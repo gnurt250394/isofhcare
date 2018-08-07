@@ -1,0 +1,103 @@
+//install yarn
+    sudo npm install -g yarn
+
+//install promise
+    npm install promise
+//install react-native-router-flux    
+    npm install --save react-native-router-flux
+
+//install react-native redux
+    npm install --save redux
+    npm install --save react-redux 
+    npm install --save redux-thunk 
+
+//install viewpager
+    npm install --save rn-viewpager
+
+//install react-native-fetch
+    yarn add react-native-fetch
+
+//install react-native-snackbar
+    yarn add react-native-snackbar
+    react-native link react-native-snackbar
+    (link library ios)
+
+//install prop-types
+    npm install --save prop-types
+
+//install react-native-fbsdk
+    react-native install react-native-fbsdk
+    react-native link react-native-fbsdk
+
+    //pod file
+        pod 'Bolts'
+        pod 'FBSDKCoreKit'
+        pod 'FBSDKLoginKit'
+        pod 'FBSDKShareKit'
+
+//install react-native-google-sign-install
+    npm install react-native-google-signin --save
+    react-native link react-native-google-signin
+    //pod file
+        pod 'Google/SignIn'  
+
+//install npm install --save react-native-firebase
+    npm install --save react-native-firebase
+    npm link react-native-firebase
+
+// install react-native-orientation
+npm install react-native-orientation-locker --save
+react-native link react-native-orientation-locker
+        /*
+
+        Add node_modules/react-native-orientation/iOS/RCTOrientation.xcodeproj to your xcode project, usually under the Libraries group
+        Add libRCTOrientation.a (from Products under RCTOrientation.xcodeproj) to build target's Linked Frameworks and Libraries list
+        Add $(SRCROOT)/node_modules/react-native-orientation/iOS/RCTOrientation/ to Project Name -> Build Settings -> Header Search Paths
+
+        */
+
+
+
+//install react-native-md5
+npm install react-native-md5 --save
+
+//react-native-table-component tao bang
+npm install react-native-table-component
+
+//react-native-share share file
+npm install react-native-share --save
+react-native link
+
+//react-native-modal
+yarn add react-native-modal
+
+//check is iphoneX
+npm i react-native-iphone-x-helper --save
+
+//exit app
+npm install react-native-exit-app --save
+react-native link react-native-exit-app
+
+//get device info
+yarn add react-native-device-info
+
+//barcode generator
+npm install react-native-barcode-builder --save
+
+//select image
+npm install react-native-image-picker@latest --save
+react-native link
+
+//pull to refresh
+npm i react-native-pull-to-refresh --save
+
+//html to pdf
+npm install react-native-html-to-pdf --save
+react-native link
+
+//install moment for time(use for date picker library)
+npm install moment --save
+
+//install react-native-image-progress and react-native-progress
+yarn add react-native-image-progress
+npm install react-native-progress --save

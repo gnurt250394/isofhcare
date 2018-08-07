@@ -1,0 +1,4 @@
+npm install react-native-router-flux --save
+
+//md5
+import md5 from "react-native-md5";
