@@ -132,7 +132,7 @@ class LoginScreen extends Component {
 							<View style={{ marginBottom: 100 }}>
 								<TouchableOpacity onPress={() => { this.qrCode() }} style={{ marginTop: 56, alignItems: 'center' }}>
 									<ScaleImage source={require("@images/btnqr.png")} width={70} />
-									<Text style={{ marginTop: 12 }}>Chạm để quét QR code</Text>
+									<Text style={{ marginTop: 12 }}>Chạm để quét QR code {this.props.userApp.test}</Text>
 								</TouchableOpacity>
 							</View>
 						</KeyboardAvoidingView>

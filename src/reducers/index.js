@@ -1,48 +1,13 @@
-import { combineReducers } from 'redux';
-import { NavigationActions } from 'react-navigation';
-import { RootNavigator } from '../navigators/AppNavigator';
+
 import userProvider from '@data-access/user-provider';
 import constants from '@resources/strings';
 import client from '@utils/client-utils';
 
-// Start with two routes: The Main screen, with the Login screen on top.
-const firstAction = RootNavigator.router.getActionForPathAndParams('splash');
-const tempNavState = RootNavigator.router.getStateForAction(firstAction);
-const secondAction = RootNavigator.router.getActionForPathAndParams('login');
-
-
-const initialNavState = RootNavigator.router.getStateForAction(
-  secondAction,
-  tempNavState
-);
-
-function nav(state = initialNavState, action) {
-  let nextState;
-  switch (action.type) {
-    // case 'Login':
-    //   nextState = RootNavigator.router.getStateForAction(
-    //     NavigationActions.back(),
-    //     state
-    //   );
-    //   break;
-    // case 'Logout':
-    //   nextState = RootNavigator.router.getStateForAction(
-    //     NavigationActions.navigate({ routeName: 'Login' }),
-    //     state
-    //   );
-    //   break;
-    // default:
-    //   nextState = RootNavigator.router.getStateForAction(action, state);
-    //   break;
-  }
-
-  // Simply return the original `state` if `nextState` is null or undefined.
-  return nextState || state;
-}
 
 const defaultState = {
     userApp:
     {
+        test:"ehehee",
         currentUser: {
 
         },
@@ -85,10 +50,4 @@ const reducer = (state = defaultState, action) => {
     return state;
 }
 
-
-const AppReducer = combineReducers({
-  nav,
-  reducer,
-});
-
-export default AppReducer;
+export default reducer;

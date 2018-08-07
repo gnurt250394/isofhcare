@@ -17,11 +17,11 @@ class SplashScreen extends Component {
 			setTimeout(() => {
 				if (s) {
 					this.props.dispatch(redux.userLogin(s));
-					Actions.home();
+					// Actions.home();
 				}
 				else {
 					// this.props.dispatch(redux.userLogout(s));
-					Actions.login({ type: 'replace' });
+					// Actions.login({ type: 'replace' });
 				}
 			}, 2000);
 		});
@@ -65,4 +65,9 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default connect()(SplashScreen);
+function mapStateToProps(state) {
+	return {
+		userApp: state.userApp
+	};
+}
+export default connect(mapStateToProps)(SplashScreen);
