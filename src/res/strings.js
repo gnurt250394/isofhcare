@@ -4,7 +4,7 @@ module.exports = {
   phone: 'Số điện thoại',
   fullname: 'Họ tên',
   confirm_password: 'Xác nhận mật khẩu',
-  app_title: 'NMC EVENT',
+  app_title: 'ISOFH CARE',
   login: "Sign In",
   register: "Đăng ký",
   send_password: "GỬI MÃ",

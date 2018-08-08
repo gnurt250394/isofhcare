@@ -1,4 +1,4 @@
-package com.isofh.nmcevent;
+package com.isofh.isofhcare;
 
 import android.app.Application;
 import android.content.Context;
@@ -84,7 +84,7 @@ private static CallbackManager mCallbackManager = CallbackManager.Factory.create
   
   @Override
   public String getFileProviderAuthority() {
-         return "com.isofh.nmcevent.provider";
+         return "com.isofh.isofhcare.provider";
   }
 
   @Override

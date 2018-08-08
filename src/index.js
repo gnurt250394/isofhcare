@@ -5,7 +5,7 @@ import thunk from 'redux-thunk';
 
 import AppReducer from '@reducers';
 
-import { RootNavigator } from './navigators/AppNavigator';
+import { RootNavigator } from '@navigators/AppNavigator';
 
 const store = createStore(AppReducer, applyMiddleware(thunk));
 

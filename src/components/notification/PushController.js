@@ -133,7 +133,7 @@ class PushController extends Component {
                 console.log('Device FCM Token: ', token);
                 userProvider.deviceId = DeviceInfo.getUniqueID();
                 userProvider.deviceToken = token;
-                firebase.messaging().subscribeToTopic("nmcevent_test");
+                firebase.messaging().subscribeToTopic("isofhcare_test");
             });
 
         this.notificationListener = firebase.notifications().onNotification(this.onNotification.bind(this));

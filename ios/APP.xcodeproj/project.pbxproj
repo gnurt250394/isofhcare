@@ -1732,7 +1732,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.isofh.nmcevent;
+				PRODUCT_BUNDLE_IDENTIFIER = com.isofh.isofhcare;
 				PRODUCT_NAME = APP;
 				PROVISIONING_PROFILE = "5ac671d7-d629-4b29-ab79-b8418ba7b324";
 				PROVISIONING_PROFILE_SPECIFIER = "nmc event development";
@@ -1773,7 +1773,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.isofh.nmcevent;
+				PRODUCT_BUNDLE_IDENTIFIER = com.isofh.isofhcare;
 				PRODUCT_NAME = APP;
 				PROVISIONING_PROFILE = "ae8a7437-80f6-4f48-94ed-aca098d175bb";
 				PROVISIONING_PROFILE_SPECIFIER = "nmc event distribution";

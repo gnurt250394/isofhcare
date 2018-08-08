@@ -122,7 +122,7 @@ class HomeScreen extends Component {
                     if (Platform.OS == "ios") {
                         Linking.openURL('itms-apps://itunes.apple.com/us/app/id1400616503')
                     } else {
-                        Linking.openURL('market://details?id=com.isofh.nmcevent')
+                        Linking.openURL('market://details?id=com.isofh.isofhcare')
                     }
                 },
             },

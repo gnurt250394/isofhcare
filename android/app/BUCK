@@ -45,12 +45,12 @@ android_library(
 
 android_build_config(
     name = "build_config",
-    package = "com.isofh.nmcevent",
+    package = "com.isofh.isofhcare",
 )
 
 android_resource(
     name = "res",
-    package = "com.isofh.nmcevent",
+    package = "com.isofh.isofhcare",
     res = "src/main/res",
 )
 
