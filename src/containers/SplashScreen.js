@@ -1,30 +1,44 @@
 import React, { Component, PropTypes } from 'react';
-import { Text, StatusBar, View, Image, StyleSheet } from 'react-native';
+import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import userProvider from '@data-access/user-provider';
 import constants from '@resources/strings';
 import redux from '@redux-store';
 import ActivityPanel from '@components/ActivityPanel';
 import ScaleImage from 'mainam-react-native-scaleimage';
+import { StackActions, NavigationActions } from 'react-navigation';
+
+const resetAction = (route) => {
+	return StackActions.reset({
+		index: 0,
+		actions: [NavigationActions.navigate({ routeName: route })],
+	})
+};
 
 class SplashScreen extends Component {
 	constructor(props) {
 		super(props);
+		this.Actions = this.props.navigation;
 	}
 	componentDidMount() {
 		console.disableYellowBox = true;
-		userProvider.getAccountStorage((s) => {
-			setTimeout(() => {
-				if (s) {
-					this.props.dispatch(redux.userLogin(s));
-					// Actions.home();
-				}
-				else {
-					// this.props.dispatch(redux.userLogout(s));
-					// Actions.login({ type: 'replace' });
-				}
-			}, 2000);
-		});
+		// this.Actions.navigate('home')
+		this.Actions.dispatch(StackActions.reset({
+			index: 0,
+			actions: [NavigationActions.navigate({ routeName: "home" })],
+		}));
+		// userProvider.getAccountStorage((s) => {
+		// 	setTimeout(() => {
+		// 		if (s) {
+		// 			this.props.dispatch(redux.userLogin(s));
+		// 			// Actions.home();
+		// 		}
+		// 		else {
+		// 			// this.props.dispatch(redux.userLogout(s));
+		// 			// Actions.login({ type: 'replace' });
+		// 		}
+		// 	}, 2000);
+		// });
 	}
 
 	render() {
@@ -35,6 +49,7 @@ class SplashScreen extends Component {
 					<View style={[{ justifyContent: 'center', alignItems: 'center', flex: 1 }]}>
 						<ScaleImage source={require("@images/logo.png")} width={120} />
 					</View>
+
 					<View style={{
 						margin: 10, justifyContent: 'center',
 						alignItems: 'center',
@@ -43,6 +58,7 @@ class SplashScreen extends Component {
 						<ScaleImage source={require("@images/copyright.png")} height={15} style={{
 						}} />
 					</View>
+
 				</View>
 			</ActivityPanel >
 		);

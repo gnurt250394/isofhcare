@@ -1,20 +1,20 @@
-import { StackRouter,StackNavigator } from 'react-navigation';
+import { StackRouter, StackNavigator } from 'react-navigation';
 
 import LoginScreen from '@containers/account/LoginScreen';
 import SplashScreen from '@containers/SplashScreen';
-import HomeScreen from '@containers/conference/HomeScreen';
+import HomeScreen from '@containers/HomeScreen';
 
 
 const RootNavigator = StackNavigator({
     splash: { screen: SplashScreen },
-    login: { screen: LoginScreen },
     home: { screen: HomeScreen },
+    login: { screen: LoginScreen },
 }, {
-    headerMode: 'none',
-    header: null,
-    navigationOptions: {
-      header: null
-    }
+        headerMode: 'none',
+        header: null,
+        navigationOptions: {
+            header: null
+        }
     }
 );
 

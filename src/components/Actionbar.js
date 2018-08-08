@@ -24,7 +24,7 @@ class Actionbar extends Component {
                         !this.props.hideBackButton ?
 
                             <TouchableOpacity onPress={() => this.backButtonClick()} style={{ paddingTop: 12, paddingBottom: 12 }}>
-                                <ScaleImage source={this.props.icBack ? this.props.icBack : ic_back} style={styles.ic_back} height={20}></ScaleImage>
+                                <ScaleImage source={this.props.icBack ? this.props.icBack : ic_back} style={[styles.ic_back, this.props.styleBackButton]} height={20}></ScaleImage>
                             </TouchableOpacity>
                             :
                             <View style={{ paddingTop: 12, paddingBottom: 12 }}>
@@ -48,9 +48,9 @@ class Actionbar extends Component {
 const styles = StyleSheet.create({
     title: {
         marginRight: 40,
-        color: '#000',
+        color: 'rgb(0,151,124)',
         fontWeight: 'bold',
-        fontSize: 19
+        fontSize: 17
     },
     ic_back: {
         marginLeft: 10,
