@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00121F268B744C0DAB8EB179 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 214A1AD8826C441B86456322 /* SafariServices.framework */; };
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
@@ -53,6 +52,8 @@
 		B24DBF5320D775180098E296 /* libReactNativePermissions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B24DBF5220D7750A0098E296 /* libReactNativePermissions.a */; };
 		B2A6AAC4208DECEF00F9C82C /* libRNSnackbar.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B2A6AAC3208DEC9800F9C82C /* libRNSnackbar.a */; };
 		E504019A736C4E52B5CA4464 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 94798CE8149C4557AC458707 /* libz.tbd */; };
+		0994F23F1F334995A544F884 /* libRealmReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E84B618C47C477F9CF7B621 /* libRealmReact.a */; };
+		2CC6ED86B49344BB91F60D13 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E72252139704C53943BA947 /* libc++.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -473,6 +474,9 @@
 		E804FAC943AA4930A2AE54E9 /* AddressBook.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		EBC3324BCEB75276C181FD32 /* libPods-APP.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-APP.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB08E72CAE4D5E4E3C0999B4 /* Pods-APP.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-APP.debug.xcconfig"; path = "Pods/Target Support Files/Pods-APP/Pods-APP.debug.xcconfig"; sourceTree = "<group>"; };
+		649A5967940A4BCD8E6DA1EF /* RealmReact.xcodeproj */ = {isa = PBXFileReference; name = "RealmReact.xcodeproj"; path = "../node_modules/realm/react-native/ios/RealmReact.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		6E84B618C47C477F9CF7B621 /* libRealmReact.a */ = {isa = PBXFileReference; name = "libRealmReact.a"; path = "libRealmReact.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		3E72252139704C53943BA947 /* libc++.tbd */ = {isa = PBXFileReference; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = sourcecode.text-based-dylib-definition; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -516,6 +520,8 @@
 				6C2662C74140484480E665EF /* libRNExitApp.a in Frameworks */,
 				A426C2899F2ADF87B187D2DD /* libPods-APP.a in Frameworks */,
 				42C1ED37DAAC48208BCEEF00 /* libRNHTMLtoPDF.a in Frameworks */,
+				0994F23F1F334995A544F884 /* libRealmReact.a in Frameworks */,
+				2CC6ED86B49344BB91F60D13 /* libc++.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -670,6 +676,7 @@
 				1E626AC20A2B4B5D973A0E78 /* SystemConfiguration.framework */,
 				E804FAC943AA4930A2AE54E9 /* AddressBook.framework */,
 				EBC3324BCEB75276C181FD32 /* libPods-APP.a */,
+				3E72252139704C53943BA947 /* libc++.tbd */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -717,6 +724,7 @@
 				41432D5DBC86498C8F9537DB /* RNGoogleSignin.xcodeproj */,
 				2D86043EA9574354B5E6BBFC /* RNExitApp.xcodeproj */,
 				E294748E39F94F66B46DFEFD /* RNHTMLtoPDF.xcodeproj */,
+				649A5967940A4BCD8E6DA1EF /* RealmReact.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1640,12 +1648,14 @@
 					"$(SRCROOT)/../node_modules/react-native-fbsdk/ios/RCTFBSDK/**",
 					"$(SRCROOT)/../node_modules/react-native-google-signin/ios/RNGoogleSignin/**",
 					"$(SRCROOT)/../node_modules/react-native-html-to-pdf/ios/RNHTMLtoPDF/**",
+					"$(SRCROOT)\..\node_modules\realm\src/**",
 				);
 				INFOPLIST_FILE = APPTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1676,12 +1686,14 @@
 					"$(SRCROOT)/../node_modules/react-native-fbsdk/ios/RCTFBSDK/**",
 					"$(SRCROOT)/../node_modules/react-native-google-signin/ios/RNGoogleSignin/**",
 					"$(SRCROOT)/../node_modules/react-native-html-to-pdf/ios/RNHTMLtoPDF/**",
+					"$(SRCROOT)\..\node_modules\realm\src/**",
 				);
 				INFOPLIST_FILE = APPTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1723,6 +1735,7 @@
 					"$(SRCROOT)/../node_modules/react-native-html-to-pdf/ios/RNHTMLtoPDF/**",
 					"$(SRCROOT)/../react-native/React",
 					"$(SRCROOT)/../../React",
+					"$(SRCROOT)\..\node_modules\realm\src/**",
 				);
 				INFOPLIST_FILE = APP/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1764,6 +1777,7 @@
 					"$(SRCROOT)/../node_modules/react-native-html-to-pdf/ios/RNHTMLtoPDF/**",
 					"$(SRCROOT)/../react-native/React",
 					"$(SRCROOT)/../../React",
+					"$(SRCROOT)\..\node_modules\realm\src/**",
 				);
 				INFOPLIST_FILE = APP/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1801,11 +1815,13 @@
 					"$(SRCROOT)/../node_modules/react-native-fbsdk/ios/RCTFBSDK/**",
 					"$(SRCROOT)/../node_modules/react-native-google-signin/ios/RNGoogleSignin/**",
 					"$(SRCROOT)/../node_modules/react-native-html-to-pdf/ios/RNHTMLtoPDF/**",
+					"$(SRCROOT)\..\node_modules\realm\src/**",
 				);
 				INFOPLIST_FILE = "APP-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1844,11 +1860,13 @@
 					"$(SRCROOT)/../node_modules/react-native-fbsdk/ios/RCTFBSDK/**",
 					"$(SRCROOT)/../node_modules/react-native-google-signin/ios/RNGoogleSignin/**",
 					"$(SRCROOT)/../node_modules/react-native-html-to-pdf/ios/RNHTMLtoPDF/**",
+					"$(SRCROOT)\..\node_modules\realm\src/**",
 				);
 				INFOPLIST_FILE = "APP-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1886,11 +1904,13 @@
 					"$(SRCROOT)/../node_modules/react-native-fbsdk/ios/RCTFBSDK/**",
 					"$(SRCROOT)/../node_modules/react-native-google-signin/ios/RNGoogleSignin/**",
 					"$(SRCROOT)/../node_modules/react-native-html-to-pdf/ios/RNHTMLtoPDF/**",
+					"$(SRCROOT)\..\node_modules\realm\src/**",
 				);
 				INFOPLIST_FILE = "APP-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1928,11 +1948,13 @@
 					"$(SRCROOT)/../node_modules/react-native-fbsdk/ios/RCTFBSDK/**",
 					"$(SRCROOT)/../node_modules/react-native-google-signin/ios/RNGoogleSignin/**",
 					"$(SRCROOT)/../node_modules/react-native-html-to-pdf/ios/RNHTMLtoPDF/**",
+					"$(SRCROOT)\..\node_modules\realm\src/**",
 				);
 				INFOPLIST_FILE = "APP-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",

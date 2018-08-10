@@ -6,6 +6,9 @@ import ScaledImage from 'mainam-react-native-scaleimage';
 import drugProvider from '@data-access/drug-provider';
 import SearchPanel from '@components/SearchPanel';
 import ItemDrug from '@components/drug/ItemDrug';
+import realmModel from '@models/realm-models';
+const Realm = require('realm');
+import historyProvider from '@data-access/history-provider';
 
 class SearchDrugScreen extends Component {
     constructor(props) {
@@ -74,8 +77,13 @@ class SearchDrugScreen extends Component {
             });
         });
     }
+    onSearchItemClick(item) {
+        this.props.navigation.navigate("drugDetailScreen", { drug: item });
+        const { DRUG_HISTORY } = realmModel;
+        historyProvider.addHistory("", DRUG_HISTORY, item.drug.name, item.drug.id, "");
+    }
     renderSearchItem(item, index, keyword) {
-        return <TouchableOpacity style={{ padding: 5 }} onPress={() => this.props.navigation.navigate("searchDrugResult", { drug: item })}>
+        return <TouchableOpacity style={{ padding: 5 }} onPress={this.onSearchItemClick.bind(this, item)}>
             <Text style={{ paddingLeft: 10 }}>{item.drug.name}</Text>
             <View style={{ height: 0.5, backgroundColor: '#00000040', marginTop: 12 }} />
         </TouchableOpacity>
@@ -94,7 +102,7 @@ class SearchDrugScreen extends Component {
         return (
             <ActivityPanel style={{ flex: 1 }} title="TRA CỨU THUỐC">
                 <View style={{ flex: 1, padding: 14 }}>
-                    <SearchPanel resultPage="searchDrugResult" ref={ref => this.searchPanel = ref} onFocus={this.searchFocus.bind(this)} placeholder="Tìm kiếm" onSearch={this.onSearch.bind(this)} renderItem={this.renderSearchItem.bind(this)} renderFooter={this.renderFooter.bind(this)} />
+                    <SearchPanel searchTypeId={realmModel.DRUG_HISTORY} resultPage="searchDrugResult" ref={ref => this.searchPanel = ref} onFocus={this.searchFocus.bind(this)} placeholder="Tìm kiếm" onSearch={this.onSearch.bind(this)} renderItem={this.renderSearchItem.bind(this)} renderFooter={this.renderFooter.bind(this)} />
                     <View style={{ flex: 1 }}>
                         <Text style={{ marginTop: 23, fontSize: 16, fontWeight: 'bold' }}>Thuốc được tra cứu nhiều</Text>
                         <FlatList

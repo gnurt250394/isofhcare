@@ -8,7 +8,8 @@ import Activity from 'mainam-react-native-activity-panel';
 import ActionBar from '@components/Actionbar';
 import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
-
+import realmModel from '@models/realm-models';
+import historyProvider from '@data-access/history-provider';
 
 
 
@@ -31,20 +32,32 @@ class SearchPanel extends Component {
     }
 
     onFocus() {
-        this.setState({
-            showHistory: true
-        }, () => {
+        this.setState({ showSuggesh: true }, () => {
             if (this.props.onFocus)
                 this.props.onFocus(this);
-        });
+        })
+        const { searchTypeId } = this.props;
+        historyProvider.getListHistory("", searchTypeId, this.getListHistoryCallback.bind(this));
+    }
+    getListHistoryCallback(data) {
+        try {
+            this.setState({
+                history: data ? data : []
+            });
+        } catch (error) {
+            this.setState({
+                history: []
+            });
+        }
     }
     clear() {
         if (this.searchInput)
             this.searchInput.blur();
         this.setState({
             keyword: "",
-            showHistory: false,
-            data: []
+            showSuggesh: false,
+            data: [],
+            history: []
         });
 
     }
@@ -62,7 +75,7 @@ class SearchPanel extends Component {
             });
         }
         else {
-            this.setState({ showHistory: false, data: [] });
+            this.setState({ data: [] });
         }
     }
     renderFooter() {
@@ -89,24 +102,39 @@ class SearchPanel extends Component {
                     }
                 </View>
                 {
-                    this.state.showHistory && ((this.state.data && this.state.data.length > 0) || this.state.keyword) ?
+                    (this.state.history && this.state.history.length > 0 && !this.state.keyword) || (this.state.data && this.state.data.length > 0 && this.state.keyword) ?
                         <View style={{ borderColor: 'rgba(151,151,151,0.55)', paddingTop: 50, right: 0, left: 0, position: 'absolute', backgroundColor: '#FFF', zIndex: 1000, borderRadius: 6, borderWidth: 1, margin: 3, padding: 10 }}>
                             {
-                                this.state.keyword && (!this.state.data || this.state.data.length == 0) ?
-                                    <Text style={{ textAlign: 'center', margin: 10 }}>Không tìm thấy kết quả nào</Text>
-                                    :
-                                    <FlatList
-                                        style={{ zIndex: 1010, marginTop: 10 }}
-                                        keyExtractor={(item, index) => index.toString()}
-                                        extraData={this.state}
-                                        data={this.state.data}
-                                        ListFooterComponent={this.renderFooter.bind(this)}
-                                        renderItem={this.renderItem.bind(this)}
-                                    />
+                                (this.state.keyword) ?
+                                    this.state.data && this.state.data.length != 0 ?
+                                        <FlatList
+                                            style={{ zIndex: 1010, marginTop: 10 }}
+                                            keyExtractor={(item, index) => index.toString()}
+                                            extraData={this.state}
+                                            data={this.state.data}
+                                            ListFooterComponent={this.renderFooter.bind(this)}
+                                            renderItem={this.renderItem.bind(this)}
+                                        /> :
+                                        <Text style={{ textAlign: 'center', margin: 10 }}>Không tìm thấy kết quả nào</Text>
+                                    : this.state.history && this.state.history.length > 0 ?
+                                        <FlatList
+                                            style={{ zIndex: 1011, marginTop: 10 }}
+                                            keyExtractor={(item, index) => index.toString()}
+                                            extraData={this.state}
+                                            data={this.state.history}
+                                            renderItem={({ item, index }) =>
+                                                <TouchableOpacity style={{ padding: 5 }}>
+                                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                        <ScaledImage source={require("@images/search/time-left.png")} width={15} />
+                                                        <Text style={{ marginLeft: 5 }}>{item.name}</Text>
+                                                    </View>
+                                                    <View style={{ height: 0.5, backgroundColor: '#00000040', marginTop: 12 }} />
+                                                </TouchableOpacity>
+                                            }
+                                        /> : null
                             }
-                        </View>
-                        :
-                        null
+
+                        </View> : null
 
                 }
 

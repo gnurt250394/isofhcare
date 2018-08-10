@@ -8,6 +8,7 @@ import android.support.multidex.MultiDexApplication;
  import com.azendoo.reactnativesnackbar.SnackbarPackage;
 import com.facebook.CallbackManager;
 import com.facebook.react.ReactApplication;
+import io.realm.react.RealmReactPackage;
 import com.heanoria.library.reactnative.locationenabler.RNAndroidLocationEnablerPackage;
 import org.reactnative.camera.RNCameraPackage;
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
@@ -47,6 +48,7 @@ private static CallbackManager mCallbackManager = CallbackManager.Factory.create
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
+            new RealmReactPackage(),
         new RNFetchBlobPackage(),
             new RNAndroidLocationEnablerPackage(),
             new RNCameraPackage(),
