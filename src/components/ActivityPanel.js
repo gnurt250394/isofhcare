@@ -6,6 +6,7 @@ import constants from '@resources/strings'
 import { isIphoneX } from 'react-native-iphone-x-helper'
 import Activity from 'mainam-react-native-activity-panel';
 import ActionBar from '@components/Actionbar';
+import { connect } from 'react-redux';
 
 import {
     Platform,
@@ -18,7 +19,7 @@ import ic_back from '@images/ic_back.png';
 
 
 
-export default class ActivityPanel extends Component {
+class ActivityPanel extends Component {
     constructor(props) {
         super(props);
         let paddingTop = Platform.select({
@@ -33,7 +34,8 @@ export default class ActivityPanel extends Component {
         }
     }
     backPress() {
-        Actions.pop();
+        if (this.props.navigation)
+            this.props.navigation.pop();
     }
     getActionbar() {
         return (<ActionBar actionbarTextColor={[{ color: constants.colors.actionbar_title_color }, this.props.actionbarTextColor]} backButtonClick={() => this.backPress()} {...this.props} actionbarStyle={[{ paddingTop: this.state.paddingTop, backgroundColor: constants.colors.actionbar_color }, this.props.actionbarStyle]} />);
@@ -46,3 +48,9 @@ export default class ActivityPanel extends Component {
         );
     }
 }
+function mapStateToProps(state) {
+    return {
+        navigation: state.navigation
+    }
+}
+export default connect(mapStateToProps)(ActivityPanel);

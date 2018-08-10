@@ -194,7 +194,6 @@ class HomeScreen extends Component {
         if (Platform.OS == "ios") {
             this.getLocationFromGPS().then(p => { resolve(p) }).catch(e => { reject(e) });
         } else {
-            debugger;
             RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({ interval: 10000, fastInterval: 5000 })
                 .then(data => {
                     setTimeout(() => {

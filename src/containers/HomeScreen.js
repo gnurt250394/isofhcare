@@ -9,6 +9,7 @@ import ScaleImage from 'mainam-react-native-scaleimage';
 import ScalingDrawer from 'react-native-scaling-drawer';
 import DrawerContent from '@components/DrawerContent';
 import { IndicatorViewPager } from 'mainam-react-native-viewpager';
+import TabSearch from '@containers/home/tab/TabSearch';
 
 let defaultScalingDrawerConfig = {
 	scalingFactor: 0.7,
@@ -22,6 +23,7 @@ class SplashScreen extends Component {
 	}
 	componentWillMount() {
 		console.disableYellowBox = true;
+		this.props.dispatch({ type: constants.action.create_navigation_global, value: this.props.navigation});
 	}
 	componentDidMount() {
 		console.disableYellowBox = true;
@@ -42,21 +44,18 @@ class SplashScreen extends Component {
 	render() {
 		return (
 			<ScalingDrawer
+				// frontStyle={{}}
+				// contentWrapperStyle={{}}
+				// swipeOffset={defaultScalingDrawerConfig.swipeOffset}
 				ref={ref => this._drawer = ref}
-				content={<DrawerContent navigation={this.props.navigation} drawer={this._drawer} />}
+				content={<DrawerContent navigation={this.props.navigation} />}
 				{...defaultScalingDrawerConfig}
 				onClose={() => this.setState({ open: false })}
 				onOpen={() => this.setState({ open: true })}
 			>
-				<ActivityPanel style={{ flex: 1 }} showFullScreen={true} title={"TRANG CHỦ"}>
-					<IndicatorViewPager ref={(viewPager) => { this.viewPager = viewPager }} style={{ flex: 1 }}>
-						<View style={{ flex: 1, backgroundColor: "#000" }}></View>
-						<View style={{ flex: 1, backgroundColor: "#0C0" }}></View>
-						<View style={{ flex: 1, backgroundColor: "#000" }}></View>
-						<View style={{ flex: 1, backgroundColor: "#0C0" }}></View>
-						<View style={{ flex: 1, backgroundColor: "#000" }}></View>
-					</IndicatorViewPager>
-				</ActivityPanel >
+				<IndicatorViewPager ref={(viewPager) => { this.viewPager = viewPager }} style={{ flex: 1 }}>
+					<TabSearch navigation={this.props.navigation} style={{ flex: 1 }} drawer={this._drawer} />
+				</IndicatorViewPager>
 			</ScalingDrawer>);
 	}
 }

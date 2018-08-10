@@ -1,27 +1,27 @@
-import snackbar from '@utils/snackbar-utils';
 String.prototype.absoluteUrl = String.prototype.absolute || function (defaultValue) {
-    var server_url = 'https://api.nmcevent.com';
-    if (this == "")
+    var server_url = 'http://123.24.206.9:8382';
+    var _this = this.toString();
+    if (_this == "")
         if (defaultValue != undefined)
             return defaultValue;
         else
-            return this;
-    if (this.startsWith("http") || this.startsWith("blob")) {
-        return this;
+            return _this;
+    if (_this.startsWith("http") || _this.startsWith("blob")) {
+        return _this;
     }
-    if (this.endsWith(".jpg") || this.endsWith(".png") || this.endsWith(".gif")) {
-        return server_url + this + "";
+    if (_this.endsWith(".jpg") || _this.endsWith(".png") || _this.endsWith(".gif")) {
+        return server_url + _this + "";
     }
-    if (!this.endsWith(".jpg") || !this.endsWith(".png") || !this.endsWith(".gif")) {
+    if (!_this.endsWith(".jpg") || !_this.endsWith(".png") || !_this.endsWith(".gif")) {
         return defaultValue;
     }
     // if(this.startsWith("user"))
     //     return
-    return server_url + this + ""
+    return server_url + _this + ""
 }
 
 String.prototype.getServiceUrl = String.prototype.absolute || function (defaultValue) {
-    var server_url = 'https://api.nmcevent.com';
+    var server_url = 'http://123.24.206.9:8382';
     if (this == "")
         if (defaultValue != undefined)
             return defaultValue;
@@ -36,7 +36,7 @@ String.prototype.getServiceUrl = String.prototype.absolute || function (defaultV
 
 module.exports = {
     auth: "",
-    serverApi: "https://api.nmcevent.com/",
+    serverApi: "http://123.24.206.9:8382/",
     response: {
         ok(data, message) {
             if (!message)

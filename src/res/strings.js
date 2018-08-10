@@ -35,15 +35,12 @@ module.exports = {
   not_com_yet: "Tôi chưa đến",
   checkin: "Check In",
   action: {
+    create_navigation_global: "ACTION_SET_NAVIGATION_GLOBAL",
     action_change_login_token: "ACTION_CHANGE_LOGIN_TOKEN",
-    action_user_change_profile: "ACTION_USER_CHANGE_PROFILE",
     action_user_login: "ACTION_USER_LOGIN",
     action_user_logout: "ACTION_USER_LOGOUT",
     action_change_notification_count: "ACTION_CHANGE_NOTIFICATION_COUNT",
-    action_select_conference: "ACTION_SELECT_CONFERENCE",
     action_show_popup_notice_new_version: "ACTION_SHOW_POPUP_NOTICE_NEW_VERSION",
-    action_user_follow_session: "ACTION_USER_FOLLOW_SESSION",
-    action_init_list_session_follow: "ACTION_INIT_LIST_SESSION_FOLLOW"
   },
   colors: {
     breakline: '#c0c0c0',
@@ -225,10 +222,9 @@ module.exports = {
     schedule: {
       get_by_user_conference: "schedule/get-by-user-conference"
     },
-    support:
+    drug:
     {
-      create: "support/create",
-      get_by_conference: "support/get-by-conference"
+      search: "drug/search"
     }
   }
 };

@@ -95,7 +95,6 @@ class Program extends Component {
         if (this.state.listTopic != newState.listTopic)
             return true;
         if (this.props.conference.listSessionFollow != newProps.conference.listSessionFollow) {
-            debugger;
             if (this.props.isMyProgram) {
                 this.onRefresh();
             }

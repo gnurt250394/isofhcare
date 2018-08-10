@@ -7,7 +7,7 @@ import client from '@utils/client-utils';
 const defaultState = {
     userApp:
     {
-        test:"ehehee",
+        test: "ehehee",
         currentUser: {
 
         },
@@ -17,7 +17,10 @@ const defaultState = {
 }
 const reducer = (state = defaultState, action) => {
     var newState = JSON.parse(JSON.stringify(state));
-    switch (action.type) {       
+    switch (action.type) {
+        case constants.action.create_navigation_global:
+            newState.navigation = action.value;
+            return newState;
         case constants.action.action_change_notification_count:
             var value = "";
             if (parseInt(action.value) <= 0) {
@@ -27,7 +30,7 @@ const reducer = (state = defaultState, action) => {
                 value = action.value;
             }
             newState.userApp.unReadNotificationCount = value;
-            return newState;        
+            return newState;
         case constants.action.action_user_login:
             newState.userApp.currentUser = action.value;
             newState.userApp.isLogin = newState.userApp.currentUser && newState.userApp.currentUser.id;

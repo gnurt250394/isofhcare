@@ -33,7 +33,7 @@ class DrawerContent extends Component {
 
     return (
       <View style={styles.container}>
-        <ActionBar icBack={require("@images/icclose.png")} backButtonClick={() => { this.hideDrawer() }} styleBackButton={{ marginLeft: 20 }} actionbarTextColor={[{ color: constants.colors.actionbar_title_color }]} actionbarStyle={[{ paddingTop: isIphoneX() ? 40 : 32, backgroundColor: constants.colors.actionbar_color }, this.props.actionbarStyle]} />
+        <ActionBar icBack={require("@images/icclose.png")} backButtonClick={() => { this.hideDrawer() }} styleBackButton={{ marginLeft: 20 }} actionbarTextColor={[{ color: constants.colors.actionbar_title_color }]} actionbarStyle={[{ paddingTop: isIphoneX() ? 40 : 32, backgroundColor: constants.colors.actionbar_color }, this.props.actionbarStyle, { elevation: 1 }]} />
         <View style={{ width: 250, paddingTop: 10, flex: 1 }}>
           <ScaleImage source={require("@images/ichotro.png")} width={70} style={{ alignSelf: 'center', }} />
           <Text style={{ alignSelf: 'center', fontWeight: 'bold', fontSize: 15, color: 'rgb(35,66,155)', marginTop: 18 }}>BÙI NGỌC HOA</Text>
