@@ -111,6 +111,14 @@ class DrugDetailScreen extends Component {
             case 61: return "Đặt dưới lưỡi";
         }
     }
+    componentDidMount() {
+        const drug = this.props.navigation.getParam("drug", null);
+        if (drug && drug.drug) {
+            drugProvider.updateViewCount(drug.drug.id, (s, e) => {
+
+            })
+        }
+    }
     render() {
         const drug = this.props.navigation.getParam("drug", null);
         return (

@@ -224,7 +224,8 @@ module.exports = {
     },
     drug:
     {
-      search: "drug/search"
+      search: "drug/search",
+      update_view_count: "drug/update-view-count"
     }
   }
 };

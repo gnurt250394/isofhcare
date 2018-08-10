@@ -23,7 +23,7 @@ class SplashScreen extends Component {
 	}
 	componentWillMount() {
 		console.disableYellowBox = true;
-		this.props.dispatch({ type: constants.action.create_navigation_global, value: this.props.navigation});
+		this.props.dispatch({ type: constants.action.create_navigation_global, value: this.props.navigation });
 	}
 	componentDidMount() {
 		console.disableYellowBox = true;
@@ -48,7 +48,7 @@ class SplashScreen extends Component {
 				// contentWrapperStyle={{}}
 				// swipeOffset={defaultScalingDrawerConfig.swipeOffset}
 				ref={ref => this._drawer = ref}
-				content={<DrawerContent navigation={this.props.navigation} />}
+				content={<DrawerContent navigation={this.props.navigation} drawer={this._drawer} />}
 				{...defaultScalingDrawerConfig}
 				onClose={() => this.setState({ open: false })}
 				onOpen={() => this.setState({ open: true })}

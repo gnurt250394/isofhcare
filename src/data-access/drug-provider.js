@@ -9,5 +9,11 @@ module.exports = {
             if (callback)
                 callback(s, e);
         });
+    },
+    updateViewCount(id, callback) {
+        client.requestApi("put", constants.api.drug.update_view_count + "/" + id, {}, (s, e) => {
+            if (callback)
+                callback(s, e);
+        });
     }
 }
