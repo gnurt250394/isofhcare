@@ -107,7 +107,7 @@ class SearchPanel extends Component {
                     }
                 </View>
                 {
-                    (this.state.history && this.state.history.length > 0 && !this.state.keyword) || (this.state.data && this.state.data.length > 0 && this.state.keyword) ?
+                    (this.state.history && this.state.history.length > 0 && !this.state.keyword) || this.state.keyword ?
                         <View style={{ borderColor: 'rgba(151,151,151,0.55)', paddingTop: 50, right: 0, left: 0, position: 'absolute', backgroundColor: '#FFF', zIndex: 1000, borderRadius: 6, borderWidth: 1, margin: 3, padding: 10 }}>
                             {
                                 (this.state.keyword) ?

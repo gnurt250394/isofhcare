@@ -109,7 +109,7 @@ xmlns:tools="http://schemas.android.com/tools"
             </provider>
             <meta-data
       android:name="com.google.android.geo.API_KEY"
-      android:value="AIzaSyBH7VO4kN5L-5ESa8YNdwa34MDwbDzNuPk"/>
+      android:value="AIzaSyAPLqfgSIYFVflpD2KSocGxL7S4NdNza3w"/>
     </application>
 
 </manifest>

@@ -104,9 +104,9 @@ class SearchFacilityScreen extends Component {
         return (
             <ActivityPanel style={{ flex: 1 }} title="TÌM KIẾM CSYT">
                 <View style={{ flex: 1, padding: 14 }}>
-                    <SearchPanel searchTypeId={realmModel.FACILITY_HISTORY} resultPage="searchDrugResult" ref={ref => this.searchPanel = ref} onFocus={this.searchFocus.bind(this)} placeholder="Nhập tên chuyên khoa/ CSYT hoặc nhà thuốc" onSearch={this.onSearch.bind(this)} renderItem={this.renderSearchItem.bind(this)} renderFooter={this.renderFooter.bind(this)} />
+                    <SearchPanel searchTypeId={realmModel.FACILITY_HISTORY} resultPage="searchFacilityResult" ref={ref => this.searchPanel = ref} onFocus={this.searchFocus.bind(this)} placeholder="Nhập tên chuyên khoa/ CSYT hoặc nhà thuốc" onSearch={this.onSearch.bind(this)} renderItem={this.renderSearchItem.bind(this)} renderFooter={this.renderFooter.bind(this)} />
                     <ScrollView>
-                        <TouchableOpacity style={{ position: 'relative', marginTop: 20 }}>
+                        <TouchableOpacity style={{ position: 'relative', marginTop: 20 }} onPress={() => { this.props.navigation.navigate("searchFacilityByLocation") }}>
                             <ScaledImage source={require("@images/facility/vitri.png")} width={Dimensions.get('window').width - 28} height={115} style={{ zIndex: 1000 }} />
                             <View style={{ flexDirection: 'row', zIndex: 1001, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center' }}>
                                 <ScaledImage source={require("@images/facility/icMap.png")} width={73} height={82} />
@@ -120,23 +120,6 @@ class SearchFacilityScreen extends Component {
                         <View style={{ flex: 1 }}>
                             <TopSearch />
                             <TopFacility />
-                            {/* <FlatList
-                            onRefresh={this.onRefreshListMost.bind(this)}
-                            refreshing={this.state.refreshing_list_most}
-                            style={{ marginTop: 10 }}
-                            keyExtractor={(item, index) => index.toString()}
-                            extraData={this.state}
-                            data={this.state.list_most}
-                            ListHeaderComponent={() => !this.state.refreshing_list_most && (!this.state.list_most || this.state.list_most.length == 0) ?
-                                <View style={{ alignItems: 'center', marginTop: 50 }}>
-                                    <Text style={{ fontStyle: 'italic' }}>Hiện tại chưa có thông tin</Text>
-                                </View> : null
-                            }
-                            ListFooterComponent={() => <View style={{ height: 100 }}></View>}
-                            renderItem={({ item, index }) =>
-                                <ItemDrug drug={item} />
-                            }
-                        /> */}
                         </View>
                     </ScrollView>
                 </View>

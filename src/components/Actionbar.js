@@ -1,9 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import ic_back from '@images/ic_back.png';
+const { width, height } = Dimensions.get('window');
 
 class Actionbar extends Component {
     constructor(props) {

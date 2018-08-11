@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import Dimensions from 'Dimensions';
 const DEVICE_WIDTH = Dimensions.get('window').width;
+import * as Animatable from 'react-native-animatable';
 
 class TabSearch extends Component {
     constructor(props) {
@@ -69,7 +70,7 @@ class TabSearch extends Component {
         return (
             <ActivityPanel style={{ flex: 1 }} title="TRA CỨU" icBack={require("@images/icmenu.png")} backButtonClick={() => { this.showDrawer() }} >
                 <ScrollView style={{ paddingLeft: 20, paddingRight: 20, paddingTop: 10 }}>
-                    <Text style={{ color: "rgb(155,155,155)", fontSize: 14, textAlign: 'center', lineHeight: 20 }}>ISofh Care có hệ thống dữ liệu lớn từ các chuyên gia hàng đầu và thực sự đáng tin cậy cho cộng đồng.</Text>
+                    <Text style={{ color: "rgb(155,155,155)", fontSize: 14, textAlign: 'center', lineHeight: 20 }}>ISofH Care có hệ thống dữ liệu lớn từ các chuyên gia hàng đầu và thực sự đáng tin cậy cho cộng đồng.</Text>
                     <View style={{
                         marginTop: 20,
                         flexDirection: 'row',
@@ -79,34 +80,14 @@ class TabSearch extends Component {
                     }}>
                         {
                             this.state.features.map((item, position) => {
-                                return (<TouchableOpacity key={position} style={{ padding: 5 }} onPress={() => { this.onClick(position) }}>
-                                    <ScaledImage source={item.icon} width={itemWidth} />
-                                </TouchableOpacity>);
+                                return (<Animatable.View delay={50 * position} animation={position % 2 == 0 ? "slideInLeft" : "slideInRight"} direction="alternate">
+                                    <TouchableOpacity key={position} style={{ padding: 5 }} onPress={() => { this.onClick(position) }}>
+                                        <ScaledImage source={item.icon} width={itemWidth} />
+                                    </TouchableOpacity>
+                                </Animatable.View>);
                             })
                         }
                     </View>
-                    {/* <FlatList
-                        numColumns={3}
-                        style={{ flex: 1, paddingBottom: 100 }}
-                        ref={ref => this.flatList = ref}
-                        keyExtractor={(item, index) => index.toString()}
-                        extraData={this.state}
-                        data={this.state.listFun}
-                        ListHeaderComponent={this.renderHeader.bind(this)}
-                        ListFooterComponent={() => <View style={{ height: 100 }}></View>}
-                        renderItem={({ item, index }) =>
-                            <View style={{ flex: 1 }}>
-                                {
-                                    item.icon ?
-                                        <TouchableOpacity style={{ flex: 1, alignItems: 'center', padding: 5 }} onPress={() => { item.action() }}>
-                                            <ScaleImage source={item.icon} width={67} />
-                                            <Text style={{ marginTop: 8, fontWeight: '800', fontSize: 13, textAlign: 'center' }}>{item.title}</Text>
-                                        </TouchableOpacity> :
-                                        <View style={{ flex: 1 }} />
-                                }
-                            </View>
-                        }
-                    /> */}
                 </ScrollView>
             </ActivityPanel >
         );

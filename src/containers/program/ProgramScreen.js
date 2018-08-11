@@ -75,7 +75,7 @@ class ProgramScreen extends Component {
     render() {
         return (
             <ActivityPanel style={{ flex: 1 }} title="Chương trình" showFullScreen={true} menuButton={this.menuSearch()} titleStyle={{ marginLeft: 45 }}>
-                <Animatable.View ref={ref => this.searchView = ref} style={{ height: 50, display: this.state.showSearchView ? 'flex' : 'none', alignItems: 'center', flexDirection: 'row', paddingLeft: 10, paddingRight: 10, margin: 5, backgroundColor: '#FFF', shadowColor: '#000000', shadowOpacity: 0.2, shadowOffset: {}, elevation: 5 }} >
+                <Animatable.View  ref={ref => this.searchView = ref} style={{ height: 50, display: this.state.showSearchView ? 'flex' : 'none', alignItems: 'center', flexDirection: 'row', paddingLeft: 10, paddingRight: 10, margin: 5, backgroundColor: '#FFF', shadowColor: '#000000', shadowOpacity: 0.2, shadowOffset: {}, elevation: 5 }} >
                     <TextInput ref={ref => this.searchInput = ref} placeholder={"Nhập nội dung tìm kiếm"} style={{ flexDirection: 'row', flex: 1 }} returnKeyType="search" underlineColorAndroid="transparent" onSubmitEditing={this.search.bind(this)} onChangeText={(x) => this.setState({ keyword: x })} value={this.state.keyword} />
                     {this.state.keyword ?
                         <TouchableOpacity style={{ padding: 10 }} onPress={() => { this.setState({ keyword: "" }, this.search) }}>
