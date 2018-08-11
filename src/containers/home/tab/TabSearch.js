@@ -35,6 +35,9 @@ class TabSearch extends Component {
     onClick(index) {
         const navigate = this.props.navigation.navigate;
         switch (index) {
+            case 4:
+                navigate("searchFacility");
+                break;
             case 5:
                 navigate("searchDrug");
                 break;

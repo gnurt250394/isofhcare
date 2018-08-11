@@ -5,6 +5,7 @@ import ScaledImage from 'mainam-react-native-scaleimage';
 import clientUtils from '@utils/client-utils';
 import ImageProgress from 'mainam-react-native-image-progress';
 import Progress from 'react-native-progress/Pie';
+import stringUtils from 'mainam-react-native-string-utils';
 
 class ItemDrug extends Component {
     constructor(props) {
@@ -31,7 +32,7 @@ class ItemDrug extends Component {
                     }
                     {
                         item.drug.price ?
-                            <Text style={{ fontSize: 14, color: 'rgb(74,74,74)' }}>Giá tham khảo: <Text style={{ color: 'rgb(208,2,27)' }}>{item.drug.price} đ</Text></Text>
+                            <Text style={{ fontSize: 14, color: 'rgb(74,74,74)' }}>Giá tham khảo: <Text style={{ color: 'rgb(208,2,27)' }}>{item.drug.price.formatPrice()} đ</Text></Text>
                             : null
                     }
                 </View>

@@ -30,6 +30,11 @@ class SearchPanel extends Component {
 
         }
     }
+    onClickItemHistory(keyword) {
+        this.setState({ keyword }, () => {
+            this.search();
+        })
+    }
 
     onFocus() {
         this.setState({ showSuggesh: true }, () => {
@@ -93,7 +98,7 @@ class SearchPanel extends Component {
         return (
             <View>
                 <View style={{ borderColor: 'rgba(151,151,151,0.55)', borderRadius: 5, borderWidth: 1.5, zIndex: 1001, flexDirection: 'row', alignItems: 'center', paddingLeft: 10, margin: 3, backgroundColor: '#FFF' }}>
-                    <TextInput onFocus={this.onFocus.bind(this)} ref={ref => this.searchInput = ref} placeholder={this.props.placeholder ? this.props.placeholder : "Tìm kiếm"} style={{ flexDirection: 'row', flex: 1, padding: 8, fontSize: 14 }} returnKeyType="search" underlineColorAndroid="transparent" onSubmitEditing={this.search.bind(this)} onChangeText={this.onChangeText.bind(this)} value={this.state.keyword} />
+                    <TextInput numberOfLines={1} place onFocus={this.onFocus.bind(this)} ref={ref => this.searchInput = ref} placeholder={this.props.placeholder ? this.props.placeholder : "Tìm kiếm"} style={{ flexDirection: 'row', flex: 1, padding: 8, fontSize: 14, overflow: 'hidden', flexWrap: 'nowrap' }} returnKeyType="search" underlineColorAndroid="transparent" onSubmitEditing={this.search.bind(this)} onChangeText={this.onChangeText.bind(this)} value={this.state.keyword} />
                     {
                         this.state.keyword ?
                             <TouchableOpacity style={{ padding: 10 }} onPress={this.clear.bind(this)}>
@@ -123,7 +128,7 @@ class SearchPanel extends Component {
                                             extraData={this.state}
                                             data={this.state.history}
                                             renderItem={({ item, index }) =>
-                                                <TouchableOpacity style={{ padding: 5 }}>
+                                                <TouchableOpacity style={{ padding: 5 }} onPress={() => { this.onClickItemHistory(item.name) }}>
                                                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                         <ScaledImage source={require("@images/search/time-left.png")} width={15} />
                                                         <Text style={{ marginLeft: 5 }}>{item.name}</Text>
