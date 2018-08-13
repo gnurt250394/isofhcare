@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, TextInput, TouchableWithoutFeedback, Text, FlatList, TouchableOpacity, Dimensions, StyleSheet } from 'react-native';
+import { View, TextInput, TouchableWithoutFeedback, Text, FlatList, TouchableOpacity, Dimensions, StyleSheet, Platform } from 'react-native';
 import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import drugProvider from '@data-access/drug-provider';
@@ -155,7 +155,7 @@ class SearchDrugScreen extends Component {
                         }
                         <MapView
                             provider={PROVIDER_GOOGLE}
-                            style={{ width: '100%', height: this.state.height - 120 }}
+                            style={{ width: '100%', height: this.state.height - Platform.OS == 'ios' ? 100 : 120 }}
                             showsUserLocation={true}
                             region={this.state.region}
                         >
@@ -179,7 +179,7 @@ class SearchDrugScreen extends Component {
                         allowDragging={false}
                         headerLayoutHeight={205}
                         headerLayout={() =>
-                            <View style={{ marginTop: 52, alignItems: 'center', width }}>
+                            <View style={{ marginTop: Platform.OS == 'ios' ? 72 : 52, alignItems: 'center', width }}>
                                 <ScaledImage source={require("@images/facility/icdrag.png")} height={29} />
                                 <FlatList
                                     onRefresh={this.onRefresh.bind(this)}
