@@ -140,35 +140,24 @@ class SearchDrugScreen extends Component {
                 <View style={styles.container}>
 
                     <View style={{ width: '100%', height: this.state.height - 120, position: 'relative' }}>
-                        {
-                            this.state.showSearchPanel ?
-                                <View style={{ padding: 14, position: 'absolute', top: 0, left: 0, right: 0 }}>
-                                    <SearchPanel searchTypeId={realmModel.DRUG_HISTORY}
-                                        resultPage="searchDrugResult"
-                                        ref={ref => this.searchPanel = ref}
-                                        onFocus={this.searchFocus.bind(this)}
-                                        placeholder="Nhập địa điểm muốn tìm kiếm"
-                                        onSearch={this.onSearch.bind(this)}
-                                        renderItem={this.renderSearchItem.bind(this)}
-                                        renderFooter={this.renderFooter.bind(this)} />
-                                </View> : null
-                        }
+
                         <MapView
+                            zIndex={1}
                             provider={PROVIDER_GOOGLE}
-                            style={{ width: '100%', height: this.state.height - Platform.OS == 'ios' ? 100 : 120 }}
+                            style={{ width: '100%', height: this.state.height - (Platform.OS == 'ios' ? 100 : 120) }}
                             showsUserLocation={true}
                             region={this.state.region}
                         >
                             {/* <Marker
-          coordinate={
-            {
-              latitude: 20.9899002,GMAI
-              latitude: 20.9899002,GMAI
-              longitude: 105.7896239
-            }
-          }
-          image={require('@images/ic_signout.png')}
-        /> */}
+                            coordinate={
+                                {
+                                latitude: 20.9899002,GMAI
+                                latitude: 20.9899002,GMAI
+                                longitude: 105.7896239
+                                }
+                            }
+                            image={require('@images/ic_signout.png')}
+                            /> */}
                         </MapView>
                     </View>
 
@@ -214,25 +203,23 @@ class SearchDrugScreen extends Component {
                     />
                 </View>
 
-                {/* <View style={{ flex: 1, padding: 14 }}>
-                    <View style={{ flex: 1 }}>
-                        {
-                            this.state.keyword ?
-                                <Text style={{ marginTop: 13, fontSize: 14 }}>Kết quả tìm kiếm "<Text style={{ fontWeight: 'bold' }}>{this.state.keyword.length > 50 ? this.state.keyword.substring(0, 49) + "..." : this.state.keyword}</Text>"</Text> :
-                                null
-                        }
-                        
-                    </View>
-                </View>
                 {
-                    this.state.loadMore ?
-                        <View style={{ alignItems: 'center', padding: 10 }}>
-                            <ScaledImage width={20} source={require("@images/loading2.gif")} />
+                    this.state.showSearchPanel ?
+                        <View zIndex={3} style={{ padding: 14, position: 'absolute', top: 0, left: 0, right: 0 }}>
+                            <SearchPanel searchTypeId={realmModel.DRUG_HISTORY}
+                                resultPage="searchDrugResult"
+                                ref={ref => this.searchPanel = ref}
+                                onFocus={this.searchFocus.bind(this)}
+                                placeholder="Nhập địa điểm muốn tìm kiếm"
+                                onSearch={this.onSearch.bind(this)}
+                                renderItem={this.renderSearchItem.bind(this)}
+                                renderFooter={this.renderFooter.bind(this)} />
                         </View> : null
-                } */}
+                }
+
                 {
                     this.state.showOverlay ?
-                        <TouchableWithoutFeedback onPress={this.overlayClick.bind(this)} style={{}}><View style={{ position: 'absolute', top: 0, right: 0, left: 0, bottom: 0, backgroundColor: '#37a3ff59' }} /></TouchableWithoutFeedback> : null
+                        <TouchableWithoutFeedback zIndex={2} onPress={this.overlayClick.bind(this)} style={{}}><View style={{ position: 'absolute', top: 0, right: 0, left: 0, bottom: 0, backgroundColor: '#37a3ff59' }} /></TouchableWithoutFeedback> : null
                 }
             </ActivityPanel >
         );
