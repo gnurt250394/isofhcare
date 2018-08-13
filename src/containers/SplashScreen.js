@@ -7,7 +7,8 @@ import redux from '@redux-store';
 import ActivityPanel from '@components/ActivityPanel';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import { StackActions, NavigationActions } from 'react-navigation';
-
+import * as Animatable from 'react-native-animatable';
+MyScaleImage = Animatable.createAnimatableComponent(ScaleImage);
 const resetAction = (route) => {
 	return StackActions.reset({
 		index: 0,
@@ -23,10 +24,12 @@ class SplashScreen extends Component {
 	componentDidMount() {
 		console.disableYellowBox = true;
 		// this.Actions.navigate('home')
-		this.Actions.dispatch(StackActions.reset({
-			index: 0,
-			actions: [NavigationActions.navigate({ routeName: "home" })],
-		}));
+		setTimeout(() => {
+			this.Actions.dispatch(StackActions.reset({
+				index: 0,
+				actions: [NavigationActions.navigate({ routeName: "home" })],
+			}));
+		}, 3000);
 		// userProvider.getAccountStorage((s) => {
 		// 	setTimeout(() => {
 		// 		if (s) {
@@ -45,9 +48,8 @@ class SplashScreen extends Component {
 		return (
 			<ActivityPanel style={{ flex: 1 }} touchToDismiss={true} hideActionbar={true} hideStatusbar={true} showFullScreen={true}>
 				<View style={{ position: 'relative', flex: 1 }}>
-					<Image source={require('@images/bg_login.png')} style={styles.picture} />
 					<View style={[{ justifyContent: 'center', alignItems: 'center', flex: 1 }]}>
-						<ScaleImage source={require("@images/logo.png")} width={120} />
+						<MyScaleImage animation="rubberBand" delay={500} duration={3000} source={require("@images/logo.png")} width={120} />
 					</View>
 
 					<View style={{
