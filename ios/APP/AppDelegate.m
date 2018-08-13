@@ -20,7 +20,7 @@
 {
   //firebase
   [FIRApp configure];
-  [GMSServices provideAPIKey:@"AIzaSyCJjIXMyqNkISgJVCIgN8ZbgO0AcaQZbDo"];
+  [GMSServices provideAPIKey:@"AIzaSyA6V1lvfuFcHHTxNi2B01G-TmZY5bnHzs8"];
   [RNFirebaseNotifications configure];
   //login fb
   [[FBSDKApplicationDelegate sharedInstance] application:application
