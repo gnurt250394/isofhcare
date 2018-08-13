@@ -68,15 +68,18 @@ class TabSearch extends Component {
     render() {
         const itemWidth = this.getItemWidth();
         return (
-            <ActivityPanel style={{ flex: 1 }} title="TRA CỨU" icBack={require("@images/icmenu.png")} backButtonClick={() => { this.showDrawer() }} >
-                <ScrollView style={{ paddingLeft: 20, paddingRight: 20, paddingTop: 10 }}>
+            <ActivityPanel style={{ flex: 1 }} title="TRA CỨU" icBack={require("@images/icmenu.png")} backButtonClick={() => { this.showDrawer() }} showFullScreen={true} >
+                <ScrollView style={{
+                    paddingLeft: 20, paddingRight: 20, paddingTop: 10,
+                    width: DEVICE_WIDTH
+                }}>
                     <Text style={{ color: "rgb(155,155,155)", fontSize: 14, textAlign: 'center', lineHeight: 20 }}>ISofH Care có hệ thống dữ liệu lớn từ các chuyên gia hàng đầu và thực sự đáng tin cậy cho cộng đồng.</Text>
                     <View style={{
                         marginTop: 20,
                         flexDirection: 'row',
                         flexWrap: 'wrap',
                         justifyContent: 'center',
-                        alignItems: 'flex-start',
+                        alignItems: 'flex-start'
                     }}>
                         {
                             this.state.features.map((item, position) => {
@@ -89,7 +92,7 @@ class TabSearch extends Component {
                         }
                     </View>
                 </ScrollView>
-            </ActivityPanel >
+            </ ActivityPanel >
         );
     }
 }

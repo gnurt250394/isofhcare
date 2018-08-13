@@ -19,7 +19,6 @@ let defaultScalingDrawerConfig = {
 class SplashScreen extends Component {
 	constructor(props) {
 		super(props);
-		this.setState({ open: false });
 	}
 	componentWillMount() {
 		console.disableYellowBox = true;
@@ -50,12 +49,13 @@ class SplashScreen extends Component {
 				ref={ref => this._drawer = ref}
 				content={<DrawerContent navigation={this.props.navigation} drawer={this._drawer} />}
 				{...defaultScalingDrawerConfig}
-				onClose={() => this.setState({ open: false })}
-				onOpen={() => this.setState({ open: true })}
 			>
-				<IndicatorViewPager ref={(viewPager) => { this.viewPager = viewPager }} style={{ flex: 1 }}>
+				<IndicatorViewPager ref={(viewPager) => { this.viewPager = viewPager }} style={{ flex: 1, overflow: 'hidden' }}>
+					<TabSearch navigation={this.props.navigation} style={{ flex: 1 }} drawer={this._drawer} />
 					<TabSearch navigation={this.props.navigation} style={{ flex: 1 }} drawer={this._drawer} />
 				</IndicatorViewPager>
+
+
 			</ScalingDrawer>);
 	}
 }

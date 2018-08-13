@@ -96,7 +96,7 @@ class SearchPanel extends Component {
     }
     render() {
         return (
-            <View>
+            <View zIndex={1001}>
                 <View style={{ borderColor: 'rgba(151,151,151,0.55)', borderRadius: 5, borderWidth: 1.5, zIndex: 1001, flexDirection: 'row', alignItems: 'center', paddingLeft: 10, margin: 3, backgroundColor: '#FFF' }}>
                     <TextInput numberOfLines={1} place onFocus={this.onFocus.bind(this)} ref={ref => this.searchInput = ref} placeholder={this.props.placeholder ? this.props.placeholder : "Tìm kiếm"} style={{ flexDirection: 'row', flex: 1, padding: 8, fontSize: 14, overflow: 'hidden', flexWrap: 'nowrap' }} returnKeyType="search" underlineColorAndroid="transparent" onSubmitEditing={this.search.bind(this)} onChangeText={this.onChangeText.bind(this)} value={this.state.keyword} />
                     {

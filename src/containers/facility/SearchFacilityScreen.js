@@ -102,7 +102,7 @@ class SearchFacilityScreen extends Component {
 
     render() {
         return (
-            <ActivityPanel style={{ flex: 1 }} title="TÌM KIẾM CSYT">
+            <ActivityPanel style={{ flex: 1 }} title="TÌM KIẾM CSYT" showFullScreen={true}>
                 <View style={{ flex: 1, padding: 14 }}>
                     <SearchPanel searchTypeId={realmModel.FACILITY_HISTORY} resultPage="searchFacilityResult" ref={ref => this.searchPanel = ref} onFocus={this.searchFocus.bind(this)} placeholder="Nhập tên chuyên khoa/ CSYT hoặc nhà thuốc" onSearch={this.onSearch.bind(this)} renderItem={this.renderSearchItem.bind(this)} renderFooter={this.renderFooter.bind(this)} />
                     <ScrollView>

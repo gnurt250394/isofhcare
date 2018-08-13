@@ -123,7 +123,7 @@ class DrugDetailScreen extends Component {
     render() {
         const drug = this.props.navigation.getParam("drug", null);
         return (
-            <ActivityPanel style={{ flex: 1 }} title="CHI TIẾT THUỐC">
+            <ActivityPanel style={{ flex: 1 }} title="CHI TIẾT THUỐC" showFullScreen={true}>
                 <ScrollView>
                     {
                         drug.images && drug.images.length > 0 ?

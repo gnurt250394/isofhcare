@@ -82,7 +82,7 @@ class SearchDrugScreen extends Component {
 
     render() {
         return (
-            <ActivityPanel style={{ flex: 1 }} title={this.state.keyword ? "KẾT QUẢ TÌM KIẾM CSYT" : "CSYT HÀNG ĐẦU"}>
+            <ActivityPanel style={{ flex: 1 }} title={this.state.keyword ? "KẾT QUẢ TÌM KIẾM CSYT" : "CSYT HÀNG ĐẦU"} showFullScreen={true}>
                 <View style={{ flex: 1, padding: 14 }}>
                     <View style={{ flex: 1 }}>
                         {

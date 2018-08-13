@@ -130,13 +130,12 @@ class SearchDrugScreen extends Component {
         }
         this.setState({ showOverlay: false });
     }
-    onExpand(isExpand,sliderPosition)
-    {
+    onExpand(isExpand, sliderPosition) {
         this.setState({ showSearchPanel: !isExpand })
     }
     render() {
         return (
-            <ActivityPanel ref={(ref) => this.activity = ref} style={{ flex: 1 }} title="CHỌN ĐỊA ĐIỂM TÌM KIẾM">
+            <ActivityPanel ref={(ref) => this.activity = ref} style={{ flex: 1 }} title="CHỌN ĐỊA ĐIỂM TÌM KIẾM" showFullScreen={true}>
 
                 <View style={styles.container}>
 
