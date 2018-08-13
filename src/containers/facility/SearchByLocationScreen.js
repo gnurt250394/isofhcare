@@ -4,7 +4,7 @@ import { View, TextInput, TouchableWithoutFeedback, Text, FlatList, TouchableOpa
 import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import drugProvider from '@data-access/drug-provider';
-import ItemDrug from '@components/drug/ItemDrug';
+import ItemFacility2 from '@components/facility/ItemFacility2';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 const { width, height } = Dimensions.get('window');
 import SearchPanel from '@components/SearchPanel';
@@ -180,13 +180,13 @@ class SearchDrugScreen extends Component {
                         headerLayoutHeight={205}
                         headerLayout={() =>
                             <View style={{ marginTop: 52, alignItems: 'center', width }}>
-                                <ScaledImage source={require("@images/facility/icdrag.png")} height={30} />
+                                <ScaledImage source={require("@images/facility/icdrag.png")} height={29} />
                                 <FlatList
                                     onRefresh={this.onRefresh.bind(this)}
                                     refreshing={this.state.refreshing}
                                     onEndReached={this.onLoadMore.bind(this)}
                                     onEndReachedThreshold={1}
-                                    style={{ width, height: height - 110, backgroundColor: '#FFF', marginTop: 5 }}
+                                    style={{ width, height: height - 110, backgroundColor: '#FFF' }}
                                     keyExtractor={(item, index) => index.toString()}
                                     extraData={this.state}
                                     data={this.state.data}
@@ -201,7 +201,7 @@ class SearchDrugScreen extends Component {
                                     }
                                     ListFooterComponent={() => <View style={{ height: 50 }}></View>}
                                     renderItem={({ item, index }) =>
-                                        <ItemDrug drug={item} />
+                                        <ItemFacility2 />
                                     }
                                 />
                             </View>
