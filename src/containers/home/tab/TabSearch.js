@@ -68,8 +68,9 @@ class TabSearch extends Component {
     render() {
         const itemWidth = this.getItemWidth();
         return (
-            <ActivityPanel style={{ flex: 1 }} title="TRA CỨU" icBack={require("@images/icmenu.png")} backButtonClick={() => { this.showDrawer() }} showFullScreen={true} >
+            <ActivityPanel style={[{ flex: 1 }, this.props.style]} title="TRA CỨU" icBack={require("@images/icmenu.png")} backButtonClick={() => { this.showDrawer() }} showFullScreen={true} >
                 <ScrollView style={{
+                    flex: 1,
                     paddingLeft: 20, paddingRight: 20, paddingTop: 10,
                     width: DEVICE_WIDTH
                 }}>
