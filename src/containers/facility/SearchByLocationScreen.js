@@ -10,7 +10,7 @@ const { width, height } = Dimensions.get('window');
 import SearchPanel from '@components/SearchPanel';
 import realmModel from '@models/realm-models';
 
-import SlidingPanel from 'react-native-sliding-up-down-panels';
+import SlidingPanel from 'mainam-react-native-sliding-up-down';
 class SearchDrugScreen extends Component {
     constructor(props) {
         super(props)
@@ -130,6 +130,10 @@ class SearchDrugScreen extends Component {
         }
         this.setState({ showOverlay: false });
     }
+    onExpand(isExpand,sliderPosition)
+    {
+        this.setState({ showSearchPanel: !isExpand })
+    }
     render() {
         return (
             <ActivityPanel ref={(ref) => this.activity = ref} style={{ flex: 1 }} title="CHỌN ĐỊA ĐIỂM TÌM KIẾM">
@@ -170,8 +174,7 @@ class SearchDrugScreen extends Component {
                     </View>
 
                     <SlidingPanel
-                        onRequestStart={() => { this.setState({ showSearchPanel: false }) }}
-                        onRequestClose={() => { this.setState({ showSearchPanel: true }) }}
+                        onExpand={this.onExpand.bind(this)}
                         visible={true}
                         AnimationSpeed={400}
                         allowDragging={false}
