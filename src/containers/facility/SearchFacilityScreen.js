@@ -104,7 +104,7 @@ class SearchFacilityScreen extends Component {
         return (
             <ActivityPanel style={{ flex: 1 }} title="TÌM KIẾM CSYT" showFullScreen={true}>
                 <View style={{ flex: 1, padding: 14 }}>
-                    <SearchPanel searchTypeId={realmModel.FACILITY_HISTORY} resultPage="searchFacilityResult" ref={ref => this.searchPanel = ref} onFocus={this.searchFocus.bind(this)} placeholder="Nhập tên chuyên khoa/ CSYT hoặc nhà thuốc" onSearch={this.onSearch.bind(this)} renderItem={this.renderSearchItem.bind(this)} renderFooter={this.renderFooter.bind(this)} />
+                    <SearchPanel zIndex={3} searchTypeId={realmModel.FACILITY_HISTORY} resultPage="searchFacilityResult" ref={ref => this.searchPanel = ref} onFocus={this.searchFocus.bind(this)} placeholder="Nhập tên chuyên khoa/ CSYT hoặc nhà thuốc" onSearch={this.onSearch.bind(this)} renderItem={this.renderSearchItem.bind(this)} renderFooter={this.renderFooter.bind(this)} />
                     <ScrollView>
                         <TouchableOpacity style={{ position: 'relative', marginTop: 20 }} onPress={() => { this.props.navigation.navigate("searchFacilityByLocation") }}>
                             <ScaledImage source={require("@images/facility/vitri.png")} width={Dimensions.get('window').width - 28} height={115} style={{ zIndex: 1000 }} />
@@ -122,11 +122,11 @@ class SearchFacilityScreen extends Component {
                             <TopFacility />
                         </View>
                     </ScrollView>
+                    {
+                        this.state.showOverlay ?
+                            <TouchableWithoutFeedback onPress={this.overlayClick.bind(this)} style={{}}><View style={{ position: 'absolute', top: 0, right: 0, left: 0, bottom: 0, backgroundColor: '#37a3ff59' }} /></TouchableWithoutFeedback> : null
+                    }
                 </View>
-                {
-                    this.state.showOverlay ?
-                        <TouchableWithoutFeedback onPress={this.overlayClick.bind(this)} style={{}}><View style={{ position: 'absolute', top: 0, right: 0, left: 0, bottom: 0, backgroundColor: '#37a3ff59' }} /></TouchableWithoutFeedback> : null
-                }
             </ActivityPanel >
         );
     }

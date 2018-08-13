@@ -100,34 +100,32 @@ class SearchDrugScreen extends Component {
 
     render() {
         return (
-            <ActivityPanel style={{ flex: 1 }} title="TRA CỨU THUỐC">
-                <View style={{ flex: 1, padding: 14 }}>
-                    <SearchPanel searchTypeId={realmModel.DRUG_HISTORY} resultPage="searchDrugResult" ref={ref => this.searchPanel = ref} onFocus={this.searchFocus.bind(this)} placeholder="Tìm kiếm" onSearch={this.onSearch.bind(this)} renderItem={this.renderSearchItem.bind(this)} renderFooter={this.renderFooter.bind(this)} />
-                    <View style={{ flex: 1 }}>
-                        <Text style={{ marginTop: 23, fontSize: 16, fontWeight: 'bold' }}>Thuốc được tra cứu nhiều</Text>
-                        <FlatList
-                            onRefresh={this.onRefreshListMost.bind(this)}
-                            refreshing={this.state.refreshing_list_most}
-                            style={{ flex: 1, marginTop: 10 }}
-                            keyExtractor={(item, index) => index.toString()}
-                            extraData={this.state}
-                            data={this.state.list_most}
-                            ListHeaderComponent={() => !this.state.refreshing_list_most && (!this.state.list_most || this.state.list_most.length == 0) ?
-                                <View style={{ alignItems: 'center', marginTop: 50 }}>
-                                    <Text style={{ fontStyle: 'italic' }}>Hiện tại chưa có thông tin</Text>
-                                </View> : null
-                            }
-                            ListFooterComponent={() => <View style={{ height: 100 }}></View>}
-                            renderItem={({ item, index }) =>
-                                <ItemDrug drug={item} />
-                            }
-                        />
-                    </View>
+            <ActivityPanel style={{ flex: 1 }} title="TRA CỨU THUỐC" showFullScreen={true}>
+                <View style={{ flex: 1, padding: 14, position: 'relative' }}>
+                    <SearchPanel zIndex={3} searchTypeId={realmModel.DRUG_HISTORY} resultPage="searchDrugResult" ref={ref => this.searchPanel = ref} onFocus={this.searchFocus.bind(this)} placeholder="Tìm kiếm" onSearch={this.onSearch.bind(this)} renderItem={this.renderSearchItem.bind(this)} renderFooter={this.renderFooter.bind(this)} />
+                    <Text style={{ marginTop: 23, fontSize: 16, fontWeight: 'bold' }}>Thuốc được tra cứu nhiều</Text>
+                    <FlatList
+                        onRefresh={this.onRefreshListMost.bind(this)}
+                        refreshing={this.state.refreshing_list_most}
+                        style={{ flex: 1, marginTop: 10 }}
+                        keyExtractor={(item, index) => index.toString()}
+                        extraData={this.state}
+                        data={this.state.list_most}
+                        ListHeaderComponent={() => !this.state.refreshing_list_most && (!this.state.list_most || this.state.list_most.length == 0) ?
+                            <View style={{ alignItems: 'center', marginTop: 50 }}>
+                                <Text style={{ fontStyle: 'italic' }}>Hiện tại chưa có thông tin</Text>
+                            </View> : null
+                        }
+                        ListFooterComponent={() => <View style={{ height: 100 }}></View>}
+                        renderItem={({ item, index }) =>
+                            <ItemDrug drug={item} />
+                        }
+                    />
+                    {
+                        this.state.showOverlay ?
+                            <TouchableWithoutFeedback onPress={this.overlayClick.bind(this)} style={{}}><View style={{ position: 'absolute', top: 0, right: 0, left: 0, bottom: 0, backgroundColor: '#37a3ff59'}} /></TouchableWithoutFeedback> : null
+                    }
                 </View>
-                {
-                    this.state.showOverlay ?
-                        <TouchableWithoutFeedback onPress={this.overlayClick.bind(this)} style={{}}><View style={{ position: 'absolute', top: 0, right: 0, left: 0, bottom: 0, backgroundColor: '#37a3ff59' }} /></TouchableWithoutFeedback> : null
-                }
             </ActivityPanel >
         );
     }
