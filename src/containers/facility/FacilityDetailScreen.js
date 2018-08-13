@@ -34,59 +34,7 @@ class SearchDrugScreen extends Component {
             showSearchPanel: true
         }
     }
-    componentDidMount() {
-        this.onRefresh();
-    }
 
-    onRefresh() {
-        if (!this.state.loading)
-            this.setState({ refreshing: true, page: 1, finish: false, loading: true }, () => {
-                this.onLoad();
-            });
-    }
-    onLoad() {
-        const { page, size } = this.state;
-        this.setState({
-            loading: true,
-            refreshing: page == 1,
-            loadMore: page != 1
-        })
-        drugProvider.search(this.state.keyword, page, size, (s, e) => {
-            this.setState({
-                loading: false,
-                refreshing: false,
-                loadMore: false
-            });
-            if (s) {
-                switch (s.code) {
-                    case 0:
-                        var list = [];
-                        var finish = false;
-                        if (s.data.data.length == 0) {
-                            finish = true;
-                        }
-                        if (page != 1) {
-                            list = this.state.data;
-                            list.push.apply(list, s.data.data);
-                        }
-                        else {
-                            list = s.data.data;
-                        }
-                        this.setState({
-                            data: [...list],
-                            finish: finish
-                        });
-                        break;
-                }
-            }
-        });
-    }
-    onLoadMore() {
-        if (!this.state.finish && !this.state.loading)
-            this.setState({ loadMore: true, refreshing: false, loading: true, page: this.state.page + 1 }, () => {
-                this.onLoad(this.state.page)
-            });
-    }
     onSearchItemClick(item) {
         this.props.navigation.navigate("drugDetailScreen", { drug: item });
         const { DRUG_HISTORY } = realmModel;
@@ -181,9 +129,6 @@ class SearchDrugScreen extends Component {
                                     <View zIndex={10} style={{ marginTop: Platform.OS == 'ios' ? 72 : 52, alignItems: 'center', width }}>
                                         <ScaledImage source={require("@images/facility/icdrag.png")} height={29} zIndex={5} />
                                         <FlatList
-                                            onRefresh={this.onRefresh.bind(this)}
-                                            refreshing={this.state.refreshing}
-                                            onEndReached={this.onLoadMore.bind(this)}
                                             onEndReachedThreshold={1}
                                             style={{ width, height: height - 110, backgroundColor: '#FFF' }}
                                             keyExtractor={(item, index) => index.toString()}
@@ -192,15 +137,15 @@ class SearchDrugScreen extends Component {
                                             ListHeaderComponent={() => !this.state.refreshing && (!this.state.data || this.state.data.length == 0) ?
                                                 <View style={{ alignItems: 'center', marginTop: 50 }}>
                                                     <ScaledImage source={require("@images/search/noresult.png")} width={136} />
-                                                    <TouchableOpacity>
-                                                        <Text style={{ marginTop: 20, padding: 20, textAlign: 'center', lineHeight: 30 }}>Chúng tôi không tìm thấy kết quả nào phù hợp</Text>
+                                                    <TouchableOpacity onPress={() => { this.setState({ keyword: "" }, this.onRefresh) }}>
+                                                        <Text style={{ marginTop: 20, padding: 20, textAlign: 'center', lineHeight: 30 }}>Chúng tôi không tìm thấy kết quả nào phù hợp, bạn có thể xem thêm <Text style={{ color: "#000", fontWeight: 'bold' }}>CSYT Hàng đầu</Text></Text>
                                                     </TouchableOpacity>
 
                                                 </View> : null
                                             }
                                             ListFooterComponent={() => <View style={{ height: 50 }}></View>}
                                             renderItem={({ item, index }) =>
-                                                <ItemFacility2 facility={item} />
+                                                <ItemFacility2 />
                                             }
                                         />
                                     </View>

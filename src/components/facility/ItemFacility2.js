@@ -25,7 +25,9 @@ class ItemFacility extends Component {
                 borderBottomWidth: 1,
                 flexDirection: 'row',
                 padding: 10
-            }, this.props.style]} >
+            }, this.props.style]}
+                onPress={() => { this.props.navigation.navigate("facilityDetailScreen", { facility: this.props.facility }) }}
+            >
                 <View style={{ flex: 1, marginRight: 10 }}>
                     <Text style={{ fontWeight: 'bold' }} numberOfLines={1} ellipsizeMode='tail'>Nhà thuốc Minh Đường</Text>
                     <Rating
@@ -54,7 +56,7 @@ class ItemFacility extends Component {
 
 function mapStateToProps(state) {
     return {
-        userApp: state.userApp
+        navigation: state.navigation
     };
 }
 export default connect(mapStateToProps)(ItemFacility);

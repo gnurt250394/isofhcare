@@ -9,6 +9,7 @@ import SearchFacilityResultScreen from '@containers/facility/SearchFacilityResul
 import SearchByLocationScreen from '@containers/facility/SearchByLocationScreen';
 import SearchDrugResultScreen from '@containers/drug/SearchDrugResultScreen';
 import DrugDetailScreen from '@containers/drug/DrugDetailScreen';
+import FacilityDetailScreen from '@containers/facility/FacilityDetailScreen';
 
 
 const RootNavigator = StackNavigator({
@@ -21,6 +22,7 @@ const RootNavigator = StackNavigator({
     searchDrug: { screen: SearchDrugScreen },
     searchDrugResult: { screen: SearchDrugResultScreen },
     drugDetailScreen: { screen: DrugDetailScreen },
+    facilityDetailScreen: { screen: FacilityDetailScreen },
 }, {
         headerMode: 'none',
         header: null,
