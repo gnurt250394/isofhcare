@@ -140,7 +140,7 @@ class SearchDrugScreen extends Component {
                     <View style={styles.container}>
                         <MapView
                             provider={PROVIDER_GOOGLE}
-                            style={{ width: '100%', height: this.state.height - (Platform.OS == 'ios' ? 100 : 120), zIndex: 1 }}
+                            style={{ width: '100%', height: this.state.height - (!this.state.showOverlay ? (Platform.OS == 'ios' ? 100 : 120) : 0) }}
                             showsUserLocation={true}
                             region={this.state.region}
                         >
@@ -156,51 +156,70 @@ class SearchDrugScreen extends Component {
                             /> */}
                         </MapView>
 
-                        <SlidingPanel
-                            zIndex={2}
-                            onExpand={this.onExpand.bind(this)}
-                            visible={true}
-                            AnimationSpeed={400}
-                            allowDragging={false}
-                            headerLayoutHeight={205}
-                            headerLayout={() =>
-                                <View zIndex={10} style={{ marginTop: Platform.OS == 'ios' ? 72 : 52, alignItems: 'center', width }}>
-                                    <ScaledImage source={require("@images/facility/icdrag.png")} height={29} zIndex={5} />
-                                    <FlatList
-                                        onRefresh={this.onRefresh.bind(this)}
-                                        refreshing={this.state.refreshing}
-                                        onEndReached={this.onLoadMore.bind(this)}
-                                        onEndReachedThreshold={1}
-                                        style={{ width, height: height - 110, backgroundColor: '#FFF' }}
-                                        keyExtractor={(item, index) => index.toString()}
-                                        extraData={this.state}
-                                        data={this.state.data}
-                                        ListHeaderComponent={() => !this.state.refreshing && (!this.state.data || this.state.data.length == 0) ?
-                                            <View style={{ alignItems: 'center', marginTop: 50 }}>
-                                                <ScaledImage source={require("@images/search/noresult.png")} width={136} />
-                                                <TouchableOpacity onPress={() => { this.setState({ keyword: "" }, this.onRefresh) }}>
-                                                    <Text style={{ marginTop: 20, padding: 20, textAlign: 'center', lineHeight: 30 }}>Chúng tôi không tìm thấy kết quả nào phù hợp, bạn có thể xem thêm <Text style={{ color: "#000", fontWeight: 'bold' }}>CSYT Hàng đầu</Text></Text>
-                                                </TouchableOpacity>
+                        {
+                            this.state.showSearchPanel ?
+                                <View zIndex={3} style={{ padding: 14, position: 'absolute', top: 0, left: 0, right: 0 }}>
+                                    <SearchPanel searchTypeId={realmModel.DRUG_HISTORY}
+                                        resultPage="searchDrugResult"
+                                        ref={ref => this.searchPanel = ref}
+                                        onFocus={this.searchFocus.bind(this)}
+                                        placeholder="Nhập địa điểm muốn tìm kiếm"
+                                        onSearch={this.onSearch.bind(this)}
+                                        renderItem={this.renderSearchItem.bind(this)}
+                                        renderFooter={this.renderFooter.bind(this)} />
+                                </View> : null
+                        }
+                        {
+                            !this.state.showOverlay ? <SlidingPanel
+                                zIndex={2}
+                                onExpand={this.onExpand.bind(this)}
+                                visible={true}
+                                AnimationSpeed={400}
+                                allowDragging={false}
+                                headerLayoutHeight={205}
+                                headerLayout={() =>
+                                    <View zIndex={10} style={{ marginTop: Platform.OS == 'ios' ? 72 : 52, alignItems: 'center', width }}>
+                                        <ScaledImage source={require("@images/facility/icdrag.png")} height={29} zIndex={5} />
+                                        <FlatList
+                                            onRefresh={this.onRefresh.bind(this)}
+                                            refreshing={this.state.refreshing}
+                                            onEndReached={this.onLoadMore.bind(this)}
+                                            onEndReachedThreshold={1}
+                                            style={{ width, height: height - 110, backgroundColor: '#FFF' }}
+                                            keyExtractor={(item, index) => index.toString()}
+                                            extraData={this.state}
+                                            data={this.state.data}
+                                            ListHeaderComponent={() => !this.state.refreshing && (!this.state.data || this.state.data.length == 0) ?
+                                                <View style={{ alignItems: 'center', marginTop: 50 }}>
+                                                    <ScaledImage source={require("@images/search/noresult.png")} width={136} />
+                                                    <TouchableOpacity onPress={() => { this.setState({ keyword: "" }, this.onRefresh) }}>
+                                                        <Text style={{ marginTop: 20, padding: 20, textAlign: 'center', lineHeight: 30 }}>Chúng tôi không tìm thấy kết quả nào phù hợp, bạn có thể xem thêm <Text style={{ color: "#000", fontWeight: 'bold' }}>CSYT Hàng đầu</Text></Text>
+                                                    </TouchableOpacity>
 
-                                            </View> : null
-                                        }
-                                        ListFooterComponent={() => <View style={{ height: 50 }}></View>}
-                                        renderItem={({ item, index }) =>
-                                            <ItemFacility2 />
-                                        }
-                                    />
-                                </View>
-                            }
-                            slidingPanelLayout={() =>
-                                <View>
+                                                </View> : null
+                                            }
+                                            ListFooterComponent={() => <View style={{ height: 50 }}></View>}
+                                            renderItem={({ item, index }) =>
+                                                <ItemFacility2 />
+                                            }
+                                        />
+                                    </View>
+                                }
+                                slidingPanelLayout={() =>
+                                    <View>
 
-                                </View>
-                            }
-                        />
+                                    </View>
+                                }
+                            /> : null
+                        }
                     </View>
                     {
+                        this.state.showOverlay ?
+                            <TouchableWithoutFeedback onPress={this.overlayClick.bind(this)} style={{}}><View style={{ position: 'absolute', top: 0, right: 0, left: 0, bottom: 0, backgroundColor: '#37a3ff59' }} /></TouchableWithoutFeedback> : null
+                    }
+                    {
                         this.state.showSearchPanel ?
-                            <View zIndex={3} style={{ padding: 14, position: 'absolute', top: 0, left: 0, right: 0 }}>
+                            <View style={{ padding: 14, position: 'absolute', top: 0, left: 0, right: 0 }}>
                                 <SearchPanel searchTypeId={realmModel.DRUG_HISTORY}
                                     resultPage="searchDrugResult"
                                     ref={ref => this.searchPanel = ref}
@@ -210,10 +229,6 @@ class SearchDrugScreen extends Component {
                                     renderItem={this.renderSearchItem.bind(this)}
                                     renderFooter={this.renderFooter.bind(this)} />
                             </View> : null
-                    }
-                    {
-                        this.state.showOverlay ?
-                            <TouchableWithoutFeedback zIndex={2} onPress={this.overlayClick.bind(this)} style={{}}><View style={{ position: 'absolute', top: 0, right: 0, left: 0, bottom: 0, backgroundColor: '#37a3ff59' }} /></TouchableWithoutFeedback> : null
                     }
                 </View>
             </ActivityPanel >
