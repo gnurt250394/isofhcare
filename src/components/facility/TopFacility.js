@@ -26,12 +26,12 @@ class TopSearch extends Component {
             return (<View style={{ flex: 1 }}>
                 <View style={{ flexDirection: 'row', marginTop: 23 }}>
                     <Text style={{ flex: 1, fontSize: 16, fontWeight: 'bold', paddingRight: 10 }} numberOfLines={1} ellipsizeMode='tail'>CSYT hàng đầu</Text>
-                    <TouchableOpacity><Text style={{ fontSize: 14, color: 'rgb(74,144,226)', marginRight: 3, marginTop: 2 }}>Xem tất cả</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={() => { this.props.navigation.navigate("searchFacilityResult", { keyword: "" }) }}><Text style={{ fontSize: 14, color: 'rgb(74,144,226)', marginRight: 3, marginTop: 2 }}>Xem tất cả</Text></TouchableOpacity>
                 </View>
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', marginTop: 14 }}>
                     {
                         this.state.data.map((item, index) => {
-                            return <ItemFacility key={index} facility={item}/>
+                            return <ItemFacility key={index} facility={item} />
                         })
                     }
                 </View>
@@ -42,7 +42,7 @@ class TopSearch extends Component {
 
 function mapStateToProps(state) {
     return {
-        userApp: state.userApp
+        navigation: state.navigation
     };
 }
 export default connect(mapStateToProps)(TopSearch);

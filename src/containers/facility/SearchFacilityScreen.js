@@ -3,9 +3,8 @@ import ActivityPanel from '@components/ActivityPanel';
 import { View, TextInput, TouchableWithoutFeedback, Text, FlatList, TouchableOpacity, Image, Dimensions, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
-import drugProvider from '@data-access/drug-provider';
+import facilityProvider from '@data-access/facility-provider';
 import SearchPanel from '@components/SearchPanel';
-import ItemDrug from '@components/drug/ItemDrug';
 import realmModel from '@models/realm-models';
 const Realm = require('realm');
 import historyProvider from '@data-access/history-provider';
@@ -22,38 +21,7 @@ class SearchFacilityScreen extends Component {
             refreshing_list_most: true
         }
     }
-    componentDidMount() {
-        this.onRefreshListMost();
-    }
 
-    onRefreshListMost() {
-        if (!this.state.loading_list_most)
-            this.setState({ refreshing_list_most: true, page_list_most: 1, loading_list_most: true }, () => {
-                this.onLoadListMost();
-            });
-    }
-    onLoadListMost() {
-        const { page_list_most, size_list_most } = this.state;
-        this.setState({
-            loading_list_most: true
-        })
-        drugProvider.search("", page_list_most, size_list_most, (s, e) => {
-            this.setState({
-                loading_list_most: false,
-                refreshing_list_most: false
-            });
-            if (s) {
-                switch (s.code) {
-                    case 0:
-                        var list = s.data.data;
-                        this.setState({
-                            list_most: [...list]
-                        });
-                        break;
-                }
-            }
-        });
-    }
     searchFocus() {
         this.setState({ showOverlay: true });
     }
@@ -66,7 +34,7 @@ class SearchFacilityScreen extends Component {
 
     onSearch(s) {
         return new Promise((resolve, reject) => {
-            drugProvider.search(s, 1, 5, (s, e) => {
+            facilityProvider.search(s, 1, 5, (s, e) => {
                 if (e)
                     reject(e);
                 else {
@@ -80,20 +48,20 @@ class SearchFacilityScreen extends Component {
         });
     }
     onSearchItemClick(item) {
-        this.props.navigation.navigate("drugDetailScreen", { drug: item });
-        const { DRUG_HISTORY } = realmModel;
-        historyProvider.addHistory("", DRUG_HISTORY, item.drug.name, item.drug.id, "");
+        this.props.navigation.navigate("facilityDetailScreen", { facility: item });
+        const { FACILITY_HISTORY } = realmModel;
+        historyProvider.addHistory("", FACILITY_HISTORY, item.facility.name, item.facility.id, "");
     }
     renderSearchItem(item, index, keyword) {
         return <TouchableOpacity style={{ padding: 5 }} onPress={this.onSearchItemClick.bind(this, item)}>
-            <Text style={{ paddingLeft: 10 }}>{item.drug.name}</Text>
+            <Text style={{ paddingLeft: 10 }}>{item.facility.name}</Text>
             <View style={{ height: 0.5, backgroundColor: '#00000040', marginTop: 12 }} />
         </TouchableOpacity>
     }
 
     renderFooter(keyword, data) {
         if (keyword)
-            return <TouchableOpacity style={{ padding: 5, paddingLeft: 15, flexDirection: 'row', alignItems: 'center', paddingTop: 10 }} onPress={() => this.props.navigation.navigate("searchDrugResult", { keyword })}>
+            return <TouchableOpacity style={{ padding: 5, paddingLeft: 15, flexDirection: 'row', alignItems: 'center', paddingTop: 10 }} onPress={() => this.props.navigation.navigate("searchFacilityResult", { keyword })}>
                 <ScaledImage source={require("@images/search/icsearch2.png")} width={15} />
                 <Text style={{ paddingLeft: 10, color: 'rgb(74,144,226)' }}>Xem tất cả kết quả tìm kiếm</Text>
             </TouchableOpacity>

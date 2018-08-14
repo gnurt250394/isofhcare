@@ -15,5 +15,12 @@ module.exports = {
             if (callback)
                 callback(s, e);
         });
+    },
+    search(name, page, size, callback) {
+        client.requestApi("get", constants.api.facility.search + "?sortType=2&page=" + page + "&size=" + size + "&name=" + name, {}, (s, e) => {
+            if (callback)
+                callback(s, e);
+        });
     }
+    
 }

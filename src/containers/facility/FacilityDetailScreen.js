@@ -201,21 +201,21 @@ class SearchDrugScreen extends Component {
                                                         }} />
                                                     }} />
                                             </View>
-                                            <Text style={{ fontSize: 12, marginTop: 14, marginBottom: 10 }} numberOfLines={2} ellipsizeMode='tail'>Xóm Hải Bình, Nga Hải, Nga Sơn, Thanh Hóa</Text>
+                                            <Text style={{ fontSize: 12, marginTop: 14, marginBottom: 10 }} numberOfLines={2} ellipsizeMode='tail'>{facility.facility.address}</Text>
 
                                             <PhotoGrid source={list_images} onPressImage={uri => { }} />
                                             {
                                                 facility.facility.website ?
                                                     <TouchableOpacity style={{ padding: 10, flexDirection: 'row' }} onPress={() => Linking.openURL(facility.facility.website)}>
                                                         <ScaledImage source={require("@images/icthongbao.png")} width={20} style={{ marginRight: 5 }} />
-                                                        <Text style={{ color: '(rgb,35,66,155)', fontWeight: 'bold' }}>{facility.facility.website}</Text>
+                                                        <Text style={{ color: 'rgb(74,74,74)' }}>{facility.facility.website}</Text>
                                                     </TouchableOpacity> : null
                                             }
                                             {
                                                 facility.facility.phone ?
                                                     <TouchableOpacity style={{ padding: 10, flexDirection: 'row' }} onPress={() => Linking.openURL("tel:" + facility.facility.phone)}>
                                                         <ScaledImage source={require("@images/icthongbao.png")} width={20} style={{ marginRight: 5 }} />
-                                                        <Text style={{ color: 'rgb(74,74,74)' }}>{facility.facility.phone}</Text>
+                                                        <Text style={{ color: '(rgb,35,66,155)', fontWeight: 'bold' }}>{facility.facility.phone}</Text>
                                                     </TouchableOpacity> : null
                                             }
                                             <Text style={{ fontSize: 16, marginTop: 15, textAlign: 'justify', lineHeight: 22, marginBottom: 20 }}>{facility.facility.introduction}</Text>

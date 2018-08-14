@@ -3,8 +3,8 @@ import ActivityPanel from '@components/ActivityPanel';
 import { View, TextInput, TouchableWithoutFeedback, Text, FlatList, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
-import drugProvider from '@data-access/drug-provider';
-import ItemDrug from '@components/drug/ItemDrug';
+import facilityProvider from '@data-access/facility-provider';
+import ItemFacility from '@components/facility/ItemFacility';
 
 class SearchDrugScreen extends Component {
     constructor(props) {
@@ -43,7 +43,7 @@ class SearchDrugScreen extends Component {
             refreshing: page == 1,
             loadMore: page != 1
         })
-        drugProvider.search(this.state.keyword, page, size, (s, e) => {
+        facilityProvider.search(this.state.keyword, page, size, (s, e) => {
             this.setState({
                 loading: false,
                 refreshing: false,
@@ -108,9 +108,9 @@ class SearchDrugScreen extends Component {
 
                                 </View> : null
                             }
-                            ListFooterComponent={() => <View style={{ height: 100 }}></View>}
+                            ListFooterComponent={() => <View style={{ height: 20 }}></View>}
                             renderItem={({ item, index }) =>
-                                <ItemDrug drug={item} />
+                                <ItemFacility facility={item} />
                             }
                         />
                     </View>
