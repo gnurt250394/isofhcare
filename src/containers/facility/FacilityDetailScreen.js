@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, TextInput, TouchableWithoutFeedback, Text, FlatList, TouchableOpacity, Dimensions, StyleSheet, Platform } from 'react-native';
+import { View, TextInput, TouchableWithoutFeedback, Text, FlatList, TouchableOpacity, Dimensions, StyleSheet, Platform, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import drugProvider from '@data-access/drug-provider';
@@ -9,8 +9,26 @@ import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 const { width, height } = Dimensions.get('window');
 import SearchPanel from '@components/SearchPanel';
 import realmModel from '@models/realm-models';
+import ImageProgress from 'mainam-react-native-image-progress';
+import Progress from 'react-native-progress/Pie';
+import { Rating } from 'react-native-ratings';
+import PhotoGrid from 'react-native-thumbnail-grid';
 
 import SlidingPanel from 'mainam-react-native-sliding-up-down';
+const images = [
+    'https://www.sapo.vn/blog/wp-content/uploads/2017/02/kinh-nghiem-va-dieu-kien-mo-quay-thuoc-tay-2.jpg',
+    'https://www.sapo.vn/blog/wp-content/uploads/2017/02/kinh-nghiem-va-dieu-kien-mo-quay-thuoc-tay-2.jpg',
+    'https://www.sapo.vn/blog/wp-content/uploads/2017/02/kinh-nghiem-va-dieu-kien-mo-quay-thuoc-tay-2.jpg',
+    'https://www.sapo.vn/blog/wp-content/uploads/2017/02/kinh-nghiem-va-dieu-kien-mo-quay-thuoc-tay-2.jpg',
+    'https://www.sapo.vn/blog/wp-content/uploads/2017/02/kinh-nghiem-va-dieu-kien-mo-quay-thuoc-tay-2.jpg',
+    'https://www.sapo.vn/blog/wp-content/uploads/2017/02/kinh-nghiem-va-dieu-kien-mo-quay-thuoc-tay-2.jpg',
+    'https://www.sapo.vn/blog/wp-content/uploads/2017/02/kinh-nghiem-va-dieu-kien-mo-quay-thuoc-tay-2.jpg',
+    'https://www.sapo.vn/blog/wp-content/uploads/2017/02/kinh-nghiem-va-dieu-kien-mo-quay-thuoc-tay-2.jpg',
+    'https://www.sapo.vn/blog/wp-content/uploads/2017/02/kinh-nghiem-va-dieu-kien-mo-quay-thuoc-tay-2.jpg',
+    'https://www.sapo.vn/blog/wp-content/uploads/2017/02/kinh-nghiem-va-dieu-kien-mo-quay-thuoc-tay-2.jpg',
+    'https://www.sapo.vn/blog/wp-content/uploads/2017/02/kinh-nghiem-va-dieu-kien-mo-quay-thuoc-tay-2.jpg'
+]
+
 class SearchDrugScreen extends Component {
     constructor(props) {
         super(props)
@@ -128,26 +146,46 @@ class SearchDrugScreen extends Component {
                                 headerLayout={() =>
                                     <View zIndex={10} style={{ marginTop: Platform.OS == 'ios' ? 72 : 52, alignItems: 'center', width }}>
                                         <ScaledImage source={require("@images/facility/icdrag.png")} height={29} zIndex={5} />
-                                        <FlatList
-                                            onEndReachedThreshold={1}
-                                            style={{ width, height: height - 110, backgroundColor: '#FFF' }}
+                                        <ScrollView
+                                            style={{ width, height: height - 110, backgroundColor: '#FFF', padding: 10 }}
                                             keyExtractor={(item, index) => index.toString()}
-                                            extraData={this.state}
                                             data={this.state.data}
-                                            ListHeaderComponent={() => !this.state.refreshing && (!this.state.data || this.state.data.length == 0) ?
-                                                <View style={{ alignItems: 'center', marginTop: 50 }}>
-                                                    <ScaledImage source={require("@images/search/noresult.png")} width={136} />
-                                                    <TouchableOpacity onPress={() => { this.setState({ keyword: "" }, this.onRefresh) }}>
-                                                        <Text style={{ marginTop: 20, padding: 20, textAlign: 'center', lineHeight: 30 }}>Chúng tôi không tìm thấy kết quả nào phù hợp, bạn có thể xem thêm <Text style={{ color: "#000", fontWeight: 'bold' }}>CSYT Hàng đầu</Text></Text>
-                                                    </TouchableOpacity>
+                                        >
+                                            <View {...this.props} style={[{
+                                                marginTop: 0,
+                                                flexDirection: 'row',
+                                            }, this.props.style]}
+                                                onPress={() => { this.props.navigation.navigate("facilityDetailScreen", { facility: this.props.facility }) }}
+                                            >
+                                                <View style={{ flex: 1, marginRight: 10 }}>
+                                                    <Text style={{ fontWeight: 'bold' }} numberOfLines={1} ellipsizeMode='tail'>Nhà thuốc Minh Đường</Text>
+                                                    <Rating
+                                                        style={{ marginTop: 8 }}
+                                                        ratingCount={5}
+                                                        imageSize={13}
+                                                        readonly
+                                                    />
+                                                    <View style={{ flexDirection: 'row', marginTop: 8 }}><TouchableOpacity style={{ marginRight: 5, backgroundColor: 'rgb(47,94,172)', padding: 6, paddingLeft: 14, paddingRight: 14 }}><Text style={{ color: '#FFF', fontWeight: 'bold' }}>Đặt khám</Text></TouchableOpacity><TouchableOpacity style={{ backgroundColor: 'rgb(47,94,172)', padding: 6, paddingLeft: 14, paddingRight: 14 }}><Text style={{ color: '#FFF', fontWeight: 'bold' }}>Đặt khám</Text></TouchableOpacity></View>
+                                                </View>
+                                                <ImageProgress
+                                                    indicator={Progress} resizeMode='cover' style={{ width: 80, height: 80 }} imageStyle={{
+                                                        borderTopLeftRadius: 5.3,
+                                                        borderBottomLeftRadius: 5.3,
+                                                        width: 80, height: 80
+                                                    }} source={{ uri: "https://www.sapo.vn/blog/wp-content/uploads/2017/02/kinh-nghiem-va-dieu-kien-mo-quay-thuoc-tay-2.jpg" }}
+                                                    defaultImage={() => {
+                                                        return <ScaledImage resizeMode='cover' source={require("@images/noimage.jpg")} width={80} height={80} style={{
+                                                            borderTopLeftRadius: 5.3,
+                                                            borderBottomLeftRadius: 5.3
+                                                        }} />
+                                                    }} />
+                                            </View>
+                                            <Text style={{ fontSize: 12, marginTop: 14, marginBottom: 10 }} numberOfLines={2} ellipsizeMode='tail'>Xóm Hải Bình, Nga Hải, Nga Sơn, Thanh Hóa</Text>
 
-                                                </View> : null
-                                            }
-                                            ListFooterComponent={() => <View style={{ height: 50 }}></View>}
-                                            renderItem={({ item, index }) =>
-                                                <ItemFacility2 />
-                                            }
-                                        />
+                                            <PhotoGrid source={images} onPressImage={uri => { }} />
+                                            <Text style={{ fontSize: 16, marginTop: 15, textAlign: 'justify', lineHeight: 22, marginBottom: 20 }}>Trung tâm tim mạch - Bệnh viện E được thành lập từ năm 2000, ra đời là một phần của bệnh viện E. Năm 2015 mới tách ra hoạt động độc lập.
+Với đội ngũ bác sĩ gạo cội, dày dặn kinh nghiệm trung tâm tim mạch là một nơi đi đầu về phẫu thuật tim của khu vực phía Bắc.</Text>
+                                        </ScrollView>
                                     </View>
                                 }
                                 slidingPanelLayout={() =>
