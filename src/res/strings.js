@@ -226,6 +226,10 @@ module.exports = {
     {
       search: "drug/search",
       update_view_count: "drug/update-view-count"
+    },
+    facility:
+    {
+      search: "facility/search"
     }
   }
 };

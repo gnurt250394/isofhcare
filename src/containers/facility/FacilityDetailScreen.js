@@ -4,7 +4,6 @@ import { View, TextInput, TouchableWithoutFeedback, Text, FlatList, TouchableOpa
 import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import drugProvider from '@data-access/drug-provider';
-import ItemFacility2 from '@components/facility/ItemFacility2';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 const { width, height } = Dimensions.get('window');
 import SearchPanel from '@components/SearchPanel';
@@ -99,7 +98,37 @@ class SearchDrugScreen extends Component {
     onExpand(isExpand, sliderPosition) {
         this.setState({ showSearchPanel: !isExpand })
     }
+    componentDidMount() {
+        const facility = this.props.navigation.getParam("facility", undefined);
+        if (!facility) {
+            this.props.navigation.pop();
+            return;
+        }
+        this.rating.setCurrentRating(facility.facility.review);
+    }
     render() {
+        const facility = this.props.navigation.getParam("facility", undefined);
+        if (!facility)
+            return <View />
+        let images = facility.images;
+        let image = "undefined";
+        try {
+            if (images && images.length > 0) {
+                image = images[0].url.absoluteUrl();
+            }
+        } catch (error) {
+
+        }
+
+        var list_images = [];
+        try {
+            for (var i = 0; i < images.length; i++) {
+                list_images.push(images[i].url.absoluteUrl())
+            }
+        } catch (error) {
+
+        }
+
         return (
             <ActivityPanel ref={(ref) => this.activity = ref} style={{ flex: 1 }} title="CHỌN ĐỊA ĐIỂM TÌM KIẾM" showFullScreen={true}>
                 <View style={styles.container}>
@@ -155,24 +184,25 @@ class SearchDrugScreen extends Component {
                                                 marginTop: 0,
                                                 flexDirection: 'row',
                                             }, this.props.style]}
-                                                onPress={() => { this.props.navigation.navigate("facilityDetailScreen", { facility: this.props.facility }) }}
+                                                onPress={() => { this.props.navigation.navigate("facilityDetailScreen", { facility }) }}
                                             >
                                                 <View style={{ flex: 1, marginRight: 10 }}>
-                                                    <Text style={{ fontWeight: 'bold' }} numberOfLines={1} ellipsizeMode='tail'>Nhà thuốc Minh Đường</Text>
+                                                    <Text style={{ fontWeight: 'bold' }} numberOfLines={1} ellipsizeMode='tail'>{facility.facility.name}</Text>
                                                     <Rating
+                                                        ref={(ref) => { this.rating = ref }}
                                                         style={{ marginTop: 8 }}
                                                         ratingCount={5}
                                                         imageSize={13}
                                                         readonly
                                                     />
-                                                    <View style={{ flexDirection: 'row', marginTop: 8 }}><TouchableOpacity style={{ marginRight: 5, backgroundColor: 'rgb(47,94,172)', padding: 6, paddingLeft: 14, paddingRight: 14 }}><Text style={{ color: '#FFF', fontWeight: 'bold' }}>Đặt khám</Text></TouchableOpacity><TouchableOpacity style={{ backgroundColor: 'rgb(47,94,172)', padding: 6, paddingLeft: 14, paddingRight: 14 }}><Text style={{ color: '#FFF', fontWeight: 'bold' }}>Đặt khám</Text></TouchableOpacity></View>
+                                                    <View style={{ flexDirection: 'row', marginTop: 8 }}><TouchableOpacity style={{ marginRight: 5, backgroundColor: 'rgb(47,94,172)', padding: 6, paddingLeft: 14, paddingRight: 14 }}><Text style={{ color: '#FFF', fontWeight: 'bold' }}>Đặt khám</Text></TouchableOpacity><TouchableOpacity style={{ backgroundColor: 'rgb(47,94,172)', padding: 6, paddingLeft: 14, paddingRight: 14 }}><Text style={{ color: '#FFF', fontWeight: 'bold' }}>Đánh giá</Text></TouchableOpacity></View>
                                                 </View>
                                                 <ImageProgress
                                                     indicator={Progress} resizeMode='cover' style={{ width: 80, height: 80 }} imageStyle={{
                                                         borderTopLeftRadius: 5.3,
                                                         borderBottomLeftRadius: 5.3,
                                                         width: 80, height: 80
-                                                    }} source={{ uri: "https://www.sapo.vn/blog/wp-content/uploads/2017/02/kinh-nghiem-va-dieu-kien-mo-quay-thuoc-tay-2.jpg" }}
+                                                    }} source={{ uri: image }}
                                                     defaultImage={() => {
                                                         return <ScaledImage resizeMode='cover' source={require("@images/noimage.jpg")} width={80} height={80} style={{
                                                             borderTopLeftRadius: 5.3,
@@ -182,9 +212,8 @@ class SearchDrugScreen extends Component {
                                             </View>
                                             <Text style={{ fontSize: 12, marginTop: 14, marginBottom: 10 }} numberOfLines={2} ellipsizeMode='tail'>Xóm Hải Bình, Nga Hải, Nga Sơn, Thanh Hóa</Text>
 
-                                            <PhotoGrid source={images} onPressImage={uri => { }} />
-                                            <Text style={{ fontSize: 16, marginTop: 15, textAlign: 'justify', lineHeight: 22, marginBottom: 20 }}>Trung tâm tim mạch - Bệnh viện E được thành lập từ năm 2000, ra đời là một phần của bệnh viện E. Năm 2015 mới tách ra hoạt động độc lập.
-Với đội ngũ bác sĩ gạo cội, dày dặn kinh nghiệm trung tâm tim mạch là một nơi đi đầu về phẫu thuật tim của khu vực phía Bắc.</Text>
+                                            <PhotoGrid source={list_images} onPressImage={uri => { }} />
+                                            <Text style={{ fontSize: 16, marginTop: 15, textAlign: 'justify', lineHeight: 22, marginBottom: 20 }}>{facility.facility.introduction}</Text>
                                         </ScrollView>
                                     </View>
                                 }
