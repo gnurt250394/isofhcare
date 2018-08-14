@@ -157,20 +157,6 @@ class SearchByLocastionScreen extends Component {
                                 />)
                             }
                         </MapView>
-
-                        {
-                            this.state.showSearchPanel ?
-                                <View zIndex={3} style={{ padding: 14, position: 'absolute', top: 0, left: 0, right: 0 }}>
-                                    <SearchPanel searchTypeId={realmModel.DRUG_HISTORY}
-                                        resultPage="searchDrugResult"
-                                        ref={ref => this.searchPanel = ref}
-                                        onFocus={this.searchFocus.bind(this)}
-                                        placeholder="Nhập địa điểm muốn tìm kiếm"
-                                        onSearch={this.onSearch.bind(this)}
-                                        renderItem={this.renderSearchItem.bind(this)}
-                                        renderFooter={this.renderFooter.bind(this)} />
-                                </View> : null
-                        }
                         {
                             !this.state.showOverlay ? <SlidingPanel
                                 zIndex={2}

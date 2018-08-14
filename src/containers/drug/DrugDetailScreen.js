@@ -121,6 +121,7 @@ class DrugDetailScreen extends Component {
         }
     }
     render() {
+        debugger;
         const drug = this.props.navigation.getParam("drug", null);
         return (
             <ActivityPanel style={{ flex: 1 }} title="CHI TIẾT THUỐC" showFullScreen={true}>
@@ -185,12 +186,12 @@ class DrugDetailScreen extends Component {
                             : null
                         }
                     </View>
-                    <Text style={{ margin: 20, color: 'rgb(47,94,172)', fontWeight: '500' }}>CÓ BÁN TẠI CÁC NHÀ THUỐC</Text>
+                    {/* <Text style={{ margin: 20, color: 'rgb(47,94,172)', fontWeight: '500' }}>CÓ BÁN TẠI CÁC NHÀ THUỐC</Text>
                     {
                         [1, 2, 3, 4, 5].map((item, index) => {
                             return <ItemFacility key={index} style={{ marginLeft: 14, marginRight: 14 }} />
                         })
-                    }
+                    } */}
                 </ScrollView>
             </ActivityPanel >
         );
