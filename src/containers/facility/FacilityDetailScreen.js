@@ -14,20 +14,6 @@ import { Rating } from 'react-native-ratings';
 import PhotoGrid from 'react-native-thumbnail-grid';
 
 import SlidingPanel from 'mainam-react-native-sliding-up-down';
-const images = [
-    'https://www.sapo.vn/blog/wp-content/uploads/2017/02/kinh-nghiem-va-dieu-kien-mo-quay-thuoc-tay-2.jpg',
-    'https://www.sapo.vn/blog/wp-content/uploads/2017/02/kinh-nghiem-va-dieu-kien-mo-quay-thuoc-tay-2.jpg',
-    'https://www.sapo.vn/blog/wp-content/uploads/2017/02/kinh-nghiem-va-dieu-kien-mo-quay-thuoc-tay-2.jpg',
-    'https://www.sapo.vn/blog/wp-content/uploads/2017/02/kinh-nghiem-va-dieu-kien-mo-quay-thuoc-tay-2.jpg',
-    'https://www.sapo.vn/blog/wp-content/uploads/2017/02/kinh-nghiem-va-dieu-kien-mo-quay-thuoc-tay-2.jpg',
-    'https://www.sapo.vn/blog/wp-content/uploads/2017/02/kinh-nghiem-va-dieu-kien-mo-quay-thuoc-tay-2.jpg',
-    'https://www.sapo.vn/blog/wp-content/uploads/2017/02/kinh-nghiem-va-dieu-kien-mo-quay-thuoc-tay-2.jpg',
-    'https://www.sapo.vn/blog/wp-content/uploads/2017/02/kinh-nghiem-va-dieu-kien-mo-quay-thuoc-tay-2.jpg',
-    'https://www.sapo.vn/blog/wp-content/uploads/2017/02/kinh-nghiem-va-dieu-kien-mo-quay-thuoc-tay-2.jpg',
-    'https://www.sapo.vn/blog/wp-content/uploads/2017/02/kinh-nghiem-va-dieu-kien-mo-quay-thuoc-tay-2.jpg',
-    'https://www.sapo.vn/blog/wp-content/uploads/2017/02/kinh-nghiem-va-dieu-kien-mo-quay-thuoc-tay-2.jpg'
-]
-
 class SearchDrugScreen extends Component {
     constructor(props) {
         super(props)
@@ -37,7 +23,7 @@ class SearchDrugScreen extends Component {
         else
             keyword = "";
 
-
+        const facility = this.props.navigation.getParam("facility", undefined);
         this.state = {
             data: [],
             refreshing: false,
@@ -51,8 +37,8 @@ class SearchDrugScreen extends Component {
             showSearchPanel: true,
             region:
             {
-                latitude: 20.9899002,
-                longitude: 105.7896239,
+                latitude: facility ? facility.facility.latitude : 0,
+                longitude: facility ? facility.facility.longitude : 0,
                 longitudeDelta: 0.1,
                 latitudeDelta: 0.1
             }
@@ -151,10 +137,7 @@ class SearchDrugScreen extends Component {
                         >
                             <Marker
                                 id={"Location"}
-                                coordinate={{
-                                    latitude: 20.9899002,
-                                    longitude: 105.7896239
-                                }}
+                                coordinate={this.state.region}
                                 image={require('@images/iccheckin.png')}
                             />
                         </MapView>
@@ -225,14 +208,14 @@ class SearchDrugScreen extends Component {
                                                 facility.facility.website ?
                                                     <TouchableOpacity style={{ padding: 10, flexDirection: 'row' }} onPress={() => Linking.openURL(facility.facility.website)}>
                                                         <ScaledImage source={require("@images/icthongbao.png")} width={20} style={{ marginRight: 5 }} />
-                                                        <Text>{facility.facility.website}</Text>
+                                                        <Text style={{ color: '(rgb,35,66,155)', fontWeight: 'bold' }}>{facility.facility.website}</Text>
                                                     </TouchableOpacity> : null
                                             }
                                             {
                                                 facility.facility.phone ?
                                                     <TouchableOpacity style={{ padding: 10, flexDirection: 'row' }} onPress={() => Linking.openURL("tel:" + facility.facility.phone)}>
                                                         <ScaledImage source={require("@images/icthongbao.png")} width={20} style={{ marginRight: 5 }} />
-                                                        <Text>{facility.facility.phone}</Text>
+                                                        <Text style={{ color: 'rgb(74,74,74)' }}>{facility.facility.phone}</Text>
                                                     </TouchableOpacity> : null
                                             }
                                             <Text style={{ fontSize: 16, marginTop: 15, textAlign: 'justify', lineHeight: 22, marginBottom: 20 }}>{facility.facility.introduction}</Text>

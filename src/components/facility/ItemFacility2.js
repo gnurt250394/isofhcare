@@ -14,9 +14,23 @@ class ItemFacility extends Component {
         }
     }
     componentDidMount() {
+        let item = this.props.facility;
+        if (this.rating) {
+            this.rating.setCurrentRating(item.facility.review);
+        }
     }
 
     render() {
+        let item = this.props.facility;
+        let images = item.images;
+        let image = "undefined";
+        try {
+            if (images && images.length > 0) {
+                image = images[0].url.absoluteUrl();
+            }
+        } catch (error) {
+
+        }
         return (
             <TouchableOpacity {...this.props} style={[{
                 marginTop: 0,
@@ -29,21 +43,22 @@ class ItemFacility extends Component {
                 onPress={() => { this.props.navigation.navigate("facilityDetailScreen", { facility: this.props.facility }) }}
             >
                 <View style={{ flex: 1, marginRight: 10 }}>
-                    <Text style={{ fontWeight: 'bold' }} numberOfLines={1} ellipsizeMode='tail'>Nhà thuốc Minh Đường</Text>
+                    <Text style={{ fontWeight: 'bold' }} numberOfLines={1} ellipsizeMode='tail'>{this.props.facility.facility.name}</Text>
                     <Rating
+                        ref={(ref) => { this.rating = ref }}
                         style={{ marginTop: 8 }}
                         ratingCount={5}
                         imageSize={13}
                         readonly
                     />
-                    <Text style={{ fontSize: 12, marginTop: 5 }} numberOfLines={2} ellipsizeMode='tail'>Xóm Hải Bình, Nga Hải, Nga Sơn, Thanh Hóa</Text>
+                    <Text style={{ fontSize: 12, marginTop: 5 }} numberOfLines={2} ellipsizeMode='tail'>{this.props.facility.facility.address}</Text>
                 </View>
                 <ImageProgress
                     indicator={Progress} resizeMode='cover' style={{ width: 80, height: 80 }} imageStyle={{
                         borderTopLeftRadius: 5.3,
                         borderBottomLeftRadius: 5.3,
                         width: 80, height: 80
-                    }} source={{ uri: "https://www.sapo.vn/blog/wp-content/uploads/2017/02/kinh-nghiem-va-dieu-kien-mo-quay-thuoc-tay-2.jpg" }}
+                    }} source={{ uri: image }}
                     defaultImage={() => {
                         return <ScaledImage resizeMode='cover' source={require("@images/noimage.jpg")} width={80} height={80} style={{
                             borderTopLeftRadius: 5.3,

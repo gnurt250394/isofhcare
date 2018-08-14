@@ -3,7 +3,7 @@ import ActivityPanel from '@components/ActivityPanel';
 import { View, TextInput, TouchableWithoutFeedback, Text, FlatList, TouchableOpacity, Dimensions, StyleSheet, Platform } from 'react-native';
 import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
-import drugProvider from '@data-access/drug-provider';
+import facilityProvider from '@data-access/facility-provider';
 import ItemFacility2 from '@components/facility/ItemFacility2';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 const { width, height } = Dimensions.get('window');
@@ -11,7 +11,7 @@ import SearchPanel from '@components/SearchPanel';
 import realmModel from '@models/realm-models';
 
 import SlidingPanel from 'mainam-react-native-sliding-up-down';
-class SearchDrugScreen extends Component {
+class SearchByLocastionScreen extends Component {
     constructor(props) {
         super(props)
         let keyword = this.props.navigation.getParam('keyword', '');
@@ -31,7 +31,9 @@ class SearchDrugScreen extends Component {
             keyword,
             width,
             height: height - 75,
-            showSearchPanel: true
+            showSearchPanel: true,
+            latitude: 20.9899002,
+            longitude: 105.7896239
         }
     }
     componentDidMount() {
@@ -51,7 +53,7 @@ class SearchDrugScreen extends Component {
             refreshing: page == 1,
             loadMore: page != 1
         })
-        drugProvider.search(this.state.keyword, page, size, (s, e) => {
+        facilityProvider.searchByLatLon(this.state.latitude, this.state.longitude, page, size, (s, e) => {
             this.setState({
                 loading: false,
                 refreshing: false,
@@ -108,7 +110,7 @@ class SearchDrugScreen extends Component {
     }
     onSearch(s) {
         return new Promise((resolve, reject) => {
-            drugProvider.search(s, 1, 5, (s, e) => {
+            facility.search(s, 1, 5, (s, e) => {
                 if (e)
                     reject(e);
                 else {
@@ -143,17 +145,17 @@ class SearchDrugScreen extends Component {
                             style={{ width: '100%', height: this.state.height - (!this.state.showOverlay ? (Platform.OS == 'ios' ? 100 : 120) : 0) }}
                             showsUserLocation={true}
                             region={this.state.region}
-                        >
-                            {/* <Marker
-                            coordinate={
-                                {
-                                latitude: 20.9899002,GMAI
-                                latitude: 20.9899002,GMAI
-                                longitude: 105.7896239
-                                }
+                        >{
+                                this.state.data.map((item, index) => <Marker key={index}
+                                    coordinate={
+                                        {
+                                            latitude: item.facility.latitude,
+                                            longitude: item.facility.longitude
+                                        }
+                                    }
+                                    image={require('@images/icquantampressed.png')}
+                                />)
                             }
-                            image={require('@images/ic_signout.png')}
-                            /> */}
                         </MapView>
 
                         {
@@ -263,4 +265,4 @@ function mapStateToProps(state) {
         userApp: state.userApp
     };
 }
-export default connect(mapStateToProps)(SearchDrugScreen);
+export default connect(mapStateToProps)(SearchByLocastionScreen);
