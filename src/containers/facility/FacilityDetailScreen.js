@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, TextInput, TouchableWithoutFeedback, Text, FlatList, TouchableOpacity, Dimensions, StyleSheet, Platform, ScrollView } from 'react-native';
+import { View, TextInput, TouchableWithoutFeedback, Text, FlatList, TouchableOpacity, Dimensions, StyleSheet, Platform, ScrollView, Linking } from 'react-native';
 import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import drugProvider from '@data-access/drug-provider';
@@ -48,7 +48,14 @@ class SearchDrugScreen extends Component {
             keyword,
             width,
             height: height - 75,
-            showSearchPanel: true
+            showSearchPanel: true,
+            region:
+            {
+                latitude: 20.9899002,
+                longitude: 105.7896239,
+                longitudeDelta: 0.1,
+                latitudeDelta: 0.1
+            }
         }
     }
 
@@ -105,6 +112,7 @@ class SearchDrugScreen extends Component {
             return;
         }
         this.rating.setCurrentRating(facility.facility.review);
+        this.mapRef.fitToElements(true);
     }
     render() {
         const facility = this.props.navigation.getParam("facility", undefined);
@@ -134,21 +142,21 @@ class SearchDrugScreen extends Component {
                 <View style={styles.container}>
                     <View style={styles.container}>
                         <MapView
+                            showsMyLocationButton={true}
+                            ref={(ref) => { this.mapRef = ref }}
                             provider={PROVIDER_GOOGLE}
                             style={{ width: '100%', height: this.state.height - (!this.state.showOverlay ? (Platform.OS == 'ios' ? 100 : 120) : 0) }}
                             showsUserLocation={true}
                             region={this.state.region}
                         >
-                            {/* <Marker
-                            coordinate={
-                                {
-                                latitude: 20.9899002,GMAI
-                                latitude: 20.9899002,GMAI
-                                longitude: 105.7896239
-                                }
-                            }
-                            image={require('@images/ic_signout.png')}
-                            /> */}
+                            <Marker
+                                id={"Location"}
+                                coordinate={{
+                                    latitude: 20.9899002,
+                                    longitude: 105.7896239
+                                }}
+                                image={require('@images/iccheckin.png')}
+                            />
                         </MapView>
 
                         {
@@ -213,6 +221,20 @@ class SearchDrugScreen extends Component {
                                             <Text style={{ fontSize: 12, marginTop: 14, marginBottom: 10 }} numberOfLines={2} ellipsizeMode='tail'>Xóm Hải Bình, Nga Hải, Nga Sơn, Thanh Hóa</Text>
 
                                             <PhotoGrid source={list_images} onPressImage={uri => { }} />
+                                            {
+                                                facility.facility.website ?
+                                                    <TouchableOpacity style={{ padding: 10, flexDirection: 'row' }} onPress={() => Linking.openURL(facility.facility.website)}>
+                                                        <ScaledImage source={require("@images/icthongbao.png")} width={20} style={{ marginRight: 5 }} />
+                                                        <Text>{facility.facility.website}</Text>
+                                                    </TouchableOpacity> : null
+                                            }
+                                            {
+                                                facility.facility.phone ?
+                                                    <TouchableOpacity style={{ padding: 10, flexDirection: 'row' }} onPress={() => Linking.openURL("tel:" + facility.facility.phone)}>
+                                                        <ScaledImage source={require("@images/icthongbao.png")} width={20} style={{ marginRight: 5 }} />
+                                                        <Text>{facility.facility.phone}</Text>
+                                                    </TouchableOpacity> : null
+                                            }
                                             <Text style={{ fontSize: 16, marginTop: 15, textAlign: 'justify', lineHeight: 22, marginBottom: 20 }}>{facility.facility.introduction}</Text>
                                         </ScrollView>
                                     </View>
