@@ -138,7 +138,7 @@ class SearchDrugScreen extends Component {
                             <Marker
                                 id={"Location"}
                                 coordinate={this.state.region}
-                                image={require('@images/iccheckin.png')}
+                                image={require('@images/ic_phongkham.png')}
                             />
                         </MapView>
 
@@ -207,18 +207,18 @@ class SearchDrugScreen extends Component {
                                             {
                                                 facility.facility.website ?
                                                     <TouchableOpacity style={{ padding: 10, flexDirection: 'row' }} onPress={() => Linking.openURL(facility.facility.website)}>
-                                                        <ScaledImage source={require("@images/web.png")} width={17} style={{ marginRight: 5 }} />
-                                                        <Text style={{ color: 'rgb(74,74,74)' }}>{facility.facility.website}</Text>
+                                                        <ScaledImage source={require("@images/web.png")} width={15} style={{ marginRight: 5 }} />
+                                                        <Text style={{ color: '#23429b' }}>{facility.facility.website}</Text>
                                                     </TouchableOpacity> : null
                                             }
                                             {
                                                 facility.facility.phone ?
-                                                    <TouchableOpacity style={{ padding: 10, flexDirection: 'row' }} onPress={() => Linking.openURL("tel:" + facility.facility.phone)}>
-                                                        <ScaledImage source={require("@images/icthongbao.png")} width={20} style={{ marginRight: 5 }} />
+                                                    <TouchableOpacity style={{ padding: 10, flexDirection: 'row', alignItems: 'center' }} onPress={() => Linking.openURL("tel:" + facility.facility.phone)}>
+                                                        <ScaledImage source={require("@images/ic_phone.png")} width={15} style={{ marginRight: 5 }} />
                                                         <Text style={{ color: '(rgb,35,66,155)', fontWeight: 'bold' }}>{facility.facility.phone}</Text>
                                                     </TouchableOpacity> : null
                                             }
-                                            <Text style={{ fontSize: 16, marginTop: 15, textAlign: 'justify', lineHeight: 22, marginBottom: 20 }}>{facility.facility.introduction}</Text>
+                                            <Text style={{ padding: 10, fontSize: 16, marginTop: 5, textAlign: 'justify', lineHeight: 22, marginBottom: 20, color: '#9b9b9b' }}>{facility.facility.introduction}</Text>
                                         </ScrollView>
                                     </View>
                                 }

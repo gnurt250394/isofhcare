@@ -2,6 +2,7 @@ import client from '@utils/client-utils';
 import string from 'mainam-react-native-string-utils';
 import constants from '@resources/strings';
 import storage from '@data-access/storage-provider';
+import { Platform } from 'react-native';
 
 module.exports = {
     syncCountry(callback) {
@@ -112,5 +113,23 @@ module.exports = {
             }
         });
         this.syncZone(districtId);
+    },
+    searchPlace(query, callback) {
+        if (query) {
+            query = query.trim();
+            while (query.indexOf(' ') != -1) {
+                query = query.replace(' ', '+');
+            }
+        }
+        var url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=" + query + "&key=" + (Platform.OS == "ios" ? "AIzaSyA6V1lvfuFcHHTxNi2B01G-TmZY5bnHzs8" : "AIzaSyD5QZaFvWLLC0j5XSDJ8yBVdhs9hZbtpdQ" + "&language=vi");
+        client.requestApi("get", url, {}, (s, e) => {
+            try {
+                if (callback)
+                    callback(s, e);
+            } catch (error) {
+                if (callback)
+                    callback(null, error);
+            }
+        });
     }
 }

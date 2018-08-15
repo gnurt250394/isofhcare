@@ -9,6 +9,8 @@ import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 const { width, height } = Dimensions.get('window');
 import SearchPanel from '@components/SearchPanel';
 import realmModel from '@models/realm-models';
+import locationProvider from '@data-access/location-provider';
+import historyProvider from '@data-access/history-provider';
 
 import SlidingPanel from 'mainam-react-native-sliding-up-down';
 class SearchByLocastionScreen extends Component {
@@ -32,8 +34,12 @@ class SearchByLocastionScreen extends Component {
             width,
             height: height - 75,
             showSearchPanel: true,
-            latitude: 20.9899002,
-            longitude: 105.7896239
+            region: {
+                latitude: 20.9899002,
+                longitude: 105.7896239,
+                longitudeDelta: 0.1,
+                latitudeDelta: 0.1
+            }
         }
     }
     componentDidMount() {
@@ -90,13 +96,20 @@ class SearchByLocastionScreen extends Component {
             });
     }
     onSearchItemClick(item) {
-        this.props.navigation.navigate("drugDetailScreen", { drug: item });
-        const { DRUG_HISTORY } = realmModel;
-        historyProvider.addHistory("", DRUG_HISTORY, item.drug.name, item.drug.id, "");
+        // this.props.navigation.navigate("drugDetailScreen", { drug: item });
+        const { LOCATION_HISTORY } = realmModel;
+        historyProvider.addHistory("", LOCATION_HISTORY, item.name, item.name, JSON.stringify(item));
+        if (item.geometry && item.geometry.location) {
+            var temp = item.geometry.location;
+            temp.longitudeDelta = 0.1;
+            temp.latitudeDelta = 0.1;
+            this.setState({ region: temp });
+        }
     }
     renderSearchItem(item, index, keyword) {
         return <TouchableOpacity style={{ padding: 5 }} onPress={this.onSearchItemClick.bind(this, item)}>
-            <Text style={{ paddingLeft: 10 }}>{item.drug.name}</Text>
+            <Text style={{ paddingLeft: 10 }}>{item.name}</Text>
+            <Text style={{ paddingLeft: 10, fontSize: 12, marginTop: 10, color: '#00000050' }}>{item.formatted_address}</Text>
             <View style={{ height: 0.5, backgroundColor: '#00000040', marginTop: 12 }} />
         </TouchableOpacity>
     }
@@ -108,15 +121,15 @@ class SearchByLocastionScreen extends Component {
             </TouchableOpacity>
         return <View />
     }
-    onSearch(s) {
+    onSearch(text) {
         return new Promise((resolve, reject) => {
-            facility.search(s, 1, 5, (s, e) => {
+            locationProvider.searchPlace(text, (s, e) => {
                 if (e)
                     reject(e);
                 else {
-                    if (s && s.code == 0) {
-                        resolve(s.data.data);
-                    } else {
+                    if (s.results)
+                        resolve(s.results);
+                    else {
                         reject([]);
                     }
                 }
@@ -135,6 +148,31 @@ class SearchByLocastionScreen extends Component {
     onExpand(isExpand, sliderPosition) {
         this.setState({ showSearchPanel: !isExpand })
     }
+    onPressItemLocation(item) {
+        if (this.searchPanel)
+            this.searchPanel.getWrappedInstance().setValue(item.name);
+        this.setState({ showOverlay: false });
+
+        if (item.geometry && item.geometry.location) {
+            var temp = item.geometry.location;
+            debugger;
+            this.setState({ region: { latitude: temp.lat, longitude: temp.lng, longitudeDelta: 0.1, latitudeDelta: 0.1 } });
+        }
+    }
+
+    renderItemHistory(item, index) {
+        var data = JSON.parse(item.data);
+        return <TouchableOpacity style={{ padding: 5 }} onPress={() => { this.onPressItemLocation(data) }}>
+            <View style={{ flexDirection: 'row' }}>
+                <ScaledImage source={require("@images/search/time-left.png")} width={15} style={{ marginTop: 2 }} />
+                <View>
+                    <Text style={{ marginLeft: 5 }}>{data.name}</Text>
+                    <Text style={{ marginLeft: 5, fontSize: 12, marginTop: 10, color: '#00000050' }}>{data.formatted_address}</Text>
+                </View>
+            </View>
+            <View style={{ height: 0.5, backgroundColor: '#00000040', marginTop: 12 }} />
+        </TouchableOpacity>
+    }
     render() {
         return (
             <ActivityPanel ref={(ref) => this.activity = ref} style={{ flex: 1 }} title="CHỌN ĐỊA ĐIỂM TÌM KIẾM" showFullScreen={true}>
@@ -145,7 +183,16 @@ class SearchByLocastionScreen extends Component {
                             style={{ width: '100%', height: this.state.height - (!this.state.showOverlay ? (Platform.OS == 'ios' ? 100 : 120) : 0) }}
                             showsUserLocation={true}
                             region={this.state.region}
-                        >{
+                        >
+                            {
+                                this.state.region ?
+                                    <Marker
+                                        coordinate={this.state.region}
+                                        image={require('@images/navigation.png')}
+                                    /> : null
+                            }
+
+                            {
                                 this.state.data.map((item, index) => <Marker key={index}
                                     coordinate={
                                         {
@@ -153,7 +200,7 @@ class SearchByLocastionScreen extends Component {
                                             longitude: item.facility.longitude
                                         }
                                     }
-                                    image={require('@images/icquantampressed.png')}
+                                    image={require('@images/ic_phongkham.png')}
                                 />)
                             }
                         </MapView>
@@ -208,13 +255,14 @@ class SearchByLocastionScreen extends Component {
                     {
                         this.state.showSearchPanel ?
                             <View style={{ padding: 14, position: 'absolute', top: 0, left: 0, right: 0 }}>
-                                <SearchPanel searchTypeId={realmModel.DRUG_HISTORY}
+                                <SearchPanel searchTypeId={realmModel.LOCATION_HISTORY}
                                     resultPage="searchDrugResult"
                                     ref={ref => this.searchPanel = ref}
                                     onFocus={this.searchFocus.bind(this)}
                                     placeholder="Nhập địa điểm muốn tìm kiếm"
                                     onSearch={this.onSearch.bind(this)}
                                     renderItem={this.renderSearchItem.bind(this)}
+                                    renderItemHistory={this.renderItemHistory.bind(this)}
                                     renderFooter={this.renderFooter.bind(this)} />
                             </View> : null
                     }

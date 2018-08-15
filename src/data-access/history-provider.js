@@ -2,6 +2,7 @@ const Realm = require('realm');
 import realmModel from '@models/realm-models';
 module.exports = {
     addHistory(userId, type, name, dataId, data) {
+        debugger;
         const { SearchHistory } = realmModel;
         try {
             Realm.open({
@@ -15,9 +16,13 @@ module.exports = {
                     try {
                         let id = "SearchHistory_" + userId + "_" + type + "_" + dataId;
                         var results = realm.objects(SearchHistory.name).filtered("type == " + type).filtered("userId == $0", userId + "").sorted('timeSearch', true);
-                        if (results.length > 5)
+                        let isDelete = false;
+                        if (results.length > 5) {
                             realm.delete(results[results.length - 1]);
-                        for (var i = 0; i < results.length - 1; i++) {
+                            isDelete = true;
+                        }
+                        debugger;
+                        for (var i = 0; i < isDelete ? results.length - 1 : results.length; i++) {
                             if (results[i].id == id) {
                                 results[i].timeSearch = new Date().getTime();
                                 results[i].name = name;
@@ -35,7 +40,8 @@ module.exports = {
                             type: type,
                             name: name,
                             timeSearch: new Date().getTime(),
-                            userId: userId
+                            userId: userId,
+                            data: data
                         });
                     } catch (error) {
                         console.log(error);

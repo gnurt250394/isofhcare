@@ -88,7 +88,7 @@ module.exports = {
         if (!body)
             body = {};
         dataBody = JSON.stringify(body);
-        this.requestFetch(methodType, this.serverApi + url,
+        this.requestFetch(methodType, url && url.indexOf('http') == 0 ? url : (this.serverApi + url),
             {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',

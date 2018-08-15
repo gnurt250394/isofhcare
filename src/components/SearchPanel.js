@@ -42,7 +42,12 @@ class SearchPanel extends Component {
                 this.props.onFocus(this);
         })
         const { searchTypeId } = this.props;
-        historyProvider.getListHistory("", searchTypeId, this.getListHistoryCallback.bind(this));
+        if (this.state.keyword) {
+
+        }
+        else {
+            historyProvider.getListHistory("", searchTypeId, this.getListHistoryCallback.bind(this));
+        }
     }
     getListHistoryCallback(data) {
         try {
@@ -94,6 +99,24 @@ class SearchPanel extends Component {
         }
         return <View />;
     }
+    setValue(text) {
+        if (this.searchInput)
+            this.searchInput.blur();
+        this.setState({
+            keyword: text,
+            showSuggesh: false,
+            data: [],
+            history: []
+        });
+        if (this.props.onSearch) {
+            this.props.onSearch(text).then((data) => {
+                this.setState({ data })
+            }).catch((e) => {
+                this.setState({ data: [] })
+            });
+        }
+    }
+
     render() {
         return (
             <View {...this.props}>
@@ -107,7 +130,7 @@ class SearchPanel extends Component {
                     }
                 </View>
                 {
-                    (this.state.history && this.state.history.length > 0 && !this.state.keyword) || this.state.keyword ?
+                    (this.state.history && this.state.history.length > 0 && !this.state.keyword) || (this.state.keyword && this.state.showSuggesh) ?
                         <View style={{ borderColor: 'rgba(151,151,151,0.55)', paddingTop: 50, right: 0, left: 0, position: 'absolute', backgroundColor: '#FFF', zIndex: 1000, borderRadius: 6, borderWidth: 1, margin: 3, padding: 10 }}>
                             {
                                 (this.state.keyword) ?
@@ -128,13 +151,15 @@ class SearchPanel extends Component {
                                             extraData={this.state}
                                             data={this.state.history}
                                             renderItem={({ item, index }) =>
-                                                <TouchableOpacity style={{ padding: 5 }} onPress={() => { this.onClickItemHistory(item.name) }}>
-                                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                        <ScaledImage source={require("@images/search/time-left.png")} width={15} />
-                                                        <Text style={{ marginLeft: 5 }}>{item.name}</Text>
-                                                    </View>
-                                                    <View style={{ height: 0.5, backgroundColor: '#00000040', marginTop: 12 }} />
-                                                </TouchableOpacity>
+                                                this.props.renderItemHistory ?
+                                                    this.props.renderItemHistory(item, index) :
+                                                    <TouchableOpacity style={{ padding: 5 }} onPress={() => { this.onClickItemHistory(item.name) }}>
+                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                            <ScaledImage source={require("@images/search/time-left.png")} width={15} />
+                                                            <Text style={{ marginLeft: 5 }}>{item.name}</Text>
+                                                        </View>
+                                                        <View style={{ height: 0.5, backgroundColor: '#00000040', marginTop: 12 }} />
+                                                    </TouchableOpacity>
                                             }
                                         /> : null
                             }
