@@ -11,25 +11,31 @@ import userProvider from '@data-access/user-provider';
 import constants from '@resources/strings';
 import redux from '@redux-store';
 import ScaleImage from 'mainam-react-native-scaleimage';
-import SocialNetwork from '@components/LoginSocial';
 
-class LoginScreen extends Component {
+class RegisterScreen extends Component {
+
 	constructor(props) {
 		super(props)
 		this.state = {
 			showPass: true,
+			showPassConfirm: true,
 			press: false,
+			pressConfirm: false,
 			email: "",
 			password: ""
 		}
 		this.showPass = this.showPass.bind(this);
+		this.showPassConfirm = this.showPassConfirm.bind(this);
 	}
 	showPass() {
 		this.state.press === false ? this.setState({ showPass: false, press: true }) : this.setState({ showPass: true, press: false });
 	}
+	showPassConfirm() {
+		this.state.pressConfirm === false ? this.setState({ showPassConfirm: false, pressConfirm: true }) : this.setState({ showPassConfirm: true, pressConfirm: false });
+	}
 
 
-	login() {
+	register() {
 		Keyboard.dismiss();
 		if (this.state.email.trim() === "" || this.state.email === "" || this.state.password === "") {
 			snackbar.showShort(constants.msg.user.please_input_username_and_password);
@@ -38,6 +44,8 @@ class LoginScreen extends Component {
 		}
 
 		userProvider.login(this.state.email.trim(), this.state.password, (s, e) => {
+			snackbar.show("Chức năng đang phát triển");
+			return;
 			this.child.unPress();
 			if (s) {
 				// snackbar.show("Thông tin đăng nhập không hợp lệ");
@@ -70,6 +78,7 @@ class LoginScreen extends Component {
 		});
 	}
 
+
 	render() {
 		return (
 			<ActivityPanel style={{ flex: 1 }} title="Đăng nhập" touchToDismiss={true} hideActionbar={true} hideStatusbar={true} showFullScreen={true}>
@@ -80,12 +89,26 @@ class LoginScreen extends Component {
 					</View>
 					<KeyboardAvoidingView behavior='padding'
 						style={styles.form}>
-						<UserInput onTextChange={(s) => this.setState({ email: s })}
-							placeholder={constants.input_username_or_email}
+						<UserInput onTextChange={(s) => this.setState({ username: s })}
+							placeholder={constants.username}
 							autoCapitalize={'none'}
 							returnKeyType={'next'}
 							autoCorrect={false} />
-						<View style={{ marginTop: 15, flex: 1 }}>
+						<UserInput onTextChange={(s) => this.setState({ email: s })}
+							placeholder={constants.email}
+							autoCapitalize={'none'}
+							returnKeyType={'next'}
+							autoCorrect={false}
+							style={{ marginTop: 12 }}
+						/>
+						<UserInput onTextChange={(s) => this.setState({ phone: s })}
+							placeholder={constants.phone}
+							autoCapitalize={'none'}
+							returnKeyType={'next'}
+							autoCorrect={false}
+							style={{ marginTop: 12 }}
+						/>
+						<View style={{ marginTop: 12, flex: 1 }}>
 
 							<UserInput
 								onTextChange={(s) => this.setState({ password: s })}
@@ -103,18 +126,32 @@ class LoginScreen extends Component {
 							</TouchableOpacity>
 
 						</View>
+
+						<View style={{ marginTop: 12, flex: 1 }}>
+
+							<UserInput
+								onTextChange={(s) => this.setState({ passwordConfirm: s })}
+								secureTextEntry={this.state.showPassConfirm}
+								placeholder={constants.confirm_password}
+								returnKeyType={'done'}
+								autoCapitalize={'none'}
+								autoCorrect={false} />
+
+							<TouchableOpacity
+								activeOpacity={0.7}
+								style={styles.btnEye}
+								onPress={this.showPassConfirm}>
+								<Image source={eyeImg} style={styles.iconEye} />
+							</TouchableOpacity>
+
+						</View>
+
+						<ButtonSubmit onRef={ref => (this.child = ref)} click={() => { this.register() }} text={constants.register} />
 						<View style={{ width: DEVICE_WIDTH, maxWidth: 300 }}>
-							<TouchableOpacity onPress={() => { this.props.navigation.replace("forgotPassword") }} style={{ alignItems: 'flex-end' }}>
-								<Text style={{ marginTop: 12, color: 'rgb(49,96,172)' }}>Quên mật khẩu</Text>
+							<TouchableOpacity onPress={() => { this.props.navigation.replace("login") }} style={{ alignItems: 'flex-end' }}>
+								<Text style={{ marginTop: 15, color: 'rgb(155,155,155)', lineHeight: 20, fontSize: 16 }}>Nếu bạn đã có tài khoản hãy đăng nhập ngay <Text style={{ fontWeight: 'bold', color: 'rgb(0,151,124)' }}>tại đây</Text></Text>
 							</TouchableOpacity>
 						</View>
-						<ButtonSubmit onRef={ref => (this.child = ref)} click={() => { this.login() }} text={constants.login} />
-						<View style={{ width: DEVICE_WIDTH, maxWidth: 300 }}>
-							<TouchableOpacity onPress={() => { this.props.navigation.replace("register") }} style={{ alignItems: 'flex-end' }}>
-								<Text style={{ marginTop: 15, color: 'rgb(155,155,155)', lineHeight: 20, fontSize: 16 }}>Nếu bạn chưa có tài khoản hãy đăng ký ngay <Text style={{ fontWeight: 'bold', color: 'rgb(0,151,124)' }}>tại đây</Text></Text>
-							</TouchableOpacity>
-						</View>
-						<SocialNetwork />
 					</KeyboardAvoidingView>
 
 
@@ -128,7 +165,7 @@ const DEVICE_HEIGHT = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
 	form: {
-		marginTop: 60,
+		marginTop: 30,
 		alignItems: 'center',
 	},
 	container: {
@@ -174,4 +211,4 @@ function mapStateToProps(state) {
 		userApp: state.userApp
 	};
 }
-export default connect(mapStateToProps)(LoginScreen);
+export default connect(mapStateToProps)(RegisterScreen);

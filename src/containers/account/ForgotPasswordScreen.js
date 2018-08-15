@@ -11,9 +11,8 @@ import userProvider from '@data-access/user-provider';
 import constants from '@resources/strings';
 import redux from '@redux-store';
 import ScaleImage from 'mainam-react-native-scaleimage';
-import SocialNetwork from '@components/LoginSocial';
 
-class LoginScreen extends Component {
+class ForgotPasswordScreen extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
@@ -29,7 +28,9 @@ class LoginScreen extends Component {
 	}
 
 
-	login() {
+	forgotPassword() {
+		snackbar.show("Chức năng đang phát triển");
+		return;
 		Keyboard.dismiss();
 		if (this.state.email.trim() === "" || this.state.email === "" || this.state.password === "") {
 			snackbar.showShort(constants.msg.user.please_input_username_and_password);
@@ -70,6 +71,7 @@ class LoginScreen extends Component {
 		});
 	}
 
+
 	render() {
 		return (
 			<ActivityPanel style={{ flex: 1 }} title="Đăng nhập" touchToDismiss={true} hideActionbar={true} hideStatusbar={true} showFullScreen={true}>
@@ -85,36 +87,13 @@ class LoginScreen extends Component {
 							autoCapitalize={'none'}
 							returnKeyType={'next'}
 							autoCorrect={false} />
-						<View style={{ marginTop: 15, flex: 1 }}>
 
-							<UserInput
-								onTextChange={(s) => this.setState({ password: s })}
-								secureTextEntry={this.state.showPass}
-								placeholder={constants.input_password}
-								returnKeyType={'done'}
-								autoCapitalize={'none'}
-								autoCorrect={false} />
-
-							<TouchableOpacity
-								activeOpacity={0.7}
-								style={styles.btnEye}
-								onPress={this.showPass}>
-								<Image source={eyeImg} style={styles.iconEye} />
-							</TouchableOpacity>
-
-						</View>
-						<View style={{ width: DEVICE_WIDTH, maxWidth: 300 }}>
-							<TouchableOpacity onPress={() => { this.props.navigation.replace("forgotPassword") }} style={{ alignItems: 'flex-end' }}>
-								<Text style={{ marginTop: 12, color: 'rgb(49,96,172)' }}>Quên mật khẩu</Text>
-							</TouchableOpacity>
-						</View>
-						<ButtonSubmit onRef={ref => (this.child = ref)} click={() => { this.login() }} text={constants.login} />
+						<ButtonSubmit onRef={ref => (this.child = ref)} click={() => { this.forgotPassword() }} text={constants.send} />
 						<View style={{ width: DEVICE_WIDTH, maxWidth: 300 }}>
 							<TouchableOpacity onPress={() => { this.props.navigation.replace("register") }} style={{ alignItems: 'flex-end' }}>
 								<Text style={{ marginTop: 15, color: 'rgb(155,155,155)', lineHeight: 20, fontSize: 16 }}>Nếu bạn chưa có tài khoản hãy đăng ký ngay <Text style={{ fontWeight: 'bold', color: 'rgb(0,151,124)' }}>tại đây</Text></Text>
 							</TouchableOpacity>
 						</View>
-						<SocialNetwork />
 					</KeyboardAvoidingView>
 
 
@@ -174,4 +153,4 @@ function mapStateToProps(state) {
 		userApp: state.userApp
 	};
 }
-export default connect(mapStateToProps)(LoginScreen);
+export default connect(mapStateToProps)(ForgotPasswordScreen);

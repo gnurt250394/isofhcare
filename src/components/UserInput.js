@@ -11,7 +11,7 @@ import {
 export default class UserInput extends Component {
 	render() {
 		return (
-			<View style={styles.inputWrapper}>
+			<View style={[styles.inputWrapper, this.props.style]}>
 				<TextInput style={styles.input}
 					keyboardType={this.props.keyboardType}
 					onChangeText={this.props.onTextChange}
