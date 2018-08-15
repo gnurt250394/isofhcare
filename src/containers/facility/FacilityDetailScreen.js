@@ -207,7 +207,7 @@ class SearchDrugScreen extends Component {
                                             {
                                                 facility.facility.website ?
                                                     <TouchableOpacity style={{ padding: 10, flexDirection: 'row' }} onPress={() => Linking.openURL(facility.facility.website)}>
-                                                        <ScaledImage source={require("@images/icthongbao.png")} width={20} style={{ marginRight: 5 }} />
+                                                        <ScaledImage source={require("@images/web.png")} width={17} style={{ marginRight: 5 }} />
                                                         <Text style={{ color: 'rgb(74,74,74)' }}>{facility.facility.website}</Text>
                                                     </TouchableOpacity> : null
                                             }
