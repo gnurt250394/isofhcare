@@ -38,11 +38,11 @@ module.exports = {
     login(username, password, callback) {
         if (username && password) {
             var body = {
-                username: username,
+                usernameOrEmail: username,
                 password: password.toMd5(),
                 device: { os: os, deviceId: this.deviceId, token: this.deviceToken }
             }
-            client.requestApi("post", constants.api.user.login, body, (s, e) => {
+            client.requestApi("put", constants.api.user.login, body, (s, e) => {
                 if (callback)
                     callback(s, e);
             });

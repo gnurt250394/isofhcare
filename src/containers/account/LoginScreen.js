@@ -13,6 +13,7 @@ import redux from '@redux-store';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import PushNotification from '@components/notification/PushController';
 import firebase from 'react-native-firebase';
+import SocialNetwork from '@components/LoginSocial';
 
 class LoginScreen extends Component {
 	componentDidMount() {
@@ -45,13 +46,7 @@ class LoginScreen extends Component {
 	}
 
 
-	qrCode() {
-		Actions.qrCode();
-	}
-
-
 	login() {
-		Actions.login4();
 		Keyboard.dismiss();
 		if (this.state.email.trim() === "" || this.state.email === "" || this.state.password === "") {
 			snackbar.showShort(constants.msg.user.please_input_username_and_password);
@@ -73,7 +68,7 @@ class LoginScreen extends Component {
 						// }
 						snackbar.show(constants.msg.user.login_success);
 						this.props.dispatch(redux.userLogin(user));
-						Actions.home();
+						this.props.navigation.navigate('home');
 						return;
 					case 2:
 						snackbar.show(constants.msg.user.username_or_password_incorrect);
@@ -96,58 +91,52 @@ class LoginScreen extends Component {
 	render() {
 		return (
 			<ActivityPanel style={{ flex: 1 }} title="Đăng nhập" touchToDismiss={true} hideActionbar={true} hideStatusbar={true} showFullScreen={true}>
-				<View style={{ position: 'relative', flex: 1 }}>
-					<Image source={require('@images/bg_login.png')} style={styles.picture} />
-					<ScrollView style={{ flex: 1 }}
-						keyboardShouldPersistTaps="always">
-						<View style={{ marginTop: 60, justifyContent: 'center', alignItems: 'center' }}>
-							<ScaleImage source={require("@images/logo.png")} width={120} />
-						</View>
-						<KeyboardAvoidingView behavior='padding'
-							style={styles.form}>
-							<UserInput onTextChange={(s) => this.setState({ email: s })}
-								placeholder={constants.input_username_or_email}
-								autoCapitalize={'none'}
-								returnKeyType={'next'}
-								autoCorrect={false} />
-							<View style={{ marginTop: 15, flex: 1 }}>
-
-								<UserInput
-									onTextChange={(s) => this.setState({ password: s })}
-									secureTextEntry={this.state.showPass}
-									placeholder={constants.input_password}
-									returnKeyType={'done'}
-									autoCapitalize={'none'}
-									autoCorrect={false} />
-
-								<TouchableOpacity
-									activeOpacity={0.7}
-									style={styles.btnEye}
-									onPress={this.showPass}>
-									<Image source={eyeImg} style={styles.iconEye} />
-								</TouchableOpacity>
-
-							</View>
-							<ButtonSubmit onRef={ref => (this.child = ref)} click={() => { this.login() }} text={constants.login} />
-							<View style={{ marginBottom: 100 }}>
-								<TouchableOpacity onPress={() => { this.qrCode() }} style={{ marginTop: 56, alignItems: 'center' }}>
-									<ScaleImage source={require("@images/btnqr.png")} width={70} />
-									<Text style={{ marginTop: 12 }}>Chạm để quét QR code {this.props.userApp.test}</Text>
-								</TouchableOpacity>
-							</View>
-						</KeyboardAvoidingView>
-
-
-					</ScrollView >
-					<View style={{
-						margin: 10, justifyContent: 'center',
-						alignItems: 'center',
-					}}>
-						<ScaleImage source={require("@images/copyright.png")} height={15} style={{
-						}} />
+				<ScrollView style={{ flex: 1 }}
+					keyboardShouldPersistTaps="always">
+					<View style={{ marginTop: 60, justifyContent: 'center', alignItems: 'center' }}>
+						<ScaleImage source={require("@images/logo.png")} width={120} />
 					</View>
-				</View>
-				<PushNotification />
+					<KeyboardAvoidingView behavior='padding'
+						style={styles.form}>
+						<UserInput onTextChange={(s) => this.setState({ email: s })}
+							placeholder={constants.input_username_or_email}
+							autoCapitalize={'none'}
+							returnKeyType={'next'}
+							autoCorrect={false} />
+						<View style={{ marginTop: 15, flex: 1 }}>
+
+							<UserInput
+								onTextChange={(s) => this.setState({ password: s })}
+								secureTextEntry={this.state.showPass}
+								placeholder={constants.input_password}
+								returnKeyType={'done'}
+								autoCapitalize={'none'}
+								autoCorrect={false} />
+
+							<TouchableOpacity
+								activeOpacity={0.7}
+								style={styles.btnEye}
+								onPress={this.showPass}>
+								<Image source={eyeImg} style={styles.iconEye} />
+							</TouchableOpacity>
+
+						</View>
+						<View style={{ width: DEVICE_WIDTH, maxWidth: 300 }}>
+							<TouchableOpacity onPress={() => { this.props.navigation.navigate("forgotPassword") }} style={{ alignItems: 'flex-end' }}>
+								<Text style={{ marginTop: 12, color: 'rgb(49,96,172)' }}>Quên mật khẩu</Text>
+							</TouchableOpacity>
+						</View>
+						<ButtonSubmit onRef={ref => (this.child = ref)} click={() => { this.login() }} text={constants.login} />
+						<View style={{ width: DEVICE_WIDTH, maxWidth: 300 }}>
+							<TouchableOpacity onPress={() => { this.props.navigation.navigate("forgotPassword") }} style={{ alignItems: 'flex-end' }}>
+								<Text style={{ marginTop: 15, color: 'rgb(155,155,155)', lineHeight: 20, fontSize: 16 }}>Nếu bạn chưa có tài khoản hãy đăng ký ngay <Text style={{ fontWeight: 'bold', color: 'rgb(0,151,124)' }}>tại đây</Text></Text>
+							</TouchableOpacity>
+						</View>
+						<SocialNetwork />
+					</KeyboardAvoidingView>
+
+
+				</ScrollView >
 			</ActivityPanel >
 		);
 	}

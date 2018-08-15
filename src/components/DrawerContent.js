@@ -3,12 +3,14 @@ import React, {
 } from 'react';
 import { View, Image, StyleSheet, Text, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
 const { width, height } = Dimensions.get('window');
+import { connect } from 'react-redux';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import ActivityPanel from '@components/ActivityPanel';
 import { NavigationActions } from 'react-navigation'
 import ActionBar from '@components/Actionbar';
 import constants from '@resources/strings';
 import { isIphoneX } from 'react-native-iphone-x-helper';
+import redux from '@redux-store';
 const resetAction = (routeName) => NavigationActions.reset({
   index: 0,
   actions: [
@@ -29,32 +31,45 @@ class DrawerContent extends Component {
     if (this.props.drawer)
       this.props.drawer.close();
   }
+
+  logout() {
+    this.props.dispatch(redux.userLogout());
+  }
+  login() {
+    this.props.navigation.navigate("login");
+  }
   render() {
 
     return (
       <View style={styles.container}>
         <ActionBar icBack={require("@images/icclose.png")} backButtonClick={() => { this.hideDrawer() }} styleBackButton={{ marginLeft: 20 }} actionbarTextColor={[{ color: constants.colors.actionbar_title_color }]} actionbarStyle={[{ paddingTop: isIphoneX() ? 40 : 32, backgroundColor: constants.colors.actionbar_color }, this.props.actionbarStyle, { elevation: 1 }]} />
         <View style={{ width: 250, paddingTop: 10, flex: 1 }}>
-          <ScaleImage source={require("@images/ichotro.png")} width={70} style={{ alignSelf: 'center', }} />
-          <Text style={{ alignSelf: 'center', fontWeight: 'bold', fontSize: 15, color: 'rgb(35,66,155)', marginTop: 18 }}>BÙI NGỌC HOA</Text>
+          {this.props.userApp.isLogin ?
+            <View>
+              <ScaleImage source={require("@images/ichotro.png")} width={70} style={{ alignSelf: 'center', }} />
+              <Text style={{ alignSelf: 'center', fontWeight: 'bold', fontSize: 15, color: 'rgb(35,66,155)', marginTop: 18, }}>{this.props.userApp.currentUser.name ? this.props.userApp.currentUser.name.toUpperCase() : ""}</Text>
+            </View> : null
+          }
           <ScrollView style={{ flex: 1, marginLeft: 60, marginTop: 30 }}>
-            <View style={{ marginLeft: 30 }}>
-              <TouchableOpacity style={styles.menu_item}>
-                <Text style={styles.menu_item_text}>Hồ sơ cá nhân</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.menu_item}>
-                <Text style={styles.menu_item_text}>Ví iSofH care</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.menu_item}>
-                <Text style={styles.menu_item_text}>Tài khoản KM</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.menu_item}>
-                <Text style={styles.menu_item_text}>Câu hỏi của bạn</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.menu_item}>
-                <Text style={styles.menu_item_text}>Tin nhắn</Text>
-              </TouchableOpacity>
-            </View>
+            {this.props.userApp.isLogin ?
+              <View style={{ marginLeft: 30 }}>
+                <TouchableOpacity style={styles.menu_item}>
+                  <Text style={styles.menu_item_text}>Hồ sơ cá nhân</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.menu_item}>
+                  <Text style={styles.menu_item_text}>Ví iSofH care</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.menu_item}>
+                  <Text style={styles.menu_item_text}>Tài khoản KM</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.menu_item}>
+                  <Text style={styles.menu_item_text}>Câu hỏi của bạn</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.menu_item}>
+                  <Text style={styles.menu_item_text}>Tin nhắn</Text>
+                </TouchableOpacity>
+              </View> : <TouchableOpacity onPress={() => this.login()} style={{ paddingTop: 10, paddingBottom: 10 }}><Text style={{ color: 'rgb(0,151,124)', fontWeight: 'bold', fontSize: 16 }}>ĐĂNG NHẬP</Text></TouchableOpacity>
+            }
             <View style={{ marginTop: 20, height: 3, backgroundColor: "rgb(234,234,234)", }} />
             <View style={{ marginLeft: 30, marginTop: 20 }}>
               <TouchableOpacity style={styles.menu_item}>
@@ -69,7 +84,7 @@ class DrawerContent extends Component {
               <TouchableOpacity style={styles.menu_item}>
                 <Text style={styles.menu_item_text}>Điều khoản sử dụng</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.menu_item}>
+              <TouchableOpacity style={styles.menu_item} onPress={() => { this.logout() }}>
                 <Text style={styles.menu_item_text}>Đăng xuất</Text>
               </TouchableOpacity>
             </View>
@@ -95,5 +110,10 @@ const styles = StyleSheet.create({
     fontSize: 16, color: 'rgba(0,0,0,0.7)'
   }
 });
-
-export default DrawerContent;
+function mapStateToProps(state) {
+  return {
+    userApp: state.userApp,
+    navigation: state.navigation
+  };
+}
+export default connect(mapStateToProps)(DrawerContent);

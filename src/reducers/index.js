@@ -17,6 +17,7 @@ const defaultState = {
 }
 const reducer = (state = defaultState, action) => {
     var newState = JSON.parse(JSON.stringify(state));
+    newState.navigation = state.navigation;
     switch (action.type) {
         case constants.action.create_navigation_global:
             newState.navigation = action.value;

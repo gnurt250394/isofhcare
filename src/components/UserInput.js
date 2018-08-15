@@ -49,10 +49,10 @@ const styles = StyleSheet.create({
 		height: 42,
 		marginHorizontal: 20,
 		paddingLeft: 15,
-		borderRadius: 3,
+		borderRadius: 6,
 		color: '#006ac6',
 		borderWidth: 1,
-		borderColor: '#8c8c8c'
+		borderColor: 'rgba(155,155,155,0.7)'
 	},
 	inputWrapper: {
 		flex: 1,

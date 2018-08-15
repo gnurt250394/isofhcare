@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ScaleImage from 'mainam-react-native-scaleimage';
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, Text } from 'react-native';
 import { connect } from 'react-redux';
 import snackbar from '@utils/snackbar-utils';
 import userProvider from '@data-access/user-provider';
@@ -120,14 +120,17 @@ class LoginSocial extends Component {
     }
     render() {
         return (
-            <View style={{ flexDirection: 'row', marginTop: 20 }}>
-                <TouchableOpacity onPress={() => this.handleSigninGoogle()}>
+            <View>
+                <Text style={{ textAlign: 'center', marginTop: 20, color: "#3160ac", opacity: 0.6 }}>Đăng nhập với</Text>
+                <View style={{ flexDirection: 'row' }}>
                     <ScaleImage source={require("@images/ic_google.png")} width={40} style={{ padding: 10, margin: 10 }} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => this.handleSigninFacebook()}>
-                    <ScaleImage source={require("@images/ic_fb.png")} width={40} style={{ padding: 10, margin: 10 }} />
-                </TouchableOpacity>
+                    <TouchableOpacity onPress={() => this.handleSigninGoogle()}>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => this.handleSigninFacebook()}>
+                        <ScaleImage source={require("@images/ic_fb.png")} width={40} style={{ padding: 10, margin: 10 }} />
+                    </TouchableOpacity>
 
+                </View>
             </View>
 
         );
