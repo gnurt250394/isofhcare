@@ -84,7 +84,7 @@ class TabSearch extends Component {
                     }}>
                         {
                             this.state.features.map((item, position) => {
-                                return (<Animatable.View delay={50 * position} animation={position % 2 == 0 ? "slideInLeft" : "slideInRight"} direction="alternate">
+                                return (<Animatable.View key={position} delay={50 * position} animation={position % 2 == 0 ? "slideInLeft" : "slideInRight"} direction="alternate">
                                     <TouchableOpacity key={position} style={{ padding: 5 }} onPress={() => { this.onClick(position) }}>
                                         <ScaledImage source={item.icon} width={itemWidth} />
                                     </TouchableOpacity>

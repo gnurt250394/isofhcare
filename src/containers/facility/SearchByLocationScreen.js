@@ -11,6 +11,7 @@ import SearchPanel from '@components/SearchPanel';
 import realmModel from '@models/realm-models';
 import locationProvider from '@data-access/location-provider';
 import historyProvider from '@data-access/history-provider';
+import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 
 import SlidingPanel from 'mainam-react-native-sliding-up-down';
 class SearchByLocastionScreen extends Component {
@@ -42,8 +43,55 @@ class SearchByLocastionScreen extends Component {
             }
         }
     }
+    getCurrentLocation = () => {
+        return new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(position => {
+                resolve(position)
+            }
+                , e => {
+                    reject(e)
+                });
+        });
+    }
     componentDidMount() {
-        this.onRefresh();
+        if (Platform.OS == "ios") {
+            this.getCurrentLocation().then(position => {
+                if (position) {
+                    this.setState({
+                        region: {
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude,
+                            latitudeDelta: 0.003,
+                            longitudeDelta: 0.003,
+                        },
+                    }, () => {
+                        this.onRefresh();
+                    });
+                }
+            });
+        } else {
+            RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({ interval: 10000, fastInterval: 5000 })
+                .then(data => {
+                    setTimeout(() => {
+                        this.getCurrentLocation().then(position => {
+                            if (position) {
+                                this.setState({
+                                    region: {
+                                        latitude: position.coords.latitude,
+                                        longitude: position.coords.longitude,
+                                        latitudeDelta: 0.003,
+                                        longitudeDelta: 0.003,
+                                    },
+                                }, () => {
+                                    this.onRefresh();
+                                });
+                            }
+                        });
+                    }, 1000);
+                }).catch(err => {
+                });
+        }
+        // this.onRefresh();        
     }
 
     onRefresh() {
@@ -59,7 +107,7 @@ class SearchByLocastionScreen extends Component {
             refreshing: page == 1,
             loadMore: page != 1
         })
-        facilityProvider.searchByLatLon(this.state.latitude, this.state.longitude, page, size, (s, e) => {
+        facilityProvider.searchByLatLon(this.state.region.latitude, this.state.region.longitude, page, size, (s, e) => {
             this.setState({
                 loading: false,
                 refreshing: false,
@@ -97,13 +145,23 @@ class SearchByLocastionScreen extends Component {
     }
     onSearchItemClick(item) {
         // this.props.navigation.navigate("drugDetailScreen", { drug: item });
-        const { LOCATION_HISTORY } = realmModel;
-        historyProvider.addHistory("", LOCATION_HISTORY, item.name, item.name, JSON.stringify(item));
-        if (item.geometry && item.geometry.location) {
-            var temp = item.geometry.location;
-            temp.longitudeDelta = 0.1;
-            temp.latitudeDelta = 0.1;
-            this.setState({ region: temp });
+        try {
+            const { LOCATION_HISTORY } = realmModel;
+            historyProvider.addHistory("", LOCATION_HISTORY, item.name, item.name, JSON.stringify(item));
+            if (item.geometry && item.geometry.location) {
+                var temp = item.geometry.location;
+                temp.latitude = temp.lat;
+                temp.longitude = temp.lng;
+                temp.longitudeDelta = 0.03;
+                temp.latitudeDelta = 0.03;
+                this.setState({ region: temp, showOverlay: false }, () => {
+                    if (this.searchPanel) {
+                        this.searchPanel.getWrappedInstance().setValue(item.name);
+                    }
+                });
+            }
+        } catch (error) {
+
         }
     }
     renderSearchItem(item, index, keyword) {
@@ -155,7 +213,6 @@ class SearchByLocastionScreen extends Component {
 
         if (item.geometry && item.geometry.location) {
             var temp = item.geometry.location;
-            debugger;
             this.setState({ region: { latitude: temp.lat, longitude: temp.lng, longitudeDelta: 0.1, latitudeDelta: 0.1 } });
         }
     }

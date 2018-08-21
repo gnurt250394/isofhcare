@@ -14,8 +14,8 @@ class TopSearch extends Component {
     }
     componentDidMount() {
         facilityProvider.getTop(10, (s, e) => {
-            if (s && s.code == 0 && s.data && s.data.data && s.data.data.length > 0) {
-                this.setState({ data: s.data.data });
+            if (s) {
+                this.setState({ data: s });
             }
         });
     }

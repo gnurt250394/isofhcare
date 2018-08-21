@@ -78,31 +78,23 @@ module.exports = {
                 callback(s, e);
         });
     },
-    register(username, email, phone, password, avatar, callback) {
-        if (username && password) {
-            var body = {
-                user: {
-                    email: email,
-                    password: password.toMd5(),
-                    nickname: username,
-                    avatarUrl: avatar,
-                    thumbnailAvatarUrl: avatar,
-                    gender: 1,
-                    phone: phone,
-                    socialType: 0,
-                    role: 0,
-                },
-                device: { os: 0, deviceId: "", token: "" }
-            }
-            client.requestApi("post", constants.api.user.register, body, (s, e) => {
-                if (callback)
-                    callback(s, e);
-            });
+    register(name, email, phone, password, callback) {
+        var body = {
+            user: {
+                email,
+                password: password.toMd5(),
+                name,
+                gender: 1,
+                phone: phone,
+                socialType: 0,
+                role: 0,
+            },
+            device: { os: 0, deviceId: "", token: "" }
         }
-        else {
+        client.requestApi("post", constants.api.user.register, body, (s, e) => {
             if (callback)
-                callback();
-        }
+                callback(s, e);
+        });
     },
     update(user, callback) {
         var body = {

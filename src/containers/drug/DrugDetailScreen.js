@@ -121,7 +121,6 @@ class DrugDetailScreen extends Component {
         }
     }
     render() {
-        debugger;
         const drug = this.props.navigation.getParam("drug", null);
         return (
             <ActivityPanel style={{ flex: 1 }} title="CHI TIẾT THUỐC" showFullScreen={true}>

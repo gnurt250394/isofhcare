@@ -2,7 +2,7 @@ module.exports = {
   username: 'Tên tài khoản',
   email: 'Email',
   phone: 'Số điện thoại',
-  fullname: 'Họ tên',
+  fullname: 'Họ và tên',
   confirm_password: 'Nhập lại mật khẩu',
   app_title: 'ISOFH CARE',
   login: "Đăng nhập",
@@ -61,7 +61,8 @@ module.exports = {
       country: 'country',
       province: 'province',
       district: 'district',
-      zone: 'zone'
+      zone: 'zone',
+      DATA_TOP_SPECIALIST: "DATA_TOP_SPECIALIST"
     }
   },
   msg:
@@ -94,6 +95,7 @@ module.exports = {
     user:
     {
       please_input_current_password: "Vui lòng nhập mật khẩu hiện tại",
+      please_input_email_or_phone: "Vui lòng nhập địa chỉ email hoặc số điện thoại",
       please_enter_the_correct_phone_number_format: "Vui lòng nhập đúng định dạng số điện thoại",
       input_phonenumber: "Nhập số điện thoại",
       please_enter_current_password: "Vui lòng nhập mật khẩu hiện tại",
@@ -114,7 +116,7 @@ module.exports = {
       please_input_email_to_receive_code: "Vui lòng nhập địa chỉ email để lấy lại mật khẩu",
       login_success: "Đăng nhập thành công",
       register_success: "Đăng ký thành công",
-      username_or_email_existed: "Email hoặc tên đăng nhập đã tồn tại. Vui lòng thử lại",
+      username_or_email_existed: "Email đã tồn tại. Vui lòng thử lại",
       username_or_email_empty: "Tên đăng nhập hoặc email trống",
       account_blocked: "Tài khoản đã bị khóa, vui lòng liên hệ quản trị viên",
       username_or_password_incorrect: "Email/tên đăng nhập hoặc mặt khẩu không đúng. Vui lòng thử lại!",
@@ -231,6 +233,10 @@ module.exports = {
     facility:
     {
       search: "facility/search"
+    },
+    specialist:
+    {
+      search: "specialist/search"
     }
   }
 };

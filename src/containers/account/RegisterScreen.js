@@ -11,6 +11,7 @@ import userProvider from '@data-access/user-provider';
 import constants from '@resources/strings';
 import redux from '@redux-store';
 import ScaleImage from 'mainam-react-native-scaleimage';
+import stringUtils from 'mainam-react-native-string-utils';
 
 class RegisterScreen extends Component {
 
@@ -22,7 +23,9 @@ class RegisterScreen extends Component {
 			press: false,
 			pressConfirm: false,
 			email: "",
-			password: ""
+			password: "",
+			username: "",
+			phone: ""
 		}
 		this.showPass = this.showPass.bind(this);
 		this.showPassConfirm = this.showPassConfirm.bind(this);
@@ -37,15 +40,61 @@ class RegisterScreen extends Component {
 
 	register() {
 		Keyboard.dismiss();
-		if (this.state.email.trim() === "" || this.state.email === "" || this.state.password === "") {
-			snackbar.showShort(constants.msg.user.please_input_username_and_password);
+		if (!this.state.fullname) {
+			snackbar.showShort(constants.msg.user.please_input_fullname);
+			this.child.unPress();
+			return;
+		}
+		if (!this.state.fullname.isFullName()) {
+			snackbar.showShort(constants.msg.user.please_enter_the_correct_fullname_format);
 			this.child.unPress();
 			return;
 		}
 
-		userProvider.login(this.state.email.trim(), this.state.password, (s, e) => {
-			snackbar.show("Chức năng đang phát triển");
+		if (!this.state.phone) {
+			if (!this.state.email) {
+				snackbar.showShort(constants.msg.user.please_input_email_or_phone);
+				this.child.unPress();
+				return;
+			}			
+		}
+		if (this.state.email && !this.state.email.isEmail()) {
+			snackbar.showShort(constants.msg.user.please_enter_the_correct_email_format);
+			this.child.unPress();
 			return;
+		}
+		
+		if (this.state.phone && !this.state.phone.isPhoneNumber()) {
+			snackbar.showShort(constants.msg.user.please_enter_the_correct_phone_number_format);
+			this.child.unPress();
+			return;
+		}
+
+		if (!this.state.password) {
+			snackbar.showShort(constants.msg.user.please_input_password);
+			this.child.unPress();
+			return;
+		}
+		if (this.state.password.length < 6) {
+			snackbar.showShort("Mật khẩu cần nhiều hơn 6 ký tự");
+			this.child.unPress();
+			return;
+		}
+
+
+		if (!this.state.confirm_password) {
+			snackbar.showShort(constants.msg.user.please_input_confirm_password);
+			this.child.unPress();
+			return;
+		}
+		if (this.state.password != this.state.confirm_password) {
+			snackbar.showShort(constants.msg.user.confirm_password_is_not_match);
+			this.child.unPress();
+			return;
+		}
+
+
+		userProvider.register(this.state.fullname.trim(), this.state.email.trim(), this.state.phone.trim(), this.state.password, (s, e) => {
 			this.child.unPress();
 			if (s) {
 				// snackbar.show("Thông tin đăng nhập không hợp lệ");
@@ -57,12 +106,12 @@ class RegisterScreen extends Component {
 						// 	snackbar.show(constants.msg.user.please_login_on_web_to_management);
 						// 	return;
 						// }
-						snackbar.show(constants.msg.user.login_success);
+						snackbar.show(constants.msg.user.register_success);
 						this.props.dispatch(redux.userLogin(user));
 						this.props.navigation.navigate('home');
 						return;
 					case 2:
-						snackbar.show(constants.msg.user.username_or_password_incorrect);
+						snackbar.show(constants.msg.user.username_or_email_existed);
 						return;
 					case 3:
 					case 1:
@@ -89,8 +138,8 @@ class RegisterScreen extends Component {
 					</View>
 					<KeyboardAvoidingView behavior='padding'
 						style={styles.form}>
-						<UserInput onTextChange={(s) => this.setState({ username: s })}
-							placeholder={constants.username}
+						<UserInput onTextChange={(s) => this.setState({ fullname: s })}
+							placeholder={constants.fullname}
 							autoCapitalize={'none'}
 							returnKeyType={'next'}
 							autoCorrect={false} />
@@ -130,7 +179,7 @@ class RegisterScreen extends Component {
 						<View style={{ marginTop: 12, flex: 1 }}>
 
 							<UserInput
-								onTextChange={(s) => this.setState({ passwordConfirm: s })}
+								onTextChange={(s) => this.setState({ confirm_password: s })}
 								secureTextEntry={this.state.showPassConfirm}
 								placeholder={constants.confirm_password}
 								returnKeyType={'done'}
