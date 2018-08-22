@@ -121,7 +121,7 @@ module.exports = {
                 query = query.replace(' ', '+');
             }
         }
-        var url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=" + query + "&key=" + (Platform.OS == "ios" ? "AIzaSyA6V1lvfuFcHHTxNi2B01G-TmZY5bnHzs8" : "AIzaSyD5QZaFvWLLC0j5XSDJ8yBVdhs9hZbtpdQ" + "&language=vi");
+        var url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=" + query + "&key=" + (Platform.OS == "ios" ? "AIzaSyD5QZaFvWLLC0j5XSDJ8yBVdhs9hZbtpdQ" : "AIzaSyD5QZaFvWLLC0j5XSDJ8yBVdhs9hZbtpdQ" + "&language=vi");
         client.requestApi("get", url, {}, (s, e) => {
             try {
                 if (callback)
