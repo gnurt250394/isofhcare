@@ -62,7 +62,8 @@ module.exports = {
       province: 'province',
       district: 'district',
       zone: 'zone',
-      DATA_TOP_SPECIALIST: "DATA_TOP_SPECIALIST"
+      DATA_TOP_SPECIALIST: "DATA_TOP_SPECIALIST",
+      DATA_TOP_FACILITY: "DATA_TOP_FACILITY"
     }
   },
   msg:

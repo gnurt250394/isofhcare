@@ -14,14 +14,14 @@ module.exports = {
             }).then(realm => {
                 realm.write(() => {
                     try {
-                        let key = "DataString_" + userId + "_" + key;
-                        var results = realm.objects(DataString.name).filtered("key == '" + key + "'");
+                        let _key = "DataString_" + userId + "_" + key;
+                        var results = realm.objects(DataString.name).filtered("key == '" + _key + "'");
                         if (results && results.length > 0) {
                             results[0].value = _value;
                             return;
                         }
                         const obj = realm.create(DataString.name, {
-                            key: key,
+                            key: _key,
                             value: _value
                         });
                     } catch (error) {
@@ -45,8 +45,8 @@ module.exports = {
                 }
             }).then((realm) => {
                 try {
-                    let key = "DataString_" + userId + "_" + key;
-                    var data = realm.objects(DataString.name).filtered("key == '" + key + "'");
+                    let _key = "DataString_" + userId + "_" + key;
+                    var data = realm.objects(DataString.name).filtered("key == '" + _key + "'");
                     if (data && data.length > 0) {
                         var _value = JSON.parse(data[0].value);
                         if (callback) {

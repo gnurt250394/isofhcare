@@ -20,12 +20,10 @@ class TopSearch extends Component {
         }
     }
     componentDidMount() {
-        debugger;
         specialistProvider.getTop(10, (s, e) => {
-            alert("");
-            // if (s && s.code == 0 && s.data && s.data.data) {
-            //     this.setState({ data: s.data.data });
-            // }
+            if (s) {
+                this.setState({ data: s });
+            }
         });
     }
 
