@@ -10,25 +10,27 @@ import * as Animatable from 'react-native-animatable';
 class TabSearch extends Component {
     constructor(props) {
         super(props)
-        var features = [{
-            icon: require("@images/search/icchuandoantrieuchung.png"),
-            index: 0
-        }, {
-            icon: require("@images/search/icchuandoanbenh.png"),
-            index: 0
-        }, {
-            icon: require("@images/search/ictimbacsi.png"),
-            index: 0
-        }, {
-            icon: require("@images/search/icgiadichvu.png"),
-            index: 0
-        }, {
-            icon: require("@images/search/ictimcsyt.png"),
-            index: 0
-        }, {
-            icon: require("@images/search/ictimthuoc.png"),
-            index: 0
-        },];
+        var features = [
+            //     {
+            //     icon: require("@images/search/icchuandoantrieuchung.png"),
+            //     index: 0
+            // }, {
+            //     icon: require("@images/search/icchuandoanbenh.png"),
+            //     index: 0
+            // }, {
+            //     icon: require("@images/search/ictimbacsi.png"),
+            //     index: 0
+            // }, {
+            //     icon: require("@images/search/icgiadichvu.png"),
+            //     index: 0
+            // }, 
+            {
+                icon: require("@images/search/ictimcsyt.png"),
+                index: 0
+            }, {
+                icon: require("@images/search/ictimthuoc.png"),
+                index: 0
+            },];
         this.state = {
             features
         }
@@ -36,10 +38,10 @@ class TabSearch extends Component {
     onClick(index) {
         const navigate = this.props.navigation.navigate;
         switch (index) {
-            case 4:
+            case 0:
                 navigate("searchFacility");
                 break;
-            case 5:
+            case 1:
                 navigate("searchDrug");
                 break;
         }

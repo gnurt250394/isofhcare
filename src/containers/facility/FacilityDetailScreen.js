@@ -3,7 +3,8 @@ import ActivityPanel from '@components/ActivityPanel';
 import { View, TextInput, TouchableWithoutFeedback, Text, FlatList, TouchableOpacity, Dimensions, StyleSheet, Platform, ScrollView, Linking } from 'react-native';
 import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
-import drugProvider from '@data-access/drug-provider';
+import locationProvider from '@data-access/location-provider';
+import historyProvider from '@data-access/history-provider';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 const { width, height } = Dimensions.get('window');
 import SearchPanel from '@components/SearchPanel';
@@ -12,6 +13,7 @@ import ImageProgress from 'mainam-react-native-image-progress';
 import Progress from 'react-native-progress/Pie';
 import { Rating } from 'react-native-ratings';
 import PhotoGrid from 'react-native-thumbnail-grid';
+import snackbar from '@utils/snackbar-utils'
 
 import SlidingPanel from 'mainam-react-native-sliding-up-down';
 class SearchDrugScreen extends Component {
@@ -46,13 +48,35 @@ class SearchDrugScreen extends Component {
     }
 
     onSearchItemClick(item) {
-        this.props.navigation.navigate("drugDetailScreen", { drug: item });
-        const { DRUG_HISTORY } = realmModel;
-        historyProvider.addHistory("", DRUG_HISTORY, item.drug.name, item.drug.id, "");
+        locationProvider.getByPlaceId(item.placeID, (s, e) => {
+            if (s) {
+                try {
+                    const { LOCATION_HISTORY } = realmModel;
+                    historyProvider.addHistory("", LOCATION_HISTORY, s.name, s.name, JSON.stringify(s));
+                    s.longitudeDelta = 0.03;
+                    s.latitudeDelta = 0.03;
+                    this.setState({ region: s, showOverlay: false }, () => {
+                        if (this.searchPanel) {
+                            this.searchPanel.getWrappedInstance().setValue(s.name);
+                        }
+                    });
+
+                } catch (error) {
+
+                }
+            }
+            else {
+                snackbar.show("Không tìm thấy thông tin của địa điểm này");
+            }
+        });
+
+        // this.props.navigation.navigate("drugDetailScreen", { drug: item });
+
     }
     renderSearchItem(item, index, keyword) {
         return <TouchableOpacity style={{ padding: 5 }} onPress={this.onSearchItemClick.bind(this, item)}>
-            <Text style={{ paddingLeft: 10 }}>{item.drug.name}</Text>
+            <Text style={{ paddingLeft: 10 }}>{item.primaryText}</Text>
+            <Text style={{ paddingLeft: 10, fontSize: 12, marginTop: 10, color: '#00000050' }}>{item.secondaryText}</Text>
             <View style={{ height: 0.5, backgroundColor: '#00000040', marginTop: 12 }} />
         </TouchableOpacity>
     }
@@ -64,15 +88,15 @@ class SearchDrugScreen extends Component {
             </TouchableOpacity>
         return <View />
     }
-    onSearch(s) {
+    onSearch(text) {
         return new Promise((resolve, reject) => {
-            drugProvider.search(s, 1, 5, (s, e) => {
+            locationProvider.searchPlace(text, (s, e) => {
                 if (e)
                     reject(e);
                 else {
-                    if (s && s.code == 0) {
-                        resolve(s.data.data);
-                    } else {
+                    if (s)
+                        resolve(s);
+                    else {
                         reject([]);
                     }
                 }
@@ -99,6 +123,31 @@ class SearchDrugScreen extends Component {
         }
         this.rating.setCurrentRating(facility.facility.review);
         this.mapRef.fitToElements(true);
+    }
+    onPressItemLocation(item) {
+        if (this.searchPanel)
+            this.searchPanel.getWrappedInstance().setValue(item.name);
+        this.setState({ showOverlay: false });
+
+        if (item.latitude && item.longitude) {
+            item.longitudeDelta = 0.03;
+            item.latitudeDelta = 0.03;
+            this.setState({ region: item });
+        }
+    }
+
+    renderItemHistory(item, index) {
+        var data = JSON.parse(item.data);
+        return <TouchableOpacity style={{ padding: 5 }} onPress={() => { this.onPressItemLocation(data) }}>
+            <View style={{ flexDirection: 'row' }}>
+                <ScaledImage source={require("@images/search/time-left.png")} width={15} style={{ marginTop: 2 }} />
+                <View>
+                    <Text style={{ marginLeft: 5 }}>{data.name}</Text>
+                    <Text style={{ marginLeft: 5, fontSize: 12, marginTop: 10, color: '#00000050' }}>{data.address}</Text>
+                </View>
+            </View>
+            <View style={{ height: 0.5, backgroundColor: '#00000040', marginTop: 12 }} />
+        </TouchableOpacity>
     }
     render() {
         const facility = this.props.navigation.getParam("facility", undefined);
@@ -145,13 +194,13 @@ class SearchDrugScreen extends Component {
                         {
                             this.state.showSearchPanel ?
                                 <View zIndex={3} style={{ padding: 14, position: 'absolute', top: 0, left: 0, right: 0 }}>
-                                    <SearchPanel searchTypeId={realmModel.DRUG_HISTORY}
-                                        resultPage="searchDrugResult"
+                                    <SearchPanel searchTypeId={realmModel.LOCATION_HISTORY}
                                         ref={ref => this.searchPanel = ref}
                                         onFocus={this.searchFocus.bind(this)}
                                         placeholder="Nhập địa điểm muốn tìm kiếm"
                                         onSearch={this.onSearch.bind(this)}
                                         renderItem={this.renderSearchItem.bind(this)}
+                                        renderItemHistory={this.renderItemHistory.bind(this)}
                                         renderFooter={this.renderFooter.bind(this)} />
                                 </View> : null
                         }
@@ -186,7 +235,13 @@ class SearchDrugScreen extends Component {
                                                         imageSize={13}
                                                         readonly
                                                     />
-                                                    <View style={{ flexDirection: 'row', marginTop: 8 }}><TouchableOpacity style={{ marginRight: 5, backgroundColor: 'rgb(47,94,172)', padding: 6, paddingLeft: 14, paddingRight: 14 }}><Text style={{ color: '#FFF', fontWeight: 'bold' }}>Đặt khám</Text></TouchableOpacity><TouchableOpacity style={{ backgroundColor: 'rgb(47,94,172)', padding: 6, paddingLeft: 14, paddingRight: 14 }}><Text style={{ color: '#FFF', fontWeight: 'bold' }}>Đánh giá</Text></TouchableOpacity></View>
+                                                    <View style={{ flexDirection: 'row', marginTop: 8 }}>
+                                                        <TouchableOpacity onPress={() => snackbar.show("Chức năng đang phát triển")} style={{ marginRight: 5, backgroundColor: 'rgb(47,94,172)', padding: 6, paddingLeft: 14, paddingRight: 14 }}>
+                                                            <Text style={{ color: '#FFF', fontWeight: 'bold' }}>Đặt khám</Text>
+                                                        </TouchableOpacity>
+                                                        <TouchableOpacity onPress={() => snackbar.show("Chức năng đang phát triển")} style={{ backgroundColor: 'rgb(47,94,172)', padding: 6, paddingLeft: 14, paddingRight: 14 }}>
+                                                            <Text style={{ color: '#FFF', fontWeight: 'bold' }}>Đánh giá</Text>
+                                                        </TouchableOpacity></View>
                                                 </View>
                                                 <ImageProgress
                                                     indicator={Progress} resizeMode='cover' style={{ width: 80, height: 80 }} imageStyle={{

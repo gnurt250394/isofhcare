@@ -2,10 +2,10 @@ const Realm = require('realm');
 import realmModel from '@models/realm-models';
 module.exports = {
     addHistory(userId, type, name, dataId, data) {
-        const { SearchHistory, schemaVersion } = realmModel;
+        const { SearchHistory, DataString, schemaVersion } = realmModel;
         try {
             Realm.open({
-                schema: [SearchHistory],
+                schema: [SearchHistory, DataString],
                 schemaVersion,
                 migration: function (oldRealm, newRealm) {
                     newRealm.deleteAll();
@@ -44,7 +44,6 @@ module.exports = {
                             data: data
                         });
                     } catch (error) {
-                        console.log(error);
                     }
 
                 });
@@ -56,9 +55,9 @@ module.exports = {
     },
     getListHistory(userId, type, callback) {
         try {
-            const { SearchHistory, schemaVersion } = realmModel;
+            const { SearchHistory, DataString, schemaVersion } = realmModel;
             Realm.open({
-                schema: [SearchHistory],
+                schema: [SearchHistory, DataString],
                 schemaVersion,
                 migration: function (oldRealm, newRealm) {
                     newRealm.deleteAll();

@@ -53,7 +53,7 @@ class DrawerContent extends Component {
           <ScrollView style={{ flex: 1, marginLeft: 60, marginTop: 30 }}>
             {this.props.userApp.isLogin ?
               <View style={{ marginLeft: 30 }}>
-                <TouchableOpacity style={styles.menu_item}>
+                {/* <TouchableOpacity style={styles.menu_item}>
                   <Text style={styles.menu_item_text}>Hồ sơ cá nhân</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.menu_item}>
@@ -67,12 +67,12 @@ class DrawerContent extends Component {
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.menu_item}>
                   <Text style={styles.menu_item_text}>Tin nhắn</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View> : <TouchableOpacity onPress={() => this.login()} style={{ paddingTop: 10, paddingBottom: 10 }}><Text style={{ color: 'rgb(0,151,124)', fontWeight: 'bold', fontSize: 16 }}>ĐĂNG NHẬP</Text></TouchableOpacity>
             }
             <View style={{ marginTop: 20, height: 3, backgroundColor: "rgb(234,234,234)", }} />
             <View style={{ marginLeft: 30, marginTop: 20 }}>
-              <TouchableOpacity style={styles.menu_item}>
+              {/* <TouchableOpacity style={styles.menu_item}>
                 <Text style={styles.menu_item_text}>Về iSofH</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.menu_item}>
@@ -83,15 +83,18 @@ class DrawerContent extends Component {
               </TouchableOpacity>
               <TouchableOpacity style={styles.menu_item}>
                 <Text style={styles.menu_item_text}>Điều khoản sử dụng</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.menu_item} onPress={() => { this.logout() }}>
-                <Text style={styles.menu_item_text}>Đăng xuất</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
+              {
+                this.props.userApp.isLogin ?
+                  <TouchableOpacity style={styles.menu_item} onPress={() => { this.logout() }}>
+                    <Text style={styles.menu_item_text}>Đăng xuất</Text>
+                  </TouchableOpacity> : null
+              }
             </View>
           </ScrollView>
         </View>
 
-      </View>
+      </View >
     );
   }
 }

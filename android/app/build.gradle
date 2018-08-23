@@ -153,6 +153,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-google-places')
     implementation project(':realm')
     compile project(':react-native-android-location-enabler')
     implementation(project(':react-native-maps')){

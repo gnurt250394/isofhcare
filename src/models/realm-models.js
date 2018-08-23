@@ -2,7 +2,7 @@ module.exports = {
     DRUG_HISTORY: 1,
     FACILITY_HISTORY: 2,
     LOCATION_HISTORY: 3,
-    schemaVersion:2,
+    schemaVersion:3,
     SearchHistory:
     {
         name: 'SearchHistory',

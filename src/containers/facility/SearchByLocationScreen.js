@@ -12,7 +12,7 @@ import realmModel from '@models/realm-models';
 import locationProvider from '@data-access/location-provider';
 import historyProvider from '@data-access/history-provider';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
-
+import snackbar from '@utils/snackbar-utils';
 import SlidingPanel from 'mainam-react-native-sliding-up-down';
 class SearchByLocastionScreen extends Component {
     constructor(props) {
@@ -144,30 +144,35 @@ class SearchByLocastionScreen extends Component {
             });
     }
     onSearchItemClick(item) {
-        // this.props.navigation.navigate("drugDetailScreen", { drug: item });
-        try {
-            const { LOCATION_HISTORY } = realmModel;
-            historyProvider.addHistory("", LOCATION_HISTORY, item.name, item.name, JSON.stringify(item));
-            if (item.geometry && item.geometry.location) {
-                var temp = item.geometry.location;
-                temp.latitude = temp.lat;
-                temp.longitude = temp.lng;
-                temp.longitudeDelta = 0.03;
-                temp.latitudeDelta = 0.03;
-                this.setState({ region: temp, showOverlay: false }, () => {
-                    if (this.searchPanel) {
-                        this.searchPanel.getWrappedInstance().setValue(item.name);
-                    }
-                });
-            }
-        } catch (error) {
+        locationProvider.getByPlaceId(item.placeID, (s, e) => {
+            if (s) {
+                try {
+                    const { LOCATION_HISTORY } = realmModel;
+                    historyProvider.addHistory("", LOCATION_HISTORY, s.name, s.name, JSON.stringify(s));
+                    s.longitudeDelta = 0.03;
+                    s.latitudeDelta = 0.03;
+                    this.setState({ region: s, showOverlay: false }, () => {
+                        if (this.searchPanel) {
+                            this.searchPanel.getWrappedInstance().setValue(s.name);
+                        }
+                    });
 
-        }
+                } catch (error) {
+
+                }
+            }
+            else {
+                snackbar.show("Không tìm thấy thông tin của địa điểm này");
+            }
+        });
+
+        // this.props.navigation.navigate("drugDetailScreen", { drug: item });
+
     }
     renderSearchItem(item, index, keyword) {
         return <TouchableOpacity style={{ padding: 5 }} onPress={this.onSearchItemClick.bind(this, item)}>
-            <Text style={{ paddingLeft: 10 }}>{item.name}</Text>
-            <Text style={{ paddingLeft: 10, fontSize: 12, marginTop: 10, color: '#00000050' }}>{item.formatted_address}</Text>
+            <Text style={{ paddingLeft: 10 }}>{item.primaryText}</Text>
+            <Text style={{ paddingLeft: 10, fontSize: 12, marginTop: 10, color: '#00000050' }}>{item.secondaryText}</Text>
             <View style={{ height: 0.5, backgroundColor: '#00000040', marginTop: 12 }} />
         </TouchableOpacity>
     }
@@ -185,8 +190,8 @@ class SearchByLocastionScreen extends Component {
                 if (e)
                     reject(e);
                 else {
-                    if (s.results)
-                        resolve(s.results);
+                    if (s)
+                        resolve(s);
                     else {
                         reject([]);
                     }
@@ -211,9 +216,10 @@ class SearchByLocastionScreen extends Component {
             this.searchPanel.getWrappedInstance().setValue(item.name);
         this.setState({ showOverlay: false });
 
-        if (item.geometry && item.geometry.location) {
-            var temp = item.geometry.location;
-            this.setState({ region: { latitude: temp.lat, longitude: temp.lng, longitudeDelta: 0.1, latitudeDelta: 0.1 } });
+        if (item.latitude && item.longitude) {
+            item.longitudeDelta = 0.03;
+            item.latitudeDelta = 0.03;
+            this.setState({ region: item });
         }
     }
 
@@ -224,7 +230,7 @@ class SearchByLocastionScreen extends Component {
                 <ScaledImage source={require("@images/search/time-left.png")} width={15} style={{ marginTop: 2 }} />
                 <View>
                     <Text style={{ marginLeft: 5 }}>{data.name}</Text>
-                    <Text style={{ marginLeft: 5, fontSize: 12, marginTop: 10, color: '#00000050' }}>{data.formatted_address}</Text>
+                    <Text style={{ marginLeft: 5, fontSize: 12, marginTop: 10, color: '#00000050' }}>{data.address}</Text>
                 </View>
             </View>
             <View style={{ height: 0.5, backgroundColor: '#00000040', marginTop: 12 }} />
@@ -313,7 +319,6 @@ class SearchByLocastionScreen extends Component {
                         this.state.showSearchPanel ?
                             <View style={{ padding: 14, position: 'absolute', top: 0, left: 0, right: 0 }}>
                                 <SearchPanel searchTypeId={realmModel.LOCATION_HISTORY}
-                                    resultPage="searchDrugResult"
                                     ref={ref => this.searchPanel = ref}
                                     onFocus={this.searchFocus.bind(this)}
                                     placeholder="Nhập địa điểm muốn tìm kiếm"

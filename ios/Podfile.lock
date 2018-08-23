@@ -72,6 +72,11 @@ PODS:
     - GoogleMaps/Base
   - GoogleNetworkingUtilities (1.2.2):
     - GoogleSymbolUtilities (~> 1.1)
+  - GooglePlacePicker (2.5.0):
+    - GoogleMaps (= 2.5.0)
+    - GooglePlaces (= 2.5.0)
+  - GooglePlaces (2.5.0):
+    - GoogleMaps/Base (= 2.5.0)
   - GoogleSignIn (3.0.0):
     - GoogleAppUtilities (~> 1.0)
     - GoogleAuthUtilities (~> 2.0)
@@ -150,6 +155,8 @@ DEPENDENCIES:
   - Google-Maps-iOS-Utils
   - Google/SignIn
   - GoogleMaps
+  - GooglePlacePicker
+  - GooglePlaces
   - react-native-google-maps (from `../node_modules/react-native-maps`)
   - react-native-maps (from `../node_modules/react-native-maps`)
   - React/Core (from `../node_modules/react-native`)
@@ -186,6 +193,8 @@ SPEC REPOS:
     - GoogleInterchangeUtilities
     - GoogleMaps
     - GoogleNetworkingUtilities
+    - GooglePlacePicker
+    - GooglePlaces
     - GoogleSignIn
     - GoogleSymbolUtilities
     - GoogleToolboxForMac
@@ -228,6 +237,8 @@ SPEC CHECKSUMS:
   GoogleInterchangeUtilities: d5bc4d88d5b661ab72f9d70c58d02ca8c27ad1f7
   GoogleMaps: c087b8e5dfe87ca6ebf59adb9b4894a4146bec4f
   GoogleNetworkingUtilities: 3edd3a8161347494f2da60ea0deddc8a472d94cb
+  GooglePlacePicker: 1573e644ab54564d95c2643edc0f29091609e966
+  GooglePlaces: dd70d9d71ea1c7944846afe67de3712c99b30a77
   GoogleSignIn: 3d571172b8603be39dcb1705d8217146bb76fe62
   GoogleSymbolUtilities: 631ee17048aa5e9ab133470d768ea997a5ef9b96
   GoogleToolboxForMac: 2501e2ad72a52eb3dfe7bd9aee7dad11b858bd20
@@ -244,6 +255,6 @@ SPEC CHECKSUMS:
   RSKImageCropper: 50d5a3e4160f0309b14d75b89d5ae2f496d56e0d
   yoga: a23273df0088bf7f2bb7e5d7b00044ea57a2a54a
 
-PODFILE CHECKSUM: 8a02b7d879c6cc32d6f0e1c0fc3deeb40a670160
+PODFILE CHECKSUM: 3b69d15d104beb0ce165b4a1bae8be6dc73eca29
 
 COCOAPODS: 1.5.3

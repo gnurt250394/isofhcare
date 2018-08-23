@@ -14,12 +14,14 @@
 #import "RNFirebaseNotifications.h"
 #import "RNFirebaseMessaging.h"
 @import GoogleMaps;
+@import GooglePlaces;
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   //firebase
   [FIRApp configure];
+  [GMSPlacesClient provideAPIKey:@"AIzaSyA6V1lvfuFcHHTxNi2B01G-TmZY5bnHzs8"];
   [GMSServices provideAPIKey:@"AIzaSyA6V1lvfuFcHHTxNi2B01G-TmZY5bnHzs8"];
   [RNFirebaseNotifications configure];
   //login fb

@@ -3,7 +3,7 @@ import string from 'mainam-react-native-string-utils';
 import constants from '@resources/strings';
 import storage from '@data-access/storage-provider';
 import { Platform } from 'react-native';
-
+import RNGooglePlaces from 'react-native-google-places';
 module.exports = {
     syncCountry(callback) {
         client.requestApi("get", constants.api.location.getListCountry, {}, (s, e) => {
@@ -114,22 +114,69 @@ module.exports = {
         });
         this.syncZone(districtId);
     },
+
+
+    // searchPlace(query, callback) {
+    //     if (query) {
+    //         query = query.trim();
+    //         while (query.indexOf(' ') != -1) {
+    //             query = query.replace(' ', '+');
+    //         }
+    //     }
+    //     var url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=" + query + "&key=" + (Platform.OS == "ios" ? "AIzaSyDsCC9o37vgSjnK6GJ_xhpkhCgqco44X4U" : "AIzaSyD5QZaFvWLLC0j5XSDJ8yBVdhs9hZbtpdQ" + "&language=vi");
+    //     client.requestApi("get", url, {}, (s, e) => {
+    //         try {
+    //             if (callback)
+    //                 callback(s, e);
+    //         } catch (error) {
+    //             if (callback)
+    //                 callback(null, error);
+    //         }
+    //     });
+    // }
+
     searchPlace(query, callback) {
-        if (query) {
-            query = query.trim();
-            while (query.indexOf(' ') != -1) {
-                query = query.replace(' ', '+');
-            }
-        }
-        var url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=" + query + "&key=" + (Platform.OS == "ios" ? "AIzaSyD5QZaFvWLLC0j5XSDJ8yBVdhs9hZbtpdQ" : "AIzaSyD5QZaFvWLLC0j5XSDJ8yBVdhs9hZbtpdQ" + "&language=vi");
-        client.requestApi("get", url, {}, (s, e) => {
-            try {
+        RNGooglePlaces.getAutocompletePredictions(query, {
+            country: 'VN'
+        })
+            .then((place) => {
+                console.log(place);
                 if (callback)
-                    callback(s, e);
-            } catch (error) {
+                    callback(place);
+            })
+            .catch(error => {
+                console.log(error.message);
                 if (callback)
-                    callback(null, error);
-            }
-        });
+                    callback([]);
+            });
+
+        // if (query) {
+        //     query = query.trim();
+        //     while (query.indexOf(' ') != -1) {
+        //         query = query.replace(' ', '+');
+        //     }
+        // }
+        // var url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=" + query + "&key=" + (Platform.OS == "ios" ? "AIzaSyDsCC9o37vgSjnK6GJ_xhpkhCgqco44X4U" : "AIzaSyD5QZaFvWLLC0j5XSDJ8yBVdhs9hZbtpdQ" + "&language=vi");
+        // client.requestApi("get", url, {}, (s, e) => {
+        //     try {
+        //         if (callback)
+        //             callback(s, e);
+        //     } catch (error) {
+        //         if (callback)
+        //             callback(null, error);
+        //     }
+        // });
+    },
+    getByPlaceId(placeId, callback) {
+        RNGooglePlaces.lookUpPlaceByID(placeId)
+            .then((results) => {
+                console.log(results);
+                if (callback)
+                    callback(results);
+            })
+            .catch((error) => {
+                console.log(error.message);
+                callback(undefined, error);
+            });
     }
 }
