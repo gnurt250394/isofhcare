@@ -5,3 +5,4 @@ node_modules/
 android/build/
 ios/DerivedData/APP/Index/DataStore/v5/records/29/NSLock.h-33NPZ5JY94G29
 ios/DerivedData/APP/Index/DataStore/v5/records/2A/FIRApp.h-3P98VTXHP192A
+android/local.properties

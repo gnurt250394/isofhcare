@@ -53,6 +53,9 @@ class DrawerContent extends Component {
           <ScrollView style={{ flex: 1, marginLeft: 60, marginTop: 30 }}>
             {this.props.userApp.isLogin ?
               <View style={{ marginLeft: 30 }}>
+                <TouchableOpacity style={styles.menu_item} onPress={() => { this.props.navigation.navigate("myFacility") }}>
+                  <Text style={styles.menu_item_text}>Cơ sở y tế của tôi</Text>
+                </TouchableOpacity>
                 {/* <TouchableOpacity style={styles.menu_item}>
                   <Text style={styles.menu_item_text}>Hồ sơ cá nhân</Text>
                 </TouchableOpacity>
@@ -109,9 +112,9 @@ const styles = StyleSheet.create({
     padding: 5
   },
   menu_item_text:
-  {
-    fontSize: 16, color: 'rgba(0,0,0,0.7)'
-  }
+    {
+      fontSize: 16, color: 'rgba(0,0,0,0.7)'
+    }
 });
 function mapStateToProps(state) {
   return {
