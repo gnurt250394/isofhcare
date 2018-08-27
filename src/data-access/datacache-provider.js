@@ -2,11 +2,11 @@ const Realm = require('realm');
 import realmModel from '@models/realm-models';
 module.exports = {
     save(userId, key, value) {
-        const { DataString, SearchHistory, schemaVersion } = realmModel;
+        const { DataString, Schemas, schemaVersion } = realmModel;
         var _value = JSON.stringify({ data: value });
         try {
             Realm.open({
-                schema: [DataString, SearchHistory],
+                schema: Schemas,
                 schemaVersion,
                 migration: function (oldRealm, newRealm) {
                     newRealm.deleteAll();
@@ -25,20 +25,22 @@ module.exports = {
                             value: _value
                         });
                     } catch (error) {
+                        alert(error);
                         console.log(error);
                     }
                 });
             });
 
         } catch (error) {
+            alert(error);
             console.log(error);
         }
     },
     read(userId, key, callback) {
         try {
-            const { DataString, SearchHistory, schemaVersion } = realmModel;
+            const { Schemas, DataString, schemaVersion } = realmModel;
             Realm.open({
-                schema: [DataString, SearchHistory],
+                schema: Schemas,
                 schemaVersion,
                 migration: function (oldRealm, newRealm) {
                     newRealm.deleteAll();

@@ -4,116 +4,30 @@ import constants from '@resources/strings';
 import storage from '@data-access/storage-provider';
 import { Platform } from 'react-native';
 import RNGooglePlaces from 'react-native-google-places';
+import datacacheProvider from '@data-access/datacache-provider';
 module.exports = {
-    syncCountry(callback) {
-        client.requestApi("get", constants.api.location.getListCountry, {}, (s, e) => {
-            try {
-                if (s && s.code == 0) {
-                    storage.save(constants.key.storage.country, s.data.countries);
+    getListProvince(callback, requestApi) {
+        if (!requestApi) {
+            datacacheProvider.read("", constants.key.storage.DATA_PROVINCE, (s, e) => {
+                if (s) {
                     if (callback)
-                        callback(s.data.countries);
-                    return;
+                        callback(s, e);
+                    this.getListProvince(callback, true);
                 }
-                if (callback)
-                    callback([]);
-            } catch (error) {
-                if (callback)
-                    callback([]);
-            }
-        });
-    },
-    getListCountry(callback) {
-        storage.get(constants.key.storage.country, null, (s) => {
-            if (!s)
-                this.syncCountry(callback)
-            if (s && callback) {
-                callback(s);
-            }
-        });
-        this.syncCountry();
-    },
-    syncProvince(callback) {
-        client.requestApi("get", constants.api.location.getListProvince, {}, (s, e) => {
-            try {
-                if (s && s.code == 0) {
-                    storage.save(constants.key.storage.province, s.data.provinces);
+                else
+                    this.getListProvince(undefined, true);
+            });
+        } else {
+            client.requestApi("get", constants.api.location.getListProvince, {}, (s, e) => {
+                if (s && s.code == 0 && s.data && s.data.provinces) {
+                    datacacheProvider.save("", constants.key.storage.DATA_PROVINCE, s.data.provinces);
                     if (callback)
-                        callback(s.data.provinces);
-                    return;
+                        callback(s.data.provinces, e);
                 }
-                if (callback)
-                    callback([]);
-            } catch (error) {
-                if (callback)
-                    callback([]);
-            }
-        });
+            });
+        }
     },
-    getListProvince(callback) {
-        storage.get(constants.key.storage.province, null, (s) => {
-            if (!s)
-                this.syncProvince(callback)
-            if (s && callback) {
-                callback(s);
-            }
-        });
-        this.syncProvince();
-    },
-    syncDistrict(callback) {
-        client.requestApi("get", constants.api.location.getListDistrict, {}, (s, e) => {
-            try {
-                if (s && s.code == 0) {
-                    storage.save(constants.key.storage.district, s.data.districts);
-                    if (callback)
-                        callback(s.data.districts);
-                    return;
-                }
-                if (callback)
-                    callback([]);
-            } catch (error) {
-                if (callback)
-                    callback([]);
-            }
-        });
-    },
-    getListDistrict(callback) {
-        storage.get(constants.key.storage.district, null, (s) => {
-            if (!s)
-                this.syncDistrict(callback)
-            if (s && callback) {
-                callback(s);
-            }
-        });
-        this.syncDistrict();
-    },
-    syncZone(districtId, callback) {
-        client.requestApi("get", constants.api.location.getListZone + "/" + districtId, {}, (s, e) => {
-            try {
-                if (s && s.code == 0) {
-                    storage.save(constants.key.storage.zone + districtId, s.data.zones);
-                    if (callback)
-                        callback(s.data.zones);
-                    return;
-                }
-                if (callback)
-                    callback([]);
 
-            } catch (error) {
-                if (callback)
-                    callback([]);
-            }
-        });
-    },
-    getListZone(districtId, callback) {
-        storage.get(constants.key.storage.zone + districtId, null, (s) => {
-            if (!s)
-                this.syncZone(districtId, callback)
-            if (s && callback) {
-                callback(s);
-            }
-        });
-        this.syncZone(districtId);
-    },
 
 
     // searchPlace(query, callback) {
@@ -178,5 +92,13 @@ module.exports = {
                 console.log(error.message);
                 callback(undefined, error);
             });
+    },
+    pickLocation(callback) {
+        if (callback)
+            RNGooglePlaces.openPlacePickerModal()
+                .then((place) => {
+                    callback(place);
+                })
+                .catch(error => callback(null, error));  // error is a Javascript Error object
     }
 }

@@ -47,7 +47,7 @@ class MyFacilityScreen extends Component {
             refreshing: page == 1,
             loadMore: page != 1
         })
-        facilityProvider.search(this.state.keyword, page, size, (s, e) => {
+        facilityProvider.myFacility(this.state.keyword, this.props.userApp.currentUser.id, page, size, (s, e) => {
             this.setState({
                 loading: false,
                 refreshing: false,

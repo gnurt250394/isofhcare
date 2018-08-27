@@ -35,6 +35,55 @@ module.exports = {
             if (callback)
                 callback(s, e);
         });
+    },
+    myFacility(name, userId, page, size, callback) {
+        client.requestApi("get", constants.api.facility.search + "?userId=" + userId + "&page=" + page + "&size=" + size + "&name=" + name, {}, (s, e) => {
+            if (callback)
+                callback(s, e);
+        });
+    },
+    createClinic(name, website, phone, address, place, imageUrls, specialistIds, provinceId, userId, callback) {
+        client.requestApi("post", constants.api.facility.create, {
+            facility: {
+                name,
+                address,
+                belongIsofh: 0,
+                latitude: place.latitude,
+                longitude: place.longitude,
+                phone,
+                type: 2,
+                website
+            },
+            imageUrls,
+            specialistIds,
+            provinceId,
+            userId
+        }, (s, e) => {
+            if (callback)
+                callback(s, e);
+        });
+    },
+    createDrugStore(name, website, phone, address, place, imageUrls, licenseNo, pharmacist, gpp, provinceId, userId, callback) {
+        client.requestApi("post", constants.api.facility.create, {
+            facility: {
+                name,
+                code: licenseNo,
+                pharmacist,
+                address,
+                belongIsofh: 0,
+                latitude: place.latitude,
+                longitude: place.longitude,
+                phone,
+                type: 8,
+                gpp: gpp ? 1 : 0,
+                website
+            },
+            imageUrls,
+            provinceId,
+            userId
+        }, (s, e) => {
+            if (callback)
+                callback(s, e);
+        });
     }
-
 }

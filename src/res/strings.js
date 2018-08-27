@@ -63,7 +63,8 @@ module.exports = {
       district: 'district',
       zone: 'zone',
       DATA_TOP_SPECIALIST: "DATA_TOP_SPECIALIST",
-      DATA_TOP_FACILITY: "DATA_TOP_FACILITY"
+      DATA_TOP_FACILITY: "DATA_TOP_FACILITY",
+      DATA_PROVINCE: "DATA_PROVINCE"
     }
   },
   msg:
@@ -169,16 +170,13 @@ module.exports = {
     location:
     {
       getListCountry: 'profile/get-countries',
-      getListProvince: 'profile/get-provinces',
+      getListProvince: 'province/get-all',
       getListDistrict: 'profile/get-districts',
       getListZone: 'profile/get-zone-by-district'
     },
     upload:
     {
       image: "image/upload"
-    },
-    image: {
-      add_to_conference: "image/create"
     },
     user:
     {
@@ -193,38 +191,9 @@ module.exports = {
       changeEmail: "user/update-email",
       getByConference: "/user/get-by-conference"
     },
-    conference_session:
-    {
-      get_by_topic: "conference-session/get-by-topic",
-      get_by_conference_date: "conference-session/get-by-conference-date",
-      get_by_conference_user: 'conference-session/get-by-conference-user',
-      follow: "user-session/follow"
-    },
-
-    conference_topic:
-    {
-      get_by_conference: "conference-topic/get-by-conference"
-    },
-    conference_question:
-    {
-      get_template: "conference-question/get-template",
-      create: "conference-question/create",
-      search: "conference-question/search"
-    },
-    conference: {
-      get_by_user: "conference/get-by-user",
-      get_image: "conference/get-images",
-      get_topic: "conference/get-topic",
-      get_session: "conference/get-session",
-      confirm: "user-conference/confirm",
-      checkin: "user-conference/checkin"
-    },
     keyvalue: {
       get: "key-value/get-value",
       set: "key-value/set-value"
-    },
-    schedule: {
-      get_by_user_conference: "schedule/get-by-user-conference"
     },
     drug:
     {
@@ -233,7 +202,8 @@ module.exports = {
     },
     facility:
     {
-      search: "facility/search"
+      search: "facility/search",
+      create: "facility/create"
     },
     specialist:
     {
