@@ -64,7 +64,8 @@ module.exports = {
       zone: 'zone',
       DATA_TOP_SPECIALIST: "DATA_TOP_SPECIALIST",
       DATA_TOP_FACILITY: "DATA_TOP_FACILITY",
-      DATA_PROVINCE: "DATA_PROVINCE"
+      DATA_PROVINCE: "DATA_PROVINCE",
+      CURRENT_LOCATION: "CURRENT_LOCATION"
     }
   },
   msg:

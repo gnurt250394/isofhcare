@@ -17,13 +17,6 @@ import SlidingPanel from 'mainam-react-native-sliding-up-down';
 class SearchByLocastionScreen extends Component {
     constructor(props) {
         super(props)
-        let keyword = this.props.navigation.getParam('keyword', '');
-        if (keyword)
-            keyword = keyword.trim();
-        else
-            keyword = "";
-
-
         this.state = {
             data: [],
             refreshing: false,
@@ -31,16 +24,9 @@ class SearchByLocastionScreen extends Component {
             page: 1,
             finish: false,
             loading: false,
-            keyword,
             width,
             height: height - 75,
-            showSearchPanel: true,
-            region: {
-                latitude: 20.9899002,
-                longitude: 105.7896239,
-                longitudeDelta: 0.1,
-                latitudeDelta: 0.1
-            }
+            showSearchPanel: true
         }
     }
     getCurrentLocation = () => {
@@ -53,45 +39,63 @@ class SearchByLocastionScreen extends Component {
                 });
         });
     }
+    componentWillReceiveProps(nextProps) {
+        try {
+            let s = nextProps.navigation.getParam('location', undefined);
+            if (s) {
+                s.longitudeDelta = 0.1;
+                s.latitudeDelta = 0.1;
+                this.setState({ region: s, showOverlay: false }, () => {
+                    if (this.searchPanel) {
+                        this.searchPanel.getWrappedInstance().setValue(s.name);
+                    }
+                    this.onRefresh();
+                });
+            }
+        } catch (error) {
+
+        }
+    }
+    getLocation() {
+        this.getCurrentLocation().then(position => {
+            if (position) {
+                locationProvider.saveCurrentLocation(position.coords.latitude, position.coords.longitude);
+                this.setState({
+                    region: {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        latitudeDelta: 0.1,
+                        longitudeDelta: 0.1,
+                    },
+                }, () => {
+                    this.onRefresh();
+                });
+            }
+        });
+    }
+    componentWillMount() {
+        locationProvider.getCurrentLocationHasSave((s, e) => {
+            if (s && s.latitude && s.longitude) {
+                s.latitudeDelta = 0.1;
+                s.longitudeDelta = 0.1;
+                this.setState({
+                    region: s,
+                });
+            }
+        });
+    }
     componentDidMount() {
         if (Platform.OS == "ios") {
-            this.getCurrentLocation().then(position => {
-                if (position) {
-                    this.setState({
-                        region: {
-                            latitude: position.coords.latitude,
-                            longitude: position.coords.longitude,
-                            latitudeDelta: 0.003,
-                            longitudeDelta: 0.003,
-                        },
-                    }, () => {
-                        this.onRefresh();
-                    });
-                }
-            });
+            this.getLocation();
         } else {
             RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({ interval: 10000, fastInterval: 5000 })
                 .then(data => {
-                    setTimeout(() => {
-                        this.getCurrentLocation().then(position => {
-                            if (position) {
-                                this.setState({
-                                    region: {
-                                        latitude: position.coords.latitude,
-                                        longitude: position.coords.longitude,
-                                        latitudeDelta: 0.003,
-                                        longitudeDelta: 0.003,
-                                    },
-                                }, () => {
-                                    this.onRefresh();
-                                });
-                            }
-                        });
-                    }, 1000);
+                    setTimeout(this.getLocation.bind(this), 1000);
                 }).catch(err => {
                 });
         }
-        // this.onRefresh();        
+        if (this.state.region)
+            this.onRefresh();
     }
 
     onRefresh() {
@@ -149,14 +153,14 @@ class SearchByLocastionScreen extends Component {
                 try {
                     const { LOCATION_HISTORY } = realmModel;
                     historyProvider.addHistory("", LOCATION_HISTORY, s.name, s.name, JSON.stringify(s));
-                    s.longitudeDelta = 0.03;
-                    s.latitudeDelta = 0.03;
+                    s.longitudeDelta = 0.1;
+                    s.latitudeDelta = 0.1;
                     this.setState({ region: s, showOverlay: false }, () => {
                         if (this.searchPanel) {
                             this.searchPanel.getWrappedInstance().setValue(s.name);
                         }
+                        this.onRefresh();
                     });
-
                 } catch (error) {
 
                 }
@@ -166,8 +170,6 @@ class SearchByLocastionScreen extends Component {
             }
         });
 
-        // this.props.navigation.navigate("drugDetailScreen", { drug: item });
-
     }
     renderSearchItem(item, index, keyword) {
         return <TouchableOpacity style={{ padding: 5 }} onPress={this.onSearchItemClick.bind(this, item)}>
@@ -175,14 +177,6 @@ class SearchByLocastionScreen extends Component {
             <Text style={{ paddingLeft: 10, fontSize: 12, marginTop: 10, color: '#00000050' }}>{item.secondaryText}</Text>
             <View style={{ height: 0.5, backgroundColor: '#00000040', marginTop: 12 }} />
         </TouchableOpacity>
-    }
-    renderFooter(keyword, data) {
-        if (keyword)
-            return <TouchableOpacity style={{ padding: 5, paddingLeft: 15, flexDirection: 'row', alignItems: 'center', paddingTop: 10 }} onPress={() => this.props.navigation.navigate("searchDrugResult", { keyword })}>
-                <ScaledImage source={require("@images/search/icsearch2.png")} width={15} />
-                <Text style={{ paddingLeft: 10, color: 'rgb(74,144,226)' }}>Xem tất cả kết quả tìm kiếm</Text>
-            </TouchableOpacity>
-        return <View />
     }
     onSearch(text) {
         return new Promise((resolve, reject) => {
@@ -217,8 +211,8 @@ class SearchByLocastionScreen extends Component {
         this.setState({ showOverlay: false });
 
         if (item.latitude && item.longitude) {
-            item.longitudeDelta = 0.03;
-            item.latitudeDelta = 0.03;
+            item.longitudeDelta = 0.1;
+            item.latitudeDelta = 0.1;
             this.setState({ region: item });
         }
     }
@@ -249,22 +243,23 @@ class SearchByLocastionScreen extends Component {
                         >
                             {
                                 this.state.region ?
-                                    <Marker
-                                        coordinate={this.state.region}
-                                        image={require('@images/navigation.png')}
-                                    /> : null
+                                    <Marker coordinate={this.state.region}>
+                                        <ScaledImage source={require("@images/navigation.png")} width={30} />
+                                    </Marker> : null
                             }
 
                             {
                                 this.state.data.map((item, index) => <Marker key={index}
-                                    coordinate={
-                                        {
-                                            latitude: item.facility.latitude,
-                                            longitude: item.facility.longitude
-                                        }
-                                    }
-                                    image={require('@images/ic_phongkham.png')}
-                                />)
+                                    coordinate={{
+                                        latitude: item.facility.latitude,
+                                        longitude: item.facility.longitude
+                                    }}>
+                                    <ScaledImage source={
+                                        item.facility.type == 2 ? require("@images/ic_phongkham.png") :
+                                            item.facility.type == 8 ? require("@images/ic_nhathuoc.png") :
+                                                item.facility.type == 1 ? require("@images/ic_hospital.png") :
+                                                    require("@images/ic_trungtamyte.png")} width={20} />
+                                </Marker>)
                             }
                         </MapView>
                         {
@@ -324,8 +319,7 @@ class SearchByLocastionScreen extends Component {
                                     placeholder="Nhập địa điểm muốn tìm kiếm"
                                     onSearch={this.onSearch.bind(this)}
                                     renderItem={this.renderSearchItem.bind(this)}
-                                    renderItemHistory={this.renderItemHistory.bind(this)}
-                                    renderFooter={this.renderFooter.bind(this)} />
+                                    renderItemHistory={this.renderItemHistory.bind(this)} />
                             </View> : null
                     }
                 </View>

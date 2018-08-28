@@ -2,7 +2,7 @@ const Realm = require('realm');
 import realmModel from '@models/realm-models';
 module.exports = {
     addHistory(userId, type, name, dataId, data) {
-        const { Schemas, schemaVersion } = realmModel;
+        const { Schemas, SearchHistory, schemaVersion } = realmModel;
         try {
             Realm.open({
                 schema: Schemas,
@@ -55,7 +55,7 @@ module.exports = {
     },
     getListHistory(userId, type, callback) {
         try {
-            const { Schemas, schemaVersion } = realmModel;
+            const { Schemas, SearchHistory, schemaVersion } = realmModel;
             Realm.open({
                 schema: Schemas,
                 schemaVersion,

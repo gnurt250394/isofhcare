@@ -195,7 +195,7 @@ class AddNewClinicScreen extends Component {
             this.state.listSpecialist.forEach((item) => {
                 listSpecialist.push(item.id);
             });
-
+            alert(logo);
             facilityProvider.createClinic(this.state.name.trim(), this.state.website.trim(), this.state.phone.trim(), this.state.address.trim(), this.state.place, logo, listImageUrl, listSpecialist, this.state.province.id, this.props.userApp.currentUser.id, (s, e) => {
                 this.setState({ isLoading: false });
                 if (s) {

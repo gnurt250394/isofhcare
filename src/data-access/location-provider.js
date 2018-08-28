@@ -100,5 +100,16 @@ module.exports = {
                     callback(place);
                 })
                 .catch(error => callback(null, error));  // error is a Javascript Error object
+    },
+    saveCurrentLocation(latitude, longitude) {
+        datacacheProvider.save("", constants.key.storage.CURRENT_LOCATION, { latitude, longitude });
+    },
+    getCurrentLocationHasSave(callback) {
+        if (callback)
+            datacacheProvider.read("", constants.key.storage.CURRENT_LOCATION, (s, e) => {
+                if (s) {
+                    callback(s, e);
+                }
+            });
     }
 }

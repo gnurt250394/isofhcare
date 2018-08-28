@@ -25,7 +25,7 @@ module.exports = {
         });
     },
     searchByLatLon(lat, lon, page, size, callback) {
-        client.requestApi("get", constants.api.facility.search + "?sortType=1&page=" + page + "&size=" + size + "&latitude=" + lat + "&lon=" + lon, {}, (s, e) => {
+        client.requestApi("get", constants.api.facility.search + "?sortType=1&page=" + page + "&size=" + size + "&latitude=" + lat + "&longitude=" + lon + "&approval=1", {}, (s, e) => {
             if (callback)
                 callback(s, e);
         });

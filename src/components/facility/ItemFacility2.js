@@ -22,9 +22,12 @@ class ItemFacility extends Component {
 
     render() {
         let item = this.props.facility;
-        let image = item.logo;
+        let image = item.facility.logo;
         if (!image)
             image = ".";
+        else {
+            image = image.absoluteUrl();
+        }
         return (
             <TouchableOpacity {...this.props} style={[{
                 marginTop: 0,
@@ -49,15 +52,10 @@ class ItemFacility extends Component {
                 </View>
                 <ImageProgress
                     indicator={Progress} resizeMode='cover' style={{ width: 80, height: 80 }} imageStyle={{
-                        borderTopLeftRadius: 5.3,
-                        borderBottomLeftRadius: 5.3,
                         width: 80, height: 80
                     }} source={{ uri: image }}
                     defaultImage={() => {
-                        return <ScaledImage resizeMode='cover' source={require("@images/noimage.jpg")} width={80} height={80} style={{
-                            borderTopLeftRadius: 5.3,
-                            borderBottomLeftRadius: 5.3
-                        }} />
+                        return <ScaledImage resizeMode='cover' source={require("@images/noimage.jpg")} width={80} height={80} />
                     }} />
             </TouchableOpacity>);
     }

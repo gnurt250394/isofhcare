@@ -16,27 +16,15 @@ import PhotoGrid from 'react-native-thumbnail-grid';
 import snackbar from '@utils/snackbar-utils'
 
 import SlidingPanel from 'mainam-react-native-sliding-up-down';
-class SearchDrugScreen extends Component {
+class FacilityDetailScreen extends Component {
     constructor(props) {
         super(props)
-        let keyword = this.props.navigation.getParam('keyword', '');
-        if (keyword)
-            keyword = keyword.trim();
-        else
-            keyword = "";
-
         const facility = this.props.navigation.getParam("facility", undefined);
         this.state = {
-            data: [],
-            refreshing: false,
-            size: 10,
-            page: 1,
-            finish: false,
-            loading: false,
-            keyword,
             width,
             height: height - 75,
             showSearchPanel: true,
+            facility,
             region:
             {
                 latitude: facility ? facility.facility.latitude : 0,
@@ -53,14 +41,7 @@ class SearchDrugScreen extends Component {
                 try {
                     const { LOCATION_HISTORY } = realmModel;
                     historyProvider.addHistory("", LOCATION_HISTORY, s.name, s.name, JSON.stringify(s));
-                    s.longitudeDelta = 0.03;
-                    s.latitudeDelta = 0.03;
-                    this.setState({ region: s, showOverlay: false }, () => {
-                        if (this.searchPanel) {
-                            this.searchPanel.getWrappedInstance().setValue(s.name);
-                        }
-                    });
-
+                    this.props.navigation.navigate("searchFacilityByLocation", { location: s });
                 } catch (error) {
 
                 }
@@ -69,9 +50,6 @@ class SearchDrugScreen extends Component {
                 snackbar.show("Không tìm thấy thông tin của địa điểm này");
             }
         });
-
-        // this.props.navigation.navigate("drugDetailScreen", { drug: item });
-
     }
     renderSearchItem(item, index, keyword) {
         return <TouchableOpacity style={{ padding: 5 }} onPress={this.onSearchItemClick.bind(this, item)}>
@@ -81,11 +59,6 @@ class SearchDrugScreen extends Component {
         </TouchableOpacity>
     }
     renderFooter(keyword, data) {
-        if (keyword)
-            return <TouchableOpacity style={{ padding: 5, paddingLeft: 15, flexDirection: 'row', alignItems: 'center', paddingTop: 10 }} onPress={() => this.props.navigation.navigate("searchDrugResult", { keyword })}>
-                <ScaledImage source={require("@images/search/icsearch2.png")} width={15} />
-                <Text style={{ paddingLeft: 10, color: 'rgb(74,144,226)' }}>Xem tất cả kết quả tìm kiếm</Text>
-            </TouchableOpacity>
         return <View />
     }
     onSearch(text) {
@@ -125,15 +98,7 @@ class SearchDrugScreen extends Component {
         this.mapRef.fitToElements(true);
     }
     onPressItemLocation(item) {
-        if (this.searchPanel)
-            this.searchPanel.getWrappedInstance().setValue(item.name);
-        this.setState({ showOverlay: false });
-
-        if (item.latitude && item.longitude) {
-            item.longitudeDelta = 0.03;
-            item.latitudeDelta = 0.03;
-            this.setState({ region: item });
-        }
+        this.props.navigation.navigate("searchFacilityByLocation", { location: item });
     }
 
     renderItemHistory(item, index) {
@@ -153,16 +118,15 @@ class SearchDrugScreen extends Component {
         const facility = this.props.navigation.getParam("facility", undefined);
         if (!facility)
             return <View />
-        let images = facility.images;
-        let image = "undefined";
-        try {
-            if (images && images.length > 0) {
-                image = images[0].url.absoluteUrl();
-            }
-        } catch (error) {
 
+        let image = facility.facility.logo;
+        if (!image)
+            image = ".";
+        else {
+            image = image.absoluteUrl();
         }
 
+        var images = facility.images;
         var list_images = [];
         try {
             for (var i = 0; i < images.length; i++) {
@@ -186,24 +150,14 @@ class SearchDrugScreen extends Component {
                         >
                             <Marker
                                 id={"Location"}
-                                coordinate={this.state.region}
-                                image={require('@images/ic_phongkham.png')}
-                            />
+                                coordinate={this.state.region}>
+                                <ScaledImage source={
+                                    this.state.facility.facility.type == 2 ? require("@images/ic_phongkham.png") :
+                                        this.state.facility.facility.type == 8 ? require("@images/ic_nhathuoc.png") :
+                                            this.state.facility.facility.type == 1 ? require("@images/ic_hospital.png") :
+                                                require("@images/ic_trungtamyte.png")} width={20} />
+                            </Marker>
                         </MapView>
-
-                        {
-                            this.state.showSearchPanel ?
-                                <View zIndex={3} style={{ padding: 14, position: 'absolute', top: 0, left: 0, right: 0 }}>
-                                    <SearchPanel searchTypeId={realmModel.LOCATION_HISTORY}
-                                        ref={ref => this.searchPanel = ref}
-                                        onFocus={this.searchFocus.bind(this)}
-                                        placeholder="Nhập địa điểm muốn tìm kiếm"
-                                        onSearch={this.onSearch.bind(this)}
-                                        renderItem={this.renderSearchItem.bind(this)}
-                                        renderItemHistory={this.renderItemHistory.bind(this)}
-                                        renderFooter={this.renderFooter.bind(this)} />
-                                </View> : null
-                        }
                         {
                             !this.state.showOverlay ? <SlidingPanel
                                 zIndex={2}
@@ -216,10 +170,7 @@ class SearchDrugScreen extends Component {
                                     <View zIndex={10} style={{ marginTop: Platform.OS == 'ios' ? 72 : 52, alignItems: 'center', width }}>
                                         <ScaledImage source={require("@images/facility/icdrag.png")} height={29} zIndex={5} />
                                         <ScrollView
-                                            style={{ width, height: height - 110, backgroundColor: '#FFF', padding: 10 }}
-                                            keyExtractor={(item, index) => index.toString()}
-                                            data={this.state.data}
-                                        >
+                                            style={{ width, height: height - 110, backgroundColor: '#FFF', padding: 10 }}>
                                             <View {...this.props} style={[{
                                                 marginTop: 0,
                                                 flexDirection: 'row',
@@ -245,15 +196,10 @@ class SearchDrugScreen extends Component {
                                                 </View>
                                                 <ImageProgress
                                                     indicator={Progress} resizeMode='cover' style={{ width: 80, height: 80 }} imageStyle={{
-                                                        borderTopLeftRadius: 5.3,
-                                                        borderBottomLeftRadius: 5.3,
                                                         width: 80, height: 80
                                                     }} source={{ uri: image }}
                                                     defaultImage={() => {
-                                                        return <ScaledImage resizeMode='cover' source={require("@images/noimage.jpg")} width={80} height={80} style={{
-                                                            borderTopLeftRadius: 5.3,
-                                                            borderBottomLeftRadius: 5.3
-                                                        }} />
+                                                        return <ScaledImage resizeMode='cover' source={require("@images/noimage.jpg")} width={80} height={80} />
                                                     }} />
                                             </View>
                                             <Text style={{ fontSize: 12, marginTop: 14, marginBottom: 10 }} numberOfLines={2} ellipsizeMode='tail'>{facility.facility.address}</Text>
@@ -292,13 +238,13 @@ class SearchDrugScreen extends Component {
                     {
                         this.state.showSearchPanel ?
                             <View style={{ padding: 14, position: 'absolute', top: 0, left: 0, right: 0 }}>
-                                <SearchPanel searchTypeId={realmModel.DRUG_HISTORY}
-                                    resultPage="searchDrugResult"
+                                <SearchPanel searchTypeId={realmModel.LOCATION_HISTORY}
                                     ref={ref => this.searchPanel = ref}
                                     onFocus={this.searchFocus.bind(this)}
                                     placeholder="Nhập địa điểm muốn tìm kiếm"
                                     onSearch={this.onSearch.bind(this)}
                                     renderItem={this.renderSearchItem.bind(this)}
+                                    renderItemHistory={this.renderItemHistory.bind(this)}
                                     renderFooter={this.renderFooter.bind(this)} />
                             </View> : null
                     }
@@ -335,4 +281,4 @@ function mapStateToProps(state) {
         userApp: state.userApp
     };
 }
-export default connect(mapStateToProps)(SearchDrugScreen);
+export default connect(mapStateToProps)(FacilityDetailScreen);
