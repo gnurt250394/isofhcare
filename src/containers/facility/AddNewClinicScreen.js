@@ -115,6 +115,7 @@ class AddNewClinicScreen extends Component {
                                     if (item.uri == s.uri) {
                                         item.loading = false;
                                         item.url = s.data.data.images[0].image;
+                                        item.thumbnail = s.data.data.images[0].thumbnail;
                                     }
                                 });
                                 this.setState({
@@ -184,15 +185,18 @@ class AddNewClinicScreen extends Component {
 
         this.setState({ isLoading: true }, () => {
             let listImageUrl = [];
-            this.state.imageUris.forEach((item) => {
+            let logo = "";
+            this.state.imageUris.forEach((item, index) => {
                 listImageUrl.push(item.url);
+                if (index == 0)
+                    logo = item.thumbnail;
             });
             let listSpecialist = [];
             this.state.listSpecialist.forEach((item) => {
                 listSpecialist.push(item.id);
             });
 
-            facilityProvider.createClinic(this.state.name.trim(), this.state.website.trim(), this.state.phone.trim(), this.state.address.trim(), this.state.place, listImageUrl, listSpecialist, this.state.province.id, this.props.userApp.currentUser.id, (s, e) => {
+            facilityProvider.createClinic(this.state.name.trim(), this.state.website.trim(), this.state.phone.trim(), this.state.address.trim(), this.state.place, logo, listImageUrl, listSpecialist, this.state.province.id, this.props.userApp.currentUser.id, (s, e) => {
                 this.setState({ isLoading: false });
                 if (s) {
                     this.props.navigation.pop();

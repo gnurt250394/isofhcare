@@ -42,9 +42,10 @@ module.exports = {
                 callback(s, e);
         });
     },
-    createClinic(name, website, phone, address, place, imageUrls, specialistIds, provinceId, userId, callback) {
+    createClinic(name, website, phone, address, place, logo, imageUrls, specialistIds, provinceId, userId, callback) {
         client.requestApi("post", constants.api.facility.create, {
             facility: {
+                logo,
                 name,
                 address,
                 belongIsofh: 0,
@@ -63,9 +64,10 @@ module.exports = {
                 callback(s, e);
         });
     },
-    createDrugStore(name, website, phone, address, place, imageUrls, licenseNo, pharmacist, gpp, provinceId, userId, callback) {
+    createDrugStore(name, website, phone, address, place, logo, imageUrls, licenseNo, pharmacist, gpp, provinceId, userId, callback) {
         client.requestApi("post", constants.api.facility.create, {
             facility: {
+                logo,
                 name,
                 code: licenseNo,
                 pharmacist,

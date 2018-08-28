@@ -23,17 +23,9 @@ class ItemFacility extends Component {
 
     render() {
         let item = this.props.facility;
-        let images = item.images;
-        let image = "undefined";
-        try {
-            if (images && images.length > 0) {
-                image = images[0].url.absoluteUrl();
-            }
-        } catch (error) {
-
-        }
-
-        
+        let image = item.logo;
+        if (!image)
+            image = ".";
         return (
             <TouchableOpacity {...this.props} style={[{
                 elevation: 2,
