@@ -31,25 +31,21 @@ class LoginSocial extends Component {
             webClientId: '612436577188-u5u1t8u4hi2iqg5n16bqk90jp4d67ug6.apps.googleusercontent.com'
         })
     }
-
+    googleSignInCallBack(res) {
+        console.log(res);
+        if (res) {
+            this.loginSocial(4, res.id, res.name, res.photo, res.email, props);
+        } else {
+            snackbar.show(constants.msg.user.canot_get_user_info_in_account_google);
+            return;
+        }
+    }
     handleSigninGoogle() {
-        alert();
-        Toast.show({ text: "hehe", duration: 3000 });
-        alert();
-        // loginSocial = this.loginSocial;
-        // props = this.props;
-        // GoogleSignin.signOut();
-        // GoogleSignin.signIn().then((res) => {
-        //     console.log(res);
-        //     if (res) {
-        //         loginSocial(2, res.id, res.name, res.photo, res.email, props);
-        //     } else {
-        //         snackbar.show(constants.msg.user.canot_get_user_info_in_account_google);
-        //         return;
-        //     }
-        // }).catch((err) => {
-        //     snackbar.show(constants.msg.user.canot_get_user_info_in_account_google);
-        // }).done();
+        props = this.props;
+        GoogleSignin.signOut();
+        GoogleSignin.signIn().then(this.googleSignInCallBack.bind(this)).catch((err) => {
+            snackbar.show(constants.msg.user.canot_get_user_info_in_account_google);
+        }).done();
     }
 
     loginSocial(socialType, socialId, name, avatar, email, props) {
@@ -58,16 +54,21 @@ class LoginSocial extends Component {
                 console.log(s);
                 switch (s.code) {
                     case 0:
-                        snackbar.show(constants.msg.user.login_success);
-                        var user = s.data.user;
-                        this.props.dispatch(redux.userLogin(user));
-                        if (this.props.directScreen) {
-                            this.props.directScreen();
+                        try {
+                            snackbar.show(constants.msg.user.login_success);
+                            var user = s.data.user;
+                            this.props.dispatch(redux.userLogin(user));
+                            if (this.props.directScreen) {
+                                this.props.directScreen();
+                            }
+                            else {
+                                this.props.navigation.navigate("home", { showDraw: false });
+                            }
+                            return;
+                        } catch (error) {
+                            alert(JSON.stringify(error));
+                            return;
                         }
-                        else {
-                            Actions.popTo('main');
-                        }
-                        return;
                     case 2:
                         snackbar.show(constants.msg.user.username_or_password_incorrect);
                         break;
@@ -86,6 +87,31 @@ class LoginSocial extends Component {
         })
     }
 
+    facebookSignInSuccessCallBack(result) {
+        if (result.isCancelled) {
+        } else {
+            const infoRequest = new GraphRequest('/me', {
+                parameters: {
+                    'fields': {
+                        'string': 'email,name,picture,id'
+                    }
+                }
+            }, (err, res) => {
+                console.log(err, res);
+                if (res) {
+                    loginSocial(2, res.id, res.name, res.picture ? res.picture.data : "", res.email, props);
+                } else {
+                    snackbar.show(constants.msg.user.canot_get_user_info_in_account_facebook);
+                    return;
+                }
+            });
+            new GraphRequestManager().addRequest(infoRequest).start();
+        }
+    }
+    facebookSignInErrorCallBack(error) {
+        console.log(error);
+        snackbar.show(constants.msg.user.canot_get_user_info_in_account_facebook);
+    }
     handleSigninFacebook() {
         try {
             LoginManager.logOut();
@@ -95,32 +121,8 @@ class LoginSocial extends Component {
         loginSocial = this.loginSocial;
         props = this.props;
         LoginManager.logInWithReadPermissions(['public_profile']).then(
-            function (result) {
-                if (result.isCancelled) {
-                } else {
-                    const infoRequest = new GraphRequest('/me', {
-                        parameters: {
-                            'fields': {
-                                'string': 'email,name,picture,id'
-                            }
-                        }
-                    }, (err, res) => {
-                        console.log(err, res);
-                        if (res) {
-                            loginSocial(1, res.id, res.name, res.picture ? res.picture.data : "", res.email, props);
-                        } else {
-                            snackbar.show(constants.msg.user.canot_get_user_info_in_account_facebook);
-                            return;
-                        }
-                    });
-                    new GraphRequestManager().addRequest(infoRequest).start();
-                }
-            },
-            function (error) {
-                console.log(error);
-                snackbar.show(constants.msg.user.canot_get_user_info_in_account_facebook);
-                return;
-            }
+            this.facebookSignInSuccessCallBack.bind(this),
+            this.facebookSignInErrorCallBack.bind(this)
         );
     }
     render() {
@@ -142,7 +144,8 @@ class LoginSocial extends Component {
 }
 function mapStateToProps(state) {
     return {
-        userApp: state.userApp
+        userApp: state.userApp,
+        navigation: state.navigation
     };
 }
 export default connect(mapStateToProps)(LoginSocial);

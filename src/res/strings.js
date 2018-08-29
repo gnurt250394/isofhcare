@@ -182,7 +182,7 @@ module.exports = {
     user:
     {
       login: "user/login",
-      login_by_id: "user/login-by-id",
+      login_social:"user/login-social",
       logout: "user/logout",
       register: "user/register",
       forgotPassword: "user/forgot-password",

@@ -68,9 +68,14 @@ module.exports = {
                 callback(s, e);
         });
     },
-    loginSocial(socialType, socialId, fullname, avatar, email, callback) {
+    loginSocial(socialType, socialId, name, avatar, email, callback) {
         var body = {
-            socialType, socialId, fullname, email, avatarUrl: avatar, thumbnailAvatarUrl: avatar,
+            socialType,
+            socialId,
+            name,
+            email,
+            avatar: avatar,
+            thumbnail: avatar,
             device: { os: os, deviceId: this.deviceId, token: this.deviceToken }
         }
         client.requestApi("put", constants.api.user.login_social, body, (s, e) => {

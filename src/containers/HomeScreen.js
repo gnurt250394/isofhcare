@@ -40,7 +40,6 @@ class SplashScreen extends Component {
 			}, 2000);
 		});
 	}
-
 	render() {
 		return (
 			<ScalingDrawer
