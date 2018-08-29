@@ -4,8 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
-
- import com.azendoo.reactnativesnackbar.SnackbarPackage;
 import com.facebook.CallbackManager;
 import com.facebook.react.ReactApplication;
 import com.arttitude360.reactnative.rngoogleplaces.RNGooglePlacesPackage;
@@ -64,7 +62,6 @@ private static CallbackManager mCallbackManager = CallbackManager.Factory.create
         new RNHTMLtoPDFPackage(),
         new RNDeviceInfo(),
         new RNGoogleSigninPackage(),
-        new SnackbarPackage(),
         new FBSDKPackage(mCallbackManager)
       );
     }

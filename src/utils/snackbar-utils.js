@@ -1,37 +1,32 @@
-import _Snackbar from 'react-native-snackbar';
-
+import { Toast } from 'native-base';
 module.exports = {
     showShort(message, title, action) {
-        this.show(message, title, action, _Snackbar.LENGTH_SHORT);
+        this.show(message, title, action, 3000);
     },
-    showLong(message, title, action) {
-        this.show(message, title, action, _Snackbar.LENGTH_LONG);
+    showLong(message, title, type) {
+        this.show(message, title, action, 6000);
     },
-    showIndefinite(message, title, action) {
-        this.show(message, title, action, _Snackbar.LENGTH_INDEFINITE);
-    },
-    show(message, title, action, duration) {
+    show(message, title, type, duration) {
         if (duration != 0 && !duration)
-            duration = _Snackbar.LENGTH_SHORT;
-        if (!title)
-            _Snackbar.show({
-                title: message,
-                duration: _Snackbar.LENGTH_SHORT
-            });
-        else {
-            _Snackbar.show({
-                title: message,
-                duration: _Snackbar.LENGTH_SHORT,
-                action: {
-                    title: title,
-                    color: 'green',
-                    onPress: () => {
-                        if (action)
-                            action();
-                    },
-                },
-            });
+            duration = 3000;
+        let _type = "success";
+        switch (type) {
+            case "warning":
+                _type = type;
+                break;
+            case "success":
+                _type = type;
+                break;
+            case "danger":
+                _type = type;
+                break;
         }
 
+        Toast.show({
+            text: message,
+            duration: 3000,
+            buttonText: title,
+            type: _type
+        });
     }
 }
