@@ -371,7 +371,6 @@ class AddNewClinicScreen extends Component {
                             <ScaledImage source={require("@images/ic_phongkham1.png")} height={36} style={{ marginRight: 12 }} />
                             <Text style={{
                                 width: 161,
-                                fontFamily: "SFUIText",
                                 fontSize: 16,
                                 fontWeight: "600",
                                 fontStyle: "normal",

@@ -111,7 +111,6 @@ class MyFacilityScreen extends Component {
                                 flex: 1,
                                 padding: 12,
                                 textAlign: 'center',
-                                fontFamily: "Montserrat",
                                 fontSize: 18,
                                 fontWeight: "600",
                                 fontStyle: "normal",
@@ -181,7 +180,6 @@ class MyFacilityScreen extends Component {
                             }} onPress={this.addNewClinic.bind(this)}>
                                 <ScaledImage source={require("@images/ic_phongkham1.png")} width={32} style={{ marginRight: 12 }} />
                                 <Text style={{
-                                    fontFamily: "SFUIText",
                                     fontSize: 18,
                                     fontWeight: "600",
                                     color: '#FFF',
@@ -202,7 +200,6 @@ class MyFacilityScreen extends Component {
                             >
                                 <ScaledImage source={require("@images/ic_phongkham1.png")} width={32} style={{ marginRight: 12 }} />
                                 <Text style={{
-                                    fontFamily: "SFUIText",
                                     fontSize: 18,
                                     fontWeight: "600",
                                     color: '#FFF',

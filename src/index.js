@@ -1,5 +1,6 @@
 import React from 'react'
 import { Provider } from 'react-redux'
+import { Root } from 'native-base';
 import { createStore, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk';
 
@@ -11,7 +12,9 @@ const store = createStore(AppReducer, applyMiddleware(thunk));
 
 const Kernel = () => (
     <Provider store={store}>
-        <RootNavigator />
+        <Root>
+            <RootNavigator />
+        </Root>
     </Provider>
 )
 export default Kernel

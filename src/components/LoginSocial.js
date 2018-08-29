@@ -8,6 +8,7 @@ import constants from '@resources/strings';
 import { GoogleSignin, GoogleSigninButton } from 'react-native-google-signin';
 const FBSDK = require('react-native-fbsdk');
 import redux from '@redux-store';
+import { Toast } from 'native-base'
 
 const {
     LoginManager,
@@ -32,20 +33,23 @@ class LoginSocial extends Component {
     }
 
     handleSigninGoogle() {
-        loginSocial = this.loginSocial;
-        props = this.props;
-        GoogleSignin.signOut();
-        GoogleSignin.signIn().then((res) => {
-            console.log(res);
-            if (res) {
-                loginSocial(2, res.id, res.name, res.photo, res.email, props);
-            } else {
-                snackbar.show(constants.msg.user.canot_get_user_info_in_account_google);
-                return;
-            }
-        }).catch((err) => {
-            snackbar.show(constants.msg.user.canot_get_user_info_in_account_google);
-        }).done();
+        alert();
+        Toast.show({ text: "hehe", duration: 3000 });
+        alert();
+        // loginSocial = this.loginSocial;
+        // props = this.props;
+        // GoogleSignin.signOut();
+        // GoogleSignin.signIn().then((res) => {
+        //     console.log(res);
+        //     if (res) {
+        //         loginSocial(2, res.id, res.name, res.photo, res.email, props);
+        //     } else {
+        //         snackbar.show(constants.msg.user.canot_get_user_info_in_account_google);
+        //         return;
+        //     }
+        // }).catch((err) => {
+        //     snackbar.show(constants.msg.user.canot_get_user_info_in_account_google);
+        // }).done();
     }
 
     loginSocial(socialType, socialId, name, avatar, email, props) {
@@ -122,16 +126,15 @@ class LoginSocial extends Component {
     render() {
         return (
             <View>
-                {/* <Text style={{ textAlign: 'center', marginTop: 20, color: "#3160ac", opacity: 0.6 }}>Đăng nhập với</Text>
+                <Text style={{ textAlign: 'center', marginTop: 20, color: "#3160ac", opacity: 0.6 }}>Đăng nhập với</Text>
                 <View style={{ flexDirection: 'row' }}>
-                    <ScaleImage source={require("@images/ic_google.png")} width={40} style={{ padding: 10, margin: 10 }} />
                     <TouchableOpacity onPress={() => this.handleSigninGoogle()}>
+                        <ScaleImage source={require("@images/ic_google.png")} width={40} style={{ padding: 10, margin: 10 }} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => this.handleSigninFacebook()}>
                         <ScaleImage source={require("@images/ic_fb.png")} width={40} style={{ padding: 10, margin: 10 }} />
                     </TouchableOpacity>
-
-                </View> */}
+                </View>
             </View>
 
         );
