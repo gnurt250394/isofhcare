@@ -4,7 +4,6 @@ import notificationProvider from '@data-access/notification-provider';
 import firebase from 'react-native-firebase';
 import sendbirdUtils from '@utils/send-bird-utils';
 import clientUtils from '@utils/client-utils';
-import conferenceSessionProvider from "@data-access/conference/session-provider";
 
 import client from '@utils/client-utils';
 function _userLogin(user) {
