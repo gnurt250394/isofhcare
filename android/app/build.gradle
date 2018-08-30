@@ -153,18 +153,20 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-google-places')
+    implementation project(':react-native-google-places')
     implementation project(':realm')
-    compile project(':react-native-android-location-enabler')
+    implementation project(':react-native-android-location-enabler')
     implementation(project(':react-native-maps')){
         exclude group: 'com.google.android.gms', module: 'play-services-base'
         exclude group: 'com.google.android.gms', module: 'play-services-maps'
     }
-    implementation project(':react-native-camera')
+    implementation (project(':react-native-camera')) {
+        exclude group: "com.android.support"
+    }
     implementation project(':rn-fetch-blob')
     implementation project(':react-native-image-crop-picker')
     implementation project(':react-native-device-info')
-    compile project(':react-native-exit-app')
+    implementation project(':react-native-exit-app')
     implementation project(':react-native-share')
 
     implementation(project(':react-native-device-info'))
