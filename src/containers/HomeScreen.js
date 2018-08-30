@@ -45,7 +45,7 @@ class SplashScreen extends Component {
 				content={<DrawerContent navigation={this.props.navigation} drawer={this._drawer} />}
 				{...defaultScalingDrawerConfig}
 			>
-				<IndicatorViewPager ref={(viewPager) => { this.viewPager = viewPager }} style={{ flex: 1, backgroundColor: "#000", width, height }}>
+				<IndicatorViewPager ref={(viewPager) => { this.viewPager = viewPager }} style={{ flex: 1, backgroundColor: "#000", width, height, overflow: 'hidden' }}>
 					<View><TabSearch navigation={this.props.navigation} style={{ width, height }} drawer={this._drawer} /></View>
 					{/* <View><TabSearch navigation={this.props.navigation} style={{ width, height }} drawer={this._drawer} /></View> */}
 				</IndicatorViewPager>

@@ -34,12 +34,14 @@ class SplashScreen extends Component {
 			setTimeout(() => {
 				if (s) {
 					this.props.dispatch(redux.userLogin(s));
-					// Actions.home();
 				}
 				else {
-					// this.props.dispatch(redux.userLogout(s));
-					// Actions.login({ type: 'replace' });
+					this.props.dispatch(redux.userLogout());
 				}
+				this.Actions.dispatch(StackActions.reset({
+					index: 0,
+					actions: [NavigationActions.navigate({ routeName: "home" })],
+				}));
 			}, 2000);
 		});
 	}
