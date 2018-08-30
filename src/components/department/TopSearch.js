@@ -1,14 +1,7 @@
-import React, { Component, PropTypes } from 'react';
-import { View, TextInput, TouchableWithoutFeedback, Text, FlatList, TouchableOpacity, Image, Dimensions } from 'react-native';
+import React, { Component } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
-import ScaledImage from 'mainam-react-native-scaleimage';
-import drugProvider from '@data-access/drug-provider';
-import SearchPanel from '@components/SearchPanel';
-import ItemDrug from '@components/drug/ItemDrug';
-import realmModel from '@models/realm-models';
-const Realm = require('realm');
 import snackbar from '@utils/snackbar-utils';
-import historyProvider from '@data-access/history-provider';
 
 import specialistProvider from '@data-access/specialist-provider';
 

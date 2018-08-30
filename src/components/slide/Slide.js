@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
-import { Text, View, TouchableOpacity } from 'react-native';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
-import ScaledImage from 'mainam-react-native-scaleimage';
-import clientUtils from '@utils/client-utils';
-import ImageProgress from 'mainam-react-native-image-progress';
-import Progress from 'react-native-progress/Pie';
 import { IndicatorViewPager } from 'mainam-react-native-viewpager';
 
 class Slide extends Component {
@@ -52,7 +48,6 @@ class Slide extends Component {
     }
     nextPosition() {
         try {
-            console.log("xxx");
             if (this.state.array && this.state.array.length > 1) {
                 let position = this.state.position;
                 position++;
