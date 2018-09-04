@@ -1,5 +1,5 @@
+const server_url = 'http://123.24.206.9:8382';
 String.prototype.absoluteUrl = String.prototype.absolute || function (defaultValue) {
-    var server_url = 'http://123.24.206.9:8382';
     var _this = this.toString();
     if (_this == "")
         if (defaultValue != undefined)
@@ -21,7 +21,6 @@ String.prototype.absoluteUrl = String.prototype.absolute || function (defaultVal
 }
 
 String.prototype.getServiceUrl = String.prototype.absolute || function (defaultValue) {
-    var server_url = 'http://123.24.206.9:8382';
     if (this == "")
         if (defaultValue != undefined)
             return defaultValue;
@@ -36,7 +35,7 @@ String.prototype.getServiceUrl = String.prototype.absolute || function (defaultV
 
 module.exports = {
     auth: "",
-    serverApi: "http://123.24.206.9:8382/",
+    serverApi: server_url + "/",
     response: {
         ok(data, message) {
             if (!message)

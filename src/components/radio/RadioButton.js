@@ -18,7 +18,7 @@ class RadioButton extends Component {
             || nextProps.uncheckImage != this.props.uncheckImage
             || nextProps.checkedImage != this.props.checkedImage)
             return true;
-        return fail;
+        return false;
     }
 
     onPress() {

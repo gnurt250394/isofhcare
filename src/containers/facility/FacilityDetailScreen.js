@@ -208,7 +208,7 @@ class FacilityDetailScreen extends Component {
                                             </View>
                                             <Text style={{ fontSize: 12, marginTop: 14, marginBottom: 10 }} numberOfLines={2} ellipsizeMode='tail'>{facility.facility.address}</Text>
 
-                                            <PhotoGrid source={this.state.list_images} onPressImage={uri => { this.photoViewer() }} />
+                                            <PhotoGrid source={this.state.list_images} onPressImage={uri => { this.photoViewer(uri) }} />
                                             {
                                                 facility.facility.website ?
                                                     <TouchableOpacity style={{ padding: 10, flexDirection: 'row' }} onPress={() => Linking.openURL(facility.facility.website)}>
