@@ -25,6 +25,7 @@ class PhotoViewerScreen extends Component {
     componentDidMount() {
 
     }
+
     preview() {
         if (this.state.index > 0) {
             this.setState({
