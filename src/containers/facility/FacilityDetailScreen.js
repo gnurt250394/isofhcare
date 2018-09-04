@@ -124,8 +124,20 @@ class FacilityDetailScreen extends Component {
             <View style={{ height: 0.5, backgroundColor: '#00000040', marginTop: 12 }} />
         </TouchableOpacity>
     }
-    photoViewer() {
-        this.props.navigation.navigate("photoViewer", { urls: this.state.list_images });
+    photoViewer(uri) {
+        try {
+            if (!this.state.list_images || this.state.list_images.length == 0) {
+                snackbar.show("Không có ảnh nào");
+                return;
+            }
+            var index = this.state.list_images.indexOf(uri);
+            if (index == -1)
+                index = 0;
+            this.props.navigation.navigate("photoViewer", { urls: this.state.list_images, index });
+
+        } catch (error) {
+
+        }
     }
     render() {
         const facility = this.props.navigation.getParam("facility", undefined);
