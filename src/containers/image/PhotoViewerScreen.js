@@ -7,6 +7,7 @@ const { width, height } = Dimensions.get('window');
 import permission from 'mainam-react-native-permission';
 import RNFetchBlob from 'rn-fetch-blob';
 let dirs = RNFetchBlob.fs.dirs
+import Share from 'react-native-share';
 class PhotoViewerScreen extends Component {
     constructor(props) {
         super(props)
@@ -58,11 +59,12 @@ class PhotoViewerScreen extends Component {
                     filename = (new Date().getTime() + "");
                 }
                 let config = {
-                    path: dirs.PictureDir + '/' + filename
+                    fileCache: true,
                 };
 
 
                 if (Platform.OS == "android") {
+                    config.path = dirs.PictureDir + '/' + filename
                     config.addAndroidDownloads =
                         {
                             useDownloadManager: true,
@@ -70,11 +72,17 @@ class PhotoViewerScreen extends Component {
                             description: 'File downloaded by download manager.'
                         }
                 }
+                // else {
+                //     config.path = dirs.DocumentDir + '/' + filename
+                // }
                 RNFetchBlob
                     .config(config)
                     .fetch('GET', url)
                     .then((resp) => {
-                        alert("Tải về hoàn tất tại: " + resp.path());
+                        Share.open({
+                            title: "Chia sẻ",
+                            url: "file://" + resp.path(),
+                        });
                     }).catch(err => {
                     })
             }

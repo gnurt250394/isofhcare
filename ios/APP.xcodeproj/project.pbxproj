@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00121F268B744C0DAB8EB179 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 214A1AD8826C441B86456322 /* SafariServices.framework */; };
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
@@ -67,11 +68,11 @@
 		B24DBF4C20D76DE90098E296 /* libRNCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B24DBF4B20D76DCD0098E296 /* libRNCamera.a */; };
 		B24DBF5320D775180098E296 /* libReactNativePermissions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B24DBF5220D7750A0098E296 /* libReactNativePermissions.a */; };
 		C257C065287C41169CDDE373 /* slidingPanelTests.xctest in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B7455775E494EFBA86E9BD5 /* slidingPanelTests.xctest */; };
+		D5A48EC5F69E4BAA84B12B90 /* libRNPhotoView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5988393358F04E1091F14092 /* libRNPhotoView.a */; };
 		E07215313F5549D9AEBE46BD /* slidingPanel-tvOS.app in Frameworks */ = {isa = PBXBuildFile; fileRef = CBE99AB0CCAC437FBB1626B2 /* slidingPanel-tvOS.app */; };
 		E2B4ECEA53E94E508AF87928 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DFF531B1D8384E1281521AFF /* FontAwesome.ttf */; };
 		E504019A736C4E52B5CA4464 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 94798CE8149C4557AC458707 /* libz.tbd */; };
 		E829ED23B13342C4906334F4 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD5F71DCE6BD49A78D01066B /* Foundation.ttf */; };
-		D5A48EC5F69E4BAA84B12B90 /* libRNPhotoView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5988393358F04E1091F14092 /* libRNPhotoView.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -446,6 +447,13 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RNGooglePlaces;
 		};
+		FAD89280213E9CAA003FE1B0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C284589C4D624FEBBCEA1382 /* RNPhotoView.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNPhotoView;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -480,6 +488,7 @@
 		2D86043EA9574354B5E6BBFC /* RNExitApp.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNExitApp.xcodeproj; path = "../node_modules/react-native-exit-app/ios/RNExitApp.xcodeproj"; sourceTree = "<group>"; };
 		3E72252139704C53943BA947 /* libc++.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		41432D5DBC86498C8F9537DB /* RNGoogleSignin.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNGoogleSignin.xcodeproj; path = "../node_modules/react-native-google-signin/ios/RNGoogleSignin.xcodeproj"; sourceTree = "<group>"; };
+		5988393358F04E1091F14092 /* libRNPhotoView.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNPhotoView.a; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		5EF70384890E42079EEF5EA1 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/native-base/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		649837A561B94C52BBA3B4B0 /* slidingPanel-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = "slidingPanel-tvOSTests.xctest"; sourceTree = "<group>"; };
@@ -509,6 +518,7 @@
 		B24DBF4620D76DCD0098E296 /* RNCamera.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RNCamera.xcodeproj"; sourceTree = "<group>"; };
 		B24DBF4D20D7750A0098E296 /* ReactNativePermissions.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativePermissions.xcodeproj; path = "../node_modules/react-native-permissions/ios/ReactNativePermissions.xcodeproj"; sourceTree = "<group>"; };
 		B69F4B9FF424460EA090B553 /* RNFirebase.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFirebase.xcodeproj; path = "../node_modules/react-native-firebase/ios/RNFirebase.xcodeproj"; sourceTree = "<group>"; };
+		C284589C4D624FEBBCEA1382 /* RNPhotoView.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNPhotoView.xcodeproj; path = "../node_modules/react-native-photo-view/ios/RNPhotoView.xcodeproj"; sourceTree = "<group>"; };
 		C3B81C39306F41A181582342 /* RNHTMLtoPDFTests.xctest */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = RNHTMLtoPDFTests.xctest; sourceTree = "<group>"; };
 		CAF101C9180447958BABC1B7 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/native-base/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		CBE99AB0CCAC437FBB1626B2 /* slidingPanel-tvOS.app */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.application; path = "slidingPanel-tvOS.app"; sourceTree = "<group>"; };
@@ -521,8 +531,6 @@
 		E804FAC943AA4930A2AE54E9 /* AddressBook.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		EBC3324BCEB75276C181FD32 /* libPods-APP.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-APP.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB08E72CAE4D5E4E3C0999B4 /* Pods-APP.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-APP.debug.xcconfig"; path = "Pods/Target Support Files/Pods-APP/Pods-APP.debug.xcconfig"; sourceTree = "<group>"; };
-		C284589C4D624FEBBCEA1382 /* RNPhotoView.xcodeproj */ = {isa = PBXFileReference; name = "RNPhotoView.xcodeproj"; path = "../node_modules/react-native-photo-view/ios/RNPhotoView.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
-		5988393358F04E1091F14092 /* libRNPhotoView.a */ = {isa = PBXFileReference; name = "libRNPhotoView.a"; path = "libRNPhotoView.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -877,6 +885,7 @@
 				8B7455775E494EFBA86E9BD5 /* slidingPanelTests.xctest */,
 				CBE99AB0CCAC437FBB1626B2 /* slidingPanel-tvOS.app */,
 				649837A561B94C52BBA3B4B0 /* slidingPanel-tvOSTests.xctest */,
+				5988393358F04E1091F14092 /* libRNPhotoView.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -963,6 +972,14 @@
 			isa = PBXGroup;
 			children = (
 				FA0325F5212E5D0C003268FA /* libRNGooglePlaces.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FAD8927D213E9CAA003FE1B0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FAD89281213E9CAA003FE1B0 /* libRNPhotoView.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1184,6 +1201,10 @@
 				{
 					ProductGroup = B20CB0C5208ED6440041C72A /* Products */;
 					ProjectRef = E294748E39F94F66B46DFEFD /* RNHTMLtoPDF.xcodeproj */;
+				},
+				{
+					ProductGroup = FAD8927D213E9CAA003FE1B0 /* Products */;
+					ProjectRef = C284589C4D624FEBBCEA1382 /* RNPhotoView.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -1554,6 +1575,13 @@
 			remoteRef = FA0325F4212E5D0C003268FA /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		FAD89281213E9CAA003FE1B0 /* libRNPhotoView.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNPhotoView.a;
+			remoteRef = FAD89280213E9CAA003FE1B0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -1767,7 +1795,7 @@
 					"$(SRCROOT)..\node_modules\nealmsrc/**",
 					"$(SRCROOT)/../node_modules/react-native-google-places/ios",
 					"$(SRCROOT)/../node_modules/mainam-react-native-sliding-up-down/ios/slidingPanel/**",
-					"$(SRCROOT)\..\node_modules\react-native-photo-view\ios/**",
+					"$(SRCROOT)..\node_modules\neact-native-photo-viewios/**",
 				);
 				INFOPLIST_FILE = APPTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1814,7 +1842,7 @@
 					"$(SRCROOT)..\node_modules\nealmsrc/**",
 					"$(SRCROOT)/../node_modules/react-native-google-places/ios",
 					"$(SRCROOT)/../node_modules/mainam-react-native-sliding-up-down/ios/slidingPanel/**",
-					"$(SRCROOT)\..\node_modules\react-native-photo-view\ios/**",
+					"$(SRCROOT)..\node_modules\neact-native-photo-viewios/**",
 				);
 				INFOPLIST_FILE = APPTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1872,7 +1900,7 @@
 					"$(SRCROOT)..\node_modules\nealmsrc/**",
 					"$(SRCROOT)/../node_modules/react-native-google-places/ios",
 					"$(SRCROOT)/../node_modules/mainam-react-native-sliding-up-down/ios/slidingPanel/**",
-					"$(SRCROOT)\..\node_modules\react-native-photo-view\ios/**",
+					"$(SRCROOT)..\node_modules\neact-native-photo-viewios/**",
 				);
 				INFOPLIST_FILE = APP/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1917,7 +1945,7 @@
 					"$(SRCROOT)..\node_modules\nealmsrc/**",
 					"$(SRCROOT)/../node_modules/react-native-google-places/ios",
 					"$(SRCROOT)/../node_modules/mainam-react-native-sliding-up-down/ios/slidingPanel/**",
-					"$(SRCROOT)\..\node_modules\react-native-photo-view\ios/**",
+					"$(SRCROOT)..\node_modules\neact-native-photo-viewios/**",
 				);
 				INFOPLIST_FILE = APP/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1958,7 +1986,7 @@
 					"$(SRCROOT)..\node_modules\nealmsrc/**",
 					"$(SRCROOT)/../node_modules/react-native-google-places/ios",
 					"$(SRCROOT)/../node_modules/mainam-react-native-sliding-up-down/ios/slidingPanel/**",
-					"$(SRCROOT)\..\node_modules\react-native-photo-view\ios/**",
+					"$(SRCROOT)..\node_modules\neact-native-photo-viewios/**",
 				);
 				INFOPLIST_FILE = "APP-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2012,7 +2040,7 @@
 					"$(SRCROOT)..\node_modules\nealmsrc/**",
 					"$(SRCROOT)/../node_modules/react-native-google-places/ios",
 					"$(SRCROOT)/../node_modules/mainam-react-native-sliding-up-down/ios/slidingPanel/**",
-					"$(SRCROOT)\..\node_modules\react-native-photo-view\ios/**",
+					"$(SRCROOT)..\node_modules\neact-native-photo-viewios/**",
 				);
 				INFOPLIST_FILE = "APP-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2065,7 +2093,7 @@
 					"$(SRCROOT)..\node_modules\nealmsrc/**",
 					"$(SRCROOT)/../node_modules/react-native-google-places/ios",
 					"$(SRCROOT)/../node_modules/mainam-react-native-sliding-up-down/ios/slidingPanel/**",
-					"$(SRCROOT)\..\node_modules\react-native-photo-view\ios/**",
+					"$(SRCROOT)..\node_modules\neact-native-photo-viewios/**",
 				);
 				INFOPLIST_FILE = "APP-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -2118,7 +2146,7 @@
 					"$(SRCROOT)..\node_modules\nealmsrc/**",
 					"$(SRCROOT)/../node_modules/react-native-google-places/ios",
 					"$(SRCROOT)/../node_modules/mainam-react-native-sliding-up-down/ios/slidingPanel/**",
-					"$(SRCROOT)\..\node_modules\react-native-photo-view\ios/**",
+					"$(SRCROOT)..\node_modules\neact-native-photo-viewios/**",
 				);
 				INFOPLIST_FILE = "APP-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
