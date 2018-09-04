@@ -9,11 +9,11 @@ import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 const { width, height } = Dimensions.get('window');
 import SearchPanel from '@components/SearchPanel';
 import realmModel from '@models/realm-models';
-import ImageProgress from 'mainam-react-native-image-progress';
-import Progress from 'react-native-progress/Pie';
 import { Rating } from 'react-native-ratings';
 import PhotoGrid from 'react-native-thumbnail-grid';
-import snackbar from '@utils/snackbar-utils'
+import snackbar from '@utils/snackbar-utils';
+import ImageLoad from 'mainam-react-native-image-loader';
+
 
 import SlidingPanel from 'mainam-react-native-sliding-up-down';
 class FacilityDetailScreen extends Component {
@@ -198,13 +198,13 @@ class FacilityDetailScreen extends Component {
                                                             <Text style={{ color: '#FFF', fontWeight: 'bold' }}>Đánh giá</Text>
                                                         </TouchableOpacity></View>
                                                 </View>
-                                                <ImageProgress
-                                                    indicator={Progress} resizeMode='cover' style={{ width: 80, height: 80 }} imageStyle={{
-                                                        width: 80, height: 80
-                                                    }} source={{ uri: image }}
-                                                    defaultImage={() => {
-                                                        return <ScaledImage resizeMode='cover' source={require("@images/noimage.jpg")} width={80} height={80} />
-                                                    }} />
+                                                <ImageLoad
+                                                    resizeMode="cover"
+                                                    placeholderSource={require("@images/noimage.jpg")}
+                                                    style={{ width: 80, height: 80 }}
+                                                    loadingStyle={{ size: 'small', color: 'gray' }}
+                                                    source={{ uri: image }}
+                                                />
                                             </View>
                                             <Text style={{ fontSize: 12, marginTop: 14, marginBottom: 10 }} numberOfLines={2} ellipsizeMode='tail'>{facility.facility.address}</Text>
 

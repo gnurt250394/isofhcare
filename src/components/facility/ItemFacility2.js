@@ -1,10 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { View, TextInput, TouchableWithoutFeedback, Text, FlatList, TouchableOpacity, Image, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
-import ScaledImage from 'mainam-react-native-scaleimage';
-import ImageProgress from 'mainam-react-native-image-progress';
-import Progress from 'react-native-progress/Pie';
 import { Rating } from 'react-native-ratings';
+import ImageLoad from 'mainam-react-native-image-loader';
 
 class ItemFacility extends Component {
     constructor(props) {
@@ -50,13 +48,13 @@ class ItemFacility extends Component {
                     />
                     <Text style={{ fontSize: 12, marginTop: 5 }} numberOfLines={2} ellipsizeMode='tail'>{this.props.facility.facility.address}</Text>
                 </View>
-                <ImageProgress
-                    indicator={Progress} resizeMode='cover' style={{ width: 80, height: 80 }} imageStyle={{
-                        width: 80, height: 80
-                    }} source={{ uri: image }}
-                    defaultImage={() => {
-                        return <ScaledImage resizeMode='cover' source={require("@images/noimage.jpg")} width={80} height={80} />
-                    }} />
+                <ImageLoad
+                    resizeMode="cover"
+                    borderRadius={5.3}
+                    style={{ width: 80, height: 80 }}
+                    loadingStyle={{ size: 'small', color: 'gray' }}
+                    source={{ uri: image }}
+                />
             </TouchableOpacity>);
     }
 }

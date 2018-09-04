@@ -1,12 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { View, TextInput, TouchableWithoutFeedback, Text, FlatList, TouchableOpacity, Image, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
-import ScaledImage from 'mainam-react-native-scaleimage';
-import ImageProgress from 'mainam-react-native-image-progress';
-import Progress from 'react-native-progress/Pie';
 import { Rating } from 'react-native-ratings';
 import clientUtils from '@utils/client-utils'
-
+import ImageLoad from 'mainam-react-native-image-loader';
 class ItemFacility extends Component {
     constructor(props) {
         super(props)
@@ -27,7 +24,7 @@ class ItemFacility extends Component {
         if (!image)
             image = ".";
         else {
-            image=image.absoluteUrl();
+            image = image.absoluteUrl();
         }
         return (
             <TouchableOpacity {...this.props} style={[{
@@ -40,18 +37,28 @@ class ItemFacility extends Component {
                 borderWidth: 1,
                 flexDirection: 'row'
             }, this.props.style]} shadowColor='#000000' shadowOpacity={0.2} shadowOffset={{}} onPress={() => { this.props.navigation.navigate("facilityDetailScreen", { facility: this.props.facility }) }}>
-                <ImageProgress
-                    indicator={Progress} resizeMode='cover' style={{ width: 100, height: 100 }} imageStyle={{
-                        borderTopLeftRadius: 5.3,
-                        borderBottomLeftRadius: 5.3,
-                        width: 100, height: 100
-                    }} source={{ uri: image }}
-                    defaultImage={() => {
-                        return <ScaledImage resizeMode='cover' source={require("@images/noimage.jpg")} width={100} height={100} style={{
+                <View style={{
+                    width: 100, height: 100, borderTopLeftRadius: 5.3,
+                    borderBottomLeftRadius: 5.3
+                }}>
+                    <ImageLoad
+                        borderRadius={5.3}
+                        style={{
+                            width: 100, height: 100
+                        }}
+                        imageStyle={{
                             borderTopLeftRadius: 5.3,
                             borderBottomLeftRadius: 5.3
-                        }} />
-                    }} />
+                        }}
+                        loadingStyle={{ size: 'small', color: 'gray' }}
+                        customImagePlaceholderDefaultStyle={{
+                            borderTopLeftRadius: 5.3,
+                            borderBottomLeftRadius: 5.3
+                        }}
+                        source={{ uri: image }}
+                        resizeMode="cover"
+                    />
+                </View>
                 <View style={{ flex: 1, margin: 12 }}>
                     <Text style={{ fontWeight: 'bold' }} numberOfLines={1} ellipsizeMode='tail'>{this.props.facility.facility.name}</Text>
                     <Rating

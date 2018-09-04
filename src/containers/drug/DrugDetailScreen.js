@@ -2,16 +2,12 @@ import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
 import { View, TextInput, TouchableWithoutFeedback, Text, FlatList, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
-import ScaledImage from 'mainam-react-native-scaleimage';
 import drugProvider from '@data-access/drug-provider';
 import Slide from '@components/slide/Slide';
 import clientUtils from '@utils/client-utils';
 import stringUtils from 'mainam-react-native-string-utils';
 import Dash from 'mainam-react-native-dash-view';
-import ImageProgress from 'mainam-react-native-image-progress';
-import Progress from 'react-native-progress/Pie';
-import { Rating } from 'react-native-ratings';
-import ItemFacility from '@components/facility/ItemFacility';
+import ImageLoad from 'mainam-react-native-image-loader';
 
 class DrugDetailScreen extends Component {
     constructor(props) {
@@ -29,7 +25,9 @@ class DrugDetailScreen extends Component {
             borderColor: 'rgb(204, 204, 204)',
             flexDirection: 'row', alignItems: 'center', justifyContent: 'center'
         }} shadowColor='#000000' shadowOpacity={0.2} shadowOffset={{}}>
-            <ScaledImage uri={item && item.url ? item.url.absoluteUrl() : "undefined"} width={Dimensions.get('window').width} height={135} />
+            <ImageLoad
+                resizeMode="contain"
+                source={{ uri: item && item.url ? item.url.absoluteUrl() : "undefined" }} style={{ width: Dimensions.get('window').width, height: 135 }} />
         </View>
     }
     getType(category) {

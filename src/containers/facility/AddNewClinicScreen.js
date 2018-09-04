@@ -4,11 +4,9 @@ import { View, TextInput, Text, FlatList, TouchableOpacity, ScrollView, Image, D
 import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import facilityProvider from '@data-access/facility-provider';
-import ItemFacility from '@components/facility/ItemFacility';
 import Dash from 'mainam-react-native-dash-view';
 import Modal from "react-native-modal";
 import stylemodal from "@styles/modal-style";
-import RNGooglePlaces from 'react-native-google-places';
 import specialistProvider from '@data-access/specialist-provider';
 import imageProvider from '@data-access/image-provider';
 import ImagePicker from 'mainam-react-native-select-image';
