@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00121F268B744C0DAB8EB179 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 214A1AD8826C441B86456322 /* SafariServices.framework */; };
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
@@ -72,6 +71,7 @@
 		E2B4ECEA53E94E508AF87928 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DFF531B1D8384E1281521AFF /* FontAwesome.ttf */; };
 		E504019A736C4E52B5CA4464 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 94798CE8149C4557AC458707 /* libz.tbd */; };
 		E829ED23B13342C4906334F4 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD5F71DCE6BD49A78D01066B /* Foundation.ttf */; };
+		D5A48EC5F69E4BAA84B12B90 /* libRNPhotoView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5988393358F04E1091F14092 /* libRNPhotoView.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -521,6 +521,8 @@
 		E804FAC943AA4930A2AE54E9 /* AddressBook.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		EBC3324BCEB75276C181FD32 /* libPods-APP.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-APP.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB08E72CAE4D5E4E3C0999B4 /* Pods-APP.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-APP.debug.xcconfig"; path = "Pods/Target Support Files/Pods-APP/Pods-APP.debug.xcconfig"; sourceTree = "<group>"; };
+		C284589C4D624FEBBCEA1382 /* RNPhotoView.xcodeproj */ = {isa = PBXFileReference; name = "RNPhotoView.xcodeproj"; path = "../node_modules/react-native-photo-view/ios/RNPhotoView.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		5988393358F04E1091F14092 /* libRNPhotoView.a */ = {isa = PBXFileReference; name = "libRNPhotoView.a"; path = "libRNPhotoView.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -568,6 +570,7 @@
 				6C17D834364F490B9D3CB7FD /* libRNGooglePlaces.a in Frameworks */,
 				46EBBF0F9A944D0C81C1B3EC /* slidingPanel.app in Frameworks */,
 				C257C065287C41169CDDE373 /* slidingPanelTests.xctest in Frameworks */,
+				D5A48EC5F69E4BAA84B12B90 /* libRNPhotoView.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -773,6 +776,7 @@
 				E294748E39F94F66B46DFEFD /* RNHTMLtoPDF.xcodeproj */,
 				649A5967940A4BCD8E6DA1EF /* RealmReact.xcodeproj */,
 				7E9C18D87F5E40CFA4AA60A4 /* RNGooglePlaces.xcodeproj */,
+				C284589C4D624FEBBCEA1382 /* RNPhotoView.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1763,12 +1767,14 @@
 					"$(SRCROOT)..\node_modules\nealmsrc/**",
 					"$(SRCROOT)/../node_modules/react-native-google-places/ios",
 					"$(SRCROOT)/../node_modules/mainam-react-native-sliding-up-down/ios/slidingPanel/**",
+					"$(SRCROOT)\..\node_modules\react-native-photo-view\ios/**",
 				);
 				INFOPLIST_FILE = APPTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1808,12 +1814,14 @@
 					"$(SRCROOT)..\node_modules\nealmsrc/**",
 					"$(SRCROOT)/../node_modules/react-native-google-places/ios",
 					"$(SRCROOT)/../node_modules/mainam-react-native-sliding-up-down/ios/slidingPanel/**",
+					"$(SRCROOT)\..\node_modules\react-native-photo-view\ios/**",
 				);
 				INFOPLIST_FILE = APPTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1864,6 +1872,7 @@
 					"$(SRCROOT)..\node_modules\nealmsrc/**",
 					"$(SRCROOT)/../node_modules/react-native-google-places/ios",
 					"$(SRCROOT)/../node_modules/mainam-react-native-sliding-up-down/ios/slidingPanel/**",
+					"$(SRCROOT)\..\node_modules\react-native-photo-view\ios/**",
 				);
 				INFOPLIST_FILE = APP/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1908,6 +1917,7 @@
 					"$(SRCROOT)..\node_modules\nealmsrc/**",
 					"$(SRCROOT)/../node_modules/react-native-google-places/ios",
 					"$(SRCROOT)/../node_modules/mainam-react-native-sliding-up-down/ios/slidingPanel/**",
+					"$(SRCROOT)\..\node_modules\react-native-photo-view\ios/**",
 				);
 				INFOPLIST_FILE = APP/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1948,11 +1958,13 @@
 					"$(SRCROOT)..\node_modules\nealmsrc/**",
 					"$(SRCROOT)/../node_modules/react-native-google-places/ios",
 					"$(SRCROOT)/../node_modules/mainam-react-native-sliding-up-down/ios/slidingPanel/**",
+					"$(SRCROOT)\..\node_modules\react-native-photo-view\ios/**",
 				);
 				INFOPLIST_FILE = "APP-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -2000,11 +2012,13 @@
 					"$(SRCROOT)..\node_modules\nealmsrc/**",
 					"$(SRCROOT)/../node_modules/react-native-google-places/ios",
 					"$(SRCROOT)/../node_modules/mainam-react-native-sliding-up-down/ios/slidingPanel/**",
+					"$(SRCROOT)\..\node_modules\react-native-photo-view\ios/**",
 				);
 				INFOPLIST_FILE = "APP-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -2051,11 +2065,13 @@
 					"$(SRCROOT)..\node_modules\nealmsrc/**",
 					"$(SRCROOT)/../node_modules/react-native-google-places/ios",
 					"$(SRCROOT)/../node_modules/mainam-react-native-sliding-up-down/ios/slidingPanel/**",
+					"$(SRCROOT)\..\node_modules\react-native-photo-view\ios/**",
 				);
 				INFOPLIST_FILE = "APP-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -2102,11 +2118,13 @@
 					"$(SRCROOT)..\node_modules\nealmsrc/**",
 					"$(SRCROOT)/../node_modules/react-native-google-places/ios",
 					"$(SRCROOT)/../node_modules/mainam-react-native-sliding-up-down/ios/slidingPanel/**",
+					"$(SRCROOT)\..\node_modules\react-native-photo-view\ios/**",
 				);
 				INFOPLIST_FILE = "APP-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",

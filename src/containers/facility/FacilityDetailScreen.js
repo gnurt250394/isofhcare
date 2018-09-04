@@ -20,7 +20,17 @@ class FacilityDetailScreen extends Component {
     constructor(props) {
         super(props)
         const facility = this.props.navigation.getParam("facility", undefined);
+        var images = facility.images;
+        var list_images = [];
+        try {
+            for (var i = 0; i < images.length; i++) {
+                list_images.push(images[i].url.absoluteUrl())
+            }
+        } catch (error) {
+
+        }
         this.state = {
+            list_images,
             width,
             height: height - 75,
             showSearchPanel: true,
@@ -114,6 +124,9 @@ class FacilityDetailScreen extends Component {
             <View style={{ height: 0.5, backgroundColor: '#00000040', marginTop: 12 }} />
         </TouchableOpacity>
     }
+    photoViewer() {
+        this.props.navigation.navigate("photoViewer", { urls: this.state.list_images });
+    }
     render() {
         const facility = this.props.navigation.getParam("facility", undefined);
         if (!facility)
@@ -126,15 +139,6 @@ class FacilityDetailScreen extends Component {
             image = image.absoluteUrl();
         }
 
-        var images = facility.images;
-        var list_images = [];
-        try {
-            for (var i = 0; i < images.length; i++) {
-                list_images.push(images[i].url.absoluteUrl())
-            }
-        } catch (error) {
-
-        }
 
         return (
             <ActivityPanel ref={(ref) => this.activity = ref} style={{ flex: 1 }} title="CHỌN ĐỊA ĐIỂM TÌM KIẾM" showFullScreen={true}>
@@ -204,7 +208,7 @@ class FacilityDetailScreen extends Component {
                                             </View>
                                             <Text style={{ fontSize: 12, marginTop: 14, marginBottom: 10 }} numberOfLines={2} ellipsizeMode='tail'>{facility.facility.address}</Text>
 
-                                            <PhotoGrid source={list_images} onPressImage={uri => { }} />
+                                            <PhotoGrid source={this.state.list_images} onPressImage={uri => { this.photoViewer() }} />
                                             {
                                                 facility.facility.website ?
                                                     <TouchableOpacity style={{ padding: 10, flexDirection: 'row' }} onPress={() => Linking.openURL(facility.facility.website)}>

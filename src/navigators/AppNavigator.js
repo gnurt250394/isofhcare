@@ -15,6 +15,7 @@ import FacilityDetailScreen from '@containers/facility/FacilityDetailScreen';
 import MyFacilityScreen from '@containers/facility/MyFacilityScreen';
 import AddNewDrugStoreScreen from '@containers/facility/AddNewDrugStoreScreen';
 import AddNewClinicScreen from '@containers/facility/AddNewClinicScreen';
+import PhotoViewerScreen from '@containers/image/PhotoViewerScreen';
 
 
 const RootNavigator = StackNavigator({
@@ -33,6 +34,7 @@ const RootNavigator = StackNavigator({
     myFacility: { screen: MyFacilityScreen },
     addNewDrugStore: { screen: AddNewDrugStoreScreen },
     addNewClinic: { screen: AddNewClinicScreen },
+    photoViewer: { screen: PhotoViewerScreen },
 }, {
         headerMode: 'none',
         header: null,
