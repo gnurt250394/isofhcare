@@ -9,10 +9,10 @@ module.exports = {
                 if (s) {
                     if (callback)
                         callback(s, e);
-                    this.getTop(top, callback, true);
+                    this.getTop(top, null, true);
                 }
                 else
-                    this.getTop(top, null, true);
+                    this.getTop(top, callback, true);
             });
         else
             this.search("", 1, top, (s, e) => {
