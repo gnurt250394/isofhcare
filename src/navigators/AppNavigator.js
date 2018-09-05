@@ -16,7 +16,8 @@ import MyFacilityScreen from '@containers/facility/MyFacilityScreen';
 import AddNewDrugStoreScreen from '@containers/facility/AddNewDrugStoreScreen';
 import AddNewClinicScreen from '@containers/facility/AddNewClinicScreen';
 import PhotoViewerScreen from '@containers/image/PhotoViewerScreen';
-
+import SearchDiseaseScreen from '@containers/disease/SearchDiseaseScreen';
+import DiseaseDetailScreen from '@containers/disease/DiseaseDetailScreen';
 
 const RootNavigator = StackNavigator({
     splash: { screen: SplashScreen },
@@ -29,6 +30,8 @@ const RootNavigator = StackNavigator({
     searchFacilityByLocation: { screen: SearchByLocationScreen },
     searchDrug: { screen: SearchDrugScreen },
     searchDrugResult: { screen: SearchDrugResultScreen },
+    searchDisease : { screen: SearchDiseaseScreen},
+    diseaseDetail : { screen: DiseaseDetailScreen},
     drugDetailScreen: { screen: DrugDetailScreen },
     facilityDetailScreen: { screen: FacilityDetailScreen },
     myFacility: { screen: MyFacilityScreen },

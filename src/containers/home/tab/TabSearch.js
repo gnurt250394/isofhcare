@@ -15,22 +15,24 @@ class TabSearch extends Component {
             //     icon: require("@images/search/icchuandoantrieuchung.png"),
             //     index: 0
             // }, {
-            //     icon: require("@images/search/icchuandoanbenh.png"),
-            //     index: 0
-            // }, {
             //     icon: require("@images/search/ictimbacsi.png"),
             //     index: 0
             // }, {
             //     icon: require("@images/search/icgiadichvu.png"),
             //     index: 0
-            // }, 
+            // },
             {
                 icon: require("@images/search/ictimcsyt.png"),
                 index: 0
             }, {
                 icon: require("@images/search/ictimthuoc.png"),
                 index: 0
-            },];
+            },
+            {
+                icon: require("@images/search/icchuandoanbenh.png"),
+                index: 0
+            }
+        ];
         this.state = {
             features
         }
@@ -43,6 +45,8 @@ class TabSearch extends Component {
                 break;
             case 1:
                 navigate("searchDrug");
+            case 2:
+                navigate("searchDisease");
                 break;
         }
     }
