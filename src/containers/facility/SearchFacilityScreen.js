@@ -8,7 +8,7 @@ import SearchPanel from '@components/SearchPanel';
 import realmModel from '@models/realm-models';
 const Realm = require('realm');
 import historyProvider from '@data-access/history-provider';
-import TopSearch from '@components/department/TopSearch';
+import TopSpecialist from '@components/specialist/TopSearch';
 import TopFacility from '@components/facility/TopFacility';
 
 class SearchFacilityScreen extends Component {
@@ -67,6 +67,12 @@ class SearchFacilityScreen extends Component {
             </TouchableOpacity>
         return <View />
     }
+    onSpecialistClick(item) {
+        if (item)
+        {
+            this.props.navigation.navigate("searchFacilityResult",{specialist: item});
+        }
+    }
 
     render() {
         return (
@@ -87,7 +93,7 @@ class SearchFacilityScreen extends Component {
                         </TouchableOpacity>
 
                         <View style={{ flex: 1 }}>
-                            <TopSearch />
+                            <TopSpecialist onItemClick={this.onSpecialistClick.bind(this)} />
                             <TopFacility />
                         </View>
                     </ScrollView>

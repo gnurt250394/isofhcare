@@ -206,7 +206,8 @@ module.exports = {
     facility:
     {
       search: "facility/search",
-      create: "facility/create"
+      create: "facility/create",
+      search_by_query:"facility/search-by-query"
     },
     specialist:
     {

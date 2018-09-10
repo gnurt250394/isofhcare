@@ -36,6 +36,12 @@ module.exports = {
                 callback(s, e);
         });
     },
+    searchBySpecialist(specialistId, page, size, callback) {
+        client.requestApi("get", constants.api.facility.search_by_query + "?page=" + page + "&size=" + size + "&specialistId=" + specialistId+"&approval=1", {}, (s, e) => {
+            if (callback)
+                callback(s, e);
+        });
+    },
     myFacility(name, userId, page, size, callback) {
         client.requestApi("get", constants.api.facility.search + "?userId=" + userId + "&page=" + page + "&size=" + size + "&name=" + name, {}, (s, e) => {
             if (callback)

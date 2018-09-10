@@ -20,6 +20,11 @@ class TopSearch extends Component {
         });
     }
 
+    onItemClick(item) {
+        if (this.props.onItemClick)
+            this.props.onItemClick(item);
+    }
+
     render() {
         return (
             this.state.data && this.state.data.length > 0 ?
@@ -31,7 +36,7 @@ class TopSearch extends Component {
                     <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', marginTop: 14 }}>
                         {
                             this.state.data.map((item, index) => {
-                                return <TouchableOpacity key={index} onPress={() => snackbar.show("Chức năng đang phát triển")} style={{ margin: 3, padding: 4, paddingLeft: 12, paddingRight: 12, borderRadius: 16, backgroundColor: 'rgb(0,151,124)' }}><Text style={{ color: '#FFF', fontWeight: 'bold', maxWidth: 80, fontSize: 13 }} numberOfLines={1} ellipsizeMode='tail'>{item.specialist.name}</Text></TouchableOpacity>
+                                return <TouchableOpacity key={index} onPress={this.onItemClick.bind(this, item)} style={{ margin: 3, padding: 4, paddingLeft: 12, paddingRight: 12, borderRadius: 16, backgroundColor: 'rgb(0,151,124)' }}><Text style={{ color: '#FFF', fontWeight: 'bold', maxWidth: 80, fontSize: 13 }} numberOfLines={1} ellipsizeMode='tail'>{item.specialist.name}</Text></TouchableOpacity>
                             })
                         }
                     </View>

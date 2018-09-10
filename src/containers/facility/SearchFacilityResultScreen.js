@@ -6,7 +6,7 @@ import ScaledImage from 'mainam-react-native-scaleimage';
 import facilityProvider from '@data-access/facility-provider';
 import ItemFacility from '@components/facility/ItemFacility';
 
-class SearchDrugScreen extends Component {
+class SearchFacilityResultScreen extends Component {
     constructor(props) {
         super(props)
         let keyword = this.props.navigation.getParam('keyword', '');
@@ -14,6 +14,12 @@ class SearchDrugScreen extends Component {
             keyword = keyword.trim();
         else
             keyword = "";
+
+        let specialist = this.props.navigation.getParam('specialist', null);
+
+        if (specialist) {
+            keyword = "";
+        }
 
 
         this.state = {
@@ -23,7 +29,8 @@ class SearchDrugScreen extends Component {
             page: 1,
             finish: false,
             loading: false,
-            keyword
+            keyword,
+            specialist
         }
     }
     componentDidMount() {
@@ -43,7 +50,13 @@ class SearchDrugScreen extends Component {
             refreshing: page == 1,
             loadMore: page != 1
         })
-        facilityProvider.search(this.state.keyword, page, size, (s, e) => {
+        let func = facilityProvider.search;
+        let keyword = this.state.keyword;
+        if (this.state.specialist) {
+            func = facilityProvider.searchBySpecialist;
+            keyword = this.state.specialist.specialist.id;
+        }
+        func(keyword, page, size, (s, e) => {            
             this.setState({
                 loading: false,
                 refreshing: false,
@@ -82,13 +95,14 @@ class SearchDrugScreen extends Component {
 
     render() {
         return (
-            <ActivityPanel style={{ flex: 1 }} title={this.state.keyword ? "KẾT QUẢ TÌM KIẾM CSYT" : "CSYT HÀNG ĐẦU"} showFullScreen={true}>
+            <ActivityPanel style={{ flex: 1 }} title={this.state.keyword || this.state.specialist ? "KẾT QUẢ TÌM KIẾM CSYT" : "CSYT HÀNG ĐẦU"} showFullScreen={true}>
                 <View style={{ flex: 1, padding: 14 }}>
-                    <View style={{ flex: 1 }}>
-                        {
+                       {
                             this.state.keyword ?
                                 <Text style={{ marginTop: 13, fontSize: 14 }}>Kết quả tìm kiếm "<Text style={{ fontWeight: 'bold' }}>{this.state.keyword.length > 50 ? this.state.keyword.substring(0, 49) + "..." : this.state.keyword}</Text>"</Text> :
-                                null
+                                this.state.specialist ?
+                                    <Text style={{ marginTop: 13, fontSize: 14 }}>Kết quả tìm kiếm theo chuyên khoa "<Text style={{ fontWeight: 'bold' }}>{this.state.specialist.specialist.name}</Text>"</Text> :
+                                    null
                         }
                         <FlatList
                             onRefresh={this.onRefresh.bind(this)}
@@ -102,7 +116,7 @@ class SearchDrugScreen extends Component {
                             ListHeaderComponent={() => !this.state.refreshing && (!this.state.data || this.state.data.length == 0) ?
                                 <View style={{ alignItems: 'center', marginTop: 50 }}>
                                     <ScaledImage source={require("@images/search/noresult.png")} width={136} />
-                                    <TouchableOpacity onPress={() => { this.setState({ keyword: "" }, this.onRefresh) }}>
+                                    <TouchableOpacity onPress={() => { this.setState({ keyword: "", specialist: null }, this.onRefresh) }}>
                                         <Text style={{ marginTop: 20, padding: 20, textAlign: 'center', lineHeight: 30 }}>Chúng tôi không tìm thấy kết quả nào phù hợp, bạn có thể xem thêm <Text style={{ color: "#000", fontWeight: 'bold' }}>CSYT Hàng đầu</Text></Text>
                                     </TouchableOpacity>
 
@@ -113,7 +127,6 @@ class SearchDrugScreen extends Component {
                                 <ItemFacility facility={item} />
                             }
                         />
-                    </View>
                 </View>
                 {
                     this.state.loadMore ?
@@ -131,4 +144,4 @@ function mapStateToProps(state) {
         userApp: state.userApp
     };
 }
-export default connect(mapStateToProps)(SearchDrugScreen);
+export default connect(mapStateToProps)(SearchFacilityResultScreen);
