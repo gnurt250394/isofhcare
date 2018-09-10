@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
 import { Dimensions, View, TouchableOpacity, Platform } from 'react-native';
-import { connect } from 'react-redux';
 import PhotoViewer from 'mainam-react-native-photo-viewer';
 const { width, height } = Dimensions.get('window');
 import permission from 'mainam-react-native-permission';

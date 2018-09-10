@@ -54,7 +54,7 @@ class TopSearch extends Component {
                                 <Text style={{ fontStyle: 'italic' }}>Hiện tại chưa có thông tin</Text>
                             </View> : null
                         }
-                        ListFooterComponent={() => <View style={{ height: 100 }}></View>}
+                        ListFooterComponent={() => <View style={{ height: 10 }}></View>}
                         renderItem={({ item, index }) =>
                             <ItemDrug drug={item} />
                         }

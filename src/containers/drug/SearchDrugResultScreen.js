@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, TextInput, TouchableWithoutFeedback, Text, FlatList, TouchableOpacity } from 'react-native';
+import { View, TextInput, ActivityIndicator, Text, FlatList, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import drugProvider from '@data-access/drug-provider';
@@ -117,8 +117,11 @@ class SearchDrugScreen extends Component {
                 </View>
                 {
                     this.state.loadMore ?
-                        <View style={{ alignItems: 'center', padding: 10 }}>
-                            <ScaledImage width={20} source={require("@images/loading2.gif")} />
+                        <View style={{ alignItems: 'center', padding: 10, position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+                            <ActivityIndicator
+                                size={'small'}
+                                color={'gray'}
+                            />
                         </View> : null
                 }
             </ActivityPanel >

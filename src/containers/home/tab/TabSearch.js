@@ -13,38 +13,40 @@ class TabSearch extends Component {
         var features = [
             //     {
             //     icon: require("@images/search/icchuandoantrieuchung.png"),
-            //     index: 0
+            //     id: 3
             // }, {
             //     icon: require("@images/search/ictimbacsi.png"),
-            //     index: 0
+            //     id: 4
             // }, {
             //     icon: require("@images/search/icgiadichvu.png"),
-            //     index: 0
+            //     id: 5
             // },
             {
                 icon: require("@images/search/ictimcsyt.png"),
-                index: 0
+                id: 0
             }, {
                 icon: require("@images/search/ictimthuoc.png"),
-                index: 0
+                id: 1
             },
             {
                 icon: require("@images/search/icchuandoanbenh.png"),
-                index: 0
+                id: 2
             }
         ];
         this.state = {
             features
         }
     }
-    onClick(index) {
+    onClick(item) {
+        alert(item);
         const navigate = this.props.navigation.navigate;
-        switch (index) {
+        switch (item.id) {
             case 0:
                 navigate("searchFacility");
                 break;
             case 1:
                 navigate("searchDrug");
+                break;
             case 2:
                 navigate("searchDisease");
                 break;
@@ -91,7 +93,7 @@ class TabSearch extends Component {
                         {
                             this.state.features.map((item, position) => {
                                 return (<Animatable.View key={position} delay={50 * position} animation={position % 2 == 0 ? "slideInLeft" : "slideInRight"} direction="alternate">
-                                    <TouchableOpacity key={position} style={{ padding: 5 }} onPress={() => { this.onClick(position) }}>
+                                    <TouchableOpacity key={position} style={{ padding: 5 }} onPress={() => { this.onClick(item) }}>
                                         <ScaledImage source={item.icon} width={itemWidth} />
                                     </TouchableOpacity>
                                 </Animatable.View>);
