@@ -24,7 +24,10 @@ class FacilityDetailScreen extends Component {
         var list_images = [];
         try {
             for (var i = 0; i < images.length; i++) {
-                list_images.push(images[i].url.absoluteUrl())
+                let url = images[i].url.absoluteUrl();
+                if (url && url.indexOf("blob:") != 0) {
+                    list_images.push(images[i].url.absoluteUrl())
+                }
             }
         } catch (error) {
 
