@@ -35,7 +35,8 @@ class ItemFacility extends Component {
                 marginBottom: 10,
                 borderColor: 'rgb(204, 204, 204)',
                 borderWidth: 1,
-                flexDirection: 'row'
+                flexDirection: 'row',
+                padding: 2
             }, this.props.style]} shadowColor='#000000' shadowOpacity={0.2} shadowOffset={{}} onPress={() => { this.props.navigation.navigate("facilityDetailScreen", { facility: this.props.facility }) }}>
                 <View style={{
                     width: 100, height: 100, borderTopLeftRadius: 5.3,

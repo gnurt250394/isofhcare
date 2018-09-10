@@ -38,7 +38,6 @@ class TabSearch extends Component {
         }
     }
     onClick(item) {
-        alert(item);
         const navigate = this.props.navigation.navigate;
         switch (item.id) {
             case 0:

@@ -66,7 +66,6 @@ class LoginSocial extends Component {
                             }
                             return;
                         } catch (error) {
-                            alert(JSON.stringify(error));
                             return;
                         }
                     case 2:
