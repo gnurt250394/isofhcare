@@ -18,9 +18,12 @@ import AddNewClinicScreen from '@containers/facility/AddNewClinicScreen';
 import PhotoViewerScreen from '@containers/image/PhotoViewerScreen';
 import SearchDiseaseScreen from '@containers/disease/SearchDiseaseScreen';
 import DiseaseDetailScreen from '@containers/disease/DiseaseDetailScreen';
+import IntroScreen from '@containers/intro/IntroScreen';
 
 const RootNavigator = StackNavigator({
+    intro: { screen: IntroScreen},
     splash: { screen: SplashScreen },
+    
     home: { screen: HomeScreen },
     login: { screen: LoginScreen },
     forgotPassword: { screen: ForgotPasswordScreen },
