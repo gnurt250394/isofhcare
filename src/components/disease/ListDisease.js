@@ -2,9 +2,9 @@ import React, { Component, PropTypes } from 'react';
 import { View, TextInput, TouchableWithoutFeedback, Text, FlatList, TouchableOpacity, Image, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
-import ItemFacility from '@components/disease/ItemFacility';
-import facilityProvider from '@data-access/facility-provider';
-
+import ItemDisease from '@components/disease/ItemDisease';
+// import facilityProvider from '@data-access/facility-provider';
+import diseaseProvider from '@data-access/disease-provider';
 class ListDisease extends Component {
     constructor(props) {
         super(props)
@@ -13,7 +13,7 @@ class ListDisease extends Component {
         }
     }
     componentDidMount() {
-        facilityProvider.getTop(10, (s, e) => {
+        diseaseProvider.getTop(10, (s, e) => {
             if (s) {
                 this.setState({ data: s });
             }
@@ -31,7 +31,7 @@ class ListDisease extends Component {
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', marginTop: 14 }}>
                     {
                         this.state.data.map((item, index) => {
-                            return <ItemFacility key={index} facility={item} />
+                            return <ItemDisease key={index} disease={item} />
                         })
                     }
                 </View>

@@ -6,11 +6,14 @@ import { connect } from 'react-redux';
 class DiseaseDetailScreen extends Component {
     constructor(props) {
         super(props)
+        const disease = this.props.navigation.getParam("disease", undefined);
         this.state = {
 
         }
+        alert(JSON.stringify(disease));
     }
     componentDidMount() {
+        
     }
     render() {
         return (

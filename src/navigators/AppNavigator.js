@@ -21,8 +21,8 @@ import DiseaseDetailScreen from '@containers/disease/DiseaseDetailScreen';
 import IntroScreen from '@containers/intro/IntroScreen';
 
 const RootNavigator = StackNavigator({
-    intro: { screen: IntroScreen},
     splash: { screen: SplashScreen },
+    intro: { screen: IntroScreen},
     
     home: { screen: HomeScreen },
     login: { screen: LoginScreen },

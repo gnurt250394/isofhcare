@@ -3,12 +3,12 @@ import ActivityPanel from '@components/ActivityPanel';
 import { View, TextInput, TouchableWithoutFeedback, Text, FlatList, TouchableOpacity, Image, Dimensions, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
-import facilityProvider from '@data-access/facility-provider';
+import diseaseProvider from '@data-access/disease-provider';
 import SearchPanel from '@components/SearchPanel';
 import realmModel from '@models/realm-models';
 const Realm = require('realm');
 import historyProvider from '@data-access/history-provider';
-import TopSearch from '@components/disease/TopSearch';
+import TopSearch from '@components/symptom/TopSearch';
 import ListDisease from '@components/disease/ListDisease';
 
 class SearchDiseaseScreen extends Component {
@@ -34,7 +34,7 @@ class SearchDiseaseScreen extends Component {
 
     onSearch(s) {
         return new Promise((resolve, reject) => {
-            facilityProvider.search(s, 1, 5, (s, e) => {
+            diseaseProvider.search(s, 1, 5, (s, e) => {
                 if (e)
                     reject(e);
                 else {
@@ -48,13 +48,13 @@ class SearchDiseaseScreen extends Component {
         });
     }
     onSearchItemClick(item) {
-        this.props.navigation.navigate("facilityDetailScreen", { facility: item });
-        const { FACILITY_HISTORY } = realmModel;
-        historyProvider.addHistory("", FACILITY_HISTORY, item.facility.name, item.facility.id, "");
+        this.props.navigation.navigate("diseaseDetail", { disease: item });
+        const { DISEASE_HISTORY } = realmModel;
+        historyProvider.addHistory("", DISEASE_HISTORY, item.name, item.id, "");
     }
     renderSearchItem(item, index, keyword) {
         return <TouchableOpacity style={{ padding: 5 }} onPress={this.onSearchItemClick.bind(this, item)}>
-            <Text style={{ paddingLeft: 10 }}>{item.facility.name}</Text>
+            <Text style={{ paddingLeft: 10 }}>{item.name}</Text>
             <View style={{ height: 0.5, backgroundColor: '#00000040', marginTop: 12 }} />
         </TouchableOpacity>
     }

@@ -67,7 +67,8 @@ module.exports = {
       DATA_TOP_DISEASE: "DATA_TOP_DISEASE",
       DATA_TOP_DRUG: "DATA_TOP_DRUG",
       DATA_PROVINCE: "DATA_PROVINCE",
-      CURRENT_LOCATION: "CURRENT_LOCATION"
+      CURRENT_LOCATION: "CURRENT_LOCATION",
+      INTRO_FINISHED: "INTRO_FINISHED"
     }
   },
   msg:
@@ -208,6 +209,11 @@ module.exports = {
       search: "facility/search",
       create: "facility/create",
       search_by_query:"facility/search-by-query"
+    },
+    disease:
+    {
+      search:"disease/search",
+      
     },
     specialist:
     {

@@ -15,7 +15,7 @@ const resetAction = (route) => {
 		actions: [NavigationActions.navigate({ routeName: route })],
 	})
 };
-
+import dataCache from '@data-access/datacache-provider';
 class SplashScreen extends Component {
 	constructor(props) {
 		super(props);
@@ -38,10 +38,14 @@ class SplashScreen extends Component {
 				else {
 					this.props.dispatch(redux.userLogout());
 				}
-				this.Actions.dispatch(StackActions.reset({
-					index: 0,
-					actions: [NavigationActions.navigate({ routeName: "home" })],
-				}));
+				dataCache.read("", constants.key.storage.INTRO_FINISHED, (s) => {
+					this.Actions.dispatch(StackActions.reset({
+						index: 0,
+						actions: [NavigationActions.navigate({ routeName: s && JSON.stringify(s)!="{}"? "home" : "intro" })],
+					}));
+
+				});
+
 			}, 2000);
 		});
 	}
