@@ -9,7 +9,6 @@ const slides = [
         title: 'iSofH Care, sổ tay y bạ cho cả nhà',
         text: 'iSofH Care giúp bạn lưu trữ hồ sơ y tế và theo dõi sức khoẻ cho cả gia đình.',
         image: require('@images/intro/slide1.png'),
-        colors: ['#63E2FF', '#B066FE'],
     },
     {
         key: 'slide2',
@@ -34,8 +33,9 @@ class IntroScreen extends Component {
     constructor(props) {
         super(props)
     }
-
+    
     render() {
+        const { navigate } = this.props.navigation;
         return (
             <View style={styles.container}>
                 <View style={{ alignItems: 'center' }}>
@@ -44,7 +44,7 @@ class IntroScreen extends Component {
                         source={require('@images/logotext.png')}
                         resizeMode='contain'
                     />
-                    <TouchableOpacity style={styles.skip}>
+                    <TouchableOpacity style={styles.skip} onPress={()=>navigate('login')}>
                         <Text>Skip</Text>
                     </TouchableOpacity>
                 </View>
@@ -68,8 +68,8 @@ class IntroScreen extends Component {
                                     <Text style={styles.text}>{item.text}</Text>
                                     {
                                         index == 3 ?
-                                            <TouchableOpacity >
-                                                <Text>Bắt đầu sử dụng app</Text>
+                                            <TouchableOpacity style={styles.startNow} onPress={()=>navigate('login')}>
+                                                <Text style={{color:'rgb(74, 144, 226)', fontSize: 18}}>Bắt đầu sử dụng app</Text>
                                             </TouchableOpacity>
                                             : null
                                     }
@@ -110,30 +110,47 @@ const styles = {
         backgroundColor: 'transparent',
         alignItems: 'center',
         justifyContent: 'center',
-        // backgroundColor:'red' 
     },
     container: {
         flex: 1,
         backgroundColor: 'white'
     },
     skip: {
+        width:70,
         borderRadius: 50,
+        position: 'absolute',
+        right:0,
+        top:10,
+        paddingLeft:20,
+        paddingVertical:3,
+        borderStartWidth:1,
+        borderBottomWidth:1,
+        borderTopWidth:1,
+        borderRightWidth:0,
+		borderColor: 'rgba(155, 155, 155, 0.41)',
+        borderBottomLeftRadius: 100,
+        borderTopLeftRadius:100,
+        borderBottomRightRadius:0,
+        borderTopRightRadius:0,
     },
     image: {
         width: 300,
-
-        // height,
     },
     title: {
         fontSize: 22,
         fontWeight: 'bold',
         textAlign: 'center',
+        color:'rgb(74, 74, 74)',
         paddingTop: 30,
         paddingBottom: 15
     },
     text: {
         fontSize: 16,
         textAlign: 'center',
+        width:'90%'
+    },
+    startNow: {
+        marginTop:30
     }
 }
 
