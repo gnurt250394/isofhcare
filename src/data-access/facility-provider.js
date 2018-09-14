@@ -37,7 +37,7 @@ module.exports = {
         });
     },
     searchBySpecialist(specialistId, page, size, callback) {
-        client.requestApi("get", constants.api.facility.search_by_query + "?page=" + page + "&size=" + size + "&specialistId=" + specialistId+"&approval=1", {}, (s, e) => {
+        client.requestApi("get", constants.api.facility.search_by_query + "?page=" + page + "&size=" + size + "&specialistId=" + specialistId + "&approval=1", {}, (s, e) => {
             if (callback)
                 callback(s, e);
         });
@@ -49,8 +49,8 @@ module.exports = {
         });
     },
     createClinic(name, website, phone, address, place, logo, imageUrls, specialistIds, provinceId, userId, callback) {
-        client.requestApi("post", constants.api.facility.create, {
-            facility: {
+        this.create(
+            {
                 logo,
                 name,
                 address,
@@ -64,15 +64,33 @@ module.exports = {
             imageUrls,
             specialistIds,
             provinceId,
-            userId
-        }, (s, e) => {
-            if (callback)
-                callback(s, e);
-        });
+            userId,
+            callback
+        );
+    },
+    updateClinic(id, name, website, phone, address, place, logo, imageUrls, specialistIds, provinceId, callback) {
+        this.update(
+            id,
+            {
+                logo,
+                name,
+                address,
+                belongIsofh: 0,
+                latitude: place.latitude,
+                longitude: place.longitude,
+                phone,
+                type: 2,
+                website
+            },
+            imageUrls,
+            specialistIds,
+            provinceId,
+            callback
+        );
     },
     createDrugStore(name, website, phone, address, place, logo, imageUrls, licenseNo, pharmacist, gpp, provinceId, userId, callback) {
-        client.requestApi("post", constants.api.facility.create, {
-            facility: {
+        this.create(
+            {
                 logo,
                 name,
                 code: licenseNo,
@@ -87,11 +105,57 @@ module.exports = {
                 website
             },
             imageUrls,
+            null,
             provinceId,
-            userId
-        }, (s, e) => {
-            if (callback)
-                callback(s, e);
-        });
+            userId,
+            callback
+        );
+    },
+    updateDrugStore(id, name, website, phone, address, place, logo, imageUrls, licenseNo, pharmacist, gpp, provinceId, callback) {
+        this.update(
+            id,
+            {
+                logo,
+                name,
+                code: licenseNo,
+                pharmacist,
+                address,
+                belongIsofh: 0,
+                latitude: place.latitude,
+                longitude: place.longitude,
+                phone,
+                type: 8,
+                gpp: gpp ? 1 : 0,
+                website
+            },
+            imageUrls,
+            null,
+            provinceId,
+            callback);
+    },
+    create(facility, imageUrls, specialistIds, provinceId, userId, callback) {
+        client.requestApi("post", constants.api.facility.create,
+            {
+                facility,
+                imageUrls,
+                provinceId,
+                specialistIds,
+                userId
+            }, (s, e) => {
+                if (callback)
+                    callback(s, e);
+            });
+    },
+    update(id, facility, imageUrls, specialistIds, provinceId, callback) {
+        client.requestApi("put", constants.api.facility.update + "/" + id,
+            {
+                facility,
+                imageUrls,
+                provinceId,
+                specialistIds
+            }, (s, e) => {
+                if (callback)
+                    callback(s, e);
+            });
     }
 }

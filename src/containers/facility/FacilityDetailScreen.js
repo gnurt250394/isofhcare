@@ -47,6 +47,16 @@ class FacilityDetailScreen extends Component {
             }
         }
     }
+    edit(facility) {
+        if (facility.facility.type == 2) {
+            this.props.navigation.navigate("addNewClinic", { facility: facility });
+        }
+        else {
+            if (facility.facility.type == 8) {
+                this.props.navigation.navigate("addNewDrugStore", { facility: facility });
+            }
+        }
+    }
 
     onSearchItemClick(item) {
         locationProvider.getByPlaceId(item.placeID, (s, e) => {
@@ -196,7 +206,16 @@ class FacilityDetailScreen extends Component {
                                                 onPress={() => { this.props.navigation.navigate("facilityDetailScreen", { facility }) }}
                                             >
                                                 <View style={{ flex: 1, marginRight: 10 }}>
-                                                    <Text style={{ fontWeight: 'bold' }} numberOfLines={1} ellipsizeMode='tail'>{facility.facility.name}</Text>
+                                                    <View style={{ flexDirection: 'row' }}>
+                                                        <Text style={{ fontWeight: 'bold', flex: 1 }} numberOfLines={1} ellipsizeMode='tail'>{facility.facility.name}</Text>
+                                                        {
+                                                            facility.facility.approval == 0 && facility.user && this.props.userApp.isLogin && this.props.userApp.currentUser.id == facility.user.id ?
+                                                                <TouchableOpacity onPress={this.edit.bind(this, facility)}>
+                                                                    <ScaledImage source={require("@images/edit.png")} width={20}></ScaledImage>
+                                                                </TouchableOpacity> :
+                                                                null
+                                                        }
+                                                    </View>
                                                     <Rating
                                                         ref={(ref) => { this.rating = ref }}
                                                         style={{ marginTop: 8 }}

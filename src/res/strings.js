@@ -185,7 +185,7 @@ module.exports = {
     user:
     {
       login: "user/login",
-      login_social:"user/login-social",
+      login_social: "user/login-social",
       logout: "user/logout",
       register: "user/register",
       forgotPassword: "user/forgot-password",
@@ -207,8 +207,9 @@ module.exports = {
     facility:
     {
       search: "facility/search",
+      update: "facility/update",
       create: "facility/create",
-      search_by_query:"facility/search-by-query"
+      search_by_query: "facility/search-by-query"
     },
     disease:
     {
