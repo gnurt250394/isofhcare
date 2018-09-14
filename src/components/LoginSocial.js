@@ -98,7 +98,7 @@ class LoginSocial extends Component {
             }, (err, res) => {
                 console.log(err, res);
                 if (res) {
-                    loginSocial(2, res.id, res.name, res.picture ? res.picture.data : "", res.email, props);
+                    loginSocial(2, res.id, res.name, res.picture && res.picture.data ? res.picture.data.url : "", res.email, props);
                 } else {
                     snackbar.show(constants.msg.user.canot_get_user_info_in_account_facebook);
                     return;

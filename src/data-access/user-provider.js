@@ -79,8 +79,9 @@ module.exports = {
             device: { os: os, deviceId: this.deviceId, token: this.deviceToken }
         }
         client.requestApi("put", constants.api.user.login_social, body, (s, e) => {
-            if (callback)
+            if (callback) {
                 callback(s, e);
+            }
         });
     },
     register(name, email, phone, password, callback) {
