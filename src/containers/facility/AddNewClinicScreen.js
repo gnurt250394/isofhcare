@@ -14,6 +14,7 @@ import snackbar from '@utils/snackbar-utils'
 import stringUtils from 'mainam-react-native-string-utils';
 import locationProvider from '@data-access/location-provider';
 import clientUtils from '@utils/client-utils';
+import { Card } from 'native-base';
 
 const DEVICE_WIDTH = Dimensions.get("window").width;
 class AddNewClinicScreen extends Component {
@@ -565,14 +566,16 @@ class AddNewClinicScreen extends Component {
                                     <View style={{ alignItems: 'center', marginTop: 50 }}>
                                         <Text style={{ fontStyle: 'italic' }}>Không tìm thấy dữ liệu tỉnh thành phố</Text>
                                     </View>
-                                    : <Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" />
+                                    : null//<Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" />
                             }
                             ListFooterComponent={() => <View style={{ height: 50 }}></View>}
                             renderItem={({ item, index }) =>
-                                <TouchableOpacity onPress={() => { this.setState({ province: item, toggleProvince: false }) }}>
-                                    <Text style={{ padding: 10, fontWeight: '300', color: this.state.province == item ? "red" : "black" }}>{item.name}</Text>
-                                    <Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" />
-                                </TouchableOpacity>
+                                <Card>
+                                    <TouchableOpacity onPress={() => { this.setState({ province: item, toggleProvince: false }) }}>
+                                        <Text style={{ padding: 10, fontWeight: '300', color: this.state.province == item ? "red" : "black" }}>{item.name}</Text>
+                                        {/* <Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" /> */}
+                                    </TouchableOpacity>
+                                </Card>
                             }
                         />
                     </View>

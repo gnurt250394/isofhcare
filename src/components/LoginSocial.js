@@ -55,7 +55,7 @@ class LoginSocial extends Component {
                 switch (s.code) {
                     case 0:
                         try {
-                            snackbar.show(constants.msg.user.login_success);
+                            snackbar.show(constants.msg.user.login_success, 'success');
                             var user = s.data.user;
                             this.props.dispatch(redux.userLogin(user));
                             if (this.props.directScreen) {
@@ -69,7 +69,7 @@ class LoginSocial extends Component {
                             return;
                         }
                     case 2:
-                        snackbar.show(constants.msg.user.username_or_password_incorrect);
+                        snackbar.show(constants.msg.user.username_or_password_incorrect, 'dranger');
                         break;
                     case 3:
                     case 1:

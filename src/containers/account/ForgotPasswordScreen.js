@@ -16,21 +16,13 @@ class ForgotPasswordScreen extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			showPass: true,
 			press: false,
-			email: "",
-			password: ""
+			email: ""
 		}
-		this.showPass = this.showPass.bind(this);
-	}
-	showPass() {
-		this.state.press === false ? this.setState({ showPass: false, press: true }) : this.setState({ showPass: true, press: false });
 	}
 
 
 	forgotPassword() {
-		snackbar.show("Chức năng đang phát triển");
-		return;
 		Keyboard.dismiss();
 		if (this.state.email.trim() === "" || this.state.email === "" || this.state.password === "") {
 			snackbar.showShort(constants.msg.user.please_input_username_and_password);
