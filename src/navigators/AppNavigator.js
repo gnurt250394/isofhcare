@@ -23,9 +23,10 @@ import IntroScreen from '@containers/intro/IntroScreen';
 import AboutScreen from '@containers/utility/AboutScreen';
 import TermsScreen from '@containers/utility/TermsScreen';
 import PolicyScreen from '@containers/utility/PolicyScreen';
+import SpecialistScreen from '@containers/specialist/SpecialistScreen';
 const RootNavigator = StackNavigator({
     splash: { screen: SplashScreen },
-    intro: { screen: IntroScreen},
+    intro: { screen: IntroScreen },
     home: { screen: HomeScreen },
     login: { screen: LoginScreen },
     forgotPassword: { screen: ForgotPasswordScreen },
@@ -35,9 +36,9 @@ const RootNavigator = StackNavigator({
     searchFacilityByLocation: { screen: SearchByLocationScreen },
     searchDrug: { screen: SearchDrugScreen },
     searchDrugResult: { screen: SearchDrugResultScreen },
-    searchDisease : { screen: SearchDiseaseScreen},
-    diseaseDetail : { screen: DiseaseDetailScreen},
-    searchDiseaseResult:{screen: SearchDiseaseResultScreen},
+    searchDisease: { screen: SearchDiseaseScreen },
+    diseaseDetail: { screen: DiseaseDetailScreen },
+    searchDiseaseResult: { screen: SearchDiseaseResultScreen },
     drugDetailScreen: { screen: DrugDetailScreen },
     facilityDetailScreen: { screen: FacilityDetailScreen },
     myFacility: { screen: MyFacilityScreen },
@@ -46,7 +47,8 @@ const RootNavigator = StackNavigator({
     photoViewer: { screen: PhotoViewerScreen },
     about: { screen: AboutScreen },
     terms: { screen: TermsScreen },
-    policy: { screen: PolicyScreen }
+    policy: { screen: PolicyScreen },
+    specialist: { screen: SpecialistScreen }
 }, {
         headerMode: 'none',
         header: null,

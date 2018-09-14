@@ -68,9 +68,8 @@ class SearchFacilityScreen extends Component {
         return <View />
     }
     onSpecialistClick(item) {
-        if (item)
-        {
-            this.props.navigation.navigate("searchFacilityResult",{specialist: item});
+        if (item) {
+            this.props.navigation.navigate("searchFacilityResult", { specialist: item });
         }
     }
 

@@ -7,7 +7,6 @@ import facilityProvider from '@data-access/facility-provider';
 import Dash from 'mainam-react-native-dash-view';
 import Modal from "react-native-modal";
 import stylemodal from "@styles/modal-style";
-import specialistProvider from '@data-access/specialist-provider';
 import imageProvider from '@data-access/image-provider';
 import ImagePicker from 'mainam-react-native-select-image';
 import snackbar from '@utils/snackbar-utils'
@@ -73,7 +72,6 @@ class AddNewDrugStoreScreen extends Component {
         }
     }
     componentDidMount() {
-        specialistProvider.saveAllSpecialist();
         locationProvider.getListProvince((s, e) => {
             if (s) {
                 for (var i = 0; i < s.length; i++) {
