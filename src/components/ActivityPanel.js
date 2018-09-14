@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, StatusBar, TouchableOpacity, Dimensions } from 'react-native';
+import { Text, StatusBar, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native';
 import PropTypes from 'prop-types';
 import constants from '@resources/strings'
 import { isIphoneX } from 'react-native-iphone-x-helper'
@@ -41,9 +41,17 @@ class ActivityPanel extends Component {
         return (<ActionBar actionbarTextColor={[{ color: constants.colors.actionbar_title_color }, this.props.actionbarTextColor]} backButtonClick={() => this.backPress()} {...this.props} actionbarStyle={[{ paddingTop: this.state.paddingTop, backgroundColor: constants.colors.actionbar_color }, this.props.actionbarStyle]} />);
     }
 
+    getLoadingView() {
+        return (<View style={{ position: "absolute", backgroundColor: "#bfeaff94", flex: 1, top: 0, right: 0, left: 0, bottom: 0, alignItems: 'center', justifyContent: "center" }} >
+            <ActivityIndicator size={'large'}
+                color={'blue'} />
+        </View>
+        );
+    }
+
     render() {
         return (
-            <Activity {...this.props} actionbar={this.getActionbar.bind(this)} paddingTop={this.state.paddingTop} translucent={true} statusBarbackgroundColor="#AAA" >
+            <Activity {...this.props} actionbar={this.getActionbar.bind(this)} loadingView={this.getLoadingView()} paddingTop={this.state.paddingTop} translucent={true} statusBarbackgroundColor="#AAA" >
                 {this.props.children}
             </Activity>
         );

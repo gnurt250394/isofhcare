@@ -1,22 +1,19 @@
 import { Toast } from 'native-base';
 module.exports = {
-    showShort(message, title, action) {
-        this.show(message, title, action, 3000);
+    showShort(message, type) {
+        this.show(message, type, 3000);
     },
-    showLong(message, title, type) {
-        this.show(message, title, action, 6000);
+    showLong(message, type) {
+        this.show(message, type, 6000);
     },
-    show(message, title, type, duration) {
+    show(message, type, duration) {
         if (duration != 0 && !duration)
             duration = 3000;
-        let _type = "success";
+        let _type = "info";
         switch (type) {
             case "warning":
-                _type = type;
-                break;
+            case "info":
             case "success":
-                _type = type;
-                break;
             case "danger":
                 _type = type;
                 break;
@@ -25,7 +22,6 @@ module.exports = {
         Toast.show({
             text: message,
             duration: 3000,
-            buttonText: title,
             type: _type
         });
     }

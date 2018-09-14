@@ -18,18 +18,58 @@ const DEVICE_WIDTH = Dimensions.get("window").width;
 class AddNewDrugStoreScreen extends Component {
     constructor(props) {
         super(props)
+        let facility = this.props.navigation.getParam("facility", undefined);
+        let editMode = facility ? true : false;
+        if (!facility)
+            facility = {
+                facility: {
+                    website: "",
+                    address: "",
+                    phone: "",
+                    code: "",
+                    pharmacist: ""
+                }
+            };
+        let province = facility.province;
+        let imageUris = facility.images;
+        if (!imageUris)
+            imageUris = [];
+        imageUris.forEach((item) => {
+            item.uri = item.url ? item.url.absoluteUrl() : "";
+        });
+
+        let logo;
+
+        if (facility.facility.logo) {
+            logo = {
+                uri: facility.facility.logo.absoluteUrl(),
+                url: facility.facility.logo
+            }
+        }
+
+        let place;
+        if (facility.facility.latitude && facility.facility.longitude) {
+            place = {
+                latitude: facility.facility.latitude,
+                longitude: facility.facility.longitude
+            }
+        }
+
         this.state = {
-            listSpecialist: [],
-            listSpecialistSuggesh: [],
-            imageUris: [],
-            website: '',
-            phone: '',
-            name: '',
-            address: '',
+            imageUris: imageUris,
+            website: facility.facility.website,
+            phone: facility.facility.phone,
+            name: facility.facility.name,
+            address: facility.facility.address,
+            pharmacist: facility.facility.pharmacist,
             listProvinces: [],
-            pharmacist: '',
-            isGPP: false,
-            licenseNo: '',
+            editMode,
+            facility,
+            province,
+            logo,
+            place,
+            isGPP: facility.facility.gpp == 1,
+            licenseNo: facility.facility.code,
         }
     }
     componentDidMount() {
@@ -102,6 +142,48 @@ class AddNewDrugStoreScreen extends Component {
             });
         }
     }
+    selectLogo() {
+        if (this.imagePicker) {
+            this.imagePicker.open(true, 200, 200, image => {
+
+                if (this.state.logo && this.state.logo.uri == image.path)
+                    return;
+                this.setState({
+                    logo:
+                    {
+                        uri: image.path,
+                        loading: true
+                    }
+                }, () => {
+                    imageProvider.upload(image.path, (s, e) => {
+                        let logo = this.state.logo;
+                        if (!logo) {
+                            return;
+                        }
+                        if (s.success && s.data.code == 0 && s.data.data && s.data.data.images && s.data.data.images.length > 0) {
+                            if (logo.uri == s.uri) {
+                                logo.loading = false;
+                                logo.url = s.data.data.images[0].image;
+                                logo.thumbnail = s.data.data.images[0].thumbnail;
+
+                                this.setState({
+                                    logo
+                                });
+                            }
+                        } else {
+                            if (logo.uri == s.uri) {
+                                logo.error = true;
+                                this.setState({
+                                    logo
+                                });
+                            }
+                        }
+                    });
+                });
+
+            });
+        }
+    }
     create() {
         if (!this.state.name || this.state.name.trim() == "") {
             snackbar.show('Vui lòng nhập tên nhà thuốc');
@@ -121,6 +203,18 @@ class AddNewDrugStoreScreen extends Component {
         }
         if (!this.state.address || this.state.address.trim() == "") {
             snackbar.show('Vui lòng nhập địa chỉ nhà thuốc');
+            return;
+        }
+        if (!this.state.logo) {
+            snackbar.show('Vui lòng chọn logo cho phòng khám');
+            return;
+        }
+        if (this.state.logo.error) {
+            snackbar.show('Ảnh logo tải lên bị lỗi, vui lòng chọn lại');
+            return;
+        }
+        if (this.state.logo.loading) {
+            snackbar.show('Ảnh logo đang được tải lên, vui lòng chờ');
             return;
         }
         if (this.state.imageUris.length == 0) {
@@ -148,31 +242,35 @@ class AddNewDrugStoreScreen extends Component {
 
         this.setState({ isLoading: true }, () => {
             let listImageUrl = [];
-            let logo = "";
             this.state.imageUris.forEach((item, index) => {
                 listImageUrl.push(item.url);
-                if (index == 0)
-                    logo = item.thumbnail;
-            });
-            let listSpecialist = [];
-            this.state.listSpecialist.forEach((item) => {
-                listSpecialist.push(item.id);
             });
 
-            facilityProvider.createDrugStore(this.state.name.trim(), this.state.website.trim(), this.state.phone.trim(), this.state.address.trim(), this.state.place, logo, listImageUrl, this.state.licenseNo, this.state.pharmacist, this.state.isGPP, this.state.province.id, this.props.userApp.currentUser.id, (s, e) => {
-                this.setState({ isLoading: false });
-                if (s) {
-                    this.props.navigation.pop();
-                    snackbar.show("Thêm nhà thuốc thành công");
-                } else {
-                    snackbar.show("Thêm nhà thuốc không thành công");
-                }
-            });
+            if (!this.state.facility.facility.id)
+                facilityProvider.createDrugStore(this.state.name.trim(), this.state.website.trim(), this.state.phone.trim(), this.state.address.trim(), this.state.place, this.state.logo.url, listImageUrl, this.state.licenseNo, this.state.pharmacist, this.state.isGPP, this.state.province.id, this.props.userApp.currentUser.id, (s, e) => {
+                    this.setState({ isLoading: false });
+                    if (s) {
+                        this.props.navigation.navigate('myFacility', { facility: s.data });
+                        snackbar.show("Thêm nhà thuốc thành công");
+                    } else {
+                        snackbar.show("Thêm nhà thuốc không thành công");
+                    }
+                });
+            else
+                facilityProvider.updateDrugStore(this.state.facility.facility.id, this.state.name.trim(), this.state.website.trim(), this.state.phone.trim(), this.state.address.trim(), this.state.place, this.state.logo.url, listImageUrl, this.state.licenseNo, this.state.pharmacist, this.state.isGPP, this.state.province.id, (s, e) => {
+                    this.setState({ isLoading: false });
+                    if (s) {
+                        this.props.navigation.navigate('myFacility', { facility: s.data });
+                        snackbar.show("Chỉnh sửa nhà thuốc thành công");
+                    } else {
+                        snackbar.show("Chỉnh sửa nhà thuốc không thành công");
+                    }
+                });
         });
     }
     render() {
         return (
-            <ActivityPanel style={{ flex: 1 }} title="THÊM MỚI NHÀ THUỐC" showFullScreen={true} isLoading={this.state.isLoading}>
+            <ActivityPanel style={{ flex: 1 }} title={this.state.editMode ? "CHỈNH SỬA NHÀ THUỐC" : "THÊM MỚI NHÀ THUỐC"} showFullScreen={true} isLoading={this.state.isLoading}>
                 <View style={{ flex: 1 }}>
                     <ScrollView style={{ padding: 10, flex: 1 }}
                         keyboardShouldPersistTaps="always">
@@ -188,6 +286,7 @@ class AddNewDrugStoreScreen extends Component {
                                 style={{
                                     padding: 0
                                 }}
+                                value={this.state.name}
                                 placeholder={"Tên nhà thuốc"}
                             />
                         </View>
@@ -204,6 +303,7 @@ class AddNewDrugStoreScreen extends Component {
                                 style={{
                                     padding: 0
                                 }}
+                                value={this.state.licenseNo}
                                 placeholder={"Số giấy phép"}
                             />
                         </View>
@@ -220,6 +320,7 @@ class AddNewDrugStoreScreen extends Component {
                                 style={{
                                     padding: 0
                                 }}
+                                value={this.state.pharmacist}
                                 placeholder={"Dược sĩ"}
                             />
                         </View>
@@ -233,6 +334,7 @@ class AddNewDrugStoreScreen extends Component {
                             <TextInput
                                 onChangeText={(s) => this.setState({ website: s })}
                                 underlineColorAndroid="transparent"
+                                value={this.state.website}
                                 style={{
                                     padding: 0
                                 }}
@@ -249,6 +351,7 @@ class AddNewDrugStoreScreen extends Component {
                             <TextInput
                                 onChangeText={(s) => this.setState({ phone: s })}
                                 underlineColorAndroid="transparent"
+                                value={this.state.phone}
                                 style={{
                                     padding: 0
                                 }}
@@ -290,6 +393,7 @@ class AddNewDrugStoreScreen extends Component {
                                     padding: 0
                                 }}
                                 placeholder={"Địa chỉ"}
+                                value={this.state.address}
                             />
                         </View>
                         <TouchableOpacity onPress={() => this.setState({ toggleProvince: true })} style={{
@@ -315,7 +419,34 @@ class AddNewDrugStoreScreen extends Component {
                         <View style={{
                             marginTop: 15
                         }}>
-                            <Text style={{ fontWeight: 'bold' }}>Hình ảnh <Text style={{ fontStyle: 'italic', fontWeight: 'normal' }}>(Tối đa 4 ảnh)</Text></Text>
+                            <Text style={{ fontWeight: 'bold' }}>Logo</Text>
+                            <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 10 }}>
+                                {
+                                    this.state.logo ?
+                                        <TouchableOpacity style={{ margin: 2, width: 100, height: 100, borderColor: '#00000020', borderWidth: 1 }}>
+                                            <Image source={{ uri: this.state.logo.uri }} resizeMode="cover" style={{ width: 100, height: 100, backgroundColor: '#000' }} />
+                                            {
+                                                this.state.logo.error ?
+                                                    <View style={{ position: 'absolute', left: 30, top: 30 }} >
+                                                        <ScaledImage source={require("@images/ic_warning.png")} width={40} />
+                                                    </View> :
+                                                    this.state.logo.loading ?
+                                                        < View style={{ position: 'absolute', left: 30, top: 30, backgroundColor: '#FFF', borderRadius: 20 }} >
+                                                            <ScaledImage source={require("@images/loading.gif")} width={40} />
+                                                        </View>
+                                                        : null
+                                            }
+                                            <TouchableOpacity onPress={() => { this.setState({ logo: null }) }} style={{ position: 'absolute', top: 0, right: 0, backgroundColor: '#FFFFFF70', padding: 1, borderRadius: 5, margin: 2 }} >
+                                                <ScaledImage source={require("@images/icclose.png")} width={12} />
+                                            </TouchableOpacity>
+                                        </TouchableOpacity> :
+                                        <TouchableOpacity onPress={this.selectLogo.bind(this)} style={{ margin: 2, width: 100, height: 100, borderColor: '#00000020', borderWidth: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                            <ScaledImage width={40} source={require("@images/ic_add_image.png")} />
+                                            <Text>Thêm ảnh</Text>
+                                        </TouchableOpacity>
+                                }
+                            </View>
+                            <Text style={{ fontWeight: 'bold', marginTop: 20 }}>Hình ảnh <Text style={{ fontStyle: 'italic', fontWeight: 'normal' }}>(Tối đa 4 ảnh)</Text></Text>
                             <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 10 }}>
                                 {
                                     this.state.imageUris.map((item, index) => <TouchableOpacity style={{ margin: 2, width: 100, height: 100, borderColor: '#00000020', borderWidth: 1 }}>

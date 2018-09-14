@@ -74,25 +74,14 @@ module.exports = {
   },
   msg:
   {
-    image:
-    {
-      add_image_to_conference_success: "Thêm ảnh vào hội nghị thành công",
-      add_image_to_conference_failed: "Thêm ảnh vào hội nghị không thành công"
-    },
     notification: {
       new_notification: "Bạn có một thông báo mới"
     },
     app:
     {
-      cannot_get_user_location: "Rất tiếc chúng tôi không thể xác định được vị trí hiện tại của bạn",
-      user_is_not_present_in_the_city: "Chúng tôi xác định bạn đang không có mặt tại TP.",
-      user_confirm_attend: "Cảm ơn bạn đã xác nhận. Hội nghị sẽ diễn ra lúc {time} bạn hãy sắp xếp thời gian có mặt đúng giờ",
-      please_update_new_version: "Đã có phiên bản NMC EVENT mới trên chợ ứng dụng. Vui lòng cập nhật để sử dụng những tính năng mới nhất",
       check_connection: "Vui lòng kiểm tra lại kết nối internet",
       pull_to_reload_app: "Kéo xuống để tải lại danh sách",
       in_development: "Chức năng đang phát triển",
-      notice_checkin_in_city: "Hội nghị này sẽ diễn ra vào lúc {time}. Bạn đã tới TP. {city} chưa?",
-      detect_near_conference_location: "Chúng tôi nhận thấy rằng bạn đang ở gần nơi diễn ra hội nghị {name} bạn có muốn CheckIn ngay lúc này?"
     },
     upload:
     {
@@ -147,6 +136,12 @@ module.exports = {
       new_password: "Mật khẩu mới",
       confirm_new_password: "Xác nhận mật khẩu"
     },
+    facility:
+    {
+      please_select_value_for_rating: "Vui lòng chọn giá trị đánh giá",
+      rating_facility_success: "Gửi đánh giá thành công",
+      rating_facility_not_success: "Gửi đánh giá không thành công"
+    },
     support:
     {
       send_support_success: "Gửi yêu cầu hỗ trợ thành công, chúng tôi sẽ liện hệ qua điện thoại với bạn trong thời gian sớm nhất",
@@ -186,15 +181,14 @@ module.exports = {
     user:
     {
       login: "user/login",
-      login_social:"user/login-social",
+      login_social: "user/login-social",
       logout: "user/logout",
       register: "user/register",
-      forgotPassword: "user/forgot-password",
+      forgot_password: "user/forgot-password",
       update: "user/update",
-      changePassword: "user/change-password",
-      refreshToken: "user/refresh-token",
-      changeEmail: "user/update-email",
-      getByConference: "/user/get-by-conference"
+      change_password: "user/change-password",
+      refresh_token: "user/refresh-token",
+      change_email: "user/update-email",
     },
     keyvalue: {
       get: "key-value/get-value",
@@ -208,14 +202,16 @@ module.exports = {
     facility:
     {
       search: "facility/search",
+      update: "facility/update",
       create: "facility/create",
-      search_by_query:"facility/search-by-query"
+      search_by_query: "facility/search-by-query",
+      review: 'facility/review'
     },
     disease:
     {
       search:"disease/search",
       update_view_count: "disease/update-view-count",
-      get_detail:"/disease/get-detail"
+      get_detail:"disease/get-detail"
     },
     symptom: {
       search: "symptom/search",

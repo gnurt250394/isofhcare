@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, TextInput, TouchableWithoutFeedback, Text, FlatList, TouchableOpacity, Dimensions, StyleSheet, Platform, ScrollView, Linking } from 'react-native';
+import { Text, View, TextInput, TouchableWithoutFeedback, TouchableOpacity, Dimensions, StyleSheet, Platform, ScrollView, Linking } from 'react-native';
 import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import locationProvider from '@data-access/location-provider';
@@ -13,37 +13,58 @@ import { Rating } from 'react-native-ratings';
 import PhotoGrid from 'react-native-thumbnail-grid';
 import snackbar from '@utils/snackbar-utils';
 import ImageLoad from 'mainam-react-native-image-loader';
+import Modal from "react-native-modal";
+import stylemodal from "@styles/modal-style";
+import constants from '@resources/strings';
+import facilityProvider from '@data-access/facility-provider';
 
 
 import SlidingPanel from 'mainam-react-native-sliding-up-down';
+import { Card, Button } from 'native-base';
 class FacilityDetailScreen extends Component {
     constructor(props) {
         super(props)
         const facility = this.props.navigation.getParam("facility", undefined);
-        var images = facility.images;
-        var list_images = [];
+        this.state = { facility };
+        this.showFacility(facility);
+    }
+    showFacility(facility) {
         try {
-            for (var i = 0; i < images.length; i++) {
-                let url = images[i].url.absoluteUrl();
-                if (url && url.indexOf("blob:") != 0) {
-                    list_images.push(images[i].url.absoluteUrl())
+            var images = facility.images;
+            var list_images = [];
+            try {
+                for (var i = 0; i < images.length; i++) {
+                    let url = images[i].url.absoluteUrl();
+                    if (url && url.indexOf("blob:") != 0) {
+                        list_images.push(images[i].url.absoluteUrl())
+                    }
                 }
-            }
-        } catch (error) {
+            } catch (error) {
 
+            }
+            this.setState({
+                list_images,
+                facility,
+                region:
+                {
+                    latitude: facility ? facility.facility.latitude : 0,
+                    longitude: facility ? facility.facility.longitude : 0,
+                    longitudeDelta: 0.1,
+                    latitudeDelta: 0.1
+                }
+            });
+        } catch (error) {
+            alert(JSON.stringify(error));
         }
-        this.state = {
-            list_images,
-            width,
-            height: height - 75,
-            showSearchPanel: true,
-            facility,
-            region:
-            {
-                latitude: facility ? facility.facility.latitude : 0,
-                longitude: facility ? facility.facility.longitude : 0,
-                longitudeDelta: 0.1,
-                latitudeDelta: 0.1
+
+    }
+    edit(facility) {
+        if (facility.facility.type == 2) {
+            this.props.navigation.navigate("addNewClinic", { facility: facility });
+        }
+        else {
+            if (facility.facility.type == 8) {
+                this.props.navigation.navigate("addNewDrugStore", { facility: facility });
             }
         }
     }
@@ -141,12 +162,37 @@ class FacilityDetailScreen extends Component {
         } catch (error) {
         }
     }
+    showRating() {
+        this.setState({ toggleRating: true }, () => {
+            this.rating2.setCurrentRating(this.state.currentRating ? this.state.currentRating : 0);
+        });
+    }
+    setRate() {
+        let val = this.rating2.getCurrentRating();
+        if (val == 0) {
+            snackbar.show(constants.msg.facility.please_select_value_for_rating, "danger");
+            return;
+        } else {
+            this.setState({ currentRating: val, toggleRating: false, isLoading: true }, () => {
+                setTimeout(() => {
+                    facilityProvider.review(this.state.facility.facility.id, val, (s, e) => {
+                        this.setState({ isLoading: false });
+                        if (s) {
+                            this.showFacility(s.data);
+                            snackbar.show(constants.msg.facility.rating_facility_success, "success");
+                        }
+                        else {
+                            this.showRating();
+                            snackbar.show(constants.msg.facility.rating_facility_not_success, "danger");
+                        }
+                    });
+                }, 500);
+            });
+        }
+    }
     render() {
-        const facility = this.props.navigation.getParam("facility", undefined);
-        if (!facility)
-            return <View />
-
-        let image = facility.facility.logo;
+        let facility = this.state.facility;
+        let image = this.state.facility.facility.logo;
         if (!image)
             image = ".";
         else {
@@ -155,7 +201,7 @@ class FacilityDetailScreen extends Component {
 
 
         return (
-            <ActivityPanel ref={(ref) => this.activity = ref} style={{ flex: 1 }} title="CHỌN ĐỊA ĐIỂM TÌM KIẾM" showFullScreen={true}>
+            <ActivityPanel ref={(ref) => this.activity = ref} style={{ flex: 1 }} title="CHỌN ĐỊA ĐIỂM TÌM KIẾM" showFullScreen={true} isLoading={this.state.isLoading}>
                 <View style={styles.container}>
                     <View style={styles.container}>
                         <MapView
@@ -189,14 +235,18 @@ class FacilityDetailScreen extends Component {
                                         <ScaledImage source={require("@images/facility/icdrag.png")} height={29} zIndex={5} />
                                         <ScrollView
                                             style={{ width, height: height - 110, backgroundColor: '#FFF', padding: 10 }}>
-                                            <View {...this.props} style={[{
-                                                marginTop: 0,
-                                                flexDirection: 'row',
-                                            }, this.props.style]}
-                                                onPress={() => { this.props.navigation.navigate("facilityDetailScreen", { facility }) }}
-                                            >
+                                            <View {...this.props} style={[{ marginTop: 0, flexDirection: 'row' }, this.props.style]}>
                                                 <View style={{ flex: 1, marginRight: 10 }}>
-                                                    <Text style={{ fontWeight: 'bold' }} numberOfLines={1} ellipsizeMode='tail'>{facility.facility.name}</Text>
+                                                    <View style={{ flexDirection: 'row' }}>
+                                                        <Text style={{ fontWeight: 'bold', flex: 1 }} numberOfLines={1} ellipsizeMode='tail'>{facility.facility.name}</Text>
+                                                        {
+                                                            (facility.facility.type == 2 || facility.facility.type == 8) && facility.facility.approval == 0 && facility.user && this.props.userApp.isLogin && this.props.userApp.currentUser.id == facility.user.id ?
+                                                                <TouchableOpacity onPress={this.edit.bind(this, facility)}>
+                                                                    <ScaledImage source={require("@images/edit.png")} width={20}></ScaledImage>
+                                                                </TouchableOpacity> :
+                                                                null
+                                                        }
+                                                    </View>
                                                     <Rating
                                                         ref={(ref) => { this.rating = ref }}
                                                         style={{ marginTop: 8 }}
@@ -208,7 +258,7 @@ class FacilityDetailScreen extends Component {
                                                         <TouchableOpacity onPress={() => snackbar.show("Chức năng đang phát triển")} style={{ marginRight: 5, backgroundColor: 'rgb(47,94,172)', padding: 6, paddingLeft: 14, paddingRight: 14 }}>
                                                             <Text style={{ color: '#FFF', fontWeight: 'bold' }}>Đặt khám</Text>
                                                         </TouchableOpacity>
-                                                        <TouchableOpacity onPress={() => snackbar.show("Chức năng đang phát triển")} style={{ backgroundColor: 'rgb(47,94,172)', padding: 6, paddingLeft: 14, paddingRight: 14 }}>
+                                                        <TouchableOpacity onPress={this.showRating.bind(this)} style={{ backgroundColor: 'rgb(47,94,172)', padding: 6, paddingLeft: 14, paddingRight: 14 }}>
                                                             <Text style={{ color: '#FFF', fontWeight: 'bold' }}>Đánh giá</Text>
                                                         </TouchableOpacity></View>
                                                 </View>
@@ -267,6 +317,33 @@ class FacilityDetailScreen extends Component {
                             </View> : null
                     }
                 </View>
+                <Modal
+                    isVisible={this.state.toggleRating}
+                    onBackdropPress={() => this.setState({ toggleRating: false })}
+                    backdropOpacity={0.5}
+                    animationInTiming={500}
+                    animationOutTiming={500}
+                    backdropTransitionInTiming={1000}
+                    backdropTransitionOutTiming={1000}
+                    style={stylemodal.container}>
+                    <Card style={{ backgroundColor: '#fff', width: 250, height: 200, alignItems: 'center' }}>
+                        <View style={{ flexDirection: 'row', alignItems: "center" }}>
+                            <Text style={{ padding: 20, flex: 1, color: "rgb(0,121,107)", textAlign: 'center', fontSize: 16, fontWeight: '900' }}>
+                                ĐÁNH GIÁ
+                            </Text>
+                        </View>
+                        <Rating
+                            ref={(ref) => { this.rating2 = ref }}
+                            style={{ marginTop: 8 }}
+                            ratingCount={5}
+                            imageSize={30}
+                        />
+                        <View style={{ flexDirection: 'row', marginTop: 20 }}>
+                            <Button onPress={() => this.setState({ toggleRating: false })} light><Text style={{ paddingHorizontal: 10, minWidth: 80, textAlign: 'center' }}>Huỷ</Text></Button>
+                            <Button onPress={this.setRate.bind(this)} primary style={{ marginLeft: 5 }}><Text style={{ paddingHorizontal: 10, minWidth: 80, textAlign: 'center', fontWeight: 'bold', color: '#FFF' }}>Gửi</Text></Button>
+                        </View>
+                    </Card>
+                </Modal>
             </ActivityPanel >
         );
     }

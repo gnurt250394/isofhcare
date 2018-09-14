@@ -74,42 +74,6 @@ module.exports = {
         return (dispatch) => {
             dispatch(_getUnreadNotificationCount());
         }
-    },
-    selectConference(conference, userId) {
-        return function (dispatch, getState) {
-            dispatch({ type: constants.action.action_select_conference, value: conference })
-            conferenceSessionProvider.getByConferenceUser(conference.id, userId, (s, e) => {
-                try {
-                    if (s)
-                        switch (s.code) {
-                            case 0:
-                                var list = [];
-                                s.data.conferenceSessions.forEach((item) => {
-                                    list[item.id] = true;
-                                });
-                                dispatch({ type: constants.action.action_init_list_session_follow, value: list })
-                                break;
-                        }
-                } catch (error) {
-                    dispatch({ type: constants.action.action_init_list_session_follow, value: []})
-                }
-            });
-        }
-    },
-    followSession(userId, sessionId, isFollow, callback) {
-        return function (dispatch, getState) {
-            conferenceSessionProvider.follow(userId, sessionId, !isFollow, (s, e) => {
-                if (s)
-                    switch (s.code) {
-                        case 0:
-                        case 2:
-                            dispatch({ type: constants.action.action_user_follow_session, sessionId, isFollow: !isFollow });
-                            break;
-                    }
-                if (callback)
-                    callback(s, e);
-            });
-        }
-    }
+    }    
 
 }
