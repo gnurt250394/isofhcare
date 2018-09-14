@@ -18,12 +18,14 @@ import AddNewClinicScreen from '@containers/facility/AddNewClinicScreen';
 import PhotoViewerScreen from '@containers/image/PhotoViewerScreen';
 import SearchDiseaseScreen from '@containers/disease/SearchDiseaseScreen';
 import DiseaseDetailScreen from '@containers/disease/DiseaseDetailScreen';
+import SearchDiseaseResultScreen from '@containers/disease/SearchDiseaseResultScreen';
 import IntroScreen from '@containers/intro/IntroScreen';
-
+import AboutScreen from '@containers/utility/AboutScreen';
+import TermsScreen from '@containers/utility/TermsScreen';
+import PolicyScreen from '@containers/utility/PolicyScreen';
 const RootNavigator = StackNavigator({
     splash: { screen: SplashScreen },
     intro: { screen: IntroScreen},
-    
     home: { screen: HomeScreen },
     login: { screen: LoginScreen },
     forgotPassword: { screen: ForgotPasswordScreen },
@@ -35,12 +37,16 @@ const RootNavigator = StackNavigator({
     searchDrugResult: { screen: SearchDrugResultScreen },
     searchDisease : { screen: SearchDiseaseScreen},
     diseaseDetail : { screen: DiseaseDetailScreen},
+    searchDiseaseResult:{screen: SearchDiseaseResultScreen},
     drugDetailScreen: { screen: DrugDetailScreen },
     facilityDetailScreen: { screen: FacilityDetailScreen },
     myFacility: { screen: MyFacilityScreen },
     addNewDrugStore: { screen: AddNewDrugStoreScreen },
     addNewClinic: { screen: AddNewClinicScreen },
     photoViewer: { screen: PhotoViewerScreen },
+    about: { screen: AboutScreen },
+    terms: { screen: TermsScreen },
+    policy: { screen: PolicyScreen }
 }, {
         headerMode: 'none',
         header: null,

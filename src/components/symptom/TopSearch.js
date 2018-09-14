@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import snackbar from '@utils/snackbar-utils';
-
-// import specialistProvider from '@data-access/specialist-provider';
-import diseaseProvider from '@data-access/disease-provider'
+import symptomProvider from '@data-access/symptom-provider';
 class TopSearch extends Component {
     constructor(props) {
         super(props)
@@ -13,14 +11,10 @@ class TopSearch extends Component {
         }
     }
     componentDidMount() {
-        diseaseProvider.getTop(10, (s, e) => {
+        symptomProvider.getTop(10, (s, e) => {
             if (s) {
                 this.setState({ data: s });
             }
-            console.log("--------------------------------------------------------")
-            console.log(this.state.data)
-            console.log("--------------------------------------------------------")
-            
         });
     }
 
@@ -40,8 +34,7 @@ class TopSearch extends Component {
                                     onPress={() => snackbar.show("Chức năng đang phát triển")}
                                     style={{ margin: 3, padding: 4, paddingLeft: 12, paddingRight: 12, borderRadius: 16, backgroundColor: 'rgb(0,151,124)' }}>
                                     <Text style={{ color: '#FFF', fontWeight: 'bold', maxWidth: 80, fontSize: 13 }} numberOfLines={1} ellipsizeMode='tail'>
-                                        {/* {item.specialist.name} */}
-                                        asxcd
+                                        {item.symptom.name}
                                     </Text>
                                 </TouchableOpacity>
                             })

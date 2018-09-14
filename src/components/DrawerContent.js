@@ -1,7 +1,7 @@
 import React, {
   Component
 } from 'react';
-import { View, Image, StyleSheet, Text, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
+import { View, Image, StyleSheet, Text, TouchableOpacity, Dimensions, ScrollView, Platform, Linking } from 'react-native';
 const { width, height } = Dimensions.get('window');
 import { connect } from 'react-redux';
 import ScaleImage from 'mainam-react-native-scaleimage';
@@ -75,18 +75,34 @@ class DrawerContent extends Component {
             }
             <View style={{ marginTop: 20, height: 3, backgroundColor: "rgb(234,234,234)", }} />
             <View style={{ marginLeft: 30, marginTop: 20 }}>
-              {/* <TouchableOpacity style={styles.menu_item}>
+              <TouchableOpacity style={styles.menu_item} onPress={() => { this.props.navigation.navigate("about") }}>
                 <Text style={styles.menu_item_text}>Về iSofH</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.menu_item}>
+              <TouchableOpacity style={styles.menu_item} onPress={() => {
+                if (Platform.OS == "ios") {
+                  Linking.openURL('itms-apps://itunes.apple.com/us/app/1428148423')
+                } else {
+                  Linking.openURL('market://details?id=com.isofh.isofhcare')
+                }
+              }}>
                 <Text style={styles.menu_item_text}>Đánh giá</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.menu_item}>
+              <TouchableOpacity style={styles.menu_item} onPress={() => { 
+                Linking.openURL('mailto:support@isofhcare.vn?subject=Hỗ trợ sử dụng app ISofhCare&body=')
+               }}>
                 <Text style={styles.menu_item_text}>Hỗ trợ</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.menu_item}>
+              <TouchableOpacity style={styles.menu_item} onPress={() => { 
+                Linking.openURL('mailto:support@isofhcare.vn?subject=Báo lỗi quá trình sử dụng app ISofhCare&body=')
+               }}>
+                <Text style={styles.menu_item_text}>Góp ý báo lỗi</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.menu_item} onPress={() => { this.props.navigation.navigate("policy") }}>
+                <Text style={styles.menu_item_text}>Chính sách riêng tư</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.menu_item} onPress={() => { this.props.navigation.navigate("terms") }}>
                 <Text style={styles.menu_item_text}>Điều khoản sử dụng</Text>
-              </TouchableOpacity> */}
+              </TouchableOpacity>
               {
                 this.props.userApp.isLogin ?
                   <TouchableOpacity style={styles.menu_item} onPress={() => { this.logout() }}>
@@ -112,9 +128,9 @@ const styles = StyleSheet.create({
     padding: 5
   },
   menu_item_text:
-    {
-      fontSize: 16, color: 'rgba(0,0,0,0.7)'
-    }
+  {
+    fontSize: 16, color: 'rgba(0,0,0,0.7)'
+  }
 });
 function mapStateToProps(state) {
   return {

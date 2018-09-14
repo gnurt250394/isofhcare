@@ -26,12 +26,16 @@ module.exports = {
             }
         });
     },
-
     search(name, page, size, callback) {
         client.requestApi("get", constants.api.disease.search + "?sortType=1&page=" + page + "&size=" + size + "&name=" + name, {}, (s, e) => {
             if (callback)
                 callback(s, e);
         });
     },
-
+    updateViewCount(id, callback) {
+        client.requestApi("put", constants.api.disease.update_view_count + "/" + id, {}, (s, e) => {
+            if (callback)
+                callback(s, e);
+        });
+    }
 }

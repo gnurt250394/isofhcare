@@ -3,11 +3,11 @@ import ActivityPanel from '@components/ActivityPanel';
 import { View, TextInput, TouchableWithoutFeedback, Text, FlatList, TouchableOpacity, Image, Dimensions, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
-import diseaseProvider from '@data-access/disease-provider';
 import SearchPanel from '@components/SearchPanel';
 import realmModel from '@models/realm-models';
 const Realm = require('realm');
 import historyProvider from '@data-access/history-provider';
+import diseaseProvider from '@data-access/disease-provider';
 import TopSearch from '@components/symptom/TopSearch';
 import ListDisease from '@components/disease/ListDisease';
 

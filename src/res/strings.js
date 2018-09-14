@@ -65,6 +65,7 @@ module.exports = {
       DATA_TOP_SPECIALIST: "DATA_TOP_SPECIALIST",
       DATA_TOP_FACILITY: "DATA_TOP_FACILITY",
       DATA_TOP_DISEASE: "DATA_TOP_DISEASE",
+      DATA_TOP_SYMPTOM: "DATA_TOP_SYMPTOM",
       DATA_TOP_DRUG: "DATA_TOP_DRUG",
       DATA_PROVINCE: "DATA_PROVINCE",
       CURRENT_LOCATION: "CURRENT_LOCATION",
@@ -213,7 +214,11 @@ module.exports = {
     disease:
     {
       search:"disease/search",
-      
+      update_view_count: "disease/update-view-count",
+      get_detail:"/disease/get-detail"
+    },
+    symptom: {
+      search: "symptom/search",
     },
     specialist:
     {
