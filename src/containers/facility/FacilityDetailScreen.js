@@ -209,7 +209,7 @@ class FacilityDetailScreen extends Component {
                                                     <View style={{ flexDirection: 'row' }}>
                                                         <Text style={{ fontWeight: 'bold', flex: 1 }} numberOfLines={1} ellipsizeMode='tail'>{facility.facility.name}</Text>
                                                         {
-                                                            facility.facility.approval == 0 && facility.user && this.props.userApp.isLogin && this.props.userApp.currentUser.id == facility.user.id ?
+                                                            (facility.facility.type == 2 || facility.facility.type == 8) && facility.facility.approval == 0 && facility.user && this.props.userApp.isLogin && this.props.userApp.currentUser.id == facility.user.id ?
                                                                 <TouchableOpacity onPress={this.edit.bind(this, facility)}>
                                                                     <ScaledImage source={require("@images/edit.png")} width={20}></ScaledImage>
                                                                 </TouchableOpacity> :

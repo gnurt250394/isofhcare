@@ -40,6 +40,18 @@ class MyFacilityScreen extends Component {
                 this.onLoad();
             });
     }
+    componentWillReceiveProps(nextProps) {
+        try {
+            let propsFacility = nextProps.navigation.getParam('facility', undefined);
+            if (propsFacility != this.state.propsFacility) {
+                this.setState({ propsFacility }, () => {
+                    this.onRefresh()
+                });
+            }
+        } catch (error) {
+
+        }
+    }
     onLoad() {
         const { page, size } = this.state;
         this.setState({
