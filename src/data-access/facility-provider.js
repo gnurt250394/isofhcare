@@ -157,5 +157,14 @@ module.exports = {
                 if (callback)
                     callback(s, e);
             });
+    },
+    review(id, value, callback) {
+        client.requestApi("put", constants.api.facility.review + "/" + id,
+            {
+                review: value
+            }, (s, e) => {
+                if (callback)
+                    callback(s, e);
+            });
     }
 }

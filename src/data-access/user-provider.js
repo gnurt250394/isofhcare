@@ -25,7 +25,7 @@ module.exports = {
             var body = {
                 email: email
             }
-            client.requestApi("put", constants.api.user.forgotPassword, body, (s, e) => {
+            client.requestApi("put", constants.api.user.forgot_password, body, (s, e) => {
                 if (callback)
                     callback(s, e);
             });
@@ -115,7 +115,7 @@ module.exports = {
             oldPassword: currentPassword.toMd5(),
             newPassword: newPassword.toMd5()
         }
-        client.requestApi("put", constants.api.user.changePassword, body, (s, e) => {
+        client.requestApi("put", constants.api.user.change_password, body, (s, e) => {
             if (callback)
                 callback(s, e);
         });
@@ -125,38 +125,18 @@ module.exports = {
             email: newEmail,
             password: password.toMd5()
         }
-        client.requestApi("put", constants.api.user.changeEmail, body, (s, e) => {
+        client.requestApi("put", constants.api.user.change_email, body, (s, e) => {
             if (callback)
                 callback(s, e);
         });
     },
     refreshToken(token, callback) {
-        client.requestApi("put", constants.api.user.refreshToken + "/" + token, {}, (s, e) => {
+        client.requestApi("put", constants.api.user.refresh_token + "/" + token, {}, (s, e) => {
             if (callback)
                 callback(s, e);
         });
     },
 
-    getFirstPosition(user) {
-        try {
-            var title = JSON.parse(user.title)
-            var company = JSON.parse(user.company)
-            {
-                if (title.length > 0 && company.length > 0) {
-                    if (title[0] && company[0])
-                        return title[0] + " - " + company[0];
-                }
-            }
-        } catch (error) {
 
-        }
-        return "";
-    },
-    getByConference(conferenceId, page, size, type, callback) {
-        client.requestApi("get", constants.api.user.getByConference + "/" + conferenceId + "?page=" + page + "&size=" + size + "&type=" + type, {}, (s, e) => {
-            if (callback)
-                callback(s, e);
-        });
-    }
 
 }
