@@ -27,7 +27,7 @@ module.exports = {
         });
     },
     search(name, page, size, callback) {
-        client.requestApi("get", constants.api.disease.search + "?sortType=1&page=" + page + "&size=" + size + "&name=" + name, {}, (s, e) => {
+        client.requestApi("get", constants.api.disease.search_by_disease_symptom + "?sortType=1&page=" + page + "&size=" + size + "&name=" + name, {}, (s, e) => {
             if (callback)
                 callback(s, e);
         });

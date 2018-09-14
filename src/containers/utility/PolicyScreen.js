@@ -64,14 +64,24 @@ class PolicyScreen extends Component {
 
 const styles = {
     title: {
-        fontSize: 14,
-        fontWeight: "bold",
-        fontStyle: "normal",
-        lineHeight: 18,
-        letterSpacing: 0.1,
-        color: "#2f5eac",
-        paddingTop: 20,
-        paddingBottom: 5
+        // fontSize: 14,
+        // fontWeight: "bold",
+        // fontStyle: "normal",
+        // lineHeight: 18,
+        // letterSpacing: 0.1,
+        // color: "#2f5eac",
+        // paddingTop: 20,
+        // paddingBottom: 5,
+
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginVertical: 200,
+        marginHorizontal: 20,
+        borderColor: '#000',
+        borderRadius: 5,
+        borderBottomWidth: 5,
+        borderStyle: 'dashed'
     },
     content: {
         fontSize: 14,

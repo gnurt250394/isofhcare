@@ -80,7 +80,7 @@ class DrawerContent extends Component {
               </TouchableOpacity>
               <TouchableOpacity style={styles.menu_item} onPress={() => {
                 if (Platform.OS == "ios") {
-                  Linking.openURL('itms-apps://itunes.apple.com/us/app/1428148423')
+                  Linking.openURL('itms-apps://itunes.apple.com/us/app/id1428148423')
                 } else {
                   Linking.openURL('market://details?id=com.isofh.isofhcare')
                 }

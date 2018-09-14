@@ -86,8 +86,8 @@ class SearchDiseaseScreen extends Component {
                     }
                     <SearchPanel 
                         style={{ position: 'absolute', top: 12, left: 12, right: 12 }} 
-                        searchTypeId={realmModel.FACILITY_HISTORY} 
-                        resultPage="searchFacilityResult" 
+                        searchTypeId={realmModel.DISEASE_HISTORY} 
+                        resultPage="searchDiseaseResult" 
                         ref={ref => this.searchPanel = ref} 
                         onFocus={this.searchFocus.bind(this)} 
                         placeholder="Tìm kiếm tên bệnh, triệu chứng" 
