@@ -9,54 +9,67 @@ import eyeImg from '@images/eye_black.png';
 import snackbar from '@utils/snackbar-utils';
 import userProvider from '@data-access/user-provider';
 import constants from '@resources/strings';
+import stringUtils from 'mainam-react-native-string-utils';
 import redux from '@redux-store';
 import ScaleImage from 'mainam-react-native-scaleimage';
-import SocialNetwork from '@components/LoginSocial';
 
-class LoginScreen extends Component {
+class ResetPasswordScreen extends Component {
 	constructor(props) {
 		super(props)
+		let userId = this.props.navigation.getParam("id", null);
+		if (!userId)
+			this.props.navigation.pop();
+
 		this.state = {
-			showPass: true,
 			press: false,
-			email: "",
-			password: ""
+			code: "",
+			showPass: true,
+			showPassConfirm: true,
+			userId
 		}
 		this.showPass = this.showPass.bind(this);
+		this.showPassConfirm = this.showPassConfirm.bind(this);
 	}
 	showPass() {
 		this.state.press === false ? this.setState({ showPass: false, press: true }) : this.setState({ showPass: true, press: false });
 	}
+	showPassConfirm() {
+		this.state.pressConfirm === false ? this.setState({ showPassConfirm: false, pressConfirm: true }) : this.setState({ showPassConfirm: true, pressConfirm: false });
+	}
 
-
-	login() {
+	changePassword() {
 		Keyboard.dismiss();
-		if (this.state.email.trim() === "" || this.state.email === "" || this.state.password === "") {
-			snackbar.showShort(constants.msg.user.please_input_username_and_password);
+
+		if (!this.state.password) {
+			snackbar.show(constants.msg.user.please_input_password);
+			this.child.unPress();
+			return;
+		}
+		if (this.state.password.length < 6) {
+			snackbar.show(constants.msg.user.password_must_greater_than_6_character);
 			this.child.unPress();
 			return;
 		}
 
-		userProvider.login(this.state.email.trim(), this.state.password, (s, e) => {
+
+		if (!this.state.confirm_password) {
+			snackbar.show(constants.msg.user.please_input_confirm_password);
+			this.child.unPress();
+			return;
+		}
+		if (this.state.password != this.state.confirm_password) {
+			snackbar.show(constants.msg.user.confirm_password_is_not_match);
+			this.child.unPress();
+			return;
+		}
+
+		userProvider.changePassword(this.state.userId, this.state.password, (s, e) => {
 			this.child.unPress();
 			if (s) {
 				switch (s.code) {
 					case 0:
-						var user = s.data.user;
-						// if (user.role == 4) {
-						// 	snackbar.show(constants.msg.user.please_login_on_web_to_management);
-						// 	return;
-						// }
-						snackbar.show(constants.msg.user.login_success, 'success');
-						this.props.dispatch(redux.userLogin(user));
-						this.props.navigation.navigate('home');
-						return;
-					case 3:
-						snackbar.show(constants.msg.user.username_or_password_incorrect, 'danger');
-						return;
-					case 2:
-					case 1:
-						snackbar.show(constants.msg.user.account_blocked, 'danger');
+						snackbar.show(constants.msg.user.change_password_success, 'success');
+						this.props.navigation.replace('login');
 						return;
 				}
 
@@ -64,13 +77,14 @@ class LoginScreen extends Component {
 			if (e) {
 				console.log(e);
 			}
-			snackbar.show(constants.msg.error_occur);
+			snackbar.show(constants.msg.user.change_password_not_success, 'danger');
 		});
 	}
 
+
 	render() {
 		return (
-			<ActivityPanel style={{ flex: 1 }} title="Đăng nhập" touchToDismiss={true} hideActionbar={true} hideStatusbar={true} showFullScreen={true}>
+			<ActivityPanel style={{ flex: 1 }} touchToDismiss={true} hideActionbar={true} hideStatusbar={true} showFullScreen={true}>
 				<ScrollView style={{ flex: 1 }}
 					keyboardShouldPersistTaps="always">
 					<View style={{ marginTop: 60, justifyContent: 'center', alignItems: 'center' }}>
@@ -78,17 +92,12 @@ class LoginScreen extends Component {
 					</View>
 					<KeyboardAvoidingView behavior='padding'
 						style={styles.form}>
-						<UserInput onTextChange={(s) => this.setState({ email: s })}
-							placeholder={constants.input_username_or_email}
-							autoCapitalize={'none'}
-							returnKeyType={'next'}
-							autoCorrect={false} />
-						<View style={{ marginTop: 15, flex: 1 }}>
+						<View style={{ marginTop: 12, flex: 1 }}>
 
 							<UserInput
 								onTextChange={(s) => this.setState({ password: s })}
 								secureTextEntry={this.state.showPass}
-								placeholder={constants.input_password}
+								placeholder={constants.msg.user.new_password}
 								returnKeyType={'done'}
 								autoCapitalize={'none'}
 								autoCorrect={false} />
@@ -101,18 +110,28 @@ class LoginScreen extends Component {
 							</TouchableOpacity>
 
 						</View>
-						<View style={{ width: DEVICE_WIDTH, maxWidth: 300 }}>
-							<TouchableOpacity onPress={() => { this.props.navigation.replace("forgotPassword") }} style={{ alignItems: 'flex-end' }}>
-								<Text style={{ marginTop: 12, color: 'rgb(49,96,172)' }}>Quên mật khẩu</Text>
+
+						<View style={{ marginTop: 12, flex: 1 }}>
+
+							<UserInput
+								onTextChange={(s) => this.setState({ confirm_password: s })}
+								secureTextEntry={this.state.showPassConfirm}
+								placeholder={constants.msg.user.confirm_new_password}
+								returnKeyType={'done'}
+								autoCapitalize={'none'}
+								autoCorrect={false} />
+
+							<TouchableOpacity
+								activeOpacity={0.7}
+								style={styles.btnEye}
+								onPress={this.showPassConfirm}>
+								<Image source={eyeImg} style={styles.iconEye} />
 							</TouchableOpacity>
+
 						</View>
-						<ButtonSubmit onRef={ref => (this.child = ref)} click={() => { this.login() }} text={constants.login} />
-						<View style={{ width: DEVICE_WIDTH, maxWidth: 300 }}>
-							<TouchableOpacity onPress={() => { this.props.navigation.replace("register") }} style={{ alignItems: 'flex-end' }}>
-								<Text style={{ marginTop: 15, color: 'rgb(155,155,155)', lineHeight: 20, fontSize: 16 }}>Nếu bạn chưa có tài khoản hãy đăng ký ngay <Text style={{ fontWeight: 'bold', color: 'rgb(0,151,124)' }}>tại đây</Text></Text>
-							</TouchableOpacity>
-						</View>
-						<SocialNetwork />
+
+						<ButtonSubmit onRef={ref => (this.child = ref)}
+							click={() => { this.changePassword() }} text={constants.change_password} />
 					</KeyboardAvoidingView>
 
 
@@ -172,4 +191,4 @@ function mapStateToProps(state) {
 		userApp: state.userApp
 	};
 }
-export default connect(mapStateToProps)(LoginScreen);
+export default connect(mapStateToProps)(ResetPasswordScreen);

@@ -32,9 +32,7 @@ module.exports = {
   share: "Chia sẻ",
   update: "Cập nhật",
   later: "Để sau",
-  arrived: "Đã đến",
-  not_com_yet: "Tôi chưa đến",
-  checkin: "Check In",
+  input_code: "Nhập mã xác thực",
   action: {
     create_navigation_global: "ACTION_SET_NAVIGATION_GLOBAL",
     action_change_login_token: "ACTION_CHANGE_LOGIN_TOKEN",
@@ -90,8 +88,15 @@ module.exports = {
     error_occur: "Xảy ra lỗi, vui lòng thử lại sau",
     user:
     {
+      change_password_success: "Đổi mật khẩu thành công",
+      change_password_not_success: "Đổi mật khẩu không thành công",
+      confirm_code_success: "Xác thực thành công. Điền đủ thông tin để đổi mật khẩu",
+      confirm_code_not_success: "Xác thực không thành công",
+      please_input_verify_code: "Vui lòng nhập mã xác thực",
+      not_found_user_with_email_or_phone: "Không tìm thấy tài khoản với email hoặc số điện thoại đã nhập",
       please_input_current_password: "Vui lòng nhập mật khẩu hiện tại",
       please_input_email_or_phone: "Vui lòng nhập địa chỉ email hoặc số điện thoại",
+      please_input_correct_email_or_phone: "Vui lòng nhập đúng định dạng email hoặc số điện thoại",
       please_enter_the_correct_phone_number_format: "Vui lòng nhập đúng định dạng số điện thoại",
       input_phonenumber: "Nhập số điện thoại",
       please_enter_current_password: "Vui lòng nhập mật khẩu hiện tại",
@@ -116,7 +121,8 @@ module.exports = {
       username_or_email_empty: "Tên đăng nhập hoặc email trống",
       account_blocked: "Tài khoản đã bị khóa, vui lòng liên hệ quản trị viên",
       username_or_password_incorrect: "Email/tên đăng nhập hoặc mặt khẩu không đúng. Vui lòng thử lại!",
-      send_mail_recovery_success: "Mật khẩu mới của bạn đã được gửi về email bạn đăng ký. Vui lòng kiểm tra lại",
+      send_mail_recovery_success: "Link xác nhận mật khẩu mới đã được gửi về email bạn đăng ký",
+      send_sms_recovery_success: "Mã xác nhận đã được gửi về số điện thoại của bạn",
       send_mail_recovery_failed: "Không tìm thấy thông tin tài khoản với email bạn nhập",
       canot_get_user_info_in_account_facebook: "Không tìm thấy thông tin trong tài khoản facebook của bạn",
       canot_get_user_info_in_account_google: "Không tìm thấy thông tin trong tài khoản google của bạn",
@@ -184,11 +190,12 @@ module.exports = {
       login_social: "user/login-social",
       logout: "user/logout",
       register: "user/register",
-      forgot_password: "user/forgot-password",
+      forgot_password: "user/forget-password",
       update: "user/update",
-      change_password: "user/change-password",
+      change_password: "user/update-password",
       refresh_token: "user/refresh-token",
       change_email: "user/update-email",
+      confirm_code: "user/confirm-code"
     },
     keyvalue: {
       get: "key-value/get-value",
@@ -209,10 +216,10 @@ module.exports = {
     },
     disease:
     {
-      search:"disease/search",
+      search: "disease/search",
       update_view_count: "disease/update-view-count",
-      get_detail:"disease/get-detail",
-      search_by_disease_symptom:"disease/search-by-disease-symptom"
+      get_detail: "disease/get-detail",
+      search_by_disease_symptom: "disease/search-by-disease-symptom"
     },
     symptom: {
       search: "symptom/search",

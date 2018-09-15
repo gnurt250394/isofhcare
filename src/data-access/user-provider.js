@@ -20,10 +20,11 @@ module.exports = {
     saveAccount(account) {
         storage.save(constants.key.storage.current_account, account);
     },
-    forgotPassword(email, callback) {
+    forgotPassword(email, type, callback) {
         if (email) {
             var body = {
-                email: email
+                emailOrPhone: email,
+                type
             }
             client.requestApi("put", constants.api.user.forgot_password, body, (s, e) => {
                 if (callback)
@@ -34,6 +35,25 @@ module.exports = {
             if (callback)
                 callback();
         }
+    },
+    confirmCode(phone, code, callback) {
+        var body = {
+            phone,
+            code
+        }
+        client.requestApi("put", constants.api.user.confirm_code, body, (s, e) => {
+            if (callback)
+                callback(s, e);
+        });
+    },
+    changePassword(id, password, callback) {
+        var body = {
+            password: password.toMd5()
+        }
+        client.requestApi("put", constants.api.user.change_password + "/" + id, body, (s, e) => {
+            if (callback)
+                callback(s, e);
+        });
     },
     login(username, password, callback) {
         if (username && password) {
@@ -50,16 +70,6 @@ module.exports = {
         else {
             if (callback)
                 callback();
-        }
-    },
-    loginId(id, callback) {
-        if (id) {
-            client.requestApi("post", constants.api.user.login_by_id + "/" + id, {
-                device: { os: os, deviceId: this.deviceId, token: this.deviceToken }
-            }, (s, e) => {
-                if (callback)
-                    callback(s, e);
-            });
         }
     },
     logout(callback) {
@@ -111,16 +121,7 @@ module.exports = {
                 callback(s, e);
         });
     },
-    changePassword(currentPassword, newPassword, callback) {
-        var body = {
-            oldPassword: currentPassword.toMd5(),
-            newPassword: newPassword.toMd5()
-        }
-        client.requestApi("put", constants.api.user.change_password, body, (s, e) => {
-            if (callback)
-                callback(s, e);
-        });
-    },
+
     changeEmail(newEmail, password, callback) {
         var body = {
             email: newEmail,

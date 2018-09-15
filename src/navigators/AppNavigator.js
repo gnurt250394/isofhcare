@@ -24,6 +24,8 @@ import AboutScreen from '@containers/utility/AboutScreen';
 import TermsScreen from '@containers/utility/TermsScreen';
 import PolicyScreen from '@containers/utility/PolicyScreen';
 import SpecialistScreen from '@containers/specialist/SpecialistScreen';
+import ConfirmCodeScreen from '@containers/account/ConfirmCodeScreen';
+import ResetPasswordScreen from '@containers/account/ResetPasswordScreen';
 const RootNavigator = StackNavigator({
     splash: { screen: SplashScreen },
     intro: { screen: IntroScreen },
@@ -48,7 +50,9 @@ const RootNavigator = StackNavigator({
     about: { screen: AboutScreen },
     terms: { screen: TermsScreen },
     policy: { screen: PolicyScreen },
-    specialist: { screen: SpecialistScreen }
+    specialist: { screen: SpecialistScreen },
+    confirmCode: { screen: ConfirmCodeScreen },
+    resetPassword: { screen: ResetPasswordScreen }
 }, {
         headerMode: 'none',
         header: null,

@@ -16,49 +16,36 @@ import ScaleImage from 'mainam-react-native-scaleimage';
 class ForgotPasswordScreen extends Component {
 	constructor(props) {
 		super(props)
+		let phone = this.props.navigation.getParam("phone", null);
+		if (!phone)
+			this.props.navigation.pop();
 		this.state = {
 			press: false,
-			email: ""
+			code: "",
+			phone
 		}
 	}
 
 
-	forgotPassword() {
+	confirmCode() {
 		Keyboard.dismiss();
 		debugger;
-		if (this.state.email.trim() === "" || this.state.email === "") {
-			snackbar.showShort(constants.msg.user.please_input_email_or_phone, 'danger');
+		if (!this.state.code) {
+			snackbar.showShort(constants.msg.user.please_input_verify_code, 'danger');
 			this.child.unPress();
 			return;
 		}
-		if (!this.state.email.isEmail() && !this.state.email.isPhoneNumber()) {
-			snackbar.showShort(constants.msg.user.please_input_correct_email_or_phone, 'danger');
-			this.child.unPress();
-			return;
-		}
-		let type = this.state.email.isEmail() ? 1 : 2;
 
-		userProvider.forgotPassword(this.state.email.trim(), type, (s, e) => {
+		userProvider.confirmCode(this.state.phone, this.state.code, (s, e) => {
 			this.child.unPress();
 			if (s) {
-				// snackbar.show("Thông tin đăng nhập không hợp lệ");
-				// return;
+
+				// // snackbar.show("Thông tin đăng nhập không hợp lệ");
+				// // return;
 				switch (s.code) {
-					case 2:
-						snackbar.show(constants.msg.user.not_found_user_with_email_or_phone, 'danger');
-						return;
 					case 0:
-						if (s.data && s.data.status == 1) {
-							if (type == 2) {
-								snackbar.show(constants.msg.user.send_sms_recovery_success, 'success');
-								this.props.navigation.replace("confirmCode", { phone: this.state.email });
-							}
-							else
-								snackbar.show(constants.msg.user.send_mail_recovery_success, 'success');
-							return;
-						} else {
-							snackbar.show(constants.msg.user.not_found_user_with_email_or_phone, 'danger');
-						}
+						snackbar.show(constants.msg.user.confirm_code_success, 'success');
+						this.props.navigation.replace("resetPassword", { id: s.data.user.id });
 						return;
 				}
 
@@ -66,14 +53,14 @@ class ForgotPasswordScreen extends Component {
 			if (e) {
 				console.log(e);
 			}
-			snackbar.show(constants.msg.error_occur);
+			snackbar.show(constants.msg.user.confirm_code_not_success);
 		});
 	}
 
 
 	render() {
 		return (
-			<ActivityPanel style={{ flex: 1 }} title="Đăng nhập" touchToDismiss={true} hideActionbar={true} hideStatusbar={true} showFullScreen={true}>
+			<ActivityPanel style={{ flex: 1 }} touchToDismiss={true} hideActionbar={true} hideStatusbar={true} showFullScreen={true}>
 				<ScrollView style={{ flex: 1 }}
 					keyboardShouldPersistTaps="always">
 					<View style={{ marginTop: 60, justifyContent: 'center', alignItems: 'center' }}>
@@ -81,18 +68,13 @@ class ForgotPasswordScreen extends Component {
 					</View>
 					<KeyboardAvoidingView behavior='padding'
 						style={styles.form}>
-						<UserInput onTextChange={(s) => this.setState({ email: s })}
-							placeholder={constants.input_username_or_email}
+						<UserInput onTextChange={(s) => this.setState({ code: s })}
+							placeholder={constants.input_code}
 							autoCapitalize={'none'}
 							returnKeyType={'next'}
 							autoCorrect={false} />
 
-						<ButtonSubmit onRef={ref => (this.child = ref)} click={() => { this.forgotPassword() }} text={constants.send} />
-						<View style={{ width: DEVICE_WIDTH, maxWidth: 300 }}>
-							<TouchableOpacity onPress={() => { this.props.navigation.replace("register") }} style={{ alignItems: 'flex-end' }}>
-								<Text style={{ marginTop: 15, color: 'rgb(155,155,155)', lineHeight: 20, fontSize: 16 }}>Nếu bạn chưa có tài khoản hãy đăng ký ngay <Text style={{ fontWeight: 'bold', color: 'rgb(0,151,124)' }}>tại đây</Text></Text>
-							</TouchableOpacity>
-						</View>
+						<ButtonSubmit onRef={ref => (this.child = ref)} click={() => { this.confirmCode() }} text={constants.confirm} />
 					</KeyboardAvoidingView>
 
 
@@ -102,7 +84,6 @@ class ForgotPasswordScreen extends Component {
 	}
 }
 const DEVICE_WIDTH = Dimensions.get('window').width;
-const DEVICE_HEIGHT = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
 	form: {
