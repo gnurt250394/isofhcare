@@ -53,15 +53,18 @@ class SearchDiseaseScreen extends Component {
         historyProvider.addHistory("", DISEASE_HISTORY, item.name, item.id, "");
     }
     renderSearchItem(item, index, keyword) {
+        // alert(JSON.stringify(item))
         return <TouchableOpacity style={{ padding: 5 }} onPress={this.onSearchItemClick.bind(this, item)}>
-            <Text style={{ paddingLeft: 10 }}>{item.name}</Text>
+            <Text style={{ paddingLeft: 10 }}>{item.disease.name}</Text>
             <View style={{ height: 0.5, backgroundColor: '#00000040', marginTop: 12 }} />
         </TouchableOpacity>
     }
 
     renderFooter(keyword, data) {
         if (keyword)
-            return <TouchableOpacity style={{ padding: 5, paddingLeft: 15, flexDirection: 'row', alignItems: 'center', paddingTop: 10 }} onPress={() => this.props.navigation.navigate("searchFacilityResult", { keyword })}>
+            return <TouchableOpacity 
+                style={{ padding: 5, paddingLeft: 15, flexDirection: 'row', alignItems: 'center', paddingTop: 10 }} 
+                onPress={() => this.props.navigation.navigate("searchDiseaseResult", { keyword })}>
                 <ScaledImage source={require("@images/search/icsearch2.png")} width={15} />
                 <Text style={{ paddingLeft: 10, color: 'rgb(74,144,226)' }}>Xem tất cả kết quả tìm kiếm</Text>
             </TouchableOpacity>

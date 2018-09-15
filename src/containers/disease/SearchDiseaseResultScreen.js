@@ -3,8 +3,9 @@ import ActivityPanel from '@components/ActivityPanel';
 import { View, ActivityIndicator, Text, FlatList, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
-import facilityProvider from '@data-access/facility-provider';
+import diseaseProvider from '@data-access/disease-provider';
 // import ItemFacility from '@components/facility/ItemFacility';
+import ItemDisease from '@components/disease/ItemDisease';
 
 class SearchDiseaseResultScreen extends Component {
     constructor(props) {
@@ -15,9 +16,9 @@ class SearchDiseaseResultScreen extends Component {
         else
             keyword = "";
 
-        let specialist = this.props.navigation.getParam('specialist', null);
+        let sympton = this.props.navigation.getParam('sympton', null);
 
-        if (specialist) {
+        if (sympton) {
             keyword = "";
         }
 
@@ -30,7 +31,7 @@ class SearchDiseaseResultScreen extends Component {
             finish: false,
             loading: false,
             keyword,
-            specialist
+            sympton
         }
     }
     componentDidMount() {
@@ -50,11 +51,11 @@ class SearchDiseaseResultScreen extends Component {
             refreshing: page == 1,
             loadMore: page != 1
         })
-        let func = facilityProvider.search;
+        let func = diseaseProvider.search;
         let keyword = this.state.keyword;
         if (this.state.specialist) {
-            func = facilityProvider.searchBySpecialist;
-            keyword = this.state.specialist.specialist.id;
+            func = diseaseProvider.searchBySympton;
+            // keyword = this.state.s.specialist.id;
         }
         func(keyword, page, size, (s, e) => {
             this.setState({
@@ -95,7 +96,7 @@ class SearchDiseaseResultScreen extends Component {
 
     render() {
         return (
-            <ActivityPanel style={{ flex: 1 }} title={this.state.keyword || this.state.specialist ? "KẾT QUẢ TÌM KIẾM CSYT" : "CSYT HÀNG ĐẦU"} showFullScreen={true}>
+            <ActivityPanel style={{ flex: 1 }} title={this.state.keyword || this.state.specialist ? "KẾT QUẢ TÌM KIẾM BỆNH" : "DANH SÁCH BỆNH"} showFullScreen={true}>
                 <View style={{ flex: 1, padding: 14 }}>
                     {
                         this.state.keyword ?
@@ -124,7 +125,7 @@ class SearchDiseaseResultScreen extends Component {
                         }
                         ListFooterComponent={() => <View style={{ height: 20 }}></View>}
                         renderItem={({ item, index }) =>
-                            <ItemFacility facility={item} />
+                            <ItemDisease key={index} disease={item} />
                         }
                     />
                 </View>

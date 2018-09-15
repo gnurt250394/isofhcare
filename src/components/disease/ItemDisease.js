@@ -10,6 +10,9 @@ class ItemDisease extends Component {
         this.state = {
 
         }
+        console.log("==================================")
+        console.log(JSON.stringify(this.props.disease))
+        console.log("==================================")
     }
 
     render() {
