@@ -145,11 +145,7 @@ class MyFacilityScreen extends Component {
                             data={this.state.data}
                             ListHeaderComponent={() => !this.state.refreshing && (!this.state.data || this.state.data.length == 0) ?
                                 <View style={{ alignItems: 'center', marginTop: 50 }}>
-                                    <ScaledImage source={require("@images/search/noresult.png")} width={136} />
-                                    <TouchableOpacity onPress={() => { this.setState({ keyword: "" }, this.onRefresh) }}>
-                                        <Text style={{ marginTop: 20, padding: 20, textAlign: 'center', lineHeight: 30 }}>Chúng tôi không tìm thấy kết quả nào phù hợp, bạn có thể xem thêm <Text style={{ color: "#000", fontWeight: 'bold' }}>CSYT Hàng đầu</Text></Text>
-                                    </TouchableOpacity>
-
+                                    <Text style={{ fontStyle: 'italic' }}>Bạn chưa tạo cơ sở y tế nào</Text>
                                 </View> : null
                             }
                             ListFooterComponent={() => <View style={{ height: 20 }}></View>}
