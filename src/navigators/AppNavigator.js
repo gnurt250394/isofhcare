@@ -26,6 +26,8 @@ import PolicyScreen from '@containers/utility/PolicyScreen';
 import SpecialistScreen from '@containers/specialist/SpecialistScreen';
 import ConfirmCodeScreen from '@containers/account/ConfirmCodeScreen';
 import ResetPasswordScreen from '@containers/account/ResetPasswordScreen';
+import SymptomScreen from '@containers/symptom/SymptomScreen';
+
 const RootNavigator = StackNavigator({
     splash: { screen: SplashScreen },
     intro: { screen: IntroScreen },
@@ -52,7 +54,8 @@ const RootNavigator = StackNavigator({
     policy: { screen: PolicyScreen },
     specialist: { screen: SpecialistScreen },
     confirmCode: { screen: ConfirmCodeScreen },
-    resetPassword: { screen: ResetPasswordScreen }
+    resetPassword: { screen: ResetPasswordScreen },
+    symptom: { screen: SymptomScreen}
 }, {
         headerMode: 'none',
         header: null,

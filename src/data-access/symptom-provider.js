@@ -25,4 +25,10 @@ module.exports = {
             }
         });
     },
+    searchFromApi(keyword, page, size, callback) {
+        client.requestApi("get", constants.api.symptom.search + "?name=" + keyword + "&page=" + page + "&size=" + size, {}, (s, e) => {
+            if (callback)
+                callback(s, e);
+        });
+    }
 }

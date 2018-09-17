@@ -37,5 +37,11 @@ module.exports = {
             if (callback)
                 callback(s, e);
         });
-    }
+    },
+    searchBySymptom(specialistId, page, size, callback) {
+        client.requestApi("get", constants.api.disease.search_by_disease_symptom + "?page=" + page + "&size=" + size + "&specialistId=" + specialistId + "&approval=1", {}, (s, e) => {
+            if (callback)
+                callback(s, e);
+        });
+    },
 }

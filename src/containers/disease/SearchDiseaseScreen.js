@@ -8,7 +8,7 @@ import realmModel from '@models/realm-models';
 const Realm = require('realm');
 import historyProvider from '@data-access/history-provider';
 import diseaseProvider from '@data-access/disease-provider';
-import TopSearch from '@components/symptom/TopSearch';
+import TopSymptom from '@components/symptom/TopSearch';
 import ListDisease from '@components/disease/ListDisease';
 
 class SearchDiseaseScreen extends Component {
@@ -71,6 +71,12 @@ class SearchDiseaseScreen extends Component {
         return <View />
     }
 
+    onSymptomClick(item) {
+        if (item) {
+            this.props.navigation.navigate("searchDiseaseResult", { symptom: item });
+        }
+    }
+
     render() {
         return (
             <ActivityPanel style={{ flex: 1 }} title="TÌM KIẾM BỆNH" showFullScreen={true}>
@@ -79,7 +85,7 @@ class SearchDiseaseScreen extends Component {
                         marginTop: 43
                     }}>
                         <View style={{ flex: 1 }}>
-                            <TopSearch />
+                            <TopSymptom onItemClick={this.onSymptomClick.bind(this)} />
                             <ListDisease />
                         </View>
                     </ScrollView>
