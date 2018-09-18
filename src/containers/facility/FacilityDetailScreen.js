@@ -25,7 +25,19 @@ class FacilityDetailScreen extends Component {
     constructor(props) {
         super(props)
         const facility = this.props.navigation.getParam("facility", undefined);
-        this.state = { facility };
+        this.state = {
+            facility,
+            region:
+            {
+                latitude: facility ? facility.facility.latitude : 1,
+                longitude: facility ? facility.facility.longitude : 1,
+                longitudeDelta: 0.1,
+                latitudeDelta: 0.1
+            },
+            width,
+            height: height - 75,
+            showSearchPanel: true,
+        };
         this.showFacility(facility);
     }
     showFacility(facility) {
