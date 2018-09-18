@@ -88,6 +88,7 @@ module.exports = {
     error_occur: "Xảy ra lỗi, vui lòng thử lại sau",
     user:
     {
+      this_account_not_active: "Tài khoản này chưa được kích hoạt",
       change_password_success: "Đổi mật khẩu thành công",
       change_password_not_success: "Đổi mật khẩu không thành công",
       confirm_code_success: "Xác thực thành công. Điền đủ thông tin để đổi mật khẩu",

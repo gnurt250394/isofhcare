@@ -51,6 +51,9 @@ class LoginScreen extends Component {
 						this.props.dispatch(redux.userLogin(user));
 						this.props.navigation.navigate('home');
 						return;
+					case 4:
+					snackbar.show(constants.msg.user.this_account_not_active, 'danger');
+					return;
 					case 3:
 						snackbar.show(constants.msg.user.username_or_password_incorrect, 'danger');
 						return;
