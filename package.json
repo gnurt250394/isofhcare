@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "art": "^0.10.2",
+    "firebase": "^5.3.0",
     "mainam-react-native-activity-panel": "^1.1.8",
     "mainam-react-native-barcode": "^1.0.3",
     "mainam-react-native-convert-utils": "^1.0.0",

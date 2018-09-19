@@ -29,7 +29,6 @@ class ForgotPasswordScreen extends Component {
 
 	confirmCode() {
 		Keyboard.dismiss();
-		debugger;
 		if (!this.state.code) {
 			snackbar.showShort(constants.msg.user.please_input_verify_code, 'danger');
 			this.child.unPress();

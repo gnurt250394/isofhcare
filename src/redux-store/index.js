@@ -6,6 +6,8 @@ import sendbirdUtils from '@utils/send-bird-utils';
 import clientUtils from '@utils/client-utils';
 
 import client from '@utils/client-utils';
+
+import firebaseUtils from '@utils/firebase-utils';
 function _userLogin(user) {
     return (dispatch) => {
         dispatch({ type: constants.action.action_user_login, value: user })
@@ -46,6 +48,11 @@ module.exports = {
         return function (dispatch, getState) {
             if (user != null) {
                 userProvider.saveAccount(user);
+                firebaseUtils.connect(user.id, user.name, user.avatar, {}).then(x => {
+                    console.log(x);
+                }).catch(x=>{
+                    console.log(x);
+                });
                 let sb = sendbirdUtils.getSendBird();
                 sendbirdUtils.startSendBird(sb, user.email, (sb, userSendBird, error) => {
                     sendbirdUtils.updateUserInfo(sb, userSendBird, (user.degree ? user.degree : "") + " " + user.name, user.avatar ? user.avatar.absoluteUrl() : "")
@@ -74,6 +81,6 @@ module.exports = {
         return (dispatch) => {
             dispatch(_getUnreadNotificationCount());
         }
-    }    
+    }
 
 }

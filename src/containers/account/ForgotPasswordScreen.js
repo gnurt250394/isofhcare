@@ -25,7 +25,6 @@ class ForgotPasswordScreen extends Component {
 
 	forgotPassword() {
 		Keyboard.dismiss();
-		debugger;
 		if (this.state.email.trim() === "" || this.state.email === "") {
 			snackbar.showShort(constants.msg.user.please_input_email_or_phone, 'danger');
 			this.child.unPress();

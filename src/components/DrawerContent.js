@@ -56,6 +56,9 @@ class DrawerContent extends Component {
                 <TouchableOpacity style={styles.menu_item} onPress={() => { this.props.navigation.navigate("myFacility") }}>
                   <Text style={styles.menu_item_text}>Cơ sở y tế của tôi</Text>
                 </TouchableOpacity>
+                <TouchableOpacity style={styles.menu_item} onPress={() => { this.props.navigation.navigate("mailbox") }}>
+                  <Text style={styles.menu_item_text}>Tin nhắn</Text>
+                </TouchableOpacity>
                 {/* <TouchableOpacity style={styles.menu_item}>
                   <Text style={styles.menu_item_text}>Hồ sơ cá nhân</Text>
                 </TouchableOpacity>
@@ -87,14 +90,14 @@ class DrawerContent extends Component {
               }}>
                 <Text style={styles.menu_item_text}>Đánh giá</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.menu_item} onPress={() => { 
+              <TouchableOpacity style={styles.menu_item} onPress={() => {
                 Linking.openURL('mailto:support@isofhcare.vn?subject=Hỗ trợ sử dụng app ISofhCare&body=')
-               }}>
+              }}>
                 <Text style={styles.menu_item_text}>Hỗ trợ</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.menu_item} onPress={() => { 
+              <TouchableOpacity style={styles.menu_item} onPress={() => {
                 Linking.openURL('mailto:support@isofhcare.vn?subject=Báo lỗi quá trình sử dụng app ISofhCare&body=')
-               }}>
+              }}>
                 <Text style={styles.menu_item_text}>Góp ý báo lỗi</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.menu_item} onPress={() => { this.props.navigation.navigate("policy") }}>

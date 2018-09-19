@@ -36,7 +36,6 @@ module.exports = {
     },
     read(userId, key, callback) {
         try {
-            debugger;
             const { Schemas, DataString, schemaVersion } = realmModel;
             Realm.open({
                 schema: Schemas,

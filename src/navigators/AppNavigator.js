@@ -27,9 +27,12 @@ import SpecialistScreen from '@containers/specialist/SpecialistScreen';
 import ConfirmCodeScreen from '@containers/account/ConfirmCodeScreen';
 import ResetPasswordScreen from '@containers/account/ResetPasswordScreen';
 import SymptomScreen from '@containers/symptom/SymptomScreen';
-
+import GroupChatScreen from '@containers/chat/GroupChatScreen';
+import ChatScreen from '@containers/chat/ChatScreen';
 const RootNavigator = StackNavigator({
     splash: { screen: SplashScreen },
+    mailbox: { screen: GroupChatScreen },
+    chat: { screen: ChatScreen },
     intro: { screen: IntroScreen },
     home: { screen: HomeScreen },
     login: { screen: LoginScreen },
@@ -55,7 +58,7 @@ const RootNavigator = StackNavigator({
     specialist: { screen: SpecialistScreen },
     confirmCode: { screen: ConfirmCodeScreen },
     resetPassword: { screen: ResetPasswordScreen },
-    symptom: { screen: SymptomScreen}
+    symptom: { screen: SymptomScreen }
 }, {
         headerMode: 'none',
         header: null,
