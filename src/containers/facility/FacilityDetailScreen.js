@@ -303,22 +303,17 @@ class FacilityDetailScreen extends Component {
                                                             </TouchableOpacity> : null
                                                     }
                                                 </View>
-                                                <TouchableOpacity style={{
-                                                    width: 107,
-                                                    height: 32,
-                                                    shadowColor: "rgba(0, 0, 0, 0.24)",
-                                                    shadowOffset: {
-                                                        width: 0,
-                                                        height: 2
-                                                    },
-                                                    shadowRadius: 4,
-                                                    shadowOpacity: 1,
-                                                    borderStyle: "dashed",
+                                                <Button style={{
+                                                    padding: 2,
+                                                    paddingLeft: 10,
+                                                    paddingRight: 10,
+                                                    backgroundColor: '#FFF',
                                                     borderWidth: 1,
                                                     borderColor: "#2f5eac"
                                                 }}>
+                                                    <ScaledImage source={require("@images/ic_chat.png")} height={21} style={{ marginRight: 5 }} />
                                                     <Text>Nhắn tin</Text>
-                                                </TouchableOpacity>
+                                                </Button>
                                             </View>
                                             <Text style={{ padding: 10, fontSize: 16, marginTop: 5, textAlign: 'justify', lineHeight: 22, marginBottom: 20, color: '#9b9b9b' }}>{facility.facility.introduction}</Text>
                                         </ScrollView>
