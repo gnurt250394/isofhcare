@@ -224,16 +224,16 @@ class ChatScreen extends React.Component {
                         data={this.state.data}
                         renderItem={({ item, index }) =>
                             <View>
-                                <MyMessage isLast={index == this.state.data.length - 1} message={item} preMessage={index == 0 ? null : this.state.data[index - 1]} />
-                                {/* {item.sender.userId == "namy" ?
-                                    <MyMessage isLast={index == this.state.data.length - 1} message={item} preMessage={index == 0 ? null : this.state.data[index - 1]} />
-                                    :
-                                    <TheirMessage isLast={index == this.state.data.length - 1} message={item} preMessage={index == 0 ? null : this.state.data[index - 1]} />
-                                } */}
+                                {
+                                    item.userId == this.props.userApp.currentUser.id ?
+                                        <MyMessage isLast={index == this.state.data.length - 1} message={item} preMessage={index == 0 ? null : this.state.data[index - 1]} />
+                                        :
+                                        <TheirMessage isLast={index == this.state.data.length - 1} message={item} preMessage={index == 0 ? null : this.state.data[index - 1]} />
+                                }
                             </View>
                         }
                     />
-                    <ChatView behavior='padding' keyboardVerticalOffset={67}>
+                    <ChatView behavior='padding' keyboardVerticalOffset={80}>
                         {this.state.typing && this.state.typing.length != 0 ?
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                 <Text style={{ fontStyle: 'italic', padding: 10 }}><Text style={{ fontWeight: 'bold' }}>{this.state.typing[0].nickname}</Text>{this.state.typing.length > 1 ? " và " + (this.state.typing.length - 1) + " người khác" : ""} đang gõ ...</Text>

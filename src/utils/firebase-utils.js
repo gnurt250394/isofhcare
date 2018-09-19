@@ -115,6 +115,21 @@ module.exports = {
             });
         });
     },
+    updateUser(userId, fullname, avatar, data) {
+        let $this = this;
+        return new Promise((resolve, reject) => {
+            try {
+                let userDb = $this.getUserDb();
+                userDb.doc(userId + "").update({
+                    fullname: fullname ? fullname : "",
+                    avatar: avatar ? avatar : "",
+                    data: data ? data : {}
+                }).then(x => resolve(x)).catch(x => reject(x));
+            } catch (error) {
+                reject(errors.exception(error));
+            }
+        });
+    },
     getGroup(userId) {
         let $this = this;
         return new Promise((resolve, reject) => {

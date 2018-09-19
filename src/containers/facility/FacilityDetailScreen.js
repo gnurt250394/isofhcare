@@ -272,7 +272,8 @@ class FacilityDetailScreen extends Component {
                                                         </TouchableOpacity>
                                                         <TouchableOpacity onPress={this.showRating.bind(this)} style={{ backgroundColor: 'rgb(47,94,172)', padding: 6, paddingLeft: 14, paddingRight: 14 }}>
                                                             <Text style={{ color: '#FFF', fontWeight: 'bold' }}>Đánh giá</Text>
-                                                        </TouchableOpacity></View>
+                                                        </TouchableOpacity>
+                                                    </View>
                                                 </View>
                                                 <ImageLoad
                                                     resizeMode="cover"
@@ -285,20 +286,40 @@ class FacilityDetailScreen extends Component {
                                             <Text style={{ fontSize: 12, marginTop: 14, marginBottom: 10 }} numberOfLines={2} ellipsizeMode='tail'>{facility.facility.address}</Text>
 
                                             <PhotoGrid source={this.state.list_images} onPressImage={(e, uri) => { this.photoViewer(uri) }} />
-                                            {
-                                                facility.facility.website ?
-                                                    <TouchableOpacity style={{ padding: 10, flexDirection: 'row' }} onPress={() => Linking.openURL(facility.facility.website)}>
-                                                        <ScaledImage source={require("@images/web.png")} width={15} style={{ marginRight: 5 }} />
-                                                        <Text style={{ color: '#23429b' }}>{facility.facility.website}</Text>
-                                                    </TouchableOpacity> : null
-                                            }
-                                            {
-                                                facility.facility.phone ?
-                                                    <TouchableOpacity style={{ padding: 10, flexDirection: 'row', alignItems: 'center' }} onPress={() => Linking.openURL("tel:" + facility.facility.phone)}>
-                                                        <ScaledImage source={require("@images/ic_phone.png")} width={15} style={{ marginRight: 5 }} />
-                                                        <Text style={{ color: '(rgb,35,66,155)', fontWeight: 'bold' }}>{facility.facility.phone}</Text>
-                                                    </TouchableOpacity> : null
-                                            }
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <View style={{ flex: 1 }}>
+                                                    {
+                                                        facility.facility.website ?
+                                                            <TouchableOpacity style={{ padding: 10, flexDirection: 'row' }} onPress={() => Linking.openURL(facility.facility.website)}>
+                                                                <ScaledImage source={require("@images/web.png")} width={15} style={{ marginRight: 5 }} />
+                                                                <Text style={{ color: '#23429b' }}>{facility.facility.website}</Text>
+                                                            </TouchableOpacity> : null
+                                                    }
+                                                    {
+                                                        facility.facility.phone ?
+                                                            <TouchableOpacity style={{ padding: 10, flexDirection: 'row', alignItems: 'center' }} onPress={() => Linking.openURL("tel:" + facility.facility.phone)}>
+                                                                <ScaledImage source={require("@images/ic_phone.png")} width={15} style={{ marginRight: 5 }} />
+                                                                <Text style={{ color: '(rgb,35,66,155)', fontWeight: 'bold' }}>{facility.facility.phone}</Text>
+                                                            </TouchableOpacity> : null
+                                                    }
+                                                </View>
+                                                <TouchableOpacity style={{
+                                                    width: 107,
+                                                    height: 32,
+                                                    shadowColor: "rgba(0, 0, 0, 0.24)",
+                                                    shadowOffset: {
+                                                        width: 0,
+                                                        height: 2
+                                                    },
+                                                    shadowRadius: 4,
+                                                    shadowOpacity: 1,
+                                                    borderStyle: "dashed",
+                                                    borderWidth: 1,
+                                                    borderColor: "#2f5eac"
+                                                }}>
+                                                    <Text>Nhắn tin</Text>
+                                                </TouchableOpacity>
+                                            </View>
                                             <Text style={{ padding: 10, fontSize: 16, marginTop: 5, textAlign: 'justify', lineHeight: 22, marginBottom: 20, color: '#9b9b9b' }}>{facility.facility.introduction}</Text>
                                         </ScrollView>
                                     </View>

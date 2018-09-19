@@ -13,8 +13,6 @@ import dateUtils from 'mainam-react-native-date-utils';
 import ActivityPanel from '@components/ActivityPanel';
 import snackbar from '@utils/snackbar-utils';
 import DateMessage from '@components/chat/DateMessage';
-import ImageProgress from 'mainam-react-native-image-progress';
-import Progress from 'react-native-progress/Pie';
 import ImageLoad from 'mainam-react-native-image-loader';
 import { connect } from 'react-redux';
 class MyMessage extends React.Component {
@@ -49,8 +47,8 @@ class MyMessage extends React.Component {
                     this.state.showDate ? <DateMessage message={this.props.message} /> : null
                 }
                 <View style={{ marginLeft: 5, marginRight: 5, minHeight: 50, marginTop: 5, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                    <View style={{ marginLeft: 5, backgroundColor: 'white', padding: 5, borderRadius: 10, minWidth: 120 }}>
-                        {
+                    <View style={{ marginLeft: 5, backgroundColor: '#0090ff', padding: 5, borderRadius: 10, minWidth: 120 }}>
+                        {/* {
                             this.props.message.type == 4 ?
                                 <TouchableOpacity onPress={this.photoViewer.bind(this, message.message ? message.message.absoluteUrl() : "")}>
                                     <ImageLoad
@@ -65,9 +63,10 @@ class MyMessage extends React.Component {
                                     />
                                 </TouchableOpacity>
                                 :
-                                <Text>{message.message}</Text>
-                        }
-                        <Text style={{ marginTop: 7, color: '#bababa', fontSize: 13 }}>{message.createdDate.toDate().format("hh:mm")}</Text>
+                                <Text style={{ color: 'white' }}>{message.message}</Text>
+                        } */}
+                        <Text style={{ color: 'white' }}>{message.message}</Text>
+                        <Text style={{ marginTop: 7, color: '#FFFFFF80', fontSize: 13 }}>{message.createdDate.toDate().format("hh:mm")}</Text>
                     </View>
                 </View>
             </View>
