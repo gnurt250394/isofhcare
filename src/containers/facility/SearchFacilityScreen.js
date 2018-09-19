@@ -34,7 +34,7 @@ class SearchFacilityScreen extends Component {
 
     onSearch(s) {
         return new Promise((resolve, reject) => {
-            facilityProvider.search(s, 1, 5, (s, e) => {
+            facilityProvider.search(s ? s.trim() : "", 1, 5, (s, e) => {
                 if (e)
                     reject(e);
                 else {

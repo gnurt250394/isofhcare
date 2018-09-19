@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, TextInput, Text, FlatList, TouchableOpacity, ScrollView, Image, Dimensions } from 'react-native';
+import { View, TextInput, Text, FlatList, TouchableOpacity, ScrollView, Image, Dimensions, Keyboard } from 'react-native';
 import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import facilityProvider from '@data-access/facility-provider';
@@ -147,6 +147,9 @@ class AddNewClinicScreen extends Component {
     selectImage() {
         if (this.imagePicker) {
             this.imagePicker.open(false, 200, 200, image => {
+                setTimeout(() => {
+                    Keyboard.dismiss();
+                }, 500);
                 let imageUris = this.state.imageUris;
                 let temp = null;
                 imageUris.forEach((item) => {
@@ -186,6 +189,9 @@ class AddNewClinicScreen extends Component {
     selectLogo() {
         if (this.imagePicker) {
             this.imagePicker.open(true, 200, 200, image => {
+                setTimeout(() => {
+                    Keyboard.dismiss();
+                }, 500);
 
                 if (this.state.logo && this.state.logo.uri == image.path)
                     return;
@@ -246,7 +252,7 @@ class AddNewClinicScreen extends Component {
             snackbar.show("Vui lòng nhập đúng định dạng số điện thoại");
             return;
         }
-        if (!this.state.address) {
+        if (!this.state.address || this.state.address.trim() == "") {
             snackbar.show('Vui lòng nhập địa chỉ phòng khám');
             return;
         }
@@ -538,7 +544,7 @@ class AddNewClinicScreen extends Component {
                             fontSize: 18,
                             fontWeight: "600",
                             color: '#FFF'
-                        }}>GỬI</Text>
+                        }}>{this.state.editMode ? "CẬP NHẬT" : "THÊM MỚI"}</Text>
                     </TouchableOpacity>
                 </View>
                 <Modal

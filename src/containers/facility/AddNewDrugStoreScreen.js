@@ -187,6 +187,10 @@ class AddNewDrugStoreScreen extends Component {
             snackbar.show('Vui lòng nhập tên nhà thuốc');
             return;
         }
+        if (!this.state.licenseNo) {
+            snackbar.show("Vui lòng nhập số giấy phép");
+            return;
+        }
         if (this.state.website && !this.state.website.isUrl()) {
             snackbar.show('Vui lòng nhập đúng định dạng địa chỉ trang web');
             return;
@@ -510,7 +514,7 @@ class AddNewDrugStoreScreen extends Component {
                             fontSize: 18,
                             fontWeight: "600",
                             color: '#FFF'
-                        }}>GỬI</Text>
+                        }}>{this.state.editMode ? "CẬP NHẬT" : "THÊM MỚI"}</Text>
                     </TouchableOpacity>
                 </View>
                 <Modal

@@ -38,17 +38,17 @@ module.exports = {
     db: null,
     inited: false,
     init() {
-        firebase.initializeApp({
-            apiKey: 'AIzaSyAHxUA4Hak6WaDJoenoKHw2FANJgF-YKf0',
-            authDomain: 'isofhcare.firebaseapp.com',
-            projectId: 'isofhcare'
-        });
-        this.inited = true;
+        if (!firebase.apps.length) {
+            firebase.initializeApp({
+                apiKey: 'AIzaSyAHxUA4Hak6WaDJoenoKHw2FANJgF-YKf0',
+                authDomain: 'isofhcare.firebaseapp.com',
+                projectId: 'isofhcare'
+            });
+        }
     },
     getDb() {
         if (!this.db) {
-            if (!this.inited)
-                this.init();
+            this.init();
             this.db = firebase.firestore();
             this.db.settings({
                 timestampsInSnapshots: true

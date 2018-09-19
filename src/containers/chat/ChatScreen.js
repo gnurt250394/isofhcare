@@ -129,35 +129,36 @@ class ChatScreen extends React.Component {
         let groupId = this.props.navigation.getParam("groupId", null);
         if (!groupId) {
             this.props.navigation.pop();
-        } else {
-            let groupDb = firebaseUtils.getGroupDb();
-            let group = groupDb.doc(groupId);
-            let messages = group.collection("messages");
-            this.snapshot = messages.onSnapshot((snap) => {
-                snap.docChanges().forEach((item) => {
-                    debugger;
-                    let data = this.state.data;
-                    data.push(item.doc.data());
-                    this.setState({
-                        data: [...data]
-                    });
-                    setTimeout(() => {
-                        if (this.flatList)
-                            this.flatList.scrollToEnd({ animated: true });
-                    }, 1000);
-                });
-            });
-            this.setState({ groupId, group, messages }, () => {
-                messages.limit(25).get().then(docs => {
-                    if (docs.docs.length > 0) {
-                        let lastMessage = docs.docs[docs.docs.length - 1];
-                        this.setState({ lastMessage }, () => {
-                            this.next();
-                        });
-                    }
-                });
-            });
+            return;
         }
+        let groupDb = firebaseUtils.getGroupDb();
+        let group = groupDb.doc(groupId);
+        let messages = group.collection("messages");
+        this.snapshot = messages.onSnapshot((snap) => {
+            snap.docChanges().forEach((item) => {
+                debugger;
+                let data = this.state.data;
+                data.push(item.doc.data());
+                this.setState({
+                    data: [...data]
+                });
+                setTimeout(() => {
+                    if (this.flatList)
+                        this.flatList.scrollToEnd({ animated: true });
+                }, 1000);
+            });
+        });
+        this.setState({ groupId, group, messages }, () => {
+            messages.limit(25).get().then(docs => {
+                if (docs.docs.length > 0) {
+                    let lastMessage = docs.docs[docs.docs.length - 1];
+                    this.setState({ lastMessage }, () => {
+                        this.next();
+                    });
+                }
+            });
+        });
+
 
         // let sb = sendbirdUtils.getSendBird();
         // sendbirdUtils.setHandler(sb, "HANDLE_CHAT", this.onTypingStatusUpdated.bind(this), this.onMessageReceived.bind(this));
@@ -188,6 +189,7 @@ class ChatScreen extends React.Component {
                             snackbar.show(constants.msg.upload.upload_image_error, 'danger');
                         });
                     }
+                    return;
                 }
                 snackbar.show(constants.msg.upload.upload_image_error, 'danger');
             });

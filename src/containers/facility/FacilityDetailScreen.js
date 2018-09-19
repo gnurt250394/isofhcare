@@ -250,7 +250,7 @@ class FacilityDetailScreen extends Component {
                                             <View {...this.props} style={[{ marginTop: 0, flexDirection: 'row' }, this.props.style]}>
                                                 <View style={{ flex: 1, marginRight: 10 }}>
                                                     <View style={{ flexDirection: 'row' }}>
-                                                        <Text style={{ fontWeight: 'bold', flex: 1 }} numberOfLines={1} ellipsizeMode='tail'>{facility.facility.name}</Text>
+                                                        <Text style={{ fontWeight: 'bold', flex: 1 }} numberOfLines={2} ellipsizeMode='tail'>{facility.facility.name}</Text>
                                                         {
                                                             (facility.facility.type == 2 || facility.facility.type == 8) && facility.facility.approval == 0 && facility.user && this.props.userApp.isLogin && this.props.userApp.currentUser.id == facility.user.id ?
                                                                 <TouchableOpacity onPress={this.edit.bind(this, facility)}>
