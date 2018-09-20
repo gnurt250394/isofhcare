@@ -60,7 +60,7 @@ class TheirMessage extends React.Component {
                                 imageStyle={{ width: 50, height: 50, borderRadius: 25 }}
                                 source={{ uri: message.message ? message.message.absoluteUrl() : "" }}
                                 defauleImage={() => {
-                                    return <ScaleImage resizeMode='cover' source={require("@images/noimage.png")} width={50} />
+                                    return <ScaleImage resizeMode='cover' source={require("@images/noimage.jpg")} width={50} />
                                 }}
                             /> : <View style={{ width: 50, height: 50 }} />
                     }
@@ -81,7 +81,7 @@ class TheirMessage extends React.Component {
                                         loadingStyle={{ size: 'small', color: 'gray' }}
                                         source={{ uri: message.message ? message.message.absoluteUrl() : "" }}
                                         defaultImage={() => {
-                                            return <ScaleImage resizeMode='cover' source={require("@images/noimage.png")} width={150} />
+                                            return <ScaleImage resizeMode='cover' source={require("@images/noimage.jpg")} width={150} />
                                         }}
                                     />
                                 </TouchableOpacity>

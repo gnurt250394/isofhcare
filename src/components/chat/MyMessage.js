@@ -58,7 +58,7 @@ class MyMessage extends React.Component {
                                         loadingStyle={{ size: 'small', color: 'gray' }}
                                         source={{ uri: message.message ? message.message.absoluteUrl() : "" }}
                                         defaultImage={() => {
-                                            return <ScaleImage resizeMode='cover' source={require("@images/noimage.png")} width={150} />
+                                            return <ScaleImage resizeMode='cover' source={require("@images/noimage.jpg")} width={150} />
                                         }}
                                     />
                                 </TouchableOpacity>
