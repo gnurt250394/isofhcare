@@ -305,21 +305,35 @@ class AddNewClinicScreen extends Component {
                 facilityProvider.createClinic(this.state.name.trim(), this.state.website.trim(), this.state.phone.trim(), this.state.address.trim(), this.state.place, this.state.logo.url, listImageUrl, listSpecialist, this.state.province.id, this.props.userApp.currentUser.id, (s, e) => {
                     this.setState({ isLoading: false });
                     if (s) {
-                        this.props.navigation.navigate('myFacility', { facility: s.data });
-                        snackbar.show("Thêm phòng khám thành công", 'success');
-                    } else {
-                        snackbar.show("Thêm phòng khám không thành công", 'danger');
+                        switch (s.code) {
+                            case 0:
+                                this.props.navigation.navigate('myFacility', { facility: s.data });
+                                snackbar.show("Thêm phòng khám thành công", 'success');
+                                break;
+                            case 2:
+                                snackbar.show("Đã tồn tại phòng khám với tên này trên hệ thống", 'danger');
+                                break;
+                        }
+                        return;
                     }
+                    snackbar.show("Thêm phòng khám không thành công", 'danger');
                 });
             else {
                 facilityProvider.updateClinic(this.state.facility.facility.id, this.state.name.trim(), this.state.website.trim(), this.state.phone.trim(), this.state.address.trim(), this.state.place, this.state.logo.url, listImageUrl, listSpecialist, this.state.province.id, (s, e) => {
                     this.setState({ isLoading: false });
                     if (s) {
-                        this.props.navigation.navigate('myFacility', { facility: s.data });
-                        snackbar.show("Cập nhật phòng khám thành công", 'success');
-                    } else {
-                        snackbar.show("Cập nhật phòng khám không thành công", 'danger');
+                        switch (s.code) {
+                            case 0:
+                                this.props.navigation.navigate('myFacility', { facility: s.data });
+                                snackbar.show("Cập nhật phòng khám thành công", 'success');
+                                break;
+                            case 2:
+                                snackbar.show("Đã tồn tại phòng khám với tên này trên hệ thống", 'danger');
+                                break;
+                        }
+                        return;
                     }
+                    snackbar.show("Cập nhật phòng khám không thành công", 'danger');
                 });
             }
         });

@@ -252,21 +252,35 @@ class AddNewDrugStoreScreen extends Component {
                 facilityProvider.createDrugStore(this.state.name.trim(), this.state.website.trim(), this.state.phone.trim(), this.state.address.trim(), this.state.place, this.state.logo.url, listImageUrl, this.state.licenseNo, this.state.pharmacist, this.state.isGPP, this.state.province.id, this.props.userApp.currentUser.id, (s, e) => {
                     this.setState({ isLoading: false });
                     if (s) {
-                        this.props.navigation.navigate('myFacility', { facility: s.data });
-                        snackbar.show("Thêm nhà thuốc thành công");
-                    } else {
-                        snackbar.show("Thêm nhà thuốc không thành công");
+                        switch (s.code) {
+                            case 0:
+                                this.props.navigation.navigate('myFacility', { facility: s.data });
+                                snackbar.show("Thêm nhà thuốc thành công", 'success');
+                                break;
+                            case 2:
+                                snackbar.show("Đã tồn tại nhà thuốc với tên này trên hệ thống", 'danger');
+                                break;
+                        }
+                        return;
                     }
+                    snackbar.show("Thêm phòng nhà thuốc thành công", 'danger');
                 });
             else
                 facilityProvider.updateDrugStore(this.state.facility.facility.id, this.state.name.trim(), this.state.website.trim(), this.state.phone.trim(), this.state.address.trim(), this.state.place, this.state.logo.url, listImageUrl, this.state.licenseNo, this.state.pharmacist, this.state.isGPP, this.state.province.id, (s, e) => {
                     this.setState({ isLoading: false });
                     if (s) {
-                        this.props.navigation.navigate('myFacility', { facility: s.data });
-                        snackbar.show("Chỉnh sửa nhà thuốc thành công");
-                    } else {
-                        snackbar.show("Chỉnh sửa nhà thuốc không thành công");
+                        switch (s.code) {
+                            case 0:
+                                this.props.navigation.navigate('myFacility', { facility: s.data });
+                                snackbar.show("Cập nhật nhà thuốc thành công", 'success');
+                                break;
+                            case 2:
+                                snackbar.show("Đã tồn tại nhà thuốc với tên này trên hệ thống", 'danger');
+                                break;
+                        }
+                        return;
                     }
+                    snackbar.show("Cập nhật nhà thuốc không thành công", 'danger');
                 });
         });
     }
