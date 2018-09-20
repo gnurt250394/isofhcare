@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { View, TextInput, TouchableWithoutFeedback, Text, FlatList, TouchableOpacity, Image, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
-import { Rating } from 'react-native-ratings';
 import clientUtils from '@utils/client-utils'
 import ImageLoad from 'mainam-react-native-image-loader';
 class ItemDisease extends Component {

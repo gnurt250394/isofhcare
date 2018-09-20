@@ -295,7 +295,7 @@ class FacilityDetailScreen extends Component {
                                                             <Text style={{ color: '#FFF', fontWeight: 'bold' }}>Đặt khám</Text>
                                                         </TouchableOpacity>
                                                         <TouchableOpacity onPress={this.showRating.bind(this)} style={{ backgroundColor: 'rgb(47,94,172)', padding: 6, paddingLeft: 14, paddingRight: 14 }}>
-                                                            <Text style={{ color: '#FFF', fontWeight: 'bold' }}>Đánh giá</Text>
+                                                            <Text style={{ color: '#FFF', fontWeight: 'bold' }}>Mua thuốc</Text>
                                                         </TouchableOpacity>
                                                     </View>
                                                 </View>
