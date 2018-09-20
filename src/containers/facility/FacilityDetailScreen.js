@@ -9,7 +9,6 @@ import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 const { width, height } = Dimensions.get('window');
 import SearchPanel from '@components/SearchPanel';
 import realmModel from '@models/realm-models';
-import { Rating } from 'react-native-ratings';
 import PhotoGrid from 'react-native-thumbnail-grid';
 import snackbar from '@utils/snackbar-utils';
 import ImageLoad from 'mainam-react-native-image-loader';
@@ -19,6 +18,7 @@ import constants from '@resources/strings';
 import facilityProvider from '@data-access/facility-provider';
 import firebaseUtils from '@utils/firebase-utils';
 
+import Rating from '@components/Rating';
 
 import SlidingPanel from 'mainam-react-native-sliding-up-down';
 import { Card, Button } from 'native-base';
@@ -171,7 +171,6 @@ class FacilityDetailScreen extends Component {
             this.props.navigation.pop();
             return;
         }
-        this.rating.setCurrentRating(facility.facility.review);
         this.mapRef.fitToElements(true);
     }
     onPressItemLocation(item) {
@@ -290,13 +289,7 @@ class FacilityDetailScreen extends Component {
                                                                 null
                                                         }
                                                     </View>
-                                                    <Rating
-                                                        ref={(ref) => { this.rating = ref }}
-                                                        style={{ marginTop: 8 }}
-                                                        ratingCount={5}
-                                                        imageSize={13}
-                                                        readonly
-                                                    />
+                                                    <Rating readonly={true} count={5} value={this.state.facility.facility.review} starWidth={13} style={{ marginTop: 8 }} />
                                                     <View style={{ flexDirection: 'row', marginTop: 8 }}>
                                                         <TouchableOpacity onPress={() => snackbar.show("Chức năng đang phát triển")} style={{ marginRight: 5, backgroundColor: 'rgb(47,94,172)', padding: 6, paddingLeft: 14, paddingRight: 14 }}>
                                                             <Text style={{ color: '#FFF', fontWeight: 'bold' }}>Đặt khám</Text>
@@ -394,8 +387,9 @@ class FacilityDetailScreen extends Component {
                         <Rating
                             ref={(ref) => { this.rating2 = ref }}
                             style={{ marginTop: 8 }}
-                            ratingCount={5}
-                            imageSize={30}
+                            count={5}
+                            starWidth={40}
+
                         />
                         <View style={{ flexDirection: 'row', marginTop: 20 }}>
                             <Button onPress={() => this.setState({ toggleRating: false })} light><Text style={{ paddingHorizontal: 10, minWidth: 80, textAlign: 'center' }}>Huỷ</Text></Button>

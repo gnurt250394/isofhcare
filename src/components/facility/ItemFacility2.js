@@ -1,20 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import { View, TextInput, TouchableWithoutFeedback, Text, FlatList, TouchableOpacity, Image, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
-import { Rating } from 'react-native-ratings';
 import ImageLoad from 'mainam-react-native-image-loader';
 
+import Rating from '@components/Rating';
 class ItemFacility extends Component {
     constructor(props) {
         super(props)
         this.state = {
 
-        }
-    }
-    componentDidMount() {
-        let item = this.props.facility;
-        if (this.rating) {
-            this.rating.setCurrentRating(item.facility.review);
         }
     }
 
@@ -39,13 +33,8 @@ class ItemFacility extends Component {
             >
                 <View style={{ flex: 1, marginRight: 10 }}>
                     <Text style={{ fontWeight: 'bold' }} numberOfLines={1} ellipsizeMode='tail'>{this.props.facility.facility.name}</Text>
-                    <Rating
-                        ref={(ref) => { this.rating = ref }}
-                        style={{ marginTop: 8 }}
-                        ratingCount={5}
-                        imageSize={13}
-                        readonly
-                    />
+                    <Rating readonly={true} count={5} value={item.facility.review} starWidth={13} style={{ marginTop: 8 }} />
+
                     <Text style={{ fontSize: 12, marginTop: 5 }} numberOfLines={2} ellipsizeMode='tail'>{this.props.facility.facility.address}</Text>
                 </View>
                 <ImageLoad
