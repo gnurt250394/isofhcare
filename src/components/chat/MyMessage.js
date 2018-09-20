@@ -48,7 +48,7 @@ class MyMessage extends React.Component {
                 }
                 <View style={{ marginLeft: 5, marginRight: 5, minHeight: 50, marginTop: 5, flexDirection: 'row', justifyContent: 'flex-end' }}>
                     <View style={{ marginLeft: 5, backgroundColor: '#0090ff', padding: 5, borderRadius: 10, minWidth: 120 }}>
-                        {/* {
+                        {
                             this.props.message.type == 4 ?
                                 <TouchableOpacity onPress={this.photoViewer.bind(this, message.message ? message.message.absoluteUrl() : "")}>
                                     <ImageLoad
@@ -64,8 +64,7 @@ class MyMessage extends React.Component {
                                 </TouchableOpacity>
                                 :
                                 <Text style={{ color: 'white' }}>{message.message}</Text>
-                        } */}
-                        <Text style={{ color: 'white' }}>{message.message}</Text>
+                        }
                         <Text style={{ marginTop: 7, color: '#FFFFFF80', fontSize: 13 }}>{message.createdDate.toDate().format("hh:mm")}</Text>
                     </View>
                 </View>

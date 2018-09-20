@@ -136,7 +136,6 @@ class ChatScreen extends React.Component {
         let messages = group.collection("messages");
         this.snapshot = messages.onSnapshot((snap) => {
             snap.docChanges().forEach((item) => {
-                debugger;
                 let data = this.state.data;
                 data.push(item.doc.data());
                 this.setState({

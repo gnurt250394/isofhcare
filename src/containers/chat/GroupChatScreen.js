@@ -11,6 +11,7 @@ import dateUtisl from 'mainam-react-native-date-utils';
 import ActivityPanel from '@components/ActivityPanel';
 import { connect } from 'react-redux';
 import firebaseUtils from '@utils/firebase-utils';
+import GroupChatItem from '@components/chat/GroupChatItem'
 class GroupChatScreen extends React.Component {
     constructor(props) {
         super(props);
@@ -88,29 +89,7 @@ class GroupChatScreen extends React.Component {
                     extraData={this.state}
                     data={this.state.listGroup}
                     renderItem={({ item, index }) =>
-                        <TouchableOpacity onPress={this.openGroup.bind(this, item.id)}>
-                            <View style={{ flexDirection: 'row', padding: 10 }}>
-                                <ScaleImage source={require("@images/doctor.png")} width={60} />
-                                <View style={{ flex: 1, marginLeft: 10 }}>
-                                    <View style={{ flexDirection: 'row' }}>
-                                        <Text style={{ fontWeight: 'bold', fontSize: 15, flex: 1 }}>
-                                            {item.name ? item.name : (item.members.length + " Thành viên")}</Text>
-                                        {
-                                            item.typing ?
-                                                <ScaleImage source={require("@images/typing.gif")} width={20} /> :
-                                                null
-                                        }
-                                    </View>
-                                    {/* <Text style={{ marginTop: 5 }}>
-                                        {item.lastMessage.message}
-                                    </Text>
-                                    <Text style={{ marginTop: 5, textAlign: 'right', fontStyle: 'italic', fontSize: 13, color: '#717171' }}>
-                                        {item.lastMessage.createdAt.getPostTime()}
-                                    </Text> */}
-                                </View>
-                            </View>
-                            <View style={{ marginLeft: 80, height: 1, backgroundColor: '#cbcbca', flex: 1 }} />
-                        </TouchableOpacity>
+                        <GroupChatItem group={item} />
                     }
                 />
             </ActivityPanel >

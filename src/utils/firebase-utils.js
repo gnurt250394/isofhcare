@@ -169,36 +169,64 @@ module.exports = {
             }
         });
     },
-    createGroup(users, name, avatar) {
+
+    createGroup2(id, users, name, avatar, data) {
         let $this = this;
         return new Promise((resolve, reject) => {
             let groupDb = $this.getGroupDb();
             let userDb = $this.getUserDb();
+            let group = groupDb.doc(id);
+            group.get().then(doc => {
+                if (doc.exists) {
+                    resolve({ groupId: doc.id });
+                } else {
+                    let members = [];
+                    users.forEach((item, index) => {
+                        let _user = userDb.doc(item + "");
+                        _user.update({ groups: firebase.firestore.FieldValue.arrayUnion(group) });
+                        members.push(_user);
+                    });
+                    let groupData = {
+                        id,
+                        name: name ? name : "",
+                        avatar: avatar ? avatar : "",
+                        members,
+                        data: data ? data : {}
+                    };
+                    group.set(groupData).then(x => {
+                        resolve({ groupId: id })
+                    }).catch(e => reject(errors.exception(e)));
+                }
+            }).catch(e => reject(errors.exception(e)));
+        });
+    },
+    createGroup(users, name, avatar, data) {
+        let $this = this;
+        try {
             if (users && users.length > 1) {
                 let id = stringUtils.guid();
-                let group = groupDb.doc(id);
-                let members = [];
-
-                users.forEach((item, index) => {
-                    let _user = userDb.doc(item + "");
-                    _user.update({ groups: firebase.firestore.FieldValue.arrayUnion(group) });
-                    members.push(_user);
-                });
-                group.set({
-                    id,
-                    name,
-                    avatar,
-                    members
-                }).then(x => { resolve(x) });
+                if (users.length == 2) {
+                    if (users[0] > users[1]) {
+                        id = users[0] + "_with_" + users[1];
+                    } else {
+                        id = users[1] + "_with_" + users[0];
+                    }
+                }
+                return $this.createGroup2(id, users, name, avatar, data)
             } else {
-                reject(errors.select_user_to_group)
+                return new Promise((resolve, reject) => {
+                    reject(errors.select_user_to_group)
+                });
             }
-        });
+        } catch (error) {
+            return new Promise((resolve, reject) => {
+                reject(errors.exception(error));
+            });
+        }
     },
     send(userId, groupId, message) {
         let $this = this;
         return new Promise((resolve, reject) => {
-            debugger;
             let userDb = $this.getUserDb();
             message.user = userDb.doc(userId + "");
             message.createdDate = new Date();

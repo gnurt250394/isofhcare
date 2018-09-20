@@ -86,6 +86,10 @@ module.exports = {
       upload_image_error: "Upload ảnh không thành công"
     },
     error_occur: "Xảy ra lỗi, vui lòng thử lại sau",
+    chat:
+    {
+      cannot_make_chat_with_this_user: "Không thể nhắn tin cho tài khoản này"
+    },
     user:
     {
       this_account_not_active: "Tài khoản này chưa được kích hoạt",
@@ -106,7 +110,7 @@ module.exports = {
       please_select_an_image_to_update: "Vui lòng chọn một ảnh đại diện để update",
       update_profile_success: "Cập nhật thông tin thành công",
       update_profile_failed: "Cập nhật thông tin không thành công",
-      please_login: "Vui lòng đăng nhập",
+      please_login: "Vui lòng đăng nhập để thực hiện",
       please_input_email: "Vui lòng nhập địa chỉ email",
       please_enter_the_correct_email_format: "Vui lòng nhập đúng định dạng email",
       please_input_username: "Vui lòng nhập tên đăng nhập",

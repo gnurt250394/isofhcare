@@ -17,6 +17,7 @@ import Modal from "react-native-modal";
 import stylemodal from "@styles/modal-style";
 import constants from '@resources/strings';
 import facilityProvider from '@data-access/facility-provider';
+import firebaseUtils from '@utils/firebase-utils';
 
 
 import SlidingPanel from 'mainam-react-native-sliding-up-down';
@@ -79,6 +80,36 @@ class FacilityDetailScreen extends Component {
                 this.props.navigation.navigate("addNewDrugStore", { facility: facility });
             }
         }
+    }
+
+    chat(facility) {
+        if (!this.props.userApp.isLogin) {
+            snackbar.show(constants.msg.user.please_login, "danger");
+            return;
+        }
+        if (facility && facility.facility)
+            this.setState({ isLoading: true }, () => {
+                let user = this.props.userApp.currentUser;
+                firebaseUtils.connect(user.id, user.name, user.avatar, {}).then(x => {
+                    firebaseUtils.connect("facility_" + facility.facility.id, facility.facility.name, facility.facility.logo, {}).then(x => {
+                        firebaseUtils.createGroup(["facility_" + facility.facility.id, this.props.userApp.currentUser.id], "", "").then(x => {
+                            this.setState({ isLoading: false });
+                            if (x && x.groupId) {
+                                this.props.navigation.navigate("chat", x)
+                            }
+                        }).catch(x => {
+                            this.setState({ isLoading: false });
+                            snackbar.show(constants.msg.chat.cannot_make_chat_with_this_user, "danger");
+                        });
+                    }).catch(x => {
+                        this.setState({ isLoading: false });
+                        snackbar.show(constants.msg.chat.cannot_make_chat_with_this_user, "danger");
+                    });
+                }).catch(x => {
+                    this.setState({ isLoading: false });
+                    snackbar.show(constants.msg.chat.cannot_make_chat_with_this_user, "danger");
+                })
+            });
     }
 
     onSearchItemClick(item) {
@@ -310,7 +341,7 @@ class FacilityDetailScreen extends Component {
                                                     backgroundColor: '#FFF',
                                                     borderWidth: 1,
                                                     borderColor: "#2f5eac"
-                                                }}>
+                                                }} onPress={this.chat.bind(this, facility)}>
                                                     <ScaledImage source={require("@images/ic_chat.png")} height={21} style={{ marginRight: 5 }} />
                                                     <Text>Nhắn tin</Text>
                                                 </Button>
