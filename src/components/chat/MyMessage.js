@@ -19,8 +19,8 @@ class MyMessage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            showAuthor: (!this.props.preMessage) ? true : this.props.message.sender && this.props.preMessage.sender && (this.props.message.sender.userId != this.props.preMessage.sender.userId) ? true : false,
-            showDate: (!this.props.preMessage) ? true : (this.props.message.createdAt && this.props.preMessage.createdAt && this.props.message.createdAt.toDateObject().format("dd/MM/yyyy") != this.props.preMessage.createdAt.toDateObject().format("dd/MM/yyyy")) ? true : false
+            showAuthor: (!this.props.preMessage) ? true : this.props.message.userId != this.props.preMessage.userId ? true : false,
+            showDate: (!this.props.preMessage) ? true : (this.props.message.createdDate && this.props.preMessage.createdDate && this.props.message.createdDate.toDate().format("dd/MM/yyyy") != this.props.preMessage.createdDate.toDate().format("dd/MM/yyyy")) ? true : false
         }
     }
     photoViewer(uri) {

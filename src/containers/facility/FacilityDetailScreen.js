@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { Text, View, TextInput, TouchableWithoutFeedback, TouchableOpacity, Dimensions, StyleSheet, Platform, ScrollView, Linking } from 'react-native';
+import { Text, View, TextInput, TouchableWithoutFeedback, TouchableOpacity, Dimensions, StyleSheet, Platform, ScrollView, Linking, Image } from 'react-native';
 import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import locationProvider from '@data-access/location-provider';
@@ -241,7 +241,6 @@ class FacilityDetailScreen extends Component {
             image = image.absoluteUrl();
         }
 
-
         return (
             <ActivityPanel ref={(ref) => this.activity = ref} style={{ flex: 1 }} title="CHỌN ĐỊA ĐIỂM TÌM KIẾM" showFullScreen={true} isLoading={this.state.isLoading}>
                 <View style={styles.container}>
@@ -289,23 +288,34 @@ class FacilityDetailScreen extends Component {
                                                                 null
                                                         }
                                                     </View>
-                                                    <Rating readonly={true} count={5} value={this.state.facility.facility.review} starWidth={13} style={{ marginTop: 8 }} />
+                                                    <TouchableOpacity onPress={this.showRating.bind(this)} style={{ paddingTop: 5, paddingBottom: 5 }}>
+                                                        <Rating readonly={true} count={5} value={this.state.facility.facility.review} starWidth={13} style={{ marginTop: 4, marginBottom: 4 }} />
+                                                    </TouchableOpacity>
                                                     <View style={{ flexDirection: 'row', marginTop: 8 }}>
                                                         <TouchableOpacity onPress={() => snackbar.show("Chức năng đang phát triển")} style={{ marginRight: 5, backgroundColor: 'rgb(47,94,172)', padding: 6, paddingLeft: 14, paddingRight: 14 }}>
                                                             <Text style={{ color: '#FFF', fontWeight: 'bold' }}>Đặt khám</Text>
                                                         </TouchableOpacity>
-                                                        <TouchableOpacity onPress={this.showRating.bind(this)} style={{ backgroundColor: 'rgb(47,94,172)', padding: 6, paddingLeft: 14, paddingRight: 14 }}>
-                                                            <Text style={{ color: '#FFF', fontWeight: 'bold' }}>Mua thuốc</Text>
-                                                        </TouchableOpacity>
+                                                        {
+                                                            this.state.facility.facility.type == 8 &&
+                                                            <TouchableOpacity onPress={this.chat.bind(this, facility)} style={{ backgroundColor: 'rgb(47,94,172)', padding: 6, paddingLeft: 14, paddingRight: 14 }}>
+                                                                <Text style={{ color: '#FFF', fontWeight: 'bold' }}>Mua thuốc</Text>
+                                                            </TouchableOpacity>
+                                                        }
                                                     </View>
                                                 </View>
-                                                <ImageLoad
-                                                    resizeMode="cover"
-                                                    placeholderSource={require("@images/noimage.jpg")}
-                                                    style={{ width: 80, height: 80 }}
-                                                    loadingStyle={{ size: 'small', color: 'gray' }}
-                                                    source={{ uri: image }}
-                                                />
+                                                <View style={{ width: 90 }}>
+                                                    {this.state.facility.facility.type == 8 && this.state.facility.facility.gpp == 1 && <View style={{ backgroundColor: '#f5a623', height: 30, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                                        <ScaledImage width={16} source={require("@images/certificate.png")} />
+                                                        <Text style={{ color: '#fff', fontWeight: 'bold', marginLeft: 5, fontSize: 10 }}>Chuẩn GPP</Text>
+                                                    </View>}
+                                                    <ImageLoad
+                                                        resizeMode="cover"
+                                                        placeholderSource={require("@images/noimage.jpg")}
+                                                        style={{ width: 90, height: 90 }}
+                                                        loadingStyle={{ size: 'small', color: 'gray' }}
+                                                        source={{ uri: image }}
+                                                    />
+                                                </View>
                                             </View>
                                             <Text style={{ fontSize: 12, marginTop: 14, marginBottom: 10 }} numberOfLines={2} ellipsizeMode='tail'>{facility.facility.address}</Text>
 

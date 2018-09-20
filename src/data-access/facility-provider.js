@@ -93,7 +93,7 @@ module.exports = {
             {
                 logo,
                 name,
-                code: licenseNo,
+                licenseNumber: licenseNo,
                 pharmacist,
                 address,
                 belongIsofh: 0,
@@ -117,7 +117,7 @@ module.exports = {
             {
                 logo,
                 name,
-                code: licenseNo,
+                licenseNumber: licenseNo,
                 pharmacist,
                 address,
                 belongIsofh: 0,

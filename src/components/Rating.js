@@ -86,7 +86,7 @@ class Rating extends Component {
         return (
             <View style={[{ flexDirection: 'row' }, this.props.style]}>
                 {
-                    this.state.counts.map((item, index) => <TouchableOpacity
+                    this.state.counts.map((item, index) => <TouchableOpacity disabled={this.props.readonly}
                         style={[this.props.style]} onPress={this.onPress.bind(this, index)}>
                         {
                             item == 1 ?

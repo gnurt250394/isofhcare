@@ -29,6 +29,8 @@ class ChatScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            title: "Tin nhắn",
+
             typing: [],
             disabled: true,
             channel: null,
@@ -134,6 +136,20 @@ class ChatScreen extends React.Component {
         let groupDb = firebaseUtils.getGroupDb();
         let group = groupDb.doc(groupId);
         let messages = group.collection("messages");
+        group.get().then(doc => {
+            if (doc.exists) {
+                let data = doc.data();
+                if (data) {
+                    firebaseUtils.getGroupName(this.props.userApp.currentUser.id, data).then(x => {
+                        this.setState({ title: x.name, avatar: x.avatar ? x.avatar.absoluteUrl() : "" });
+                    }).catch(x => {
+                        this.setState({ title: data.name ? data.name : "Tin nhắn", avatar: data.avatar ? data.avatar.absoluteUrl() : "" });
+                    });
+                }
+            }
+        });
+
+
         this.snapshot = messages.onSnapshot((snap) => {
             snap.docChanges().forEach((item) => {
                 let data = this.state.data;
@@ -213,7 +229,7 @@ class ChatScreen extends React.Component {
     }
     render() {
         return (
-            <ActivityPanel style={{ flex: 1 }} title="Tin nhắn" showFullScreen={true} containerStyle={{ backgroundColor: "#afcccc" }} isLoading={this.state.isLoading}>
+            <ActivityPanel style={{ flex: 1 }} title={this.state.title} showFullScreen={true} containerStyle={{ backgroundColor: "#afcccc" }} isLoading={this.state.isLoading}>
                 <View style={{ flex: 1 }}>
                     <FlatList
                         style={{ flex: 1 }}

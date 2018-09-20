@@ -284,6 +284,30 @@ module.exports = {
             message: link,
             data: data ? data : {}
         });
+    },
+    getGroupName(userId, groupData) {
+        return new Promise((resolve, reject) => {
+            if (groupData.members.length == 2) {
+                let user = (groupData.members[0].id == userId) ? groupData.members[1] : groupData.members[0]
+                user.get().then(doc => {
+                    let data = doc.data();
+                    resolve({
+                        name: data.fullname,
+                        avatar: data.avatar
+                    })
+                }).catch(x => {
+                    resolve({
+                        name: groupData.name ? groupData.name : "Tin nhắn",
+                        avatar: groupData.avatar
+                    })
+                });
+            } else {
+                resolve({
+                    name: groupData.name,
+                    avatar: groupData.avatar
+                });
+            }
+        });
     }
     // ,
     // getMessage(groupId) {

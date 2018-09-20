@@ -25,7 +25,7 @@ class AddNewDrugStoreScreen extends Component {
                     website: "",
                     address: "",
                     phone: "",
-                    code: "",
+                    licenseNumber: "",
                     pharmacist: ""
                 }
             };
@@ -68,7 +68,7 @@ class AddNewDrugStoreScreen extends Component {
             logo,
             place,
             isGPP: facility.facility.gpp == 1,
-            licenseNo: facility.facility.code,
+            licenseNo: facility.facility.licenseNumber,
         }
     }
     componentDidMount() {
@@ -249,7 +249,7 @@ class AddNewDrugStoreScreen extends Component {
             });
 
             if (!this.state.facility.facility.id)
-                facilityProvider.createDrugStore(this.state.name.trim(), this.state.website.trim(), this.state.phone.trim(), this.state.address.trim(), this.state.place, this.state.logo.url, listImageUrl, this.state.licenseNo, this.state.pharmacist, this.state.isGPP, this.state.province.id, this.props.userApp.currentUser.id, (s, e) => {
+                facilityProvider.createDrugStore(this.state.name.trim(), this.state.website ? this.state.website.trim() : "", this.state.phone, this.state.address ? this.state.address.trim() : "", this.state.place, this.state.logo.url, listImageUrl, this.state.licenseNo, this.state.pharmacist, this.state.isGPP, this.state.province.id, this.props.userApp.currentUser.id, (s, e) => {
                     this.setState({ isLoading: false });
                     if (s) {
                         switch (s.code) {
@@ -266,7 +266,7 @@ class AddNewDrugStoreScreen extends Component {
                     snackbar.show("Thêm phòng nhà thuốc thành công", 'danger');
                 });
             else
-                facilityProvider.updateDrugStore(this.state.facility.facility.id, this.state.name.trim(), this.state.website.trim(), this.state.phone.trim(), this.state.address.trim(), this.state.place, this.state.logo.url, listImageUrl, this.state.licenseNo, this.state.pharmacist, this.state.isGPP, this.state.province.id, (s, e) => {
+                facilityProvider.updateDrugStore(this.state.facility.facility.id, this.state.name.trim(),this.state.website ? this.state.website.trim() : "", this.state.phone, this.state.address.trim(), this.state.place, this.state.logo.url, listImageUrl, this.state.licenseNo, this.state.pharmacist, this.state.isGPP, this.state.province.id, (s, e) => {
                     this.setState({ isLoading: false });
                     if (s) {
                         switch (s.code) {
