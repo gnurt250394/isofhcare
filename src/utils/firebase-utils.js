@@ -197,15 +197,18 @@ module.exports = {
                 } else {
                     let members = [];
                     users.forEach((item, index) => {
-                        let _user = userDb.doc(item + "");
+                        let memberId = item + "";
+                        let _user = userDb.doc(memberId);
                         _user.update({ groups: firebase.firestore.FieldValue.arrayUnion(group) });
-                        members.push(_user);
+                        group.collection("members").doc(memberId).set({
+                            user: _user,
+                            unread_message: []
+                        })
                     });
                     let groupData = {
                         id,
                         name: name ? name : "",
                         avatar: avatar ? avatar : "",
-                        members,
                         data: data ? data : {}
                     };
                     group.set(groupData).then(x => {
@@ -246,17 +249,29 @@ module.exports = {
             message.user = userDb.doc(userId + "");
             message.createdDate = new Date();
             message.userId = userId + "";
+            message.readed = [userId + ""];
             let groupDb = $this.getGroupDb();
             let group = groupDb.doc(groupId);
             group.get().then(doc => {
                 if (doc.exists) {
+                    let mesId = Date.now() + "_" + userId;
                     group.update({ updatedDate: new Date() })
-                    group.collection("messages").doc(Date.now() + "").set(message).then(x => {
+
+                    group.collection("members").get().then(docs => {
+                        let members = docs.docs;
+                        members.forEach((item) => {
+                            if (item.id != userId) {
+                                item.ref.update("unread_message", firebase.firestore.FieldValue.arrayUnion(mesId));
+                            }
+                        });
+                    });
+                    // let members = doc.data().members;
+
+
+
+                    group.collection("messages").doc(mesId).set(message).then(x => {
                         resolve();
                     }).catch(x => { reject(x); });
-                    // group.update({ messages: firebase.firestore.FieldValue.arrayUnion(message) }).then(x => {
-                    //     resolve();
-                    // }).catch(x => reject(x));
                 }
             });
         });
@@ -303,26 +318,35 @@ module.exports = {
     },
     getGroupName(userId, groupData) {
         return new Promise((resolve, reject) => {
-            if (groupData.members.length == 2) {
-                let user = (groupData.members[0].id == userId) ? groupData.members[1] : groupData.members[0]
-                user.get().then(doc => {
-                    let data = doc.data();
+            let groupDb = this.getGroupDb();
+            groupDb.doc(groupData.id).collection("members").get().then(docs => {
+                let members = docs.docs;
+                if (members.length == 2) {
+                    let user = (members[0].id == userId) ? members[1] : members[0]
+                    user.data().user.get().then(doc => {
+                        let data = doc.data();
+                        resolve({
+                            name: data.fullname,
+                            avatar: data.avatar
+                        })
+                    }).catch(x => {
+                        resolve({
+                            name: groupData.name ? groupData.name : "Tin nhắn",
+                            avatar: groupData.avatar
+                        })
+                    });
+                } else {
                     resolve({
-                        name: data.fullname,
-                        avatar: data.avatar
-                    })
-                }).catch(x => {
-                    resolve({
-                        name: groupData.name ? groupData.name : "Tin nhắn",
+                        name: groupData.name,
                         avatar: groupData.avatar
-                    })
-                });
-            } else {
+                    });
+                }
+            }).catch(x => {
                 resolve({
-                    name: groupData.name,
+                    name: groupData.name ? groupData.name : "Tin nhắn",
                     avatar: groupData.avatar
-                });
-            }
+                })
+            });
         });
     },
     setTyping(userId, groupId) {
