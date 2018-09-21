@@ -373,7 +373,6 @@ module.exports = {
                     let data = doc.data();
                     if (data.unread_message && data.unread_message.length) {
                         resolve(data.unread_message.length);
-                        return;
                     }
                 }
                 resolve(0);
@@ -382,14 +381,43 @@ module.exports = {
     },
     getTotalUnReadMessageCount(userId) {
         return new Promise((resolve, reject) => {
-            let userDb = this.getUserDb();
-            userDb.doc(userId + "").get().then(doc => {
-                if (doc.exists) {
+            this.getUser(userId).collection("groups").get().then(docs => {
+                let groups = [];
+                if (docs.docs) {
+                    let groupDb = this.getGroupDb();
+                    docs.docs.forEach(item => {
+                        groups.push(groupDb.doc(item.id).collection("members").doc(userId + "").get());
+                    });
+                }
+                if (groups.length == 0) {
+                    resolve(0)
                 } else {
-                    resolve(0);
+                    Promise.all(groups).then(values => {
+                        let total = 0;
+                        values.forEach(item => {
+                            total += item.data().unread_message.length;
+                        })
+                        resolve(total);
+                    })
                 }
             }).catch(x => resolve(0));
         })
+    },
+    leaveGroup(userId, groupId) {
+        return new Promise((resolve, reject) => {
+            try {
+                let db = this.getDb();
+                let batch = db.batch();
+                let groupFromUser = this.getUser(userId).collection("groups").doc(groupId + "");
+                batch.delete(groupFromUser);
+                let userFromGroup = this.getGroup(groupId).collection("members").doc(userId + "");
+                batch.delete(userFromGroup);
+                batch.commit();
+                resolve()
+            } catch (error) {
+                reject(errors.exception(error));
+            }
+        });
     },
     setTyping(userId, groupId) {
         return new Promise((resolve, reject) => {

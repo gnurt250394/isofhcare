@@ -22,8 +22,8 @@ class GroupChatItem extends React.Component {
         }
     }
     openGroup(groupId) {
-        this.props.navigation.navigate("chat", { groupId: groupId })
-        // firebaseUtils.sendMessage(this.props.userApp.currentUser.id, groupId, "test", "");
+        if (this.props.onOpenGroup)
+            this.props.onOpenGroup(groupId);
     }
     componentDidMount() {
         let item = this.props.group;
@@ -39,7 +39,6 @@ class GroupChatItem extends React.Component {
         let snapshot = message.onSnapshot((snap) => {
             snap.docChanges().forEach((item) => {
                 if (item.type == "added") {
-                    console.log(item);
                     this.setState({
                         lastMessage: item.doc.data()
                     });

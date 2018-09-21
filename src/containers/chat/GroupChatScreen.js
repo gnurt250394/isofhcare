@@ -68,10 +68,6 @@ class GroupChatScreen extends React.Component {
         this.snap = firebaseUtils.getUserDb().doc(this.props.userApp.currentUser.id + "").onSnapshot((snap) => {
             console.log(snap);
         });
-        // firebaseUtils.createGroup([55, 324], "test group", "");
-
-        // let sb = sendbirdUtils.getSendBird();
-        // sendbirdUtils.startSendBird(sb, "namy", this.sendBirtConnectCallback.bind(this));
     }
     componentWillUnmount() {
         if (this.snap)
@@ -80,10 +76,15 @@ class GroupChatScreen extends React.Component {
         //         sendbirdUtils.removeHandler(sendbirdUtils.sendbird, "HANDLE_GROUP");
         //     // AppState.removeEventListener('change', this._handleAppStateChange);
     }
-    openGroup(groupId) {
-        this.props.navigation.navigate("chat", { groupId: groupId })
-        // firebaseUtils.sendMessage(this.props.userApp.currentUser.id, groupId, "test", "");
+    onOpenGroup(groupId) {
+        this.props.navigation.navigate("chat", {
+            groupId: groupId,
+            onGoBack: () => {
+                alert();
+            }
+        })
     }
+
     render() {
         return (
             <ActivityPanel style={{ flex: 1 }} title="Tin nhắn" showFullScreen={true}>
@@ -94,7 +95,7 @@ class GroupChatScreen extends React.Component {
                     extraData={this.state}
                     data={this.state.listGroup}
                     renderItem={({ item, index }) =>
-                        <GroupChatItem group={item} />
+                        <GroupChatItem group={item} onOpenGroup={this.onOpenGroup.bind(this)} />
                     }
                 />
             </ActivityPanel >
