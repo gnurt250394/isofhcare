@@ -24,6 +24,11 @@ const errors = {
     select_user_to_group: {
         code: 4,
         message: "Select user to group"
+    },
+    group_not_exist:
+    {
+        code: 5,
+        message: "Groupd not exist"
     }
 }
 const message_type =
@@ -265,9 +270,6 @@ module.exports = {
                             }
                         });
                     });
-                    // let members = doc.data().members;
-
-
 
                     group.collection("messages").doc(mesId).set(message).then(x => {
                         resolve();
@@ -348,6 +350,47 @@ module.exports = {
                 })
             });
         });
+    },
+    markAsRead(userId, groupId) {
+        return new Promise((resolve, reject) => {
+            let groupDb = this.getGroupDb();
+            groupDb.doc(groupId).get().then(doc => {
+                if (doc.exists) {
+                    groupDb.doc(groupId).collection("members").doc(userId + "").update({
+                        unread_message: []
+                    }).then(x => resolve()).catch(x => reject());
+                }
+                else {
+                    reject(errors.group_not_exist);
+                }
+            });
+        });
+    },
+    getUnReadMessageCount(userId, groupId) {
+        return new Promise((resolve, reject) => {
+            let groupDb = this.getGroupDb();
+            groupDb.doc(groupId).collection("members").doc(userId + "").get().then(doc => {
+                if (doc.exists) {
+                    let data = doc.data();
+                    if (data.unread_message && data.unread_message.length) {
+                        resolve(data.unread_message.length);
+                        return;
+                    }
+                }
+                resolve(0);
+            }).catch(x => resolve(0));
+        });
+    },
+    getTotalUnReadMessageCount(userId) {
+        return new Promise((resolve, reject) => {
+            let userDb = this.getUserDb();
+            userDb.doc(userId + "").get().then(doc => {
+                if (doc.exists) {
+                } else {
+                    resolve(0);
+                }
+            }).catch(x => resolve(0));
+        })
     },
     setTyping(userId, groupId) {
         return new Promise((resolve, reject) => {
