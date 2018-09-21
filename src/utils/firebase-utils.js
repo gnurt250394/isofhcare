@@ -152,6 +152,21 @@ module.exports = {
                                             groups.push(data);
                                     }
                                 });
+                                groups.sort((a, b) => {
+                                    try {
+                                        if (!a.updatedDate && !b.updatedDate)
+                                            return 0;
+                                        if (!a.updatedDate)
+                                            return 1;
+                                        if (!b.updatedDate)
+                                            return -1;
+                                        if (a.updatedDate.toDate() < b.updatedDate.toDate())
+                                            return 1;
+                                    } catch (error) {
+
+                                    }
+                                    return -1;
+                                })
                                 resolve(groups);
                             }).catch(e => {
                                 resolve([]);
@@ -235,6 +250,7 @@ module.exports = {
             let group = groupDb.doc(groupId);
             group.get().then(doc => {
                 if (doc.exists) {
+                    group.update({ updatedDate: new Date() })
                     group.collection("messages").doc(Date.now() + "").set(message).then(x => {
                         resolve();
                     }).catch(x => { reject(x); });
@@ -307,6 +323,18 @@ module.exports = {
                     avatar: groupData.avatar
                 });
             }
+        });
+    },
+    setTyping(userId, groupId) {
+        return new Promise((resolve, reject) => {
+            let groupDb = this.getGroup();
+            let group = groupDb.doc(groupId);
+            group.update({
+                typing: {
+                    userId,
+                    time: new Date()
+                }
+            })
         });
     }
     // ,
