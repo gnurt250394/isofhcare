@@ -38,10 +38,12 @@ class GroupChatItem extends React.Component {
         let message = group.collection("messages");
         let snapshot = message.onSnapshot((snap) => {
             snap.docChanges().forEach((item) => {
-                if (item.type == "added")
+                if (item.type == "added") {
+                    console.log(item);
                     this.setState({
                         lastMessage: item.doc.data()
                     });
+                }
             });
         });
         // message.orderBy('createdDate', 'desc').limit(1).get().then((snap) => {

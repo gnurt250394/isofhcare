@@ -65,9 +65,15 @@ module.exports = {
         let db = this.getDb();
         return db.collection("isofhcare").doc("chat").collection("users");
     },
+    getUser(userId) {
+        return this.getUserDb().doc(userId + "");
+    },
     getGroupDb() {
         let db = this.getDb();
         return db.collection("isofhcare").doc("chat").collection("groups");
+    },
+    getGroup(groupId) {
+        return this.getGroupDb().doc(groupId + "");
     },
     getUserById(userId) {
         var userDb = this.getUserDb();
@@ -140,50 +146,43 @@ module.exports = {
         return new Promise((resolve, reject) => {
             try {
                 let userDb = this.getUserDb();
-                userDb.doc(userId + "").get().then(doc => {
-                    if (doc.exists) {
-                        let data = doc.data();
-                        if (data.groups && data.groups.length > 0) {
-                            let promises = [];
-                            data.groups.forEach((item) => {
-                                promises.push(item.get());
-                            });
-                            Promise.all(promises).then(values => {
-                                let groups = [];
-                                values.forEach(item => {
-                                    if (item.exists) {
-                                        let data = item.data();
-                                        if (data)
-                                            groups.push(data);
-                                    }
-                                });
-                                groups.sort((a, b) => {
-                                    try {
-                                        if (!a.updatedDate && !b.updatedDate)
-                                            return 0;
-                                        if (!a.updatedDate)
-                                            return 1;
-                                        if (!b.updatedDate)
-                                            return -1;
-                                        if (a.updatedDate.toDate() < b.updatedDate.toDate())
-                                            return 1;
-                                    } catch (error) {
+                userDb.doc(userId + "").collection("groups").get().then(docs => {
+                    let groups = [];
+                    docs.docs.forEach(item => {
+                        if (item && item.exists && item.data().group)
+                            groups.push(item.data().group.get())
+                    })
 
-                                    }
+                    Promise.all(groups).then(values => {
+                        let groups = [];
+                        values.forEach(item => {
+                            if (item.exists) {
+                                let data = item.data();
+                                if (data)
+                                    groups.push(data);
+                            }
+                        });
+                        groups.sort((a, b) => {
+                            try {
+                                if (!a.updatedDate && !b.updatedDate)
+                                    return 0;
+                                if (!a.updatedDate)
+                                    return 1;
+                                if (!b.updatedDate)
                                     return -1;
-                                })
-                                resolve(groups);
-                            }).catch(e => {
-                                resolve([]);
-                            });
-                        }
-                        else
-                            resolve([]);
-                    }
-                    else {
-                        reject(errors.user_not_found);
-                    }
-                });
+                                if (a.updatedDate.toDate() < b.updatedDate.toDate())
+                                    return 1;
+                            } catch (error) {
+
+                            }
+                            return -1;
+                        })
+                        resolve(groups);
+                    }).catch(e => {
+                        resolve([]);
+                    });
+                    // resolve(groups);
+                }).catch(x => resolve([]));
             } catch (error) {
 
             }
@@ -200,13 +199,13 @@ module.exports = {
                 if (doc.exists) {
                     resolve({ groupId: doc.id });
                 } else {
-                    let members = [];
+                    debugger;
                     users.forEach((item, index) => {
                         let memberId = item + "";
-                        let _user = userDb.doc(memberId);
-                        _user.update({ groups: firebase.firestore.FieldValue.arrayUnion(group) });
+                        let user = userDb.doc(memberId);
+                        user.collection("groups").doc(id).set({ group });
                         group.collection("members").doc(memberId).set({
-                            user: _user,
+                            user: user,
                             unread_message: []
                         })
                     });

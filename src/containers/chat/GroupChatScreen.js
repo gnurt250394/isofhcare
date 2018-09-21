@@ -65,16 +65,21 @@ class GroupChatScreen extends React.Component {
         }).catch(x => {
             this.setState({ listGroup: [] })
         });
+        this.snap = firebaseUtils.getUserDb().doc(this.props.userApp.currentUser.id + "").onSnapshot((snap) => {
+            console.log(snap);
+        });
         // firebaseUtils.createGroup([55, 324], "test group", "");
 
         // let sb = sendbirdUtils.getSendBird();
         // sendbirdUtils.startSendBird(sb, "namy", this.sendBirtConnectCallback.bind(this));
     }
-    // componentWillUnmount() {
-    //     if (sendbirdUtils.sendbird)
-    //         sendbirdUtils.removeHandler(sendbirdUtils.sendbird, "HANDLE_GROUP");
-    //     // AppState.removeEventListener('change', this._handleAppStateChange);
-    // }
+    componentWillUnmount() {
+        if (this.snap)
+            this.snap();
+        //     if (sendbirdUtils.sendbird)
+        //         sendbirdUtils.removeHandler(sendbirdUtils.sendbird, "HANDLE_GROUP");
+        //     // AppState.removeEventListener('change', this._handleAppStateChange);
+    }
     openGroup(groupId) {
         this.props.navigation.navigate("chat", { groupId: groupId })
         // firebaseUtils.sendMessage(this.props.userApp.currentUser.id, groupId, "test", "");
