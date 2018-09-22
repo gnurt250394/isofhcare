@@ -5,7 +5,7 @@
  */
 
 import React, { Component, PropTypes } from 'react';
-import { TextInput, View, ScrollView, KeyboardAvoidingView, Text, StatusBar, TouchableOpacity, Image, Platform, Keyboard, AppState, FlatList } from 'react-native';
+import { TextInput, View, ScrollView, KeyboardAvoidingView, Text, StatusBar, ActivityIndicator, TouchableOpacity, Image, Platform, Keyboard, AppState, FlatList } from 'react-native';
 import sendbirdUtils from '@utils/send-bird-utils';
 import SendBird from 'sendbird';
 import ScaleImage from 'mainam-react-native-scaleimage';
@@ -31,6 +31,7 @@ class ChatScreen extends React.Component {
         this.state = {
             title: "Tin nhắn",
             lastMessage: null,
+            firstTime: true,
 
             typing: [],
             disabled: true,
@@ -144,6 +145,15 @@ class ChatScreen extends React.Component {
                     data: [...this.data],
                     loadFinish: s.length == 0
                 });
+                if (this.state.firstTime) {
+                    setTimeout(() => {
+                        if (this.flatList)
+                            this.flatList.scrollToEnd({ animated: true });
+                    }, 1000);
+                    this.setState({
+                        firstTime: false
+                    });
+                }
             }).catch(x => {
                 this.setState({ loadingPre: false });
             });
@@ -256,8 +266,9 @@ class ChatScreen extends React.Component {
                         data={this.state.data}
                         ListHeaderComponent={<View style={{ alignItems: 'center' }}>
                             {
-                                (this.state.lastMessage && !this.state.loadFinish && !this.state.loadingPre) &&
-                                <TouchableOpacity onPress={this.loadPreMessages.bind(this)} style={{ borderRadius: 15, margin: 10, backgroundColor: '#00000050' }}><Text style={{ color: '#FFF', padding: 10 }}>Xem tin nhắn cũ hơn</Text></TouchableOpacity>
+                                (this.state.lastMessage && !this.state.loadFinish && !this.state.loadingPre) ?
+                                    <TouchableOpacity onPress={this.loadPreMessages.bind(this)} style={{ borderRadius: 15, margin: 10, backgroundColor: '#00000050' }}><Text style={{ color: '#FFF', padding: 10 }}>Xem tin nhắn cũ hơn</Text></TouchableOpacity> :
+                                    this.state.loadingPre ? <ActivityIndicator style={{ margin: 5 }}></ActivityIndicator> : null
                             }
                         </View>}
                         renderItem={({ item, index }) =>
