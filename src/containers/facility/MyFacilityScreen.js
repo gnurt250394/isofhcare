@@ -150,7 +150,7 @@ class MyFacilityScreen extends Component {
                             }
                             ListFooterComponent={() => <View style={{ height: 20 }}></View>}
                             renderItem={({ item, index }) =>
-                                <ItemFacility facility={item} />
+                                <ItemFacility facility={item} showEdit={true} />
                             }
                         />
                     </View>

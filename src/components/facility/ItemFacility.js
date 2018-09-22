@@ -5,6 +5,7 @@ import clientUtils from '@utils/client-utils'
 import ImageLoad from 'mainam-react-native-image-loader';
 
 import Rating from '@components/Rating';
+import ScaledImage from '../../../node_modules/mainam-react-native-scaleimage';
 class ItemFacility extends Component {
     constructor(props) {
         super(props)
@@ -31,7 +32,8 @@ class ItemFacility extends Component {
                 borderColor: 'rgb(204, 204, 204)',
                 borderWidth: 1,
                 flexDirection: 'row',
-                padding: 2
+                padding: 2,
+                position: 'relative'
             }, this.props.style]} shadowColor='#000000' shadowOpacity={0.2} shadowOffset={{}} onPress={() => { this.props.navigation.navigate("facilityDetailScreen", { facility: this.props.facility }) }}>
                 <View style={{
                     width: 100, height: 100, borderTopLeftRadius: 5.3,
@@ -61,6 +63,18 @@ class ItemFacility extends Component {
 
                     <Text style={{ fontSize: 12, marginTop: 5 }} numberOfLines={2} ellipsizeMode='tail'>{this.props.facility.facility.address}</Text>
                 </View>
+                {
+                    this.props.showEdit && this.props.facility.facility.approval == 0 ?
+                        <TouchableOpacity style={{ position: 'absolute', top: -2, right: -2 }}>
+                            <ScaledImage source={require("@images/ic_edit.png")} width={80} />
+                        </TouchableOpacity> : null
+                }
+                {
+                    this.props.showEdit && this.props.facility.facility.approval == 1 ?
+                        <TouchableOpacity style={{ position: 'absolute', top: -2, right: -2 }}>
+                            <ScaledImage source={require("@images/ic_approve.png")} width={80} />
+                        </TouchableOpacity> : null
+                }
             </TouchableOpacity>);
     }
 }
