@@ -13,6 +13,16 @@ class ItemFacility extends Component {
 
         }
     }
+    edit(facility) {
+        if (facility.facility.type == 2) {
+            this.props.navigation.navigate("addNewClinic", { facility: facility });
+        }
+        else {
+            if (facility.facility.type == 8) {
+                this.props.navigation.navigate("addNewDrugStore", { facility: facility });
+            }
+        }
+    }
 
     render() {
         let item = this.props.facility;
@@ -65,15 +75,15 @@ class ItemFacility extends Component {
                 </View>
                 {
                     this.props.showEdit && this.props.facility.facility.approval == 0 ?
-                        <TouchableOpacity style={{ position: 'absolute', top: -2, right: -2 }}>
+                        <TouchableOpacity style={{ position: 'absolute', top: -2, right: -2 }} onPress={this.edit.bind(this, this.props.facility)}>
                             <ScaledImage source={require("@images/ic_edit.png")} width={80} />
                         </TouchableOpacity> : null
                 }
                 {
                     this.props.showEdit && this.props.facility.facility.approval == 1 ?
-                        <TouchableOpacity style={{ position: 'absolute', top: -2, right: -2 }}>
+                        <View style={{ position: 'absolute', top: -2, right: -2 }}>
                             <ScaledImage source={require("@images/ic_approve.png")} width={80} />
-                        </TouchableOpacity> : null
+                        </View> : null
                 }
             </TouchableOpacity>);
     }

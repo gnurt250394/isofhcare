@@ -13,7 +13,7 @@ class TopSearch extends Component {
         }
     }
     componentDidMount() {
-        specialistProvider.getTop(10, (s, e) => {
+        specialistProvider.getTop(6, (s, e) => {
             if (s) {
                 this.setState({ data: s });
             }

@@ -21,12 +21,13 @@ import firebaseUtils from '@utils/firebase-utils';
 import Rating from '@components/Rating';
 
 import SlidingPanel from 'mainam-react-native-sliding-up-down';
-import { Card, Button } from 'native-base';
+import { Card, Button, ListItem } from 'native-base';
 class FacilityDetailScreen extends Component {
     constructor(props) {
         super(props)
         const facility = this.props.navigation.getParam("facility", undefined);
         this.state = {
+            list_images: this.getListImage(facility),
             facility,
             region:
             {
@@ -41,20 +42,24 @@ class FacilityDetailScreen extends Component {
         };
         this.showFacility(facility);
     }
+    getListImage(facility) {
+        var images = facility.images;
+        var list_images = [];
+        try {
+            for (var i = 0; i < images.length; i++) {
+                let url = images[i].url.absoluteUrl();
+                if (url && url.indexOf("blob:") != 0) {
+                    list_images.push(images[i].url.absoluteUrl())
+                }
+            }
+        } catch (error) {
+
+        }
+        return list_images;
+    }
     showFacility(facility) {
         try {
-            var images = facility.images;
-            var list_images = [];
-            try {
-                for (var i = 0; i < images.length; i++) {
-                    let url = images[i].url.absoluteUrl();
-                    if (url && url.indexOf("blob:") != 0) {
-                        list_images.push(images[i].url.absoluteUrl())
-                    }
-                }
-            } catch (error) {
-
-            }
+            let list_images = this.getListImage(facility);
             this.setState({
                 list_images,
                 facility,
@@ -192,6 +197,7 @@ class FacilityDetailScreen extends Component {
     }
     photoViewer(uri) {
         try {
+            debugger;
             if (!this.state.list_images || this.state.list_images.length == 0) {
                 snackbar.show("Không có ảnh nào");
                 return;
