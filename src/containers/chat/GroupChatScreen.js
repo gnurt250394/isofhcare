@@ -59,7 +59,7 @@ class GroupChatScreen extends React.Component {
 
     componentDidMount() {
         console.disableYellowBox = true;
-        firebaseUtils.getGroup(this.props.userApp.currentUser.id).then(x => {
+        firebaseUtils.getMyGroup(this.props.userApp.currentUser.id).then(x => {
             console.log(x);
             this.setState({ listGroup: x });
         }).catch(x => {

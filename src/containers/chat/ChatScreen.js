@@ -30,6 +30,7 @@ class ChatScreen extends React.Component {
         super(props);
         this.state = {
             title: "Tin nhắn",
+            lastMessage: null,
 
             typing: [],
             disabled: true,
@@ -41,9 +42,13 @@ class ChatScreen extends React.Component {
             show: false,
             hasRendered: false,
             listMessageIds: [],
-            data: []
+            data: [],
+            dataId: []
         };
     }
+    data = []
+    dataIds = []
+
     // onMessageReceived(channel, message) {
     //     if (this.state.channel && message.channelUrl == this.state.channel.url) {
     //         if (this.state.messages) {
@@ -108,24 +113,41 @@ class ChatScreen extends React.Component {
     //     this.state.messageQuery.load(limit, false, handler);
     // }
     next() {
-        let { messages, lastMessage } = this.state;
+        let { messages, lastMessage, groupId } = this.state;
+        firebaseUtils.getMessages(groupId, 20, null);
         messages.limit(25).get().then(docs => {
             let data = [];
             if (docs.docs) {
                 docs.docs.forEach((item) => {
-                    data.push(item.ref.get());
+                    data.push(item.data());
                 });
             }
-            Promise.all(data).then(values => {
-                let data = [];
-                values.forEach((item => {
-                    if (item.exists) {
-                        data.push(item.data())
-                    }
-                }))
-                this.setState({ data: [...data] });
-            });
+            this.setState({ data: [...data] });
         });
+    }
+    loadPreMessages() {
+        this.setState({ loadingPre: true }, () => {
+            firebaseUtils.getMessages(this.state.groupId, 20, this.state.lastMessage).then(s => {
+                let lastMessage = this.state.lastMessage;
+                s.forEach(item => {
+                    if (this.dataIds.indexOf(item.id) == -1) {
+                        this.data.splice(0, 0, item.data());
+                        this.dataIds.splice(0, 0, item.id);
+                    }
+                });
+                if (s.length > 0) {
+                    lastMessage = s[s.length - 1];
+                }
+                this.setState({
+                    lastMessage,
+                    loadingPre: false,
+                    data: [...this.data],
+                    loadFinish: s.length == 0
+                });
+            }).catch(x => {
+                this.setState({ loadingPre: false });
+            });
+        })
     }
     componentDidMount() {
         let groupId = this.props.navigation.getParam("groupId", null);
@@ -133,43 +155,38 @@ class ChatScreen extends React.Component {
             this.props.navigation.pop();
             return;
         }
-        let groupDb = firebaseUtils.getGroupDb();
-        let group = groupDb.doc(groupId);
-        let messages = group.collection("messages");
-        group.get().then(doc => {
-            if (doc.exists) {
-                let data = doc.data();
-                if (data) {
-                    firebaseUtils.getGroupName(this.props.userApp.currentUser.id, data).then(x => {
-                        this.setState({ title: x.name, avatar: x.avatar ? x.avatar.absoluteUrl() : "" });
-                    }).catch(x => {
-                        this.setState({ title: data.name ? data.name : "Tin nhắn", avatar: data.avatar ? data.avatar.absoluteUrl() : "" });
-                    });
-                }
-            }
-        });
+        let group = firebaseUtils.getGroup(groupId);
+        let messages = group.collection("messages").orderBy('createdDate', 'desc');
 
-
-        this.snapshot = messages.onSnapshot((snap) => {
-            snap.docChanges().forEach((item) => {
-                let data = this.state.data;
-                data.push(item.doc.data());
-                this.setState({
-                    data: [...data]
-                });
-                setTimeout(() => {
-                    if (this.flatList)
-                        this.flatList.scrollToEnd({ animated: true });
-                }, 1000);
-            });
-        });
         this.setState({ groupId, group, messages }, () => {
-            messages.limit(25).get().then(docs => {
+            messages.limit(1).get().then(docs => {
                 if (docs.docs.length > 0) {
                     let lastMessage = docs.docs[docs.docs.length - 1];
-                    this.setState({ lastMessage }, () => {
-                        this.next();
-                    });
+                    this.dataIds.push(lastMessage.id);
+                    this.data.push(lastMessage.data());
+                    this.setState({
+                        data: [...this.data],
+                        lastMessage
+                    }, () => {
+                        this.snapshot = messages.limit(1).onSnapshot((snap) => {
+                            snap.docChanges().forEach((item) => {
+                                if (item.type == 'added') {
+                                    if (this.dataIds.indexOf(item.doc.id) == -1) {
+                                        this.data.push(item.doc.data());
+                                        this.dataIds.push(item.doc.id);
+                                        this.setState({
+                                            data: [...this.data],
+                                        });
+                                        setTimeout(() => {
+                                            if (this.flatList)
+                                                this.flatList.scrollToEnd({ animated: true });
+                                        }, 1000);
+                                    }
+                                }
+                            });
+                        });
+                        this.loadPreMessages();
+                    })
                 }
             });
         });
@@ -237,6 +254,12 @@ class ChatScreen extends React.Component {
                         keyExtractor={(item, index) => index.toString()}
                         extraData={this.state}
                         data={this.state.data}
+                        ListHeaderComponent={<View style={{ alignItems: 'center' }}>
+                            {
+                                (this.state.lastMessage && !this.state.loadFinish && !this.state.loadingPre) &&
+                                <TouchableOpacity onPress={this.loadPreMessages.bind(this)} style={{ borderRadius: 15, margin: 10, backgroundColor: '#00000050' }}><Text style={{ color: '#FFF', padding: 10 }}>Xem tin nhắn cũ hơn</Text></TouchableOpacity>
+                            }
+                        </View>}
                         renderItem={({ item, index }) =>
                             <View>
                                 {

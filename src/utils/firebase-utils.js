@@ -141,7 +141,7 @@ module.exports = {
             }
         });
     },
-    getGroup(userId) {
+    getMyGroup(userId) {
         let $this = this;
         return new Promise((resolve, reject) => {
             try {
@@ -430,18 +430,13 @@ module.exports = {
                 }
             })
         });
+    },
+    getMessages(groupId, limit, from) {
+        return new Promise((resolve, reject) => {
+            this.getGroup(groupId).collection("messages").orderBy("createdDate", 'desc').limit(limit)
+                .startAt(from).get().then(docs => {
+                    resolve(docs.docs);
+                }).catch(x => reject());
+        });
     }
-    // ,
-    // getMessage(groupId) {
-    //     let $this = this;
-    //     return new Promise((resolve, reject) => {
-    //         if (!$this.rejectUserNotConnect(reject)) {
-    //             let groupDb = $this.getGroupDb();
-    //             let group = groupDb.doc(groupId);
-    //             group.onSnapshot((doc) => {
-    //                 resolve(doc.data());
-    //             });
-    //         }
-    //     });
-    // }
 }
