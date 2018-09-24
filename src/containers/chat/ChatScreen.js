@@ -34,101 +34,16 @@ class ChatScreen extends React.Component {
             firstTime: true,
 
             typing: [],
-            disabled: true,
-            channel: null,
-            messageQuery: null,
-            messages: [],
             text: '',
-            disabled: true,
-            show: false,
-            hasRendered: false,
-            listMessageIds: [],
             data: [],
             dataId: []
         };
     }
-    data = []
-    dataIds = []
-
-    // onMessageReceived(channel, message) {
-    //     if (this.state.channel && message.channelUrl == this.state.channel.url) {
-    //         if (this.state.messages) {
-    //             if (this.state.listMessageIds.indexOf(message.messageId) == -1) {
-    //                 this.state.listMessageIds.push(message.messageId);
-    //                 this.state.messages.push(message);
-    //             }
-    //             this.setState({ messages: this.state.messages });
-    //             setTimeout(() => {
-    //                 this.flatList.scrollToEnd({ animated: true });
-    //             }, 1000);
-    //         }
-    //     }
-    // }
-    // onTypingStatusUpdated(channel) {
-    //     this.setState({ typing: channel.getTypingMembers() });
-    // }
-    // getGroupChannelCallback(channel, error) {
-    //     if (error) {
-    //         Actions.pop();
-    //         snackbar.show("Xảy ra lỗi vui lòng thử lại sau");
-    //     }
-    //     if (channel) {
-    //         this.setState({
-    //             channel: channel
-    //         }, () => { this.loadPreviousMessage(true, 20, this.loadPreviousMessageCallback.bind(this)) });
-    //     }
-    // }
-    // loadPreviousMessageCallback(response, error) {
-    //     if (error) {
-    //         console.log('Get Message List Fail.', error);
-    //         return;
-    //     }
-
-    //     var _messages = [];
-    //     for (var i = 0; i < response.length; i++) {
-    //         var _curr = response[i];
-    //         if (this.state.listMessageIds.indexOf(_curr.messageId) == -1) {
-    //             _messages.splice(0, 0, _curr);
-    //             this.state.listMessageIds.push(_curr.messageId);
-    //         }
-    //     }
-
-    //     console.log(_messages);
-    //     this.setState({
-    //         messages: this.state.messages.concat(_messages.reverse())
-    //     });
-    //     setTimeout(() => {
-    //         if (this.flatList)
-    //             this.flatList.scrollToEnd({ animated: true });
-    //     }, 1000);
-    // }
-    // loadPreviousMessage(refresh, limit, handler) {
-    //     if (refresh) {
-    //         this.state.messageQuery = this.state.channel.createPreviousMessageListQuery();
-    //         this.messages = [];
-    //         this.listMessageIds = [];
-    //     }
-    //     if (!this.state.messageQuery.hasMore) {
-    //         return;
-    //     }
-    //     this.state.messageQuery.load(limit, false, handler);
-    // }
-    next() {
-        let { messages, lastMessage, groupId } = this.state;
-        firebaseUtils.getMessages(groupId, 20, null);
-        messages.limit(25).get().then(docs => {
-            let data = [];
-            if (docs.docs) {
-                docs.docs.forEach((item) => {
-                    data.push(item.data());
-                });
-            }
-            this.setState({ data: [...data] });
-        });
-    }
+    data = [];
+    dataIds = [];
     loadPreMessages() {
         this.setState({ loadingPre: true }, () => {
-            firebaseUtils.getMessages(this.state.groupId, 20, this.state.lastMessage).then(s => {
+            firebaseUtils.getMessages(this.state.groupId, 40, this.state.lastMessage).then(s => {
                 let lastMessage = this.state.lastMessage;
                 s.forEach(item => {
                     if (this.dataIds.indexOf(item.id) == -1) {
@@ -159,6 +74,28 @@ class ChatScreen extends React.Component {
             });
         })
     }
+    onMessageChange(messages, groupId) {
+        this.snapshot = messages.limit(1).onSnapshot((snap) => {
+            snap.docChanges().forEach((item) => {
+                if (item.type == 'added') {
+                    if (this.dataIds.indexOf(item.doc.id) == -1) {
+                        this.data.push(item.doc.data());
+                        this.dataIds.push(item.doc.id);
+                        this.setState({
+                            data: [...this.data],
+                        });
+                        firebaseUtils.markAsRead(this.props.userApp.currentUser.id, groupId);
+                        firebaseUtils.markAsReadMessage(this.props.userApp.currentUser.id, groupId, item.doc.id);
+                        setTimeout(() => {
+                            if (this.flatList)
+                                this.flatList.scrollToEnd({ animated: true });
+                        }, 1000);
+                    }
+                }
+            });
+        });
+        this.loadPreMessages();
+    }
     componentDidMount() {
         let groupId = this.props.navigation.getParam("groupId", null);
         if (!groupId) {
@@ -172,48 +109,21 @@ class ChatScreen extends React.Component {
             messages.limit(1).get().then(docs => {
                 if (docs.docs.length > 0) {
                     let lastMessage = docs.docs[docs.docs.length - 1];
+                    firebaseUtils.markAsRead(this.props.userApp.currentUser.id, groupId);
+                    firebaseUtils.markAsReadMessage(this.props.userApp.currentUser.id, groupId, lastMessage.id);
                     this.dataIds.push(lastMessage.id);
                     this.data.push(lastMessage.data());
                     this.setState({
                         data: [...this.data],
                         lastMessage
-                    }, () => {
-                        this.snapshot = messages.limit(1).onSnapshot((snap) => {
-                            snap.docChanges().forEach((item) => {
-                                if (item.type == 'added') {
-                                    if (this.dataIds.indexOf(item.doc.id) == -1) {
-                                        this.data.push(item.doc.data());
-                                        this.dataIds.push(item.doc.id);
-                                        this.setState({
-                                            data: [...this.data],
-                                        });
-                                        setTimeout(() => {
-                                            if (this.flatList)
-                                                this.flatList.scrollToEnd({ animated: true });
-                                        }, 1000);
-                                    }
-                                }
-                            });
-                        });
-                        this.loadPreMessages();
-                    })
+                    }, this.onMessageChange.bind(this, messages, groupId))
                 }
             });
         });
-
-
-        // let sb = sendbirdUtils.getSendBird();
-        // sendbirdUtils.setHandler(sb, "HANDLE_CHAT", this.onTypingStatusUpdated.bind(this), this.onMessageReceived.bind(this));
-        // sb.GroupChannel.getChannel(this.props.groupUrl, this.getGroupChannelCallback.bind(this));
-
-
     }
     componentWillUnmount() {
         if (this.snapshot)
             this.snapshot();
-        // if (sendbirdUtils.sendbird)
-        //     sendbirdUtils.removeHandler(sendbirdUtils.sendbird, "HANDLE_CHAT");
-        // AppState.removeEventListener('change', this._handleAppStateChange);
     }
     selectImage() {
         if (this.imagePicker) {

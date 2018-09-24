@@ -94,7 +94,6 @@ class PhotoViewerScreen extends Component {
         const bottonWidth = 200 > width ? width : 200;
         if (!this.state.urls || this.state.urls.length == 0)
             return null;
-        alert(JSON.stringify(this.state.urls))
         return (
             <ActivityPanel style={{ flex: 1 }} showFullScreen={true} title={(this.state.index + 1) + "/" + (this.state.urls.length)}>
                 <PhotoViewer urls={this.state.urls} index={this.state.index} style={{ flex: 1 }} onDownload={this.onDownload.bind(this)} onNext={(index, length) => { this.setState({ index }) }} onPreview={(index, length) => { this.setState({ index }) }} />

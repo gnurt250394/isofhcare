@@ -18,7 +18,8 @@ class GroupChatItem extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: ""
+            name: "",
+            unReadCount: 0
         }
     }
     openGroup(groupId) {
@@ -33,16 +34,23 @@ class GroupChatItem extends React.Component {
             this.setState({ name: item.name ? item.name : "Tin nhắn", avatar: item.avatar ? item.avatar.absoluteUrl() : "" });
         });
 
-        let groupDb = firebaseUtils.getGroupDb();
-        let group = groupDb.doc(item.id);
+        let group = firebaseUtils.getGroup(item.id);
         let message = group.collection("messages");
-        let snapshot = message.onSnapshot((snap) => {
+        this.snapshot = message.onSnapshot((snap) => {
             snap.docChanges().forEach((item) => {
                 if (item.type == "added") {
                     this.setState({
                         lastMessage: item.doc.data()
                     });
                 }
+                firebaseUtils.getUnReadMessageCount(this.props.userApp.currentUser.id, this.props.group.id).then(x => {
+                    this.setState({
+                        unReadCount: x
+                    });
+                }).catch(x =>
+                    this.setState({
+                        unReadCount: 0
+                    }));
             });
         });
         // message.orderBy('createdDate', 'desc').limit(1).get().then((snap) => {
@@ -59,6 +67,14 @@ class GroupChatItem extends React.Component {
         //     //     });
         //     // });
         // });
+    }
+    highlighMessage(item) {
+        try {
+            return item.readed.indexOf(this.props.userApp.currentUser.id + "") == -1 ? "900" : "normal";
+        } catch (error) {
+
+        }
+        return 'normal';
     }
     componentWillUnmount() {
         if (this.snapshot) {
@@ -90,8 +106,17 @@ class GroupChatItem extends React.Component {
                     /> */}
                     <View style={{ flex: 1, marginLeft: 10 }}>
                         <View style={{ flexDirection: 'row' }}>
-                            <Text style={{ fontWeight: 'bold', fontSize: 15, flex: 1 }}>
-                                {item.name ? item.name : (this.state.name)}</Text>
+                            <View style={{
+                                flex: 1,
+                                flexDirection: 'row'
+                            }} >
+                                <Text style={{ fontWeight: 'bold', fontSize: 15, flex: 1 }}>
+                                    {item.name ? item.name : (this.state.name)}</Text>
+                                {
+                                    this.state.unReadCount > 0 &&
+                                    <Text style={{ backgroundColor: '#d8d8d8', borderRadius: 8, overflow: 'hidden', paddingHorizontal: 5, paddingVertical: 2 }}>{this.state.unReadCount > 100 ? "99+" : this.state.unReadCount}</Text>
+                                }
+                            </View>
                             {
                                 item.typing ?
                                     <ScaleImage source={require("@images/typing.gif")} width={20} /> :
@@ -101,7 +126,7 @@ class GroupChatItem extends React.Component {
                         {
                             this.state.lastMessage &&
                             <View>
-                                <Text style={{ marginTop: 5 }}>
+                                <Text numberOfLines={1} ellipsizeMode='tail' style={{ marginTop: 5, fontWeight: this.highlighMessage(this.state.lastMessage) }}>
                                     {this.state.lastMessage.type == 4 ? "[Hình ảnh]" : this.state.lastMessage.message}
                                 </Text>
                                 <Text style={{ marginTop: 5, textAlign: 'right', fontStyle: 'italic', fontSize: 13, color: '#717171' }}>

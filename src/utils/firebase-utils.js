@@ -365,6 +365,18 @@ module.exports = {
             });
         });
     },
+    markAsReadMessage(userId, groupId, messageId) {
+        return new Promise((resolve, reject) => {
+            let message = this.getGroup(groupId).collection("messages").doc(messageId + "");
+            message.get().then(doc => {
+                if (doc.exists) {
+                    message.update("readed", firebase.firestore.FieldValue.arrayUnion(userId + "")).then(x => {
+                        resolve();
+                    }).catch(x => reject());
+                }
+            }).catch(x => reject());
+        });
+    },
     getUnReadMessageCount(userId, groupId) {
         return new Promise((resolve, reject) => {
             let groupDb = this.getGroupDb();
@@ -375,6 +387,7 @@ module.exports = {
                         resolve(data.unread_message.length);
                     }
                 }
+                el;se
                 resolve(0);
             }).catch(x => resolve(0));
         });

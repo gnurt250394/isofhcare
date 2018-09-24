@@ -355,6 +355,16 @@ class FacilityDetailScreen extends Component {
                                                     <Text>Nhắn tin</Text>
                                                 </Button>
                                             </View>
+                                            <View>
+                                                {
+                                                    facility.facility.licenseNumber ?
+                                                        <TouchableOpacity style={{ padding: 10, flexDirection: 'row' }} onPress={() => Linking.openURL(facility.facility.website)}>
+                                                            <ScaledImage source={require("@images/web.png")} width={15} style={{ marginRight: 5 }} />
+                                                            <Text style={{ color: '#23429b' }}>{facility.facility.licenseNumber}</Text>
+                                                        </TouchableOpacity> : null
+                                                }
+                                            </View>
+
                                             <Text style={{ padding: 10, fontSize: 16, marginTop: 5, textAlign: 'justify', lineHeight: 22, marginBottom: 20, color: '#9b9b9b' }}>{facility.facility.introduction}</Text>
                                         </ScrollView>
                                     </View>
