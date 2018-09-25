@@ -27,7 +27,10 @@ class GroupChatItem extends React.Component {
             this.props.onOpenGroup(groupId);
     }
     componentDidMount() {
-        let item = this.props.group;
+        this.showData(this.props);
+    }
+    showData(props) {
+        let item = props.group;
         firebaseUtils.getGroupName(this.props.userApp.currentUser.id, item).then(x => {
             this.setState({ name: x.name ? x.name : "Tin nhắn", avatar: x.avatar ? x.avatar.absoluteUrl() : "" });
         }).catch(x => {
@@ -41,7 +44,7 @@ class GroupChatItem extends React.Component {
                         lastMessage: item.doc.data()
                     });
                 }
-                firebaseUtils.getUnReadMessageCount(this.props.userApp.currentUser.id, this.props.group.id).then(x => {
+                firebaseUtils.getUnReadMessageCount(this.props.userApp.currentUser.id, props.group.id).then(x => {
                     this.setState({
                         unReadCount: x
                     });
@@ -68,6 +71,14 @@ class GroupChatItem extends React.Component {
     }
     onError() {
         this.setState({ avatarError: true });
+    }
+    componentWillReceiveProps(props) {
+        if (this.props.group.id != props.group.id) {
+            if (this.snapshot) {
+                this.snapshot();
+            }
+            this.showData(props);
+        }
     }
     render() {
         let item = this.props.group;

@@ -452,5 +452,12 @@ module.exports = {
                     resolve(docs.docs);
                 }).catch(x => reject());
         });
+    },
+    onMyGroupChange(userId, callback) {
+        return this.getUser(userId).collection("groups").orderBy('updatedDate', 'desc').limit(1).onSnapshot((snap) => {
+            if (callback) {
+                callback(snap);
+            }
+        });
     }
 }

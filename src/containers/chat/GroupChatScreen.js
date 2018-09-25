@@ -57,11 +57,23 @@ class GroupChatScreen extends React.Component {
     //     let groupChannelListQuery = sendbirdUtils.getGroupChannelList(sb, 100, this.groupChannelQueryNext.bind(this));
     // }
 
+    data = [];
+    dataIds = [];
+    removeGroup(id) {
+        let index = this.dataIds.indexOf(id);
+        if (index != -1) {
+            this.data.splice(index, 1);
+            this.dataIds.splice(index, 1);
+        }
+    }
+    addGroup(group, index) {
+        this.removeGroup(group.doc.id);
+        this.data.splice(index, 0, group.doc);
+        this.dataIds.splice(index, 0, group.doc.id);
+    }
     getMyGroup() {
         firebaseUtils.getMyGroup(this.props.userApp.currentUser.id).then(x => {
-            debugger;
-            console.log(x);
-            this.setState({ listGroup: [...x] });
+            this.setState({ listGroup: x })
         }).catch(x => {
             this.setState({ listGroup: [] })
         });
@@ -69,23 +81,17 @@ class GroupChatScreen extends React.Component {
     componentDidMount() {
         console.disableYellowBox = true;
         this.getMyGroup();
-        // this.snap = firebaseUtils.getUserDb().doc(this.props.userApp.currentUser.id + "").collection("groups").onSnapshot((snap) => {
-        //     snap.docChanges().forEach(item => {
-
-        //     })
-        //     this.setState({ listGroup: [] }, () => {
-        //         setTimeout(() => {
-        //             this.getMyGroup();
-        //         }, 2000);
-        //     });
-        // });
+        this.snap = this.snap = firebaseUtils.onMyGroupChange(this.props.userApp.currentUser.id, (snap) => {
+            snap.docChanges().forEach(item => {
+                if (item.type == 'added') {
+                    this.getMyGroup();
+                }
+            });
+        });
     }
     componentWillUnmount() {
         if (this.snap)
             this.snap();
-        //     if (sendbirdUtils.sendbird)
-        //         sendbirdUtils.removeHandler(sendbirdUtils.sendbird, "HANDLE_GROUP");
-        //     // AppState.removeEventListener('change', this._handleAppStateChange);
     }
     onOpenGroup(groupId) {
         this.props.navigation.navigate("chat", {
