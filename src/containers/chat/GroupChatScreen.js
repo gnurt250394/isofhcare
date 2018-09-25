@@ -93,9 +93,10 @@ class GroupChatScreen extends React.Component {
         if (this.snap)
             this.snap();
     }
-    onOpenGroup(groupId) {
+    onOpenGroup(groupId, title) {
         this.props.navigation.navigate("chat", {
-            groupId: groupId
+            groupId: groupId,
+            title
         })
     }
 

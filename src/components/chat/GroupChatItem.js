@@ -24,7 +24,7 @@ class GroupChatItem extends React.Component {
     }
     openGroup(groupId) {
         if (this.props.onOpenGroup)
-            this.props.onOpenGroup(groupId);
+            this.props.onOpenGroup(groupId, this.state.name);
     }
     componentDidMount() {
         this.showData(this.props);
