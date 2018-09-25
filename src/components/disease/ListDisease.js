@@ -13,7 +13,7 @@ class ListDisease extends Component {
         }
     }
     componentDidMount() {
-        diseaseProvider.getTop(10, (s, e) => {
+        diseaseProvider.getTop(6, (s, e) => {
             if (s) {
                 this.setState({ data: s });
             }

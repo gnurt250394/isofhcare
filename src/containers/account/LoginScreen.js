@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import UserInput from '@components/UserInput';
 import ActivityPanel from '@components/ActivityPanel';
 import ButtonSubmit from '@components/ButtonSubmit';
-import { View, ScrollView, KeyboardAvoidingView, StyleSheet, Text, TouchableOpacity, Image, Platform, Keyboard } from 'react-native';
+import { View, ScrollView, KeyboardAvoidingView, StyleSheet, Text, TouchableOpacity, Image, Animated, Easing, Keyboard } from 'react-native';
 import Dimensions from 'Dimensions';
 import { connect } from 'react-redux';
 import eyeImg from '@images/eye_black.png';
@@ -12,7 +12,7 @@ import constants from '@resources/strings';
 import redux from '@redux-store';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import SocialNetwork from '@components/LoginSocial';
-
+const durationDefault = 500;
 class LoginScreen extends Component {
 	constructor(props) {
 		super(props)
@@ -23,11 +23,40 @@ class LoginScreen extends Component {
 			password: ""
 		}
 		this.showPass = this.showPass.bind(this);
+		this.animatedValue = new Animated.Value(0)
+		this.animatedValue1 = new Animated.Value(0)
+		this.animatedValue2 = new Animated.Value(0)
 	}
+
+	componentDidMount() {
+		this.animate()
+	}
+
+	animate() {
+		this.animatedValue.setValue(0)
+		this.animatedValue1.setValue(0)
+		this.animatedValue2.setValue(0)
+		const createAnimation = function (value, duration, easing, delay = 0) {
+			return Animated.timing(
+				value,
+				{
+					toValue: 1,
+					duration,
+					easing,
+					delay
+				}
+			)
+		}
+		Animated.parallel([
+			createAnimation(this.animatedValue, durationDefault, Easing.ease, durationDefault),
+			createAnimation(this.animatedValue1, durationDefault, Easing.ease, durationDefault),
+			createAnimation(this.animatedValue2, durationDefault, Easing.ease, durationDefault)
+		]).start()
+	}
+
 	showPass() {
 		this.state.press === false ? this.setState({ showPass: false, press: true }) : this.setState({ showPass: true, press: false });
 	}
-
 
 	login() {
 		Keyboard.dismiss();
@@ -52,8 +81,8 @@ class LoginScreen extends Component {
 						this.props.navigation.navigate('home');
 						return;
 					case 4:
-					snackbar.show(constants.msg.user.this_account_not_active, 'danger');
-					return;
+						snackbar.show(constants.msg.user.this_account_not_active, 'danger');
+						return;
 					case 3:
 						snackbar.show(constants.msg.user.username_or_password_incorrect, 'danger');
 						return;
@@ -72,53 +101,70 @@ class LoginScreen extends Component {
 	}
 
 	render() {
+		const introButton = this.animatedValue1.interpolate({
+			inputRange: [0, 1],
+			outputRange: [150, 60]
+		})
+		const introBottom = this.animatedValue2.interpolate({
+			inputRange: [0, 1],
+			outputRange: [150, 0]
+		})
+		const marginLeft = this.animatedValue.interpolate({
+			inputRange: [0, 1],
+			outputRange: [-800, 0]
+		})
 		return (
-			<ActivityPanel style={{ flex: 1 }} title="Đăng nhập" touchToDismiss={true} hideActionbar={true} hideStatusbar={true} showFullScreen={true}>
-				<ScrollView style={{ flex: 1 }}
-					keyboardShouldPersistTaps="always">
-					<View style={{ marginTop: 60, justifyContent: 'center', alignItems: 'center' }}>
-						<ScaleImage source={require("@images/logo.png")} width={120} />
-					</View>
-					<KeyboardAvoidingView behavior='padding'
-						style={styles.form}>
-						<UserInput onTextChange={(s) => this.setState({ email: s })}
-							placeholder={constants.input_username_or_email}
-							autoCapitalize={'none'}
-							returnKeyType={'next'}
-							autoCorrect={false} />
-						<View style={{ marginTop: 15, flex: 1 }}>
+			<ActivityPanel style={{ flex: 1 }} 
+				title="Đăng nhập" 
+				touchToDismiss={true} 
+				hideActionbar={true} 
+				hideStatusbar={true} 
+				showFullScreen={true}>
+				<ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
+					<Animated.View style={{ top: introButton }}>
+						<View style={{ justifyContent: 'center', alignItems: 'center' }}>
+							<ScaleImage source={require("@images/logo.png")} width={120} />
+						</View>
+					</Animated.View>
 
-							<UserInput
-								onTextChange={(s) => this.setState({ password: s })}
-								secureTextEntry={this.state.showPass}
-								placeholder={constants.input_password}
-								returnKeyType={'done'}
+					<KeyboardAvoidingView behavior='padding' style={styles.form}>
+						<Animated.View style={{ marginLeft, flex:1}}>
+							<UserInput onTextChange={(s) => this.setState({ email: s })}
+								placeholder={constants.input_username_or_email}
 								autoCapitalize={'none'}
-								autoCorrect={false} />
-
-							<TouchableOpacity
-								activeOpacity={0.7}
-								style={styles.btnEye}
-								onPress={this.showPass}>
-								<Image source={eyeImg} style={styles.iconEye} />
-							</TouchableOpacity>
-
-						</View>
-						<View style={{ width: DEVICE_WIDTH, maxWidth: 300 }}>
-							<TouchableOpacity onPress={() => { this.props.navigation.replace("forgotPassword") }} style={{ alignItems: 'flex-end' }}>
-								<Text style={{ marginTop: 12, color: 'rgb(49,96,172)' }}>Quên mật khẩu</Text>
-							</TouchableOpacity>
-						</View>
-						<ButtonSubmit onRef={ref => (this.child = ref)} click={() => { this.login() }} text={constants.login} />
-						<View style={{ width: DEVICE_WIDTH, maxWidth: 300 }}>
-							<TouchableOpacity onPress={() => { this.props.navigation.replace("register") }} style={{ alignItems: 'flex-end' }}>
-								<Text style={{ marginTop: 15, color: 'rgb(155,155,155)', lineHeight: 20, fontSize: 16 }}>Nếu bạn chưa có tài khoản hãy đăng ký ngay <Text style={{ fontWeight: 'bold', color: 'rgb(0,151,124)' }}>tại đây</Text></Text>
-							</TouchableOpacity>
-						</View>
-						<SocialNetwork />
+								returnKeyType={'next'}
+								autoCorrect={false}
+								style={{}} />
+							<View style={{ marginTop: 15, flex: 1 }}>
+								<UserInput
+									onTextChange={(s) => this.setState({ password: s })}
+									secureTextEntry={this.state.showPass}
+									placeholder={constants.input_password}
+									returnKeyType={'done'}
+									autoCapitalize={'none'}
+									autoCorrect={false} />
+								<TouchableOpacity
+									activeOpacity={0.7}
+									style={styles.btnEye}
+									onPress={this.showPass}>
+									<Image source={eyeImg} style={styles.iconEye} />
+								</TouchableOpacity>
+							</View>
+							<View style={{ width: DEVICE_WIDTH, maxWidth: 300 }}>
+								<TouchableOpacity onPress={() => { this.props.navigation.replace("forgotPassword") }} style={{ alignItems: 'flex-end' }}>
+									<Text style={{ marginTop: 12, color: 'rgb(49,96,172)' }}>Quên mật khẩu</Text>
+								</TouchableOpacity>
+							</View>
+							<ButtonSubmit onRef={ref => (this.child = ref)} click={() => { this.login() }} text={constants.login} />
+							<View style={{ width: DEVICE_WIDTH, maxWidth: 300,paddingHorizontal :40, justifyContent:'center'}}>
+								<TouchableOpacity onPress={() => { this.props.navigation.replace("register") }} style={{ alignItems: 'flex-end' }}>
+									<Text style={{ marginTop: 15, color: 'rgb(155,155,155)', lineHeight: 20, fontSize: 16 }}>Nếu bạn chưa có tài khoản hãy đăng ký ngay <Text style={{ fontWeight: 'bold', color: 'rgb(0,151,124)' }}>tại đây</Text></Text>
+								</TouchableOpacity>
+							</View>
+						</Animated.View>
 					</KeyboardAvoidingView>
 
-
+					<Animated.View style={{ bottom: introBottom, flex:1 }}><SocialNetwork /></Animated.View>
 				</ScrollView >
 			</ActivityPanel >
 		);
@@ -129,24 +175,10 @@ const DEVICE_HEIGHT = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
 	form: {
-		marginTop: 60,
+		marginTop: 80,
 		alignItems: 'center',
 	},
-	container: {
-		flex: 1,
-		alignItems: 'center',
-		justifyContent: 'center',
-	},
-	text: {
-		backgroundColor: 'transparent',
-	},
-	signup_section: {
-		marginTop: 30,
-		flex: 1,
-		width: DEVICE_WIDTH,
-		flexDirection: 'row',
-		justifyContent: 'space-around',
-	}, btnEye: {
+	btnEye: {
 		position: 'absolute',
 		right: 25,
 		top: 10
@@ -155,19 +187,6 @@ const styles = StyleSheet.create({
 		width: 25,
 		height: 25,
 		tintColor: 'rgba(0,0,0,0.2)',
-	},
-	picture: {
-		position: 'absolute',
-		top: 0,
-		bottom: 0,
-		left: 0,
-		right: 0,
-		justifyContent: 'center',
-		alignItems: 'center',
-		flex: 1,
-		width: null,
-		height: null,
-		resizeMode: 'cover',
 	},
 });
 function mapStateToProps(state) {

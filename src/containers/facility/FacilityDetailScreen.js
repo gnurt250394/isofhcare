@@ -357,11 +357,20 @@ class FacilityDetailScreen extends Component {
                                             </View>
                                             <View>
                                                 {
-                                                    facility.facility.licenseNumber ?
-                                                        <TouchableOpacity style={{ padding: 10, flexDirection: 'row' }} onPress={() => Linking.openURL(facility.facility.website)}>
-                                                            <ScaledImage source={require("@images/web.png")} width={15} style={{ marginRight: 5 }} />
-                                                            <Text style={{ color: '#23429b' }}>{facility.facility.licenseNumber}</Text>
+                                                    facility.facility.emergencyContact ?
+                                                        <TouchableOpacity style={{ padding: 10, flexDirection: 'row' }} onPress={() => Linking.openURL("tel:" + facility.facility.emergencyContact)}>
+                                                            <ScaledImage source={require("@images/icemergency.png")} width={15} style={{ marginRight: 5 }} />
+                                                            <Text>Gọi cấp cứu hotline: <Text style={{ fontWeight: 'bold' }}>{facility.facility.emergencyContact}</Text></Text>
                                                         </TouchableOpacity> : null
+                                                }
+                                            </View>
+                                            <View>
+                                                {
+                                                    facility.facility.licenseNumber ?
+                                                        <View style={{ padding: 10, flexDirection: 'row' }}>
+                                                            <ScaledImage source={require("@images/icgiayphep.png")} width={15} style={{ marginRight: 5 }} />
+                                                            <Text>Số giấy phép kinh doanh: <Text style={{ fontWeight: 'bold' }}>{facility.facility.licenseNumber}</Text></Text>
+                                                        </View> : null
                                                 }
                                             </View>
 

@@ -48,7 +48,7 @@ module.exports = {
                 callback(s, e);
         });
     },
-    createClinic(name, website, phone, address, place, logo, imageUrls, specialistIds, provinceId, userId, callback) {
+    createClinic(name, website, phone, phone_emergency, address, place, logo, imageUrls, specialistIds, provinceId, userId, callback) {
         this.create(
             {
                 logo,
@@ -58,6 +58,7 @@ module.exports = {
                 latitude: place.latitude,
                 longitude: place.longitude,
                 phone,
+                emergencyContact: phone_emergency,
                 type: 2,
                 website
             },
@@ -68,7 +69,7 @@ module.exports = {
             callback
         );
     },
-    updateClinic(id, name, website, phone, address, place, logo, imageUrls, specialistIds, provinceId, callback) {
+    updateClinic(id, name, website, phone, phone_emergency, address, place, logo, imageUrls, specialistIds, provinceId, callback) {
         this.update(
             id,
             {
@@ -79,6 +80,7 @@ module.exports = {
                 latitude: place.latitude,
                 longitude: place.longitude,
                 phone,
+                emergencyContact: phone_emergency,
                 type: 2,
                 website
             },

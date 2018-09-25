@@ -74,7 +74,7 @@ class ItemFacility extends Component {
                     <Text style={{ fontSize: 12, marginTop: 5 }} numberOfLines={2} ellipsizeMode='tail'>{this.props.facility.facility.address}</Text>
                 </View>
                 {
-                    this.props.showEdit && this.props.facility.facility.approval == 0 ?
+                    this.props.showEdit && this.props.facility.facility.approval == 0 && (this.props.facility.facility.type == 2 ||  this.props.facility.facility.type == 8) ?
                         <TouchableOpacity style={{ position: 'absolute', top: -2, right: -2 }} onPress={this.edit.bind(this, this.props.facility)}>
                             <ScaledImage source={require("@images/ic_edit.png")} width={80} />
                         </TouchableOpacity> : null

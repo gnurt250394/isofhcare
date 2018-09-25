@@ -27,7 +27,8 @@ class AddNewClinicScreen extends Component {
                 facility: {
                     website: "",
                     address: "",
-                    phone: ""
+                    phone: "",
+                    emergencyContact: ""
                 }
             };
 
@@ -66,10 +67,11 @@ class AddNewClinicScreen extends Component {
             listSpecialist,
             listSpecialistSuggesh: [],
             imageUris: imageUris,
-            website: facility.facility.website,
-            phone: facility.facility.phone,
-            name: facility.facility.name,
-            address: facility.facility.address,
+            website: facility.facility.website ? facility.facility.website : "",
+            phone: facility.facility.phone ? facility.facility.phone : "",
+            phone_emergency: facility.facility.emergencyContact ? facility.facility.emergencyContact : "",
+            name: facility.facility.name ? facility.facility.name : "",
+            address: facility.facility.address ? facility.facility.address : "",
             listProvinces: [],
             editMode,
             facility,
@@ -252,6 +254,10 @@ class AddNewClinicScreen extends Component {
             snackbar.show("Vui lòng nhập đúng định dạng số điện thoại");
             return;
         }
+        if (this.state.phone_emergency && !this.state.phone_emergency.isPhoneNumber()) {
+            snackbar.show("Vui lòng nhập đúng định dạng số điện thoại cấp cứu");
+            return;
+        }
         if (!this.state.address || this.state.address.trim() == "") {
             snackbar.show('Vui lòng nhập địa chỉ phòng khám');
             return;
@@ -302,7 +308,7 @@ class AddNewClinicScreen extends Component {
                 listSpecialist.push(item.id);
             });
             if (!this.state.facility.facility.id)
-                facilityProvider.createClinic(this.state.name.trim(), this.state.website.trim(), this.state.phone.trim(), this.state.address.trim(), this.state.place, this.state.logo.url, listImageUrl, listSpecialist, this.state.province.id, this.props.userApp.currentUser.id, (s, e) => {
+                facilityProvider.createClinic(this.state.name.trim(), this.state.website.trim(), this.state.phone.trim(), this.state.phone_emergency.trim(), this.state.address.trim(), this.state.place, this.state.logo.url, listImageUrl, listSpecialist, this.state.province.id, this.props.userApp.currentUser.id, (s, e) => {
                     this.setState({ isLoading: false });
                     if (s) {
                         switch (s.code) {
@@ -319,7 +325,7 @@ class AddNewClinicScreen extends Component {
                     snackbar.show("Thêm phòng khám không thành công", 'danger');
                 });
             else {
-                facilityProvider.updateClinic(this.state.facility.facility.id, this.state.name.trim(), this.state.website.trim(), this.state.phone.trim(), this.state.address.trim(), this.state.place, this.state.logo.url, listImageUrl, listSpecialist, this.state.province.id, (s, e) => {
+                facilityProvider.updateClinic(this.state.facility.facility.id, this.state.name.trim(), this.state.website.trim(), this.state.phone.trim(), this.state.phone_emergency.trim(), this.state.address.trim(), this.state.place, this.state.logo.url, listImageUrl, listSpecialist, this.state.province.id, (s, e) => {
                     this.setState({ isLoading: false });
                     if (s) {
                         switch (s.code) {
@@ -344,12 +350,7 @@ class AddNewClinicScreen extends Component {
                 <View style={{ flex: 1 }}>
                     <ScrollView style={{ padding: 10, flex: 1 }}
                         keyboardShouldPersistTaps="always">
-                        <View style={{
-                            padding: 10,
-                            borderStyle: "solid",
-                            borderWidth: 1,
-                            borderColor: "#9b9b9b"
-                        }}>
+                        <View style={styles.row}>
                             <TextInput
                                 value={this.state.name}
                                 onChangeText={(s) => this.setState({ name: s })}
@@ -390,13 +391,7 @@ class AddNewClinicScreen extends Component {
                                 </TouchableOpacity>
                             ) : null
                         }
-                        <View style={{
-                            marginTop: 15,
-                            padding: 10,
-                            borderStyle: "solid",
-                            borderWidth: 1,
-                            borderColor: "#9b9b9b"
-                        }}>
+                        <View style={styles.row}>
                             <TextInput
                                 value={this.state.website}
                                 onChangeText={(s) => this.setState({ website: s })}
@@ -407,13 +402,7 @@ class AddNewClinicScreen extends Component {
                                 placeholder={"Website"}
                             />
                         </View>
-                        <View style={{
-                            marginTop: 15,
-                            padding: 10,
-                            borderStyle: "solid",
-                            borderWidth: 1,
-                            borderColor: "#9b9b9b"
-                        }}>
+                        <View style={styles.row}>
                             <TextInput
                                 value={this.state.phone}
                                 onChangeText={(s) => this.setState({ phone: s })}
@@ -424,13 +413,18 @@ class AddNewClinicScreen extends Component {
                                 placeholder={"Số điện thoại"}
                             />
                         </View>
-                        <View style={{
-                            marginTop: 15,
-                            padding: 10,
-                            borderStyle: "solid",
-                            borderWidth: 1,
-                            borderColor: "#9b9b9b"
-                        }}>
+                        <View style={styles.row}>
+                            <TextInput
+                                value={this.state.phone_emergency}
+                                onChangeText={(s) => this.setState({ phone_emergency: s })}
+                                underlineColorAndroid="transparent"
+                                style={{
+                                    padding: 0
+                                }}
+                                placeholder={"Số điện thoại cấp cứu"}
+                            />
+                        </View>
+                        <View style={styles.row}>
                             <TextInput
                                 onChangeText={(s) => this.setState({ address: s })}
                                 underlineColorAndroid="transparent"
@@ -609,5 +603,14 @@ function mapStateToProps(state) {
     return {
         userApp: state.userApp
     };
+}
+const styles = {
+    row: {
+        marginTop: 15,
+        padding: 10,
+        borderStyle: "solid",
+        borderWidth: 1,
+        borderColor: "#9b9b9b"
+    }
 }
 export default connect(mapStateToProps)(AddNewClinicScreen);

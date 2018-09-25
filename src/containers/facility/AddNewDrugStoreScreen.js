@@ -266,7 +266,7 @@ class AddNewDrugStoreScreen extends Component {
                     snackbar.show("Thêm phòng nhà thuốc thành công", 'danger');
                 });
             else
-                facilityProvider.updateDrugStore(this.state.facility.facility.id, this.state.name.trim(),this.state.website ? this.state.website.trim() : "", this.state.phone, this.state.address.trim(), this.state.place, this.state.logo.url, listImageUrl, this.state.licenseNo, this.state.pharmacist, this.state.isGPP, this.state.province.id, (s, e) => {
+                facilityProvider.updateDrugStore(this.state.facility.facility.id, this.state.name.trim(), this.state.website ? this.state.website.trim() : "", this.state.phone, this.state.address.trim(), this.state.place, this.state.logo.url, listImageUrl, this.state.licenseNo, this.state.pharmacist, this.state.isGPP, this.state.province.id, (s, e) => {
                     this.setState({ isLoading: false });
                     if (s) {
                         switch (s.code) {
@@ -290,12 +290,7 @@ class AddNewDrugStoreScreen extends Component {
                 <View style={{ flex: 1 }}>
                     <ScrollView style={{ padding: 10, flex: 1 }}
                         keyboardShouldPersistTaps="always">
-                        <View style={{
-                            padding: 10,
-                            borderStyle: "solid",
-                            borderWidth: 1,
-                            borderColor: "#9b9b9b"
-                        }}>
+                        <View style={styles.row}>
                             <TextInput
                                 onChangeText={(s) => this.setState({ name: s })}
                                 underlineColorAndroid="transparent"
@@ -306,13 +301,7 @@ class AddNewDrugStoreScreen extends Component {
                                 placeholder={"Tên nhà thuốc"}
                             />
                         </View>
-                        <View style={{
-                            marginTop: 15,
-                            padding: 10,
-                            borderStyle: "solid",
-                            borderWidth: 1,
-                            borderColor: "#9b9b9b"
-                        }}>
+                        <View style={styles.row}>
                             <TextInput
                                 onChangeText={(s) => this.setState({ licenseNo: s })}
                                 underlineColorAndroid="transparent"
@@ -323,13 +312,7 @@ class AddNewDrugStoreScreen extends Component {
                                 placeholder={"Số giấy phép"}
                             />
                         </View>
-                        <View style={{
-                            marginTop: 15,
-                            padding: 10,
-                            borderStyle: "solid",
-                            borderWidth: 1,
-                            borderColor: "#9b9b9b"
-                        }}>
+                        <View style={styles.row}>
                             <TextInput
                                 onChangeText={(s) => this.setState({ pharmacist: s })}
                                 underlineColorAndroid="transparent"
@@ -340,13 +323,7 @@ class AddNewDrugStoreScreen extends Component {
                                 placeholder={"Dược sĩ"}
                             />
                         </View>
-                        <View style={{
-                            marginTop: 15,
-                            padding: 10,
-                            borderStyle: "solid",
-                            borderWidth: 1,
-                            borderColor: "#9b9b9b"
-                        }}>
+                        <View style={styles.row}>
                             <TextInput
                                 onChangeText={(s) => this.setState({ website: s })}
                                 underlineColorAndroid="transparent"
@@ -357,13 +334,7 @@ class AddNewDrugStoreScreen extends Component {
                                 placeholder={"Website"}
                             />
                         </View>
-                        <View style={{
-                            marginTop: 15,
-                            padding: 10,
-                            borderStyle: "solid",
-                            borderWidth: 1,
-                            borderColor: "#9b9b9b"
-                        }}>
+                        <View style={styles.row}>
                             <TextInput
                                 onChangeText={(s) => this.setState({ phone: s })}
                                 underlineColorAndroid="transparent"
@@ -395,13 +366,7 @@ class AddNewDrugStoreScreen extends Component {
                             >Tiêu chuẩn GPP</Text>
                         </TouchableOpacity>
 
-                        <View style={{
-                            marginTop: 15,
-                            padding: 10,
-                            borderStyle: "solid",
-                            borderWidth: 1,
-                            borderColor: "#9b9b9b"
-                        }}>
+                        <View style={styles.row}>
                             <TextInput
                                 onChangeText={(s) => this.setState({ address: s })}
                                 underlineColorAndroid="transparent"
@@ -573,6 +538,15 @@ class AddNewDrugStoreScreen extends Component {
     }
 }
 
+const styles = {
+    row: {
+        marginTop: 15,
+        padding: 10,
+        borderStyle: "solid",
+        borderWidth: 1,
+        borderColor: "#9b9b9b"
+    }
+}
 function mapStateToProps(state) {
     return {
         userApp: state.userApp

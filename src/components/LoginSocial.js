@@ -128,7 +128,7 @@ class LoginSocial extends Component {
         return (
             <View>
                 <Text style={{ textAlign: 'center', marginTop: 20, color: "#3160ac", opacity: 0.6 }}>Đăng nhập với</Text>
-                <View style={{ flexDirection: 'row' }}>
+                <View style={{ flexDirection: 'row', justifyContent:'center' }}>
                     <TouchableOpacity onPress={() => this.handleSigninGoogle()}>
                         <ScaleImage source={require("@images/ic_google.png")} width={40} style={{ padding: 10, margin: 10 }} />
                     </TouchableOpacity>
