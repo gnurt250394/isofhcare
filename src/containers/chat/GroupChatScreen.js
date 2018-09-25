@@ -57,17 +57,28 @@ class GroupChatScreen extends React.Component {
     //     let groupChannelListQuery = sendbirdUtils.getGroupChannelList(sb, 100, this.groupChannelQueryNext.bind(this));
     // }
 
-    componentDidMount() {
-        console.disableYellowBox = true;
+    getMyGroup() {
         firebaseUtils.getMyGroup(this.props.userApp.currentUser.id).then(x => {
+            debugger;
             console.log(x);
-            this.setState({ listGroup: x });
+            this.setState({ listGroup: [...x] });
         }).catch(x => {
             this.setState({ listGroup: [] })
         });
-        this.snap = firebaseUtils.getUserDb().doc(this.props.userApp.currentUser.id + "").onSnapshot((snap) => {
-            console.log(snap);
-        });
+    }
+    componentDidMount() {
+        console.disableYellowBox = true;
+        this.getMyGroup();
+        // this.snap = firebaseUtils.getUserDb().doc(this.props.userApp.currentUser.id + "").collection("groups").onSnapshot((snap) => {
+        //     snap.docChanges().forEach(item => {
+
+        //     })
+        //     this.setState({ listGroup: [] }, () => {
+        //         setTimeout(() => {
+        //             this.getMyGroup();
+        //         }, 2000);
+        //     });
+        // });
     }
     componentWillUnmount() {
         if (this.snap)

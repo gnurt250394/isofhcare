@@ -33,10 +33,8 @@ class GroupChatItem extends React.Component {
         }).catch(x => {
             this.setState({ name: item.name ? item.name : "Tin nhắn", avatar: item.avatar ? item.avatar.absoluteUrl() : "" });
         });
-
-        let group = firebaseUtils.getGroup(item.id);
-        let message = group.collection("messages");
-        this.snapshot = message.onSnapshot((snap) => {
+        let message = item.data().group.collection("messages");
+        this.snapshot = message.orderBy('createdDate', 'desc').limit(1).onSnapshot((snap) => {
             snap.docChanges().forEach((item) => {
                 if (item.type == "added") {
                     this.setState({
@@ -53,20 +51,6 @@ class GroupChatItem extends React.Component {
                     }));
             });
         });
-        // message.orderBy('createdDate', 'desc').limit(1).get().then((snap) => {
-        //     if (snap.docs && snap.docs.length > 0) {
-        //         let data = snap.docs[0].data();
-        //         this.setState({
-        //             lastMessage: data
-        //         });
-        //         console.log(data);
-        //     }
-        //     // snap.docChanges().forEach((item) => {
-        //     //     this.setState({
-        //     //         lastMessage: item
-        //     //     });
-        //     // });
-        // });
     }
     highlighMessage(item) {
         try {

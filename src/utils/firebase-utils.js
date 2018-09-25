@@ -146,41 +146,42 @@ module.exports = {
         return new Promise((resolve, reject) => {
             try {
                 let userDb = this.getUserDb();
-                userDb.doc(userId + "").collection("groups").get().then(docs => {
-                    let groups = [];
-                    docs.docs.forEach(item => {
-                        if (item && item.exists && item.data().group)
-                            groups.push(item.data().group.get())
-                    })
+                userDb.doc(userId + "").collection("groups").orderBy("updatedDate", 'desc').get().then(docs => {
+                    resolve(docs.docs);
+                    // let groups = [];
+                    // docs.docs.forEach(item => {
+                    //     if (item && item.exists && item.data().group)
+                    //         groups.push(item.data().group.get())
+                    // })
 
-                    Promise.all(groups).then(values => {
-                        let groups = [];
-                        values.forEach(item => {
-                            if (item.exists) {
-                                let data = item.data();
-                                if (data)
-                                    groups.push(data);
-                            }
-                        });
-                        groups.sort((a, b) => {
-                            try {
-                                if (!a.updatedDate && !b.updatedDate)
-                                    return 0;
-                                if (!a.updatedDate)
-                                    return 1;
-                                if (!b.updatedDate)
-                                    return -1;
-                                if (a.updatedDate.toDate() < b.updatedDate.toDate())
-                                    return 1;
-                            } catch (error) {
+                    // Promise.all(groups).then(values => {
+                    //     let groups = [];
+                    //     values.forEach(item => {
+                    //         if (item.exists) {
+                    //             let data = item.data();
+                    //             if (data)
+                    //                 groups.push(data);
+                    //         }
+                    //     });
+                    //     // groups.sort((a, b) => {
+                    //     //     try {
+                    //     //         if (!a.updatedDate && !b.updatedDate)
+                    //     //             return 0;
+                    //     //         if (!a.updatedDate)
+                    //     //             return 1;
+                    //     //         if (!b.updatedDate)
+                    //     //             return -1;
+                    //     //         if (a.updatedDate.toDate() < b.updatedDate.toDate())
+                    //     //             return 1;
+                    //     //     } catch (error) {
 
-                            }
-                            return -1;
-                        })
-                        resolve(groups);
-                    }).catch(e => {
-                        resolve([]);
-                    });
+                    //     //     }
+                    //     //     return -1;
+                    //     // })
+                    //     resolve(groups);
+                    // }).catch(e => {
+                    //     resolve([]);
+                    // });
                     // resolve(groups);
                 }).catch(x => resolve([]));
             } catch (error) {
@@ -387,7 +388,7 @@ module.exports = {
                         resolve(data.unread_message.length);
                     }
                 }
-                el;se
+                el; se
                 resolve(0);
             }).catch(x => resolve(0));
         });
