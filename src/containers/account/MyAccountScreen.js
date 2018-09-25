@@ -1,11 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Animated, Easing } from 'react-native';
+import { Fab, Container, Header } from 'native-base';
 import { connect } from 'react-redux';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import Dimensions from 'Dimensions';
-const DEVICE_WIDTH = Dimensions.get('window').width;
 import ImageProgress from 'mainam-react-native-image-progress';
+import ImagePicker from 'mainam-react-native-select-image';
 import Progress from 'react-native-progress/Pie';
 import clientUtils from '@utils/client-utils';
 import convertUtils from 'mainam-react-native-convert-utils';
@@ -13,25 +14,21 @@ import QRCode from 'react-native-qrcode';
 import userProvider from '@data-access/user-provider';
 import redux from '@redux-store';
 
+
+const bgImage = require("@images/bg.png")
+const icSupport = require("@images/ichotro.png")
+const icCamera = require("@images/photoCamera.png")
+const icEdit = require("@images/edit1.png")
+
 class MyAccountScreen extends Component {
     constructor(props) {
         super(props);
-        var user = this.props.user;
-        if (!user)
-            user = this.props.userApp.currentUser;
-        if (!user || !this.props.userApp.isLogin)
-            Actions.pop();
-        var title = convertUtils.toJsonArray(user.title, []);
-        if (!title.length)
-            title = [];
-        var company = convertUtils.toJsonArray(user.company, []);
-        if (!company.length)
-            company = [];
         this.state = {
-            user,
-            title,
-            company
-        }
+            view: true
+        };
+        var user = this.props.user;
+        this.onChange = this.onChange.bind(this)
+        this.animatedValue = new Animated.Value(0)
     }
 
     logout() {
@@ -39,94 +36,172 @@ class MyAccountScreen extends Component {
         Actions.login();
     }
 
+    onChange() {
+        // alert("ádasdsada")
+        this.animate()
+        this.setState({ view: !this.state.view })
+    }
 
+    componentDidMount() {
+        this.animate()
+    }
+
+    animate() {
+        this.animatedValue.setValue(0)
+        Animated.timing(
+            this.animatedValue,
+            {
+                toValue: 1,
+                duration: 2000,
+                easing: Easing.linear
+            }
+        ).start()
+    }
 
     render() {
+        const textSize = this.animatedValue.interpolate({
+            inputRange: [0, 200, 400],
+            outputRange: [54, 200, 54]
+        })
+
         return (
             <ActivityPanel style={{ flex: 1 }} title="Thông tin cá nhân" showFullScreen={true}>
-                <ScrollView>
-                    <View style={{ position: 'relative' }}>
-                        <ScaleImage source={require("@images/bannerprofile.png")} width={DEVICE_WIDTH} style={{ marginBottom: 80 }} resizeMode="cover" />
-                        <View>
-                            <View style={{ alignItems: 'center', justifyContent: 'center', width: 157, height: 157, borderRadius: 80, backgroundColor: '#00796b10', position: 'absolute', bottom: 0, left: (DEVICE_WIDTH - 157) / 2 }}>
-                                <View style={{ alignItems: 'center', justifyContent: 'center', width: 130, height: 130, backgroundColor: '#00796b20', borderRadius: 65 }}>
-                                    <ImageProgress
-                                        indicator={Progress} resizeMode='cover' style={{ width: 104, height: 104 }} imageStyle={{ width: 104, height: 104, borderRadius: 52, borderWidth: 3, borderColor: '#00796b' }} source={{ uri: this.props.userApp.currentUser.avatar ? this.props.userApp.currentUser.avatar.absoluteUrl() : "undefined" }}
-                                        defaultImage={() => {
-                                            return <ScaleImage resizeMode='cover' source={require("@images/doctor.png")} width={104} style={{ width: 104, height: 104, borderRadius: 52, borderWidth: 3, borderColor: '#00796b' }} />
-                                        }}
-                                    />
+                <View style={{ position: 'relative', flex: 1 }}>
+                    <ScaleImage source={bgImage} width={DEVICE_WIDTH} zIndex={0} />
+                    <ScaleImage source={require("@images/rectangle.png")} zIndex={1} width={100} style={{ bottom: 0, left: 80, position: 'absolute' }} />
+                    <ScrollView style={styles.container} zIndex={2}>
+                        <View style={styles.header}>
+                            <TouchableOpacity style={styles.boxAvatar}>
+                                <ScaleImage source={icSupport} width={80} style={styles.avatar} />
+                                <ScaleImage source={icCamera} width={20} style={styles.iconChangeAvatar} />
+                            </TouchableOpacity>
+                        </View>
+                        {this.state.view
+                            ?
+                            <View>
+                                <Text style={styles.name}>NGUYỄN THU PHƯƠNG THẢO</Text>
+                                <View style={styles.content}>
 
+                                    <View style={styles.item}>
+                                        <Text style={styles.lable}>Số điện thoại:</Text>
+                                        <Text style={styles.value}>0123456789</Text>
+                                    </View>
+                                    <View style={styles.item}>
+                                        <Text style={styles.lable}>Email:</Text>
+                                        <Text style={styles.value}>diachiemail@gmail.com</Text>
+                                    </View>
                                 </View>
                             </View>
-                        </View>
-                    </View>
-                    <View style={{ alignItems: 'center', marginTop: 7 }}>
-                        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#000' }}>{this.state.user.degree} {this.state.user.name}</Text>
-                        {this.props.userApp.currentUser.type == 1 ?
-                            <View style={{ paddingTop: 10, alignItems: 'center' }}>
-                                <Text style={{ marginBottom: 10, fontSize: 10, fontStyle: 'italic' }}>Mã QRCode của bạn</Text>
-                                <QRCode
-                                    value={JSON.stringify({ id: this.state.user.id, name: this.state.user.name })}
-                                    size={100}
-                                    fgColor='white' />
-                            </View> : null
+                            :
+                            <View>
+                                <Text><Text>Lưu ý</Text>: khi thay đổi email, quý khách cần đăng nhập email mới để kích hoạt lại tài khoản</Text>
+                            </View>
                         }
-                        {
-                            this.state.user.email && this.props.userApp.currentUser.type != 1 ?
-                                <Text style={{ color: '#00000060', fontSize: 14, marginTop: 7 }}>{this.state.user.email}</Text> : null
-                        }
-                        {
-                            this.state.user.phone && this.props.userApp.currentUser.type != 1 ?
-                                <Text style={{ color: '#00000060', fontSize: 14, marginTop: 7 }}>{this.state.user.phone}</Text> : null
-                        }
-                        {
-                            this.state.user && this.props.userApp.isLogin && this.state.user.id == this.props.userApp.currentUser.id ?
-                                <TouchableOpacity style={{ marginTop: 16, marginBottom: 31, padding: 6, paddingLeft: 20, paddingRight: 20, borderWidth: 1, borderRadius: 13, borderColor: 'rgb(149,149,149)' }}
-                                    onPress={() => this.logout()}><Text style={{ fontWeight: '900' }}>Đăng xuất</Text></TouchableOpacity>
-                                : <View style={{ marginBottom: 31 }} />
-                        }
+                    </ScrollView >
 
-                        {
-                            this.state.title ?
-                                this.state.title.map((item, i) => {
-                                    return (
-                                        item && this.state.company.length > i && this.state.company[i] ?
-                                            <View style={{ padding: 9, flexDirection: 'row', marginTop: 0 }}>
-                                                <View style={{ flex: 1, backgroundColor: 'rgb(204,204,204)', marginLeft: 10, paddingTop: 21, alignItems: 'center', paddingBottom: 26, marginRight: 9 }}>
-                                                    <ScaleImage source={require("@images/icchucvu.png")} height={35} />
-                                                    <Text style={{ color: '#000000', fontWeight: '800', marginTop: 24 }}>Chức vụ:</Text>
-                                                    <Text style={{ color: '#000000', marginTop: 7 }}>{item}</Text>
-                                                </View>
-                                                <View style={{ flex: 1, backgroundColor: 'rgb(204,204,204)', marginLeft: 9, paddingTop: 21, alignItems: 'center', paddingBottom: 26, marginRight: 10 }}>
-                                                    <ScaleImage source={require("@images/iccoquan.png")} height={35} />
-                                                    <Text style={{ color: '#000000', fontWeight: '800', marginTop: 24 }}>Cơ quan:</Text>
-                                                    <Text style={{ color: '#000000', marginTop: 7 }}>{this.state.company[i] ? this.state.company[i] : ""}</Text>
-                                                </View>
-                                            </View> : null
-                                    );
-                                }) : null
-                        }
-                        {
-                            this.state.user.id == this.props.userApp.currentUser.id && this.props.userApp.currentUser.type != 1 ?
-                                <View style={{ padding: 9, flexDirection: 'row', marginTop: 0 }}>
-                                    <TouchableOpacity style={{ flex: 1, flexDirection: 'row', alignContent: 'center', justifyContent: 'center', height: 54, backgroundColor: 'rgb(255,132,137)', marginLeft: 10, alignItems: 'center', marginRight: 9 }}>
-                                        <ScaleImage source={require("@images/icdoimk.png")} height={28} />
-                                        <Text style={{ color: '#FFF', fontWeight: '800', marginLeft: 11, fontSize: 16 }}>Đổi mật khẩu</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity onPress={() => Actions.groupChatScreen()} style={{ flex: 1, flexDirection: 'row', alignContent: 'center', justifyContent: 'center', height: 54, backgroundColor: 'rgb(0,121,107)', marginLeft: 10, alignItems: 'center', marginRight: 9 }}>
-                                        <ScaleImage source={require("@images/icnhomchat.png")} height={28} />
-                                        <Text style={{ color: '#FFF', fontWeight: '800', marginLeft: 11, fontSize: 16 }}>Nhóm chat</Text>
-                                    </TouchableOpacity>
-                                </View>
-                                : null
-                        }
+                    <View style={styles.actions} zIndex={3}>
+                        <Animated.View
+                            style={{
+                                fontSize: textSize,
+                            }} >
+                            <TouchableOpacity style={styles.fab} onPress={this.onChange} >
+                                <ScaleImage source={icEdit} width={24} style={{ position: 'absolute', left: 15, top: 15 }} />
+                            </TouchableOpacity>
+                        </Animated.View>
                     </View>
-                </ScrollView >
+                </View>
             </ActivityPanel >
         );
     }
 }
+
+const { height: DEVICE_HEIGHT, width: DEVICE_WIDTH } = Dimensions.get('window');
+
+const styles = StyleSheet.create({
+    background: {
+        width: DEVICE_WIDTH,
+        height: DEVICE_HEIGHT - 44,
+        alignSelf: 'center',
+        flex: 1
+    },
+    container: {
+        padding: 40,
+        paddingBottom: 0,
+        flex: 1,
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
+    },
+    header: {
+        paddingLeft: 20,
+        height: "100%",
+        flex: 1
+    },
+    boxAvatar: {
+        width: 84,
+        height: 84,
+        borderRadius: 100,
+        borderWidth: 2,
+        borderColor: '#5fba7d'
+    },
+    avatar: {
+        alignSelf: 'center',
+        borderRadius: 100
+    },
+    iconChangeAvatar: {
+        position: 'absolute',
+        zIndex: 1,
+        bottom: 5,
+        right: 5
+    },
+    name: {
+        marginTop: 18,
+        marginBottom: 40,
+        fontSize: 26,
+        fontWeight: "600",
+        fontStyle: "normal",
+        letterSpacing: 0,
+        color: "#23429b",
+        width: 190,
+    },
+    content: {
+        padding: 20,
+        borderRadius: 20,
+        backgroundColor: '#edf4fa',
+        paddingBottom: 100
+    },
+    item: {
+        paddingTop: 20,
+        // color:'#3a4f60'
+    },
+    lable: {
+        fontSize: 19,
+        color: '#3a4f60'
+    },
+    value: {
+        fontSize: 19,
+        fontWeight: "bold",
+        color: '#3a4f60'
+    },
+    actions: {
+        position: 'absolute',
+        right: 0,
+        bottom: 0,
+        height: 74,
+        width: DEVICE_WIDTH,
+        alignItems: 'flex-end'
+    },
+    fab: {
+        width: 54,
+        height: 54,
+        marginRight: 40,
+        backgroundColor: '#00796b',
+        borderRadius: 100,
+
+    }
+})
 
 function mapStateToProps(state) {
     return {

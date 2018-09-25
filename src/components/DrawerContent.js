@@ -46,8 +46,10 @@ class DrawerContent extends Component {
         <View style={{ width: 250, paddingTop: 10, flex: 1 }}>
           {this.props.userApp.isLogin ?
             <View>
-              <ScaleImage source={require("@images/ichotro.png")} width={70} style={{ alignSelf: 'center', }} />
-              <Text style={{ alignSelf: 'center', fontWeight: 'bold', fontSize: 15, color: 'rgb(35,66,155)', marginTop: 18, }}>{this.props.userApp.currentUser.name ? this.props.userApp.currentUser.name.toUpperCase() : ""}</Text>
+              <TouchableOpacity style={styles.menu_item} onPress={() => { this.props.navigation.navigate("profile") }}>
+                <ScaleImage source={require("@images/ichotro.png")} width={70} style={{ alignSelf: 'center', }} />
+                <Text style={{ alignSelf: 'center', fontWeight: 'bold', fontSize: 15, color: 'rgb(35,66,155)', marginTop: 18, }}>{this.props.userApp.currentUser.name ? this.props.userApp.currentUser.name.toUpperCase() : ""}</Text>
+              </TouchableOpacity>
             </View> : null
           }
           <ScrollView style={{ flex: 1, marginLeft: 60, marginTop: 30 }}>
@@ -59,9 +61,10 @@ class DrawerContent extends Component {
                 <TouchableOpacity style={styles.menu_item} onPress={() => { this.props.navigation.navigate("mailbox") }}>
                   <Text style={styles.menu_item_text}>Tin nhắn</Text>
                 </TouchableOpacity>
-                {/* <TouchableOpacity style={styles.menu_item}>
+                <TouchableOpacity style={styles.menu_item} onPress={() => { this.props.navigation.navigate("profile") }}>
                   <Text style={styles.menu_item_text}>Hồ sơ cá nhân</Text>
                 </TouchableOpacity>
+                {/* 
                 <TouchableOpacity style={styles.menu_item}>
                   <Text style={styles.menu_item_text}>Ví iSofH care</Text>
                 </TouchableOpacity>
