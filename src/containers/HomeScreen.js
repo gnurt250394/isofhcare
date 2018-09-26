@@ -6,10 +6,8 @@ import constants from '@resources/strings';
 import redux from '@redux-store';
 import ScalingDrawer from 'mainam-react-native-scaling-drawer';
 import DrawerContent from '@components/DrawerContent';
-import { IndicatorViewPager } from 'mainam-react-native-viewpager';
 import TabSearch from '@containers/home/tab/TabSearch';
-const { width, height } = Dimensions.get('window');
-
+import Swiper from 'react-native-swiper';
 let defaultScalingDrawerConfig = {
 	scalingFactor: 0.7,
 	minimizeFactor: 0.7,
@@ -45,12 +43,15 @@ class SplashScreen extends Component {
 				content={<DrawerContent navigation={this.props.navigation} drawer={this._drawer} />}
 				{...defaultScalingDrawerConfig}
 			>
-				<IndicatorViewPager ref={(viewPager) => { this.viewPager = viewPager }} style={{ flex: 1, backgroundColor: "#000", width, height, overflow: 'hidden' }}>
-					<View><TabSearch navigation={this.props.navigation} style={{ width, height }} drawer={this._drawer} /></View>
-					{/* <View><TabSearch navigation={this.props.navigation} style={{ width, height }} drawer={this._drawer} /></View> */}
-				</IndicatorViewPager>
-
-
+				<Swiper
+					dot={<View />}
+					activeDot={<View />}
+					paginationStyle={{
+						bottom: 30
+					}}
+					loop={true}>
+					<TabSearch navigation={this.props.navigation} style={{ flex: 1 }} drawer={this._drawer} />
+				</Swiper>
 			</ScalingDrawer >);
 	}
 }

@@ -6,7 +6,7 @@
 
 import React, { Component, PropTypes } from 'react';
 import { View, ScrollView, KeyboardAvoidingView, Text, StatusBar, TouchableOpacity, Image, Platform, Keyboard, AppState, FlatList } from 'react-native';
-import ScaleImage from 'mainam-react-native-scaleimage';
+import ScaledImage from 'mainam-react-native-scaleimage';
 import dateUtisl from 'mainam-react-native-date-utils';
 import ActivityPanel from '@components/ActivityPanel';
 import { connect } from 'react-redux';
@@ -15,10 +15,18 @@ import GroupChatItem from '@components/chat/GroupChatItem'
 class GroupChatScreen extends React.Component {
     constructor(props) {
         super(props);
-        selfSendBird = this;
+        let facility = this.props.navigation.getParam("facility");
+        let title = "Tin nhắn";
+        let userId = this.props.userApp.currentUser.id;
+        if (facility) {
+            title = facility.facility.name;
+            userId = facility.facility.id;
+        }
         this.state =
             {
+                loadingGroup: true,
                 listGroup: [],
+                title, userId
             }
     }
     // _handleAppStateChange = currentAppState => {
@@ -35,27 +43,6 @@ class GroupChatScreen extends React.Component {
     //     }
     // };
 
-    // onMessageReceived(channel, message) {
-    //     for (var i = 0; i < this.state.listGroup.length; i++) {
-    //         var item = this.state.listGroup[i];
-    //         if (item.url === channel.url) {
-    //             this.state.listGroup.splice(i, 1);
-    //             break;
-    //         }
-    //     }
-    //     this.state.listGroup.splice(0, 0, channel);
-    //     this.setState({ listGroup: this.state.listGroup });
-    // }
-    // onTypingStatusUpdated(channel) {
-    //     this.setState({ listGroup: this.state.listGroup });
-    // }
-    // groupChannelQueryNext(channels, error) {
-    //     this.setState({ listGroup: channels });
-    // }
-    // sendBirtConnectCallback(sb, user, error) {
-    //     sendbirdUtils.setHandler(sb, "HANDLE_GROUP", this.onTypingStatusUpdated.bind(this), this.onMessageReceived.bind(this));
-    //     let groupChannelListQuery = sendbirdUtils.getGroupChannelList(sb, 100, this.groupChannelQueryNext.bind(this));
-    // }
 
     data = [];
     dataIds = [];
@@ -72,22 +59,32 @@ class GroupChatScreen extends React.Component {
         this.dataIds.splice(index, 0, group.doc.id);
     }
     getMyGroup() {
-        firebaseUtils.getMyGroup(this.props.userApp.currentUser.id).then(x => {
-            this.setState({ listGroup: x })
-        }).catch(x => {
-            this.setState({ listGroup: [] })
+        this.setState({ loadingGroup: true }, () => {
+            firebaseUtils.getMyGroup(this.state.userId).then(x => {
+                this.setState({
+                    listGroup: x,
+                    loadingGroup: false
+                })
+            }).catch(x => {
+                this.setState({
+                    listGroup: [],
+                    loadingGroup: false
+                })
+            });
         });
     }
     componentDidMount() {
         console.disableYellowBox = true;
-        this.getMyGroup();
-        this.snap = this.snap = firebaseUtils.onMyGroupChange(this.props.userApp.currentUser.id, (snap) => {
-            snap.docChanges().forEach(item => {
-                if (item.type == 'added') {
-                    this.getMyGroup();
-                }
+        this.setState({ loadingGroup: true }, () => {
+            this.getMyGroup();
+            this.snap = this.snap = firebaseUtils.onMyGroupChange(this.state.userId, (snap) => {
+                snap.docChanges().forEach(item => {
+                    if (item.type == 'added') {
+                        this.getMyGroup();
+                    }
+                });
             });
-        });
+        })
     }
     componentWillUnmount() {
         if (this.snap)
@@ -102,9 +99,11 @@ class GroupChatScreen extends React.Component {
 
     render() {
         return (
-            <ActivityPanel style={{ flex: 1 }} title="Tin nhắn" showFullScreen={true}>
+            <ActivityPanel style={{ flex: 1 }} title={this.state.title} showFullScreen={true}>
 
                 <FlatList
+                    onRefresh={this.getMyGroup.bind(this)}
+                    refreshing={this.state.loadingGroup}
                     style={{ flex: 1, paddingTop: 20 }}
                     keyExtractor={(item, index) => index.toString()}
                     extraData={this.state}

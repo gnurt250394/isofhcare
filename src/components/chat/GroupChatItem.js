@@ -35,6 +35,7 @@ class GroupChatItem extends React.Component {
         let item = props.group;
         let groupId = item.id;
         dataCacheProvider.read(this.state.userId, "group_chat_" + item.id, (s) => {
+            console.log(s);
             if (s && JSON.stringify(s) != "{}") {
                 try {
                     this.setState(s);
@@ -42,15 +43,15 @@ class GroupChatItem extends React.Component {
 
                 }
             }
-            firebaseUtils.getGroupName(this.props.userApp.currentUser.id, groupId).then(x => {
-                let info = { name: x.name ? x.name : "Tin nhắn", avatar: x.avatar ? x.avatar.absoluteUrl() : "" }
-                this.setState(info);
-                dataCacheProvider.save(this.state.userId, "group_chat_" + groupId, info)
-            }).catch(x => {
-                let info = { name: "Tin nhắn", avatar: "" }
-                this.setState(info);
-                dataCacheProvider.save(this.state.userId, "group_chat_" + groupId, info)
-            });
+            // firebaseUtils.getGroupName(this.props.userApp.currentUser.id, groupId).then(x => {
+            //     let info = { name: x.name ? x.name : "Tin nhắn", avatar: x.avatar ? x.avatar.absoluteUrl() : "" }
+            //     this.setState(info);
+            //     dataCacheProvider.save(this.state.userId, "group_chat_" + groupId, info)
+            // }).catch(x => {
+            //     let info = { name: "Tin nhắn", avatar: "" }
+            //     this.setState(info);
+            //     dataCacheProvider.save(this.state.userId, "group_chat_" + groupId, info)
+            // });
         });
         dataCacheProvider.read(this.state.userId, "group_chat_message" + groupId, (s) => {
             if (s && JSON.stringify(s) != "{}") {
@@ -118,20 +119,22 @@ class GroupChatItem extends React.Component {
         return (
             <TouchableOpacity onPress={this.openGroup.bind(this, item.id)} >
                 <View style={{ flexDirection: 'row', padding: 10 }}>
-                    {
+                    {/* {
                         this.state.avatarError ?
                             <Image source={require("@images/user.png")} style={{ width: 60, height: 60 }}></Image> :
                             <Image source={{ uri: this.state.avatar }} style={{ width: 60, height: 60, borderRadius: 30 }} resizeMode="cover" onError={this.onError.bind(this)}></Image>
-                    }
+                    } */}
 
-                    {/* <ImageLoad
-                        customImagePlaceholderDefaultStyle={{ width: 60, height: 60 }}
+                    <ImageLoad
+                        borderRadius={30}
+                        customImagePlaceholderDefaultStyle={{ width: 60, height: 60, borderRadius: 30 }}
                         resizeMode="cover"
-                        placeholderSource={require("@images/noimage.jpg")}
-                        style={{ width: 60, height: 60 }}
+                        placeholderSource={require("@images/user.png")}
+                        style={{ width: 60, height: 60, borderRadius: 30 }}
                         loadingStyle={{ size: 'small', color: 'gray' }}
+                        imageStyle={{ borderRadius: 30 }}
                         source={{ uri: this.state.avatar }}
-                    /> */}
+                    />
                     <View style={{ flex: 1, marginLeft: 10 }}>
                         <View style={{ flexDirection: 'row' }}>
                             <View style={{
