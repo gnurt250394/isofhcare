@@ -318,37 +318,44 @@ module.exports = {
             data: data ? data : {}
         });
     },
-    getGroupName(userId, groupData) {
+    getGroupName(userId, groupId) {
         return new Promise((resolve, reject) => {
-            let groupDb = this.getGroupDb();
-            groupDb.doc(groupData.id).collection("members").get().then(docs => {
-                let members = docs.docs;
-                if (members.length == 2) {
-                    let user = (members[0].id == userId) ? members[1] : members[0]
-                    user.data().user.get().then(doc => {
-                        let data = doc.data();
-                        resolve({
-                            name: data.fullname,
-                            avatar: data.avatar
-                        })
+            let group = this.getGroup(groupId);
+            group.get().then(doc => {
+                if (doc.exists) {
+                    let groupData = doc.data();
+                    group.collection("members").get().then(docs => {
+                        let members = docs.docs;
+                        if (members.length == 2) {
+                            let user = (members[0].id == userId) ? members[1] : members[0]
+                            user.data().user.get().then(doc => {
+                                let data = doc.data();
+                                resolve({
+                                    name: data.fullname,
+                                    avatar: data.avatar
+                                })
+                            }).catch(x => {
+                                resolve({
+                                    name: groupData.name ? groupData.name : "",
+                                    avatar: groupData.avatar
+                                })
+                            });
+                        } else {
+                            resolve({
+                                name: groupData.name,
+                                avatar: groupData.avatar
+                            });
+                        }
                     }).catch(x => {
                         resolve({
-                            name: groupData.name ? groupData.name : "Tin nhắn",
+                            name: groupData.name ? groupData.name : "",
                             avatar: groupData.avatar
                         })
                     });
                 } else {
-                    resolve({
-                        name: groupData.name,
-                        avatar: groupData.avatar
-                    });
+                    reject();
                 }
-            }).catch(x => {
-                resolve({
-                    name: groupData.name ? groupData.name : "Tin nhắn",
-                    avatar: groupData.avatar
-                })
-            });
+            }).catch(x => reject());
         });
     },
     markAsRead(userId, groupId) {

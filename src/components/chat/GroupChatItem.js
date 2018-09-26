@@ -14,12 +14,14 @@ import DateMessage from '@components/chat/DateMessage';
 import ImageLoad from 'mainam-react-native-image-loader';
 import { connect } from 'react-redux';
 import firebaseUtils from '@utils/firebase-utils';
+import dataCacheProvider from '@data-access/datacache-provider';
 class GroupChatItem extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             name: "",
-            unReadCount: 0
+            unReadCount: 0,
+            userId: this.props.userApp.currentUser.id
         }
     }
     openGroup(groupId) {
@@ -31,27 +33,58 @@ class GroupChatItem extends React.Component {
     }
     showData(props) {
         let item = props.group;
-        firebaseUtils.getGroupName(this.props.userApp.currentUser.id, item).then(x => {
-            this.setState({ name: x.name ? x.name : "Tin nhắn", avatar: x.avatar ? x.avatar.absoluteUrl() : "" });
-        }).catch(x => {
-            this.setState({ name: item.name ? item.name : "Tin nhắn", avatar: item.avatar ? item.avatar.absoluteUrl() : "" });
-        });
-        let message = item.data().group.collection("messages");
-        this.snapshot = message.orderBy('createdDate', 'desc').limit(1).onSnapshot((snap) => {
-            snap.docChanges().forEach((item) => {
-                if (item.type == "added") {
-                    this.setState({
-                        lastMessage: item.doc.data()
-                    });
+        let groupId = item.id;
+        dataCacheProvider.read(this.state.userId, "group_chat_" + item.id, (s) => {
+            if (s && JSON.stringify(s) != "{}") {
+                try {
+                    this.setState(s);
+                } catch (error) {
+
                 }
-                firebaseUtils.getUnReadMessageCount(this.props.userApp.currentUser.id, props.group.id).then(x => {
-                    this.setState({
-                        unReadCount: x
-                    });
-                }).catch(x =>
-                    this.setState({
-                        unReadCount: 0
-                    }));
+            }
+            firebaseUtils.getGroupName(this.props.userApp.currentUser.id, groupId).then(x => {
+                let info = { name: x.name ? x.name : "Tin nhắn", avatar: x.avatar ? x.avatar.absoluteUrl() : "" }
+                this.setState(info);
+                dataCacheProvider.save(this.state.userId, "group_chat_" + groupId, info)
+            }).catch(x => {
+                let info = { name: "Tin nhắn", avatar: "" }
+                this.setState(info);
+                dataCacheProvider.save(this.state.userId, "group_chat_" + groupId, info)
+            });
+        });
+        dataCacheProvider.read(this.state.userId, "group_chat_message" + groupId, (s) => {
+            if (s && JSON.stringify(s) != "{}") {
+                try {
+                    this.setState({ lastMessage: s });
+                } catch (error) {
+
+                }
+            }
+            let message = item.data().group.collection("messages");
+            this.snapshot = message.orderBy('createdDate', 'desc').limit(1).onSnapshot((snap) => {
+                snap.docChanges().forEach((item) => {
+                    if (item.type == "added") {
+                        let lastMessage = item.doc.data();
+                        this.setState({
+                            lastMessage
+                        });
+                        dataCacheProvider.save(this.state.userId, "group_chat_message" + groupId, {
+                            type: lastMessage.type,
+                            message: lastMessage.message,
+                            userId: lastMessage.userId,
+                            fromCache: true,
+                            createdDate: lastMessage.createdDate.toDate().getTime()
+                        })
+                    }
+                    firebaseUtils.getUnReadMessageCount(this.props.userApp.currentUser.id, props.group.id).then(x => {
+                        this.setState({
+                            unReadCount: x
+                        });
+                    }).catch(x =>
+                        this.setState({
+                            unReadCount: 0
+                        }));
+                });
             });
         });
     }
@@ -124,9 +157,18 @@ class GroupChatItem extends React.Component {
                                 <Text numberOfLines={1} ellipsizeMode='tail' style={{ marginTop: 5, fontWeight: this.highlighMessage(this.state.lastMessage) }}>
                                     {this.state.lastMessage.type == 4 ? "[Hình ảnh]" : this.state.lastMessage.message}
                                 </Text>
-                                <Text style={{ marginTop: 5, textAlign: 'right', fontStyle: 'italic', fontSize: 13, color: '#717171' }}>
-                                    {this.state.lastMessage.createdDate.toDate().getPostTime()}
-                                </Text>
+                                {
+                                    !this.state.lastMessage.fromCache &&
+                                    <Text style={{ marginTop: 5, textAlign: 'right', fontStyle: 'italic', fontSize: 13, color: '#717171' }}>
+                                        {this.state.lastMessage.createdDate.toDate().getPostTime()}
+                                    </Text>
+                                }
+                                {
+                                    this.state.lastMessage.fromCache &&
+                                    <Text style={{ marginTop: 5, textAlign: 'right', fontStyle: 'italic', fontSize: 13, color: '#717171' }}>
+                                        {this.state.lastMessage.createdDate.toDateObject().getPostTime()}
+                                    </Text>
+                                }
                             </View>
                         }
                     </View>

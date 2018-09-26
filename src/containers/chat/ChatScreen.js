@@ -106,15 +106,10 @@ class ChatScreen extends React.Component {
             return;
         }
         let group = firebaseUtils.getGroup(groupId);
-        group.get().then(doc => {
-            if (doc.exists) {
-                let data = doc.data();
-                firebaseUtils.getGroupName(this.props.userApp.currentUser.id, data).then(x => {
-                    this.setState({ title: x.name, avatar: x.avatar ? x.avatar.absoluteUrl() : "" });
-                }).catch(x => {
-                    this.setState({ title: data.name ? data.name : "Tin nhắn", avatar: data.avatar ? data.avatar.absoluteUrl() : "" });
-                });
-            }
+        firebaseUtils.getGroupName(this.props.userApp.currentUser.id, groupId).then(x => {
+            this.setState({ title: x.name, avatar: x.avatar ? x.avatar.absoluteUrl() : "" });
+        }).catch(x => {
+            this.setState({ title: "Tin nhắn", avatar: "" });
         });
         let messages = group.collection("messages").orderBy('createdDate', 'desc');
 
