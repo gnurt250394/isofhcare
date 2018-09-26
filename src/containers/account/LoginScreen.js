@@ -134,15 +134,16 @@ class LoginScreen extends Component {
 								autoCapitalize={'none'}
 								returnKeyType={'next'}
 								autoCorrect={false}
-								style={{}} />
-							<View style={{ marginTop: 15, flex: 1 }}>
+								style={{width:"100%"}} />
+							<View style={{ marginTop: 15, flex: 1, width:"100%", }}>
 								<UserInput
 									onTextChange={(s) => this.setState({ password: s })}
 									secureTextEntry={this.state.showPass}
 									placeholder={constants.input_password}
 									returnKeyType={'done'}
 									autoCapitalize={'none'}
-									autoCorrect={false} />
+									autoCorrect={false}
+									style={{width:"100%"}} />
 								<TouchableOpacity
 									activeOpacity={0.7}
 									style={styles.btnEye}
@@ -150,14 +151,14 @@ class LoginScreen extends Component {
 									<Image source={eyeImg} style={styles.iconEye} />
 								</TouchableOpacity>
 							</View>
-							<View style={{ width: DEVICE_WIDTH, maxWidth: 300 }}>
+							<View style={{marginLeft:20, width: 300, maxWidth: 300 }}>
 								<TouchableOpacity onPress={() => { this.props.navigation.replace("forgotPassword") }} style={{ alignItems: 'flex-end' }}>
-									<Text style={{ marginTop: 12, color: 'rgb(49,96,172)' }}>Quên mật khẩu</Text>
+									<Text style={{ marginTop: 12, color: 'rgb(49,96,172)', paddingRight:10}}>Quên mật khẩu</Text>
 								</TouchableOpacity>
 							</View>
-							<ButtonSubmit onRef={ref => (this.child = ref)} click={() => { this.login() }} text={constants.login} />
-							<View style={{ width: DEVICE_WIDTH, maxWidth: 300,paddingHorizontal :40, justifyContent:'center'}}>
-								<TouchableOpacity onPress={() => { this.props.navigation.replace("register") }} style={{ alignItems: 'flex-end' }}>
+							<ButtonSubmit style={{width:'100%', marginLeft: 20,}} onRef={ref => (this.child = ref)} click={() => { this.login() }} text={constants.login} />
+							<View style={{ width: 300, maxWidth: 300, paddingLeft:20, justifyContent:'center'}}>
+								<TouchableOpacity onPress={() => { this.props.navigation.replace("register") }}>
 									<Text style={{ marginTop: 15, color: 'rgb(155,155,155)', lineHeight: 20, fontSize: 16 }}>Nếu bạn chưa có tài khoản hãy đăng ký ngay <Text style={{ fontWeight: 'bold', color: 'rgb(0,151,124)' }}>tại đây</Text></Text>
 								</TouchableOpacity>
 							</View>
