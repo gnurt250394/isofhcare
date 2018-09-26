@@ -156,7 +156,9 @@ class LoginScreen extends Component {
 									<Text style={{ marginTop: 12, color: 'rgb(49,96,172)', paddingRight:10}}>Quên mật khẩu</Text>
 								</TouchableOpacity>
 							</View>
-							<ButtonSubmit style={{width:'100%', marginLeft: 20,}} onRef={ref => (this.child = ref)} click={() => { this.login() }} text={constants.login} />
+							<View style={{marginLeft:20, width: 300, maxWidth: 300 }}>
+								<ButtonSubmit style={{width:'100%'}} onRef={ref => (this.child = ref)} click={() => { this.login() }} text={constants.login} />
+							</View>
 							<View style={{ width: 300, maxWidth: 300, paddingLeft:20, justifyContent:'center'}}>
 								<TouchableOpacity onPress={() => { this.props.navigation.replace("register") }}>
 									<Text style={{ marginTop: 15, color: 'rgb(155,155,155)', lineHeight: 20, fontSize: 16 }}>Nếu bạn chưa có tài khoản hãy đăng ký ngay <Text style={{ fontWeight: 'bold', color: 'rgb(0,151,124)' }}>tại đây</Text></Text>
