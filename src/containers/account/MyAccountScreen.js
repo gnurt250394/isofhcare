@@ -14,6 +14,7 @@ import userProvider from '@data-access/user-provider';
 import redux from '@redux-store';
 import UserInput from '@components/UserInput';
 import constants from '@resources/strings';
+
 const { height: DEVICE_HEIGHT, width: DEVICE_WIDTH } = Dimensions.get('window');
 
 const bgImage = require("@images/bg.png")
@@ -26,7 +27,7 @@ class MyAccountScreen extends Component {
         super(props);
         this.state = {
             view: true,
-            user:this.props.userApp.currentUser
+            user: this.props.userApp.currentUser
         };
         this.onChange = this.onChange.bind(this)
         this.animatedValue = new Animated.Value(54)
@@ -47,6 +48,38 @@ class MyAccountScreen extends Component {
         // this.animate()
     }
 
+    componentWillMount() {
+        this.animatedValue1 = new Animated.Value(0);
+        this.value = 0;
+        this.animatedValue1.addListener(({ value }) => {
+            this.value = value;
+        })
+        this.frontInterpolate = this.animatedValue1.interpolate({
+            inputRange: [0, 180],
+            outputRange: ['0deg', '180deg'],
+        })
+        this.backInterpolate = this.animatedValue1.interpolate({
+            inputRange: [0, 180],
+            outputRange: ['180deg', '360deg']
+        })
+    }
+
+    flipCard() {
+        if (this.value >= 90) {
+            Animated.spring(this.animatedValue1, {
+                toValue: 0,
+                friction: 8,
+                tension: 10
+            }).start();
+        } else {
+            Animated.spring(this.animatedValue1, {
+                toValue: 180,
+                friction: 8,
+                tension: 10
+            }).start();
+        }
+
+    }
     animate() {
         let value = 0
         this.state.view ? value = DEVICE_WIDTH - 90 : value = 54
@@ -62,19 +95,31 @@ class MyAccountScreen extends Component {
     selectAvatar() {
         alert("GO Her")
     }
+
     render() {
         const animatedSizeFrom = { width: this.animatedValue }
         const animatedSizeTo = { width: this.animatedValue }
 
+        const frontAnimatedStyle = {
+            transform: [
+                { rotateY: this.frontInterpolate }
+            ]
+        }
+        const backAnimatedStyle = {
+            transform: [
+                { rotateY: this.backInterpolate }
+            ]
+        }
+
         return (
             <ActivityPanel style={{ flex: 1 }} title="Thông tin cá nhân" showFullScreen={true}>
-                <View style={{ position: 'relative', flex: 1 }}>
+                {/* <View style={{ position: 'relative', flex: 1 }}>
                     <ScaleImage source={bgImage} width={DEVICE_WIDTH} zIndex={0} />
-                    <ScaleImage source={require("@images/rectangle.png")} zIndex={1} width={100} style={{ bottom: 0, left: 80, position: 'absolute' }} />
-                    <ScrollView style={styles.container} zIndex={2}>
+                    <ScaleImage source={require("@images/rectangle.png")} zIndex={1} width={100} style={{ bottom: 0, left: 80, position: 'absolute' }} /> */}
+                    {/* <ScrollView style={styles.container} zIndex={2}>
                         <View style={styles.header}>
                             <TouchableOpacity style={styles.boxAvatar} onPress={this.selectAvatar}>
-                                <ScaleImage source={icSupport} width={80} style={styles.avatar} />
+                                <ScaleImage source={icSupport} width={100} style={styles.avatar} />
                                 <ScaleImage source={icCamera} width={20} style={styles.iconChangeAvatar} />
                             </TouchableOpacity>
                         </View>
@@ -85,7 +130,7 @@ class MyAccountScreen extends Component {
                                 <View style={styles.content}>
                                     <View style={styles.item}>
                                         <Text style={styles.lable}>Số điện thoại:</Text>
-                                        <Text style={styles.value}>{this.state.user.phone ? this.state.user.phone : 'Chưa Có Số Điện Thoại' }</Text>
+                                        <Text style={styles.value}>{this.state.user.phone ? this.state.user.phone : 'Chưa Có Số Điện Thoại'}</Text>
                                     </View>
                                     <View style={styles.item}>
                                         <Text style={styles.lable}>Email:</Text>
@@ -101,28 +146,42 @@ class MyAccountScreen extends Component {
                                     returnKeyType={'next'}
                                     autoCorrect={false}
                                     value={this.state.user.name}
-                                    style={{paddingBottom:20, color: "#3a4f60"}} />
+                                    style={{ paddingBottom: 20, color: "#3a4f60" }} />
                                 <UserInput onTextChange={(s) => this.setState({ email: s })}
                                     placeholder={constants.input_username_or_email}
                                     autoCapitalize={'none'}
                                     returnKeyType={'next'}
                                     autoCorrect={false}
                                     value={this.state.user.email}
-                                    style={{paddingBottom:20, color: "#3a4f60"}} />
+                                    style={{ paddingBottom: 20, color: "#3a4f60" }} />
                                 <UserInput onTextChange={(s) => this.setState({ email: s })}
                                     placeholder={constants.input_username_or_email}
                                     autoCapitalize={'none'}
                                     returnKeyType={'next'}
                                     autoCorrect={false}
-                                    style={{paddingBottom:20, color: "#3a4f60"}} />
-                                <Text style={{paddingLeft:20, color: "#000000"}}>
-                                    <Text style={{fontWeight: "bold",color: "#00977c"}}>Lưu ý</Text> : khi thay đổi email, quý khách cần đăng nhập email mới để kích hoạt lại tài khoản
+                                    style={{ paddingBottom: 20, color: "#3a4f60" }} />
+                                <Text style={{ paddingLeft: 20, color: "#000000" }}>
+                                    <Text style={{ fontWeight: "bold", color: "#00977c" }}>Lưu ý</Text> : khi thay đổi email, quý khách cần đăng nhập email mới để kích hoạt lại tài khoản
                                 </Text>
                             </View>
                         }
-                    </ScrollView >
-
-                    <View style={styles.actions} zIndex={3}>
+                    </ScrollView > */}
+                    <ScrollView style={styles.container} zIndex={2}>
+                        <View style={styles.container2}>
+                            <View>
+                                <Animated.View style={[styles.flipCard, frontAnimatedStyle]}>
+                                    <Text style={styles.flipText}> This text is flipping on the front. </Text>
+                                </Animated.View>
+                                <Animated.View style={[backAnimatedStyle, styles.flipCard, styles.flipCardBack]}>
+                                    <Text style={styles.flipText}> This text is flipping on the back. </Text>
+                                </Animated.View>
+                            </View>
+                            <TouchableOpacity onPress={() => this.flipCard()}>
+                                <Text>Flip!</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </ScrollView>
+                    {/* <View style={styles.actions} zIndex={3}>
                         <Animated.View style={[styles.boxAnimate, this.state.view ? animatedSizeTo : animatedSizeFrom]}>
                             <TouchableOpacity style={styles.fab} onPress={this.onChange} >
                                 {
@@ -134,7 +193,7 @@ class MyAccountScreen extends Component {
                             </TouchableOpacity>
                         </Animated.View>
                     </View>
-                </View>
+                </View> */}
             </ActivityPanel >
         );
     }
@@ -143,6 +202,48 @@ class MyAccountScreen extends Component {
 
 
 const styles = StyleSheet.create({
+
+    container2: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    flipCard: {
+        width: 200,
+        height: 200,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'blue',
+        backfaceVisibility: 'hidden',
+    },
+    flipCardBack: {
+        backgroundColor: "red",
+        position: "absolute",
+        top: 0,
+    },
+    flipText: {
+        width: 90,
+        fontSize: 20,
+        color: 'white',
+        fontWeight: 'bold',
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     background: {
         width: DEVICE_WIDTH,
         height: DEVICE_HEIGHT - 44,
@@ -174,7 +275,7 @@ const styles = StyleSheet.create({
     },
     avatar: {
         alignSelf: 'center',
-        borderRadius: 100
+        borderRadius: 50
     },
     iconChangeAvatar: {
         position: 'absolute',
@@ -183,7 +284,7 @@ const styles = StyleSheet.create({
         right: 5
     },
     name: {
-        
+
         marginBottom: 40,
         fontSize: 26,
         fontWeight: "600",
