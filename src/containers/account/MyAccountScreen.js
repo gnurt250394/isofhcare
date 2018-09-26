@@ -10,10 +10,11 @@ import ImagePicker from 'mainam-react-native-select-image';
 import Progress from 'react-native-progress/Pie';
 import clientUtils from '@utils/client-utils';
 import convertUtils from 'mainam-react-native-convert-utils';
-import QRCode from 'react-native-qrcode';
 import userProvider from '@data-access/user-provider';
 import redux from '@redux-store';
-
+import UserInput from '@components/UserInput';
+import constants from '@resources/strings';
+const { height: DEVICE_HEIGHT, width: DEVICE_WIDTH } = Dimensions.get('window');
 
 const bgImage = require("@images/bg.png")
 const icSupport = require("@images/ichotro.png")
@@ -24,11 +25,12 @@ class MyAccountScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            view: true
+            view: true,
+            user:this.props.userApp.currentUser
         };
-        var user = this.props.user;
         this.onChange = this.onChange.bind(this)
-        this.animatedValue = new Animated.Value(0)
+        this.animatedValue = new Animated.Value(54)
+        this.selectAvatar = this.selectAvatar.bind(this)
     }
 
     logout() {
@@ -37,32 +39,29 @@ class MyAccountScreen extends Component {
     }
 
     onChange() {
-        // alert("ádasdsada")
         this.animate()
         this.setState({ view: !this.state.view })
     }
 
     componentDidMount() {
-        this.animate()
+        // this.animate()
     }
 
     animate() {
-        this.animatedValue.setValue(0)
+        let value = 0
+        this.state.view ? value = DEVICE_WIDTH - 90 : value = 54
         Animated.timing(
-            this.animatedValue,
-            {
-                toValue: 1,
-                duration: 2000,
+            this.animatedValue, {
+                toValue: value,
+                duration: 250,
                 easing: Easing.linear
             }
-        ).start()
+        ).start(() => { console.log("Animated ") })
     }
 
     render() {
-        const textSize = this.animatedValue.interpolate({
-            inputRange: [0, 200, 400],
-            outputRange: [54, 200, 54]
-        })
+        const animatedSizeFrom = { width: this.animatedValue }
+        const animatedSizeTo = { width: this.animatedValue }
 
         return (
             <ActivityPanel style={{ flex: 1 }} title="Thông tin cá nhân" showFullScreen={true}>
@@ -71,7 +70,7 @@ class MyAccountScreen extends Component {
                     <ScaleImage source={require("@images/rectangle.png")} zIndex={1} width={100} style={{ bottom: 0, left: 80, position: 'absolute' }} />
                     <ScrollView style={styles.container} zIndex={2}>
                         <View style={styles.header}>
-                            <TouchableOpacity style={styles.boxAvatar}>
+                            <TouchableOpacity style={styles.boxAvatar} onPress={this.selectAvatar}>
                                 <ScaleImage source={icSupport} width={80} style={styles.avatar} />
                                 <ScaleImage source={icCamera} width={20} style={styles.iconChangeAvatar} />
                             </TouchableOpacity>
@@ -79,33 +78,56 @@ class MyAccountScreen extends Component {
                         {this.state.view
                             ?
                             <View>
-                                <Text style={styles.name}>NGUYỄN THU PHƯƠNG THẢO</Text>
+                                <Text style={styles.name}>{this.state.user.name.toUpperCase()}</Text>
                                 <View style={styles.content}>
-
                                     <View style={styles.item}>
                                         <Text style={styles.lable}>Số điện thoại:</Text>
-                                        <Text style={styles.value}>0123456789</Text>
+                                        <Text style={styles.value}>{this.state.user.phone ? this.state.user.phone : 'Chưa Có Số Điện Thoại' }</Text>
                                     </View>
                                     <View style={styles.item}>
                                         <Text style={styles.lable}>Email:</Text>
-                                        <Text style={styles.value}>diachiemail@gmail.com</Text>
+                                        <Text style={styles.value}>{this.state.user.email ? this.state.user.email : 'Chưa Có Email'}</Text>
                                     </View>
                                 </View>
                             </View>
                             :
-                            <View>
-                                <Text><Text>Lưu ý</Text>: khi thay đổi email, quý khách cần đăng nhập email mới để kích hoạt lại tài khoản</Text>
+                            <View style={{}}>
+                                <UserInput onTextChange={(s) => this.setState({ email: s })}
+                                    placeholder={constants.input_username_or_email}
+                                    autoCapitalize={'none'}
+                                    returnKeyType={'next'}
+                                    autoCorrect={false}
+                                    value={this.state.user.name}
+                                    style={{paddingBottom:20, color: "#3a4f60"}} />
+                                <UserInput onTextChange={(s) => this.setState({ email: s })}
+                                    placeholder={constants.input_username_or_email}
+                                    autoCapitalize={'none'}
+                                    returnKeyType={'next'}
+                                    autoCorrect={false}
+                                    value={this.state.user.email}
+                                    style={{paddingBottom:20, color: "#3a4f60"}} />
+                                <UserInput onTextChange={(s) => this.setState({ email: s })}
+                                    placeholder={constants.input_username_or_email}
+                                    autoCapitalize={'none'}
+                                    returnKeyType={'next'}
+                                    autoCorrect={false}
+                                    style={{paddingBottom:20, color: "#3a4f60"}} />
+                                <Text style={{paddingLeft:20, color: "#000000"}}>
+                                    <Text style={{fontWeight: "bold",color: "#00977c"}}>Lưu ý</Text> : khi thay đổi email, quý khách cần đăng nhập email mới để kích hoạt lại tài khoản
+                                </Text>
                             </View>
                         }
                     </ScrollView >
 
                     <View style={styles.actions} zIndex={3}>
-                        <Animated.View
-                            style={{
-                                fontSize: textSize,
-                            }} >
+                        <Animated.View style={[styles.boxAnimate, this.state.view ? animatedSizeTo : animatedSizeFrom]}>
                             <TouchableOpacity style={styles.fab} onPress={this.onChange} >
-                                <ScaleImage source={icEdit} width={24} style={{ position: 'absolute', left: 15, top: 15 }} />
+                                {
+                                    this.state.view ?
+                                        <ScaleImage source={icEdit} width={24} style={{ position: 'absolute', left: 15, top: 15 }} />
+                                        :
+                                        <Text style={styles.btnUpdate}>CẬP NHẬT</Text>
+                                }
                             </TouchableOpacity>
                         </Animated.View>
                     </View>
@@ -115,7 +137,7 @@ class MyAccountScreen extends Component {
     }
 }
 
-const { height: DEVICE_HEIGHT, width: DEVICE_WIDTH } = Dimensions.get('window');
+
 
 const styles = StyleSheet.create({
     background: {
@@ -144,7 +166,8 @@ const styles = StyleSheet.create({
         height: 84,
         borderRadius: 100,
         borderWidth: 2,
-        borderColor: '#5fba7d'
+        borderColor: '#5fba7d',
+        marginBottom: 18,
     },
     avatar: {
         alignSelf: 'center',
@@ -157,7 +180,7 @@ const styles = StyleSheet.create({
         right: 5
     },
     name: {
-        marginTop: 18,
+        
         marginBottom: 40,
         fontSize: 26,
         fontWeight: "600",
@@ -191,15 +214,28 @@ const styles = StyleSheet.create({
         bottom: 0,
         height: 74,
         width: DEVICE_WIDTH,
-        alignItems: 'flex-end'
+        alignItems: 'flex-end',
+        paddingRight: 40
+    },
+    boxAnimate: {
+        width: 54,
     },
     fab: {
-        width: 54,
+        width: "100%",
         height: 54,
-        marginRight: 40,
         backgroundColor: '#00796b',
-        borderRadius: 100,
-
+        borderRadius: 100
+    },
+    btnUpdate: {
+        width: '100%',
+        height: '100%',
+        textAlign: 'center',
+        paddingTop: 15,
+        fontSize: 18,
+        fontWeight: "bold",
+        fontStyle: "normal",
+        color: '#ffffff',
+        letterSpacing: 0
     }
 })
 
