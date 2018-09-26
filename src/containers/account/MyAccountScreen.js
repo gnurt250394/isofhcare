@@ -59,6 +59,9 @@ class MyAccountScreen extends Component {
         ).start(() => { console.log("Animated ") })
     }
 
+    selectAvatar() {
+        alert("GO Her")
+    }
     render() {
         const animatedSizeFrom = { width: this.animatedValue }
         const animatedSizeTo = { width: this.animatedValue }
