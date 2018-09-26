@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { Text, StatusBar, View, Image, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { Text, StatusBar, View, Image, StyleSheet, TouchableOpacity, Dimensions, DeviceEventEmitter } from 'react-native';
 import { connect } from 'react-redux';
 import userProvider from '@data-access/user-provider';
 import constants from '@resources/strings';
@@ -18,24 +18,22 @@ class SplashScreen extends Component {
 		super(props);
 	}
 	componentWillMount() {
-		console.disableYellowBox = true;
 		this.props.dispatch({ type: constants.action.create_navigation_global, value: this.props.navigation });
 	}
 	componentDidMount() {
-		console.disableYellowBox = true;
-		userProvider.getAccountStorage((s) => {
-			setTimeout(() => {
-				if (s) {
-					this.props.dispatch(redux.userLogin(s));
-					// Actions.home();
-				}
-				else {
-					// this.props.dispatch(redux.userLogout(s));
-					// Actions.login({ type: 'replace' });
-				}
-			}, 2000);
-		});
+		DeviceEventEmitter.removeAllListeners('hardwareBackPress')
+		DeviceEventEmitter.addListener('hardwareBackPress', this.handleHardwareBack.bind(this));
 	}
+
+	componentWillUnmount() {
+		DeviceEventEmitter.removeAllListeners('hardwareBackPress')
+	}
+
+	handleHardwareBack = () => {
+		this.props.navigation.pop();
+		return true;
+	}
+
 	render() {
 		return (
 			<ScalingDrawer
