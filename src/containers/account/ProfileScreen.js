@@ -87,11 +87,22 @@ class ProfileScreen extends Component {
         return (
             <View style={styles.container}>
                 <View>
-                    <Animated.View style={[styles.flipCard, frontAnimatedStyle, Platform.OS == "android" ? { opacity: this.frontOpacity } : null  ]}>
-                        <Text style={styles.flipText}> Android Display </Text>
+                    <Animated.View style={[styles.flipCard, frontAnimatedStyle, Platform.OS == "android" ? { opacity: this.frontOpacity } : null]}>
+                        {
+                            Platform.OS == "android" ?
+                                <Text style={styles.flipText}> Android Display </Text>
+                                :
+                                <Text style={styles.flipText}> IOS Display </Text>
+                        }
+
                     </Animated.View>
                     <Animated.View style={[styles.flipCard, styles.flipCardBack, backAnimatedStyle, Platform.OS == "android" ? { opacity: this.backOpacity } : null]}>
-                        <Text style={styles.flipText}> Android Edit </Text>
+                        {
+                            Platform.OS == "android" ?
+                                <Text style={styles.flipText}> Android Edit </Text>
+                                :
+                                <Text style={styles.flipText}> IOS Edit </Text>
+                        }
                     </Animated.View>
                 </View>
                 <TouchableOpacity onPress={() => this.flipCard()}>
