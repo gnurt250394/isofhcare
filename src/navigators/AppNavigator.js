@@ -1,5 +1,5 @@
-import { StackRouter, StackNavigator } from 'react-navigation';
-
+import { StackRouter, createStackNavigator } from 'react-navigation';
+import { Platform } from 'react-native';
 import LoginScreen from '@containers/account/LoginScreen';
 import RegisterScreen from '@containers/account/RegisterScreen';
 import ForgotPasswordScreen from '@containers/account/ForgotPasswordScreen';
@@ -31,7 +31,7 @@ import GroupChatScreen from '@containers/chat/GroupChatScreen';
 import ChatScreen from '@containers/chat/ChatScreen';
 import MyAccountScreen from '@containers/account/MyAccountScreen';
 import ProfileScreen from '@containers/account/ProfileScreen'
-const RootNavigator = StackNavigator({
+const RootNavigator = createStackNavigator({
     splash: { screen: SplashScreen },
     mailbox: { screen: GroupChatScreen },
     chat: { screen: ChatScreen },
@@ -67,7 +67,8 @@ const RootNavigator = StackNavigator({
         header: null,
         navigationOptions: {
             header: null
-        }
+        },
+        mode: Platform.OS == 'ios' ? 'modal' : 'card'
     }
 );
 
