@@ -1,117 +1,35 @@
 {
   "project_info": {
-    "project_number": "612436577188",
-    "firebase_url": "https://cong-dong-y-te.firebaseio.com",
-    "project_id": "cong-dong-y-te",
-    "storage_bucket": "cong-dong-y-te.appspot.com"
+    "project_number": "553446981035",
+    "firebase_url": "https://isofhcare.firebaseio.com",
+    "project_id": "isofhcare",
+    "storage_bucket": "isofhcare.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:612436577188:android:aed0b52c335237f4",
-        "android_client_info": {
-          "package_name": "com.isofh.bvdhyhn"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "612436577188-maf0rg1ao05jj4lf6h7cl85b9r2uq79c.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.isofh.bvdhyhn",
-            "certificate_hash": "40e77f52e33e4363337c7ff72e4cfd81b15f207e"
-          }
-        },
-        {
-          "client_id": "612436577188-u5u1t8u4hi2iqg5n16bqk90jp4d67ug6.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCYjdJMupXjqz5_KbaOcGj_W44AWu8GE_M"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "612436577188-88fv8rvsnq738a9fpc6veqhg68oj9qhe.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "612436577188-lrlb7h3eldjt79km9f9a6dlueh7ag0ct.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.isofh.bvdhyhn"
-              }
-            }
-          ]
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:612436577188:android:0d5303158b711b04",
+        "mobilesdk_app_id": "1:553446981035:android:0d5303158b711b04",
         "android_client_info": {
           "package_name": "com.isofh.isofhcare"
         }
       },
       "oauth_client": [
         {
-          "client_id": "612436577188-u5u1t8u4hi2iqg5n16bqk90jp4d67ug6.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCYjdJMupXjqz5_KbaOcGj_W44AWu8GE_M"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:612436577188:android:c40b4fbf662f5f10",
-        "android_client_info": {
-          "package_name": "com.isofh.nmcevent"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "612436577188-7fjj1f6d9pj0qdqufkb4lubfjc2t955d.apps.googleusercontent.com",
+          "client_id": "553446981035-13crntjue56vmtueclp5q04uf695ll65.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.isofh.nmcevent",
+            "package_name": "com.isofh.isofhcare",
             "certificate_hash": "9c56d44b5049b3c1edfb9553b7ce86d8a3f7c906"
           }
         },
         {
-          "client_id": "612436577188-u5u1t8u4hi2iqg5n16bqk90jp4d67ug6.apps.googleusercontent.com",
+          "client_id": "553446981035-buqufol8jocasl65igl4erla5s3qtc7p.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCYjdJMupXjqz5_KbaOcGj_W44AWu8GE_M"
+          "current_key": "AIzaSyB0F10HwApaJGWBgaHWPyewP84gmntupfQ"
         }
       ],
       "services": {
@@ -122,73 +40,15 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "612436577188-88fv8rvsnq738a9fpc6veqhg68oj9qhe.apps.googleusercontent.com",
+              "client_id": "553446981035-buqufol8jocasl65igl4erla5s3qtc7p.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "612436577188-lrlb7h3eldjt79km9f9a6dlueh7ag0ct.apps.googleusercontent.com",
+              "client_id": "553446981035-bo2beb0me37ooagphjp7b1rg17lpp5qr.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.isofh.bvdhyhn"
-              }
-            }
-          ]
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:612436577188:android:44e5b69cf984f316",
-        "android_client_info": {
-          "package_name": "com.isorasoft.congdongyte"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "612436577188-jnrenvk1pnh934v5t2pt0d72ffsfe70q.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.isorasoft.congdongyte",
-            "certificate_hash": "caceb985c8d5ec96aaed06be7fc93352eb25a7a2"
-          }
-        },
-        {
-          "client_id": "612436577188-osdkgc0b82n3r1qp271nbqvonptpr0ov.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.isorasoft.congdongyte",
-            "certificate_hash": "9c56d44b5049b3c1edfb9553b7ce86d8a3f7c906"
-          }
-        },
-        {
-          "client_id": "612436577188-u5u1t8u4hi2iqg5n16bqk90jp4d67ug6.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCYjdJMupXjqz5_KbaOcGj_W44AWu8GE_M"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "612436577188-88fv8rvsnq738a9fpc6veqhg68oj9qhe.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "612436577188-lrlb7h3eldjt79km9f9a6dlueh7ag0ct.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.isofh.bvdhyhn"
+                "bundle_id": "com.isofh.isofhcare",
+                "app_store_id": "1428148423"
               }
             }
           ]
