@@ -68,12 +68,15 @@ class LoginSocial extends Component {
                         } catch (error) {
                             return;
                         }
-                    case 2:
-                        snackbar.show(constants.msg.user.username_or_password_incorrect, 'dranger');
-                        break;
+                    case 4:
+                        snackbar.show(constants.msg.user.this_account_not_active, 'danger');
+                        return;
                     case 3:
+                        snackbar.show(constants.msg.user.username_or_password_incorrect, 'danger');
+                        return;
+                    case 2:
                     case 1:
-                        snackbar.show(constants.msg.user.account_blocked);
+                        snackbar.show(constants.msg.user.account_blocked, 'danger');
                         return;
                 }
 
@@ -81,8 +84,7 @@ class LoginSocial extends Component {
             if (e) {
                 console.log(e);
             }
-            // snackbar.show(constants.msg.error_occur);
-            snackbar.show("Chức năng đang phát triển");
+            snackbar.show(constants.msg.error_occur);
         })
     }
 
@@ -128,7 +130,7 @@ class LoginSocial extends Component {
         return (
             <View>
                 <Text style={{ textAlign: 'center', marginTop: 20, color: "#3160ac", opacity: 0.6 }}>Đăng nhập với</Text>
-                <View style={{ flexDirection: 'row', justifyContent:'center' }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                     <TouchableOpacity onPress={() => this.handleSigninGoogle()}>
                         <ScaleImage source={require("@images/ic_google.png")} width={40} style={{ padding: 10, margin: 10 }} />
                     </TouchableOpacity>

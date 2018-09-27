@@ -78,7 +78,7 @@ class LoginScreen extends Component {
 						// }
 						snackbar.show(constants.msg.user.login_success, 'success');
 						this.props.dispatch(redux.userLogin(user));
-						this.props.navigation.navigate('home');
+						this.props.navigation.navigate('home', { showDraw: false });
 						return;
 					case 4:
 						snackbar.show(constants.msg.user.this_account_not_active, 'danger');
@@ -114,11 +114,11 @@ class LoginScreen extends Component {
 			outputRange: [-800, 0]
 		})
 		return (
-			<ActivityPanel style={{ flex: 1 }} 
-				title="Đăng nhập" 
-				touchToDismiss={true} 
-				hideActionbar={true} 
-				hideStatusbar={true} 
+			<ActivityPanel style={{ flex: 1 }}
+				title="Đăng nhập"
+				touchToDismiss={true}
+				hideActionbar={true}
+				hideStatusbar={true}
 				showFullScreen={true}>
 				<ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
 					<Animated.View style={{ top: introButton }}>
@@ -128,14 +128,14 @@ class LoginScreen extends Component {
 					</Animated.View>
 
 					<KeyboardAvoidingView behavior='padding' style={styles.form}>
-						<Animated.View style={{ marginLeft, flex:1}}>
+						<Animated.View style={{ marginLeft, flex: 1 }}>
 							<UserInput onTextChange={(s) => this.setState({ email: s })}
 								placeholder={constants.input_username_or_email}
 								autoCapitalize={'none'}
 								returnKeyType={'next'}
 								autoCorrect={false}
-								style={{width:"100%"}} />
-							<View style={{ marginTop: 15, flex: 1, width:"100%", }}>
+								style={{ width: "100%" }} />
+							<View style={{ marginTop: 15, flex: 1, width: "100%", }}>
 								<UserInput
 									onTextChange={(s) => this.setState({ password: s })}
 									secureTextEntry={this.state.showPass}
@@ -143,7 +143,7 @@ class LoginScreen extends Component {
 									returnKeyType={'done'}
 									autoCapitalize={'none'}
 									autoCorrect={false}
-									style={{width:"100%"}} />
+									style={{ width: "100%" }} />
 								<TouchableOpacity
 									activeOpacity={0.7}
 									style={styles.btnEye}
@@ -151,15 +151,15 @@ class LoginScreen extends Component {
 									<Image source={eyeImg} style={styles.iconEye} />
 								</TouchableOpacity>
 							</View>
-							<View style={{marginLeft:20, width: 300, maxWidth: 300 }}>
+							<View style={{ marginLeft: 20, width: 300, maxWidth: 300 }}>
 								<TouchableOpacity onPress={() => { this.props.navigation.replace("forgotPassword") }} style={{ alignItems: 'flex-end' }}>
-									<Text style={{ marginTop: 12, color: 'rgb(49,96,172)', paddingRight:10}}>Quên mật khẩu</Text>
+									<Text style={{ marginTop: 12, color: 'rgb(49,96,172)', paddingRight: 10 }}>Quên mật khẩu</Text>
 								</TouchableOpacity>
 							</View>
-							<View style={{marginLeft:20, width: 300, maxWidth: 300 }}>
-								<ButtonSubmit style={{width:'100%'}} onRef={ref => (this.child = ref)} click={() => { this.login() }} text={constants.login} />
+							<View style={{ marginLeft: 20, width: 300, maxWidth: 300 }}>
+								<ButtonSubmit style={{ width: '100%' }} onRef={ref => (this.child = ref)} click={() => { this.login() }} text={constants.login} />
 							</View>
-							<View style={{ width: 300, maxWidth: 300, paddingLeft:20, justifyContent:'center'}}>
+							<View style={{ width: 300, maxWidth: 300, paddingLeft: 20, justifyContent: 'center' }}>
 								<TouchableOpacity onPress={() => { this.props.navigation.replace("register") }}>
 									<Text style={{ marginTop: 15, color: 'rgb(155,155,155)', lineHeight: 20, fontSize: 16 }}>Nếu bạn chưa có tài khoản hãy đăng ký ngay <Text style={{ fontWeight: 'bold', color: 'rgb(0,151,124)' }}>tại đây</Text></Text>
 								</TouchableOpacity>
@@ -167,7 +167,7 @@ class LoginScreen extends Component {
 						</Animated.View>
 					</KeyboardAvoidingView>
 
-					<Animated.View style={{ bottom: introBottom, flex:1 }}><SocialNetwork /></Animated.View>
+					<Animated.View style={{ bottom: introBottom, flex: 1 }}><SocialNetwork /></Animated.View>
 				</ScrollView >
 			</ActivityPanel >
 		);
