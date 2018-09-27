@@ -92,10 +92,13 @@ module.exports = {
     },
     user:
     {
+      confirm_email_active_account: "Đăng ký thành công, Mã xác thực đã gửi tới email bạn đã đăng ký",
+      confirm_phone_active_account: "Đăng ký thành công, Mã xác thực đã gửi tới số điện thoại bạn đã đăng ký",
       this_account_not_active: "Tài khoản này chưa được kích hoạt",
       change_password_success: "Đổi mật khẩu thành công",
       change_password_not_success: "Đổi mật khẩu không thành công",
       confirm_code_success: "Xác thực thành công. Điền đủ thông tin để đổi mật khẩu",
+      active_account_success: "Xác thực tài khoản thành công. Vui lòng đăng nhập lại để sử dụng ứng dụng",
       confirm_code_not_success: "Xác thực không thành công",
       please_input_verify_code: "Vui lòng nhập mã xác thực",
       not_found_user_with_email_or_phone: "Không tìm thấy tài khoản với email hoặc số điện thoại đã nhập",

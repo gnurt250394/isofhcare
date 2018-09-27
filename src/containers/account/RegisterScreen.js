@@ -56,14 +56,14 @@ class RegisterScreen extends Component {
 				snackbar.showShort(constants.msg.user.please_input_email_or_phone);
 				this.child.unPress();
 				return;
-			}			
+			}
 		}
 		if (this.state.email && !this.state.email.isEmail()) {
 			snackbar.showShort(constants.msg.user.please_enter_the_correct_email_format);
 			this.child.unPress();
 			return;
 		}
-		
+
 		if (this.state.phone && !this.state.phone.isPhoneNumber()) {
 			snackbar.showShort(constants.msg.user.please_enter_the_correct_phone_number_format);
 			this.child.unPress();
@@ -106,16 +106,24 @@ class RegisterScreen extends Component {
 						// 	snackbar.show(constants.msg.user.please_login_on_web_to_management);
 						// 	return;
 						// }
-						snackbar.show(constants.msg.user.register_success);
-						this.props.dispatch(redux.userLogin(user));
-						this.props.navigation.navigate('home');
+						if (this.state.email) {
+							snackbar.show(constants.msg.user.confirm_email_active_account, "success")
+							this.props.navigation.replace("login");
+						} else {
+							snackbar.show(constants.msg.user.confirm_phone_active_account, "success")
+							this.props.navigation.replace("confirmCode", {
+								phone: this.state.phone,
+								fromRegisterScreen: true,
+								user
+							});
+						}
 						return;
 					case 2:
-						snackbar.show(constants.msg.user.username_or_email_existed);
+						snackbar.show(constants.msg.user.username_or_email_existed, "danger");
 						return;
 					case 3:
 					case 1:
-						snackbar.show(constants.msg.user.account_blocked);
+						snackbar.show(constants.msg.user.account_blocked, "danger");
 						return;
 				}
 

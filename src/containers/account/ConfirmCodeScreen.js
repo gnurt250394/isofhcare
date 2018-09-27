@@ -13,16 +13,20 @@ import stringUtils from 'mainam-react-native-string-utils';
 import redux from '@redux-store';
 import ScaleImage from 'mainam-react-native-scaleimage';
 
-class ForgotPasswordScreen extends Component {
+class ConfirmCodeScreen extends Component {
 	constructor(props) {
 		super(props)
 		let phone = this.props.navigation.getParam("phone", null);
 		if (!phone)
 			this.props.navigation.pop();
+		let fromRegisterScreen = this.props.navigation.getParam("fromRegisterScreen", null);
+		alert(fromRegisterScreen);
+
 		this.state = {
 			press: false,
 			code: "",
-			phone
+			phone,
+			fromRegisterScreen
 		}
 	}
 
@@ -34,26 +38,40 @@ class ForgotPasswordScreen extends Component {
 			this.child.unPress();
 			return;
 		}
+		if (this.props.fromRegisterScreen) {
+			userProvider.confirmCode(this.state.phone, this.state.code, (s, e) => {
+				this.child.unPress();
+				if (s) {
+					switch (s.code) {
+						case 0:
+							snackbar.show(constants.msg.user.active_account_success, 'success');
+							this.props.navigation.replace("login");
+							return;
+					}
 
-		userProvider.confirmCode(this.state.phone, this.state.code, (s, e) => {
-			this.child.unPress();
-			if (s) {
-
-				// // snackbar.show("Thông tin đăng nhập không hợp lệ");
-				// // return;
-				switch (s.code) {
-					case 0:
-						snackbar.show(constants.msg.user.confirm_code_success, 'success');
-						this.props.navigation.replace("resetPassword", { id: s.data.user.id });
-						return;
 				}
+				if (e) {
+					console.log(e);
+				}
+				snackbar.show(constants.msg.user.confirm_code_not_success, 'danger');
+			});
+		} else
+			userProvider.confirmCode(this.state.phone, this.state.code, (s, e) => {
+				this.child.unPress();
+				if (s) {
+					switch (s.code) {
+						case 0:
+							snackbar.show(constants.msg.user.confirm_code_success, 'success');
+							this.props.navigation.replace("resetPassword", { id: s.data.user.id });
+							return;
+					}
 
-			}
-			if (e) {
-				console.log(e);
-			}
-			snackbar.show(constants.msg.user.confirm_code_not_success);
-		});
+				}
+				if (e) {
+					console.log(e);
+				}
+				snackbar.show(constants.msg.user.confirm_code_not_success);
+			});
 	}
 
 
@@ -132,4 +150,4 @@ function mapStateToProps(state) {
 		userApp: state.userApp
 	};
 }
-export default connect(mapStateToProps)(ForgotPasswordScreen);
+export default connect(mapStateToProps)(ConfirmCodeScreen);

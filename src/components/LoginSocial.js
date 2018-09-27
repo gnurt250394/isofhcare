@@ -27,7 +27,7 @@ class LoginSocial extends Component {
             })
 
         GoogleSignin.configure({
-            iosClientId: '612436577188-gfd6ppf7avg7b341db0tnp5qjlbhqrnq.apps.googleusercontent.com',
+            iosClientId: '553446981035-bo2beb0me37ooagphjp7b1rg17lpp5qr.apps.googleusercontent.com',
             webClientId: '612436577188-u5u1t8u4hi2iqg5n16bqk90jp4d67ug6.apps.googleusercontent.com'
         })
     }
