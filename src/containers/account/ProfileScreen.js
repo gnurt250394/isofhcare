@@ -1,12 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, TextInput, Animated, Easing, Platform, ImageBackground } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, TextInput, Animated, Easing, Platform, Image, ImageBackground } from 'react-native';
 import { Fab, Container, Header } from 'native-base';
 import { connect } from 'react-redux';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import Dimensions from 'Dimensions';
 import ImageProgress from 'mainam-react-native-image-progress';
 import ImagePicker from 'mainam-react-native-select-image';
+import imageProvider from '@data-access/image-provider';
 import Progress from 'react-native-progress/Pie';
 import clientUtils from '@utils/client-utils';
 import convertUtils from 'mainam-react-native-convert-utils';
@@ -16,7 +17,7 @@ import UserInput from '@components/UserInput';
 import constants from '@resources/strings';
 import ic_back from '@images/ic_back.png';
 const { height: DEVICE_HEIGHT, width: DEVICE_WIDTH } = Dimensions.get('window');
-
+import ImageLoad from 'mainam-react-native-image-loader';
 const bgImage = require("@images/bg.png")
 const icSupport = require("@images/ichotro.png")
 const icCamera = require("@images/photoCamera.png")
@@ -27,7 +28,8 @@ class ProfileScreen extends Component {
         super(props);
         this.state = {
             view: true,
-            user: this.props.userApp.currentUser
+            user: this.props.userApp.currentUser,
+            avatar:this.props.userApp.currentUser.avatar
         };
         this.onChange = this.onChange.bind(this)
         this.animatedValueBtn = new Animated.Value(54)
@@ -93,7 +95,19 @@ class ProfileScreen extends Component {
     }
 
     selectAvatar() {
-        alert("GO Her")
+        // alert("GO Her")
+        if (this.imagePicker) {
+            this.imagePicker.open(false, 200, 200, image => {
+                // alert(image.path)
+                imageProvider.upload(image.path, (s, e) => {
+                    console.log(JSON.stringify(s))
+                    if(s && s.data.code == 0)
+                        this.setState({avatar:s.data.data.images[0].thumbnail})
+                        this.state.user.avatar = s.data.data.images[0].thumbnail
+                        userProvider.saveAccount(this.state.user)
+                })
+            })
+        }
     }
 
     render() {
@@ -109,7 +123,7 @@ class ProfileScreen extends Component {
                 { rotateY: this.backInterpolate }
             ]
         }
-
+        const source = this.state.avatar ? {uri : this.state.avatar.absoluteUrl()} : icSupport;
         return (
             <ActivityPanel style={{ flex: 1 }} title="Thông tin cá nhân" showFullScreen={true}>
                 <ImageBackground source={bgImage} style={{ width: '100%', height: '100%' }}>
@@ -117,7 +131,7 @@ class ProfileScreen extends Component {
                     <ScrollView style={styles.container} zIndex={2}>
                         <View style={styles.header}>
                             <TouchableOpacity style={styles.boxAvatar} onPress={this.selectAvatar}>
-                                <ScaleImage source={icSupport} width={80} style={styles.avatar} />
+                                <Image source={source} style={styles.avatar} resizeMode="cover" />
                                 <ScaleImage source={icCamera} width={20} style={styles.iconChangeAvatar} />
                             </TouchableOpacity>
                         </View>
@@ -184,6 +198,7 @@ class ProfileScreen extends Component {
                                 </Animated.View>
                             </View>
                         </View>
+                        <ImagePicker ref={ref => this.imagePicker = ref} />
                     </ScrollView>
                 </ImageBackground>
             </ActivityPanel>
@@ -215,7 +230,9 @@ const styles = StyleSheet.create({
     },
     avatar: {
         alignSelf: 'center',
-        borderRadius: 50
+        borderRadius: 100,
+        width:80,
+        height:80
     },
     iconChangeAvatar: {
         position: 'absolute',
