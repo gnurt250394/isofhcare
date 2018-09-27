@@ -15,6 +15,7 @@ import stringUtils from 'mainam-react-native-string-utils';
 import locationProvider from '@data-access/location-provider';
 import clientUtils from '@utils/client-utils';
 import { Card } from 'native-base';
+import ImageLoad from 'mainam-react-native-image-loader';
 
 const DEVICE_WIDTH = Dimensions.get("window").width;
 class AddNewClinicScreen extends Component {
@@ -122,8 +123,9 @@ class AddNewClinicScreen extends Component {
         });
     }
     openSearchModal() {
-        locationProvider.pickLocation((s, e) => {
+        locationProvider.pickLocation(this.state.place, (s, e) => {
             if (s) {
+                console.log(s);
                 this.setState({ place: s });
             }
         })
@@ -488,7 +490,7 @@ class AddNewClinicScreen extends Component {
                             <Text style={{ fontWeight: 'bold', marginTop: 20 }}>Hình ảnh <Text style={{ fontStyle: 'italic', fontWeight: 'normal' }}>(Tối đa 4 ảnh)</Text></Text>
                             <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 10 }}>
                                 {
-                                    this.state.imageUris.map((item, index) => <TouchableOpacity style={{ margin: 2, width: 100, height: 100, borderColor: '#00000020', borderWidth: 1 }}>
+                                    this.state.imageUris.map((item, index) => <TouchableOpacity key={index} style={{ margin: 2, width: 100, height: 100, borderColor: '#00000020', borderWidth: 1 }}>
                                         <Image source={{ uri: item.uri }} resizeMode="cover" style={{ width: 100, height: 100, backgroundColor: '#000' }} />
                                         {
                                             item.error ?
@@ -533,8 +535,15 @@ class AddNewClinicScreen extends Component {
                                 letterSpacing: 0,
                                 color: '#FFF'
                             }}>Đặt vị trí trên bản đồ</Text></TouchableOpacity>
-                        {this.state.place ?
-                            <ScaledImage uri={"http://maps.google.com/maps/api/staticmap?zoom=15&markers=" + this.state.place.latitude + "," + this.state.place.longitude + "&size=500x200"} width={DEVICE_WIDTH - 20} /> : null
+                        {
+                            this.state.place &&
+                            <ImageLoad
+                                resizeMode="cover"
+                                style={{ width: 70, height: 70 }}
+                                resizeMode="cover"
+                                loadingStyle={{ size: 'small', color: 'gray' }}
+                                source={{ uri: "http://maps.google.com/maps/api/staticmap?zoom=15&markers=" + this.state.place.latitude + "," + this.state.place.longitude + "&size=500x200" }}
+                            />
                         }
 
                         <View style={{ height: 50 }}></View>

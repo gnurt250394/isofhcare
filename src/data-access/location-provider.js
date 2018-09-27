@@ -93,9 +93,12 @@ module.exports = {
                 callback(undefined, error);
             });
     },
-    pickLocation(callback) {
+    pickLocation(latlon, callback) {
+        let _latlon = latlon;
+        if (!_latlon)
+            _latlon = {};
         if (callback)
-            RNGooglePlaces.openPlacePickerModal()
+            RNGooglePlaces.openPlacePickerModal(_latlon)
                 .then((place) => {
                     callback(place);
                 })

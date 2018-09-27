@@ -54,6 +54,7 @@ class DrawerContent extends Component {
                 <ImageLoad
                   resizeMode="cover"
                   imageStyle={{ borderRadius: 35 }}
+                  borderRadius={35}
                   customImagePlaceholderDefaultStyle={{ width: 70, height: 70, alignSelf: 'center' }}
                   placeholderSource={icSupport}
                   style={{ width: 70, height: 70, alignSelf: 'center' }}

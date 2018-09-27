@@ -12,6 +12,7 @@ import ImagePicker from 'mainam-react-native-select-image';
 import snackbar from '@utils/snackbar-utils'
 import stringUtils from 'mainam-react-native-string-utils';
 import locationProvider from '@data-access/location-provider';
+import ImageLoad from 'mainam-react-native-image-loader';
 
 const DEVICE_WIDTH = Dimensions.get("window").width;
 class AddNewDrugStoreScreen extends Component {
@@ -94,7 +95,7 @@ class AddNewDrugStoreScreen extends Component {
 
 
     openSearchModal() {
-        locationProvider.pickLocation((s, e) => {
+        locationProvider.pickLocation(this.state.place, (s, e) => {
             if (s) {
                 this.setState({ place: s });
             }
@@ -430,7 +431,7 @@ class AddNewDrugStoreScreen extends Component {
                             <Text style={{ fontWeight: 'bold', marginTop: 20 }}>Hình ảnh <Text style={{ fontStyle: 'italic', fontWeight: 'normal' }}>(Tối đa 4 ảnh)</Text></Text>
                             <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 10 }}>
                                 {
-                                    this.state.imageUris.map((item, index) => <TouchableOpacity style={{ margin: 2, width: 100, height: 100, borderColor: '#00000020', borderWidth: 1 }}>
+                                    this.state.imageUris.map((item, index) => <TouchableOpacity key={index} style={{ margin: 2, width: 100, height: 100, borderColor: '#00000020', borderWidth: 1 }}>
                                         <Image source={{ uri: item.uri }} resizeMode="cover" style={{ width: 100, height: 100, backgroundColor: '#000' }} />
                                         {
                                             item.error ?
@@ -475,8 +476,22 @@ class AddNewDrugStoreScreen extends Component {
                                 letterSpacing: 0,
                                 color: '#FFF'
                             }}>Đặt vị trí trên bản đồ</Text></TouchableOpacity>
-                        {this.state.place ?
-                            <ScaledImage uri={"http://maps.google.com/maps/api/staticmap?zoom=15&markers=" + this.state.place.latitude + "," + this.state.place.longitude + "&size=500x200"} width={DEVICE_WIDTH - 20} /> : null
+                        {
+                            this.state.place &&
+                            // <Image
+                            //     style={{ width: DEVICE_WIDTH - 20, height: (DEVICE_WIDTH - 20) * 200 / 500 }}
+                            //     resizeMode='cover'
+                            //     source={{ uri: "http://maps.google.com/maps/api/staticmap?zoom=15&markers=" + this.state.place.latitude + "," + this.state.place.longitude + "&size=500x200" }}
+                            // />
+                            <ImageLoad
+                                resizeMode="cover"
+                                placeholderSource={require("@images/bg_map_vn.png")}
+                                style={{ width: DEVICE_WIDTH - 20, height: (DEVICE_WIDTH - 20) * 200 / 500 }}
+                                resizeMode="cover"
+                                defauleImage={() => <ScaledImage width={DEVICE_WIDTH - 20} source={require("@images/bg_map_vn.png")} />}
+                                loadingStyle={{ size: 'small', color: 'gray' }}
+                                source={{ uri: "http://maps.google.com/maps/api/staticmap?zoom=15&markers=" + this.state.place.latitude + "," + this.state.place.longitude + "&size=500x200" }}
+                            />
                         }
                         <View style={{ height: 50 }}></View>
                     </ScrollView>
