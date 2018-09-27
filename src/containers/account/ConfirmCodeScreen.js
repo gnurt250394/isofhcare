@@ -20,8 +20,6 @@ class ConfirmCodeScreen extends Component {
 		if (!phone)
 			this.props.navigation.pop();
 		let fromRegisterScreen = this.props.navigation.getParam("fromRegisterScreen", null);
-		alert(fromRegisterScreen);
-
 		this.state = {
 			press: false,
 			code: "",

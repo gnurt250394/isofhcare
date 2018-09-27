@@ -200,7 +200,6 @@ module.exports = {
                 if (doc.exists) {
                     resolve({ groupId: doc.id });
                 } else {
-                    debugger;
                     users.forEach((item, index) => {
                         let memberId = item + "";
                         let user = userDb.doc(memberId);

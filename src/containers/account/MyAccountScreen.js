@@ -93,7 +93,6 @@ class MyAccountScreen extends Component {
     }
 
     selectAvatar() {
-        alert("GO Her")
     }
 
     render() {

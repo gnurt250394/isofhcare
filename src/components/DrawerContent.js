@@ -43,7 +43,6 @@ class DrawerContent extends Component {
   render() {
     const icSupport = require("@images/ichotro.png");
     const source = this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar.absoluteUrl() } : icSupport;
-
     return (
       <View style={styles.container}>
         <ActionBar icBack={require("@images/icclose.png")} backButtonClick={() => { this.hideDrawer() }} styleBackButton={{ marginLeft: 20 }} actionbarTextColor={[{ color: constants.colors.actionbar_title_color }]} actionbarStyle={[{ paddingTop: isIphoneX() ? 40 : 32, backgroundColor: constants.colors.actionbar_color }, this.props.actionbarStyle, { elevation: 1 }]} />

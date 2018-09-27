@@ -72,7 +72,6 @@ class FacilityDetailScreen extends Component {
                 }
             });
         } catch (error) {
-            alert(JSON.stringify(error));
         }
 
     }
@@ -197,7 +196,6 @@ class FacilityDetailScreen extends Component {
     }
     photoViewer(uri) {
         try {
-            debugger;
             if (!this.state.list_images || this.state.list_images.length == 0) {
                 snackbar.show("Không có ảnh nào");
                 return;
