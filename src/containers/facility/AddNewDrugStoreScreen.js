@@ -52,7 +52,10 @@ class AddNewDrugStoreScreen extends Component {
         if (facility.facility.latitude && facility.facility.longitude) {
             place = {
                 latitude: facility.facility.latitude,
-                longitude: facility.facility.longitude
+                longitude: facility.facility.longitude,
+                latitudeDelta: 0.05,
+                longitudeDelta: 0.05
+
             }
         }
 
@@ -98,8 +101,8 @@ class AddNewDrugStoreScreen extends Component {
     openSearchModal() {
         locationProvider.pickLocation(this.state.place, (s, e) => {
             if (s) {
-                s.latitudeDelta = 0.1;
-                s.longitudeDelta = 0.1;
+                s.latitudeDelta = 0.05;
+                s.longitudeDelta = 0.05;
                 this.setState({ place: s });
             }
         })
