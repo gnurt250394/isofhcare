@@ -3,6 +3,7 @@ import string from 'mainam-react-native-string-utils';
 import constants from '@resources/strings';
 import storage from '@data-access/storage-provider';
 import { Platform } from 'react-native'
+import datacacheProvider from '@data-access/datacache-provider';
 
 const os = Platform.select({
     ios: 2,
@@ -12,13 +13,13 @@ module.exports = {
     deviceId: "",
     deviceToken: "",
     getAccountStorage(callback) {
-        storage.get(constants.key.storage.current_account, null, (s) => {
+        datacacheProvider.read("", constants.key.storage.current_account, (s) => {
             if (callback)
                 callback(s);
         });
     },
     saveAccount(account) {
-        storage.save(constants.key.storage.current_account, account);
+        datacacheProvider.save("", constants.key.storage.current_account, account);
     },
     forgotPassword(email, type, callback) {
         if (email) {

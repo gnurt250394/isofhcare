@@ -35,42 +35,41 @@ module.exports = {
         }
     },
     read(userId, key, callback) {
-        try {
-            const { Schemas, DataString, schemaVersion } = realmModel;
-            Realm.open({
-                schema: Schemas,
-                schemaVersion,
-                migration: function (oldRealm, newRealm) {
-                    newRealm.deleteAll();
-                }
-            }).then((realm) => {
-                try {
-                    let _key = "DataString_" + userId + "_" + key;
-                    var data = realm.objects(DataString.name).filtered("key == '" + _key + "'");
-                    if (data && data.length > 0) {
-                        var _value = JSON.parse(data[0].value);
-                        if (callback) {
+        if (callback) {
+            try {
+                const { Schemas, DataString, schemaVersion } = realmModel;
+                Realm.open({
+                    schema: Schemas,
+                    schemaVersion,
+                    migration: function (oldRealm, newRealm) {
+                        newRealm.deleteAll();
+                    }
+                }).then((realm) => {
+                    try {
+                        let _key = "DataString_" + userId + "_" + key;
+                        var data = realm.objects(DataString.name).filtered("key == '" + _key + "'");
+                        if (data && data.length > 0) {
+                            var _value = JSON.parse(data[0].value);
                             if (_value)
                                 callback(_value.data);
-                            return;
                         }
+                        else
+                            callback(undefined, { message: "not found" });
+                    } catch (e) {
+                        callback(undefined, {
+                            message: JSON.stringify(e)
+                        });
                     }
-                    if (callback)
-                        callback({}, {});
-                    return;
-                } catch (error) {
-                    if (callback)
-                        callback({}, error);
-                }
-            }).catch((e) => {
-                if (callback)
-                    callback({}, e);
-                console.log(e);
-            });
-        } catch (error) {
-            if (callback)
-                callback({}, error);
-            console.log(error);
+                }).catch(e => {
+                    callback(undefined, {
+                        message: e ? JSON.stringify(e) : ""
+                    });
+                });
+            } catch (e) {
+                callback(undefined, {
+                    message: e ? JSON.stringify(error) : ""
+                });
+            }
         }
     }
 }
