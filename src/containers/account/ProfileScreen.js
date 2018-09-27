@@ -141,7 +141,8 @@ class ProfileScreen extends Component {
                                 <ImageLoad
                                     resizeMode="cover"
                                     imageStyle={{ borderRadius: 40 }}
-                                    customImagePlaceholderDefaultStyle={styles.avatar}
+                                    borderRadius={40}
+                                    customImagePlaceholderDefaultStyle={[styles.avatar, { width: 70, height: 70 }]}
                                     placeholderSource={icSupport}
                                     style={styles.avatar}
                                     resizeMode="cover"

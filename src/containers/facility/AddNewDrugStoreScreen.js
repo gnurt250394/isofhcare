@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, TextInput, Text, FlatList, TouchableOpacity, ScrollView, Image, Dimensions } from 'react-native';
+import { View, TextInput, Text, FlatList, TouchableOpacity, ScrollView, Image, Dimensions, Platform } from 'react-native';
 import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import facilityProvider from '@data-access/facility-provider';
@@ -13,8 +13,9 @@ import snackbar from '@utils/snackbar-utils'
 import stringUtils from 'mainam-react-native-string-utils';
 import locationProvider from '@data-access/location-provider';
 import ImageLoad from 'mainam-react-native-image-loader';
-
+import constants from '@resources/strings';
 const DEVICE_WIDTH = Dimensions.get("window").width;
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 class AddNewDrugStoreScreen extends Component {
     constructor(props) {
         super(props)
@@ -97,6 +98,8 @@ class AddNewDrugStoreScreen extends Component {
     openSearchModal() {
         locationProvider.pickLocation(this.state.place, (s, e) => {
             if (s) {
+                s.latitudeDelta = 0.1;
+                s.longitudeDelta = 0.1;
                 this.setState({ place: s });
             }
         })
@@ -478,20 +481,15 @@ class AddNewDrugStoreScreen extends Component {
                             }}>Đặt vị trí trên bản đồ</Text></TouchableOpacity>
                         {
                             this.state.place &&
-                            // <Image
-                            //     style={{ width: DEVICE_WIDTH - 20, height: (DEVICE_WIDTH - 20) * 200 / 500 }}
-                            //     resizeMode='cover'
-                            //     source={{ uri: "http://maps.google.com/maps/api/staticmap?zoom=15&markers=" + this.state.place.latitude + "," + this.state.place.longitude + "&size=500x200" }}
-                            // />
-                            <ImageLoad
-                                resizeMode="cover"
-                                placeholderSource={require("@images/bg_map_vn.png")}
+                            <MapView
+                                provider={PROVIDER_GOOGLE}
                                 style={{ width: DEVICE_WIDTH - 20, height: (DEVICE_WIDTH - 20) * 200 / 500 }}
-                                resizeMode="cover"
-                                defauleImage={() => <ScaledImage width={DEVICE_WIDTH - 20} source={require("@images/bg_map_vn.png")} />}
-                                loadingStyle={{ size: 'small', color: 'gray' }}
-                                source={{ uri: "http://maps.google.com/maps/api/staticmap?zoom=15&markers=" + this.state.place.latitude + "," + this.state.place.longitude + "&size=500x200" }}
-                            />
+                                region={this.state.place}
+                            >
+                                <Marker
+                                    coordinate={this.state.place}>
+                                </Marker>
+                            </MapView>
                         }
                         <View style={{ height: 50 }}></View>
                     </ScrollView>

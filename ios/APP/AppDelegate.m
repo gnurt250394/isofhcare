@@ -21,8 +21,8 @@
 {
   //firebase
   [FIRApp configure];
-  [GMSPlacesClient provideAPIKey:@"AIzaSyA6V1lvfuFcHHTxNi2B01G-TmZY5bnHzs8"];
-  [GMSServices provideAPIKey:@"AIzaSyA6V1lvfuFcHHTxNi2B01G-TmZY5bnHzs8"];
+  [GMSPlacesClient provideAPIKey:@"AIzaSyAuxCg_cGhru90abVUxnkTVVdsLzyr4sQ4"];
+  [GMSServices provideAPIKey:@"AIzaSyAuxCg_cGhru90abVUxnkTVVdsLzyr4sQ4"];
   [RNFirebaseNotifications configure];
   //login fb
   [[FBSDKApplicationDelegate sharedInstance] application:application

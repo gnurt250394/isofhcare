@@ -16,7 +16,7 @@ import locationProvider from '@data-access/location-provider';
 import clientUtils from '@utils/client-utils';
 import { Card } from 'native-base';
 import ImageLoad from 'mainam-react-native-image-loader';
-
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 const DEVICE_WIDTH = Dimensions.get("window").width;
 class AddNewClinicScreen extends Component {
     constructor(props) {
@@ -122,14 +122,17 @@ class AddNewClinicScreen extends Component {
             })
         });
     }
+
     openSearchModal() {
         locationProvider.pickLocation(this.state.place, (s, e) => {
             if (s) {
-                console.log(s);
+                s.latitudeDelta = 0.1;
+                s.longitudeDelta = 0.1;
                 this.setState({ place: s });
             }
         })
     }
+
 
     onClickSpecialist(item) {
         let temp;
@@ -535,15 +538,17 @@ class AddNewClinicScreen extends Component {
                                 letterSpacing: 0,
                                 color: '#FFF'
                             }}>Đặt vị trí trên bản đồ</Text></TouchableOpacity>
-                        {
+                       {
                             this.state.place &&
-                            <ImageLoad
-                                resizeMode="cover"
-                                style={{ width: 70, height: 70 }}
-                                resizeMode="cover"
-                                loadingStyle={{ size: 'small', color: 'gray' }}
-                                source={{ uri: "http://maps.google.com/maps/api/staticmap?zoom=15&markers=" + this.state.place.latitude + "," + this.state.place.longitude + "&size=500x200" }}
-                            />
+                            <MapView
+                                provider={PROVIDER_GOOGLE}
+                                style={{ width: DEVICE_WIDTH - 20, height: (DEVICE_WIDTH - 20) * 200 / 500 }}
+                                region={this.state.place}
+                            >
+                                <Marker
+                                    coordinate={this.state.place}>
+                                </Marker>
+                            </MapView>
                         }
 
                         <View style={{ height: 50 }}></View>
