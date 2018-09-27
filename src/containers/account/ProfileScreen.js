@@ -12,7 +12,6 @@ import Progress from 'react-native-progress/Pie';
 import clientUtils from '@utils/client-utils';
 import convertUtils from 'mainam-react-native-convert-utils';
 import userProvider from '@data-access/user-provider';
-import redux from '@redux-store';
 import UserInput from '@components/UserInput';
 import constants from '@resources/strings';
 import ic_back from '@images/ic_back.png';
@@ -22,6 +21,7 @@ const bgImage = require("@images/bg.png")
 const icSupport = require("@images/ichotro.png")
 const icCamera = require("@images/photoCamera.png")
 const icEdit = require("@images/edit1.png")
+import redux from '@redux-store';
 
 class ProfileScreen extends Component {
     constructor(props) {
@@ -29,7 +29,7 @@ class ProfileScreen extends Component {
         this.state = {
             view: true,
             user: this.props.userApp.currentUser,
-            avatar:this.props.userApp.currentUser.avatar
+            avatar: this.props.userApp.currentUser.avatar
         };
         this.onChange = this.onChange.bind(this)
         this.animatedValueBtn = new Animated.Value(54)
@@ -97,14 +97,21 @@ class ProfileScreen extends Component {
     selectAvatar() {
         // alert("GO Her")
         if (this.imagePicker) {
-            this.imagePicker.open(false, 200, 200, image => {
+            this.imagePicker.open(true, 200, 200, image => {
                 // alert(image.path)
+                this.setState({ isLoading: true });
                 imageProvider.upload(image.path, (s, e) => {
                     console.log(JSON.stringify(s))
-                    if(s && s.data.code == 0)
-                        this.setState({avatar:s.data.data.images[0].thumbnail})
-                        this.state.user.avatar = s.data.data.images[0].thumbnail
-                        userProvider.saveAccount(this.state.user)
+                    if (s && s.data.code == 0) {
+                        this.setState({ avatar: s.data.data.images[0].thumbnail }, () => {
+                            this.state.user.avatar = s.data.data.images[0].thumbnail
+                            this.props.dispatch(redux.userLogin(this.state.user));
+                            this.setState({ isLoading: false });
+                        });
+                    } else {
+                        this.setState({ isLoading: false });
+                        snack
+                    }
                 })
             })
         }
@@ -123,15 +130,27 @@ class ProfileScreen extends Component {
                 { rotateY: this.backInterpolate }
             ]
         }
-        const source = this.state.avatar ? {uri : this.state.avatar.absoluteUrl()} : icSupport;
+        const source = this.state.avatar ? { uri: this.state.avatar.absoluteUrl() } : icSupport;
         return (
-            <ActivityPanel style={{ flex: 1 }} title="Thông tin cá nhân" showFullScreen={true}>
+            <ActivityPanel style={{ flex: 1 }} title="Thông tin cá nhân" showFullScreen={true} isLoading={this.state.isLoading}>
                 <ImageBackground source={bgImage} style={{ width: '100%', height: '100%' }}>
 
                     <ScrollView style={styles.container} zIndex={2}>
                         <View style={styles.header}>
                             <TouchableOpacity style={styles.boxAvatar} onPress={this.selectAvatar}>
-                                <Image source={source} style={styles.avatar} resizeMode="cover" />
+                                <ImageLoad
+                                    resizeMode="cover"
+                                    imageStyle={{ borderRadius: 40 }}
+                                    customImagePlaceholderDefaultStyle={styles.avatar}
+                                    placeholderSource={icSupport}
+                                    style={styles.avatar}
+                                    resizeMode="cover"
+                                    loadingStyle={{ size: 'small', color: 'gray' }}
+                                    source={source}
+                                    defaultImage={() => {
+                                        return <ScaleImage resizeMode='cover' source={icSupport} width={80} style={styles.avatar} />
+                                    }}
+                                />
                                 <ScaleImage source={icCamera} width={20} style={styles.iconChangeAvatar} />
                             </TouchableOpacity>
                         </View>
@@ -159,9 +178,11 @@ class ProfileScreen extends Component {
                                     returnKeyType={'next'}
                                     autoCorrect={false}
                                     onTextChange={(s) => this.setState({ email: s })}
+                                    underlineColorAndroid="transparent"
                                     style={styles.inputText}
                                 />
                                 <TextInput
+                                    underlineColorAndroid="transparent"
                                     placeholder={constants.input_username_or_email}
                                     value={this.state.user.email}
                                     autoCapitalize={'none'}
@@ -223,16 +244,16 @@ const styles = StyleSheet.create({
         height: 84,
         alignItems: "center",
         justifyContent: "center",
-        borderRadius: 100,
+        borderRadius: 42,
         borderWidth: 2,
         borderColor: '#5fba7d',
         marginBottom: 18,
     },
     avatar: {
         alignSelf: 'center',
-        borderRadius: 100,
-        width:80,
-        height:80
+        borderRadius: 40,
+        width: 80,
+        height: 80
     },
     iconChangeAvatar: {
         position: 'absolute',
@@ -335,7 +356,8 @@ const styles = StyleSheet.create({
         color: "#3a4f60",
         height: 42,
         borderWidth: 1,
-        borderColor: 'rgba(155,155,155,0.7)'
+        borderColor: 'rgba(155,155,155,0.7)',
+        paddingHorizontal: 5
     }
 });
 

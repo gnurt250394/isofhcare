@@ -11,6 +11,8 @@ import ActionBar from '@components/Actionbar';
 import constants from '@resources/strings';
 import { isIphoneX } from 'react-native-iphone-x-helper';
 import redux from '@redux-store';
+import ImageLoad from 'mainam-react-native-image-loader';
+
 const resetAction = (routeName) => NavigationActions.reset({
   index: 0,
   actions: [
@@ -39,6 +41,8 @@ class DrawerContent extends Component {
     this.props.navigation.navigate("login");
   }
   render() {
+    const icSupport = require("@images/ichotro.png");
+    const source = this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar.absoluteUrl() } : icSupport;
 
     return (
       <View style={styles.container}>
@@ -47,7 +51,19 @@ class DrawerContent extends Component {
           {this.props.userApp.isLogin ?
             <View>
               <TouchableOpacity style={styles.menu_item} onPress={() => { this.props.navigation.navigate("profile") }}>
-                <ScaleImage source={require("@images/ichotro.png")} width={70} style={{ alignSelf: 'center', }} />
+                <ImageLoad
+                  resizeMode="cover"
+                  imageStyle={{ borderRadius: 35 }}
+                  customImagePlaceholderDefaultStyle={{ width: 70, height: 70, alignSelf: 'center' }}
+                  placeholderSource={icSupport}
+                  style={{ width: 70, height: 70, alignSelf: 'center' }}
+                  resizeMode="cover"
+                  loadingStyle={{ size: 'small', color: 'gray' }}
+                  source={source}
+                  defaultImage={() => {
+                    return <ScaleImage resizeMode='cover' source={icSupport} width={70} style={{ width: 70, height: 70, alignSelf: 'center' }} />
+                  }}
+                />
                 <Text style={{ alignSelf: 'center', fontWeight: 'bold', fontSize: 15, color: 'rgb(35,66,155)', marginTop: 18, }}>{this.props.userApp.currentUser.name ? this.props.userApp.currentUser.name.toUpperCase() : ""}</Text>
               </TouchableOpacity>
             </View> : null
