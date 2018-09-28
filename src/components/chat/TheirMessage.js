@@ -44,7 +44,7 @@ class TheirMessage extends React.Component {
                 createdDate: new Date()
             }
         const chatProfile = this.props.chatProfile;
-        let avatar = chatProfile && chatProfile.avatar ? chatProfile.absoluteUrl() : "";
+        let avatar = chatProfile && chatProfile.avatar ? chatProfile.avatar.absoluteUrl() : "";
         return (
             <View style={{ marginBottom: this.props.isLast ? 30 : 0 }}>
                 {
