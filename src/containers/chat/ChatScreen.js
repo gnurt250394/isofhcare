@@ -84,7 +84,7 @@ class ChatScreen extends React.Component {
         })
     }
     onMessageChange(messages, groupId) {
-        this.snapshot = messages.limit(1).onSnapshot((snap) => {
+        this.snapshot = messages.onSnapshot((snap) => {
             snap.docChanges().forEach((item) => {
                 if (item.type == 'added') {
                     if (this.dataIds.indexOf(item.doc.id) == -1) {
@@ -102,6 +102,8 @@ class ChatScreen extends React.Component {
                     }
                 }
             });
+        }, (e) => {
+            console.log(e);
         });
         this.loadPreMessages();
     }
@@ -131,6 +133,8 @@ class ChatScreen extends React.Component {
                         data: [...this.data],
                         lastMessage
                     }, this.onMessageChange.bind(this, messages, groupId))
+                } else {
+                    this.onMessageChange(messages, groupId);
                 }
             });
         });

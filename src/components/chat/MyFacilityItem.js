@@ -71,7 +71,7 @@ class MyFacilityItem extends React.Component {
                     />
                     {
                         this.state.unReadCount > 0 &&
-                        <Text style={{ position: 'absolute', top: 0, right: 0, backgroundColor: 'red', color: '#FFF', borderRadius: 10, overflow: 'hidden', paddingHorizontal: 5, paddingVertical: 2 }}>{this.state.unReadCount > 100 ? "99+" : this.state.unReadCount}</Text>
+                        <Text style={{ position: 'absolute', top: 0, right: 0, backgroundColor: 'red', color: '#FFF', borderRadius: 8, overflow: 'hidden', paddingHorizontal: 5, paddingVertical: 2 }}>{this.state.unReadCount > 100 ? "99+" : this.state.unReadCount}</Text>
                     }
 
                 </View>

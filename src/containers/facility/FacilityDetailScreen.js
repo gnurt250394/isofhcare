@@ -339,7 +339,7 @@ class FacilityDetailScreen extends Component {
                                                             facility.facility.phone ?
                                                                 <TouchableOpacity style={{ padding: 10, flexDirection: 'row', alignItems: 'center' }} onPress={() => Linking.openURL("tel:" + facility.facility.phone)}>
                                                                     <ScaledImage source={require("@images/ic_phone.png")} width={15} style={{ marginRight: 5 }} />
-                                                                    <Text style={{ color: '(rgb,35,66,155)', fontWeight: 'bold' }}>{facility.facility.phone}</Text>
+                                                                    <Text style={{ color: 'rgb(35,66,155)', fontWeight: 'bold' }}>{facility.facility.phone}</Text>
                                                                 </TouchableOpacity> : null
                                                         }
                                                     </View>

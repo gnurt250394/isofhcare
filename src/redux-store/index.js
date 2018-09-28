@@ -48,9 +48,9 @@ module.exports = {
         return function (dispatch, getState) {
             if (user != null) {
                 userProvider.saveAccount(user);
-                firebaseUtils.connect(user.id, user.name, user.avartar, {}).then(x => {
-                    // firebaseUtils.updateUser(user.id, user.name, user.avartar, {});
-                    firebaseUtils.updateUser(user.id, user.name, "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&h=350", {});
+                firebaseUtils.connect(user.id, user.name, user.avatar, {}).then(x => {
+                    firebaseUtils.updateUser(user.id, user.name, user.avatar, {});
+                    // firebaseUtils.updateUser(user.id, user.name, "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&h=350", {});
                     console.log(x);
                 }).catch(x => {
                     console.log(x);

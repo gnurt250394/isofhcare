@@ -91,11 +91,13 @@ class GroupChatScreen extends React.Component {
                 });
             });
         });
-        userProvider.detail(this.props.userApp.currentUser.id, (s, e) => {
-            if (s && s.code == 0) {
-                this.props.dispatch({ type: constants.action.action_set_my_facility, value: s.data.facilities })
-            }
-        });
+        if (this.state.userId == this.props.userApp.currentUser.id) {
+            userProvider.detail(this.props.userApp.currentUser.id, (s, e) => {
+                if (s && s.code == 0) {
+                    this.props.dispatch({ type: constants.action.action_set_my_facility, value: s.data.facilities })
+                }
+            });
+        }
     }
     componentWillUnmount() {
         if (this.snap)
@@ -112,7 +114,7 @@ class GroupChatScreen extends React.Component {
     renderMyFacility() {
         if (this.props.userApp.myFacility && this.props.userApp.myFacility.length > 0 && this.props.userApp.currentUser.id == this.state.userId) {
             return (<View
-                style={{ height: 170 }}
+                style={{ height: 140 }}
             >
                 {/* <Text style={{ fontSize: 15, padding: 20, fontWeight: 'bold' }}>Cơ sở y tế của bạn</Text> */}
                 <FlatList
