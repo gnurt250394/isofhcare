@@ -31,10 +31,16 @@ class ChatScreen extends React.Component {
         let title = this.props.navigation.getParam("title");
         if (!title)
             title = "Tin nhắn";
+        let userId = this.props.navigation.getParam("userId");
+        if (!userId)
+            userId = this.props.userApp.currentUser.id;
+
         this.state = {
             title,
+            userId,
             lastMessage: null,
             firstTime: true,
+            chatProfile: [],
 
             typing: [],
             text: '',
@@ -87,8 +93,8 @@ class ChatScreen extends React.Component {
                         this.setState({
                             data: [...this.data],
                         });
-                        firebaseUtils.markAsRead(this.props.userApp.currentUser.id, groupId);
-                        firebaseUtils.markAsReadMessage(this.props.userApp.currentUser.id, groupId, item.doc.id);
+                        firebaseUtils.markAsRead(this.state.userId, groupId);
+                        firebaseUtils.markAsReadMessage(this.state.userId, groupId, item.doc.id);
                         setTimeout(() => {
                             if (this.flatList)
                                 this.flatList.scrollToEnd({ animated: true });
@@ -106,7 +112,7 @@ class ChatScreen extends React.Component {
             return;
         }
         let group = firebaseUtils.getGroup(groupId);
-        firebaseUtils.getGroupName(this.props.userApp.currentUser.id, groupId).then(x => {
+        firebaseUtils.getGroupName(this.state.userId).then(x => {
             this.setState({ title: x.name, avatar: x.avatar ? x.avatar.absoluteUrl() : "" });
         }).catch(x => {
             this.setState({ title: "Tin nhắn", avatar: "" });
@@ -117,8 +123,8 @@ class ChatScreen extends React.Component {
             messages.limit(1).get().then(docs => {
                 if (docs.docs.length > 0) {
                     let lastMessage = docs.docs[docs.docs.length - 1];
-                    firebaseUtils.markAsRead(this.props.userApp.currentUser.id, groupId);
-                    firebaseUtils.markAsReadMessage(this.props.userApp.currentUser.id, groupId, lastMessage.id);
+                    firebaseUtils.markAsRead(this.state.userId, groupId);
+                    firebaseUtils.markAsReadMessage(this.state.userId, groupId, lastMessage.id);
                     this.dataIds.push(lastMessage.id);
                     this.data.push(lastMessage.data());
                     this.setState({
@@ -172,6 +178,23 @@ class ChatScreen extends React.Component {
         this.txtMessage.clear();
         // Keyboard.dismiss();
     }
+    getChatProfile(id) {
+        if (this.state.chatProfile && this.state.chatProfile[id]) {
+            return this.state.chatProfile[id];
+        }
+        firebaseUtils.getUser(id).get().then(doc => {
+            if (doc.exists) {
+                let data = this.state.chatProfile;
+                if (doc.data()) {
+                    data[id] = doc.data();
+                    this.setState({
+                        chatProfile: [...data]
+                    });
+                }
+            }
+        });
+
+    }
     render() {
         return (
             <ActivityPanel style={{ flex: 1 }} title={this.state.title} showFullScreen={true} containerStyle={{ backgroundColor: "#afcccc" }} isLoading={this.state.isLoading}>
@@ -195,7 +218,7 @@ class ChatScreen extends React.Component {
                                     item.userId == this.props.userApp.currentUser.id ?
                                         <MyMessage isLast={index == this.state.data.length - 1} message={item} preMessage={index == 0 ? null : this.state.data[index - 1]} />
                                         :
-                                        <TheirMessage isLast={index == this.state.data.length - 1} message={item} preMessage={index == 0 ? null : this.state.data[index - 1]} />
+                                        <TheirMessage chatProfile={this.getChatProfile(item.userId)} isLast={index == this.state.data.length - 1} message={item} preMessage={index == 0 ? null : this.state.data[index - 1]} />
                                 }
                             </View>
                         }

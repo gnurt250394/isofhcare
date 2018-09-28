@@ -11,7 +11,12 @@ import dateUtisl from 'mainam-react-native-date-utils';
 import ActivityPanel from '@components/ActivityPanel';
 import { connect } from 'react-redux';
 import firebaseUtils from '@utils/firebase-utils';
-import GroupChatItem from '@components/chat/GroupChatItem'
+import GroupChatItem from '@components/chat/GroupChatItem';
+import userProvider from '@data-access/user-provider';
+import constants from '@resources/strings';
+import ImageLoad from 'mainam-react-native-image-loader';
+import clientUtils from '@utils/client-utils';
+import MyFacilityItem from '@components/chat/MyFacilityItem'
 class GroupChatScreen extends React.Component {
     constructor(props) {
         super(props);
@@ -19,14 +24,15 @@ class GroupChatScreen extends React.Component {
         let title = "Tin nhắn";
         let userId = this.props.userApp.currentUser.id;
         if (facility) {
-            title = facility.facility.name;
-            userId = facility.facility.id;
+            title = facility.name;
+            userId = "facility_" + facility.id;
         }
         this.state =
             {
                 loadingGroup: true,
                 listGroup: [],
-                title, userId
+                title,
+                userId
             }
     }
     // _handleAppStateChange = currentAppState => {
@@ -84,23 +90,49 @@ class GroupChatScreen extends React.Component {
                     }
                 });
             });
-        })
+        });
+        userProvider.detail(this.props.userApp.currentUser.id, (s, e) => {
+            if (s && s.code == 0) {
+                this.props.dispatch({ type: constants.action.action_set_my_facility, value: s.data.facilities })
+            }
+        });
     }
     componentWillUnmount() {
         if (this.snap)
             this.snap();
     }
-    onOpenGroup(groupId, title) {
+    onOpenGroup(userId, groupId, title) {
         this.props.navigation.navigate("chat", {
             groupId: groupId,
-            title
+            title,
+            userId
         })
+    }
+
+    renderMyFacility() {
+        if (this.props.userApp.myFacility && this.props.userApp.myFacility.length > 0 && this.props.userApp.currentUser.id == this.state.userId) {
+            return (<View
+                style={{ height: 170 }}
+            >
+                {/* <Text style={{ fontSize: 15, padding: 20, fontWeight: 'bold' }}>Cơ sở y tế của bạn</Text> */}
+                <FlatList
+                    keyExtractor={(item, index) => index.toString()}
+                    extraData={this.state}
+                    data={this.props.userApp.myFacility}
+                    renderItem={({ item, index }) =>
+                        <MyFacilityItem facility={item} onOpenGroup={(x) => this.props.navigation.navigate("groupChatFacility", { facility: x })} />
+                    }
+                    horizontal={true}
+                />
+            </View>);
+        }
+        return <View></View>
     }
 
     render() {
         return (
             <ActivityPanel style={{ flex: 1 }} title={this.state.title} showFullScreen={true}>
-
+                {this.renderMyFacility()}
                 <FlatList
                     onRefresh={this.getMyGroup.bind(this)}
                     refreshing={this.state.loadingGroup}
@@ -109,7 +141,7 @@ class GroupChatScreen extends React.Component {
                     extraData={this.state}
                     data={this.state.listGroup}
                     renderItem={({ item, index }) =>
-                        <GroupChatItem group={item} onOpenGroup={this.onOpenGroup.bind(this)} />
+                        <GroupChatItem group={item} userId={this.state.userId} onOpenGroup={this.onOpenGroup.bind(this)} />
                     }
                 />
             </ActivityPanel >

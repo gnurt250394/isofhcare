@@ -43,6 +43,8 @@ class TheirMessage extends React.Component {
                 message: "",
                 createdDate: new Date()
             }
+        const chatProfile = this.props.chatProfile;
+        let avatar = chatProfile && chatProfile.avatar ? chatProfile.absoluteUrl() : "";
         return (
             <View style={{ marginBottom: this.props.isLast ? 30 : 0 }}>
                 {
@@ -57,10 +59,11 @@ class TheirMessage extends React.Component {
                                 placeholderSource={require("@images/noimage.jpg")}
                                 style={{ width: 50, height: 50, borderRadius: 25 }}
                                 loadingStyle={{ size: 'small', color: 'gray' }}
+                                borderRadius={25}
                                 imageStyle={{ width: 50, height: 50, borderRadius: 25 }}
-                                source={{ uri: message.message ? message.message.absoluteUrl() : "" }}
+                                source={{ uri: avatar }}
                                 defauleImage={() => {
-                                    return <ScaleImage resizeMode='cover' source={require("@images/noimage.jpg")} width={50} />
+                                    return <ScaleImage resizeMode='cover' source={require("@images/noimage.jpg")} width={50} style={{ borderRadius: 25 }} />
                                 }}
                             /> : <View style={{ width: 50, height: 50 }} />
                     }

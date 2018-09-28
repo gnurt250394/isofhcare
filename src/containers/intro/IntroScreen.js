@@ -40,7 +40,7 @@ class IntroScreen extends Component {
     }
 
     skip() {
-        dataCache.save("",constants.key.storage.INTRO_FINISHED, true);
+        dataCache.save("", constants.key.storage.INTRO_FINISHED, true);
         this.Actions.dispatch(StackActions.reset({
             index: 0,
             actions: [NavigationActions.navigate({ routeName: "home" })],
@@ -127,6 +127,7 @@ const styles = {
     },
     container: {
         flex: 1,
+        paddingTop: 30,
         backgroundColor: 'white'
     },
     skip: {

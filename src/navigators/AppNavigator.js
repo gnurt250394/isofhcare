@@ -33,7 +33,8 @@ import MyAccountScreen from '@containers/account/MyAccountScreen';
 import ProfileScreen from '@containers/account/ProfileScreen'
 const RootNavigator = createStackNavigator({
     splash: { screen: SplashScreen },
-    mailbox: { screen: GroupChatScreen },
+    groupChat: { screen: GroupChatScreen },
+    groupChatFacility: { screen: GroupChatScreen },
     chat: { screen: ChatScreen },
     intro: { screen: IntroScreen },
     home: { screen: HomeScreen },

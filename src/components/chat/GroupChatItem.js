@@ -18,15 +18,19 @@ import dataCacheProvider from '@data-access/datacache-provider';
 class GroupChatItem extends React.Component {
     constructor(props) {
         super(props);
+        let userId = this.props.userApp.currentUser.id;
+        if (this.props.userId)
+            userId = this.props.userId;
         this.state = {
             name: "",
             unReadCount: 0,
-            userId: this.props.userApp.currentUser.id
+            userId
         }
+        console.log(userId);
     }
     openGroup(groupId) {
         if (this.props.onOpenGroup)
-            this.props.onOpenGroup(groupId, this.state.name);
+            this.props.onOpenGroup(this.state.userId, groupId, this.state.name);
     }
     componentDidMount() {
         this.showData(this.props);
@@ -43,15 +47,15 @@ class GroupChatItem extends React.Component {
 
                 }
             }
-            // firebaseUtils.getGroupName(this.props.userApp.currentUser.id, groupId).then(x => {
-            //     let info = { name: x.name ? x.name : "Tin nhắn", avatar: x.avatar ? x.avatar.absoluteUrl() : "" }
-            //     this.setState(info);
-            //     dataCacheProvider.save(this.state.userId, "group_chat_" + groupId, info)
-            // }).catch(x => {
-            //     let info = { name: "Tin nhắn", avatar: "" }
-            //     this.setState(info);
-            //     dataCacheProvider.save(this.state.userId, "group_chat_" + groupId, info)
-            // });
+            firebaseUtils.getGroupName(this.state.userId, groupId).then(x => {
+                let info = { name: x.name ? x.name : "Tin nhắn", avatar: x.avatar ? x.avatar.absoluteUrl() : "" }
+                this.setState(info);
+                dataCacheProvider.save(this.state.userId, "group_chat_" + groupId, info)
+            }).catch(x => {
+                let info = { name: "Tin nhắn", avatar: "" }
+                this.setState(info);
+                dataCacheProvider.save(this.state.userId, "group_chat_" + groupId, info)
+            });
         });
         dataCacheProvider.read(this.state.userId, "group_chat_message" + groupId, (s) => {
             if (s && JSON.stringify(s) != "{}") {
@@ -77,7 +81,7 @@ class GroupChatItem extends React.Component {
                             createdDate: lastMessage.createdDate.toDate().getTime()
                         })
                     }
-                    firebaseUtils.getUnReadMessageCount(this.props.userApp.currentUser.id, props.group.id).then(x => {
+                    firebaseUtils.getUnReadMessageCount(this.state.userId, props.group.id).then(x => {
                         this.setState({
                             unReadCount: x
                         });
@@ -91,7 +95,7 @@ class GroupChatItem extends React.Component {
     }
     highlighMessage(item) {
         try {
-            return item.readed.indexOf(this.props.userApp.currentUser.id + "") == -1 ? "900" : "normal";
+            return item.readed.indexOf(this.state.userId + "") == -1 ? "900" : "normal";
         } catch (error) {
 
         }

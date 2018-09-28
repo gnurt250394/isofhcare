@@ -139,7 +139,11 @@ module.exports = {
                 callback(s, e);
         });
     },
+    detail(userId, callback) {
+        client.requestApi("get", constants.api.user.get_detail + "/" + userId, {}, (s, e) => {
+            if (callback)
+                callback(s, e);
+        });
 
-
-
+    }
 }
