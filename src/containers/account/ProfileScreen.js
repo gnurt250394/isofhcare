@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, TextInput, Animated, Easing, Platform, Image, ImageBackground } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, TextInput, Animated, Easing, Platform, Image, ImageBackground, Keyboard } from 'react-native';
 import { Fab, Container, Header } from 'native-base';
 import { connect } from 'react-redux';
 import ScaleImage from 'mainam-react-native-scaleimage';
@@ -29,11 +29,13 @@ class ProfileScreen extends Component {
         this.state = {
             view: true,
             user: this.props.userApp.currentUser,
+            userName: "",
             avatar: this.props.userApp.currentUser.avatar
         };
         this.onChange = this.onChange.bind(this)
         this.animatedValueBtn = new Animated.Value(54)
         this.selectAvatar = this.selectAvatar.bind(this)
+        this.updateUsername = this.updateUsername.bind(this)
     }
 
     componentWillMount() {
@@ -95,10 +97,8 @@ class ProfileScreen extends Component {
     }
 
     selectAvatar() {
-        // alert("GO Her")
         if (this.imagePicker) {
             this.imagePicker.open(true, 200, 200, image => {
-                // alert(image.path)
                 this.setState({ isLoading: true });
                 imageProvider.upload(image.path, (s, e) => {
                     console.log(JSON.stringify(s))
@@ -115,6 +115,16 @@ class ProfileScreen extends Component {
                 })
             })
         }
+    }
+
+    updateUsername= (text) => {
+        this.setState({
+            userName:"adsad"
+        })
+    }
+
+    senData() {
+        alert("adasdsadsadsada")
     }
 
     render() {
@@ -174,12 +184,13 @@ class ProfileScreen extends Component {
                             <Animated.View style={[styles.flipCard2, styles.flipCardBack, backAnimatedStyle, Platform.OS == "android" ? { opacity: this.backOpacity } : null]}>
                                 <TextInput
                                     placeholder={constants.input_username_or_email}
-                                    value={this.state.user.name}
+                                    value={this.state.userName}
                                     autoCapitalize={'none'}
                                     returnKeyType={'next'}
                                     autoCorrect={false}
-                                    onTextChange={(s) => this.setState({ email: s })}
+                                    onChangeText={(s) => this.setState({ userName: s })}
                                     underlineColorAndroid="transparent"
+                                    onSubmitEditing={this.senData}
                                     style={styles.inputText}
                                 />
                                 <TextInput
