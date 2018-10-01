@@ -34,6 +34,18 @@ class MyFacilityItem extends React.Component {
     }
     showData(props) {
         let facility = props.facility;
+        this.snapshot = firebaseUtils.onMyGroupChange("facility_" + facility.id, (snap) => {
+            if (snap.docChanges().length > 0) {
+                this.getUnreadCount(facility);
+            }
+        });
+        this.setState({
+            unReadCount: 0
+        }, () => {
+            this.getUnreadCount(facility);
+        });
+    }
+    getUnreadCount(facility) {
         firebaseUtils.getTotalUnReadMessageCount("facility_" + facility.id).then(x => {
             this.setState({
                 unReadCount: x
@@ -45,9 +57,28 @@ class MyFacilityItem extends React.Component {
     }
     componentWillReceiveProps(props) {
         if (this.props.facility.id != props.facility.id) {
-            this.showData(props);
+            if (this.snapshot) {
+                this.snapshot();
+            }
+            this.setState({
+                unReadCount: 0
+            });
+            setTimeout(() => {
+                this.showData(props);
+            }, 1000);
         }
     }
+    componentWillUnmount() {
+        if (this.snapshot) {
+            this.snapshot();
+            this.snapshot = null;
+        }
+    }
+    // shouldComponentUpdate(props, state) {
+    //     if (this.props.facility != props.facility || this.state.unReadCount != state.unReadCount) {
+    //         return true;
+    //     }
+    // }
     render() {
         const facility = this.props.facility;
         let avatar = facility.logo;

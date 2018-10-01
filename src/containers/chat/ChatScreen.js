@@ -31,6 +31,7 @@ class ChatScreen extends React.Component {
         let title = this.props.navigation.getParam("title");
         if (!title)
             title = "Tin nhắn";
+        debugger;
         let userId = this.props.navigation.getParam("userId");
         if (!userId)
             userId = this.props.userApp.currentUser.id;
@@ -93,6 +94,7 @@ class ChatScreen extends React.Component {
                         this.setState({
                             data: [...this.data],
                         });
+                        debugger;
                         firebaseUtils.markAsRead(this.state.userId, groupId);
                         firebaseUtils.markAsReadMessage(this.state.userId, groupId, item.doc.id);
                         setTimeout(() => {
@@ -155,7 +157,7 @@ class ChatScreen extends React.Component {
                 this.setState({ isLoading: false });
                 if (s.success) {
                     if (s.data.code == 0 && s.data.data && s.data.data.images && s.data.data.images.length > 0) {
-                        firebaseUtils.sendImage(this.props.userApp.currentUser.id, this.state.groupId, s.data.data.images[0].image).catch(e => {
+                        firebaseUtils.sendImage(this.state.userId, this.state.groupId, s.data.data.images[0].image).catch(e => {
                             snackbar.show(constants.msg.upload.upload_image_error, 'danger');
                         });
                     }
@@ -175,7 +177,7 @@ class ChatScreen extends React.Component {
             }, 1000);
             return;
         }
-        firebaseUtils.sendMessage(this.props.userApp.currentUser.id, this.state.groupId, this.state.newMessage);
+        firebaseUtils.sendMessage(this.state.userId, this.state.groupId, this.state.newMessage);
         this.setState({
             newMessage: ""
         })
@@ -219,7 +221,7 @@ class ChatScreen extends React.Component {
                         renderItem={({ item, index }) =>
                             <View>
                                 {
-                                    item.userId == this.props.userApp.currentUser.id ?
+                                    item.userId == this.state.userId ?
                                         <MyMessage isLast={index == this.state.data.length - 1} message={item} preMessage={index == 0 ? null : this.state.data[index - 1]} />
                                         :
                                         <TheirMessage chatProfile={this.getChatProfile(item.userId)} isLast={index == this.state.data.length - 1} message={item} preMessage={index == 0 ? null : this.state.data[index - 1]} />
