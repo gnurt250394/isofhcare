@@ -31,7 +31,6 @@ class ChatScreen extends React.Component {
         let title = this.props.navigation.getParam("title");
         if (!title)
             title = "Tin nhắn";
-        debugger;
         let userId = this.props.navigation.getParam("userId");
         if (!userId)
             userId = this.props.userApp.currentUser.id;
@@ -51,9 +50,9 @@ class ChatScreen extends React.Component {
     }
     data = [];
     dataIds = [];
-    loadPreMessages() {
+    loadPreMessages(callback) {
         this.setState({ loadingPre: true }, () => {
-            firebaseUtils.getMessages(this.state.groupId, 40, this.state.lastMessage).then(s => {
+            firebaseUtils.getMessages(this.state.groupId, 10, this.state.lastMessage).then(s => {
                 let lastMessage = this.state.lastMessage;
                 s.forEach(item => {
                     if (this.dataIds.indexOf(item.id) == -1) {
@@ -69,7 +68,7 @@ class ChatScreen extends React.Component {
                     loadingPre: false,
                     data: [...this.data],
                     loadFinish: s.length == 0
-                });
+                }, callback);
                 if (this.state.firstTime) {
                     setTimeout(() => {
                         if (this.flatList)
@@ -80,34 +79,34 @@ class ChatScreen extends React.Component {
                     });
                 }
             }).catch(x => {
-                this.setState({ loadingPre: false });
+                this.setState({ loadingPre: false }, callback);
             });
         })
     }
     onMessageChange(messages, groupId) {
-        this.snapshot = messages.onSnapshot((snap) => {
-            snap.docChanges().forEach((item) => {
-                if (item.type == 'added') {
-                    if (this.dataIds.indexOf(item.doc.id) == -1) {
-                        this.data.push(item.doc.data());
-                        this.dataIds.push(item.doc.id);
-                        this.setState({
-                            data: [...this.data],
-                        });
-                        debugger;
-                        firebaseUtils.markAsRead(this.state.userId, groupId);
-                        firebaseUtils.markAsReadMessage(this.state.userId, groupId, item.doc.id);
-                        setTimeout(() => {
-                            if (this.flatList)
-                                this.flatList.scrollToEnd({ animated: true });
-                        }, 1000);
+        if (!this.snapshot) {
+            this.snapshot = messages.onSnapshot((snap) => {
+                snap.docChanges().forEach((item) => {
+                    if (item.type == 'added') {
+                        if (this.dataIds.indexOf(item.doc.id) == -1) {
+                            this.data.push(item.doc.data());
+                            this.dataIds.push(item.doc.id);
+                            this.setState({
+                                data: [...this.data],
+                            });
+                            firebaseUtils.markAsRead(this.state.userId, groupId);
+                            firebaseUtils.markAsReadMessage(this.state.userId, groupId, item.doc.id);
+                            setTimeout(() => {
+                                if (this.flatList)
+                                    this.flatList.scrollToEnd({ animated: true });
+                            }, 1000);
+                        }
                     }
-                }
+                });
+            }, (e) => {
+                console.log(e);
             });
-        }, (e) => {
-            console.log(e);
-        });
-        this.loadPreMessages();
+        }
     }
     componentDidMount() {
         let groupId = this.props.navigation.getParam("groupId", null);
