@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import clientUtils from '@utils/client-utils';
 import ImageLoad from 'mainam-react-native-image-loader';
 import stringUtils from 'mainam-react-native-string-utils';
-import {Card} from 'native-base';
+import { Card } from 'native-base';
 
 class ItemDrug extends Component {
     constructor(props) {
@@ -15,10 +15,20 @@ class ItemDrug extends Component {
     }
     render() {
         let item = this.props.drug;
+        let images = item.drug.images;
+        let image = "";
+        if (images) {
+            let arrs = images.split(',');
+            if (arrs.length > 0)
+                image = arrs[0];
+        }
+        image = image.absoluteUrl();
+        console.log(item.drug.images);
         return (
-            <Card style={{padding: 2}}>
-                <TouchableOpacity onPress={this.showDetail.bind(this)} style={{ flexDirection: 'row'}} >
-                    <ImageLoad style={{ width: 100, height: 100 }} imageStyle={{ width: 100, height: 100}} loadingStyle={{ size: 'small', color: 'gray' }} source={{ uri: (item.images && item.images.length && item.images[0].url) ? item.images[0].url.absoluteUrl() : null }}
+            <Card style={{ padding: 2 }}>
+                <TouchableOpacity onPress={this.showDetail.bind(this)} style={{ flexDirection: 'row' }} >
+                    <ImageLoad
+                        placeholderSource={require("@images/icthuoc.png")} style={{ width: 100, height: 100 }} imageStyle={{ width: 100, height: 100 }} loadingStyle={{ size: 'small', color: 'gray' }} source={{ uri: image }}
                         resizeMode="cover" />
                     <View style={{ flex: 1, marginLeft: 18, marginTop: 10 }}>
                         <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'rgb(74,74,74)', marginBottom: 13 }}>{item.drug.name}</Text>
