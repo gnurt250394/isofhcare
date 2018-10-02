@@ -23,7 +23,6 @@ class ItemDrug extends Component {
                 image = arrs[0];
         }
         image = image.absoluteUrl();
-        console.log(item.drug.images);
         return (
             <Card style={{ padding: 2 }}>
                 <TouchableOpacity onPress={this.showDetail.bind(this)} style={{ flexDirection: 'row' }} >

@@ -27,7 +27,7 @@ class DrugDetailScreen extends Component {
         }} shadowColor='#000000' shadowOpacity={0.2} shadowOffset={{}}>
             <ImageLoad
                 resizeMode="contain"
-                source={{ uri: item && item.url ? item.url.absoluteUrl() : "undefined" }} style={{ width: Dimensions.get('window').width, height: 135 }} />
+                source={{ uri: item ? item.absoluteUrl() : "undefined" }} style={{ width: Dimensions.get('window').width, height: 135 }} />
         </View>
     }
     getType(category) {
@@ -120,12 +120,19 @@ class DrugDetailScreen extends Component {
     }
     render() {
         const drug = this.props.navigation.getParam("drug", null);
+        let images = drug.drug.images;
+        let arr = [];
+        if (images)
+            arr = images.split(",");
+
+        console.log(arr);
+
         return (
             <ActivityPanel style={{ flex: 1 }} title="CHI TIẾT THUỐC" showFullScreen={true}>
                 <ScrollView>
                     {
-                        drug.images && drug.images.length > 0 ?
-                            <Slide autoPlay={true} inteval={3000} dataArray={drug.images} renderItemPager={this.renderItemPager.bind(this)} style={{ height: 150 }} />
+                        arr.length > 0 ?
+                            <Slide autoPlay={true} inteval={3000} dataArray={arr} renderItemPager={this.renderItemPager.bind(this)} style={{ height: 150 }} />
                             : null
                     }
                     <View style={{ padding: 20 }}>
