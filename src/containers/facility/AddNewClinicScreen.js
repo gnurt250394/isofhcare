@@ -414,6 +414,7 @@ class AddNewClinicScreen extends Component {
                                 value={this.state.phone}
                                 onChangeText={(s) => this.setState({ phone: s })}
                                 underlineColorAndroid="transparent"
+                                keyboardType='number-pad'
                                 style={{
                                     padding: 0
                                 }}
@@ -425,6 +426,7 @@ class AddNewClinicScreen extends Component {
                                 value={this.state.phone_emergency}
                                 onChangeText={(s) => this.setState({ phone_emergency: s })}
                                 underlineColorAndroid="transparent"
+                                keyboardType='number-pad'
                                 style={{
                                     padding: 0
                                 }}

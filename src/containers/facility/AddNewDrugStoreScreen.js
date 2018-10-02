@@ -346,6 +346,7 @@ class AddNewDrugStoreScreen extends Component {
                                 onChangeText={(s) => this.setState({ phone: s })}
                                 underlineColorAndroid="transparent"
                                 value={this.state.phone}
+                                keyboardType='number-pad'
                                 style={{
                                     padding: 0
                                 }}
