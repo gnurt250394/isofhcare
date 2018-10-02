@@ -14,6 +14,7 @@ import stringUtils from 'mainam-react-native-string-utils';
 import locationProvider from '@data-access/location-provider';
 import ImageLoad from 'mainam-react-native-image-loader';
 import constants from '@resources/strings';
+import { Card } from 'native-base';
 const DEVICE_WIDTH = Dimensions.get("window").width;
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 class AddNewDrugStoreScreen extends Component {
@@ -542,10 +543,12 @@ class AddNewDrugStoreScreen extends Component {
                             }
                             ListFooterComponent={() => <View style={{ height: 50 }}></View>}
                             renderItem={({ item, index }) =>
-                                <TouchableOpacity onPress={() => { this.setState({ province: item, toggleProvince: false }) }}>
-                                    <Text style={{ padding: 10, fontWeight: '300', color: this.state.province == item ? "red" : "black" }}>{item.name}</Text>
-                                    <Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" />
-                                </TouchableOpacity>
+                                <Card>
+                                    <TouchableOpacity onPress={() => { this.setState({ province: item, toggleProvince: false }) }}>
+                                        <Text style={{ padding: 10, fontWeight: '300', color: this.state.province == item ? "red" : "black" }}>{item.name}</Text>
+                                        {/* <Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" /> */}
+                                    </TouchableOpacity>
+                                </Card>
                             }
                         />
                     </View>
