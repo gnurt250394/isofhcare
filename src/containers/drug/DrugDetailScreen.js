@@ -122,8 +122,8 @@ class DrugDetailScreen extends Component {
     }
     loadFacilityRelated(drugId) {
         facilityProvider.getByDrug(drugId, 1, 10, (s, e) => {
-            if (s && s.code == 0) {
-                this.setState({ listFacilities: s.data });
+            if (s && s.code == 0 && s.data && s.data.data) {
+                this.setState({ listFacilities: s.data.data });
             }
         })
     }
@@ -204,7 +204,7 @@ class DrugDetailScreen extends Component {
                         <View>
                             <Text style={{ margin: 20, color: 'rgb(47,94,172)', fontWeight: '500' }}>CÓ BÁN TẠI CÁC NHÀ THUỐC</Text>
                             {
-                                listFacilities.map((item, index) => {
+                                this.state.listFacilities.map((item, index) => {
                                     return <ItemFacility facility={item} key={index} style={{ marginLeft: 14, marginRight: 14 }} />
                                 })
                             }

@@ -31,7 +31,7 @@ module.exports = {
         });
     },
     getByDrug(drugId, page, size, callback) {
-        client.requestApi("get", constants.api.facility.search_from_drug + "/" + drugId + "?sortType=2&page=" + page + "&size=" + size, {}, (s, e) => {
+        client.requestApi("get", constants.api.facility.search_from_drug + "?drugId=" + drugId + "&page=" + page + "&size=" + size, {}, (s, e) => {
             if (callback)
                 callback(s, e);
         });
