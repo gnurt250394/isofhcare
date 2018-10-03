@@ -222,7 +222,8 @@ module.exports = {
       update: "facility/update",
       create: "facility/create",
       search_by_query: "facility/search-by-query",
-      review: 'facility/review'
+      review: 'facility/review',
+      search_from_drug: "facility/search-from-drug"
     },
     disease:
     {

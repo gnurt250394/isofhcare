@@ -539,7 +539,7 @@ class AddNewDrugStoreScreen extends Component {
                                     <View style={{ alignItems: 'center', marginTop: 50 }}>
                                         <Text style={{ fontStyle: 'italic' }}>Không tìm thấy dữ liệu tỉnh thành phố</Text>
                                     </View>
-                                    : <Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" />
+                                    : null//<Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" />
                             }
                             ListFooterComponent={() => <View style={{ height: 50 }}></View>}
                             renderItem={({ item, index }) =>

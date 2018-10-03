@@ -3,17 +3,18 @@ import ActivityPanel from '@components/ActivityPanel';
 import { View, TextInput, TouchableWithoutFeedback, Text, FlatList, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import drugProvider from '@data-access/drug-provider';
+import facilityProvider from '@data-access/facility-provider';
 import Slide from '@components/slide/Slide';
 import clientUtils from '@utils/client-utils';
 import stringUtils from 'mainam-react-native-string-utils';
 import Dash from 'mainam-react-native-dash-view';
 import ImageLoad from 'mainam-react-native-image-loader';
-
+import ItemFacility from '@components/facility/ItemFacility';
 class DrugDetailScreen extends Component {
     constructor(props) {
         super(props)
         this.state = {
-
+            listFacilities: []
         }
     }
     renderItemPager(item, index) {
@@ -116,7 +117,15 @@ class DrugDetailScreen extends Component {
             drugProvider.updateViewCount(drug.drug.id, (s, e) => {
 
             })
+            this.loadFacilityRelated(drug.drug.id);
         }
+    }
+    loadFacilityRelated(drugId) {
+        facilityProvider.getByDrug(drugId, 1, 10, (s, e) => {
+            if (s && s.code == 0) {
+                this.setState({ listFacilities: s.data });
+            }
+        })
     }
     render() {
         const drug = this.props.navigation.getParam("drug", null);
@@ -190,12 +199,18 @@ class DrugDetailScreen extends Component {
                             : null
                         }
                     </View>
-                    {/* <Text style={{ margin: 20, color: 'rgb(47,94,172)', fontWeight: '500' }}>CÓ BÁN TẠI CÁC NHÀ THUỐC</Text>
                     {
-                        [1, 2, 3, 4, 5].map((item, index) => {
-                            return <ItemFacility key={index} style={{ marginLeft: 14, marginRight: 14 }} />
-                        })
-                    } */}
+                        (this.state.listFacilities && this.state.listFacilities.length > 0) &&
+                        <View>
+                            <Text style={{ margin: 20, color: 'rgb(47,94,172)', fontWeight: '500' }}>CÓ BÁN TẠI CÁC NHÀ THUỐC</Text>
+                            {
+                                listFacilities.map((item, index) => {
+                                    return <ItemFacility facility={item} key={index} style={{ marginLeft: 14, marginRight: 14 }} />
+                                })
+                            }
+                        </View>
+
+                    }
                 </ScrollView>
             </ActivityPanel >
         );
