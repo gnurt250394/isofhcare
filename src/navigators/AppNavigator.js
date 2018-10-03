@@ -31,7 +31,9 @@ import GroupChatScreen from '@containers/chat/GroupChatScreen';
 import ChatScreen from '@containers/chat/ChatScreen';
 import MyAccountScreen from '@containers/account/MyAccountScreen';
 import ProfileScreen from '@containers/account/ProfileScreen'
+import EmptyScreen from '@containers/EmptyScreen1'
 const RootNavigator = createStackNavigator({
+    empty: {screen: EmptyScreen },
     splash: { screen: SplashScreen },
     groupChat: { screen: GroupChatScreen },
     groupChatFacility: { screen: GroupChatScreen },
@@ -63,6 +65,7 @@ const RootNavigator = createStackNavigator({
     resetPassword: { screen: ResetPasswordScreen },
     symptom: { screen: SymptomScreen },
     profile: {screen: ProfileScreen}
+    
 }, {
         headerMode: 'none',
         header: null,

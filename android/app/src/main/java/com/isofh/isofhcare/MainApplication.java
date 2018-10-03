@@ -30,6 +30,7 @@ import com.airbnb.android.react.maps.MapsPackage;
 import java.util.Arrays;
 import java.util.List;
 import com.RNFetchBlob.RNFetchBlobPackage;
+import com.BV.LinearGradient.LinearGradientPackage;
 
 public class MainApplication extends MultiDexApplication implements ReactApplication, ShareApplication{
 private static CallbackManager mCallbackManager = CallbackManager.Factory.create();
@@ -64,7 +65,9 @@ private static CallbackManager mCallbackManager = CallbackManager.Factory.create
         new RNHTMLtoPDFPackage(),
         new RNDeviceInfo(),
         new RNGoogleSigninPackage(),
-        new FBSDKPackage(mCallbackManager)
+        new FBSDKPackage(mCallbackManager),
+              new LinearGradientPackage()
+
       );
     }
     
