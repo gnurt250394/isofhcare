@@ -6,6 +6,7 @@ import constants from '@resources/strings';
 import redux from '@redux-store';
 import ScalingDrawer from 'mainam-react-native-scaling-drawer';
 import DrawerContent from '@components/DrawerContent';
+import Home from '@containers/home/tab/Home';
 import TabSearch from '@containers/home/tab/TabSearch';
 import Swiper from 'react-native-swiper';
 let defaultScalingDrawerConfig = {
@@ -48,7 +49,8 @@ class SplashScreen extends Component {
 						bottom: 30
 					}}
 					loop={true}>
-					<TabSearch navigation={this.props.navigation} style={{ flex: 1 }} drawer={this._drawer} />
+					{/* <TabSearch navigation={this.props.navigation} style={{ flex: 1 }} drawer={this._drawer} /> */}
+					<Home navigation={this.props.navigation} style={{ flex: 1 }} drawer={this._drawer} />
 				</Swiper>
 			</ScalingDrawer >);
 	}

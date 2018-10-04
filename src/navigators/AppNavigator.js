@@ -33,8 +33,8 @@ import MyAccountScreen from '@containers/account/MyAccountScreen';
 import ProfileScreen from '@containers/account/ProfileScreen'
 import EmptyScreen from '@containers/EmptyScreen1'
 const RootNavigator = createStackNavigator({
-    empty: {screen: EmptyScreen },
     splash: { screen: SplashScreen },
+    empty: {screen: EmptyScreen },
     groupChat: { screen: GroupChatScreen },
     groupChatFacility: { screen: GroupChatScreen },
     chat: { screen: ChatScreen },
