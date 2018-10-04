@@ -293,6 +293,7 @@ class FacilityDetailScreen extends Component {
                         }}>
                             <View style={{ ...StyleSheet.absoluteFillObject, top: 0, backgroundColor: 'rgb(245,245,245)' }} /> */}
                             {/* <ContentComponent /> */}
+                            <View style={{ padding: 10, backgroundColor:'#fff' }}>  
                                 <View style={{ padding: 10, backgroundColor:'#fff' }}>
                                     <View {...this.props} style={[{ marginTop: 0, flexDirection: 'row' }, this.props.style]}>
                                         <View style={{ flex: 1, marginRight: 10 }}>
@@ -390,7 +391,7 @@ class FacilityDetailScreen extends Component {
                                     <Text style={{ padding: 10, fontSize: 16, marginTop: 5, textAlign: 'justify', lineHeight: 22, marginBottom: 20, color: '#9b9b9b' }}>{facility.facility.introduction}</Text>
                                     
                                 </View>
-                            
+                                </View>
                         {/* </View> */}
                     </Animated.ScrollView>
                     <Animated.View style={{

@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, TextInput, TouchableWithoutFeedback, Text, FlatList, TouchableOpacity, Dimensions, StyleSheet, Platform } from 'react-native';
+import { View, TextInput, TouchableWithoutFeedback, Text, FlatList, TouchableOpacity, Dimensions, StyleSheet, Platform, Animated, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import facilityProvider from '@data-access/facility-provider';
@@ -13,7 +13,11 @@ import locationProvider from '@data-access/location-provider';
 import historyProvider from '@data-access/history-provider';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 import snackbar from '@utils/snackbar-utils';
+import LinearGradient from 'react-native-linear-gradient'
 import SlidingPanel from 'mainam-react-native-sliding-up-down';
+// import ContentComponent from './ContentComponent'
+const { height: screenHeight, width: screenWidth } = Dimensions.get('window')
+
 class SearchByLocastionScreen extends Component {
     constructor(props) {
         super(props)
@@ -26,7 +30,11 @@ class SearchByLocastionScreen extends Component {
             loading: false,
             width,
             height: height - 75,
-            showSearchPanel: true
+            showSearchPanel: true,
+
+
+
+            enableScrollView: true
         }
     }
     getCurrentLocation = () => {
@@ -230,82 +238,126 @@ class SearchByLocastionScreen extends Component {
             <View style={{ height: 0.5, backgroundColor: '#00000040', marginTop: 12 }} />
         </TouchableOpacity>
     }
+    scroll = new Animated.Value(0)
+    headerY = Animated.multiply(Animated.diffClamp(this.scroll, 0, 56), -1)
+
+    onScrollToBottom({ layoutMeasurement, contentOffset, contentSize }) {
+        const paddingToBottom = 20;
+        return layoutMeasurement.height + contentOffset.y >=
+            contentSize.height - paddingToBottom;
+    };
+
+    onScrollToTop({ layoutMeasurement, contentOffset, contentSize }) {
+        return contentOffset.y == 0;
+    };
+
+    onScroll(e) {
+        Animated.event([{ nativeEvent: { contentOffset: { y: this.scroll } } }], { useNativeDriver: true })
+        if (this.onScrollToBottom(e.nativeEvent)) {
+            this.setState({ enableScrollView: false });
+        }
+    }
+    onScrollFlatList(e) {
+        console.log(e.nativeEvent);
+        if (this.onScrollToTop(e.nativeEvent)) {
+            if (this.scrollView)
+                this.scrollView.getNode().scrollTo({ y: 0, animated: true });
+            this.setState({ enableScrollView: true });
+        }
+    }
     render() {
         return (
-            <ActivityPanel ref={(ref) => this.activity = ref} style={{ flex: 1 }} title="CHỌN ĐỊA ĐIỂM TÌM KIẾM" showFullScreen={true}>
-                <View style={styles.container}>
-                    <View style={styles.container}>
-                        <MapView
-                            provider={PROVIDER_GOOGLE}
-                            style={{ width: '100%', height: this.state.height - (!this.state.showOverlay ? (Platform.OS == 'ios' ? 100 : 120) : 0) }}
-                            showsUserLocation={true}
-                            region={this.state.region}
-                        >
-                            {
-                                this.state.region ?
-                                    <Marker coordinate={this.state.region}>
-                                        <ScaledImage source={require("@images/navigation.png")} width={30} />
-                                    </Marker> : null
-                            }
-
-                            {
-                                this.state.data.map((item, index) => <Marker key={index}
-                                    coordinate={{
-                                        latitude: item.facility.latitude,
-                                        longitude: item.facility.longitude
-                                    }}>
-                                    <ScaledImage source={
-                                        item.facility.type == 2 ? require("@images/ic_phongkham.png") :
-                                            item.facility.type == 8 ? require("@images/ic_nhathuoc.png") :
-                                                item.facility.type == 1 ? require("@images/ic_hospital.png") :
-                                                    require("@images/ic_trungtamyte.png")} width={20} />
-                                </Marker>)
-                            }
-                        </MapView>
-                        {
-                            !this.state.showOverlay ? <SlidingPanel
-                                zIndex={2}
-                                onExpand={this.onExpand.bind(this)}
-                                visible={true}
-                                AnimationSpeed={400}
-                                allowDragging={false}
-                                headerLayoutHeight={205}
-                                headerLayout={() =>
-                                    <View zIndex={10} style={{ marginTop: Platform.OS == 'ios' ? 72 : 52, alignItems: 'center', width }}>
-                                        <ScaledImage source={require("@images/facility/icdrag.png")} height={29} zIndex={5} />
-                                        <FlatList
-                                            onRefresh={this.onRefresh.bind(this)}
-                                            refreshing={this.state.refreshing}
-                                            onEndReached={this.onLoadMore.bind(this)}
-                                            onEndReachedThreshold={1}
-                                            style={{ width, height: height - 110, backgroundColor: '#FFF' }}
-                                            keyExtractor={(item, index) => index.toString()}
-                                            extraData={this.state}
-                                            data={this.state.data}
-                                            ListHeaderComponent={() => !this.state.refreshing && (!this.state.data || this.state.data.length == 0) ?
-                                                <View style={{ alignItems: 'center', marginTop: 50 }}>
-                                                    <ScaledImage source={require("@images/search/noresult.png")} width={136} />
-                                                    <TouchableOpacity>
-                                                        <Text style={{ marginTop: 20, padding: 20, textAlign: 'center', lineHeight: 30 }}>Chúng tôi không tìm thấy kết quả nào phù hợp</Text>
-                                                    </TouchableOpacity>
-
-                                                </View> : null
-                                            }
-                                            ListFooterComponent={() => <View style={{ height: 50 }}></View>}
-                                            renderItem={({ item, index }) =>
-                                                <ItemFacility2 facility={item} />
-                                            }
-                                        />
-                                    </View>
+            <ActivityPanel style={{ flex: 1 }} title="CHỌN ĐỊA ĐIỂM TÌM KIẾM" hideActionbar={false} showFullScreen={true}>
+                <View style={StyleSheet.absoluteFill}>
+                    <Animated.ScrollView scrollEventThrottle={5}
+                        ref={(ref) => this.scrollView = ref}
+                        showsVerticalScrollIndicator={false}
+                        scrollEnabled={this.state.enableScrollView}
+                        style={{ zIndex: 0 }}
+                        onScroll={this.onScroll.bind(this)}
+                    >
+                        <Animated.View style={{
+                            height: screenHeight * 0.5,
+                            width: '100%',
+                            transform: [{ translateY: Animated.multiply(this.scroll, 0.5) }]
+                        }}>
+                            <MapView style={StyleSheet.absoluteFill}
+                                provider={PROVIDER_GOOGLE}
+                                showsUserLocation={true}
+                                region={this.state.region}>
+                                {
+                                    this.state.region ?
+                                        <Marker coordinate={this.state.region}>
+                                            <ScaledImage source={require("@images/navigation.png")} width={30} />
+                                        </Marker> : null
                                 }
-                                slidingPanelLayout={() =>
-                                    <View>
 
-                                    </View>
+                                {
+                                    this.state.data.map((item, index) => <Marker key={index}
+                                        coordinate={{
+                                            latitude: item.facility.latitude,
+                                            longitude: item.facility.longitude
+                                        }}>
+                                        <ScaledImage source={
+                                            item.facility.type == 2 ? require("@images/ic_phongkham.png") :
+                                                item.facility.type == 8 ? require("@images/ic_nhathuoc.png") :
+                                                    item.facility.type == 1 ? require("@images/ic_hospital.png") :
+                                                        require("@images/ic_trungtamyte.png")} width={20} />
+                                    </Marker>)
                                 }
-                            /> : null
-                        }
-                    </View>
+                            </MapView>
+                        </Animated.View>
+                        <View style={{ position: 'absolute', height: 10, width: '100%' }}>
+                            <LinearGradient
+                                colors={['rgba(245,245,245,0.0)', 'rgba(245,245,245,0.35)', 'rgba(245,245,245,1)']}
+                                locations={[0, 0.7, 1]}
+                                style={StyleSheet.absoluteFill} />
+                        </View>
+                        {/* <View style={{
+                            transform: [{ translateY: 100 }],
+                            width: screenWidth,
+                            paddingHorizontal: 30,
+                            paddingVertical: 20,
+                            backgroundColor: 'transparent'
+                        }}> */}
+                        {/* <View style={{ ...StyleSheet.absoluteFillObject, top: 0,backgroundColor: 'rgb(245,245,245)' }} /> */}
+
+                        <FlatList
+                            onScroll={this.onScrollFlatList.bind(this)}
+                            onRefresh={this.onRefresh.bind(this)}
+                            refreshing={this.state.refreshing}
+                            onEndReached={this.onLoadMore.bind(this)}
+                            onEndReachedThreshold={1}
+                            style={{ width, height: screenHeight, backgroundColor: '#FFF' }}
+                            keyExtractor={(item, index) => index.toString()}
+                            extraData={this.state}
+                            data={this.state.data}
+                            ListHeaderComponent={() => !this.state.refreshing && (!this.state.data || this.state.data.length == 0) ?
+                                <View style={{ alignItems: 'center', marginTop: 50 }}>
+                                    <ScaledImage source={require("@images/search/noresult.png")} width={136} />
+                                    <TouchableOpacity>
+                                        <Text style={{ marginTop: 20, padding: 20, textAlign: 'center', lineHeight: 30 }}>Chúng tôi không tìm thấy kết quả nào phù hợp</Text>
+                                    </TouchableOpacity>
+
+                                </View> : null
+                            }
+                            ListFooterComponent={() => <View style={{ height: 50 }}></View>}
+                            renderItem={({ item, index }) =>
+                                <ItemFacility2 facility={item} />
+                            }
+                        />
+                        {/* </View> */}
+                    </Animated.ScrollView>
+                    <Animated.View style={{
+                        width: "100%",
+                        position: "absolute",
+                        transform: [{
+                            translateY: this.headerY
+                        }],
+                        flex: 1,
+                        backgroundColor: 'transparent'
+                    }}>
+                    </Animated.View>
                     {
                         this.state.showOverlay ?
                             <TouchableWithoutFeedback onPress={this.overlayClick.bind(this)} style={{}}><View style={{ position: 'absolute', top: 0, right: 0, left: 0, bottom: 0, backgroundColor: '#37a3ff59' }} /></TouchableWithoutFeedback> : null
@@ -323,32 +375,10 @@ class SearchByLocastionScreen extends Component {
                             </View> : null
                     }
                 </View>
-            </ActivityPanel >
-        );
+            </ActivityPanel>
+        )
     }
 }
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        position: 'relative'
-    },
-    headerLayoutStyle: {
-        width,
-        backgroundColor: 'orange',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    slidingPanelLayoutStyle: {
-        width,
-        backgroundColor: '#FFF',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    commonTextStyle: {
-        color: 'white',
-        fontSize: 18,
-    },
-});
 
 function mapStateToProps(state) {
     return {
