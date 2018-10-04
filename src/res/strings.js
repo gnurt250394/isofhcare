@@ -33,6 +33,9 @@ module.exports = {
   update: "Cập nhật",
   later: "Để sau",
   input_code: "Nhập mã xác thực",
+  hospital: {
+    BENH_VIEN_DAI_HOC_Y: 1
+  },
   action: {
     create_navigation_global: "ACTION_SET_NAVIGATION_GLOBAL",
     action_change_login_token: "ACTION_CHANGE_LOGIN_TOKEN",
@@ -238,6 +241,9 @@ module.exports = {
     specialist:
     {
       search: "specialist/search"
+    },
+    booking: {
+      get_list_booking: 'booking/get-list-patient-history-by-user'
     }
   }
 };
