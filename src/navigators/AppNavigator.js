@@ -31,10 +31,10 @@ import GroupChatScreen from '@containers/chat/GroupChatScreen';
 import ChatScreen from '@containers/chat/ChatScreen';
 import MyAccountScreen from '@containers/account/MyAccountScreen';
 import ProfileScreen from '@containers/account/ProfileScreen'
-import EmptyScreen from '@containers/EmptyScreen1'
+import EhealthScreen from '@containers/ehealth/EhealthScreen'
 const RootNavigator = createStackNavigator({
     splash: { screen: SplashScreen },
-    empty: {screen: EmptyScreen },
+    ehealth: {screen: EhealthScreen },
     groupChat: { screen: GroupChatScreen },
     groupChatFacility: { screen: GroupChatScreen },
     chat: { screen: ChatScreen },

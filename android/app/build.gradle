@@ -153,6 +153,7 @@ android {
 }
 
 dependencies {
+    compile project(':tipsi-dash-line')
     implementation project(':react-native-linear-gradient')
     implementation project(':react-native-photo-view')
     implementation project(':react-native-google-places')

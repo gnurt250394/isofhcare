@@ -61,6 +61,7 @@
     "redux-thunk": "^2.2.0",
     "rn-fetch-blob": "^0.10.11",
     "sendbird": "^3.0.65",
+    "tipsi-dash-line": "^0.1.0",
     "yarn": "^1.9.4"
   },
   "devDependencies": {
