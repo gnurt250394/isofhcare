@@ -4,7 +4,6 @@ import { View, TextInput, Text, FlatList, TouchableOpacity, ScrollView, Image, D
 import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import facilityProvider from '@data-access/facility-provider';
-import Dash from 'mainam-react-native-dash-view';
 import Modal from "react-native-modal";
 import stylemodal from "@styles/modal-style";
 import imageProvider from '@data-access/image-provider';

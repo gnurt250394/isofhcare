@@ -12,7 +12,7 @@
     "mainam-react-native-activity-panel": "^1.1.8",
     "mainam-react-native-barcode": "^1.0.3",
     "mainam-react-native-convert-utils": "^1.0.0",
-    "mainam-react-native-dash-view": "^1.0.1",
+    "mainam-react-native-dash-view": "^2.0.3",
     "mainam-react-native-date-picker": "^1.0.0",
     "mainam-react-native-date-utils": "^1.0.1",
     "mainam-react-native-dialog-box": "^1.0.1",
@@ -61,7 +61,6 @@
     "redux-thunk": "^2.2.0",
     "rn-fetch-blob": "^0.10.11",
     "sendbird": "^3.0.65",
-    "tipsi-dash-line": "^0.1.0",
     "yarn": "^1.9.4"
   },
   "devDependencies": {
