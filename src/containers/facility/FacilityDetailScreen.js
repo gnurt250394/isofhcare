@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { Text, View, TextInput, TouchableWithoutFeedback, TouchableOpacity, Dimensions, StyleSheet, Platform, ScrollView, Linking, Image } from 'react-native';
+import { Text, View, TextInput, TouchableWithoutFeedback, TouchableOpacity, Dimensions, StyleSheet, Platform, ScrollView, Linking, Image, Animated } from 'react-native';
 import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import locationProvider from '@data-access/location-provider';
@@ -17,7 +17,8 @@ import stylemodal from "@styles/modal-style";
 import constants from '@resources/strings';
 import facilityProvider from '@data-access/facility-provider';
 import firebaseUtils from '@utils/firebase-utils';
-
+import LinearGradient from 'react-native-linear-gradient'
+const { height: screenHeight, width: screenWidth } = Dimensions.get('window')
 import Rating from '@components/Rating';
 
 import SlidingPanel from 'mainam-react-native-sliding-up-down';
@@ -42,6 +43,9 @@ class FacilityDetailScreen extends Component {
         };
         this.showFacility(facility);
     }
+    scroll = new Animated.Value(0)
+    headerY = Animated.multiply(Animated.diffClamp(this.scroll, 0, 56), -1)
+
     getListImage(facility) {
         var images = facility.images;
         var list_images = [];
@@ -247,147 +251,158 @@ class FacilityDetailScreen extends Component {
 
         return (
             <ActivityPanel ref={(ref) => this.activity = ref} style={{ flex: 1 }} title="CHỌN ĐỊA ĐIỂM TÌM KIẾM" showFullScreen={true} isLoading={this.state.isLoading}>
-                <View style={styles.container}>
-                    <View style={styles.container}>
-                        <MapView
-                            showsMyLocationButton={true}
-                            ref={(ref) => { this.mapRef = ref }}
-                            provider={PROVIDER_GOOGLE}
-                            style={{ width: '100%', height: this.state.height - (!this.state.showOverlay ? (Platform.OS == 'ios' ? 300 : 320) : 0) }}
-                            showsUserLocation={true}
-                            region={this.state.region}
-                        >
-                            <Marker
-                                id={"Location"}
-                                coordinate={this.state.region}>
-                                <ScaledImage source={
-                                    this.state.facility.facility.type == 2 ? require("@images/ic_phongkham.png") :
-                                        this.state.facility.facility.type == 8 ? require("@images/ic_nhathuoc.png") :
-                                            this.state.facility.facility.type == 1 ? require("@images/ic_hospital.png") :
-                                                require("@images/ic_trungtamyte.png")} width={20} />
-                            </Marker>
-                        </MapView>
-                        {
-                            !this.state.showOverlay ? <SlidingPanel
-                                zIndex={2}
-                                onExpand={this.onExpand.bind(this)}
-                                visible={true}
-                                AnimationSpeed={400}
-                                allowDragging={false}
-                                headerLayoutHeight={405}
-                                headerLayout={() =>
-                                    <View zIndex={10} style={{ marginTop: Platform.OS == 'ios' ? 72 : 52, alignItems: 'center', width }}>
-                                        <ScaledImage source={require("@images/facility/icdrag.png")} height={29} zIndex={5} />
-                                        <ScrollView
-                                            style={{ width, height: height - 110, backgroundColor: '#FFF' }}>
-                                            <View style={{ padding: 10 }}>
-                                                <View {...this.props} style={[{ marginTop: 0, flexDirection: 'row' }, this.props.style]}>
-                                                    <View style={{ flex: 1, marginRight: 10 }}>
-                                                        <View style={{ flexDirection: 'row' }}>
-                                                            <Text style={{ fontWeight: 'bold', flex: 1 }} numberOfLines={2} ellipsizeMode='tail'>{facility.facility.name}</Text>
-                                                            {
-                                                                (facility.facility.type == 2 || facility.facility.type == 8) && facility.facility.approval == 0 && facility.user && this.props.userApp.isLogin && this.props.userApp.currentUser.id == facility.user.id ?
-                                                                    <TouchableOpacity onPress={this.edit.bind(this, facility)}>
-                                                                        <ScaledImage source={require("@images/edit.png")} width={20}></ScaledImage>
-                                                                    </TouchableOpacity> :
-                                                                    null
-                                                            }
-                                                        </View>
-                                                        <TouchableOpacity onPress={this.showRating.bind(this)} style={{ paddingTop: 5, paddingBottom: 5 }}>
-                                                            <Rating readonly={true} count={5} value={this.state.facility.facility.review} starWidth={13} style={{ marginTop: 4, marginBottom: 4 }} />
-                                                        </TouchableOpacity>
-                                                        <View style={{ flexDirection: 'row', marginTop: 8 }}>
-                                                            <TouchableOpacity onPress={() => snackbar.show("Chức năng đang phát triển")} style={{ marginRight: 5, backgroundColor: 'rgb(47,94,172)', padding: 6, paddingLeft: 14, paddingRight: 14 }}>
-                                                                <Text style={{ color: '#FFF', fontWeight: 'bold' }}>Đặt khám</Text>
-                                                            </TouchableOpacity>
-                                                            {
-                                                                this.state.facility.facility.type == 8 &&
-                                                                <TouchableOpacity onPress={this.chat.bind(this, facility)} style={{ backgroundColor: 'rgb(47,94,172)', padding: 6, paddingLeft: 14, paddingRight: 14 }}>
-                                                                    <Text style={{ color: '#FFF', fontWeight: 'bold' }}>Mua thuốc</Text>
-                                                                </TouchableOpacity>
-                                                            }
-                                                        </View>
-                                                    </View>
-                                                    <View style={{ width: 90 }}>
-                                                        {this.state.facility.facility.type == 8 && this.state.facility.facility.gpp == 1 && <View style={{ backgroundColor: '#f5a623', height: 30, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                                                            <ScaledImage width={16} source={require("@images/certificate.png")} />
-                                                            <Text style={{ color: '#fff', fontWeight: 'bold', marginLeft: 5, fontSize: 10 }}>Chuẩn GPP</Text>
-                                                        </View>}
-                                                        <ImageLoad
-                                                            resizeMode="cover"
-                                                            placeholderSource={require("@images/noimage.jpg")}
-                                                            style={{ width: 90, height: 90 }}
-                                                            loadingStyle={{ size: 'small', color: 'gray' }}
-                                                            source={{ uri: image }}
-                                                        />
-                                                    </View>
-                                                </View>
-                                                <Text style={{ fontSize: 12, marginTop: 14, marginBottom: 10 }} numberOfLines={2} ellipsizeMode='tail'>{facility.facility.address}</Text>
+                <View style={StyleSheet.absoluteFill}>
+                    <Animated.ScrollView scrollEventThrottle={5}
+                        showsVerticalScrollIndicator={false}
+                        style={{ zIndex: 0 }}
+                        onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: this.scroll } } }], { useNativeDriver: true })}>
+                        <Animated.View style={{
+                            height: screenHeight * 0.5,
+                            width: '100%',
+                            transform: [{ translateY: Animated.multiply(this.scroll, 0.5) }]
+                        }}> 
+                            <MapView style={StyleSheet.absoluteFill}
+                                provider={PROVIDER_GOOGLE}
+                                ref={(ref) => { this.mapRef = ref }}
+                                showsUserLocation={true}
+                                showsMyLocationButton={true}
+                                region={this.state.region}>
+                                <Marker
+                                    id={"Location"}
+                                    coordinate={this.state.region}>
+                                    <ScaledImage source={
+                                        this.state.facility.facility.type == 2 ? require("@images/ic_phongkham.png") :
+                                            this.state.facility.facility.type == 8 ? require("@images/ic_nhathuoc.png") :
+                                                this.state.facility.facility.type == 1 ? require("@images/ic_hospital.png") :
+                                                    require("@images/ic_trungtamyte.png")} width={20} />
+                                </Marker>
+                            </MapView>
+                        </Animated.View>
+                        <View style={{ position: 'absolute', height: screenHeight * 0.5, width: '100%' }}>
+                            <LinearGradient
+                                colors={['rgba(245,245,245,0.0)', 'rgba(245,245,245,0.35)', 'rgba(245,245,245,1)']}
+                                locations={[0, 0.7, 1]}
+                                style={StyleSheet.absoluteFill} />
+                        </View>
+                        {/* <View style={{
+                            transform: [{ translateY: -100 }],
+                            width: screenWidth,
+                            paddingHorizontal: 30,
+                            paddingVertical: 20,
+                            backgroundColor: 'transparent'
+                        }}>
+                            <View style={{ ...StyleSheet.absoluteFillObject, top: 0, backgroundColor: 'rgb(245,245,245)' }} /> */}
+                            {/* <ContentComponent /> */}
+                                <View style={{ padding: 10, backgroundColor:'#fff' }}>
+                                    <View {...this.props} style={[{ marginTop: 0, flexDirection: 'row' }, this.props.style]}>
+                                        <View style={{ flex: 1, marginRight: 10 }}>
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <Text style={{ fontWeight: 'bold', flex: 1 }} numberOfLines={2} ellipsizeMode='tail'>{facility.facility.name}</Text>
+                                                {
+                                                    (facility.facility.type == 2 || facility.facility.type == 8) && facility.facility.approval == 0 && facility.user && this.props.userApp.isLogin && this.props.userApp.currentUser.id == facility.user.id ?
+                                                        <TouchableOpacity onPress={this.edit.bind(this, facility)}>
+                                                            <ScaledImage source={require("@images/edit.png")} width={20}></ScaledImage>
+                                                        </TouchableOpacity> :
+                                                        null
+                                                }
                                             </View>
-                                            <PhotoGrid styles={{ maxHeight: this.state.list_images.length > 2 ? 300 : height }} source={this.state.list_images} onPressImage={(e, uri) => { this.photoViewer(uri) }} />
-                                            <View style={{ padding: 10 }}>
-                                                <View style={{ flexDirection: 'row', marginTop: 10 }}>
-                                                    <View style={{ flex: 1 }}>
-                                                        {
-                                                            facility.facility.website ?
-                                                                <TouchableOpacity style={{ padding: 10, flexDirection: 'row' }} onPress={() => Linking.openURL(facility.facility.website)}>
-                                                                    <ScaledImage source={require("@images/web.png")} width={15} style={{ marginRight: 5 }} />
-                                                                    <Text style={{ color: '#23429b' }}>{facility.facility.website}</Text>
-                                                                </TouchableOpacity> : null
-                                                        }
-                                                        {
-                                                            facility.facility.phone ?
-                                                                <TouchableOpacity style={{ padding: 10, flexDirection: 'row', alignItems: 'center' }} onPress={() => Linking.openURL("tel:" + facility.facility.phone)}>
-                                                                    <ScaledImage source={require("@images/ic_phone.png")} width={15} style={{ marginRight: 5 }} />
-                                                                    <Text style={{ color: 'rgb(35,66,155)', fontWeight: 'bold' }}>{facility.facility.phone}</Text>
-                                                                </TouchableOpacity> : null
-                                                        }
-                                                    </View>
-                                                    <Button style={{
-                                                        padding: 2,
-                                                        paddingLeft: 10,
-                                                        paddingRight: 10,
-                                                        backgroundColor: '#FFF',
-                                                        borderWidth: 1,
-                                                        borderColor: "#2f5eac"
-                                                    }} onPress={this.chat.bind(this, facility)}>
-                                                        <ScaledImage source={require("@images/ic_chat.png")} height={21} style={{ marginRight: 5 }} />
-                                                        <Text>Nhắn tin</Text>
-                                                    </Button>
-                                                </View>
-                                                <View>
-                                                    {
-                                                        facility.facility.emergencyContact ?
-                                                            <TouchableOpacity style={{ padding: 10, flexDirection: 'row' }} onPress={() => Linking.openURL("tel:" + facility.facility.emergencyContact)}>
-                                                                <ScaledImage source={require("@images/icemergency.png")} width={15} style={{ marginRight: 5 }} />
-                                                                <Text>Gọi cấp cứu hotline: <Text style={{ fontWeight: 'bold' }}>{facility.facility.emergencyContact}</Text></Text>
-                                                            </TouchableOpacity> : null
-                                                    }
-                                                </View>
-                                                <View>
-                                                    {
-                                                        facility.facility.licenseNumber ?
-                                                            <View style={{ padding: 10, flexDirection: 'row' }}>
-                                                                <ScaledImage source={require("@images/icgiayphep.png")} width={15} style={{ marginRight: 5 }} />
-                                                                <Text>Số giấy phép kinh doanh: <Text style={{ fontWeight: 'bold' }}>{facility.facility.licenseNumber}</Text></Text>
-                                                            </View> : null
-                                                    }
-                                                </View>
-
-                                                <Text style={{ padding: 10, fontSize: 16, marginTop: 5, textAlign: 'justify', lineHeight: 22, marginBottom: 20, color: '#9b9b9b' }}>{facility.facility.introduction}</Text>
-                                                <View style={{ height: 200 }} />
+                                            <TouchableOpacity onPress={this.showRating.bind(this)} style={{ paddingTop: 5, paddingBottom: 5 }}>
+                                                <Rating readonly={true} count={5} value={this.state.facility.facility.review} starWidth={13} style={{ marginTop: 4, marginBottom: 4 }} />
+                                            </TouchableOpacity>
+                                            <View style={{ flexDirection: 'row', marginTop: 8 }}>
+                                                <TouchableOpacity onPress={() => snackbar.show("Chức năng đang phát triển")} style={{ marginRight: 5, backgroundColor: 'rgb(47,94,172)', padding: 6, paddingLeft: 14, paddingRight: 14 }}>
+                                                    <Text style={{ color: '#FFF', fontWeight: 'bold' }}>Đặt khám</Text>
+                                                </TouchableOpacity>
+                                                {
+                                                    this.state.facility.facility.type == 8 &&
+                                                    <TouchableOpacity onPress={this.chat.bind(this, facility)} style={{ backgroundColor: 'rgb(47,94,172)', padding: 6, paddingLeft: 14, paddingRight: 14 }}>
+                                                        <Text style={{ color: '#FFF', fontWeight: 'bold' }}>Mua thuốc</Text>
+                                                    </TouchableOpacity>
+                                                }
                                             </View>
-                                        </ScrollView>
+                                        </View>
+                                        <View style={{ width: 90 }}>
+                                            {this.state.facility.facility.type == 8 && this.state.facility.facility.gpp == 1 && <View style={{ backgroundColor: '#f5a623', height: 30, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                                <ScaledImage width={16} source={require("@images/certificate.png")} />
+                                                <Text style={{ color: '#fff', fontWeight: 'bold', marginLeft: 5, fontSize: 10 }}>Chuẩn GPP</Text>
+                                            </View>}
+                                            <ImageLoad
+                                                resizeMode="cover"
+                                                placeholderSource={require("@images/noimage.jpg")}
+                                                style={{ width: 90, height: 90 }}
+                                                loadingStyle={{ size: 'small', color: 'gray' }}
+                                                source={{ uri: image }}
+                                            />
+                                        </View>
                                     </View>
-                                }
-                                slidingPanelLayout={() =>
+                                    <Text style={{ fontSize: 12, marginTop: 14, marginBottom: 10 }} numberOfLines={2} ellipsizeMode='tail'>{facility.facility.address}</Text>
+                                </View>
+                                <PhotoGrid styles={{ maxHeight: this.state.list_images.length > 2 ? 300 : height }} source={this.state.list_images} onPressImage={(e, uri) => { this.photoViewer(uri) }} />
+                                <View style={{ padding: 10 }}>
+                                    <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                                        <View style={{ flex: 1 }}>
+                                            {
+                                                facility.facility.website ?
+                                                    <TouchableOpacity style={{ padding: 10, flexDirection: 'row' }} onPress={() => Linking.openURL(facility.facility.website)}>
+                                                        <ScaledImage source={require("@images/web.png")} width={15} style={{ marginRight: 5 }} />
+                                                        <Text style={{ color: '#23429b' }}>{facility.facility.website}</Text>
+                                                    </TouchableOpacity> : null
+                                            }
+                                            {
+                                                facility.facility.phone ?
+                                                    <TouchableOpacity style={{ padding: 10, flexDirection: 'row', alignItems: 'center' }} onPress={() => Linking.openURL("tel:" + facility.facility.phone)}>
+                                                        <ScaledImage source={require("@images/ic_phone.png")} width={15} style={{ marginRight: 5 }} />
+                                                        <Text style={{ color: 'rgb(35,66,155)', fontWeight: 'bold' }}>{facility.facility.phone}</Text>
+                                                    </TouchableOpacity> : null
+                                            }
+                                        </View>
+                                        <Button style={{
+                                            padding: 2,
+                                            paddingLeft: 10,
+                                            paddingRight: 10,
+                                            backgroundColor: '#FFF',
+                                            borderWidth: 1,
+                                            borderColor: "#2f5eac"
+                                        }} onPress={this.chat.bind(this, facility)}>
+                                            <ScaledImage source={require("@images/ic_chat.png")} height={21} style={{ marginRight: 5 }} />
+                                            <Text>Nhắn tin</Text>
+                                        </Button>
+                                    </View>
                                     <View>
-
+                                        {
+                                            facility.facility.emergencyContact ?
+                                                <TouchableOpacity style={{ padding: 10, flexDirection: 'row' }} onPress={() => Linking.openURL("tel:" + facility.facility.emergencyContact)}>
+                                                    <ScaledImage source={require("@images/icemergency.png")} width={15} style={{ marginRight: 5 }} />
+                                                    <Text>Gọi cấp cứu hotline: <Text style={{ fontWeight: 'bold' }}>{facility.facility.emergencyContact}</Text></Text>
+                                                </TouchableOpacity> : null
+                                        }
                                     </View>
-                                }
-                            /> : null
-                        }
-                    </View>
+                                    <View>
+                                        {
+                                            facility.facility.licenseNumber ?
+                                                <View style={{ padding: 10, flexDirection: 'row' }}>
+                                                    <ScaledImage source={require("@images/icgiayphep.png")} width={15} style={{ marginRight: 5 }} />
+                                                    <Text>Số giấy phép kinh doanh: <Text style={{ fontWeight: 'bold' }}>{facility.facility.licenseNumber}</Text></Text>
+                                                </View> : null
+                                        }
+                                    </View>
+
+                                    <Text style={{ padding: 10, fontSize: 16, marginTop: 5, textAlign: 'justify', lineHeight: 22, marginBottom: 20, color: '#9b9b9b' }}>{facility.facility.introduction}</Text>
+                                    
+                                </View>
+                            
+                        {/* </View> */}
+                    </Animated.ScrollView>
+                    <Animated.View style={{
+                        width: "100%",
+                        position: "absolute",
+                        transform: [{
+                            translateY: this.headerY
+                        }],
+                        flex: 1,
+                        backgroundColor: 'transparent'
+                    }}>
+                    </Animated.View>
                     {
                         this.state.showOverlay ?
                             <TouchableWithoutFeedback onPress={this.overlayClick.bind(this)} style={{}}><View style={{ position: 'absolute', top: 0, right: 0, left: 0, bottom: 0, backgroundColor: '#37a3ff59' }} /></TouchableWithoutFeedback> : null
@@ -406,6 +421,7 @@ class FacilityDetailScreen extends Component {
                             </View> : null
                     }
                 </View>
+                
                 <Modal
                     isVisible={this.state.toggleRating}
                     onBackdropPress={() => this.setState({ toggleRating: false })}
