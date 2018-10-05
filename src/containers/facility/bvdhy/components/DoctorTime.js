@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Actions } from '';
+// import { Actions } from '';
 import { connect } from 'react-redux';
 import { View, Text, ScrollView, FlatList, TouchableOpacity, StyleSheet } from 'react-native'
 import PropTypes from 'prop-types';
@@ -8,6 +8,7 @@ import dateUtils from 'mainam-react-native-date-utils';
 import snackbar from '@utils/snackbar-utils';
 
 class DoctorTime extends Component {
+    Actions;
     constructor(props) {
         super(props);
         var timeString = JSON.stringify({

@@ -5,7 +5,7 @@ import {
     View, StyleSheet, Image, Text, TouchableOpacity, FlatList
 } from 'react-native'
 import ScaleImage from 'mainam-react-native-scaleimage';
-import departmentProvider from '@data-access/department-provider';
+import departmentProvider from '@dhy/data-access/department-provider';
 import constants from '@dhy/strings';
 
 class TabBookingType extends Component {

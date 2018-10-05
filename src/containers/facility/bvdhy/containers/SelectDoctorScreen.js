@@ -2,12 +2,12 @@ import React, { Component, PropTypes } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, FlatList, TouchableOpacity, TextInput } from 'react-native';
 import constants from '@resources/strings';
 import ActivityPanel from '@components/ActivityPanel';
-import DoctorTime from '@components/booking/DoctorTime';
+// import DoctorTime from '@components/booking/DoctorTime';
 import { connect } from 'react-redux';
 import userProvider from '@data-access/user-provider';
 import Dimensions from 'Dimensions';
 import banner from '@images/booking/booking_banner.png'
-import doctorProvider from '@data-access/booking-doctor-provider';
+import doctorProvider from '@dhy/data-access/booking-doctor-provider';
 // import { Actions } from 'react-native-router-flux';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import ImageProgress from 'mainam-react-native-image-progress';

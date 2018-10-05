@@ -8,7 +8,6 @@ import { connect } from 'react-redux';
 import Modal from "react-native-modal";
 import stylemodal from "@styles/modal-style";
 import locationProvider from '@data-access/location-provider';
-import profileProvider from '@data-access/booking-profile-provider';
 import snackbar from '@utils/snackbar-utils';
 import dateUtils from 'mainam-react-native-date-utils';
 import DateTimePicker from 'mainam-react-native-date-picker';
@@ -330,7 +329,7 @@ class AddBookingNoProfile extends Component {
                         <Text style={{ flex: 1, fontWeight: "bold" }} editable={false}>
                             {this.state.newProfile && this.state.newProfile.bod ? this.state.newProfile.bod.ddmmyyyy() : "Ngày sinh"}
                         </Text>
-                        <Image style={{ width: 12, height: 8, marginLeft: 5, position: 'absolute', right: 5 }} source={require('@images/ic_dropdown_color.png')} />
+                        <Image style={{ width: 12, height: 8, marginLeft: 5, position: 'absolute', right: 5 }} source={require('@images/icdropdown.png')} />
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => this.toggleModalCountry()}>
@@ -338,7 +337,7 @@ class AddBookingNoProfile extends Component {
                         <Text style={{ flex: 1, fontWeight: "bold" }} underlineColorAndroid='#0c8c8b' editable={false}>
                             {this.state.newProfile.country ? this.state.newProfile.country.name : "Chọn quốc gia"}
                         </Text>
-                        <Image style={{ width: 12, height: 8, marginLeft: 5, position: 'absolute', right: 5 }} source={require('@images/ic_dropdown_color.png')} />
+                        <Image style={{ width: 12, height: 8, marginLeft: 5, position: 'absolute', right: 5 }} source={require('@images/icdropdown.png')} />
                     </View>
                 </TouchableOpacity>
                 {
@@ -349,7 +348,7 @@ class AddBookingNoProfile extends Component {
                                     <Text style={{ flex: 1, fontWeight: "bold" }} underlineColorAndroid='#0c8c8b' editable={false}>
                                         {this.state.newProfile.province ? this.state.newProfile.province.name : "Chọn Tỉnh/Tp"}
                                     </Text>
-                                    <Image style={{ width: 12, height: 8, marginLeft: 5, position: 'absolute', right: 5 }} source={require('@images/ic_dropdown_color.png')} />
+                                    <Image style={{ width: 12, height: 8, marginLeft: 5, position: 'absolute', right: 5 }} source={require('@images/icdropdown.png')} />
                                 </View>
                             </TouchableOpacity>
                             <TouchableOpacity onPress={() => this.toggleModalDistrict()}>
@@ -357,7 +356,7 @@ class AddBookingNoProfile extends Component {
                                     <Text style={{ flex: 1, fontWeight: "bold" }} underlineColorAndroid='#0c8c8b' editable={false}>
                                         {this.state.newProfile.district ? this.state.newProfile.district.name : "Chọn Quận/huyện"}
                                     </Text>
-                                    <Image style={{ width: 12, height: 8, marginLeft: 5, position: 'absolute', right: 5 }} source={require('@images/ic_dropdown_color.png')} />
+                                    <Image style={{ width: 12, height: 8, marginLeft: 5, position: 'absolute', right: 5 }} source={require('@images/icdropdown.png')} />
                                 </View>
                             </TouchableOpacity>
                             <TouchableOpacity onPress={() => this.toggleModalZone()}>
@@ -365,7 +364,7 @@ class AddBookingNoProfile extends Component {
                                     <Text style={{ flex: 1, fontWeight: "bold" }} underlineColorAndroid='#0c8c8b' editable={false}>
                                         {this.state.newProfile.zone ? this.state.newProfile.zone.name : "Chọn Xã/Phường"}
                                     </Text>
-                                    <Image style={{ width: 12, height: 8, marginLeft: 5, position: 'absolute', right: 5 }} source={require('@images/ic_dropdown_color.png')} />
+                                    <Image style={{ width: 12, height: 8, marginLeft: 5, position: 'absolute', right: 5 }} source={require('@images/icdropdown.png')} />
                                 </View>
                             </TouchableOpacity>
                         </View>

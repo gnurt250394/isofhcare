@@ -97,7 +97,7 @@ class BookingScreen extends Component {
                                     <Text style={{ borderColor: "#0c8c8b", borderWidth: 1, padding: 10, flex: 1 }}>
                                         {this.state.bycat ? "Chọn chuyên khoa" : "Chọn bác sĩ"}
                                     </Text>
-                                    <Image source={require("@images/ic_dropdown_color.png")} style={{ width: 14, height: 10, position: 'absolute', right: 10 }} />
+                                    <Image source={require("@images/icdropdown.png")} style={{ width: 14, height: 10, position: 'absolute', right: 10 }} />
                                 </View>
                             </TouchableOpacity>
                         </ScrollView>
