@@ -8,13 +8,11 @@ import userProvider from '@data-access/user-provider';
 import Dimensions from 'Dimensions';
 import banner from '@images/booking/booking_banner.png'
 import doctorProvider from '@dhy/data-access/booking-doctor-provider';
-// import { Actions } from 'react-native-router-flux';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import ImageProgress from 'mainam-react-native-image-progress';
 import Progress from 'react-native-progress/Pie';
-// const Actions;
+import dhyCommand from '@dhy/strings';
 class BookingScreen extends Component {
-    Actions
     constructor(props) {
         super(props);
         $this = this;
@@ -29,9 +27,9 @@ class BookingScreen extends Component {
     }
     viewScheduleDoctor(item) {
         this.props.dispatch({
-            type: constants.action.action_select_booking_doctor, value: item
+            type: dhyCommand.action.action_select_booking_doctor, value: item
         })
-        Actions.viewScheduleDoctor();
+        this.props.navigation.navigate("dhyViewScheduleDoctor")
     }
     componentDidMount() {
         this.onRefresh();
@@ -79,7 +77,7 @@ class BookingScreen extends Component {
     renderSearchButton() {
         return (
             <TouchableOpacity onPress={() => this.showSearch()}>
-                <ScaleImage source={require("@images/ic_search.png")} width={20} />
+                <ScaleImage source={require("@images/ictimkiem.png")} width={20} />
             </TouchableOpacity>
         );
     }
@@ -96,7 +94,7 @@ class BookingScreen extends Component {
     };
     render() {
         return (
-            <ActivityPanel style={{ flex: 1, }} title={this.state.showSearch ? constants.find_doctor : (this.props.booking.specialist ? this.props.booking.specialist.name : this.props.booking.currentDepartment ? this.props.booking.currentDepartment.name : "")} isLoading={this.state.isLoading} menuButton={this.renderSearchButton()} style={{ backgroundColor: '#e5fafe' }} >
+            <ActivityPanel style={{ flex: 1, }} title={this.state.showSearch ? dhyCommand.find_doctor : (this.props.booking.specialist ? this.props.booking.specialist.name : this.props.booking.currentDepartment ? this.props.booking.currentDepartment.name : "")} isLoading={this.state.isLoading} menuButton={this.renderSearchButton()} style={{ backgroundColor: '#e5fafe' }} >
                 {
                     this.state.showSearch ?
                         <View style={{
@@ -169,7 +167,7 @@ const styles = StyleSheet.create({
 function mapStateToProps(state) {
     return {
         userApp: state.userApp,
-        booking: state.booking
+        booking: state.dhyBooking
     };
 }
 export default connect(mapStateToProps)(BookingScreen);

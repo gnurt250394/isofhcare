@@ -258,8 +258,7 @@ class FacilityDetailScreen extends Component {
     }
 
     booking() {
-        // this.props.navigation.navigate("dhyBooking");
-        alert("ada")
+        this.props.navigation.navigate("addBookingBVDHY");
     }
 
     render() {

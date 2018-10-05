@@ -1,11 +1,11 @@
 import client from '@utils/client-utils';
 import string from 'mainam-react-native-string-utils';
-import constants from '@resources/strings';
+import constants from '@dhy/strings';
 import storage from '@data-access/storage-provider';
 
 module.exports = {
     getListDoctorByDepartment(departmentId, callback) {
-        client.requestApi("get", constants.api.booking_doctor.get_by_specialist_department + "?specialistId=" + "&departmentId=" + departmentId, {}, (s, e) => {
+        client.requestApi("get", constants.api.booking_doctor.get_by_specialist_department + "?specialistId=" + "&departmentId=" + departmentId + "&source=" + 1, {}, (s, e) => {
             try {
                 if (s && s.code == 0) {
                     if (callback)
@@ -21,7 +21,7 @@ module.exports = {
         });
     },
     getListDoctorBySpecialistDepartment(serviceId, departmentId, callback) {
-        client.requestApi("get", constants.api.booking_doctor.get_by_specialist_department + "?specialistId=" + serviceId + "&departmentId=" + departmentId, {}, (s, e) => {
+        client.requestApi("get", constants.api.booking_doctor.get_by_specialist_department + "?specialistId=" + serviceId + "&departmentId=" + departmentId + "&source=" + 1, {}, (s, e) => {
             try {
                 if (s && s.code == 0) {
                     if (callback)

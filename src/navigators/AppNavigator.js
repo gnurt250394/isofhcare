@@ -31,23 +31,12 @@ import GroupChatScreen from '@containers/chat/GroupChatScreen';
 import ChatScreen from '@containers/chat/ChatScreen';
 import ProfileScreen from '@containers/account/ProfileScreen'
 import { EHealthNavigator } from '@ehealth/navigator'
-
-
-import AddBookingScreen from '@dhy/containers/AddBookingScreen'
-import BookingScreen from '@dhy/containers/BookingScreen'
-import SelectDoctorScreen from '@dhy/containers/SelectDoctorScreen'
-import SelectSpecialistScreen from '@dhy/containers/SelectSpecialistScreen'
-import ViewScheduleDoctorScreen from '@dhy/containers/ViewScheduleDoctorScreen'
-
+import { BookingDHYNavigation } from '@dhy/navigator'
 
 const RootNavigator = createStackNavigator({
     splash: { screen: SplashScreen },
     ehealth: { screen: EHealthNavigator },
-    dhyBooking: {screen: BookingScreen},
-    dhyAddBooking: {screen: AddBookingScreen},
-    dhySelectDocter: {screen: SelectDoctorScreen},
-    dhySelectSpeciaList: {screen: SelectSpecialistScreen},
-    dhyViewScheduleDoctor: {screen: ViewScheduleDoctorScreen},
+    addBookingBVDHY: { screen: BookingDHYNavigation },
     groupChat: { screen: GroupChatScreen },
     groupChatFacility: { screen: GroupChatScreen },
     chat: { screen: ChatScreen },

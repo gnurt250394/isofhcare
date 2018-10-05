@@ -3,12 +3,11 @@ import { View, FlatList, TouchableOpacity, Text, TextInput } from 'react-native'
 import { connect } from 'react-redux';
 import ActivityPanel from '@components/ActivityPanel'
 import serviceProvider from '@dhy/data-access/booking-service-provider';
-// import { Actions } from 'react-native-router-flux';
 import constants from '@resources/strings';
+import dhyCommand from '@dhy/strings';
 import ScaleImage from 'mainam-react-native-scaleimage';
 let $this;
 class SelectSpecialistScreen extends Component {
-    Actions
     constructor(props) {
         super(props);
         $this = this;
@@ -26,9 +25,9 @@ class SelectSpecialistScreen extends Component {
     }
     selectSpecialist(item) {
         this.props.dispatch({
-            type: constants.action.action_select_booking_specialist, value: item
+            type: dhyCommand.action.action_select_booking_specialist, value: item
         })
-        Actions.selectDoctor();
+        this.props.navigation.navigate("dhySelectDoctor")
     }
 
 
@@ -70,7 +69,7 @@ class SelectSpecialistScreen extends Component {
     renderSearchButton() {
         return (
             <TouchableOpacity onPress={() => this.showSearch()}>
-                <ScaleImage source={require("@images/ic_search.png")} width={20} />
+                <ScaleImage source={require("@images/ictimkiem.png")} width={20} />
             </TouchableOpacity>
         );
     }
@@ -87,7 +86,7 @@ class SelectSpecialistScreen extends Component {
     };
     render() {
         return (
-            <ActivityPanel title={this.state.showSearch ? constants.find_category : (this.props.booking.currentDepartment ? this.props.booking.currentDepartment.name : "")} isLoading={this.state.isLoading} menuButton={this.renderSearchButton()} style={{ backgroundColor: '#e5fafe' }} >
+            <ActivityPanel title={this.state.showSearch ? dhyCommand.find_category : (this.props.booking.currentDepartment ? this.props.booking.currentDepartment.name : "")} isLoading={this.state.isLoading} menuButton={this.renderSearchButton()} style={{ backgroundColor: '#e5fafe' }} >
                 {
                     this.state.showSearch ?
                         <View style={{
@@ -98,11 +97,11 @@ class SelectSpecialistScreen extends Component {
                             backgroundColor: constants.colors.actionbar_color, 
                             flexDirection: 'row'
                         }}>
-                            <TextInput autoFocus={true} style={{ flex: 1, color: '#FFF', padding: 10 }} placeholderTextColor='#dddddd' underlineColorAndroid="transparent" placeholder={"Nhập từ khóa tìm kiếm"} onChangeText={(s) => {
+                            <TextInput autoFocus={true} style={{ flex: 1, color: constants.colors.actionbar_title_color, padding: 10 }} placeholderTextColor='#dddddd' underlineColorAndroid="transparent" placeholder={"Nhập từ khóa tìm kiếm"} onChangeText={(s) => {
                                 this.searchTextChange(s);
                             }} returnKeyType="search" onSubmitEditing={() => { this.onSearch() }} />
                             <TouchableOpacity onPress={() => this.onSearch()}>
-                                <Text style={{ backgroundColor: '#006ac6', padding: 7, borderRadius: 20, marginRight: 10, paddingLeft: 15, paddingRight: 15, fontWeight: 'bold', color: '#FFF' }}>{constants.search}</Text>
+                                <Text style={{ backgroundColor: constants.colors.actionbar_title_color, padding: 7, borderRadius: 20, marginRight: 10, paddingLeft: 15, paddingRight: 15, fontWeight: 'bold', color: '#FFF' }}>{constants.search}</Text>
                             </TouchableOpacity>
                         </View>
                         : null
@@ -133,7 +132,7 @@ class SelectSpecialistScreen extends Component {
                         />
                         : <View style={{width:'100%', height:'100%', backgroundColor:'#fff', justifyContent:'center', alignItems:'center'}}>
                             <ScaleImage source={require("@images/empty_result.png")} width={120} />
-                            <Text>Không tìm thấy chuyên khoa <Text style={{fontWeight:'bold', color:'#006ac6'}}>{this.state.searchValue}</Text></Text>
+                            <Text>Không tìm thấy chuyên khoa <Text style={{fontWeight:'bold', color:constants.colors.actionbar_title_color}}>{this.state.searchValue}</Text></Text>
                         </View>
                 }
 
@@ -145,7 +144,7 @@ class SelectSpecialistScreen extends Component {
 function mapStateToProps(state) {
     return {
         userApp: state.userApp,
-        booking: state.booking
+        booking: state.dhyBooking
     };
 }
 

@@ -25,6 +25,7 @@ class BookingScreen extends Component {
             updateBanner: false,
             bycat: true,
         };
+        // this.props.dispatch({ type: constants.action.action_init_booking})
     }
     filter(byCat) {
         this.setState({ bycat: byCat });
@@ -32,14 +33,16 @@ class BookingScreen extends Component {
     selectCategory() {
         this.props.dispatch({ type: constants.action.action_select_booking_specialist, value: null })
 
-        if (!this.props.booking.currentDepartment) {
+        if (!this.props.dhyBooking.currentDepartment) {
             snackbar.show(constants.msg.booking.please_select_department_first);
             return;
         }
         if (this.state.bycat) {
-            Actions.selectCategory()
+            // Actions.selectCategory()
+            this.props.navigation.navigate("dhySelectSpeciaList")
+            
         } else {
-            Actions.selectDoctor()
+            this.props.navigation.navigate("dhySelectDoctor")
         }
     }
     itemChange() {
@@ -47,18 +50,17 @@ class BookingScreen extends Component {
     }
     render() {
         return (
+            <ActivityPanel style={{ flex: 1 }} title="ĐẶT KHÁM"  showFullScreen={true}>
             <Animatable.View  animation="bounceIn"
                             duration={2000}
                             delay={100} style={{ backgroundColor: '#fFF', flex: 1 }}>
                 <View>
                     <View style={{ backgroundColor: constants.colors.actionbar_color }}>
-                        <View style={{ padding: 10, height: 50, alignItems: 'center', flexDirection: 'row' }}>
-                            {/* <ScaleImage source={require("@images/ic_navmenu.png")} width={20} /> */}
+                        {/* <View style={{ padding: 10, height: 50, alignItems: 'center', flexDirection: 'row' }}>
                             <View style={{ flex: 1 }}>
                                 <Text style={{ fontWeight: 'bold', color: 'white', padding: 3, flex: 1, textAlign: 'center', fontSize: 18 }}>ĐẶT KHÁM</Text>
                             </View>
-                            {/* <ScaleImage source={require("@images/ic_search.png")} width={20} /> */}
-                        </View>
+                        </View> */}
                         <TabBookingType itemChange={() => { this.itemChange() }}></TabBookingType>
                     </View>
                     <View >
@@ -104,6 +106,7 @@ class BookingScreen extends Component {
                     </View>
                 </View>
             </Animatable.View>
+            </ActivityPanel>
         )
     }
 }
@@ -112,7 +115,7 @@ class BookingScreen extends Component {
 function mapStateToProps(state) {
     return {
         userApp: state.userApp,
-        booking: state.booking
+        dhyBooking: state.dhyBooking
     };
 }
 export default connect(mapStateToProps)(BookingScreen);

@@ -18,6 +18,7 @@ class TabBookingType extends Component {
     }
     selectItem(item) {
         this.props.dispatch({ type: constants.action.action_select_department, value: item });
+
         if (this.props.itemChange) {
             this.props.itemChange();
         }
@@ -51,8 +52,10 @@ class TabBookingType extends Component {
         }
     }
     componentWillMount() {
-        // console.log("componentWillMount");
+
         departmentProvider.getListDepartment((res) => {
+            console.log("AAAAAAAAAAAAAAAAAAAAAAAA");
+            console.log(res)
             if (!res)
                 res = [];
             this.setState({
@@ -69,7 +72,7 @@ class TabBookingType extends Component {
             <View style={styles.tabContainer}>
                 <TouchableOpacity onPress={() => this.previewItem()}><ScaleImage style={{ padding: 5, transform: [{ rotate: '180deg' }] }} source={require("@images/ic_next2.png")} width={24}></ScaleImage></TouchableOpacity>
                 <Text style={{ flex: 1, overflow: 'hidden', textAlign: 'center', padding: 5, paddingTop: 10, paddingBottom: 10, backgroundColor: '#FFF', margin: 10, borderRadius: 20, fontWeight: 'bold', color: constants.colors.primary_bold }}>
-                    {this.props.booking.currentDepartment ? this.props.booking.currentDepartment.name : ""}
+                    {this.props.dhyBooking && this.props.dhyBooking.currentDepartment ? this.props.dhyBooking.currentDepartment.name : ""}
                 </Text>
 
                 <TouchableOpacity onPress={() => this.nextItem()} >
@@ -89,13 +92,13 @@ export default connect(mapStateToProps)(TabBookingType);
 function mapStateToProps(state) {
     return {
         userApp: state.userApp,
-        booking: state.booking
+        dhyBooking: state.dhyBooking
     };
 }
 
 const styles = StyleSheet.create({
 
-    tabContainer: { flexDirection: 'row', alignItems: 'center', paddingLeft: 10, paddingRight: 10 },
+    tabContainer: { backgroundColor:constants.colors.actionbar_title_color, flexDirection: 'row', alignItems: 'center', paddingLeft: 10, paddingRight: 10 },
     tabItem: {
         flex: 1, backgroundColor: '#FFF', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
         margin: 2,

@@ -1,6 +1,6 @@
 import client from '@utils/client-utils';
 import string from 'mainam-react-native-string-utils';
-import constants from '@resources/strings';
+import constants from '@dhy/strings';
 import storage from '@data-access/storage-provider';
 
 module.exports = {

@@ -2,7 +2,7 @@
 import userProvider from '@data-access/user-provider';
 import constants from '@resources/strings';
 import client from '@utils/client-utils';
-
+import DHYRedux from '@dhy/redux'
 
 const defaultState = {
     userApp:
@@ -55,6 +55,9 @@ const reducer = (state = defaultState, action) => {
             return newState;
         case constants.action.action_show_popup_notice_new_version:
             newState.showPopupNewVersion = true;
+            return newState;
+        default:
+            DHYRedux.apply(newState, action);
             return newState;
     }
     return state;
