@@ -8,9 +8,9 @@ import { connect } from 'react-redux';
 import userProvider from '@data-access/user-provider';
 import profileProvider from '@dhy/data-access/booking-profile-provider';
 import bookingProvider from '@dhy/data-access/booking-provider';
-import { Actions } from 'react-native-router-flux';
+// import { Actions } from 'react-native-router-flux';
 import Dimensions from 'Dimensions';
-import banner from '@images/booking_banner.png';
+// import banner from '@resources/booking_banner.png';
 import dateUtils from 'mainam-react-native-date-utils';
 import client from '@utils/client-utils';
 import snackbar from '@utils/snackbar-utils';
@@ -19,12 +19,15 @@ import storage from '@data-access/storage-provider';
 import RequiredLogin from '@components/account/RequiredLogin';
 import redux from '@redux-store';
 class AddBookingScreen extends Component {
+    Actions;
     constructor(props) {
         super(props);
         this.state = {
             isLoading: false
         }
     }
+    
+    
     getDate(date) {
         if (date) {
             var _date = new Date(date.timestamp);

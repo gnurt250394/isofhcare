@@ -1,17 +1,20 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Users\MaiNam\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add react-navigation
+  C:\Program Files\nodejs\node.exe C:\Users\ISOFH\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add react-native-dialogbox
 
 PATH: 
-  C:\Program Files\Microsoft MPI\Bin\;C:\Program Files\ImageMagick-7.0.6-Q16;C:\Program Files (x86)\iis express\PHP\v5.6;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;D:\SOFTWARE\ANDROID\sdk\\platform-tools;D:\SOFTWARE\ANDROID\sdk\\tools;C:\Program Files\Microsoft SQL Server\120\Tools\Binn\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files (x86)\Windows Kits\8.1\Windows Performance Toolkit\;D:\GRADLE\gradle-3.3\bin;C:\Program Files (x86)\Skype\Phone\;C:\Program Files\Java\jre1.8.0_162\bin\;C:\Users\MaiNam\AppData\Roaming\npm;C:\Users\MaiNam\AppData\Local\Microsoft\WindowsApps;C:\Program Files (x86)\M;C:\Program Files\Microsoft\Web Platform Installer\;C:\Program Files\nodejs\;C:\Program Files\Git\cmd;D:\SOFTWARE\ANDROID\sdk\emulator;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Microsoft SQL Server\140\Tools\Binn\;C:\Program Files\Microsoft SQL Server\140\Tools\Binn\;C:\Program Files (x86)\Microsoft SQL Server\140\DTS\Binn\;C:\Program Files\Microsoft SQL Server\140\DTS\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\130\Tools\Binn\;C:\Program Files (x86)\Microsoft SQL Server\Client SDK\ODBC\130\Tools\Binn\;C:\Program Files (x86)\Microsoft SQL Server\140\Tools\Binn\ManagementStudio\;C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Pages\v1.0\;C:\Program Files\Microsoft SQL Server\110\Tools\Binn\;C:\Program Files\TortoiseSVN\bin;C:\Python27\;C:\Program Files\Java\jdk1.8.0_162\bin;;C:\WINDOWS\System32\OpenSSH\;D:\GRADLE\gradle-3.3\bin;C:\Users\MaiNam\AppData\Local\Microsoft\WindowsApps;C:\Program Files (x86)\Microsoft VS Code\bin;C:\Program Files\ImageMagick-7.0.6-Q16;C:\Users\MaiNam\AppData\Roaming\npm;C:\Program Files\nodejs;C:\Program Files\Java\jdk1.8.0_162\bin;
+  C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\ProgramData\chocolatey\bin;C:\Program Files\nodejs;C:\Program Files\Java\jdk1.8.0_181\bin;C:\Users\ISOFH\AppData\Roaming\npm;C:\Users\ISOFH\AppData\Local\Android\Sdk\platform-tools;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\Program Files\Microsoft VS Code\bin;C:\Program Files\GTK3-Runtime Win64\bin;C:\Program Files (x86)\PuTTY\;C:\Users\ISOFH\Anaconda3;C:\Users\ISOFH\Anaconda3\Library\mingw-w64\bin;C:\Users\ISOFH\Anaconda3\Library\usr\bin;C:\Users\ISOFH\Anaconda3\Library\bin;C:\Users\ISOFH\Anaconda3\Scripts;C:\Users\ISOFH\AppData\Local\Microsoft\WindowsApps;C:\Users\ISOFH\AppData\Local\Programs\Microsoft VS Code\bin
 
 Yarn version: 
-  1.3.2
+  1.9.4
 
 Node version: 
-  8.2.1
+  8.11.4
 
 Platform: 
   win32 x64
+
+Trace: 
+  Error: EPERM: operation not permitted, lstat 'C:\Users\ISOFH\Desktop\work\isofh\isofh_care\node_modules\mainam-react-native-dash-view'
 
 npm manifest: 
   {
@@ -24,25 +27,31 @@ npm manifest:
     },
     "dependencies": {
       "art": "^0.10.2",
+      "firebase": "^5.3.0",
       "mainam-react-native-activity-panel": "^1.1.8",
       "mainam-react-native-barcode": "^1.0.3",
       "mainam-react-native-convert-utils": "^1.0.0",
-      "mainam-react-native-dash-view": "^1.0.1",
+      "mainam-react-native-dash-view": "^2.0.3",
       "mainam-react-native-date-picker": "^1.0.0",
-      "mainam-react-native-date-utils": "^1.0.0",
+      "mainam-react-native-date-utils": "^1.0.1",
       "mainam-react-native-dialog-box": "^1.0.1",
+      "mainam-react-native-image-loader": "^1.0.6",
       "mainam-react-native-image-progress": "^1.0.2",
       "mainam-react-native-permission": "^1.0.1",
+      "mainam-react-native-photo-viewer": "^1.0.9",
       "mainam-react-native-qrcode-scanner": "^1.0.1",
+      "mainam-react-native-scaleimage": "^1.0.4",
+      "mainam-react-native-scaling-drawer": "^1.0.3",
       "mainam-react-native-select-image": "^1.0.3",
-      "mainam-react-native-string-utils": "^1.0.0",
+      "mainam-react-native-sliding-up-down": "^1.0.3",
+      "mainam-react-native-string-utils": "^1.0.3",
       "mainam-react-native-viewpager": "^1.0.1",
+      "native-base": "^2.8.0",
       "prop-types": "^15.6.1",
       "react": "16.3.1",
       "react-native": "0.55.3",
       "react-native-android-location-enabler": "^1.0.6",
       "react-native-animatable": "^1.3.0",
-      "react-native-button": "^2.3.0",
       "react-native-calendars": "^1.19.3",
       "react-native-camera": "^1.1.4",
       "react-native-device-info": "^0.21.5",
@@ -50,26 +59,28 @@ npm manifest:
       "react-native-fbsdk": "^0.7.0",
       "react-native-fetch": "^1.0.0",
       "react-native-firebase": "^4.0.7",
+      "react-native-google-places": "^2.5.2",
       "react-native-google-signin": "^0.12.0",
       "react-native-html-to-pdf": "^0.6.0",
-      "react-native-image-zoom-viewer": "^2.2.13",
       "react-native-iphone-x-helper": "^1.0.2",
-      "react-native-maps": "github:react-community/react-native-maps",
+      "react-native-linear-gradient": "^2.4.2",
+      "react-native-maps": "^0.21.0",
       "react-native-md5": "^1.0.0",
       "react-native-modal": "^6.0.0",
-      "react-native-pull-to-refresh": "^2.1.3",
       "react-native-qrcode": "^0.2.6",
-      "react-native-router-flux": "^4.0.0-beta.31",
-      "react-native-scaling-drawer": "^1.0.1",
       "react-native-share": "^1.0.27",
-      "react-native-snackbar": "^0.4.6",
+      "react-native-swiper": "^1.5.13",
       "react-native-table-component": "^1.1.8",
+      "react-native-thumbnail-grid": "^0.3.0",
       "react-native-viewport-units": "0.0.5",
+      "react-navigation": "^2.10.0",
       "react-redux": "^5.0.7",
+      "realm": "^2.14.2",
       "redux": "^4.0.0",
       "redux-thunk": "^2.2.0",
       "rn-fetch-blob": "^0.10.11",
-      "sendbird": "^3.0.65"
+      "sendbird": "^3.0.65",
+      "yarn": "^1.9.4"
     },
     "devDependencies": {
       "babel-jest": "22.4.3",
@@ -1436,6 +1447,10 @@ Lockfile:
     version "1.0.0"
     resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
   
+  base-64@0.1.0:
+    version "0.1.0"
+    resolved "https://registry.yarnpkg.com/base-64/-/base-64-0.1.0.tgz#780a99c84e7d600260361511c4877613bf24f6bb"
+  
   base64-js@0.0.8:
     version "0.0.8"
     resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-0.0.8.tgz#1101e9544f4a76b1bc3b26d452ca96d7a35e7978"
@@ -1802,13 +1817,20 @@ Lockfile:
     version "1.0.2"
     resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
   
-  create-react-class@^15.6.3:
+  create-react-class@^15.6.0, create-react-class@^15.6.3:
     version "15.6.3"
     resolved "https://registry.yarnpkg.com/create-react-class/-/create-react-class-15.6.3.tgz#2d73237fb3f970ae6ebe011a9e66f46dbca80036"
     dependencies:
       fbjs "^0.8.9"
       loose-envify "^1.3.1"
       object-assign "^4.1.1"
+  
+  create-react-context@^0.2.1:
+    version "0.2.2"
+    resolved "https://registry.yarnpkg.com/create-react-context/-/create-react-context-0.2.2.tgz#9836542f9aaa22868cd7d4a6f82667df38019dca"
+    dependencies:
+      fbjs "^0.8.0"
+      gud "^1.0.0"
   
   cross-spawn@^5.0.1, cross-spawn@^5.1.0:
     version "5.1.0"
@@ -2264,6 +2286,18 @@ Lockfile:
       semver "^5.1.0"
       through2 "^2.0.0"
   
+  fbjs@^0.8.0:
+    version "0.8.17"
+    resolved "https://registry.yarnpkg.com/fbjs/-/fbjs-0.8.17.tgz#c4d598ead6949112653d6588b01a5cdcd9f90fdd"
+    dependencies:
+      core-js "^1.0.0"
+      isomorphic-fetch "^2.1.1"
+      loose-envify "^1.0.0"
+      object-assign "^4.1.0"
+      promise "^7.1.1"
+      setimmediate "^1.0.5"
+      ua-parser-js "^0.7.18"
+  
   fbjs@^0.8.14, fbjs@^0.8.16, fbjs@^0.8.9:
     version "0.8.16"
     resolved "https://registry.yarnpkg.com/fbjs/-/fbjs-0.8.16.tgz#5e67432f550dc41b572bf55847b8aca64e5337db"
@@ -2479,6 +2513,17 @@ Lockfile:
     dependencies:
       is-glob "^2.0.0"
   
+  glob@7.0.6:
+    version "7.0.6"
+    resolved "https://registry.yarnpkg.com/glob/-/glob-7.0.6.tgz#211bafaf49e525b8cd93260d14ab136152b3f57a"
+    dependencies:
+      fs.realpath "^1.0.0"
+      inflight "^1.0.4"
+      inherits "2"
+      minimatch "^3.0.2"
+      once "^1.3.0"
+      path-is-absolute "^1.0.0"
+  
   glob@^7.0.3, glob@^7.0.5, glob@^7.1.1, glob@^7.1.2:
     version "7.1.2"
     resolved "https://registry.yarnpkg.com/glob/-/glob-7.1.2.tgz#c19c9df9a028702d678612384a6552404c636d15"
@@ -2531,6 +2576,10 @@ Lockfile:
   growly@^1.3.0:
     version "1.3.0"
     resolved "https://registry.yarnpkg.com/growly/-/growly-1.3.0.tgz#f10748cbe76af964b7c96c93c6bcc28af120c081"
+  
+  gud@^1.0.0:
+    version "1.0.0"
+    resolved "https://registry.yarnpkg.com/gud/-/gud-1.0.0.tgz#a489581b17e6a70beca9abe3ae57de7a499852c0"
   
   handlebars@^4.0.3:
     version "4.0.11"
@@ -3608,9 +3657,9 @@ Lockfile:
     version "1.1.0"
     resolved "https://registry.yarnpkg.com/macos-release/-/macos-release-1.1.0.tgz#831945e29365b470aa8724b0ab36c8f8959d10fb"
   
-  mainam-react-native-activity-panel@^1.1.4:
-    version "1.1.4"
-    resolved "https://registry.yarnpkg.com/mainam-react-native-activity-panel/-/mainam-react-native-activity-panel-1.1.4.tgz#b3efc9bbd2eef4171d91530e1aecab824418d680"
+  mainam-react-native-activity-panel@^1.1.8:
+    version "1.1.8"
+    resolved "https://registry.yarnpkg.com/mainam-react-native-activity-panel/-/mainam-react-native-activity-panel-1.1.8.tgz#0562da8fcab2a1a94e9d8153d4e1093447e41569"
     dependencies:
       mainam-react-native-dismiss-keyboard "^1.0.3"
       mainam-react-native-scaleimage "^1.0.1"
@@ -3624,6 +3673,17 @@ Lockfile:
     dependencies:
       react-native-barcode-builder "^1.0.5"
   
+  mainam-react-native-convert-utils@^1.0.0:
+    version "1.0.0"
+    resolved "https://registry.yarnpkg.com/mainam-react-native-convert-utils/-/mainam-react-native-convert-utils-1.0.0.tgz#9a06318e58698e26a15d13bcb19692cb379499a7"
+  
+  mainam-react-native-dash-view@^1.0.1:
+    version "1.0.1"
+    resolved "https://registry.yarnpkg.com/mainam-react-native-dash-view/-/mainam-react-native-dash-view-1.0.1.tgz#33cfe2db859859c421a3d59f0bc82625b39d808b"
+    dependencies:
+      prop-types "^15.5.10"
+      react-native-measureme "0.0.1"
+  
   mainam-react-native-date-picker@^1.0.0:
     version "1.0.0"
     resolved "https://registry.yarnpkg.com/mainam-react-native-date-picker/-/mainam-react-native-date-picker-1.0.0.tgz#ccf0b87210b982b52439976f5fcac7df0f5c67a4"
@@ -3635,13 +3695,19 @@ Lockfile:
     version "1.0.0"
     resolved "https://registry.yarnpkg.com/mainam-react-native-date-utils/-/mainam-react-native-date-utils-1.0.0.tgz#cd99f824e43eee8d02499818b6db4bd7c49ede92"
   
+  mainam-react-native-dialog-box@^1.0.1:
+    version "1.0.1"
+    resolved "https://registry.yarnpkg.com/mainam-react-native-dialog-box/-/mainam-react-native-dialog-box-1.0.1.tgz#08bbe46969ae499f7ef99b58d133892285bb0d51"
+    dependencies:
+      prop-types "^15.6.0"
+  
   mainam-react-native-dismiss-keyboard@^1.0.3:
     version "1.0.3"
     resolved "https://registry.yarnpkg.com/mainam-react-native-dismiss-keyboard/-/mainam-react-native-dismiss-keyboard-1.0.3.tgz#c374e083ebba900bac6ef562e3a577d82f6342b1"
   
-  mainam-react-native-image-progress@^1.0.1:
-    version "1.0.1"
-    resolved "https://registry.yarnpkg.com/mainam-react-native-image-progress/-/mainam-react-native-image-progress-1.0.1.tgz#1390b3a50b2651e22236be6b0d2349cd13804da5"
+  mainam-react-native-image-progress@^1.0.2:
+    version "1.0.2"
+    resolved "https://registry.yarnpkg.com/mainam-react-native-image-progress/-/mainam-react-native-image-progress-1.0.2.tgz#7485d29ecbe6d2321e8d5c5840b13e6ffb8e515f"
     dependencies:
       react-native-image-progress "^1.1.0"
       react-native-progress "^3.4.0"
@@ -3650,9 +3716,9 @@ Lockfile:
     version "1.0.1"
     resolved "https://registry.yarnpkg.com/mainam-react-native-permission/-/mainam-react-native-permission-1.0.1.tgz#c7d76eab8a8e03801091c29b3c4f4f22568038d1"
   
-  mainam-react-native-qrcode-scanner@^1.0.0:
-    version "1.0.0"
-    resolved "https://registry.yarnpkg.com/mainam-react-native-qrcode-scanner/-/mainam-react-native-qrcode-scanner-1.0.0.tgz#976a09078669f1b90d5d898ff2a74669388278ef"
+  mainam-react-native-qrcode-scanner@^1.0.1:
+    version "1.0.1"
+    resolved "https://registry.yarnpkg.com/mainam-react-native-qrcode-scanner/-/mainam-react-native-qrcode-scanner-1.0.1.tgz#4b3620719ba8e0c642dfec2ebb512f98b34dd2db"
     dependencies:
       prop-types "^15.5.10"
       react-native-permissions "^1.1.1"
@@ -3676,6 +3742,10 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/mainam-react-native-string-utils/-/mainam-react-native-string-utils-1.0.0.tgz#a9d99f5f1d88d1eebef9baa5534d0754c2959355"
     dependencies:
       react-native-md5 "^1.0.0"
+  
+  mainam-react-native-viewpager@^1.0.1:
+    version "1.0.1"
+    resolved "https://registry.yarnpkg.com/mainam-react-native-viewpager/-/mainam-react-native-viewpager-1.0.1.tgz#732c39000620669aaafacb5f12ae49a45c8187c9"
   
   make-dir@^1.0.0:
     version "1.2.0"
@@ -3919,7 +3989,7 @@ Lockfile:
     dependencies:
       dom-walk "^0.1.0"
   
-  minimatch@^3.0.3, minimatch@^3.0.4:
+  minimatch@^3.0.2, minimatch@^3.0.3, minimatch@^3.0.4:
     version "3.0.4"
     resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-3.0.4.tgz#5166e286457f03306064be5497e8dbb0c3d32083"
     dependencies:
@@ -3962,16 +4032,6 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-0.5.1.tgz#30057438eac6cf7f8c4767f38648d6697d75c903"
     dependencies:
       minimist "0.0.8"
-  
-  mobx-react@^4.3.4:
-    version "4.4.3"
-    resolved "https://registry.yarnpkg.com/mobx-react/-/mobx-react-4.4.3.tgz#baa9ec41165ee35ae7b9df19bca10190f36f117e"
-    dependencies:
-      hoist-non-react-statics "^2.3.1"
-  
-  mobx@^3.3.1:
-    version "3.6.2"
-    resolved "https://registry.yarnpkg.com/mobx/-/mobx-3.6.2.tgz#fb9f5ff5090539a1ad54e75dc4c098b602693320"
   
   moment@^2.22.1:
     version "2.22.1"
@@ -4371,10 +4431,6 @@ Lockfile:
     dependencies:
       isarray "0.0.1"
   
-  path-to-regexp@^2.1.0:
-    version "2.2.0"
-    resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-2.2.0.tgz#80f0ff45c1e0e641da74df313644eaf115050972"
-  
   path-type@^1.0.0:
     version "1.1.0"
     resolved "https://registry.yarnpkg.com/path-type/-/path-type-1.1.0.tgz#59c44f7ee491da704da415da5a4070ba4f8fe441"
@@ -4546,9 +4602,20 @@ Lockfile:
     version "2.1.0"
     resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.0.tgz#5f863edc89b96db09074bad7947bf09056ca4e7d"
   
+  qr.js@0.0.0:
+    version "0.0.0"
+    resolved "https://registry.yarnpkg.com/qr.js/-/qr.js-0.0.0.tgz#cace86386f59a0db8050fa90d9b6b0e88a1e364f"
+  
   qs@~6.5.1:
     version "6.5.1"
     resolved "https://registry.yarnpkg.com/qs/-/qs-6.5.1.tgz#349cdf6eef89ec45c12d7d5eb3fc0c870343a6d8"
+  
+  query-string@^6.1.0:
+    version "6.1.0"
+    resolved "https://registry.yarnpkg.com/query-string/-/query-string-6.1.0.tgz#01e7d69f6a0940dac67a937d6c6325647aa4532a"
+    dependencies:
+      decode-uri-component "^0.2.0"
+      strict-uri-encode "^2.0.0"
   
   randomatic@^1.1.3:
     version "1.1.7"
@@ -4589,9 +4656,9 @@ Lockfile:
     version "16.3.2"
     resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.3.2.tgz#f4d3d0e2f5fbb6ac46450641eb2e25bf05d36b22"
   
-  react-lifecycles-compat@^1.0.2:
-    version "1.1.4"
-    resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-1.1.4.tgz#fc005c72849b7ed364de20a0f64ff58ebdc2009a"
+  react-lifecycles-compat@^3, react-lifecycles-compat@^3.0.2, react-lifecycles-compat@^3.0.4:
+    version "3.0.4"
+    resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   
   react-native-android-location-enabler@^1.0.6:
     version "1.0.6"
@@ -4614,6 +4681,12 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/react-native-barcode-builder/-/react-native-barcode-builder-1.0.5.tgz#dcc93b6afeec56148b8b3c4e5fb9136a532f7883"
     dependencies:
       jsbarcode "^3.8.0"
+  
+  react-native-button@^2.3.0:
+    version "2.3.0"
+    resolved "https://registry.yarnpkg.com/react-native-button/-/react-native-button-2.3.0.tgz#7d0a90095d415b0edf98a904556a7c4439646568"
+    dependencies:
+      prop-types "^15.5.10"
   
   react-native-calendars@^1.19.3:
     version "1.19.3"
@@ -4691,19 +4764,29 @@ Lockfile:
     version "0.20.3"
     resolved "https://registry.yarnpkg.com/react-native-image-crop-picker/-/react-native-image-crop-picker-0.20.3.tgz#565d69c1764e96abef23871fe4d6d58b1ee35e18"
   
+  react-native-image-pan-zoom@^2.1.7:
+    version "2.1.7"
+    resolved "https://registry.yarnpkg.com/react-native-image-pan-zoom/-/react-native-image-pan-zoom-2.1.7.tgz#1c066e66f8f345f5e1fc187f02d92c482952bb59"
+  
   react-native-image-progress@^1.1.0:
     version "1.1.0"
     resolved "https://registry.yarnpkg.com/react-native-image-progress/-/react-native-image-progress-1.1.0.tgz#737140d699fb3fb107ec70615736dfdc2eef7b35"
     dependencies:
       prop-types "^15.5.10"
   
+  react-native-image-zoom-viewer@^2.2.13:
+    version "2.2.13"
+    resolved "https://registry.yarnpkg.com/react-native-image-zoom-viewer/-/react-native-image-zoom-viewer-2.2.13.tgz#05d085dae399129970c3c6e58b03276bf25f032e"
+    dependencies:
+      react-native-image-pan-zoom "^2.1.7"
+  
   react-native-iphone-x-helper@^1.0.2:
     version "1.0.2"
     resolved "https://registry.yarnpkg.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.0.2.tgz#7dbca530930f7c1ce8633cc8fd13ba94102992e1"
   
-  react-native-maps@^0.21.0:
+  "react-native-maps@github:react-community/react-native-maps":
     version "0.21.0"
-    resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-0.21.0.tgz#005f58e93d7623ad59667e8002101970ddf235c2"
+    resolved "https://codeload.github.com/react-community/react-native-maps/tar.gz/c3b380272ba7cfa93d430a58028984a88fed0990"
     dependencies:
       babel-plugin-module-resolver "^2.3.0"
       babel-preset-react-native "1.9.0"
@@ -4711,6 +4794,10 @@ Lockfile:
   react-native-md5@^1.0.0:
     version "1.0.0"
     resolved "https://registry.yarnpkg.com/react-native-md5/-/react-native-md5-1.0.0.tgz#2320be24d674938ae5ef4f492698edbbfa0e0205"
+  
+  react-native-measureme@0.0.1:
+    version "0.0.1"
+    resolved "https://registry.yarnpkg.com/react-native-measureme/-/react-native-measureme-0.0.1.tgz#8b1c5595cdbb1cfdf85bff98fe36d33e98b6162c"
   
   react-native-modal@^6.0.0:
     version "6.1.0"
@@ -4733,23 +4820,31 @@ Lockfile:
     version "2.1.3"
     resolved "https://registry.yarnpkg.com/react-native-pull-to-refresh/-/react-native-pull-to-refresh-2.1.3.tgz#66a02c024dc471372a80511f1f180c0bb2646819"
   
-  react-native-router-flux@^4.0.0-beta.31:
-    version "4.0.0-beta.31"
-    resolved "https://registry.yarnpkg.com/react-native-router-flux/-/react-native-router-flux-4.0.0-beta.31.tgz#edea28cbac705fbb324ae8f5eb136dc0bef1e1e8"
+  react-native-qrcode@^0.2.6:
+    version "0.2.7"
+    resolved "https://registry.yarnpkg.com/react-native-qrcode/-/react-native-qrcode-0.2.7.tgz#d103166fb1a5b53643e8bf7b88c0672e689ac4f8"
     dependencies:
-      lodash.isequal "^4.5.0"
-      mobx "^3.3.1"
-      mobx-react "^4.3.4"
-      opencollective "^1.0.3"
-      path-to-regexp "^2.1.0"
-      prop-types "^15.6.0"
-      react-navigation "1.5.8"
+      create-react-class "^15.6.0"
+      prop-types "^15.5.10"
+      qr.js "0.0.0"
   
   react-native-safe-area-view@^0.7.0:
     version "0.7.0"
     resolved "https://registry.yarnpkg.com/react-native-safe-area-view/-/react-native-safe-area-view-0.7.0.tgz#38f5ab9368d6ef9e5d18ab64212938af3ec39421"
     dependencies:
       hoist-non-react-statics "^2.3.1"
+  
+  react-native-safe-area-view@^0.8.0:
+    version "0.8.0"
+    resolved "https://registry.yarnpkg.com/react-native-safe-area-view/-/react-native-safe-area-view-0.8.0.tgz#22d78cb8e8658d04a10cd53c1546e0bc86cb7aea"
+    dependencies:
+      hoist-non-react-statics "^2.3.1"
+  
+  react-native-scaling-drawer@^1.0.1:
+    version "1.0.1"
+    resolved "https://registry.yarnpkg.com/react-native-scaling-drawer/-/react-native-scaling-drawer-1.0.1.tgz#f75a35883c7bb9df69c1a9ca5ae831d94833c852"
+    dependencies:
+      react-navigation "^1.0.0-beta.3"
   
   react-native-share@^1.0.27:
     version "1.0.27"
@@ -4758,6 +4853,18 @@ Lockfile:
   react-native-snackbar@^0.4.6:
     version "0.4.6"
     resolved "https://registry.yarnpkg.com/react-native-snackbar/-/react-native-snackbar-0.4.6.tgz#3c4a051bf80fed3ca2c9513e84ac99ae4df59ff1"
+  
+  react-native-tab-view@^0.0.77:
+    version "0.0.77"
+    resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-0.0.77.tgz#11ceb8e7c23100d07e628dc151b57797524d00d4"
+    dependencies:
+      prop-types "^15.6.0"
+  
+  react-native-tab-view@^1.0.0:
+    version "1.0.2"
+    resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-1.0.2.tgz#66e0bc6d38a227ed2b212e3a256b7902f6ce02ed"
+    dependencies:
+      prop-types "^15.6.1"
   
   "react-native-tab-view@github:react-navigation/react-native-tab-view":
     version "0.0.74"
@@ -4768,6 +4875,10 @@ Lockfile:
   react-native-table-component@^1.1.8:
     version "1.1.8"
     resolved "https://registry.yarnpkg.com/react-native-table-component/-/react-native-table-component-1.1.8.tgz#4d0846d077914e1c608769e55a1a9e76ea32a90f"
+  
+  react-native-viewport-units@0.0.5:
+    version "0.0.5"
+    resolved "https://registry.yarnpkg.com/react-native-viewport-units/-/react-native-viewport-units-0.0.5.tgz#c86448ca6497e49a9255a48589f1609d6b73f503"
   
   react-native@0.55.3:
     version "0.55.3"
@@ -4833,18 +4944,61 @@ Lockfile:
       xmldoc "^0.4.0"
       yargs "^9.0.0"
   
-  react-navigation@1.5.8:
-    version "1.5.8"
-    resolved "https://registry.yarnpkg.com/react-navigation/-/react-navigation-1.5.8.tgz#f04bec1a39af8cfcf651337d351e8d0a144f1b6d"
+  react-navigation-deprecated-tab-navigator@1.3.0:
+    version "1.3.0"
+    resolved "https://registry.yarnpkg.com/react-navigation-deprecated-tab-navigator/-/react-navigation-deprecated-tab-navigator-1.3.0.tgz#015dcae1e977b984ca7e99245261c15439026bb7"
+    dependencies:
+      react-native-tab-view "^0.0.77"
+  
+  react-navigation-drawer@0.5.0:
+    version "0.5.0"
+    resolved "https://registry.yarnpkg.com/react-navigation-drawer/-/react-navigation-drawer-0.5.0.tgz#d91b6a6ec65c34ba78c00f814b1e6508922cc9ec"
+    dependencies:
+      react-native-drawer-layout-polyfill "^1.3.2"
+  
+  react-navigation-redux-helpers@^2.0.5:
+    version "2.0.5"
+    resolved "https://registry.yarnpkg.com/react-navigation-redux-helpers/-/react-navigation-redux-helpers-2.0.5.tgz#2c2412d5b7184bbcee850b5d2c350cca34ad6cf6"
+    dependencies:
+      invariant "^2.2.2"
+  
+  react-navigation-tabs@0.6.0:
+    version "0.6.0"
+    resolved "https://registry.yarnpkg.com/react-navigation-tabs/-/react-navigation-tabs-0.6.0.tgz#2f526194f4360e56c2702e736887449acc2080dc"
+    dependencies:
+      hoist-non-react-statics "^2.5.0"
+      prop-types "^15.6.1"
+      react-lifecycles-compat "^3.0.4"
+      react-native-safe-area-view "^0.7.0"
+      react-native-tab-view "^1.0.0"
+  
+  react-navigation@^1.0.0-beta.3:
+    version "1.5.12"
+    resolved "https://registry.yarnpkg.com/react-navigation/-/react-navigation-1.5.12.tgz#e226b4906c76dde55ddf7cc0a62ea04c77140d8a"
     dependencies:
       clamp "^1.0.1"
       hoist-non-react-statics "^2.2.0"
       path-to-regexp "^1.7.0"
       prop-types "^15.5.10"
-      react-lifecycles-compat "^1.0.2"
+      react-lifecycles-compat "^3.0.2"
       react-native-drawer-layout-polyfill "^1.3.2"
       react-native-safe-area-view "^0.7.0"
       react-native-tab-view "github:react-navigation/react-native-tab-view"
+  
+  react-navigation@^2.10.0:
+    version "2.10.0"
+    resolved "https://registry.yarnpkg.com/react-navigation/-/react-navigation-2.10.0.tgz#b525821261bedb3b4d3ee91564cad32fca2bd684"
+    dependencies:
+      clamp "^1.0.1"
+      create-react-context "^0.2.1"
+      hoist-non-react-statics "^2.2.0"
+      path-to-regexp "^1.7.0"
+      query-string "^6.1.0"
+      react-lifecycles-compat "^3"
+      react-native-safe-area-view "^0.8.0"
+      react-navigation-deprecated-tab-navigator "1.3.0"
+      react-navigation-drawer "0.5.0"
+      react-navigation-tabs "0.6.0"
   
   react-proxy@^1.1.7:
     version "1.1.8"
@@ -5137,9 +5291,12 @@ Lockfile:
     version "2.2.8"
     resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-2.2.8.tgz#e439be2aaee327321952730f99a8929e4fc50582"
   
-  rn-viewpager@^1.2.9:
-    version "1.2.9"
-    resolved "https://registry.yarnpkg.com/rn-viewpager/-/rn-viewpager-1.2.9.tgz#7f06f898e23b296f3b5be7c98bd9101d94427779"
+  rn-fetch-blob@^0.10.11:
+    version "0.10.12"
+    resolved "https://registry.yarnpkg.com/rn-fetch-blob/-/rn-fetch-blob-0.10.12.tgz#7b9a309149eb136a1b063b282a1847a205297924"
+    dependencies:
+      base-64 "0.1.0"
+      glob "7.0.6"
   
   run-async@^2.2.0:
     version "2.3.0"
@@ -5472,6 +5629,10 @@ Lockfile:
     version "2.2.0"
     resolved "https://registry.yarnpkg.com/stream-buffers/-/stream-buffers-2.2.0.tgz#91d5f5130d1cef96dcfa7f726945188741d09ee4"
   
+  strict-uri-encode@^2.0.0:
+    version "2.0.0"
+    resolved "https://registry.yarnpkg.com/strict-uri-encode/-/strict-uri-encode-2.0.0.tgz#b9c7330c7042862f6b142dc274bbcc5866ce3546"
+  
   string-length@^2.0.0:
     version "2.0.0"
     resolved "https://registry.yarnpkg.com/string-length/-/string-length-2.0.0.tgz#d40dbb686a3ace960c1cffca562bf2c45f8363ed"
@@ -5691,6 +5852,10 @@ Lockfile:
   typedarray@^0.0.6:
     version "0.0.6"
     resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
+  
+  ua-parser-js@^0.7.18:
+    version "0.7.18"
+    resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.18.tgz#a7bfd92f56edfb117083b69e31d2aa8882d4b1ed"
   
   ua-parser-js@^0.7.9:
     version "0.7.17"
@@ -6069,6 +6234,3 @@ Lockfile:
       cliui "^2.1.0"
       decamelize "^1.0.0"
       window-size "0.1.0"
-
-Trace: 
-  Error: EPERM: operation not permitted, unlink 'E:\USER\MAINAM\Desktop\test\New folder\node_modules\@babel\highlight\node_modules\chalk'

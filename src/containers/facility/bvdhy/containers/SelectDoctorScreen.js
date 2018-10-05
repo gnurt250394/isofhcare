@@ -8,12 +8,13 @@ import userProvider from '@data-access/user-provider';
 import Dimensions from 'Dimensions';
 import banner from '@images/booking/booking_banner.png'
 import doctorProvider from '@data-access/booking-doctor-provider';
-import { Actions } from 'react-native-router-flux';
+// import { Actions } from 'react-native-router-flux';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import ImageProgress from 'mainam-react-native-image-progress';
 import Progress from 'react-native-progress/Pie';
-
+// const Actions;
 class BookingScreen extends Component {
+    Actions
     constructor(props) {
         super(props);
         $this = this;

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Actions } from 'react-native-router-flux';
 import Dimensions from 'Dimensions';
 import { Text, StatusBar, TouchableOpacity, TextInput, FlatList, Keyboard } from 'react-native';
 import PropTypes from 'prop-types';

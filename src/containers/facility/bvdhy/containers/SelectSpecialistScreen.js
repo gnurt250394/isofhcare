@@ -3,12 +3,12 @@ import { View, FlatList, TouchableOpacity, Text, TextInput } from 'react-native'
 import { connect } from 'react-redux';
 import ActivityPanel from '@components/ActivityPanel'
 import serviceProvider from '@dhy/data-access/booking-service-provider';
-import { Actions } from 'react-native-router-flux';
+// import { Actions } from 'react-native-router-flux';
 import constants from '@resources/strings';
 import ScaleImage from 'mainam-react-native-scaleimage';
-
 let $this;
 class SelectSpecialistScreen extends Component {
+    Actions
     constructor(props) {
         super(props);
         $this = this;

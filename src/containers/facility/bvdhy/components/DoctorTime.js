@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Actions } from 'react-native-router-flux';
+import { Actions } from '';
 import { connect } from 'react-redux';
 import { View, Text, ScrollView, FlatList, TouchableOpacity, StyleSheet } from 'react-native'
 import PropTypes from 'prop-types';

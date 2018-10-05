@@ -254,8 +254,12 @@ class FacilityDetailScreen extends Component {
             this.setState({ showSearchPanel: false });
         } else if(this.onScrollToTop(e.nativeEvent)) {
             this.setState({ showSearchPanel: true });
-        } 
-        
+        }
+    }
+
+    booking() {
+        // this.props.navigation.navigate("dhyBooking");
+        alert("ada")
     }
 
     render() {
@@ -330,7 +334,7 @@ class FacilityDetailScreen extends Component {
                                             <Rating readonly={true} count={5} value={this.state.facility.facility.review} starWidth={13} style={{ marginTop: 4, marginBottom: 4 }} />
                                         </TouchableOpacity>
                                         <View style={{ flexDirection: 'row', marginTop: 8 }}>
-                                            <TouchableOpacity onPress={() => snackbar.show("Chức năng đang phát triển")} style={{ marginRight: 5, backgroundColor: 'rgb(47,94,172)', padding: 6, paddingLeft: 14, paddingRight: 14 }}>
+                                            <TouchableOpacity onPress={this.booking.bind(this)} style={{ marginRight: 5, backgroundColor: 'rgb(47,94,172)', padding: 6, paddingLeft: 14, paddingRight: 14 }}>
                                                 <Text style={{ color: '#FFF', fontWeight: 'bold' }}>Đặt khám</Text>
                                             </TouchableOpacity>
                                             {

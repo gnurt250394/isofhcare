@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Actions } from 'react-native-router-flux';
+// import { Actions } from 'react-native-router-flux';
 import Dimensions from 'Dimensions';
 import { Text, StatusBar, TouchableOpacity, TextInput } from 'react-native';
 import PropTypes from 'prop-types';
@@ -15,6 +15,7 @@ import {
 import ic_back from '@images/ic_back.png';
 
 class AddBookingHasProfile extends Component {
+    Actions;
     viewProfile() {
         Actions.detailProfile();
     }
