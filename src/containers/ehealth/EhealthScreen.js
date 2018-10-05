@@ -153,11 +153,24 @@ class LoginScreen extends Component {
         </View>
     }
 
+    getDetailBooking(patientHistoryId, hospitalId) {
+        this.setState({ isLoading: true }, () => {
+            bookingProvider.detailPatientHistory(patientHistoryId, hospitalId, (s, e) => {
+                if (s && s.code == 0) {
+                    this.setState({ isLoading: false });
+                    let booking = s.data.data;
+                    booking.hasCheckin = true;
+                    this.props.navigation.navigate("ehealthDHY", { booking })
+                }
+            });
+        });
+    }
+
     renderItemBookingInHis(booking, index) {
         if (booking) {
             if (booking.hospitalId == constants.hospital.BENH_VIEN_DAI_HOC_Y) {
                 return <View style={{ position: 'relative' }}>
-                    <TouchableOpacity style={{ position: 'relative', marginLeft: 15 }}>
+                    <TouchableOpacity style={{ position: 'relative', marginLeft: 15 }} onPress={this.getDetailBooking.bind(this, booking.PatientHistoryId, booking.hospitalId)}>
                         <View style={{
                             flex: 1,
                             backgroundColor: '#f8fcf4',
@@ -185,7 +198,7 @@ class LoginScreen extends Component {
     }
     render() {
         return (
-            <ActivityPanel style={{ flex: 1 }} title="Y BẠ ĐIỆN TỬ" showFullScreen={true}>
+            <ActivityPanel style={{ flex: 1 }} title="Y BẠ ĐIỆN TỬ" showFullScreen={true} isLoading={this.state.isLoading}>
                 <FlatList
                     onRefresh={this.onRefresh.bind(this)}
                     refreshing={this.state.refreshing}

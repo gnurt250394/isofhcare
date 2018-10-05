@@ -7,5 +7,17 @@ module.exports = {
             if (callback)
                 callback(s, e);
         });
+    },
+    detailPatientHistory(patientHistoryId, source, callback) {
+        client.requestApi("get", constants.api.booking.get_detail_patient_historyid + "/" + patientHistoryId + "?source=" + source, {}, (s, e) => {
+            if (callback)
+                callback(s, e);
+        });
+    },
+    resultPatientHistory(patientHistoryId, source, callback) {
+        client.requestApi("get", constants.api.booking.get_result_patient_historyid + "/" + patientHistoryId + "?source=" + source, {}, (s, e) => {
+            if (callback)
+                callback(s, e);
+        });
     }
 }

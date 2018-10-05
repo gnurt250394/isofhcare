@@ -243,7 +243,9 @@ module.exports = {
       search: "specialist/search"
     },
     booking: {
-      get_list_booking: 'booking/get-list-patient-history-by-user'
+      get_list_booking: 'booking/get-all-patient-history-by-user',
+      get_detail_patient_historyid: "booking/get-detail-patient-history",
+      get_result_patient_historyid: "booking/get-result-patient-history"
     }
   }
 };

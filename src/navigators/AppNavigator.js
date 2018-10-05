@@ -29,9 +29,8 @@ import ResetPasswordScreen from '@containers/account/ResetPasswordScreen';
 import SymptomScreen from '@containers/symptom/SymptomScreen';
 import GroupChatScreen from '@containers/chat/GroupChatScreen';
 import ChatScreen from '@containers/chat/ChatScreen';
-import MyAccountScreen from '@containers/account/MyAccountScreen';
 import ProfileScreen from '@containers/account/ProfileScreen'
-import EhealthScreen from '@containers/ehealth/EhealthScreen'
+import { EHealthNavigator } from '@ehealth/navigator'
 
 
 import AddBookingScreen from '@dhy/containers/AddBookingScreen'
@@ -43,7 +42,7 @@ import ViewScheduleDoctorScreen from '@dhy/containers/ViewScheduleDoctorScreen'
 
 const RootNavigator = createStackNavigator({
     splash: { screen: SplashScreen },
-    ehealth: {screen: EhealthScreen },
+    ehealth: { screen: EHealthNavigator },
     dhyBooking: {screen: BookingScreen},
     dhyAddBooking: {screen: AddBookingScreen},
     dhySelectDocter: {screen: SelectDoctorScreen},
@@ -78,8 +77,8 @@ const RootNavigator = createStackNavigator({
     confirmCode: { screen: ConfirmCodeScreen },
     resetPassword: { screen: ResetPasswordScreen },
     symptom: { screen: SymptomScreen },
-    profile: {screen: ProfileScreen}
-    
+    profile: { screen: ProfileScreen }
+
 }, {
         headerMode: 'none',
         header: null,
