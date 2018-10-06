@@ -2,7 +2,8 @@
 import userProvider from '@data-access/user-provider';
 import constants from '@resources/strings';
 import client from '@utils/client-utils';
-import DHYRedux from '@dhy/redux'
+import reduxBookingDHY from '@dhy/redux'
+import reduxEhealthDHY from '@ehealth/daihocy/redux'
 
 const defaultState = {
     userApp:
@@ -18,6 +19,7 @@ const defaultState = {
 const reducer = (state = defaultState, action) => {
     var newState = JSON.parse(JSON.stringify(state));
     newState.navigation = state.navigation;
+
     switch (action.type) {
         case constants.action.action_set_my_facility:
             if (!action.value || action.value.length == 0)
@@ -57,7 +59,8 @@ const reducer = (state = defaultState, action) => {
             newState.showPopupNewVersion = true;
             return newState;
         default:
-            DHYRedux.apply(newState, action);
+            reduxBookingDHY.apply(newState, action);
+            reduxEhealthDHY.apply(newState, action);
             return newState;
     }
     return state;

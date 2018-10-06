@@ -175,6 +175,10 @@ module.exports = {
     {
       checkin_failed: "Checkin không thành công. Vui lòng liên hệ quản trị viên để được trợ giúp",
       checkin_success: "Checkin thành công",
+    },
+    ehealth: {
+      not_found_result_of_this_booking: "Chưa có kết quả",
+      canot_view_detail_this_booking: "Không thể xem kết quả đặt khám này"
     }
   },
   api: {

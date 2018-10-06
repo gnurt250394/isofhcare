@@ -6,6 +6,7 @@ import ScaledImage from 'mainam-react-native-scaleimage';
 import Dash from 'mainam-react-native-dash-view';
 import bookingProvider from '@data-access/booking-provider';
 import constants from '@resources/strings';
+import constants2 from '@ehealth/daihocy/resources/strings';
 import dateUtils from 'mainam-react-native-date-utils';
 
 import { Card } from 'native-base';
@@ -155,12 +156,15 @@ class LoginScreen extends Component {
 
     getDetailBooking(patientHistoryId, hospitalId) {
         this.setState({ isLoading: true }, () => {
+            this.props.dispatch({ type: constants2.action.action_select_hospital, value: hospitalId });
             bookingProvider.detailPatientHistory(patientHistoryId, hospitalId, (s, e) => {
                 if (s && s.code == 0) {
                     this.setState({ isLoading: false });
                     let booking = s.data.data;
                     booking.hasCheckin = true;
-                    this.props.navigation.navigate("ehealthDHY", { booking })
+                    booking.hospitalId = hospitalId;
+                    booking.patientHistoryId = patientHistoryId;
+                    this.props.navigation.navigate("ehealthDHY", { booking, patientHistoryId })
                 }
             });
         });

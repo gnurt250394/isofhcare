@@ -177,13 +177,13 @@ class DetailBookingHasCheckin extends Component {
                     || (result.data.ListResulGiaiPhau && result.data.ListResulGiaiPhau.length > 0)
                     || (result.data.ListDiagnostic && result.data.ListDiagnostic.length > 0)
                 ) {
+                    result.booking = this.props.booking;
                     this.props.navigation.navigate("viewBookingResult", { result })
-                    Actions.bookingResult();
                     return;
                 }
                 snackbar.show(constants.msg.ehealth.not_found_result_of_this_booking);
             } else {
-                snackbar.show(constants.msg.booking.canot_view_detail_this_booking);
+                snackbar.show(constants.msg.ehealth.canot_view_detail_this_booking);
             }
         })
     }
@@ -203,7 +203,7 @@ class DetailBookingHasCheckin extends Component {
                             <Text style={{ fontWeight: 'bold', fontSize: 16, color: constants.colors.primaryColor }}>{booking.Profile.Value}</Text>
                         </View>
                         <View style={{ marginLeft: 'auto' }}>
-                            <TouchableOpacity onPress={() => this.viewResult(booking.Profile.PatientHistoryId, booking.hospitalId)}>
+                            <TouchableOpacity onPress={() => this.viewResult(booking.patientHistoryId, booking.hospitalId)}>
                                 <Text style={{ borderColor: constants.colors.primaryColor, borderWidth: 2, paddingLeft: 12, paddingRight: 12, paddingTop: 8, paddingBottom: 8, borderRadius: 20, color: constants.colors.primaryColor, fontWeight: 'bold' }}>Xem kết quả</Text>
                             </TouchableOpacity>
                         </View>
