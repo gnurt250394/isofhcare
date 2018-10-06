@@ -10,11 +10,12 @@ module.exports = {
         + "&specialistId=" + specialistId 
         + "&departmentId=" + departmentId 
         + "&startDate=" + startDate
-        + "&endDate=" + endDate, {}, (s, e) => {
+        + "&endDate=" + endDate 
+        + "&source=" + 1, {}, (s, e) => {
             try {
                 if (s && s.code == 0) {
                     if (callback)
-                        callback(s.data.schedules);
+                        callback(s.data.bookings);
                     return;
                 }
 

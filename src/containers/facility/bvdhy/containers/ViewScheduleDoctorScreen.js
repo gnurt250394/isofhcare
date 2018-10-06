@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, FlatList, TouchableOpacity } from 'react-native';
-import constants from '@dhy/strings';
+import dhyCommand from '@dhy/strings';
 import ActivityPanel from '@components/ActivityPanel';
 import DoctorTime from '@dhy/components/DoctorTime';
 import { connect } from 'react-redux';
@@ -19,7 +19,6 @@ import string from 'mainam-react-native-string-utils';
 import dateUtils from 'mainam-react-native-date-utils';
 import ImageProgress from 'mainam-react-native-image-progress';
 import Progress from 'react-native-progress/Pie';
-
 
 LocaleConfig.locales['en'] = {
     monthNames: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
@@ -55,18 +54,18 @@ class ViewScheduleDoctorScreen extends Component {
         try {
             day.timestamp = new Date(day.timestamp.toDateObject().format("MM/dd/yyyy")).getTime();
             if (!this.props.booking.specialist2) {
-                snackbar.show(constants.msg.booking.please_select_service_first);
+                snackbar.show(dhyCommand.msg.booking.please_select_service_first);
                 return;
             }
 
             var schedule = this.getScheduleOnDay(day);
             if (!schedule || schedule.disabled) {
-                snackbar.show(constants.msg.booking.not_found_schedule_of_doctor_in_this_day);
+                snackbar.show(dhyCommand.msg.booking.not_found_schedule_of_doctor_in_this_day);
                 return;
             }
 
             this.props.dispatch({
-                type: constants.action.action_select_booking_date
+                type: dhyCommand.action.action_select_booking_date
                 , value: day
             });
 
@@ -79,16 +78,17 @@ class ViewScheduleDoctorScreen extends Component {
                 listSchedule: newListScheduleText
             })
             this.props.dispatch({
-                type: constants.action.action_select_schedule, value: newListScheduleText[key]
+                type: dhyCommand.action.action_select_schedule, value: newListScheduleText[key]
             });
 
             this.loadListBooking(day);
         } catch (error) {
-
+            console.log(error)
         }
     }
 
     loadListBooking(day) {
+        
         bookingProvider.getListBooking(
             this.props.booking.doctor.id,
             this.props.booking.specialist2.id,
@@ -109,7 +109,7 @@ class ViewScheduleDoctorScreen extends Component {
     onMonthChange(month, loadNewMonth) {
         var firstDayHasSchedule = this.generateCalendar(month.month, month.year);
         this.props.dispatch({
-            type: constants.action.action_select_booking_date
+            type: dhyCommand.action.action_select_booking_date
             , value: null
         });
         $this = this;
@@ -128,12 +128,13 @@ class ViewScheduleDoctorScreen extends Component {
 
     componentWillMount() {
         this.props.dispatch({
-            type: constants.action.action_select_booking_date
+            type: dhyCommand.action.action_select_booking_date
             , value: null
         });
-
+        
         if (!this.props.booking.specialist) {
             serviceProvider.getListSpecialistByDoctorDepartment(this.props.booking.doctor.id, this.props.booking.currentDepartment.id, (res) => {
+                
                 if (res && res.length > 0) {
                     this.selectSpecialist(res[0]);
                 }
@@ -145,7 +146,7 @@ class ViewScheduleDoctorScreen extends Component {
             this.loadSchedule(this.props.booking.doctor.id, this.props.booking.specialist.id);
         }
         this.props.dispatch({
-            type: constants.action.action_select_booking_specialist2, value: this.props.booking.specialist
+            type: dhyCommand.action.action_select_booking_specialist2, value: this.props.booking.specialist
         })
     }
 
@@ -164,7 +165,7 @@ class ViewScheduleDoctorScreen extends Component {
         });
         this.loadSchedule(this.props.booking.doctor.id, item.id);
         this.props.dispatch({
-            type: constants.action.action_select_booking_specialist2, value: item
+            type: dhyCommand.action.action_select_booking_specialist2, value: item
         })
     }
 
@@ -250,18 +251,18 @@ class ViewScheduleDoctorScreen extends Component {
                     if (compare < 0)
                         continue;
                     if (!isNaN(time)) {
-
+                        
                         var temp = this.getScheduleByDate(date, schedule)
                         if (temp && temp.length > 0) {
 
                             // if (temp && compare > 0) { release version
                             var key = year + "-" + (month < 10 ? "0" : "") + month + "-" + (i < 10 ? "0" : "") + i;
                             var valid = false;
+                            
                             for (var j = 0; j < temp.length; j++) {
                                 var item = temp[j];
-
                                 if (this.checkScheduleValid(date, item)) {
-
+                                    
                                     if (!listSchedule[key]) {
                                         listSchedule[key] = {
                                             dots: [],
@@ -319,6 +320,7 @@ class ViewScheduleDoctorScreen extends Component {
             this.props.booking.currentDepartment.id,
             this.state.startDate,
             this.state.endDate, (res) => {
+                
                 if (res && res.length > 0) {
                     this.setState({
                         service: res[0].service,
@@ -342,6 +344,7 @@ class ViewScheduleDoctorScreen extends Component {
     }
 
     render() {
+        console.log(this.props.booking)
         return (
             <ActivityPanel style={{ flex: 1, }} title={this.props.booking.currentDepartment ? this.props.booking.currentDepartment.name : ""}>
                 {this.props.booking.doctor ?
@@ -350,7 +353,7 @@ class ViewScheduleDoctorScreen extends Component {
                             <View style={{ backgroundColor: '#FFF', padding: 10, flexDirection: 'column' }}>
                                 <View style={{ flexDirection: 'row' }}>
                                     <ImageProgress
-                                        indicator={Progress} resizeMode='cover' imageStyle={{ borderRadius: 30, borderWidth: 0.5, borderColor: constants.colors.primaryColor }} style={{ width: 60, height: 60 }} source={{ uri: this.props.booking.doctor.avatar ? this.props.booking.doctor.avatar : "undefined" }}
+                                        indicator={Progress} resizeMode='cover' imageStyle={{ borderRadius: 30, borderWidth: 0.5, borderColor: dhyCommand.colors.primaryColor }} style={{ width: 60, height: 60 }} source={{ uri: this.props.booking.doctor.avatar ? this.props.booking.doctor.avatar : "undefined" }}
                                         defaultImage={() => {
                                             return (<ScaleImage source={require("@images/doctor.png")} width={60} />)
                                         }} />
@@ -366,12 +369,12 @@ class ViewScheduleDoctorScreen extends Component {
                                             this.props.booking.specialist ?
                                                 <View style={{ flexDirection: 'row', marginTop: 10 }}>
                                                     <Text style={{ fontWeight: 'bold' }}>Chuyên khoa: </Text>
-                                                    <Text style={{ overflow: 'hidden', flex: 1, padding: 2, paddingLeft: 5, paddingRight: 5, backgroundColor: constants.colors.primaryColor, marginLeft: 10, flexDirection: 'row', alignItems: 'center', borderRadius: 5, color: 'white', fontWeight: 'bold' }}>{this.props.booking.specialist.name}</Text>
+                                                    <Text style={{ overflow: 'hidden', flex: 1, padding: 2, paddingLeft: 5, paddingRight: 5, backgroundColor: dhyCommand.colors.primaryColor, marginLeft: 10, flexDirection: 'row', alignItems: 'center', borderRadius: 5, color: 'white', fontWeight: 'bold' }}>{this.props.booking.specialist.name}</Text>
                                                 </View> :
                                                 <View style={{ flexDirection: 'row', marginTop: 10 }}>
                                                     <Text style={{ fontWeight: 'bold' }}>Chuyên khoa: </Text>
                                                     <TouchableOpacity style={{ flex: 1 }} onPress={() => { this.toggleModalService() }}>
-                                                        <View style={{ overflow: 'hidden', padding: 2, paddingLeft: 5, backgroundColor: constants.colors.primaryColor, marginLeft: 10, flexDirection: 'row', alignItems: 'center', borderRadius: 5, flex: 1, paddingRight: 20 }}>
+                                                        <View style={{ overflow: 'hidden', padding: 2, paddingLeft: 5, backgroundColor: dhyCommand.colors.primaryColor, marginLeft: 10, flexDirection: 'row', alignItems: 'center', borderRadius: 5, flex: 1, paddingRight: 20 }}>
                                                             <Text style={{ color: 'white' }} numberOfLines={1} ellipsizeMode="tail">{this.state.serviceSelected ? this.state.serviceSelected.name : "Chọn chuyên khoa"}</Text>
                                                             <Image style={{ width: 12, height: 8, marginLeft: 5, position: 'absolute', right: 10 }} source={require('@images/ic_dropdown.png')} />
                                                         </View>
@@ -405,18 +408,20 @@ class ViewScheduleDoctorScreen extends Component {
                             markingType={'multi-dot'}
                         />
                         {
-                            this.props.booking.date ? <DoctorTime ref={(element) => this.doctorTime = element} doctor={this.props.booking.doctor} /> :
+                            this.props.booking.date ? 
+                            <DoctorTime ref={(element) => this.doctorTime = element} doctor={this.props.booking.doctor} /> 
+                            :
                                 <View>
                                     <Text style={{ padding: 10, fontStyle: 'italic', textAlign: 'center' }}>
-                                        {constants.msg.ehealth.select_date_to_view_schedule}
+                                        {dhyCommand.msg.ehealth.select_date_to_view_schedule}
                                     </Text>
                                     <TouchableOpacity onPress={() => { this.viewNearestDay() }}>
                                         <Text style={{
                                             flex: 1,
-                                            backgroundColor: constants.colors.primaryColor,
+                                            backgroundColor: dhyCommand.colors.primaryColor,
                                             width: 250,
                                             alignSelf: 'center',
-                                            color: constants.colors.white,
+                                            color: dhyCommand.colors.white,
                                             fontWeight: 'bold',
                                             textAlign: 'center',
                                             overflow: 'hidden',
@@ -482,7 +487,7 @@ class ViewScheduleDoctorScreen extends Component {
 function mapStateToProps(state) {
     return {
         userApp: state.userApp,
-        booking: state.booking
+        booking: state.dhyBooking
     };
 }
 export default connect(mapStateToProps, null, null, { withRef: true })(ViewScheduleDoctorScreen);

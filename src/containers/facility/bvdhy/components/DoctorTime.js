@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { View, Text, ScrollView, FlatList, TouchableOpacity, StyleSheet } from 'react-native'
 import PropTypes from 'prop-types';
-import constants from '@dhy/strings';
+import dhyCommand from '@dhy/strings';
 import dateUtils from 'mainam-react-native-date-utils';
 import snackbar from '@utils/snackbar-utils';
 
@@ -204,29 +204,32 @@ class DoctorTime extends Component {
 
     click(item) {
         if (!item.isAvailable) {
-            snackbar.show(constants.msg.booking.cannot_booking_in_this_time);
+            snackbar.show(dhyCommand.msg.booking.cannot_booking_in_this_time);
             return;
         }
         if (!item.allowBooking) {
-            snackbar.show(constants.msg.booking.not_allow_booking_in_this_time);
+            snackbar.show(dhyCommand.msg.booking.not_allow_booking_in_this_time);
             return;
         }
         if (item.count >= item.numberCase) {
-            snackbar.show(constants.msg.booking.maximum_booking_count_in_this_time);
+            snackbar.show(dhyCommand.msg.booking.maximum_booking_count_in_this_time);
             return;
         }
         this.props.dispatch({
-            type: constants.action.action_select_booking_time,
+            type: dhyCommand.action.action_select_booking_time,
             value: item
         })
-        if (!this.props.userApp.isLogin) {
-            this.props.dispatch({ type: constants.action.action_set_pending_booking, value: true });
-            Actions.login({ directScreen: () => { Actions.popTo('viewScheduleDoctor') } });
-        }
-        else {
-            Actions.addBooking();
-        }
-    }
+        // Test 
+        // if (!this.props.userApp.isLogin) {
+        //     this.props.dispatch({ type: dhyCommand.action.action_set_pending_booking, value: true });
+        //     this.props.
+        //     Actions.login({ directScreen: () => { Actions.popTo('viewScheduleDoctor') } });
+        // }
+        // else {
+            // Actions.addBooking();
+        // }
+        this.props.navigation.navigate("ehealth")
+    }   
     render() {
         return (
             <View style={{ marginBottom: 3, backgroundColor: "#FFF", padding: 10 }}>
@@ -287,8 +290,9 @@ DoctorTime.propTypes = {
 }
 function mapStateToProps(state) {
     return {
-        booking: state.booking,
-        userApp: state.userApp
+        booking: state.dhyBooking,
+        userApp: state.userApp,
+        navigation: state.navigation
     }
 }
 export default connect(mapStateToProps, null, null, { withRef: true })(DoctorTime);

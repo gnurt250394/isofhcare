@@ -18,7 +18,8 @@ module.exports = {
         + "?doctorId=" + doctorId 
         + "&specialistId=" + specialistId 
         + "&startDate=" + date
-        + "&endDate=" + date, {}, (s, e) => {
+        + "&endDate=" + date 
+        + "&source=" + 1, {}, (s, e) => {
             try {
                 if (callback)
                     callback(s, e);
