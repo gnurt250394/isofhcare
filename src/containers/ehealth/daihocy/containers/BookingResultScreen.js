@@ -81,6 +81,7 @@ class BookingResultScreen extends Component {
         }
     }
     viewResultCheckup(item) {
+        debugger;
         let result = this.state.result;
         item.isContract = result.profile.IsContract;
         this.props.navigation.navigate("bookingCheckupResult", { result, checkupResult: item })

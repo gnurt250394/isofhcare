@@ -262,18 +262,18 @@ class BookingCheckupResultScreen extends Component {
                                         </View> : null
                                 }
                                 {
-                                    (this.props.booking.checkupResult.ListMedicine
-                                        && this.props.booking.checkupResult.ListMedicine.length > 0)
+                                    (this.state.checkupResult.ListMedicine
+                                        && this.state.checkupResult.ListMedicine.length > 0)
                                         ||
-                                        (this.props.booking.checkupResult.ListExternalMedicine
-                                            && this.props.booking.checkupResult.ListExternalMedicine.length > 0)
+                                        (this.state.checkupResult.ListExternalMedicine
+                                            && this.state.checkupResult.ListExternalMedicine.length > 0)
                                         ?
                                         <View>
                                             <Text style={[styles.diagnosticLabel, { marginBottom: 0, marginTop: 10 }]}>Đơn thuốc</Text>
                                             <Table style={[styles.table, { marginTop: 10 }]} borderStyle={{ borderWidth: 0.5, borderColor: '#c8e1ff' }}>
                                                 <Row data={tableHead} style={styles.head} textStyle={styles.textHead} flexArr={[1, 3, 1, 1]} />
-                                                {this.renderMedicine(0, this.props.booking.checkupResult.ListMedicine)}
-                                                {this.renderMedicine(this.props.booking.checkupResult.ListMedicine.length, this.props.booking.checkupResult.ListExternalMedicine)}
+                                                {this.renderMedicine(0, this.state.checkupResult.ListMedicine)}
+                                                {this.renderMedicine(this.state.checkupResult.ListMedicine.length, this.state.checkupResult.ListExternalMedicine)}
                                             </Table>
                                         </View> : null
                                 }
