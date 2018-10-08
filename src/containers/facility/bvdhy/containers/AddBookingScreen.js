@@ -21,11 +21,22 @@ class AddBookingScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoading: false
+            isLoading: false,
+            profile: null
         }
     }
-    
-    
+
+    componentDidMount() {
+        this.setState({ isLoading: true }, () => {
+            profileProvider.getListProfiles(this.props.userApp.currentUser.id, (s, e) =>{
+                this.setState({ 
+                    isLoading: false, 
+                    profile: s
+                })
+            })
+        })
+    }
+
     getDate(date) {
         if (date) {
             var _date = new Date(date.timestamp);
@@ -58,16 +69,16 @@ class AddBookingScreen extends Component {
             return;
         this.showLoading(true);
         bookingProvider.addBooking(
-            profile.profile.id,
+            profile.id,
             schedule.id,
-            this.props.booking.date.dateString +" "+ myTime+":00",
+            this.props.booking.date.dateString + " " + myTime + ":00",
             this.state.note, (s, e) => {
                 this.showLoading(false);
                 try {
                     var value = JSON.parse(s.data.checkinResult).Patient.Value;
                     if (result) {
-                        profile.profile.value = result;
-                        this.props.dispatch({ type: constants.action.action_load_booking_profile, value: profile.profile })
+                        profile.value = result;
+                        this.props.dispatch({ type: constants.action.action_load_booking_profile, value: profile })
                     }
                 } catch (error) {
 
@@ -86,9 +97,9 @@ class AddBookingScreen extends Component {
                                     }
                                 }
                             }).then((event) => {
-                                this.props.dispatch({ type: constants.action.action_select_ehealth_tab, value: true });
+                                // this.props.dispatch({ type: constants.action.action_select_ehealth_tab, value: true });
                                 this.props.dispatch({ type: constants.action.action_trigger_load_list_booking, value: true });
-                                Actions.popTo('main');
+                                // Actions.popTo('main');
                             });
                             return;
                         case 2:
@@ -120,7 +131,7 @@ class AddBookingScreen extends Component {
                     snackbar.show(constants.msg.booking.add_booking_error)
                 }
             })
-            this.showLoading(false);
+        this.showLoading(false);
     }
     getSchedule() {
         var schedule = this.selectSchedule(this.props.booking.time.value);
@@ -152,13 +163,13 @@ class AddBookingScreen extends Component {
                     temp.fullname.trim(),
                     temp.gender,
                     temp.bod.format("yyyy-MM-dd"),
-                    temp.country.hisCountryId,
+                    temp.country.id,
                     temp.country.name,
-                    temp.province.hisProvinceId,
+                    temp.province.id,
                     temp.province.name,
                     temp.district.id,
                     temp.district.name,
-                    temp.zone.hisZoneId,
+                    temp.zone.id,
                     temp.zone.name,
                     temp.phoneNumber,
                     temp.guardianPhoneNumber,
@@ -168,10 +179,10 @@ class AddBookingScreen extends Component {
                             this.showLoading(false);
                             if (res.code == 0) {
                                 this.props.dispatch({
-                                    type: constants.action.action_load_booking_profile, value: {profile : res.data.profile}
+                                    type: constants.action.action_load_booking_profile, value: { profile: res.data.profile }
                                 });
                                 storage.save(constants.key.storage.user_profile + this.props.userApp.currentUser.id, [res.data.profile]);
-                                this.addBooking({profile : res.data.profile});
+                                this.addBooking({ profile: res.data.profile });
                             } else {
                                 if (res.code == 1) {
                                     snackbar.show(constants.msg.booking.exist_profile)
@@ -189,65 +200,66 @@ class AddBookingScreen extends Component {
     render() {
         return (
             <ActivityPanel style={{ flex: 1, }} hideActionbar={!this.props.userApp.isLogin} title="Đặt lịch khám" isLoading={this.state.isLoading} touchToDismiss={true}>
-                {
+                {/* {
                     !this.props.userApp.isLogin ?
-                        <RequiredLogin directScreen={() => { Actions.popTo('viewScheduleDoctor') }} /> :
-                        <View style={{ flex: 1 }}>
-                            <View style={{ padding: 10, flexDirection: 'column', marginTop: 10 }}>
-                                <View style={{ flexDirection: 'row' }}>
-                                    <Image style={{ width: 60, height: 60, borderRadius: 30 }} source={require("@images/doctor.png")}></Image>
-                                    <View style={{ flex: 1, marginLeft: 10, flexDirection: 'column' }}>
-                                        <Text style={{ fontWeight: 'bold' }}>
-                                            {this.props.booking.doctor.academicRankShortName} {this.props.booking.doctor.fullname}
-                                        </Text>
-                                        <View style={{ flexDirection: 'row', marginTop: 5 }}>
-                                            <Text style={{ color: '#00accc', fontWeight: 'bold' }}>{this.props.booking.time.label}</Text>
-                                            <Text style={{ marginLeft: 5 }}>- {this.getDate(this.props.booking.date)}</Text>
-                                        </View>
-                                        {this.props.booking.specialist2 ?
-                                            <View style={{ flexDirection: 'row', marginTop: 5 }}>
-                                                <Text style={{ fontWeight: 'bold' }}>Chuyên khoa: </Text>
-                                                <Text style={{ flex: 1, color: '#00accc', fontWeight: 'bold' }}>{this.props.booking.specialist2.name}</Text>
-                                            </View> : null}
-                                        {
-                                            this.props.booking.time && this.props.booking.time.service ?
-                                                <View>
-                                                    <View style={{ flexDirection: 'row', marginTop: 7 }}>
-                                                        <Text style={{ fontWeight: 'bold' }}>Dịch vụ: </Text>
-                                                        <Text style={{ flex: 1, color: '#00accc', padding: 2, paddingLeft: 5, paddingRight: 5, flexDirection: 'row', alignItems: 'center', borderRadius: 5, fontWeight: 'bold' }}>{this.props.booking.time.service.name}</Text>
-                                                    </View>
-
-                                                    <View style={{ flexDirection: 'row', marginTop: 7 }}>
-                                                        <Text style={{ fontWeight: 'bold' }}>Giá dịch vụ: </Text>
-                                                        <Text style={{ flex: 1, color: '#00accc', padding: 2, paddingLeft: 5, paddingRight: 5, flexDirection: 'row', alignItems: 'center', borderRadius: 5, fontWeight: 'bold' }}>{this.props.booking.time.service.price.formatPrice()} đ</Text>
-                                                    </View>
-                                                </View> : null
-                                        }
-                                    </View>
+                        <RequiredLogin directScreen={() => { Actions.popTo('viewScheduleDoctor') }} /> 
+                        : */}
+                <View style={{ flex: 1 }}>
+                    <View style={{ padding: 10, flexDirection: 'column', marginTop: 10 }}>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Image style={{ width: 60, height: 60, borderRadius: 30 }} source={require("@images/doctor.png")}></Image>
+                            <View style={{ flex: 1, marginLeft: 10, flexDirection: 'column' }}>
+                                <Text style={{ fontWeight: 'bold' }}>
+                                    {this.props.booking.doctor.academicRankShortName} {this.props.booking.doctor.fullname}
+                                </Text>
+                                <View style={{ flexDirection: 'row', marginTop: 5 }}>
+                                    <Text style={{ color: '#00accc', fontWeight: 'bold' }}>{this.props.booking.time.label}</Text>
+                                    <Text style={{ marginLeft: 5 }}>- {this.getDate(this.props.booking.date)}</Text>
                                 </View>
-                            </View>
-                            <ScrollView style={{ flex: 1, padding: 10, flexDirection: 'column', paddingBottom: 20 }} keyboardShouldPersistTaps='always'>
+                                {this.props.booking.specialist2 ?
+                                    <View style={{ flexDirection: 'row', marginTop: 5 }}>
+                                        <Text style={{ fontWeight: 'bold' }}>Chuyên khoa: </Text>
+                                        <Text style={{ flex: 1, color: '#00accc', fontWeight: 'bold' }}>{this.props.booking.specialist2.name}</Text>
+                                    </View> : null}
                                 {
-                                    this.props.booking.profile ? <AddBookingHasProfile></AddBookingHasProfile> : <AddBookingNoProfile ref={(element) => this.formProfile = element}></AddBookingNoProfile>
+                                    this.props.booking.time && this.props.booking.time.service ?
+                                        <View>
+                                            <View style={{ flexDirection: 'row', marginTop: 7 }}>
+                                                <Text style={{ fontWeight: 'bold' }}>Dịch vụ: </Text>
+                                                <Text style={{ flex: 1, color: '#00accc', padding: 2, paddingLeft: 5, paddingRight: 5, flexDirection: 'row', alignItems: 'center', borderRadius: 5, fontWeight: 'bold' }}>{this.props.booking.time.service.name}</Text>
+                                            </View>
+
+                                            <View style={{ flexDirection: 'row', marginTop: 7 }}>
+                                                <Text style={{ fontWeight: 'bold' }}>Giá dịch vụ: </Text>
+                                                <Text style={{ flex: 1, color: '#00accc', padding: 2, paddingLeft: 5, paddingRight: 5, flexDirection: 'row', alignItems: 'center', borderRadius: 5, fontWeight: 'bold' }}>{this.props.booking.time.service.price.formatPrice()} đ</Text>
+                                            </View>
+                                        </View> : null
                                 }
-                                <KeyboardAvoidingView behavior="padding">
-                                    <View style={{ flexDirection: 'row', padding: 3, marginTop: 10 }}>
-                                        <Text style={{ fontWeight: 'bold' }}>{constants.msg.booking.reason_booking}</Text>
-                                    </View>
-                                    <TextInput
-                                        onChangeText={(s) => { this.setState({ note: s }) }}
-                                        multiline={true} underlineColorAndroid='transparent' style={{ borderColor: constants.colors.primaryColor, borderWidth: 1, margin: 3, minHeight: 100, textAlignVertical: 'top', paddingLeft: 5, paddingRight: 5 }} placeholder="Nhập tình trạng sức khỏe của bạn" />
-                                    <View style={{ flex: 1, alignItems: 'flex-end', marginBottom: 50 }}>
-                                        <TouchableOpacity onPress={() => this.props.booking.profile ? this.addBooking(this.props.booking.profile) : this.createProfile()}>
-                                            <Text style={{ margin: 3, padding: 5, backgroundColor: constants.colors.buttonOkColor, color: '#FFF', fontWeight: 'bold', borderRadius: 15, paddingLeft: 15, paddingRight: 15, marginTop: 10 }}>Gửi lịch</Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                    <View style={{ height: 50 }} />
-                                </KeyboardAvoidingView>
-                            </ScrollView >
-                            <DialogBox ref={dialogbox => { this.dialogbox = dialogbox }} />
+                            </View>
                         </View>
-                }
+                    </View>
+                    <ScrollView style={{ flex: 1, padding: 10, flexDirection: 'column', paddingBottom: 20 }} keyboardShouldPersistTaps='always'>
+                        {
+                            this.state.profile ? <AddBookingHasProfile profile={this.state.profile}></AddBookingHasProfile> : <AddBookingNoProfile ref={(element) => this.formProfile = element}></AddBookingNoProfile>
+                        }
+                        <KeyboardAvoidingView behavior="padding">
+                            <View style={{ flexDirection: 'row', padding: 3, marginTop: 10 }}>
+                                <Text style={{ fontWeight: 'bold' }}>{constants.msg.booking.reason_booking}</Text>
+                            </View>
+                            <TextInput
+                                onChangeText={(s) => { this.setState({ note: s }) }}
+                                multiline={true} underlineColorAndroid='transparent' style={{ borderColor: constants.colors.primaryColor, borderWidth: 1, margin: 3, minHeight: 100, textAlignVertical: 'top', paddingLeft: 5, paddingRight: 5 }} placeholder="Nhập tình trạng sức khỏe của bạn" />
+                            <View style={{ flex: 1, alignItems: 'flex-end', marginBottom: 50 }}>
+                                <TouchableOpacity onPress={() => this.state.profile ? this.addBooking(this.state.profile) : this.createProfile()}>
+                                    <Text style={{ margin: 3, padding: 5, backgroundColor: constants.colors.buttonOkColor, color: '#FFF', fontWeight: 'bold', borderRadius: 15, paddingLeft: 15, paddingRight: 15, marginTop: 10 }}>Gửi lịch</Text>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={{ height: 50 }} />
+                        </KeyboardAvoidingView>
+                    </ScrollView >
+                    <DialogBox ref={dialogbox => { this.dialogbox = dialogbox }} />
+                </View>
+                {/* } */}
             </ActivityPanel >
         )
     }
@@ -279,7 +291,7 @@ const styles = StyleSheet.create({
 function mapStateToProps(state) {
     return {
         userApp: state.userApp,
-        booking: state.booking
+        booking: state.dhyBooking
     };
 }
 export default connect(mapStateToProps)(AddBookingScreen);

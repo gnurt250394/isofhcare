@@ -15,16 +15,18 @@ import {
 import ic_back from '@images/ic_back.png';
 
 class AddBookingHasProfile extends Component {
-    Actions;
-    viewProfile() {
-        Actions.detailProfile();
-    }
+    // Actions;
+    // viewProfile() {
+    //     Actions.detailProfile();
+    // }
     render() {
+        console.log(this.props.profile)
         return (
-            <TouchableOpacity onPress={() => { this.viewProfile() }}>
+            // <TouchableOpacity onPress={() => { this.viewProfile() }}>
+            <TouchableOpacity>
                 <View style={{ flex: 1, backgroundColor: 'white' }}>
                     <Text style={{ padding: 10, borderColor: constants.colors.primaryColor, borderWidth: 1, margin: 3, fontWeight: 'bold', color: constants.colors.primaryColor }} >
-                        {this.props.booking.profile ? this.props.booking.profile.profile.name.toUpperCase() : ""}
+                        {this.props.profile && this.props.profile.profile ? this.props.profile.profile.name : ""}
                     </Text>
                 </View>
             </TouchableOpacity>
@@ -33,7 +35,7 @@ class AddBookingHasProfile extends Component {
 }
 function mapStateToProps(state) {
     return {
-        booking: state.booking
+        booking: state.dhyBooking
     }
 }
 

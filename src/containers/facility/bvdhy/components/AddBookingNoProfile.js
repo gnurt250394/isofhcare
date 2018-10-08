@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
-import Dimensions from 'Dimensions';
-import { Text, StatusBar, TouchableOpacity, TextInput, FlatList, Keyboard } from 'react-native';
-import PropTypes from 'prop-types';
+import { Text, TouchableOpacity, TextInput, FlatList, Keyboard } from 'react-native';
 import ScaleImage from 'mainam-react-native-scaleimage';
-import constants from '@dhy/strings'
+import dhyCommand from '@dhy/strings'
 import { connect } from 'react-redux';
 import Modal from "react-native-modal";
 import stylemodal from "@styles/modal-style";
-import locationProvider from '@data-access/location-provider';
+import locationProvider from '@dhy/data-access/location-provider';
 import snackbar from '@utils/snackbar-utils';
-import dateUtils from 'mainam-react-native-date-utils';
 import DateTimePicker from 'mainam-react-native-date-picker';
 import {
     StyleSheet,
@@ -17,8 +14,6 @@ import {
     View,
     Platform
 } from 'react-native';
-
-import ic_back from '@images/ic_back.png';
 
 const padding = Platform.select({
     ios: 7,
@@ -51,31 +46,31 @@ class AddBookingNoProfile extends Component {
         Keyboard.dismiss();
         var temp = this.state.newProfile;
         if (!temp.fullname || !temp.fullname.trim()) {
-            snackbar.show(constants.msg.booking.please_input_fullname);
+            snackbar.show(dhyCommand.msg.booking.please_input_fullname);
             return;
         }
         if (!temp.fullname.isFullName()) {
-            snackbar.show(constants.msg.booking.please_enter_the_correct_fullname_format);
+            snackbar.show(dhyCommand.msg.booking.please_enter_the_correct_fullname_format);
             return;
         }
 
         if (!temp.phoneNumber || !temp.phoneNumber.trim()) {
-            snackbar.show(constants.msg.booking.please_input_phone_number);
+            snackbar.show(dhyCommand.msg.booking.please_input_phone_number);
             return;
         }
         if (!temp.phoneNumber.isPhoneNumber()) {
-            snackbar.show(constants.msg.booking.please_enter_the_correct_phone_number_format);
+            snackbar.show(dhyCommand.msg.booking.please_enter_the_correct_phone_number_format);
             return;
         }
 
         if (!temp.bod) {
-            snackbar.show(constants.msg.booking.please_input_dob);
+            snackbar.show(dhyCommand.msg.booking.please_input_dob);
             return;
         }
 
         if (!temp.country) {
             if (temp.listCountries && temp.listCountries.length > 0) {
-                snackbar.show(constants.msg.booking.please_select_country);
+                snackbar.show(dhyCommand.msg.booking.please_select_country);
                 return;
             }
             temp.country = { hisCountryId: 0 }
@@ -86,7 +81,7 @@ class AddBookingNoProfile extends Component {
         else {
             if (!temp.province) {
                 if (temp.listProvincesTemp && temp.listProvincesTemp.length > 0) {
-                    snackbar.show(constants.msg.booking.please_select_province);
+                    snackbar.show(dhyCommand.msg.booking.please_select_province);
                     return;
                 }
                 temp.province = { hisProvinceId: 0 }
@@ -95,7 +90,7 @@ class AddBookingNoProfile extends Component {
             } else {
                 if (!temp.district) {
                     // if (temp.listDistrictTemp && temp.listDistrictTemp.length > 0) {
-                    //     snackbar.show(constants.msg.booking.please_select_district);
+                    //     snackbar.show(dhyCommand.msg.booking.please_select_district);
                     //     return;
                     // }
                     temp.district = { id: 0 }
@@ -104,7 +99,7 @@ class AddBookingNoProfile extends Component {
                 else {
                     if (!temp.zone) {
                         // if (temp.listZone && temp.listZone.length > 0) {
-                        //     snackbar.show(constants.msg.booking.please_select_zone);
+                        //     snackbar.show(dhyCommand.msg.booking.please_select_zone);
                         //     return;
                         // }
                         temp.zone = { hisZoneId: 0 }
@@ -116,20 +111,20 @@ class AddBookingNoProfile extends Component {
 
         if (temp.bod.getAge() <= 6) {
             if (!temp.guardianName || !temp.guardianName.trim()) {
-                snackbar.show(constants.msg.booking.please_input_guardian_fullname);
+                snackbar.show(dhyCommand.msg.booking.please_input_guardian_fullname);
                 return;
             }
             if (!temp.guardianName.isFullName()) {
-                snackbar.show(constants.msg.booking.please_enter_the_correct_guardian_fullname_format);
+                snackbar.show(dhyCommand.msg.booking.please_enter_the_correct_guardian_fullname_format);
                 return;
             }
 
             if (!temp.guardianPhoneNumber || !temp.guardianPhoneNumber.trim()) {
-                snackbar.show(constants.msg.booking.please_input_guardian_phone_number);
+                snackbar.show(dhyCommand.msg.booking.please_input_guardian_phone_number);
                 return;
             }
             if (!temp.guardianPhoneNumber.isPhoneNumber()) {
-                snackbar.show(constants.msg.booking.please_enter_the_correct_guardian_phone_number_format);
+                snackbar.show(dhyCommand.msg.booking.please_enter_the_correct_guardian_phone_number_format);
                 return;
             }
         }
@@ -181,6 +176,7 @@ class AddBookingNoProfile extends Component {
     }
 
     selectProvince(province, reload) {
+
         if (!this.state.newProfile.province || this.state.newProfile.province.hisProvinceId != province.hisProvinceId || reload) {
             this.state.newProfile.province = province;
             this.state.newProfile.district = null;
@@ -188,7 +184,6 @@ class AddBookingNoProfile extends Component {
             this.state.newProfile.listDistrictTemp = this.state.listDistrict.filter((item) => {
                 return this.state.newProfile.province && item.hisProvinceId == this.state.newProfile.province.hisProvinceId
             });
-
         }
         this.setState({
             toggleModalProvince: false
@@ -268,22 +263,24 @@ class AddBookingNoProfile extends Component {
         locationProvider.getListProvince((res) => {
             this.setState({
                 listProvinces: res
-            })
-            if (this.state.newProfile.country) {
-                this.selectCountry(this.state.newProfile.country, true);
-            } else {
-                this.state.newProfile.listProvincesTemp = [];
-            }
+            },()=>{
+                if (this.state.newProfile.country) {
+                    this.selectCountry(this.state.newProfile.country, true);
+                } else {
+                    this.state.newProfile.listProvincesTemp = [];
+                }
+            })            
         });
         locationProvider.getListDistrict((res) => {
             this.setState({
                 listDistrict: res
+            }, () => {
+                if (this.state.newProfile.province) {
+                    this.selectProvince(this.state.newProfile.province, true);
+                } else {
+                    this.state.newProfile.listDistrictTemp = [];
+                }
             })
-            if (this.state.newProfile.province) {
-                this.selectProvince(this.state.newProfile.province, true);
-            } else {
-                this.state.newProfile.listDistrictTemp = [];
-            }
         });
     }
 
@@ -540,8 +537,8 @@ class AddBookingNoProfile extends Component {
                     onConfirm={this._handleDatePicked}
                     onCancel={this._handleDatePickerCancel}
                     maximumDate={new Date()}
-                    cancelTextIOS={constants.cancel}
-                    confirmTextIOS={constants.confirm}
+                    cancelTextIOS={dhyCommand.cancel}
+                    confirmTextIOS={dhyCommand.confirm}
                     date={this.state.newProfile.bod ? this.state.newProfile.bod : new Date()}
                 />
             </View>
@@ -550,8 +547,8 @@ class AddBookingNoProfile extends Component {
 }
 const styles = StyleSheet.create({
     field: {
-        flexDirection: 'row', alignItems: 'center', marginTop: 17, borderColor: constants.colors.primaryColor, borderWidth: 1, padding: 7
+        flexDirection: 'row', alignItems: 'center', marginTop: 17, borderColor: dhyCommand.colors.primaryColor, borderWidth: 1, padding: 7
     }, textinput:
-        { borderColor: constants.colors.primaryColor, borderWidth: 1, padding: padding, paddingLeft: 7 }
+        { borderColor: dhyCommand.colors.primaryColor, borderWidth: 1, padding: padding, paddingLeft: 7 }
 })
 export default connect(null, null, null, { withRef: true })(AddBookingNoProfile);

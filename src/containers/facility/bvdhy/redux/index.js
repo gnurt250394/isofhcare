@@ -39,6 +39,9 @@ module.exports = {
                 newState.dhyBooking = {};
                 newState.dhyBooking.currentDepartment = currentDepartment2;
                 return newState;
+            case dhyCommand.action.action_trigger_load_list_booking:
+                newState.dhyBooking.triggerLoadListBooking = action.value;
+                return newState;
         }
     }
 }

@@ -213,7 +213,7 @@ module.exports = {
       },
       booking_profile: {
         create: "profile/create",
-        getProfiles: "profile/get-profiles"
+        getProfiles: "profile/get-by-user"
       },
       booking_schedule: {
         get_by_doctor_specialist_department: "schedule/get-by-doctor-specialist-department"
@@ -235,10 +235,10 @@ module.exports = {
         get_detail_profile:"profile/get-detail"  // -- profile/get-detail/{id}
       },
       location: {
-        getListCountry: 'country/get-all',
-        getListProvince: 'province/get-all',
-        getListDistrict: 'district/get-all',
-        getListZone: 'zone/get-by-district'
+        getListCountry: 'country/get-by-hospital',
+        getListProvince: 'province/get-by-hospital',
+        getListDistrict: 'district/get-by-hospital',
+        getListZone: 'zone/get-by-district-hospital'
       },
       upload: {
         image: "image/upload"

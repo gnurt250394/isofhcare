@@ -8,7 +8,6 @@ import dateUtils from 'mainam-react-native-date-utils';
 import snackbar from '@utils/snackbar-utils';
 
 class DoctorTime extends Component {
-    Actions;
     constructor(props) {
         super(props);
         var timeString = JSON.stringify({
@@ -219,16 +218,13 @@ class DoctorTime extends Component {
             type: dhyCommand.action.action_select_booking_time,
             value: item
         })
-        // Test 
         // if (!this.props.userApp.isLogin) {
         //     this.props.dispatch({ type: dhyCommand.action.action_set_pending_booking, value: true });
-        //     this.props.
         //     Actions.login({ directScreen: () => { Actions.popTo('viewScheduleDoctor') } });
+        // } else {
+        //      Actions.addBooking();
         // }
-        // else {
-            // Actions.addBooking();
-        // }
-        this.props.navigation.navigate("ehealth")
+        this.props.navigation.navigate("dhyAddBooking")
     }   
     render() {
         return (
