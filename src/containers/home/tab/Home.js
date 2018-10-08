@@ -45,15 +45,8 @@ class TabSearch extends Component {
             //     id: 5
             // },
             {
-                icon: require("@images/timcsyt.png"),
+                icon: require("@images/isofhcare.png"),
                 id: 0
-            }, {
-                icon: require("@images/timthuoc.png"),
-                id: 1
-            },
-            {
-                icon: require("@images/ybadientu.png"),
-                id: 2
             }
         ];
         this.state = {
@@ -149,10 +142,10 @@ class TabSearch extends Component {
                             fontSize: 16,
                             fontWeight: "500", marginLeft: (DEVICE_WIDTH - itemWidth) / 2
                         }}>iSofH Care</Text>{
-                            this.state.features.map((item, position) => {
+                            this.state.ads.map((item, position) => {
                                 return (<Animatable.View key={position} delay={50 * position} animation={"slideInRight"} direction="alternate">
                                     <TouchableOpacity key={position} style={{ padding: 5 }} onPress={() => { this.onClickItemAds(item) }}>
-                                        <View style={{ width: itemWidth, height: 150, borderRadius: 6, backgroundColor: 'rgba(74, 144, 226, 0.44)' }} />
+                                        <ScaledImage source={item.icon} width={itemWidth} style={{ borderRadius: 5 }} />
                                     </TouchableOpacity>
                                 </Animatable.View>);
                             })
