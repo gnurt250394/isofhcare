@@ -15,7 +15,7 @@ module.exports = {
             try {
                 if (s && s.code == 0) {
                     if (callback)
-                        callback(s.data.bookings);
+                        callback(s.data.schedules);
                     return;
                 }
 
