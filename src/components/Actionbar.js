@@ -32,7 +32,7 @@ class Actionbar extends Component {
                                 <View style={[styles.ic_back, { height: 20 }]} />
                             </View>
                     }
-                    <Text style={[styles.title, this.props.actionbarTextColor, this.props.titleStyle]}>
+                    <Text style={[styles.title, this.props.actionbarTextColor, this.props.titleStyle, { flex: 1, textAlign: 'center'}]}>
                         {this.props.title}
                     </Text>
                     <View style={styles.menuButton}>

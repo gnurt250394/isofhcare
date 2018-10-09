@@ -64,7 +64,7 @@ class SelectSpecialistScreen extends Component {
     }
     renderSearchButton() {
         return (
-            <TouchableOpacity onPress={() => this.showSearch()} style={{marginRight:10}}>
+            <TouchableOpacity onPress={() => this.showSearch()} style={{ padding: 10 }}>
                 <ScaleImage source={require("@images/ictimkiem.png")} width={20} />
             </TouchableOpacity>
         );
@@ -82,7 +82,7 @@ class SelectSpecialistScreen extends Component {
     };
     render() {
         return (
-            <ActivityPanel title={this.state.showSearch ? dhyCommand.find_category : (this.props.booking.currentDepartment ? this.props.booking.currentDepartment.name : "")} isLoading={this.state.isLoading} menuButton={this.renderSearchButton()} style={{ backgroundColor: '#e5fafe' }} >
+            <ActivityPanel titleStyle={{ marginRight: 0 }} title={this.state.showSearch ? dhyCommand.find_category : (this.props.booking.currentDepartment ? this.props.booking.currentDepartment.name : "")} isLoading={this.state.isLoading} menuButton={this.renderSearchButton()} style={{ backgroundColor: '#e5fafe' }} >
                 {
                     this.state.showSearch ?
                         <View style={{
@@ -90,7 +90,7 @@ class SelectSpecialistScreen extends Component {
                             elevation: 5,
                             height: 55,
                             justifyContent: 'center', alignItems: 'center',
-                            backgroundColor: constants.colors.actionbar_color, 
+                            backgroundColor: constants.colors.actionbar_color,
                             flexDirection: 'row'
                         }}>
                             <TextInput autoFocus={true} style={{ flex: 1, color: constants.colors.actionbar_title_color, padding: 10 }} placeholderTextColor='#dddddd' underlineColorAndroid="transparent" placeholder={"Nhập từ khóa tìm kiếm"} onChangeText={(s) => {
@@ -126,9 +126,9 @@ class SelectSpecialistScreen extends Component {
                                 </TouchableOpacity>
                             }
                         />
-                        : <View style={{width:'100%', height:'100%', backgroundColor:'#fff', justifyContent:'center', alignItems:'center'}}>
+                        : <View style={{ width: '100%', height: '100%', backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center' }}>
                             <ScaleImage source={require("@images/empty_result.png")} width={120} />
-                            <Text>Không tìm thấy chuyên khoa <Text style={{fontWeight:'bold', color:constants.colors.actionbar_title_color}}>{this.state.searchValue}</Text></Text>
+                            <Text>Không tìm thấy chuyên khoa <Text style={{ fontWeight: 'bold', color: constants.colors.actionbar_title_color }}>{this.state.searchValue}</Text></Text>
                         </View>
                 }
 

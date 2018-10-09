@@ -76,7 +76,7 @@ class BookingScreen extends Component {
     }
     renderSearchButton() {
         return (
-            <TouchableOpacity onPress={() => this.showSearch()} style={{marginRight:10}}>
+            <TouchableOpacity onPress={() => this.showSearch()} style={{ padding: 10 }}>
                 <ScaleImage source={require("@images/ictimkiem.png")} width={20} />
             </TouchableOpacity>
         );
@@ -94,7 +94,7 @@ class BookingScreen extends Component {
     };
     render() {
         return (
-            <ActivityPanel style={{ flex: 1, }} title={this.state.showSearch ? dhyCommand.find_doctor : (this.props.booking.specialist ? this.props.booking.specialist.name : this.props.booking.currentDepartment ? this.props.booking.currentDepartment.name : "")} isLoading={this.state.isLoading} menuButton={this.renderSearchButton()} style={{ backgroundColor: '#e5fafe' }} >
+            <ActivityPanel titleStyle={{ marginRight: 0 }}  style={{ flex: 1, }} title={this.state.showSearch ? dhyCommand.find_doctor : (this.props.booking.specialist ? this.props.booking.specialist.name : this.props.booking.currentDepartment ? this.props.booking.currentDepartment.name : "")} isLoading={this.state.isLoading} menuButton={this.renderSearchButton()} style={{ backgroundColor: '#e5fafe' }} >
                 {
                     this.state.showSearch ?
                         <View style={{
