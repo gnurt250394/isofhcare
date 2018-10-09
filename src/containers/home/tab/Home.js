@@ -87,10 +87,11 @@ class TabSearch extends Component {
     }
 
     getItemWidth() {
-        const width = DEVICE_WIDTH - 40;
+        const width = DEVICE_WIDTH - 42;
         let itemWidth = 370;
         if (itemWidth > width)
             return width - 10;
+        return width;
         // if (width >= 320)
         //     return 150;
         // if (width > 320)

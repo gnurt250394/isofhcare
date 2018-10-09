@@ -67,71 +67,82 @@ class AddBookingScreen extends Component {
         var schedule = this.getSchedule();
         if (!schedule)
             return;
-        this.showLoading(true);
-        bookingProvider.addBooking(
-            profile.id,
-            schedule.id,
-            this.props.booking.date.dateString + " " + myTime + ":00",
-            this.state.note, (s, e) => {
-                this.showLoading(false);
-                try {
-                    var value = JSON.parse(s.data.checkinResult).Patient.Value;
-                    if (result) {
-                        profile.value = result;
-                        this.props.dispatch({ type: constants.action.action_load_booking_profile, value: profile })
+        this.setState({
+            isLoading:true
+        }, () => {
+            bookingProvider.addBooking(
+                profile.profile.id,
+                schedule.id,
+                this.props.booking.date.dateString + " " + myTime + ":00",
+                this.state.note,
+                1, (s, e) => {
+                    // this.showLoading(false);
+                    this.setState({
+                        isLoading:false,
+                    })
+                    try {
+                        var value = JSON.parse(s.data.checkinResult).Patient.Value;
+                        if (result) {
+                            profile.value = result;
+                            this.props.dispatch({ type: constants.action.action_load_booking_profile, value: profile })
+                        }
+                    } catch (error) {
+    
                     }
-                } catch (error) {
-
-                }
-                if (s) {
-                    switch (s.code) {
-                        case 0:
-                            this.props.dispatch(redux.userAddNewBooking(s.data));
-                            this.dialogbox.tip({
-                                title: constants.alert,
-                                content: [constants.msg.booking.add_booking_success],
-                                btn: {
-                                    text: constants.view,
-                                    style: {
-                                        color: 'red'
+                    if (s) {
+                        switch (s.code) {
+                            case 0:
+                                // this.props.dispatch(redux.userAddNewBooking(s.data));
+                                this.dialogbox.tip({
+                                    title: constants.alert,
+                                    content: [constants.msg.booking.add_booking_success],
+                                    btn: {
+                                        text: constants.view,
+                                        style: {
+                                            color: 'red'
+                                        }
                                     }
-                                }
-                            }).then((event) => {
-                                // this.props.dispatch({ type: constants.action.action_select_ehealth_tab, value: true });
-                                this.props.dispatch({ type: constants.action.action_trigger_load_list_booking, value: true });
-                                // Actions.popTo('main');
-                            });
-                            return;
-                        case 2:
-                            snackbar.show(constants.msg.booking.maximum_booking_count_in_this_time)
-                            return;
-                        case 3:
-                            snackbar.show(constants.msg.booking.add_booking_check_in_not_success)
-                            return;
-                        case 6:
-                            snackbar.show(s.message);
-                            return;
-                        case 7:
-                            snackbar.show(s.message);
-                            return;
-                        case 8:
-                            snackbar.show(s.message);
-                            return;
-                        case 9:
-                            snackbar.show(constants.msg.booking.exist_booking_not_payment);
-                            return;
-                        case 500:
-                            snackbar.show(constants.msg.booking.add_booking_error)
-                            return;
-
+                                }).then((event) => {
+                                    this.props.navigation.navigate("ehealth");
+                                    // this.props.dispatch({ type: constants.action.action_select_ehealth_tab, value: true });
+                                    // this.props.dispatch({ type: constants.action.action_trigger_load_list_booking, value: true });
+                                    // Actions.popTo('main');
+                                });
+                                return;
+                            case 2:
+                                snackbar.show(constants.msg.booking.maximum_booking_count_in_this_time)
+                                return;
+                            case 3:
+                                snackbar.show(constants.msg.booking.add_booking_check_in_not_success)
+                                return;
+                            case 6:
+                                snackbar.show(s.message);
+                                return;
+                            case 7:
+                                snackbar.show(s.message);
+                                return;
+                            case 8:
+                                snackbar.show(s.message);
+                                return;
+                            case 9:
+                                snackbar.show(constants.msg.booking.exist_booking_not_payment);
+                                return;
+                            case 500:
+                                snackbar.show(constants.msg.booking.add_booking_error)
+                                return;
+    
+                        }
+    
+    
+                    } else {
+                        snackbar.show(constants.msg.booking.add_booking_error)
                     }
-
-
-                } else {
-                    snackbar.show(constants.msg.booking.add_booking_error)
-                }
-            })
-        this.showLoading(false);
+                })
+        })
+        // this.showLoading(true);
+        this.setState({
+            isLoading:false,
+        })
     }
     getSchedule() {
         var schedule = this.selectSchedule(this.props.booking.time.value);

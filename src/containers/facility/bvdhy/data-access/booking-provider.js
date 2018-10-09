@@ -28,8 +28,8 @@ module.exports = {
         });
 
     },
-    addBooking(profileId, scheduleId, bookingTime, note, callback) {
-        client.requestApi("post", constants.api.booking.create, {
+    addBooking(profileId, scheduleId, bookingTime, note, source, callback) {
+        client.requestApi("post", constants.api.booking.create +  "?source=" + source, {
             profileId: profileId,
             scheduleId: scheduleId,
             booking: {

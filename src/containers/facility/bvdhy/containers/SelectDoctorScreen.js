@@ -76,7 +76,7 @@ class BookingScreen extends Component {
     }
     renderSearchButton() {
         return (
-            <TouchableOpacity onPress={() => this.showSearch()}>
+            <TouchableOpacity onPress={() => this.showSearch()} style={{marginRight:10}}>
                 <ScaleImage source={require("@images/ictimkiem.png")} width={20} />
             </TouchableOpacity>
         );
