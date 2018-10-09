@@ -88,7 +88,7 @@ class ViewScheduleDoctorScreen extends Component {
     }
 
     loadListBooking(day) {
-        
+
         bookingProvider.getListBooking(
             this.props.booking.doctor.id,
             this.props.booking.specialist2.id,
@@ -131,10 +131,10 @@ class ViewScheduleDoctorScreen extends Component {
             type: dhyCommand.action.action_select_booking_date
             , value: null
         });
-        
+
         if (!this.props.booking.specialist) {
             serviceProvider.getListSpecialistByDoctorDepartment(this.props.booking.doctor.id, this.props.booking.currentDepartment.id, (res) => {
-                
+
                 if (res && res.length > 0) {
                     this.selectSpecialist(res[0]);
                 }
@@ -251,18 +251,18 @@ class ViewScheduleDoctorScreen extends Component {
                     if (compare < 0)
                         continue;
                     if (!isNaN(time)) {
-                        
+
                         var temp = this.getScheduleByDate(date, schedule)
                         if (temp && temp.length > 0) {
 
                             // if (temp && compare > 0) { release version
                             var key = year + "-" + (month < 10 ? "0" : "") + month + "-" + (i < 10 ? "0" : "") + i;
                             var valid = false;
-                            
+
                             for (var j = 0; j < temp.length; j++) {
                                 var item = temp[j];
                                 if (this.checkScheduleValid(date, item)) {
-                                    
+
                                     if (!listSchedule[key]) {
                                         listSchedule[key] = {
                                             dots: [],
@@ -320,7 +320,7 @@ class ViewScheduleDoctorScreen extends Component {
             this.props.booking.currentDepartment.id,
             this.state.startDate,
             this.state.endDate, (res) => {
-                
+
                 if (res && res.length > 0) {
                     this.setState({
                         service: res[0].service,
@@ -346,7 +346,7 @@ class ViewScheduleDoctorScreen extends Component {
     render() {
         console.log(this.props.booking)
         return (
-            <ActivityPanel style={{ flex: 1, }} title={this.props.booking.currentDepartment ? this.props.booking.currentDepartment.name : ""}>
+            <ActivityPanel style={{ flex: 1, }} title={this.props.booking.currentDepartment ? this.props.booking.currentDepartment.name : ""} showFullScreen={true} >
                 {this.props.booking.doctor ?
                     <ScrollView style={{ backgroundColor: "#e7fbff" }}>
                         <View style={{ marginBottom: 3, backgroundColor: "#FFF" }}>
@@ -384,11 +384,11 @@ class ViewScheduleDoctorScreen extends Component {
                                         {/* {
                                             console.log("BBBBBBBBB" + JSON.stringify( this.state.schedule))
                                         } */}
-                                        {   this.state.schedule && this.state.schedule.length > 0 ?
+                                        {this.state.schedule && this.state.schedule.length > 0 ?
                                             <View style={{ flexDirection: 'row', marginTop: 10 }}>
                                                 <Text style={{ fontWeight: 'bold' }}>Giá dịch vụ: </Text>
                                                 <Text style={{ fontWeight: 'bold' }}>{this.state.schedule[0].service.price.formatPrice() + " đ"}</Text>
-                                            </View> 
+                                            </View>
                                             :
                                             null
                                         }
@@ -408,9 +408,9 @@ class ViewScheduleDoctorScreen extends Component {
                             markingType={'multi-dot'}
                         />
                         {
-                            this.props.booking.date ? 
-                            <DoctorTime ref={(element) => this.doctorTime = element} doctor={this.props.booking.doctor} /> 
-                            :
+                            this.props.booking.date ?
+                                <DoctorTime ref={(element) => this.doctorTime = element} doctor={this.props.booking.doctor} />
+                                :
                                 <View>
                                     <Text style={{ padding: 10, fontStyle: 'italic', textAlign: 'center' }}>
                                         {dhyCommand.msg.ehealth.select_date_to_view_schedule}

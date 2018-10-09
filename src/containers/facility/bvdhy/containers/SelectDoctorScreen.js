@@ -94,7 +94,7 @@ class BookingScreen extends Component {
     };
     render() {
         return (
-            <ActivityPanel titleStyle={{ marginRight: 0 }}  style={{ flex: 1, }} title={this.state.showSearch ? dhyCommand.find_doctor : (this.props.booking.specialist ? this.props.booking.specialist.name : this.props.booking.currentDepartment ? this.props.booking.currentDepartment.name : "")} isLoading={this.state.isLoading} menuButton={this.renderSearchButton()} style={{ backgroundColor: '#e5fafe' }} >
+            <ActivityPanel titleStyle={{ marginRight: 0 }} style={{ flex: 1, }} title={this.state.showSearch ? dhyCommand.find_doctor : (this.props.booking.specialist ? this.props.booking.specialist.name : this.props.booking.currentDepartment ? this.props.booking.currentDepartment.name : "")} isLoading={this.state.isLoading} menuButton={this.renderSearchButton()} style={{ backgroundColor: '#e5fafe' }} showFullScreen={true} >
                 {
                     this.state.showSearch ?
                         <View style={{

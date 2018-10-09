@@ -28,9 +28,9 @@ class AddBookingScreen extends Component {
 
     componentDidMount() {
         this.setState({ isLoading: true }, () => {
-            profileProvider.getListProfiles(this.props.userApp.currentUser.id, (s, e) =>{
-                this.setState({ 
-                    isLoading: false, 
+            profileProvider.getListProfiles(this.props.userApp.currentUser.id, (s, e) => {
+                this.setState({
+                    isLoading: false,
                     profile: s
                 })
             })
@@ -68,7 +68,7 @@ class AddBookingScreen extends Component {
         if (!schedule)
             return;
         this.setState({
-            isLoading:true
+            isLoading: true
         }, () => {
             bookingProvider.addBooking(
                 profile.profile.id,
@@ -78,7 +78,7 @@ class AddBookingScreen extends Component {
                 1, (s, e) => {
                     // this.showLoading(false);
                     this.setState({
-                        isLoading:false,
+                        isLoading: false,
                     })
                     try {
                         var value = JSON.parse(s.data.checkinResult).Patient.Value;
@@ -87,7 +87,7 @@ class AddBookingScreen extends Component {
                             this.props.dispatch({ type: constants.action.action_load_booking_profile, value: profile })
                         }
                     } catch (error) {
-    
+
                     }
                     if (s) {
                         switch (s.code) {
@@ -130,10 +130,10 @@ class AddBookingScreen extends Component {
                             case 500:
                                 snackbar.show(constants.msg.booking.add_booking_error)
                                 return;
-    
+
                         }
-    
-    
+
+
                     } else {
                         snackbar.show(constants.msg.booking.add_booking_error)
                     }
@@ -141,7 +141,7 @@ class AddBookingScreen extends Component {
         })
         // this.showLoading(true);
         this.setState({
-            isLoading:false,
+            isLoading: false,
         })
     }
     getSchedule() {
@@ -210,7 +210,7 @@ class AddBookingScreen extends Component {
     }
     render() {
         return (
-            <ActivityPanel style={{ flex: 1, }} hideActionbar={!this.props.userApp.isLogin} title="Đặt lịch khám" isLoading={this.state.isLoading} touchToDismiss={true}>
+            <ActivityPanel style={{ flex: 1, }} hideActionbar={!this.props.userApp.isLogin} title="Đặt lịch khám" isLoading={this.state.isLoading} touchToDismiss={true} showFullScreen={true} >
                 {/* {
                     !this.props.userApp.isLogin ?
                         <RequiredLogin directScreen={() => { Actions.popTo('viewScheduleDoctor') }} /> 
