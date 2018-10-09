@@ -64,7 +64,10 @@ class TabSearch extends Component {
                 navigate("searchDrug");
                 break;
             case 2:
-                navigate("ehealth");
+                if (this.props.userApp.isLogin)
+                    navigate("ehealth");
+                else
+                    navigate("login");
                 break;
         }
     }
@@ -161,7 +164,8 @@ class TabSearch extends Component {
 
 function mapStateToProps(state) {
     return {
-        navigation: state.navigation
+        navigation: state.navigation,
+        userApp: state.userApp
     };
 }
 export default connect(mapStateToProps)(TabSearch);
