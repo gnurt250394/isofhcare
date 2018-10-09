@@ -1,4 +1,4 @@
-const server_url = 'http://demo.isofhcare.com:8683';
+const server_url = 'http://27.72.105.49:8382';
 String.prototype.absoluteUrl = String.prototype.absolute || function (defaultValue) {
     var _this = this.toString();
     if (_this == "")
