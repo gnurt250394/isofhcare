@@ -4,9 +4,9 @@ import constants from '@dhy/strings';
 // import storage from '@data-access/storage-provider';
 import datacacheProvider from '@data-access/datacache-provider';
 module.exports = {
-    createProfile(uId, fullname, gender, dob, countryId, countryName, provinceId, provinceName, districtId, districtName, zoneId, zoneName, phoneNumber, guardianPhoneNumber, guardianName, callback) {
+    createProfile(source, uId, fullname, gender, dob, countryId, countryName, provinceId, provinceName, districtId, districtName, zoneId, zoneName, phoneNumber, guardianPhoneNumber, guardianName, callback) {
 
-        client.requestApi("post", constants.api.booking_profile.create, {
+        client.requestApi("post", constants.api.booking_profile.create + "?source=" + source, {
             userId: uId,
             countryId,
             provinceId,
@@ -21,24 +21,6 @@ module.exports = {
                 guardianPhone:guardianPhoneNumber,
                 guardianPassport:""
             }
-
-            // profile:
-            //     {
-            //         patientName: fullname,
-            //         dob: dob,
-            //         gender: gender,
-            //         countryId: countryId,
-            //         countryName: countryName,
-            //         provinceId: provinceId ? provinceId : 0,
-            //         provinceName: provinceName,
-            //         districtId: districtId ? districtId : 0,
-            //         districtName: districtName,
-            //         zoneId: zoneId ? zoneId : 0,
-            //         zoneName: zoneName,
-            //         phoneNumber,
-            //         guardianPhoneNumber,
-            //         guardianName
-            //     }
         }, (s, e) => {
             try {
                 if (callback)

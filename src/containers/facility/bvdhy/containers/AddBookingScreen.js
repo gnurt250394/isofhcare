@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+﻿import React, { Component, PropTypes } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Keyboard } from 'react-native';
 import constants from '@dhy/strings';
 import AddBookingHasProfile from '@dhy/components/AddBookingHasProfile';
@@ -167,9 +167,11 @@ class AddBookingScreen extends Component {
                 return;
 
             var temp = this.formProfile.getWrappedInstance().createProfile();
+            console.log(temp)
             if (temp) {
                 this.showLoading(true);
                 profileProvider.createProfile(
+                    1, // Source Default DHY = 1
                     this.props.userApp.currentUser.id,
                     temp.fullname.trim(),
                     temp.gender,
@@ -251,7 +253,9 @@ class AddBookingScreen extends Component {
                     </View>
                     <ScrollView style={{ flex: 1, padding: 10, flexDirection: 'column', paddingBottom: 20 }} keyboardShouldPersistTaps='always'>
                         {
-                            this.state.profile ? <AddBookingHasProfile profile={this.state.profile}></AddBookingHasProfile> : <AddBookingNoProfile ref={(element) => this.formProfile = element}></AddBookingNoProfile>
+                            this.state.profile && this.state.profile.length > 0 ?
+                                <AddBookingHasProfile profile={this.state.profile}></AddBookingHasProfile> :
+                                <AddBookingNoProfile ref={(element) => this.formProfile = element}></AddBookingNoProfile>
                         }
                         <KeyboardAvoidingView behavior="padding">
                             <View style={{ flexDirection: 'row', padding: 3, marginTop: 10 }}>
@@ -261,7 +265,11 @@ class AddBookingScreen extends Component {
                                 onChangeText={(s) => { this.setState({ note: s }) }}
                                 multiline={true} underlineColorAndroid='transparent' style={{ borderColor: constants.colors.primaryColor, borderWidth: 1, margin: 3, minHeight: 100, textAlignVertical: 'top', paddingLeft: 5, paddingRight: 5 }} placeholder="Nhập tình trạng sức khỏe của bạn" />
                             <View style={{ flex: 1, alignItems: 'flex-end', marginBottom: 50 }}>
-                                <TouchableOpacity onPress={() => this.state.profile ? this.addBooking(this.state.profile) : this.createProfile()}>
+                                <TouchableOpacity onPress={() =>
+                                    this.state.profile && this.state.profile.length > 0
+                                        ? this.addBooking(this.state.profile)
+                                        : this.createProfile()
+                                }>
                                     <Text style={{ margin: 3, padding: 5, backgroundColor: constants.colors.buttonOkColor, color: '#FFF', fontWeight: 'bold', borderRadius: 15, paddingLeft: 15, paddingRight: 15, marginTop: 10 }}>Gửi lịch</Text>
                                 </TouchableOpacity>
                             </View>
