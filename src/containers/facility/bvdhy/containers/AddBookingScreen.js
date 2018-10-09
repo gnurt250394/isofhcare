@@ -211,6 +211,9 @@ class AddBookingScreen extends Component {
         }
     }
     render() {
+        console.log("00000000000000000000000000000000000000000000000000")
+        console.log(this.state.profile)
+        console.log("00000000000000000000000000000000000000000000000000")
         return (
             <ActivityPanel style={{ flex: 1, }} hideActionbar={!this.props.userApp.isLogin} title="Đặt lịch khám" isLoading={this.state.isLoading} touchToDismiss={true} showFullScreen={true} >
                 {/* {
@@ -253,7 +256,7 @@ class AddBookingScreen extends Component {
                     </View>
                     <ScrollView style={{ flex: 1, padding: 10, flexDirection: 'column', paddingBottom: 20 }} keyboardShouldPersistTaps='always'>
                         {
-                            this.state.profile && this.state.profile.length > 0 ?
+                            this.state.profile && (this.state.profile.length > 0 || this.state.profile.profile) ?
                                 <AddBookingHasProfile profile={this.state.profile}></AddBookingHasProfile> :
                                 <AddBookingNoProfile ref={(element) => this.formProfile = element}></AddBookingNoProfile>
                         }
@@ -266,7 +269,7 @@ class AddBookingScreen extends Component {
                                 multiline={true} underlineColorAndroid='transparent' style={{ borderColor: constants.colors.primaryColor, borderWidth: 1, margin: 3, minHeight: 100, textAlignVertical: 'top', paddingLeft: 5, paddingRight: 5 }} placeholder="Nhập tình trạng sức khỏe của bạn" />
                             <View style={{ flex: 1, alignItems: 'flex-end', marginBottom: 50 }}>
                                 <TouchableOpacity onPress={() =>
-                                    this.state.profile && this.state.profile.length > 0
+                                    this.state.profile && (this.state.profile.length > 0 || this.state.profile.profile)
                                         ? this.addBooking(this.state.profile)
                                         : this.createProfile()
                                 }>
