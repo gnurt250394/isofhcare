@@ -104,12 +104,12 @@ class BookingScreen extends Component {
                             justifyContent: 'center', alignItems: 'center',
                             backgroundColor: constants.colors.actionbar_color, flexDirection: 'row'
                         }}>
-                            <TextInput autoFocus={true} style={{ flex: 1, color: '#FFF', padding: 10 }} placeholderTextColor='#dddddd' underlineColorAndroid="transparent" placeholder={"Nhập từ khóa tìm kiếm"} onChangeText={(s) => {
+                            <TextInput autoFocus={true} style={{ flex: 1, color: constants.colors.actionbar_title_color, padding: 10 }} placeholderTextColor='#dddddd' underlineColorAndroid="transparent" placeholder={"Nhập từ khóa tìm kiếm"} onChangeText={(s) => {
                                 this.searchTextChange(s);
                             }}
                                 returnKeyType="search" onSubmitEditing={() => { this.onSearch() }} />
                             <TouchableOpacity onPress={() => this.onSearch()}>
-                                <Text style={{ backgroundColor: '#006ac6', padding: 7, borderRadius: 20, marginRight: 10, paddingLeft: 15, paddingRight: 15, fontWeight: 'bold', color: '#FFF' }}>{constants.search}</Text>
+                                <Text style={{ backgroundColor: constants.colors.actionbar_title_color, padding: 7, borderRadius: 20, marginRight: 10, paddingLeft: 15, paddingRight: 15, fontWeight: 'bold', color: '#FFF' }}>{constants.search}</Text>
                             </TouchableOpacity>
                         </View>
                         : null

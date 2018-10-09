@@ -179,6 +179,7 @@ class FacilityDetailScreen extends Component {
             this.props.navigation.pop();
             return;
         }
+        console.log(facility)
         this.mapRef.fitToElements(true);
     }
     onPressItemLocation(item) {
@@ -250,15 +251,24 @@ class FacilityDetailScreen extends Component {
         var currentOffset = e.nativeEvent.contentOffset.y;
         var isUp = currentOffset > this.offset ? false : true;
         this.offset = currentOffset;
-        if(!isUp) {
+        if (!isUp) {
             this.setState({ showSearchPanel: false });
-        } else if(this.onScrollToTop(e.nativeEvent)) {
+        } else if (this.onScrollToTop(e.nativeEvent)) {
             this.setState({ showSearchPanel: true });
         }
     }
 
     booking() {
-        this.props.navigation.navigate("addBookingBVDHY");
+        if (this.props.userApp.isLogin) {
+            if (this.state.facility.facility.id == 403) {
+                this.props.navigation.navigate("addBookingBVDHY");
+            } else {
+                snackbar.show("Chưa kết nối đến " + this.state.facility.facility.name, "danger");
+            }
+        } else {
+            this.props.navigation.navigate("login")
+        }
+
     }
 
     render() {

@@ -71,7 +71,7 @@ class TabBookingType extends Component {
         return (
             <View style={styles.tabContainer}>
                 <TouchableOpacity onPress={() => this.previewItem()}><ScaleImage style={{ padding: 5, transform: [{ rotate: '180deg' }] }} source={require("@images/ic_next2.png")} width={24}></ScaleImage></TouchableOpacity>
-                <Text style={{ flex: 1, overflow: 'hidden', textAlign: 'center', padding: 5, paddingTop: 10, paddingBottom: 10, backgroundColor: '#FFF', margin: 10, borderRadius: 20, fontWeight: 'bold', color: constants.colors.primary_bold }}>
+                <Text style={{ flex: 1, overflow: 'hidden', textAlign: 'center', padding: 5, paddingTop: 10, paddingBottom: 10, backgroundColor: '#FFF', margin: 10, borderRadius: 20, fontWeight: 'bold', color: constants.colors.actionbar_color }}>
                     {this.props.dhyBooking && this.props.dhyBooking.currentDepartment ? this.props.dhyBooking.currentDepartment.name : ""}
                 </Text>
 

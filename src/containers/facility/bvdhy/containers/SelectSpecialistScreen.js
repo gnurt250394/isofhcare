@@ -60,10 +60,6 @@ class SelectSpecialistScreen extends Component {
         var listSearch = this.state.listService.filter(function (item) {
             return s == null || item.name && item.name.toLowerCase().indexOf(s.toLowerCase()) != -1;
         });
-
-        console.log("=======================================================")
-        console.log(JSON.stringify(listSearch))
-        console.log("=======================================================")
         this.setState({ listServiceSearch: listSearch });
     }
     renderSearchButton() {
