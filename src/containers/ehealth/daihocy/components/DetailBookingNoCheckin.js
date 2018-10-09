@@ -14,8 +14,8 @@ class DetailBookingNoCheckin extends Component {
     }
 
     render() {
-        let booking = this.props.booking.booking;
-
+        let booking = this.props.booking;
+        console.log(booking);
         return (
             <View style={{ padding: 10, flex: 1 }}>
                 <ScrollView style={{ flex: 1 }}>
@@ -73,7 +73,7 @@ class DetailBookingNoCheckin extends Component {
                             <ScaleImage width={20} source={require("@ehealth/daihocy/resources/images/ic_info.png")} style={{ marginTop: 5 }} />
                             <Text style={{ marginLeft: 10 }}>
                                 {
-                                    this.props.booking.profile.profile.name
+                                    this.props.booking.profile.name
                                 }
                             </Text>
 
@@ -82,8 +82,8 @@ class DetailBookingNoCheckin extends Component {
                             <ScaleImage width={22} source={require("@ehealth/daihocy/resources/images/ic_location.png")} style={{ marginTop: 5 }} />
                             <Text style={{ marginLeft: 5 }}>
                                 {
-                                    // console.log("DDDDDDDDDDDDDDDDDDDDDDDDDDD\n"+ JSON.stringify(this.props.booking.profile.profile)+"\nDDDDDDDDDDDDDDDDDDDDDDDDDDD\n")
-                                    this.props.booking.profile.profile.address
+                                    // console.log("DDDDDDDDDDDDDDDDDDDDDDDDDDD\n"+ JSON.stringify(this.props.booking.profile)+"\nDDDDDDDDDDDDDDDDDDDDDDDDDDD\n")
+                                    this.props.booking.profile.address
                                 }
                             </Text>
                         </View>
@@ -105,8 +105,7 @@ class DetailBookingNoCheckin extends Component {
 
 function mapStateToProps(state) {
     return {
-        userApp: state.userApp,
-        booking: state.booking
+        userApp: state.userApp
     }
 }
 export default connect(mapStateToProps)(DetailBookingNoCheckin);

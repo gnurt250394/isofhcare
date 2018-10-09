@@ -169,6 +169,13 @@ class LoginScreen extends Component {
             });
         });
     }
+    openBooking(booking, hospitalId) {
+        debugger;
+        this.props.dispatch({ type: constants2.action.action_select_hospital, value: hospitalId });
+        booking.hasCheckin = false;
+        booking.hospitalId = hospitalId;
+        this.props.navigation.navigate("ehealthDHY", { booking })
+    }
 
     renderItemBookingInHis(booking, index) {
         if (booking) {
@@ -200,6 +207,36 @@ class LoginScreen extends Component {
         }
         return null;
     }
+    renderItemBookingNotInHis(booking, index) {
+        if (booking) {
+            if (booking.hospitalId == constants.hospital.BENH_VIEN_DAI_HOC_Y) {
+                return <View style={{ position: 'relative' }}>
+                    <TouchableOpacity style={{ position: 'relative', marginLeft: 15 }} onPress={this.openBooking.bind(this, booking, booking.hospitalId)}>
+                        <View style={{
+                            flex: 1,
+                            backgroundColor: '#f8fcf4',
+                            borderStyle: 'solid',
+                            borderWidth: 1,
+                            borderColor: 'rgba(155, 155, 155, 0.47)',
+                            borderRadius: 6,
+                            marginTop: 10,
+                            marginLeft: 14,
+                            padding: 12
+                        }}>
+                            <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{booking.profile.name}</Text>
+                            <Text style={{ marginTop: 13 }}>Bệnh viện: <Text style={{ fontWeight: 'bold' }}>{booking.hospitalName}</Text></Text>
+                            {/* <Text style={{ marginTop: 8 }}>Mã hồ sơ: <Text style={{ fontWeight: 'bold' }}>{booking.PatientHistoryId}</Text></Text> */}
+                            <Text style={{ marginTop: 8 }}>Thời gian: <Text style={{ fontWeight: 'bold' }}>{booking.booking.bookingTime.toDateObject("-").format("dd/MM/yyyy hh:mm tt")}</Text></Text>
+                        </View>
+                        <ScaledImage source={require("@images/ehealth/square1.png")} width={20} style={{ marginRight: 8, position: 'absolute', top: '50%', marginTop: -10, left: 0 }} />
+                    </TouchableOpacity>
+                    <Dash style={{ width: 2, flexDirection: 'column', position: 'absolute', top: 0, left: 10, bottom: 0 }} dashColor="#00977c" />
+                    <View style={{ width: 10, height: 10, backgroundColor: '#9b9b9b', borderRadius: 5, position: 'absolute', left: 6, top: '50%', marginTop: -5 }} />
+                </View>
+            }
+        }
+        return null;
+    }
     render() {
         return (
             <ActivityPanel style={{ flex: 1 }} title="Y BẠ ĐIỆN TỬ" showFullScreen={true} isLoading={this.state.isLoading}>
@@ -212,7 +249,11 @@ class LoginScreen extends Component {
                     data={this.state.bookings}
                     ListHeaderComponent={this.renderHeader.bind(this)}
                     ListFooterComponent={() => <View style={{ height: 10 }}></View>}
-                    renderItem={({ item, index }) => this.renderItemBookingInHis(item, index)
+                    renderItem={({ item, index }) => {
+                        if (!item.booking)
+                            return this.renderItemBookingInHis(item, index)
+                        return this.renderItemBookingNotInHis(item, index)
+                    }
                     }
                 />
                 <Modal

@@ -19,6 +19,8 @@ class DetailBookingScreen extends Component {
     }
     render() {
         let booking = this.props.navigation.getParam("booking");
+        debugger;
+
         if (!booking) {
             this.props.navigation.pop();
             return null;
