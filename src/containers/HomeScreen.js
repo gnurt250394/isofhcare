@@ -50,7 +50,7 @@ class SplashScreen extends Component {
 					}}
 					loop={true}>
 					<Home navigation={this.props.navigation} style={{ flex: 1 }} drawer={this._drawer} />
-					<TabSearch navigation={this.props.navigation} style={{ flex: 1 }} drawer={this._drawer} />
+					{/* <TabSearch navigation={this.props.navigation} style={{ flex: 1 }} drawer={this._drawer} /> */}
 				</Swiper>
 			</ScalingDrawer >);
 	}
