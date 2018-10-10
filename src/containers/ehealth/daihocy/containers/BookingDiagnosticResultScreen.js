@@ -25,7 +25,7 @@ class BookingDiagnosticResultScreen extends Component {
             type: "diagnostic",
             data: this.state.diagnosticResult,
             result: this.state.result,
-            fileName: constants.filenameDiagnosticPDF +  this.state.result.booking.patientHistoryId
+            fileName: constants.filenameDiagnosticPDF + this.state.result.booking.patientHistoryId
         }, () => {
             this.setState({ isLoading: false });
         });
@@ -73,6 +73,7 @@ class BookingDiagnosticResultScreen extends Component {
                                         <Text style={{ marginLeft: 10 }}>{this.state.diagnosticResult.Conclusion}</Text>
                                     </View> : null}
                             </View> : null}
+                    <View style={{ height: 50 }} />
                 </ScrollView>
                 <ExportPDF ref={(element) => this.exportPdfCom = element} />
             </ActivityPanel >

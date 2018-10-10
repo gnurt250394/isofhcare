@@ -176,6 +176,7 @@ class DetailBookingHasCheckin extends Component {
                     || (result.data.ListResulHoaSinh && result.data.ListResulHoaSinh.length > 0)
                     || (result.data.ListResulGiaiPhau && result.data.ListResulGiaiPhau.length > 0)
                     || (result.data.ListDiagnostic && result.data.ListDiagnostic.length > 0)
+                    || (result.data.ListResulOther && result.data.ListResulOther.length > 0)
                 ) {
                     result.booking = this.props.booking;
                     this.props.navigation.navigate("viewBookingResult", { result })

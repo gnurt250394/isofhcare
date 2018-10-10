@@ -170,7 +170,7 @@ class LoginScreen extends Component {
         });
     }
     openBooking(booking, hospitalId) {
-        debugger;
+        // debugger;
         this.props.dispatch({ type: constants2.action.action_select_hospital, value: hospitalId });
         booking.hasCheckin = false;
         booking.hospitalId = hospitalId;

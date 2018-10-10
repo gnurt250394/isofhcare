@@ -12,7 +12,7 @@ import ExportPDF from '@ehealth/daihocy/components/ExportPDF';
 class BookingCheckupResultScreen extends Component {
     constructor(props) {
         super(props);
-        debugger;
+        // debugger;
         this.state = {
             isLoading: false,
             result: this.props.navigation.getParam("result"),
@@ -43,7 +43,7 @@ class BookingCheckupResultScreen extends Component {
         return null;
     }
     exportPdf() {
-        debugger;
+        // debugger;
         this.setState({
             isLoading: true
         })
@@ -87,7 +87,7 @@ class BookingCheckupResultScreen extends Component {
     }
     render() {
         let datas = this.state.checkupResult;
-        debugger;
+        // debugger;
         const tableHead = ['STT', 'Tên thuốc', 'Số lượng', 'Đơn vị'];
         return (
             <ActivityPanel style={{ flex: 1, }} title="Kết quả khám và đơn thuốc" isLoading={this.state.isLoading} showFullScreen={true}>
@@ -103,7 +103,6 @@ class BookingCheckupResultScreen extends Component {
                             <View>
                                 {
                                     [
-                                        this.renderItem("Bác sĩ", datas.ActUser),
                                         this.renderItem("Tiền sử bệnh", datas.Anamnesis),
                                         this.renderItem("Tiền sử gia đình", datas.AnamnesisFamily),
                                         this.renderItem("Tiền sử dị ứng thuốc", datas.AnamnesisMedicine),
@@ -176,6 +175,7 @@ class BookingCheckupResultScreen extends Component {
                                         this.renderItem("Phân loại", datas.DermatologyClassify),
                                         this.renderItem("Các bệnh tật nếu có", datas.OtherDiseases),
                                         this.renderItem("Những điều cần giải quyết", datas.OtherConclusion),
+                                        this.renderItem("Bác sĩ", datas.ActUser),
                                         this.renderItem("Phân loại", datas.HealthClassify),
                                         this.renderItem("Tuần hoàn", datas.CheckUpCirculation + (datas.CirculationClassify ? "(Phân loại: " + datas.CirculationClassify + ")" : null)),
                                         this.renderItem("Tiêu hóa", datas.CheckUpDigestion + (datas.DigestionClassify ? "(Phân loại: " + datas.DigestionClassify + ")" : null)),
