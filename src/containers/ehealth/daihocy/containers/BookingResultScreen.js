@@ -32,6 +32,7 @@ class BookingResultScreen extends Component {
                     resultHuyetHoc: result.data.ListResulHuyetHoc,
                     resultViSinh: result.data.ListResulViSinh,
                     resultHoaSinh: result.data.ListResulHoaSinh,
+                    resultKhac: result.data.ListResulOther,
                 });
             }
     }
@@ -99,6 +100,7 @@ class BookingResultScreen extends Component {
             resultViSinh: this.state.resultViSinh,
             resultHoaSinh: this.state.resultHoaSinh,
             resultHuyetHoc: this.state.resultHuyetHoc,
+            resultKhac: this.state.resultKhac,
         }
         let result = this.state.result;
         this.props.navigation.navigate("bookingMedicalTestResult", { result, medicalTest: result1 })

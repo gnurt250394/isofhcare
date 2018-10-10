@@ -67,6 +67,19 @@ class BookingMedicalTestResultScreen extends Component {
                     item.value.ListMedical.push.apply(item.value.ListMedical, entry.ListMedical);
                 });
             }
+            if (this.props.booking.medicalTestResult.resultKhac && this.props.booking.medicalTestResult.resultKhac.length > 0) {
+                var item = {
+                    type: 'Xét Nghiệm Khác',
+                    value: {
+                        ListMedical: [],
+                        GroupId: ""
+                    }
+                }
+                result.push(item);
+                this.props.booking.medicalTestResult.resultKhac.forEach(function (entry) {
+                    item.value.ListMedical.push.apply(item.value.ListMedical, entry.ListMedical);
+                });
+            }
         }
         this.setState({
             medicalTestResult: result,
