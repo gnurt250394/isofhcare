@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Platform } from 'react-native';
 import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import Dimensions from 'Dimensions';
@@ -114,7 +114,7 @@ class TabSearch extends Component {
             <ActivityPanel 
             style={[{ flex: 1 }, this.props.style]} 
             titleStyle={{ marginRight: 60 }} 
-            title={<ScaledImage source={require("@images/logo_home.png")} height={72}/>} 
+            title={<ScaledImage source={require("@images/logo_home.png")} height={ Platform.OS =="android" ? 72 : 45}/>} 
             icBack={require("@images/icmenu.png")} 
             backButtonClick={() => { this.showDrawer() }} 
             showMessenger={this.props.userApp.isLogin ? true : false}
