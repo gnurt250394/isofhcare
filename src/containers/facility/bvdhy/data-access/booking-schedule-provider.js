@@ -1,7 +1,6 @@
 import client from '@utils/client-utils';
 import string from 'mainam-react-native-string-utils';
 import constants from '@dhy/strings';
-import storage from '@data-access/storage-provider';
 
 module.exports = {
     getListSchedule(doctorId, specialistId, departmentId, startDate, endDate, callback) {

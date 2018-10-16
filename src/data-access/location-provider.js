@@ -1,7 +1,6 @@
 import client from '@utils/client-utils';
 import string from 'mainam-react-native-string-utils';
 import constants from '@resources/strings';
-import storage from '@data-access/storage-provider';
 import { Platform } from 'react-native';
 import RNGooglePlaces from 'react-native-google-places';
 import datacacheProvider from '@data-access/datacache-provider';

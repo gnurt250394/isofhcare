@@ -9,10 +9,6 @@ import permission from 'mainam-react-native-permission';
 
 class ExportPDF extends Component {
     renderResult(result) {
-        // debugger;
-        console.log("000000000000000000000000000000000000000000000000000000000000000000000")
-        console.log(result.profile.IsContract)
-        console.log("000000000000000000000000000000000000000000000000000000000000000000000")
         if (result.profile.IsContract) {
 
         }
@@ -20,15 +16,19 @@ class ExportPDF extends Component {
         var resultSurgery = result.data.ListResulGiaiPhau;
         var resultCheckup = result.data.ListResultCheckup;
         var resultDiagnostic = result.data.ListDiagnostic;
+        // var resultKhac = result.data.ListResulOther;
+
         var resultMedicalTest;
         if ((result.data.ListResulViSinh && result.data.ListResulViSinh.length > 0)
             || (result.data.ListResulHoaSinh && result.data.ListResulHoaSinh.length > 0)
-            || (result.data.ListResulHuyetHoc && result.data.ListResulHuyetHoc.length > 0))
+            || (result.data.ListResulHuyetHoc && result.data.ListResulHuyetHoc.length > 0)
+            || (result.data.ListResulOther && result.data.ListResulOther.length > 0)
+            )
             resultMedicalTest = {
                 resultViSinh: result.data.ListResulViSinh,
                 resultHoaSinh: result.data.ListResulHoaSinh,
                 resultHuyetHoc: result.data.ListResulHuyetHoc,
-                resultKhac: result.data.resultKhac 
+                resultKhac: result.data.ListResulOther 
             }
         var profile = result.profile;
         var div = "";
@@ -178,6 +178,8 @@ class ExportPDF extends Component {
                 div += "<style>.pagebreak { page-break-before: always; }.bold{font-weight:bold; color: red}</style><div class='pagebreak'></div>";
             }
         }
+        
+        debugger
         return div;
     }
     renderTd(child, _class, colSpan, rowSpan) {
@@ -769,7 +771,7 @@ class ExportPDF extends Component {
         var profile = booking.Profile;
         var filename = option.fileName;
         if (!filename)
-            filename = "Kết_quả";
+            filename = "ket_qua";
         filename += new Date().format("ddMMyyyyhhmmss");
         switch (option.type) {
             case "surgery":

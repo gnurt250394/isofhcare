@@ -37,21 +37,51 @@ class ActivityPanel extends Component {
         if (this.props.navigation)
             this.props.navigation.pop();
     }
+    
+    msgPress() {
+        if (this.props.navigation)
+            this.props.navigation.navigate("groupChat")
+    }
+
     getActionbar() {
-        return (<ActionBar actionbarTextColor={[{ color: constants.colors.actionbar_title_color }, this.props.actionbarTextColor]} backButtonClick={() => this.backPress()} {...this.props} actionbarStyle={[{ paddingTop: this.state.paddingTop, backgroundColor: constants.colors.actionbar_color }, this.props.actionbarStyle]} />);
+        return (
+        <ActionBar 
+            actionbarTextColor={[{ color: constants.colors.actionbar_title_color }, this.props.actionbarTextColor]} 
+            backButtonClick={() => this.backPress()}
+            showMessengerClicked={() => this.msgPress()}
+            {...this.props} 
+            actionbarStyle={[{ paddingTop: this.state.paddingTop, backgroundColor: constants.colors.actionbar_color }, this.props.actionbarStyle]} 
+            />
+        );
     }
 
     getLoadingView() {
-        return (<View style={{ position: "absolute", backgroundColor: "#bfeaff94", flex: 1, top: 0, right: 0, left: 0, bottom: 0, alignItems: 'center', justifyContent: "center" }} >
-            <ActivityIndicator size={'large'}
-                color={'blue'} />
+        return (
+        <View style={{ 
+            position: "absolute", 
+            backgroundColor: "#bfeaff94", 
+            flex: 1, 
+            top: 0, 
+            right: 0, 
+            left: 0, 
+            bottom: 0, 
+            alignItems: 'center', 
+            justifyContent: "center" }} 
+        >
+            <ActivityIndicator size={'large'} color={'blue'} />
         </View>
         );
     }
 
     render() {
         return (
-            <Activity {...this.props} actionbar={this.getActionbar.bind(this)} loadingView={this.getLoadingView()} paddingTop={this.state.paddingTop} translucent={true} statusBarbackgroundColor="#AAA" >
+            <Activity 
+                {...this.props} 
+                actionbar={this.getActionbar.bind(this)} 
+                loadingView={this.getLoadingView()} 
+                paddingTop={this.state.paddingTop} 
+                translucent={true} 
+                statusBarbackgroundColor="#AAA" >
                 {this.props.children}
             </Activity>
         );

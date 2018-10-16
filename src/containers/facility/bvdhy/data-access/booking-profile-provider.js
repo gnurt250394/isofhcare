@@ -1,7 +1,6 @@
 import client from '@utils/client-utils';
 import string from 'mainam-react-native-string-utils';
 import constants from '@dhy/strings';
-// import storage from '@data-access/storage-provider';
 import datacacheProvider from '@data-access/datacache-provider';
 module.exports = {
     createProfile(source, uId, fullname, gender, dob, countryId, countryName, provinceId, provinceName, districtId, districtName, zoneId, zoneName, phoneNumber, guardianPhoneNumber, guardianName, callback) {

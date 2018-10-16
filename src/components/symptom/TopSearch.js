@@ -11,7 +11,7 @@ class TopSearch extends Component {
         }
     }
     componentDidMount() {
-        symptomProvider.getTop(10, (s, e) => {
+        symptomProvider.getTop(6, (s, e) => {
             if (s) {
                 this.setState({ data: s });
             }

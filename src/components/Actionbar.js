@@ -4,6 +4,7 @@ import { View, TouchableOpacity, Text, StyleSheet, Dimensions } from 'react-nati
 import { connect } from 'react-redux';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import ic_back from '@images/ic_back.png';
+import ic_msg from '@images/ic_msg.png';
 const { width, height } = Dimensions.get('window');
 
 class Actionbar extends Component {
@@ -14,6 +15,11 @@ class Actionbar extends Component {
     backButtonClick() {
         if (this.props.backButtonClick)
             this.props.backButtonClick();
+    }
+
+    showMessengerClicked() {
+        if (this.props.showMessengerClicked)
+            this.props.showMessengerClicked();
     }
 
     render() {
@@ -40,13 +46,32 @@ class Actionbar extends Component {
                             this.props.menuButton
                         }
                     </View>
+                    <View style={[styles.notifi ]}>
+                        {
+                            this.props.showMessenger ? 
+                            <TouchableOpacity onPress={() => this.showMessengerClicked()} style={{ paddingTop: 12, paddingBottom: 12 }}>
+                                <ScaleImage source={this.props.ic_msg ? this.props.ic_msg : ic_msg} style={[styles.ic_msg, this.props.styleMessenger]} height={23}></ScaleImage>
+                                {this.props.badge ?
+                                    <Text style={styles.badge} zIndex={2} >{this.props.badge < 100 ? this.props.badge : 
+                                    <Text style={{fontSize:9, paddingTop:15}}>99+</Text> }</Text>: null 
+                                }
+                            </TouchableOpacity>
+                            :
+                            <View style={{ paddingTop: 12, paddingBottom: 12 }}>
+                                <View style={{}} />
+                            </View>
+                        }
+                    </View>
                 </View>
-
             </View >
         );
     }
 }
 const styles = StyleSheet.create({
+    notifi:{
+        width:35,
+        height:40,
+    },  
     title: {
         marginRight: 40,
         color: 'rgb(0,151,124)',
@@ -67,5 +92,18 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: 'white',
     },
+    badge: {
+        backgroundColor:'#fb5656', 
+        width:20, 
+        height:20, 
+        position:'absolute', 
+        borderRadius:50, 
+        fontSize:10, 
+        top:3, 
+        left:10, 
+        color:"#ffffff", 
+        paddingLeft:4, 
+        paddingTop:2
+    }
 });
 export default Actionbar;

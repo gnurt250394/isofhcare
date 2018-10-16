@@ -34,7 +34,7 @@ class SearchDiseaseScreen extends Component {
 
     onSearch(s) {
         return new Promise((resolve, reject) => {
-            diseaseProvider.search(s, 1, 5, (s, e) => {
+            diseaseProvider.search(s, 1, 4, (s, e) => {
                 if (e)
                     reject(e);
                 else {

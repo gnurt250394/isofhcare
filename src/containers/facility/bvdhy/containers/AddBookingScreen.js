@@ -14,7 +14,7 @@ import dateUtils from 'mainam-react-native-date-utils';
 import client from '@utils/client-utils';
 import snackbar from '@utils/snackbar-utils';
 import DialogBox from 'react-native-dialogbox';
-import storage from '@data-access/storage-provider';
+// import storage from '@data-access/storage-provider';
 import RequiredLogin from '@components/account/RequiredLogin';
 import redux from '@redux-store';
 class AddBookingScreen extends Component {
@@ -194,7 +194,7 @@ class AddBookingScreen extends Component {
                                 this.props.dispatch({
                                     type: constants.action.action_load_booking_profile, value: { profile: res.data.profile }
                                 });
-                                storage.save(constants.key.storage.user_profile + this.props.userApp.currentUser.id, [res.data.profile]);
+                                // storage.save(constants.key.storage.user_profile + this.props.userApp.currentUser.id, [res.data.profile]);
                                 this.addBooking({ profile: res.data.profile });
                             } else {
                                 if (res.code == 1) {

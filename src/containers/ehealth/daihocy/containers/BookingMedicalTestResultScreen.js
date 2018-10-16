@@ -25,7 +25,7 @@ class BookingMedicalTestResultScreen extends Component {
     componentWillMount() {
         var result = [];
         let medicalTestResult = this.props.navigation.getParam("medicalTest");
-
+        
         if (medicalTestResult) {
             if (medicalTestResult.resultViSinh && medicalTestResult.resultViSinh.length > 0) {
                 var item = {
@@ -67,7 +67,7 @@ class BookingMedicalTestResultScreen extends Component {
                     item.value.ListMedical.push.apply(item.value.ListMedical, entry.ListMedical);
                 });
             }
-            if (this.props.booking.medicalTestResult.resultKhac && this.props.booking.medicalTestResult.resultKhac.length > 0) {
+            if (medicalTestResult.resultKhac && medicalTestResult.resultKhac.length > 0) {
                 var item = {
                     type: 'Xét Nghiệm Khác',
                     value: {
@@ -76,7 +76,7 @@ class BookingMedicalTestResultScreen extends Component {
                     }
                 }
                 result.push(item);
-                this.props.booking.medicalTestResult.resultKhac.forEach(function (entry) {
+                medicalTestResult.resultKhac.forEach(function (entry) {
                     item.value.ListMedical.push.apply(item.value.ListMedical, entry.ListMedical);
                 });
             }
@@ -197,7 +197,7 @@ class BookingMedicalTestResultScreen extends Component {
         })
         this.exportPdfCom.getWrappedInstance().exportPdf({
             type: "medicaltest",
-            data: medicalTestResult,
+            data: this.state.medicalTestResult,
             result: this.state.result,
             fileName: constants.filenameMedicalTestPDF + this.state.result.profile.PatientHistoryId
         }, () => {
