@@ -1,4 +1,5 @@
-const server_url = 'http://27.72.105.49:8483';
+// const server_url = 'http://27.72.105.49:8483'; //demo 
+const server_url = 'http://27.72.105.49:8382'; //dev
 String.prototype.absoluteUrl = String.prototype.absolute || function (defaultValue) {
     var _this = this.toString();
     if (_this == "")
