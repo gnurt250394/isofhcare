@@ -29,10 +29,10 @@ import ResetPasswordScreen from '@containers/account/ResetPasswordScreen';
 import SymptomScreen from '@containers/symptom/SymptomScreen';
 import GroupChatScreen from '@containers/chat/GroupChatScreen';
 import ChatScreen from '@containers/chat/ChatScreen';
-import ProfileScreen from '@containers/account/ProfileScreen'
-import { EHealthNavigator } from '@ehealth/navigator'
-import { BookingDHYNavigation } from '@dhy/navigator'
-
+import ProfileScreen from '@containers/account/ProfileScreen';
+import { EHealthNavigator } from '@ehealth/navigator';
+import { BookingDHYNavigation } from '@dhy/navigator';
+import NotificationScreen from '@containers/notification/NotificationScreen';
 
 const RootNavigator = createStackNavigator({
     splash: { screen: SplashScreen },
@@ -67,8 +67,8 @@ const RootNavigator = createStackNavigator({
     confirmCode: { screen: ConfirmCodeScreen },
     resetPassword: { screen: ResetPasswordScreen },
     symptom: { screen: SymptomScreen },
-    profile: { screen: ProfileScreen }
-
+    profile: { screen: ProfileScreen },
+    notification: { screen: NotificationScreen}
 }, {
         headerMode: 'none',
         header: null,

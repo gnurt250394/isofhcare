@@ -17,7 +17,7 @@ class NotificationScreen extends Component {
                     <View style={{ flexDirection: 'row', padding: 11, paddingLeft: 13, paddingRight: 13 }}>
                         <ScaleImage source={require("@images/doctor.png")} width={47} />
                         <View style={{ paddingTop: 4, marginLeft: 19 }}>
-                            <Text style={{ fontSize: 14 }}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Bạn</Text> có một sự kiện mới vào 22/10/2018</Text>
+                            <Text style={{ fontSize: 14 }}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Test</Text> Dữ liệu demo 17/10/2018</Text>
                             <Text style={{ fontSize: 12, color: '#00000060', marginTop: 8 }}>5 giờ trước</Text>
                         </View>
                     </View>
@@ -27,7 +27,7 @@ class NotificationScreen extends Component {
                     <View style={{ flexDirection: 'row', padding: 11, paddingLeft: 13, paddingRight: 13 }}>
                         <ScaleImage source={require("@images/doctor.png")} width={47} />
                         <View style={{ paddingTop: 4, marginLeft: 19 }}>
-                            <Text style={{ fontSize: 14 }}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Bạn</Text> có một sự kiện mới vào 22/10/2018</Text>
+                            <Text style={{ fontSize: 14 }}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Test</Text> Dữ liệu demo 17/10/2018</Text>
                             <Text style={{ fontSize: 12, color: '#00000060', marginTop: 8 }}>5 giờ trước</Text>
                         </View>
                     </View>
@@ -37,7 +37,7 @@ class NotificationScreen extends Component {
                     <View style={{ flexDirection: 'row', padding: 11, paddingLeft: 13, paddingRight: 13 }}>
                         <ScaleImage source={require("@images/doctor.png")} width={47} />
                         <View style={{ paddingTop: 4, marginLeft: 19 }}>
-                            <Text style={{ fontSize: 14 }}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Bạn</Text> có một sự kiện mới vào 22/10/2018</Text>
+                            <Text style={{ fontSize: 14 }}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Test</Text> Dữ liệu demo 17/10/2018</Text>
                             <Text style={{ fontSize: 12, color: '#00000060', marginTop: 8 }}>5 giờ trước</Text>
                         </View>
                     </View>
@@ -47,7 +47,7 @@ class NotificationScreen extends Component {
                     <View style={{ flexDirection: 'row', padding: 11, paddingLeft: 13, paddingRight: 13 }}>
                         <ScaleImage source={require("@images/doctor.png")} width={47} />
                         <View style={{ paddingTop: 4, marginLeft: 19 }}>
-                            <Text style={{ fontSize: 14 }}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Bạn</Text> có một sự kiện mới vào 22/10/2018</Text>
+                            <Text style={{ fontSize: 14 }}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Test</Text> Dữ liệu demo 17/10/2018</Text>
                             <Text style={{ fontSize: 12, color: '#00000060', marginTop: 8 }}>5 giờ trước</Text>
                         </View>
                     </View>
@@ -57,7 +57,7 @@ class NotificationScreen extends Component {
                     <View style={{ flexDirection: 'row', padding: 11, paddingLeft: 13, paddingRight: 13 }}>
                         <ScaleImage source={require("@images/doctor.png")} width={47} />
                         <View style={{ paddingTop: 4, marginLeft: 19 }}>
-                            <Text style={{ fontSize: 14 }}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Bạn</Text> có một sự kiện mới vào 22/10/2018</Text>
+                            <Text style={{ fontSize: 14 }}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Test</Text> Dữ liệu demo 17/10/2018</Text>
                             <Text style={{ fontSize: 12, color: '#00000060', marginTop: 8 }}>5 giờ trước</Text>
                         </View>
                     </View>
@@ -67,7 +67,7 @@ class NotificationScreen extends Component {
                     <View style={{ flexDirection: 'row', padding: 11, paddingLeft: 13, paddingRight: 13 }}>
                         <ScaleImage source={require("@images/doctor.png")} width={47} />
                         <View style={{ paddingTop: 4, marginLeft: 19 }}>
-                            <Text style={{ fontSize: 14 }}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Bạn</Text> có một sự kiện mới vào 22/10/2018</Text>
+                            <Text style={{ fontSize: 14 }}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Test</Text> Dữ liệu demo 17/10/2018</Text>
                             <Text style={{ fontSize: 12, color: '#00000060', marginTop: 8 }}>5 giờ trước</Text>
                         </View>
                     </View>
@@ -77,7 +77,7 @@ class NotificationScreen extends Component {
                     <View style={{ flexDirection: 'row', padding: 11, paddingLeft: 13, paddingRight: 13 }}>
                         <ScaleImage source={require("@images/doctor.png")} width={47} />
                         <View style={{ paddingTop: 4, marginLeft: 19 }}>
-                            <Text style={{ fontSize: 14 }}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Bạn</Text> có một sự kiện mới vào 22/10/2018</Text>
+                            <Text style={{ fontSize: 14 }}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Test</Text> Dữ liệu demo 17/10/2018</Text>
                             <Text style={{ fontSize: 12, color: '#00000060', marginTop: 8 }}>5 giờ trước</Text>
                         </View>
                     </View>
@@ -87,7 +87,7 @@ class NotificationScreen extends Component {
                     <View style={{ flexDirection: 'row', padding: 11, paddingLeft: 13, paddingRight: 13 }}>
                         <ScaleImage source={require("@images/doctor.png")} width={47} />
                         <View style={{ paddingTop: 4, marginLeft: 19 }}>
-                            <Text style={{ fontSize: 14 }}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Bạn</Text> có một sự kiện mới vào 22/10/2018</Text>
+                            <Text style={{ fontSize: 14 }}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Test</Text> Dữ liệu demo 17/10/2018</Text>
                             <Text style={{ fontSize: 12, color: '#00000060', marginTop: 8 }}>5 giờ trước</Text>
                         </View>
                     </View>
@@ -97,7 +97,7 @@ class NotificationScreen extends Component {
                     <View style={{ flexDirection: 'row', padding: 11, paddingLeft: 13, paddingRight: 13 }}>
                         <ScaleImage source={require("@images/doctor.png")} width={47} />
                         <View style={{ paddingTop: 4, marginLeft: 19 }}>
-                            <Text style={{ fontSize: 14 }}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Bạn</Text> có một sự kiện mới vào 22/10/2018</Text>
+                            <Text style={{ fontSize: 14 }}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Test</Text> Dữ liệu demo 17/10/2018</Text>
                             <Text style={{ fontSize: 12, color: '#00000060', marginTop: 8 }}>5 giờ trước</Text>
                         </View>
                     </View>

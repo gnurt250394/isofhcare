@@ -105,7 +105,7 @@ class LoginScreen extends Component {
         }
 
 
-        return <View>
+        return <View style={{padding:20, width:'100%'}}>
             <View style={{
                 flexDirection: 'row', alignItems: 'center',
             }}>
@@ -243,7 +243,7 @@ class LoginScreen extends Component {
                 <FlatList
                     onRefresh={this.onRefresh.bind(this)}
                     refreshing={this.state.refreshing}
-                    style={{ flex: 1, paddingHorizontal: 20, paddingTop: 20 }}
+                    style={{ flex: 1}}
                     keyExtractor={(item, index) => index.toString()}
                     extraData={this.state}
                     data={this.state.bookings}
