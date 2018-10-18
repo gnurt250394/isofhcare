@@ -25,7 +25,7 @@ class BookingMedicalTestResultScreen extends Component {
     componentWillMount() {
         var result = [];
         let medicalTestResult = this.props.navigation.getParam("medicalTest");
-        
+
         if (medicalTestResult) {
             if (medicalTestResult.resultViSinh && medicalTestResult.resultViSinh.length > 0) {
                 var item = {
@@ -118,12 +118,12 @@ class BookingMedicalTestResultScreen extends Component {
 
                         return (
                             $this.state.currentGroup.type == 'Vi Sinh' ?
-                                <TableWrapper style={{ flexDirection: 'row' }}>
+                                <TableWrapper style={{ flexDirection: 'row' }} key={i}>
                                     <Cell data={item2.NameLine.trim()} textStyle={[styles.textValue]}></Cell>
                                     <Cell data={item2.Result} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
                                 </TableWrapper>
                                 :
-                                <TableWrapper style={{ flexDirection: 'row' }}>
+                                <TableWrapper style={{ flexDirection: 'row' }} key={i}>
                                     <Cell data={item2.NameLine.trim()} textStyle={[styles.textValue]}></Cell>
                                     <Cell data={item2.Result} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
                                     <Cell data={range} textStyle={[styles.textValue]}></Cell>

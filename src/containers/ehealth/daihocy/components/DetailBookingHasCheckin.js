@@ -22,6 +22,7 @@ class DetailBookingHasCheckin extends Component {
         bookingProvider.resultPatientHistory(patientHistoryId, hospitalId, (s, e) => {
             if (this.props.onLoading)
                 this.props.onLoading(false);
+            debugger;
 
             if (s && s.code == 0) {
                 let result = {
@@ -265,8 +266,8 @@ class DetailBookingHasCheckin extends Component {
                                                 <Text style={{ fontWeight: 'bold', marginLeft: 10 }}>
                                                     {
                                                         (
-                                                            booking.ListInvoice.reduce((a, b) => a + b.Amount, 0) - 
-                                                            (booking.ListPayment && booking.ListPayment.length>0 ? booking.ListPayment.reduce((a, b) => a + b.Amount, 0):0) 
+                                                            booking.ListInvoice.reduce((a, b) => a + b.Amount, 0) -
+                                                            (booking.ListPayment && booking.ListPayment.length > 0 ? booking.ListPayment.reduce((a, b) => a + b.Amount, 0) : 0)
                                                         ).formatPrice() + " đ"
                                                     }</Text>
                                             </View>
