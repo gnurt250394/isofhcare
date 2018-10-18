@@ -178,8 +178,6 @@ class ExportPDF extends Component {
                 div += "<style>.pagebreak { page-break-before: always; }.bold{font-weight:bold; color: red}</style><div class='pagebreak'></div>";
             }
         }
-        
-        debugger
         return div;
     }
     renderTd(child, _class, colSpan, rowSpan) {
