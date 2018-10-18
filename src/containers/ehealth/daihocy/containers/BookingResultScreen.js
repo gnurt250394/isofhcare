@@ -165,7 +165,8 @@ class BookingResultScreen extends Component {
                     {
                         ((this.state.resultHoaSinh && this.state.resultHoaSinh.length > 0) ||
                             (this.state.resultViSinh && this.state.resultViSinh.length > 0) ||
-                            (this.state.resultHuyetHoc && this.state.resultHuyetHoc.length > 0)) ?
+                            (this.state.resultHuyetHoc && this.state.resultHuyetHoc.length > 0) ||
+                            (this.state.resultKhac && this.state.resultKhac.length > 0)) ?
                             <TouchableOpacity onPress={() => this.viewResultMedicalTest()}>
                                 <View style={{ flexDirection: 'row', marginTop: 20, alignItems: 'center' }}>
                                     <Text style={styles.resultTypeText}>Kết quả xét nghiệm</Text>
