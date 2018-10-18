@@ -100,7 +100,7 @@ class SearchFacilityScreen extends Component {
                         this.state.showOverlay ?
                             <TouchableWithoutFeedback onPress={this.overlayClick.bind(this)} style={{}}><View style={{ position: 'absolute', top: 0, right: 0, left: 0, bottom: 0, backgroundColor: '#37a3ff59' }} /></TouchableWithoutFeedback> : null
                     }
-                    <SearchPanel style={{ position: 'absolute', top: 12, left: 12, right: 12 }} searchTypeId={realmModel.FACILITY_HISTORY} resultPage="searchFacilityResult" ref={ref => this.searchPanel = ref} onFocus={this.searchFocus.bind(this)} placeholder="Nhập tên chuyên khoa/ CSYT hoặc nhà thuốc" onSearch={this.onSearch.bind(this)} renderItem={this.renderSearchItem.bind(this)} renderFooter={this.renderFooter.bind(this)} />
+                    <SearchPanel style={{ position: 'absolute', top: 12, left: 12, right: 12 }} searchTypeId={realmModel.FACILITY_HISTORY} resultPage="searchFacilityResult" ref={ref => this.searchPanel = ref} onFocus={this.searchFocus.bind(this)} placeholder="Nhập tên CSYT hoặc nhà thuốc để tìm kiếm" onSearch={this.onSearch.bind(this)} renderItem={this.renderSearchItem.bind(this)} renderFooter={this.renderFooter.bind(this)} />
 
                 </View>
             </ActivityPanel >

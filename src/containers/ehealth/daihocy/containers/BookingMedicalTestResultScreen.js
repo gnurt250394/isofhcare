@@ -24,7 +24,6 @@ class BookingMedicalTestResultScreen extends Component {
     }
     componentWillMount() {
         var result = [];
-        var resultExport = {}
         let medicalTestResult = this.props.navigation.getParam("medicalTest");
 
         if (medicalTestResult) {
@@ -41,7 +40,6 @@ class BookingMedicalTestResultScreen extends Component {
                 medicalTestResult.resultViSinh.forEach(function (entry) {
                     item.value.ListMedical.push.apply(item.value.ListMedical, entry.ListMedical);
                 });
-                resultExport.resultViSinh = item.value;
             }
             if (medicalTestResult.resultHoaSinh && medicalTestResult.resultHoaSinh.length > 0) {
                 var item = {
@@ -55,7 +53,6 @@ class BookingMedicalTestResultScreen extends Component {
                 medicalTestResult.resultHoaSinh.forEach(function (entry) {
                     item.value.ListMedical.push.apply(item.value.ListMedical, entry.ListMedical);
                 });
-                resultExport.resultHoaSinh = item.value;
             }
             if (medicalTestResult.resultHuyetHoc && medicalTestResult.resultHuyetHoc.length > 0) {
                 var item = {
@@ -69,7 +66,6 @@ class BookingMedicalTestResultScreen extends Component {
                 medicalTestResult.resultHuyetHoc.forEach(function (entry) {
                     item.value.ListMedical.push.apply(item.value.ListMedical, entry.ListMedical);
                 });
-                resultExport.resultHuyetHoc = item.value;
             }
             if (medicalTestResult.resultKhac && medicalTestResult.resultKhac.length > 0) {
                 var item = {
@@ -83,12 +79,10 @@ class BookingMedicalTestResultScreen extends Component {
                 medicalTestResult.resultKhac.forEach(function (entry) {
                     item.value.ListMedical.push.apply(item.value.ListMedical, entry.ListMedical);
                 });
-                resultExport.resultKhac = item.value;
             }
         }
         this.setState({
             medicalTestResult: result,
-            resultExport,
             currentGroup: result[0]
         })
     }
@@ -220,7 +214,7 @@ class BookingMedicalTestResultScreen extends Component {
 
         this.exportPdfCom.getWrappedInstance().exportPdf({
             type: "medicaltest",
-            data: this.state.resultExport,
+            data: this.state.medicalTestResult,
             result: this.state.result,
             fileName: constants.filenameMedicalTestPDF + this.state.result.profile.PatientHistoryId
         }, () => {
