@@ -23,12 +23,12 @@ class ExportPDF extends Component {
             || (result.data.ListResulHoaSinh && result.data.ListResulHoaSinh.length > 0)
             || (result.data.ListResulHuyetHoc && result.data.ListResulHuyetHoc.length > 0)
             || (result.data.ListResulOther && result.data.ListResulOther.length > 0)
-            )
+        )
             resultMedicalTest = {
                 resultViSinh: result.data.ListResulViSinh,
                 resultHoaSinh: result.data.ListResulHoaSinh,
                 resultHuyetHoc: result.data.ListResulHuyetHoc,
-                resultKhac: result.data.ListResulOther 
+                resultKhac: result.data.ListResulOther
             }
         var profile = result.profile;
         var div = "";
@@ -75,7 +75,7 @@ class ExportPDF extends Component {
         var div = "<div style='margin-left: 50px; margin-right: 50px;'>";
         div += this.renderHeader(booking);
         div += "<div style='font-weight: bold;    margin-bottom: 30px; text-align: center;    margin-top: 30px;'>Phiếu kết quả giải phẫu</div>"
-        div += "<div class=\"content-filter-yba\"> <p> <span>Họ và tên : </span> <span class=\"ten-nb\">" + profile.name + "</span> <br />"
+        div += "<div class=\"content-filter-yba\"> <p> <span>Họ và tên : </span> <span class=\"ten-nb\">" + profile.PatientName + "</span> <br />"
         div += "<br /> </p> <p class=\"yc-kt\">" + item.ServiceName + "</p>";
         if (item.BiopsyLocation) {
             div += "<p> <strong>Vị trí sinh thiết</strong> </p>";
@@ -97,7 +97,7 @@ class ExportPDF extends Component {
             if (item.ServiceMedicTestLine.length > 0) {
                 for (var i = 0; i < item.ServiceMedicTestLine.length; i++) {
                     if (item.ServiceMedicTestLine[i].IsVerified) {
-                        div += "<p>" + checked + "<strong>"  + item.ServiceMedicTestLine[i].NameLine + "</strong> </p>";
+                        div += "<p>" + checked + "<strong>" + item.ServiceMedicTestLine[i].NameLine + "</strong> </p>";
                     } else {
                         div += "<p>" + unCheck + "<strong>" + item.ServiceMedicTestLine[i].NameLine + "</strong> </p>";
                     }
@@ -263,7 +263,7 @@ class ExportPDF extends Component {
         var div = "<div style='margin-left: 50px; margin-right: 50px;'>";
         div += this.renderHeader(booking);
         div += "<div style='font-weight: bold;  margin-bottom: 30px; text-align: center;    margin-top: 30px;'>Phiếu kết quả xét nghiệm " + result.type + "</div>"
-        div += "<div class=\"content-filter-yba\"> <p> <span>Họ và tên : </span> <span class=\"ten-nb\">" + profile.name + "</span> <br />"
+        div += "<div class=\"content-filter-yba\"> <p> <span>Họ và tên : </span> <span class=\"ten-nb\">" + profile.PatientName + "</span> <br />"
         div += "<style>.resultMedical {background-color: #fff; border: 1px solid #ddd; width: 100%; text-align:'center'} .resultMedical th{    border-bottom: 0;     background-color: #486677;     color: #fff;} .resultMedical .serviceName{font-weight: bold } .resultMedical td{border-right: 1px solid #ddd; 	    padding: 8px;     line-height: 1.42857143;     vertical-align: top;     border-top: 1px solid #ddd;} </style>"
         div += "<table style='width: 100%' class='resultMedical'>"
         div += "<thead>"
@@ -290,7 +290,7 @@ class ExportPDF extends Component {
         var div = "<div style='margin-left: 50px; margin-right: 50px;'>";
         div += this.renderHeader(booking);
         div += "<div style='font-weight: bold;    margin-bottom: 30px; text-align: center;    margin-top: 30px;'>Phiếu kết quả khám và đơn thuốc</div>"
-        div += "<div class=\"content-filter-yba\"> <p> <span>Họ và tên : </span> <span class=\"ten-nb\">" + profile.name + "</span> <br />"
+        div += "<div class=\"content-filter-yba\"> <p> <span>Họ và tên : </span> <span class=\"ten-nb\">" + profile.PatientName + "</span> <br />"
         div += "<br /> </p> <p class=\"yc-kt\">" + item.ServiceName + "</p>";
 
         if (booking.profile.IsContract) {
@@ -730,7 +730,7 @@ class ExportPDF extends Component {
         var div = "<div style='margin-left: 50px; margin-right: 50px;'>";
         div += this.renderHeader(booking);
         div += "<div style='font-weight: bold;  margin-bottom: 30px; text-align: center;    margin-top: 30px;'>Phiếu kết quả cận lâm sàng</div>"
-        div += "<div class=\"content-filter-yba\"> <p> <span>Họ và tên : </span> <span class=\"ten-nb\">" + profile.name + "</span> <br />"
+        div += "<div class=\"content-filter-yba\"> <p> <span>Họ và tên : </span> <span class=\"ten-nb\">" + profile.PatientName + "</span> <br />"
         div += "<br /> </p> <p class=\"yc-kt\">" + item.ServiceName + "</p>";
         if (item.Result || item.SummaryResult || item.Discussion) {
             div += "<p> <strong>Kết quả</strong> </p>";

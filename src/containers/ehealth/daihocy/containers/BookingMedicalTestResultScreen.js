@@ -24,6 +24,7 @@ class BookingMedicalTestResultScreen extends Component {
     }
     componentWillMount() {
         var result = [];
+        var resultExport = {}
         let medicalTestResult = this.props.navigation.getParam("medicalTest");
 
         if (medicalTestResult) {
@@ -40,6 +41,7 @@ class BookingMedicalTestResultScreen extends Component {
                 medicalTestResult.resultViSinh.forEach(function (entry) {
                     item.value.ListMedical.push.apply(item.value.ListMedical, entry.ListMedical);
                 });
+                resultExport.resultViSinh = item.value;
             }
             if (medicalTestResult.resultHoaSinh && medicalTestResult.resultHoaSinh.length > 0) {
                 var item = {
@@ -53,6 +55,7 @@ class BookingMedicalTestResultScreen extends Component {
                 medicalTestResult.resultHoaSinh.forEach(function (entry) {
                     item.value.ListMedical.push.apply(item.value.ListMedical, entry.ListMedical);
                 });
+                resultExport.resultHoaSinh = item.value;
             }
             if (medicalTestResult.resultHuyetHoc && medicalTestResult.resultHuyetHoc.length > 0) {
                 var item = {
@@ -66,6 +69,7 @@ class BookingMedicalTestResultScreen extends Component {
                 medicalTestResult.resultHuyetHoc.forEach(function (entry) {
                     item.value.ListMedical.push.apply(item.value.ListMedical, entry.ListMedical);
                 });
+                resultExport.resultHuyetHoc = item.value;
             }
             if (medicalTestResult.resultKhac && medicalTestResult.resultKhac.length > 0) {
                 var item = {
@@ -79,10 +83,12 @@ class BookingMedicalTestResultScreen extends Component {
                 medicalTestResult.resultKhac.forEach(function (entry) {
                     item.value.ListMedical.push.apply(item.value.ListMedical, entry.ListMedical);
                 });
+                resultExport.resultKhac = item.value;
             }
         }
         this.setState({
             medicalTestResult: result,
+            resultExport,
             currentGroup: result[0]
         })
     }
@@ -105,7 +111,7 @@ class BookingMedicalTestResultScreen extends Component {
             return false;
         }
     }
-    showHighlight (item) {
+    showHighlight(item) {
         if (item.NormalRange) {
             if (!item.ResultState)
                 return false;
@@ -118,10 +124,10 @@ class BookingMedicalTestResultScreen extends Component {
         if (item.Result)
             return this.checkHighlight(item.Result, item.LowerIndicator, item.HigherIndicator);
         return this.checkHighlight(item.Conclusion, item.LowerIndicator, item.HigherIndicator);
-    }    
-    renderMedicalTestLine(item) {
+    }
+    renderMedicalTestLine(item, index) {
         return (
-            <View>
+            <View key={index}>
                 <Cell data={item.ServiceName} textStyle={[styles.textValue, { fontWeight: 'bold' }]} style={{ backgroundColor: '#DFF5F2' }}></Cell>
                 {
                     item.ServiceMedicTestLine.map((item2, i) => {
@@ -165,7 +171,7 @@ class BookingMedicalTestResultScreen extends Component {
     }
     renderMedical(item, index) {
         if (item.ServiceMedicTestLine && item.ServiceMedicTestLine.length > 0 && item.ServiceMedicTestLine[0].NameLine != 0) {
-            return (this.renderMedicalTestLine(item));
+            return (this.renderMedicalTestLine(item, index));
         }
         if (item.ServiceMedicTestLine && item.ServiceMedicTestLine.length > 0) {
             var range = this.getRangeMedicalTest(item.ServiceMedicTestLine[0]);
@@ -211,9 +217,10 @@ class BookingMedicalTestResultScreen extends Component {
         this.setState({
             isLoading: true
         })
+
         this.exportPdfCom.getWrappedInstance().exportPdf({
             type: "medicaltest",
-            data: this.state.medicalTestResult,
+            data: this.state.resultExport,
             result: this.state.result,
             fileName: constants.filenameMedicalTestPDF + this.state.result.profile.PatientHistoryId
         }, () => {
