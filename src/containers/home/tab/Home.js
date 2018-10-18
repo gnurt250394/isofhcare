@@ -107,6 +107,12 @@ class TabSearch extends Component {
         //     return 160;
         // return width - 10;
     }
+    
+    // renderTitlePage() {
+    //     alert("ádasdasdas");
+    //     return(
+    //     )
+    // }
 
     render() {
         const itemWidth = this.getItemWidth();
@@ -114,7 +120,7 @@ class TabSearch extends Component {
             <ActivityPanel 
             style={[{ flex: 1 }, this.props.style]} 
             titleStyle={{ marginRight: 60 }} 
-            title={<ScaledImage source={require("@images/logo_home.png")} height={ Platform.OS =="android" ? 72 : 45}/>} 
+            image={require("@images/logo_home.png")} 
             icBack={require("@images/icmenu.png")} 
             backButtonClick={() => { this.showDrawer() }} 
             showMessenger={this.props.userApp.isLogin ? true : false}

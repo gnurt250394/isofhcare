@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, TouchableOpacity, Text, StyleSheet, Dimensions } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet, Platform, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import ic_back from '@images/ic_back.png';
@@ -30,7 +30,7 @@ class Actionbar extends Component {
                     {
                         !this.props.hideBackButton ?
 
-                            <TouchableOpacity onPress={() => this.backButtonClick()} style={{ paddingTop: 12, paddingBottom: 12 }}>
+                            <TouchableOpacity onPress={() => this.backButtonClick()} style={{width:45, paddingTop: 12, paddingBottom: 12}}>
                                 <ScaleImage source={this.props.icBack ? this.props.icBack : ic_back} style={[styles.ic_back, this.props.styleBackButton]} height={20}></ScaleImage>
                             </TouchableOpacity>
                             :
@@ -38,28 +38,35 @@ class Actionbar extends Component {
                                 <View style={[styles.ic_back, { height: 20 }]} />
                             </View>
                     }
-                    <Text style={[styles.title, this.props.actionbarTextColor, this.props.titleStyle, { flex: 1, textAlign: 'center'}]}>
-                        {this.props.title}
-                    </Text>
+                    {
+                        this.props.title ?
+                            <Text style={[styles.title, this.props.actionbarTextColor, this.props.titleStyle, { flex: 1, textAlign: 'center'}]}>
+                                {this.props.title}
+                            </Text>
+                        :
+                        <View style={{height:45, flex: 1, justifyContent: 'center', alignItems:'center'}}>
+                            <ScaleImage source={this.props.image} height={32}/>
+                        </View>
+                    }
                     <View style={styles.menuButton}>
                         {
                             this.props.menuButton
                         }
                     </View>
-                    <View style={[styles.notifi ]}>
+                    <View style={[styles.notifi]}>
                         {
-                            this.props.showMessenger ? 
-                            <TouchableOpacity onPress={() => this.showMessengerClicked()} style={{ paddingTop: 12, paddingBottom: 12 }}>
-                                <ScaleImage source={this.props.ic_msg ? this.props.ic_msg : ic_msg} style={[styles.ic_msg, this.props.styleMessenger]} height={23}></ScaleImage>
-                                {this.props.badge ?
-                                    <Text style={styles.badge} zIndex={2} >{this.props.badge < 100 ? this.props.badge : 
-                                    <Text style={{fontSize:9, paddingTop:15}}>99+</Text> }</Text>: null 
-                                }
-                            </TouchableOpacity>
-                            :
-                            <View style={{ paddingTop: 12, paddingBottom: 12 }}>
-                                <View style={{}} />
-                            </View>
+                            this.props.showMessenger ?
+                                <TouchableOpacity onPress={() => this.showMessengerClicked()} style={{ paddingTop: 12, paddingBottom: 12 }}>
+                                    <ScaleImage source={this.props.ic_msg ? this.props.ic_msg : ic_msg} style={[styles.ic_msg, this.props.styleMessenger]} height={23}></ScaleImage>
+                                    {this.props.badge ?
+                                        <Text style={styles.badge} zIndex={2} >{this.props.badge < 100 ? this.props.badge :
+                                            <Text style={{ fontSize: 9, paddingTop: 15 }}>99+</Text>}</Text> : null
+                                    }
+                                </TouchableOpacity>
+                                :
+                                <View style={{ paddingTop: 12, paddingBottom: 12 }}>
+                                    <View style={{}} />
+                                </View>
                         }
                     </View>
                 </View>
@@ -68,10 +75,10 @@ class Actionbar extends Component {
     }
 }
 const styles = StyleSheet.create({
-    notifi:{
-        width:35,
-        height:40,
-    },  
+    notifi: {
+        width: 35,
+        height: 40,
+    },
     title: {
         marginRight: 40,
         color: 'rgb(0,151,124)',
@@ -93,17 +100,17 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     badge: {
-        backgroundColor:'#fb5656', 
-        width:20, 
-        height:20, 
-        position:'absolute', 
-        borderRadius:50, 
-        fontSize:10, 
-        top:3, 
-        left:10, 
-        color:"#ffffff", 
-        paddingLeft:4, 
-        paddingTop:2
+        backgroundColor: '#fb5656',
+        width: 20,
+        height: 20,
+        position: 'absolute',
+        borderRadius: 50,
+        fontSize: 10,
+        top: 3,
+        left: 10,
+        color: "#ffffff",
+        paddingLeft: 4,
+        paddingTop: 2
     }
 });
 export default Actionbar;
