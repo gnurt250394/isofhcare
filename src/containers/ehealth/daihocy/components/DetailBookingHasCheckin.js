@@ -22,8 +22,6 @@ class DetailBookingHasCheckin extends Component {
         bookingProvider.resultPatientHistory(patientHistoryId, hospitalId, (s, e) => {
             if (this.props.onLoading)
                 this.props.onLoading(false);
-            debugger;
-
             if (s && s.code == 0) {
                 let result = {
                     data: s.data.data

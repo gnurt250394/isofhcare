@@ -20,7 +20,6 @@ class BookingResultScreen extends Component {
     }
     componentWillMount() {
         let result = this.props.navigation.getParam("result");
-        // debugger;
         if (!result) {
 
         } else
@@ -82,7 +81,6 @@ class BookingResultScreen extends Component {
         }
     }
     viewResultCheckup(item) {
-        // debugger;
         let result = this.state.result;
         item.isContract = result.profile.IsContract;
         this.props.navigation.navigate("bookingCheckupResult", { result, checkupResult: item })

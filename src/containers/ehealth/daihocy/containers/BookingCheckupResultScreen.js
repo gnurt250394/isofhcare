@@ -12,7 +12,6 @@ import ExportPDF from '@ehealth/daihocy/components/ExportPDF';
 class BookingCheckupResultScreen extends Component {
     constructor(props) {
         super(props);
-        // debugger;
         this.state = {
             isLoading: false,
             result: this.props.navigation.getParam("result"),
@@ -43,7 +42,6 @@ class BookingCheckupResultScreen extends Component {
         return null;
     }
     exportPdf() {
-        // debugger;
         this.setState({
             isLoading: true
         })
@@ -87,7 +85,6 @@ class BookingCheckupResultScreen extends Component {
     }
     render() {
         let datas = this.state.checkupResult;
-        // debugger;
         const tableHead = ['STT', 'Tên thuốc', 'Số lượng', 'Đơn vị'];
         return (
             <ActivityPanel style={{ flex: 1, }} title="Kết quả khám và đơn thuốc" isLoading={this.state.isLoading} showFullScreen={true}>

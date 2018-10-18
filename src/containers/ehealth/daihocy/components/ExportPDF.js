@@ -289,8 +289,6 @@ class ExportPDF extends Component {
         return div;
     }
     renderResultCheckup(booking, profile, item) {
-        // debugger;
-        // alert(JSON.stringify(item.ServiceName));
         var div = "<div style='margin-left: 50px; margin-right: 50px;'>";
         div += this.renderHeader(booking);
         div += "<div style='font-weight: bold;    margin-bottom: 30px; text-align: center;    margin-top: 30px;'>Phiếu kết quả khám và đơn thuốc</div>"
