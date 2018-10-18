@@ -105,7 +105,7 @@ class LoginScreen extends Component {
         }
 
 
-        return <View style={{padding:20, width:'100%'}}>
+        return <View style={{ padding: 20, width: '100%' }}>
             <View style={{
                 flexDirection: 'row', alignItems: 'center',
             }}>
@@ -179,17 +179,16 @@ class LoginScreen extends Component {
     renderItemBookingInHis(booking, index) {
         if (booking) {
             if (booking.hospitalId == constants.hospital.BENH_VIEN_DAI_HOC_Y) {
-                return <View style={{ position: 'relative' }}>
-                    <TouchableOpacity style={{ position: 'relative', marginLeft: 15 }} onPress={this.getDetailBooking.bind(this, booking.PatientHistoryId, booking.hospitalId)}>
+                return <View style={{ position: 'relative', left: 15, right: 30 }}>
+                    <TouchableOpacity style={{ position: 'relative', marginLeft: 15, right: 30 }} onPress={this.getDetailBooking.bind(this, booking.PatientHistoryId, booking.hospitalId)}>
                         <View style={{
-                            flex: 1,
                             backgroundColor: '#f8fcf4',
                             borderStyle: 'solid',
                             borderWidth: 1,
                             borderColor: 'rgba(155, 155, 155, 0.47)',
                             borderRadius: 6,
                             marginTop: 10,
-                            marginLeft: 14,
+                            marginLeft: 40,
                             padding: 12
                         }}>
                             <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{booking.PatientName}</Text>
@@ -197,7 +196,7 @@ class LoginScreen extends Component {
                             <Text style={{ marginTop: 8 }}>Mã hồ sơ: <Text style={{ fontWeight: 'bold' }}>{booking.PatientHistoryId}</Text></Text>
                             <Text style={{ marginTop: 8 }}>Thời gian: <Text style={{ fontWeight: 'bold' }}>{booking.TimeGoIn.toDateObject().format("dd/MM/yyyy hh:mm tt")}</Text></Text>
                         </View>
-                        <ScaledImage source={require("@images/ehealth/square1.png")} width={20} style={{ marginRight: 8, position: 'absolute', top: '50%', marginTop: -10, left: 0 }} />
+                        <ScaledImage source={require("@images/ehealth/square1.png")} width={20} style={{ marginRight: 8, position: 'absolute', top: '50%', marginTop: -10, left: 26 }} />
                     </TouchableOpacity>
                     <Dash style={{ width: 2, flexDirection: 'column', position: 'absolute', top: 0, left: 10, bottom: 0 }} dashColor="#00977c" />
                     <View style={{ width: 10, height: 10, backgroundColor: '#9b9b9b', borderRadius: 5, position: 'absolute', left: 6, top: '50%', marginTop: -5 }} />
@@ -242,7 +241,7 @@ class LoginScreen extends Component {
                 <FlatList
                     onRefresh={this.onRefresh.bind(this)}
                     refreshing={this.state.refreshing}
-                    style={{ flex: 1}}
+                    style={{ flex: 1 }}
                     keyExtractor={(item, index) => index.toString()}
                     extraData={this.state}
                     data={this.state.bookings}

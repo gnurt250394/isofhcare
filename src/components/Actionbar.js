@@ -30,7 +30,7 @@ class Actionbar extends Component {
                     {
                         !this.props.hideBackButton ?
 
-                            <TouchableOpacity onPress={() => this.backButtonClick()} style={{width:45, paddingTop: 12, paddingBottom: 12}}>
+                            <TouchableOpacity onPress={() => this.backButtonClick()} style={{ width: 45, paddingTop: 12, paddingBottom: 12 }}>
                                 <ScaleImage source={this.props.icBack ? this.props.icBack : ic_back} style={[styles.ic_back, this.props.styleBackButton]} height={20}></ScaleImage>
                             </TouchableOpacity>
                             :
@@ -40,13 +40,14 @@ class Actionbar extends Component {
                     }
                     {
                         this.props.title ?
-                            <Text style={[styles.title, this.props.actionbarTextColor, this.props.titleStyle, { flex: 1, textAlign: 'center'}]}>
+                            <Text style={[styles.title, this.props.actionbarTextColor, this.props.titleStyle, { flex: 1, textAlign: 'center' }]}>
                                 {this.props.title}
                             </Text>
-                        :
-                        <View style={{height:45, flex: 1, justifyContent: 'center', alignItems:'center'}}>
-                            <ScaleImage source={this.props.image} height={32}/>
-                        </View>
+                            :
+                            this.props.image &&
+                            <View style={{ height: 45, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                <ScaleImage source={this.props.image} height={32} />
+                            </View>
                     }
                     <View style={styles.menuButton}>
                         {
