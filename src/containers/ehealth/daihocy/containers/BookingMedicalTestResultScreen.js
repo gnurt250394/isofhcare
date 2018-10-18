@@ -147,7 +147,7 @@ class BookingMedicalTestResultScreen extends Component {
         }
         return range;
     }
-    renderMedical(item) {
+    renderMedical(item, index) {
         if (item.ServiceMedicTestLine && item.ServiceMedicTestLine.length > 0 && item.ServiceMedicTestLine[0].NameLine != 0) {
             return (this.renderMedicalTestLine(item));
         }
@@ -157,12 +157,12 @@ class BookingMedicalTestResultScreen extends Component {
 
             var data =
                 $this.state.currentGroup.type == 'Vi Sinh' ?
-                    <TableWrapper style={{ flexDirection: 'row' }}>
+                    <TableWrapper style={{ flexDirection: 'row' }} key={index}>
                         <Cell data={item.ServiceName.trim()} textStyle={[styles.textValue]}></Cell>
                         <Cell data={item.ServiceMedicTestLine[0].Result} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
                     </TableWrapper>
                     :
-                    <TableWrapper style={{ flexDirection: 'row' }}>
+                    <TableWrapper style={{ flexDirection: 'row' }} key={index}>
                         <Cell data={item.ServiceName.trim()} textStyle={[styles.textValue]}></Cell>
                         <Cell data={item.ServiceMedicTestLine[0].Result} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
                         <Cell data={irange} textStyle={[styles.textValue]}></Cell>
@@ -173,12 +173,12 @@ class BookingMedicalTestResultScreen extends Component {
         var range = this.getRange(item.LowerIndicator, item.HigherIndicator);
         var isHighlight = this.renderHighLight(item.Result, item.LowerIndicator, item.HigherIndicator);
         var data = $this.state.currentGroup.type == 'Vi Sinh' ?
-            <TableWrapper style={{ flexDirection: 'row' }}>
+            <TableWrapper style={{ flexDirection: 'row' }} key={index}>
                 <Cell data={item.ServiceName.trim()} textStyle={[styles.textValue, { fontWeight: 'bold' }]}></Cell>
                 <Cell data={item.Result} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
             </TableWrapper>
             :
-            <TableWrapper style={{ flexDirection: 'row' }}>
+            <TableWrapper style={{ flexDirection: 'row' }} key={index}>
                 <Cell data={item.ServiceName.trim()} textStyle={[styles.textValue, { fontWeight: 'bold' }]}></Cell>
                 <Cell data={item.Result} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
                 <Cell data={range} textStyle={[styles.textValue]}></Cell>
@@ -188,7 +188,7 @@ class BookingMedicalTestResultScreen extends Component {
     }
     renderData() {
         return this.state.currentGroup.value.ListMedical.map((data, i) => (
-            this.renderMedical(data)
+            this.renderMedical(data, i)
         ))
     }
     exportPdf() {

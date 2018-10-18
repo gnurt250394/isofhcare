@@ -143,8 +143,11 @@ class MyFacilityScreen extends Component {
                             keyExtractor={(item, index) => index.toString()}
                             extraData={this.state}
                             data={this.state.data}
-                            
-                            
+                            ListHeaderComponent={() => !this.state.refreshing_list_most && (!this.state.data || this.state.data.length == 0) ?
+                                <View style={{ alignItems: 'center', marginTop: 50 }}>
+                                    <Text style={{ fontStyle: 'italic' }}>Bạn chưa tạo cơ sở y tế nào</Text>
+                                </View> : null
+                            }                                                      
                             ListFooterComponent={() => <View style={{ height: 20 }}></View>}
                             renderItem={({ item, index }) =>
                                 <ItemFacility facility={item} showEdit={true} />
