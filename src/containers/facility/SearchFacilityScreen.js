@@ -113,4 +113,5 @@ function mapStateToProps(state) {
         userApp: state.userApp
     };
 }
+
 export default connect(mapStateToProps)(SearchFacilityScreen);

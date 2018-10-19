@@ -79,14 +79,25 @@ class DetailBookingNoCheckin extends Component {
 
                         </View>
                         <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
-                            <ScaleImage width={22} source={require("@ehealth/daihocy/resources/images/ic_location.png")} style={{ marginTop: 5 }} />
-                            <Text style={{ marginLeft: 5 }}>
+                            <ScaleImage width={15} source={require("@ehealth/daihocy/resources/images/ic_location.png")} style={{ marginTop: 5 }} />
+                            <Text style={{ marginLeft: 15 }}>
                                 {
                                     // console.log("DDDDDDDDDDDDDDDDDDDDDDDDDDD\n"+ JSON.stringify(this.props.booking.profile)+"\nDDDDDDDDDDDDDDDDDDDDDDDDDDD\n")
                                     this.props.booking.profile.address
                                 }
                             </Text>
                         </View>
+                        {
+                            this.props.booking.profile.phone ?
+                                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
+                                    <ScaleImage width={20} source={require("@ehealth/daihocy/resources/images/ic_phone.png")} style={{ marginTop: 5 }} />
+                                    <Text style={{ marginLeft: 10 }}>
+                                        {
+                                            this.props.booking.profile.phone
+                                        }
+                                    </Text>
+                                </View> : null
+                        }
                         <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
                             <ScaleImage width={20} source={require("@ehealth/daihocy/resources/images/ic_bookingDate.png")} style={{ marginTop: 5 }} />
                             <Text style={{ marginLeft: 10 }}>

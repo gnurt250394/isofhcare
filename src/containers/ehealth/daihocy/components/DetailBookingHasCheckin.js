@@ -295,9 +295,9 @@ class DetailBookingHasCheckin extends Component {
 
                     </View>
                     {
-                        this.props.booking.Profile.address ? <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
-                            <ScaleImage width={22} source={require("@ehealth/daihocy/resources/images/ic_location.png")} style={{ marginTop: 5 }} />
-                            <Text style={{ marginLeft: 5 }}>
+                        this.props.booking.Profile.Address ? <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
+                            <ScaleImage width={18} source={require("@ehealth/daihocy/resources/images/ic_location.png")} style={{ marginTop: 5 }} />
+                            <Text style={{ marginLeft: 10 }}>
                                 {
                                     this.props.booking.Profile.Address
                                 }

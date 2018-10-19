@@ -15,7 +15,6 @@ class SearchDiseaseResultScreen extends Component {
             keyword = keyword.trim();
         else
             keyword = "";
-
         let symptom = this.props.navigation.getParam('symptom', null);
 
         if (symptom) {
@@ -57,7 +56,7 @@ class SearchDiseaseResultScreen extends Component {
         let keyword = this.state.keyword;
         if (this.state.symptom) {
             func = diseaseProvider.searchBySymptom;
-            // keyword = this.state.s.symptom.id;
+            keyword = this.state.symptom.symptom.id;
         }
         func(keyword, page, size, (s, e) => {
             this.setState({

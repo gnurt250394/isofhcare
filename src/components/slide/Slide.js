@@ -19,7 +19,7 @@ class Slide extends Component {
             {
                 array.map((item, index) => {
                     return (
-                        <View>{this.props.renderItemPager ? this.props.renderItemPager(item, index) : <View />}</View>
+                        <View key={index}>{this.props.renderItemPager ? this.props.renderItemPager(item, index) : <View />}</View>
                     )
                 })
             }
@@ -40,7 +40,7 @@ class Slide extends Component {
             {
                 array.map((item, index) => {
                     return (
-                        <View style={{ margin: 2, width: 6, height: 6, backgroundColor: '#000', borderRadius: 3.5, backgroundColor: this.state.position == index ? 'rgb(74,144,226)' : "#00000060" }}></View>
+                        <View key={index} style={{ margin: 2, width: 6, height: 6, backgroundColor: '#000', borderRadius: 3.5, backgroundColor: this.state.position == index ? 'rgb(74,144,226)' : "#00000060" }}></View>
                     )
                 })
             }

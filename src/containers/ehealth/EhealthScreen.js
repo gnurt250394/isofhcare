@@ -208,25 +208,24 @@ class LoginScreen extends Component {
     renderItemBookingNotInHis(booking, index) {
         if (booking) {
             if (booking.hospitalId == constants.hospital.BENH_VIEN_DAI_HOC_Y) {
-                return <View style={{ position: 'relative' }}>
-                    <TouchableOpacity style={{ position: 'relative', marginLeft: 15 }} onPress={this.openBooking.bind(this, booking, booking.hospitalId)}>
+                return <View style={{ position: 'relative', left: 20, right: 30 }}>
+                    <TouchableOpacity style={{ position: 'relative', marginLeft: 15, right: 35 }} onPress={this.openBooking.bind(this, booking, booking.hospitalId)}>
                         <View style={{
-                            flex: 1,
-                            backgroundColor: '#f8fcf4',
-                            borderStyle: 'solid',
-                            borderWidth: 1,
-                            borderColor: 'rgba(155, 155, 155, 0.47)',
-                            borderRadius: 6,
-                            marginTop: 10,
-                            marginLeft: 14,
-                            padding: 12
+                           backgroundColor: '#f8fcf4',
+                           borderStyle: 'solid',
+                           borderWidth: 1,
+                           borderColor: 'rgba(155, 155, 155, 0.47)',
+                           borderRadius: 6,
+                           marginTop: 10,
+                           marginLeft: 45,
+                           padding: 12
                         }}>
                             <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{booking.profile.name}</Text>
                             <Text style={{ marginTop: 13 }}>Bệnh viện: <Text style={{ fontWeight: 'bold' }}>{booking.hospitalName}</Text></Text>
                             {/* <Text style={{ marginTop: 8 }}>Mã hồ sơ: <Text style={{ fontWeight: 'bold' }}>{booking.PatientHistoryId}</Text></Text> */}
                             <Text style={{ marginTop: 8 }}>Thời gian: <Text style={{ fontWeight: 'bold' }}>{booking.booking.bookingTime.toDateObject("-").format("dd/MM/yyyy hh:mm tt")}</Text></Text>
                         </View>
-                        <ScaledImage source={require("@images/ehealth/square1.png")} width={20} style={{ marginRight: 8, position: 'absolute', top: '50%', marginTop: -10, left: 0 }} />
+                        <ScaledImage source={require("@images/ehealth/square1.png")} width={20} style={{ marginRight: 8, position: 'absolute', top: '50%', marginTop: -10, left: 31 }} />
                     </TouchableOpacity>
                     <Dash style={{ width: 2, flexDirection: 'column', position: 'absolute', top: 0, left: 10, bottom: 0 }} dashColor="#00977c" />
                     <View style={{ width: 10, height: 10, backgroundColor: '#9b9b9b', borderRadius: 5, position: 'absolute', left: 6, top: '50%', marginTop: -5 }} />
