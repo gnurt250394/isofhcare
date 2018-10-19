@@ -21,10 +21,10 @@ module.exports = {
                 if (s) {
                     if (callback)
                         callback(s, e);
-                    this.getTopRequestApi(top, null, true);
+                    this.getTop(top, null, true);
                 }
                 else
-                    this.getTopRequestApi(top, callback, true);
+                    this.getTop(top, callback, true);
             });
     },
     search(keyword, top, callback) {
