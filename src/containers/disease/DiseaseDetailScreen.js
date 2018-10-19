@@ -55,40 +55,40 @@ class DiseaseDetailScreen extends Component {
                         <Text style={styles.name}>{disease.disease.name}</Text>
                         <View style={styles.card}>
                             <Text style={styles.title}>Độ tuổi: <Text style={styles.value}>{disease.disease.fromAge}-{disease.disease.toAge}</Text></Text>
-                            
+
                         </View>
-                        {disease.disease.generalInfo ? 
-                        <View style={styles.card}>
-                            <Text style={styles.title}>Tổng quan:</Text>
-                            <Text style={styles.value}>{disease.disease.generalInfo}</Text>
-                        </View>
-                        : <View/>}
-                        {disease.disease.reason ? 
-                        <View style={styles.card}>
-                            <Text style={styles.title}>Nguyên nhân:</Text>
-                            <Text style={styles.value}>{disease.disease.reason}</Text>
-                        </View>
-                        : <View/>}
-                        {disease.symptoms.length > 0 ? 
-                        <View style={styles.card}>
-                            <Text style={styles.title}>Triệu chứng:</Text>
-                            {
-                                disease.symptoms.map((item, index) => {
-                                    return<Text key={index} style={styles.value}>{item.name}</Text>
-                                })
-                            }
-                            
-                        </View>
-                        : <View/>}
-                        {disease.disease.treatment ? 
-                        <View style={styles.card}>
-                            <Text style={styles.title}>Hướng điều trị:</Text>
-                            <Text style={styles.value}>{disease.disease.treatment}</Text>
-                        </View>
-                        : <View/>}
-                        <TopSearch/>
+                        {disease.disease.generalInfo ?
+                            <View style={styles.card}>
+                                <Text style={styles.title}>Tổng quan:</Text>
+                                <Text style={styles.value}>{disease.disease.generalInfo}</Text>
+                            </View>
+                            : <View />}
+                        {disease.disease.reason ?
+                            <View style={styles.card}>
+                                <Text style={styles.title}>Nguyên nhân:</Text>
+                                <Text style={styles.value}>{disease.disease.reason}</Text>
+                            </View>
+                            : <View />}
+                        {disease.symptoms && disease.symptoms.length > 0 ?
+                            <View style={styles.card}>
+                                <Text style={styles.title}>Triệu chứng:</Text>
+                                {
+                                    disease.symptoms.map((item, index) => {
+                                        return <Text key={index} style={styles.value}>{item.name}</Text>
+                                    })
+                                }
+
+                            </View>
+                            : <View />}
+                        {disease.disease.treatment ?
+                            <View style={styles.card}>
+                                <Text style={styles.title}>Hướng điều trị:</Text>
+                                <Text style={styles.value}>{disease.disease.treatment}</Text>
+                            </View>
+                            : <View />}
+                        <TopSearch />
                     </View>
-                    
+
                 </ScrollView>
             </ActivityPanel >
         );
