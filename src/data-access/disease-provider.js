@@ -38,7 +38,7 @@ module.exports = {
         });
     },
     searchBySymptom(symtomId, page, size, callback) {
-        client.requestApi("get", constants.api.disease.search_by_disease_symptom + "?page=" + page + "&size=" + size + "&symtomId=" + symtomId + "&approval=1", {}, (s, e) => {
+        client.requestApi("get", constants.api.disease.search_disease_by_symptom + "?page=" + page + "&size=" + size + "&symptomId=" + symtomId + "&sortType=1", {}, (s, e) => {
             if (callback)
                 callback(s, e);
         });

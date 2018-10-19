@@ -119,7 +119,7 @@ class SearchDiseaseResultScreen extends Component {
                             <View style={{ alignItems: 'center', marginTop: 50 }}>
                                 <ScaledImage source={require("@images/search/noresult.png")} width={136} />
                                 <TouchableOpacity onPress={() => { this.setState({ keyword: "", symptom: null }, this.onRefresh) }}>
-                                    <Text style={{ marginTop: 20, padding: 20, textAlign: 'center', lineHeight: 30 }}>Chúng tôi không tìm thấy kết quả nào phù hợp, bạn có thể xem thêm <Text style={{ color: "#000", fontWeight: 'bold' }}>CSYT Hàng đầu</Text></Text>
+                                    <Text style={{ marginTop: 20, padding: 20, textAlign: 'center', lineHeight: 30 }}>Chúng tôi không tìm thấy kết quả nào phù hợp, bạn có thể xem thêm <Text style={{ color: "#000", fontWeight: 'bold' }}>Bệnh được tìm nhiều</Text></Text>
                                 </TouchableOpacity>
 
                             </View> : null

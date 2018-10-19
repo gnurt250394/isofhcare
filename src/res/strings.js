@@ -237,7 +237,8 @@ module.exports = {
       search: "disease/search",
       update_view_count: "disease/update-view-count",
       get_detail: "disease/get-detail",
-      search_by_disease_symptom: "disease/search-by-disease-symptom"
+      search_by_disease_symptom: "disease/search-by-disease-symptom",
+      search_disease_by_symptom: "disease/search-disease-by-symptom"
     },
     symptom: {
       search: "symptom/search",
