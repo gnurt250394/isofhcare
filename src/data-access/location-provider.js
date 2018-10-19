@@ -11,10 +11,10 @@ module.exports = {
                 if (s) {
                     if (callback)
                         callback(s, e);
-                    this.getListProvince(callback, true);
+                    this.getListProvince(null, true);
                 }
                 else
-                    this.getListProvince(undefined, true);
+                    this.getListProvince(callback, true);
             });
         } else {
             client.requestApi("get", constants.api.location.getListProvince, {}, (s, e) => {

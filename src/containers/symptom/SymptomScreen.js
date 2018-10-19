@@ -54,7 +54,7 @@ class SymptomScreen extends Component {
             refreshing: page == 1,
             loadMore: page != 1
         })
-        symptomProvider.searchFromApi(keyword, page, size, (s, e) => {
+        symptomProvider.search(keyword, page, size, (s, e) => {
             this.setState({
                 loading: false,
                 refreshing: false,
