@@ -119,6 +119,10 @@ class BookingMedicalTestResultScreen extends Component {
             return this.checkHighlight(item.Result, item.LowerIndicator, item.HigherIndicator);
         return this.checkHighlight(item.Conclusion, item.LowerIndicator, item.HigherIndicator);
     }
+    getResult(item)
+    {
+        return item.Result?item.Result:item.Conclusion;
+    }
     renderMedicalTestLine(item, index) {
         return (
             <View key={index}>
@@ -134,12 +138,12 @@ class BookingMedicalTestResultScreen extends Component {
                             $this.state.currentGroup.type == 'Vi Sinh' ?
                                 <TableWrapper style={{ flexDirection: 'row' }} key={i}>
                                     <Cell data={item2.NameLine.trim()} textStyle={[styles.textValue]}></Cell>
-                                    <Cell data={item2.Result} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
+                                    <Cell data={this.getResult(item2)} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
                                 </TableWrapper>
                                 :
                                 <TableWrapper style={{ flexDirection: 'row' }} key={i}>
                                     <Cell data={item2.NameLine.trim()} textStyle={[styles.textValue]}></Cell>
-                                    <Cell data={item2.Result} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
+                                    <Cell data={this.getResult(item2)} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
                                     <Cell data={range} textStyle={[styles.textValue]}></Cell>
                                     <Cell data={item2.Unit} textStyle={[styles.textValue,]}></Cell>
                                 </TableWrapper>
@@ -175,12 +179,12 @@ class BookingMedicalTestResultScreen extends Component {
                 $this.state.currentGroup.type == 'Vi Sinh' ?
                     <TableWrapper style={{ flexDirection: 'row' }} key={index}>
                         <Cell data={item.ServiceName.trim()} textStyle={[styles.textValue]}></Cell>
-                        <Cell data={item.ServiceMedicTestLine[0].Result} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
+                        <Cell data={this.getResult(item.ServiceMedicTestLine[0])} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
                     </TableWrapper>
                     :
                     <TableWrapper style={{ flexDirection: 'row' }} key={index}>
                         <Cell data={item.ServiceName.trim()} textStyle={[styles.textValue]}></Cell>
-                        <Cell data={item.ServiceMedicTestLine[0].Result} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
+                        <Cell data={this.getResult(item.ServiceMedicTestLine[0])} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
                         <Cell data={irange} textStyle={[styles.textValue]}></Cell>
                         <Cell data={item.ServiceMedicTestLine[0].Unit} textStyle={[styles.textValue,]}></Cell>
                     </TableWrapper>
@@ -191,12 +195,12 @@ class BookingMedicalTestResultScreen extends Component {
         var data = $this.state.currentGroup.type == 'Vi Sinh' ?
             <TableWrapper style={{ flexDirection: 'row' }} key={index}>
                 <Cell data={item.ServiceName.trim()} textStyle={[styles.textValue, { fontWeight: 'bold' }]}></Cell>
-                <Cell data={item.Result} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
+                <Cell data={this.getResult(item)} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
             </TableWrapper>
             :
             <TableWrapper style={{ flexDirection: 'row' }} key={index}>
                 <Cell data={item.ServiceName.trim()} textStyle={[styles.textValue, { fontWeight: 'bold' }]}></Cell>
-                <Cell data={item.Result} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
+                <Cell data={this.getResult(item)} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
                 <Cell data={range} textStyle={[styles.textValue]}></Cell>
                 <Cell data={item.Unit} textStyle={[styles.textValue,]}></Cell>
             </TableWrapper>
