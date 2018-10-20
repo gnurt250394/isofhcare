@@ -26,7 +26,7 @@ class DetailBookingNoCheckin extends Component {
                 activity.setState({ isLoading: false })
                 if (s) {
                     snackbar.show("Hủy lịch khám thành công", "success");
-                    this.props.navigation.navigate("ehealth", { reloadTime: true });
+                    this.props.navigation.navigate("ehealth", { reloadTime: new Date().getTime() });
                 } else {
                     snackbar.show("Hủy lịch khám không thành công", "danger");
                 }
