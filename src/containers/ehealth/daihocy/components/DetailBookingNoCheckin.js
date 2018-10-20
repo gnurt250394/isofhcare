@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import { Text, View, TouchableOpacity, FlatList, ScrollView } from 'react-native';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import { connect } from 'react-redux';
+import snackbar from '@utils/snackbar-utils';
 import dateUtils from 'mainam-react-native-date-utils';
-
+import constants from '@resources/strings'
+import bookingProvider from '@data-access/booking-provider';
 import {
     StyleSheet
 } from 'react-native';
@@ -13,11 +15,38 @@ class DetailBookingNoCheckin extends Component {
         super(props);
     }
 
+    delete(bookingId, hospitalId) {
+        let activity = this.props.activity;
+        if (!activity)
+            activity = this;
+        activity.setState({
+            isLoading: true
+        }, () => {
+            bookingProvider.delete(bookingId, hospitalId, (s, e) => {
+                activity.setState({ isLoading: false })
+                if (s) {
+                    snackbar.show("Hủy lịch khám thành công", "success");
+                    this.props.navigation.navigate("ehealth", { reloadTime: true });
+                } else {
+                    snackbar.show("Hủy lịch khám không thành công", "danger");
+                }
+            })
+        });
+    }
     render() {
         let booking = this.props.booking;
         console.log(booking);
         return (
             <View style={{ padding: 10, flex: 1 }}>
+                <View style={{ flexDirection: 'row' }}>
+                    <View>
+                    </View>
+                    <View style={{ marginLeft: 'auto' }}>
+                        <TouchableOpacity onPress={() => this.delete(booking.booking.id, booking.hospitalId)}>
+                            <Text style={{ borderColor: 'red', borderWidth: 2, paddingLeft: 12, paddingRight: 12, paddingTop: 8, paddingBottom: 8, borderRadius: 20, color: 'red', fontWeight: 'bold' }}>Hủy khám</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
                 <ScrollView style={{ flex: 1 }}>
                     <View style={{ flexDirection: 'column' }}>
                         <Text style={{ marginTop: 10, fontWeight: 'bold' }}>Khoa</Text>
@@ -116,7 +145,8 @@ class DetailBookingNoCheckin extends Component {
 
 function mapStateToProps(state) {
     return {
-        userApp: state.userApp
+        userApp: state.userApp,
+        navigation: state.navigation
     }
 }
 export default connect(mapStateToProps)(DetailBookingNoCheckin);

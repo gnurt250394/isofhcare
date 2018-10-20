@@ -34,6 +34,20 @@ class LoginScreen extends Component {
                 this.onLoad();
             });
     }
+    componentWillReceiveProps(nextProps) {
+        try {
+            let s = nextProps.navigation.getParam('reloadTime', undefined);
+            if (s != this.state.reloadTime) {
+                this.setState({
+                    reloadTime: s
+                }, () => {
+                    this.onRefresh();
+                })
+            }
+        } catch (error) {
+
+        }
+    }
     getListBookings(hospitals) {
         let data = [];
         if (hospitals != null && hospitals.length > 0) {
@@ -211,14 +225,14 @@ class LoginScreen extends Component {
                 return <View style={{ position: 'relative', left: 20, right: 30 }}>
                     <TouchableOpacity style={{ position: 'relative', marginLeft: 15, right: 35 }} onPress={this.openBooking.bind(this, booking, booking.hospitalId)}>
                         <View style={{
-                           backgroundColor: '#f8fcf4',
-                           borderStyle: 'solid',
-                           borderWidth: 1,
-                           borderColor: 'rgba(155, 155, 155, 0.47)',
-                           borderRadius: 6,
-                           marginTop: 10,
-                           marginLeft: 45,
-                           padding: 12
+                            backgroundColor: '#f8fcf4',
+                            borderStyle: 'solid',
+                            borderWidth: 1,
+                            borderColor: 'rgba(155, 155, 155, 0.47)',
+                            borderRadius: 6,
+                            marginTop: 10,
+                            marginLeft: 45,
+                            padding: 12
                         }}>
                             <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{booking.profile.name}</Text>
                             <Text style={{ marginTop: 13 }}>Bệnh viện: <Text style={{ fontWeight: 'bold' }}>{booking.hospitalName}</Text></Text>

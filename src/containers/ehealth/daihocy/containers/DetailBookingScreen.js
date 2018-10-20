@@ -28,7 +28,7 @@ class DetailBookingScreen extends Component {
                 {
                     booking.hasCheckin ? <DetailBookingHasCheckin booking={booking} onLoading={this.onLoading.bind(this)} />
                         :
-                        <DetailBookingNoCheckin booking={booking} />
+                        <DetailBookingNoCheckin booking={booking} activity={this} />
                 }
             </ActivityPanel >
         )

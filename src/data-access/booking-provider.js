@@ -19,5 +19,12 @@ module.exports = {
             if (callback)
                 callback(s, e);
         });
+    },
+    delete(bookingId, source, callback)
+    {
+        client.requestApi("delete", constants.api.booking.delete + "/" + bookingId + "?source=" + source, {}, (s, e) => {
+            if (callback)
+                callback(s, e);
+        });
     }
 }
