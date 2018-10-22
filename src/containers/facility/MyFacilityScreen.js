@@ -209,7 +209,7 @@ class MyFacilityScreen extends Component {
                             }}
                                 onPress={this.addNewDrugStore.bind(this)}
                             >
-                                <ScaledImage source={require("@images/ic_nhathuoc.png")} width={32} style={{ marginRight: 12 }} />
+                                <ScaledImage source={require("@images/ic_nhathuoc.png")} width={25} style={{ marginRight: 19 }} />
                                 <Text style={{
                                     fontSize: 18,
                                     fontWeight: "600",
