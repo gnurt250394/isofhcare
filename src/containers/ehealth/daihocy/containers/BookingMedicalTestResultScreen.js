@@ -10,6 +10,7 @@ import client from '@utils/client-utils';
 const DEVICE_WIDTH = Dimensions.get('window').width;
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
 import ExportPDF from '@ehealth/daihocy/components/ExportPDF';
+import resultUtils from '@ehealth/daihocy/utils/result-utils';
 
 let $this = null;
 class BookingMedicalTestResultScreen extends Component {
@@ -91,59 +92,27 @@ class BookingMedicalTestResultScreen extends Component {
             currentGroup: item
         })
     }
-    checkHighlight(result, min, max) {
-        try {
-            if (result && result.toLowerCase() == "dương tính")
-                return true;
-            result = parseFloat(result);
-            min = parseFloat(min);
-            max = parseFloat(max);
-            if (result < min || result > max)
-                return true;
-            return false;
-        } catch (error) {
-            return false;
-        }
-    }
-    showHighlight(item) {
-        if (item.NormalRange) {
-            if (!item.ResultState)
-                return false;
-            else {
-                if (item.ResultState != "N")
-                    return true;
-            }
-            return false;
-        }
-        if (item.Result)
-            return this.checkHighlight(item.Result, item.LowerIndicator, item.HigherIndicator);
-        return this.checkHighlight(item.Conclusion, item.LowerIndicator, item.HigherIndicator);
-    }
-    getResult(item)
-    {
-        return item.Result?item.Result:item.Conclusion;
-    }
     renderMedicalTestLine(item, index) {
         return (
             <View key={index}>
                 <Cell data={item.ServiceName} textStyle={[styles.textValue, { fontWeight: 'bold' }]} style={{ backgroundColor: '#DFF5F2' }}></Cell>
                 {
                     item.ServiceMedicTestLine.map((item2, i) => {
-                        var range = this.getRangeMedicalTest(item2);
+                        var range = resultUtils.getRangeMedicalTest(item2);
 
-                        var isHighlight = this.showHighlight(item2);
+                        var isHighlight = resultUtils.showHighlight(item2);
 
 
                         return (
                             $this.state.currentGroup.type == 'Vi Sinh' ?
                                 <TableWrapper style={{ flexDirection: 'row' }} key={i}>
                                     <Cell data={item2.NameLine.trim()} textStyle={[styles.textValue]}></Cell>
-                                    <Cell data={this.getResult(item2)} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
+                                    <Cell data={resultUtils.getResult(item2)} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
                                 </TableWrapper>
                                 :
                                 <TableWrapper style={{ flexDirection: 'row' }} key={i}>
                                     <Cell data={item2.NameLine.trim()} textStyle={[styles.textValue]}></Cell>
-                                    <Cell data={this.getResult(item2)} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
+                                    <Cell data={resultUtils.getResult(item2)} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
                                     <Cell data={range} textStyle={[styles.textValue]}></Cell>
                                     <Cell data={item2.Unit} textStyle={[styles.textValue,]}></Cell>
                                 </TableWrapper>
@@ -154,53 +123,41 @@ class BookingMedicalTestResultScreen extends Component {
         );
 
     }
-    getRangeMedicalTest(item2) {
-        if (item2.NormalRange)
-            return item2.NormalRange;
-        var range = "";
-        if (item2.LowerIndicator && item2.HigherIndicator)
-            range = item2.LowerIndicator + " - " + item2.HigherIndicator;
-        else {
-            range = item2.LowerIndicator;
-            if (item2.HigherIndicator)
-                range = item2.HigherIndicator;
-        }
-        return range;
-    }
+    
     renderMedical(item, index) {
         if (item.ServiceMedicTestLine && item.ServiceMedicTestLine.length > 0 && item.ServiceMedicTestLine[0].NameLine != 0) {
             return (this.renderMedicalTestLine(item, index));
         }
         if (item.ServiceMedicTestLine && item.ServiceMedicTestLine.length > 0) {
-            var range = this.getRangeMedicalTest(item.ServiceMedicTestLine[0]);
-            var isHighlight = this.showHighlight(item.ServiceMedicTestLine[0]);
+            var range = resultUtils.getRangeMedicalTest(item.ServiceMedicTestLine[0]);
+            var isHighlight = resultUtils.showHighlight(item.ServiceMedicTestLine[0]);
 
             var data =
                 $this.state.currentGroup.type == 'Vi Sinh' ?
                     <TableWrapper style={{ flexDirection: 'row' }} key={index}>
                         <Cell data={item.ServiceName.trim()} textStyle={[styles.textValue]}></Cell>
-                        <Cell data={this.getResult(item.ServiceMedicTestLine[0])} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
+                        <Cell data={resultUtils.getResult(item.ServiceMedicTestLine[0])} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
                     </TableWrapper>
                     :
                     <TableWrapper style={{ flexDirection: 'row' }} key={index}>
                         <Cell data={item.ServiceName.trim()} textStyle={[styles.textValue]}></Cell>
-                        <Cell data={this.getResult(item.ServiceMedicTestLine[0])} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
+                        <Cell data={resultUtils.getResult(item.ServiceMedicTestLine[0])} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
                         <Cell data={irange} textStyle={[styles.textValue]}></Cell>
                         <Cell data={item.ServiceMedicTestLine[0].Unit} textStyle={[styles.textValue,]}></Cell>
                     </TableWrapper>
             return data;
         }
-        var range = this.getRangeMedicalTest(item);
-        var isHighlight = this.showHighlight(item.Result);
+        var range = resultUtils.getRangeMedicalTest(item);
+        var isHighlight = resultUtils.showHighlight(item.Result);
         var data = $this.state.currentGroup.type == 'Vi Sinh' ?
             <TableWrapper style={{ flexDirection: 'row' }} key={index}>
                 <Cell data={item.ServiceName.trim()} textStyle={[styles.textValue, { fontWeight: 'bold' }]}></Cell>
-                <Cell data={this.getResult(item)} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
+                <Cell data={resultUtils.getResult(item)} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
             </TableWrapper>
             :
             <TableWrapper style={{ flexDirection: 'row' }} key={index}>
                 <Cell data={item.ServiceName.trim()} textStyle={[styles.textValue, { fontWeight: 'bold' }]}></Cell>
-                <Cell data={this.getResult(item)} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
+                <Cell data={resultUtils.getResult(item)} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
                 <Cell data={range} textStyle={[styles.textValue]}></Cell>
                 <Cell data={item.Unit} textStyle={[styles.textValue,]}></Cell>
             </TableWrapper>
@@ -214,15 +171,14 @@ class BookingMedicalTestResultScreen extends Component {
     exportPdf() {
         this.setState({
             isLoading: true
-        })
-
-        this.exportPdfCom.getWrappedInstance().exportPdf({
-            type: "medicaltest",
-            data: this.state.medicalTestResult,
-            result: this.state.result,
-            fileName: constants.filenameMedicalTestPDF + this.state.result.profile.PatientHistoryId
         }, () => {
-            this.setState({ isLoading: false });
+            this.exportPdfCom.getWrappedInstance().exportPdf({
+                type: "medicaltest",
+                result: this.state.result,
+                fileName: constants.filenameMedicalTestPDF + this.state.result.profile.PatientHistoryId
+            }, () => {
+                this.setState({ isLoading: false });
+            });
         });
     }
     render() {

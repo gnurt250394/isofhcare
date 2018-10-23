@@ -5,7 +5,7 @@ import Share from 'react-native-share';
 import { connect } from 'react-redux';
 import dateUtils from 'mainam-react-native-date-utils';
 import permission from 'mainam-react-native-permission';
-
+import resultUtils from '@ehealth/daihocy/utils/result-utils';
 
 class ExportPDF extends Component {
     renderResult(result) {
@@ -209,21 +209,18 @@ class ExportPDF extends Component {
     renderMedicalTestLine(type, item) {
         var result2 = "";
         result2 += this.renderTr(this.renderTd(item.ServiceName, "serviceName", type == "Vi Sinh" ? 2 : 4));
-        for (var i = 0; i < item.ServiceMedicTestLine.length; i++) {
-            var result = "";
-            var item2 = item.ServiceMedicTestLine[i];
-            var range = "";
-            if (item2.LowerIndicator && item2.HigherIndicator)
-                range = item2.LowerIndicator + " - " + item2.HigherIndicator;
-            else {
-                range = item2.LowerIndicator;
-                if (item2.HigherIndicator)
-                    range = item2.HigherIndicator;
-            }
-            result += type == 'Vi Sinh' ?
-                this.renderTd(item2.NameLine.trim()) + this.renderTd(item2.Result, this.renderHighLight(item2.Result)) : this.renderTd(item2.NameLine.trim()) + this.renderTd(item2.Result, this.renderHighLight(item2.Result, item2.LowerIndicator, item2.HigherIndicator)) + this.renderTd(range) + this.renderTd(item2.Unit);
-            result2 += this.renderTr(result);
-        }
+        item.ServiceMedicTestLine.map((item2, i) => {
+            var range = resultUtils.getRangeMedicalTest(item2);
+            var isHighlight = resultUtils.showHighlight(item2);
+            result2 += this.renderTr((type == 'Vi Sinh' ?
+                this.renderTd(item2.NameLine.trim()) +
+                this.renderTd(resultUtils.getResult(item2), isHighlight ? "bold" : "")
+                :
+                this.renderTd(item2.NameLine.trim()) +
+                this.renderTd(resultUtils.getResult(item2), isHighlight ? "bold" : "") +
+                this.renderTd(range) +
+                this.renderTd(item2.Unit)));
+        });
         return result2;
     }
     renderItemTest(type, item) {
@@ -262,7 +259,7 @@ class ExportPDF extends Component {
     renderMedItem(booking, profile, result) {
         var div = "<div style='margin-left: 50px; margin-right: 50px;'>";
         div += this.renderHeader(booking);
-        div += "<div style='font-weight: bold;  margin-bottom: 30px; text-align: center;    margin-top: 30px;'>Phiếu kết quả xét nghiệm " + result.type + "</div>"
+        div += "<div style='font-weight: bold;  margin-bottom: 30px; text-align: center;    margin-top: 30px;'>Phiếu kết quả " + (result.type == "Xét Nghiệm Khác" ? "xét nghiệm khác" : result.type) + "</div>"
         div += "<div class=\"content-filter-yba\"> <p> <span>Họ và tên : </span> <span class=\"ten-nb\">" + profile.PatientName + "</span> <br />"
         div += "<style>.resultMedical {background-color: #fff; border: 1px solid #ddd; width: 100%; text-align:'center'} .resultMedical th{    border-bottom: 0;     background-color: #486677;     color: #fff;} .resultMedical .serviceName{font-weight: bold } .resultMedical td{border-right: 1px solid #ddd; 	    padding: 8px;     line-height: 1.42857143;     vertical-align: top;     border-top: 1px solid #ddd;} </style>"
         div += "<table style='width: 100%' class='resultMedical'>"
@@ -789,10 +786,20 @@ class ExportPDF extends Component {
                 }
                 break;
             case "medicaltest":
-                var item = option.data;
-                if (item) {
-                    html = this.renderResultMedicalTest(result, profile, item);
-                }
+
+                var resultMedicalTest;
+                if ((result.data.ListResulViSinh && result.data.ListResulViSinh.length > 0)
+                    || (result.data.ListResulHoaSinh && result.data.ListResulHoaSinh.length > 0)
+                    || (result.data.ListResulHuyetHoc && result.data.ListResulHuyetHoc.length > 0)
+                    || (result.data.ListResulOther && result.data.ListResulOther.length > 0)
+                )
+                    resultMedicalTest = {
+                        resultViSinh: result.data.ListResulViSinh,
+                        resultHoaSinh: result.data.ListResulHoaSinh,
+                        resultHuyetHoc: result.data.ListResulHuyetHoc,
+                        resultKhac: result.data.ListResulOther
+                    }
+                html = this.renderResultMedicalTest(result, profile, resultMedicalTest);
                 break;
             default:
                 html = this.renderResult(result)

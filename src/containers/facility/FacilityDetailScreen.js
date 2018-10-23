@@ -268,7 +268,6 @@ class FacilityDetailScreen extends Component {
         } else {
             this.props.navigation.navigate("login")
         }
-
     }
 
     render() {

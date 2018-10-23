@@ -94,14 +94,15 @@ class BookingResultScreen extends Component {
         this.props.navigation.navigate("bookingDiagnosticResult", { result, diagnosticResult: item })
     }
     viewResultMedicalTest() {
-        var result1 = {
-            resultViSinh: this.state.resultViSinh,
-            resultHoaSinh: this.state.resultHoaSinh,
-            resultHuyetHoc: this.state.resultHuyetHoc,
-            resultKhac: this.state.resultKhac,
-        }
         let result = this.state.result;
-        this.props.navigation.navigate("bookingMedicalTestResult", { result, medicalTest: result1 })
+        this.props.navigation.navigate("bookingMedicalTestResult", {
+            result, medicalTest: {
+                resultViSinh: this.state.resultViSinh,
+                resultHoaSinh: this.state.resultHoaSinh,
+                resultHuyetHoc: this.state.resultHuyetHoc,
+                resultKhac: this.state.resultKhac,
+            }
+        })
     }
     exportPdf() {
         this.setState({
