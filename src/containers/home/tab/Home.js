@@ -45,7 +45,7 @@ class TabSearch extends Component {
             //     id: 5
             // },
             {
-                icon: require("@images/banner/bannerdhy.png"),
+                icon: require("@images/banner/findcdyt.png"),
                 id: 0
             }
         ];
@@ -75,10 +75,11 @@ class TabSearch extends Component {
         const navigate = this.props.navigation.navigate;
         switch (item.id) {
             case 0:
-                if (this.props.userApp.isLogin)
-                    navigate("addBookingBVDHY");
-                else
-                    navigate("login");
+                navigate("searchFacilityByLocation");
+                // if (this.props.userApp.isLogin)
+
+                // else
+                //     navigate("login");
                 break;
             case 1:
                 break;

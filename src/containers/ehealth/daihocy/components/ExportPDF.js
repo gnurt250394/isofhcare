@@ -232,12 +232,12 @@ class ExportPDF extends Component {
             var isHighlight = resultUtils.showHighlight(item);
 
             type == 'Vi Sinh' ?
-                result += this.renderTd(item.ServiceName, "serviceName") + 
-                this.renderTd(resultUtils.getResult(item), isHighlight ? "bold" : "") 
-                : 
-                result += this.renderTd(item.ServiceName, "serviceName") + 
-                this.renderTd(resultUtils.getResult(item), isHighlight ? "bold" : "") + 
-                this.renderTd(range) + 
+                result += this.renderTd(item.ServiceName, "serviceName") +
+                this.renderTd(resultUtils.getResult(item), isHighlight ? "bold" : "")
+                :
+                result += this.renderTd(item.ServiceName, "serviceName") +
+                this.renderTd(resultUtils.getResult(item), isHighlight ? "bold" : "") +
+                this.renderTd(range) +
                 this.renderTd(item.Unit);
         }
         return this.renderTr(result);
@@ -325,7 +325,7 @@ class ExportPDF extends Component {
         div += this.renderHeader(booking);
         div += "<div style='font-weight: bold;    margin-bottom: 30px; text-align: center;    margin-top: 30px;'>Phiếu kết quả khám và đơn thuốc</div>"
         div += "<div class=\"content-filter-yba\"> <p> <span>Họ và tên : </span> <span class=\"ten-nb\">" + profile.PatientName + "</span> <br />"
-        div += "<br /> </p> <p class=\"yc-kt\">" + item.ServiceName + "</p>";
+        div += "<br /> </p> <p class=\"yc-kt\">" + (item.ServiceName == "Đơn thuốc" ? "" : item.ServiceName) + "</p>";
 
         if (booking.profile.IsContract) {
 
