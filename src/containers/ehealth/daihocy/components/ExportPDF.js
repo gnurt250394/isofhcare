@@ -284,7 +284,6 @@ class ExportPDF extends Component {
         return div;
     }
     renderMedicine(item) {
-        debugger;
         let div = "";
         if ((item.ListMedicine && item.ListMedicine.length > 0) || item.ListExternalMedicine && item.ListExternalMedicine.length > 0) {
             div += "<p> <strong>Đơn thuốc</strong> </p>";
@@ -691,6 +690,14 @@ class ExportPDF extends Component {
                 div += "<p>" + item.CheckUpUrination;
                 if (item.UrinationClassify) {
                     div += "<span> (Phân loại: " + item.UrinationClassify + "</span>";
+                }
+                div += "</p>";
+            }
+            if (item.Content) {
+                div += "<p> <strong>Nội tiết</strong> </p>";
+                div += "<p>" + item.Content;
+                if (item.ContentClassify) {
+                    div += "<span> (Phân loại: " + item.ContentClassify + "</span>";
                 }
                 div += "</p>";
             }

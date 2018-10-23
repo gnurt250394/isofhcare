@@ -174,13 +174,14 @@ class BookingCheckupResultScreen extends Component {
                                         this.renderItem("Những điều cần giải quyết", datas.OtherConclusion),
                                         this.renderItem("Bác sĩ", datas.ActUser),
                                         this.renderItem("Phân loại", datas.HealthClassify),
-                                        this.renderItem("Tuần hoàn", datas.CheckUpCirculation + (datas.CirculationClassify ? "(Phân loại: " + datas.CirculationClassify + ")" : null)),
-                                        this.renderItem("Tiêu hóa", datas.CheckUpDigestion + (datas.DigestionClassify ? "(Phân loại: " + datas.DigestionClassify + ")" : null)),
-                                        this.renderItem("Cơ xương khớp", datas.CheckUpMusculoskel + (datas.MusculoskelClassify ? "(Phân loại: " + datas.MusculoskelClassify + ")" : null)),
-                                        this.renderItem("Thần kinh", datas.CheckUpNerve + (datas.NerveClassify ? "(Phân loại: " + datas.NerveClassify + ")" : null)),
-                                        this.renderItem("Tâm thần", datas.Mental + (datas.MentalClassify ? "(Phân loại: " + datas.MentalClassify + ")" : null)),
-                                        this.renderItem("Hô hấp", datas.CheckUpRespiration + (datas.RespirationClassify ? "(Phân loại: " + datas.RespirationClassify + ")" : null)),
-                                        this.renderItem("Thận tiết niệu", datas.CheckUpUrination + (datas.UrinationClassify ? "(Phân loại: " + datas.UrinationClassify + ")" : null)),
+                                        this.renderItem("Tuần hoàn", datas.CheckUpCirculation + (datas.CirculationClassify ? " (Phân loại: " + datas.CirculationClassify + ")" : "")),
+                                        this.renderItem("Tiêu hóa", datas.CheckUpDigestion + (datas.DigestionClassify ? " (Phân loại: " + datas.DigestionClassify + ")" : "")),
+                                        this.renderItem("Cơ xương khớp", datas.CheckUpMusculoskel + (datas.MusculoskelClassify ? " (Phân loại: " + datas.MusculoskelClassify + ")" : "")),
+                                        this.renderItem("Thần kinh", datas.CheckUpNerve + (datas.NerveClassify ? " (Phân loại: " + datas.NerveClassify + ")" : "")),
+                                        this.renderItem("Tâm thần", datas.Mental + (datas.MentalClassify ? " (Phân loại: " + datas.MentalClassify + ")" : "")),
+                                        this.renderItem("Hô hấp", datas.CheckUpRespiration + (datas.RespirationClassify ? " (Phân loại: " + datas.RespirationClassify + ")" : "")),
+                                        this.renderItem("Thận tiết niệu", datas.CheckUpUrination + (datas.UrinationClassify ? " (Phân loại: " + datas.UrinationClassify + ")" : "")),
+                                        this.renderItem("Nội tiết", datas.Content + (datas.ContentClassify ? " (Phân loại: " + datas.ContentClassify + ")" : "")),
                                         this.renderListMedicine(datas.ListMedicine)
                                     ].map((item, index) => <View key={index}>{item}</View>)
                                 }
