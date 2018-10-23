@@ -56,7 +56,7 @@ class BookingCheckupResultScreen extends Component {
     }
 
     renderItem(lable, value) {
-        if (!value)
+        if (!value || value == undefined || value == 'undefined')
             return null;
         return (
             <View>
