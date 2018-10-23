@@ -256,30 +256,34 @@ class DetailBookingHasCheckin extends Component {
 
                                 )}
                                 {
-                                    !booking.Profile.IsContract && booking.ListInvoice && booking.ListInvoice.length > 0 ?
-                                        <View>
-                                            <View style={{ marginLeft: 17, width: 150, height: 3, backgroundColor: constants.colors.primaryColor, marginTop: 10 }}></View>
-                                            <View style={{ marginLeft: 17, marginTop: 10, flexDirection: 'row' }}>
-                                                <Text style={{ fontWeight: 'bold' }}>Tổng tiền thanh toán:</Text>
-                                                <Text style={{ fontWeight: 'bold', marginLeft: 10 }}>
-                                                    {
-                                                        (
-                                                            booking.ListInvoice.reduce((a, b) => a + b.Amount, 0) -
-                                                            (booking.ListPayment && booking.ListPayment.length > 0 ? booking.ListPayment.reduce((a, b) => a + b.Amount, 0) : 0)
-                                                        ).formatPrice() + " đ"
-                                                    }</Text>
+                                    !booking.Profile.IsContract &&
+                                    <View>
+                                        {booking.ListInvoice && booking.ListInvoice.length > 0 ?
+                                            <View>
+                                                <View style={{ marginLeft: 17, width: 150, height: 3, backgroundColor: constants.colors.primaryColor, marginTop: 10 }}></View>
+                                                <View style={{ marginLeft: 17, marginTop: 10, flexDirection: 'row' }}>
+                                                    <Text style={{ fontWeight: 'bold' }}>Tổng tiền thanh toán:</Text>
+                                                    <Text style={{ fontWeight: 'bold', marginLeft: 10 }}>
+                                                        {
+                                                            (
+                                                                booking.ListInvoice.reduce((a, b) => a + b.Amount, 0) -
+                                                                (booking.ListPayment && booking.ListPayment.length > 0 ? booking.ListPayment.reduce((a, b) => a + b.Amount, 0) : 0)
+                                                            ).formatPrice() + " đ"
+                                                        }</Text>
+                                                </View>
+                                            </View> :
+                                            <View>
+                                                <View style={{ marginLeft: 17, width: 150, height: 2, backgroundColor: constants.colors.primaryColor, marginTop: 10 }}></View>
+                                                <View style={{ marginLeft: 17, marginTop: 10, flexDirection: 'row' }}>
+                                                    <Text style={{ fontWeight: 'bold' }}>Tổng tiền dịch vụ:</Text>
+                                                    <Text style={{ fontWeight: 'bold', marginLeft: 10 }}>
+                                                        {
+                                                            booking.ListService.reduce((a, b) => a + b.PriceService, 0).formatPrice() + " đ"
+                                                        }</Text>
+                                                </View>
                                             </View>
-                                        </View> :
-                                        <View>
-                                            <View style={{ marginLeft: 17, width: 150, height: 2, backgroundColor: constants.colors.primaryColor, marginTop: 10 }}></View>
-                                            <View style={{ marginLeft: 17, marginTop: 10, flexDirection: 'row' }}>
-                                                <Text style={{ fontWeight: 'bold' }}>Tổng tiền dịch vụ:</Text>
-                                                <Text style={{ fontWeight: 'bold', marginLeft: 10 }}>
-                                                    {
-                                                        booking.ListService.reduce((a, b) => a + b.PriceService, 0).formatPrice() + " đ"
-                                                    }</Text>
-                                            </View>
-                                        </View>
+                                        }
+                                    </View>
                                 }
 
                             </View> : null}
