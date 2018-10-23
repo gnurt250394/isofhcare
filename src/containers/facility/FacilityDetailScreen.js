@@ -380,14 +380,14 @@ class FacilityDetailScreen extends Component {
                                             facility.facility.website ?
                                                 <TouchableOpacity style={{ padding: 10, flexDirection: 'row' }} onPress={() => Linking.openURL(facility.facility.website)}>
                                                     <ScaledImage source={require("@images/web.png")} width={15} style={{ marginRight: 5 }} />
-                                                    <Text style={{ color: '#23429b' }}>{facility.facility.website}</Text>
+                                                    <Text style={{ color: '#23429b', flex: 1 }} numberOfLines={1} ellipsizeMode="tail">{facility.facility.website}</Text>
                                                 </TouchableOpacity> : null
                                         }
                                         {
                                             facility.facility.phone ?
                                                 <TouchableOpacity style={{ padding: 10, flexDirection: 'row', alignItems: 'center' }} onPress={() => Linking.openURL("tel:" + facility.facility.phone)}>
                                                     <ScaledImage source={require("@images/ic_phone.png")} width={15} style={{ marginRight: 5 }} />
-                                                    <Text style={{ color: 'rgb(35,66,155)', fontWeight: 'bold' }}>{facility.facility.phone}</Text>
+                                                    <Text style={{ color: 'rgb(35,66,155)', fontWeight: 'bold', flex: 1 }}>{facility.facility.phone}</Text>
                                                 </TouchableOpacity> : null
                                         }
                                     </View>

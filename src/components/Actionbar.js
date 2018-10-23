@@ -54,22 +54,18 @@ class Actionbar extends Component {
                             this.props.menuButton
                         }
                     </View>
-                    <View style={[styles.notifi]}>
-                        {
-                            this.props.showMessenger ?
-                                <TouchableOpacity onPress={() => this.showMessengerClicked()} style={{ paddingTop: 12, paddingBottom: 12 }}>
-                                    <ScaleImage source={this.props.ic_msg ? this.props.ic_msg : ic_msg} style={[styles.ic_msg, this.props.styleMessenger]} height={23}></ScaleImage>
-                                    {this.props.badge ?
-                                        <Text style={styles.badge} zIndex={2} >{this.props.badge < 100 ? this.props.badge :
-                                            <Text style={{ fontSize: 9, paddingTop: 15 }}>99+</Text>}</Text> : null
-                                    }
-                                </TouchableOpacity>
-                                :
-                                <View style={{ paddingTop: 12, paddingBottom: 12 }}>
-                                    <View style={{}} />
-                                </View>
-                        }
-                    </View>
+                    {
+                        this.props.showMessenger &&
+                        <View style={[styles.notifi]}>
+                            <TouchableOpacity onPress={() => this.showMessengerClicked()} style={{ paddingTop: 12, paddingBottom: 12 }}>
+                                <ScaleImage source={this.props.ic_msg ? this.props.ic_msg : ic_msg} style={[styles.ic_msg, this.props.styleMessenger]} height={23}></ScaleImage>
+                                {this.props.badge ?
+                                    <Text style={styles.badge} zIndex={2} >{this.props.badge < 100 ? this.props.badge :
+                                        <Text style={{ fontSize: 9, paddingTop: 15 }}>99+</Text>}</Text> : null
+                                }
+                            </TouchableOpacity>
+                        </View>
+                    }
                 </View>
             </View >
         );
