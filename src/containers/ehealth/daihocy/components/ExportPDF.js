@@ -192,20 +192,6 @@ class ExportPDF extends Component {
         tr += "</tr>";
         return tr;
     }
-    renderHighLight(result, min, max) {
-        try {
-            if (result && result.toLowerCase() == "dương tính")
-                return "bold";
-            result = parseFloat(result);
-            min = parseFloat(min);
-            max = parseFloat(max);
-            if (result < min || result > max)
-                return "bold";
-            return "";
-        } catch (error) {
-            return "";
-        }
-    }
     renderMedicalTestLine(type, item) {
         var result2 = "";
         result2 += this.renderTr(this.renderTd(item.ServiceName, "serviceName", type == "Vi Sinh" ? 2 : 4));
@@ -230,29 +216,29 @@ class ExportPDF extends Component {
         }
 
         if (item.ServiceMedicTestLine && item.ServiceMedicTestLine.length > 0) {
-            var range = "";
-            if (item.ServiceMedicTestLine[0].LowerIndicator && item.ServiceMedicTestLine[0].HigherIndicator)
-                range = item.ServiceMedicTestLine[0].LowerIndicator + " - " + item.ServiceMedicTestLine[0].HigherIndicator;
-            else {
-                range = item.ServiceMedicTestLine[0].LowerIndicator;
-                if (item.ServiceMedicTestLine[0].HigherIndicator)
-                    range = item.ServiceMedicTestLine[0].HigherIndicator;
-            }
+            var range = resultUtils.getRangeMedicalTest(item.ServiceMedicTestLine[0]);
+            var isHighlight = resultUtils.showHighlight(item.ServiceMedicTestLine[0]);
 
             type == 'Vi Sinh' ?
-                result += this.renderTd(item.ServiceName, "serviceName") + this.renderTd(item.ServiceMedicTestLine[0].Result, this.renderHighLight(item.ServiceMedicTestLine[0].Result)) : result += this.renderTd(item.ServiceName, "serviceName") + this.renderTd(item.ServiceMedicTestLine[0].Result, this.renderHighLight(item.ServiceMedicTestLine[0].Result, item.ServiceMedicTestLine[0].LowerIndicator, item.ServiceMedicTestLine[0].HigherIndicator)) + this.renderTd(range) + this.renderTd(item.ServiceMedicTestLine[0].Unit);
+                result += this.renderTd(item.ServiceName, "serviceName") +
+                this.renderTd(resultUtils.getResult(item.ServiceMedicTestLine[0]), isHighlight ? "bold" : "")
+                :
+                result += this.renderTd(item.ServiceName, "serviceName") +
+                this.renderTd(resultUtils.getResult(item.ServiceMedicTestLine[0]), isHighlight ? "bold" : "") +
+                this.renderTd(range) +
+                this.renderTd(item.ServiceMedicTestLine[0].Unit);
         } else {
-            var range = "";
-            if (item.LowerIndicator && item.HigherIndicator)
-                range = item.LowerIndicator + " - " + item.HigherIndicator;
-            else {
-                range = item.LowerIndicator;
-                if (item.HigherIndicator)
-                    range = item.HigherIndicator;
-            }
+            var range = resultUtils.getRangeMedicalTest(item);
+            var isHighlight = resultUtils.showHighlight(item);
 
             type == 'Vi Sinh' ?
-                result += this.renderTd(item.ServiceName, "serviceName") + this.renderTd(item.Result, this.renderHighLight(item.Result)) : result += this.renderTd(item.ServiceName, "serviceName") + this.renderTd(item.Result, this.renderHighLight(item.Result, item.LowerIndicator, item.HigherIndicator)) + this.renderTd(range) + this.renderTd(item.Unit);
+                result += this.renderTd(item.ServiceName, "serviceName") + 
+                this.renderTd(resultUtils.getResult(item), isHighlight ? "bold" : "") 
+                : 
+                result += this.renderTd(item.ServiceName, "serviceName") + 
+                this.renderTd(resultUtils.getResult(item), isHighlight ? "bold" : "") + 
+                this.renderTd(range) + 
+                this.renderTd(item.Unit);
         }
         return this.renderTr(result);
     }
