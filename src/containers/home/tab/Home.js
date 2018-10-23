@@ -45,7 +45,7 @@ class TabSearch extends Component {
             //     id: 5
             // },
             {
-                icon: require("@images/isofhcare.png"),
+                icon: require("@images/banner/bannerdhy.png"),
                 id: 0
             }
         ];
@@ -75,7 +75,7 @@ class TabSearch extends Component {
         const navigate = this.props.navigation.navigate;
         switch (item.id) {
             case 0:
-                navigate("searchDisease");
+                navigate("addBookingBVDHY");
                 break;
             case 1:
                 break;
