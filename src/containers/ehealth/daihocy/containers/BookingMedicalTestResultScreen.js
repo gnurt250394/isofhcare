@@ -148,7 +148,7 @@ class BookingMedicalTestResultScreen extends Component {
             return data;
         }
         var range = resultUtils.getRangeMedicalTest(item);
-        var isHighlight = resultUtils.showHighlight(item.Result);
+        var isHighlight = resultUtils.showHighlight(item);
         var data = $this.state.currentGroup.type == 'Vi Sinh' ?
             <TableWrapper style={{ flexDirection: 'row' }} key={index}>
                 <Cell data={item.ServiceName.trim()} textStyle={[styles.textValue, { fontWeight: 'bold' }]}></Cell>
