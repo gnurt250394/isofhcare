@@ -283,6 +283,58 @@ class ExportPDF extends Component {
         div += " </div>"
         return div;
     }
+    renderMedicine(item) {
+        debugger;
+        let div = "";
+        if ((item.ListMedicine && item.ListMedicine.length > 0) || item.ListExternalMedicine && item.ListExternalMedicine.length > 0) {
+            div += "<p> <strong>Đơn thuốc</strong> </p>";
+            div += "<style>.donthuoc {background-color: #fff; border: 1px solid #ddd; width: 100%; text-align:'center'} .donthuoc th{    border-bottom: 0;     background-color: #486677;     color: #fff;} .donthuoc td{border-right: 1px solid #ddd; 	    padding: 8px;     line-height: 1.42857143;     vertical-align: top;     border-top: 1px solid #ddd;} </style>"
+            div += "<table class='donthuoc'>";
+            div += "<thead><tr><th>STT</th><th>Tên thuốc</th><th>Số lượng</th><th>Đơn vị</th></tr></thead>"
+            div += "<tbody>"
+            if (item.ListMedicine)
+                for (var i = 0; i < item.ListMedicine.length; i++) {
+                    var med = item.ListMedicine[i];
+                    div += "<tr>";
+                    var medName = "";
+                    if (med.ServiceName)
+                        medName += med.ServiceName + "<br />";
+                    if (med.Measure)
+                        medName += med.Measure + "<br />";
+                    if (med.Dosage)
+                        medName += med.Dosage + "<br />";
+                    if (med.Usage)
+                        medName += med.Usage
+                    div += "<td>" + (i + 1) + "</td>";
+                    div += "<td>" + medName + "</td>";
+                    div += "<td>" + med.Quantity + "</td>";
+                    div += "<td>" + med.Unit + "</td>";
+                    div += "</tr>";
+                }
+            if (item.ListExternalMedicine)
+                for (var i = 0; i < item.ListExternalMedicine.length; i++) {
+                    var med = item.ListExternalMedicine[i];
+                    div += "<tr>";
+                    var medName = "";
+                    if (med.ServiceName)
+                        medName += med.ServiceName + "<br />";
+                    if (med.Measure)
+                        medName += med.Measure + "<br />";
+                    if (med.Dosage)
+                        medName += med.Dosage + "<br />";
+                    if (med.Usage)
+                        medName += med.Usage
+                    div += "<td>" + (i + 1 + (item.ListMedicine ? item.ListMedicine.length : 0)) + "</td>";
+                    div += "<td>" + medName + "</td>";
+                    div += "<td>" + med.Quantity + "</td>";
+                    div += "<td>" + med.Unit + "</td>";
+                    div += "</tr>";
+                }
+            div += "</tbody>"
+            div += "</table>";
+        }
+        return div;
+    }
     renderResultCheckup(booking, profile, item) {
         var div = "<div style='margin-left: 50px; margin-right: 50px;'>";
         div += this.renderHeader(booking);
@@ -646,6 +698,7 @@ class ExportPDF extends Component {
                 div += "<p> <strong>Bác sĩ thực hiện</strong> </p>";
                 div += "<p>" + item.ActUser + "</p>";
             }
+            div += this.renderMedicine(item);
         } else {
             if (item.First_Diagnostic) {
                 div += "<p> <strong>Chẩn đoán</strong> </p>";
@@ -673,51 +726,7 @@ class ExportPDF extends Component {
                 div += "<p> <strong>Ghi chú</strong> </p>";
                 div += "<p>" + item.Note + "</p>";
             }
-            if ((item.ListMedicine && item.ListMedicine.length > 0) || item.ListExternalMedicine && item.ListExternalMedicine.length > 0) {
-                div += "<p> <strong>Đơn thuốc</strong> </p>";
-                div += "<style>.donthuoc {background-color: #fff; border: 1px solid #ddd; width: 100%; text-align:'center'} .donthuoc th{    border-bottom: 0;     background-color: #486677;     color: #fff;} .donthuoc td{border-right: 1px solid #ddd; 	    padding: 8px;     line-height: 1.42857143;     vertical-align: top;     border-top: 1px solid #ddd;} </style>"
-                div += "<table class='donthuoc'>";
-                div += "<thead><tr><th>STT</th><th>Tên thuốc</th><th>Số lượng</th><th>Đơn vị</th></tr></thead>"
-                div += "<tbody>"
-                for (var i = 0; i < item.ListMedicine.length; i++) {
-                    var med = item.ListMedicine[i];
-                    div += "<tr>";
-                    var medName = "";
-                    if (med.ServiceName)
-                        medName += med.ServiceName + "<br />";
-                    if (med.Measure)
-                        medName += med.Measure + "<br />";
-                    if (med.Dosage)
-                        medName += med.Dosage + "<br />";
-                    if (med.Usage)
-                        medName += med.Usage
-                    div += "<td>" + (i + 1) + "</td>";
-                    div += "<td>" + medName + "</td>";
-                    div += "<td>" + med.Quantity + "</td>";
-                    div += "<td>" + med.Unit + "</td>";
-                    div += "</tr>";
-                }
-                for (var i = 0; i < item.ListExternalMedicine.length; i++) {
-                    var med = item.ListExternalMedicine[i];
-                    div += "<tr>";
-                    var medName = "";
-                    if (med.ServiceName)
-                        medName += med.ServiceName + "<br />";
-                    if (med.Measure)
-                        medName += med.Measure + "<br />";
-                    if (med.Dosage)
-                        medName += med.Dosage + "<br />";
-                    if (med.Usage)
-                        medName += med.Usage
-                    div += "<td>" + (i + 1 + (item.ListMedicine ? item.ListMedicine.length : 0)) + "</td>";
-                    div += "<td>" + medName + "</td>";
-                    div += "<td>" + med.Quantity + "</td>";
-                    div += "<td>" + med.Unit + "</td>";
-                    div += "</tr>";
-                }
-                div += "</tbody>"
-                div += "</table>";
-            }
+            div += this.renderMedicine(item);
         }
         div += " </div>"
         div += " </div>"
