@@ -256,7 +256,7 @@ class DetailBookingHasCheckin extends Component {
 
                                 )}
                                 {
-                                    booking.ListInvoice && booking.ListInvoice.length > 0 ?
+                                    !booking.Profile.IsContract && booking.ListInvoice && booking.ListInvoice.length > 0 ?
                                         <View>
                                             <View style={{ marginLeft: 17, width: 150, height: 3, backgroundColor: constants.colors.primaryColor, marginTop: 10 }}></View>
                                             <View style={{ marginLeft: 17, marginTop: 10, flexDirection: 'row' }}>
