@@ -75,7 +75,10 @@ class TabSearch extends Component {
         const navigate = this.props.navigation.navigate;
         switch (item.id) {
             case 0:
-                navigate("addBookingBVDHY");
+                if (this.props.userApp.isLogin)
+                    navigate("addBookingBVDHY");
+                else
+                    navigate("login");
                 break;
             case 1:
                 break;
@@ -107,7 +110,7 @@ class TabSearch extends Component {
         //     return 160;
         // return width - 10;
     }
-    
+
     // renderTitlePage() {
     //     alert("ádasdasdas");
     //     return(
@@ -117,15 +120,15 @@ class TabSearch extends Component {
     render() {
         const itemWidth = this.getItemWidth();
         return (
-            <ActivityPanel 
-            style={[{ flex: 1 }, this.props.style]} 
-            titleStyle={{ marginRight: 60 }} 
-            image={require("@images/logo_home.png")} 
-            icBack={require("@images/icmenu.png")} 
-            backButtonClick={() => { this.showDrawer() }} 
-            showMessenger={this.props.userApp.isLogin ? true : false}
-            badge={0}
-            showFullScreen={true} >
+            <ActivityPanel
+                style={[{ flex: 1 }, this.props.style]}
+                titleStyle={{ marginRight: 60 }}
+                image={require("@images/logo_home.png")}
+                icBack={require("@images/icmenu.png")}
+                backButtonClick={() => { this.showDrawer() }}
+                showMessenger={this.props.userApp.isLogin ? true : false}
+                badge={0}
+                showFullScreen={true} >
                 <ScrollView style={{
                     flex: 1,
                     paddingLeft: 15, paddingRight: 15, paddingTop: 0,
@@ -158,13 +161,13 @@ class TabSearch extends Component {
                             marginTop: 20,
                             color: "#9b9b9b",
                             fontSize: 16,
-                            fontWeight: "500", 
+                            fontWeight: "500",
                             // marginLeft: (DEVICE_WIDTH - itemWidth) / 2
                         }}>iSofH Care</Text>{
                             this.state.ads.map((item, position) => {
                                 return (<Animatable.View key={position} delay={50 * position} animation={"slideInRight"} direction="alternate">
-                                    <TouchableOpacity key={position} style={{ paddingTop: 5, paddingBottom:5}} onPress={() => { this.onClickItemAds(item) }}>
-                                        <ScaledImage source={item.icon} width={itemWidth-30} style={{ borderRadius: 5 }} />
+                                    <TouchableOpacity key={position} style={{ paddingTop: 5, paddingBottom: 5 }} onPress={() => { this.onClickItemAds(item) }}>
+                                        <ScaledImage source={item.icon} width={itemWidth - 30} style={{ borderRadius: 5 }} />
                                     </TouchableOpacity>
                                 </Animatable.View>);
                             })
