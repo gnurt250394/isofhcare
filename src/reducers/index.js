@@ -8,7 +8,6 @@ import reduxEhealthDHY from '@ehealth/daihocy/redux'
 const defaultState = {
     userApp:
     {
-        test: "ehehee",
         currentUser: {
 
         },

@@ -627,7 +627,7 @@ class ExportPDF extends Component {
                 div += "<p> <strong>Tuần hoàn</strong> </p>";
                 div += "<p>" + item.CheckUpCirculation;
                 if (item.CirculationClassify) {
-                    div += "<span> (Phân loại: " + item.CirculationClassify + "</span>";
+                    div += "<span> (Phân loại: " + item.CirculationClassify + ")</span>";
                 }
                 div += "</p>";
             }
@@ -635,7 +635,7 @@ class ExportPDF extends Component {
                 div += "<p> <strong>Tiêu hóa</strong> </p>";
                 div += "<p>" + item.CheckUpDigestion;
                 if (item.DigestionClassify) {
-                    div += "<span> (Phân loại: " + item.DigestionClassify + "</span>";
+                    div += "<span> (Phân loại: " + item.DigestionClassify + ")</span>";
                 }
                 div += "</p>";
             }
@@ -643,7 +643,7 @@ class ExportPDF extends Component {
                 div += "<p> <strong>Cơ xương khớp</strong> </p>";
                 div += "<p>" + item.CheckUpMusculoskel;
                 if (item.MusculoskelClassify) {
-                    div += "<span> (Phân loại: " + item.MusculoskelClassify + "</span>";
+                    div += "<span> (Phân loại: " + item.MusculoskelClassify + ")</span>";
                 }
                 div += "</p>";
             }
@@ -651,7 +651,7 @@ class ExportPDF extends Component {
                 div += "<p> <strong>Thần kinh</strong> </p>";
                 div += "<p>" + item.CheckUpNerve;
                 if (item.NerveClassify) {
-                    div += "<span> (Phân loại: " + item.NerveClassify + "</span>";
+                    div += "<span> (Phân loại: " + item.NerveClassify + ")</span>";
                 }
                 div += "</p>";
             }
@@ -659,7 +659,7 @@ class ExportPDF extends Component {
                 div += "<p> <strong>Tâm thần</strong> </p>";
                 div += "<p>" + item.Mental;
                 if (item.MentalClassify) {
-                    div += "<span> (Phân loại: " + item.MentalClassify + "</span>";
+                    div += "<span> (Phân loại: " + item.MentalClassify + ")</span>";
                 }
                 div += "</p>";
             }
@@ -667,7 +667,7 @@ class ExportPDF extends Component {
                 div += "<p> <strong>Hô hấp</strong> </p>";
                 div += "<p>" + item.CheckUpRespiration;
                 if (item.RespirationClassify) {
-                    div += "<span> (Phân loại: " + item.RespirationClassify + "</span>";
+                    div += "<span> (Phân loại: " + item.RespirationClassify + ")</span>";
                 }
                 div += "</p>";
             }
@@ -675,7 +675,7 @@ class ExportPDF extends Component {
                 div += "<p> <strong>Thận tiết niệu</strong> </p>";
                 div += "<p>" + item.CheckUpUrination;
                 if (item.UrinationClassify) {
-                    div += "<span> (Phân loại: " + item.UrinationClassify + "</span>";
+                    div += "<span> (Phân loại: " + item.UrinationClassify + ")</span>";
                 }
                 div += "</p>";
             }
@@ -683,7 +683,7 @@ class ExportPDF extends Component {
                 div += "<p> <strong>Nội tiết</strong> </p>";
                 div += "<p>" + item.Content;
                 if (item.ContentClassify) {
-                    div += "<span> (Phân loại: " + item.ContentClassify + "</span>";
+                    div += "<span> (Phân loại: " + item.ContentClassify + ")</span>";
                 }
                 div += "</p>";
             }
