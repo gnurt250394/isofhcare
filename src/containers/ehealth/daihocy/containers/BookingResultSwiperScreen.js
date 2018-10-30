@@ -95,7 +95,7 @@ class BookingResultSwiperScreen extends Component {
     render() {
         const tableHead = ['STT', 'Tên thuốc', 'Số lượng', 'Đơn vị'];
         let datas = this.state.ListResultCheckup;
-
+        console.log(datas)
         return (
             <ActivityPanel style={{ flex: 1, }} title="Kết quả khám và đơn thuốc" isLoading={this.state.isLoading} showFullScreen={true}>
                 <Swiper style={styles.wrapper} index={this.state.index} onIndexChanged={(i) => { this._onIndexChanged(i) }} showsButtons={false}>
@@ -203,89 +203,85 @@ class BookingResultSwiperScreen extends Component {
                                                 </View>
                                                 : <View>
                                                     {
-                                                        this.state.checkupResult.First_Diagnostic ?
+                                                        datas[0].First_Diagnostic ?
                                                             <View>
                                                                 <View style={styles.breakline} />
                                                                 <Text style={styles.diagnosticLabel}>Chẩn đoán</Text>
                                                                 <View style={{ flexDirection: 'row' }}>
                                                                     <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
-                                                                    <Text style={{ marginLeft: 10 }}>{this.state.checkupResult.First_Diagnostic}</Text>
+                                                                    <Text style={{ marginLeft: 10 }}>{datas[0].First_Diagnostic}</Text>
                                                                 </View>
                                                             </View> : null}
                                                     {
-                                                        this.state.checkupResult.DiseaseDiagnostic || this.state.Diagnostic ?
+                                                        datas[0].DiseaseDiagnostic || this.state.Diagnostic ?
                                                             <View>
                                                                 <View style={styles.breakline} />
                                                                 <Text style={styles.diagnosticLabel}>Chẩn đoán bệnh</Text>
                                                                 {
-                                                                    this.state.checkupResult.DiseaseDiagnostic ?
+                                                                    datas[0].DiseaseDiagnostic ?
                                                                         <View style={{ flexDirection: 'row' }}>
                                                                             <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
-                                                                            <Text style={{ marginLeft: 10 }}>{this.state.checkupResult.DiseaseDiagnostic}</Text>
+                                                                            <Text style={{ marginLeft: 10 }}>{datas[0].DiseaseDiagnostic}</Text>
                                                                         </View> : null
                                                                 }
                                                                 {
-                                                                    this.state.checkupResult.Diagnostic ?
+                                                                    datas[0].Diagnostic ?
                                                                         <View style={{ flexDirection: 'row' }}>
                                                                             <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
-                                                                            <Text style={{ marginLeft: 10 }}>{this.state.checkupResult.Diagnostic}</Text>
+                                                                            <Text style={{ marginLeft: 10 }}>{datas[0].Diagnostic}</Text>
                                                                         </View> : null
                                                                 }
                                                             </View> : null}
                                                     {
-                                                        this.state.checkupResult.Other_DiseaseDiagnostic ?
+                                                        datas[0].Other_DiseaseDiagnostic ?
                                                             <View>
                                                                 <View style={styles.breakline} />
                                                                 <Text style={styles.diagnosticLabel}>Chẩn đoán khác</Text>
                                                                 <View style={{ flexDirection: 'row' }}>
                                                                     <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
-                                                                    <Text style={{ marginLeft: 10 }}>{this.state.checkupResult.Other_DiseaseDiagnostic}</Text>
+                                                                    <Text style={{ marginLeft: 10 }}>{datas[0].Other_DiseaseDiagnostic}</Text>
                                                                 </View>
                                                             </View> : null}
                                                     {
-                                                        (this.state.checkupResult.DoctorAdviceTxt || this.state.checkupResult.DoctorAdvice) ?
+                                                        (datas[0].DoctorAdviceTxt || datas[0].DoctorAdvice) ?
                                                             <View>
                                                                 <View style={styles.breakline} />
                                                                 <Text style={styles.diagnosticLabel}>Lời dặn</Text>
                                                                 {
-                                                                    this.state.checkupResult.DoctorAdvice ?
+                                                                    datas[0].DoctorAdvice ?
                                                                         <View style={{ flexDirection: 'row' }}>
                                                                             <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
-                                                                            <Text style={{ marginLeft: 10 }}>{this.state.checkupResult.DoctorAdvice}</Text>
+                                                                            <Text style={{ marginLeft: 10 }}>{datas[0].DoctorAdvice}</Text>
                                                                         </View> : null
                                                                 }
                                                                 {
-                                                                    this.state.checkupResult.DoctorAdviceTxt ?
+                                                                    datas[0].DoctorAdviceTxt ?
                                                                         <View style={{ flexDirection: 'row' }}>
                                                                             <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
-                                                                            <Text style={{ marginLeft: 10 }}>{this.state.checkupResult.DoctorAdviceTxt}</Text>
+                                                                            <Text style={{ marginLeft: 10 }}>{datas[0].DoctorAdviceTxt}</Text>
                                                                         </View> : null}
                                                             </View> : null
                                                     }
                                                     {
-                                                        this.state.checkupResult.Note ?
+                                                        datas[0].Note ?
                                                             <View>
                                                                 <View style={styles.breakline} />
                                                                 <Text style={styles.diagnosticLabel}>Ghi chú</Text>
                                                                 <View style={{ flexDirection: 'row' }}>
                                                                     <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
-                                                                    <Text style={{ marginLeft: 10 }}>{this.state.checkupResult.Note}</Text>
+                                                                    <Text style={{ marginLeft: 10 }}>{datas[0].Note}</Text>
                                                                 </View>
                                                             </View> : null
                                                     }
                                                     {
-                                                        (this.state.checkupResult.ListMedicine
-                                                            && this.state.checkupResult.ListMedicine.length > 0)
-                                                            ||
-                                                            (this.state.checkupResult.ListExternalMedicine
-                                                                && this.state.checkupResult.ListExternalMedicine.length > 0)
+                                                        (datas[0].ListMedicine && datas[0].ListMedicine.length > 0) || (datas[0].ListExternalMedicine && datas[0].ListExternalMedicine.length > 0)
                                                             ?
                                                             <View>
                                                                 <Text style={[styles.diagnosticLabel, { marginBottom: 0, marginTop: 10 }]}>Đơn thuốc</Text>
                                                                 <Table style={[styles.table, { marginTop: 10 }]} borderStyle={{ borderWidth: 0.5, borderColor: '#c8e1ff' }}>
                                                                     <Row data={tableHead} style={styles.head} textStyle={styles.textHead} flexArr={[1, 3, 1, 1]} />
-                                                                    {this.renderMedicine(0, this.state.checkupResult.ListMedicine)}
-                                                                    {this.renderMedicine(this.state.checkupResult.ListMedicine.length, this.state.checkupResult.ListExternalMedicine)}
+                                                                    {this.renderMedicine(0, datas[0].ListMedicine)}
+                                                                    {this.renderMedicine(datas[0].ListMedicine.length, datas[0].ListExternalMedicine)}
                                                                 </Table>
                                                             </View> : null
                                                     }
