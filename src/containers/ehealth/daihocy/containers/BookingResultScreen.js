@@ -18,6 +18,7 @@ class BookingResultScreen extends Component {
             result
         }
     }
+
     componentWillMount() {
         let result = this.props.navigation.getParam("result");
         if (!result) {
@@ -80,10 +81,15 @@ class BookingResultScreen extends Component {
                 break;
         }
     }
-    viewResultCheckup(item) {
+    viewResultCheckup(item, index) {
         let result = this.state.result;
         item.isContract = result.profile.IsContract;
-        this.props.navigation.navigate("bookingCheckupResult", { result, checkupResult: item })
+        this.props.navigation.navigate("bookingCheckupResult", {
+            result,
+            ListResultCheckup:result.data.ListResultCheckup, 
+            active: index, 
+            isContract:result.profile.IsContract
+        })
     }
     viewResultSurgery(item) {
         let result = this.state.result;
@@ -149,10 +155,10 @@ class BookingResultScreen extends Component {
                         this.state.showResultCheckup ?
                             <View style={styles.resultItem} >
                                 <FlatList
-                                    keyExtractor={(item, index) => index.toString()}
+                                    keyExtractor={(i, index) => index.toString()}
                                     data={this.state.resultCheckup}
-                                    renderItem={({ item }) =>
-                                        <TouchableOpacity onPress={() => { this.viewResultCheckup(item) }} style={styles.resultItemItem}>
+                                    renderItem={({item, index}) =>
+                                        <TouchableOpacity onPress={() => { this.viewResultCheckup(item, index) }} style={styles.resultItemItem}>
                                             <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} />
                                             <Text style={styles.resultItemItemText}>
                                                 {item.ServiceName}

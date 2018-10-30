@@ -16,6 +16,92 @@ class DetailBookingHasCheckin extends Component {
     constructor(props) {
         super(props);
     }
+    hasResult(datas) {
+        return datas.Anamnesis ||
+            datas.AnamnesisFamily ||
+            datas.AnamnesisMedicine ||
+            datas.AnamnesisMaternity ||
+            datas.Height ||
+            datas.Weight ||
+            datas.BMI ||
+            datas.BloodPressure ||
+            datas.Pulse ||
+            datas.PhysicalClassify ||
+            datas.RBCCount ||
+            datas.LeukemiaCount ||
+            datas.PlateletCount ||
+            datas.BloodSugar ||
+            datas.Ure ||
+            datas.Creatinin ||
+            datas.Protein ||
+            datas.UrineTestOther ||
+            datas.BloodTestOther ||
+            datas.ImageDiagnose ||
+            datas.ImmunitySpecialist ||
+            datas.ImmunityClassifySpecialist ||
+            datas.HeartSpecialist ||
+            datas.HeartClassifySpecialist ||
+            datas.CheckUpUrinationSpecialist ||
+            datas.UrinationClassifySpecialist ||
+            datas.TumorSpecialist ||
+            datas.TumorClassifySpecialist ||
+            datas.CheckUpNerveSpecialist ||
+            datas.NerveClassifySpecialist ||
+            datas.MentalSpecialist ||
+            datas.MentalClassifySpecialist ||
+            datas.Surgical ||
+            datas.SurgicalClassify ||
+            datas.CheckUpLEyeWOGlass ||
+            datas.CheckUpLEyeWGlass ||
+            datas.CheckUpREyeWOGlass ||
+            datas.CheckUpREyeWGlass ||
+            datas.EyeDisease ||
+            datas.EyeClassify ||
+            datas.Gynecology ||
+            datas.GynecologyClassify ||
+            datas.SpeakNormallyL ||
+            datas.SpeakNormallyR ||
+            datas.WhisperL ||
+            datas.WhisperR ||
+            datas.ENTClassify ||
+            datas.Conclusion1 ||
+            datas.RightEar ||
+            datas.LeftEar ||
+            datas.RightNose ||
+            datas.LeftNose ||
+            datas.Throat ||
+            datas.Bulkhead ||
+            datas.Nasopharynx ||
+            datas.Laryngopharynx ||
+            datas.ENTConclusion ||
+            datas.EndoscopicClassify ||
+            datas.LowerJaw ||
+            datas.UpperJaw ||
+            datas.DentalDisease ||
+            datas.DentalClassify ||
+            datas.CheckUpMusculoskelSpecialist ||
+            datas.MusculoskelClassifySpecialist ||
+            datas.CheckUpRespirationSpecialist ||
+            datas.RespirationClassifySpecialist ||
+            datas.CheckUpDigestionSpecialist ||
+            datas.DigestionSpecialistClassify ||
+            datas.Dermatology ||
+            datas.DermatologyClassify ||
+            datas.OtherDiseases ||
+            datas.OtherConclusion ||
+            datas.ActUser ||
+            datas.HealthClassify ||
+            datas.ListMedicine ||
+            datas.CheckUpCirculation ||
+            datas.CheckUpDigestion ||
+            datas.CheckUpMusculoskel ||
+            datas.CheckUpNerve ||
+            datas.Mental ||
+            datas.CheckUpRespiration ||
+            datas.CheckUpUrination ||
+            datas.Content
+    }
+
     viewResult(patientHistoryId, hospitalId) {
         if (this.props.onLoading)
             this.props.onLoading(true);
@@ -31,7 +117,6 @@ class DetailBookingHasCheckin extends Component {
                 // console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
                 if (s.data.data.Profile.IsContract) {
                     result.data.ListResultCheckup = [];
-
                     if (result.data.ResultContractCheckup) {
                         var result1 = result.data.ResultContractCheckup;
                         if (result1.ResultTheLuc) {
@@ -166,7 +251,9 @@ class DetailBookingHasCheckin extends Component {
                                 HIS_Service_ID: "ListMedicine"
                             });
                         }
+                        result.data.ListResultCheckup = result.data.ListResultCheckup.filter(item => this.hasResult(item));
                     }
+
                 }
                 result.profile = s.data.data.Profile;
                 if ((result.data.ListResultCheckup && result.data.ListResultCheckup.length > 0)
