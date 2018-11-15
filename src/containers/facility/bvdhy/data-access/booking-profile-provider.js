@@ -17,8 +17,8 @@ module.exports = {
                 dob: dob,
                 phone: phoneNumber,
                 guardianName,
-                guardianPhone:guardianPhoneNumber,
-                guardianPassport:""
+                guardianPhone: guardianPhoneNumber,
+                guardianPassport: ""
             }
         }, (s, e) => {
             try {
@@ -29,7 +29,7 @@ module.exports = {
         });
     },
     syncListProfile(userId, callback) {
-        client.requestApi("get", constants.api.profile.get_profile + "/" + userId, {}, (s, e) => {
+        client.requestApi("get", constants.api.profile.get_profile + "/" + userId + "?source=1", {}, (s, e) => {
             try {
                 if (s && s.code == 0) {
                     datacacheProvider.save(constants.key.storage.user_profile + userId, s.data.profiles[0]);

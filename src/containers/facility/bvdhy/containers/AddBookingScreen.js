@@ -198,7 +198,10 @@ class AddBookingScreen extends Component {
                                 this.addBooking({ profile: res.data.profile });
                             } else {
                                 if (res.code == 1) {
-                                    snackbar.show(constants.msg.booking.exist_profile)
+                                    snackbar.show(constants.msg.booking.exist_profile, "danger");
+                                }
+                                else {
+                                    snackbar.show("Lỗi, vui lòng thử lại sau", "danger");
                                 }
                             }
                         }
