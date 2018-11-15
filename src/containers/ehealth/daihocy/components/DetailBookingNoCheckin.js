@@ -132,7 +132,7 @@ class DetailBookingNoCheckin extends Component {
                             <Text style={{ marginLeft: 10 }}>
                                 {
                                     // (booking.booking.bookingDate + (booking.booking.bookingTime * 60 * 1000)).toDateObject().format("hh:mm Ngày dd/MM/yyyy")
-                                    booking.booking.bookingTime
+                                    booking.booking.bookingTime.toDateObject('-').format("dd-MM-yyyy HH:mm:ss")
                                 }
                             </Text>
                         </View>
