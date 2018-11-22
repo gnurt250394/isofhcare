@@ -1,41 +1,35 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, TextInput, Animated, Easing, Platform, Image, ImageBackground, Keyboard } from 'react-native';
-import { Fab, Container, Header } from 'native-base';
 import { connect } from 'react-redux';
 import ScaleImage from 'mainam-react-native-scaleimage';
-import Dimensions from 'Dimensions';
-import ImageProgress from 'mainam-react-native-image-progress';
 import ImagePicker from 'mainam-react-native-select-image';
 import imageProvider from '@data-access/image-provider';
 import Progress from 'react-native-progress/Pie';
 import clientUtils from '@utils/client-utils';
 import convertUtils from 'mainam-react-native-convert-utils';
-import userProvider from '@data-access/user-provider';
-import UserInput from '@components/UserInput';
-import constants from '@resources/strings';
-import ic_back from '@images/ic_back.png';
-const { height: DEVICE_HEIGHT, width: DEVICE_WIDTH } = Dimensions.get('window');
 import ImageLoad from 'mainam-react-native-image-loader';
 const bgImage = require("@images/bg.png")
 const icSupport = require("@images/ichotro.png")
 const icCamera = require("@images/photoCamera.png")
 const icEdit = require("@images/edit1.png")
 import redux from '@redux-store';
+import snackbar from '@utils/snackbar-utils';
 
 class ProfileScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            view: true,
+            editMode: false,
             user: this.props.userApp.currentUser,
-            userName: "",
+            name: this.props.userApp.currentUser.name,
+            phone: this.props.userApp.currentUser.phone,
+            email: this.props.userApp.currentUser.email,
             avatar: this.props.userApp.currentUser.avatar
         };
         this.onChange = this.onChange.bind(this)
         this.animatedValueBtn = new Animated.Value(54)
         this.selectAvatar = this.selectAvatar.bind(this)
-        this.updateUsername = this.updateUsername.bind(this)
     }
 
     componentWillMount() {
@@ -80,7 +74,7 @@ class ProfileScreen extends Component {
 
     animate() {
         let value = 0
-        this.state.view ? value = 300 : value = 54
+        !this.state.editMode ? value = 300 : value = 54
         Animated.timing(
             this.animatedValueBtn, {
                 toValue: value,
@@ -91,12 +85,23 @@ class ProfileScreen extends Component {
     }
 
     onChange() {
-        this.animate()
-        this.flipCard()
-        this.setState({ view: !this.state.view })
+        snackbar.show("Chức năng đang phát triển");
+        return;
+        if (this.state.editMode) {
+            if (!this.state.name || this.state.name.trim()) {
+                snackbar.show("Vui lòng nhập họ tên", "danger");
+                return;
+            }
+        }
+        else {
+            this.animate()
+            this.flipCard()
+            this.setState({ editMode: !this.state.editMode })
+        }
     }
 
     selectAvatar() {
+        return;
         if (this.imagePicker) {
             this.imagePicker.open(true, 200, 200, image => {
                 this.setState({ isLoading: true });
@@ -117,14 +122,7 @@ class ProfileScreen extends Component {
         }
     }
 
-    updateUsername= (text) => {
-        this.setState({
-            userName:"adsad"
-        })
-    }
-
     senData() {
-        alert("adasdsadsadsada")
     }
 
     render() {
@@ -162,54 +160,56 @@ class ProfileScreen extends Component {
                                         return <ScaleImage resizeMode='cover' source={icSupport} width={80} style={styles.avatar} />
                                     }}
                                 />
-                                <ScaleImage source={icCamera} width={20} style={styles.iconChangeAvatar} />
+                                {/* <ScaleImage source={icCamera} width={20} style={styles.iconChangeAvatar} /> */}
                             </TouchableOpacity>
                         </View>
                         <View style={styles.boxAnimatedcontent}>
                             <Animated.View style={[styles.flipCard, frontAnimatedStyle, Platform.OS == "android" ? { opacity: this.frontOpacity } : null]}>
                                 <View>
-                                    <Text style={styles.name}>{this.state.user.name.toUpperCase()}</Text>
+                                    <Text style={styles.name}>{this.state.name.toUpperCase()}</Text>
                                     <View style={styles.content}>
                                         <View style={styles.item}>
                                             <Text style={styles.lable}>Số điện thoại:</Text>
-                                            <Text style={styles.value}>{this.state.user.phone ? this.state.user.phone : 'Chưa Có Số Điện Thoại'}</Text>
+                                            <Text style={styles.value}>{this.state.phone ? this.state.phone : 'Chưa Có Số Điện Thoại'}</Text>
                                         </View>
                                         <View style={styles.item}>
                                             <Text style={styles.lable}>Email:</Text>
-                                            <Text style={styles.value}>{this.state.user.email ? this.state.user.email : 'Chưa Có Email'}</Text>
+                                            <Text style={styles.value}>{this.state.email ? this.state.email : 'Chưa Có Email'}</Text>
                                         </View>
                                     </View>
                                 </View>
                             </Animated.View>
                             <Animated.View style={[styles.flipCard2, styles.flipCardBack, backAnimatedStyle, Platform.OS == "android" ? { opacity: this.backOpacity } : null]}>
                                 <TextInput
-                                    placeholder={constants.input_username_or_email}
-                                    value={this.state.userName}
+                                    editable={false}
+                                    placeholder={"Số điện thoại"}
+                                    value={this.state.phone}
                                     autoCapitalize={'none'}
                                     returnKeyType={'next'}
                                     autoCorrect={false}
-                                    onChangeText={(s) => this.setState({ userName: s })}
+                                    onChangeText={(s) => this.setState({ phone: s })}
                                     underlineColorAndroid="transparent"
                                     onSubmitEditing={this.senData}
-                                    style={styles.inputText}
+                                    style={[styles.inputText, { backgroundColor: '#cacaca' }]}
                                 />
                                 <TextInput
+                                    editable={false}
                                     underlineColorAndroid="transparent"
-                                    placeholder={constants.input_username_or_email}
-                                    value={this.state.user.email}
+                                    placeholder={"Email"}
+                                    value={this.state.email}
                                     autoCapitalize={'none'}
                                     returnKeyType={'next'}
                                     autoCorrect={false}
                                     onTextChange={(s) => this.setState({ email: s })}
-                                    style={styles.inputText}
+                                    style={[styles.inputText, { backgroundColor: '#cacaca' }]}
                                 />
                                 <TextInput
-                                    placeholder={constants.input_username_or_email}
-                                    value={this.state.user.name}
+                                    placeholder={"Họ và tên"}
+                                    value={this.state.name}
                                     autoCapitalize={'none'}
                                     returnKeyType={'next'}
                                     autoCorrect={false}
-                                    onTextChange={(s) => this.setState({ email: s })}
+                                    onTextChange={(s) => this.setState({ name: s })}
                                     style={styles.inputText}
                                 />
 
@@ -219,10 +219,10 @@ class ProfileScreen extends Component {
 
                             </Animated.View>
                             <View style={styles.actions}>
-                                <Animated.View style={[styles.boxAnimate, this.state.view ? animatedSizeTo : animatedSizeFrom]}>
+                                <Animated.View style={[styles.boxAnimate, !this.state.editMode ? animatedSizeTo : animatedSizeFrom]}>
                                     <TouchableOpacity style={styles.fab} onPress={this.onChange} >
                                         {
-                                            this.state.view ?
+                                            !this.state.editMode ?
                                                 <ScaleImage source={icEdit} width={24} style={{ position: 'absolute', left: 15, top: 15 }} />
                                                 :
                                                 <Text style={styles.btnUpdate}>CẬP NHẬT</Text>

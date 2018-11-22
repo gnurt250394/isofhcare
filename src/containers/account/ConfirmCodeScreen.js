@@ -68,7 +68,7 @@ class ConfirmCodeScreen extends Component {
 				if (e) {
 					console.log(e);
 				}
-				snackbar.show(constants.msg.user.confirm_code_not_success);
+				snackbar.show(constants.msg.user.confirm_code_not_success, "danger");
 			});
 	}
 
