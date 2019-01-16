@@ -255,7 +255,12 @@ module.exports = {
       delete: "booking/delete"
     },
     question: {
-      create: "post/create"
+      create: "post/create",
+      search: "post/search",
+      like: "post/like"
+    },
+    comment: {
+      create: "comment/create"
     }
   }
 };
