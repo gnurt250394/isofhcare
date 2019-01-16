@@ -98,6 +98,11 @@ class DrawerContent extends Component {
                 </TouchableOpacity> */}
               </View> : <TouchableOpacity onPress={() => this.login()} style={{ paddingTop: 10, paddingBottom: 10 }}><Text style={{ color: 'rgb(0,151,124)', fontWeight: 'bold', fontSize: 16 }}>ĐĂNG NHẬP</Text></TouchableOpacity>
             }
+            <View style={{ marginLeft: 30 }}>
+              <TouchableOpacity style={styles.menu_item} onPress={() => { this.props.navigation.navigate("listQuestion") }}>
+                <Text style={styles.menu_item_text}>Tư vấn online</Text>
+              </TouchableOpacity>
+            </View>
             <View style={{ marginTop: 20, height: 3, backgroundColor: "rgb(234,234,234)", }} />
             <View style={{ marginLeft: 30, marginTop: 20 }}>
               <TouchableOpacity style={styles.menu_item} onPress={() => { this.props.navigation.navigate("about") }}>

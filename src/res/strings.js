@@ -167,6 +167,7 @@ module.exports = {
     },
     question:
     {
+      please_input_title: "Vui lòng nhập tiêu đề câu hỏi",
       please_input_content: "Vui lòng nhập nội dung câu hỏi",
       create_question_success: "Gửi câu hỏi thành công",
       create_question_failed: "Gửi câu hỏi không thành công"
@@ -251,7 +252,10 @@ module.exports = {
       get_list_booking: 'booking/get-all-patient-history-by-user',
       get_detail_patient_historyid: "booking/get-detail-patient-history",
       get_result_patient_historyid: "booking/get-result-patient-history",
-      delete:"booking/delete"
+      delete: "booking/delete"
+    },
+    question: {
+      create: "post/create"
     }
   }
 };
