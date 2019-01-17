@@ -96,6 +96,21 @@ class ListQuestionScreen extends Component {
         });
         questionProvider.like(!isLiked ? 1 : 0, item.post.id);
     }
+
+    componentWillReceiveProps(nextProps) {
+        try {
+            let s = nextProps.navigation.getParam('reloadTime', undefined);
+            if (s != this.state.reloadTime) {
+                this.setState({
+                    reloadTime: s
+                }, () => {
+                    this.onRefresh();
+                })
+            }
+        } catch (error) {
+
+        }
+    }
     renderItemPost(item, index) {
         const icSupport = require("@images/ichotro.png");
         const DEVICE_WIDTH = Dimensions.get('window').width;

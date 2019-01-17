@@ -44,6 +44,18 @@ class TabSearch extends Component {
             //     icon: require("@images/search/icgiadichvu.png"),
             //     id: 5
             // },
+            // {
+            //     icon: require("@images/banner/findcdyt.png"),
+            //     id: 0
+            // },
+            {
+                icon: require("@images/banner/bannerbooking.png"),
+                id: 0
+            },
+            {
+                icon: require("@images/banner/bannerquestion.png"),
+                id: 0
+            },
             {
                 icon: require("@images/banner/findcdyt.png"),
                 id: 0
@@ -75,15 +87,13 @@ class TabSearch extends Component {
         const navigate = this.props.navigation.navigate;
         switch (item.id) {
             case 0:
-                navigate("searchFacilityByLocation");
-                // if (this.props.userApp.isLogin)
-
-                // else
-                //     navigate("login");
+                navigate("createQuestion");
                 break;
             case 1:
+                navigate("createQuestion");
                 break;
             case 2:
+                navigate("searchFacilityByLocation");
                 break;
         }
     }

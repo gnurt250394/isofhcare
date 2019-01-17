@@ -69,6 +69,10 @@ class CreateQuestionScreen extends Component {
         }
     }
     createQuestion() {
+        if (!this.props.userApp.isLogin) {
+            this.props.navigation.navigate("login");
+            return;
+        }
         if (!this.state.title || !this.state.title.trim()) {
             snackbar.show(constants.msg.question.please_input_title, 'danger');
             return;
@@ -99,7 +103,7 @@ class CreateQuestionScreen extends Component {
                 this.setState({ isLoading: false });
                 if (s && s.code == 0) {
                     snackbar.show(constants.msg.question.create_question_success, "success");
-                    this.props.navigation.pop();
+                    this.props.navigation.navigate("listQuestion", { reloadTime: new Date().getTime() });
                 } else {
                     snackbar.show(constants.msg.question.create_question_failed, "danger");
                 }
