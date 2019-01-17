@@ -17,5 +17,13 @@ module.exports = {
             if (callback)
                 callback(s, e);
         });
+    },
+    search(postId, page, size, callback) {
+        if (!callback)
+            return;
+        client.requestApi("get", constants.api.comment.search + "?page=" + page + "&size=" + size + "&postId=" + postId, {}, (s, e) => {
+            if (callback)
+                callback(s, e);
+        });
     }
 }

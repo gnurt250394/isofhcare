@@ -260,7 +260,8 @@ module.exports = {
       like: "post/like"
     },
     comment: {
-      create: "comment/create"
+      create: "comment/create",
+      search: "comment/search"
     }
   }
 };

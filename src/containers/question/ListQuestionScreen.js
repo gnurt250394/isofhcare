@@ -134,7 +134,7 @@ class ListQuestionScreen extends Component {
                     <View style={{ marginTop: 10, flex: 1 }}>
                         <Text style={{ fontWeight: 'bold' }} numberOfLines={2} ellipsizeMode="tail">{item.post.title}</Text>
                         <View flexDirection='row' style={{ marginTop: 5, flex: 1 }}>
-                            <Text style={{ flex: 1, fontWeight: 'bold', color: 'rgb(74,74,74)' }} numberOfLines={1} ellipsizeMode='tail'>{item.author.name}</Text>
+                            <Text style={{ flex: 1, fontWeight: 'bold', color: 'rgb(74,74,74)' }} numberOfLines={1} ellipsizeMode='tail'>{item.post.isPrivate == 0 ? item.author.name : "Ẩn danh"}</Text>
                             <Text style={{ color: 'rgb(155,155,155)' }}>{item.post.createdDate.toDateObject('-').getPostTime()}</Text>
                         </View>
                     </View>

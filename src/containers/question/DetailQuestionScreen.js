@@ -23,9 +23,10 @@ class DetailQuestionScreen extends Component {
         const post = this.props.navigation.getParam("post", null);
         if (post == null)
             this.props.navigation.pop();
-
+        console.log(post);
         this.state = {
             post,
+            isPrivate: post ? post.post.isPrivate : 0,
             data: [],
             refreshing: false,
             size: 10,
@@ -50,7 +51,7 @@ class DetailQuestionScreen extends Component {
             refreshing: page == 1,
             loadMore: page != 1
         })
-        questionProvider.search("", page, size, (s, e) => {
+        commentProvider.search(this.state.post.post.id, page, size, (s, e) => {
             this.setState({
                 loading: false,
                 refreshing: false,
@@ -86,6 +87,14 @@ class DetailQuestionScreen extends Component {
                 this.onLoad(this.state.page)
             });
     }
+    hideAuthor(author) {
+        if (author && this.props.post && this.props.post.author) {
+            if (this.props.post.post.isPrivate == 0)
+                return false;
+            return this.props.post.author.id == author.id;
+        }
+        return false;
+    }
     likePost(item) {
         if (!this.props.userApp.isLogin) {
             snackbar.show(constants.msg.user.please_login, "danger");
@@ -117,21 +126,7 @@ class DetailQuestionScreen extends Component {
                     imageProvider.upload(image.path, (s, e) => {
                         if (s.success && s.data.code == 0 && s.data.data && s.data.data.images && s.data.data.images.length > 0) {
                             var image = s.data.data.images[0];
-                            commentProvider.create(this.state.post.post.id, "", image.image, (s, e) => {
-                                this.setState({ isLoading: false });
-                                if (s && s.code == 0) {
-                                    var data = this.state.data;
-                                    if (data != null) {
-                                        data.push(s.data);
-                                        this.setState({ data: [...data] })
-                                    }
-                                    return;
-                                }
-                                else {
-                                    snackbar.show("Gửi bình luận không thành công", "danger");
-                                    return;
-                                }
-                            });
+                            this.send(this.state.post.post.id, "", image.image);
                         }
                         else {
                             snackbar.show("Gửi upload ảnh không thành công", "danger");
@@ -142,9 +137,51 @@ class DetailQuestionScreen extends Component {
             });
         }
     }
-    renderItemPager(item, index) {
-        console.log(item);
-        return <View style={{
+    dataCommentId = []
+    pushToListComment(item, index) {
+        var data = this.state.data;
+        if (this.dataCommentId.indexOf(item.comment.id) == -1) {
+            this.dataCommentId.push(item.comment.id);
+            if (index && index >= 0 && index < data.lenght) {
+                data.splice(index, 0, item);
+
+            } else {
+                data.push(item);
+
+            }
+        }
+        return data;
+    }
+    send(postId, content, image) {
+        commentProvider.create(postId, content, image, (s, e) => {
+            this.setState({ isLoading: false });
+            if (s && s.code == 0) {
+                var data = this.pushToListComment(s.data);
+                this.setState({ data: [...data] })
+                if (content)
+                    this.setState({ commentText: "" });
+                this.setTimeout(() => {
+                    this.scrollView.scrollToEnd();
+                }, 1000);
+                return;
+            }
+            else {
+                snackbar.show("Gửi bình luận không thành công", "danger");
+                return;
+            }
+        });
+    }
+    sendComment() {
+        if (!this.state.commentText || !this.state.commentText.trim()) {
+            snackbar.show("Vui lòng nhập nội dung bình luận", "danger");
+            return;
+        }
+        this.setState({ isLoading: true }, () => {
+            this.send(this.state.post.post.id, this.state.commentText, "");
+        })
+    }
+    renderItemPager(list, item, index) {
+        return <TouchableOpacity onPress={this.photoViewer.bind(this, list, index)} style={{
             flex: 1,
             elevation: 5,
             backgroundColor: 'white',
@@ -155,7 +192,23 @@ class DetailQuestionScreen extends Component {
             <ImageLoad
                 resizeMode="cover"
                 source={{ uri: item ? item.absoluteUrl() : "undefined" }} style={{ width: Dimensions.get('window').width, height: 200 }} />
-        </View>
+        </TouchableOpacity>
+    }
+    renderItemCommentPager(list, item, index) {
+        return <TouchableOpacity onPress={this.photoViewer.bind(this, list, index)} style={{
+            flex: 1,
+            elevation: 5,
+            backgroundColor: 'white',
+            marginBottom: 10,
+            borderColor: 'rgb(204, 204, 204)',
+            flexDirection: 'row', alignItems: 'center', justifyContent: 'center'
+        }}
+        // shadowColor='#000000' shadowOpacity={0.2} shadowOffset={{}}
+        >
+            <ImageLoad
+                resizeMode="contain"
+                source={{ uri: item ? item.absoluteUrl() : "undefined" }} style={{ width: 150, height: 150 }} />
+        </TouchableOpacity>
     }
     componentWillMount() {
         this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow.bind(this));
@@ -206,7 +259,9 @@ class DetailQuestionScreen extends Component {
                         />
                     </View>
                     <View style={{ marginTop: 20, flex: 1 }}>
-                        <Text style={{ fontWeight: 'bold', color: 'rgb(74,74,74)' }} numberOfLines={1} ellipsizeMode='tail'>{item.author.name}</Text>
+                        <Text style={{ fontWeight: 'bold', color: 'rgb(74,74,74)' }} numberOfLines={1} ellipsizeMode='tail'>
+                            {item.post.isPrivate == 0 ? item.author.name : "Ẩn danh"}
+                        </Text>
                         <Text style={{ color: 'rgb(155,155,155)', marginTop: 10 }}>{item.post.createdDate.toDateObject('-').getPostTime()}</Text>
                     </View>
                 </View>
@@ -219,7 +274,11 @@ class DetailQuestionScreen extends Component {
                 </View>
                 {
                     arr.length > 0 ?
-                        <Slide autoPlay={true} inteval={3000} dataArray={arr} renderItemPager={this.renderItemPager.bind(this)} style={{ height: 200, marginTop: 10 }} />
+                        <Slide autoPlay={true} inteval={3000} dataArray={arr}
+                            renderItemPager={(image, index) => {
+                                var images = item.post.images.split(',');
+                                return this.renderItemPager(images, image, index);
+                            }} style={{ height: 200, marginTop: 10 }} />
                         : null
                 }
 
@@ -243,17 +302,103 @@ class DetailQuestionScreen extends Component {
                 </View>
             </View>
     }
+    renderItemComment(item, index) {
+        const icSupport = require("@images/ichotro.png");
+        const DEVICE_WIDTH = Dimensions.get('window').width;
+        const source = item.author && item.author.avatar ? { uri: item.author.avatar.absoluteUrl() } : icSupport;
+        var arr = [];
+        if (item.comment.images) {
+            var arr = item.comment.images.split(',');
+        }
 
+        return (item.comment && item.author) &&
+            <View style={{ flexDirection: 'column' }} key={index}>
+                <View style={{ flexDirection: 'row', margin: 10, marginTop: 0 }}>
+                    <View style={{ width: 60, height: 60, marginRight: 10 }}>
+                        <ImageLoad
+                            resizeMode="cover"
+                            imageStyle={{ borderRadius: 35 }}
+                            borderRadius={35}
+                            customImagePlaceholderDefaultStyle={{ width: 60, height: 60, alignSelf: 'center' }}
+                            placeholderSource={icSupport}
+                            style={{ width: 60, height: 60, alignSelf: 'center' }}
+                            resizeMode="cover"
+                            loadingStyle={{ size: 'small', color: 'gray' }}
+                            source={source}
+                            defaultImage={() => {
+                                return <ScaleImage resizeMode='cover' source={icSupport} width={60} style={{ width: 60, height: 60, alignSelf: 'center' }} />
+                            }}
+                        />
+                    </View>
+                    <View style={{ marginTop: 10, flex: 1 }}>
+                        <Text style={{ fontWeight: 'bold', color: 'rgb(74,74,74)' }} numberOfLines={1} ellipsizeMode='tail'>{item.author.name}</Text>
+                        <Text style={{ color: 'rgb(155,155,155)', marginTop: 10 }}>{item.comment.createdDate.toDateObject('-').getPostTime()}</Text>
+                        {
+                            arr.length > 0 ?
+                                <Slide autoPlay={true} inteval={3000} dataArray={arr} renderItemPager={(image, index) => {
+                                    var images = item.comment.images.split(',');
+                                    return this.renderItemCommentPager(images, image, index);
+                                }} style={{ height: 170, width: 170, margin: 10 }} />
+                                : null
+                        }
+                        {item.comment.content &&
+                            <View style={{ margin: 10 }}>
+                                <Text style={{ lineHeight: 15, textAlign: 'justify', marginTop: 10 }}>
+                                    {item.comment.content}
+                                </Text>
+                            </View>
+                        }
+                        {/* <View style={{ height: 0.5, backgroundColor: "#cacaca" }} /> */}
+                    </View>
+                </View>
+            </View>
+    }
+    inputTextSizeChange() {
+        setTimeout(function () {
+            this.scrollView.scrollToEnd({ animated: false });
+        }.bind(this))
+    }
+    photoViewer(list, index) {
+        try {
+            if (!list || list.length == 0) {
+                snackbar.show("Không có ảnh nào");
+                return;
+            }
+            var list2 = [];
+            list.forEach(element => {
+                list2.push(element.absoluteUrl())
+            });
+            this.props.navigation.navigate("photoViewer", { urls: list2, index });
+
+        } catch (error) {
+        }
+    }
     render() {
         const post = this.props.navigation.getParam("post", null);
         return (
-            <ActivityPanel style={{ flex: 1 }} title="Hỏi đáp" showFullScreen={true}>
+            <ActivityPanel style={{ flex: 1 }} title="Hỏi đáp" showFullScreen={true} isLoading={this.state.isLoading}>
                 <ScrollView ref={(ref) => { this.scrollView = ref }} >
 
                     {
                         this.renderItemPost(post)
                     }
-                    <FlatList
+                    <View style={{ height: 2, backgroundColor: "#cacaca" }} />
+                    {
+                        (this.state.data && this.state.data.length > 0) &&
+                        <View style={{ marginTop: 10 }}>
+                            {
+                                this.state.data.map((item, index) => {
+                                    return this.renderItemComment(item, index);
+                                })
+                            }</View>
+                    }
+                    {
+                        (!this.state.data || this.state.data.length == 0) &&
+                        <View style={{ alignItems: 'center', marginTop: 50 }}>
+                            <Text style={{ fontStyle: 'italic' }}>Chưa có bình luận nào</Text>
+                        </View>
+                    }
+                    {/* <FlatList
                         onRefresh={this.onRefresh.bind(this)}
                         refreshing={this.state.refreshing}
                         onEndReached={this.onLoadMore.bind(this)}
@@ -269,9 +414,9 @@ class DetailQuestionScreen extends Component {
                         }
                         ListFooterComponent={() => <View style={{ height: 10 }}></View>}
                         renderItem={({ item, index }) => {
-                            return null;
+                            return this.renderItemComment(item, index);
                         }}
-                    />
+                    /> */}
                     {
                         this.state.loadMore ?
                             <View style={{ alignItems: 'center', padding: 10, position: 'absolute', bottom: 0, left: 0, right: 0 }}>
@@ -288,8 +433,10 @@ class DetailQuestionScreen extends Component {
                         <TouchableOpacity style={{ padding: 15 }} onPress={this.selectImage.bind(this)}>
                             <ScaleImage source={require("@images/question/camera.png")} width={30} />
                         </TouchableOpacity>
-                        <TextInput style={{ flex: 1, maxHeight: 100, padding: 10, paddingTop: 20 }} underlineColorAndroid='transparent' multiline={true} placeholder="Nhập nội dung thảo luận" />
-                        <TouchableOpacity style={{ padding: 17 }}>
+                        <TextInput
+                            onContentSizeChange={this.inputTextSizeChange.bind(this)}
+                            style={{ flex: 1, maxHeight: 100, padding: 10, paddingTop: 20 }} underlineColorAndroid='transparent' multiline={true} placeholder="Nhập nội dung thảo luận" value={this.state.commentText} onChangeText={x => this.setState({ commentText: x })} />
+                        <TouchableOpacity style={{ padding: 17 }} onPress={this.sendComment.bind(this)}>
                             <Text style={{ color: 'rgb(0,155,121)', fontWeight: '900', fontSize: 16 }}>GỬI</Text>
                         </TouchableOpacity>
                     </View>

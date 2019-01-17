@@ -8,6 +8,7 @@ import imageProvider from '@data-access/image-provider';
 import snackbar from '@utils/snackbar-utils';
 import questionProvider from '@data-access/question-provider';
 import constants from '@resources/strings';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 const padding = Platform.select({
     ios: 7,
     android: 2
@@ -162,6 +163,7 @@ class CreateQuestionScreen extends Component {
                     <Text style={{ color: '#FFF', textAlign: 'center', fontWeight: 'bold' }}>Gửi</Text>
                 </TouchableOpacity>
                 <ImagePicker ref={ref => this.imagePicker = ref} />
+                <KeyboardSpacer />
             </ActivityPanel>
         );
     }
