@@ -155,22 +155,21 @@ class ListQuestionScreen extends Component {
                     </View>
                 </View>
                 <TouchableOpacity onPress={() => { this.props.navigation.navigate("detailQuestion", { post: item }) }}>
-                    {
-                        image && <Image source={{ uri: image }} style={{ width: DEVICE_WIDTH, height: 200, marginTop: 10 }} resizeMode='cover' />
-                    }
-                    <View style={{ margin: 10 }}>
-
-                        <Text style={{ lineHeight: 15, textAlign: 'justify' }} numberOfLines={3} ellipsizeMode='tail'>
-                            {item.post.content}
-                        </Text>
-                        <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginTop: 10 }}>
-                            <Text style={{ fontWeight: 'bold', color: 'rgb(0,151,124)' }}>Đọc chi tiết</Text>
+                    <View>
+                        {
+                            image ? <Image source={{ uri: image }} style={{ width: DEVICE_WIDTH, height: 200, marginTop: 10 }} resizeMode='cover' /> : null
+                        }
+                        <View style={{ margin: 10 }}>
+                            <Text style={{ lineHeight: 15, textAlign: 'justify' }} numberOfLines={3} ellipsizeMode='tail'>{item.post.content}</Text>
+                            <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginTop: 10 }}>
+                                <Text style={{ fontWeight: 'bold', color: 'rgb(0,151,124)' }}>Đọc chi tiết</Text>
+                            </View>
                         </View>
                     </View>
                 </TouchableOpacity>
 
                 <View style={{ margin: 10 }}>
-                    <View style={{ flexDirection: 'row', marginTop: 20 }}>
+                    {/* <View style={{ flexDirection: 'row', marginTop: 20 }}>
                         <View style={{ flexDirection: 'row', flex: 1 }}>
                             <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={this.likePost.bind(this, item)}>
                                 <ScaleImage source={require("@images/question/liked.png")} height={20} />
@@ -181,11 +180,7 @@ class ListQuestionScreen extends Component {
                                 <Text style={{ marginLeft: 10 }}>{item.post.commentCount}</Text>
                             </TouchableOpacity>
                         </View>
-                        {/* <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 20 }}>
-                            <ScaleImage source={require("@images/question/share.png")} height={20} />
-                            <Text style={{ marginLeft: 10 }}>Chia sẻ</Text>
-                        </TouchableOpacity> */}
-                    </View>
+                    </View> */}
                 </View>
                 <View style={{ marginTop: 10, marginBottom: 10, height: 2, flex: 1, backgroundColor: '#cacaca' }} />
             </View>
