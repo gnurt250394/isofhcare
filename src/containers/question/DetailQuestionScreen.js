@@ -88,10 +88,10 @@ class DetailQuestionScreen extends Component {
             });
     }
     hideAuthor(author) {
-        if (author && this.props.post && this.props.post.author) {
-            if (this.props.post.post.isPrivate == 0)
+        if (author && this.state.post && this.state.post.author) {
+            if (this.state.post.post.isPrivate == 0)
                 return false;
-            return this.props.post.author.id == author.id;
+            return this.state.post.author.id == author.id;
         }
         return false;
     }
@@ -331,7 +331,8 @@ class DetailQuestionScreen extends Component {
                         />
                     </View>
                     <View style={{ marginTop: 10, flex: 1 }}>
-                        <Text style={{ fontWeight: 'bold', color: 'rgb(74,74,74)' }} numberOfLines={1} ellipsizeMode='tail'>{item.author.name}</Text>
+                        <Text style={{ fontWeight: 'bold', color: 'rgb(74,74,74)' }} numberOfLines={1} ellipsizeMode='tail'>{
+                            this.hideAuthor(item.author) ? "Ẩn danh" : item.author.name}</Text>
                         <Text style={{ color: 'rgb(155,155,155)', marginTop: 10 }}>{item.comment.createdDate.toDateObject('-').getPostTime()}</Text>
                         {
                             arr.length > 0 ?
@@ -395,7 +396,7 @@ class DetailQuestionScreen extends Component {
                     {
                         (!this.state.data || this.state.data.length == 0) &&
                         <View style={{ alignItems: 'center', marginTop: 50 }}>
-                            <Text style={{ fontStyle: 'italic' }}>Chưa có bình luận nào</Text>
+                            <Text style={{ fontStyle: 'italic', paddingBottom: 30 }}>Hãy là người đầu tiên trả lời câu hỏi này</Text>
                         </View>
                     }
                     {/* <FlatList
