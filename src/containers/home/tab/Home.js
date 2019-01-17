@@ -56,11 +56,11 @@ class TabSearch extends Component {
             },
             {
                 icon: require("@images/banner/bannerquestion.png"),
-                id: 0
+                id: 1
             },
             {
                 icon: require("@images/banner/findcdyt.png"),
-                id: 0
+                id: 2
             }
         ];
         this.state = {
