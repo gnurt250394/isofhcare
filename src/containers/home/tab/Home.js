@@ -6,6 +6,8 @@ import ScaledImage from 'mainam-react-native-scaleimage';
 import Dimensions from 'Dimensions';
 const DEVICE_WIDTH = Dimensions.get('window').width;
 import * as Animatable from 'react-native-animatable';
+import Modal from "react-native-modal";
+import stylemodal from "@styles/modal-style";
 
 class TabSearch extends Component {
     constructor(props) {
@@ -87,7 +89,7 @@ class TabSearch extends Component {
         const navigate = this.props.navigation.navigate;
         switch (item.id) {
             case 0:
-                navigate("createQuestion");
+                this.setState({ showModalSelectHospital: true });
                 break;
             case 1:
                 navigate("createQuestion");
@@ -127,7 +129,13 @@ class TabSearch extends Component {
     //     return(
     //     )
     // }
-
+    selectBVDHY() {
+        this.setState({
+            showModalSelectHospital: false
+        }, () => {
+            this.props.navigation.navigate("addBookingBVDHY");
+        });
+    }
     render() {
         const itemWidth = this.getItemWidth();
         return (
@@ -186,6 +194,41 @@ class TabSearch extends Component {
                     </View>
                     <View style={{ height: 30 }} />
                 </ScrollView>
+                <Modal
+                    isVisible={this.state.showModalSelectHospital}
+                    onBackdropPress={() => this.setState({ showModalSelectHospital: false })}
+                    backdropOpacity={0.5}
+                    animationInTiming={500}
+                    animationOutTiming={500}
+                    backdropTransitionInTiming={1000}
+                    backdropTransitionOutTiming={1000}
+                    style={stylemodal.bottomModal}>
+                    <View style={{ backgroundColor: '#fff', elevation: 3, flexDirection: 'column', maxHeight: 400, minHeight: 100 }}>
+                        <View style={{ flexDirection: 'row', alignItems: "center" }}>
+                            <Text style={{ padding: 20, flex: 1, color: "rgb(0,121,107)", textAlign: 'center', fontSize: 16, fontWeight: '900' }}>
+                                CHỌN BỆNH VIỆN
+                            </Text>
+                        </View>
+                        <View style={{ alignItems: 'center', marginBottom: 10 }}>
+                            <TouchableOpacity style={{
+                                height: 52,
+                                flexDirection: 'row',
+                                borderRadius: 4,
+                                alignItems: 'center',
+                                padding: 10,
+                                backgroundColor: "#00977c"
+                            }} onPress={this.selectBVDHY.bind(this)}>
+                                <ScaledImage source={require("@images/ic_phongkham1.png")} width={32} style={{ marginRight: 12 }} />
+                                <Text style={{
+                                    fontSize: 15,
+                                    fontWeight: "600",
+                                    color: '#FFF',
+                                    fontStyle: "normal"
+                                }}>BỆNH VIỆN ĐẠI HỌC Y HÀ NỘI</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </Modal>
             </ ActivityPanel >
         );
     }
