@@ -92,7 +92,7 @@ class TabSearch extends Component {
                 this.setState({ showModalSelectHospital: true });
                 break;
             case 1:
-                navigate("createQuestion");
+                navigate("listQuestion");
                 break;
             case 2:
                 navigate("searchFacilityByLocation");

@@ -29,7 +29,7 @@ class DetailQuestionScreen extends Component {
             isPrivate: post ? post.post.isPrivate : 0,
             data: [],
             refreshing: false,
-            size: 10,
+            size: 100,
             page: 1,
             finish: false,
             loading: false,
@@ -294,10 +294,10 @@ class DetailQuestionScreen extends Component {
                                 <Text style={{ marginLeft: 10 }}>{item.post.commentCount}</Text>
                             </TouchableOpacity>
                         </View>
-                        <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 20 }}>
+                        {/* <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 20 }}>
                             <ScaleImage source={require("@images/question/share.png")} height={20} />
                             <Text style={{ marginLeft: 10 }}>Chia sẻ</Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </View>
                 </View>
             </View>
@@ -331,8 +331,14 @@ class DetailQuestionScreen extends Component {
                         />
                     </View>
                     <View style={{ marginTop: 10, flex: 1 }}>
-                        <Text style={{ fontWeight: 'bold', color: 'rgb(74,74,74)' }} numberOfLines={1} ellipsizeMode='tail'>{
-                            this.hideAuthor(item.author) ? "Ẩn danh" : item.author.name}</Text>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={{ fontWeight: 'bold', color: 'rgb(0,151,124)' }} numberOfLines={1} ellipsizeMode='tail'>{
+                                this.hideAuthor(item.author) ? "Ẩn danh" : item.author.name}</Text>
+                            {
+                                (item.author && item.author.role == 2 && item.author.verify == 1) &&
+                                <ScaleImage source={require("@images/question/verified.png")} height={15} style={{ marginLeft: 5 }} />
+                            }
+                        </View>
                         <Text style={{ color: 'rgb(155,155,155)', marginTop: 10 }}>{item.comment.createdDate.toDateObject('-').getPostTime()}</Text>
                         {
                             arr.length > 0 ?

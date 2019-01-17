@@ -181,10 +181,10 @@ class ListQuestionScreen extends Component {
                                 <Text style={{ marginLeft: 10 }}>{item.post.commentCount}</Text>
                             </TouchableOpacity>
                         </View>
-                        <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 20 }}>
+                        {/* <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 20 }}>
                             <ScaleImage source={require("@images/question/share.png")} height={20} />
                             <Text style={{ marginLeft: 10 }}>Chia sẻ</Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </View>
                 </View>
                 <View style={{ marginTop: 10, marginBottom: 10, height: 2, flex: 1, backgroundColor: '#cacaca' }} />
