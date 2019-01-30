@@ -300,7 +300,11 @@ class FacilityDetailScreen extends Component {
                                 region={this.state.region}>
                                 <Marker
                                     id={"Location"}
-                                    coordinate={this.state.region}>
+                                    coordinate={this.state.region} />
+                                    // <Image source={this.state.facility.facility.type == 2 ? require("@images/ic_phongkham.png") :
+                                    //     this.state.facility.facility.type == 8 ? require("@images/ic_nhathuoc.png") :
+                                    //         this.state.facility.facility.type == 1 ? require("@images/ic_hospital.png") :
+                                    //             require("@images/ic_trungtamyte.png")} style={{ width: 20, height: 20 }} resizeMode='contain' />
                                     <ScaledImage source={
                                         this.state.facility.facility.type == 2 ? require("@images/ic_phongkham.png") :
                                             this.state.facility.facility.type == 8 ? require("@images/ic_nhathuoc.png") :

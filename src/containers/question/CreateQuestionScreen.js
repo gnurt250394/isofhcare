@@ -167,7 +167,10 @@ class CreateQuestionScreen extends Component {
                     <Text style={{ color: '#FFF', textAlign: 'center', fontWeight: 'bold' }}>Gửi</Text>
                 </TouchableOpacity>
                 <ImagePicker ref={ref => this.imagePicker = ref} />
-                <KeyboardSpacer />
+                {
+                    Platform.borderRadius == 'ios' && <KeyboardSpacer />
+
+                }
             </ActivityPanel>
         );
     }
