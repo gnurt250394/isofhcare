@@ -71,6 +71,7 @@
 		E2B4ECEA53E94E508AF87928 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DFF531B1D8384E1281521AFF /* FontAwesome.ttf */; };
 		E504019A736C4E52B5CA4464 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 94798CE8149C4557AC458707 /* libz.tbd */; };
 		E829ED23B13342C4906334F4 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD5F71DCE6BD49A78D01066B /* Foundation.ttf */; };
+		FACF3D2D22117918001C14FB /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FACF3CDE22117891001C14FB /* libBVLinearGradient.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -438,6 +439,20 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RNGooglePlaces;
 		};
+		FACF3CDD22117891001C14FB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FACF3CD622117891001C14FB /* BVLinearGradient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = BVLinearGradient;
+		};
+		FACF3CDF22117891001C14FB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FACF3CD622117891001C14FB /* BVLinearGradient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 64AA15081EF7F30100718508;
+			remoteInfo = "BVLinearGradient-tvOS";
+		};
 		FAD89280213E9CAA003FE1B0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C284589C4D624FEBBCEA1382 /* RNPhotoView.xcodeproj */;
@@ -520,6 +535,7 @@
 		E294748E39F94F66B46DFEFD /* RNHTMLtoPDF.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNHTMLtoPDF.xcodeproj; path = "../node_modules/react-native-html-to-pdf/ios/RNHTMLtoPDF.xcodeproj"; sourceTree = "<group>"; };
 		E804FAC943AA4930A2AE54E9 /* AddressBook.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		EBC3324BCEB75276C181FD32 /* libPods-APP.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-APP.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FACF3CD622117891001C14FB /* BVLinearGradient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BVLinearGradient.xcodeproj; path = "../node_modules/react-native-linear-gradient/BVLinearGradient.xcodeproj"; sourceTree = "<group>"; };
 		FB08E72CAE4D5E4E3C0999B4 /* Pods-APP.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-APP.debug.xcconfig"; path = "Pods/Target Support Files/Pods-APP/Pods-APP.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -536,6 +552,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FACF3D2D22117918001C14FB /* libBVLinearGradient.a in Frameworks */,
 				B24DBF4C20D76DE90098E296 /* libRNCamera.a in Frameworks */,
 				B2056FE020A05D220055DFFF /* libRNDeviceInfo.a in Frameworks */,
 				B20CB0CD208EE1A50041C72A /* libART.a in Frameworks */,
@@ -749,6 +766,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				FACF3CD622117891001C14FB /* BVLinearGradient.xcodeproj */,
 				B24DBF4620D76DCD0098E296 /* RNCamera.xcodeproj */,
 				B2056FD720A05D170055DFFF /* RNDeviceInfo.xcodeproj */,
 				B245A975208D08200000BF5D /* ART.xcodeproj */,
@@ -955,6 +973,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		FACF3CD722117891001C14FB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FACF3CDE22117891001C14FB /* libBVLinearGradient.a */,
+				FACF3CE022117891001C14FB /* libBVLinearGradient.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		FAD8927D213E9CAA003FE1B0 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -1092,6 +1119,10 @@
 				{
 					ProductGroup = B245A976208D08200000BF5D /* Products */;
 					ProjectRef = B245A975208D08200000BF5D /* ART.xcodeproj */;
+				},
+				{
+					ProductGroup = FACF3CD722117891001C14FB /* Products */;
+					ProjectRef = FACF3CD622117891001C14FB /* BVLinearGradient.xcodeproj */;
 				},
 				{
 					ProductGroup = 00C302A81ABCB8CE00DB3ED1 /* Products */;
@@ -1541,6 +1572,20 @@
 			fileType = archive.ar;
 			path = libRNGooglePlaces.a;
 			remoteRef = FA0325F4212E5D0C003268FA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FACF3CDE22117891001C14FB /* libBVLinearGradient.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libBVLinearGradient.a;
+			remoteRef = FACF3CDD22117891001C14FB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FACF3CE022117891001C14FB /* libBVLinearGradient.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libBVLinearGradient.a;
+			remoteRef = FACF3CDF22117891001C14FB /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		FAD89281213E9CAA003FE1B0 /* libRNPhotoView.a */ = {

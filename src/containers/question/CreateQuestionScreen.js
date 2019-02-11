@@ -168,8 +168,7 @@ class CreateQuestionScreen extends Component {
                 </TouchableOpacity>
                 <ImagePicker ref={ref => this.imagePicker = ref} />
                 {
-                    Platform.borderRadius == 'ios' && <KeyboardSpacer />
-
+                    Platform.OS == 'ios' && <KeyboardSpacer />
                 }
             </ActivityPanel>
         );

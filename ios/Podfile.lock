@@ -5,8 +5,6 @@ PODS:
   - Bolts/AppLinks (1.9.0):
     - Bolts/Tasks
   - Bolts/Tasks (1.9.0)
-  - BVLinearGradient (2.4.2):
-    - React
   - FBSDKCoreKit (4.32.0):
     - Bolts (~> 1.7)
   - FBSDKLoginKit (4.32.0):
@@ -148,7 +146,6 @@ PODS:
 
 DEPENDENCIES:
   - Bolts
-  - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
   - FBSDKCoreKit
   - FBSDKLoginKit
   - FBSDKShareKit
@@ -208,8 +205,6 @@ SPEC REPOS:
     - RSKImageCropper
 
 EXTERNAL SOURCES:
-  BVLinearGradient:
-    :path: "../node_modules/react-native-linear-gradient"
   React:
     :path: "../node_modules/react-native"
   react-native-google-maps:
@@ -227,7 +222,6 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Bolts: ac6567323eac61e203f6a9763667d0f711be34c8
-  BVLinearGradient: 6d8909e3fc6b089defa4b89d967441fa6827a2ee
   FBSDKCoreKit: 55d7f2ac45d9c4b9b6119f4e43900fe84b9b7b1b
   FBSDKLoginKit: 32ac05c2a59952c363c2e85aafa8f73ba93bcbad
   FBSDKShareKit: 658780d0d108b8ad590a54afb5ac1427bdc8de28
@@ -261,6 +255,6 @@ SPEC CHECKSUMS:
   RSKImageCropper: 50d5a3e4160f0309b14d75b89d5ae2f496d56e0d
   yoga: a23273df0088bf7f2bb7e5d7b00044ea57a2a54a
 
-PODFILE CHECKSUM: 683b811feeacfe2880832631366876287d9c89c2
+PODFILE CHECKSUM: 3b69d15d104beb0ce165b4a1bae8be6dc73eca29
 
 COCOAPODS: 1.5.3
