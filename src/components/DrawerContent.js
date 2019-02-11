@@ -80,9 +80,9 @@ class DrawerContent extends Component {
                 <TouchableOpacity style={styles.menu_item} onPress={() => { this.props.navigation.navigate("profile") }}>
                   <Text style={styles.menu_item_text}>Hồ sơ cá nhân</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.menu_item} onPress={() => { this.props.navigation.navigate("notification") }}>
+                {/* <TouchableOpacity style={styles.menu_item} onPress={() => { this.props.navigation.navigate("notification") }}>
                   <Text style={styles.menu_item_text}>Thông báo</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 {/* 
                 <TouchableOpacity style={styles.menu_item}>
                   <Text style={styles.menu_item_text}>Ví iSofH care</Text>
