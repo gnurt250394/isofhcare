@@ -395,7 +395,7 @@ class FacilityDetailScreen extends Component {
                                                 </TouchableOpacity> : null
                                         }
                                     </View>
-                                    <Button style={{
+                                    {/* <Button style={{
                                         padding: 2,
                                         paddingLeft: 10,
                                         paddingRight: 10,
@@ -405,7 +405,7 @@ class FacilityDetailScreen extends Component {
                                     }} onPress={this.chat.bind(this, facility)}>
                                         <ScaledImage source={require("@images/ic_chat.png")} height={21} style={{ marginRight: 5 }} />
                                         <Text>Nhắn tin</Text>
-                                    </Button>
+                                    </Button> */}
                                 </View>
                                 <View>
                                     {
