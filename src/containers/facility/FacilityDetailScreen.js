@@ -278,7 +278,6 @@ class FacilityDetailScreen extends Component {
         else {
             image = image.absoluteUrl();
         }
-
         return (
             <ActivityPanel ref={(ref) => this.activity = ref} style={{ flex: 1 }} title="CHI TIẾT CƠ SỞ Y TẾ" showFullScreen={true} isLoading={this.state.isLoading}>
                 <View style={StyleSheet.absoluteFill}>
@@ -301,6 +300,7 @@ class FacilityDetailScreen extends Component {
                                 <Marker
                                     id={"Location"}
                                     coordinate={this.state.region} >
+                                    {/* <Image source={require("@images/ic_phongkham.png")} style={{ width: 20, height: 20 }} /> */}
                                     {/* // <Image source={this.state.facility.facility.type == 2 ? require("@images/ic_phongkham.png") :
                                     //     this.state.facility.facility.type == 8 ? require("@images/ic_nhathuoc.png") :
                                     //         this.state.facility.facility.type == 1 ? require("@images/ic_hospital.png") :
