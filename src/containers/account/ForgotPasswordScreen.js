@@ -53,7 +53,10 @@ class ForgotPasswordScreen extends Component {
 								this.props.navigation.replace("confirmCode", { phone: this.state.email });
 							}
 							else
+							{
 								snackbar.show(constants.msg.user.send_mail_recovery_success, 'success');
+								this.props.navigation.replace("login", { phone: this.state.email });
+							}
 							return;
 						} else {
 							snackbar.show(constants.msg.user.not_found_user_with_email_or_phone, 'danger');

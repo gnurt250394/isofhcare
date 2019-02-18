@@ -280,7 +280,7 @@ class FacilityDetailScreen extends Component {
         }
 
         return (
-            <ActivityPanel ref={(ref) => this.activity = ref} style={{ flex: 1 }} title="CHỌN ĐỊA ĐIỂM TÌM KIẾM" showFullScreen={true} isLoading={this.state.isLoading}>
+            <ActivityPanel ref={(ref) => this.activity = ref} style={{ flex: 1 }} title="CHI TIẾT CƠ SỞ Y TẾ" showFullScreen={true} isLoading={this.state.isLoading}>
                 <View style={StyleSheet.absoluteFill}>
                     <Animated.ScrollView scrollEventThrottle={5}
                         showsVerticalScrollIndicator={false}
@@ -446,7 +446,7 @@ class FacilityDetailScreen extends Component {
                         this.state.showOverlay ?
                             <TouchableWithoutFeedback onPress={this.overlayClick.bind(this)} style={{}}><View style={{ position: 'absolute', top: 0, right: 0, left: 0, bottom: 0, backgroundColor: '#37a3ff59' }} /></TouchableWithoutFeedback> : null
                     }
-                    {
+                    {/* {
                         this.state.showSearchPanel ?
                             <View style={{ padding: 14, position: 'absolute', top: 0, left: 0, right: 0 }}>
                                 <SearchPanel searchTypeId={realmModel.LOCATION_HISTORY}
@@ -458,7 +458,7 @@ class FacilityDetailScreen extends Component {
                                     renderItemHistory={this.renderItemHistory.bind(this)}
                                     renderFooter={this.renderFooter.bind(this)} />
                             </View> : null
-                    }
+                    } */}
                 </View>
 
                 <Modal
