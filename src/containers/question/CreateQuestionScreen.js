@@ -172,6 +172,7 @@ class CreateQuestionScreen extends Component {
                 }
             </ActivityPanel>
         );
+        
     }
 }
 const styles = StyleSheet.create({

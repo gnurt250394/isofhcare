@@ -4,6 +4,7 @@ import { View, ActivityIndicator, Text, FlatList, TouchableOpacity } from 'react
 import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import facilityProvider from '@data-access/facility-provider';
+import specialistProvider from '@data-access/specialist-provider';
 import ItemFacility from '@components/facility/ItemFacility';
 
 class SearchFacilityResultScreen extends Component {
@@ -35,6 +36,13 @@ class SearchFacilityResultScreen extends Component {
     }
     componentDidMount() {
         this.onRefresh();
+        const specialist = this.props.navigation.getParam("specialist", null);
+        console.log(specialist);
+        if (specialist && specialist.specialist) {
+            specialistProvider.updateViewCount(specialist.specialist.id, (s, e) => {
+
+            })
+        }
     }
 
     onRefresh() {

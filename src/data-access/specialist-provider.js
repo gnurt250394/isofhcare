@@ -116,5 +116,11 @@ module.exports = {
             if (callback)
                 callback(s, e);
         });
+    },
+    updateViewCount(id, callback) {
+        client.requestApi("put", constants.api.specialist.update_view_count + "/" + id, {}, (s, e) => {
+            if (callback)
+                callback(s, e);
+        });
     }
 }

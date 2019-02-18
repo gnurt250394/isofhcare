@@ -246,7 +246,8 @@ module.exports = {
     },
     specialist:
     {
-      search: "specialist/search"
+      search: "specialist/search",
+      update_view_count: "specialist/update-view-count"
     },
     booking: {
       get_list_booking: 'booking/get-all-patient-history-by-user',
