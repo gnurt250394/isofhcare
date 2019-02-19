@@ -89,6 +89,10 @@ class TabSearch extends Component {
         const navigate = this.props.navigation.navigate;
         switch (item.id) {
             case 0:
+                if (!this.props.userApp.isLogin) {
+                    this.props.navigation.navigate("login");
+                    return;
+                }
                 this.setState({ showModalSelectHospital: true });
                 break;
             case 1:
