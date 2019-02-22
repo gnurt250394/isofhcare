@@ -1,6 +1,7 @@
 import React from 'react'
 import { Provider } from 'react-redux'
 import { Root } from 'native-base';
+import { MenuProvider } from 'react-native-popup-menu';
 import { createStore, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk';
 
@@ -13,7 +14,9 @@ const store = createStore(AppReducer, applyMiddleware(thunk));
 const Kernel = () => (
     <Provider store={store}>
         <Root>
-            <RootNavigator />
+            <MenuProvider>
+                <RootNavigator />
+            </MenuProvider>
         </Root>
     </Provider>
 )

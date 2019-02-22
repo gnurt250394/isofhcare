@@ -180,6 +180,9 @@ module.exports = {
     ehealth: {
       not_found_result_of_this_booking: "Chưa có kết quả",
       canot_view_detail_this_booking: "Không thể xem kết quả đặt khám này"
+    },
+    question: {
+      confirm_delete_post: "Bạn có muốn xoá bài viết này"
     }
   },
   api: {

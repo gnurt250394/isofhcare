@@ -7,8 +7,8 @@ target 'APP' do
 
   # Pods for APP
   pod 'Firebase'
-  pod 'Firebase/Core'
   pod 'Firebase/Messaging'
+  pod 'Firebase/Core', '~> 4.13.0'
   pod 'Google/SignIn'
   
   pod 'Bolts'

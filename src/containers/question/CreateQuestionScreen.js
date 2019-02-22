@@ -16,8 +16,19 @@ const padding = Platform.select({
 class CreateQuestionScreen extends Component {
     constructor(props) {
         super(props);
+        let post = this.props.navigation.getParam("post", null);
+        if (post != null && post.post) {
+            post = post.post;
+        } else {
+            post = null;
+        }
         this.state = {
-            imageUris: []
+            imageUris: [],
+            post: post,
+            title: post ? post.title : "",
+            content: post ? post.content : "",
+            isPrivate: post ? post.isPrivate == 1 : false,
+            btnSend: post ? "Lưu" : "Gửi"
         }
     }
 
@@ -113,17 +124,19 @@ class CreateQuestionScreen extends Component {
 
     render() {
         return (
-            <ActivityPanel style={{ flex: 1 }} title="Đặt câu hỏi" showFullScreen={true} touchToDismiss={true} isLoading={this.state.isLoading}>
+            <ActivityPanel style={{ flex: 1 }} title={this.state.post ? "Chỉnh sửa" : "Đặt câu hỏi"} showFullScreen={true} touchToDismiss={true} isLoading={this.state.isLoading}>
                 <ScrollView style={{ flex: 1 }}
                     keyboardShouldPersistTaps="always">
                     <View style={{ padding: 10 }}>
                         <Text style={{ fontWeight: 'bold' }}>Tiêu đề</Text>
                         <TextInput
+                            value={this.state.title}
                             autoFocus={true} placeholder="Nhập tiêu đề câu hỏi" underlineColorAndroid='transparent' style={[styles.textinput, { marginTop: 10 }]}
                             onChangeText={(s) => { this.setState({ title: s }) }}
                         />
                         <Text style={{ marginTop: 10, fontWeight: 'bold' }}>Nội dung</Text>
                         <TextInput
+                            value={this.state.content}
                             multiline={true}
                             autoFocus={true} placeholder="Nhập nội dung câu hỏi" underlineColorAndroid='transparent' style={[styles.textinput, { marginTop: 10, height: 150 }]}
                             onChangeText={(s) => { this.setState({ content: s }) }}
@@ -164,7 +177,7 @@ class CreateQuestionScreen extends Component {
                     </View>
                 </ScrollView>
                 <TouchableOpacity onPress={this.createQuestion.bind(this)} style={{ width: 200, backgroundColor: '#58bc91', padding: 15, borderRadius: 25, alignSelf: 'center', margin: 10 }}>
-                    <Text style={{ color: '#FFF', textAlign: 'center', fontWeight: 'bold' }}>Gửi</Text>
+                    <Text style={{ color: '#FFF', textAlign: 'center', fontWeight: 'bold' }}>{this.state.post ? "Lưu" : "Gửi"}</Text>
                 </TouchableOpacity>
                 <ImagePicker ref={ref => this.imagePicker = ref} />
                 {
@@ -172,7 +185,7 @@ class CreateQuestionScreen extends Component {
                 }
             </ActivityPanel>
         );
-        
+
     }
 }
 const styles = StyleSheet.create({
