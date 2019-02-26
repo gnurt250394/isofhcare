@@ -17,10 +17,11 @@ import {
 class ActivityPanel extends Component {
     constructor(props) {
         super(props);
-        let paddingTop = Platform.select({
-            ios: isIphoneX() ? 40 : 32,
-            android: 0
-        });
+        // let paddingTop = Platform.select({
+        //     ios: isIphoneX() ? 40 : 32,
+        //     android: 0
+        // });
+        let paddingTop = 0;
         if (this.props.paddingTop >= 0) {
             paddingTop = this.props.paddingTop
         }

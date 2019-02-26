@@ -314,12 +314,12 @@ class FacilityDetailScreen extends Component {
                                 </Marker>
                             </MapView>
                         </Animated.View>
-                        <View style={{ position: 'absolute', height: screenHeight * 0.5, width: '100%' }}>
+                        {/* <View style={{ position: 'absolute', height: screenHeight * 0.5, width: '100%' }}>
                             <LinearGradient
                                 colors={['rgba(245,245,245,0.0)', 'rgba(245,245,245,0.35)', 'rgba(245,245,245,1)']}
                                 locations={[0, 0.7, 1]}
                                 style={StyleSheet.absoluteFill} />
-                        </View>
+                        </View> */}
                         {/* <View style={{
                             transform: [{ translateY: -100 }],
                             width: screenWidth,

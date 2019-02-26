@@ -147,10 +147,12 @@ class TabSearch extends Component {
             <ActivityPanel
                 style={[{ flex: 1 }, this.props.style]}
                 titleStyle={{ marginRight: 60 }}
+                imageStyle={{ marginRight: 50 }}
                 image={require("@images/logo_home.png")}
                 icBack={require("@images/icmenu.png")}
                 backButtonClick={() => { this.showDrawer() }}
-                showMessenger={this.props.userApp.isLogin ? true : false}
+                // showMessenger={this.props.userApp.isLogin ? true : false}
+                showMessenger={false}
                 badge={0}>
                 <ScrollView style={{
                     flex: 1,

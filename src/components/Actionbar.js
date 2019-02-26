@@ -45,7 +45,7 @@ class Actionbar extends Component {
                             </Text>
                             :
                             this.props.image &&
-                            <View style={{ height: 45, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                            <View style={[{ height: 45, flex: 1, justifyContent: 'center', alignItems: 'center' },this.props.imageStyle]}>
                                 <ScaleImage source={this.props.image} height={32} />
                             </View>
                     }
