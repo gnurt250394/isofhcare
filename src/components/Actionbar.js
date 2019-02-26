@@ -25,7 +25,7 @@ class Actionbar extends Component {
     render() {
         return (
             <View>
-                <View style={[styles.actionbar, this.props.actionbarStyle, { paddingTop: this.props.hideBackButton ? 40 : 30, paddingBottom: this.props.hideBackButton ? 15 : 5 }]}
+                <View style={[styles.actionbar, this.props.actionbarStyle, { paddingTop: this.props.hideBackButton ? 15 : 5, paddingBottom: this.props.hideBackButton ? 15 : 5 }]}
                     shadowColor='#000000' shadowOpacity={0.1} shadowOffset={{ width: 0, height: 2 }} shadowRadius={5}>
                     {
                         !this.props.hideBackButton ?
@@ -56,18 +56,18 @@ class Actionbar extends Component {
                     </View>
                     {
                         this.props.showMessenger &&
-                            <View style={[styles.notifi]}>
-                                <TouchableOpacity onPress={() => this.showMessengerClicked()} style={{ paddingTop: 12, paddingBottom: 12 }}>
-                                    <ScaleImage source={this.props.ic_msg ? this.props.ic_msg : ic_msg} style={[styles.ic_msg, this.props.styleMessenger]} height={23}></ScaleImage>
-                                    {this.props.badge ?
-                                        <Text style={styles.badge} zIndex={2} >{this.props.badge < 100 ? this.props.badge :
-                                            <Text style={{ fontSize: 9, paddingTop: 15 }}>99+</Text>}</Text> : null
-                                    }
-                                </TouchableOpacity>
-                            </View> 
-                            // :
-                            // <View style={[styles.notifi]}>
-                            // </View>
+                        <View style={[styles.notifi]}>
+                            <TouchableOpacity onPress={() => this.showMessengerClicked()} style={{ paddingTop: 12, paddingBottom: 12 }}>
+                                <ScaleImage source={this.props.ic_msg ? this.props.ic_msg : ic_msg} style={[styles.ic_msg, this.props.styleMessenger]} height={23}></ScaleImage>
+                                {this.props.badge ?
+                                    <Text style={styles.badge} zIndex={2} >{this.props.badge < 100 ? this.props.badge :
+                                        <Text style={{ fontSize: 9, paddingTop: 15 }}>99+</Text>}</Text> : null
+                                }
+                            </TouchableOpacity>
+                        </View>
+                        // :
+                        // <View style={[styles.notifi]}>
+                        // </View>
                     }
                 </View>
             </View >
