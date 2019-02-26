@@ -278,6 +278,7 @@ class FacilityDetailScreen extends Component {
         else {
             image = image.absoluteUrl();
         }
+        console.log(facility);
         return (
             <ActivityPanel ref={(ref) => this.activity = ref} style={{ flex: 1 }} title="CHI TIẾT CƠ SỞ Y TẾ" showFullScreen={true} isLoading={this.state.isLoading}>
                 <View style={StyleSheet.absoluteFill}>

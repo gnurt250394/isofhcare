@@ -9,6 +9,7 @@ import DrawerContent from '@components/DrawerContent';
 import Home from '@containers/home/tab/Home';
 import TabSearch from '@containers/home/tab/TabSearch';
 import Swiper from 'react-native-swiper';
+const { width, height } = Dimensions.get('window');
 let defaultScalingDrawerConfig = {
 	scalingFactor: 0.7,
 	minimizeFactor: 0.7,
@@ -39,6 +40,7 @@ class SplashScreen extends Component {
 		return (
 			<ScalingDrawer
 				ref={ref => this._drawer = ref}
+				frontStyle={{ height: height + 5 }}
 				content={<DrawerContent navigation={this.props.navigation} drawer={this._drawer} />}
 				{...defaultScalingDrawerConfig}
 			>

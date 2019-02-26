@@ -110,11 +110,12 @@ class TabSearch extends Component {
     }
 
     getItemWidth() {
+        // debugger;
         const width = DEVICE_WIDTH;
-        let itemWidth = 370;
-        if (itemWidth > width)
-            return width - 10;
-        return width;
+        // let itemWidth = 360;
+        // if (itemWidth > width - 10)
+        //     return width - 10;
+        return width - 15;
         // if (width >= 320)
         //     return 150;
         // if (width > 320)
@@ -150,8 +151,7 @@ class TabSearch extends Component {
                 icBack={require("@images/icmenu.png")}
                 backButtonClick={() => { this.showDrawer() }}
                 showMessenger={this.props.userApp.isLogin ? true : false}
-                badge={0}
-                showFullScreen={true} >
+                badge={0}>
                 <ScrollView style={{
                     flex: 1,
                     paddingLeft: 15, paddingRight: 15, paddingTop: 0,
@@ -190,7 +190,7 @@ class TabSearch extends Component {
                             this.state.ads.map((item, position) => {
                                 return (<Animatable.View key={position} delay={50 * position} animation={"slideInRight"} direction="alternate">
                                     <TouchableOpacity key={position} style={{ paddingTop: 5, paddingBottom: 5 }} onPress={() => { this.onClickItemAds(item) }}>
-                                        <ScaledImage source={item.icon} width={itemWidth - 30} style={{ borderRadius: 5 }} />
+                                        <ScaledImage source={item.icon} width={itemWidth - 15} style={{ borderRadius: 5 }} />
                                     </TouchableOpacity>
                                 </Animatable.View>);
                             })
