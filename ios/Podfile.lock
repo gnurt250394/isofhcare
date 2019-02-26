@@ -11,6 +11,8 @@ PODS:
     - FBSDKCoreKit
   - FBSDKShareKit (4.40.0):
     - FBSDKCoreKit
+  - Firebase (4.13.0):
+    - Firebase/Core (= 4.13.0)
   - Firebase/Core (4.13.0):
     - FirebaseAnalytics (= 4.2.0)
     - FirebaseCore (= 4.0.20)
@@ -147,6 +149,7 @@ DEPENDENCIES:
   - FBSDKCoreKit
   - FBSDKLoginKit
   - FBSDKShareKit
+  - Firebase
   - Firebase/Core (~> 4.13.0)
   - Firebase/Messaging
   - Google-Maps-iOS-Utils
@@ -252,6 +255,6 @@ SPEC CHECKSUMS:
   RSKImageCropper: 98296ad26b41753f796b6898d015509598f13d97
   yoga: a23273df0088bf7f2bb7e5d7b00044ea57a2a54a
 
-PODFILE CHECKSUM: 06682aa354130574ed5e67a877323d575dcaec6a
+PODFILE CHECKSUM: 92d83d9be22d91867ea6f61e939974560023121a
 
 COCOAPODS: 1.5.3
