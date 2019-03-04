@@ -1,6 +1,6 @@
 rootProject.name = 'APP'
 include ':react-native-photo-view'
-project(':react-native-photo-view').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-photo-view/android')
+project(':react-native-photo-view').projectDir = new File(rootProject.projectDir, '../node_modules/mainam-react-native-photo-viewer/android')
 include ':react-native-google-places'
 project(':react-native-google-places').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-google-places/android')
 include ':realm'

@@ -46,6 +46,7 @@ function _getUnreadNotificationCount() {
 module.exports = {
     userLogin(user) {
         return function (dispatch, getState) {
+            debugger;
             if (user != null) {
                 userProvider.saveAccount(user);
                 firebaseUtils.connect(user.id, user.name, user.avatar, {}).then(x => {
