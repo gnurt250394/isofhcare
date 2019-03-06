@@ -44,7 +44,7 @@ export default class ButtonSubmit extends Component {
 		this.growAnimated.setValue(0);
 	}
 	onPress() {
-		if (this.state.isLoading) return;
+		// if (this.state.isLoading) return;
 
 		this.setState({ isLoading: true });
 		Animated.timing(

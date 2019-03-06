@@ -124,7 +124,7 @@ module.exports = {
       please_input_username: "Vui lòng nhập tên đăng nhập",
       please_input_password: "Vui lòng nhập mật khẩu",
       please_input_confirm_password: "Vui lòng xác nhận lại mật khẩu",
-      password_must_greater_than_6_character: "Mật khẩu cần lớn hơn 6 ký tự",
+      password_must_greater_than_8_character: "Mật khẩu cần lớn hơn 8 ký tự",
       password_require_uppercase_lowercase_number_special_character: "Mật khẩu cần chứa chữ hoa, chữ thường, số và ký tự đặc biệt",
       confirm_password_is_not_match: "Xác nhận mật khẩu không trùng khớp",
       please_input_username_and_password: "Vui lòng nhập tên đăng nhập và mật khẩu",

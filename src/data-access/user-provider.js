@@ -58,7 +58,7 @@ module.exports = {
     login(username, password, callback) {
         if (username && password) {
             var body = {
-                usernameOrEmail: username,
+                emailOrPhone: username,
                 password: password.toMd5(),
                 device: { os: os, deviceId: this.deviceId, token: this.deviceToken }
             }

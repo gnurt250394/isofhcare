@@ -41,24 +41,31 @@ class ResetPasswordScreen extends Component {
 		Keyboard.dismiss();
 
 		if (!this.state.password) {
-			snackbar.show(constants.msg.user.please_input_password);
+			snackbar.show(constants.msg.user.please_input_password, "danger");
 			this.child.unPress();
 			return;
 		}
-		if (this.state.password.length < 6) {
-			snackbar.show(constants.msg.user.password_must_greater_than_6_character);
+		if (this.state.password.length < 8) {
+			snackbar.show(constants.msg.user.password_must_greater_than_8_character, "danger");
+			this.child.unPress();
+			return;
+		}
+
+		var re = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/g;
+		if (!re.test(this.state.password)) {
+			snackbar.showShort(constants.msg.user.password_require_uppercase_lowercase_number_special_character, "danger");
 			this.child.unPress();
 			return;
 		}
 
 
 		if (!this.state.confirm_password) {
-			snackbar.show(constants.msg.user.please_input_confirm_password);
+			snackbar.show(constants.msg.user.please_input_confirm_password, "danger");
 			this.child.unPress();
 			return;
 		}
 		if (this.state.password != this.state.confirm_password) {
-			snackbar.show(constants.msg.user.confirm_password_is_not_match);
+			snackbar.show(constants.msg.user.confirm_password_is_not_match, "danger");
 			this.child.unPress();
 			return;
 		}

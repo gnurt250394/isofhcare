@@ -36,40 +36,40 @@ class ConfirmCodeScreen extends Component {
 			this.child.unPress();
 			return;
 		}
-		if (this.props.fromRegisterScreen) {
-			userProvider.confirmCode(this.state.phone, this.state.code, (s, e) => {
-				this.child.unPress();
-				if (s) {
-					switch (s.code) {
-						case 0:
-							snackbar.show(constants.msg.user.active_account_success, 'success');
-							this.props.navigation.replace("login");
-							return;
-					}
+		// if (this.props.fromRegisterScreen) {
+		// 	userProvider.confirmCode(this.state.phone, this.state.code, (s, e) => {
+		// 		this.child.unPress();
+		// 		if (s) {
+		// 			switch (s.code) {
+		// 				case 0:
+		// 					snackbar.show(constants.msg.user.active_account_success, 'success');
+		// 					this.props.navigation.replace("login");
+		// 					return;
+		// 			}
 
+		// 		}
+		// 		if (e) {
+		// 			console.log(e);
+		// 		}
+		// 		snackbar.show(constants.msg.user.confirm_code_not_success, 'danger');
+		// 	});
+		// } else
+		userProvider.confirmCode(this.state.phone, this.state.code, (s, e) => {
+			this.child.unPress();
+			if (s) {
+				switch (s.code) {
+					case 0:
+						snackbar.show(constants.msg.user.confirm_code_success, 'success');
+						this.props.navigation.replace("resetPassword", { id: s.data.user.id });
+						return;
 				}
-				if (e) {
-					console.log(e);
-				}
-				snackbar.show(constants.msg.user.confirm_code_not_success, 'danger');
-			});
-		} else
-			userProvider.confirmCode(this.state.phone, this.state.code, (s, e) => {
-				this.child.unPress();
-				if (s) {
-					switch (s.code) {
-						case 0:
-							snackbar.show(constants.msg.user.confirm_code_success, 'success');
-							this.props.navigation.replace("resetPassword", { id: s.data.user.id });
-							return;
-					}
 
-				}
-				if (e) {
-					console.log(e);
-				}
-				snackbar.show(constants.msg.user.confirm_code_not_success, "danger");
-			});
+			}
+			if (e) {
+				console.log(e);
+			}
+			snackbar.show(constants.msg.user.confirm_code_not_success, "danger");
+		});
 	}
 
 
@@ -87,6 +87,7 @@ class ConfirmCodeScreen extends Component {
 							placeholder={constants.input_code}
 							autoCapitalize={'none'}
 							returnKeyType={'next'}
+							keyboardType='numeric'
 							autoCorrect={false} />
 
 						<ButtonSubmit onRef={ref => (this.child = ref)} click={() => { this.confirmCode() }} text={constants.confirm} />
