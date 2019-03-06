@@ -84,7 +84,7 @@ class ResetPasswordScreen extends Component {
 
 	render() {
 		return (
-			<ActivityPanel style={{ flex: 1 }} touchToDismiss={true} hideActionbar={true} hideStatusbar={true} showFullScreen={true}>
+			<ActivityPanel style={{ flex: 1 }} touchToDismiss={true} title="Đổi mật khẩu" >
 				<ScrollView style={{ flex: 1 }}
 					keyboardShouldPersistTaps="always">
 					<View style={{ marginTop: 60, justifyContent: 'center', alignItems: 'center' }}>

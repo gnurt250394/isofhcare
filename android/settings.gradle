@@ -1,4 +1,6 @@
 rootProject.name = 'APP'
+include ':react-native-facebook-account-kit'
+project(':react-native-facebook-account-kit').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-facebook-account-kit/android')
 include ':react-native-photo-view'
 project(':react-native-photo-view').projectDir = new File(rootProject.projectDir, '../node_modules/mainam-react-native-photo-viewer/android')
 include ':react-native-google-places'

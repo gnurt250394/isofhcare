@@ -15,7 +15,9 @@ target 'APP' do
   pod 'FBSDKCoreKit'
   pod 'FBSDKLoginKit'
   pod 'FBSDKShareKit'
-  
+  # facebook account kit
+  pod 'RNAccountKit', :path => '../node_modules/react-native-facebook-account-kit/ios'
+
   # this is very important to have!
   rn_path = '../node_modules/react-native'
   pod 'yoga', path: "#{rn_path}/ReactCommon/yoga/yoga.podspec"

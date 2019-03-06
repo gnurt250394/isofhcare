@@ -48,15 +48,15 @@ class ForgotPasswordScreen extends Component {
 						return;
 					case 0:
 						if (s.data && s.data.status == 1) {
-							if (type == 2) {
-								snackbar.show(constants.msg.user.send_sms_recovery_success, 'success');
-								this.props.navigation.replace("confirmCode", { phone: this.state.email });
-							}
-							else
-							{
-								snackbar.show(constants.msg.user.send_mail_recovery_success, 'success');
-								this.props.navigation.replace("login", { phone: this.state.email });
-							}
+							// if (type == 2) {
+							snackbar.show(constants.msg.user.send_sms_recovery_success, 'success');
+							this.props.navigation.replace("confirmCode", { phone: this.state.email });
+							// }
+							// else
+							// {
+							// 	snackbar.show(constants.msg.user.send_mail_recovery_success, 'success');
+							// 	this.props.navigation.replace("login", { phone: this.state.email });
+							// }
 							return;
 						} else {
 							snackbar.show(constants.msg.user.not_found_user_with_email_or_phone, 'danger');
@@ -75,7 +75,7 @@ class ForgotPasswordScreen extends Component {
 
 	render() {
 		return (
-			<ActivityPanel style={{ flex: 1 }} title="Đăng nhập" touchToDismiss={true} hideActionbar={true} hideStatusbar={true} showFullScreen={true}>
+			<ActivityPanel style={{ flex: 1 }} title="Quên mật khẩu" touchToDismiss={true}>
 				<ScrollView style={{ flex: 1 }}
 					keyboardShouldPersistTaps="always">
 					<View style={{ marginTop: 60, justifyContent: 'center', alignItems: 'center' }}>

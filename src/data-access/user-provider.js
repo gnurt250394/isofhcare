@@ -94,7 +94,7 @@ module.exports = {
             }
         });
     },
-    register(name, email, phone, password, callback) {
+    register(name, email, phone, password, dob, gender, callback) {
         var body = {
             user: {
                 email,
@@ -104,6 +104,8 @@ module.exports = {
                 phone: phone,
                 socialType: 0,
                 role: 0,
+                dob,
+                gender
             },
             device: { os: 0, deviceId: "", token: "" }
         }

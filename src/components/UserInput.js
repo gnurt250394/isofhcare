@@ -13,6 +13,7 @@ export default class UserInput extends Component {
 		return (
 			<View style={[styles.inputWrapper, this.props.style]}>
 				<TextInput style={styles.input}
+					editable={this.props.editable}
 					keyboardType={this.props.keyboardType}
 					onChangeText={this.props.onTextChange}
 					placeholder={this.props.placeholder}

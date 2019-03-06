@@ -37,8 +37,10 @@ import ListQuestionScreen from '@containers/question/ListQuestionScreen';
 import MyQuestionScreen from '@containers/question/MyQuestionScreen';
 import CreateQuestionScreen from '@containers/question/CreateQuestionScreen';
 import DetailQuestionScreen from '@containers/question/DetailQuestionScreen';
+import TestVNPayScreen from '@containers/test/TestVNPayScreen';
 
 const RootNavigator = createStackNavigator({
+    // testVNPay: { screen: TestVNPayScreen },
     splash: { screen: SplashScreen },
     ehealth: { screen: EHealthNavigator },
     addBookingBVDHY: { screen: BookingDHYNavigation },

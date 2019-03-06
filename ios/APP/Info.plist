@@ -55,6 +55,17 @@
 	<string>1</string>
 	<key>FacebookAppID</key>
 	<string>457683741386685</string>
+	<key>AccountKitClientToken</key>
+	<string>a9ae7d8852eab508b86896d5cd375999</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+	<dict>
+		<key>CFBundleURLSchemes</key>
+		<array>
+		<string>ak457683741386685</string>
+		</array>
+	</dict>
+	</array>
 	<key>FacebookDisplayName</key>
 	<string>iSofH Care</string>
 	<key>ITSAppUsesNonExemptEncryption</key>

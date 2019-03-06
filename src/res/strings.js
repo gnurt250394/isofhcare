@@ -33,6 +33,7 @@ module.exports = {
   update: "Cập nhật",
   later: "Để sau",
   input_code: "Nhập mã xác thực",
+  dob:"Ngày sinh",
   hospital: {
     BENH_VIEN_DAI_HOC_Y: 1
   },
@@ -134,7 +135,7 @@ module.exports = {
       account_blocked: "Tài khoản đã bị khóa, vui lòng liên hệ quản trị viên",
       username_or_password_incorrect: "Email/tên đăng nhập hoặc mặt khẩu không đúng. Vui lòng thử lại!",
       send_mail_recovery_success: "Link xác nhận mật khẩu mới đã được gửi về email bạn đăng ký",
-      send_sms_recovery_success: "Mã xác nhận đã được gửi về số điện thoại của bạn",
+      send_sms_recovery_success: "iSofHCare đã gửi mã xác thực tới Email/SĐT của bạn",
       send_mail_recovery_failed: "Không tìm thấy thông tin tài khoản với email bạn nhập",
       canot_get_user_info_in_account_facebook: "Không tìm thấy thông tin trong tài khoản facebook của bạn",
       canot_get_user_info_in_account_google: "Không tìm thấy thông tin trong tài khoản google của bạn",

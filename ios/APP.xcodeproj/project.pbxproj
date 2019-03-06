@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00121F268B744C0DAB8EB179 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 214A1AD8826C441B86456322 /* SafariServices.framework */; };
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
@@ -72,6 +71,7 @@
 		E504019A736C4E52B5CA4464 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 94798CE8149C4557AC458707 /* libz.tbd */; };
 		E829ED23B13342C4906334F4 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD5F71DCE6BD49A78D01066B /* Foundation.ttf */; };
 		FACF3D2D22117918001C14FB /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FACF3CDE22117891001C14FB /* libBVLinearGradient.a */; };
+		AB0127FAE3D449368C677EF7 /* libRNAccountKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 523C2A71A68745E49752E186 /* libRNAccountKit.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -537,6 +537,8 @@
 		EBC3324BCEB75276C181FD32 /* libPods-APP.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-APP.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FACF3CD622117891001C14FB /* BVLinearGradient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BVLinearGradient.xcodeproj; path = "../node_modules/react-native-linear-gradient/BVLinearGradient.xcodeproj"; sourceTree = "<group>"; };
 		FB08E72CAE4D5E4E3C0999B4 /* Pods-APP.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-APP.debug.xcconfig"; path = "Pods/Target Support Files/Pods-APP/Pods-APP.debug.xcconfig"; sourceTree = "<group>"; };
+		F40DBE379BA44D75B40801E1 /* RNAccountKit.xcodeproj */ = {isa = PBXFileReference; name = "RNAccountKit.xcodeproj"; path = "../node_modules/react-native-facebook-account-kit/ios/RNAccountKit.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		523C2A71A68745E49752E186 /* libRNAccountKit.a */ = {isa = PBXFileReference; name = "libRNAccountKit.a"; path = "libRNAccountKit.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -584,6 +586,7 @@
 				6C17D834364F490B9D3CB7FD /* libRNGooglePlaces.a in Frameworks */,
 				46EBBF0F9A944D0C81C1B3EC /* slidingPanel.app in Frameworks */,
 				D5A48EC5F69E4BAA84B12B90 /* libRNPhotoView.a in Frameworks */,
+				AB0127FAE3D449368C677EF7 /* libRNAccountKit.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -790,6 +793,7 @@
 				649A5967940A4BCD8E6DA1EF /* RealmReact.xcodeproj */,
 				7E9C18D87F5E40CFA4AA60A4 /* RNGooglePlaces.xcodeproj */,
 				C284589C4D624FEBBCEA1382 /* RNPhotoView.xcodeproj */,
+				F40DBE379BA44D75B40801E1 /* RNAccountKit.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1809,11 +1813,15 @@
 					"$(SRCROOT)/../node_modules/react-native-google-places/ios",
 					"$(SRCROOT)/../node_modules/mainam-react-native-sliding-up-down/ios/slidingPanel/**",
 					"$(SRCROOT)..\node_modules\neact-native-photo-viewios/**",
+					"$(SRCROOT)\..\node_modules\react-native-facebook-account-kit\ios/**",
 				);
 				INFOPLIST_FILE = APPTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -1841,11 +1849,15 @@
 					"$(SRCROOT)/../node_modules/react-native-google-places/ios",
 					"$(SRCROOT)/../node_modules/mainam-react-native-sliding-up-down/ios/slidingPanel/**",
 					"$(SRCROOT)..\node_modules\neact-native-photo-viewios/**",
+					"$(SRCROOT)\..\node_modules\react-native-facebook-account-kit\ios/**",
 				);
 				INFOPLIST_FILE = APPTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -1888,6 +1900,7 @@
 					"$(SRCROOT)..",
 					ode_modules,
 					"eact-native-photo-viewios/**",
+					"$(SRCROOT)\..\node_modules\react-native-facebook-account-kit\ios/**",
 				);
 				INFOPLIST_FILE = APP/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1937,6 +1950,7 @@
 					"$(SRCROOT)..",
 					ode_modules,
 					"eact-native-photo-viewios/**",
+					"$(SRCROOT)\..\node_modules\react-native-facebook-account-kit\ios/**",
 				);
 				INFOPLIST_FILE = APP/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1978,10 +1992,14 @@
 					"$(SRCROOT)/../node_modules/react-native-google-places/ios",
 					"$(SRCROOT)/../node_modules/mainam-react-native-sliding-up-down/ios/slidingPanel/**",
 					"$(SRCROOT)..\node_modules\neact-native-photo-viewios/**",
+					"$(SRCROOT)\..\node_modules\react-native-facebook-account-kit\ios/**",
 				);
 				INFOPLIST_FILE = "APP-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -2017,10 +2035,14 @@
 					"$(SRCROOT)/../node_modules/react-native-google-places/ios",
 					"$(SRCROOT)/../node_modules/mainam-react-native-sliding-up-down/ios/slidingPanel/**",
 					"$(SRCROOT)..\node_modules\neact-native-photo-viewios/**",
+					"$(SRCROOT)\..\node_modules\react-native-facebook-account-kit\ios/**",
 				);
 				INFOPLIST_FILE = "APP-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -2055,10 +2077,14 @@
 					"$(SRCROOT)/../node_modules/react-native-google-places/ios",
 					"$(SRCROOT)/../node_modules/mainam-react-native-sliding-up-down/ios/slidingPanel/**",
 					"$(SRCROOT)..\node_modules\neact-native-photo-viewios/**",
+					"$(SRCROOT)\..\node_modules\react-native-facebook-account-kit\ios/**",
 				);
 				INFOPLIST_FILE = "APP-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",
@@ -2093,10 +2119,14 @@
 					"$(SRCROOT)/../node_modules/react-native-google-places/ios",
 					"$(SRCROOT)/../node_modules/mainam-react-native-sliding-up-down/ios/slidingPanel/**",
 					"$(SRCROOT)..\node_modules\neact-native-photo-viewios/**",
+					"$(SRCROOT)\..\node_modules\react-native-facebook-account-kit\ios/**",
 				);
 				INFOPLIST_FILE = "APP-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-lc++",

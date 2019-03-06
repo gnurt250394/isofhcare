@@ -12,6 +12,7 @@ import constants from '@resources/strings';
 import redux from '@redux-store';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import SocialNetwork from '@components/LoginSocial';
+// import RNAccountKit from 'react-native-facebook-account-kit'
 const durationDefault = 500;
 class LoginScreen extends Component {
 	constructor(props) {
@@ -30,6 +31,13 @@ class LoginScreen extends Component {
 
 	componentDidMount() {
 		this.animate()
+		// RNAccountKit.loginWithPhone().then((token) => {
+		// 	if (!token) {
+		// 	console.log('Login cancelled')
+		// 	} else {
+		// 	console.log(`Logged with phone. Token: ${token}`)
+		// 	}
+		// });
 	}
 
 	animate() {
@@ -117,8 +125,8 @@ class LoginScreen extends Component {
 			<ActivityPanel style={{ flex: 1 }}
 				title="Đăng nhập"
 				touchToDismiss={true}
-				hideActionbar={true}
-				hideStatusbar={true}
+				// hideActionbar={true}
+				// hideStatusbar={true}
 				showFullScreen={true}>
 				<ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
 					<Animated.View style={{ top: introButton }}>

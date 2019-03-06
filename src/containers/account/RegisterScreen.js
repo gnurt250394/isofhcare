@@ -12,6 +12,8 @@ import constants from '@resources/strings';
 import redux from '@redux-store';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import stringUtils from 'mainam-react-native-string-utils';
+import dateUtils from 'mainam-react-native-date-utils';
+import { DatePicker } from 'native-base';
 
 class RegisterScreen extends Component {
 
@@ -25,10 +27,15 @@ class RegisterScreen extends Component {
 			email: "",
 			password: "",
 			username: "",
-			phone: ""
+			phone: "",
+			dob: null,
+			gender: 1
 		}
 		this.showPass = this.showPass.bind(this);
 		this.showPassConfirm = this.showPassConfirm.bind(this);
+	}
+	setDate(newDate) {
+		this.setState({ dob: newDate });
 	}
 	showPass() {
 		this.state.press === false ? this.setState({ showPass: false, press: true }) : this.setState({ showPass: true, press: false });
@@ -41,60 +48,60 @@ class RegisterScreen extends Component {
 	register() {
 		Keyboard.dismiss();
 		if (!this.state.fullname) {
-			snackbar.showShort(constants.msg.user.please_input_fullname);
+			snackbar.showShort(constants.msg.user.please_input_fullname, "danger");
 			this.child.unPress();
 			return;
 		}
 		if (!this.state.fullname.isFullName()) {
-			snackbar.showShort(constants.msg.user.please_enter_the_correct_fullname_format);
+			snackbar.showShort(constants.msg.user.please_enter_the_correct_fullname_format, "danger");
 			this.child.unPress();
 			return;
 		}
 
 		if (!this.state.phone) {
 			if (!this.state.email) {
-				snackbar.showShort(constants.msg.user.please_input_email_or_phone);
+				snackbar.showShort(constants.msg.user.please_input_email_or_phone, "danger");
 				this.child.unPress();
 				return;
 			}
 		}
 		if (this.state.email && !this.state.email.isEmail()) {
-			snackbar.showShort(constants.msg.user.please_enter_the_correct_email_format);
+			snackbar.showShort(constants.msg.user.please_enter_the_correct_email_format, "danger");
 			this.child.unPress();
 			return;
 		}
 
 		if (this.state.phone && !this.state.phone.isPhoneNumber()) {
-			snackbar.showShort(constants.msg.user.please_enter_the_correct_phone_number_format);
+			snackbar.showShort(constants.msg.user.please_enter_the_correct_phone_number_format, "danger");
 			this.child.unPress();
 			return;
 		}
 
 		if (!this.state.password) {
-			snackbar.showShort(constants.msg.user.please_input_password);
+			snackbar.showShort(constants.msg.user.please_input_password, "danger");
 			this.child.unPress();
 			return;
 		}
 		if (this.state.password.length < 6) {
-			snackbar.showShort("Mật khẩu cần nhiều hơn 6 ký tự");
+			snackbar.showShort("Mật khẩu cần nhiều hơn 6 ký tự", "danger");
 			this.child.unPress();
 			return;
 		}
 
 
 		if (!this.state.confirm_password) {
-			snackbar.showShort(constants.msg.user.please_input_confirm_password);
+			snackbar.showShort(constants.msg.user.please_input_confirm_password, "danger");
 			this.child.unPress();
 			return;
 		}
 		if (this.state.password != this.state.confirm_password) {
-			snackbar.showShort(constants.msg.user.confirm_password_is_not_match);
+			snackbar.showShort(constants.msg.user.confirm_password_is_not_match, "danger");
 			this.child.unPress();
 			return;
 		}
 
 
-		userProvider.register(this.state.fullname.trim(), this.state.email.trim(), this.state.phone.trim(), this.state.password, (s, e) => {
+		userProvider.register(this.state.fullname.trim(), this.state.email.trim(), this.state.phone.trim(), this.state.password, this.state.dob ? this.state.dob.format("yyyy-MM-dd HH:mm:ss") : null, this.state.gender, (s, e) => {
 			this.child.unPress();
 			if (s) {
 				// snackbar.show("Thông tin đăng nhập không hợp lệ");
@@ -138,7 +145,7 @@ class RegisterScreen extends Component {
 
 	render() {
 		return (
-			<ActivityPanel style={{ flex: 1 }} title="Đăng nhập" touchToDismiss={true} hideActionbar={true} hideStatusbar={true} showFullScreen={true}>
+			<ActivityPanel style={{ flex: 1 }} title="Đăng nhập" touchToDismiss={true} showFullScreen={true}>
 				<ScrollView style={{ flex: 1 }}
 					keyboardShouldPersistTaps="always">
 					<View style={{ marginTop: 60, justifyContent: 'center', alignItems: 'center' }}>
@@ -151,6 +158,59 @@ class RegisterScreen extends Component {
 							autoCapitalize={'none'}
 							returnKeyType={'next'}
 							autoCorrect={false} />
+						<View style={{ paddingLeft: 20 }}>
+							<Text>Giới tính</Text>
+							<View style={{ flexDirection: 'row' }}>
+								<TouchableOpacity onPress={() => { this.setState({ gender: 1 }) }} style={{ padding: 10, flexDirection: 'row' }}>
+									{
+										this.state.gender == 1 ?
+											<ScaleImage source={require("@images/ic_radio1.png")} width={20} /> :
+											<ScaleImage source={require("@images/ic_radio0.png")} width={20} />
+									}
+									<Text style={{ marginLeft: 5 }}>Nam</Text>
+								</TouchableOpacity>
+								<TouchableOpacity onPress={() => { this.setState({ gender: 0 }) }} style={{ padding: 10, flexDirection: 'row' }}>
+									{
+										this.state.gender == 0 ?
+											<ScaleImage source={require("@images/ic_radio1.png")} width={20} /> :
+											<ScaleImage source={require("@images/ic_radio0.png")} width={20} />
+									}
+									<Text style={{ marginLeft: 5 }}>Nữ</Text>
+								</TouchableOpacity>
+							</View>
+						</View>
+						<TouchableOpacity style={{ flex: 1, marginTop: 10 }} onPress={() => {
+							if (this.dob)
+								this.dob.showDatePicker();
+						}}>
+
+							<UserInput
+								value={this.state.dob ? this.state.dob.format("dd/MM/yyyy") : ""}
+								placeholder={constants.dob}
+								autoCapitalize={'none'}
+								returnKeyType={'next'}
+								editable={false}
+								autoCorrect={false} />
+							<View style={{ display: 'none' }}>
+								<DatePicker
+									ref={ref => this.dob = ref}
+									defaultDate={new Date()}
+									minimumDate={new Date(1900, 1, 1)}
+									maximumDate={new Date()}
+									locale={"en"}
+									timeZoneOffsetInMinutes={undefined}
+									modalTransparent={false}
+									animationType={"fade"}
+									androidMode={"default"}
+									placeHolderText="Select date"
+									textStyle={{ color: "green" }}
+									placeHolderTextStyle={{ color: "#d3d3d3" }}
+									onDateChange={this.setDate.bind(this)}
+									style={{ width: 0 }}
+									disabled={false}
+								/>
+							</View>
+						</TouchableOpacity>
 						<UserInput onTextChange={(s) => this.setState({ email: s })}
 							placeholder={constants.email}
 							autoCapitalize={'none'}
@@ -213,6 +273,7 @@ class RegisterScreen extends Component {
 
 
 				</ScrollView >
+
 			</ActivityPanel >
 		);
 	}
