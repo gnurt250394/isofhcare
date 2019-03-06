@@ -30,28 +30,17 @@ class RegisterScreen extends Component {
 		// }
 		this.state = {
 			verified,
-			showPass: true,
-			showPassConfirm: true,
 			press: false,
 			pressConfirm: false,
 			email: "",
-			password: "",
 			phone,
 			token,
 			dob: null,
 			gender: 1
 		}
-		this.showPass = this.showPass.bind(this);
-		this.showPassConfirm = this.showPassConfirm.bind(this);
 	}
 	setDate(newDate) {
 		this.setState({ dob: newDate });
-	}
-	showPass() {
-		this.state.press === false ? this.setState({ showPass: false, press: true }) : this.setState({ showPass: true, press: false });
-	}
-	showPassConfirm() {
-		this.state.pressConfirm === false ? this.setState({ showPassConfirm: false, pressConfirm: true }) : this.setState({ showPassConfirm: true, pressConfirm: false });
 	}
 
 	changeEmail() {
@@ -128,72 +117,17 @@ class RegisterScreen extends Component {
 			return;
 		}
 
-		// if (this.state.phone && !this.state.phone.isPhoneNumber()) {
-		// 	snackbar.showShort(constants.msg.user.please_enter_the_correct_phone_number_format, "danger");
-		// 	this.child.unPress();
-		// 	return;
-		// }
-
-		if (!this.state.password) {
-			snackbar.showShort(constants.msg.user.please_input_password, "danger");
-			this.child.unPress();
-			return;
-		}
-		if (this.state.password.length < 6) {
-			snackbar.showShort("Mật khẩu cần nhiều hơn 6 ký tự", "danger");
-			this.child.unPress();
-			return;
-		}
-
-
-		if (!this.state.confirm_password) {
-			snackbar.showShort(constants.msg.user.please_input_confirm_password, "danger");
-			this.child.unPress();
-			return;
-		}
-		if (this.state.password != this.state.confirm_password) {
-			snackbar.showShort(constants.msg.user.confirm_password_is_not_match, "danger");
-			this.child.unPress();
-			return;
-		}
-
-
-		userProvider.register(this.state.fullname.trim(), this.state.email.trim(), this.state.phone.trim(), this.state.password, this.state.dob ? this.state.dob.format("yyyy-MM-dd HH:mm:ss") : null, this.state.gender, this.state.token).then(s => {
-			this.child.unPress();
-			switch (s.code) {
-				case 0:
-					var user = s.data.user;
-					this.props.dispatch(redux.userLogin(user));
-					this.props.navigation.navigate('home', { showDraw: false });
-					return;
-					// if (user.role == 4) {
-					// 	snackbar.show(constants.msg.user.please_login_on_web_to_management);
-					// 	return;
-					// }
-					// if (this.state.email) {
-					// 	snackbar.show(constants.msg.user.confirm_email_active_account, "success")
-					// 	this.props.navigation.replace("login");
-					// } else {
-					// 	snackbar.show(constants.msg.user.confirm_phone_active_account, "success")
-					// 	this.props.navigation.replace("confirmCode", {
-					// 		phone: this.state.phone,
-					// 		fromRegisterScreen: true,
-					// 		user
-					// 	});
-					// }
-					return;
-				case 2:
-					snackbar.show(constants.msg.user.username_or_email_existed, "danger");
-					return;
-				case 3:
-				case 1:
-					snackbar.show(constants.msg.user.account_blocked, "danger");
-					return;
+		this.child.unPress();
+		this.props.navigation.navigate("enterPassword", {
+			user: {
+				phone: this.state.phone,
+				email: this.state.email,
+				fullname: this.state.fullname,
+				dob: this.state.dob,
+				gender: this.state.gender,
+				token: this.state.token
 			}
-		}).catch(e => {
-			this.child.unPress();
-			snackbar.show(constants.msg.error_occur);
-		});
+		})
 	}
 
 
@@ -288,45 +222,8 @@ class RegisterScreen extends Component {
 								style={{ marginTop: 12 }}
 							/>
 						</TouchableOpacity>
-						<View style={{ marginTop: 12, flex: 1 }}>
 
-							<UserInput
-								onTextChange={(s) => this.setState({ password: s })}
-								secureTextEntry={this.state.showPass}
-								placeholder={constants.input_password}
-								returnKeyType={'done'}
-								autoCapitalize={'none'}
-								autoCorrect={false} />
-
-							<TouchableOpacity
-								activeOpacity={0.7}
-								style={styles.btnEye}
-								onPress={this.showPass}>
-								<Image source={eyeImg} style={styles.iconEye} />
-							</TouchableOpacity>
-
-						</View>
-
-						<View style={{ marginTop: 12, flex: 1 }}>
-
-							<UserInput
-								onTextChange={(s) => this.setState({ confirm_password: s })}
-								secureTextEntry={this.state.showPassConfirm}
-								placeholder={constants.confirm_password}
-								returnKeyType={'done'}
-								autoCapitalize={'none'}
-								autoCorrect={false} />
-
-							<TouchableOpacity
-								activeOpacity={0.7}
-								style={styles.btnEye}
-								onPress={this.showPassConfirm}>
-								<Image source={eyeImg} style={styles.iconEye} />
-							</TouchableOpacity>
-
-						</View>
-
-						<ButtonSubmit onRef={ref => (this.child = ref)} click={() => { this.register() }} text={constants.register} />
+						<ButtonSubmit onRef={ref => (this.child = ref)} click={() => { this.register() }} text={"Tiếp tục"} />
 						<View style={{ width: DEVICE_WIDTH, maxWidth: 300 }}>
 							<TouchableOpacity onPress={() => { this.props.navigation.replace("login") }} style={{ alignItems: 'flex-end' }}>
 								<Text style={{ marginTop: 15, color: 'rgb(155,155,155)', lineHeight: 20, fontSize: 16 }}>Nếu bạn đã có tài khoản hãy đăng nhập ngay <Text style={{ fontWeight: 'bold', color: 'rgb(0,151,124)' }}>tại đây</Text></Text>

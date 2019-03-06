@@ -3,7 +3,6 @@ import string from 'mainam-react-native-string-utils';
 import constants from '@resources/strings';
 import { Platform } from 'react-native'
 import datacacheProvider from '@data-access/datacache-provider';
-import { resolve } from '../../node_modules/uri-js';
 
 const os = Platform.select({
     ios: 2,
@@ -97,6 +96,7 @@ module.exports = {
     },
     register(name, email, phone, password, dob, gender, token) {
         return new Promise((resolve, reject) => {
+            // reject({});
             var body = {
                 user: {
                     email,
@@ -107,8 +107,8 @@ module.exports = {
                     socialType: 0,
                     role: 0,
                     dob,
-                    gender
-                    , token
+                    gender,
+                    token
                 },
                 device: { os: 0, deviceId: "", token: "" }
             }

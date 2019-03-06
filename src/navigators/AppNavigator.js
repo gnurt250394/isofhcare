@@ -2,6 +2,7 @@ import { StackRouter, createStackNavigator } from 'react-navigation';
 import { Platform } from 'react-native';
 import LoginScreen from '@containers/account/LoginScreen';
 import RegisterScreen from '@containers/account/RegisterScreen';
+import EnterPasswordScreen from '@containers/account/EnterPasswordScreen';
 import ForgotPasswordScreen from '@containers/account/ForgotPasswordScreen';
 import SplashScreen from '@containers/SplashScreen';
 import HomeScreen from '@containers/HomeScreen';
@@ -51,6 +52,7 @@ const RootNavigator = createStackNavigator({
     home: { screen: HomeScreen },
     login: { screen: LoginScreen },
     forgotPassword: { screen: ForgotPasswordScreen },
+    enterPassword: { screen: EnterPasswordScreen },
     register: { screen: RegisterScreen },
     searchFacility: { screen: SearchFacilityScreen },
     searchFacilityResult: { screen: SearchFacilityResultScreen },
