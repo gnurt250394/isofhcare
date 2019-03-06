@@ -3,6 +3,7 @@ import string from 'mainam-react-native-string-utils';
 import constants from '@resources/strings';
 import { Platform } from 'react-native'
 import datacacheProvider from '@data-access/datacache-provider';
+import { resolve } from '../../node_modules/uri-js';
 
 const os = Platform.select({
     ios: 2,
@@ -38,7 +39,7 @@ module.exports = {
     },
     confirmCode(phone, code, callback) {
         var body = {
-            phone,
+            phoneOrMail: phone,
             code
         }
         client.requestApi("put", constants.api.user.confirm_code, body, (s, e) => {
@@ -94,24 +95,29 @@ module.exports = {
             }
         });
     },
-    register(name, email, phone, password, dob, gender, callback) {
-        var body = {
-            user: {
-                email,
-                password: password.toMd5(),
-                name,
-                gender: 1,
-                phone: phone,
-                socialType: 0,
-                role: 0,
-                dob,
-                gender
-            },
-            device: { os: 0, deviceId: "", token: "" }
-        }
-        client.requestApi("post", constants.api.user.register, body, (s, e) => {
-            if (callback)
-                callback(s, e);
+    register(name, email, phone, password, dob, gender, token) {
+        return new Promise((resolve, reject) => {
+            var body = {
+                user: {
+                    email,
+                    password: password.toMd5(),
+                    name,
+                    gender: 1,
+                    phone: phone,
+                    socialType: 0,
+                    role: 0,
+                    dob,
+                    gender
+                    , token
+                },
+                device: { os: 0, deviceId: "", token: "" }
+            }
+            client.requestApi("post", constants.api.user.register, body, (s, e) => {
+                if (s)
+                    resolve(s);
+                else
+                    reject(e);
+            });
         });
     },
     update(user, callback) {

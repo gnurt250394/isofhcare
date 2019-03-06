@@ -12,7 +12,7 @@ import constants from '@resources/strings';
 import redux from '@redux-store';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import SocialNetwork from '@components/LoginSocial';
-// import RNAccountKit from 'react-native-facebook-account-kit'
+import RNAccountKit from 'react-native-facebook-account-kit'
 const durationDefault = 500;
 class LoginScreen extends Component {
 	constructor(props) {
@@ -27,17 +27,17 @@ class LoginScreen extends Component {
 		this.animatedValue = new Animated.Value(0)
 		this.animatedValue1 = new Animated.Value(0)
 		this.animatedValue2 = new Animated.Value(0)
+		// Configures the SDK with some options
+		RNAccountKit.configure({
+			titleType: 'login',
+			initialPhoneCountryPrefix: '+84', // autodetected if none is provided
+			countryWhitelist: ['VN'], // [] by default
+			defaultCountry: 'VN',
+		});
 	}
 
 	componentDidMount() {
 		this.animate()
-		// RNAccountKit.loginWithPhone().then((token) => {
-		// 	if (!token) {
-		// 	console.log('Login cancelled')
-		// 	} else {
-		// 	console.log(`Logged with phone. Token: ${token}`)
-		// 	}
-		// });
 	}
 
 	animate() {
@@ -64,6 +64,31 @@ class LoginScreen extends Component {
 
 	showPass() {
 		this.state.press === false ? this.setState({ showPass: false, press: true }) : this.setState({ showPass: true, press: false });
+	}
+	register() {
+		// this.props.navigation.navigate("register", {  })
+		// return;
+		let verify = async () => {
+			RNAccountKit.loginWithPhone().then(async (token) => {
+				if (!token) {
+					snackbar.show("Xác minh số điện thoại không thành công", "danger");
+				} else {
+					let account = await RNAccountKit.getCurrentAccount();
+					if (account && account.phoneNumber) {
+						this.props.navigation.navigate("register", { phone: "0" + account.phoneNumber.number, token: token.token })
+					} else {
+						snackbar.show("Xác minh số điện thoại không thành công", "danger");
+					}
+				}
+			});
+		};
+		RNAccountKit.logout()
+			.then(() => {
+				verify();
+			}).catch(x => {
+				verify();
+			});
+
 	}
 
 	login() {
@@ -168,7 +193,7 @@ class LoginScreen extends Component {
 								<ButtonSubmit style={{ width: '100%' }} onRef={ref => (this.child = ref)} click={() => { this.login() }} text={constants.login} />
 							</View>
 							<View style={{ width: 300, maxWidth: 300, paddingLeft: 20, justifyContent: 'center' }}>
-								<TouchableOpacity onPress={() => { this.props.navigation.replace("register") }}>
+								<TouchableOpacity onPress={this.register.bind(this)}>
 									<Text style={{ marginTop: 15, color: 'rgb(155,155,155)', lineHeight: 20, fontSize: 16 }}>Nếu bạn chưa có tài khoản hãy đăng ký ngay <Text style={{ fontWeight: 'bold', color: 'rgb(0,151,124)' }}>tại đây</Text></Text>
 								</TouchableOpacity>
 							</View>

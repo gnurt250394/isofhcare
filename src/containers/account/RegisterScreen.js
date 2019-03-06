@@ -14,20 +14,30 @@ import ScaleImage from 'mainam-react-native-scaleimage';
 import stringUtils from 'mainam-react-native-string-utils';
 import dateUtils from 'mainam-react-native-date-utils';
 import { DatePicker } from 'native-base';
+import RNAccountKit from 'react-native-facebook-account-kit'
 
 class RegisterScreen extends Component {
 
 	constructor(props) {
 		super(props)
+		var phone = this.props.navigation.getParam("phone", null);
+		var token = this.props.navigation.getParam("token", null);
+		let verified = true;
+		// if (!phone || !token) {
+		// 	verified = false;
+		// 	snackbar.show("Vui lòng xác thực số điện thoại trước khi đăng ký", "danger");
+		// 	this.props.navigation.pop();
+		// }
 		this.state = {
+			verified,
 			showPass: true,
 			showPassConfirm: true,
 			press: false,
 			pressConfirm: false,
 			email: "",
 			password: "",
-			username: "",
-			phone: "",
+			phone,
+			token,
 			dob: null,
 			gender: 1
 		}
@@ -44,6 +54,53 @@ class RegisterScreen extends Component {
 		this.state.pressConfirm === false ? this.setState({ showPassConfirm: false, pressConfirm: true }) : this.setState({ showPassConfirm: true, pressConfirm: false });
 	}
 
+	changeEmail() {
+		let verify = async () => {
+			RNAccountKit.loginWithEmail().then(async (token) => {
+				if (!token) {
+					snackbar.show("Xác minh email không thành công", "danger");
+				} else {
+					let account = await RNAccountKit.getCurrentAccount();
+					if (account && account.email) {
+						this.setState({ email: account.email });
+					} else {
+						snackbar.show("Xác minh email không thành công", "danger");
+					}
+				}
+			});
+		};
+		RNAccountKit.logout()
+			.then(() => {
+				verify();
+			}).catch(x => {
+				verify();
+			});
+	}
+	changePhone() {
+		let verify = async () => {
+			RNAccountKit.loginWithPhone().then(async (token) => {
+				if (!token) {
+					snackbar.show("Xác minh số điện thoại không thành công", "danger");
+				} else {
+					let account = await RNAccountKit.getCurrentAccount();
+					if (account && account.phoneNumber) {
+						this.setState({
+							phone: "0" + account.phoneNumber.number,
+							token: token.token
+						})
+					} else {
+						snackbar.show("Xác minh số điện thoại không thành công", "danger");
+					}
+				}
+			});
+		};
+		RNAccountKit.logout()
+			.then(() => {
+				verify();
+			}).catch(x => {
+				verify();
+			});
+	}
 
 	register() {
 		Keyboard.dismiss();
@@ -71,11 +128,11 @@ class RegisterScreen extends Component {
 			return;
 		}
 
-		if (this.state.phone && !this.state.phone.isPhoneNumber()) {
-			snackbar.showShort(constants.msg.user.please_enter_the_correct_phone_number_format, "danger");
-			this.child.unPress();
-			return;
-		}
+		// if (this.state.phone && !this.state.phone.isPhoneNumber()) {
+		// 	snackbar.showShort(constants.msg.user.please_enter_the_correct_phone_number_format, "danger");
+		// 	this.child.unPress();
+		// 	return;
+		// }
 
 		if (!this.state.password) {
 			snackbar.showShort(constants.msg.user.please_input_password, "danger");
@@ -101,43 +158,40 @@ class RegisterScreen extends Component {
 		}
 
 
-		userProvider.register(this.state.fullname.trim(), this.state.email.trim(), this.state.phone.trim(), this.state.password, this.state.dob ? this.state.dob.format("yyyy-MM-dd HH:mm:ss") : null, this.state.gender, (s, e) => {
+		userProvider.register(this.state.fullname.trim(), this.state.email.trim(), this.state.phone.trim(), this.state.password, this.state.dob ? this.state.dob.format("yyyy-MM-dd HH:mm:ss") : null, this.state.gender, this.state.token).then(s => {
 			this.child.unPress();
-			if (s) {
-				// snackbar.show("Thông tin đăng nhập không hợp lệ");
-				// return;
-				switch (s.code) {
-					case 0:
-						var user = s.data.user;
-						// if (user.role == 4) {
-						// 	snackbar.show(constants.msg.user.please_login_on_web_to_management);
-						// 	return;
-						// }
-						if (this.state.email) {
-							snackbar.show(constants.msg.user.confirm_email_active_account, "success")
-							this.props.navigation.replace("login");
-						} else {
-							snackbar.show(constants.msg.user.confirm_phone_active_account, "success")
-							this.props.navigation.replace("confirmCode", {
-								phone: this.state.phone,
-								fromRegisterScreen: true,
-								user
-							});
-						}
-						return;
-					case 2:
-						snackbar.show(constants.msg.user.username_or_email_existed, "danger");
-						return;
-					case 3:
-					case 1:
-						snackbar.show(constants.msg.user.account_blocked, "danger");
-						return;
-				}
-
+			switch (s.code) {
+				case 0:
+					var user = s.data.user;
+					this.props.dispatch(redux.userLogin(user));
+					this.props.navigation.navigate('home', { showDraw: false });
+					return;
+					// if (user.role == 4) {
+					// 	snackbar.show(constants.msg.user.please_login_on_web_to_management);
+					// 	return;
+					// }
+					// if (this.state.email) {
+					// 	snackbar.show(constants.msg.user.confirm_email_active_account, "success")
+					// 	this.props.navigation.replace("login");
+					// } else {
+					// 	snackbar.show(constants.msg.user.confirm_phone_active_account, "success")
+					// 	this.props.navigation.replace("confirmCode", {
+					// 		phone: this.state.phone,
+					// 		fromRegisterScreen: true,
+					// 		user
+					// 	});
+					// }
+					return;
+				case 2:
+					snackbar.show(constants.msg.user.username_or_email_existed, "danger");
+					return;
+				case 3:
+				case 1:
+					snackbar.show(constants.msg.user.account_blocked, "danger");
+					return;
 			}
-			if (e) {
-				console.log(e);
-			}
+		}).catch(e => {
+			this.child.unPress();
 			snackbar.show(constants.msg.error_occur);
 		});
 	}
@@ -145,6 +199,7 @@ class RegisterScreen extends Component {
 
 	render() {
 		return (
+			this.state.verified &&
 			<ActivityPanel style={{ flex: 1 }} title="Đăng nhập" touchToDismiss={true} showFullScreen={true}>
 				<ScrollView style={{ flex: 1 }}
 					keyboardShouldPersistTaps="always">
@@ -158,7 +213,7 @@ class RegisterScreen extends Component {
 							autoCapitalize={'none'}
 							returnKeyType={'next'}
 							autoCorrect={false} />
-						<View style={{ paddingLeft: 20 }}>
+						<View style={{ paddingLeft: 30, flex: 1, width: DEVICE_WIDTH - 40, marginTop: 10 }}>
 							<Text>Giới tính</Text>
 							<View style={{ flexDirection: 'row' }}>
 								<TouchableOpacity onPress={() => { this.setState({ gender: 1 }) }} style={{ padding: 10, flexDirection: 'row' }}>
@@ -211,20 +266,28 @@ class RegisterScreen extends Component {
 								/>
 							</View>
 						</TouchableOpacity>
-						<UserInput onTextChange={(s) => this.setState({ email: s })}
-							placeholder={constants.email}
-							autoCapitalize={'none'}
-							returnKeyType={'next'}
-							autoCorrect={false}
-							style={{ marginTop: 12 }}
-						/>
-						<UserInput onTextChange={(s) => this.setState({ phone: s })}
-							placeholder={constants.phone}
-							autoCapitalize={'none'}
-							returnKeyType={'next'}
-							autoCorrect={false}
-							style={{ marginTop: 12 }}
-						/>
+						<TouchableOpacity onPress={this.changeEmail.bind(this)} style={{ flex: 1 }} >
+							<UserInput
+								editable={false}
+								value={this.state.email}
+								placeholder={constants.email}
+								autoCapitalize={'none'}
+								returnKeyType={'next'}
+								autoCorrect={false}
+								style={{ marginTop: 12 }}
+							/>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={this.changePhone.bind(this)} style={{ flex: 1 }} >
+							<UserInput
+								value={this.state.phone}
+								placeholder={constants.phone}
+								autoCapitalize={'none'}
+								returnKeyType={'next'}
+								editable={false}
+								autoCorrect={false}
+								style={{ marginTop: 12 }}
+							/>
+						</TouchableOpacity>
 						<View style={{ marginTop: 12, flex: 1 }}>
 
 							<UserInput
