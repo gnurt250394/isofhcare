@@ -20,24 +20,17 @@ class RegisterScreen extends Component {
 
 	constructor(props) {
 		super(props)
-		var phone = this.props.navigation.getParam("phone", null);
-		var token = this.props.navigation.getParam("token", null);
+		let user = this.props.navigation.getParam("user", null);
+		// var phone = this.props.navigation.getParam("phone", null);
+		// var token = this.props.navigation.getParam("token", null);
 		let verified = true;
-		// if (!phone || !token) {
-		// 	verified = false;
-		// 	snackbar.show("Vui lòng xác thực số điện thoại trước khi đăng ký", "danger");
-		// 	this.props.navigation.pop();
-		// }
-		this.state = {
-			verified,
-			press: false,
-			pressConfirm: false,
-			email: "",
-			phone,
-			token,
-			dob: null,
-			gender: 1
-		}
+		if (!user)
+			user = {};
+		user.verified = verified;
+		user.press = false;
+		user.pressConfirm = false;
+		user.gender = 1;
+		this.state = user;
 	}
 	setDate(newDate) {
 		this.setState({ dob: newDate });
@@ -125,7 +118,9 @@ class RegisterScreen extends Component {
 				fullname: this.state.fullname,
 				dob: this.state.dob,
 				gender: this.state.gender,
-				token: this.state.token
+				token: this.state.token,
+				socialId: this.state.socialId,
+				socialType: this.state.socialType ? this.state.socialType : 1
 			}
 		})
 	}
@@ -144,6 +139,7 @@ class RegisterScreen extends Component {
 						style={styles.form}>
 						<UserInput onTextChange={(s) => this.setState({ fullname: s })}
 							placeholder={constants.fullname}
+							value={this.state.fullname}
 							autoCapitalize={'none'}
 							returnKeyType={'next'}
 							autoCorrect={false} />

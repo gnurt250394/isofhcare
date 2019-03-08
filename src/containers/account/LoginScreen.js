@@ -24,9 +24,9 @@ class LoginScreen extends Component {
 			password: ""
 		}
 		this.showPass = this.showPass.bind(this);
-		this.animatedValue = new Animated.Value(0)
-		this.animatedValue1 = new Animated.Value(0)
-		this.animatedValue2 = new Animated.Value(0)
+		this.animatedValue = new Animated.Value(0);
+		this.animatedValue1 = new Animated.Value(0);
+		this.animatedValue2 = new Animated.Value(0);
 		// Configures the SDK with some options
 		RNAccountKit.configure({
 			titleType: 'login',
@@ -75,7 +75,7 @@ class LoginScreen extends Component {
 				} else {
 					let account = await RNAccountKit.getCurrentAccount();
 					if (account && account.phoneNumber) {
-						this.props.navigation.navigate("register", { phone: "0" + account.phoneNumber.number, token: token.token })
+						this.props.navigation.navigate("register", { user: { phone: "0" + account.phoneNumber.number, token: token.token, socialType: 1, socialId: 0 } })
 					} else {
 						snackbar.show("Xác minh số điện thoại không thành công", "danger");
 					}
@@ -148,7 +148,7 @@ class LoginScreen extends Component {
 		})
 		return (
 			<ActivityPanel style={{ flex: 1 }}
-				title="Đăng nhập"
+				title="Đăng nhập 1"
 				touchToDismiss={true}
 				// hideActionbar={true}
 				// hideStatusbar={true}

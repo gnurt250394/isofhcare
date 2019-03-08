@@ -78,38 +78,43 @@ module.exports = {
                 callback(s, e);
         });
     },
-    loginSocial(socialType, socialId, name, avatar, email, callback) {
-        var body = {
-            socialType,
-            socialId,
-            name,
-            email,
-            avatar: avatar,
-            thumbnail: avatar,
-            device: { os: os, deviceId: this.deviceId, token: this.deviceToken }
-        }
-        client.requestApi("put", constants.api.user.login_social, body, (s, e) => {
-            if (callback) {
-                callback(s, e);
+    loginSocial(socialType, socialId, name, avatar, email) {
+        return new Promise((resolve, reject) => {
+            var body = {
+                socialType,
+                socialId,
+                name,
+                email,
+                avatar: avatar,
+                thumbnail: avatar,
+                device: { os: os, deviceId: this.deviceId, token: this.deviceToken }
             }
+            client.requestApi("put", constants.api.user.login_social, body, (s, e) => {
+                if (s)
+                    resolve(s);
+                else
+                    reject(e);
+            });
         });
     },
-    register(name, email, phone, password, dob, gender, token) {
+    register(name, avatar, email, phone, password, dob, gender, token, socialType, socialId) {
         return new Promise((resolve, reject) => {
             // reject({});
             var body = {
                 user: {
                     email,
+                    avatar,
                     password: password.toMd5(),
                     name,
                     gender: 1,
                     phone: phone,
-                    socialType: 0,
                     role: 0,
                     dob,
                     gender,
                     token
                 },
+                socialId,
+                socialType: socialType ? socialType : 1,
                 device: { os: 0, deviceId: "", token: "" }
             }
             client.requestApi("post", constants.api.user.register, body, (s, e) => {

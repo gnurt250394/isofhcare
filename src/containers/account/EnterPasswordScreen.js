@@ -70,9 +70,19 @@ class EnterPasswordScreen extends Component {
 			return;
 		}
 
-
-
-		userProvider.register(this.state.fullname.trim(), this.state.email.trim(), this.state.phone.trim(), this.state.password, this.state.dob ? this.state.dob.format("yyyy-MM-dd HH:mm:ss") : null, this.state.gender, this.state.token).then(s => {
+		userProvider.register(
+			this.state.fullname.trim(),
+			this.state.avatar,
+			this.state.email.trim(), 
+			this.state.phone.trim(),
+			this.state.password,
+			this.state.dob ?
+				this.state.dob.format("yyyy-MM-dd HH:mm:ss") : null,
+			this.state.gender,
+			this.state.token,
+			this.state.socialType,
+			this.state.socialId
+		).then(s => {
 			this.child.unPress();
 			switch (s.code) {
 				case 0:
@@ -97,7 +107,7 @@ class EnterPasswordScreen extends Component {
 
 	render() {
 		return (
-			<ActivityPanel style={{ flex: 1 }} title="Nhập mật khẩu 1" touchToDismiss={true} showFullScreen={true}>
+			<ActivityPanel style={{ flex: 1 }} title="Nhập mật khẩu" touchToDismiss={true} showFullScreen={true}>
 				<ScrollView style={{ flex: 1 }}
 					keyboardShouldPersistTaps="always">
 					<View style={{ marginTop: 60, justifyContent: 'center', alignItems: 'center' }}>
