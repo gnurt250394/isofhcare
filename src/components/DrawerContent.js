@@ -12,6 +12,8 @@ import constants from '@resources/strings';
 import { isIphoneX } from 'react-native-iphone-x-helper';
 import redux from '@redux-store';
 import ImageLoad from 'mainam-react-native-image-loader';
+import snackbar from '@utils/snackbar-utils';
+
 
 const resetAction = (routeName) => NavigationActions.reset({
   index: 0,
@@ -71,15 +73,31 @@ class DrawerContent extends Component {
           <ScrollView style={{ flex: 1, marginLeft: 60, marginTop: 30 }}>
             {this.props.userApp.isLogin ?
               <View style={{ marginLeft: 30 }}>
-                <TouchableOpacity style={styles.menu_item} onPress={() => { this.props.navigation.navigate("myFacility") }}>
-                  <Text style={styles.menu_item_text}>Cơ sở y tế của tôi</Text>
+                <TouchableOpacity style={styles.menu_item} onPress={() => { snackbar.show("Chức năng đang phát triển") }}>
+                  <Text style={styles.menu_item_text}>Y bạ điện tử</Text>
                 </TouchableOpacity>
+                <TouchableOpacity style={styles.menu_item} onPress={() => { snackbar.show("Chức năng đang phát triển")  }}>
+                  <Text style={styles.menu_item_text}>Lịch khám</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.menu_item} onPress={() => { snackbar.show("Chức năng đang phát triển")  }}>
+                  <Text style={styles.menu_item_text}>Đổi mật khẩu</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.menu_item} onPress={() => { snackbar.show("Chức năng đang phát triển")  }}>
+                  <Text style={styles.menu_item_text}>Đổi mã bảo mật</Text>
+                </TouchableOpacity>
+                {/* <TouchableOpacity style={styles.menu_item} onPress={() => { snackbar.show("Chức năng đang phát triển")  }}>
+                  <Text style={styles.menu_item_text}>Về isofh</Text>
+                </TouchableOpacity> */}
+
+                {/* <TouchableOpacity style={styles.menu_item} onPress={() => {  snackbar.show("Chức năng đang phát triển")  }}>
+                  <Text style={styles.menu_item_text}>Cơ sở y tế của tôi</Text>
+                </TouchableOpacity> */}
                 {/* <TouchableOpacity style={styles.menu_item} onPress={() => { this.props.navigation.navigate("groupChat") }}>
                   <Text style={styles.menu_item_text}>Tin nhắn</Text>
                 </TouchableOpacity> */}
-                <TouchableOpacity style={styles.menu_item} onPress={() => { this.props.navigation.navigate("profile") }}>
+                {/* <TouchableOpacity style={styles.menu_item} onPress={() => { this.props.navigation.navigate("profile") }}>
                   <Text style={styles.menu_item_text}>Hồ sơ cá nhân</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 {/* <TouchableOpacity style={styles.menu_item} onPress={() => { this.props.navigation.navigate("myQuestion") }}>
                   <Text style={styles.menu_item_text}>Câu hỏi của tôi</Text>
                 </TouchableOpacity> */}

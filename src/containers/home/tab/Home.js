@@ -8,65 +8,66 @@ const DEVICE_WIDTH = Dimensions.get('window').width;
 import * as Animatable from 'react-native-animatable';
 import Modal from "react-native-modal";
 import stylemodal from "@styles/modal-style";
+import Carousel from 'react-native-snap-carousel';
 
 class TabSearch extends Component {
     constructor(props) {
         super(props)
-        var features = [
-            //     {
-            //     icon: require("@images/search/icchuandoantrieuchung.png"),
-            //     id: 3
-            // }, {
-            //     icon: require("@images/search/ictimbacsi.png"),
-            //     id: 4
-            // }, {
-            //     icon: require("@images/search/icgiadichvu.png"),
-            //     id: 5
-            // },
-            {
-                icon: require("@images/timcsyt.png"),
-                id: 0
-            }, {
-                icon: require("@images/timthuoc.png"),
-                id: 1
-            },
-            {
-                icon: require("@images/ybadientu.png"),
-                id: 2
-            }
-        ];
-        var ads = [
-            //     {
-            //     icon: require("@images/search/icchuandoantrieuchung.png"),
-            //     id: 3
-            // }, {
-            //     icon: require("@images/search/ictimbacsi.png"),
-            //     id: 4
-            // }, {
-            //     icon: require("@images/search/icgiadichvu.png"),
-            //     id: 5
-            // },
-            // {
-            //     icon: require("@images/banner/findcdyt.png"),
-            //     id: 0
-            // },
-            {
-                icon: require("@images/banner/bannerbooking.png"),
-                id: 0
-            },
-            {
-                icon: require("@images/banner/bannerquestion.png"),
-                id: 1
-            },
-            {
-                icon: require("@images/banner/findcdyt.png"),
-                id: 2
-            }
-        ];
-        this.state = {
-            features,
-            ads
-        }
+        // var features = [
+        //     //     {
+        //     //     icon: require("@images/search/icchuandoantrieuchung.png"),
+        //     //     id: 3
+        //     // }, {
+        //     //     icon: require("@images/search/ictimbacsi.png"),
+        //     //     id: 4
+        //     // }, {
+        //     //     icon: require("@images/search/icgiadichvu.png"),
+        //     //     id: 5
+        //     // },
+        //     {
+        //         icon: require("@images/timcsyt.png"),
+        //         id: 0
+        //     }, {
+        //         icon: require("@images/timthuoc.png"),
+        //         id: 1
+        //     },
+        //     {
+        //         icon: require("@images/ybadientu.png"),
+        //         id: 2
+        //     }
+        // ];
+        // var ads = [
+        //     //     {
+        //     //     icon: require("@images/search/icchuandoantrieuchung.png"),
+        //     //     id: 3
+        //     // }, {
+        //     //     icon: require("@images/search/ictimbacsi.png"),
+        //     //     id: 4
+        //     // }, {
+        //     //     icon: require("@images/search/icgiadichvu.png"),
+        //     //     id: 5
+        //     // },
+        //     // {
+        //     //     icon: require("@images/banner/findcdyt.png"),
+        //     //     id: 0
+        //     // },
+        //     {
+        //         icon: require("@images/banner/bannerbooking.png"),
+        //         id: 0
+        //     },
+        //     {
+        //         icon: require("@images/banner/bannerquestion.png"),
+        //         id: 1
+        //     },
+        //     {
+        //         icon: require("@images/banner/findcdyt.png"),
+        //         id: 2
+        //     }
+        // ];
+        // this.state = {
+        //     features,
+        //     ads
+        // }
     }
     onClick(item) {
         const navigate = this.props.navigation.navigate;
@@ -110,7 +111,6 @@ class TabSearch extends Component {
     }
 
     getItemWidth() {
-        // debugger;
         const width = DEVICE_WIDTH;
         // let itemWidth = 360;
         // if (itemWidth > width - 10)
@@ -134,12 +134,19 @@ class TabSearch extends Component {
     //     return(
     //     )
     // }
-    selectBVDHY() {
-        this.setState({
-            showModalSelectHospital: false
-        }, () => {
-            this.props.navigation.navigate("addBookingBVDHY");
-        });
+    // selectBVDHY() {
+    //     this.setState({
+    //         showModalSelectHospital: false
+    //     }, () => {
+    //         this.props.navigation.navigate("addBookingBVDHY");
+    //     });
+    // }
+    _renderItem({ item, index }) {
+        return (
+            <View>
+                <ScaledImage source={require("@images/banner/bannerbooking.png")} width={DEVICE_WIDTH - 100} />
+            </View>
+        );
     }
     render() {
         const itemWidth = this.getItemWidth();
@@ -159,7 +166,26 @@ class TabSearch extends Component {
                     paddingLeft: 15, paddingRight: 15, paddingTop: 0,
                     width: DEVICE_WIDTH
                 }}>
-                    <View style={{
+                    <Text>Bạn cần gì hôm nay</Text>
+                    <View style={{ flexDirection: 'row' }}>
+                        <TouchableOpacity style={{ flex: 1, marginLeft: 5 }}>
+                            <Text>Đặt khám</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{ flex: 1, marginLeft: 5 }}>
+                            <Text>Tư vấn</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{ flex: 1, marginLeft: 5 }}>
+                            <Text>Tra cứu</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <Carousel
+                        ref={(c) => { this._carousel = c; }}
+                        data={[1, 2, 3, 4, 5]}
+                        renderItem={this._renderItem}
+                        sliderWidth={DEVICE_WIDTH}
+                        itemWidth={DEVICE_WIDTH - 100}
+                    />
+                    {/* <View style={{
                         marginTop: 10,
                         flexDirection: 'row',
                         flexWrap: 'wrap',
@@ -197,10 +223,10 @@ class TabSearch extends Component {
                                 </Animatable.View>);
                             })
                         }
-                    </View>
+                    </View> */}
                     <View style={{ height: 30 }} />
                 </ScrollView>
-                <Modal
+                {/* <Modal
                     isVisible={this.state.showModalSelectHospital}
                     onBackdropPress={() => this.setState({ showModalSelectHospital: false })}
                     backdropOpacity={0.5}
@@ -234,7 +260,7 @@ class TabSearch extends Component {
                             </TouchableOpacity>
                         </View>
                     </View>
-                </Modal>
+                </Modal> */}
             </ ActivityPanel >
         );
     }

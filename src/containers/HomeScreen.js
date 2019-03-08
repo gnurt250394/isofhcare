@@ -40,21 +40,52 @@ class SplashScreen extends Component {
 		return (
 			<ScalingDrawer
 				ref={ref => this._drawer = ref}
-				frontStyle={{ height: height + 5 }}
+				frontStyle={{ height: height + 10 }}
 				content={<DrawerContent navigation={this.props.navigation} drawer={this._drawer} />}
 				{...defaultScalingDrawerConfig}
 			>
-				<Swiper
-					dot={<View />}
-					activeDot={<View />}
-					paginationStyle={{
-						bottom: 30
-					}}
-					loop={true}>
-					<Home navigation={this.props.navigation} style={{ flex: 1 }} drawer={this._drawer} />
-					{/* <TabSearch navigation={this.props.navigation} style={{ flex: 1 }} drawer={this._drawer} /> */}
-				</Swiper>
-			</ScalingDrawer >);
+							<View style={{ flex: 1 }}>
+					<Swiper
+						ref={ref => this.swiper = ref}
+						onIndexChanged={index => {
+							this.setState({ tabIndex: index });
+						}}
+						dot={<View />}
+						activeDot={<View />}
+						paginationStyle={{
+							bottom: 30
+						}}
+						loop={false}
+						style={{ flex: 1 }}
+					>
+						<Home navigation={this.props.navigation} style={{ flex: 1 }} drawer={this._drawer} />
+						<View style={{ flex: 1, backgroundColor: '#000' }} />
+						<View style={{ flex: 1, backgroundColor: '#cac' }} />
+						<View style={{ flex: 1, backgroundColor: '#aba' }} />
+
+						{/* <TabSearch navigation={this.props.navigation} style={{ flex: 1 }} drawer={this._drawer} /> */}
+					</Swiper>
+					<View style={{ height: 50, flexDirection: 'row' }} >
+						<TouchableOpacity style={{ flex: 1 }} onPress={this.swipe.bind(this, 0)}>
+							<Text style={{ textAlign: 'center' }}>Home</Text>
+						</TouchableOpacity>
+						<TouchableOpacity style={{ flex: 1 }} onPress={this.swipe.bind(this, 1)}>
+							<Text style={{ textAlign: 'center' }}>Lịch khám</Text>
+						</TouchableOpacity>
+						<TouchableOpacity style={{ flex: 1 }} onPress={this.swipe.bind(this, 2)}>
+							<Text style={{ textAlign: 'center' }}>Dịch vụ</Text>
+						</TouchableOpacity>
+						<TouchableOpacity style={{ flex: 1 }} onPress={this.swipe.bind(this, 3)}>
+							<Text style={{ textAlign: 'center' }}>Tài khoản</Text>
+						</TouchableOpacity>
+					</View>
+				</View>
+			</ScalingDrawer>);
+	}
+	swipe(targetIndex) {
+		const currentIndex = this.swiper.state.index;
+		const offset = targetIndex - currentIndex;
+		this.swiper.scrollBy(offset);
 	}
 }
 
