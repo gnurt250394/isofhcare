@@ -13,7 +13,7 @@ const padding = Platform.select({
     ios: 7,
     android: 2
 });
-class CreateQuestionScreen extends Component {
+class CreateQuestionStep2Screen extends Component {
     constructor(props) {
         super(props);
         let post = this.props.navigation.getParam("post", null);
@@ -199,4 +199,4 @@ function mapStateToProps(state) {
         userApp: state.userApp
     };
 }
-export default connect(mapStateToProps)(CreateQuestionScreen);
+export default connect(mapStateToProps)(CreateQuestionStep2Screen);

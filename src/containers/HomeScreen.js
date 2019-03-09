@@ -10,6 +10,7 @@ import Home from '@containers/home/tab/Home';
 import TabSearch from '@containers/home/tab/TabSearch';
 import Swiper from 'react-native-swiper';
 const { width, height } = Dimensions.get('window');
+import PushController from '@components/notification/PushController'
 let defaultScalingDrawerConfig = {
 	scalingFactor: 0.7,
 	minimizeFactor: 0.7,
@@ -44,7 +45,7 @@ class SplashScreen extends Component {
 				content={<DrawerContent navigation={this.props.navigation} drawer={this._drawer} />}
 				{...defaultScalingDrawerConfig}
 			>
-							<View style={{ flex: 1 }}>
+				<View style={{ flex: 1 }}>
 					<Swiper
 						ref={ref => this.swiper = ref}
 						onIndexChanged={index => {
@@ -80,6 +81,7 @@ class SplashScreen extends Component {
 						</TouchableOpacity>
 					</View>
 				</View>
+				<PushController />
 			</ScalingDrawer>);
 	}
 	swipe(targetIndex) {

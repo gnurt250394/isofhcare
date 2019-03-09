@@ -171,7 +171,7 @@ class TabSearch extends Component {
                         <TouchableOpacity style={{ flex: 1, marginLeft: 5 }}>
                             <Text>Đặt khám</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={{ flex: 1, marginLeft: 5 }}>
+                        <TouchableOpacity style={{ flex: 1, marginLeft: 5 }} onPress={() => this.props.navigation.navigate("listQuestion")}>
                             <Text>Tư vấn</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={{ flex: 1, marginLeft: 5 }}>

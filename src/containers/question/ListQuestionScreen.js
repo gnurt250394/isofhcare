@@ -189,6 +189,14 @@ class ListQuestionScreen extends Component {
     render() {
         return (
             <ActivityPanel style={{ flex: 1 }} title="Hỏi đáp" showFullScreen={true}>
+                <View style={{ height: 50, flexDirection: "row" }}>
+                    <TouchableOpacity style={{ flex: 1 }}>
+                        <Text>Đã trả lời</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ flex: 1 }}>
+                        <Text>Câu hỏi khác</Text>
+                    </TouchableOpacity>
+                </View>
                 <FlatList
                     onRefresh={this.onRefresh.bind(this)}
                     refreshing={this.state.refreshing}

@@ -36,7 +36,8 @@ import { BookingDHYNavigation } from '@dhy/navigator';
 import NotificationScreen from '@containers/notification/NotificationScreen';
 import ListQuestionScreen from '@containers/question/ListQuestionScreen';
 import MyQuestionScreen from '@containers/question/MyQuestionScreen';
-import CreateQuestionScreen from '@containers/question/CreateQuestionScreen';
+import CreateQuestionStep1Screen from '@containers/question/CreateQuestionStep1Screen';
+import CreateQuestionStep2Screen from '@containers/question/CreateQuestionStep2Screen';
 import DetailQuestionScreen from '@containers/question/DetailQuestionScreen';
 import TestVNPayScreen from '@containers/test/TestVNPayScreen';
 
@@ -79,7 +80,8 @@ const RootNavigator = createStackNavigator({
     notification: { screen: NotificationScreen },
     listQuestion: { screen: ListQuestionScreen },
     myQuestion: { screen: MyQuestionScreen },
-    createQuestion: { screen: CreateQuestionScreen },
+    createQuestionStep1: { screen: CreateQuestionStep1Screen },
+    createQuestionStep2: { screen: CreateQuestionStep2Screen },
     detailQuestion: { screen: DetailQuestionScreen }
 }, {
         headerMode: 'none',

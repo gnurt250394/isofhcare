@@ -34,7 +34,7 @@ class PushController extends Component {
         //                         .setNotificationId(StringUtils.guid())
         //                         .setBody(s.data.notification.content)
         //                         .setTitle(s.data.notification.title)
-        //                         .android.setChannelId("nmc-event-channel")
+        //                         .android.setChannelId("isofh-care-channel")
         //                         .android.setSmallIcon("ic_launcher")
         //                         .setSound("default")
         //                         .setData({
@@ -54,7 +54,7 @@ class PushController extends Component {
                     .setNotificationId(StringUtils.guid())
                     .setBody(body)
                     .setTitle(s.data.advertise.title)
-                    .android.setChannelId("nmc-event-channel")
+                    .android.setChannelId("isofh-care-channel")
                     .android.setSmallIcon("ic_launcher")
                     .setSound("default")
                     .setData({
@@ -109,7 +109,7 @@ class PushController extends Component {
     }
     componentDidMount() {
         // Build a channel
-        const channel = new firebase.notifications.Android.Channel('nmc-event-channel', 'nmc event Channel', firebase.notifications.Android.Importance.Max).setDescription('Nhât Minh Notification channel');
+        const channel = new firebase.notifications.Android.Channel('isofh-care-channel', 'nmc event Channel', firebase.notifications.Android.Importance.Max).setDescription('Nhât Minh Notification channel');
 
         // Create the channel
         firebase.notifications().android.createChannel(channel);
