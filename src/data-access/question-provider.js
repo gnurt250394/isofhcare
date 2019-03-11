@@ -8,7 +8,7 @@ import realmModel from '@models/realm-models';
 module.exports = {
     create(departmentId, tags, title, content, images, isPrivate, callback) {
         client.requestApi("post", constants.api.question.create, {
-            departmentId,
+            specialistId,
             tags,
             post: {
                 title,
@@ -29,13 +29,15 @@ module.exports = {
                 callback(s, e);
         });
     },
-    search(authorId, page, size, callback) {
-        if (!callback)
-            return;
-        let _authorId = authorId ? authorId : -1;
-        client.requestApi("get", constants.api.question.search + "?page=" + page + "&size=" + size + "&authorId=" + _authorId, {}, (s, e) => {
-            if (callback)
-                callback(s, e);
+    search(authorId, page, size, isAnswered) {
+        return new Promise((resolve, reject) => {
+            let _authorId = authorId ? authorId : -1;
+            client.requestApi("get", constants.api.question.search + "?page=" + page + "&size=" + size + "&authorId=" + _authorId + "&isAnswered=" + (isAnswered ? 1 : 0), {}, (s, e) => {
+                if (s)
+                    resolve(s);
+                if (e)
+                    reject(e);
+            });
         });
     }
 }

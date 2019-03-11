@@ -42,7 +42,7 @@ class ListQuestion extends Component {
             refreshing: page == 1,
             loadMore: page != 1
         })
-        questionProvider.search("", page, size, (s, e) => {
+        questionProvider.search(this.props.userApp.isLogin ? this.props.userApp.currentUser.id : "", page, size, this.props.isAnswered).then(s => {
             this.setState({
                 loading: false,
                 refreshing: false,
@@ -70,6 +70,12 @@ class ListQuestion extends Component {
                         break;
                 }
             }
+        }).catch(e => {
+            this.setState({
+                loading: false,
+                refreshing: false,
+                loadMore: false
+            });
         });
     }
     onLoadMore() {
@@ -130,62 +136,7 @@ class ListQuestion extends Component {
 
 
         return (item.post && item.author) &&
-            <View style={{ flexDirection: 'column' }}>
-                <View style={{ flexDirection: 'row', margin: 10 }}>
-                    <View style={{ width: 60, height: 60, margin: 10, marginLeft: 0, marginBottom: 0 }}>
-                        <ImageLoad
-                            resizeMode="cover"
-                            imageStyle={{ borderRadius: 35 }}
-                            borderRadius={35}
-                            customImagePlaceholderDefaultStyle={{ width: 60, height: 60, alignSelf: 'center' }}
-                            placeholderSource={icSupport}
-                            style={{ width: 60, height: 60, alignSelf: 'center' }}
-                            resizeMode="cover"
-                            loadingStyle={{ size: 'small', color: 'gray' }}
-                            source={source}
-                            defaultImage={() => {
-                                return <ScaleImage resizeMode='cover' source={icSupport} width={60} style={{ width: 60, height: 60, alignSelf: 'center' }} />
-                            }}
-                        />
-                    </View>
-                    <View style={{ marginTop: 10, flex: 1 }}>
-                        <Text style={{ fontWeight: 'bold' }} numberOfLines={2} ellipsizeMode="tail">{item.post.title}</Text>
-                        <View flexDirection='row' style={{ marginTop: 5, flex: 1 }}>
-                            <Text style={{ flex: 1, fontWeight: 'bold', color: 'rgb(74,74,74)' }} numberOfLines={1} ellipsizeMode='tail'>{item.post.isPrivate == 0 ? item.author.name : "Ẩn danh"}</Text>
-                            <Text style={{ color: 'rgb(155,155,155)' }}>{item.post.createdDate.toDateObject('-').getPostTime()}</Text>
-                        </View>
-                    </View>
-                </View>
-                <TouchableOpacity onPress={() => { this.props.navigation.navigate("detailQuestion", { post: item }) }}>
-                    <View>
-                        {
-                            image ? <Image source={{ uri: image }} style={{ width: DEVICE_WIDTH, height: 200, marginTop: 10 }} resizeMode='cover' /> : null
-                        }
-                        <View style={{ margin: 10 }}>
-                            <Text style={{ lineHeight: 15, textAlign: 'justify' }} numberOfLines={3} ellipsizeMode='tail'>{item.post.content}</Text>
-                            <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginTop: 10 }}>
-                                <Text style={{ fontWeight: 'bold', color: 'rgb(0,151,124)' }}>Đọc chi tiết</Text>
-                            </View>
-                        </View>
-                    </View>
-                </TouchableOpacity>
-
-                <View style={{ margin: 10 }}>
-                    {/* <View style={{ flexDirection: 'row', marginTop: 20 }}>
-                        <View style={{ flexDirection: 'row', flex: 1 }}>
-                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={this.likePost.bind(this, item)}>
-                                <ScaleImage source={require("@images/question/liked.png")} height={20} />
-                                <Text style={{ marginLeft: 10, minWidth: 20 }}>{item.post.likeCount}</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 20 }}>
-                                <ScaleImage source={require("@images/question/comment.png")} height={20} />
-                                <Text style={{ marginLeft: 10 }}>{item.post.commentCount}</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View> */}
-                </View>
-                <View style={{ marginTop: 10, marginBottom: 10, height: 2, flex: 1, backgroundColor: '#cacaca' }} />
-            </View>
+            <ItemQuestion item={item} index={index} />
     }
 
     render() {
@@ -221,4 +172,10 @@ class ListQuestion extends Component {
         </View >
     }
 }
-export default ListQuestion;
+
+function mapStateToProps(state) {
+    return {
+        userApp: state.userApp
+    };
+}
+export default connect(mapStateToProps)(ListQuestion);

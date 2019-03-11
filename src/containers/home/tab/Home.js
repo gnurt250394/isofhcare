@@ -15,61 +15,6 @@ import snackbar from '@utils/snackbar-utils';
 class Home extends Component {
     constructor(props) {
         super(props)
-        // var features = [
-        //     //     {
-        //     //     icon: require("@images/search/icchuandoantrieuchung.png"),
-        //     //     id: 3
-        //     // }, {
-        //     //     icon: require("@images/search/ictimbacsi.png"),
-        //     //     id: 4
-        //     // }, {
-        //     //     icon: require("@images/search/icgiadichvu.png"),
-        //     //     id: 5
-        //     // },
-        //     {
-        //         icon: require("@images/timcsyt.png"),
-        //         id: 0
-        //     }, {
-        //         icon: require("@images/timthuoc.png"),
-        //         id: 1
-        //     },
-        //     {
-        //         icon: require("@images/ybadientu.png"),
-        //         id: 2
-        //     }
-        // ];
-        // var ads = [
-        //     //     {
-        //     //     icon: require("@images/search/icchuandoantrieuchung.png"),
-        //     //     id: 3
-        //     // }, {
-        //     //     icon: require("@images/search/ictimbacsi.png"),
-        //     //     id: 4
-        //     // }, {
-        //     //     icon: require("@images/search/icgiadichvu.png"),
-        //     //     id: 5
-        //     // },
-        //     // {
-        //     //     icon: require("@images/banner/findcdyt.png"),
-        //     //     id: 0
-        //     // },
-        //     {
-        //         icon: require("@images/banner/bannerbooking.png"),
-        //         id: 0
-        //     },
-        //     {
-        //         icon: require("@images/banner/bannerquestion.png"),
-        //         id: 1
-        //     },
-        //     {
-        //         icon: require("@images/banner/findcdyt.png"),
-        //         id: 2
-        //     }
-        // ];
-        // this.state = {
-        //     features,
-        //     ads
-        // }
         this.state = { ads: [] };
     }
     componentWillMount() {

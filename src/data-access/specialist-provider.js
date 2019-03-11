@@ -10,14 +10,14 @@ module.exports = {
         if (requestApi) {
             client.requestApi("get", constants.api.specialist.search + "?page=" + 1 + "&size=" + top, {}, (s, e) => {
                 if (s && s.code == 0 && s.data && s.data.data) {
-                    datacacheProvider.save("", constants.key.storage.DATA_TOP_SPECIALIST, s.data.data);
+                    datacacheProvider.save("", constants.key.storage.DATA_TOP_SPECIALIST + "_" + top, s.data.data);
                     if (callback)
                         callback(s.data.data, e);
                 }
             });
         }
         else
-            datacacheProvider.read("", constants.key.storage.DATA_TOP_SPECIALIST, (s, e) => {
+            datacacheProvider.read("", constants.key.storage.DATA_TOP_SPECIALIST + "_" + top, (s, e) => {
                 if (s) {
                     if (callback)
                         callback(s, e);
