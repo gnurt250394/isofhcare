@@ -12,11 +12,11 @@ import Dimensions from 'Dimensions';
 import constants from '@resources/strings';
 import snackbar from '@utils/snackbar-utils';
 import Swiper from 'react-native-swiper';
-import ListQuestion from '@components/question/ListQuestion';
+import ItemQuestion from '@components/question/ItemQuestion';
 
-class ListQuestionScreen extends Component {
+class ListQuestion extends Component {
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
             data: [],
             refreshing: false,
@@ -189,41 +189,36 @@ class ListQuestionScreen extends Component {
     }
 
     render() {
-        return (
-            <ActivityPanel style={{ flex: 1 }} title="Hỏi đáp" showFullScreen={true}>
-                <View style={{ height: 50, flexDirection: "row" }}>
-                    <TouchableOpacity style={{ flex: 1 }}>
-                        <Text style={{ textAlign: 'center' }}>Đã trả lời</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ flex: 1 }}>
-                        <Text style={{ textAlign: 'center' }}>Khác</Text>
-                    </TouchableOpacity>
-                </View>
-
-                <Swiper
-                    ref={ref => this.swiper = ref}
-                    onIndexChanged={index => {
-                        this.setState({ tabIndex: index });
-                    }}
-                    dot={<View />}
-                    activeDot={<View />}
-                    loop={false}
-                    style={{ flex: 1 }}
-                >
-                    <ListQuestion />
-                </Swiper>
-
-                <TouchableOpacity style={{ position: 'absolute', bottom: 11, right: 11 }} onPress={() => { this.props.navigation.navigate("createQuestion") }}>
-                    <ScaleImage source={require("@images/btn_add_question.png")} width={81} />
-                </TouchableOpacity>
-            </ActivityPanel >
-        );
+        return <View style={{ flex: 1 }} >
+            <FlatList
+                onRefresh={this.onRefresh.bind(this)}
+                refreshing={this.state.refreshing}
+                onEndReached={this.onLoadMore.bind(this)}
+                onEndReachedThreshold={1}
+                style={{ flex: 1, marginTop: 10 }}
+                keyExtractor={(item, index) => index.toString()}
+                extraData={this.state}
+                data={this.state.data}
+                ListHeaderComponent={() => !this.state.refreshing && (!this.state.data || this.state.data.length == 0) ?
+                    <View style={{ alignItems: 'center', marginTop: 50 }}>
+                        <Text style={{ fontStyle: 'italic' }}>Hiện tại chưa có thông tin</Text>
+                    </View> : null
+                }
+                ListFooterComponent={() => <View style={{ height: 10 }}></View>}
+                renderItem={({ item, index }) => {
+                    return this.renderItemPost(item, index)
+                }}
+            />
+            {
+                this.state.loadMore ?
+                    <View style={{ alignItems: 'center', padding: 10, position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+                        <ActivityIndicator
+                            size={'small'}
+                            color={'gray'}
+                        />
+                    </View> : null
+            }
+        </View >
     }
 }
-
-function mapStateToProps(state) {
-    return {
-        userApp: state.userApp
-    };
-}
-export default connect(mapStateToProps)(ListQuestionScreen);
+export default ListQuestion;
