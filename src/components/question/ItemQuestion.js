@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import dateUtils from 'mainam-react-native-date-utils';
-
+import { connect } from 'react-redux';
 class ItemQuestion extends Component {
     constructor(props) {
         super(props)
@@ -10,7 +10,7 @@ class ItemQuestion extends Component {
     }
     render() {
         return this.props.item && this.props.item.post ?
-            <TouchableOpacity key={this.props.index} >
+            <TouchableOpacity key={this.props.index}>
                 <Text >{this.props.item.post.content}</Text>
                 <View style={{ alignContent: 'flex-end', flexDirection: 'row' }}>
                     <View style={{ flex: 1 }}>
@@ -30,4 +30,11 @@ class ItemQuestion extends Component {
             </TouchableOpacity> : null
     }
 }
-export default ItemQuestion;
+
+function mapStateToProps(state) {
+    return {
+        userApp: state.userApp,
+        navigation: state.navigation
+    };
+}
+export default connect(mapStateToProps)(ItemQuestion);

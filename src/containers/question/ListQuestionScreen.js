@@ -20,9 +20,14 @@ class ListQuestionScreen extends Component {
         this.state = {
         }
     }
+    menuCreate() {
+        return <View>
+            <TouchableOpacity style={{ padding: 10 }} onPress={() => this.props.navigation.navigate("createQuestionStep1")}><Text>Tạo</Text></TouchableOpacity>
+        </View >
+    }
     render() {
         return (
-            <ActivityPanel style={{ flex: 1 }} title="Hỏi đáp" showFullScreen={true}>
+            <ActivityPanel style={{ flex: 1 }} title="Hỏi đáp" showFullScreen={true} menuButton={this.menuCreate()}>
                 <View style={{ height: 50, flexDirection: "row" }}>
                     <TouchableOpacity style={{ flex: 1 }}>
                         <Text style={{ textAlign: 'center' }}>Đã trả lời</Text>

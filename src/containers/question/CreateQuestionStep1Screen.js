@@ -128,12 +128,6 @@ class CreateQuestionStep1Screen extends Component {
                 <ScrollView style={{ flex: 1 }}
                     keyboardShouldPersistTaps="always">
                     <View style={{ padding: 10 }}>
-                        <Text style={{ fontWeight: 'bold' }}>Tiêu đề</Text>
-                        <TextInput
-                            value={this.state.title}
-                            autoFocus={true} placeholder="Nhập tiêu đề câu hỏi" underlineColorAndroid='transparent' style={[styles.textinput, { marginTop: 10 }]}
-                            onChangeText={(s) => { this.setState({ title: s }) }}
-                        />
                         <Text style={{ marginTop: 10, fontWeight: 'bold' }}>Nội dung</Text>
                         <TextInput
                             value={this.state.content}
@@ -141,6 +135,16 @@ class CreateQuestionStep1Screen extends Component {
                             autoFocus={true} placeholder="Nhập nội dung câu hỏi" underlineColorAndroid='transparent' style={[styles.textinput, { marginTop: 10, height: 150 }]}
                             onChangeText={(s) => { this.setState({ content: s }) }}
                         />
+                        <View style={{ flexDirection: 'row' }}>
+                            <View>
+                                <Text>Tuổi</Text>
+                                <TextInput value={this.state.age} keyboardType='numeric' style={[styles.textinput, { width: 50 }]} />
+                            </View>
+                            <View>
+                                <Text>Giới tính</Text>
+                                <TextInput value={this.state.age} keyboardType='numeric' style={[styles.textinput, { width: 50 }]} />
+                            </View>
+                        </View>
                         <View style={{ marginTop: 10, alignItems: 'center' }} flexDirection="row">
                             <Text style={{ flex: 1, fontWeight: '700' }}>Không hiển thị người hỏi</Text>
                             <Switch value={this.state.isPrivate} onValueChange={x => this.setState({ isPrivate: x })} />

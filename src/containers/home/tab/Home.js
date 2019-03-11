@@ -11,6 +11,7 @@ import stylemodal from "@styles/modal-style";
 import Carousel from 'react-native-snap-carousel';
 import advertiseProvider from '@data-access/advertise-provider';
 import snackbar from '@utils/snackbar-utils';
+import TextField from '@components/form/TextField';
 
 class Home extends Component {
     constructor(props) {
@@ -128,6 +129,27 @@ class Home extends Component {
                 // showMessenger={this.props.userApp.isLogin ? true : false}
                 showMessenger={false}
                 badge={0}>
+                <TextField inputStyleError={{borderWidth: 1,borderColor:'red'}} ref={ref => this.text = ref} errorStyle={{ color: 'red' }}
+                    validate={{
+                        rules: {
+                            // required: true, 
+                            test: (x, y) => {
+                                return x == "xxx";
+                            }
+                            // equalTo: () => { return "xyz" }
+                        },
+                        messages: {
+                            min: "0",
+                            max: 1,
+                            password: "Mật khẩu chứa kía",
+                            number: "Vui lòng nhập họ tên",
+                            equalTo: "Vui lòng nhập đúng định dạng số điện thoại xxx1"
+                        }
+                    }
+                    }
+                />
+                <TouchableOpacity onPress={() => this.text.isValid()} style={{ padding: 10 }}><Text>xx</Text></TouchableOpacity>
+
                 <ScrollView style={{
                     flex: 1,
                     paddingLeft: 15, paddingRight: 15, paddingTop: 0,
