@@ -71,5 +71,45 @@ module.exports = {
                 });
             }
         }
+    },
+    readPromise(userId, key) {
+        return new Promise((resolve, reject) => {
+            try {
+                const { Schemas, DataString, schemaVersion } = realmModel;
+                Realm.open({
+                    schema: Schemas,
+                    schemaVersion,
+                    migration: function (oldRealm, newRealm) {
+                        newRealm.deleteAll();
+                    }
+                }).then((realm) => {
+                    try {
+                        let _key = "DataString_" + userId + "_" + key;
+                        var data = realm.objects(DataString.name).filtered("key == '" + _key + "'");
+                        if (data && data.length > 0) {
+                            var _value = JSON.parse(data[0].value);
+                            if (_value) {
+                                resolve(_value.data);
+                            }
+                        }
+                        else {
+                            reject({ message: "not found" });
+                        }
+                    } catch (e) {
+                        reject({
+                            message: e ? JSON.stringify(e) : ""
+                        });
+                    }
+                }).catch(e => {
+                    reject({
+                        message: e ? JSON.stringify(e) : ""
+                    });
+                });
+            } catch (e) {
+                reject({
+                    message: e ? JSON.stringify(e) : ""
+                });
+            }
+        });
     }
 }

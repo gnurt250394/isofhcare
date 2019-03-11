@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, Text, ScrollView, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Platform, Linking } from 'react-native';
 import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import Dimensions from 'Dimensions';
@@ -9,8 +9,10 @@ import * as Animatable from 'react-native-animatable';
 import Modal from "react-native-modal";
 import stylemodal from "@styles/modal-style";
 import Carousel from 'react-native-snap-carousel';
+import advertiseProvider from '@data-access/advertise-provider';
+import snackbar from '@utils/snackbar-utils';
 
-class TabSearch extends Component {
+class Home extends Component {
     constructor(props) {
         super(props)
         // var features = [
@@ -68,6 +70,19 @@ class TabSearch extends Component {
         //     features,
         //     ads
         // }
+        this.state = { ads: [] };
+    }
+    componentWillMount() {
+        advertiseProvider.getTop(100, (s, e) => {
+            if (s) {
+                this.setState({
+                    ads: s
+                    // .filter(item => { return item.advertise && item.advertise.images })
+                });
+            }
+            if (e) {
+            }
+        });
     }
     onClick(item) {
         const navigate = this.props.navigation.navigate;
@@ -143,9 +158,16 @@ class TabSearch extends Component {
     // }
     _renderItem({ item, index }) {
         return (
-            <View>
+            <TouchableOpacity onPress={() => {
+                if (item.advertise && item.advertise.value) {
+                    Linking.openURL(item.advertise.value);
+                } else {
+                    snackbar.show("Url không tồn tại", "danger");
+                }
+            }}>
                 <ScaledImage source={require("@images/banner/bannerbooking.png")} width={DEVICE_WIDTH - 100} />
-            </View>
+                <Text>{item.advertise ? item.advertise.content : ""}</Text>
+            </TouchableOpacity>
         );
     }
     render() {
@@ -180,7 +202,7 @@ class TabSearch extends Component {
                     </View>
                     <Carousel
                         ref={(c) => { this._carousel = c; }}
-                        data={[1, 2, 3, 4, 5]}
+                        data={this.state.ads}
                         renderItem={this._renderItem}
                         sliderWidth={DEVICE_WIDTH}
                         itemWidth={DEVICE_WIDTH - 100}
@@ -272,4 +294,4 @@ function mapStateToProps(state) {
         userApp: state.userApp
     };
 }
-export default connect(mapStateToProps)(TabSearch);
+export default connect(mapStateToProps)(Home);

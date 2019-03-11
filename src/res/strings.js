@@ -33,7 +33,7 @@ module.exports = {
   update: "Cập nhật",
   later: "Để sau",
   input_code: "Nhập mã xác thực",
-  dob:"Ngày sinh",
+  dob: "Ngày sinh",
   hospital: {
     BENH_VIEN_DAI_HOC_Y: 1
   },
@@ -70,6 +70,7 @@ module.exports = {
       DATA_TOP_DISEASE: "DATA_TOP_DISEASE",
       DATA_TOP_SYMPTOM: "DATA_TOP_SYMPTOM",
       DATA_TOP_DRUG: "DATA_TOP_DRUG",
+      DATA_TOP_ADS:"DATA_TOP_ADS",
       DATA_PROVINCE: "DATA_PROVINCE",
       CURRENT_LOCATION: "CURRENT_LOCATION",
       INTRO_FINISHED: "INTRO_FINISHED"
@@ -268,6 +269,10 @@ module.exports = {
     comment: {
       create: "comment/create",
       search: "comment/search"
+    },
+    advertise: {
+      create: "advertise/create",
+      search: "advertise/search"
     }
   }
 };
