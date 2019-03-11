@@ -19,6 +19,10 @@ class ItemQuestion extends Component {
                                 Chuyên khoa: <Text>{this.props.item.specialist.name}</Text>
                             </Text>
                         }
+                        {
+                            this.props.item.post.isAnswered == 0 ?
+                                <Text>Trạng thái: <Text>{this.props.item.post.reject ? "Đã bị từ chối" : "Chưa trả lời"}</Text></Text> : null
+                        }
                     </View>
                     <Text style={{ padding: 5 }}>{this.props.item.post.createdDate.toDateObject("-").getPostTime()}</Text>
                 </View>
