@@ -157,6 +157,7 @@ class TextField extends Component {
                     underlineColorAndroid={"transparent"}
                     autoCorrect={this.props.autoCorrect}
                     returnKeyType={this.props.returnKeyType}
+                    keyboardType={this.props.keyboardType}
                     secureTextEntry={this.props.secureTextEntry}
                 />
                 {/* } */}
