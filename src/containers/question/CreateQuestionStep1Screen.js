@@ -141,7 +141,7 @@ class CreateQuestionStep1Screen extends Component {
                                         maxlength: 2000
                                     },
                                     messages: {
-                                        required: "Vui lòng nhập mã OTP",
+                                        required: "Vui lòng nhập nội dung câu hỏi",
                                         minlength: "Nội dung nhập tối thiểu 1 ký tự",
                                         maxlength: "Nội dung nhập tối đa 2000 ký tự"
                                     }
@@ -152,6 +152,31 @@ class CreateQuestionStep1Screen extends Component {
                                 autoFocus={true}
                                 multiline={true}
                                 autoCorrect={false} />
+
+                            <Form >
+
+                                <Text style={{ marginTop: 10, fontWeight: 'bold' }}>Tuổi</Text>
+                                <TextField validate={
+                                    {
+                                        rules: {
+                                            required: true,
+                                            min: 1,
+                                            max: 150
+                                        },
+                                        messages: {
+                                            required: "Vui lòng nhập nội dung câu hỏi",
+                                            min: "Tuổi bệnh nhân cần lớn hơn 1",
+                                            max: "Tuổi bệnh nhân cần nhỏ hơn 150",
+                                        }
+                                    }
+                                } inputStyle={[styles.textinput, { marginTop: 10}]} onChangeText={(s) => { this.setState({ code: s }) }} placeholder={constants.input_code} autoCapitalize={'none'}
+                                    returnKeyType={'next'}
+                                    underlineColorAndroid='transparent'
+                                    keyboardType='numeric' 
+                                    autoFocus={true}
+                                    multiline={true}
+                                    autoCorrect={false} />
+                            </Form>
                         </Form>
 
                         <TextInput

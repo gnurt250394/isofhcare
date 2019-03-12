@@ -131,53 +131,6 @@ class Home extends Component {
                 // showMessenger={this.props.userApp.isLogin ? true : false}
                 showMessenger={false}
                 badge={0}>
-                <Form ref={ref => this.form = ref}>
-                    <TextField inputStyleError={{ borderWidth: 1, borderColor: 'red' }} ref={ref => this.text = ref} errorStyle={{ color: 'red' }}
-                        validate={{
-                            rules: {
-                                // required: true, 
-                                test: (x, y) => {
-                                    return x == "xxx";
-                                }
-                                // equalTo: () => { return "xyz" }
-                            },
-                            messages: {
-                                min: "0",
-                                max: 1,
-                                password: "Mật khẩu chứa kía",
-                                number: "Vui lòng nhập họ tên",
-                                equalTo: "Vui lòng nhập đúng định dạng số điện thoại xxx1"
-                            }
-                        }
-                        }
-                    >
-                        <UserInput returnKeyType={'done'}
-                            autoCapitalize={'none'}
-                            autoCorrect={false}
-                            placeholder={"constants.input_password"}
-                            style={{ width: "100%" }} />
-                    </TextField>
-                    {/* <TextField inputStyleError={{ borderWidth: 1, borderColor: 'red' }} ref={ref => this.text2 = ref} errorStyle={{ color: 'red' }}
-                        validate={{
-                            rules: {
-                                // required: true, 
-                                test: (x, y) => {
-                                    return x == "yyy";
-                                }
-                                // equalTo: () => { return "xyz" }
-                            },
-                            messages: {
-                                min: "0",
-                                max: 1,
-                                password: "Mật khẩu chứa kía",
-                                number: "Vui lòng nhập họ tên",
-                                equalTo: "Vui lòng nhập đúng định dạng số điện thoại xxx1"
-                            }
-                        }
-                        }
-                    /> */}
-                </Form>
-                
 
                 <ScrollView style={{
                     flex: 1,

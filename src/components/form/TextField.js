@@ -97,19 +97,23 @@ class TextField extends Component {
                 }
             }
             if (rules.min) {
-                if (this.state.value < rules.min) {
-                    let message = messages.min ? messages.min : "Vui lòng nhập giá trị lớn hơn " + rules.min;
-                    let result = { error: true, message };
-                    this.setState(result);
-                    return false;
+                if (rules.required || this.state.value) {
+                    if (this.state.value < rules.min) {
+                        let message = messages.min ? messages.min : "Vui lòng nhập giá trị lớn hơn " + rules.min;
+                        let result = { error: true, message };
+                        this.setState(result);
+                        return false;
+                    }
                 }
             }
             if (rules.max) {
-                if (this.state.value > rules.max) {
-                    let message = messages.max ? messages.max : "Vui lòng nhập giá trị nhỏ hơn " + rules.max;
-                    let result = { error: true, message };
-                    this.setState(result);
-                    return false;
+                if (rules.required || this.state.value) {
+                    if (this.state.value > rules.max) {
+                        let message = messages.max ? messages.max : "Vui lòng nhập giá trị nhỏ hơn " + rules.max;
+                        let result = { error: true, message };
+                        this.setState(result);
+                        return false;
+                    }
                 }
             }
             for (var name in rules) {
