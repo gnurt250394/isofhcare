@@ -38,16 +38,21 @@ class ListQuestionScreen extends Component {
             });
         }
     }
+    swipe(targetIndex) {
+        const currentIndex = this.swiper.state.index;
+        const offset = targetIndex - currentIndex;
+        this.swiper.scrollBy(offset);
+    }
     render() {
         return (
             <ActivityPanel style={{ flex: 1 }} title="Hỏi đáp" showFullScreen={true}
                 menuButton={this.menuCreate()}
             >
                 <View style={{ height: 50, flexDirection: "row" }}>
-                    <TouchableOpacity style={{ flex: 1 }}>
+                    <TouchableOpacity style={{ flex: 1 }} onPress={this.swipe.bind(this, 0)}>
                         <Text style={{ textAlign: 'center' }}>Đã trả lời</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={{ flex: 1 }}>
+                    <TouchableOpacity style={{ flex: 1 }} onPress={this.swipe.bind(this, 1)}>
                         <Text style={{ textAlign: 'center' }}>Khác</Text>
                     </TouchableOpacity>
                 </View>
@@ -65,10 +70,6 @@ class ListQuestionScreen extends Component {
                     <ListQuestion isAnswered={true} ref={ref => this.listAnswered = ref} />
                     <ListQuestion isAnswered={false} ref={ref => this.listNotAnswered = ref} />
                 </Swiper>
-
-                <TouchableOpacity style={{ position: 'absolute', bottom: 11, right: 11 }} onPress={() => { this.props.navigation.navigate("createQuestion") }}>
-                    <ScaleImage source={require("@images/btn_add_question.png")} width={81} />
-                </TouchableOpacity>
             </ActivityPanel >
         );
     }
