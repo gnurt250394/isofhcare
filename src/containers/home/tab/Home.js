@@ -142,7 +142,12 @@ class Home extends Component {
                         <TouchableOpacity style={{ flex: 1, marginLeft: 5 }}>
                             <Text>Đặt khám</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={{ flex: 1, marginLeft: 5 }} onPress={() => this.props.navigation.navigate("listQuestion")}>
+                        <TouchableOpacity style={{ flex: 1, marginLeft: 5 }} onPress={() => {
+                            if (this.props.userApp.isLogin)
+                                this.props.navigation.navigate("listQuestion")
+                            else
+                                this.props.navigation.navigate("login")
+                        }}>
                             <Text>Tư vấn</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={{ flex: 1, marginLeft: 5 }}>
