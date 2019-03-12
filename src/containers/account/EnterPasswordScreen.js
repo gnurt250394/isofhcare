@@ -48,7 +48,6 @@ class EnterPasswordScreen extends Component {
 			this.child.unPress();
 			return;
 		}
-		alert(this.state.socialId);
 
 		userProvider.register(
 			this.state.fullname.trim(),
@@ -64,7 +63,6 @@ class EnterPasswordScreen extends Component {
 			this.state.socialId
 		).then(s => {
 			this.child.unPress();
-			alert(JSON.stringify(s));
 			switch (s.code) {
 				case 0:
 					var user = s.data.user;

@@ -11,7 +11,7 @@ class ItemQuestion extends Component {
     render() {
         return this.props.item && this.props.item.post ?
             <TouchableOpacity key={this.props.index}>
-                <Text >{this.props.item.post.content}</Text>
+                <Text numberOfLines={3} ellipsizeMode='tail' >{this.props.item.post.content}</Text>
                 <View style={{ alignContent: 'flex-end', flexDirection: 'row' }}>
                     <View style={{ flex: 1 }}>
                         {this.props.item.specialist &&

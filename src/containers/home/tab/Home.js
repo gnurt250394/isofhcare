@@ -177,12 +177,7 @@ class Home extends Component {
                         }
                     /> */}
                 </Form>
-                <TouchableOpacity onPress={() => {
-                    if (this.form.isValid())
-                        alert(1);
-                    else
-                        alert(2);
-                }} style={{ padding: 10 }}><Text>xx</Text></TouchableOpacity>
+                
 
                 <ScrollView style={{
                     flex: 1,

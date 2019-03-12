@@ -9,6 +9,8 @@ import snackbar from '@utils/snackbar-utils';
 import questionProvider from '@data-access/question-provider';
 import constants from '@resources/strings';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+import Form from '@components/form/Form';
+import TextField from '@components/form/TextField';
 const padding = Platform.select({
     ios: 7,
     android: 2
@@ -128,7 +130,30 @@ class CreateQuestionStep1Screen extends Component {
                 <ScrollView style={{ flex: 1 }}
                     keyboardShouldPersistTaps="always">
                     <View style={{ padding: 10 }}>
-                        <Text style={{ marginTop: 10, fontWeight: 'bold' }}>Nội dung</Text>
+                        <Form ref={ref => this.form = ref}>
+
+                            <Text style={{ marginTop: 10, fontWeight: 'bold' }}>Nội dung</Text>
+                            <TextField validate={
+                                {
+                                    rules: {
+                                        required: true,
+                                        minlength: 1,
+                                        maxlength: 2000
+                                    },
+                                    messages: {
+                                        required: "Vui lòng nhập mã OTP",
+                                        minlength: "Nội dung nhập tối thiểu 1 ký tự",
+                                        maxlength: "Nội dung nhập tối đa 2000 ký tự"
+                                    }
+                                }
+                            } inputStyle={[styles.textinput, { marginTop: 10, height: 150 }]} onChangeText={(s) => { this.setState({ code: s }) }} placeholder={constants.input_code} autoCapitalize={'none'}
+                                returnKeyType={'next'}
+                                underlineColorAndroid='transparent'
+                                autoFocus={true}
+                                multiline={true}
+                                autoCorrect={false} />
+                        </Form>
+
                         <TextInput
                             value={this.state.content}
                             multiline={true}
