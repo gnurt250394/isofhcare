@@ -25,6 +25,19 @@ class ListQuestionScreen extends Component {
             <TouchableOpacity style={{ padding: 10 }} onPress={() => this.props.navigation.navigate("createQuestionStep1")}><Text>Tạo</Text></TouchableOpacity>
         </View >
     }
+    componentWillReceiveProps(props) {
+        let reloadTime = props.navigation.getParam('reloadTime', undefined);
+        if (this.state.reloadTime != reloadTime) {
+            this.setState({ reloadTime }, () => {
+                if (this.listAnswered) {
+                    this.listAnswered.getWrappedInstance().onRefresh();
+                }
+                if (this.listNotAnswered) {
+                    this.listNotAnswered.getWrappedInstance().onRefresh();
+                }
+            });
+        }
+    }
     render() {
         return (
             <ActivityPanel style={{ flex: 1 }} title="Hỏi đáp" showFullScreen={true}
@@ -49,8 +62,8 @@ class ListQuestionScreen extends Component {
                     loop={false}
                     style={{ flex: 1 }}
                 >
-                    <ListQuestion isAnswered={true} />
-                    <ListQuestion isAnswered={false} />
+                    <ListQuestion isAnswered={true} ref={ref => this.listAnswered = ref} />
+                    <ListQuestion isAnswered={false} ref={ref => this.listNotAnswered = ref} />
                 </Swiper>
 
                 <TouchableOpacity style={{ position: 'absolute', bottom: 11, right: 11 }} onPress={() => { this.props.navigation.navigate("createQuestion") }}>

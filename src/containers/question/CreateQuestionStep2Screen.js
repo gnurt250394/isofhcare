@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { TouchableOpacity, ScrollView, View, Text, StyleSheet, TextInput, Platform, Switch, Keyboard, Image } from 'react-native';
+import { TouchableOpacity, ScrollView, View, Text, StyleSheet, TextInput, Platform, Switch, Keyboard, Image, FlatList } from 'react-native';
 import ActivityPanel from '@components/ActivityPanel';
 import { connect } from 'react-redux';
 import ScaleImage from 'mainam-react-native-scaleimage';
@@ -9,6 +9,12 @@ import snackbar from '@utils/snackbar-utils';
 import questionProvider from '@data-access/question-provider';
 import constants from '@resources/strings';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+import Modal from "react-native-modal";
+import stylemodal from "@styles/modal-style";
+import specialistProvider from '@data-access/specialist-provider';
+
+import Form from '@components/form/Form';
+import TextField from '@components/form/TextField';
 const padding = Platform.select({
     ios: 7,
     android: 2
@@ -17,19 +23,19 @@ class CreateQuestionStep2Screen extends Component {
     constructor(props) {
         super(props);
         let post = this.props.navigation.getParam("post", null);
-        if (post != null && post.post) {
-            post = post.post;
-        } else {
-            post = null;
+        if (!post) {
+            post = {}
         }
-        this.state = {
-            imageUris: [],
-            post: post,
-            title: post ? post.title : "",
-            content: post ? post.content : "",
-            isPrivate: post ? post.isPrivate == 1 : false,
-            btnSend: post ? "Lưu" : "Gửi"
-        }
+        post.imageUris = [];
+        post.disease = 0;
+        this.state = post;
+    }
+    componentWillMount() {
+        specialistProvider.getTop(1000, (s, e) => {
+            if (s) {
+                this.setState({ specialist: s });
+            }
+        });
     }
 
     removeImage(index) {
@@ -80,16 +86,7 @@ class CreateQuestionStep2Screen extends Component {
         }
     }
     createQuestion() {
-        if (!this.props.userApp.isLogin) {
-            this.props.navigation.navigate("login");
-            return;
-        }
-        if (!this.state.title || !this.state.title.trim()) {
-            snackbar.show(constants.msg.question.please_input_title, 'danger');
-            return;
-        }
-        if (!this.state.content || !this.state.content.trim()) {
-            snackbar.show(constants.msg.question.please_input_content, 'danger');
+        if (!this.form.isValid()) {
             return;
         }
 
@@ -110,7 +107,8 @@ class CreateQuestionStep2Screen extends Component {
                     images += ",";
                 images += item.url;
             });
-            questionProvider.create("", [], this.state.title, this.state.content, images, this.state.isPrivate ? 1 : 0, (s, e) => {
+            snackbar.show(constants.msg.question.create_question_failed, "danger");
+            questionProvider.create(this.state.content, this.state.gender, this.state.age, this.state.specialist_item ? this.state.specialist_item.specialist.id : "0", this.state.disease, this.state.otherContent, images).then(s => {
                 this.setState({ isLoading: false });
                 if (s && s.code == 0) {
                     snackbar.show(constants.msg.question.create_question_success, "success");
@@ -118,34 +116,157 @@ class CreateQuestionStep2Screen extends Component {
                 } else {
                     snackbar.show(constants.msg.question.create_question_failed, "danger");
                 }
+            }).catch(e => {
+                this.setState({ isLoading: false });
+                // snackbar.show(constants.msg.question.create_question_failed, "danger");
             });
         })
     }
 
+    toggleModalSpecialize() {
+        Keyboard.dismiss();
+        this.setState({
+            toggleModalSpecialize: !this.state.toggleModalSpecialize
+        })
+    }
+
+    selectSpecialist(specialize) {
+        this.state.specialist_item = specialize;
+        this.setState({
+            toggleModalSpecialize: false
+        })
+    }
+    selectDisease(value) {
+        if ((this.state.disease & value) == value) {
+            this.setState({ disease: this.state.disease ^ value })
+        } else {
+            this.setState({ disease: this.state.disease | value })
+        }
+    }
     render() {
         return (
             <ActivityPanel style={{ flex: 1 }} title={this.state.post ? "Chỉnh sửa" : "Đặt câu hỏi"} showFullScreen={true} touchToDismiss={true} isLoading={this.state.isLoading}>
                 <ScrollView style={{ flex: 1 }}
                     keyboardShouldPersistTaps="always">
                     <View style={{ padding: 10 }}>
-                        <Text style={{ fontWeight: 'bold' }}>Tiêu đề</Text>
-                        <TextInput
-                            value={this.state.title}
-                            autoFocus={true} placeholder="Nhập tiêu đề câu hỏi" underlineColorAndroid='transparent' style={[styles.textinput, { marginTop: 10 }]}
-                            onChangeText={(s) => { this.setState({ title: s }) }}
-                        />
-                        <Text style={{ marginTop: 10, fontWeight: 'bold' }}>Nội dung</Text>
-                        <TextInput
-                            value={this.state.content}
-                            multiline={true}
-                            autoFocus={true} placeholder="Nhập nội dung câu hỏi" underlineColorAndroid='transparent' style={[styles.textinput, { marginTop: 10, height: 150 }]}
-                            onChangeText={(s) => { this.setState({ content: s }) }}
-                        />
-                        <View style={{ marginTop: 10, alignItems: 'center' }} flexDirection="row">
-                            <Text style={{ flex: 1, fontWeight: '700' }}>Không hiển thị người hỏi</Text>
-                            <Switch value={this.state.isPrivate} onValueChange={x => this.setState({ isPrivate: x })} />
+                        <TouchableOpacity onPress={() => { this.toggleModalSpecialize() }}>
+                            <View style={{ position: 'relative', margin: 20, marginTop: 0, flexDirection: 'row', alignItems: 'center' }}>
+                                <Text style={{ borderColor: "#0c8c8b", borderWidth: 1, padding: 10, flex: 1 }}>
+                                    {
+                                        this.state.specialist_item ? this.state.specialist_item.specialist.name : "Chọn chuyên khoa"
+                                    }
+                                </Text>
+                                <Image source={require("@images/icdropdown.png")} style={{ width: 14, height: 10, position: 'absolute', right: 10 }} />
+                            </View>
+                        </TouchableOpacity>
+                        <Text style={{ fontWeight: 'bold' }}>Tiền sử bệnh</Text>
+                        <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flex: 1 }}>
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Text style={{ flex: 1 }}>Tim mạch</Text>
+                                    <TouchableOpacity onPress={this.selectDisease.bind(this, 1)} style={{ padding: 10, flexDirection: 'row' }}>
+                                        {
+                                            (this.state.disease & 1) == 1 ?
+                                                <ScaleImage source={require("@images/ic_check_tick.png")} width={20} /> :
+                                                <ScaleImage source={require("@images/ic_check.png")} width={20} />
+                                        }
+                                    </TouchableOpacity>
+
+                                </View>
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Text style={{ flex: 1 }}>huyết áp</Text>
+                                    <TouchableOpacity onPress={this.selectDisease.bind(this, 4)} style={{ padding: 10, flexDirection: 'row' }}>
+                                        {
+                                            (this.state.disease & 4) == 4 ?
+                                                <ScaleImage source={require("@images/ic_check_tick.png")} width={20} /> :
+                                                <ScaleImage source={require("@images/ic_check.png")} width={20} />
+                                        }
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Text style={{ flex: 1 }}>Hô hấp</Text>
+                                    <TouchableOpacity onPress={this.selectDisease.bind(this, 16)} style={{ padding: 10, flexDirection: 'row' }}>
+                                        {
+                                            (this.state.disease & 16) == 16 ?
+                                                <ScaleImage source={require("@images/ic_check_tick.png")} width={20} /> :
+                                                <ScaleImage source={require("@images/ic_check.png")} width={20} />
+                                        }
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Text style={{ flex: 1 }}>Xương khớp</Text>
+                                    <TouchableOpacity onPress={this.selectDisease.bind(this, 64)} style={{ padding: 10, flexDirection: 'row' }}>
+                                        {
+                                            (this.state.disease & 64) == 64 ?
+                                                <ScaleImage source={require("@images/ic_check_tick.png")} width={20} /> :
+                                                <ScaleImage source={require("@images/ic_check.png")} width={20} />
+                                        }
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                            <View style={{ flex: 1 }}>
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Text style={{ flex: 1 }}>Mỡ máu</Text>
+                                    <TouchableOpacity onPress={this.selectDisease.bind(this, 2)} style={{ padding: 10, flexDirection: 'row' }}>
+                                        {
+                                            (this.state.disease & 2) == 2 ?
+                                                <ScaleImage source={require("@images/ic_check_tick.png")} width={20} /> :
+                                                <ScaleImage source={require("@images/ic_check.png")} width={20} />
+                                        }
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Text style={{ flex: 1 }}>HIV</Text>
+                                    <TouchableOpacity onPress={this.selectDisease.bind(this, 8)} style={{ padding: 10, flexDirection: 'row' }}>
+                                        {
+                                            (this.state.disease & 8) == 8 ?
+                                                <ScaleImage source={require("@images/ic_check_tick.png")} width={20} /> :
+                                                <ScaleImage source={require("@images/ic_check.png")} width={20} />
+                                        }
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Text style={{ flex: 1 }}>Dạ dày</Text>
+                                    <TouchableOpacity onPress={this.selectDisease.bind(this, 32)} style={{ padding: 10, flexDirection: 'row' }}>
+                                        {
+                                            (this.state.disease & 32) == 32 ?
+                                                <ScaleImage source={require("@images/ic_check_tick.png")} width={20} /> :
+                                                <ScaleImage source={require("@images/ic_check.png")} width={20} />
+                                        }
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Text style={{ flex: 1 }}>Thiếu chất</Text>
+                                    <TouchableOpacity onPress={this.selectDisease.bind(this, 128)} style={{ padding: 10, flexDirection: 'row' }}>
+                                        {
+                                            (this.state.disease & 128) == 128 ?
+                                                <ScaleImage source={require("@images/ic_check_tick.png")} width={20} /> :
+                                                <ScaleImage source={require("@images/ic_check.png")} width={20} />
+                                        }
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
                         </View>
-                        <Text style={{ fontWeight: 'bold', marginTop: 20 }}>Hình ảnh <Text style={{ fontStyle: 'italic', fontWeight: 'normal' }}>(Tối đa 4 ảnh)</Text></Text>
+                        <Form ref={ref => this.form = ref}>
+
+                            <Text style={{ marginTop: 10, fontWeight: 'bold' }}>Thông tin khác</Text>
+                            <TextField validate={
+                                {
+                                    rules: {
+                                        maxlength: 255
+                                    },
+                                    messages: {
+                                        maxlength: "Không cho phép nhập quá 255 kí tự"
+                                    }
+                                }
+                            } inputStyle={[styles.textinput, { marginTop: 10, height: 50 }]} onChangeText={(s) => { this.setState({ otherContent: s }) }} autoCapitalize={'none'}
+                                returnKeyType={'next'}
+                                underlineColorAndroid='transparent'
+                                autoFocus={true}
+                                multiline={true}
+                                autoCorrect={false} />
+                        </Form>
+                        <Text style={{ fontWeight: 'bold', marginTop: 20 }}>Hình ảnh <Text style={{ fontStyle: 'italic', fontWeight: 'normal' }}>(Tối đa 5 ảnh)</Text></Text>
                         <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 10 }}>
                             {
                                 this.state.imageUris.map((item, index) => <TouchableOpacity key={index} style={{ margin: 2, width: 100, height: 100, borderColor: '#00000020', borderWidth: 1 }}>
@@ -167,7 +288,7 @@ class CreateQuestionStep2Screen extends Component {
                                 </TouchableOpacity>)
                             }
                             {
-                                !this.state.imageUris || this.state.imageUris.length < 4 ?
+                                !this.state.imageUris || this.state.imageUris.length < 5 ?
                                     <TouchableOpacity onPress={this.selectImage.bind(this)} style={{ margin: 2, width: 100, height: 100, borderColor: '#00000020', borderWidth: 1, justifyContent: 'center', alignItems: 'center' }}>
                                         <ScaleImage width={40} source={require("@images/ic_add_image.png")} />
                                         <Text>Thêm ảnh</Text>
@@ -183,6 +304,46 @@ class CreateQuestionStep2Screen extends Component {
                 {
                     Platform.OS == 'ios' && <KeyboardSpacer />
                 }
+                <Modal isVisible={this.state.toggleModalSpecialize}
+                    onSwipe={() => this.setState({ toggleModalSpecialize: false })}
+                    swipeDirection="left"
+                    backdropOpacity={0.5}
+                    animationInTiming={500}
+                    animationOutTiming={500}
+                    backdropTransitionInTiming={1000}
+                    backdropTransitionOutTiming={1000}
+                    onBackdropPress={() => this.toggleModalSpecialize()}
+                    style={stylemodal.bottomModal}>
+                    <View style={{ backgroundColor: '#fff', elevation: 3, flexDirection: 'column', maxHeight: 400, minHeight: 100 }}>
+                        <View style={{ borderBottomWidth: 2, borderBottomColor: "#0c8c8b", flexDirection: 'row', alignItems: "center" }}>
+                            <Text style={{ fontWeight: 'bold', padding: 10, flex: 1 }}>
+                                Chọn chuyên khoa
+                            </Text>
+                            <TouchableOpacity onPress={this.toggleModalSpecialize.bind(this)}>
+                                <View style={{ padding: 10 }}>
+                                    <ScaleImage source={require("@images/ic_close.png")} width={15}></ScaleImage>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                        {!this.state.specialist || this.state.specialist.length == 0 ? <View style={{ flex: 1 }}>
+                            <Text style={{ fontStyle: 'italic', textAlign: 'center', padding: 10 }}>Không có chuyên khoa nào</Text></View> : null}
+
+                        <FlatList
+                            data={
+                                this.state.specialist
+                            }
+                            extraData={this.state}
+                            keyExtractor={(item, index) => index}
+
+                            renderItem={({ item }) => <TouchableOpacity onPress={this.selectSpecialist.bind(this, item)}>
+                                <Text style={{ padding: 15, fontWeight: 'bold', borderBottomColor: '#0c8c8b', borderBottomWidth: 1 }}>
+                                    {item.specialist.name}
+                                </Text>
+                            </TouchableOpacity>
+                            }
+                        />
+                    </View>
+                </Modal>
             </ActivityPanel>
         );
 

@@ -6,19 +6,24 @@ import datacacheProvider from '@data-access/datacache-provider';
 const Realm = require('realm');
 import realmModel from '@models/realm-models';
 module.exports = {
-    create(departmentId, tags, title, content, images, isPrivate, callback) {
-        client.requestApi("post", constants.api.question.create, {
-            specialistId,
-            tags,
-            post: {
-                title,
-                content,
-                images,
-                isPrivate
-            }
-        }, (s, e) => {
-            if (callback)
-                callback(s, e);
+    create(content, gender, age, specialistId, diseaseHistory, otherContent, images) {
+        return new Promise((resolve, reject) => {
+            client.requestApi("post", constants.api.question.create, {
+                specialistId,
+                post: {
+                    age,
+                    gender,
+                    diseaseHistory,
+                    images,
+                    otherContent,
+                    content
+                }
+            }, (s, e) => {
+                if (s)
+                    resolve(s);
+                else
+                    reject(e);
+            });
         });
     },
     like(isLiked, postId, callback) {

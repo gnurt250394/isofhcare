@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import Dimensions from 'Dimensions';
 import { TouchableOpacity, ScrollView, View, Text, StyleSheet, TextInput, Platform, Switch, Keyboard, Image } from 'react-native';
 import ActivityPanel from '@components/ActivityPanel';
 import { connect } from 'react-redux';
@@ -15,6 +16,9 @@ const padding = Platform.select({
     ios: 7,
     android: 2
 });
+
+const DEVICE_WIDTH = Dimensions.get('window').width;
+const DEVICE_HEIGHT = Dimensions.get('window').height;
 class CreateQuestionStep1Screen extends Component {
     constructor(props) {
         super(props);
@@ -30,7 +34,8 @@ class CreateQuestionStep1Screen extends Component {
             title: post ? post.title : "",
             content: post ? post.content : "",
             isPrivate: post ? post.isPrivate == 1 : false,
-            btnSend: post ? "Lưu" : "Gửi"
+            btnSend: post ? "Lưu" : "Gửi",
+            gender: 1
         }
     }
 
@@ -82,46 +87,16 @@ class CreateQuestionStep1Screen extends Component {
         }
     }
     createQuestion() {
-        if (!this.props.userApp.isLogin) {
-            this.props.navigation.navigate("login");
+        if (!this.form.isValid()) {
             return;
         }
-        if (!this.state.title || !this.state.title.trim()) {
-            snackbar.show(constants.msg.question.please_input_title, 'danger');
-            return;
-        }
-        if (!this.state.content || !this.state.content.trim()) {
-            snackbar.show(constants.msg.question.please_input_content, 'danger');
-            return;
-        }
-
-        for (var i = 0; i < this.state.imageUris.length; i++) {
-            if (this.state.imageUris[i].loading) {
-                snackbar.show('Một số ảnh đang được tải lên. Vui lòng chờ', 'danger');
-                return;
+        this.props.navigation.navigate("createQuestionStep2", {
+            post: {
+                gender: this.state.gender,
+                content: this.state.content,
+                age: this.state.age
             }
-            if (this.state.imageUris[i].error) {
-                snackbar.show('Ảnh tải lên bị lỗi, vui lòng kiểm tra lại', 'danger');
-                return;
-            }
-        }
-        this.setState({ isLoading: true }, () => {
-            var images = "";
-            this.state.imageUris.forEach((item) => {
-                if (images)
-                    images += ",";
-                images += item.url;
-            });
-            questionProvider.create("", [], this.state.title, this.state.content, images, this.state.isPrivate ? 1 : 0, (s, e) => {
-                this.setState({ isLoading: false });
-                if (s && s.code == 0) {
-                    snackbar.show(constants.msg.question.create_question_success, "success");
-                    this.props.navigation.navigate("listQuestion", { reloadTime: new Date().getTime() });
-                } else {
-                    snackbar.show(constants.msg.question.create_question_failed, "danger");
-                }
-            });
-        })
+        });
     }
 
     render() {
@@ -142,11 +117,10 @@ class CreateQuestionStep1Screen extends Component {
                                     },
                                     messages: {
                                         required: "Vui lòng nhập nội dung câu hỏi",
-                                        minlength: "Nội dung nhập tối thiểu 1 ký tự",
-                                        maxlength: "Nội dung nhập tối đa 2000 ký tự"
+                                        maxlength: "Không cho phép nhập quá 2000 kí tự"
                                     }
                                 }
-                            } inputStyle={[styles.textinput, { marginTop: 10, height: 150 }]} onChangeText={(s) => { this.setState({ code: s }) }} placeholder={constants.input_code} autoCapitalize={'none'}
+                            } inputStyle={[styles.textinput, { marginTop: 10, height: 150 }]} onChangeText={(s) => { this.setState({ content: s }) }} autoCapitalize={'none'}
                                 returnKeyType={'next'}
                                 underlineColorAndroid='transparent'
                                 autoFocus={true}
@@ -159,79 +133,46 @@ class CreateQuestionStep1Screen extends Component {
                                 <TextField validate={
                                     {
                                         rules: {
-                                            required: true,
                                             min: 1,
                                             max: 150
                                         },
                                         messages: {
-                                            required: "Vui lòng nhập nội dung câu hỏi",
                                             min: "Tuổi bệnh nhân cần lớn hơn 1",
                                             max: "Tuổi bệnh nhân cần nhỏ hơn 150",
                                         }
                                     }
-                                } inputStyle={[styles.textinput, { marginTop: 10}]} onChangeText={(s) => { this.setState({ code: s }) }} placeholder={constants.input_code} autoCapitalize={'none'}
+                                } inputStyle={[styles.textinput, { marginTop: 10 }]} onChangeText={(s) => { this.setState({ age: s }) }}
                                     returnKeyType={'next'}
                                     underlineColorAndroid='transparent'
-                                    keyboardType='numeric' 
-                                    autoFocus={true}
-                                    multiline={true}
-                                    autoCorrect={false} />
+                                    keyboardType='numeric'
+                                />
                             </Form>
                         </Form>
-
-                        <TextInput
-                            value={this.state.content}
-                            multiline={true}
-                            autoFocus={true} placeholder="Nhập nội dung câu hỏi" underlineColorAndroid='transparent' style={[styles.textinput, { marginTop: 10, height: 150 }]}
-                            onChangeText={(s) => { this.setState({ content: s }) }}
-                        />
-                        <View style={{ flexDirection: 'row' }}>
-                            <View>
-                                <Text>Tuổi</Text>
-                                <TextInput value={this.state.age} keyboardType='numeric' style={[styles.textinput, { width: 50 }]} />
-                            </View>
-                            <View>
-                                <Text>Giới tính</Text>
-                                <TextInput value={this.state.age} keyboardType='numeric' style={[styles.textinput, { width: 50 }]} />
-                            </View>
-                        </View>
-                        <View style={{ marginTop: 10, alignItems: 'center' }} flexDirection="row">
-                            <Text style={{ flex: 1, fontWeight: '700' }}>Không hiển thị người hỏi</Text>
-                            <Switch value={this.state.isPrivate} onValueChange={x => this.setState({ isPrivate: x })} />
-                        </View>
-                        <Text style={{ fontWeight: 'bold', marginTop: 20 }}>Hình ảnh <Text style={{ fontStyle: 'italic', fontWeight: 'normal' }}>(Tối đa 4 ảnh)</Text></Text>
-                        <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 10 }}>
-                            {
-                                this.state.imageUris.map((item, index) => <TouchableOpacity key={index} style={{ margin: 2, width: 100, height: 100, borderColor: '#00000020', borderWidth: 1 }}>
-                                    <Image source={{ uri: item.uri }} resizeMode="cover" style={{ width: 100, height: 100, backgroundColor: '#000' }} />
+                        <View style={{ paddingLeft: 30, width: DEVICE_WIDTH - 40, marginTop: 10 }}>
+                            <Text>Giới tính</Text>
+                            <View style={{ flexDirection: 'row' }}>
+                                <TouchableOpacity onPress={() => { this.setState({ gender: 1 }) }} style={{ padding: 10, flexDirection: 'row' }}>
                                     {
-                                        item.error ?
-                                            <View style={{ position: 'absolute', left: 30, top: 30 }} >
-                                                <ScaleImage source={require("@images/ic_warning.png")} width={40} />
-                                            </View> :
-                                            item.loading ?
-                                                < View style={{ position: 'absolute', left: 30, top: 30, backgroundColor: '#FFF', borderRadius: 20 }} >
-                                                    <ScaleImage source={require("@images/loading.gif")} width={40} />
-                                                </View>
-                                                : null
+                                        this.state.gender == 1 ?
+                                            <ScaleImage source={require("@images/ic_radio1.png")} width={20} /> :
+                                            <ScaleImage source={require("@images/ic_radio0.png")} width={20} />
                                     }
-                                    <TouchableOpacity onPress={this.removeImage.bind(this, index)} style={{ position: 'absolute', top: 0, right: 0, backgroundColor: '#FFFFFF70', padding: 1, borderRadius: 5, margin: 2 }} >
-                                        <ScaleImage source={require("@images/icclose.png")} width={12} />
-                                    </TouchableOpacity>
-                                </TouchableOpacity>)
-                            }
-                            {
-                                !this.state.imageUris || this.state.imageUris.length < 4 ?
-                                    <TouchableOpacity onPress={this.selectImage.bind(this)} style={{ margin: 2, width: 100, height: 100, borderColor: '#00000020', borderWidth: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                        <ScaleImage width={40} source={require("@images/ic_add_image.png")} />
-                                        <Text>Thêm ảnh</Text>
-                                    </TouchableOpacity> : null
-                            }
+                                    <Text style={{ marginLeft: 5 }}>Nam</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => { this.setState({ gender: 0 }) }} style={{ padding: 10, flexDirection: 'row' }}>
+                                    {
+                                        this.state.gender == 0 ?
+                                            <ScaleImage source={require("@images/ic_radio1.png")} width={20} /> :
+                                            <ScaleImage source={require("@images/ic_radio0.png")} width={20} />
+                                    }
+                                    <Text style={{ marginLeft: 5 }}>Nữ</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </View>
                 </ScrollView>
                 <TouchableOpacity onPress={this.createQuestion.bind(this)} style={{ width: 200, backgroundColor: '#58bc91', padding: 15, borderRadius: 25, alignSelf: 'center', margin: 10 }}>
-                    <Text style={{ color: '#FFF', textAlign: 'center', fontWeight: 'bold' }}>{this.state.post ? "Lưu" : "Gửi"}</Text>
+                    <Text style={{ color: '#FFF', textAlign: 'center', fontWeight: 'bold' }}>THÔNG TIN BỔ SUNG</Text>
                 </TouchableOpacity>
                 <ImagePicker ref={ref => this.imagePicker = ref} />
                 {

@@ -71,7 +71,7 @@ module.exports = {
       DATA_TOP_DISEASE: "DATA_TOP_DISEASE",
       DATA_TOP_SYMPTOM: "DATA_TOP_SYMPTOM",
       DATA_TOP_DRUG: "DATA_TOP_DRUG",
-      DATA_TOP_ADS:"DATA_TOP_ADS",
+      DATA_TOP_ADS: "DATA_TOP_ADS",
       DATA_PROVINCE: "DATA_PROVINCE",
       CURRENT_LOCATION: "CURRENT_LOCATION",
       INTRO_FINISHED: "INTRO_FINISHED"
@@ -169,13 +169,6 @@ module.exports = {
       send_support_success: "Gửi yêu cầu hỗ trợ thành công, chúng tôi sẽ liện hệ qua điện thoại với bạn trong thời gian sớm nhất",
       send_support_failed: "Yêu cầu của bạn chưa được gửi đi, vui lòng thử lại sau"
     },
-    question:
-    {
-      please_input_title: "Vui lòng nhập tiêu đề câu hỏi",
-      please_input_content: "Vui lòng nhập nội dung câu hỏi",
-      create_question_success: "Gửi câu hỏi thành công",
-      create_question_failed: "Gửi câu hỏi không thành công"
-    },
     conference:
     {
       checkin_failed: "Checkin không thành công. Vui lòng liên hệ quản trị viên để được trợ giúp",
@@ -186,7 +179,11 @@ module.exports = {
       canot_view_detail_this_booking: "Không thể xem kết quả đặt khám này"
     },
     question: {
-      confirm_delete_post: "Bạn có muốn xoá bài viết này"
+      confirm_delete_post: "Bạn có muốn xoá bài viết này",
+      please_input_title: "Vui lòng nhập tiêu đề câu hỏi",
+      please_input_content: "Vui lòng nhập nội dung câu hỏi",
+      create_question_success: "Gửi câu hỏi thành công",
+      create_question_failed: "Gửi câu hỏi không thành công"
     }
   },
   api: {

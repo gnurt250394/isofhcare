@@ -72,6 +72,7 @@ class LoginScreen extends Component {
 		// return;
 		let verify = async () => {
 			RNAccountKit.loginWithPhone().then(async (token) => {
+				console.log(token);
 				if (!token) {
 					snackbar.show("Xác minh số điện thoại không thành công", "danger");
 				} else {

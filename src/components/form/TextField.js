@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, TextInput } from 'react-native';
-import { connect } from 'react-redux';
-import snackbar from '@utils/snackbar-utils';
 import stringUtils from 'mainam-react-native-string-utils';
-
-import specialistProvider from '@data-access/specialist-provider';
 
 class TextField extends Component {
     constructor(props) {
