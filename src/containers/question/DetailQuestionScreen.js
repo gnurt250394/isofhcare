@@ -385,7 +385,7 @@ class DetailQuestionScreen extends Component {
         var image = post.images;
         if (image) {
             var images = image.split(",");
-            return (<View><Text>Ảnh</Text>
+            return (<View><Text style={{ fontWeight: 'bold' }}>Ảnh</Text>
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 10 }}>
                     {
                         images.map((item, index) => <TouchableOpacity onPress={() => {
@@ -529,6 +529,25 @@ class DetailQuestionScreen extends Component {
                     {
                         this.renderImages(this.state.post.post)
                     }
+                    <View style={{ flexDirection: 'row' }}>
+                        <View style={{ flex: 1 }}>
+                            {
+                                this.state.post.post.isAnswered == 0 ?
+                                    <Text>Trạng thái: <Text>{this.state.post.post.reject ? "Đã bị từ chối" : "Chưa trả lời"}</Text></Text> : null
+                            }
+                        </View>
+                        <View style={{ flex: 1 }}>
+                            <Text style={{ padding: 5, textAlign: 'right' }}>{this.state.post.post.createdDate.toDateObject("-").getPostTime()}</Text>
+                        </View>
+                    </View>
+                    {
+                        this.state.post.post.reject ?
+                            <View>
+                                <Text style={{ fontWeight: 'bold' }}>Lý do từ chối</Text>
+                                <Text style={{ color: 'red' }}>{this.state.post.post.reject}</Text>
+                            </View> : null
+                    }
+
 
                     {/* {
                         this.renderItemPost(post)
