@@ -14,6 +14,9 @@ class TextField extends Component {
             message: ""
         }
     }
+    getValue() {
+        return this.state.value;
+    }
     getError() {
         if (!this.props.validate) {
             return null;
@@ -27,7 +30,7 @@ class TextField extends Component {
                     let message = messages.required ? messages.required : "Trường này là bắt buộc";
                     let result = { error: true, message };
                     this.setState(result);
-                    return result;
+                    return false;
                 }
             }
             if (rules.minlength && rules.minlength > 0) {
@@ -35,7 +38,7 @@ class TextField extends Component {
                     let message = messages.minlength ? messages.minlength : "Yêu cầu tối thiểu " + rules.minlength + " ký tự";
                     let result = { error: true, message };
                     this.setState(result);
-                    return result;
+                    return false;
                 }
             }
             if (rules.maxlength && rules.maxlength > 0) {
@@ -43,7 +46,7 @@ class TextField extends Component {
                     let message = messages.maxlength ? messages.maxlength : "Yêu cầu tối đa " + rules.maxlength + " ký tự";
                     let result = { error: true, message };
                     this.setState(result);
-                    return result;
+                    return false;
                 }
             }
             if (rules.equalTo) {
@@ -56,7 +59,7 @@ class TextField extends Component {
                     let message = messages.equalTo ? messages.equalTo : "Dữ liệu không trùng khớp";
                     let result = { error: true, message };
                     this.setState(result);
-                    return result;
+                    return false;
                 }
             }
             if (rules.password) {
@@ -65,7 +68,7 @@ class TextField extends Component {
                     let message = messages.password ? messages.password : "Mật khẩu nhập không hợp lệ";
                     let result = { error: true, message };
                     this.setState(result);
-                    return result;
+                    return false;
                 }
             }
             if (rules.email) {
@@ -73,7 +76,7 @@ class TextField extends Component {
                     let message = messages.email ? messages.email : "Vui lòng nhập đúng định dạng email";
                     let result = { error: true, message };
                     this.setState(result);
-                    return result;
+                    return false;
                 }
             }
             if (rules.phone) {
@@ -81,7 +84,7 @@ class TextField extends Component {
                     let message = messages.phone ? messages.phone : "Vui lòng nhập đúng định dạng số điện thoại";
                     let result = { error: true, message };
                     this.setState(result);
-                    return result;
+                    return false;
                 }
             }
             if (rules.number) {
@@ -90,7 +93,7 @@ class TextField extends Component {
                     let message = messages.number ? messages.number : "Vui lòng nhập đúng định dạng ký tự số";
                     let result = { error: true, message };
                     this.setState(result);
-                    return result;
+                    return false;
                 }
             }
             if (rules.min) {
@@ -98,7 +101,7 @@ class TextField extends Component {
                     let message = messages.min ? messages.min : "Vui lòng nhập giá trị lớn hơn " + rules.min;
                     let result = { error: true, message };
                     this.setState(result);
-                    return result;
+                    return false;
                 }
             }
             if (rules.max) {
@@ -106,7 +109,7 @@ class TextField extends Component {
                     let message = messages.max ? messages.max : "Vui lòng nhập giá trị nhỏ hơn " + rules.max;
                     let result = { error: true, message };
                     this.setState(result);
-                    return result;
+                    return false;
                 }
             }
             for (var name in rules) {
@@ -116,13 +119,13 @@ class TextField extends Component {
                         let message = messages[name] ? messages[name] : "Dữ liệu không hợp lệ";
                         let result = { error: true, message };
                         this.setState(result);
-                        return result;
+                        return false;
                     }
                 }
             }
         }
         this.setState({ message: "", error: false });
-        return null;
+        return true;
     }
 
     isValid() {
@@ -136,14 +139,27 @@ class TextField extends Component {
         }, () => {
             this.isValid();
         })
+        if (this.props.onChangeText)
+            this.props.onChangeText(s);
     }
     // shouldComponentUpdate(newProps, newState) {
     //     return true;
     // }
     render() {
+        // const childrenWithProps = React.Children.map(this.props.children, child =>
+        //     React.cloneElement(child, { onChangeText: this.onChangeText.bind(this) })
+        // );
         return (
             <View {...this.props}>
-                <TextInput style={[this.props.inputStyle, this.state.error ? this.props.inputStyleError : null]} onChangeText={this.onChangeText.bind(this)} />
+                {/* {this.props.children ? <View>{childrenWithProps}</View> : */}
+                <TextInput style={[this.props.inputStyle, this.state.error ? this.props.inputStyleError : null]} onChangeText={this.onChangeText.bind(this)}
+                    placeholder={this.props.placeholder}
+                    underlineColorAndroid={"transparent"}
+                    autoCorrect={this.props.autoCorrect}
+                    returnKeyType={this.props.returnKeyType}
+                    secureTextEntry={this.props.secureTextEntry}
+                />
+                {/* } */}
                 {
                     this.state.error ?
                         this.props.getLableError ?

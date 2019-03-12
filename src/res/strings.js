@@ -10,6 +10,7 @@ module.exports = {
   send_password: "GỬI MÃ",
   input_email: "Nhập địa chỉ email",
   input_username_or_email: 'Nhập Email hoặc số điện thoại',
+  input_phone: 'Nhập số điện thoại',
   input_password: 'Mật khẩu',
   forgot_password: 'QUÊN MẬT KHẨU',
   ehealth: 'Y bạ điện tử',

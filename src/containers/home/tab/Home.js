@@ -12,6 +12,8 @@ import Carousel from 'react-native-snap-carousel';
 import advertiseProvider from '@data-access/advertise-provider';
 import snackbar from '@utils/snackbar-utils';
 import TextField from '@components/form/TextField';
+import Form from '@components/form/Form';
+import UserInput from '@components/UserInput';
 
 class Home extends Component {
     constructor(props) {
@@ -129,26 +131,58 @@ class Home extends Component {
                 // showMessenger={this.props.userApp.isLogin ? true : false}
                 showMessenger={false}
                 badge={0}>
-                <TextField inputStyleError={{borderWidth: 1,borderColor:'red'}} ref={ref => this.text = ref} errorStyle={{ color: 'red' }}
-                    validate={{
-                        rules: {
-                            // required: true, 
-                            test: (x, y) => {
-                                return x == "xxx";
+                <Form ref={ref => this.form = ref}>
+                    <TextField inputStyleError={{ borderWidth: 1, borderColor: 'red' }} ref={ref => this.text = ref} errorStyle={{ color: 'red' }}
+                        validate={{
+                            rules: {
+                                // required: true, 
+                                test: (x, y) => {
+                                    return x == "xxx";
+                                }
+                                // equalTo: () => { return "xyz" }
+                            },
+                            messages: {
+                                min: "0",
+                                max: 1,
+                                password: "Mật khẩu chứa kía",
+                                number: "Vui lòng nhập họ tên",
+                                equalTo: "Vui lòng nhập đúng định dạng số điện thoại xxx1"
                             }
-                            // equalTo: () => { return "xyz" }
-                        },
-                        messages: {
-                            min: "0",
-                            max: 1,
-                            password: "Mật khẩu chứa kía",
-                            number: "Vui lòng nhập họ tên",
-                            equalTo: "Vui lòng nhập đúng định dạng số điện thoại xxx1"
                         }
-                    }
-                    }
-                />
-                <TouchableOpacity onPress={() => this.text.isValid()} style={{ padding: 10 }}><Text>xx</Text></TouchableOpacity>
+                        }
+                    >
+                        <UserInput returnKeyType={'done'}
+                            autoCapitalize={'none'}
+                            autoCorrect={false}
+                            placeholder={"constants.input_password"}
+                            style={{ width: "100%" }} />
+                    </TextField>
+                    {/* <TextField inputStyleError={{ borderWidth: 1, borderColor: 'red' }} ref={ref => this.text2 = ref} errorStyle={{ color: 'red' }}
+                        validate={{
+                            rules: {
+                                // required: true, 
+                                test: (x, y) => {
+                                    return x == "yyy";
+                                }
+                                // equalTo: () => { return "xyz" }
+                            },
+                            messages: {
+                                min: "0",
+                                max: 1,
+                                password: "Mật khẩu chứa kía",
+                                number: "Vui lòng nhập họ tên",
+                                equalTo: "Vui lòng nhập đúng định dạng số điện thoại xxx1"
+                            }
+                        }
+                        }
+                    /> */}
+                </Form>
+                <TouchableOpacity onPress={() => {
+                    if (this.form.isValid())
+                        alert(1);
+                    else
+                        alert(2);
+                }} style={{ padding: 10 }}><Text>xx</Text></TouchableOpacity>
 
                 <ScrollView style={{
                     flex: 1,

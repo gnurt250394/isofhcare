@@ -14,6 +14,8 @@ import ScaleImage from 'mainam-react-native-scaleimage';
 import SocialNetwork from '@components/LoginSocial';
 import RNAccountKit from 'react-native-facebook-account-kit'
 const durationDefault = 500;
+import Form from '@components/form/Form';
+import TextField from '@components/form/TextField';
 class LoginScreen extends Component {
 	constructor(props) {
 		super(props)
@@ -93,12 +95,10 @@ class LoginScreen extends Component {
 
 	login() {
 		Keyboard.dismiss();
-		if (this.state.email.trim() === "" || this.state.email === "" || this.state.password === "") {
-			snackbar.showShort(constants.msg.user.please_input_username_and_password);
+		if (!this.form.isValid()) {
 			this.child.unPress();
 			return;
 		}
-
 		userProvider.login(this.state.email.trim(), this.state.password, (s, e) => {
 			this.child.unPress();
 			if (s) {
@@ -129,6 +129,8 @@ class LoginScreen extends Component {
 			if (e) {
 				console.log(e);
 			}
+
+
 			snackbar.show(constants.msg.error_occur);
 		});
 	}
@@ -148,7 +150,7 @@ class LoginScreen extends Component {
 		})
 		return (
 			<ActivityPanel style={{ flex: 1 }}
-				title="Đăng nhập 1"
+				title="Đăng nhập"
 				touchToDismiss={true}
 				// hideActionbar={true}
 				// hideStatusbar={true}
@@ -162,28 +164,63 @@ class LoginScreen extends Component {
 
 					<KeyboardAvoidingView behavior='padding' style={styles.form}>
 						<Animated.View style={{ marginLeft, flex: 1 }}>
-							<UserInput onTextChange={(s) => this.setState({ email: s })}
-								placeholder={constants.input_username_or_email}
-								autoCapitalize={'none'}
-								returnKeyType={'next'}
-								autoCorrect={false}
-								style={{ width: "100%" }} />
-							<View style={{ marginTop: 15, flex: 1, width: "100%", }}>
-								<UserInput
-									onTextChange={(s) => this.setState({ password: s })}
-									secureTextEntry={this.state.showPass}
-									placeholder={constants.input_password}
-									returnKeyType={'done'}
+							<Form ref={ref => this.form = ref}>
+								<TextField errorStyle={styles.errorStyle} validate={
+									{
+										rules: {
+											required: true,
+											phone: true
+										},
+										messages: {
+											required: "Vui lòng nhập số điện thoại",
+											phone: "Nhập SĐT không hợp lệ"
+										}
+									}
+								} inputStyle={styles.input} onChangeText={(s) => { this.setState({ email: s }) }} placeholder={constants.input_phone} autoCapitalize={'none'} />
+								<Form style={{ width: "100%", }}>
+									<TextField errorStyle={styles.errorStyle} validate={
+										{
+											rules: {
+												required: true,
+												minlength: 8,
+											},
+											messages: {
+												required: "Mật khẩu bắt buộc phải nhập",
+												min: "Mật khẩu tối thiểu 8 ký tự"
+											}
+										}
+									}
+										secureTextEntry={this.state.showPass}
+										inputStyle={styles.input} style={{ marginTop: 10 }} onChangeText={(s) => this.setState({ password: s })} placeholder={constants.input_password} autoCapitalize={'none'} />
+									<TouchableOpacity
+										activeOpacity={0.7}
+										style={styles.btnEye}
+										onPress={this.showPass}>
+										<Image source={eyeImg} style={styles.iconEye} />
+									</TouchableOpacity>
+								</Form>
+								{/* <UserInput onTextChange={(s) => this.setState({ email: s })}
 									autoCapitalize={'none'}
+									returnKeyType={'next'}
 									autoCorrect={false}
-									style={{ width: "100%" }} />
-								<TouchableOpacity
-									activeOpacity={0.7}
-									style={styles.btnEye}
-									onPress={this.showPass}>
-									<Image source={eyeImg} style={styles.iconEye} />
-								</TouchableOpacity>
-							</View>
+									style={{ width: "100%" }} /> */}
+								{/* <View style={{ marginTop: 15, flex: 1, width: "100%", }}>
+									<UserInput
+										onTextChange={(s) => this.setState({ password: s })}
+										secureTextEntry={this.state.showPass}
+										placeholder={constants.input_password}
+										returnKeyType={'done'}
+										autoCapitalize={'none'}
+										autoCorrect={false}
+										style={{ width: "100%" }} />
+									<TouchableOpacity
+										activeOpacity={0.7}
+										style={styles.btnEye}
+										onPress={this.showPass}>
+										<Image source={eyeImg} style={styles.iconEye} />
+									</TouchableOpacity>
+								</View> */}
+							</Form>
 							<View style={{ marginLeft: 20, width: 300, maxWidth: 300 }}>
 								<TouchableOpacity onPress={() => { this.props.navigation.replace("forgotPassword") }} style={{ alignItems: 'flex-end' }}>
 									<Text style={{ marginTop: 12, color: 'rgb(49,96,172)', paddingRight: 10 }}>Quên mật khẩu</Text>
@@ -224,6 +261,23 @@ const styles = StyleSheet.create({
 		height: 25,
 		tintColor: 'rgba(0,0,0,0.2)',
 	},
+	input: {
+		maxWidth: 300,
+		paddingRight: 30,
+		backgroundColor: '#FFF',
+		width: DEVICE_WIDTH - 40,
+		height: 42,
+		marginHorizontal: 20,
+		paddingLeft: 15,
+		borderRadius: 6,
+		color: '#006ac6',
+		borderWidth: 1,
+		borderColor: 'rgba(155,155,155,0.7)'
+	},
+	errorStyle: {
+		color: 'red',
+		marginLeft: 20
+	}
 });
 function mapStateToProps(state) {
 	return {
