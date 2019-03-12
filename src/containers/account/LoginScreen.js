@@ -77,7 +77,7 @@ class LoginScreen extends Component {
 				} else {
 					let account = await RNAccountKit.getCurrentAccount();
 					if (account && account.phoneNumber) {
-						this.props.navigation.navigate("register", { user: { phone: "0" + account.phoneNumber.number, token: token.token, socialType: 1, socialId: 0 } })
+						this.props.navigation.navigate("register", { user: { phone: "0" + account.phoneNumber.number, token: token.token, socialType: 1, socialId: "0" } })
 					} else {
 						snackbar.show("Xác minh số điện thoại không thành công", "danger");
 					}

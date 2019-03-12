@@ -21,6 +21,8 @@ class EnterPasswordScreen extends Component {
 	constructor(props) {
 		super(props)
 		var user = this.props.navigation.getParam("user", null);
+		if (!user.email)
+			user.email = "";
 		user.showPass = true;
 		user.showPassConfirm = true;
 		user.press = false;
@@ -42,35 +44,11 @@ class EnterPasswordScreen extends Component {
 
 	register() {
 		Keyboard.dismiss();
-
-		if (!this.state.password) {
-			snackbar.showShort(constants.msg.user.please_input_password, "danger");
+		if (!this.form.isValid()) {
 			this.child.unPress();
 			return;
 		}
-		if (this.state.password.length < 8) {
-			snackbar.showShort("Mật khẩu cần nhiều hơn 8 ký tự", "danger");
-			this.child.unPress();
-			return;
-		}
-
-		var re = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/g;
-		if (!re.test(this.state.password)) {
-			snackbar.showShort(constants.msg.user.password_require_uppercase_lowercase_number_special_character, "danger");
-			this.child.unPress();
-			return;
-		}
-
-		if (!this.state.confirm_password) {
-			snackbar.showShort(constants.msg.user.please_input_confirm_password, "danger");
-			this.child.unPress();
-			return;
-		}
-		if (this.state.password != this.state.confirm_password) {
-			snackbar.showShort(constants.msg.user.confirm_password_is_not_match, "danger");
-			this.child.unPress();
-			return;
-		}
+		alert(this.state.socialId);
 
 		userProvider.register(
 			this.state.fullname.trim(),
@@ -86,6 +64,7 @@ class EnterPasswordScreen extends Component {
 			this.state.socialId
 		).then(s => {
 			this.child.unPress();
+			alert(JSON.stringify(s));
 			switch (s.code) {
 				case 0:
 					var user = s.data.user;
@@ -99,10 +78,13 @@ class EnterPasswordScreen extends Component {
 				case 1:
 					snackbar.show(constants.msg.user.account_blocked, "danger");
 					return;
+				case 500:
+					snackbar.show(constants.msg.error_occur, "danger");
+					return;
 			}
 		}).catch(e => {
 			this.child.unPress();
-			snackbar.show(constants.msg.error_occur);
+			snackbar.show(constants.msg.error_occur, "danger");
 		});
 	}
 
