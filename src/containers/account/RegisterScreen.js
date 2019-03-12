@@ -98,7 +98,7 @@ class RegisterScreen extends Component {
 		this.props.navigation.navigate("enterPassword", {
 			user: {
 				phone: this.state.phone,
-				email: this.state.email,
+				// email: this.state.email,
 				fullname: this.state.fullname,
 				dob: this.state.dob,
 				gender: this.state.gender,
@@ -191,7 +191,7 @@ class RegisterScreen extends Component {
 										/>
 									</View>
 								</TouchableOpacity>
-								<TouchableOpacity onPress={this.changeEmail.bind(this)}  >
+								{/* <TouchableOpacity onPress={this.changeEmail.bind(this)}  >
 									<UserInput
 										editable={false}
 										value={this.state.email}
@@ -201,7 +201,7 @@ class RegisterScreen extends Component {
 										autoCorrect={false}
 										style={{ marginTop: 12 }}
 									/>
-								</TouchableOpacity>
+								</TouchableOpacity> */}
 								<TouchableOpacity onPress={this.changePhone.bind(this)} >
 									<UserInput
 										value={this.state.phone}

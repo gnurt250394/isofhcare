@@ -107,7 +107,6 @@ class CreateQuestionStep2Screen extends Component {
                     images += ",";
                 images += item.url;
             });
-            snackbar.show(constants.msg.question.create_question_failed, "danger");
             questionProvider.create(this.state.content, this.state.gender, this.state.age, this.state.specialist_item ? this.state.specialist_item.specialist.id : "0", this.state.disease, this.state.otherContent, images).then(s => {
                 this.setState({ isLoading: false });
                 if (s && s.code == 0) {
@@ -118,7 +117,7 @@ class CreateQuestionStep2Screen extends Component {
                 }
             }).catch(e => {
                 this.setState({ isLoading: false });
-                // snackbar.show(constants.msg.question.create_question_failed, "danger");
+                snackbar.show(constants.msg.question.create_question_failed, "danger");
             });
         })
     }

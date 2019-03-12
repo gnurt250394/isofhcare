@@ -10,11 +10,12 @@ class ItemQuestion extends Component {
     }
     render() {
         return this.props.item && this.props.item.post ?
-            <TouchableOpacity key={this.props.index}>
+            <TouchableOpacity key={this.props.index} onPress={() => this.props.navigation.navigate("detailQuestion", { post: this.props.item })}>
                 <Text numberOfLines={3} ellipsizeMode='tail' >{this.props.item.post.content}</Text>
                 <View style={{ alignContent: 'flex-end', flexDirection: 'row' }}>
                     <View style={{ flex: 1 }}>
-                        {this.props.item.specialist &&
+                        {
+                            this.props.item.specialist &&
                             <Text style={{ padding: 5 }}>
                                 Chuyên khoa: <Text>{this.props.item.specialist.name}</Text>
                             </Text>

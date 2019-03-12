@@ -7,7 +7,9 @@ const Realm = require('realm');
 import realmModel from '@models/realm-models';
 module.exports = {
     create(content, gender, age, specialistId, diseaseHistory, otherContent, images) {
+        // alert(images);
         return new Promise((resolve, reject) => {
+            // reject();
             client.requestApi("post", constants.api.question.create, {
                 specialistId,
                 post: {
