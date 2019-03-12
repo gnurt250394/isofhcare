@@ -12,7 +12,8 @@ import constants from '@resources/strings';
 import stringUtils from 'mainam-react-native-string-utils';
 import redux from '@redux-store';
 import ScaleImage from 'mainam-react-native-scaleimage';
-
+import Form from '@components/form/Form';
+import TextField from '@components/form/TextField';
 class ForgotPasswordScreen extends Component {
 	constructor(props) {
 		super(props)
@@ -25,19 +26,12 @@ class ForgotPasswordScreen extends Component {
 
 	forgotPassword() {
 		Keyboard.dismiss();
-		if (this.state.email.trim() === "" || this.state.email === "") {
-			snackbar.showShort(constants.msg.user.please_input_email_or_phone, 'danger');
+		if (!this.form.isValid()) {
 			this.child.unPress();
 			return;
 		}
-		if (!this.state.email.isEmail() && !this.state.email.isPhoneNumber()) {
-			snackbar.showShort(constants.msg.user.please_input_correct_email_or_phone, 'danger');
-			this.child.unPress();
-			return;
-		}
-		let type = this.state.email.isEmail() ? 1 : 2;
 
-		userProvider.forgotPassword(this.state.email.trim(), type, (s, e) => {
+		userProvider.forgotPassword(this.state.email.trim(), 2, (s, e) => {
 			this.child.unPress();
 			if (s) {
 				// snackbar.show("Thông tin đăng nhập không hợp lệ");
@@ -83,12 +77,20 @@ class ForgotPasswordScreen extends Component {
 					</View>
 					<KeyboardAvoidingView behavior='padding'
 						style={styles.form}>
-						<UserInput onTextChange={(s) => this.setState({ email: s })}
-							placeholder={constants.input_username_or_email}
-							autoCapitalize={'none'}
-							returnKeyType={'next'}
-							autoCorrect={false} />
-
+						<Form ref={ref => this.form = ref}>
+							<TextField errorStyle={styles.errorStyle} validate={
+								{
+									rules: {
+										required: true,
+										phone: true
+									},
+									messages: {
+										required: "Vui lòng nhập số điện thoại",
+										phone: "Nhập SĐT không hợp lệ"
+									}
+								}
+							} inputStyle={styles.input} onChangeText={(s) => { this.setState({ email: s }) }} placeholder={constants.input_phone} autoCapitalize={'none'} />
+						</Form>
 						<ButtonSubmit onRef={ref => (this.child = ref)} click={() => { this.forgotPassword() }} text={constants.send} />
 						<View style={{ width: DEVICE_WIDTH, maxWidth: 300 }}>
 							<TouchableOpacity onPress={() => { this.props.navigation.replace("register") }} style={{ alignItems: 'flex-end' }}>
@@ -148,6 +150,23 @@ const styles = StyleSheet.create({
 		height: null,
 		resizeMode: 'cover',
 	},
+	input: {
+		maxWidth: 300,
+		paddingRight: 30,
+		backgroundColor: '#FFF',
+		width: DEVICE_WIDTH - 40,
+		height: 42,
+		marginHorizontal: 20,
+		paddingLeft: 15,
+		borderRadius: 6,
+		color: '#006ac6',
+		borderWidth: 1,
+		borderColor: 'rgba(155,155,155,0.7)'
+	},
+	errorStyle: {
+		color: 'red',
+		marginLeft: 20
+	}
 });
 function mapStateToProps(state) {
 	return {
