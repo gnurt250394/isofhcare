@@ -15,6 +15,8 @@ import stringUtils from 'mainam-react-native-string-utils';
 import dateUtils from 'mainam-react-native-date-utils';
 import { DatePicker } from 'native-base';
 import RNAccountKit from 'react-native-facebook-account-kit'
+import Form from '@components/form/Form';
+import TextField from '@components/form/TextField';
 
 class RegisterScreen extends Component {
 
@@ -85,31 +87,13 @@ class RegisterScreen extends Component {
 	}
 
 	register() {
+		if (!this.form.isValid()) {
+			this.child.unPress();
+			return;
+		}
 		Keyboard.dismiss();
-		if (!this.state.fullname) {
-			snackbar.showShort(constants.msg.user.please_input_fullname, "danger");
-			this.child.unPress();
-			return;
-		}
-		if (!this.state.fullname.isFullName()) {
-			snackbar.showShort(constants.msg.user.please_enter_the_correct_fullname_format, "danger");
-			this.child.unPress();
-			return;
-		}
-
-		if (!this.state.phone) {
-			if (!this.state.email) {
-				snackbar.showShort(constants.msg.user.please_input_email_or_phone, "danger");
-				this.child.unPress();
-				return;
-			}
-		}
-		if (this.state.email && !this.state.email.isEmail()) {
-			snackbar.showShort(constants.msg.user.please_enter_the_correct_email_format, "danger");
-			this.child.unPress();
-			return;
-		}
-
+	
+	
 		this.child.unPress();
 		this.props.navigation.navigate("enterPassword", {
 			user: {
@@ -127,6 +111,8 @@ class RegisterScreen extends Component {
 
 
 	render() {
+		let maxDate = new Date();
+		maxDate = new Date(maxDate.getFullYear() - 15, maxDate.getMonth(), maxDate.getDate());
 		return (
 			this.state.verified &&
 			<ActivityPanel style={{ flex: 1 }} title="Đăng nhập" touchToDismiss={true} showFullScreen={true}>
@@ -137,87 +123,98 @@ class RegisterScreen extends Component {
 					</View>
 					<KeyboardAvoidingView behavior='padding'
 						style={styles.form}>
-						<UserInput onTextChange={(s) => this.setState({ fullname: s })}
-							placeholder={constants.fullname}
-							value={this.state.fullname}
-							autoCapitalize={'none'}
-							returnKeyType={'next'}
-							autoCorrect={false} />
-						<View style={{ paddingLeft: 30, flex: 1, width: DEVICE_WIDTH - 40, marginTop: 10 }}>
-							<Text>Giới tính</Text>
-							<View style={{ flexDirection: 'row' }}>
-								<TouchableOpacity onPress={() => { this.setState({ gender: 1 }) }} style={{ padding: 10, flexDirection: 'row' }}>
+						<View style={{ flex: 1 }}>
+							<Form ref={ref => this.form = ref}>
+								<TextField errorStyle={styles.errorStyle} validate={
 									{
-										this.state.gender == 1 ?
-											<ScaleImage source={require("@images/ic_radio1.png")} width={20} /> :
-											<ScaleImage source={require("@images/ic_radio0.png")} width={20} />
+										rules: {
+											required: true,
+											maxlength: 255
+										},
+										messages: {
+											required: "Họ tên bắt buộc phải nhập",
+											maxlength: "Họ tên tối đa 255 ký tự"
+										}
 									}
-									<Text style={{ marginLeft: 5 }}>Nam</Text>
-								</TouchableOpacity>
-								<TouchableOpacity onPress={() => { this.setState({ gender: 0 }) }} style={{ padding: 10, flexDirection: 'row' }}>
-									{
-										this.state.gender == 0 ?
-											<ScaleImage source={require("@images/ic_radio1.png")} width={20} /> :
-											<ScaleImage source={require("@images/ic_radio0.png")} width={20} />
-									}
-									<Text style={{ marginLeft: 5 }}>Nữ</Text>
-								</TouchableOpacity>
-							</View>
-						</View>
-						<TouchableOpacity style={{ flex: 1, marginTop: 10 }} onPress={() => {
-							if (this.dob)
-								this.dob.showDatePicker();
-						}}>
+								} inputStyle={styles.input} onChangeText={(s) => { this.setState({ fullname: s }) }} placeholder={constants.fullname} returnKeyType={'next'} autoCapitalize={'none'} autoCorrect={false} />
 
-							<UserInput
-								value={this.state.dob ? this.state.dob.format("dd/MM/yyyy") : ""}
-								placeholder={constants.dob}
-								autoCapitalize={'none'}
-								returnKeyType={'next'}
-								editable={false}
-								autoCorrect={false} />
-							<View style={{ display: 'none' }}>
-								<DatePicker
-									ref={ref => this.dob = ref}
-									defaultDate={new Date()}
-									minimumDate={new Date(1900, 1, 1)}
-									maximumDate={new Date()}
-									locale={"en"}
-									timeZoneOffsetInMinutes={undefined}
-									modalTransparent={false}
-									animationType={"fade"}
-									androidMode={"default"}
-									placeHolderText="Select date"
-									textStyle={{ color: "green" }}
-									placeHolderTextStyle={{ color: "#d3d3d3" }}
-									onDateChange={this.setDate.bind(this)}
-									style={{ width: 0 }}
-									disabled={false}
-								/>
-							</View>
-						</TouchableOpacity>
-						<TouchableOpacity onPress={this.changeEmail.bind(this)} style={{ flex: 1 }} >
-							<UserInput
-								editable={false}
-								value={this.state.email}
-								placeholder={constants.email}
-								autoCapitalize={'none'}
-								returnKeyType={'next'}
-								autoCorrect={false}
-								style={{ marginTop: 12 }}
-							/>
-						</TouchableOpacity>
-						<TouchableOpacity onPress={this.changePhone.bind(this)} style={{ flex: 1 }} >
-							<UserInput
-								value={this.state.phone}
-								placeholder={constants.phone}
-								autoCapitalize={'none'}
-								returnKeyType={'next'}
-								editable={false}
-								autoCorrect={false}
-								style={{ marginTop: 12 }}
-							/>
-						</TouchableOpacity>
+								<View style={{ paddingLeft: 30, width: DEVICE_WIDTH - 40, marginTop: 10 }}>
+									<Text>Giới tính</Text>
+									<View style={{ flexDirection: 'row' }}>
+										<TouchableOpacity onPress={() => { this.setState({ gender: 1 }) }} style={{ padding: 10, flexDirection: 'row' }}>
+											{
+												this.state.gender == 1 ?
+													<ScaleImage source={require("@images/ic_radio1.png")} width={20} /> :
+													<ScaleImage source={require("@images/ic_radio0.png")} width={20} />
+											}
+											<Text style={{ marginLeft: 5 }}>Nam</Text>
+										</TouchableOpacity>
+										<TouchableOpacity onPress={() => { this.setState({ gender: 0 }) }} style={{ padding: 10, flexDirection: 'row' }}>
+											{
+												this.state.gender == 0 ?
+													<ScaleImage source={require("@images/ic_radio1.png")} width={20} /> :
+													<ScaleImage source={require("@images/ic_radio0.png")} width={20} />
+											}
+											<Text style={{ marginLeft: 5 }}>Nữ</Text>
+										</TouchableOpacity>
+									</View>
+								</View>
+								<TouchableOpacity style={{ marginTop: 10 }} onPress={() => {
+									if (this.dob)
+										this.dob.showDatePicker();
+								}}>
+
+									<UserInput
+										value={this.state.dob ? this.state.dob.format("dd/MM/yyyy") : ""}
+										placeholder={constants.dob}
+										autoCapitalize={'none'}
+										returnKeyType={'next'}
+										editable={false}
+										autoCorrect={false} />
+									<View style={{ display: 'none' }}>
+										<DatePicker
+											ref={ref => this.dob = ref}
+											defaultDate={maxDate}
+											minimumDate={new Date(1900, 1, 1)}
+											maximumDate={maxDate}
+											locale={"en"}
+											timeZoneOffsetInMinutes={undefined}
+											modalTransparent={false}
+											animationType={"fade"}
+											androidMode={"default"}
+											placeHolderText="Select date"
+											textStyle={{ color: "green" }}
+											placeHolderTextStyle={{ color: "#d3d3d3" }}
+											onDateChange={this.setDate.bind(this)}
+											style={{ width: 0 }}
+											disabled={false}
+										/>
+									</View>
+								</TouchableOpacity>
+								<TouchableOpacity onPress={this.changeEmail.bind(this)}  >
+									<UserInput
+										editable={false}
+										value={this.state.email}
+										placeholder={constants.email}
+										autoCapitalize={'none'}
+										returnKeyType={'next'}
+										autoCorrect={false}
+										style={{ marginTop: 12 }}
+									/>
+								</TouchableOpacity>
+								<TouchableOpacity onPress={this.changePhone.bind(this)} >
+									<UserInput
+										value={this.state.phone}
+										placeholder={constants.phone}
+										autoCapitalize={'none'}
+										returnKeyType={'next'}
+										editable={false}
+										autoCorrect={false}
+										style={{ marginTop: 12 }}
+									/>
+								</TouchableOpacity>
+							</Form>
+						</View>
 
 						<ButtonSubmit onRef={ref => (this.child = ref)} click={() => { this.register() }} text={"Tiếp tục"} />
 						<View style={{ width: DEVICE_WIDTH, maxWidth: 300 }}>
@@ -279,6 +276,23 @@ const styles = StyleSheet.create({
 		height: null,
 		resizeMode: 'cover',
 	},
+	input: {
+		maxWidth: 300,
+		paddingRight: 30,
+		backgroundColor: '#FFF',
+		width: DEVICE_WIDTH - 40,
+		height: 42,
+		marginHorizontal: 20,
+		paddingLeft: 15,
+		borderRadius: 6,
+		color: '#006ac6',
+		borderWidth: 1,
+		borderColor: 'rgba(155,155,155,0.7)'
+	},
+	errorStyle: {
+		color: 'red',
+		marginLeft: 20
+	}
 });
 function mapStateToProps(state) {
 	return {

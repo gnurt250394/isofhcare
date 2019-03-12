@@ -13,6 +13,8 @@ import redux from '@redux-store';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import stringUtils from 'mainam-react-native-string-utils';
 import dateUtils from 'mainam-react-native-date-utils';
+import Form from '@components/form/Form';
+import TextField from '@components/form/TextField';
 
 class EnterPasswordScreen extends Component {
 
@@ -73,7 +75,7 @@ class EnterPasswordScreen extends Component {
 		userProvider.register(
 			this.state.fullname.trim(),
 			this.state.avatar,
-			this.state.email.trim(), 
+			this.state.email.trim(),
 			this.state.phone.trim(),
 			this.state.password,
 			this.state.dob ?
@@ -115,43 +117,53 @@ class EnterPasswordScreen extends Component {
 					</View>
 					<KeyboardAvoidingView behavior='padding'
 						style={styles.form}>
-						<View style={{ marginTop: 12, flex: 1 }}>
+						<Form ref={ref => this.form = ref}>
+							<Form style={{ width: "100%", }}>
+								<TextField errorStyle={styles.errorStyle} validate={
+									{
+										rules: {
+											required: true,
+											minlength: 8
+										},
+										messages: {
+											required: "Mật khẩu bắt buộc phải nhập",
+											min: "Mật khẩu dài ít nhất 8 ký tự"
+										}
+									}
+								}
+									secureTextEntry={this.state.showPass}
+									inputStyle={styles.input} style={{ marginTop: 10 }} onChangeText={(s) => this.setState({ password: s })} placeholder={constants.input_password} autoCapitalize={'none'} />
+								<TouchableOpacity
+									activeOpacity={0.7}
+									style={styles.btnEye}
+									onPress={this.showPass}>
+									<Image source={eyeImg} style={styles.iconEye} />
+								</TouchableOpacity>
+							</Form>
+							<Form style={{ width: "100%", }}>
+								<TextField errorStyle={styles.errorStyle} validate={
+									{
+										rules: {
+											required: true,
+											equalTo: this.state.password
+										},
+										messages: {
+											required: "Xác nhận mật khẩu bắt buộc phải nhập",
+											equalTo: "Xác nhận mật khẩu không trùng khớp"
+										}
+									}
+								}
+									secureTextEntry={this.state.showPassConfirm}
+									inputStyle={styles.input} style={{ marginTop: 10 }} onChangeText={(s) => this.setState({ confirm_password: s })} placeholder={constants.confirm_password} autoCapitalize={'none'} />
+								<TouchableOpacity
+									activeOpacity={0.7}
+									style={styles.btnEye}
+									onPress={this.showPassConfirm}>
+									<Image source={eyeImg} style={styles.iconEye} />
+								</TouchableOpacity>
+							</Form>
+						</Form>
 
-							<UserInput
-								onTextChange={(s) => this.setState({ password: s })}
-								secureTextEntry={this.state.showPass}
-								placeholder={constants.input_password}
-								returnKeyType={'done'}
-								autoCapitalize={'none'}
-								autoCorrect={false} />
-
-							<TouchableOpacity
-								activeOpacity={0.7}
-								style={styles.btnEye}
-								onPress={this.showPass}>
-								<Image source={eyeImg} style={styles.iconEye} />
-							</TouchableOpacity>
-
-						</View>
-
-						<View style={{ marginTop: 12, flex: 1 }}>
-
-							<UserInput
-								onTextChange={(s) => this.setState({ confirm_password: s })}
-								secureTextEntry={this.state.showPassConfirm}
-								placeholder={constants.confirm_password}
-								returnKeyType={'done'}
-								autoCapitalize={'none'}
-								autoCorrect={false} />
-
-							<TouchableOpacity
-								activeOpacity={0.7}
-								style={styles.btnEye}
-								onPress={this.showPassConfirm}>
-								<Image source={eyeImg} style={styles.iconEye} />
-							</TouchableOpacity>
-
-						</View>
 
 						<ButtonSubmit onRef={ref => (this.child = ref)} click={() => { this.register() }} text={constants.register} />
 						<View style={{ width: DEVICE_WIDTH, maxWidth: 300 }}>
@@ -213,6 +225,23 @@ const styles = StyleSheet.create({
 		height: null,
 		resizeMode: 'cover',
 	},
+	input: {
+		maxWidth: 300,
+		paddingRight: 30,
+		backgroundColor: '#FFF',
+		width: DEVICE_WIDTH - 40,
+		height: 42,
+		marginHorizontal: 20,
+		paddingLeft: 15,
+		borderRadius: 6,
+		color: '#006ac6',
+		borderWidth: 1,
+		borderColor: 'rgba(155,155,155,0.7)'
+	},
+	errorStyle: {
+		color: 'red',
+		marginLeft: 20
+	}
 });
 function mapStateToProps(state) {
 	return {

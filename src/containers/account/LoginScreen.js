@@ -181,8 +181,7 @@ class LoginScreen extends Component {
 									<TextField errorStyle={styles.errorStyle} validate={
 										{
 											rules: {
-												required: true,
-												minlength: 8,
+												required: true
 											},
 											messages: {
 												required: "Mật khẩu bắt buộc phải nhập",
