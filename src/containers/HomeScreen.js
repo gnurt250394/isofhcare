@@ -11,6 +11,7 @@ import TabSearch from '@containers/home/tab/TabSearch';
 import Swiper from 'react-native-swiper';
 const { width, height } = Dimensions.get('window');
 import PushController from '@components/notification/PushController'
+import ActivityPanel from '@components/ActivityPanel';
 let defaultScalingDrawerConfig = {
 	scalingFactor: 0.7,
 	minimizeFactor: 0.7,
@@ -45,7 +46,16 @@ class SplashScreen extends Component {
 				content={<DrawerContent navigation={this.props.navigation} drawer={this._drawer} />}
 				{...defaultScalingDrawerConfig}
 			>
-				<View style={{ flex: 1 }}>
+				<ActivityPanel
+					style={[{ flex: 1 }, this.props.style]}
+					titleStyle={{ marginRight: 60 }}
+					imageStyle={{ marginRight: 50 }}
+					image={require("@images/logo_home.png")}
+					icBack={require("@images/icmenu.png")}
+					backButtonClick={() => { this._drawer.open() }}
+					// showMessenger={this.props.userApp.isLogin ? true : false}
+					showMessenger={false}
+					badge={0}>
 					<Swiper
 						ref={ref => this.swiper = ref}
 						onIndexChanged={index => {
@@ -80,8 +90,8 @@ class SplashScreen extends Component {
 							<Text style={{ textAlign: 'center' }}>Tài khoản</Text>
 						</TouchableOpacity>
 					</View>
-				</View>
-				<PushController />
+					<PushController />
+				</ActivityPanel>
 			</ScalingDrawer>);
 	}
 	swipe(targetIndex) {

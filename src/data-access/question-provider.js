@@ -46,5 +46,15 @@ module.exports = {
                     reject(e);
             });
         });
+    },
+    detail(postId) {
+        return new Promise((resolve, reject) => {
+            client.requestApi("get", constants.api.question.detail + "/" + postId, {}, (s, e) => {
+                if (s)
+                    resolve(s);
+                if (e)
+                    reject(e);
+            });
+        });
     }
 }

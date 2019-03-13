@@ -97,7 +97,7 @@ module.exports = {
             });
         });
     },
-    register(name, avatar, email, phone, password, dob, gender, token, socialType, socialId) {
+    register(name, avatar, email, phone, password, dob, gender, accessToken, socialType, socialId) {
         return new Promise((resolve, reject) => {
             // reject({});
             var body = {
@@ -108,11 +108,12 @@ module.exports = {
                     name,
                     gender: 1,
                     phone: phone,
-                    role: 0,
                     dob,
-                    gender,
-                    token
+                    role: 1,
+                    gender
                 },
+                applicationId: "457683741386685",
+                accessToken,
                 socialId,
                 socialType: socialType ? socialType : 1,
                 device: { os: 0, deviceId: "", token: "" }

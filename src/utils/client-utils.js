@@ -85,7 +85,6 @@ module.exports = {
             });
     },
     requestApi(methodType, url, body, funRes) {
-        console.log("Request url " + url + " with token: " + this.auth);
         var dataBody = "";
         if (!body)
             body = {};
@@ -110,7 +109,13 @@ module.exports = {
             });
     },
     requestFetch(methodType, url, header, body, funRes) {
-        console.log(body);
+        let data = {
+            methodType,
+            url: url.getServiceUrl(),
+            header,
+            body
+        };
+        console.log(JSON.stringify(data), JSON.stringify(data));
         let fetchParam = {
             method: methodType,
             headers: header,

@@ -118,126 +118,128 @@ class Home extends Component {
             </TouchableOpacity>
         );
     }
+
     render() {
         const itemWidth = this.getItemWidth();
         return (
-            <ActivityPanel
-                style={[{ flex: 1 }, this.props.style]}
-                titleStyle={{ marginRight: 60 }}
-                imageStyle={{ marginRight: 50 }}
-                image={require("@images/logo_home.png")}
-                icBack={require("@images/icmenu.png")}
-                backButtonClick={() => { this.showDrawer() }}
-                // showMessenger={this.props.userApp.isLogin ? true : false}
-                showMessenger={false}
-                badge={0}>
-
-                <ScrollView style={{
-                    flex: 1,
-                    paddingLeft: 15, paddingRight: 15, paddingTop: 0,
-                    width: DEVICE_WIDTH
+            <ScrollView style={{
+                flex: 1,
+                paddingLeft: 15, paddingRight: 15, paddingTop: 0,
+                width: DEVICE_WIDTH
+            }}>
+                <Text>Bạn cần gì hôm nay</Text>
+                <View style={{ flexDirection: 'row' }}>
+                    <TouchableOpacity style={{ flex: 1, marginLeft: 5 }} onPress={() => this.props.navigation.navigate("dhyBooking")}>
+                        <Text>Đặt khám</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ flex: 1, marginLeft: 5 }} onPress={() => {
+                        if (this.props.userApp.isLogin)
+                            this.props.navigation.navigate("listQuestion")
+                        else
+                            this.props.navigation.navigate("login")
+                    }}>
+                        <Text>Tư vấn</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ flex: 1, marginLeft: 5 }}>
+                        <Text>Tra cứu</Text>
+                    </TouchableOpacity>
+                </View>
+                <Carousel
+                    ref={(c) => { this._carousel = c; }}
+                    data={this.state.ads}
+                    renderItem={this._renderItem}
+                    sliderWidth={DEVICE_WIDTH}
+                    itemWidth={DEVICE_WIDTH - 100}
+                />
+                {/* <View style={{
+                    marginTop: 10,
+                    flexDirection: 'row',
+                    flexWrap: 'wrap',
+                    justifyContent: 'center',
+                    alignItems: 'flex-start',
                 }}>
-                    <Text>Bạn cần gì hôm nay</Text>
-                    <View style={{ flexDirection: 'row' }}>
-                        <TouchableOpacity style={{ flex: 1, marginLeft: 5 }}>
-                            <Text>Đặt khám</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{ flex: 1, marginLeft: 5 }} onPress={() => {
-                            if (this.props.userApp.isLogin)
-                                this.props.navigation.navigate("listQuestion")
-                            else
-                                this.props.navigation.navigate("login")
-                        }}>
-                            <Text>Tư vấn</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{ flex: 1, marginLeft: 5 }}>
-                            <Text>Tra cứu</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <Carousel
-                        ref={(c) => { this._carousel = c; }}
-                        data={this.state.ads}
-                        renderItem={this._renderItem}
-                        sliderWidth={DEVICE_WIDTH}
-                        itemWidth={DEVICE_WIDTH - 100}
-                    />
-                    {/* <View style={{
-                        marginTop: 10,
-                        flexDirection: 'row',
-                        flexWrap: 'wrap',
-                        justifyContent: 'center',
-                        alignItems: 'flex-start',
-                    }}>
-                        {
-                            this.state.features.map((item, position) => {
-                                return (<Animatable.View key={position} delay={50 * position} animation={"slideInLeft"} direction="alternate">
-                                    <TouchableOpacity key={position} onPress={() => { this.onClick(item) }}>
-                                        <ScaledImage source={item.icon} width={itemWidth} />
-                                    </TouchableOpacity>
-                                </Animatable.View>);
-                            })
-                        }
-                    </View>
+                    {
+                        this.state.features.map((item, position) => {
+                            return (<Animatable.View key={position} delay={50 * position} animation={"slideInLeft"} direction="alternate">
+                                <TouchableOpacity key={position} onPress={() => { this.onClick(item) }}>
+                                    <ScaledImage source={item.icon} width={itemWidth} />
+                                </TouchableOpacity>
+                            </Animatable.View>);
+                        })
+                    }
+                </View>
 
-                    <View style={{
-                        flexWrap: 'wrap',
-                        justifyContent: 'center',
-                        alignItems: 'flex-start'
-                    }}>
-                        <Text style={{
-                            marginTop: 20,
-                            color: "#9b9b9b",
-                            fontSize: 16,
-                            fontWeight: "500",
-                            // marginLeft: (DEVICE_WIDTH - itemWidth) / 2
-                        }}>iSofH Care</Text>{
-                            this.state.ads.map((item, position) => {
-                                return (<Animatable.View key={position} delay={50 * position} animation={"slideInRight"} direction="alternate">
-                                    <TouchableOpacity key={position} style={{ paddingTop: 5, paddingBottom: 5 }} onPress={() => { this.onClickItemAds(item) }}>
-                                        <ScaledImage source={item.icon} width={itemWidth - 15} style={{ borderRadius: 5 }} />
-                                    </TouchableOpacity>
-                                </Animatable.View>);
-                            })
-                        }
-                    </View> */}
-                    <View style={{ height: 30 }} />
-                </ScrollView>
-                {/* <Modal
-                    isVisible={this.state.showModalSelectHospital}
-                    onBackdropPress={() => this.setState({ showModalSelectHospital: false })}
-                    backdropOpacity={0.5}
-                    animationInTiming={500}
-                    animationOutTiming={500}
-                    backdropTransitionInTiming={1000}
-                    backdropTransitionOutTiming={1000}
-                    style={stylemodal.bottomModal}>
-                    <View style={{ backgroundColor: '#fff', elevation: 3, flexDirection: 'column', maxHeight: 400, minHeight: 100 }}>
-                        <View style={{ flexDirection: 'row', alignItems: "center" }}>
-                            <Text style={{ padding: 20, flex: 1, color: "rgb(0,121,107)", textAlign: 'center', fontSize: 16, fontWeight: '900' }}>
-                                CHỌN BỆNH VIỆN
-                            </Text>
-                        </View>
-                        <View style={{ alignItems: 'center', marginBottom: 10 }}>
-                            <TouchableOpacity style={{
-                                height: 52,
-                                flexDirection: 'row',
-                                borderRadius: 4,
-                                alignItems: 'center',
-                                padding: 10,
-                                backgroundColor: "#00977c"
-                            }} onPress={this.selectBVDHY.bind(this)}>
-                                <ScaledImage source={require("@images/ic_phongkham1.png")} width={32} style={{ marginRight: 12 }} />
-                                <Text style={{
-                                    fontSize: 15,
-                                    fontWeight: "600",
-                                    color: '#FFF',
-                                    fontStyle: "normal"
-                                }}>BỆNH VIỆN ĐẠI HỌC Y HÀ NỘI</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </Modal> */}
-            </ ActivityPanel >
+                <View style={{
+                    flexWrap: 'wrap',
+                    justifyContent: 'center',
+                    alignItems: 'flex-start'
+                }}>
+                    <Text style={{
+                        marginTop: 20,
+                        color: "#9b9b9b",
+                        fontSize: 16,
+                        fontWeight: "500",
+                        // marginLeft: (DEVICE_WIDTH - itemWidth) / 2
+                    }}>iSofH Care</Text>{
+                        this.state.ads.map((item, position) => {
+                            return (<Animatable.View key={position} delay={50 * position} animation={"slideInRight"} direction="alternate">
+                                <TouchableOpacity key={position} style={{ paddingTop: 5, paddingBottom: 5 }} onPress={() => { this.onClickItemAds(item) }}>
+                                    <ScaledImage source={item.icon} width={itemWidth - 15} style={{ borderRadius: 5 }} />
+                                </TouchableOpacity>
+                            </Animatable.View>);
+                        })
+                    }
+                </View> */}
+                <View style={{ height: 30 }} />
+            </ScrollView>
+            // <ActivityPanel
+            //     style={[{ flex: 1 }, this.props.style]}
+            //     titleStyle={{ marginRight: 60 }}
+            //     imageStyle={{ marginRight: 50 }}
+            //     image={require("@images/logo_home.png")}
+            //     icBack={require("@images/icmenu.png")}
+            //     backButtonClick={() => { this.showDrawer() }}
+            //     // showMessenger={this.props.userApp.isLogin ? true : false}
+            //     showMessenger={false}
+            //     badge={0}>
+
+
+            //     {/* <Modal
+            //         isVisible={this.state.showModalSelectHospital}
+            //         onBackdropPress={() => this.setState({ showModalSelectHospital: false })}
+            //         backdropOpacity={0.5}
+            //         animationInTiming={500}
+            //         animationOutTiming={500}
+            //         backdropTransitionInTiming={1000}
+            //         backdropTransitionOutTiming={1000}
+            //         style={stylemodal.bottomModal}>
+            //         <View style={{ backgroundColor: '#fff', elevation: 3, flexDirection: 'column', maxHeight: 400, minHeight: 100 }}>
+            //             <View style={{ flexDirection: 'row', alignItems: "center" }}>
+            //                 <Text style={{ padding: 20, flex: 1, color: "rgb(0,121,107)", textAlign: 'center', fontSize: 16, fontWeight: '900' }}>
+            //                     CHỌN BỆNH VIỆN
+            //                 </Text>
+            //             </View>
+            //             <View style={{ alignItems: 'center', marginBottom: 10 }}>
+            //                 <TouchableOpacity style={{
+            //                     height: 52,
+            //                     flexDirection: 'row',
+            //                     borderRadius: 4,
+            //                     alignItems: 'center',
+            //                     padding: 10,
+            //                     backgroundColor: "#00977c"
+            //                 }} onPress={this.selectBVDHY.bind(this)}>
+            //                     <ScaledImage source={require("@images/ic_phongkham1.png")} width={32} style={{ marginRight: 12 }} />
+            //                     <Text style={{
+            //                         fontSize: 15,
+            //                         fontWeight: "600",
+            //                         color: '#FFF',
+            //                         fontStyle: "normal"
+            //                     }}>BỆNH VIỆN ĐẠI HỌC Y HÀ NỘI</Text>
+            //                 </TouchableOpacity>
+            //             </View>
+            //         </View>
+            //     </Modal> */}
+            // </ ActivityPanel >
         );
     }
 }

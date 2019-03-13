@@ -262,7 +262,8 @@ module.exports = {
     question: {
       create: "post/create",
       search: "post/search",
-      like: "post/like"
+      like: "post/like",
+      detail: "post/get-detail"
     },
     comment: {
       create: "comment/create",

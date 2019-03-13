@@ -4,6 +4,8 @@ import DeviceInfo from 'react-native-device-info'
 import StringUtils from 'mainam-react-native-string-utils'
 import userProvider from '@data-access/user-provider';
 import notificationProvider from '@data-access/notification-provider';
+import questionProvider from '@data-access/question-provider';
+import snackbar from '@utils/snackbar-utils';
 // import bookingProvider from '@data-access/booking-provider';
 
 import { connect } from 'react-redux';
@@ -144,13 +146,25 @@ class PushController extends Component {
         console.log(notification);
         if (!notification || notification.show_in_foreground)
             return;
+        if (notification.data && notification.data.id) {
+            const fbNotification = new firebase.notifications.Notification()
+                .setNotificationId(StringUtils.guid())
+                .setBody("")
+                .setTitle(notification.title)
+                .android.setChannelId("isofh-care-channel")
+                .android.setSmallIcon("ic_launcher")
+                .android.setPriority(2)
+                .setSound("default")
+                .setData(notification.data);
+            firebase.notifications().displayNotification(fbNotification)
 
-        if (notification.data.id) {
-            if (notification.data.type) {
-                this.showBroadcast(notification.data.id);
-            }
-            else
-                this.showNotification(notification.data.id);
+
+
+            // if (notification.data.type) {
+            //     this.showBroadcast(notification.data.id);
+            // }
+            // else
+            // this.showNotification(notification.data.id);
         }
         if (this.props.userApp.isLogin) {
             firebase.notifications().setBadge(this.props.userApp.unReadNotificationCount + 1);
@@ -164,6 +178,10 @@ class PushController extends Component {
     onNotificationOpened(notificationOpen) {
         try {
             firebase.notifications().removeDeliveredNotification(notificationOpen.notification.notificationId);
+            if (notificationOpen && notificationOpen.notification && notificationOpen.notification.data) {
+                var id = notificationOpen.notification.data.id;
+                this.openQuestion(id);
+            }
             const notificationId = notificationOpen.notification.data.uid;
             if (notificationOpen.notification.data.type)
                 this.showDetailBroadcast(notificationId);
@@ -172,6 +190,18 @@ class PushController extends Component {
         } catch (error) {
             console.log(error);
         }
+    }
+    openQuestion(id) {
+        questionProvider.detail(id).then(s => {
+            if (s && s.data) {
+                this.props.navigation.navigate("detailQuestion", { post: s.data })
+            }
+            else {
+                snackbar.show("Lỗi, bài viết không tồn tại", "danger");
+            }
+        }).catch(e => {
+            snackbar.show("Lỗi, vui lòng thử lại", "danger");
+        });
     }
     getInitialNotification(notificationOpen) {
         if (notificationOpen) {
@@ -204,7 +234,8 @@ class PushController extends Component {
 }
 function mapStateToProps(state) {
     return {
-        userApp: state.userApp
+        userApp: state.userApp,
+        navigation: state.navigation
     };
 }
 export default connect(mapStateToProps, null, null, { withRef: true })(PushController);

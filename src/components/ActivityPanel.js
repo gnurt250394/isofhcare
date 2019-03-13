@@ -74,7 +74,7 @@ class ActivityPanel extends Component {
         return (
             <Activity
                 {...this.props}
-                actionbar={this.getActionbar.bind(this)}
+                actionbar={this.props.actionbar ? this.props.actionbar : this.getActionbar.bind(this)}
                 loadingView={this.getLoadingView()}
                 paddingTop={this.state.paddingTop}
                 translucent={true}
