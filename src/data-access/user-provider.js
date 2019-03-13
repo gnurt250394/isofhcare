@@ -46,9 +46,10 @@ module.exports = {
                 callback(s, e);
         });
     },
-    changePassword(id, password, callback) {
+    changePassword(id, passwordOld, passwordNew, callback) {
         var body = {
-            password: password.toMd5()
+            passwordOld: passwordOld.toMd5(),
+            passwordNew: passwordNew.toMd5(),
         }
         client.requestApi("put", constants.api.user.change_password + "/" + id, body, (s, e) => {
             if (callback)

@@ -40,7 +40,7 @@ import CreateQuestionStep1Screen from '@containers/question/CreateQuestionStep1S
 import CreateQuestionStep2Screen from '@containers/question/CreateQuestionStep2Screen';
 import DetailQuestionScreen from '@containers/question/DetailQuestionScreen';
 import TestVNPayScreen from '@containers/test/TestVNPayScreen';
-
+import ChangePass from '@containers/account/ChangePassWord'
 const RootNavigator = createStackNavigator({
     // testVNPay: { screen: TestVNPayScreen },
     splash: { screen: SplashScreen },
@@ -82,7 +82,8 @@ const RootNavigator = createStackNavigator({
     myQuestion: { screen: MyQuestionScreen },
     createQuestionStep1: { screen: CreateQuestionStep1Screen },
     createQuestionStep2: { screen: CreateQuestionStep2Screen },
-    detailQuestion: { screen: DetailQuestionScreen }
+    detailQuestion: { screen: DetailQuestionScreen },
+    changePass : { screen: ChangePass} 
 }, {
         headerMode: 'none',
         header: null,
