@@ -15,6 +15,7 @@ import SocialNetwork from '@components/LoginSocial';
 import RNAccountKit from 'react-native-facebook-account-kit'
 const durationDefault = 500;
 import Form from 'mainam-react-native-form-validate/Form';
+import Field from 'mainam-react-native-form-validate/Field';
 import TextField from 'mainam-react-native-form-validate/TextField';
 class LoginScreen extends Component {
 	constructor(props) {
@@ -151,7 +152,7 @@ class LoginScreen extends Component {
 		})
 		return (
 			<ActivityPanel style={{ flex: 1 }}
-				title="Đăng nhập"
+				title="Đăng nhập 1"
 				touchToDismiss={true}
 				// hideActionbar={true}
 				// hideStatusbar={true}
@@ -165,46 +166,48 @@ class LoginScreen extends Component {
 
 					<KeyboardAvoidingView behavior='padding' style={styles.form}>
 						<Animated.View style={{ marginLeft, flex: 1 }}>
-							<Form ref={ref => this.form = ref}>
-								<TextField errorStyle={styles.errorStyle} validate={
-									{
-										rules: {
-											required: true,
-											phone: true
-										},
-										messages: {
-											required: "Vui lòng nhập số điện thoại",
-											phone: "Nhập SĐT không hợp lệ"
-										}
-									}
-								} inputStyle={styles.input} onChangeText={(s) => { this.setState({ email: s }) }} placeholder={constants.input_phone} autoCapitalize={'none'} />
-								<Form style={{ width: "100%", }}>
-									<TextField errorStyle={styles.errorStyle} clearWhenFocus={true} validate={
+							<Field ref={ref => this.form = ref}>
+								<Field clearWhenFocus={true}>
+									<TextField onChangeText={s => this.setState({ email: s })} errorStyle={styles.errorStyle} validate={
 										{
 											rules: {
-												required: true
+												required: true,
+												phone: true
 											},
 											messages: {
-												required: "Mật khẩu bắt buộc phải nhập",
-												min: "Mật khẩu tối thiểu 8 ký tự"
+												required: "Vui lòng nhập số điện thoại",
+												phone: "Nhập SĐT không hợp lệ"
 											}
 										}
-									}
-										secureTextEntry={this.state.showPass}
-										inputStyle={styles.input} style={{ marginTop: 10 }} onChangeText={(s) => this.setState({ password: s })} placeholder={constants.input_password} autoCapitalize={'none'} />
-									<TouchableOpacity
-										activeOpacity={0.7}
-										style={styles.btnEye}
-										onPress={this.showPass}>
-										<Image source={eyeImg} style={styles.iconEye} />
-									</TouchableOpacity>
-								</Form>
-								{/* <UserInput onTextChange={(s) => this.setState({ email: s })}
+									} inputStyle={styles.input} placeholder={constants.input_phone} autoCapitalize={'none'} />
+									<Field style={{ width: "100%", }}>
+										<TextField onChangeText={s => this.setState({ password: s })} errorStyle={styles.errorStyle} validate={
+											{
+												rules: {
+													required: true
+												},
+												messages: {
+													required: "Mật khẩu bắt buộc phải nhập",
+													min: "Mật khẩu tối thiểu 8 ký tự"
+												}
+											}
+										}
+											secureTextEntry={this.state.showPass}
+											// value={this.state.password}
+											inputStyle={styles.input} style={{ marginTop: 10 }} onChangeText={(s) => this.setState({ password: s })} placeholder={constants.input_password} autoCapitalize={'none'} />
+										<TouchableOpacity
+											activeOpacity={0.7}
+											style={styles.btnEye}
+											onPress={this.showPass}>
+											<Image source={eyeImg} style={styles.iconEye} />
+										</TouchableOpacity>
+									</Field>
+									{/* <UserInput onTextChange={(s) => this.setState({ email: s })}
 									autoCapitalize={'none'}
 									returnKeyType={'next'}
 									autoCorrect={false}
 									style={{ width: "100%" }} /> */}
-								{/* <View style={{ marginTop: 15, flex: 1, width: "100%", }}>
+									{/* <View style={{ marginTop: 15, flex: 1, width: "100%", }}>
 									<UserInput
 										onTextChange={(s) => this.setState({ password: s })}
 										secureTextEntry={this.state.showPass}
@@ -220,7 +223,8 @@ class LoginScreen extends Component {
 										<Image source={eyeImg} style={styles.iconEye} />
 									</TouchableOpacity>
 								</View> */}
-							</Form>
+								</Field>
+							</Field>
 							<View style={{ marginLeft: 20, width: 300, maxWidth: 300 }}>
 								<TouchableOpacity onPress={() => { this.props.navigation.replace("forgotPassword") }} style={{ alignItems: 'flex-end' }}>
 									<Text style={{ marginTop: 12, color: 'rgb(49,96,172)', paddingRight: 10 }}>Quên mật khẩu</Text>
