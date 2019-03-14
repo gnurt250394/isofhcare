@@ -14,8 +14,8 @@ import ScaleImage from 'mainam-react-native-scaleimage';
 import SocialNetwork from '@components/LoginSocial';
 import RNAccountKit from 'react-native-facebook-account-kit'
 const durationDefault = 500;
-import Form from '@components/form/Form';
-import TextField from '@components/form/TextField';
+import Form from 'mainam-react-native-form-validate/Form';
+import TextField from 'mainam-react-native-form-validate/TextField';
 class LoginScreen extends Component {
 	constructor(props) {
 		super(props)
@@ -179,7 +179,7 @@ class LoginScreen extends Component {
 									}
 								} inputStyle={styles.input} onChangeText={(s) => { this.setState({ email: s }) }} placeholder={constants.input_phone} autoCapitalize={'none'} />
 								<Form style={{ width: "100%", }}>
-									<TextField errorStyle={styles.errorStyle} validate={
+									<TextField errorStyle={styles.errorStyle} clearWhenFocus={true} validate={
 										{
 											rules: {
 												required: true

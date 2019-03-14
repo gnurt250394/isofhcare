@@ -15,8 +15,8 @@ import stringUtils from 'mainam-react-native-string-utils';
 import dateUtils from 'mainam-react-native-date-utils';
 import { DatePicker } from 'native-base';
 import RNAccountKit from 'react-native-facebook-account-kit'
-import Form from '@components/form/Form';
-import TextField from '@components/form/TextField';
+import Form from 'mainam-react-native-form-validate/Form';
+import TextField from 'mainam-react-native-form-validate/TextField';
 
 class RegisterScreen extends Component {
 
@@ -92,8 +92,8 @@ class RegisterScreen extends Component {
 			return;
 		}
 		Keyboard.dismiss();
-	
-	
+
+
 		this.child.unPress();
 		this.props.navigation.navigate("enterPassword", {
 			user: {
@@ -132,7 +132,7 @@ class RegisterScreen extends Component {
 											maxlength: 255
 										},
 										messages: {
-											required: "Họ tên bắt buộc phải nhập",
+											required: "Họ tên không được bỏ trống!",
 											maxlength: "Họ tên tối đa 255 ký tự"
 										}
 									}
@@ -171,26 +171,27 @@ class RegisterScreen extends Component {
 										returnKeyType={'next'}
 										editable={false}
 										autoCorrect={false} />
-									<View style={{ display: 'none' }}>
-										<DatePicker
-											ref={ref => this.dob = ref}
-											defaultDate={maxDate}
-											minimumDate={new Date(1900, 1, 1)}
-											maximumDate={maxDate}
-											locale={"en"}
-											timeZoneOffsetInMinutes={undefined}
-											modalTransparent={false}
-											animationType={"fade"}
-											androidMode={"default"}
-											placeHolderText="Select date"
-											textStyle={{ color: "green" }}
-											placeHolderTextStyle={{ color: "#d3d3d3" }}
-											onDateChange={this.setDate.bind(this)}
-											style={{ width: 0 }}
-											disabled={false}
-										/>
-									</View>
 								</TouchableOpacity>
+
+								<View style={{ display: 'none' }}>
+									<DatePicker
+										ref={ref => this.dob = ref}
+										defaultDate={maxDate}
+										minimumDate={new Date(1900, 1, 1)}
+										maximumDate={maxDate}
+										locale={"en"}
+										timeZoneOffsetInMinutes={undefined}
+										modalTransparent={false}
+										animationType={"fade"}
+										androidMode={"default"}
+										placeHolderText="Select date"
+										textStyle={{ color: "green" }}
+										placeHolderTextStyle={{ color: "#d3d3d3" }}
+										onDateChange={this.setDate.bind(this)}
+										style={{ width: 0 }}
+										disabled={false}
+									/>
+								</View>
 								{/* <TouchableOpacity onPress={this.changeEmail.bind(this)}  >
 									<UserInput
 										editable={false}
@@ -202,7 +203,7 @@ class RegisterScreen extends Component {
 										style={{ marginTop: 12 }}
 									/>
 								</TouchableOpacity> */}
-								<TouchableOpacity onPress={this.changePhone.bind(this)} >
+								{/* <TouchableOpacity onPress={this.changePhone.bind(this)} >
 									<UserInput
 										value={this.state.phone}
 										placeholder={constants.phone}
@@ -212,7 +213,7 @@ class RegisterScreen extends Component {
 										autoCorrect={false}
 										style={{ marginTop: 12 }}
 									/>
-								</TouchableOpacity>
+								</TouchableOpacity> */}
 							</Form>
 						</View>
 

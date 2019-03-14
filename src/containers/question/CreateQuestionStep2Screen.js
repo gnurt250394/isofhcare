@@ -13,8 +13,8 @@ import Modal from "react-native-modal";
 import stylemodal from "@styles/modal-style";
 import specialistProvider from '@data-access/specialist-provider';
 
-import Form from '@components/form/Form';
-import TextField from '@components/form/TextField';
+import Form from 'mainam-react-native-form-validate/Form';
+import TextField from 'mainam-react-native-form-validate/TextField';
 const padding = Platform.select({
     ios: 7,
     android: 2

@@ -13,8 +13,8 @@ import redux from '@redux-store';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import stringUtils from 'mainam-react-native-string-utils';
 import dateUtils from 'mainam-react-native-date-utils';
-import Form from '@components/form/Form';
-import TextField from '@components/form/TextField';
+import Form from 'mainam-react-native-form-validate/Form';
+import TextField from 'mainam-react-native-form-validate/TextField';
 
 class EnterPasswordScreen extends Component {
 

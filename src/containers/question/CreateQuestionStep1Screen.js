@@ -10,8 +10,8 @@ import snackbar from '@utils/snackbar-utils';
 import questionProvider from '@data-access/question-provider';
 import constants from '@resources/strings';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
-import Form from '@components/form/Form';
-import TextField from '@components/form/TextField';
+import Form from 'mainam-react-native-form-validate/Form';
+import TextField from 'mainam-react-native-form-validate/TextField';
 const padding = Platform.select({
     ios: 7,
     android: 2

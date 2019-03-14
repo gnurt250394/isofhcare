@@ -4,8 +4,8 @@ import Dimensions from 'Dimensions';
 import { View, Text, KeyboardAvoidingView, ScrollView, TouchableOpacity, StyleSheet, TextInput, Animated, Easing, Platform, Image, ImageBackground, Keyboard } from 'react-native';
 import { connect } from 'react-redux';
 import snackbar from '@utils/snackbar-utils';
-import Form from '@components/form/Form';
-import TextField from '@components/form/TextField';
+import Form from 'mainam-react-native-form-validate/Form';
+import TextField from 'mainam-react-native-form-validate/TextField';
 import eyeImg from '@images/eye_black.png';
 import ButtonSubmit from '@components/ButtonSubmit';
 import userProvider from '@data-access/user-provider';
@@ -33,30 +33,27 @@ class ProfileScreen extends Component {
             this.child.unPress();
             return;
         }
-        userProvider.changePassword(user.currentUser.id, this.state.passwordOld, this.state.passwordNew, (s, e) => {
+        userProvider.changePassword(user.currentUser.id, this.state.passwordOld, this.state.passwordNew).then(s => {
             console.log(s, e)
-            if (s) {
-                switch (s.code) {
-                    case 0:
-                        snackbar.show(constants.msg.user.change_password_success, 'success');
-                        this.props.navigation.navigate('home');
-                        return
-                        break;
-                    case 2:
-                        this.child.unPress();
-                        snackbar.show("Mật khẩu cũ không đúng", 'danger');
-                        break
-                    default:
-                        this.child.unPress();
-                        snackbar.show(constants.msg.user.change_password_not_success, 'danger');
-                        break
-                }
-
+            alert(JSON.stringify(s));
+            switch (s.code) {
+                case 0:
+                    snackbar.show(constants.msg.user.change_password_success, 'success');
+                    this.props.navigation.navigate('home');
+                    return
+                    break;
+                case 2:
+                    this.child.unPress();
+                    snackbar.show(constants.msg.user.change_password_success_old_password_incorrect, 'danger');
+                    break
+                default:
+                    this.child.unPress();
+                    snackbar.show(constants.msg.user.change_password_not_success, 'danger');
+                    break
             }
-            if (e) {
-                this.child.unPress();
-                console.log(e);
-            }
+        }).catch(e => {
+            this.child.unPress();
+            console.log(e);
             snackbar.show(constants.msg.user.change_password_not_success, 'danger');
         });
     }
@@ -74,8 +71,8 @@ class ProfileScreen extends Component {
                                             required: true
                                         },
                                         messages: {
-                                            required: "Mật khẩu bắt buộc phải nhập",
-                                            min: "Mật khẩu tối thiểu 8 ký tự"
+                                            required: "Vui lòng nhập đầy đủ thông tin",
+                                            min: "Mật khẩu dài ít nhất 8 kí tự"
                                         }
                                     }
                                 }
@@ -96,8 +93,8 @@ class ProfileScreen extends Component {
                                             minlength: 8
                                         },
                                         messages: {
-                                            required: "Mật khẩu bắt buộc phải nhập",
-                                            minlength: "Mật khẩu tối thiểu 8 ký tự"
+                                            required: "Vui lòng nhập đầy đủ thông tin",
+                                            minlength: "Mật khẩu dài ít nhất 8 kí tự"
                                         }
                                     }
                                 }
@@ -119,9 +116,9 @@ class ProfileScreen extends Component {
                                             minlength: 8
                                         },
                                         messages: {
-                                            required: "Mật khẩu bắt buộc phải nhập",
-                                            minlength: "Mật khẩu tối thiểu 8 ký tự",
-                                            equalTo: 'Mật khẩu mới không trùng khớp'
+                                            required: "Vui lòng nhập đầy đủ thông tin",
+                                            minlength: "Mật khẩu dài ít nhất 8 kí tự",
+                                            equalTo: 'Mật khẩu và xác nhận mật khẩu không giống nhau'
                                         }
                                     }
                                 }
@@ -135,7 +132,7 @@ class ProfileScreen extends Component {
                                 </TouchableOpacity>
                             </Form>
                             <View style={{ width: 300, maxWidth: 300, paddingLeft: 20 }}>
-                                <ButtonSubmit style={{ width: '100%', marginLeft:10 }} onRef={ref => (this.child = ref)} click={() => { this.change() }} text={"Đổi mật khẩu"} />
+                                <ButtonSubmit style={{ width: '100%', marginLeft: 10 }} onRef={ref => (this.child = ref)} click={() => { this.change() }} text={"Đổi mật khẩu"} />
                             </View>
                         </Form>
                     </KeyboardAvoidingView>

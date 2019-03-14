@@ -46,14 +46,18 @@ module.exports = {
                 callback(s, e);
         });
     },
-    changePassword(id, passwordOld, passwordNew, callback) {
-        var body = {
-            passwordOld: passwordOld.toMd5(),
-            passwordNew: passwordNew.toMd5(),
-        }
-        client.requestApi("put", constants.api.user.change_password + "/" + id, body, (s, e) => {
-            if (callback)
-                callback(s, e);
+    changePassword(id, passwordOld, passwordNew) {
+        return new Promise((resolve, reject) => {
+            var body = {
+                passwordOld: passwordOld.toMd5(),
+                passwordNew: passwordNew.toMd5(),
+            }
+            client.requestApi("put", constants.api.user.change_password + "/" + id, body, (s, e) => {
+                if (s)
+                    resolve(s);
+                else
+                    reject(e);
+            });
         });
     },
     login(username, password, callback) {

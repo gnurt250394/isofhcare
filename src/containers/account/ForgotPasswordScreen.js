@@ -12,8 +12,8 @@ import constants from '@resources/strings';
 import stringUtils from 'mainam-react-native-string-utils';
 import redux from '@redux-store';
 import ScaleImage from 'mainam-react-native-scaleimage';
-import Form from '@components/form/Form';
-import TextField from '@components/form/TextField';
+import Form from 'mainam-react-native-form-validate/Form';
+import TextField from 'mainam-react-native-form-validate/TextField';
 class ForgotPasswordScreen extends Component {
 	constructor(props) {
 		super(props)

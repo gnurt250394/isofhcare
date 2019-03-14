@@ -45,7 +45,7 @@ class ListQuestionScreen extends Component {
     }
     render() {
         return (
-            <ActivityPanel style={{ flex: 1 }} title="Hỏi đáp" showFullScreen={true}
+            <ActivityPanel style={{ flex: 1 }} title="Tư vấn online" showFullScreen={true}
                 menuButton={this.menuCreate()}
             >
                 <View style={{ height: 50, flexDirection: "row" }}>

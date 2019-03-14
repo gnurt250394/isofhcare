@@ -11,8 +11,8 @@ import stylemodal from "@styles/modal-style";
 import Carousel from 'react-native-snap-carousel';
 import advertiseProvider from '@data-access/advertise-provider';
 import snackbar from '@utils/snackbar-utils';
-import TextField from '@components/form/TextField';
-import Form from '@components/form/Form';
+import TextField from 'mainam-react-native-form-validate/TextField';
+import Form from 'mainam-react-native-form-validate/Form';
 import UserInput from '@components/UserInput';
 
 class Home extends Component {
