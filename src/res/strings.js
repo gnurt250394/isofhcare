@@ -182,16 +182,16 @@ module.exports = {
       confirm_delete_post: "Bạn có muốn xoá bài viết này",
       please_input_title: "Vui lòng nhập tiêu đề câu hỏi",
       please_input_content: "Vui lòng nhập nội dung câu hỏi",
-      create_question_success: "Gửi câu hỏi thành công",
+      create_question_success: "Bạn đã gửi câu hỏi thành công",
       create_question_failed: "Gửi câu hỏi không thành công"
     }
   },
   api: {
     notification: {
-      get_by_user: "notification/get-notification-by-user",
+      search: "notification/search",
       get_detail: "notification/get-detail",
-      get_detail_broadcast: "advertise/get-detail",
-      set_read: "notification/set-read",
+      delete: "notification/delete/all",
+      set_read: "notification/active-watched",
       get_unread_notification_count: "notification/get-unread-notification-count"
     },
     location:

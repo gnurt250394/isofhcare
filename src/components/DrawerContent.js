@@ -76,13 +76,13 @@ class DrawerContent extends Component {
                 <TouchableOpacity style={styles.menu_item} onPress={() => { snackbar.show("Chức năng đang phát triển") }}>
                   <Text style={styles.menu_item_text}>Y bạ điện tử</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.menu_item} onPress={() => { snackbar.show("Chức năng đang phát triển")  }}>
+                <TouchableOpacity style={styles.menu_item} onPress={() => { snackbar.show("Chức năng đang phát triển") }}>
                   <Text style={styles.menu_item_text}>Lịch khám</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.menu_item} onPress={() => { snackbar.show("Chức năng đang phát triển")  }}>
+                <TouchableOpacity style={styles.menu_item} onPress={() => { this.props.navigation.navigate("changePass") }}>
                   <Text style={styles.menu_item_text}>Đổi mật khẩu</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.menu_item} onPress={() => { snackbar.show("Chức năng đang phát triển")  }}>
+                <TouchableOpacity style={styles.menu_item} onPress={() => { snackbar.show("Chức năng đang phát triển") }}>
                   <Text style={styles.menu_item_text}>Đổi mã bảo mật</Text>
                 </TouchableOpacity>
                 {/* <TouchableOpacity style={styles.menu_item} onPress={() => { snackbar.show("Chức năng đang phát triển")  }}>
@@ -101,9 +101,9 @@ class DrawerContent extends Component {
                 {/* <TouchableOpacity style={styles.menu_item} onPress={() => { this.props.navigation.navigate("myQuestion") }}>
                   <Text style={styles.menu_item_text}>Câu hỏi của tôi</Text>
                 </TouchableOpacity> */}
-                {/* <TouchableOpacity style={styles.menu_item} onPress={() => { this.props.navigation.navigate("notification") }}>
+                <TouchableOpacity style={styles.menu_item} onPress={() => { this.props.navigation.navigate("notification") }}>
                   <Text style={styles.menu_item_text}>Thông báo</Text>
-                </TouchableOpacity> */}
+                </TouchableOpacity>
                 {/* 
                 <TouchableOpacity style={styles.menu_item}>
                   <Text style={styles.menu_item_text}>Ví iSofH care</Text>

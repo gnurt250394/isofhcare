@@ -6,49 +6,60 @@ import firebase from 'react-native-firebase';
 
 
 module.exports = {
-    getByUser(userId, page, size, callback) {
-        client.requestApi("get", constants.api.notification.get_by_user + "/" + userId + "?page=" + page + "&size=" + size, {}, (s, e) => {
-            try {
-                if (callback)
-                    callback(s, e);
-            } catch (error) {
-                if (callback)
-                    callback(undefined, error);
-            }
-        });
-
-    },
-    getDetail(notificationId, callback) {
-        client.requestApi("get", constants.api.notification.get_detail + "/" + notificationId, {}, (s, e) => {
-            try {
-                if (callback)
-                    callback(s, e);
-            } catch (error) {
-                if (callback)
-                    callback(undefined, error);
-            }
+    search(page, size) {
+        return new Promise((resolve, reject) => {
+            client.requestApi("get", `${constants.api.notification.search}?page=${page}&size=${size}`, {}, (s, e) => {
+                try {
+                    if (s)
+                        resolve(s);
+                    else
+                        reject(e);
+                } catch (error) {
+                    reject(error);
+                }
+            });
         });
     },
-    getDetailBroadcast(notificationId, callback) {
-        client.requestApi("get", constants.api.notification.get_detail_broadcast + "/" + notificationId, {}, (s, e) => {
-            try {
-                if (callback)
-                    callback(s, e);
-            } catch (error) {
-                if (callback)
-                    callback(undefined, error);
-            }
+    getDetail(notificationId) {
+        return new Promise((resolve, reject) => {
+            client.requestApi("get", `${constants.api.notification.get_detail}/${notificationId}`, {}, (s, e) => {
+                try {
+                    if (s)
+                        resolve(s);
+                    else
+                        reject(e);
+                } catch (error) {
+                    reject(error);
+                }
+            });
         });
     },
-    setRead(notificationId, callback) {
-        client.requestApi("put", constants.api.notification.set_read + "/" + notificationId, {}, (s, e) => {
-            try {
-                if (callback)
-                    callback(s, e);
-            } catch (error) {
-                if (callback)
-                    callback(undefined, error);
-            }
+    setRead(notificationId) {
+        return new Promise((resolve, reject) => {
+            client.requestApi("put", `${constants.api.notification.set_read}/${notificationId}`, {}, (s, e) => {
+                try {
+                    if (s)
+                        resolve(s);
+                    else
+                        reject(e);
+                } catch (error) {
+                    reject(error);
+                }
+            });
+        });
+    },
+    deleteAll() {
+        return new Promise((resolve, reject) => {
+            client.requestApi("delete", `${constants.api.notification.delete}`, {}, (s, e) => {
+                try {
+                    if (s)
+                        resolve(s);
+                    else
+                        reject(e);
+                } catch (error) {
+                    reject(error);
+                }
+            });
         });
     },
     getUnReadCount(callback) {

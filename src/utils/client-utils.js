@@ -115,7 +115,7 @@ module.exports = {
             header,
             body
         };
-        console.log(JSON.stringify(data), JSON.stringify(data));
+        console.log(data);
         let fetchParam = {
             method: methodType,
             headers: header,
