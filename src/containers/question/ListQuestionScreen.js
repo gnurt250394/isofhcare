@@ -22,7 +22,7 @@ class ListQuestionScreen extends Component {
     }
     menuCreate() {
         return <View>
-            <TouchableOpacity style={{ padding: 10 }} onPress={() => this.props.navigation.navigate("createQuestionStep1")}><Text>Xóa</Text></TouchableOpacity>
+            <TouchableOpacity style={{ padding: 10 }} onPress={() => this.props.navigation.navigate("createQuestionStep1")}><Text>Tạo</Text></TouchableOpacity>
         </View >
     }
     componentWillReceiveProps(props) {

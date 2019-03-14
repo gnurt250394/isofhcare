@@ -109,7 +109,7 @@ class NotificationScreen extends Component {
                     this.onRefresh();
                 });
 
-            }}><Text>Tạo</Text></TouchableOpacity>
+            }}><Text>Xóa</Text></TouchableOpacity>
         </View >
     }
 
