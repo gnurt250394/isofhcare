@@ -2,7 +2,6 @@ import constants from '@resources/strings';
 import userProvider from '@data-access/user-provider';
 import notificationProvider from '@data-access/notification-provider';
 import firebase from 'react-native-firebase';
-import sendbirdUtils from '@utils/send-bird-utils';
 import clientUtils from '@utils/client-utils';
 
 import client from '@utils/client-utils';
@@ -48,17 +47,7 @@ module.exports = {
         return function (dispatch, getState) {
             if (user != null) {
                 userProvider.saveAccount(user);
-                // firebaseUtils.connect(user.id, user.name, user.avatar, {}).then(x => {
-                //     firebaseUtils.updateUser(user.id, user.name, user.avatar, {});
-                //     // firebaseUtils.updateUser(user.id, user.name, "https://images.pexels.com/photos/67636/rose-blue-flower-rose-blooms-67636.jpeg?auto=compress&cs=tinysrgb&h=350", {});
-                //     console.log(x);
-                // }).catch(x => {
-                //     console.log(x);
-                // });
-                // let sb = sendbirdUtils.getSendBird();
-                // sendbirdUtils.startSendBird(sb, user.email, (sb, userSendBird, error) => {
-                //     sendbirdUtils.updateUserInfo(sb, userSendBird, (user.degree ? user.degree : "") + " " + user.name, user.avatar ? user.avatar.absoluteUrl() : "")
-                // });
+                
 
                 dispatch(_userLogin(user)).then(() => {
                     if (user) {
@@ -71,10 +60,7 @@ module.exports = {
     },
     userLogout() {
         return (dispatch) => {
-            let sb = sendbirdUtils.getSendBird();
             userProvider.saveAccount(undefined);
-            sendbirdUtils.stopSendBird(sb, (sb, userSendBird, error) => {
-            });
             dispatch({ type: constants.action.action_user_logout })
         };
 

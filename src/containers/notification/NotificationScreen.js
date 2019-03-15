@@ -83,6 +83,9 @@ class NotificationScreen extends Component {
     viewNotification(item) {
         var data = JSON.parse(item.notification.value);
         this.openQuestion(data.id);
+        notificationProvider.setRead(item.notification.id);
+        item.notification.watched = 1;
+        this.setState({ data: [...this.state.data] });
     }
     openQuestion(id) {
         questionProvider.detail(id).then(s => {

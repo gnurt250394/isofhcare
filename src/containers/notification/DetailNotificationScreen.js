@@ -7,7 +7,6 @@ import { connect } from 'react-redux';
 import notificationProvider from '@data-access/notification-provider';
 import snackbar from '@utils/snackbar-utils';
 import stringUtils from 'mainam-react-native-string-utils';
-
 let $this;
 class NotificationScreen extends Component {
     constructor(props) {

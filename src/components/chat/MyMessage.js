@@ -6,8 +6,6 @@
 
 import React, { Component, PropTypes } from 'react';
 import { Text, View, Image, TouchableOpacity } from 'react-native';
-import sendbirdUtils from '@utils/send-bird-utils';
-import SendBird from 'sendbird';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import dateUtils from 'mainam-react-native-date-utils';
 import ActivityPanel from '@components/ActivityPanel';
