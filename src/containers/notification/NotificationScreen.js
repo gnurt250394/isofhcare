@@ -134,17 +134,19 @@ class NotificationScreen extends Component {
                         </View> : null
                     }
                     ListFooterComponent={() => <View style={{ height: 10 }}></View>}
-                    renderItem={({ item, index }) => <TouchableOpacity style={{ backgroundColor: 'rgb(238,248,247)', marginTop: 10 }} onPress={this.viewNotification.bind(this, item)}>
-                        <View style={{ flexDirection: 'row', padding: 11, paddingLeft: 13, paddingRight: 13 }}>
+                    renderItem={({ item, index }) => <TouchableOpacity style={{
+                        backgroundColor: item.notification.watched == 0 ? 'rgb(238,248,247)' : '#faf5f5', marginTop: 10
+                    }} onPress={this.viewNotification.bind(this, item)}>
+                        < View style={{ flexDirection: 'row', padding: 11, paddingLeft: 13, paddingRight: 13 }}>
                             <ScaleImage source={require("@images/doctor.png")} width={47} />
                             <View style={{ paddingTop: 4, marginLeft: 19, flex: 1 }}>
                                 <Text style={{ fontSize: 14 }}>Tư vấn - đặt câu hỏi</Text>
-                                <Text style={{ fontSize: 14 }} numberOfLines={2} ellipsizeMode="tail">{item.notification.title}</Text>
+                                <Text style={{ fontSize: 14 }} numberOfLines={2} ellipsizeMode="tail">{item.notification.title.trim()}</Text>
                                 <Text style={{ fontSize: 12, color: '#00000060', marginTop: 8 }}>{item.notification.createdDate.toDateObject().getPostTime()}</Text>
                             </View>
                         </View>
                         <View style={{ height: 0.5, backgroundColor: "rgb(204,204,204)" }} />
-                    </TouchableOpacity>}
+                    </TouchableOpacity >}
                 />
 
                 {/* <TouchableOpacity style={{ backgroundColor: 'rgb(238,248,247)' }}>

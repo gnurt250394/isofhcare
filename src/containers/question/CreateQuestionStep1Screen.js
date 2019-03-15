@@ -233,7 +233,7 @@ class CreateQuestionStep1Screen extends Component {
           </View>
         </ScrollView>
         <TouchableOpacity
-          disabled={!this.state.change}
+          disabled={!this.state.changed}
           onPress={this.createQuestion.bind(this)}
           style={{
             width: 200,
