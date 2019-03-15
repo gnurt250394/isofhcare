@@ -157,14 +157,6 @@ class PushController extends Component {
                 .setSound("default")
                 .setData(notification.data);
             firebase.notifications().displayNotification(fbNotification)
-
-
-
-            // if (notification.data.type) {
-            //     this.showBroadcast(notification.data.id);
-            // }
-            // else
-            // this.showNotification(notification.data.id);
         }
         if (this.props.userApp.isLogin) {
             firebase.notifications().setBadge(this.props.userApp.unReadNotificationCount + 1);
@@ -182,11 +174,6 @@ class PushController extends Component {
                 var id = notificationOpen.notification.data.id;
                 this.openQuestion(id);
             }
-            const notificationId = notificationOpen.notification.data.uid;
-            if (notificationOpen.notification.data.type)
-                this.showDetailBroadcast(notificationId);
-            else
-                this.showDetailNotification(notificationId);
         } catch (error) {
             console.log(error);
         }
@@ -207,11 +194,12 @@ class PushController extends Component {
         if (notificationOpen) {
             try {
                 firebase.notifications().removeDeliveredNotification(notificationOpen.notification.notificationId);
-                const notificationId = notificationOpen.notification.data.uid;
-                if (notificationOpen.notification.data.type)
-                    this.showDetailBroadcast(notificationId);
-                else
-                    this.showDetailNotification(notificationId);
+                const id = notificationOpen.notification.data.id;
+                this.openQuestion(id);
+                // if (notificationOpen.notification.data.type)
+                //     this.showDetailBroadcast(notificationId);
+                // else
+                //     this.showDetailNotification(notificationId);
             } catch (error) {
                 console.log(error);
             }
