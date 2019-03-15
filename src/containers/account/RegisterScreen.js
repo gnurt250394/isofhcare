@@ -166,7 +166,7 @@ class RegisterScreen extends Component {
                       },
                       messages: {
                         required: "Họ tên bắt buộc phải nhập",
-                        maxlength: "Họ tên tối đa 255 ký tự"
+                        maxlength: "Không được nhập quá 255 kí tự"
                       }
                     }}
                     inputStyle={styles.input}

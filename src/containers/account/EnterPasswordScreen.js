@@ -139,7 +139,7 @@ class EnterPasswordScreen extends Component {
                     },
                     messages: {
                       required: "Mật khẩu bắt buộc phải nhập",
-                      min: "Mật khẩu dài ít nhất 8 ký tự"
+                      minlength: "Mật khẩu dài ít nhất 8 ký tự"
                     }
                   }}
                   secureTextEntry={this.state.showPass}
@@ -167,7 +167,7 @@ class EnterPasswordScreen extends Component {
                     },
                     messages: {
                       required: "Xác nhận mật khẩu bắt buộc phải nhập",
-                      equalTo: "Xác nhận mật khẩu không trùng khớp"
+                      equalTo: "Xác Mật khẩu và xác nhận mật khẩu không giống nhau"
                     }
                   }}
                   secureTextEntry={this.state.showPassConfirm}

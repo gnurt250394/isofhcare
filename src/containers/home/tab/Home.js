@@ -145,7 +145,17 @@ class Home extends Component {
         <View style={{ flexDirection: "row" }}>
           <TouchableOpacity
             style={{ flex: 1, marginLeft: 5 }}
-            onPress={() => this.props.navigation.navigate("dhyBooking")}
+            onPress={() => {
+              if (this.props.userApp.isLogin)
+                this.props.navigation.navigate("dhyBooking");
+              else
+                this.props.navigation.navigate("login", {
+                  nextScreen: {
+                    screen: "dhyBooking",
+                    param: {}
+                  }
+                });
+            }}
           >
             <Text>Đặt khám</Text>
           </TouchableOpacity>
@@ -165,7 +175,7 @@ class Home extends Component {
           >
             <Text>Tư vấn</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{ flex: 1, marginLeft: 5 }}>
+          <TouchableOpacity style={{ flex: 1, marginLeft: 5 }} onPress={() => { snackbar.show("Chức năng đang phát triển") }}>
             <Text>Tra cứu</Text>
           </TouchableOpacity>
         </View>

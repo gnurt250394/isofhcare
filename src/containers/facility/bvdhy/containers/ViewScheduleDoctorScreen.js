@@ -198,7 +198,7 @@ class ViewScheduleDoctorScreen extends Component {
                         var date2 = new Date(month + "/" + i + "/" + year);
                         var time = date2.getTime();
                         var compare = time.compareDate(today);
-                        if (compare < 0)
+                        if (compare <= 0)
                             continue;
                         if (!isNaN(time)) {
                             var temp = this.getScheduleByDate(date2, schedule)

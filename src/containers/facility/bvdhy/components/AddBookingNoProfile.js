@@ -53,6 +53,10 @@ class AddBookingNoProfile extends Component {
             snackbar.show(dhyCommand.msg.booking.please_enter_the_correct_fullname_format);
             return;
         }
+        if (temp.fullname.length>255) {
+            snackbar.show("Họ tên không được nhập quá 255 kí tự");
+            return;
+        }
 
         if (!temp.phoneNumber || !temp.phoneNumber.trim()) {
             snackbar.show(dhyCommand.msg.booking.please_input_phone_number);
@@ -119,6 +123,10 @@ class AddBookingNoProfile extends Component {
                 return;
             }
 
+            if (temp.guardianName.length>255) {
+                snackbar.show("Tên người bảo lãnh không được nhập quá 255 kí tự");
+                return;
+            }
             if (!temp.guardianPhoneNumber || !temp.guardianPhoneNumber.trim()) {
                 snackbar.show(dhyCommand.msg.booking.please_input_guardian_phone_number);
                 return;
