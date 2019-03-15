@@ -101,11 +101,11 @@ class NotificationScreen extends Component {
         return <View>
             <TouchableOpacity style={{ padding: 10 }} onPress={() => {
                 this.setState({ isLoading: true })
-                notificationProvider.deleteAll().then(s=>{
-                    this.setState({isLoading:false});
+                notificationProvider.deleteAll().then(s => {
+                    this.setState({ isLoading: false });
                     this.onRefresh();
-                }).catch(e=>{
-                    this.setState({isLoading:false});
+                }).catch(e => {
+                    this.setState({ isLoading: false });
                     this.onRefresh();
                 });
 
@@ -137,9 +137,9 @@ class NotificationScreen extends Component {
                     renderItem={({ item, index }) => <TouchableOpacity style={{ backgroundColor: 'rgb(238,248,247)', marginTop: 10 }} onPress={this.viewNotification.bind(this, item)}>
                         <View style={{ flexDirection: 'row', padding: 11, paddingLeft: 13, paddingRight: 13 }}>
                             <ScaleImage source={require("@images/doctor.png")} width={47} />
-                            <View style={{ paddingTop: 4, marginLeft: 19 }}>
+                            <View style={{ paddingTop: 4, marginLeft: 19, flex: 1 }}>
                                 <Text style={{ fontSize: 14 }}>Tư vấn - đặt câu hỏi</Text>
-                                <Text style={{ fontSize: 14 }}>{item.notification.title}</Text>
+                                <Text style={{ fontSize: 14 }} numberOfLines={2} ellipsizeMode="tail">{item.notification.title}</Text>
                                 <Text style={{ fontSize: 12, color: '#00000060', marginTop: 8 }}>{item.notification.createdDate.toDateObject().getPostTime()}</Text>
                             </View>
                         </View>
