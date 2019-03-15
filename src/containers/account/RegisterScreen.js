@@ -26,6 +26,7 @@ import dateUtils from "mainam-react-native-date-utils";
 import { DatePicker } from "native-base";
 import RNAccountKit from "react-native-facebook-account-kit";
 import Form from "mainam-react-native-form-validate/Form";
+import Field from "mainam-react-native-form-validate/Field";
 import TextField from "mainam-react-native-form-validate/TextField";
 
 class RegisterScreen extends Component {
@@ -44,7 +45,9 @@ class RegisterScreen extends Component {
     this.state = user;
   }
   setDate(newDate) {
-    this.setState({ dob: newDate });
+    this.setState({ dob: newDate, date: newDate.format("dd/MM/yyyy") }, () => {
+      this.form.isValid();
+    });
   }
 
   changeEmail() {
@@ -127,11 +130,17 @@ class RegisterScreen extends Component {
       maxDate.getMonth(),
       maxDate.getDate()
     );
+    let minDate = new Date();
+    minDate = new Date(
+      maxDate.getFullYear() - 150,
+      maxDate.getMonth(),
+      maxDate.getDate()
+    );
     return (
       this.state.verified && (
         <ActivityPanel
           style={{ flex: 1 }}
-          title="Đăng nhập"
+          title="Đăng ký"
           touchToDismiss={true}
           showFullScreen={true}
         >
@@ -156,7 +165,7 @@ class RegisterScreen extends Component {
                         maxlength: 255
                       },
                       messages: {
-                        required: "Họ tên không được bỏ trống!",
+                        required: "Họ tên bắt buộc phải nhập",
                         maxlength: "Họ tên tối đa 255 ký tự"
                       }
                     }}
@@ -191,11 +200,11 @@ class RegisterScreen extends Component {
                             width={20}
                           />
                         ) : (
-                          <ScaleImage
-                            source={require("@images/ic_radio0.png")}
-                            width={20}
-                          />
-                        )}
+                            <ScaleImage
+                              source={require("@images/ic_radio0.png")}
+                              width={20}
+                            />
+                          )}
                         <Text style={{ marginLeft: 5 }}>Nam</Text>
                       </TouchableOpacity>
                       <TouchableOpacity
@@ -210,41 +219,52 @@ class RegisterScreen extends Component {
                             width={20}
                           />
                         ) : (
-                          <ScaleImage
-                            source={require("@images/ic_radio0.png")}
-                            width={20}
-                          />
-                        )}
+                            <ScaleImage
+                              source={require("@images/ic_radio0.png")}
+                              width={20}
+                            />
+                          )}
                         <Text style={{ marginLeft: 5 }}>Nữ</Text>
                       </TouchableOpacity>
                     </View>
                   </View>
-                  <TouchableOpacity
-                    style={{ marginTop: 10 }}
+                  <TextField
+                    value={this.state.date || ""}
                     onPress={() => {
                       if (this.dob) this.dob.showDatePicker();
                     }}
-                  >
-                    <UserInput
-                      value={
-                        this.state.dob
-                          ? this.state.dob.format("dd/MM/yyyy")
-                          : ""
+                    dateFormat={"dd/MM/yyyy"}
+                    splitDate={"/"}
+                    editable={false}
+                    errorStyle={styles.errorStyle}
+                    validate={{
+                      rules: {
+                        date: true,
+                        max: maxDate,
+                        min: minDate
+                      },
+                      messages: {
+                        date: "Nhập đúng định dạng ngày",
+                        max: "Không cho phép chọn dưới 15 tuổi",
+                        min: "Không cho phép chon trên 150 tuổi"
                       }
-                      placeholder={constants.dob}
-                      autoCapitalize={"none"}
-                      returnKeyType={"next"}
-                      editable={false}
-                      autoCorrect={false}
-                    />
-                  </TouchableOpacity>
+                    }}
+                    inputStyle={styles.input}
+                    onChangeText={s => {
+                      this.setState({ date: s });
+                    }}
+                    placeholder={constants.dob}
+                    returnKeyType={"next"}
+                    autoCapitalize={"none"}
+                    autoCorrect={false}
+                  />
 
                   <View style={{ display: "none" }}>
                     <DatePicker
                       ref={ref => (this.dob = ref)}
-                      defaultDate={maxDate}
-                      minimumDate={new Date(1900, 1, 1)}
-                      maximumDate={maxDate}
+                      defaultDate={new Date()}
+                      minimumDate={minDate}
+                      maximumDate={new Date()}
                       locale={"en"}
                       timeZoneOffsetInMinutes={undefined}
                       modalTransparent={false}
@@ -254,7 +274,6 @@ class RegisterScreen extends Component {
                       textStyle={{ color: "green" }}
                       placeHolderTextStyle={{ color: "#d3d3d3" }}
                       onDateChange={this.setDate.bind(this)}
-                      style={{ width: 0 }}
                       disabled={false}
                     />
                   </View>

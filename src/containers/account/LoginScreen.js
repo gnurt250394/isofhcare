@@ -60,7 +60,7 @@ class LoginScreen extends Component {
     this.animatedValue.setValue(0);
     this.animatedValue1.setValue(0);
     this.animatedValue2.setValue(0);
-    const createAnimation = function(value, duration, easing, delay = 0) {
+    const createAnimation = function (value, duration, easing, delay = 0) {
       return Animated.timing(value, {
         toValue: 1,
         duration,
@@ -196,7 +196,7 @@ class LoginScreen extends Component {
     return (
       <ActivityPanel
         style={{ flex: 1 }}
-        title="Đăng nhập 1"
+        title="Đăng nhập"
         touchToDismiss={true}
         // hideActionbar={true}
         // hideStatusbar={true}
