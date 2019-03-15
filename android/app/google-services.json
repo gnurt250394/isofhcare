@@ -29,7 +29,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB0F10HwApaJGWBgaHWPyewP84gmntupfQ"
+          "current_key": "AIzaSyAO9Eg_F6gav0Q3WLwLWl2l2iVHoC94HaM"
         }
       ],
       "services": {
@@ -44,14 +44,44 @@
               "client_type": 3
             },
             {
-              "client_id": "553446981035-bo2beb0me37ooagphjp7b1rg17lpp5qr.apps.googleusercontent.com",
+              "client_id": "553446981035-a0m637l0u8sg9i2eiufmf1i7mjapbvum.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.isofh.isofhcare",
-                "app_store_id": "1428148423"
+                "bundle_id": "com.isofh.isofhcarefordoctor"
               }
             }
           ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:553446981035:android:2eec14d8586903b4",
+        "android_client_info": {
+          "package_name": "com.isofh.isofhcarefordoctor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "553446981035-buqufol8jocasl65igl4erla5s3qtc7p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAO9Eg_F6gav0Q3WLwLWl2l2iVHoC94HaM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2
