@@ -118,7 +118,7 @@ class CreateQuestionStep1Screen extends Component {
     return (
       <ActivityPanel
         style={{ flex: 1 }}
-        title={this.state.post ? "Chỉnh sửa" : "Đặt câu hỏi"}
+        title={"Nội dung"}
         showFullScreen={true}
         touchToDismiss={true}
         isLoading={this.state.isLoading}

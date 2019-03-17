@@ -12,6 +12,7 @@ import KeyboardSpacer from 'react-native-keyboard-spacer';
 import Modal from "react-native-modal";
 import stylemodal from "@styles/modal-style";
 import specialistProvider from '@data-access/specialist-provider';
+import connectionUtils from '@utils/connection-utils';
 
 import Form from 'mainam-react-native-form-validate/Form';
 import TextField from 'mainam-react-native-form-validate/TextField';
@@ -100,26 +101,35 @@ class CreateQuestionStep2Screen extends Component {
                 return;
             }
         }
-        this.setState({ isLoading: true }, () => {
-            var images = "";
-            this.state.imageUris.forEach((item) => {
-                if (images)
-                    images += ",";
-                images += item.url;
-            });
-            questionProvider.create(this.state.content, this.state.gender, this.state.age, this.state.specialist_item ? this.state.specialist_item.specialist.id : "0", this.state.disease, this.state.otherContent, images).then(s => {
-                this.setState({ isLoading: false });
-                if (s && s.code == 0) {
-                    snackbar.show(constants.msg.question.create_question_success, "success");
-                    this.props.navigation.navigate("listQuestion", { reloadTime: new Date().getTime() });
-                } else {
-                    snackbar.show(constants.msg.question.create_question_failed, "danger");
-                }
-            }).catch(e => {
-                this.setState({ isLoading: false });
-                snackbar.show(constants.msg.question.create_question_failed, "danger");
-            });
+
+        connectionUtils.checkConnect(c => {
+            if (c) {
+                this.setState({ isLoading: true }, () => {
+                    var images = "";
+                    this.state.imageUris.forEach((item) => {
+                        if (images)
+                            images += ",";
+                        images += item.url;
+                    });
+                    questionProvider.create(this.state.content, this.state.gender, this.state.age, this.state.specialist_item ? this.state.specialist_item.specialist.id : "0", this.state.disease, this.state.otherContent, images).then(s => {
+                        this.setState({ isLoading: false });
+                        if (s && s.code == 0) {
+                            snackbar.show(constants.msg.question.create_question_success, "success");
+                            this.props.navigation.navigate("listQuestion", { reloadTime: new Date().getTime() });
+                        } else {
+                            snackbar.show(constants.msg.question.create_question_failed, "danger");
+                        }
+                    }).catch(e => {
+                        this.setState({ isLoading: false });
+                        snackbar.show(constants.msg.question.create_question_failed, "danger");
+                    });
+                });
+            }
+            else{
+                snackbar.show("Không có kết nối mạng", "danger");
+            }
         })
+
     }
 
     toggleModalSpecialize() {
@@ -144,7 +154,7 @@ class CreateQuestionStep2Screen extends Component {
     }
     render() {
         return (
-            <ActivityPanel style={{ flex: 1 }} title={this.state.post ? "Chỉnh sửa" : "Đặt câu hỏi"} showFullScreen={true} touchToDismiss={true} isLoading={this.state.isLoading}>
+            <ActivityPanel style={{ flex: 1 }} title={"Thông tin bổ sung"} showFullScreen={true} touchToDismiss={true} isLoading={this.state.isLoading}>
                 <ScrollView style={{ flex: 1 }}
                     keyboardShouldPersistTaps="always">
                     <View style={{ padding: 10 }}>
