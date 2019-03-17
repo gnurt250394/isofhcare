@@ -157,7 +157,7 @@ class NotificationScreen extends Component {
                 style: {
                   color: "blue"
                 },
-                callback: () => {}
+                callback: () => { }
               }
             });
           }}
@@ -188,13 +188,13 @@ class NotificationScreen extends Component {
           data={this.state.data}
           ListHeaderComponent={() =>
             !this.state.refreshing &&
-            (!this.state.data || this.state.data.length == 0) ? (
-              <View style={{ alignItems: "center", marginTop: 50 }}>
-                <Text style={{ fontStyle: "italic" }}>
-                  Hiện tại chưa có thông tin
+              (!this.state.data || this.state.data.length == 0) ? (
+                <View style={{ alignItems: "center", marginTop: 50 }}>
+                  <Text style={{ fontStyle: "italic" }}>
+                    Hiện tại chưa có thông tin
                 </Text>
-              </View>
-            ) : null
+                </View>
+              ) : null
           }
           ListFooterComponent={() => <View style={{ height: 10 }} />}
           renderItem={({ item, index }) => (
@@ -229,7 +229,10 @@ class NotificationScreen extends Component {
                   <Text
                     style={{ fontSize: 12, color: "#00000060", marginTop: 8 }}
                   >
-                    {item.notification.createdDate.toDateObject().getPostTime()}
+                    {((item) => {
+                      var date = item.notification.createdDate.toDateObject();
+                      return date.format("HH:mm") + " - " + date.format("dd/MM/yyyy")
+                    }).call(this, item)}
                   </Text>
                 </View>
               </View>
