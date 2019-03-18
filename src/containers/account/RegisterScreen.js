@@ -28,6 +28,8 @@ import RNAccountKit from "react-native-facebook-account-kit";
 import Form from "mainam-react-native-form-validate/Form";
 import Field from "mainam-react-native-form-validate/Field";
 import TextField from "mainam-react-native-form-validate/TextField";
+import FloatingLabel from 'mainam-react-native-floating-label';
+import DateTimePicker from 'mainam-react-native-date-picker';
 
 class RegisterScreen extends Component {
   constructor(props) {
@@ -73,41 +75,12 @@ class RegisterScreen extends Component {
         verify();
       });
   }
-  changePhone() {
-    let verify = async () => {
-      RNAccountKit.loginWithPhone().then(async token => {
-        if (!token) {
-          snackbar.show("Xác minh số điện thoại không thành công", "danger");
-        } else {
-          let account = await RNAccountKit.getCurrentAccount();
-          if (account && account.phoneNumber) {
-            this.setState({
-              phone: "0" + account.phoneNumber.number,
-              token: token.token
-            });
-          } else {
-            snackbar.show("Xác minh số điện thoại không thành công", "danger");
-          }
-        }
-      });
-    };
-    RNAccountKit.logout()
-      .then(() => {
-        verify();
-      })
-      .catch(x => {
-        verify();
-      });
-  }
 
   register() {
     if (!this.form.isValid()) {
-      this.child.unPress();
       return;
     }
     Keyboard.dismiss();
-
-    this.child.unPress();
     this.props.navigation.navigate("enterPassword", {
       user: {
         phone: this.state.phone,
@@ -141,23 +114,19 @@ class RegisterScreen extends Component {
         <ActivityPanel
           style={{ flex: 1 }}
           title="Đăng ký"
-          touchToDismiss={true}
           showFullScreen={true}
         >
           <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
-            <View
-              style={{
-                marginTop: 60,
-                justifyContent: "center",
-                alignItems: "center"
-              }}
-            >
-              <ScaleImage source={require("@images/logo.png")} width={120} />
-            </View>
             <KeyboardAvoidingView behavior="padding" style={styles.form}>
-              <View style={{ flex: 1 }}>
+              <View style={{ flex: 1, padding: 20 }}>
                 <Form ref={ref => (this.form = ref)}>
                   <TextField
+                    getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
+                      placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Họ tên"}
+                      onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
+                    onChangeText={s => {
+                      this.setState({ fullname: s });
+                    }}
                     errorStyle={styles.errorStyle}
                     validate={{
                       rules: {
@@ -169,174 +138,125 @@ class RegisterScreen extends Component {
                         maxlength: "Không được nhập quá 255 kí tự"
                       }
                     }}
-                    inputStyle={styles.input}
-                    onChangeText={s => {
-                      this.setState({ fullname: s });
-                    }}
-                    placeholder={constants.fullname}
-                    returnKeyType={"next"}
+
+                    placeholder={constants.input_password}
                     autoCapitalize={"none"}
-                    autoCorrect={false}
                   />
 
-                  <View
+                  <Field
                     style={{
-                      paddingLeft: 30,
-                      width: DEVICE_WIDTH - 40,
-                      marginTop: 10
+                      flexDirection: 'row',
+                      alignItems: "center",
+                      marginTop: 35, position: 'relative'
                     }}
                   >
-                    <Text>Giới tính</Text>
+                    <TextField
+                      value={this.state.date || ""}
+                      onPress={() => {
+                        this.setState({ toggelDateTimePickerVisible: true });
+                      }}
+                      dateFormat={"dd/MM/yyyy"}
+                      splitDate={"/"}
+                      editable={false}
+                      errorStyle={styles.errorStyle}
+                      validate={{
+                        rules: {
+                          date: true,
+                          max: maxDate,
+                          min: minDate
+                        },
+                        messages: {
+                          date: "Nhập đúng định dạng ngày",
+                          max: "Không cho phép chọn dưới 15 tuổi",
+                          min: "Không cho phép chon trên 150 tuổi"
+                        }
+                      }}
+                      inputStyle={{
+                        backgroundColor: "#FFF",
+                        height: 42,
+                        color: "#006ac6",
+                        borderBottomWidth: 2,
+                        borderBottomColor: "#02C39A",
+
+                        color: "#53657B",
+                        fontWeight: "600",
+                        fontSize: 20
+                      }}
+                      onChangeText={s => {
+                        this.setState({ date: s });
+                      }}
+                      placeholder={constants.dob}
+                      returnKeyType={"next"}
+                      autoCapitalize={"none"}
+                      autoCorrect={false}
+                      style={{
+                        flex: 1
+                      }}
+                    />
+                    <ScaleImage source={require("@images/new/calendar.png")} width={20} style={{ position: 'absolute', right: 0, top: 10 }} />
+                  </Field>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: "center",
+                      marginTop: 25
+                    }}
+                  >
+                    <Text style={[styles.label]}>Giới tính</Text>
                     <View style={{ flexDirection: "row" }}>
                       <TouchableOpacity
                         onPress={() => {
-                          this.setState({ gender: 1 });
+                          this.setState({ gender: 1, changed: true });
                         }}
                         style={{ padding: 10, flexDirection: "row" }}
                       >
-                        {this.state.gender == 1 ? (
-                          <ScaleImage
-                            source={require("@images/ic_radio1.png")}
-                            width={20}
-                          />
-                        ) : (
-                            <ScaleImage
-                              source={require("@images/ic_radio0.png")}
-                              width={20}
-                            />
-                          )}
+                        <View style={{ width: 19, height: 19, borderWidth: 2, borderColor: '#02C39A', borderRadius: 10, alignItems: 'center', justifyContent: 'center' }}>
+                          {
+                            this.state.gender == 1 && <View style={{ width: 12, height: 12, backgroundColor: '#02C39A', borderRadius: 6 }}></View>
+                          }
+                        </View>
                         <Text style={{ marginLeft: 5 }}>Nam</Text>
                       </TouchableOpacity>
                       <TouchableOpacity
                         onPress={() => {
-                          this.setState({ gender: 0 });
+                          this.setState({ gender: 0, changed: true });
                         }}
                         style={{ padding: 10, flexDirection: "row" }}
                       >
-                        {this.state.gender == 0 ? (
-                          <ScaleImage
-                            source={require("@images/ic_radio1.png")}
-                            width={20}
-                          />
-                        ) : (
-                            <ScaleImage
-                              source={require("@images/ic_radio0.png")}
-                              width={20}
-                            />
-                          )}
+                        <View style={{ width: 19, height: 19, borderWidth: 2, borderColor: '#02C39A', borderRadius: 10, alignItems: 'center', justifyContent: 'center' }}>
+                          {
+                            this.state.gender == 0 && <View style={{ width: 12, height: 12, backgroundColor: '#02C39A', borderRadius: 6 }}></View>
+                          }
+                        </View>
                         <Text style={{ marginLeft: 5 }}>Nữ</Text>
                       </TouchableOpacity>
                     </View>
                   </View>
-                  <TextField
-                    value={this.state.date || ""}
-                    onPress={() => {
-                      if (this.dob) this.dob.showDatePicker();
-                    }}
-                    dateFormat={"dd/MM/yyyy"}
-                    splitDate={"/"}
-                    editable={false}
-                    errorStyle={styles.errorStyle}
-                    validate={{
-                      rules: {
-                        date: true,
-                        max: maxDate,
-                        min: minDate
-                      },
-                      messages: {
-                        date: "Nhập đúng định dạng ngày",
-                        max: "Không cho phép chọn dưới 15 tuổi",
-                        min: "Không cho phép chon trên 150 tuổi"
-                      }
-                    }}
-                    inputStyle={styles.input}
-                    onChangeText={s => {
-                      this.setState({ date: s });
-                    }}
-                    placeholder={constants.dob}
-                    returnKeyType={"next"}
-                    autoCapitalize={"none"}
-                    autoCorrect={false}
-                  />
 
-                  <View style={{ display: "none" }}>
-                    <DatePicker
-                      ref={ref => (this.dob = ref)}
-                      defaultDate={new Date()}
-                      minimumDate={minDate}
-                      maximumDate={new Date()}
-                      locale={"en"}
-                      timeZoneOffsetInMinutes={undefined}
-                      modalTransparent={false}
-                      animationType={"fade"}
-                      androidMode={"default"}
-                      placeHolderText="Select date"
-                      textStyle={{ color: "green" }}
-                      placeHolderTextStyle={{ color: "#d3d3d3" }}
-                      onDateChange={this.setDate.bind(this)}
-                      disabled={false}
-                    />
-                  </View>
-                  {/* <TouchableOpacity onPress={this.changeEmail.bind(this)}  >
-									<UserInput
-										editable={false}
-										value={this.state.email}
-										placeholder={constants.email}
-										autoCapitalize={'none'}
-										returnKeyType={'next'}
-										autoCorrect={false}
-										style={{ marginTop: 12 }}
-									/>
-								</TouchableOpacity> */}
-                  {/* <TouchableOpacity onPress={this.changePhone.bind(this)} >
-									<UserInput
-										value={this.state.phone}
-										placeholder={constants.phone}
-										autoCapitalize={'none'}
-										returnKeyType={'next'}
-										editable={false}
-										autoCorrect={false}
-										style={{ marginTop: 12 }}
-									/>
-								</TouchableOpacity> */}
                 </Form>
               </View>
-
-              <ButtonSubmit
-                onRef={ref => (this.child = ref)}
-                click={() => {
-                  this.register();
-                }}
-                text={"Tiếp tục"}
-              />
-              <View style={{ width: DEVICE_WIDTH, maxWidth: 300 }}>
-                <TouchableOpacity
-                  onPress={() => {
-                    this.props.navigation.replace("login", {
-                      nextScreen: this.nextScreen
-                    });
-                  }}
-                  style={{ alignItems: "flex-end" }}
-                >
-                  <Text
-                    style={{
-                      marginTop: 15,
-                      color: "rgb(155,155,155)",
-                      lineHeight: 20,
-                      fontSize: 16
-                    }}
-                  >
-                    Nếu bạn đã có tài khoản hãy đăng nhập ngay{" "}
-                    <Text
-                      style={{ fontWeight: "bold", color: "rgb(0,151,124)" }}
-                    >
-                      tại đây
-                    </Text>
-                  </Text>
-                </TouchableOpacity>
-              </View>
+              <TouchableOpacity style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center' }} onPress={this.register.bind(this)}>
+                <Text style={{ color: '#FFF', fontSize: 20, textTransform: 'uppercase' }}>{"TIẾP TỤC"}</Text>
+              </TouchableOpacity>
             </KeyboardAvoidingView>
           </ScrollView>
+          <DateTimePicker
+            isVisible={this.state.toggelDateTimePickerVisible}
+            onConfirm={newDate => {
+              this.setState({ dob: newDate, date: newDate.format("dd/MM/yyyy"), toggelDateTimePickerVisible: false }, () => {
+                this.form.isValid();
+              });
+            }}
+            onCancel={() => {
+              this.setState({ toggelDateTimePickerVisible: false })
+            }}
+            date={new Date()}
+            minimumDate={minDate}
+            maximumDate={new Date()}
+            cancelTextIOS={"Hủy bỏ"}
+            confirmTextIOS={"Xác nhận"}
+            date={this.state.dob || new Date()}
+          />
         </ActivityPanel>
       )
     );
@@ -347,23 +267,8 @@ const DEVICE_HEIGHT = Dimensions.get("window").height;
 
 const styles = StyleSheet.create({
   form: {
-    marginTop: 30,
-    alignItems: "center"
-  },
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  text: {
-    backgroundColor: "transparent"
-  },
-  signup_section: {
-    marginTop: 30,
-    flex: 1,
-    width: DEVICE_WIDTH,
-    flexDirection: "row",
-    justifyContent: "space-around"
+    marginTop: 80,
+    borderRadius: 10
   },
   btnEye: {
     position: "absolute",
@@ -374,19 +279,6 @@ const styles = StyleSheet.create({
     width: 25,
     height: 25,
     tintColor: "rgba(0,0,0,0.2)"
-  },
-  picture: {
-    position: "absolute",
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    justifyContent: "center",
-    alignItems: "center",
-    flex: 1,
-    width: null,
-    height: null,
-    resizeMode: "cover"
   },
   input: {
     maxWidth: 300,
@@ -403,8 +295,16 @@ const styles = StyleSheet.create({
   },
   errorStyle: {
     color: "red",
-    marginLeft: 20
-  }
+    marginTop: 10
+  },
+  textInputStyle: {
+    color: "#53657B",
+    fontWeight: "600",
+    height: 45,
+    marginLeft: 0,
+    fontSize: 20
+  },
+  labelStyle: { paddingTop: 10, color: '#53657B', fontSize: 16 }
 });
 function mapStateToProps(state) {
   return {

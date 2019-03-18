@@ -28,6 +28,7 @@ const durationDefault = 500;
 import Form from "mainam-react-native-form-validate/Form";
 import Field from "mainam-react-native-form-validate/Field";
 import TextField from "mainam-react-native-form-validate/TextField";
+import FloatingLabel from 'mainam-react-native-floating-label';
 class LoginScreen extends Component {
 	constructor(props) {
 		super(props);
@@ -135,47 +136,52 @@ class LoginScreen extends Component {
 		if (!this.form.isValid()) {
 			return;
 		}
-		userProvider.login(this.state.email.trim(), this.state.password, (s, e) => {
-			if (s) {
-				switch (s.code) {
-					case 0:
-						var user = s.data.user;
-						// if (user.role == 4) {
-						// 	snackbar.show(constants.msg.user.please_login_on_web_to_management);
-						// 	return;
-						// }
-						snackbar.show(constants.msg.user.login_success, "success");
-						this.props.dispatch(redux.userLogin(user));
-						if (this.nextScreen) {
-							this.props.navigation.replace(
-								this.nextScreen.screen,
-								this.nextScreen.param
+		this.setState({ isLoading: true }, () => {
+			userProvider.login(this.state.email.trim(), this.state.password, (s, e) => {
+				this.setState({ isLoading: false });
+				if (s) {
+					switch (s.code) {
+						case 0:
+							var user = s.data.user;
+							// if (user.role == 4) {
+							// 	snackbar.show(constants.msg.user.please_login_on_web_to_management);
+							// 	return;
+							// }
+							snackbar.show(constants.msg.user.login_success, "success");
+							this.props.dispatch(redux.userLogin(user));
+							if (this.nextScreen) {
+								this.props.navigation.replace(
+									this.nextScreen.screen,
+									this.nextScreen.param
+								);
+							} else {
+								this.props.navigation.navigate("home", { showDraw: false });
+							}
+							return;
+						case 4:
+							snackbar.show(constants.msg.user.this_account_not_active, "danger");
+							return;
+						case 3:
+							snackbar.show(
+								constants.msg.user.username_or_password_incorrect,
+								"danger"
 							);
-						} else {
-							this.props.navigation.navigate("home", { showDraw: false });
-						}
-						return;
-					case 4:
-						snackbar.show(constants.msg.user.this_account_not_active, "danger");
-						return;
-					case 3:
-						snackbar.show(
-							constants.msg.user.username_or_password_incorrect,
-							"danger"
-						);
-						return;
-					case 2:
-					case 1:
-						snackbar.show(constants.msg.user.account_blocked, "danger");
-						return;
+							return;
+						case 2:
+						case 1:
+							snackbar.show(constants.msg.user.account_blocked, "danger");
+							return;
+					}
 				}
-			}
-			if (e) {
-				console.log(e);
-			}
+				if (e) {
+					console.log(e);
+					this.setState({ isLoading: false });
+				}
 
-			snackbar.show(constants.msg.error_occur);
-		});
+				snackbar.show(constants.msg.error_occur);
+			});
+		})
+
 	}
 
 	render() {
@@ -186,6 +192,7 @@ class LoginScreen extends Component {
 				image={require("@images/new/isofhcare.png")}
 				imageStyle={{ marginRight: 50 }}
 				showFullScreen={true}
+				isLoading={this.state.isLoading}
 			>
 				<ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
 					<KeyboardAvoidingView behavior="padding">
@@ -195,14 +202,9 @@ class LoginScreen extends Component {
 									<Form ref={ref => (this.form = ref)}>
 										<Field clearWhenFocus={true}>
 											<TextField
-												getComponent={(value, onChangeText, onFocus, onBlur, isError) => <Item floatingLabel>
-													<Label style={styles.labelStyle}>{constants.phone}</Label>
-													<Input style={styles.textInputStyle}
-														value={value} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />
-												</Item>
-												}
-												onChangeText={s => this.setState({ email: s })
-												}
+												getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
+													placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.phone} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
+												onChangeText={s => this.setState({ email: s })}
 												errorStyle={styles.errorStyle}
 												validate={{
 													rules: {
@@ -210,37 +212,29 @@ class LoginScreen extends Component {
 														phone: true
 													},
 													messages: {
-														required: "Số điện thoại bắt buộc phải nhập",
+														required: "Số điện thoại không được bỏ trống!",
 														phone: "Nhập SĐT không hợp lệ"
 													}
 												}}
-												secureTextEntry={this.state.showPass}
-												inputStyle={styles.input}
-												style={{ marginTop: 10 }}
+
 												placeholder={constants.input_password}
 												autoCapitalize={"none"}
 											/>
 											<TextField
-												getComponent={(value, onChangeText, onFocus, onBlur, isError) => <Item floatingLabel>
-													<Label style={styles.labelStyle}>{constants.password}</Label>
-													<Input style={styles.textInputStyle}
-														secureTextEntry={true}
-														value={value} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />
-												</Item>
-												}
+												getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
+													placeholderStyle={{ fontSize: 16, fontWeight: '200' }}
+													value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.password} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} secureTextEntry={true} />}
 												onChangeText={s => this.setState({ password: s })}
 												errorStyle={styles.errorStyle}
 												validate={{
 													rules: {
-														required: true
+														required: true,
 													},
 													messages: {
-														required: "Mật khẩu bắt buộc phải nhập"
+														required: "Mật khẩu không được bỏ trống!"
 													}
 												}}
-												secureTextEntry={this.state.showPass}
 												inputStyle={styles.input}
-												style={{ marginTop: 10 }}
 												placeholder={constants.input_password}
 												autoCapitalize={"none"}
 											/>
@@ -330,10 +324,11 @@ const styles = StyleSheet.create({
 	textInputStyle: {
 		color: "#53657B",
 		fontWeight: "600",
-		height: 60,
-		marginLeft: 0
+		height: 45,
+		marginLeft: 0,
+		fontSize: 20
 	},
-	labelStyle: { paddingTop: 10, color: '#53657B' }
+	labelStyle: { paddingTop: 10, color: '#53657B', fontSize: 16 }
 });
 function mapStateToProps(state) {
 	return {

@@ -80,7 +80,7 @@ class DrawerContent extends Component {
               <TouchableOpacity
                 style={styles.menu_item}
                 onPress={() => {
-                  this.props.navigation.navigate("profile");
+                  // this.props.navigation.navigate("profile");
                 }}
               >
                 <ImageLoad

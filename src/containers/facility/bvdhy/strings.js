@@ -163,7 +163,7 @@ module.exports = {
         username_or_email_existed: "Email hoặc tên đăng nhập đã tồn tại. Vui lòng thử lại",
         username_or_email_empty: "Tên đăng nhập hoặc email trống",
         account_blocked: "Tài khoản đã bị khóa. Vui lòng liên hệ với Admin của Isofhcare",
-        username_or_password_incorrect: "Email/tên đăng nhập hoặc mặt khẩu không đúng. Vui lòng thử lại!",
+        username_or_password_incorrect: "Số điện thoại hoặc mặt khẩu không đúng!",
         send_mail_recovery_success: "Mật khẩu mới của bạn đã được gửi về email bạn đăng ký. Vui lòng kiểm tra lại",
         send_mail_recovery_failed: "Không tìm thấy thông tin tài khoản với email bạn nhập",
         canot_get_user_info_in_account_facebook: "Không tìm thấy thông tin trong tài khoản facebook của bạn",
