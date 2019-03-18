@@ -1,25 +1,18 @@
 import React, { Component, PropTypes } from "react";
-import Dimensions from "Dimensions";
 import {
   TouchableOpacity,
   ScrollView,
   View,
   Text,
   StyleSheet,
-  TextInput,
   Platform,
-  Switch,
   Keyboard,
-  Image
 } from "react-native";
 import { Card } from 'native-base';
 import ActivityPanel from "@components/ActivityPanel";
 import { connect } from "react-redux";
-import ScaleImage from "mainam-react-native-scaleimage";
 import ImagePicker from "mainam-react-native-select-image";
 import imageProvider from "@data-access/image-provider";
-import snackbar from "@utils/snackbar-utils";
-import questionProvider from "@data-access/question-provider";
 import constants from "@resources/strings";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import Form from "mainam-react-native-form-validate/Form";
@@ -30,9 +23,6 @@ const padding = Platform.select({
   ios: 7,
   android: 2
 });
-
-const DEVICE_WIDTH = Dimensions.get("window").width;
-const DEVICE_HEIGHT = Dimensions.get("window").height;
 class CreateQuestionStep1Screen extends Component {
   constructor(props) {
     super(props);
@@ -134,7 +124,6 @@ class CreateQuestionStep1Screen extends Component {
         style={{ flex: 1 }}
         title={"Nội dung"}
         showFullScreen={true}
-        touchToDismiss={true}
         isLoading={this.state.isLoading}
         actionbarStyle={{
           backgroundColor: '#02C39A'

@@ -17,6 +17,7 @@ import connectionUtils from '@utils/connection-utils';
 import Form from 'mainam-react-native-form-validate/Form';
 import TextField from 'mainam-react-native-form-validate/TextField';
 import dataCacheProvider from '@data-access/datacache-provider';
+import { Card } from 'native-base';
 const padding = Platform.select({
     ios: 7,
     android: 2
@@ -171,163 +172,138 @@ class CreateQuestionStep2Screen extends Component {
             this.setState({ disease: this.state.disease | value })
         }
     }
+    renderItemDisease(value, text, left) {
+        return <TouchableOpacity onPress={this.selectDisease.bind(this, value)} style={{ flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderColor: 'rgba(151,151,151,0.36)', padding: 10, marginTop: 6, marginRight: left ? 5 : 0, marginLeft: !left ? 5 : 0, borderRadius: 6 }}>
+            <Text style={{ flex: 1 }}>{text}</Text>
+            <View style={{ flexDirection: 'row' }}>
+                {
+                    (this.state.disease & value) == value ?
+                        <ScaleImage source={require("@images/ic_check_tick.png")} width={20} /> :
+                        <ScaleImage source={require("@images/ic_check.png")} width={20} />
+                }
+            </View>
+        </TouchableOpacity>
+    }
+
     render() {
         return (
-            <ActivityPanel style={{ flex: 1 }} title={"Thông tin bổ sung"} showFullScreen={true} touchToDismiss={true} isLoading={this.state.isLoading}>
-                <ScrollView style={{ flex: 1 }}
-                    keyboardShouldPersistTaps="always">
-                    <View style={{ padding: 10 }}>
-                        <TouchableOpacity onPress={() => { this.toggleModalSpecialize() }}>
-                            <View style={{ position: 'relative', margin: 20, marginTop: 0, flexDirection: 'row', alignItems: 'center' }}>
-                                <Text style={{ borderColor: "#0c8c8b", borderWidth: 1, padding: 10, flex: 1 }}>
+            <ActivityPanel
+                style={{ flex: 1 }}
+                title={"Thông tin bổ sung"}
+                showFullScreen={true}
+                isLoading={this.state.isLoading}
+                actionbarStyle={{
+                    backgroundColor: '#02C39A'
+                }}
+            >
+                <ScrollView style={{ flex: 1, position: 'relative' }} keyboardShouldPersistTaps="always">
+                    <View style={{ backgroundColor: '#02C39A', height: 130, position: 'absolute', top: 0, left: 0, right: 0 }}></View>
+                    <View style={{ margin: 22, marginTop: 10 }}>
+                        <Card style={{ padding: 22, align: 'center' }}>
+                            <View style={{ backgroundColor: '#02C39A', width: 20, height: 4, borderRadius: 2, alignSelf: 'center' }}></View>
+                            <Text style={[styles.label, { marginTop: 15 }]}>Chuyên khoa đang hỏi</Text>
+                            <TouchableOpacity onPress={() => { this.toggleModalSpecialize() }} style={[styles.textinput, { position: 'relative', flexDirection: 'row', alignItems: 'center' }]}>
+                                <Text style={{ padding: 10, flex: 1, color: "#4A4A4A", fontWeight: '600' }}>
                                     {
                                         this.state.specialist_item ? this.state.specialist_item.specialist.name : "Chọn chuyên khoa"
                                     }
                                 </Text>
-                                <Image source={require("@images/icdropdown.png")} style={{ width: 14, height: 10, position: 'absolute', right: 10 }} />
-                            </View>
-                        </TouchableOpacity>
-                        <Text style={{ fontWeight: 'bold' }}>Tiền sử bệnh</Text>
-                        <View style={{ flexDirection: 'row' }}>
-                            <View style={{ flex: 1 }}>
-                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <Text style={{ flex: 1 }}>Tim mạch</Text>
-                                    <TouchableOpacity onPress={this.selectDisease.bind(this, 1)} style={{ padding: 10, flexDirection: 'row' }}>
-                                        {
-                                            (this.state.disease & 1) == 1 ?
-                                                <ScaleImage source={require("@images/ic_check_tick.png")} width={20} /> :
-                                                <ScaleImage source={require("@images/ic_check.png")} width={20} />
-                                        }
-                                    </TouchableOpacity>
-
-                                </View>
-                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <Text style={{ flex: 1 }}>huyết áp</Text>
-                                    <TouchableOpacity onPress={this.selectDisease.bind(this, 4)} style={{ padding: 10, flexDirection: 'row' }}>
-                                        {
-                                            (this.state.disease & 4) == 4 ?
-                                                <ScaleImage source={require("@images/ic_check_tick.png")} width={20} /> :
-                                                <ScaleImage source={require("@images/ic_check.png")} width={20} />
-                                        }
-                                    </TouchableOpacity>
-                                </View>
-                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <Text style={{ flex: 1 }}>Hô hấp</Text>
-                                    <TouchableOpacity onPress={this.selectDisease.bind(this, 16)} style={{ padding: 10, flexDirection: 'row' }}>
-                                        {
-                                            (this.state.disease & 16) == 16 ?
-                                                <ScaleImage source={require("@images/ic_check_tick.png")} width={20} /> :
-                                                <ScaleImage source={require("@images/ic_check.png")} width={20} />
-                                        }
-                                    </TouchableOpacity>
-                                </View>
-                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <Text style={{ flex: 1 }}>Xương khớp</Text>
-                                    <TouchableOpacity onPress={this.selectDisease.bind(this, 64)} style={{ padding: 10, flexDirection: 'row' }}>
-                                        {
-                                            (this.state.disease & 64) == 64 ?
-                                                <ScaleImage source={require("@images/ic_check_tick.png")} width={20} /> :
-                                                <ScaleImage source={require("@images/ic_check.png")} width={20} />
-                                        }
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                            <View style={{ flex: 1 }}>
-                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <Text style={{ flex: 1 }}>Mỡ máu</Text>
-                                    <TouchableOpacity onPress={this.selectDisease.bind(this, 2)} style={{ padding: 10, flexDirection: 'row' }}>
-                                        {
-                                            (this.state.disease & 2) == 2 ?
-                                                <ScaleImage source={require("@images/ic_check_tick.png")} width={20} /> :
-                                                <ScaleImage source={require("@images/ic_check.png")} width={20} />
-                                        }
-                                    </TouchableOpacity>
-                                </View>
-                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <Text style={{ flex: 1 }}>HIV</Text>
-                                    <TouchableOpacity onPress={this.selectDisease.bind(this, 8)} style={{ padding: 10, flexDirection: 'row' }}>
-                                        {
-                                            (this.state.disease & 8) == 8 ?
-                                                <ScaleImage source={require("@images/ic_check_tick.png")} width={20} /> :
-                                                <ScaleImage source={require("@images/ic_check.png")} width={20} />
-                                        }
-                                    </TouchableOpacity>
-                                </View>
-                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <Text style={{ flex: 1 }}>Dạ dày</Text>
-                                    <TouchableOpacity onPress={this.selectDisease.bind(this, 32)} style={{ padding: 10, flexDirection: 'row' }}>
-                                        {
-                                            (this.state.disease & 32) == 32 ?
-                                                <ScaleImage source={require("@images/ic_check_tick.png")} width={20} /> :
-                                                <ScaleImage source={require("@images/ic_check.png")} width={20} />
-                                        }
-                                    </TouchableOpacity>
-                                </View>
-                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <Text style={{ flex: 1 }}>Thiếu chất</Text>
-                                    <TouchableOpacity onPress={this.selectDisease.bind(this, 128)} style={{ padding: 10, flexDirection: 'row' }}>
-                                        {
-                                            (this.state.disease & 128) == 128 ?
-                                                <ScaleImage source={require("@images/ic_check_tick.png")} width={20} /> :
-                                                <ScaleImage source={require("@images/ic_check.png")} width={20} />
-                                        }
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                        </View>
-                        <Form ref={ref => this.form = ref}>
-
-                            <Text style={{ marginTop: 10, fontWeight: 'bold' }}>Thông tin khác</Text>
-                            <TextField validate={
-                                {
-                                    rules: {
-                                        maxlength: 255
-                                    },
-                                    messages: {
-                                        maxlength: "Không cho phép nhập quá 255 kí tự"
-                                    }
-                                }
-                            } inputStyle={[styles.textinput, { marginTop: 10, height: 50 }]} onChangeText={(s) => { this.setState({ otherContent: s }) }} autoCapitalize={'none'}
-                                returnKeyType={'next'}
-                                underlineColorAndroid='transparent'
-                                autoFocus={true}
-                                multiline={true}
-                                autoCorrect={false} />
-                        </Form>
-                        <Text style={{ fontWeight: 'bold', marginTop: 20 }}>Hình ảnh <Text style={{ fontStyle: 'italic', fontWeight: 'normal' }}>(Tối đa 5 ảnh)</Text></Text>
-                        <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 10 }}>
-                            {
-                                this.state.imageUris.map((item, index) => <TouchableOpacity key={index} style={{ margin: 2, width: 100, height: 100, borderColor: '#00000020', borderWidth: 1 }}>
-                                    <Image source={{ uri: item.uri }} resizeMode="cover" style={{ width: 100, height: 100, backgroundColor: '#000' }} />
+                                <ScaleImage source={require("@images/icdropdown.png")} height={8} style={{ marginRight: 5 }} />
+                            </TouchableOpacity>
+                            <Text style={[styles.label, { marginTop: 20 }]}>Tiền sử bệnh</Text>
+                            <View style={{ flexDirection: 'row' }}>
+                                <View style={{ flex: 1 }}>
                                     {
-                                        item.error ?
-                                            <View style={{ position: 'absolute', left: 30, top: 30 }} >
-                                                <ScaleImage source={require("@images/ic_warning.png")} width={40} />
-                                            </View> :
-                                            item.loading ?
-                                                < View style={{ position: 'absolute', left: 30, top: 30, backgroundColor: '#FFF', borderRadius: 20 }} >
-                                                    <ScaleImage source={require("@images/loading.gif")} width={40} />
-                                                </View>
-                                                : null
+                                        this.renderItemDisease(1, "Tim mạch", true)
                                     }
-                                    <TouchableOpacity onPress={this.removeImage.bind(this, index)} style={{ position: 'absolute', top: 0, right: 0, backgroundColor: '#FFFFFF70', padding: 1, borderRadius: 5, margin: 2 }} >
-                                        <ScaleImage source={require("@images/icclose.png")} width={12} />
-                                    </TouchableOpacity>
-                                </TouchableOpacity>)
-                            }
-                            {
-                                !this.state.imageUris || this.state.imageUris.length < 5 ?
-                                    <TouchableOpacity onPress={this.selectImage.bind(this)} style={{ margin: 2, width: 100, height: 100, borderColor: '#00000020', borderWidth: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                        <ScaleImage width={40} source={require("@images/ic_add_image.png")} />
-                                        <Text>Thêm ảnh</Text>
-                                    </TouchableOpacity> : null
-                            }
-                        </View>
+                                    {
+                                        this.renderItemDisease(4, "Huyết áp", true)
+                                    }
+                                    {
+                                        this.renderItemDisease(16, "Hô hấp", true)
+                                    }
+                                    {
+                                        this.renderItemDisease(64, "Xương khớp", true)
+                                    }
+                                </View>
+                                <View style={{ flex: 1 }}>
+                                    {
+                                        this.renderItemDisease(2, "Mỡ máu", false)
+                                    }
+                                    {
+                                        this.renderItemDisease(8, "HIV", false)
+                                    }
+                                    {
+                                        this.renderItemDisease(32, "Dạ dày", false)
+                                    }
+                                    {
+                                        this.renderItemDisease(128, "Thiếu chất", false)
+                                    }
+                                </View>
+                            </View>
+                            <Form ref={ref => this.form = ref}>
+
+                                <Text style={[styles.label, { marginTop: 20 }]}>Thông tin khác</Text>
+                                <TextField validate={
+                                    {
+                                        rules: {
+                                            maxlength: 255
+                                        },
+                                        messages: {
+                                            maxlength: "Không cho phép nhập quá 255 kí tự"
+                                        }
+                                    }
+                                } inputStyle={[styles.textinput, { marginTop: 10, height: 90, textAlignVertical: 'top', paddingTop: 13, paddingLeft: 10, paddingBottom: 13, paddingRight: 10 }]} onChangeText={(s) => { this.setState({ otherContent: s }) }} autoCapitalize={'none'}
+                                    returnKeyType={'next'}
+                                    underlineColorAndroid='transparent'
+                                    autoFocus={true}
+                                    multiline={true}
+                                    autoCorrect={false} />
+                            </Form>
+                            <Text style={[styles.label, { marginTop: 20 }]}>Tải ảnh lên <Text style={{ fontStyle: 'italic', fontWeight: 'normal' }}>(Tối đa 5 ảnh)</Text></Text>
+                            <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 10 }}>
+                                {
+                                    this.state.imageUris.map((item, index) => <TouchableOpacity key={index} style={{ margin: 2, width: 100, height: 100, borderColor: '#00000020', borderWidth: 1 }}>
+                                        <Image source={{ uri: item.uri }} resizeMode="cover" style={{ width: 100, height: 100, backgroundColor: '#000' }} />
+                                        {
+                                            item.error ?
+                                                <View style={{ position: 'absolute', left: 30, top: 30 }} >
+                                                    <ScaleImage source={require("@images/ic_warning.png")} width={40} />
+                                                </View> :
+                                                item.loading ?
+                                                    < View style={{ position: 'absolute', left: 30, top: 30, backgroundColor: '#FFF', borderRadius: 20 }} >
+                                                        <ScaleImage source={require("@images/loading.gif")} width={40} />
+                                                    </View>
+                                                    : null
+                                        }
+                                        <TouchableOpacity onPress={this.removeImage.bind(this, index)} style={{ position: 'absolute', top: 0, right: 0, backgroundColor: '#FFFFFF70', padding: 1, borderRadius: 5, margin: 2 }} >
+                                            <ScaleImage source={require("@images/icclose.png")} width={12} />
+                                        </TouchableOpacity>
+                                    </TouchableOpacity>)
+                                }
+                                {
+                                    !this.state.imageUris || this.state.imageUris.length < 5 ?
+                                        <TouchableOpacity onPress={this.selectImage.bind(this)} style={{ margin: 2, width: 100, height: 100, borderColor: '#00000020', borderWidth: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                            <ScaleImage width={40} source={require("@images/ic_add_image.png")} />
+                                            <Text>Thêm ảnh</Text>
+                                        </TouchableOpacity> : null
+                                }
+                            </View>
+                            <TouchableOpacity onPress={this.createQuestion.bind(this)} style={{
+                                width: 250,
+                                backgroundColor: "#58bc91",
+                                padding: 15,
+                                borderRadius: 6,
+                                alignSelf: "center",
+                                margin: 36
+                            }}>
+                                <Text
+                                    style={{ color: "#FFF", textAlign: "center", fontWeight: "bold", fontSize: 16 }}
+                                >Gửi câu hỏi</Text>
+                            </TouchableOpacity>
+                        </Card>
                     </View>
                 </ScrollView>
-                <TouchableOpacity onPress={this.createQuestion.bind(this)} style={{ width: 200, backgroundColor: '#58bc91', padding: 15, borderRadius: 25, alignSelf: 'center', margin: 10 }}>
-                    <Text style={{ color: '#FFF', textAlign: 'center', fontWeight: 'bold' }}>{this.state.post ? "Lưu" : "Gửi"}</Text>
-                </TouchableOpacity>
                 <ImagePicker ref={ref => this.imagePicker = ref} />
                 {
                     Platform.OS == 'ios' && <KeyboardSpacer />
@@ -372,16 +348,35 @@ class CreateQuestionStep2Screen extends Component {
                         />
                     </View>
                 </Modal>
-            </ActivityPanel>
+            </ActivityPanel >
         );
 
     }
 }
 const styles = StyleSheet.create({
+    label: {
+        color: '#00000048', marginLeft: 9
+    },
     field: {
-        flexDirection: 'row', alignItems: 'center', marginTop: 17, borderColor: '#cacaca', borderWidth: 1, padding: 7
-    }, textinput:
-        { borderColor: '#cacaca', borderWidth: 1, paddingLeft: 7, padding: padding }
+        flexDirection: "row",
+        alignItems: "center",
+        marginTop: 17,
+        borderColor: "#cacaca",
+        borderWidth: 1,
+        padding: 7
+    },
+    textinput: {
+        borderColor: "#cacaca",
+        borderWidth: 1,
+        paddingLeft: 7,
+        padding: padding,
+        borderRadius: 6
+    },
+    errorStyle: {
+        color: 'red',
+        marginTop: 10,
+        marginLeft: 6
+    }
 })
 function mapStateToProps(state) {
     return {
