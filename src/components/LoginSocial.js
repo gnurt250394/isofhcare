@@ -142,18 +142,16 @@ class LoginSocial extends Component {
     }
     render() {
         return (
-            <View>
-                <Text style={{ textAlign: 'center', marginTop: 20, color: "#3160ac", opacity: 0.6 }}>Đăng nhập với</Text>
-                <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                    <TouchableOpacity onPress={() => this.handleSigninGoogle()}>
-                        <ScaleImage source={require("@images/ic_google.png")} width={40} style={{ padding: 10, margin: 10 }} />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={this.handleSigninFacebook.bind(this)}>
-                        <ScaleImage source={require("@images/ic_fb.png")} width={40} style={{ padding: 10, margin: 10 }} />
-                    </TouchableOpacity>
-                </View>
+            <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 10 }}>
+                <TouchableOpacity style={{ flexDirection: 'row', marginRight: 50 }} onPress={this.handleSigninFacebook.bind(this)}>
+                    <ScaleImage source={require("@images/new/facebook.png")} height={20} style={{ marginRight: 10 }} />
+                    <Text>Facebook</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center' }} onPress={this.handleSigninGoogle.bind(this)}>
+                    <ScaleImage source={require("@images/new/google.png")} height={20} style={{ marginRight: 10 }} />
+                    <Text>Google</Text>
+                </TouchableOpacity>
             </View>
-
         );
     }
 }

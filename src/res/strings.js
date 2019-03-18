@@ -12,6 +12,7 @@ module.exports = {
   input_username_or_email: "Nhập Email hoặc số điện thoại",
   input_phone: "Nhập số điện thoại",
   input_password: "Mật khẩu",
+  password: "Mật khẩu",
   forgot_password: "QUÊN MẬT KHẨU",
   ehealth: "Y bạ điện tử",
   booking: "Đặt lịch",

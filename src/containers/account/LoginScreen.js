@@ -13,7 +13,7 @@ import {
 	Easing,
 	Keyboard
 } from "react-native";
-import { Card } from 'native-base';
+import { Card, Item, Label, Input } from 'native-base';
 import Dimensions from "Dimensions";
 import { connect } from "react-redux";
 import eyeImg from "@images/eye_black.png";
@@ -133,11 +133,9 @@ class LoginScreen extends Component {
 	login() {
 		Keyboard.dismiss();
 		if (!this.form.isValid()) {
-			this.child.unPress();
 			return;
 		}
 		userProvider.login(this.state.email.trim(), this.state.password, (s, e) => {
-			this.child.unPress();
 			if (s) {
 				switch (s.code) {
 					case 0:
@@ -181,58 +179,55 @@ class LoginScreen extends Component {
 	}
 
 	render() {
-		const introButton = this.animatedValue1.interpolate({
-			inputRange: [0, 1],
-			outputRange: [150, 60]
-		});
-		const introBottom = this.animatedValue2.interpolate({
-			inputRange: [0, 1],
-			outputRange: [150, 0]
-		});
-		const marginLeft = this.animatedValue.interpolate({
-			inputRange: [0, 1],
-			outputRange: [-800, 0]
-		});
 		return (
 			<ActivityPanel
 				style={{ flex: 1 }}
-				title="Đăng nhập"
 				touchToDismiss={true}
-				// hideActionbar={true}
-				// hideStatusbar={true}
+				image={require("@images/new/isofhcare.png")}
+				imageStyle={{ marginRight: 50 }}
 				showFullScreen={true}
 			>
 				<ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
-					<Animated.View style={{ top: introButton }}>
-						<View style={{ justifyContent: "center", alignItems: "center" }}>
-							<ScaleImage source={require("@images/logo.png")} width={120} />
-						</View>
-					</Animated.View>
-
-					<KeyboardAvoidingView behavior="padding" style={styles.form}>
-						<Animated.View style={{ marginLeft, flex: 1 }}>
-							<Card>
-								<Form ref={ref => (this.form = ref)}>
-									<Field clearWhenFocus={true}>
-										<TextField
-											onChangeText={s => this.setState({ email: s })}
-											errorStyle={styles.errorStyle}
-											validate={{
-												rules: {
-													required: true,
-													phone: true
-												},
-												messages: {
-													required: "Vui lòng nhập số điện thoại",
-													phone: "Nhập SĐT không hợp lệ"
-												}
-											}}
-											inputStyle={styles.input}
-											placeholder={constants.input_phone}
-											autoCapitalize={"none"}
-										/>
-										<Field style={{ width: "100%" }}>
+					<KeyboardAvoidingView behavior="padding">
+						<View style={{ flex: 1 }}>
+							<View style={{ margin: 22 }}>
+								<Card style={{ padding: 22, paddingTop: 10, align: 'center', borderRadius: 5, marginTop: 60 }}>
+									<Form ref={ref => (this.form = ref)}>
+										<Field clearWhenFocus={true}>
 											<TextField
+												getComponent={(value, onChangeText, onFocus, onBlur, isError) => <Item floatingLabel>
+													<Label style={styles.labelStyle}>{constants.phone}</Label>
+													<Input style={styles.textInputStyle}
+														value={value} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />
+												</Item>
+												}
+												onChangeText={s => this.setState({ email: s })
+												}
+												errorStyle={styles.errorStyle}
+												validate={{
+													rules: {
+														required: true,
+														phone: true
+													},
+													messages: {
+														required: "Số điện thoại bắt buộc phải nhập",
+														phone: "Nhập SĐT không hợp lệ"
+													}
+												}}
+												secureTextEntry={this.state.showPass}
+												inputStyle={styles.input}
+												style={{ marginTop: 10 }}
+												placeholder={constants.input_password}
+												autoCapitalize={"none"}
+											/>
+											<TextField
+												getComponent={(value, onChangeText, onFocus, onBlur, isError) => <Item floatingLabel>
+													<Label style={styles.labelStyle}>{constants.password}</Label>
+													<Input style={styles.textInputStyle}
+														secureTextEntry={true}
+														value={value} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />
+												</Item>
+												}
 												onChangeText={s => this.setState({ password: s })}
 												errorStyle={styles.errorStyle}
 												validate={{
@@ -240,91 +235,58 @@ class LoginScreen extends Component {
 														required: true
 													},
 													messages: {
-														required: "Mật khẩu bắt buộc phải nhập",
-														min: "Mật khẩu dài ít nhất 8 ký tự"
+														required: "Mật khẩu bắt buộc phải nhập"
 													}
 												}}
 												secureTextEntry={this.state.showPass}
-												// value={this.state.password}
 												inputStyle={styles.input}
 												style={{ marginTop: 10 }}
-												onChangeText={s => this.setState({ password: s })}
 												placeholder={constants.input_password}
 												autoCapitalize={"none"}
 											/>
-											<TouchableOpacity
-												activeOpacity={0.7}
-												style={styles.btnEye}
-												onPress={this.showPass}
-											>
-												<Image source={eyeImg} style={styles.iconEye} />
-											</TouchableOpacity>
 										</Field>
-									</Field>
-								</Form>
-								<View style={{ marginLeft: 20, width: 300, maxWidth: 300 }}>
-									<TouchableOpacity
-										onPress={() => {
-											this.props.navigation.replace("forgotPassword", {
-												nextScreen: this.nextScreen
-											});
-										}}
-										style={{ alignItems: "flex-end" }}
-									>
-										<Text
-											style={{
-												marginTop: 12,
-												color: "rgb(49,96,172)",
-												paddingRight: 10
-											}}
-										>
-											Quên mật khẩu
-                  </Text>
-									</TouchableOpacity>
-								</View>
-							</Card>
-							<View style={{ marginLeft: 20, width: 300, maxWidth: 300 }}>
-								<ButtonSubmit
-									style={{ width: "100%" }}
-									onRef={ref => (this.child = ref)}
-									click={() => {
-										this.login();
-									}}
-									text={constants.login}
-								/>
+										<View style={{ flexDirection: 'row', marginTop: 15 }}>
+											<TouchableOpacity
+												onPress={() => {
+													this.props.navigation.replace("forgotPassword", {
+														nextScreen: this.nextScreen
+													});
+												}}
+												style={{ alignItems: "flex-start", flex: 1 }}
+											>
+												<Text
+													style={{
+														color: '#028090',
+														paddingRight: 10,
+														fontSize: 16
+													}}>
+													Quên mật khẩu?
+													</Text>
+											</TouchableOpacity>
+											<TouchableOpacity
+												onPress={this.register.bind(this)}
+												style={{ alignItems: "center", justifyContent: 'flex-end', flex: 1, flexDirection: 'row' }}
+											>
+												<Text
+													style={{
+														color: "rgb(2,195,154)",
+														fontSize: 16,
+														fontWeight: 'bold',
+														marginRight: 5
+													}}
+												>Đăng ký</Text><ScaleImage source={require("@images/new/right-arrow.png")} height={10} />
+											</TouchableOpacity>
+										</View>
+									</Form>
+								</Card>
 							</View>
-							<View
-								style={{
-									width: 300,
-									maxWidth: 300,
-									paddingLeft: 20,
-									justifyContent: "center"
-								}}
-							>
-								<TouchableOpacity onPress={this.register.bind(this)}>
-									<Text
-										style={{
-											marginTop: 15,
-											color: "rgb(155,155,155)",
-											lineHeight: 20,
-											fontSize: 16
-										}}
-									>
-										Nếu bạn chưa có tài khoản hãy đăng ký ngay{" "}
-										<Text
-											style={{ fontWeight: "bold", color: "rgb(0,151,124)" }}
-										>
-											tại đây
-                    </Text>
-									</Text>
-								</TouchableOpacity>
-							</View>
-						</Animated.View>
+							<SocialNetwork />
+							<TouchableOpacity style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center' }} onPress={this.login.bind(this)}>
+								<Text style={{ color: '#FFF', fontSize: 20, textTransform: 'uppercase' }}>{"ĐĂNG NHẬP"}</Text>
+							</TouchableOpacity>
+						</View>
 					</KeyboardAvoidingView>
 
-					<Animated.View style={{ bottom: introBottom, flex: 1 }}>
-						<SocialNetwork />
-					</Animated.View>
 				</ScrollView>
 			</ActivityPanel>
 		);
@@ -336,7 +298,7 @@ const DEVICE_HEIGHT = Dimensions.get("window").height;
 const styles = StyleSheet.create({
 	form: {
 		marginTop: 80,
-		alignItems: "center"
+		borderRadius: 10
 	},
 	btnEye: {
 		position: "absolute",
@@ -363,8 +325,15 @@ const styles = StyleSheet.create({
 	},
 	errorStyle: {
 		color: "red",
-		marginLeft: 20
-	}
+		marginTop: 10
+	},
+	textInputStyle: {
+		color: "#53657B",
+		fontWeight: "600",
+		height: 60,
+		marginLeft: 0
+	},
+	labelStyle: { paddingTop: 10, color: '#53657B' }
 });
 function mapStateToProps(state) {
 	return {

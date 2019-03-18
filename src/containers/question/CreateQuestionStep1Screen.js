@@ -113,7 +113,7 @@ class CreateQuestionStep1Screen extends Component {
       post: {
         gender: this.state.gender,
         content: this.state.content,
-        age: this.state.age
+        age: this.state.age || 0
       }
     });
   }
