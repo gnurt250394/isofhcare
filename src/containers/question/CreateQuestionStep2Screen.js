@@ -34,9 +34,11 @@ class CreateQuestionStep2Screen extends Component {
     }
     componentDidMount() {
         dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_POSTS, (s, e) => {
+            debugger;
             if (s) {
                 this.setState({
-                    disease: s.diseaseHistory || 0                    
+                    disease: s.diseaseHistory || 0,
+                    specialist_item: s.specialist
                 })
             }
         })
@@ -122,10 +124,12 @@ class CreateQuestionStep2Screen extends Component {
                         images += item.url;
                     });
                     questionProvider.create(this.state.content, this.state.gender, this.state.age, this.state.specialist_item ? this.state.specialist_item.specialist.id : "0", this.state.disease, this.state.otherContent, images).then(s => {
+                        debugger;
                         dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_POSTS, {
                             gender: this.state.gender,
                             age: this.state.age,
-                            diseaseHistory: this.state.disease
+                            diseaseHistory: this.state.disease,
+                            specialist: this.state.specialist_item
                         });
                         this.setState({ isLoading: false });
                         if (s && s.code == 0) {

@@ -53,6 +53,7 @@ class CreateQuestionStep1Screen extends Component {
   }
   componentDidMount() {
     dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_POSTS, (s, e) => {
+      debugger;
       if (s) {
         this.setState({
           gender: s.gender || 1,
@@ -183,6 +184,7 @@ class CreateQuestionStep1Screen extends Component {
                       max: "Tuổi bệnh nhân cần nhỏ hơn 150"
                     }
                   }}
+                  value={this.state.age}
                   inputStyle={[styles.textinput, { marginTop: 10 }]}
                   onChangeText={s => {
                     this.setState({ age: s });
