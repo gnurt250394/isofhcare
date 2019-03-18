@@ -184,11 +184,41 @@ class LoginScreen extends Component {
 
 	}
 
+	forgotPassword() {
+		let verify = async () => {
+			RNAccountKit.loginWithPhone().then(async token => {
+				console.log(token);
+				if (!token) {
+					snackbar.show("Xác minh số điện thoại không thành công", "danger");
+				} else {
+					let account = await RNAccountKit.getCurrentAccount();
+					if (account && account.phoneNumber) {
+						this.props.navigation.replace("resetPassword", {
+							user: {
+								phone: "0" + account.phoneNumber.number,
+								token: token.token,
+								applicationId: constants.fbApplicationId,
+							}
+						});
+					} else {
+						snackbar.show("Xác minh số điện thoại không thành công", "danger");
+					}
+				}
+			});
+		};
+		RNAccountKit.logout()
+			.then(() => {
+				verify();
+			})
+			.catch(x => {
+				verify();
+			});
+	}
+
 	render() {
 		return (
 			<ActivityPanel
 				style={{ flex: 1 }}
-				touchToDismiss={true}
 				image={require("@images/new/isofhcare.png")}
 				imageStyle={{ marginRight: 50 }}
 				showFullScreen={true}
@@ -241,11 +271,7 @@ class LoginScreen extends Component {
 										</Field>
 										<View style={{ flexDirection: 'row', marginTop: 15 }}>
 											<TouchableOpacity
-												onPress={() => {
-													this.props.navigation.replace("forgotPassword", {
-														nextScreen: this.nextScreen
-													});
-												}}
+												onPress={this.forgotPassword.bind(this)}
 												style={{ alignItems: "flex-start", flex: 1 }}
 											>
 												<Text

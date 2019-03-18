@@ -1,4 +1,5 @@
 module.exports = {
+  fbApplicationId: "457683741386685",
   username: "Tên tài khoản",
   email: "Email",
   phone: "Số điện thoại",
@@ -243,7 +244,8 @@ module.exports = {
       refresh_token: "user/refresh-token",
       change_email: "user/update-email",
       confirm_code: "user/confirm-code",
-      get_detail: "user/get-detail"
+      get_detail: "user/get-detail",
+      refresh_password_by_token:"user/refresh-password-by-token"
     },
     keyvalue: {
       get: "key-value/get-value",

@@ -162,6 +162,20 @@ module.exports = {
             if (callback)
                 callback(s, e);
         });
+    },
+    refreshPasswordByToken(phone, accessToken, applicationId, newPassword) {
+        return new Promise((resolve, reject) => {
+            client.requestApi("put", constants.api.user.refresh_password_by_token, {
+                phone,
+                accessToken,
+                applicationId,
+                newPassword: newPassword.toMd5()
+            }, (s, e) => {
+                if (callback)
+                    callback(s, e);
+            });
 
+
+        });
     }
 }
