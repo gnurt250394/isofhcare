@@ -25,12 +25,13 @@ import stringUtils from "mainam-react-native-string-utils";
 import dateUtils from "mainam-react-native-date-utils";
 import Form from "mainam-react-native-form-validate/Form";
 import TextField from "mainam-react-native-form-validate/TextField";
+import FloatingLabel from 'mainam-react-native-floating-label';
 
 class EnterPasswordScreen extends Component {
   constructor(props) {
     super(props);
-	var user = this.props.navigation.getParam("user", null);
-	this.nextScreen = this.props.navigation.getParam("nextScreen", null);
+    var user = this.props.navigation.getParam("user", null);
+    this.nextScreen = this.props.navigation.getParam("nextScreen", null);
 
     if (!user.email) user.email = "";
     user.showPass = true;
@@ -58,55 +59,56 @@ class EnterPasswordScreen extends Component {
   register() {
     Keyboard.dismiss();
     if (!this.form.isValid()) {
-      this.child.unPress();
       return;
     }
-
-    userProvider
-      .register(
-        this.state.fullname.trim(),
-        this.state.avatar,
-        this.state.email.trim(),
-        this.state.phone.trim(),
-        this.state.password,
-        this.state.dob ? this.state.dob.format("yyyy-MM-dd HH:mm:ss") : null,
-        this.state.gender,
-        this.state.token,
-        this.state.socialType,
-        this.state.socialId
-      )
-      .then(s => {
-        this.child.unPress();
-        switch (s.code) {
-          case 0:
-            var user = s.data.user;
-            this.props.dispatch(redux.userLogin(user));
-            if (this.nextScreen) {
-              this.props.navigation.replace(
-                this.nextScreen.screen,
-                this.nextScreen.param
+    this.setState({ isLoading: true }, () => {
+      userProvider
+        .register(
+          this.state.fullname.trim(),
+          this.state.avatar,
+          this.state.email.trim(),
+          this.state.phone.trim(),
+          this.state.password,
+          this.state.dob ? this.state.dob.format("yyyy-MM-dd HH:mm:ss") : null,
+          this.state.gender,
+          this.state.token,
+          this.state.socialType,
+          this.state.socialId
+        )
+        .then(s => {
+          this.setState({ isLoading: false });
+          switch (s.code) {
+            case 0:
+              var user = s.data.user;
+              this.props.dispatch(redux.userLogin(user));
+              if (this.nextScreen) {
+                this.props.navigation.replace(
+                  this.nextScreen.screen,
+                  this.nextScreen.param
+                );
+              } else this.props.navigation.navigate("home", { showDraw: false });
+              return;
+            case 2:
+              snackbar.show(
+                constants.msg.user.username_or_email_existed,
+                "danger"
               );
-            } else this.props.navigation.navigate("home", { showDraw: false });
-            return;
-          case 2:
-            snackbar.show(
-              constants.msg.user.username_or_email_existed,
-              "danger"
-            );
-            return;
-          case 3:
-          case 1:
-            snackbar.show(constants.msg.user.account_blocked, "danger");
-            return;
-          case 500:
-            snackbar.show(constants.msg.error_occur, "danger");
-            return;
-        }
-      })
-      .catch(e => {
-        this.child.unPress();
-        snackbar.show(constants.msg.error_occur, "danger");
-      });
+              return;
+            case 3:
+            case 1:
+              snackbar.show(constants.msg.user.account_blocked, "danger");
+              return;
+            case 500:
+              snackbar.show(constants.msg.error_occur, "danger");
+              return;
+          }
+        })
+        .catch(e => {
+          snackbar.show(constants.msg.error_occur, "danger");
+          this.setState({ isLoading: false });
+        });
+    });
+
   }
 
   render() {
@@ -117,20 +119,20 @@ class EnterPasswordScreen extends Component {
         touchToDismiss={true}
         showFullScreen={true}
       >
+
         <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
-          <View
-            style={{
-              marginTop: 60,
-              justifyContent: "center",
-              alignItems: "center"
-            }}
-          >
-            <ScaleImage source={require("@images/logo.png")} width={120} />
-          </View>
           <KeyboardAvoidingView behavior="padding" style={styles.form}>
-            <Form ref={ref => (this.form = ref)}>
-              <Form style={{ width: "100%" }}>
+            <View style={{ flex: 1, padding: 20 }}>
+              <Form ref={ref => (this.form = ref)}>
+
                 <TextField
+                  getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
+                    placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.input_password}
+                    secureTextEntry={true}
+                    onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
+                  onChangeText={s => {
+                    this.setState({ password: s });
+                  }}
                   errorStyle={styles.errorStyle}
                   validate={{
                     rules: {
@@ -142,23 +144,17 @@ class EnterPasswordScreen extends Component {
                       minlength: "Mật khẩu dài ít nhất 8 ký tự"
                     }
                   }}
-                  secureTextEntry={this.state.showPass}
-                  inputStyle={styles.input}
-                  style={{ marginTop: 10 }}
-                  onChangeText={s => this.setState({ password: s })}
                   placeholder={constants.input_password}
                   autoCapitalize={"none"}
                 />
-                <TouchableOpacity
-                  activeOpacity={0.7}
-                  style={styles.btnEye}
-                  onPress={this.showPass}
-                >
-                  <Image source={eyeImg} style={styles.iconEye} />
-                </TouchableOpacity>
-              </Form>
-              <Form style={{ width: "100%" }}>
                 <TextField
+                  getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
+                    placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.confirm_password}
+                    secureTextEntry={true}
+                    onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
+                  onChangeText={s => {
+                    this.setState({ confirm_password: s });
+                  }}
                   errorStyle={styles.errorStyle}
                   validate={{
                     rules: {
@@ -170,57 +166,18 @@ class EnterPasswordScreen extends Component {
                       equalTo: "Xác Mật khẩu và xác nhận mật khẩu không giống nhau"
                     }
                   }}
-                  secureTextEntry={this.state.showPassConfirm}
-                  inputStyle={styles.input}
-                  style={{ marginTop: 10 }}
-                  onChangeText={s => this.setState({ confirm_password: s })}
-                  placeholder={constants.confirm_password}
+                  placeholder={constants.input_password}
                   autoCapitalize={"none"}
                 />
-                <TouchableOpacity
-                  activeOpacity={0.7}
-                  style={styles.btnEye}
-                  onPress={this.showPassConfirm}
-                >
-                  <Image source={eyeImg} style={styles.iconEye} />
+
+                <TouchableOpacity style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center' }} onPress={this.register.bind(this)}>
+                  <Text style={{ color: '#FFF', fontSize: 20, textTransform: 'uppercase' }}>{"HOÀN THÀNH"}</Text>
                 </TouchableOpacity>
               </Form>
-            </Form>
-
-            <ButtonSubmit
-              onRef={ref => (this.child = ref)}
-              click={() => {
-                this.register();
-              }}
-              text={constants.register}
-            />
-            <View style={{ width: DEVICE_WIDTH, maxWidth: 300 }}>
-              <TouchableOpacity
-                onPress={() => {
-                  this.props.navigation.replace("login", {
-                    nextScreen: this.nextScreen
-                  });
-                }}
-                style={{ alignItems: "flex-end" }}
-              >
-                <Text
-                  style={{
-                    marginTop: 15,
-                    color: "rgb(155,155,155)",
-                    lineHeight: 20,
-                    fontSize: 16
-                  }}
-                >
-                  Nếu bạn đã có tài khoản hãy đăng nhập ngay{" "}
-                  <Text style={{ fontWeight: "bold", color: "rgb(0,151,124)" }}>
-                    tại đây
-                  </Text>
-                </Text>
-              </TouchableOpacity>
             </View>
           </KeyboardAvoidingView>
         </ScrollView>
-      </ActivityPanel>
+      </ActivityPanel >
     );
   }
 }
@@ -229,23 +186,8 @@ const DEVICE_HEIGHT = Dimensions.get("window").height;
 
 const styles = StyleSheet.create({
   form: {
-    marginTop: 30,
-    alignItems: "center"
-  },
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  text: {
-    backgroundColor: "transparent"
-  },
-  signup_section: {
-    marginTop: 30,
-    flex: 1,
-    width: DEVICE_WIDTH,
-    flexDirection: "row",
-    justifyContent: "space-around"
+    marginTop: 80,
+    borderRadius: 10
   },
   btnEye: {
     position: "absolute",
@@ -256,19 +198,6 @@ const styles = StyleSheet.create({
     width: 25,
     height: 25,
     tintColor: "rgba(0,0,0,0.2)"
-  },
-  picture: {
-    position: "absolute",
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    justifyContent: "center",
-    alignItems: "center",
-    flex: 1,
-    width: null,
-    height: null,
-    resizeMode: "cover"
   },
   input: {
     maxWidth: 300,
@@ -285,8 +214,16 @@ const styles = StyleSheet.create({
   },
   errorStyle: {
     color: "red",
-    marginLeft: 20
-  }
+    marginTop: 10
+  },
+  textInputStyle: {
+    color: "#53657B",
+    fontWeight: "600",
+    height: 45,
+    marginLeft: 0,
+    fontSize: 20
+  },
+  labelStyle: { paddingTop: 10, color: '#53657B', fontSize: 16 }
 });
 function mapStateToProps(state) {
   return {
