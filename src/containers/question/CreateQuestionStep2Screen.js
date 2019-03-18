@@ -264,27 +264,29 @@ class CreateQuestionStep2Screen extends Component {
                             <Text style={[styles.label, { marginTop: 20 }]}>Tải ảnh lên <Text style={{ fontStyle: 'italic', fontWeight: 'normal' }}>(Tối đa 5 ảnh)</Text></Text>
                             <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 10 }}>
                                 {
-                                    this.state.imageUris.map((item, index) => <TouchableOpacity key={index} style={{ margin: 2, width: 100, height: 100, borderColor: '#00000020', borderWidth: 1 }}>
-                                        <Image source={{ uri: item.uri }} resizeMode="cover" style={{ width: 100, height: 100, backgroundColor: '#000' }} />
-                                        {
-                                            item.error ?
-                                                <View style={{ position: 'absolute', left: 30, top: 30 }} >
-                                                    <ScaleImage source={require("@images/ic_warning.png")} width={40} />
-                                                </View> :
-                                                item.loading ?
-                                                    < View style={{ position: 'absolute', left: 30, top: 30, backgroundColor: '#FFF', borderRadius: 20 }} >
-                                                        <ScaleImage source={require("@images/loading.gif")} width={40} />
-                                                    </View>
-                                                    : null
-                                        }
-                                        <TouchableOpacity onPress={this.removeImage.bind(this, index)} style={{ position: 'absolute', top: 0, right: 0, backgroundColor: '#FFFFFF70', padding: 1, borderRadius: 5, margin: 2 }} >
-                                            <ScaleImage source={require("@images/icclose.png")} width={12} />
+                                    this.state.imageUris.map((item, index) => <View key={index} style={{ margin: 2, width: 88, height: 88, position: 'relative' }}>
+                                        <View style={{ marginTop: 8, width: 80, height: 80, borderColor: '#00000020', borderWidth: 1 }}>
+                                            <Image source={{ uri: item.uri }} resizeMode="cover" style={{ width: 80, height: 80, backgroundColor: '#000' }} />
+                                            {
+                                                item.error ?
+                                                    <View style={{ position: 'absolute', left: 20, top: 20 }} >
+                                                        <ScaleImage source={require("@images/ic_warning.png")} width={40} />
+                                                    </View> :
+                                                    item.loading ?
+                                                        < View style={{ position: 'absolute', left: 20, top: 20, backgroundColor: '#FFF', borderRadius: 20 }} >
+                                                            <ScaleImage source={require("@images/loading.gif")} width={40} />
+                                                        </View>
+                                                        : null
+                                            }
+                                        </View>
+                                        <TouchableOpacity onPress={this.removeImage.bind(this, index)} style={{ position: 'absolute', top: 0, right: 0, backgroundColor: '#00000070', padding: 1, borderRadius: 8, width: 16, height: 16, alignItems: 'center', justifyContent: 'center' }} >
+                                            <ScaleImage source={require("@images/icclose.png")} width={8} />
                                         </TouchableOpacity>
-                                    </TouchableOpacity>)
+                                    </View>)
                                 }
                                 {
                                     !this.state.imageUris || this.state.imageUris.length < 5 ?
-                                        <TouchableOpacity onPress={this.selectImage.bind(this)} style={{ margin: 2, width: 100, height: 100, borderColor: '#00000020', borderWidth: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                        <TouchableOpacity onPress={this.selectImage.bind(this)} style={{ marginTop: 10, width: 80, height: 80, borderColor: '#00000020', borderWidth: 1, justifyContent: 'center', alignItems: 'center' }}>
                                             <ScaleImage width={40} source={require("@images/ic_add_image.png")} />
                                             <Text>Thêm ảnh</Text>
                                         </TouchableOpacity> : null

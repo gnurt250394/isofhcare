@@ -77,7 +77,7 @@ class ProfileScreen extends Component {
                                     }
                                 }
                                     secureTextEntry={this.state.showPass}
-                                    inputStyle={styles.input} style={{ marginTop: 10 }} onChangeText={(s) => this.setState({ passwordOld: s })} placeholder={"Mật khẩu hiện tại"} autoCapitalize={'none'} />
+                                    inputStyle={styles.input} style={{ marginTop: 10 }} onChangeText={(s) => this.setState({ passwordOld: s })} placeholder={"Nhập mật khẩu cũ"} autoCapitalize={'none'} />
                                 <TouchableOpacity
                                     activeOpacity={0.7}
                                     style={styles.btnEye}
@@ -99,7 +99,7 @@ class ProfileScreen extends Component {
                                     }
                                 }
                                     secureTextEntry={this.state.showPass}
-                                    inputStyle={styles.input} style={{ marginTop: 10 }} onChangeText={(s) => this.setState({ passwordNew: s })} placeholder={"Mật khẩu mới"} autoCapitalize={'none'} />
+                                    inputStyle={styles.input} style={{ marginTop: 10 }} onChangeText={(s) => this.setState({ passwordNew: s })} placeholder={"Nhập mật khẩu mới"} autoCapitalize={'none'} />
                                 <TouchableOpacity
                                     activeOpacity={0.7}
                                     style={styles.btnEye}
@@ -123,7 +123,7 @@ class ProfileScreen extends Component {
                                     }
                                 }
                                     secureTextEntry={this.state.showPass}
-                                    inputStyle={styles.input} style={{ marginTop: 10 }} onChangeText={(s) => this.setState({ passwordNewConfirm: s })} placeholder={"Nhập lại mật khẩu mới"} autoCapitalize={'none'} />
+                                    inputStyle={styles.input} style={{ marginTop: 10 }} onChangeText={(s) => this.setState({ passwordNewConfirm: s })} placeholder={"Xác nhận mật khẩu mới"} autoCapitalize={'none'} />
                                 <TouchableOpacity
                                     activeOpacity={0.7}
                                     style={styles.btnEye}
@@ -132,7 +132,7 @@ class ProfileScreen extends Component {
                                 </TouchableOpacity>
                             </Form>
                             <View style={{ width: 300, maxWidth: 300, paddingLeft: 20 }}>
-                                <ButtonSubmit style={{ width: '100%', marginLeft: 10 }} onRef={ref => (this.child = ref)} click={() => { this.change() }} text={"Đổi mật khẩu"} />
+                                <ButtonSubmit style={{ width: '100%', marginLeft: 10 }} onRef={ref => (this.child = ref)} click={() => { this.change() }} text={"Cập nhật"} />
                             </View>
                         </Form>
                     </KeyboardAvoidingView>
