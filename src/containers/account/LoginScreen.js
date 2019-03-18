@@ -240,7 +240,7 @@ class LoginScreen extends Component {
                         },
                         messages: {
                           required: "Mật khẩu bắt buộc phải nhập",
-                          min: "Mật khẩu tối thiểu 8 ký tự"
+                          min: "Mật khẩu dài ít nhất 8 ký tự"
                         }
                       }}
                       secureTextEntry={this.state.showPass}
