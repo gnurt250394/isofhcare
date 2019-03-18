@@ -16,6 +16,7 @@ import connectionUtils from '@utils/connection-utils';
 
 import Form from 'mainam-react-native-form-validate/Form';
 import TextField from 'mainam-react-native-form-validate/TextField';
+import dataCacheProvider from '@data-access/datacache-provider';
 const padding = Platform.select({
     ios: 7,
     android: 2
@@ -30,6 +31,15 @@ class CreateQuestionStep2Screen extends Component {
         post.imageUris = [];
         post.disease = 0;
         this.state = post;
+    }
+    componentDidMount() {
+        dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_POSTS, (s, e) => {
+            if (s) {
+                this.setState({
+                    disease: s.diseaseHistory || 0                    
+                })
+            }
+        })
     }
     componentWillMount() {
         specialistProvider.getTop(1000, (s, e) => {
@@ -112,6 +122,11 @@ class CreateQuestionStep2Screen extends Component {
                         images += item.url;
                     });
                     questionProvider.create(this.state.content, this.state.gender, this.state.age, this.state.specialist_item ? this.state.specialist_item.specialist.id : "0", this.state.disease, this.state.otherContent, images).then(s => {
+                        dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_POSTS, {
+                            gender: this.state.gender,
+                            age: this.state.age,
+                            diseaseHistory: this.state.disease
+                        });
                         this.setState({ isLoading: false });
                         if (s && s.code == 0) {
                             snackbar.show(constants.msg.question.create_question_success, "success");
@@ -125,7 +140,7 @@ class CreateQuestionStep2Screen extends Component {
                     });
                 });
             }
-            else{
+            else {
                 snackbar.show("Không có kết nối mạng", "danger");
             }
         })

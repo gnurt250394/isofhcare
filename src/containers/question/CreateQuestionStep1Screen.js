@@ -23,6 +23,8 @@ import constants from "@resources/strings";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import Form from "mainam-react-native-form-validate/Form";
 import TextField from "mainam-react-native-form-validate/TextField";
+import dataCacheProvider from '@data-access/datacache-provider';
+
 const padding = Platform.select({
   ios: 7,
   android: 2
@@ -48,6 +50,16 @@ class CreateQuestionStep1Screen extends Component {
       btnSend: post ? "Lưu" : "Gửi",
       gender: 1
     };
+  }
+  componentDidMount() {
+    dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_POSTS, (s, e) => {
+      if (s) {
+        this.setState({
+          gender: s.gender || 1,
+          age: s.age || ""
+        })
+      }
+    })
   }
 
   removeImage(index) {
@@ -202,11 +214,11 @@ class CreateQuestionStep1Screen extends Component {
                       width={20}
                     />
                   ) : (
-                    <ScaleImage
-                      source={require("@images/ic_radio0.png")}
-                      width={20}
-                    />
-                  )}
+                      <ScaleImage
+                        source={require("@images/ic_radio0.png")}
+                        width={20}
+                      />
+                    )}
                   <Text style={{ marginLeft: 5 }}>Nam</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -221,11 +233,11 @@ class CreateQuestionStep1Screen extends Component {
                       width={20}
                     />
                   ) : (
-                    <ScaleImage
-                      source={require("@images/ic_radio0.png")}
-                      width={20}
-                    />
-                  )}
+                      <ScaleImage
+                        source={require("@images/ic_radio0.png")}
+                        width={20}
+                      />
+                    )}
                   <Text style={{ marginLeft: 5 }}>Nữ</Text>
                 </TouchableOpacity>
               </View>

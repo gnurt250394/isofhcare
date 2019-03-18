@@ -76,6 +76,7 @@ module.exports = {
       DATA_PROVINCE: "DATA_PROVINCE",
       CURRENT_LOCATION: "CURRENT_LOCATION",
       INTRO_FINISHED: "INTRO_FINISHED"
+      LASTEST_POST: "LASTEST_POSTS"
     }
   },
   msg: {
