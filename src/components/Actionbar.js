@@ -3,7 +3,7 @@ import ActivityPanel from '@components/ActivityPanel';
 import { View, TouchableOpacity, Text, StyleSheet, Platform, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
 import ScaleImage from 'mainam-react-native-scaleimage';
-import ic_back from '@images/ic_back.png';
+import ic_back from '@images/new/left-arrow.png';
 import ic_msg from '@images/ic_msg.png';
 const { width, height } = Dimensions.get('window');
 
@@ -25,13 +25,12 @@ class Actionbar extends Component {
     render() {
         return (
             <View>
-                <View style={[styles.actionbar, this.props.actionbarStyle, { paddingTop: this.props.hideBackButton ? 15 : 5, paddingBottom: this.props.hideBackButton ? 15 : 5 }]}
-                    shadowColor='#000000' shadowOpacity={0.1} shadowOffset={{ width: 0, height: 2 }} shadowRadius={5}>
+                <View style={[styles.actionbar, this.props.actionbarStyle, { paddingTop: this.props.hideBackButton ? 15 : 5, paddingBottom: this.props.hideBackButton ? 15 : 5 }]}>
                     {
                         !this.props.hideBackButton ?
 
-                            <TouchableOpacity onPress={() => this.backButtonClick()} style={{ width: 45, paddingTop: 12, paddingBottom: 12 }}>
-                                <ScaleImage source={this.props.icBack ? this.props.icBack : ic_back} style={[styles.ic_back, this.props.styleBackButton]} height={20}></ScaleImage>
+                            <TouchableOpacity onPress={() => this.backButtonClick()} style={{ width: 50, paddingTop: 12, paddingBottom: 12, paddingLeft: 15 }}>
+                                <ScaleImage source={this.props.icBack ? this.props.icBack : ic_back} style={[styles.ic_back, this.props.styleBackButton]} height={14}></ScaleImage>
                             </TouchableOpacity>
                             :
                             <View style={{ paddingTop: 12, paddingBottom: 12 }}>
@@ -45,7 +44,7 @@ class Actionbar extends Component {
                             </Text>
                             :
                             this.props.image &&
-                            <View style={[{ height: 45, flex: 1, justifyContent: 'center', alignItems: 'center' },this.props.imageStyle]}>
+                            <View style={[{ height: 45, flex: 1, justifyContent: 'center', alignItems: 'center' }, this.props.imageStyle]}>
                                 <ScaleImage source={this.props.image} height={32} />
                             </View>
                     }
@@ -80,10 +79,10 @@ const styles = StyleSheet.create({
         height: 40,
     },
     title: {
-        marginRight: 40,
-        color: 'rgb(0,151,124)',
+        marginRight: 55,
+        color: '#4A4A4A',
         fontWeight: 'bold',
-        fontSize: 17
+        fontSize: 20
     },
     ic_back: {
         marginLeft: 10,
@@ -93,7 +92,6 @@ const styles = StyleSheet.create({
     },
     actionbar: {
         justifyContent: 'space-between',
-        elevation: 5,
         paddingBottom: 12,
         flexDirection: 'row',
         alignItems: 'center',

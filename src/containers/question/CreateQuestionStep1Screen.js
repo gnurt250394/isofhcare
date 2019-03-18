@@ -12,6 +12,7 @@ import {
   Keyboard,
   Image
 } from "react-native";
+import { Card } from 'native-base';
 import ActivityPanel from "@components/ActivityPanel";
 import { connect } from "react-redux";
 import ScaleImage from "mainam-react-native-scaleimage";
@@ -135,142 +136,142 @@ class CreateQuestionStep1Screen extends Component {
         showFullScreen={true}
         touchToDismiss={true}
         isLoading={this.state.isLoading}
+        actionbarStyle={{
+          backgroundColor: '#02C39A'
+        }}
       >
-        <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
-          <View style={{ padding: 10 }}>
-            <Form
-              ref={ref => (this.form = ref)}
-              onValueChange={() => {
-                this.setState({ changed: true });
-              }}
-            >
-              <Text style={{ marginTop: 10, fontWeight: "bold" }}>
-                Nội dung
+        <ScrollView style={{ flex: 1, position: 'relative' }} keyboardShouldPersistTaps="always">
+          <View style={{ backgroundColor: '#02C39A', height: 130, position: 'absolute', top: 0, left: 0, right: 0 }}></View>
+          <View style={{ margin: 22, marginTop: 10 }}>
+            <Card style={{ padding: 22, align: 'center' }}>
+              <View style={{ backgroundColor: '#02C39A', width: 20, height: 4, borderRadius: 2, alignSelf: 'center' }}></View>
+              <Form
+                ref={ref => (this.form = ref)}
+                onValueChange={() => {
+                  this.setState({ changed: true });
+                }}
+              >
+                <Text style={[styles.label, { marginTop: 24 }]}>
+                  Nội dung
               </Text>
-              <TextField
-                validate={{
-                  rules: {
-                    required: true,
-                    minlength: 1,
-                    maxlength: 2000
-                  },
-                  messages: {
-                    required: "Vui lòng nhập nội dung câu hỏi",
-                    maxlength: "Không cho phép nhập quá 2000 kí tự"
-                  }
-                }}
-                inputStyle={[styles.textinput, { marginTop: 10, height: 150 }]}
-                onChangeText={s => {
-                  this.setState({ content: s });
-                }}
-                autoCapitalize={"none"}
-                returnKeyType={"next"}
-                underlineColorAndroid="transparent"
-                autoFocus={true}
-                multiline={true}
-                autoCorrect={false}
-              />
-
-              <Form>
-                <Text style={{ marginTop: 10, fontWeight: "bold" }}>Tuổi</Text>
                 <TextField
                   validate={{
                     rules: {
-                      min: 1,
-                      max: 150
+                      required: true,
+                      minlength: 1,
+                      maxlength: 2000
                     },
                     messages: {
-                      min: "Tuổi bệnh nhân cần lớn hơn 1",
-                      max: "Tuổi bệnh nhân cần nhỏ hơn 150"
+                      required: "Vui lòng nhập nội dung câu hỏi",
+                      maxlength: "Không cho phép nhập quá 2000 kí tự"
                     }
                   }}
-                  value={this.state.age}
-                  inputStyle={[styles.textinput, { marginTop: 10 }]}
+                  inputStyle={[styles.textinput, { lineHeight: 20, marginTop: 6, height: 150, borderRadius: 6, textAlignVertical: 'top', paddingTop: 13, paddingLeft: 10, paddingBottom: 13, paddingRight: 10 }]}
+                  errorStyle={styles.errorStyle}
                   onChangeText={s => {
-                    this.setState({ age: s });
+                    this.setState({ content: s });
                   }}
+                  autoCapitalize={"none"}
                   returnKeyType={"next"}
                   underlineColorAndroid="transparent"
-                  keyboardType="numeric"
+                  autoFocus={true}
+                  multiline={true}
+                  autoCorrect={false}
                 />
+
+                <Form>
+                  <Text style={[styles.label, { marginTop: 15 }]}>Tuổi</Text>
+                  <TextField
+                    validate={{
+                      rules: {
+                        min: 1,
+                        max: 150
+                      },
+                      messages: {
+                        min: "Tuổi bệnh nhân cần lớn hơn 1",
+                        max: "Tuổi bệnh nhân cần nhỏ hơn 150"
+                      }
+                    }}
+                    value={this.state.age}
+                    style={{ marginTop: 6 }}
+                    inputStyle={[styles.textinput, { lineHeight: 20, paddingTop: 8, paddingLeft: 17, paddingRight: 17, paddingBottom: 8, fontWeight: '600' }]}
+                    onChangeText={s => {
+                      this.setState({ age: s });
+                    }}
+                    returnKeyType={"next"}
+                    underlineColorAndroid="transparent"
+                    keyboardType="numeric"
+                  />
+                </Form>
               </Form>
-            </Form>
-            <View
-              style={{
-                paddingLeft: 30,
-                width: DEVICE_WIDTH - 40,
-                marginTop: 10
-              }}
-            >
-              <Text>Giới tính</Text>
-              <View style={{ flexDirection: "row" }}>
-                <TouchableOpacity
-                  onPress={() => {
-                    this.setState({ gender: 1, changed: true });
-                  }}
-                  style={{ padding: 10, flexDirection: "row" }}
-                >
-                  {this.state.gender == 1 ? (
-                    <ScaleImage
-                      source={require("@images/ic_radio1.png")}
-                      width={20}
-                    />
-                  ) : (
-                      <ScaleImage
-                        source={require("@images/ic_radio0.png")}
-                        width={20}
-                      />
-                    )}
-                  <Text style={{ marginLeft: 5 }}>Nam</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    this.setState({ gender: 0, changed: true });
-                  }}
-                  style={{ padding: 10, flexDirection: "row" }}
-                >
-                  {this.state.gender == 0 ? (
-                    <ScaleImage
-                      source={require("@images/ic_radio1.png")}
-                      width={20}
-                    />
-                  ) : (
-                      <ScaleImage
-                        source={require("@images/ic_radio0.png")}
-                        width={20}
-                      />
-                    )}
-                  <Text style={{ marginLeft: 5 }}>Nữ</Text>
-                </TouchableOpacity>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: "center",
+                  marginTop: 25
+                }}
+              >
+                <Text style={[styles.label]}>Giới tính</Text>
+                <View style={{ flexDirection: "row" }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.setState({ gender: 1, changed: true });
+                    }}
+                    style={{ padding: 10, flexDirection: "row" }}
+                  >
+                    <View style={{ width: 19, height: 19, borderWidth: 2, borderColor: '#02C39A', borderRadius: 10, alignItems: 'center', justifyContent: 'center' }}>
+                      {
+                        this.state.gender == 1 && <View style={{ width: 12, height: 12, backgroundColor: '#02C39A', borderRadius: 6 }}></View>
+                      }
+                    </View>
+                    <Text style={{ marginLeft: 5 }}>Nam</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.setState({ gender: 0, changed: true });
+                    }}
+                    style={{ padding: 10, flexDirection: "row" }}
+                  >
+                    <View style={{ width: 19, height: 19, borderWidth: 2, borderColor: '#02C39A', borderRadius: 10, alignItems: 'center', justifyContent: 'center' }}>
+                      {
+                        this.state.gender == 0 && <View style={{ width: 12, height: 12, backgroundColor: '#02C39A', borderRadius: 6 }}></View>
+                      }
+                    </View>
+                    <Text style={{ marginLeft: 5 }}>Nữ</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
+              <TouchableOpacity
+                disabled={!this.state.changed}
+                onPress={this.createQuestion.bind(this)}
+                style={{
+                  width: 250,
+                  backgroundColor: this.state.changed ? "#58bc91" : "#cacaca",
+                  padding: 15,
+                  borderRadius: 6,
+                  alignSelf: "center",
+                  margin: 36
+                }}
+              >
+                <Text
+                  style={{ color: "#FFF", textAlign: "center", fontWeight: "bold", fontSize: 16 }}
+                >
+                  Thông tin bổ sung
+          </Text>
+              </TouchableOpacity>
+            </Card>
           </View>
         </ScrollView>
-        <TouchableOpacity
-          disabled={!this.state.changed}
-          onPress={this.createQuestion.bind(this)}
-          style={{
-            width: 200,
-            backgroundColor: this.state.changed ? "#58bc91" : "#cacaca",
-            padding: 15,
-            borderRadius: 25,
-            alignSelf: "center",
-            margin: 10
-          }}
-        >
-          <Text
-            style={{ color: "#FFF", textAlign: "center", fontWeight: "bold" }}
-          >
-            THÔNG TIN BỔ SUNG
-          </Text>
-        </TouchableOpacity>
         <ImagePicker ref={ref => (this.imagePicker = ref)} />
         {Platform.OS == "ios" && <KeyboardSpacer />}
-      </ActivityPanel>
+      </ActivityPanel >
     );
   }
 }
 const styles = StyleSheet.create({
+  label: {
+    color: '#00000048', marginLeft: 9
+  },
   field: {
     flexDirection: "row",
     alignItems: "center",
@@ -283,7 +284,13 @@ const styles = StyleSheet.create({
     borderColor: "#cacaca",
     borderWidth: 1,
     paddingLeft: 7,
-    padding: padding
+    padding: padding,
+    borderRadius: 6
+  },
+  errorStyle: {
+    color: 'red',
+    marginTop: 10,
+    marginLeft: 6
   }
 });
 function mapStateToProps(state) {

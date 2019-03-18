@@ -229,8 +229,9 @@ class NotificationScreen extends Component {
                   <Text
                     style={{ fontSize: 12, color: "#00000060", marginTop: 8 }}
                   >
+                    {/* {item.notification.createdDate} */}
                     {((item) => {
-                      var date = item.notification.createdDate.toDateObject();
+                      var date = item.notification.createdDate.toDateObject('-');
                       return date.format("HH:mm") + " - " + date.format("dd/MM/yyyy")
                     }).call(this, item)}
                   </Text>

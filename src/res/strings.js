@@ -54,7 +54,7 @@ module.exports = {
     primaryColor: "#065cb4",
     activity_background: "white",
     actionbar_color: "#FFF",
-    actionbar_title_color: "rgb(0,151,124)",
+    actionbar_title_color: '#4A4A4A',
     primary_bold: "#065cb4",
     buttonOkColor: "#ff9999"
   },
