@@ -201,6 +201,7 @@ class CreateQuestionStep1Screen extends Component {
                     returnKeyType={"next"}
                     underlineColorAndroid="transparent"
                     keyboardType="numeric"
+                    errorStyle={styles.errorStyle}
                   />
                 </Form>
               </Form>
