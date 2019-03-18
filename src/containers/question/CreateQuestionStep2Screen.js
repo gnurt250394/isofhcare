@@ -173,16 +173,17 @@ class CreateQuestionStep2Screen extends Component {
         }
     }
     renderItemDisease(value, text, left) {
-        return <TouchableOpacity onPress={this.selectDisease.bind(this, value)} style={{ flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderColor: 'rgba(151,151,151,0.36)', padding: 10, marginTop: 6, marginRight: left ? 5 : 0, marginLeft: !left ? 5 : 0, borderRadius: 6 }}>
-            <Text style={{ flex: 1 }}>{text}</Text>
+        let selected = (this.state.disease & value) == value;
+        return <View style={{ height: 50 }}><TouchableOpacity onPress={this.selectDisease.bind(this, value)} style={{ flexDirection: 'row', alignItems: 'center', borderWidth: selected ? 2 : 1, borderColor: selected ? '#02C39A' : 'rgba(151,151,151,0.36)', padding: 10, marginTop: 6, marginRight: left ? 5 : 0, marginLeft: !left ? 5 : 0, borderRadius: 6 }}>
+            <Text style={{ flex: 1 }} numberOfLines={1} ellipsizeMode='tail'>{text}</Text>
             <View style={{ flexDirection: 'row' }}>
                 {
-                    (this.state.disease & value) == value ?
+                    selected ?
                         <ScaleImage source={require("@images/ic_check_tick.png")} width={20} /> :
                         <ScaleImage source={require("@images/ic_check.png")} width={20} />
                 }
             </View>
-        </TouchableOpacity>
+        </TouchableOpacity></View>
     }
 
     render() {
@@ -202,7 +203,7 @@ class CreateQuestionStep2Screen extends Component {
                         <Card style={{ padding: 22, align: 'center' }}>
                             <View style={{ backgroundColor: '#02C39A', width: 20, height: 4, borderRadius: 2, alignSelf: 'center' }}></View>
                             <Text style={[styles.label, { marginTop: 15 }]}>Chuyên khoa đang hỏi</Text>
-                            <TouchableOpacity onPress={() => { this.toggleModalSpecialize() }} style={[styles.textinput, { position: 'relative', flexDirection: 'row', alignItems: 'center' }]}>
+                            <TouchableOpacity onPress={() => { this.toggleModalSpecialize() }} style={[styles.textinput, { flexDirection: 'row', alignItems: 'center', marginTop: 6 }]}>
                                 <Text style={{ padding: 10, flex: 1, color: "#4A4A4A", fontWeight: '600' }}>
                                     {
                                         this.state.specialist_item ? this.state.specialist_item.specialist.name : "Chọn chuyên khoa"
