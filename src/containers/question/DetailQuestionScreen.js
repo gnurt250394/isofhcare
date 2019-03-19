@@ -50,6 +50,13 @@ class DetailQuestionScreen extends Component {
             post
         }
     }
+    componentDidMount() {
+        commentProvider.search(this.state.post.post.id, 1, 1).then(s => {
+            alert(JSON.stringify(s));
+        }).catch(e => {
+            alert(JSON.stringify(e));
+        })
+    }
     renderImages(post) {
         var image = post.images;
         if (image) {
@@ -150,71 +157,8 @@ class DetailQuestionScreen extends Component {
                                 </View> : null
                         }
                     </View>
-
-
-                    {/* {
-                        this.renderItemPost(post)
-                    } */}
-                    {/* <View style={{ height: 2, backgroundColor: "#cacaca" }} /> */}
-                    {/* {
-                        (this.state.data && this.state.data.length > 0) &&
-                        <View style={{ marginTop: 10 }}>
-                            {
-                                this.state.data.map((item, index) => {
-                                    return this.renderItemComment(item, index);
-                                })
-                            }</View>
-                    } */}
-                    {/* {
-                        (!this.state.data || this.state.data.length == 0) &&
-                        <View style={{ alignItems: 'center', marginTop: 50 }}>
-                            <Text style={{ fontStyle: 'italic', paddingBottom: 30 }}>Hãy là người đầu tiên trả lời câu hỏi này</Text>
-                        </View>
-                    } */}
-                    {/* <FlatList
-                        onRefresh={this.onRefresh.bind(this)}
-                        refreshing={this.state.refreshing}
-                        onEndReached={this.onLoadMore.bind(this)}
-                        onEndReachedThreshold={1}
-                        style={{ flex: 1, marginTop: 10 }}
-                        keyExtractor={(item, index) => index.toString()}
-                        extraData={this.state}
-                        data={this.state.data}
-                        ListHeaderComponent={() => !this.state.refreshing && (!this.state.data || this.state.data.length == 0) ?
-                            <View style={{ alignItems: 'center', marginTop: 50 }}>
-                                <Text style={{ fontStyle: 'italic' }}>Hiện tại chưa có thông tin</Text>
-                            </View> : null
-                        }
-                        ListFooterComponent={() => <View style={{ height: 10 }}></View>}
-                        renderItem={({ item, index }) => {
-                            return this.renderItemComment(item, index);
-                        }}
-                    /> */}
-                    {/* {
-                        this.state.loadMore ?
-                            <View style={{ alignItems: 'center', padding: 10, position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-                                <ActivityIndicator
-                                    size={'small'}
-                                    color={'gray'}
-                                />
-                            </View> : null
-                    } */}
+                    <View style={{ height: 100 }} />
                 </ScrollView>
-                {/* <View style={{ flexDirection: 'column' }}>
-                    <View style={{ height: 2, backgroundColor: '#cacaca' }} />
-                    <View style={{ flexDirection: 'row' }}>
-                        <TouchableOpacity style={{ padding: 15 }} onPress={this.selectImage.bind(this)}>
-                            <ScaleImage source={require("@images/question/camera.png")} width={30} />
-                        </TouchableOpacity>
-                        <TextInput
-                            onContentSizeChange={this.inputTextSizeChange.bind(this)}
-                            style={{ flex: 1, maxHeight: 100, padding: 10, paddingTop: 20 }} underlineColorAndroid='transparent' multiline={true} placeholder="Nhập nội dung thảo luận" value={this.state.commentText} onChangeText={x => this.setState({ commentText: x })} />
-                        <TouchableOpacity style={{ padding: 17 }} onPress={this.sendComment.bind(this)}>
-                            <Text style={{ color: 'rgb(0,155,121)', fontWeight: '900', fontSize: 16 }}>GỬI</Text>
-                        </TouchableOpacity>
-                    </View>
-
-                </View> */}
                 <KeyboardSpacer />
                 <ImagePicker ref={ref => this.imagePicker = ref} />
             </ActivityPanel >
