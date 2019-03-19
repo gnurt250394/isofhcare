@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { TouchableOpacity, ActivityIndicator } from 'react-native';
+import { TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
 import ActivityPanel from '@components/ActivityPanel';
 import { View, Text, FlatList, Image } from 'react-native';
 import { connect } from 'react-redux';
@@ -18,6 +18,7 @@ class ListQuestionScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            tabIndex: 0
         }
     }
     menuCreate() {
@@ -45,35 +46,55 @@ class ListQuestionScreen extends Component {
     }
     render() {
         return (
-            <ActivityPanel style={{ flex: 1 }} title="Tư vấn online" showFullScreen={true}
-                menuButton={this.menuCreate()}
+            <ActivityPanel
+                style={{ flex: 1 }}
+                title={"Tư vấn online"}
+                showFullScreen={true}
+                isLoading={this.state.isLoading}
+                actionbarStyle={{
+                    backgroundColor: '#02C39A'
+                }}
             >
-                <View style={{ height: 50, flexDirection: "row" }}>
-                    <TouchableOpacity style={{ flex: 1 }} onPress={this.swipe.bind(this, 0)}>
-                        <Text style={{ textAlign: 'center' }}>Đã trả lời</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ flex: 1 }} onPress={this.swipe.bind(this, 1)}>
-                        <Text style={{ textAlign: 'center' }}>Khác</Text>
-                    </TouchableOpacity>
-                </View>
+                <View style={{ flex: 1, position: 'relative' }} keyboardShouldPersistTaps="always">
+                    <View style={{ backgroundColor: '#02C39A', height: 130, position: 'absolute', top: 0, left: 0, right: 0 }}></View>
+                    <View style={{ height: 50, flexDirection: "row" }}>
+                        <TouchableOpacity style={{ flex: 1 }} onPress={this.swipe.bind(this, 0)}>
+                            <Text style={[{ textAlign: 'center' }, this.state.tabIndex == 0 ? styles.tabSelected : styles.tabNormal]}>Đã trả lời</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{ flex: 1 }} onPress={this.swipe.bind(this, 1)}>
+                            <Text style={[{ textAlign: 'center' }, this.state.tabIndex == 1 ? styles.tabSelected : styles.tabNormal]}>Khác</Text>
+                        </TouchableOpacity>
+                    </View>
 
-                <Swiper
-                    ref={ref => this.swiper = ref}
-                    onIndexChanged={index => {
-                        this.setState({ tabIndex: index });
-                    }}
-                    dot={<View />}
-                    activeDot={<View />}
-                    loop={false}
-                    style={{ flex: 1 }}
-                >
-                    <ListQuestion isAnswered={true} ref={ref => this.listAnswered = ref} />
-                    <ListQuestion isAnswered={false} ref={ref => this.listNotAnswered = ref} />
-                </Swiper>
+                    <Swiper
+                        ref={ref => this.swiper = ref}
+                        onIndexChanged={index => {
+                            this.setState({ tabIndex: index });
+                        }}
+                        dot={<View />}
+                        activeDot={<View />}
+                        loop={false}
+                        style={{ flex: 1 }}
+                    >
+                        <ListQuestion isAnswered={true} ref={ref => this.listAnswered = ref} />
+                        <ListQuestion isAnswered={false} ref={ref => this.listNotAnswered = ref} />
+                    </Swiper>
+                </View>
             </ActivityPanel >
         );
     }
 }
+const styles = StyleSheet.create({
+    tabSelected: {
+        fontWeight: 'bold',
+        fontSize: 18,
+        color: 'rgb(106,1,54)'
+    }, tabNormal:
+    {
+        fontSize: 18,
+        color: 'rgba(106,1,54,48)'
+    }
+});
 
 function mapStateToProps(state) {
     return {

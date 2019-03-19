@@ -55,14 +55,15 @@ class DetailQuestionScreen extends Component {
             writeQuestion: false,
             confirmed: false,
             rating: false,
-            dataComment: []
+            dataComment: [],
+            userCommentCount: 0
         }
     }
     componentDidMount() {
         questionProvider.detail(this.state.post.post.id).then(s => {
             if (s.code == 0) {
                 let post = s.data;
-                this.setState({ post: s.data, diagnose: post.post.diagnose });
+                this.setState({ post: s.data, diagnose: post.post.diagnose, userCommentCount: post.post.numberCommentUser || 0 });
             }
             else {
                 this.props.navigation.pop();
@@ -126,7 +127,13 @@ class DetailQuestionScreen extends Component {
                         commentProvider.create(this.state.post.post.id, this.state.content, "", "").then(s => {
                             this.setState({ isLoading: false });
                             if (s.code == 0) {
-                                this.setState({ lastComment: s.data, commentCount: ((this.state.commentCount || 0) + 1), content: "", writeQuestion: false });
+                                this.setState({
+                                    lastComment: s.data,
+                                    commentCount: ((this.state.commentCount || 0) + 1),
+                                    content: "",
+                                    writeQuestion: false,
+                                    userCommentCount: this.state.userCommentCount + 1
+                                });
                             }
                         }).catch(e => {
                             this.setState({ isLoading: false });
@@ -231,9 +238,6 @@ class DetailQuestionScreen extends Component {
         let { post } = this.state;
         return (
             <ActivityPanel style={{ flex: 1 }} title="Tư vấn online" showFullScreen={true} isLoading={this.state.isLoading}>
-                <Text>
-                    {JSON.stringify(post.post)}
-                </Text>
                 <ScrollView ref={(ref) => { this.scrollView = ref }} style={{ padding: 20 }} >
                     <View style={{ flexDirection: "row", alignItems: 'center' }}>
                         <View style={{ flex: 1 }} ><Text style={{ fontSize: 18, fontWeight: 'bold' }}>{post.author ? post.author.name : ""}</Text></View>
@@ -315,39 +319,6 @@ class DetailQuestionScreen extends Component {
                                             </TouchableOpacity>
                                         </View> : null : null
                                 }
-                                {/* <View>
-                                    {this.state.lastComment.user &&
-                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                            <View style={{ width: 50, height: 50, borderRadius: 25, borderWidth: 1, borderColor: '#000' }}></View>
-                                            <View style={{ marginLeft: 10 }}>
-                                                <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 5 }}>{this.state.lastComment.user.name}</Text>
-                                                {this.state.post.assignee && this.state.post.assignee.id != this.props.userApp.currentUser.id ?
-                                                    <View style={{ width: 100 }}>
-                                                        <StarRating
-                                                            disabled={true}
-                                                            starSize={20}
-                                                            maxStars={5}
-                                                            rating={this.state.ratedoctor}
-                                                            starStyle={{ margin: 0 }}
-                                                            fullStarColor={"#fbbd04"}
-                                                            emptyStarColor={"#fbbd04"}
-                                                        />
-                                                    </View> : null
-                                                }
-                                            </View>
-                                        </View>
-                                    }
-                                    <View style={{ position: 'relative', marginTop: 10 }}>
-                                        <Dash style={{ width: 1, position: 'absolute', top: 0, bottom: 20, flexDirection: 'column', marginLeft: 25 }} dashStyle={{ backgroundColor: '#cacaca' }} />
-                                        <View style={{ marginLeft: 37, marginBottom: 20 }}>
-                                            <Text style={{ color: '#00000038' }}>
-                                                {this.getTime(this.state.lastComment.comment.createdDate)}
-                                            </Text>
-                                            <Text style={{ marginTop: 15, fontSize: 16 }}>{this.state.lastComment.comment.content}</Text>
-                                        </View>
-                                        
-                                    </View>
-                                </View> */}
                                 {
                                     this.state.showComment && this.state.dataComment.map((item, index) => {
                                         return !this.state.lastComment || item.comment.id != this.state.lastComment.comment.id ?
