@@ -288,7 +288,8 @@ module.exports = {
       search: "post/search",
       like: "post/like",
       detail: "post/get-detail",
-      review: "post/review"
+      review: "post/review",
+      get_result_review: "post/get-result-review"
     },
     comment: {
       create: "comment/create",
