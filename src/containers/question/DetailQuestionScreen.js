@@ -54,7 +54,8 @@ class DetailQuestionScreen extends Component {
             post,
             writeQuestion: false,
             confirmed: false,
-            rating: false
+            rating: false,
+            dataComment: []
         }
     }
     componentDidMount() {
@@ -169,6 +170,53 @@ class DetailQuestionScreen extends Component {
         });
     }
 
+    showAllComment() {
+        this.setState({ loadingComment: true })
+        commentProvider.search(this.state.post.post.id, 1, this.state.commentCount + 1).then(s => {
+            this.setState({ loadingComment: false });
+            if (s.code == 0) {
+                if (s.data && s.data.data && s.data.data.length > 0) {
+                    this.setState({ dataComment: s.data.data, showComment: true });
+                }
+            }
+        }).catch(e => {
+            this.setState({ loadingComment: false });
+        })
+    }
+    showItemComment(item, key) {
+        return <View key={key}>
+            {item.user &&
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <View style={{ width: 50, height: 50, borderRadius: 25, borderWidth: 1, borderColor: '#000' }}></View>
+                    <View style={{ marginLeft: 10 }}>
+                        <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 5 }}>{item.user.name}</Text>
+                        {item.user && item.user.id != this.props.userApp.currentUser.id ?
+                            <View style={{ width: 100 }}>
+                                <StarRating
+                                    disabled={true}
+                                    starSize={20}
+                                    maxStars={5}
+                                    rating={this.state.ratedoctor}
+                                    starStyle={{ margin: 0 }}
+                                    fullStarColor={"#fbbd04"}
+                                    emptyStarColor={"#fbbd04"}
+                                />
+                            </View> : null
+                        }
+                    </View>
+                </View>
+            }
+            <View style={{ position: 'relative', marginTop: 10 }}>
+                <Dash style={{ width: 1, position: 'absolute', top: 0, bottom: 7, flexDirection: 'column', marginLeft: 25 }} dashStyle={{ backgroundColor: '#cacaca' }} />
+                <View style={{ marginLeft: 37, marginBottom: 20 }}>
+                    <Text style={{ color: '#00000038' }}>
+                        {this.getTime(item.comment.createdDate)}
+                    </Text>
+                    <Text style={{ marginTop: 15, fontSize: 16 }}>{item.comment.content}</Text>
+                </View>
+            </View>
+        </View>
+    }
     render() {
         // const post = this.props.navigation.getParam("post", null);
         let { post } = this.state;
@@ -243,40 +291,57 @@ class DetailQuestionScreen extends Component {
                         {
                             this.state.lastComment &&
                             <View style={{ marginTop: 10 }}>
-                                {this.state.lastComment.user &&
-                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                        <View style={{ width: 50, height: 50, borderRadius: 25, borderWidth: 1, borderColor: '#000' }}></View>
-                                        <View style={{ marginLeft: 10 }}>
-                                            <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 5 }}>{this.state.lastComment.user.name}</Text>
-                                            {/* <StarRating
-                                                disabled={true}
-                                                starSize={20}
-                                                maxStars={5}
-                                                rating={5}
-                                                starStyle={{ margin: 0 }}
-                                                fullStarColor={"#fbbd04"}
-                                                emptyStarColor={"#fbbd04"}
-                                            /> */}
-                                        </View>
-                                    </View>
+                                {
+                                    this.showItemComment(this.state.lastComment, -1)
                                 }
-                                <View style={{ position: 'relative', marginTop: 10 }}>
-                                    <Dash style={{ width: 1, position: 'absolute', top: 0, bottom: 20, flexDirection: 'column', marginLeft: 25 }} dashStyle={{ backgroundColor: '#cacaca' }} />
-                                    <View style={{ marginLeft: 37, marginBottom: 20 }}>
-                                        <Text style={{ color: '#00000038' }}>
-                                            {this.getTime(this.state.lastComment.comment.createdDate)}
-                                        </Text>
-                                        <Text style={{ marginTop: 15, fontSize: 16 }}>{this.state.lastComment.comment.content}</Text>
-                                    </View>
-                                    {
+                                {
+                                    (!this.state.showComment && !this.state.loadingComment) ?
                                         this.state.commentCount != 0 ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                            <View style={{ width: 12, height: 12, borderRadius: 6, backgroundColor: 'rgb(155,155,155)', marginLeft: 19 }} />
-                                            <TouchableOpacity onPress={() => snackbar.show("Chức năng đang phát triển")}>
+                                            <View style={{ width: 12, height: 12, borderRadius: 6, backgroundColor: 'rgb(155,155,155)', marginLeft: 20 }} />
+                                            <TouchableOpacity onPress={this.showAllComment.bind(this)}>
                                                 <Text style={{ color: 'rgb(10,155,225)', marginLeft: 10 }} > Xem thêm {this.state.commentCount} trả lời ></Text>
                                             </TouchableOpacity>
-                                        </View> : null
+                                        </View> : null : null
+                                }
+                                {/* <View>
+                                    {this.state.lastComment.user &&
+                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                            <View style={{ width: 50, height: 50, borderRadius: 25, borderWidth: 1, borderColor: '#000' }}></View>
+                                            <View style={{ marginLeft: 10 }}>
+                                                <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 5 }}>{this.state.lastComment.user.name}</Text>
+                                                {this.state.post.assignee && this.state.post.assignee.id != this.props.userApp.currentUser.id ?
+                                                    <View style={{ width: 100 }}>
+                                                        <StarRating
+                                                            disabled={true}
+                                                            starSize={20}
+                                                            maxStars={5}
+                                                            rating={this.state.ratedoctor}
+                                                            starStyle={{ margin: 0 }}
+                                                            fullStarColor={"#fbbd04"}
+                                                            emptyStarColor={"#fbbd04"}
+                                                        />
+                                                    </View> : null
+                                                }
+                                            </View>
+                                        </View>
                                     }
-                                </View>
+                                    <View style={{ position: 'relative', marginTop: 10 }}>
+                                        <Dash style={{ width: 1, position: 'absolute', top: 0, bottom: 20, flexDirection: 'column', marginLeft: 25 }} dashStyle={{ backgroundColor: '#cacaca' }} />
+                                        <View style={{ marginLeft: 37, marginBottom: 20 }}>
+                                            <Text style={{ color: '#00000038' }}>
+                                                {this.getTime(this.state.lastComment.comment.createdDate)}
+                                            </Text>
+                                            <Text style={{ marginTop: 15, fontSize: 16 }}>{this.state.lastComment.comment.content}</Text>
+                                        </View>
+                                        
+                                    </View>
+                                </View> */}
+                                {
+                                    this.state.showComment && this.state.dataComment.map((item, index) => {
+                                        return !this.state.lastComment || item.comment.id != this.state.lastComment.comment.id ?
+                                            this.showItemComment(item, index) : null
+                                    })
+                                }
                                 {
                                     this.state.post.post.diagnose ?
                                         <View style={{
