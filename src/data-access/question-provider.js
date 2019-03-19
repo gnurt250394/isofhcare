@@ -56,5 +56,17 @@ module.exports = {
                     reject(e);
             });
         });
+    },
+    review(postId, star) {
+        return new Promise((resolve, reject) => {
+            client.requestApi("put", constants.api.question.review + "/" + postId, {
+                review: star
+            }, (s, e) => {
+                if (s)
+                    resolve(s);
+                if (e)
+                    reject(e);
+            });
+        });
     }
 }

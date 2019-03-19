@@ -9,19 +9,17 @@ import commentProvider from '@data-access/comment-provider';
 import dateUtils from 'mainam-react-native-date-utils';
 import ImageLoad from 'mainam-react-native-image-loader';
 import clientUtils from '@utils/client-utils';
-import Dimensions from 'Dimensions';
 import constants from '@resources/strings';
 import snackbar from '@utils/snackbar-utils';
-import Slide from '@components/slide/Slide';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import ImagePicker from 'mainam-react-native-select-image';
 import imageProvider from '@data-access/image-provider';
 import Form from "mainam-react-native-form-validate/Form";
-import Field from "mainam-react-native-form-validate/Field";
 import TextField from "mainam-react-native-form-validate/TextField";
 import DialogBox from 'react-native-dialogbox';
 import StarRating from 'react-native-star-rating';
 import Dash from 'mainam-react-native-dash-view';
+import connectionUtils from '@utils/connection-utils';
 
 const disease = [{
     value: 1,
@@ -53,7 +51,10 @@ class DetailQuestionScreen extends Component {
         super(props);
         const post = this.props.navigation.getParam("post", null);
         this.state = {
-            post
+            post,
+            writeQuestion: false,
+            confirmed: false,
+            rating: false
         }
     }
     componentDidMount() {
@@ -100,7 +101,7 @@ class DetailQuestionScreen extends Component {
             return null;
         }
     }
-    doctorSend() {
+    userSend() {
         if (!this.form.isValid()) { return; }
         this.dialogbox.confirm({
             title: constants.alert,
@@ -112,10 +113,10 @@ class DetailQuestionScreen extends Component {
                 },
                 callback: (() => {
                     this.setState({ isLoading: true }, () => {
-                        commentProvider.create(this.state.post.post.id, this.state.content, this.state.diagnose, "").then(s => {
+                        commentProvider.create(this.state.post.post.id, this.state.content, "", "").then(s => {
                             this.setState({ isLoading: false });
                             if (s.code == 0) {
-                                this.setState({ lastComment: s.data, commentCount: ((this.state.commentCount || 0) + 1), content: "" });
+                                this.setState({ lastComment: s.data, commentCount: ((this.state.commentCount || 0) + 1), content: "", writeQuestion: false });
                             }
                         }).catch(e => {
                             this.setState({ isLoading: false });
@@ -145,6 +146,29 @@ class DetailQuestionScreen extends Component {
             return Math.round(hour) + " giờ trước";
         }
     }
+    onStarRatingPress(rating) {
+        this.setState({
+            star: rating
+        }, () => {
+            this.setState({ isLoading: true }, () => {
+                connectionUtils.checkConnect(c => {
+                    if (c) {
+                        questionProvider.review(this.state.post.post.id, rating).then(s => {
+                            this.setState({ isLoading: false })
+                            snackbar.show("Bạn đã gửi đánh giá thành công", "success");
+                        }).catch(e => {
+                            snackbar.show("Gửi đánh giá không thành công", "danger");
+                            this.setState({ isLoading: false })
+                        });
+                    }
+                    else {
+                        snackbar.show("Không có kết nối mạng", "danger");
+                    }
+                });
+            });
+        });
+    }
+
     render() {
         // const post = this.props.navigation.getParam("post", null);
         let { post } = this.state;
@@ -254,17 +278,62 @@ class DetailQuestionScreen extends Component {
                                     }
                                 </View>
                                 {
-                                    this.state.post.post.diagnose &&
-                                    <View style={{
-                                        marginTop: 16,
-                                        flexDirection: 'row',
-                                        backgroundColor: 'rgb(239,240,241)', paddingTop: 14, paddingBottom: 14, paddingLeft: 18, paddingRight: 10
-                                    }}><View style={{ width: 16, height: 16, backgroundColor: 'rgb(2,195,154)', borderRadius: 8, marginTop: 2 }} />
-                                        <View style={{ flex: 1, marginLeft: 10 }}>
-                                            <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Chẩn đoán ban đầu</Text>
-                                            <Text>{this.state.post.post.diagnose}</Text>
-                                        </View></View>
+                                    this.state.post.post.diagnose ?
+                                        <View style={{
+                                            marginTop: 16,
+                                            flexDirection: 'row',
+                                            backgroundColor: 'rgb(239,240,241)', paddingTop: 14, paddingBottom: 14, paddingLeft: 18, paddingRight: 10
+                                        }}>
+                                            <View style={{ width: 16, height: 16, backgroundColor: 'rgb(2,195,154)', borderRadius: 8, marginTop: 2 }} />
+                                            <View style={{ flex: 1, marginLeft: 10 }}>
+                                                <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Chẩn đoán ban đầu</Text>
+                                                <Text>{this.state.post.post.diagnose}</Text>
+                                            </View>
+                                        </View> : null
                                 }
+                                {
+                                    !this.state.confirmed &&
+                                    <View>
+                                        <Text style={{ textAlign: 'center', marginTop: 39, fontSize: 16 }}>Bạn có hài lòng với câu hỏi này không?</Text>
+                                        <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 20 }}>
+                                            <TouchableOpacity onPress={() => { this.setState({ confirmed: true, writeQuestion: true }) }} style={{ width: 130, borderWidth: 1, borderColor: '#00000044', borderRadius: 6, alignItems: 'center', paddingTop: 5, paddingBottom: 5 }}><Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 5 }}>Không</Text><Text style={{ color: '#cacaca' }}>muốn hỏi thêm</Text></TouchableOpacity>
+                                            <TouchableOpacity onPress={() => { this.setState({ confirmed: true, rating: true }) }} style={{ width: 130, backgroundColor: 'rgb(2,195,154)', borderRadius: 6, marginLeft: 10, alignItems: 'center', paddingTop: 5, paddingBottom: 5 }}><Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 5, color: '#FFF' }}>Có</Text><Text style={{ color: '#fff' }}>cảm ơn bác sĩ</Text></TouchableOpacity>
+                                        </View>
+                                    </View>
+                                }
+                                {
+                                    this.state.writeQuestion &&
+                                    <View>
+                                        <View style={{
+                                            marginTop: 20,
+                                            flexDirection: 'row', borderRadius: 6, borderColor: "#cacaca", borderWidth: 1
+                                        }}>
+                                            <Form ref={ref => this.form = ref} style={{ flex: 1, marginTop: 10 }}>
+                                                <TextField placeholder={"Viết trả lời"}
+                                                    inputStyle={[{ textAlignVertical: 'top', paddingLeft: 10, paddingBottom: 5, paddingRight: 10 }]}
+                                                    errorStyle={[styles.errorStyle, { marginLeft: 10, marginBottom: 10 }]}
+                                                    onChangeText={(s) => this.setState({ content: s })}
+                                                    value={this.state.content}
+                                                    validate={{
+                                                        rules: {
+                                                            required: true,
+                                                            maxlength: 20000
+                                                        },
+                                                        messages:
+                                                        {
+                                                            required: "Câu trả lời bắt buộc phải nhập",
+                                                            maxlength: "Không cho phép nhập quá 20000 ký tự"
+                                                        }
+                                                    }}
+                                                />
+                                            </Form>
+                                            <TouchableOpacity style={{ padding: 20 }} onPress={this.userSend.bind(this)}>
+                                                <ScaleImage width={22} source={require("@images/new/send.png")} />
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
+                                }
+
                             </View>
                         }
                     </View>
@@ -338,6 +407,22 @@ class DetailQuestionScreen extends Component {
 
                     <View style={{ height: 100 }} />
                 </ScrollView>
+                {
+                    this.state.rating &&
+                    <View style={{ flexDirection: 'row', padding: 20, borderTopColor: '#cacaca', borderTopWidth: 2 }}>
+                        <Text style={{ flex: 1 }}>Đánh giá</Text>
+                        <StarRating
+                            starSize={30}
+                            maxStars={5}
+                            rating={this.state.star}
+                            starStyle={{ margin: 0 }}
+                            fullStarColor={"#fbbd04"}
+                            emptyStarColor={"#fbbd04"}
+                            selectedStar={(rating) => this.onStarRatingPress(rating)}
+                        />
+
+                    </View>
+                }
                 {
                     Platform.OS == "ios" &&
                     <KeyboardSpacer />

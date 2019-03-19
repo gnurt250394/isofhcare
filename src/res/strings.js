@@ -287,7 +287,8 @@ module.exports = {
       create: "post/create",
       search: "post/search",
       like: "post/like",
-      detail: "post/get-detail"
+      detail: "post/get-detail",
+      review: "post/review"
     },
     comment: {
       create: "comment/create",
