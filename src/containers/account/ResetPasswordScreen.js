@@ -59,7 +59,6 @@ class ResetPasswordScreen extends Component {
         snackbar.show(constants.msg.user.change_password_not_success, "danger");
       });
     });
-
   }
 
   render() {
@@ -68,7 +67,7 @@ class ResetPasswordScreen extends Component {
         style={{ flex: 1 }}
         touchToDismiss={true}
         title="Thiết lập mật khẩu"
-      isLoading={this.state.isLoading1}
+        isLoading={this.state.isLoading1}
       >
         <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
           <KeyboardAvoidingView behavior="padding">

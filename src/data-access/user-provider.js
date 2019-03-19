@@ -171,8 +171,10 @@ module.exports = {
                 applicationId,
                 newPassword: newPassword.toMd5()
             }, (s, e) => {
-                if (callback)
-                    callback(s, e);
+                if (s)
+                    resolve(s);
+                else
+                    reject(e);
             });
 
 

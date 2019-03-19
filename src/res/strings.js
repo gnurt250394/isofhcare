@@ -154,7 +154,7 @@ module.exports = {
       username_or_email_empty: "Tên đăng nhập hoặc email trống",
       account_blocked: "Tài khoản đã bị khóa, vui lòng liên hệ quản trị viên",
       username_or_password_incorrect:
-        "Email/tên đăng nhập hoặc mặt khẩu không đúng. Vui lòng thử lại!",
+        "Số điện thoại hoặc mặt khẩu không đúng. Vui lòng thử lại!",
       send_mail_recovery_success:
         "Link xác nhận mật khẩu mới đã được gửi về email bạn đăng ký",
       send_sms_recovery_success:
@@ -245,7 +245,7 @@ module.exports = {
       change_email: "user/update-email",
       confirm_code: "user/confirm-code",
       get_detail: "user/get-detail",
-      refresh_password_by_token:"user/refresh-password-by-token"
+      refresh_password_by_token: "user/refresh-password-by-token"
     },
     keyvalue: {
       get: "key-value/get-value",
