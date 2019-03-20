@@ -44,7 +44,6 @@ class CreateQuestionStep1Screen extends Component {
   }
   componentDidMount() {
     dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_POSTS, (s, e) => {
-      debugger;
       if (s) {
         this.setState({
           gender: s.gender || 1,

@@ -120,7 +120,8 @@ class ViewScheduleDoctorScreen extends Component {
         }, () => {
             $this.onDayPress(firstDayHasSchedule);
             if (loadNewMonth) {
-                $this.loadSchedule(this.props.booking.doctor.id, this.props.booking.specialist.id);
+                let specialist = this.props.booking.specialist || this.props.booking.specialist2;
+                $this.loadSchedule(this.props.booking.doctor.id, specialist ? specialist.id : "");
             }
 
         })
@@ -137,6 +138,9 @@ class ViewScheduleDoctorScreen extends Component {
 
                 if (res && res.length > 0) {
                     this.selectSpecialist(res[0]);
+                    this.props.dispatch({
+                        type: dhyCommand.action.action_select_booking_specialist2, value: res[0]
+                    })
                 }
                 this.setState({
                     listService: res
@@ -144,10 +148,10 @@ class ViewScheduleDoctorScreen extends Component {
             });
         } else {
             this.loadSchedule(this.props.booking.doctor.id, this.props.booking.specialist.id);
-        }
-        this.props.dispatch({
-            type: dhyCommand.action.action_select_booking_specialist2, value: this.props.booking.specialist
-        })
+            this.props.dispatch({
+                type: dhyCommand.action.action_select_booking_specialist2, value: this.props.booking.specialist
+            })
+        }        
     }
 
     toggleModalService() {
