@@ -180,7 +180,9 @@ class DetailQuestionScreen extends Component {
                 connectionUtils.checkConnect(c => {
                     if (c) {
                         questionProvider.review(this.state.post.post.id, rating).then(s => {
-                            this.setState({ isLoading: false })
+                            let post = this.state.post;
+                            post.post.status = 6;
+                            this.setState({ isLoading: false, post })
                             snackbar.show("Bạn đã gửi đánh giá thành công", "success");
                         }).catch(e => {
                             snackbar.show("Gửi đánh giá không thành công", "danger");
@@ -243,55 +245,59 @@ class DetailQuestionScreen extends Component {
         </View>
     }
     renderViewReview() {
-        if (this.state.post.post.status == 3 && (!this.state.lastComment2 || (this.state.lastComment2.user.id != this.props.userApp.currentUser.id)))
-            return (<View style={{ marginTop: 10 }}>
-                {
-                    !this.state.confirmed &&
-                    <View>
-                        <Text style={{ textAlign: 'center', marginTop: 39, fontSize: 16 }}>Bạn có hài lòng với câu hỏi này không?</Text>
-                        <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 20 }}>
-                            <TouchableOpacity onPress={() => { this.setState({ confirmed: true, writeQuestion: true }) }} style={{ width: 130, borderWidth: 1, borderColor: '#00000044', borderRadius: 6, alignItems: 'center', paddingTop: 5, paddingBottom: 5 }}><Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 5 }}>Không</Text><Text style={{ color: '#cacaca' }}>muốn hỏi thêm</Text></TouchableOpacity>
-                            <TouchableOpacity onPress={() => { this.setState({ confirmed: true, rating: true }) }} style={{ width: 130, backgroundColor: 'rgb(2,195,154)', borderRadius: 6, marginLeft: 10, alignItems: 'center', paddingTop: 5, paddingBottom: 5 }}><Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 5, color: '#FFF' }}>Có</Text><Text style={{ color: '#fff' }}>cảm ơn bác sĩ</Text></TouchableOpacity>
+        if (this.state.post.post.status == 3) {
+            if (this.state.userCommentCount == 3)
+                return null;
+            if (this.state.lastComment && this.state.lastComment2 && (this.state.lastComment2.user.id != this.props.userApp.currentUser.id))
+                return (<View style={{ marginTop: 10 }}>
+                    {
+                        !this.state.confirmed &&
+                        <View>
+                            <Text style={{ textAlign: 'center', marginTop: 39, fontSize: 16 }}>Bạn có hài lòng với câu hỏi này không?</Text>
+                            <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 20 }}>
+                                <TouchableOpacity onPress={() => { this.setState({ confirmed: true, writeQuestion: true }) }} style={{ width: 130, borderWidth: 1, borderColor: '#00000044', borderRadius: 6, alignItems: 'center', paddingTop: 5, paddingBottom: 5 }}><Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 5 }}>Không</Text><Text style={{ color: '#cacaca' }}>muốn hỏi thêm</Text></TouchableOpacity>
+                                <TouchableOpacity onPress={() => { this.setState({ confirmed: true, rating: true }) }} style={{ width: 130, backgroundColor: 'rgb(2,195,154)', borderRadius: 6, marginLeft: 10, alignItems: 'center', paddingTop: 5, paddingBottom: 5 }}><Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 5, color: '#FFF' }}>Có</Text><Text style={{ color: '#fff' }}>cảm ơn bác sĩ</Text></TouchableOpacity>
+                            </View>
                         </View>
-                    </View>
-                }
-                {
-                    this.state.writeQuestion &&
-                    <View>
-                        <View style={{
-                            marginTop: 20,
-                            flexDirection: 'row', borderRadius: 6, borderColor: "#cacaca", borderWidth: 1
-                        }}>
-                            <Form ref={ref => this.form = ref} style={{ flex: 1, marginTop: 10 }}>
-                                <TextField placeholder={"Viết trả lời"}
-                                    inputStyle={[{ textAlignVertical: 'top', paddingLeft: 10, paddingBottom: 5, paddingRight: 10 }]}
-                                    errorStyle={[styles.errorStyle, { marginLeft: 10, marginBottom: 10 }]}
-                                    onChangeText={(s) => this.setState({ content: s })}
-                                    value={this.state.content}
-                                    validate={{
-                                        rules: {
-                                            required: true,
-                                            maxlength: 20000
-                                        },
-                                        messages:
-                                        {
-                                            required: "Câu trả lời bắt buộc phải nhập",
-                                            maxlength: "Không cho phép nhập quá 20000 ký tự"
-                                        }
-                                    }}
-                                />
-                            </Form>
-                            <TouchableOpacity style={{ padding: 20 }} onPress={this.userSend.bind(this)}>
-                                <ScaleImage width={22} source={require("@images/new/send.png")} />
-                            </TouchableOpacity>
+                    }
+                    {
+                        this.state.writeQuestion &&
+                        <View>
+                            <View style={{
+                                marginTop: 20,
+                                flexDirection: 'row', borderRadius: 6, borderColor: "#cacaca", borderWidth: 1
+                            }}>
+                                <Form ref={ref => this.form = ref} style={{ flex: 1, marginTop: 10 }}>
+                                    <TextField placeholder={"Viết trả lời"}
+                                        inputStyle={[{ textAlignVertical: 'top', paddingLeft: 10, paddingBottom: 5, paddingRight: 10 }]}
+                                        errorStyle={[styles.errorStyle, { marginLeft: 10, marginBottom: 10 }]}
+                                        onChangeText={(s) => this.setState({ content: s })}
+                                        value={this.state.content}
+                                        validate={{
+                                            rules: {
+                                                required: true,
+                                                maxlength: 20000
+                                            },
+                                            messages:
+                                            {
+                                                required: "Câu trả lời bắt buộc phải nhập",
+                                                maxlength: "Không cho phép nhập quá 20000 ký tự"
+                                            }
+                                        }}
+                                    />
+                                </Form>
+                                <TouchableOpacity style={{ padding: 20 }} onPress={this.userSend.bind(this)}>
+                                    <ScaleImage width={22} source={require("@images/new/send.png")} />
+                                </TouchableOpacity>
+                            </View>
                         </View>
-                    </View>
-                }
-            </View>);
+                    }
+                </View>);
+        }
         return null;
     }
     renderViewRating() {
-        if (this.state.post.post.status != 6 && this.state.rating)
+        if (this.state.post.post.status != 6 && this.state.rating || (this.state.post.post.status == 3 && this.state.userCommentCount >= 3))
             return (<View style={{ flexDirection: 'row', padding: 20, borderTopColor: '#cacaca', borderTopWidth: 2 }}>
                 <Text style={{ flex: 1 }}>Đánh giá</Text>
                 <StarRating
