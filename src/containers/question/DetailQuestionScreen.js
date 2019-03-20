@@ -72,7 +72,7 @@ class DetailQuestionScreen extends Component {
 
                 }
 
-                this.setState({ post: s.data, showMore: post.post.status == 1 || post.post.status == 2, diagnose: post.post.diagnose, userCommentCount: post.post.numberCommentUser || 0, lastComment: doctorComment }, () => {
+                this.setState({ post: s.data, showMore: post.post.status == 1 || post.post.status == 2 || post.post.status == 4 || post.post.status == 5, diagnose: post.post.diagnose, userCommentCount: post.post.numberCommentUser || 0, lastComment: doctorComment }, () => {
                     commentProvider.search(this.state.post.post.id, 1, 1).then(s => {
                         if (s.code == 0) {
                             if (s.data && s.data.data && s.data.data.length > 0) {
@@ -245,6 +245,37 @@ class DetailQuestionScreen extends Component {
             </View>
         </View>
     }
+
+    renderFormSendWithoutDiagnostic() {
+        return (<View style={{
+            marginTop: 20,
+            flexDirection: 'row', borderRadius: 6, borderColor: "#cacaca", borderWidth: 1
+        }}>
+            <Form ref={ref => this.form = ref} style={{ flex: 1, marginTop: 10 }}>
+                <TextField placeholder={"Viết trả lời"}
+                    inputStyle={[{ textAlignVertical: 'top', paddingLeft: 10, paddingBottom: 5, paddingRight: 10 }]}
+                    errorStyle={[styles.errorStyle, { marginLeft: 10, marginBottom: 10 }]}
+                    onChangeText={(s) => this.setState({ content: s })}
+                    value={this.state.content}
+                    validate={{
+                        rules: {
+                            required: true,
+                            maxlength: 20000
+                        },
+                        messages:
+                        {
+                            required: "Câu trả lời bắt buộc phải nhập",
+                            maxlength: "Không cho phép nhập quá 20000 ký tự"
+                        }
+                    }}
+                />
+            </Form>
+            <TouchableOpacity style={{ padding: 20 }} onPress={this.doctorSend.bind(this)}>
+                <ScaleImage width={22} source={require("@images/new/send.png")} />
+            </TouchableOpacity>
+        </View>);
+    }
+
     renderViewReview() {
         if (this.state.post.post.status == 3) {
             if (this.state.userCommentCount == 3)
@@ -263,35 +294,7 @@ class DetailQuestionScreen extends Component {
                     }
                     {
                         this.state.writeQuestion &&
-                        <View>
-                            <View style={{
-                                marginTop: 20,
-                                flexDirection: 'row', borderRadius: 6, borderColor: "#cacaca", borderWidth: 1
-                            }}>
-                                <Form ref={ref => this.form = ref} style={{ flex: 1, marginTop: 10 }}>
-                                    <TextField placeholder={"Viết trả lời"}
-                                        inputStyle={[{ textAlignVertical: 'top', paddingLeft: 10, paddingBottom: 5, paddingRight: 10 }]}
-                                        errorStyle={[styles.errorStyle, { marginLeft: 10, marginBottom: 10 }]}
-                                        onChangeText={(s) => this.setState({ content: s })}
-                                        value={this.state.content}
-                                        validate={{
-                                            rules: {
-                                                required: true,
-                                                maxlength: 20000
-                                            },
-                                            messages:
-                                            {
-                                                required: "Câu trả lời bắt buộc phải nhập",
-                                                maxlength: "Không cho phép nhập quá 20000 ký tự"
-                                            }
-                                        }}
-                                    />
-                                </Form>
-                                <TouchableOpacity style={{ padding: 20 }} onPress={this.userSend.bind(this)}>
-                                    <ScaleImage width={22} source={require("@images/new/send.png")} />
-                                </TouchableOpacity>
-                            </View>
-                        </View>
+                        this.renderFormSendWithoutDiagnostic()
                     }
                 </View>);
         }
@@ -366,6 +369,85 @@ class DetailQuestionScreen extends Component {
             });
         return null;
     }
+    isFinish() {
+        let lastInteractive = this.state.lastInteractive;
+        totalTime = new Date() - (lastInteractive || new Date());
+        return (totalTime > (1000 * 60 * 60 * 2) || this.state.post.post.status == 6);
+    }
+    renderStatusPost() {
+        if (this.isFinish()) {
+            return (<View style={{ marginTop: 25 }}>
+                <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'rgb(0,141,111)' }}>Trạng thái: Hoàn thành</Text>
+            </View>);
+        }
+
+        if (this.state.post.post.status == 1 || this.state.post.post.status == 2 || this.state.post.post.status == 5) {
+            return (<View style={{ marginTop: 25 }}>
+                <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'rgb(0,141,111)' }}>Trạng thái: Chờ trả lời</Text>
+            </View>);
+        }
+
+        if (this.state.post.post.status == 4) {
+            return <View>
+                <View style={{ marginTop: 25 }}>
+                    <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'rgb(106,1,54)' }}>Trạng thái: Bị từ chối</Text>
+                </View>
+                {
+                    this.state.post.post.reject ?
+                        <View style={{ backgroundColor: 'rgba(106,1,54,0.11)', padding: 17, marginTop: 13 }}>
+                            <Text style={{ fontWeight: 'bold', color: 'rgb(106,1,54)' }}>Lý do từ chối: {this.state.post.post.reject}</Text>
+                        </View> : null
+                }
+            </View>
+        }
+
+        return null;
+    }
+    renderDiagnosticView() {
+        return this.state.post.post.diagnose ?
+            <View style={{
+                marginTop: 16,
+                flexDirection: 'row',
+                backgroundColor: 'rgb(239,240,241)', paddingTop: 14, paddingBottom: 14, paddingLeft: 18, paddingRight: 10
+            }}>
+                <View style={{ width: 16, height: 16, backgroundColor: 'rgb(2,195,154)', borderRadius: 8, marginTop: 2 }} />
+                <View style={{ flex: 1, marginLeft: 10 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 5 }}>
+                        <Text style={{ fontWeight: 'bold', fontSize: 16, flex: 1 }}>Chẩn đoán ban đầu</Text>
+                        {
+                            !this.isFinish() &&
+                            <View>
+                                {
+                                    !this.state.editDiagnostic && this.state.post.post.status != 6 ?
+                                        <TouchableOpacity onPress={() => this.setState({ editDiagnostic: true })}><Text style={{ color: 'rgb(2,195,154)' }}>Chỉnh sửa</Text></TouchableOpacity> :
+                                        <TouchableOpacity onPress={() => this.setState({ editDiagnostic: false })}><Text style={{ color: 'red' }}>Hủy</Text></TouchableOpacity>
+                                }
+                            </View>
+                        }
+                    </View>
+                    <Text>{this.state.post.post.diagnose}</Text>
+                </View>
+            </View> : null;
+    }
+    renderShowMoreComment() {
+        return this.state.loadingComment ?
+            <View style={{ alignItems: 'center', padding: 10 }}>
+                <ActivityIndicator
+                    size={'small'}
+                    color={'gray'}
+                />
+            </View> :
+            !this.state.showComment ?
+                this.state.commentCount != 0 ?
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <View style={{ width: 12, height: 12, borderRadius: 6, backgroundColor: 'rgb(155,155,155)', marginLeft: 20 }} />
+                        <TouchableOpacity onPress={this.showAllComment.bind(this)}>
+                            <Text style={{ color: 'rgb(10,155,225)', marginLeft: 10 }} > Xem thêm {this.state.commentCount} trả lời ></Text>
+                        </TouchableOpacity>
+                    </View> :
+                    null
+                : null
+    }
     render() {
         // const post = this.props.navigation.getParam("post", null);
         let { post } = this.state;
@@ -382,21 +464,6 @@ class DetailQuestionScreen extends Component {
                     {
                         this.showMoreInfo()
                     }
-                    {
-                        !this.state.lastComment &&
-                        <View style={{ marginTop: 25 }}>
-                            {
-                                this.state.post.post.isAnswered == 0 ?
-                                    <Text style={{ fontSize: 15 }}>Trạng thái: <Text>{this.state.post.post.reject ? "Đã bị từ chối" : "Chưa trả lời"}</Text></Text> : null
-                            }
-                            {
-                                this.state.post.post.reject ?
-                                    <View style={{ backgroundColor: 'rgba(106,1,54,0.11)', padding: 17, marginTop: 13 }}>
-                                        <Text style={{ fontWeight: 'bold', color: 'rgb(106,1,54)' }}>Lý do từ chối: {this.state.post.post.reject}</Text>
-                                    </View> : null
-                            }
-                        </View>
-                    }
                     <View>
                         {
                             this.state.lastComment &&
@@ -405,36 +472,23 @@ class DetailQuestionScreen extends Component {
                                     this.showItemComment(this.state.lastComment, -1)
                                 }
                                 {
-                                    (!this.state.showComment && !this.state.loadingComment) ?
-                                        this.state.commentCount != 0 ? <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                            <View style={{ width: 12, height: 12, borderRadius: 6, backgroundColor: 'rgb(155,155,155)', marginLeft: 20 }} />
-                                            <TouchableOpacity onPress={this.showAllComment.bind(this)}>
-                                                <Text style={{ color: 'rgb(10,155,225)', marginLeft: 10 }} > Xem thêm {this.state.commentCount} trả lời ></Text>
-                                            </TouchableOpacity>
-                                        </View> : null : null
+                                    this.renderShowMoreComment()
                                 }
                                 {
                                     this.renderListComment()
                                 }
                                 {
-                                    this.state.post.post.diagnose ?
-                                        <View style={{
-                                            marginTop: 16,
-                                            flexDirection: 'row',
-                                            backgroundColor: 'rgb(239,240,241)', paddingTop: 14, paddingBottom: 14, paddingLeft: 18, paddingRight: 10
-                                        }}>
-                                            <View style={{ width: 16, height: 16, backgroundColor: 'rgb(2,195,154)', borderRadius: 8, marginTop: 2 }} />
-                                            <View style={{ flex: 1, marginLeft: 10 }}>
-                                                <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Chẩn đoán ban đầu</Text>
-                                                <Text>{this.state.post.post.diagnose}</Text>
-                                            </View>
-                                        </View> : null
+                                    this.renderDiagnosticView()
                                 }
-                            </View>}
-                        {
-                            this.renderViewReview()
+                            </View>
                         }
                     </View>
+                    {
+                        this.renderViewReview()
+                    }
+                    {
+                        this.renderStatusPost()
+                    }
                     <View style={{ height: 100 }} />
                 </ScrollView>
                 {
