@@ -36,15 +36,18 @@ class ItemQuestion extends Component {
                                 <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{item.author.name}</Text>
                                 <View style={{ flexDirection: 'row' }}>
                                     <Text style={{ flex: 1, fontSize: 15, color: '#00000048' }}>{this.getTime(item.post.createdDate)}</Text>
-                                    <StarRating
-                                        disabled={true}
-                                        starSize={20}
-                                        maxStars={5}
-                                        rating={item.post.review}
-                                        starStyle={{ margin: 0 }}
-                                        fullStarColor={"#fbbd04"}
-                                        emptyStarColor={"#fbbd04"}
-                                    />
+                                    {
+                                        item.post.status == 6 &&
+                                        <StarRating
+                                            disabled={true}
+                                            starSize={20}
+                                            maxStars={5}
+                                            rating={item.post.review}
+                                            starStyle={{ margin: 0 }}
+                                            fullStarColor={"#fbbd04"}
+                                            emptyStarColor={"#fbbd04"}
+                                        />
+                                    }
                                 </View>
                             </View>
                         </View>
@@ -63,9 +66,18 @@ class ItemQuestion extends Component {
                                             }
                                         </View>
                                         <View>
-                                            <Text style={{ padding: 5, color: 'rgb(0,141,111)', fontWeight: 'bold' }}>
-                                                {this.props.item.post.commentCount} trả lời
-                                                </Text>
+                                            {
+                                                item.post.status == 1 || item.post.status == 2 || item.post.status == 5 ?
+                                                    <Text style={{ padding: 5, color: 'rgb(0,141,111)', fontWeight: 'bold' }}>Chờ trả lời</Text> :
+                                                    item.post.status == 3 ?
+                                                        < Text style={{ padding: 5, color: 'rgb(0,141,111)', fontWeight: 'bold' }}>{this.props.item.post.commentCount} trả lời</Text> :
+                                                        item.post.status == 4 ?
+                                                            < Text style={{ padding: 5, color: 'rgb(0,141,111)', fontWeight: 'bold' }}>Đã bị từ chối</Text>
+                                                            :
+                                                            item.post.status ?
+                                                                < Text style={{ padding: 5, color: 'rgb(0,141,111)', fontWeight: 'bold' }}>Hoàn thành</Text> :
+                                                                null
+                                            }
                                         </View>
                                     </View>
                                 }

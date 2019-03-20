@@ -71,7 +71,8 @@ class DetailQuestionScreen extends Component {
                 } catch (error) {
 
                 }
-                this.setState({ post: s.data, diagnose: post.post.diagnose, userCommentCount: post.post.numberCommentUser || 0, lastComment: doctorComment }, () => {
+
+                this.setState({ post: s.data, showMore: post.post.status == 1 || post.post.status == 2, diagnose: post.post.diagnose, userCommentCount: post.post.numberCommentUser || 0, lastComment: doctorComment }, () => {
                     commentProvider.search(this.state.post.post.id, 1, 1).then(s => {
                         if (s.code == 0) {
                             if (s.data && s.data.data && s.data.data.length > 0) {
@@ -370,7 +371,6 @@ class DetailQuestionScreen extends Component {
         let { post } = this.state;
         return (
             <ActivityPanel style={{ flex: 1 }} title="Tư vấn online" showFullScreen={true} isLoading={this.state.isLoading}>
-                {/* <Text>{JSON.stringify(post)}</Text> */}
                 <ScrollView ref={(ref) => { this.scrollView = ref }} style={{ padding: 20 }} >
                     <View style={{ flexDirection: "row", alignItems: 'center' }}>
                         <View style={{ flex: 1 }} ><Text style={{ fontSize: 18, fontWeight: 'bold' }}>{post.author ? post.author.name : ""}</Text></View>
