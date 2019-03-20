@@ -228,7 +228,7 @@ class LoginScreen extends Component {
 					<KeyboardAvoidingView behavior="padding">
 						<View style={{ flex: 1 }}>
 							<View style={{ margin: 22 }}>
-								<Card style={{ padding: 22, paddingTop: 10,  borderRadius: 5, marginTop: 60 }}>
+								<Card style={{ padding: 22, paddingTop: 10, borderRadius: 5, marginTop: 60 }}>
 									<Form ref={ref => (this.form = ref)}>
 										<Field clearWhenFocus={true}>
 											<TextField
@@ -275,10 +275,12 @@ class LoginScreen extends Component {
 												style={{ alignItems: "flex-start", flex: 1 }}
 											>
 												<Text
+													numberOfLines={1}
+													ellipsizeMode="tail"
 													style={{
 														color: '#028090',
-														paddingRight: 10,
-														fontSize: 16
+														paddingRight: 5,
+														fontSize: 14
 													}}>
 													Quên mật khẩu?
 													</Text>
@@ -290,7 +292,7 @@ class LoginScreen extends Component {
 												<Text
 													style={{
 														color: "rgb(2,195,154)",
-														fontSize: 16,
+														fontSize: 14,
 														fontWeight: 'bold',
 														marginRight: 5
 													}}

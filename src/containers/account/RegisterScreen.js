@@ -173,7 +173,6 @@ class RegisterScreen extends Component {
                       }}
                       inputStyle={{
                         backgroundColor: "#FFF",
-                        height: 42,
                         color: "#006ac6",
                         borderBottomWidth: 2,
                         borderBottomColor: "#02C39A",

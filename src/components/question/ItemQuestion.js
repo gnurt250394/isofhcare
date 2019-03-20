@@ -1,9 +1,10 @@
 import React, { Component, PropTypes } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import dateUtils from 'mainam-react-native-date-utils';
 import { connect } from 'react-redux';
 import { Card } from 'native-base';
 import StarRating from 'react-native-star-rating';
+import ImageLoad from 'mainam-react-native-image-loader';
 class ItemQuestion extends Component {
     constructor(props) {
         super(props)
@@ -24,15 +25,27 @@ class ItemQuestion extends Component {
     }
     render() {
         let { item } = this.props;
+        const source = item.user && item.user.avatar ? { uri: item.user.avatar.absoluteUrl() } : require("@images/new/user.png");
         return this.props.item && this.props.item.post ?
             <View style={{ margin: 20, marginTop: 0 }}>
                 <Card style={{ padding: 20, borderRadius: 6 }}>
                     <TouchableOpacity key={this.props.index} onPress={() => this.props.navigation.navigate("detailQuestion", { post: this.props.item })}>
                         <View style={{ width: 25, height: 4, backgroundColor: item.post.status == 4 ? 'rgb(106,1,54)' : 'rgb(0,141,111)', borderRadius: 2, alignSelf: 'center', marginBottom: 27 }} />
                         <View style={{ flexDirection: 'row' }} >
-                            <View style={{ width: 50, height: 50, borderRadius: 25, borderWidth: 1, borderColor: "#000" }}>
-
-                            </View>
+                            <ImageLoad
+                                resizeMode="cover"
+                                imageStyle={{ borderRadius: 25 }}
+                                borderRadius={25}
+                                customImagePlaceholderDefaultStyle={[styles.avatar, { width: 50, height: 50 }]}
+                                placeholderSource={require("@images/new/user.png")}
+                                style={styles.avatar}
+                                resizeMode="cover"
+                                loadingStyle={{ size: 'small', color: 'gray' }}
+                                source={source}
+                                defaultImage={() => {
+                                    return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={50} height={50} style={styles.avatar} />
+                                }}
+                            />
                             <View style={{ flex: 1, marginLeft: 12, marginTop: 5 }}>
                                 <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{item.author.name}</Text>
                                 <View style={{ flexDirection: 'row' }}>
@@ -91,6 +104,15 @@ class ItemQuestion extends Component {
     }
 }
 
+
+const styles = StyleSheet.create({
+    avatar: {
+        alignSelf: 'center',
+        borderRadius: 25,
+        width: 50,
+        height: 50
+    }
+});
 function mapStateToProps(state) {
     return {
         userApp: state.userApp,
