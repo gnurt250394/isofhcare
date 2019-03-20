@@ -149,7 +149,7 @@ class LoginSocial extends Component {
                 </TouchableOpacity>
                 <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center' }} onPress={this.handleSigninGoogle.bind(this)}>
                     <ScaleImage source={require("@images/new/google.png")} height={20} style={{ marginRight: 10 }} />
-                    <Text>Google</Text>
+                    <Text>Gmail</Text>
                 </TouchableOpacity>
             </View>
         );

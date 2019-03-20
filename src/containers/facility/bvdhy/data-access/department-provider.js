@@ -4,7 +4,7 @@ import datacacheProvider from '@data-access/datacache-provider';
 
 module.exports = {
     syncDepartment(callback) {
-        client.requestApi("get", dhyCommand.api.department.getList + "?source=" + 1, {}, (s, e) => {
+        client.requestApi("get", dhyCommand.api.department.getList + "/" + 1, {}, (s, e) => {
             try {
                 if (s && s.code == 0) {
                     datacacheProvider.save('', dhyCommand.key.storage.department, s.data.departments);

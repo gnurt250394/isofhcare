@@ -70,8 +70,7 @@ module.exports = {
             {
                 Accept: 'application/json',
                 'Content-Type': 'multipart/form-data',
-                'Authorization': this.auth,
-                'Device':'Mobile'
+                'Authorization': this.auth
             }, data, (s, e) => {
                 if (s) {
                     s.json().then(val => {
@@ -94,8 +93,7 @@ module.exports = {
             {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': this.auth,            
-                'Device':'Mobile'
+                'Authorization': this.auth
             }, dataBody, (s, e) => {
                 if (s) {
                     s.json().then(val => {
@@ -111,6 +109,7 @@ module.exports = {
             });
     },
     requestFetch(methodType, url, header, body, funRes) {
+        console.log(url);
         let data = {
             methodType,
             url: url.getServiceUrl(),

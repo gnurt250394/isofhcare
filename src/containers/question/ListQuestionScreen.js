@@ -50,6 +50,7 @@ class ListQuestionScreen extends Component {
                 style={{ flex: 1 }}
                 title={"Tư vấn online"}
                 showFullScreen={true}
+                menuButton={this.menuCreate()}
                 isLoading={this.state.isLoading}
                 actionbarStyle={{
                     backgroundColor: '#02C39A'

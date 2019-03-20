@@ -219,14 +219,14 @@ module.exports = {
         get_by_doctor_specialist_department: "schedule/get-by-doctor-specialist-department"
       },
       booking_specialist: {
-        get_by_doctor_department: "specialist/get-by-department-doctor"
+        get_by_doctor_department: "specialist-booking/get-by-department-doctor"
   
       },
       booking_doctor: {
-        get_by_specialist_department: "doctor/get-by-department-specialist",
+        get_by_specialist_department: "doctor-booking/get-by-department-specialist",
       },
       department: {
-        getList: "department/get-all"
+        getList: "department-booking/get-all"
       },
       profile: {
         create:"profile/create",
@@ -255,7 +255,7 @@ module.exports = {
         changeEmail: "user/update-email"
       },
       specialist: {
-        get_all:'specialist/get-all'
+        get_all:'specialist-booking/get-all'
       }
     }
   };

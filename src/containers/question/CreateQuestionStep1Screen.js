@@ -132,7 +132,7 @@ class CreateQuestionStep1Screen extends Component {
         <ScrollView style={{ flex: 1, position: 'relative' }} keyboardShouldPersistTaps="always">
           <View style={{ backgroundColor: '#02C39A', height: 130, position: 'absolute', top: 0, left: 0, right: 0 }}></View>
           <View style={{ margin: 22, marginTop: 10 }}>
-            <Card style={{ padding: 22, align: 'center' }}>
+            <Card style={{ padding: 22 }}>
               <View style={{ backgroundColor: '#02C39A', width: 20, height: 4, borderRadius: 2, alignSelf: 'center' }}></View>
               <Form
                 ref={ref => (this.form = ref)}

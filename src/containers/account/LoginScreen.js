@@ -228,7 +228,7 @@ class LoginScreen extends Component {
 					<KeyboardAvoidingView behavior="padding">
 						<View style={{ flex: 1 }}>
 							<View style={{ margin: 22 }}>
-								<Card style={{ padding: 22, paddingTop: 10, align: 'center', borderRadius: 5, marginTop: 60 }}>
+								<Card style={{ padding: 22, paddingTop: 10,  borderRadius: 5, marginTop: 60 }}>
 									<Form ref={ref => (this.form = ref)}>
 										<Field clearWhenFocus={true}>
 											<TextField

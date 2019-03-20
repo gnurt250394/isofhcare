@@ -53,20 +53,31 @@ class ItemQuestion extends Component {
                         <View style={{ alignContent: 'flex-end', flexDirection: 'row' }}>
                             <View style={{ flex: 1 }}>
                                 {
-                                    this.props.item.specialist &&
-                                    <Text style={{ padding: 5 }}>
-                                        {this.props.item.specialist.name}
-                                    </Text>
+                                    <View style={{ flexDirection: 'row' }}>
+                                        <View style={{ flex: 1 }}>
+                                            {
+                                                this.props.item.specialist &&
+                                                <Text style={{ padding: 5, color: 'rgb(155,155,155)' }}>
+                                                    {this.props.item.specialist.name}
+                                                </Text>
+                                            }
+                                        </View>
+                                        <View>
+                                            <Text style={{ padding: 5, color: 'rgb(0,141,111)', fontWeight: 'bold' }}>
+                                                {this.props.item.post.commentCount} trả lời
+                                                </Text>
+                                        </View>
+                                    </View>
                                 }
-                                {
+                                {/* {
                                     this.props.item.post.isAnswered == 0 ?
                                         <Text>Trạng thái: <Text>{this.props.item.post.reject ? "Đã bị từ chối" : "Chưa trả lời"}</Text></Text> : null
-                                }
+                                } */}
                             </View>
                         </View>
                     </TouchableOpacity>
                 </Card>
-            </View> : null
+            </View > : null
     }
 }
 
