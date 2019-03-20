@@ -23,7 +23,7 @@ class ListQuestionScreen extends Component {
     }
     menuCreate() {
         return <View>
-            <TouchableOpacity style={{ padding: 10 }} onPress={() => this.props.navigation.navigate("createQuestionStep1")}>
+            <TouchableOpacity style={{ marginRight: 20 }} onPress={() => this.props.navigation.navigate("createQuestionStep1")}>
                 <ScaleImage source={require("@images/new/ic_create.png")} width={32} /></TouchableOpacity>
         </View >
     }
@@ -56,6 +56,7 @@ class ListQuestionScreen extends Component {
                 actionbarStyle={{
                     backgroundColor: '#02C39A'
                 }}
+                titleStyle={{ marginRight: 0}}
             >
                 <View style={{ flex: 1, position: 'relative' }} keyboardShouldPersistTaps="always">
                     <View style={{ backgroundColor: '#02C39A', height: 130, position: 'absolute', top: 0, left: 0, right: 0 }}></View>
