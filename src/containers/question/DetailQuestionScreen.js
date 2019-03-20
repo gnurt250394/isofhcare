@@ -270,7 +270,7 @@ class DetailQuestionScreen extends Component {
                     }}
                 />
             </Form>
-            <TouchableOpacity style={{ padding: 20 }} onPress={this.doctorSend.bind(this)}>
+            <TouchableOpacity style={{ padding: 20 }} onPress={this.userSend.bind(this)}>
                 <ScaleImage width={22} source={require("@images/new/send.png")} />
             </TouchableOpacity>
         </View>);
@@ -414,16 +414,6 @@ class DetailQuestionScreen extends Component {
                 <View style={{ flex: 1, marginLeft: 10 }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 5 }}>
                         <Text style={{ fontWeight: 'bold', fontSize: 16, flex: 1 }}>Chẩn đoán ban đầu</Text>
-                        {
-                            !this.isFinish() &&
-                            <View>
-                                {
-                                    !this.state.editDiagnostic && this.state.post.post.status != 6 ?
-                                        <TouchableOpacity onPress={() => this.setState({ editDiagnostic: true })}><Text style={{ color: 'rgb(2,195,154)' }}>Chỉnh sửa</Text></TouchableOpacity> :
-                                        <TouchableOpacity onPress={() => this.setState({ editDiagnostic: false })}><Text style={{ color: 'red' }}>Hủy</Text></TouchableOpacity>
-                                }
-                            </View>
-                        }
                     </View>
                     <Text>{this.state.post.post.diagnose}</Text>
                 </View>
