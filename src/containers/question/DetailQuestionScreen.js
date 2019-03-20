@@ -357,6 +357,14 @@ class DetailQuestionScreen extends Component {
             }
         </View>
     }
+    renderListComment() {
+        if (this.state.showComment)
+            return this.state.dataComment.map((item, index) => {
+                return !this.state.lastComment || item.comment.id != this.state.lastComment.comment.id ?
+                    this.showItemComment(item, index) : null
+            });
+        return null;
+    }
     render() {
         // const post = this.props.navigation.getParam("post", null);
         let { post } = this.state;
@@ -406,10 +414,7 @@ class DetailQuestionScreen extends Component {
                                         </View> : null : null
                                 }
                                 {
-                                    this.state.showComment && this.state.dataComment.map((item, index) => {
-                                        return !this.state.lastComment || item.comment.id != this.state.lastComment.comment.id ?
-                                            this.showItemComment(item, index) : null
-                                    })
+                                    this.renderListComment()
                                 }
                                 {
                                     this.state.post.post.diagnose ?
