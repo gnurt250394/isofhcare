@@ -28,6 +28,7 @@ class ItemQuestion extends Component {
             <View style={{ margin: 20, marginTop: 0 }}>
                 <Card style={{ padding: 20, borderRadius: 6 }}>
                     <TouchableOpacity key={this.props.index} onPress={() => this.props.navigation.navigate("detailQuestion", { post: this.props.item })}>
+                        <View style={{ width: 25, height: 4, backgroundColor: item.post.status == 4 ? 'rgb(106,1,54)' : 'rgb(0,141,111)', borderRadius: 2, alignSelf: 'center', marginBottom: 27 }} />
                         <View style={{ flexDirection: 'row' }} >
                             <View style={{ width: 50, height: 50, borderRadius: 25, borderWidth: 1, borderColor: "#000" }}>
 
@@ -67,16 +68,13 @@ class ItemQuestion extends Component {
                                         </View>
                                         <View>
                                             {
-                                                item.post.status == 1 || item.post.status == 2 || item.post.status == 5 ?
-                                                    <Text style={{ padding: 5, color: 'rgb(0,141,111)', fontWeight: 'bold' }}>Chờ trả lời</Text> :
-                                                    item.post.status == 3 ?
-                                                        < Text style={{ padding: 5, color: 'rgb(0,141,111)', fontWeight: 'bold' }}>{this.props.item.post.commentCount} trả lời</Text> :
-                                                        item.post.status == 4 ?
-                                                            < Text style={{ padding: 5, color: 'rgb(0,141,111)', fontWeight: 'bold' }}>Đã bị từ chối</Text>
-                                                            :
-                                                            item.post.status ?
-                                                                < Text style={{ padding: 5, color: 'rgb(0,141,111)', fontWeight: 'bold' }}>Hoàn thành</Text> :
-                                                                null
+                                                item.post.status == 1 || item.post.status == 2 || item.post.status == 5 || item.post.status == 3 ?
+                                                    <Text style={{ padding: 5, color: 'rgb(0,141,111)', fontWeight: 'bold' }}>{this.props.item.post.commentCount} trả lời</Text> :
+                                                    item.post.status == 4 ?
+                                                        <Text style={{ padding: 5, color: 'rgb(106,1,54)', fontWeight: 'bold' }}>Đã bị từ chối</Text> :
+                                                        item.post.status ?
+                                                            <Text style={{ padding: 5, color: 'rgb(0,141,111)', fontWeight: 'bold' }}>Đã hoàn thành</Text> :
+                                                            null
                                             }
                                         </View>
                                     </View>

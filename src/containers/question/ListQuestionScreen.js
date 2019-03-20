@@ -23,7 +23,8 @@ class ListQuestionScreen extends Component {
     }
     menuCreate() {
         return <View>
-            <TouchableOpacity style={{ padding: 10 }} onPress={() => this.props.navigation.navigate("createQuestionStep1")}><Text>Tạo</Text></TouchableOpacity>
+            <TouchableOpacity style={{ padding: 10 }} onPress={() => this.props.navigation.navigate("createQuestionStep1")}>
+                <ScaleImage source={require("@images/new/ic_create.png")} width={32} /></TouchableOpacity>
         </View >
     }
     componentWillReceiveProps(props) {
