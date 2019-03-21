@@ -124,7 +124,6 @@ class CreateQuestionStep2Screen extends Component {
                         images += item.url;
                     });
                     questionProvider.create(this.state.content, this.state.gender, this.state.age, this.state.specialist_item ? this.state.specialist_item.specialist.id : "0", this.state.disease, this.state.otherContent, images).then(s => {
-                        alert(JSON.stringify(s));
                         dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_POSTS, {
                             gender: this.state.gender,
                             age: this.state.age,

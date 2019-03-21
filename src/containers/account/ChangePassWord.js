@@ -35,7 +35,6 @@ class ProfileScreen extends Component {
         }
         userProvider.changePassword(user.currentUser.id, this.state.passwordOld, this.state.passwordNew).then(s => {
             console.log(s, e)
-            alert(JSON.stringify(s));
             switch (s.code) {
                 case 0:
                     snackbar.show(constants.msg.user.change_password_success, 'success');
