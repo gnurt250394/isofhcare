@@ -21,6 +21,9 @@ import { isIphoneX } from "react-native-iphone-x-helper";
 import redux from "@redux-store";
 import ImageLoad from "mainam-react-native-image-loader";
 import snackbar from "@utils/snackbar-utils";
+import ImagePicker from 'mainam-react-native-select-image';
+import imageProvider from '@data-access/image-provider';
+import userProvider from '@data-access/user-provider';
 
 const resetAction = routeName =>
   NavigationActions.reset({
@@ -33,6 +36,9 @@ const resetAction = routeName =>
 class DrawerContent extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      user: this.props.userApp.currentUser
+    }
   }
 
   onNavigate(route) {
@@ -49,11 +55,45 @@ class DrawerContent extends Component {
   login() {
     this.props.navigation.navigate("login");
   }
+
+  uploadAvatar() {
+    if (this.imagePicker) {
+      this.imagePicker.open(true, 200, 200, image => {
+        this.setState({ isLoading: true });
+        imageProvider.upload(image.path, (s, e) => {
+          if (s && s.data.code == 0) {
+            this.setState({ avatar: s.data.data.images[0].thumbnail }, () => {
+              this.state.user.avatar = s.data.data.images[0].thumbnail
+              // let user1 = this.props.userApp.currentUser;
+              // user1.avatar = s.data.data.images[0].thumbnail;
+              // let user = {
+              //   user: user1,
+              //   specialist: user1.specialist
+              // }
+              this.props.dispatch(redux.userLogin(this.state.user));
+              delete this.state.user.dob
+              this.updateUser(this.state.user)
+              this.setState({ isLoading: false });
+            });
+          } else {
+            this.setState({ isLoading: false });
+          }
+        })
+      })
+    }
+  }
+
+  updateUser(user) {
+    userProvider.update(user, (s, e) => {
+      console.log("0000000000000000000000000000000")
+      console.log(s, e)
+      console.log("0000000000000000000000000000000")
+    })
+  }
+
   render() {
     const icSupport = require("@images/ichotro.png");
-    const source = this.props.userApp.currentUser.avatar
-      ? { uri: this.props.userApp.currentUser.avatar.absoluteUrl() }
-      : icSupport;
+    const source = this.state.user.avatar ? { uri: this.state.user.avatar.absoluteUrl() } : icSupport;
     return (
       <View style={styles.container}>
         <ActionBar
@@ -79,9 +119,7 @@ class DrawerContent extends Component {
             <View>
               <TouchableOpacity
                 style={styles.menu_item}
-                onPress={() => {
-                  // this.props.navigation.navigate("profile");
-                }}
+                onPress={this.uploadAvatar.bind(this)}
               >
                 <ImageLoad
                   resizeMode="cover"
@@ -108,20 +146,20 @@ class DrawerContent extends Component {
                     );
                   }}
                 />
-                <Text
-                  style={{
-                    alignSelf: "center",
-                    fontWeight: "bold",
-                    fontSize: 15,
-                    color: "rgb(35,66,155)",
-                    marginTop: 18
-                  }}
-                >
-                  {this.props.userApp.currentUser.name
-                    ? this.props.userApp.currentUser.name.toUpperCase()
-                    : ""}
-                </Text>
               </TouchableOpacity>
+              <Text
+                style={{
+                  alignSelf: "center",
+                  fontWeight: "bold",
+                  fontSize: 15,
+                  color: "rgb(35,66,155)",
+                  marginTop: 18
+                }}
+              >
+                {this.props.userApp.currentUser.name
+                  ? this.props.userApp.currentUser.name.toUpperCase()
+                  : ""}
+              </Text>
             </View>
           ) : null}
           <ScrollView style={{ flex: 1, marginLeft: 60, marginTop: 30 }}>
@@ -198,21 +236,21 @@ class DrawerContent extends Component {
                 </TouchableOpacity> */}
               </View>
             ) : (
-              <TouchableOpacity
-                onPress={() => this.login()}
-                style={{ paddingTop: 10, paddingBottom: 10 }}
-              >
-                <Text
-                  style={{
-                    color: "rgb(0,151,124)",
-                    fontWeight: "bold",
-                    fontSize: 16
-                  }}
+                <TouchableOpacity
+                  onPress={() => this.login()}
+                  style={{ paddingTop: 10, paddingBottom: 10 }}
                 >
-                  ĐĂNG NHẬP
+                  <Text
+                    style={{
+                      color: "rgb(0,151,124)",
+                      fontWeight: "bold",
+                      fontSize: 16
+                    }}
+                  >
+                    ĐĂNG NHẬP
                 </Text>
-              </TouchableOpacity>
-            )}
+                </TouchableOpacity>
+              )}
             {/* <View style={{ marginLeft: 30 }}>
               <TouchableOpacity style={styles.menu_item} onPress={() => { this.props.navigation.navigate("listQuestion") }}>
                 <Text style={styles.menu_item_text}>Tư vấn online</Text>
@@ -295,6 +333,7 @@ class DrawerContent extends Component {
                 </TouchableOpacity>
               ) : null}
             </View>
+            <ImagePicker ref={ref => this.imagePicker = ref} />
           </ScrollView>
         </View>
       </View>
