@@ -296,7 +296,7 @@ class LoginScreen extends Component {
 														fontWeight: 'bold',
 														marginRight: 5
 													}}
-												>Đăng ký</Text><ScaleImage source={require("@images/new/right-arrow.png")} height={10} />
+												>Đăng ký</Text><ScaleImage source={require("@images/new/right_arrow.png")} height={10} />
 											</TouchableOpacity>
 										</View>
 									</Form>
