@@ -3,7 +3,7 @@ import ActivityPanel from '@components/ActivityPanel';
 import { View, TouchableOpacity, Text, StyleSheet, Platform, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
 import ScaleImage from 'mainam-react-native-scaleimage';
-import ic_back from '@images/new/left-arrow.png';
+import ic_back from '@images/new/left_arrow.png';
 import ic_msg from '@images/ic_msg.png';
 const { width, height } = Dimensions.get('window');
 
