@@ -162,7 +162,7 @@ class NotificationScreen extends Component {
             });
           }}
         >
-          <ScaleImage source={require("@images/new/ic-remove.png")} width={20} />
+          <ScaleImage source={require("@images/new/ic_remove.png")} width={20} />
         </TouchableOpacity>
       </View>
     );
