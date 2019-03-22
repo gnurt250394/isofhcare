@@ -9,13 +9,15 @@ String.prototype.absoluteUrl = String.prototype.absolute || function (defaultVal
             return defaultValue;
         else
             return _this;
+
     if (_this.startsWith("http") || _this.startsWith("blob")) {
         return _this;
     }
-    if (_this.endsWith(".jpg") || _this.endsWith(".png") || _this.endsWith(".gif")) {
+    let _this2 = _this.toLowerCase();
+    if (_this2.endsWith(".jpg") || _this2.endsWith(".png") || _this2.endsWith(".gif")) {
         return server_url + _this + "";
     }
-    if (!_this.endsWith(".jpg") || !_this.endsWith(".png") || !_this.endsWith(".gif")) {
+    if (!_this2.endsWith(".jpg") || !_this2.endsWith(".png") || !_this2.endsWith(".gif")) {
         return defaultValue;
     }
     // if(this.startsWith("user"))
@@ -70,7 +72,9 @@ module.exports = {
             {
                 Accept: 'application/json',
                 'Content-Type': 'multipart/form-data',
-                'Authorization': this.auth
+                'Authorization': this.auth,
+                'MobileMode':'user'
+                // 'MobileMode':'vender',                
             }, data, (s, e) => {
                 if (s) {
                     s.json().then(val => {
@@ -93,7 +97,9 @@ module.exports = {
             {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': this.auth
+                'Authorization': this.auth,
+                // 'MobileMode':'user',
+                'MobileMode':'vender',        
             }, dataBody, (s, e) => {
                 if (s) {
                     s.json().then(val => {
@@ -109,7 +115,6 @@ module.exports = {
             });
     },
     requestFetch(methodType, url, header, body, funRes) {
-        console.log(url);
         let data = {
             methodType,
             url: url.getServiceUrl(),

@@ -162,7 +162,7 @@ class NotificationScreen extends Component {
             });
           }}
         >
-          <Text>Xóa</Text>
+          <ScaleImage source={require("@images/new/ic-remove.png")} width={20} />
         </TouchableOpacity>
       </View>
     );
@@ -172,17 +172,19 @@ class NotificationScreen extends Component {
     return (
       <ActivityPanel
         style={{ flex: 1 }}
+        titleStyle={{ marginRight: 0 }}
         title="Thông báo"
         showFullScreen={true}
         menuButton={this.menuCreate()}
         isLoading={this.state.isLoading}
+
       >
         <FlatList
           onRefresh={this.onRefresh.bind(this)}
           refreshing={this.state.refreshing}
           onEndReached={this.onLoadMore.bind(this)}
           onEndReachedThreshold={1}
-          style={{ flex: 1, marginTop: 10 }}
+          style={{ flex: 1 }}
           keyExtractor={(item, index) => index.toString()}
           extraData={this.state}
           data={this.state.data}
@@ -198,49 +200,70 @@ class NotificationScreen extends Component {
           }
           ListFooterComponent={() => <View style={{ height: 10 }} />}
           renderItem={({ item, index }) => (
-            <TouchableOpacity
-              style={{
-                backgroundColor:
-                  item.notification.watched == 0
-                    ? "rgb(238,248,247)"
-                    : "#faf5f5",
-                marginTop: 10
-              }}
-              onPress={this.viewNotification.bind(this, item)}
-            >
-              <View
+            <View>
+              {
+                ((item, index) => {
+                  let notiTime = item.notification.createdDate.toDateObject('-');
+                  if (index == 0) {
+                    let date = new Date();
+                    if (date.ddmmyyyy() == notiTime.ddmmyyyy())
+                      return <Text style={{ marginLeft: 20, marginRight: 20, marginBottom: 10, marginTop: 20 }}>Today</Text>
+                    else
+                      return <Text style={{ marginLeft: 20, marginRight: 20, marginBottom: 10, marginTop: 20 }}>Ngày {notiTime.format('dd/MM/yyyy')}</Text>
+                  }
+                  else {
+                    let preNoti = this.state.data[0];
+                    let preNotiDate = preNoti.notification.createdDate.toDateObject('-');
+                    if (preNotiDate.ddmmyyyy() != notiTime.ddmmyyyy())
+                      return <Text style={{ marginLeft: 20, marginRight: 20, marginBottom: 10, marginTop: 20 }}>Ngày {notiTime.format('dd/MM/yyyy')}</Text>
+                  }
+                  return null
+                }).call(this, item, index)
+              }
+
+              <TouchableOpacity
                 style={{
-                  flexDirection: "row",
-                  padding: 11,
-                  paddingLeft: 13,
-                  paddingRight: 13
+                  // backgroundColor:
+                  //   item.notification.watched == 0
+                  //     ? "rgb(238,248,247)"
+                  //     : "#FFF",
+                  marginLeft: 20, marginRight: 20
                 }}
+                onPress={this.viewNotification.bind(this, item)}
               >
-                <ScaleImage source={require("@images/doctor.png")} width={47} />
-                <View style={{ paddingTop: 4, marginLeft: 19, flex: 1 }}>
-                  <Text style={{ fontSize: 14 }}>Tư vấn - đặt câu hỏi</Text>
-                  <Text
-                    style={{ fontSize: 14 }}
-                    numberOfLines={2}
-                    ellipsizeMode="tail"
-                  >
-                    {item.notification.title.trim()}
-                  </Text>
-                  <Text
-                    style={{ fontSize: 12, color: "#00000060", marginTop: 8 }}
-                  >
-                    {/* {item.notification.createdDate} */}
-                    {((item) => {
-                      var date = item.notification.createdDate.toDateObject('-');
-                      return date.format("HH:mm") + " - " + date.format("dd/MM/yyyy")
-                    }).call(this, item)}
-                  </Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    padding: 11,
+                    paddingLeft: 13,
+                    paddingRight: 13
+                  }}
+                >
+                  <ScaleImage source={require("@images/doctor.png")} width={47} />
+                  <View style={{ paddingTop: 4, marginLeft: 19, flex: 1 }}>
+                    <Text style={{ fontSize: 14 }}>Tư vấn - đặt câu hỏi</Text>
+                    <Text
+                      style={{ fontSize: 14 }}
+                      numberOfLines={2}
+                      ellipsizeMode="tail"
+                    >
+                      {item.notification.title.trim()}
+                    </Text>
+                    <Text
+                      style={{ fontSize: 12, color: "#00000060", marginTop: 8 }}
+                    >
+                      {((item) => {
+                        var date = item.notification.createdDate.toDateObject('-');
+                        return date.format("HH:mm") + " - " + date.format("dd/MM/yyyy")
+                      }).call(this, item)}
+                    </Text>
+                  </View>
                 </View>
-              </View>
-              <View
-                style={{ height: 0.5, backgroundColor: "rgb(204,204,204)" }}
-              />
-            </TouchableOpacity>
+                <View
+                  style={{ height: 0.5, backgroundColor: "rgb(204,204,204)" }}
+                />
+              </TouchableOpacity>
+            </View>
           )}
         />
 

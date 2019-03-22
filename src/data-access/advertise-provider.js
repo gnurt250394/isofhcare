@@ -26,7 +26,7 @@ module.exports = {
     },
     getTop(top, callback, requestApi) {
         if (!requestApi) {
-            datacacheProvider.readPromise("", constants.key.storage.DATA_TOP_ADS + 1).then(s => {
+            datacacheProvider.readPromise("", constants.key.storage.DATA_TOP_ADS + top).then(s => {
                 if (callback)
                     callback(s);
                 this.getTop(top, null, true);
@@ -37,7 +37,7 @@ module.exports = {
         else {
             this.search(1, top).then(s => {
                 if (s && s.code == 0 && s.data && s.data.data && s.data.data) {
-                    datacacheProvider.save("", constants.key.storage.DATA_TOP_ADS + 1, s.data.data);
+                    datacacheProvider.save("", constants.key.storage.DATA_TOP_ADS + top, s.data.data);
                     if (callback) {
                         callback(s.data.data, e);
                     }
