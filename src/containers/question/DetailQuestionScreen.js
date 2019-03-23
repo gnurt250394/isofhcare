@@ -29,7 +29,7 @@ const disease = [{
     text: "Mỡ máu"
 }, {
     value: 4,
-    text: "Huyết áp"
+    text: "Tiểu đường"
 }, {
     value: 8,
     text: "HIV"

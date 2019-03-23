@@ -216,7 +216,7 @@ class CreateQuestionStep2Screen extends Component {
                                         this.renderItemDisease(1, "Tim mạch", true)
                                     }
                                     {
-                                        this.renderItemDisease(4, "Huyết áp", true)
+                                        this.renderItemDisease(4, "Tiểu đường", true)
                                     }
                                     {
                                         this.renderItemDisease(16, "Hô hấp", true)
