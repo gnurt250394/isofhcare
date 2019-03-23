@@ -137,47 +137,39 @@ class LoginScreen extends Component {
 			return;
 		}
 		this.setState({ isLoading: true }, () => {
-			userProvider.login(this.state.email.trim(), this.state.password, (s, e) => {
+			userProvider.login(this.state.email.trim(), this.state.password).then(s => {
 				this.setState({ isLoading: false });
-				if (s) {
-					switch (s.code) {
-						case 0:
-							var user = s.data.user;
-							// if (user.role == 4) {
-							// 	snackbar.show(constants.msg.user.please_login_on_web_to_management);
-							// 	return;
-							// }
-							snackbar.show(constants.msg.user.login_success, "success");
-							this.props.dispatch(redux.userLogin(user));
-							if (this.nextScreen) {
-								this.props.navigation.replace(
-									this.nextScreen.screen,
-									this.nextScreen.param
-								);
-							} else {
-								this.props.navigation.navigate("home", { showDraw: false });
-							}
-							return;
-						case 4:
-							snackbar.show(constants.msg.user.this_account_not_active, "danger");
-							return;
-						case 3:
-							snackbar.show(
-								constants.msg.user.username_or_password_incorrect,
-								"danger"
+				switch (s.code) {
+					case 0:
+						var user = s.data.user;
+						snackbar.show(constants.msg.user.login_success, "success");
+						this.props.dispatch(redux.userLogin(user));
+						if (this.nextScreen) {
+							this.props.navigation.replace(
+								this.nextScreen.screen,
+								this.nextScreen.param
 							);
-							return;
-						case 2:
-						case 1:
-							snackbar.show(constants.msg.user.account_blocked, "danger");
-							return;
-					}
+						} else {
+							this.props.navigation.navigate("home", { showDraw: false });
+						}
+						return;
+					case 4:
+						snackbar.show(constants.msg.user.this_account_not_active, "danger");
+						return;
+					case 3:
+						alert(2);
+						snackbar.show(
+							constants.msg.user.username_or_password_incorrect,
+							"danger"
+						);
+						return;
+					case 2:
+					case 1:
+						snackbar.show(constants.msg.user.account_blocked, "danger");
+						return;
 				}
-				if (e) {
-					console.log(e);
-					this.setState({ isLoading: false });
-				}
-
+			}).then(e => {
+				this.setState({ isLoading: false });
 				snackbar.show(constants.msg.error_occur);
 			});
 		})

@@ -60,22 +60,20 @@ module.exports = {
             });
         });
     },
-    login(username, password, callback) {
-        if (username && password) {
+    login(username, password) {
+        return new Promise((resolve, reject) => {
             var body = {
                 emailOrPhone: username,
                 password: password.toMd5(),
                 device: { os: os, deviceId: this.deviceId, token: this.deviceToken }
             }
             client.requestApi("put", constants.api.user.login, body, (s, e) => {
-                if (callback)
-                    callback(s, e);
+                if (s)
+                    resolve(s);
+                else
+                    reject(e);
             });
-        }
-        else {
-            if (callback)
-                callback();
-        }
+        });
     },
     logout(callback) {
         client.requestApi("post", constants.api.user.logout + "/" + this.deviceId, {}, (s, e) => {
