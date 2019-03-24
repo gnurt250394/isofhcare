@@ -51,13 +51,23 @@ class HomeScreen extends Component {
     this.props.navigation.pop();
     return true;
   };
+  logout() {
+    this.props.dispatch(redux.userLogout());
+  }
+
   render() {
     return (
       <ActivityPanel
         style={[{ flex: 1 }, this.props.style]}
         titleStyle={{ marginRight: 60 }}
         imageStyle={{ marginRight: 10 }}
-        backButton={<TouchableOpacity style={{ paddingLeft: 15 }}>
+        backButton={<TouchableOpacity style={{ paddingLeft: 15 }} onPress={() => {
+          if (this.props.userApp.isLogin) {
+            this.logout();
+          } else {
+            this.props.navigation.navigate("login");
+          }
+        }}>
           <ScaledImage source={require("@images/new/user.png")} width={30} />
         </TouchableOpacity>}
         image={require("@images/logo_home.png")}

@@ -51,38 +51,66 @@ class ListQuestionScreen extends Component {
                 style={{ flex: 1 }}
                 title={"Tư vấn online"}
                 showFullScreen={true}
-                menuButton={this.menuCreate()}
+                menuButton={this.props.userApp.isLogin && this.menuCreate()}
                 isLoading={this.state.isLoading}
-                actionbarStyle={{
+                actionbarStyle={[this.props.userApp.isLogin ? {
                     backgroundColor: '#02C39A'
-                }}
-                titleStyle={{ marginRight: 0}}
+                } : {}]}
+                titleStyle={[this.props.userApp.isLogin ? { marginRight: 0 } : {}]}
             >
-                <View style={{ flex: 1, position: 'relative' }} keyboardShouldPersistTaps="always">
-                    <View style={{ backgroundColor: '#02C39A', height: 130, position: 'absolute', top: 0, left: 0, right: 0 }}></View>
-                    <View style={{ height: 50, flexDirection: "row" }}>
-                        <TouchableOpacity style={{ flex: 1 }} onPress={this.swipe.bind(this, 0)}>
-                            <Text style={[{ textAlign: 'center' }, this.state.tabIndex == 0 ? styles.tabSelected : styles.tabNormal]}>Đã trả lời</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{ flex: 1 }} onPress={this.swipe.bind(this, 1)}>
-                            <Text style={[{ textAlign: 'center' }, this.state.tabIndex == 1 ? styles.tabSelected : styles.tabNormal]}>Khác</Text>
-                        </TouchableOpacity>
-                    </View>
+                {
+                    this.props.userApp.isLogin ?
+                        <View style={{ flex: 1, position: 'relative' }} keyboardShouldPersistTaps="always">
+                            <View style={{ backgroundColor: '#02C39A', height: 130, position: 'absolute', top: 0, left: 0, right: 0 }}></View>
+                            <View style={{ height: 50, flexDirection: "row" }}>
+                                <TouchableOpacity style={{ flex: 1 }} onPress={this.swipe.bind(this, 0)}>
+                                    <Text style={[{ textAlign: 'center' }, this.state.tabIndex == 0 ? styles.tabSelected : styles.tabNormal]}>Đã trả lời</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={{ flex: 1 }} onPress={this.swipe.bind(this, 1)}>
+                                    <Text style={[{ textAlign: 'center' }, this.state.tabIndex == 1 ? styles.tabSelected : styles.tabNormal]}>Khác</Text>
+                                </TouchableOpacity>
+                            </View>
 
-                    <Swiper
-                        ref={ref => this.swiper = ref}
-                        onIndexChanged={index => {
-                            this.setState({ tabIndex: index });
-                        }}
-                        dot={<View />}
-                        activeDot={<View />}
-                        loop={false}
-                        style={{ flex: 1 }}
-                    >
-                        <ListQuestion isAnswered={true} ref={ref => this.listAnswered = ref} />
-                        <ListQuestion isAnswered={false} ref={ref => this.listNotAnswered = ref} />
-                    </Swiper>
-                </View>
+                            <Swiper
+                                ref={ref => this.swiper = ref}
+                                onIndexChanged={index => {
+                                    this.setState({ tabIndex: index });
+                                }}
+                                dot={<View />}
+                                activeDot={<View />}
+                                loop={false}
+                                style={{ flex: 1 }}
+                            >
+                                <ListQuestion isAnswered={true} ref={ref => this.listAnswered = ref} />
+                                <ListQuestion isAnswered={false} ref={ref => this.listNotAnswered = ref} />
+                            </Swiper>
+                        </View> :
+                        <View style={{ flex: 1, alignItems: 'center', marginTop: 50 }}>
+                            <View style={{ flex: 1, alignItems: 'center' }}>
+                                <ScaleImage source={require("@images/new/createPostImage.png")} width={200} />
+                                <Text style={{ textAlign: 'center', maxWidth: 240, marginTop: 20, fontSize: 15, lineHeight: 20 }}>
+                                    Gửi vấn đề của bạn tới bác sĩ để được tư vấn <Text style={{ fontWeight: 'bold' }}>miễn phí</Text> hôm nay.
+                                </Text>
+                            </View>
+                            <TouchableOpacity
+                                onPress={() => { this.props.navigation.navigate("createQuestionStep1") }} style={{
+                                    width: 230,
+                                    marginBottom: 50,
+                                    borderRadius: 6,
+                                    backgroundColor: "#02c39a",
+                                    shadowColor: "rgba(0, 0, 0, 0.21)",
+                                    shadowOffset: {
+                                        width: 2,
+                                        height: 4
+                                    },
+                                    shadowRadius: 10,
+                                    shadowOpacity: 1,
+                                    padding: 11, justifyContent: 'center'
+                                }}>
+                                <Text style={{ fontSize: 18, color: '#FFF', textAlign: 'center' }}>Đặt câu hỏi ngay</Text>
+                            </TouchableOpacity>
+                        </View>
+                }
             </ActivityPanel >
         );
     }

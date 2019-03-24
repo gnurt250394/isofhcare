@@ -114,6 +114,16 @@ class CreateQuestionStep2Screen extends Component {
             }
         }
 
+        if (!this.props.userApp.isLogin) {
+            this.props.navigation.navigate("login", {
+                nextScreen: {
+                    screen: "createQuestionStep2",
+                    param: {}
+                }
+            });
+            return;
+        }
+
         connectionUtils.checkConnect(c => {
             if (c) {
                 this.setState({ isLoading: true }, () => {

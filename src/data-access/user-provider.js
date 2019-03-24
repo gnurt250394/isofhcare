@@ -67,7 +67,7 @@ module.exports = {
                 password: password.toMd5(),
                 device: { os: os, deviceId: this.deviceId, token: this.deviceToken }
             }
-            client.requestApi("put", constants.api.user.login, body, (s, e) => {
+            client.requestApi("put", constants.api.user.login, body, (s, e) => {                
                 if (s)
                     resolve(s);
                 else

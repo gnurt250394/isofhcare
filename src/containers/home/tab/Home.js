@@ -89,7 +89,7 @@ class Home extends Component {
         <Pagination
           dotsLength={length}
           activeDotIndex={activeSlide}
-          dotContainerStyle={{ width: 10, margin: 0, padding: 0, height: 10}}
+          dotContainerStyle={{ width: 10, margin: 0, padding: 0, height: 10 }}
           dotStyle={{
             width: 10,
             height: 10,
@@ -186,15 +186,7 @@ class Home extends Component {
           <TouchableOpacity
             style={{ flex: 1, marginLeft: 5, alignItems: 'center' }}
             onPress={() => {
-              if (this.props.userApp.isLogin)
-                this.props.navigation.navigate("listQuestion");
-              else
-                this.props.navigation.navigate("login", {
-                  nextScreen: {
-                    screen: "listQuestion",
-                    param: {}
-                  }
-                });
+              this.props.navigation.navigate("listQuestion");
             }}
           >
             <View style={[styles.icon]}></View>

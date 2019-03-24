@@ -9,14 +9,12 @@ import {
 	Text,
 	TouchableOpacity,
 	Image,
-	Animated,
 	Easing,
 	Keyboard
 } from "react-native";
 import { Card, Item, Label, Input } from 'native-base';
 import Dimensions from "Dimensions";
 import { connect } from "react-redux";
-import eyeImg from "@images/eye_black.png";
 import snackbar from "@utils/snackbar-utils";
 import userProvider from "@data-access/user-provider";
 import constants from "@resources/strings";
@@ -24,7 +22,6 @@ import redux from "@redux-store";
 import ScaleImage from "mainam-react-native-scaleimage";
 import SocialNetwork from "@components/LoginSocial";
 import RNAccountKit from "react-native-facebook-account-kit";
-const durationDefault = 500;
 import Form from "mainam-react-native-form-validate/Form";
 import Field from "mainam-react-native-form-validate/Field";
 import TextField from "mainam-react-native-form-validate/TextField";
@@ -33,15 +30,10 @@ class LoginScreen extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			showPass: true,
 			press: false,
 			email: "",
 			password: ""
 		};
-		this.showPass = this.showPass.bind(this);
-		this.animatedValue = new Animated.Value(0);
-		this.animatedValue1 = new Animated.Value(0);
-		this.animatedValue2 = new Animated.Value(0);
 		this.nextScreen = this.props.navigation.getParam("nextScreen", null);
 
 		// Configures the SDK with some options
@@ -53,49 +45,7 @@ class LoginScreen extends Component {
 		});
 	}
 
-	componentDidMount() {
-		this.animate();
-	}
 
-	animate() {
-		this.animatedValue.setValue(0);
-		this.animatedValue1.setValue(0);
-		this.animatedValue2.setValue(0);
-		const createAnimation = function (value, duration, easing, delay = 0) {
-			return Animated.timing(value, {
-				toValue: 1,
-				duration,
-				easing,
-				delay
-			});
-		};
-		Animated.parallel([
-			createAnimation(
-				this.animatedValue,
-				durationDefault,
-				Easing.ease,
-				durationDefault
-			),
-			createAnimation(
-				this.animatedValue1,
-				durationDefault,
-				Easing.ease,
-				durationDefault
-			),
-			createAnimation(
-				this.animatedValue2,
-				durationDefault,
-				Easing.ease,
-				durationDefault
-			)
-		]).start();
-	}
-
-	showPass() {
-		this.state.press === false
-			? this.setState({ showPass: false, press: true })
-			: this.setState({ showPass: true, press: false });
-	}
 	register() {
 		// this.props.navigation.navigate("register", {  })
 		// return;
@@ -157,10 +107,7 @@ class LoginScreen extends Component {
 						snackbar.show(constants.msg.user.this_account_not_active, "danger");
 						return;
 					case 3:
-						snackbar.show(
-							constants.msg.user.username_or_password_incorrect,
-							"danger"
-						);
+						snackbar.show(constants.msg.user.username_or_password_incorrect, "danger");
 						return;
 					case 2:
 					case 1:
@@ -169,7 +116,7 @@ class LoginScreen extends Component {
 				}
 			}).then(e => {
 				this.setState({ isLoading: false });
-				snackbar.show(constants.msg.error_occur);
+				// snackbar.show(constants.msg.error_occur);
 			});
 		})
 
