@@ -21,6 +21,7 @@ import snackbar from "@utils/snackbar-utils";
 import TextField from "mainam-react-native-form-validate/TextField";
 import Form from "mainam-react-native-form-validate/Form";
 import UserInput from "@components/UserInput";
+import { Card } from "native-base";
 
 class Home extends Component {
   constructor(props) {
@@ -111,21 +112,23 @@ class Home extends Component {
   // }
   _renderItem({ item, index }) {
     return (
-      <TouchableOpacity
-        onPress={() => {
-          if (item.advertise && item.advertise.value) {
-            Linking.openURL(item.advertise.value);
-          } else {
-            snackbar.show("Url không tồn tại", "danger");
-          }
-        }}
-      >
-        <ScaledImage
-          source={require("@images/banner/bannerbooking.png")}
-          width={DEVICE_WIDTH - 100}
-        />
-        <Text>{item.advertise ? item.advertise.content : ""}</Text>
-      </TouchableOpacity>
+      <Card>
+        <TouchableOpacity
+          onPress={() => {
+            if (item.advertise && item.advertise.value) {
+              Linking.openURL(item.advertise.value);
+            } else {
+              snackbar.show("Url không tồn tại", "danger");
+            }
+          }}
+        >
+          <ScaledImage
+            source={require("@images/banner/bannerbooking.png")}
+            width={DEVICE_WIDTH - 100}
+          />
+          <Text numberOfLines={1} ellipsizeMode='tail' style={{ color: '#00000064', margin: 13 }}>{item.advertise ? item.advertise.content : ""}</Text>
+        </TouchableOpacity>
+      </Card>
     );
   }
 
@@ -135,13 +138,10 @@ class Home extends Component {
       <ScrollView
         style={{
           flex: 1,
-          paddingLeft: 15,
-          paddingRight: 15,
-          paddingTop: 0,
-          width: DEVICE_WIDTH
+          paddingTop: 0
         }}
       >
-        <View style={{ flexDirection: "row" }}>
+        <View style={{ flexDirection: "row", padding: 10 }}>
           <TouchableOpacity
             style={{ flex: 1, marginLeft: 5, alignItems: 'center' }}
             onPress={() => {
@@ -194,10 +194,13 @@ class Home extends Component {
           </TouchableOpacity>
         </View>
         <Carousel
+          loop={true}
           ref={c => {
             this._carousel = c;
           }}
           data={this.state.ads}
+          layoutCardOffset={'1'}
+          // layout={'stack'}
           renderItem={this._renderItem}
           sliderWidth={DEVICE_WIDTH}
           itemWidth={DEVICE_WIDTH - 100}

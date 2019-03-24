@@ -18,8 +18,10 @@ import TabSearch from "@containers/home/tab/TabSearch";
 import Swiper from "react-native-swiper";
 const { width, height } = Dimensions.get("window");
 import PushController from "@components/notification/PushController";
+import NotificationBadge from "@components/notification/NotificationBadge";
 import ActivityPanel from "@components/ActivityPanel";
 import ScaledImage from "../../node_modules/mainam-react-native-scaleimage";
+import snackbar from '@utils/snackbar-utils';
 class HomeScreen extends Component {
   constructor(props) {
     super(props);
@@ -49,38 +51,19 @@ class HomeScreen extends Component {
     this.props.navigation.pop();
     return true;
   };
-  menuCreate() {
-    return (
-      <View>
-        <TouchableOpacity
-          style={{ padding: 10 }}
-          onPress={() => {
-            if (this.props.userApp.isLogin) {
-              this.props.navigation.navigate("notification");
-            } else {
-              this.props.navigation.navigate("login", {
-                nextScreen: { screen: "notification", param: {} }
-              });
-            }
-          }}
-        >
-          <Text>Thông báo</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  }
   render() {
     return (
       <ActivityPanel
         style={[{ flex: 1 }, this.props.style]}
         titleStyle={{ marginRight: 60 }}
-        imageStyle={{ marginRight: 50 }}
+        imageStyle={{ marginRight: 10 }}
+        backButton={<TouchableOpacity style={{ paddingLeft: 15 }}>
+          <ScaledImage source={require("@images/new/user.png")} width={30} />
+        </TouchableOpacity>}
         image={require("@images/logo_home.png")}
-        icBack={require("@images/icmenu.png")}
-        menuButton={this.menuCreate()}
+        menuButton={<NotificationBadge />}
         // showMessenger={this.props.userApp.isLogin ? true : false}
         showMessenger={false}
-        badge={0}
       >
         <Swiper
           ref={ref => (this.swiper = ref)}

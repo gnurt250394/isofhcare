@@ -27,15 +27,16 @@ class Actionbar extends Component {
             <View>
                 <View style={[styles.actionbar, this.props.actionbarStyle, { paddingTop: this.props.hideBackButton ? 15 : 5, paddingBottom: this.props.hideBackButton ? 15 : 5, minHeight: 70 }]}>
                     {
-                        !this.props.hideBackButton ?
-
-                            <TouchableOpacity onPress={() => this.backButtonClick()} style={{ width: 50, paddingTop: 12, paddingBottom: 12, paddingLeft: 15 }}>
-                                <ScaleImage source={this.props.icBack ? this.props.icBack : ic_back} style={[styles.ic_back, this.props.styleBackButton]} height={14}></ScaleImage>
-                            </TouchableOpacity>
-                            :
-                            <View style={{ paddingTop: 12, paddingBottom: 12 }}>
-                                <View style={[styles.ic_back, { height: 20 }]} />
-                            </View>
+                        this.props.backButton ?
+                            this.props.backButton :
+                            !this.props.hideBackButton ?
+                                <TouchableOpacity onPress={() => this.backButtonClick()} style={{ width: 50, paddingTop: 12, paddingBottom: 12, paddingLeft: 15 }}>
+                                    <ScaleImage source={this.props.icBack ? this.props.icBack : ic_back} style={[styles.ic_back, this.props.styleBackButton]} height={14}></ScaleImage>
+                                </TouchableOpacity>
+                                :
+                                <View style={{ paddingTop: 12, paddingBottom: 12 }}>
+                                    <View style={[styles.ic_back, { height: 20 }]} />
+                                </View>
                     }
                     {
                         this.props.title ?
