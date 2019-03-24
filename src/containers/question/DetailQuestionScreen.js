@@ -122,45 +122,29 @@ class DetailQuestionScreen extends Component {
         }
     }
     userSend() {
-        if (!this.form.isValid()) { return; }
-        this.dialogbox.confirm({
-            title: constants.alert,
-            content: ["Bạn muốn thực hiện gửi câu trả lời cho câu hỏi này?"],
-            ok: {
-                text: "Đồng ý",
-                style: {
-                    color: 'red'
-                },
-                callback: (() => {
-                    this.setState({ isLoading: true }, () => {
-                        commentProvider.create(this.state.post.post.id, this.state.content, "", "").then(s => {
-                            this.setState({ isLoading: false });
-                            if (s.code == 0) {
-                                this.setState({
-                                    lastComment: s.data,
-                                    lastComment2: s.data,
-                                    commentCount: ((this.state.commentCount || 0) + 1),
-                                    content: "",
-                                    writeQuestion: false,
-                                    userCommentCount: this.state.userCommentCount + 1
-                                });
-                            }
-                        }).catch(e => {
-                            this.setState({ isLoading: false });
-                        })
-                    });
-                }).bind(this),
-            },
-            cancel: {
-                text: constants.cancel,
-                style: {
-                    color: 'blue'
-                },
-                callback: () => {
-                },
-            }
-        });
-
+        connectionUtils.isConnected().then(s => {
+            if (!this.form.isValid()) { return; }
+            this.setState({ isLoading: true }, () => {
+                commentProvider.create(this.state.post.post.id, this.state.content, "", "").then(s => {
+                    this.setState({ isLoading: false });
+                    if (s.code == 0) {
+                        this.setState({
+                            lastComment: s.data,
+                            lastComment2: s.data,
+                            commentCount: ((this.state.commentCount || 0) + 1),
+                            content: "",
+                            writeQuestion: false,
+                            userCommentCount: this.state.userCommentCount + 1
+                        });
+                        snackbar.show("Bạn đã gửi ý kiến thành công", "success");
+                    }
+                }).catch(e => {
+                    this.setState({ isLoading: false });
+                })
+            });
+        }).catch(e => {
+            snackbar.show("Không có kết nối mạng", "danger");
+        })
     }
     getTime(createdDate) {
         let date = createdDate.toDateObject('-');
@@ -212,10 +196,11 @@ class DetailQuestionScreen extends Component {
         })
     }
     showItemComment(item, key) {
+        const source = item.user && item.user.avatar ? { uri: item.user.avatar.absoluteUrl() } : require("@images/new/user.png");
         return <View key={key}>
             {item.user &&
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <View style={{ width: 50, height: 50, borderRadius: 25, borderWidth: 1, borderColor: '#000' }}></View>
+                    <Image source={source} style={{ width: 50, height: 50, borderRadius: 25 }} resizeMode="cover" />
                     <View style={{ marginLeft: 10 }}>
                         <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 5 }}>{item.user.name}</Text>
                         {item.user && item.user.id != this.props.userApp.currentUser.id ?
@@ -271,7 +256,7 @@ class DetailQuestionScreen extends Component {
                 />
             </Form>
             <TouchableOpacity style={{ padding: 20 }} onPress={this.userSend.bind(this)}>
-                <ScaleImage width={22} source={require("@images/new/send.png")} />
+                <ScaleImage width={22} source={this.state.content && this.state.content.trim().length > 0 ? require("@images/new/send2.png") : require("@images/new/send.png")} />
             </TouchableOpacity>
         </View>);
     }
@@ -301,10 +286,11 @@ class DetailQuestionScreen extends Component {
         return null;
     }
     renderViewRating() {
-        if (this.state.post.post.status != 6 && this.state.rating || (this.state.post.post.status == 3 && this.state.userCommentCount >= 3))
+        if (this.state.post.post.status == 6 || this.state.rating || (this.state.post.post.status == 3 && this.state.userCommentCount >= 3))
             return (<View style={{ flexDirection: 'row', padding: 20, borderTopColor: '#cacaca', borderTopWidth: 2 }}>
                 <Text style={{ flex: 1 }}>Đánh giá</Text>
                 <StarRating
+                    disabled={this.state.post.post.status == 6 ? true : false}
                     starSize={30}
                     maxStars={5}
                     rating={this.state.star}
@@ -375,12 +361,6 @@ class DetailQuestionScreen extends Component {
         return (totalTime > (1000 * 60 * 60 * 2) || this.state.post.post.status == 6);
     }
     renderStatusPost() {
-        if (this.isFinish()) {
-            return (<View style={{ marginTop: 25 }}>
-                <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'rgb(0,141,111)' }}>Trạng thái: Hoàn thành</Text>
-            </View>);
-        }
-
         if (this.state.post.post.status == 1 || this.state.post.post.status == 2 || this.state.post.post.status == 5) {
             return (<View style={{ marginTop: 25 }}>
                 <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'rgb(0,141,111)' }}>Trạng thái: Chờ trả lời</Text>

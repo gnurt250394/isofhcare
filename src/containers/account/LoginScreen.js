@@ -242,7 +242,7 @@ class LoginScreen extends Component {
 							</View>
 							<SocialNetwork />
 							<TouchableOpacity style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center' }} onPress={this.login.bind(this)}>
-								<Text style={{ color: '#FFF', fontSize: 20, textTransform: 'uppercase' }}>{"ĐĂNG NHẬP"}</Text>
+								<Text style={{ color: '#FFF', fontSize: 20}}>{"ĐĂNG NHẬP"}</Text>
 							</TouchableOpacity>
 						</View>
 					</KeyboardAvoidingView>
