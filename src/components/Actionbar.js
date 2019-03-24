@@ -40,7 +40,7 @@ class Actionbar extends Component {
                     }
                     {
                         this.props.title ?
-                            <Text style={[styles.title, this.props.actionbarTextColor, this.props.titleStyle, { flex: 1, textAlign: 'center' }]}>
+                            <Text style={[styles.title, this.props.actionbarTextColor, this.props.titleStyle]}>
                                 {this.props.title}
                             </Text>
                             :
@@ -83,7 +83,8 @@ const styles = StyleSheet.create({
         marginRight: 55,
         color: '#4A4A4A',
         fontWeight: 'bold',
-        fontSize: 20
+        fontSize: 20,
+        flex: 1, textAlign: 'center'
     },
     ic_back: {
         marginLeft: 10,
