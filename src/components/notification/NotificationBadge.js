@@ -12,7 +12,7 @@ class NotificationBadge extends Component {
     render() {
         return (
             <TouchableOpacity
-                style={{ padding: 10 }}
+                style={{ padding: 10, paddingRight: 15, position: 'relative' }}
                 onPress={() => {
                     if (this.props.userApp.isLogin) {
                         this.props.navigation.navigate("notification");
@@ -24,6 +24,10 @@ class NotificationBadge extends Component {
                 }}
             >
                 <ScaleImage source={require("@images/new/bell.png")} width={20} />
+                {
+                    (this.props.userApp.isLogin && (this.props.userApp.unReadNotificationCount || 0)) &&
+                    <Text style={{ position: 'absolute', right: 10, top: 4, backgroundColor: 'red', borderRadius: 10, color: '#FFF', paddingLeft: 4, paddingRight: 4, fontSize: 11 }}>{(this.props.userApp.unReadNotificationCount || 0) > 9 ? "9+" : (this.props.userApp.unReadNotificationCount || 0)}</Text>
+                }
             </TouchableOpacity>
         );
     }

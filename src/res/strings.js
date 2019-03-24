@@ -222,7 +222,7 @@ module.exports = {
       delete: "notification/delete/all",
       set_read: "notification/active-watched",
       get_unread_notification_count:
-        "notification/get-unread-notification-count"
+        "notification/count-notification"
     },
     location: {
       getListCountry: "profile/get-countries",

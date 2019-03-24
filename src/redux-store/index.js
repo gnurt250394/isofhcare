@@ -16,30 +16,26 @@ function _userLogin(user) {
 
 function _getUnreadNotificationCount() {
     return function (dispatch) {
-        notificationProvider.getUnReadCount((s, e) => {
-            try {
-                if (s) {
-                    switch (s.code) {
-                        case 0:
-                            var data = s.data;
-                            if (data && data.count) {
-                                try {
-                                    firebase.notifications().setBadge(data.count);
-                                    var count = parseInt(data.count);
-                                    dispatch({ type: constants.action.action_change_notification_count, value: count })
-                                    return;
-                                } catch (error) {
-                                    console.log(error);
-                                }
-                            }
-                            dispatch({ type: constants.action.action_change_notification_count, value: 0 })
-                            break;
+        notificationProvider.getUnReadCount().then(s => {
+            switch (s.code) {
+                case 0:
+                    var data = s.data;
+                    if (data && data.total) {
+                        try {
+                            firebase.notifications().setBadge(data.total);
+                            var total = parseInt(data.total);
+                            dispatch({ type: constants.action.action_change_notification_count, value: total })
+                            return;
+                        } catch (error) {
+                            console.log(error);
+                        }
                     }
-                }
-            } catch (error) {
-                console.log(error);
+                    dispatch({ type: constants.action.action_change_notification_count, value: 0 })
+                    break;
             }
-        })
+        }).catch(e => {
+            console.log(e);
+        });
     }
 }
 module.exports = {
@@ -47,7 +43,7 @@ module.exports = {
         return function (dispatch, getState) {
             if (user != null) {
                 userProvider.saveAccount(user);
-                
+
 
                 dispatch(_userLogin(user)).then(() => {
                     if (user) {

@@ -199,7 +199,7 @@ module.exports = {
         get_detail: "notification/get-detail",
         get_detail_broadcast: "advertise/get-detail",
         set_read: "notification/set-read",
-        get_unread_notification_count: "notification/get-unread-notification-count"
+        get_unread_notification_count: "notification/count-notification"
       },
       booking: {
         create: "booking/create",

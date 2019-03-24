@@ -62,15 +62,13 @@ module.exports = {
             });
         });
     },
-    getUnReadCount(callback) {
-        client.requestApi("get", constants.api.notification.get_unread_notification_count, {}, (s, e) => {
-            try {
-                if (callback)
-                    callback(s, e);
-            } catch (error) {
-                if (callback)
-                    callback(undefined, error);
-            }
+    getUnReadCount() {
+        return new Promise((resolve, reject) => {
+            client.requestApi("get", constants.api.notification.get_unread_notification_count, {}, (s, e) => {
+                if (s)
+                    resolve(s);
+                reject(e);
+            });
         });
     },
     getUnReadCountAndSendDispath(props, firebase) {
