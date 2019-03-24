@@ -140,7 +140,7 @@ class CreateQuestionStep1Screen extends Component {
                 }}
               >
                 <Text style={[styles.label, { marginTop: 24 }]}>
-                  Nội dung
+                  Nội dung 1
               </Text>
                 <TextField
                   validate={{
@@ -173,11 +173,13 @@ class CreateQuestionStep1Screen extends Component {
                     validate={{
                       rules: {
                         min: 1,
-                        max: 150
+                        max: 150,
+                        number: true
                       },
                       messages: {
                         min: "Tuổi bệnh nhân cần lớn hơn 1",
-                        max: "Tuổi bệnh nhân cần nhỏ hơn 150"
+                        max: "Tuổi bệnh nhân cần nhỏ hơn 150",
+                        number: "Tuổi không hợp lệ"
                       }
                     }}
                     value={this.state.age}

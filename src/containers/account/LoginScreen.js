@@ -157,7 +157,6 @@ class LoginScreen extends Component {
 						snackbar.show(constants.msg.user.this_account_not_active, "danger");
 						return;
 					case 3:
-						alert(2);
 						snackbar.show(
 							constants.msg.user.username_or_password_incorrect,
 							"danger"

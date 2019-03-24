@@ -85,7 +85,7 @@ module.exports = {
     notification: {
       new_notification: "Bạn có một thông báo mới",
       confirm_delete_all_notification:
-        "Bạn chắc chắn muốn xóa hết các thông báo"
+        "Bạn chắc chắn muốn xóa hết các thông báo?"
     },
     app: {
       check_connection: "Vui lòng kiểm tra lại kết nối internet",
@@ -152,7 +152,7 @@ module.exports = {
       username_or_email_existed:
         "Email hoặc số điện thoại đã tồn tại. Vui lòng thử lại",
       username_or_email_empty: "Tên đăng nhập hoặc email trống",
-      account_blocked: "Tài khoản đã bị khóa, vui lòng liên hệ quản trị viên",
+      account_blocked: "Tài khoản đã bị khóa. Vui lòng liên hệ với Admin của Isofhcare",
       username_or_password_incorrect:
         "Số điện thoại hoặc mặt khẩu không đúng. Vui lòng thử lại!",
       send_mail_recovery_success:

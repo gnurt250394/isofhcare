@@ -6,7 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Platform,
-  Linking
+  Linking, StyleSheet
 } from "react-native";
 import { connect } from "react-redux";
 import ScaledImage from "mainam-react-native-scaleimage";
@@ -141,10 +141,9 @@ class Home extends Component {
           width: DEVICE_WIDTH
         }}
       >
-        <Text>Bạn cần gì hôm nay</Text>
         <View style={{ flexDirection: "row" }}>
           <TouchableOpacity
-            style={{ flex: 1, marginLeft: 5 }}
+            style={{ flex: 1, marginLeft: 5, alignItems: 'center' }}
             onPress={() => {
               if (this.props.userApp.isLogin)
                 this.props.navigation.navigate("dhyBooking");
@@ -157,10 +156,14 @@ class Home extends Component {
                 });
             }}
           >
-            <Text>Đặt khám</Text>
+            <View style={[styles.icon]}></View>
+            <Text style={[styles.label]}>Đặt khám</Text>
+            <Text style={[styles.subLabel]}>
+              1000+ người đã dùng
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={{ flex: 1, marginLeft: 5 }}
+            style={{ flex: 1, marginLeft: 5, alignItems: 'center' }}
             onPress={() => {
               if (this.props.userApp.isLogin)
                 this.props.navigation.navigate("listQuestion");
@@ -173,10 +176,21 @@ class Home extends Component {
                 });
             }}
           >
-            <Text>Tư vấn</Text>
+            <View style={[styles.icon]}></View>
+            <Text style={[styles.label]}>Tư vấn</Text>
+            <Text style={[styles.subLabel]}>
+              1000+ người yêu thích
+            </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{ flex: 1, marginLeft: 5 }} onPress={() => { snackbar.show("Chức năng đang phát triển") }}>
-            <Text>Tra cứu</Text>
+          <TouchableOpacity
+            style={{ flex: 1, marginLeft: 5, alignItems: 'center' }}
+            onPress={() => { snackbar.show("Chức năng đang phát triển") }}
+          >
+            <View style={[styles.icon]}></View>
+            <Text style={[styles.label]}>Tra cứu</Text>
+            <Text style={[styles.subLabel]}>
+              1000+ người hài lòng
+            </Text>
           </TouchableOpacity>
         </View>
         <Carousel
@@ -228,7 +242,7 @@ class Home extends Component {
                     }
                 </View> */}
         <View style={{ height: 30 }} />
-      </ScrollView>
+      </ScrollView >
       // <ActivityPanel
       //     style={[{ flex: 1 }, this.props.style]}
       //     titleStyle={{ marginRight: 60 }}
@@ -279,6 +293,21 @@ class Home extends Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  icon: {
+    height: 55,
+    width: 55,
+    backgroundColor: '#02c39a',
+    borderRadius: 30
+  },
+  label: {
+    marginTop: 5, color: '#4A4A4A', fontFamily: 'Source Sans Pro', fontSize: 15, fontWeight: '600', lineHeight: 23
+  },
+  subLabel: {
+    color: '#9B9B9B', fontSize: 12, textAlign: 'center', marginTop: 5
+  }
+});
 
 function mapStateToProps(state) {
   return {

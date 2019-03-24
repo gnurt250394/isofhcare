@@ -134,7 +134,7 @@ class NotificationScreen extends Component {
                 constants.msg.notification.confirm_delete_all_notification
               ],
               ok: {
-                text: constants.confirm,
+                text: "Đồng ý",
                 style: {
                   color: "red"
                 },
@@ -153,7 +153,7 @@ class NotificationScreen extends Component {
                 }
               },
               cancel: {
-                text: constants.cancel,
+                text: "Hủy",
                 style: {
                   color: "blue"
                 },

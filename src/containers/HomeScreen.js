@@ -13,22 +13,19 @@ import { connect } from "react-redux";
 import userProvider from "@data-access/user-provider";
 import constants from "@resources/strings";
 import redux from "@redux-store";
-import ScalingDrawer from "mainam-react-native-scaling-drawer";
-import DrawerContent from "@components/DrawerContent";
 import Home from "@containers/home/tab/Home";
 import TabSearch from "@containers/home/tab/TabSearch";
 import Swiper from "react-native-swiper";
 const { width, height } = Dimensions.get("window");
 import PushController from "@components/notification/PushController";
 import ActivityPanel from "@components/ActivityPanel";
-let defaultScalingDrawerConfig = {
-  scalingFactor: 0.7,
-  minimizeFactor: 0.7,
-  swipeOffset: 20
-};
-class SplashScreen extends Component {
+import ScaledImage from "../../node_modules/mainam-react-native-scaleimage";
+class HomeScreen extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      tabIndex: 0
+    }
   }
   componentWillMount() {
     this.props.dispatch({
@@ -74,84 +71,85 @@ class SplashScreen extends Component {
   }
   render() {
     return (
-      <ScalingDrawer
-        ref={ref => (this._drawer = ref)}
-        frontStyle={{ height: height + 10 }}
-        content={
-          <DrawerContent
-            navigation={this.props.navigation}
-            drawer={this._drawer}
-          />
-        }
-        {...defaultScalingDrawerConfig}
+      <ActivityPanel
+        style={[{ flex: 1 }, this.props.style]}
+        titleStyle={{ marginRight: 60 }}
+        imageStyle={{ marginRight: 50 }}
+        image={require("@images/logo_home.png")}
+        icBack={require("@images/icmenu.png")}
+        menuButton={this.menuCreate()}
+        // showMessenger={this.props.userApp.isLogin ? true : false}
+        showMessenger={false}
+        badge={0}
       >
-        <ActivityPanel
-          style={[{ flex: 1 }, this.props.style]}
-          titleStyle={{ marginRight: 60 }}
-          imageStyle={{ marginRight: 50 }}
-          image={require("@images/logo_home.png")}
-          icBack={require("@images/icmenu.png")}
-          backButtonClick={() => {
-            this._drawer.open();
+        <Swiper
+          ref={ref => (this.swiper = ref)}
+          onIndexChanged={index => {
+            this.setState({ tabIndex: index });
           }}
-          menuButton={this.menuCreate()}
-          // showMessenger={this.props.userApp.isLogin ? true : false}
-          showMessenger={false}
-          badge={0}
+          dot={<View />}
+          activeDot={<View />}
+          paginationStyle={{
+            bottom: 30
+          }}
+          loop={false}
+          style={{ flex: 1 }}
         >
-          <Swiper
-            ref={ref => (this.swiper = ref)}
-            onIndexChanged={index => {
-              this.setState({ tabIndex: index });
-            }}
-            dot={<View />}
-            activeDot={<View />}
-            paginationStyle={{
-              bottom: 30
-            }}
-            loop={false}
+          <Home
+            navigation={this.props.navigation}
             style={{ flex: 1 }}
-          >
-            <Home
-              navigation={this.props.navigation}
-              style={{ flex: 1 }}
-              drawer={this._drawer}
-            />
-            <View style={{ flex: 1, backgroundColor: "#000" }} />
-            <View style={{ flex: 1, backgroundColor: "#cac" }} />
-            <View style={{ flex: 1, backgroundColor: "#aba" }} />
-
-            {/* <TabSearch navigation={this.props.navigation} style={{ flex: 1 }} drawer={this._drawer} /> */}
-          </Swiper>
-          <View style={{ height: 50, flexDirection: "row" }}>
+          />
+          <View style={{ flex: 1, backgroundColor: "#000" }} />
+          <View style={{ flex: 1, backgroundColor: "#cac" }} />
+          <View style={{ flex: 1, backgroundColor: "#aba" }} />
+        </Swiper>
+        <View style={{
+          paddingTop: 10
+        }}>
+          < View style={{
+            height: 61, flexDirection: "row", backgroundColor: '#ffffff',
+            shadowColor: 'rgba(0, 0, 0, 0.09)',
+            shadowOffset: {
+              width: 0,
+              height: 0
+            },
+            shadowRadius: 4,
+            shadowOpacity: 1,
+            marginTop: -3,
+            elevation: 5
+          }}>
             <TouchableOpacity
-              style={{ flex: 1 }}
+              style={[this.state.tabIndex == 0 ? styles.tab_selected : styles.tab]}
               onPress={this.swipe.bind(this, 0)}
             >
-              <Text style={{ textAlign: "center" }}>Home</Text>
+              <ScaledImage source={require("@images/new/user.png")} width={20} />
+              <Text style={[this.state.tabIndex == 0 ? styles.tab_label_selected : styles.tab_label]}>Trang chủ</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={{ flex: 1 }}
+              style={[this.state.tabIndex == 1 ? styles.tab_selected : styles.tab]}
               onPress={this.swipe.bind(this, 1)}
             >
-              <Text style={{ textAlign: "center" }}>Lịch khám</Text>
+              <ScaledImage source={require("@images/new/user.png")} width={20} />
+              <Text style={[this.state.tabIndex == 1 ? styles.tab_label_selected : styles.tab_label]}>Lịch khám</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={{ flex: 1 }}
+              style={[this.state.tabIndex == 2 ? styles.tab_selected : styles.tab]}
               onPress={this.swipe.bind(this, 2)}
             >
-              <Text style={{ textAlign: "center" }}>Dịch vụ</Text>
+              <ScaledImage source={require("@images/new/user.png")} width={20} />
+              <Text style={[this.state.tabIndex == 2 ? styles.tab_label_selected : styles.tab_label]}>Dịch vụ</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={{ flex: 1 }}
+              style={[this.state.tabIndex == 3 ? styles.tab_selected : styles.tab]}
               onPress={this.swipe.bind(this, 3)}
             >
-              <Text style={{ textAlign: "center" }}>Tài khoản</Text>
+              <ScaledImage source={require("@images/new/user.png")} width={20} />
+              <Text style={[this.state.tabIndex == 3 ? styles.tab_label_selected : styles.tab_label]}>Tài khoản</Text>
             </TouchableOpacity>
           </View>
-          <PushController />
-        </ActivityPanel>
-      </ScalingDrawer>
+        </View >
+        <PushController />
+      </ActivityPanel >
     );
   }
   swipe(targetIndex) {
@@ -162,6 +160,33 @@ class SplashScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  tab_selected:
+  {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+    backgroundColor: '#02c39a11'
+  },
+  tab:
+  {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+    backgroundColor: '#FFF'
+  },
+  tab_label_selected:
+  {
+    marginTop: 5,
+    fontWeight: '500',
+    color: 'rgb(2,195,154)',
+    fontSize: 15
+  },
+  tab_label:
+  {
+    marginTop: 5,
+    color: '#00000044',
+    fontSize: 14
+  },
   picture: {
     position: "absolute",
     top: 0,
@@ -182,4 +207,4 @@ function mapStateToProps(state) {
     userApp: state.userApp
   };
 }
-export default connect(mapStateToProps)(SplashScreen);
+export default connect(mapStateToProps)(HomeScreen);
