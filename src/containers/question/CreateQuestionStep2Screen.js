@@ -13,6 +13,7 @@ import Modal from "react-native-modal";
 import stylemodal from "@styles/modal-style";
 import specialistProvider from '@data-access/specialist-provider';
 import connectionUtils from '@utils/connection-utils';
+import clientUtils from '@utils/client-utils';
 
 import Form from 'mainam-react-native-form-validate/Form';
 import TextField from 'mainam-react-native-form-validate/TextField';
@@ -35,10 +36,21 @@ class CreateQuestionStep2Screen extends Component {
     }
     componentDidMount() {
         dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_POSTS, (s, e) => {
-            if (s) {
+            if (s && s.post) {
+                let images = (s.post.images || "").split(',').filter(x => x != "").map(x => {
+                    return {
+                        uri: x.absoluteUrl(),
+                        url: x.absoluteUrl(),
+                        thumbnail: x.absoluteUrl(),
+                        loading: false,
+                        error: false
+                    }
+                });
                 this.setState({
-                    disease: s.diseaseHistory || 0,
-                    specialist_item: s.specialist
+                    disease: s.post.diseaseHistory || 0,
+                    specialist_item: s.specialist ? { specialist: s.specialist } : null,
+                    otherContent: s.post.otherContent,
+                    imageUris: images
                 })
             }
         })
@@ -134,14 +146,9 @@ class CreateQuestionStep2Screen extends Component {
                         images += item.url;
                     });
                     questionProvider.create(this.state.content, this.state.gender, this.state.age, this.state.specialist_item ? this.state.specialist_item.specialist.id : "0", this.state.disease, this.state.otherContent, images).then(s => {
-                        dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_POSTS, {
-                            gender: this.state.gender,
-                            age: this.state.age,
-                            diseaseHistory: this.state.disease,
-                            specialist: this.state.specialist_item
-                        });
                         this.setState({ isLoading: false });
                         if (s && s.code == 0) {
+                            dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_POSTS, s.data);
                             snackbar.show(constants.msg.question.create_question_success, "success");
                             this.props.navigation.navigate("listQuestion", { reloadTime: new Date().getTime() });
                         } else {

@@ -39,15 +39,17 @@ class CreateQuestionStep1Screen extends Component {
       content: post ? post.content : "",
       isPrivate: post ? post.isPrivate == 1 : false,
       btnSend: post ? "Lưu" : "Gửi",
-      gender: 1
+      gender: 1,
+      age: ""
     };
   }
   componentDidMount() {
     dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_POSTS, (s, e) => {
-      if (s) {
+      if (s && s.post) {
         this.setState({
-          gender: s.gender || 1,
-          age: s.age || ""
+          gender: s.post.gender ? 1 : 0,
+          age: s.post.age && s.post.age != 0 ? (s.post.age + "") : "0",
+          content: s.post.content || ""
         })
       }
     })
@@ -140,7 +142,7 @@ class CreateQuestionStep1Screen extends Component {
                 }}
               >
                 <Text style={[styles.label, { marginTop: 24 }]}>
-                  Nội dung 1
+                  Nội dung
               </Text>
                 <TextField
                   validate={{
@@ -159,6 +161,7 @@ class CreateQuestionStep1Screen extends Component {
                   onChangeText={s => {
                     this.setState({ content: s });
                   }}
+                  value={this.state.content}
                   autoCapitalize={"none"}
                   returnKeyType={"next"}
                   underlineColorAndroid="transparent"
@@ -189,7 +192,6 @@ class CreateQuestionStep1Screen extends Component {
                       this.setState({ age: s });
                     }}
                     returnKeyType={"next"}
-                    underlineColorAndroid="transparent"
                     keyboardType="numeric"
                     errorStyle={styles.errorStyle}
                   />

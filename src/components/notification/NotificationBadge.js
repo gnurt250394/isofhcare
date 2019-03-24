@@ -25,8 +25,9 @@ class NotificationBadge extends Component {
             >
                 <ScaleImage source={require("@images/new/bell.png")} width={20} />
                 {
-                    (this.props.userApp.isLogin && (this.props.userApp.unReadNotificationCount || 0)) &&
-                    <Text style={{ position: 'absolute', right: 10, top: 4, backgroundColor: 'red', borderRadius: 10, color: '#FFF', paddingLeft: 4, paddingRight: 4, fontSize: 11 }}>{(this.props.userApp.unReadNotificationCount || 0) > 9 ? "9+" : (this.props.userApp.unReadNotificationCount || 0)}</Text>
+                    this.props.userApp.isLogin && (this.props.userApp.unReadNotificationCount || 0) ?
+                        <Text style={{ position: 'absolute', right: 10, top: 4, backgroundColor: 'red', borderRadius: 10, color: '#FFF', paddingLeft: 4, paddingRight: 4, fontSize: 11 }}>{(this.props.userApp.unReadNotificationCount || 0) > 9 ? "9+" : this.props.userApp.unReadNotificationCount}</Text>
+                        : null
                 }
             </TouchableOpacity>
         );
