@@ -39,7 +39,7 @@ class Home extends Component {
   }
   renderAds() {
     return (<View style={{ padding: 12 }}>
-      <Text style={{ marginBottom: 5, color: 'rbg(74,74,74)' }}>Ưu đãi</Text>
+      <Text style={{ marginBottom: 5, color: 'rgb(74,74,74)' }}>Ưu đãi</Text>
       <Carousel
         enableSnap={false}
         loop={true}
@@ -52,7 +52,7 @@ class Home extends Component {
           this._carousel = c;
         }}
         data={this.state.ads}
-        layoutCardOffset={'3'}
+        layoutCardOffset={3}
         stagePadding={3}
         // layout={'stack'}
         renderItem={({ item, index }) => {
@@ -88,7 +88,7 @@ class Home extends Component {
       <View style={{ position: 'absolute', bottom: 0, width: DEVICE_WIDTH }}>
         <Pagination
           dotsLength={length}
-          activeDotIndex={activeSlide}
+          activeDotIndex={activeSlide || 0}
           dotContainerStyle={{ width: 10, margin: 0, padding: 0, height: 10 }}
           dotStyle={{
             width: 10,

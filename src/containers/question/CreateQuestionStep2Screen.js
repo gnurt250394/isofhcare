@@ -270,10 +270,12 @@ class CreateQuestionStep2Screen extends Component {
                                         }
                                     }
                                 } inputStyle={[styles.textinput, { marginTop: 10, height: 90, textAlignVertical: 'top', paddingTop: 13, paddingLeft: 10, paddingBottom: 13, paddingRight: 10 }]} onChangeText={(s) => { this.setState({ otherContent: s }) }} autoCapitalize={'none'}
+                                    value={this.state.otherContent}
                                     returnKeyType={'next'}
                                     underlineColorAndroid='transparent'
                                     autoFocus={true}
                                     multiline={true}
+                                    errorStyle={[styles.errorStyle, { marginLeft: 10, marginBottom: 10 }]}
                                     autoCorrect={false} />
                             </Form>
                             <Text style={[styles.label, { marginTop: 20 }]}>Tải ảnh lên <Text style={{ fontStyle: 'italic', fontWeight: 'normal' }}>(Tối đa 5 ảnh)</Text></Text>

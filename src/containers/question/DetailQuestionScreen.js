@@ -158,28 +158,33 @@ class DetailQuestionScreen extends Component {
         }
     }
     onStarRatingPress(rating) {
-        this.setState({
-            star: rating
-        }, () => {
-            this.setState({ isLoading: true }, () => {
-                connectionUtils.checkConnect(c => {
-                    if (c) {
-                        questionProvider.review(this.state.post.post.id, rating).then(s => {
-                            let post = this.state.post;
-                            post.post.status = 6;
-                            this.setState({ isLoading: false, post })
-                            snackbar.show("Bạn đã gửi đánh giá thành công", "success");
-                        }).catch(e => {
-                            snackbar.show("Gửi đánh giá không thành công", "danger");
-                            this.setState({ isLoading: false })
-                        });
-                    }
-                    else {
-                        snackbar.show("Không có kết nối mạng", "danger");
-                    }
+        connectionUtils.isConnected().then(s => {
+
+            this.setState({
+                star: rating
+            }, () => {
+                this.setState({ isLoading: true }, () => {
+                    connectionUtils.checkConnect(c => {
+                        if (c) {
+                            questionProvider.review(this.state.post.post.id, rating).then(s => {
+                                let post = this.state.post;
+                                post.post.status = 6;
+                                this.setState({ isLoading: false, post })
+                                snackbar.show("Bạn đã gửi đánh giá thành công", "success");
+                            }).catch(e => {
+                                snackbar.show("Gửi đánh giá không thành công", "danger");
+                                this.setState({ isLoading: false })
+                            });
+                        }
+                        else {
+                            snackbar.show("Không có kết nối mạng", "danger");
+                        }
+                    });
                 });
             });
-        });
+        }).catch(e => {
+            snackbar.show("Không có kết nối mạng", "danger");
+        })
     }
 
     showAllComment() {
@@ -272,8 +277,20 @@ class DetailQuestionScreen extends Component {
                         <View>
                             <Text style={{ textAlign: 'center', marginTop: 39, fontSize: 16 }}>Bạn có hài lòng với câu hỏi này không?</Text>
                             <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 20 }}>
-                                <TouchableOpacity onPress={() => { this.setState({ confirmed: true, writeQuestion: true }) }} style={{ width: 130, borderWidth: 1, borderColor: '#00000044', borderRadius: 6, alignItems: 'center', paddingTop: 5, paddingBottom: 5 }}><Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 5 }}>Không</Text><Text style={{ color: '#cacaca' }}>muốn hỏi thêm</Text></TouchableOpacity>
-                                <TouchableOpacity onPress={() => { this.setState({ confirmed: true, rating: true }) }} style={{ width: 130, backgroundColor: 'rgb(2,195,154)', borderRadius: 6, marginLeft: 10, alignItems: 'center', paddingTop: 5, paddingBottom: 5 }}><Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 5, color: '#FFF' }}>Có</Text><Text style={{ color: '#fff' }}>cảm ơn bác sĩ</Text></TouchableOpacity>
+                                <TouchableOpacity onPress={() => {
+                                    connectionUtils.isConnected().then(s => {
+                                        this.setState({ confirmed: true, writeQuestion: true })
+                                    }).catch(e => {
+                                        snackbar.show("Không có kết nối mạng", "danger");
+                                    })
+                                }} style={{ width: 130, borderWidth: 1, borderColor: '#00000044', borderRadius: 6, alignItems: 'center', paddingTop: 5, paddingBottom: 5 }}><Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 5 }}>Không</Text><Text style={{ color: '#cacaca' }}>muốn hỏi thêm</Text></TouchableOpacity>
+                                <TouchableOpacity onPress={() => {
+                                    connectionUtils.isConnected().then(s => {
+                                        this.setState({ confirmed: true, rating: true })
+                                    }).catch(e => {
+                                        snackbar.show("Không có kết nối mạng", "danger");
+                                    })
+                                }} style={{ width: 130, backgroundColor: 'rgb(2,195,154)', borderRadius: 6, marginLeft: 10, alignItems: 'center', paddingTop: 5, paddingBottom: 5 }}><Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 5, color: '#FFF' }}>Có</Text><Text style={{ color: '#fff' }}>cảm ơn bác sĩ</Text></TouchableOpacity>
                             </View>
                         </View>
                     }
@@ -306,7 +323,7 @@ class DetailQuestionScreen extends Component {
     showMoreInfo() {
         return <View style={{ backgroundColor: 'rgb(231,241,239)', borderRadius: 6, marginTop: 26, paddingTop: 13, paddingBottom: 13, paddingLeft: 20, paddingRight: 20 }}>
             <TouchableOpacity onPress={() => { this.setState({ showMore: !this.state.showMore }) }} style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Text style={{ color: 'rgb(0,141,111)', fontWeight: 'bold', fontSize: 16, flex: 1 }}>Thông tin bổ sung</Text>
+                <Text style={{ color: 'rgba(0,141,111,0.70)', fontWeight: 'bold', fontSize: 16, flex: 1 }}>Thông tin bổ sung</Text>
                 <ScaleImage width={12} source={this.state.showMore ? require("@images/new/down.png") : require("@images/new/up.png")} />
             </TouchableOpacity>
             {
@@ -335,7 +352,7 @@ class DetailQuestionScreen extends Component {
                         this.state.post.post.otherContent &&
                         <View>
                             <Text style={styles.moreInfo}>Thông tin khác:</Text>
-                            <Text style={{ fontSize: 16, marginTop: 6 }}>
+                            <Text style={{ fontSize: 16, marginTop: 6, color: '#00000064' }}>
                                 {this.state.post.post.otherContent}
                             </Text>
                         </View>
@@ -370,7 +387,7 @@ class DetailQuestionScreen extends Component {
         if (this.state.post.post.status == 4) {
             return <View>
                 <View style={{ marginTop: 25 }}>
-                    <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'rgb(106,1,54)' }}>Trạng thái: Bị từ chối</Text>
+                    <Text style={{ fontSize: 15, color: 'rgb(106,1,54)' }}>Trạng thái: Bị từ chối</Text>
                 </View>
                 {
                     this.state.post.post.reject ?
@@ -479,7 +496,7 @@ class DetailQuestionScreen extends Component {
 const styles = StyleSheet.create({
     moreInfo:
     {
-        color: '#00000080', fontSize: 16, fontWeight: '500', marginTop: 7
+        color: '#00000080', fontSize: 15, fontWeight: '500', marginTop: 7
     },
     errorStyle: {
         color: "red",
