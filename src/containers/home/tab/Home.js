@@ -12,21 +12,18 @@ import { connect } from "react-redux";
 import ScaledImage from "mainam-react-native-scaleimage";
 import Dimensions from "Dimensions";
 const DEVICE_WIDTH = Dimensions.get("window").width;
-import * as Animatable from "react-native-animatable";
-import Modal from "react-native-modal";
-import stylemodal from "@styles/modal-style";
-import Carousel from "react-native-snap-carousel";
+import Carousel, { Pagination } from "react-native-snap-carousel";
 import advertiseProvider from "@data-access/advertise-provider";
 import snackbar from "@utils/snackbar-utils";
-import TextField from "mainam-react-native-form-validate/TextField";
-import Form from "mainam-react-native-form-validate/Form";
-import UserInput from "@components/UserInput";
 import { Card } from "native-base";
 
 class Home extends Component {
   constructor(props) {
     super(props);
-    this.state = { ads: [] };
+    this.state = {
+      ads: [],
+      ads0: [1, 2, 3, 4, 5]
+    };
   }
   componentWillMount() {
     advertiseProvider.getTop(100, (s, e) => {
@@ -40,100 +37,89 @@ class Home extends Component {
       }
     });
   }
-  onClick(item) {
-    const navigate = this.props.navigation.navigate;
-    switch (item.id) {
-      case 0:
-        navigate("searchFacility");
-        break;
-      case 1:
-        navigate("searchDrug");
-        break;
-      case 2:
-        if (this.props.userApp.isLogin) navigate("ehealth");
-        else navigate("login");
-        break;
-    }
+  renderAds() {
+    return (<View style={{ padding: 12 }}>
+      <Text style={{ marginBottom: 5, color: 'rbg(74,74,74)' }}>Ưu đãi</Text>
+      <Carousel
+        enableSnap={false}
+        loop={true}
+        // onSnapToItem={(index) => {
+        //   this.setState({ adsActiveIndex: index })
+        // }}
+        activeSlideAlignment={'start'}
+        // firstItem={this.state.ads && this.state.ads.length > 1 ? 1 : 0}
+        ref={c => {
+          this._carousel = c;
+        }}
+        data={this.state.ads}
+        layoutCardOffset={'3'}
+        stagePadding={3}
+        // layout={'stack'}
+        renderItem={({ item, index }) => {
+          return (
+            <Card>
+              <TouchableOpacity
+                onPress={() => {
+                  if (item.advertise && item.advertise.value) {
+                    Linking.openURL(item.advertise.value);
+                  } else {
+                    snackbar.show("Url không tồn tại", "danger");
+                  }
+                }}
+              >
+                <ScaledImage
+                  source={require("@images/banner/bannerbooking.png")}
+                  width={DEVICE_WIDTH - 100}
+                />
+                <Text numberOfLines={1} ellipsizeMode='tail' style={{ color: '#00000064', margin: 13 }}>{item.advertise ? item.advertise.content : ""}</Text>
+              </TouchableOpacity>
+            </Card>
+          );
+        }}
+        sliderWidth={DEVICE_WIDTH}
+        itemWidth={DEVICE_WIDTH - 100}
+      />
+    </View>)
   }
-  onClickItemAds(item) {
-    const navigate = this.props.navigation.navigate;
-    switch (item.id) {
-      case 0:
-        if (!this.props.userApp.isLogin) {
-          this.props.navigation.navigate("login");
-          return;
-        }
-        this.setState({ showModalSelectHospital: true });
-        break;
-      case 1:
-        navigate("listQuestion");
-        break;
-      case 2:
-        navigate("searchFacilityByLocation");
-        break;
-    }
-  }
-  showDrawer() {
-    if (this.props.drawer) {
-      this.props.drawer.open();
-    }
-  }
-
-  getItemWidth() {
-    const width = DEVICE_WIDTH;
-    // let itemWidth = 360;
-    // if (itemWidth > width - 10)
-    //     return width - 10;
-    return width - 15;
-    // if (width >= 320)
-    //     return 150;
-    // if (width > 320)
-    //     return 150;
-    // if (width > 300)
-    //     return 140;
-    // if (width > 250)
-    //     return 115;
-    // if (width > 170)
-    //     return 160;
-    // return width - 10;
-  }
-
-  // renderTitlePage() {
-  //     alert("ádasdasdas");
-  //     return(
-  //     )
-  // }
-  // selectBVDHY() {
-  //     this.setState({
-  //         showModalSelectHospital: false
-  //     }, () => {
-  //         this.props.navigation.navigate("addBookingBVDHY");
-  //     });
-  // }
-  _renderItem({ item, index }) {
+  pagination() {
+    const { ads0, activeSlide } = this.state;
+    let length = ads0.length;
     return (
-      <Card>
-        <TouchableOpacity
-          onPress={() => {
-            if (item.advertise && item.advertise.value) {
-              Linking.openURL(item.advertise.value);
-            } else {
-              snackbar.show("Url không tồn tại", "danger");
-            }
+      <View style={{ position: 'absolute', bottom: 0, width: DEVICE_WIDTH }}>
+        <Pagination
+          dotsLength={length}
+          activeDotIndex={activeSlide}
+          dotContainerStyle={{ width: 10, margin: 0, padding: 0, height: 10}}
+          dotStyle={{
+            width: 10,
+            height: 10,
+            borderRadius: 5,
+            marginHorizontal: 10,
+            backgroundColor: "#02c39a",
+            paddingHorizontal: 0,
+            margin: 0,
+            padding: 0
           }}
-        >
-          <ScaledImage
-            source={require("@images/banner/bannerbooking.png")}
-            width={DEVICE_WIDTH - 100}
-          />
-          <Text numberOfLines={1} ellipsizeMode='tail' style={{ color: '#00000064', margin: 13 }}>{item.advertise ? item.advertise.content : ""}</Text>
-        </TouchableOpacity>
-      </Card>
+          inactiveDotStyle={
+            {
+              // Define styles for inactive dots here
+              backgroundColor: "#d8d8d8"
+            }
+          }
+          inactiveDotOpacity={0.4}
+          inactiveDotScale={0.6}
+          containerStyle={
+            {
+              paddingVertical: 10,
+              paddingHorizontal: 0
+            }
+          }
+        />
+      </View>
     );
   }
 
   render() {
-    const itemWidth = this.getItemWidth();
     return (
       <ScrollView
         style={{
@@ -141,7 +127,42 @@ class Home extends Component {
           paddingTop: 0
         }}
       >
-        <View style={{ flexDirection: "row", padding: 10 }}>
+        <View style={{ position: 'relative' }}>
+          <Carousel
+            enableSnap={true}
+            data={this.state.ads0}
+            loop={true}
+            autoplayInterval={3000}
+            autoplay={true}
+            onSnapToItem={index => {
+              this.setState({ activeSlide: index });
+            }}
+            renderItem={({ item, index }) => {
+              return (
+                <TouchableOpacity
+                  onPress={() => {
+                    if (item.advertise && item.advertise.value) {
+                      Linking.openURL(item.advertise.value);
+                    } else {
+                      snackbar.show("Url không tồn tại", "danger");
+                    }
+                  }}
+                >
+                  <ScaledImage
+                    source={require("@images/banner/bannerbooking.png")}
+                    width={DEVICE_WIDTH}
+                  />
+                </TouchableOpacity>
+              );
+            }}
+            sliderWidth={DEVICE_WIDTH}
+            itemWidth={DEVICE_WIDTH}
+          />
+          {
+            this.pagination()
+          }
+        </View>
+        <View style={{ flexDirection: "row", padding: 10, marginTop: 25 }}>
           <TouchableOpacity
             style={{ flex: 1, marginLeft: 5, alignItems: 'center' }}
             onPress={() => {
@@ -193,106 +214,11 @@ class Home extends Component {
             </Text>
           </TouchableOpacity>
         </View>
-        <Carousel
-          loop={true}
-          ref={c => {
-            this._carousel = c;
-          }}
-          data={this.state.ads}
-          layoutCardOffset={'1'}
-          // layout={'stack'}
-          renderItem={this._renderItem}
-          sliderWidth={DEVICE_WIDTH}
-          itemWidth={DEVICE_WIDTH - 100}
-        />
-        {/* <View style={{
-                    marginTop: 10,
-                    flexDirection: 'row',
-                    flexWrap: 'wrap',
-                    justifyContent: 'center',
-                    alignItems: 'flex-start',
-                }}>
-                    {
-                        this.state.features.map((item, position) => {
-                            return (<Animatable.View key={position} delay={50 * position} animation={"slideInLeft"} direction="alternate">
-                                <TouchableOpacity key={position} onPress={() => { this.onClick(item) }}>
-                                    <ScaledImage source={item.icon} width={itemWidth} />
-                                </TouchableOpacity>
-                            </Animatable.View>);
-                        })
-                    }
-                </View>
-
-                <View style={{
-                    flexWrap: 'wrap',
-                    justifyContent: 'center',
-                    alignItems: 'flex-start'
-                }}>
-                    <Text style={{
-                        marginTop: 20,
-                        color: "#9b9b9b",
-                        fontSize: 16,
-                        fontWeight: "500",
-                        // marginLeft: (DEVICE_WIDTH - itemWidth) / 2
-                    }}>iSofH Care</Text>{
-                        this.state.ads.map((item, position) => {
-                            return (<Animatable.View key={position} delay={50 * position} animation={"slideInRight"} direction="alternate">
-                                <TouchableOpacity key={position} style={{ paddingTop: 5, paddingBottom: 5 }} onPress={() => { this.onClickItemAds(item) }}>
-                                    <ScaledImage source={item.icon} width={itemWidth - 15} style={{ borderRadius: 5 }} />
-                                </TouchableOpacity>
-                            </Animatable.View>);
-                        })
-                    }
-                </View> */}
+        {
+          this.renderAds()
+        }
         <View style={{ height: 30 }} />
       </ScrollView >
-      // <ActivityPanel
-      //     style={[{ flex: 1 }, this.props.style]}
-      //     titleStyle={{ marginRight: 60 }}
-      //     imageStyle={{ marginRight: 50 }}
-      //     image={require("@images/logo_home.png")}
-      //     icBack={require("@images/icmenu.png")}
-      //     backButtonClick={() => { this.showDrawer() }}
-      //     // showMessenger={this.props.userApp.isLogin ? true : false}
-      //     showMessenger={false}
-      //     badge={0}>
-
-      //     {/* <Modal
-      //         isVisible={this.state.showModalSelectHospital}
-      //         onBackdropPress={() => this.setState({ showModalSelectHospital: false })}
-      //         backdropOpacity={0.5}
-      //         animationInTiming={500}
-      //         animationOutTiming={500}
-      //         backdropTransitionInTiming={1000}
-      //         backdropTransitionOutTiming={1000}
-      //         style={stylemodal.bottomModal}>
-      //         <View style={{ backgroundColor: '#fff', elevation: 3, flexDirection: 'column', maxHeight: 400, minHeight: 100 }}>
-      //             <View style={{ flexDirection: 'row', alignItems: "center" }}>
-      //                 <Text style={{ padding: 20, flex: 1, color: "rgb(0,121,107)", textAlign: 'center', fontSize: 16, fontWeight: '900' }}>
-      //                     CHỌN BỆNH VIỆN
-      //                 </Text>
-      //             </View>
-      //             <View style={{ alignItems: 'center', marginBottom: 10 }}>
-      //                 <TouchableOpacity style={{
-      //                     height: 52,
-      //                     flexDirection: 'row',
-      //                     borderRadius: 4,
-      //                     alignItems: 'center',
-      //                     padding: 10,
-      //                     backgroundColor: "#00977c"
-      //                 }} onPress={this.selectBVDHY.bind(this)}>
-      //                     <ScaledImage source={require("@images/ic_phongkham1.png")} width={32} style={{ marginRight: 12 }} />
-      //                     <Text style={{
-      //                         fontSize: 15,
-      //                         fontWeight: "600",
-      //                         color: '#FFF',
-      //                         fontStyle: "normal"
-      //                     }}>BỆNH VIỆN ĐẠI HỌC Y HÀ NỘI</Text>
-      //                 </TouchableOpacity>
-      //             </View>
-      //         </View>
-      //     </Modal> */}
-      // </ ActivityPanel >
     );
   }
 }
