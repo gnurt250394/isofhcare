@@ -39,7 +39,6 @@ class ProfileScreen extends Component {
                     this.setState({ isLoading: false });
                     switch (s.code) {
                         case 0:
-                            alert("");
                             snackbar.show(constants.msg.user.change_password_success, 'success');
                             this.props.navigation.navigate('home');
                             return;
