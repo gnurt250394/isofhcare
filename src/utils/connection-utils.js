@@ -7,21 +7,9 @@ module.exports = {
             NetInfo.isConnected.fetch().then(connect => {
                 if (connect)
                     resolve(true);
-                else {
-                    if (time != 1)
-                        setTimeout(() => {
-                            this.isConnected(1).then(s => {
-                                if (s)
-                                    resolve(s);
-                                else {
-                                    reject(false);
-                                }
-                            }).catch(e => {
-                                reject(e);
-                            })
-                        }, 1000);
-                }
-            }).catch(e => reject(e));
+                else
+                    reject(false);
+            }).catch(e => reject(false));
         })
     },
     checkConnect(callback) {

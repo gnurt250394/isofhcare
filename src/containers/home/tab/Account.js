@@ -149,7 +149,9 @@ class Account extends Component {
         </TouchableOpacity>
         {
           this.state.showSetting &&
-          <TouchableOpacity style={[styles.itemMenu, { paddingLeft: 40 }]}>
+          <TouchableOpacity style={[styles.itemMenu, { paddingLeft: 40 }]} onPress={() => {
+            this.props.navigation.navigate("changePass");
+          }}>
             <Text style={styles.itemText}>Đổi mật khẩu</Text>
             <ScaledImage source={require("@images/new/ic_menu_change_password.png")} width={24} height={24} />
           </TouchableOpacity>

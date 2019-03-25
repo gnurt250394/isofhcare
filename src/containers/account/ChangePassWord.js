@@ -10,7 +10,8 @@ import eyeImg from '@images/eye_black.png';
 import ButtonSubmit from '@components/ButtonSubmit';
 import userProvider from '@data-access/user-provider';
 import constants from '@resources/strings';
-
+import FloatingLabel from 'mainam-react-native-floating-label';
+import connectionUtils from '@utils/connection-utils';
 class ProfileScreen extends Component {
     constructor(props) {
         super(props)
@@ -30,122 +31,129 @@ class ProfileScreen extends Component {
         const { user } = this.state;
         Keyboard.dismiss();
         if (!this.form.isValid()) {
-            this.child.unPress();
             return;
         }
-        userProvider.changePassword(user.currentUser.id, this.state.passwordOld, this.state.passwordNew).then(s => {
-            console.log(s, e)
-            switch (s.code) {
-                case 0:
-                    snackbar.show(constants.msg.user.change_password_success, 'success');
-                    this.props.navigation.navigate('home');
-                    return
-                    break;
-                case 2:
-                    this.child.unPress();
-                    snackbar.show(constants.msg.user.change_password_success_old_password_incorrect, 'danger');
-                    break
-                default:
-                    this.child.unPress();
+        connectionUtils.isConnected().then(s => {
+            this.setState({ isLoading: true }, () => {
+                userProvider.changePassword(user.currentUser.id, this.state.passwordOld, this.state.passwordNew).then(s => {
+                    this.setState({ isLoading: false });
+                    switch (s.code) {
+                        case 0:
+                            alert("");
+                            snackbar.show(constants.msg.user.change_password_success, 'success');
+                            this.props.navigation.navigate('home');
+                            return;
+                        case 2:
+                            snackbar.show(constants.msg.user.change_password_success_old_password_incorrect, 'danger');
+                            break
+                        default:
+                            snackbar.show(constants.msg.user.change_password_not_success, 'danger');
+                            break
+                    }
+                }).catch(e => {
+                    this.setState({ isLoading: false });
                     snackbar.show(constants.msg.user.change_password_not_success, 'danger');
-                    break
-            }
+                });
+            })
+
         }).catch(e => {
-            this.child.unPress();
-            console.log(e);
-            snackbar.show(constants.msg.user.change_password_not_success, 'danger');
-        });
+            snackbar.show("Không có kết nối mạng", "danger");
+        })
     }
 
     render() {
         return (
-            <ActivityPanel style={{ flex: 1 }} title="Đổi mật khẩu" showFullScreen={true} isLoading={this.state.isLoading}>
-                <ScrollView>
-                    <KeyboardAvoidingView behavior='padding' style={styles.form}>
-                        <Form ref={ref => this.form = ref}>
-                            <Form style={{ width: "100%", }}>
-                                <TextField errorStyle={styles.errorStyle} validate={
-                                    {
-                                        rules: {
-                                            required: true
-                                        },
-                                        messages: {
-                                            required: "Vui lòng nhập đầy đủ thông tin",
-                                            min: "Mật khẩu dài ít nhất 8 kí tự"
-                                        }
-                                    }
-                                }
-                                    secureTextEntry={this.state.showPass}
-                                    inputStyle={styles.input} style={{ marginTop: 10 }} onChangeText={(s) => this.setState({ passwordOld: s })} placeholder={"Nhập mật khẩu cũ"} autoCapitalize={'none'} />
-                                <TouchableOpacity
-                                    activeOpacity={0.7}
-                                    style={styles.btnEye}
-                                    onPress={this.showPass}>
-                                    <Image source={eyeImg} style={styles.iconEye} />
-                                </TouchableOpacity>
-                            </Form>
-                            <Form style={{ width: "100%", }}>
-                                <TextField errorStyle={styles.errorStyle} validate={
-                                    {
+            <ActivityPanel
+                style={{ flex: 1 }} title="Đổi mật khẩu"
+                titleStyle={{ textAlign: 'left', marginLeft: 20 }}
+                touchToDismiss={true}
+                showFullScreen={true} isLoading={this.state.isLoading}>
+                <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
+                    <KeyboardAvoidingView behavior="padding" style={styles.form}>
+                        <ScaleImage source={require("@images/new/isofhcare.png")} width={200} style={{ marginTop: 50, alignSelf: 'center' }} />
+                        <View style={{ flex: 1, padding: 30 }}>
+                            <Form ref={ref => (this.form = ref)} style={{ marginTop: 10 }}>
+                                <TextField
+                                    getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
+                                        placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Nhập mật khẩu cũ"}
+                                        secureTextEntry={true}
+                                        onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
+                                    onChangeText={s => {
+                                        this.setState({ passwordOld: s });
+                                    }}
+                                    errorStyle={styles.errorStyle}
+                                    validate={{
                                         rules: {
                                             required: true,
                                             minlength: 8
                                         },
                                         messages: {
-                                            required: "Vui lòng nhập đầy đủ thông tin",
-                                            minlength: "Mật khẩu dài ít nhất 8 kí tự"
+                                            required: "Vui lòng nhập đầy đủ thông tin!",
+                                            minlength: "Mật khẩu dài ít nhất 8 ký tự"
                                         }
-                                    }
-                                }
-                                    secureTextEntry={this.state.showPass}
-                                    inputStyle={styles.input} style={{ marginTop: 10 }} onChangeText={(s) => this.setState({ passwordNew: s })} placeholder={"Nhập mật khẩu mới"} autoCapitalize={'none'} />
-                                <TouchableOpacity
-                                    activeOpacity={0.7}
-                                    style={styles.btnEye}
-                                    onPress={this.showPass}>
-                                    <Image source={eyeImg} style={styles.iconEye} />
-                                </TouchableOpacity>
-                            </Form>
-                            <Form style={{ width: "100%", }}>
-                                <TextField errorStyle={styles.errorStyle} validate={
-                                    {
+                                    }}
+                                    placeholder={constants.input_password}
+                                    autoCapitalize={"none"}
+                                />
+                                <TextField
+                                    getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
+                                        placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.input_password}
+                                        secureTextEntry={true}
+                                        onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
+                                    onChangeText={s => {
+                                        this.setState({ passwordNew: s });
+                                    }}
+                                    errorStyle={styles.errorStyle}
+                                    validate={{
+                                        rules: {
+                                            required: true,
+                                            minlength: 8
+                                        },
+                                        messages: {
+                                            required: "Vui lòng nhập đầy đủ thông tin!",
+                                            minlength: "Mật khẩu dài ít nhất 8 ký tự"
+                                        }
+                                    }}
+                                    placeholder={constants.input_password}
+                                    autoCapitalize={"none"}
+                                />
+                                <TextField
+                                    getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
+                                        placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Xác nhận mật khẩu mới"}
+                                        secureTextEntry={true}
+                                        onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
+                                    onChangeText={s => {
+                                        this.setState({ confirm_password: s });
+                                    }}
+                                    errorStyle={styles.errorStyle}
+                                    validate={{
                                         rules: {
                                             required: true,
                                             equalTo: this.state.passwordNew,
                                             minlength: 8
                                         },
                                         messages: {
-                                            required: "Vui lòng nhập đầy đủ thông tin",
-                                            minlength: "Mật khẩu dài ít nhất 8 kí tự",
+                                            required: "Vui lòng nhập đầy đủ thông tin!",
+                                            minlength: "Xác nhận mật khẩu dài ít nhất 8 kí tự",
                                             equalTo: 'Mật khẩu và xác nhận mật khẩu không giống nhau'
                                         }
-                                    }
-                                }
-                                    secureTextEntry={this.state.showPass}
-                                    inputStyle={styles.input} style={{ marginTop: 10 }} onChangeText={(s) => this.setState({ passwordNewConfirm: s })} placeholder={"Xác nhận mật khẩu mới"} autoCapitalize={'none'} />
-                                <TouchableOpacity
-                                    activeOpacity={0.7}
-                                    style={styles.btnEye}
-                                    onPress={this.showPass}>
-                                    <Image source={eyeImg} style={styles.iconEye} />
-                                </TouchableOpacity>
+                                    }}
+                                    placeholder={constants.input_password}
+                                    autoCapitalize={"none"}
+                                />
                             </Form>
-                            <View style={{ width: 300, maxWidth: 300, paddingLeft: 20 }}>
-                                <ButtonSubmit style={{ width: '100%', marginLeft: 10 }} onRef={ref => (this.child = ref)} click={() => { this.change() }} text={"Cập nhật"} />
-                            </View>
-                        </Form>
+                        </View>
                     </KeyboardAvoidingView>
                 </ScrollView>
+                <TouchableOpacity onPress={this.change.bind(this)} style={{ backgroundColor: 'rgb(2,195,154)', marginBottom: 30, alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center' }}>
+                    <Text style={{ color: '#FFF', fontSize: 20 }}>{"CẬP NHẬT"}</Text>
+                </TouchableOpacity>
             </ActivityPanel>
         )
     }
 }
 const DEVICE_WIDTH = Dimensions.get('window').width;
 const styles = StyleSheet.create({
-    form: {
-        marginTop: 80,
-        alignItems: 'center',
-    },
     btnEye: {
         position: 'absolute',
         right: 25,
@@ -170,8 +178,8 @@ const styles = StyleSheet.create({
         borderColor: 'rgba(155,155,155,0.7)'
     },
     errorStyle: {
-        color: 'red',
-        marginLeft: 20
+        color: "red",
+        marginTop: 10
     }
 });
 
