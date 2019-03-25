@@ -58,76 +58,81 @@ class HomeScreen extends Component {
 
   render() {
     return (
-      <View
-        style={[{ flex: 1 }, this.props.style]}
-      >
-        <Swiper
-          ref={ref => (this.swiper = ref)}
-          onIndexChanged={index => {
-            this.setState({ tabIndex: index });
-          }}
-          dot={<View />}
-          activeDot={<View />}
-          paginationStyle={{
-            bottom: 30
-          }}
-          loop={false}
-          style={{ flex: 1 }}
+      <ActivityPanel isLoading={this.state.isLoading} hideActionbar={true}>
+        <View
+          style={[{ flex: 1 }, this.props.style]}
         >
-          <Home
-            navigation={this.props.navigation}
+          <Swiper
+            ref={ref => (this.swiper = ref)}
+            onIndexChanged={index => {
+              this.setState({ tabIndex: index });
+            }}
+            dot={<View />}
+            activeDot={<View />}
+            paginationStyle={{
+              bottom: 30
+            }}
+            loop={false}
             style={{ flex: 1 }}
-          />
-          <View style={{ flex: 1, backgroundColor: "#000" }} />
-          <View style={{ flex: 1, backgroundColor: "#cac" }} />
-          <Account />
-        </Swiper>
-        <View style={{
-        }}>
-          < View style={{
-            height: 61, flexDirection: "row", backgroundColor: '#ffffff',
-            shadowColor: 'rgba(0, 0, 0, 0.09)',
-            shadowOffset: {
-              width: 0,
-              height: 0
-            },
-            shadowRadius: 4,
-            shadowOpacity: 1,
-            marginTop: -3,
-            elevation: 5
+          >
+            <Home
+              navigation={this.props.navigation}
+              style={{ flex: 1 }}
+            />
+            <View style={{ flex: 1, backgroundColor: "#000" }} />
+            <View style={{ flex: 1, backgroundColor: "#cac" }} />
+            <Account showLoading={(loading, callback) => {
+              debugger;
+              this.setState({ isLoading: loading }, callback);
+            }} />
+          </Swiper>
+          <View style={{
           }}>
-            <TouchableOpacity
-              style={[this.state.tabIndex == 0 ? styles.tab_selected : styles.tab]}
-              onPress={this.swipe.bind(this, 0)}
-            >
-              <ScaledImage source={this.state.tabIndex == 0 ? require("@images/new/ic_home_home1.png") : require("@images/new/ic_home_home0.png")} width={20} />
-              <Text style={[this.state.tabIndex == 0 ? styles.tab_label_selected : styles.tab_label]}>Trang chủ</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[this.state.tabIndex == 1 ? styles.tab_selected : styles.tab]}
-              onPress={this.swipe.bind(this, 1)}
-            >
-              <ScaledImage source={this.state.tabIndex == 1 ? require("@images/new/ic_home_booking1.png") : require("@images/new/ic_home_booking0.png")} height={20} />
-              <Text style={[this.state.tabIndex == 1 ? styles.tab_label_selected : styles.tab_label]}>Lịch khám</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[this.state.tabIndex == 2 ? styles.tab_selected : styles.tab]}
-              onPress={this.swipe.bind(this, 2)}
-            >
-              <ScaledImage source={this.state.tabIndex == 2 ? require("@images/new/ic_home_service1.png") : require("@images/new/ic_home_service0.png")} height={20} />
-              <Text style={[this.state.tabIndex == 2 ? styles.tab_label_selected : styles.tab_label]}>Dịch vụ</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[this.state.tabIndex == 3 ? styles.tab_selected : styles.tab]}
-              onPress={this.swipe.bind(this, 3)}
-            >
-              <ScaledImage source={this.state.tabIndex == 3 ? require("@images/new/ic_home_account1.png") : require("@images/new/ic_home_account0.png")} height={20} />
-              <Text style={[this.state.tabIndex == 3 ? styles.tab_label_selected : styles.tab_label]}>Tài khoản</Text>
-            </TouchableOpacity>
-          </View>
-        </View >
-        <PushController />
-      </View>
+            < View style={{
+              height: 61, flexDirection: "row", backgroundColor: '#ffffff',
+              shadowColor: 'rgba(0, 0, 0, 0.09)',
+              shadowOffset: {
+                width: 0,
+                height: 0
+              },
+              shadowRadius: 4,
+              shadowOpacity: 1,
+              marginTop: -3,
+              elevation: 5
+            }}>
+              <TouchableOpacity
+                style={[this.state.tabIndex == 0 ? styles.tab_selected : styles.tab]}
+                onPress={this.swipe.bind(this, 0)}
+              >
+                <ScaledImage source={this.state.tabIndex == 0 ? require("@images/new/ic_home_home1.png") : require("@images/new/ic_home_home0.png")} width={20} />
+                <Text style={[this.state.tabIndex == 0 ? styles.tab_label_selected : styles.tab_label]}>Trang chủ</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[this.state.tabIndex == 1 ? styles.tab_selected : styles.tab]}
+                onPress={this.swipe.bind(this, 1)}
+              >
+                <ScaledImage source={this.state.tabIndex == 1 ? require("@images/new/ic_home_booking1.png") : require("@images/new/ic_home_booking0.png")} height={20} />
+                <Text style={[this.state.tabIndex == 1 ? styles.tab_label_selected : styles.tab_label]}>Lịch khám</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[this.state.tabIndex == 2 ? styles.tab_selected : styles.tab]}
+                onPress={this.swipe.bind(this, 2)}
+              >
+                <ScaledImage source={this.state.tabIndex == 2 ? require("@images/new/ic_home_service1.png") : require("@images/new/ic_home_service0.png")} height={20} />
+                <Text style={[this.state.tabIndex == 2 ? styles.tab_label_selected : styles.tab_label]}>Dịch vụ</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[this.state.tabIndex == 3 ? styles.tab_selected : styles.tab]}
+                onPress={this.swipe.bind(this, 3)}
+              >
+                <ScaledImage source={this.state.tabIndex == 3 ? require("@images/new/ic_home_account1.png") : require("@images/new/ic_home_account0.png")} height={20} />
+                <Text style={[this.state.tabIndex == 3 ? styles.tab_label_selected : styles.tab_label]}>Tài khoản</Text>
+              </TouchableOpacity>
+            </View>
+          </View >
+          <PushController />
+        </View>
+      </ActivityPanel>
     );
   }
   swipe(targetIndex) {

@@ -4,14 +4,24 @@ import constants from '@resources/strings';
 
 module.exports = {
     upload(uri, callback) {
-        client.uploadFile(constants.api.upload.image, uri, (s, e) => {
-            if (callback) {
-                if (s) {
-                    callback({ data: s, uri, success: true }, e);
+        if (!callback) {
+            return new Promise((resolve, reject) => {
+                client.uploadFile(constants.api.upload.image, uri, (s, e) => {
+                    if (s)
+                        resolve({ data: s, uri, success: true });
+                    resolve({ uri, success: false });
+                });
+            });
+        }
+        else
+            client.uploadFile(constants.api.upload.image, uri, (s, e) => {
+                if (callback) {
+                    if (s) {
+                        callback({ data: s, uri, success: true }, e);
+                    }
+                    else
+                        callback({ uri, success: false }, e);
                 }
-                else
-                    callback({ uri, success: false }, e);
-            }
-        });
+            });
     }
 }

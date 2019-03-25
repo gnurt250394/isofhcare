@@ -67,7 +67,7 @@ module.exports = {
                 password: password.toMd5(),
                 device: { os: os, deviceId: this.deviceId, token: this.deviceToken }
             }
-            client.requestApi("put", constants.api.user.login, body, (s, e) => {                
+            client.requestApi("put", constants.api.user.login, body, (s, e) => {
                 if (s)
                     resolve(s);
                 else
@@ -129,14 +129,17 @@ module.exports = {
             });
         });
     },
-    update(user, callback) {
-        var body = {
-            user: user
-        }
-        client.requestApi("put", constants.api.user.update, body, (s, e) => {
-            if (callback)
-                callback(s, e);
-        });
+    update(userId, user) {
+        return new Promise((resolve, reject) => {
+            var body = {
+                user: user
+            }
+            client.requestApi("put", constants.api.user.update + "/" + userId, body, (s, e) => {
+                if (s)
+                    resolve(s);
+                reject(e);
+            });
+        })
     },
 
     changeEmail(newEmail, password, callback) {

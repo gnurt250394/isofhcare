@@ -18,19 +18,58 @@ import snackbar from "@utils/snackbar-utils";
 import { Card } from "native-base";
 import ImageLoad from "mainam-react-native-image-loader";
 import clientUtils from '@utils/client-utils';
+import objectUtils from '@utils/object-utils';
 import ScaleImage from "mainam-react-native-scaleimage";
 import redux from "@redux-store";
-import { Toast } from 'native-base';
+import ImagePicker from 'mainam-react-native-select-image';
+import imageProvider from '@data-access/image-provider';
+import userProvider from '@data-access/user-provider';
+
 class Account extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      ads: [],
-      ads0: [1, 2, 3, 4, 5]
     };
   }
-  componentWillMount() {
-
+  showLoading(loading, callback) {
+    if (this.props.showLoading) {
+      this.props.showLoading(loading, callback);
+    } else {
+      callback();
+    }
+  }
+  selectImage() {
+    if (this.imagePicker) {
+      this.imagePicker.open(true, 200, 200, image => {
+        this.showLoading(true, () => {
+          imageProvider.upload(image.path).then(s => {
+            this.showLoading(false, () => {
+              if (s && s.data.code == 0) {
+                let user = objectUtils.clone(this.props.userApp.currentUser);
+                user.avatar = s.data.data.images[0].thumbnail;
+                this.showLoading(true, () => {
+                  userProvider.update(this.props.userApp.currentUser.id, user).then(s => {
+                    this.showLoading(false);
+                    if (s.code == 0) {
+                      this.props.dispatch(redux.userLogin(s.data.user));
+                    }
+                    else {
+                      snackbar.show("Cập nhật ảnh đại diện không thành công", "danger");
+                    }
+                  }).catch(e => {
+                    this.showLoading(false);
+                    snackbar.show("Cập nhật ảnh đại diện không thành công", "danger");
+                  });
+                })
+              }
+            });
+          }).catch(e => {
+            this.showLoading(false);
+            snackbar.show("Upload ảnh không thành công", "danger");
+          })
+        });
+      })
+    }
   }
   render() {
     if (!this.props.userApp.isLogin) {
@@ -51,9 +90,11 @@ class Account extends Component {
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <View style={{ flex: 1 }}>
             <Text style={{ color: '#000000', fontSize: 20 }}>{this.props.userApp.currentUser.name}</Text>
-            <TouchableOpacity><Text style={{ color: '#008D6F', marginTop: 10 }}>Xem hồ sơ cá nhân</Text></TouchableOpacity>
+            <TouchableOpacity onPress={() => {
+              snackbar.show("Chức năng đang phát triển");
+            }}><Text style={{ color: '#008D6F', marginTop: 10 }}>Xem hồ sơ cá nhân</Text></TouchableOpacity>
           </View>
-          <TouchableOpacity style={{ position: 'relative' }}>
+          <TouchableOpacity style={{ position: 'relative' }} onPress={this.selectImage.bind(this)}>
             <ImageLoad
               resizeMode="cover"
               imageStyle={{ borderRadius: 35 }}
@@ -154,6 +195,7 @@ class Account extends Component {
           <ScaledImage source={require("@images/new/ic_menu_logout.png")} width={24} height={24} />
         </TouchableOpacity>
         <View style={{ height: 100 }} />
+        <ImagePicker ref={ref => this.imagePicker = ref} />
       </ScrollView >
     );
   }
