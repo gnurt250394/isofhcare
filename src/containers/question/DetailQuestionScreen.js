@@ -275,7 +275,7 @@ class DetailQuestionScreen extends Component {
                     {
                         !this.state.confirmed &&
                         <View>
-                            <Text style={{ textAlign: 'center', marginTop: 39, fontSize: 16 }}>Bạn có hài lòng với câu hỏi này không?</Text>
+                            <Text style={{ textAlign: 'center', marginTop: 39, fontSize: 16 }}>Bạn có hài lòng với câu trả lời này không?</Text>
                             <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 20 }}>
                                 <TouchableOpacity onPress={() => {
                                     connectionUtils.isConnected().then(s => {

@@ -67,7 +67,7 @@ class ListQuestionScreen extends Component {
                                     <Text style={[{ textAlign: 'center' }, this.state.tabIndex == 0 ? styles.tabSelected : styles.tabNormal]}>Đã trả lời</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={{ flex: 1 }} onPress={this.swipe.bind(this, 1)}>
-                                    <Text style={[{ textAlign: 'center' }, this.state.tabIndex == 1 ? styles.tabSelected : styles.tabNormal]}>Khác</Text>
+                                    <Text style={[{ textAlign: 'center' }, this.state.tabIndex == 1 ? styles.tabSelected : styles.tabNormal]}>Chưa trả lời</Text>
                                 </TouchableOpacity>
                             </View>
 

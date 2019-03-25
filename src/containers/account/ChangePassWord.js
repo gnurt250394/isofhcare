@@ -145,7 +145,7 @@ class ProfileScreen extends Component {
                     </KeyboardAvoidingView>
                 </ScrollView>
                 <TouchableOpacity onPress={this.change.bind(this)} style={{ backgroundColor: 'rgb(2,195,154)', marginBottom: 30, alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center' }}>
-                    <Text style={{ color: '#FFF', fontSize: 20 }}>{"CẬP NHẬT"}</Text>
+                    <Text style={{ color: '#FFF', fontSize: 17}}>{"CẬP NHẬT"}</Text>
                 </TouchableOpacity>
             </ActivityPanel>
         )

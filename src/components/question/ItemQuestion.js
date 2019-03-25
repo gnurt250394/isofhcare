@@ -81,13 +81,15 @@ class ItemQuestion extends Component {
                                         </View>
                                         <View>
                                             {
-                                                item.post.status == 1 || item.post.status == 2 || item.post.status == 5 || item.post.status == 3 ?
-                                                    <Text style={{ padding: 5, color: 'rgb(0,141,111)', fontWeight: 'bold' }}>{this.props.item.post.commentCount} trả lời</Text> :
-                                                    item.post.status == 4 ?
-                                                        <Text style={{ padding: 5, color: 'rgb(106,1,54)', fontWeight: 'bold' }}>Đã bị từ chối</Text> :
-                                                        item.post.status ?
-                                                            <Text style={{ padding: 5, color: 'rgb(0,141,111)', fontWeight: 'bold' }}>Đã hoàn thành</Text> :
-                                                            null
+                                                item.post.status == 1 || item.post.status == 2 || item.post.status == 5 ?
+                                                    <Text style={{ padding: 5, color: 'rgb(0,141,111)', fontWeight: 'bold' }}>Chờ trả lời</Text> :
+                                                    item.post.status == 3 ?
+                                                        <Text style={{ padding: 5, color: 'rgb(0,141,111)', fontWeight: 'bold' }}>{this.props.item.post.commentCount} trả lời</Text> :
+                                                        item.post.status == 4 ?
+                                                            <Text style={{ padding: 5, color: 'rgb(106,1,54)', fontWeight: 'bold' }}>Đã bị từ chối</Text> :
+                                                            item.post.status ?
+                                                                <Text style={{ padding: 5, color: 'rgb(0,141,111)', fontWeight: 'bold' }}>Đã hoàn thành</Text> :
+                                                                null
                                             }
                                         </View>
                                     </View>

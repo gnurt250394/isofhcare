@@ -26,6 +26,7 @@ import Form from "mainam-react-native-form-validate/Form";
 import Field from "mainam-react-native-form-validate/Field";
 import TextField from "mainam-react-native-form-validate/TextField";
 import FloatingLabel from 'mainam-react-native-floating-label';
+import connectionUtils from '@utils/connection-utils';
 
 class ResetPasswordScreen extends Component {
   constructor(props) {
@@ -40,25 +41,31 @@ class ResetPasswordScreen extends Component {
     if (!this.form.isValid()) {
       return;
     }
-    this.setState({ isLoading1: true }, () => {
-      userProvider.refreshPasswordByToken(this.state.phone, this.state.token, this.state.applicationId, this.state.password).then(s => {
-        this.setState({ isLoading1: false })
-        switch (s.code) {
-          case 0:
-            snackbar.show(
-              "Thiết lập mật khẩu mới thành công",
-              "success"
-            );
-            this.props.navigation.replace("login", {
-              nextScreen: this.nextScreen
-            });
-            return;
-        }
-      }).catch(e => {
-        this.setState({ isLoading1: false })
-        snackbar.show(constants.msg.user.change_password_not_success, "danger");
+    connectionUtils.isConnected().then(s => {
+      this.setState({ isLoading: true }, () => {
+        userProvider.refreshPasswordByToken(this.state.phone, this.state.token, this.state.applicationId, this.state.password).then(s => {
+          this.setState({ isLoading: false })
+          switch (s.code) {
+            case 0:
+              snackbar.show(
+                "Thiết lập mật khẩu mới thành công",
+                "success"
+              );
+              this.props.navigation.replace("login", {
+                nextScreen: this.nextScreen
+              });
+              return;
+          }
+        }).catch(e => {
+          this.setState({ isLoading: false })
+          snackbar.show(constants.msg.user.change_password_not_success, "danger");
+        });
       });
-    });
+
+    }).catch(e => {
+      snackbar.show("Không có kết nối mạng", "danger");
+    })
+
   }
 
   render() {
@@ -67,15 +74,18 @@ class ResetPasswordScreen extends Component {
         style={{ flex: 1 }}
         touchToDismiss={true}
         title="Thiết lập mật khẩu"
-        isLoading={this.state.isLoading1}
+        titleStyle={{ textAlign: 'left', marginLeft: 20 }}
+        touchToDismiss={true}
+        isLoading={this.state.isLoading}
       >
         <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
-          <KeyboardAvoidingView behavior="padding">
+          <KeyboardAvoidingView behavior="padding" style={styles.form}>
             <View style={{ flex: 1, padding: 20 }}>
+              <ScaleImage source={require("@images/new/isofhcare.png")} width={200} style={{ marginTop: 30, alignSelf: 'center' }} />
               <Form ref={ref => (this.form = ref)}>
                 <TextField
                   getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-                    placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.msg.user.new_password}
+                    placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Mật khẩu"}
                     secureTextEntry={true}
                     onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
                   onChangeText={s => {
@@ -122,12 +132,11 @@ class ResetPasswordScreen extends Component {
 
               </Form>
             </View>
-
-            <TouchableOpacity style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center' }} onPress={this.changePassword.bind(this)}>
-              <Text style={{ color: '#FFF', fontSize: 20 }}>{"HOÀN THÀNH"}</Text>
-            </TouchableOpacity>
           </KeyboardAvoidingView>
         </ScrollView>
+        <TouchableOpacity style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center', marginBottom: 20 }} onPress={this.changePassword.bind(this)}>
+          <Text style={{ color: '#FFF', fontSize: 17 }}>{"HOÀN THÀNH"}</Text>
+        </TouchableOpacity>
       </ActivityPanel >
     );
   }
@@ -136,10 +145,6 @@ const DEVICE_WIDTH = Dimensions.get("window").width;
 const DEVICE_HEIGHT = Dimensions.get("window").height;
 
 const styles = StyleSheet.create({
-  form: {
-    marginTop: 80,
-    borderRadius: 10
-  },
   btnEye: {
     position: "absolute",
     right: 25,
