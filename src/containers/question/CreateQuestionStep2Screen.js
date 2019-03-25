@@ -130,7 +130,7 @@ class CreateQuestionStep2Screen extends Component {
             this.props.navigation.navigate("login", {
                 nextScreen: {
                     screen: "createQuestionStep2",
-                    param: {}
+                    param: { fromlogin: true }
                 }
             });
             return;
@@ -199,6 +199,12 @@ class CreateQuestionStep2Screen extends Component {
                 }
             </View>
         </TouchableOpacity></View>
+    }
+
+    componentWillReceiveProps(props) {
+        if (props.navigation.getParam("fromlogin", null)) {
+            this.createQuestion();
+        }
     }
 
     render() {
