@@ -17,7 +17,7 @@ import advertiseProvider from "@data-access/advertise-provider";
 import snackbar from "@utils/snackbar-utils";
 import { Card } from "native-base";
 
-class Home extends Component {
+class Account extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -163,53 +163,7 @@ class Home extends Component {
           }
         </View>
         <View style={{ flexDirection: "row", padding: 10, marginTop: 25 }}>
-          <TouchableOpacity
-            style={{ flex: 1, marginLeft: 5, alignItems: 'center' }}
-            onPress={() => {
-              if (this.props.userApp.isLogin)
-                this.props.navigation.navigate("dhyBooking");
-              else
-                this.props.navigation.navigate("login", {
-                  nextScreen: {
-                    screen: "dhyBooking",
-                    param: {}
-                  }
-                });
-            }}
-          >
-            <View style={{ position: 'relative', padding: 5 }}><ScaledImage style={[styles.icon]} source={require("@images/new/ic_home_addbooking.png")} width={60} />
-            </View>
-            <Text style={[styles.label]}>Đặt khám</Text>
-            <Text style={[styles.subLabel]}>
-              1000+ người đã dùng
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{ flex: 1, marginLeft: 5, alignItems: 'center' }}
-            onPress={() => {
-              this.props.navigation.navigate("listQuestion");
-            }}
-          >
-            <View style={{ position: 'relative', padding: 5 }}>
-              <ScaledImage style={[styles.icon]} source={require("@images/new/ic_home_question.png")} width={60} />
-              <ScaledImage style={[{ position: 'absolute', right: 0, top: 0 }]} source={require("@images/new/ic_home_chat.png")} width={30} />
-            </View>
-            <Text style={[styles.label]}>Tư vấn</Text>
-            <Text style={[styles.subLabel]}>
-              1000+ người yêu thích
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{ flex: 1, marginLeft: 5, alignItems: 'center' }}
-            onPress={() => { snackbar.show("Chức năng đang phát triển") }}
-          >
-            <View style={{ position: 'relative', padding: 5 }}><ScaledImage style={[styles.icon]} source={require("@images/new/ic_home_search.png")} width={60} />
-            </View>
-            <Text style={[styles.label]}>Tra cứu</Text>
-            <Text style={[styles.subLabel]}>
-              1000+ người hài lòng
-            </Text>
-          </TouchableOpacity>
+         
         </View>
         {
           this.renderAds()
@@ -224,7 +178,7 @@ const styles = StyleSheet.create({
   icon: {
   },
   label: {
-    marginTop: 0, color: '#4A4A4A', fontFamily: 'Source Sans Pro', fontSize: 15, fontWeight: '600', lineHeight: 23
+    marginTop: 2, color: '#4A4A4A', fontFamily: 'Source Sans Pro', fontSize: 15, fontWeight: '600', lineHeight: 23
   },
   subLabel: {
     color: '#9B9B9B', fontSize: 12, textAlign: 'center', marginTop: 5
@@ -237,4 +191,4 @@ function mapStateToProps(state) {
     userApp: state.userApp
   };
 }
-export default connect(mapStateToProps)(Home);
+export default connect(mapStateToProps)(Account);

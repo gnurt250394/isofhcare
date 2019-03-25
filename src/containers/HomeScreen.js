@@ -14,6 +14,7 @@ import userProvider from "@data-access/user-provider";
 import constants from "@resources/strings";
 import redux from "@redux-store";
 import Home from "@containers/home/tab/Home";
+import Account from "@containers/home/tab/Account";
 import TabSearch from "@containers/home/tab/TabSearch";
 import Swiper from "react-native-swiper";
 const { width, height } = Dimensions.get("window");
@@ -115,28 +116,28 @@ class HomeScreen extends Component {
               style={[this.state.tabIndex == 0 ? styles.tab_selected : styles.tab]}
               onPress={this.swipe.bind(this, 0)}
             >
-              <ScaledImage source={require("@images/new/user.png")} width={20} />
+              <ScaledImage source={this.state.tabIndex == 0 ? require("@images/new/ic_home_home1.png") : require("@images/new/ic_home_home0.png")} width={20} />
               <Text style={[this.state.tabIndex == 0 ? styles.tab_label_selected : styles.tab_label]}>Trang chủ</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[this.state.tabIndex == 1 ? styles.tab_selected : styles.tab]}
               onPress={this.swipe.bind(this, 1)}
             >
-              <ScaledImage source={require("@images/new/user.png")} width={20} />
+              <ScaledImage source={this.state.tabIndex == 1 ? require("@images/new/ic_home_booking1.png") : require("@images/new/ic_home_booking0.png")} height={20} />
               <Text style={[this.state.tabIndex == 1 ? styles.tab_label_selected : styles.tab_label]}>Lịch khám</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[this.state.tabIndex == 2 ? styles.tab_selected : styles.tab]}
               onPress={this.swipe.bind(this, 2)}
             >
-              <ScaledImage source={require("@images/new/user.png")} width={20} />
+              <ScaledImage source={this.state.tabIndex == 2 ? require("@images/new/ic_home_service1.png") : require("@images/new/ic_home_service0.png")} height={20} />
               <Text style={[this.state.tabIndex == 2 ? styles.tab_label_selected : styles.tab_label]}>Dịch vụ</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[this.state.tabIndex == 3 ? styles.tab_selected : styles.tab]}
               onPress={this.swipe.bind(this, 3)}
             >
-              <ScaledImage source={require("@images/new/user.png")} width={20} />
+              <ScaledImage source={this.state.tabIndex == 3 ? require("@images/new/ic_home_account1.png") : require("@images/new/ic_home_account0.png")} height={20} />
               <Text style={[this.state.tabIndex == 3 ? styles.tab_label_selected : styles.tab_label]}>Tài khoản</Text>
             </TouchableOpacity>
           </View>
