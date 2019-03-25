@@ -16,6 +16,9 @@ import Carousel, { Pagination } from "react-native-snap-carousel";
 import advertiseProvider from "@data-access/advertise-provider";
 import snackbar from "@utils/snackbar-utils";
 import { Card } from "native-base";
+import ImageLoad from "mainam-react-native-image-loader";
+import clientUtils from '@utils/client-utils';
+import ScaleImage from "mainam-react-native-scaleimage";
 
 class Account extends Component {
   constructor(props) {
@@ -26,149 +29,56 @@ class Account extends Component {
     };
   }
   componentWillMount() {
-    advertiseProvider.getTop(100, (s, e) => {
-      if (s) {
-        this.setState({
-          ads: s
-          // .filter(item => { return item.advertise && item.advertise.images })
-        });
-      }
-      if (e) {
-      }
-    });
-  }
-  renderAds() {
-    return (<View style={{ padding: 12 }}>
-      <Text style={{ marginBottom: 5, color: 'rgb(74,74,74)' }}>Ưu đãi</Text>
-      <Carousel
-        enableSnap={false}
-        loop={true}
-        // onSnapToItem={(index) => {
-        //   this.setState({ adsActiveIndex: index })
-        // }}
-        activeSlideAlignment={'start'}
-        // firstItem={this.state.ads && this.state.ads.length > 1 ? 1 : 0}
-        ref={c => {
-          this._carousel = c;
-        }}
-        data={this.state.ads}
-        layoutCardOffset={3}
-        stagePadding={3}
-        // layout={'stack'}
-        renderItem={({ item, index }) => {
-          return (
-            <Card>
-              <TouchableOpacity
-                onPress={() => {
-                  if (item.advertise && item.advertise.value) {
-                    Linking.openURL(item.advertise.value);
-                  } else {
-                    snackbar.show("Url không tồn tại", "danger");
-                  }
-                }}
-              >
-                <ScaledImage
-                  source={require("@images/banner/bannerbooking.png")}
-                  width={DEVICE_WIDTH - 100}
-                />
-                <Text numberOfLines={1} ellipsizeMode='tail' style={{ color: '#00000064', margin: 13 }}>{item.advertise ? item.advertise.content : ""}</Text>
-              </TouchableOpacity>
-            </Card>
-          );
-        }}
-        sliderWidth={DEVICE_WIDTH}
-        itemWidth={DEVICE_WIDTH - 100}
-      />
-    </View>)
-  }
-  pagination() {
-    const { ads0, activeSlide } = this.state;
-    let length = ads0.length;
-    return (
-      <View style={{ position: 'absolute', bottom: 0, width: DEVICE_WIDTH }}>
-        <Pagination
-          dotsLength={length}
-          activeDotIndex={activeSlide || 0}
-          dotContainerStyle={{ width: 10, margin: 0, padding: 0, height: 10 }}
-          dotStyle={{
-            width: 10,
-            height: 10,
-            borderRadius: 5,
-            marginHorizontal: 10,
-            backgroundColor: "#02c39a",
-            paddingHorizontal: 0,
-            margin: 0,
-            padding: 0
-          }}
-          inactiveDotStyle={
-            {
-              // Define styles for inactive dots here
-              backgroundColor: "#d8d8d8"
-            }
-          }
-          inactiveDotOpacity={0.4}
-          inactiveDotScale={0.6}
-          containerStyle={
-            {
-              paddingVertical: 10,
-              paddingHorizontal: 0
-            }
-          }
-        />
-      </View>
-    );
-  }
 
+  }
   render() {
+    if (!this.props.userApp.isLogin) {
+      return (<View></View>);
+    }
+    const icSupport = require("@images/new/user.png");
+    const source = this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar.absoluteUrl() } : icSupport;
+
     return (
       <ScrollView
         style={{
           flex: 1,
-          paddingTop: 0
+          paddingTop: 0,
+          paddingHorizontal: 20,
+          paddingTop: 20
         }}
       >
-        <View style={{ position: 'relative' }}>
-          <Carousel
-            enableSnap={true}
-            data={this.state.ads0}
-            loop={true}
-            autoplayInterval={3000}
-            autoplay={true}
-            onSnapToItem={index => {
-              this.setState({ activeSlide: index });
+        <View style={{ flexDirection: 'row' }}>
+          <View style={{ flex: 1 }}>
+            <Text>{this.props.userApp.currentUser.name}</Text>
+            <TouchableOpacity><Text>Xem hồ sơ cá nhân</Text></TouchableOpacity>
+          </View>
+          <ImageLoad
+            resizeMode="cover"
+            imageStyle={{ borderRadius: 35 }}
+            borderRadius={35}
+            customImagePlaceholderDefaultStyle={{
+              width: 70,
+              height: 70,
+              alignSelf: "center"
             }}
-            renderItem={({ item, index }) => {
+            placeholderSource={icSupport}
+            style={{ width: 70, height: 70, alignSelf: "center" }}
+            resizeMode="cover"
+            loadingStyle={{ size: "small", color: "gray" }}
+            source={source}
+            defaultImage={() => {
               return (
-                <TouchableOpacity
-                  onPress={() => {
-                    if (item.advertise && item.advertise.value) {
-                      Linking.openURL(item.advertise.value);
-                    } else {
-                      snackbar.show("Url không tồn tại", "danger");
-                    }
-                  }}
-                >
-                  <ScaledImage
-                    source={require("@images/banner/bannerbooking.png")}
-                    width={DEVICE_WIDTH}
-                  />
-                </TouchableOpacity>
+                <ScaleImage
+                  resizeMode="cover"
+                  source={icSupport}
+                  width={70}
+                  style={{ width: 70, height: 70, alignSelf: "center" }}
+                />
               );
             }}
-            sliderWidth={DEVICE_WIDTH}
-            itemWidth={DEVICE_WIDTH}
           />
-          {
-            this.pagination()
-          }
         </View>
-        <View style={{ flexDirection: "row", padding: 10, marginTop: 25 }}>
-         
-        </View>
-        {
-          this.renderAds()
-        }
-        <View style={{ height: 30 }} />
+
       </ScrollView >
     );
   }

@@ -16,6 +16,7 @@ import Carousel, { Pagination } from "react-native-snap-carousel";
 import advertiseProvider from "@data-access/advertise-provider";
 import snackbar from "@utils/snackbar-utils";
 import { Card } from "native-base";
+import NotificationBadge from "@components/notification/NotificationBadge";
 
 class Home extends Component {
   constructor(props) {
@@ -118,104 +119,124 @@ class Home extends Component {
       </View>
     );
   }
+  logout() {
+    this.props.dispatch(redux.userLogout());
+  }
 
   render() {
     return (
-      <ScrollView
-        style={{
-          flex: 1,
-          paddingTop: 0
-        }}
-      >
-        <View style={{ position: 'relative' }}>
-          <Carousel
-            enableSnap={true}
-            data={this.state.ads0}
-            loop={true}
-            autoplayInterval={3000}
-            autoplay={true}
-            onSnapToItem={index => {
-              this.setState({ activeSlide: index });
-            }}
-            renderItem={({ item, index }) => {
-              return (
-                <TouchableOpacity
-                  onPress={() => {
-                    if (item.advertise && item.advertise.value) {
-                      Linking.openURL(item.advertise.value);
-                    } else {
-                      snackbar.show("Url không tồn tại", "danger");
-                    }
-                  }}
-                >
-                  <ScaledImage
-                    source={require("@images/banner/bannerbooking.png")}
-                    width={DEVICE_WIDTH}
-                  />
-                </TouchableOpacity>
-              );
-            }}
-            sliderWidth={DEVICE_WIDTH}
-            itemWidth={DEVICE_WIDTH}
-          />
-          {
-            this.pagination()
+      <ActivityPanel
+        style={[{ flex: 1 }, this.props.style]}
+        titleStyle={{ marginRight: 60 }}
+        imageStyle={{ marginRight: 10 }}
+        backButton={<TouchableOpacity style={{ paddingLeft: 15 }} onPress={() => {
+          if (this.props.userApp.isLogin) {
+            this.logout();
+          } else {
+            this.props.navigation.navigate("login");
           }
-        </View>
-        <View style={{ flexDirection: "row", padding: 10, marginTop: 25 }}>
-          <TouchableOpacity
-            style={{ flex: 1, marginLeft: 5, alignItems: 'center' }}
-            onPress={() => {
-              if (this.props.userApp.isLogin)
-                this.props.navigation.navigate("dhyBooking");
-              else
-                this.props.navigation.navigate("login", {
-                  nextScreen: {
-                    screen: "dhyBooking",
-                    param: {}
-                  }
-                });
-            }}
-          >
-            <View style={{ position: 'relative', padding: 5 }}><ScaledImage style={[styles.icon]} source={require("@images/new/ic_home_addbooking.png")} width={60} />
-            </View>
-            <Text style={[styles.label]}>Đặt khám</Text>
-            <Text style={[styles.subLabel]}>
-              1000+ người đã dùng
+        }}>
+          <ScaledImage source={require("@images/new/user.png")} width={30} />
+        </TouchableOpacity>}
+        image={require("@images/logo_home.png")}
+        menuButton={<NotificationBadge />}
+      >
+        <ScrollView
+          style={{
+            flex: 1,
+            paddingTop: 0
+          }}
+        >
+          <View style={{ position: 'relative' }}>
+            <Carousel
+              enableSnap={true}
+              data={this.state.ads0}
+              loop={true}
+              autoplayInterval={3000}
+              autoplay={true}
+              onSnapToItem={index => {
+                this.setState({ activeSlide: index });
+              }}
+              renderItem={({ item, index }) => {
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (item.advertise && item.advertise.value) {
+                        Linking.openURL(item.advertise.value);
+                      } else {
+                        snackbar.show("Url không tồn tại", "danger");
+                      }
+                    }}
+                  >
+                    <ScaledImage
+                      source={require("@images/banner/bannerbooking.png")}
+                      width={DEVICE_WIDTH}
+                    />
+                  </TouchableOpacity>
+                );
+              }}
+              sliderWidth={DEVICE_WIDTH}
+              itemWidth={DEVICE_WIDTH}
+            />
+            {
+              this.pagination()
+            }
+          </View>
+          <View style={{ flexDirection: "row", padding: 10, marginTop: 25 }}>
+            <TouchableOpacity
+              style={{ flex: 1, marginLeft: 5, alignItems: 'center' }}
+              onPress={() => {
+                if (this.props.userApp.isLogin)
+                  this.props.navigation.navigate("dhyBooking");
+                else
+                  this.props.navigation.navigate("login", {
+                    nextScreen: {
+                      screen: "dhyBooking",
+                      param: {}
+                    }
+                  });
+              }}
+            >
+              <View style={{ position: 'relative', padding: 5 }}><ScaledImage style={[styles.icon]} source={require("@images/new/ic_home_addbooking.png")} width={60} />
+              </View>
+              <Text style={[styles.label]}>Đặt khám</Text>
+              <Text style={[styles.subLabel]}>
+                1000+ người đã dùng
             </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{ flex: 1, marginLeft: 5, alignItems: 'center' }}
-            onPress={() => {
-              this.props.navigation.navigate("listQuestion");
-            }}
-          >
-            <View style={{ position: 'relative', padding: 5 }}>
-              <ScaledImage style={[styles.icon]} source={require("@images/new/ic_home_question.png")} width={60} />
-              <ScaledImage style={[{ position: 'absolute', right: 0, top: 0 }]} source={require("@images/new/ic_home_chat.png")} width={30} />
-            </View>
-            <Text style={[styles.label]}>Tư vấn</Text>
-            <Text style={[styles.subLabel]}>
-              1000+ người yêu thích
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{ flex: 1, marginLeft: 5, alignItems: 'center' }}
+              onPress={() => {
+                this.props.navigation.navigate("listQuestion");
+              }}
+            >
+              <View style={{ position: 'relative', padding: 5 }}>
+                <ScaledImage style={[styles.icon]} source={require("@images/new/ic_home_question.png")} width={60} />
+                <ScaledImage style={[{ position: 'absolute', right: 0, top: 0 }]} source={require("@images/new/ic_home_chat.png")} width={30} />
+              </View>
+              <Text style={[styles.label]}>Tư vấn</Text>
+              <Text style={[styles.subLabel]}>
+                1000+ người yêu thích
             </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{ flex: 1, marginLeft: 5, alignItems: 'center' }}
-            onPress={() => { snackbar.show("Chức năng đang phát triển") }}
-          >
-            <View style={{ position: 'relative', padding: 5 }}><ScaledImage style={[styles.icon]} source={require("@images/new/ic_home_search.png")} width={60} />
-            </View>
-            <Text style={[styles.label]}>Tra cứu</Text>
-            <Text style={[styles.subLabel]}>
-              1000+ người hài lòng
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{ flex: 1, marginLeft: 5, alignItems: 'center' }}
+              onPress={() => { snackbar.show("Chức năng đang phát triển") }}
+            >
+              <View style={{ position: 'relative', padding: 5 }}><ScaledImage style={[styles.icon]} source={require("@images/new/ic_home_search.png")} width={60} />
+              </View>
+              <Text style={[styles.label]}>Tra cứu</Text>
+              <Text style={[styles.subLabel]}>
+                1000+ người hài lòng
             </Text>
-          </TouchableOpacity>
-        </View>
-        {
-          this.renderAds()
-        }
-        <View style={{ height: 30 }} />
-      </ScrollView >
+            </TouchableOpacity>
+          </View>
+          {
+            this.renderAds()
+          }
+          <View style={{ height: 30 }} />
+        </ScrollView >
+      </ActivityPanel>
     );
   }
 }

@@ -58,23 +58,8 @@ class HomeScreen extends Component {
 
   render() {
     return (
-      <ActivityPanel
+      <View
         style={[{ flex: 1 }, this.props.style]}
-        titleStyle={{ marginRight: 60 }}
-        imageStyle={{ marginRight: 10 }}
-        backButton={<TouchableOpacity style={{ paddingLeft: 15 }} onPress={() => {
-          if (this.props.userApp.isLogin) {
-            this.logout();
-          } else {
-            this.props.navigation.navigate("login");
-          }
-        }}>
-          <ScaledImage source={require("@images/new/user.png")} width={30} />
-        </TouchableOpacity>}
-        image={require("@images/logo_home.png")}
-        menuButton={<NotificationBadge />}
-        // showMessenger={this.props.userApp.isLogin ? true : false}
-        showMessenger={false}
       >
         <Swiper
           ref={ref => (this.swiper = ref)}
@@ -95,10 +80,9 @@ class HomeScreen extends Component {
           />
           <View style={{ flex: 1, backgroundColor: "#000" }} />
           <View style={{ flex: 1, backgroundColor: "#cac" }} />
-          <View style={{ flex: 1, backgroundColor: "#aba" }} />
+          <Account />
         </Swiper>
         <View style={{
-          paddingTop: 10
         }}>
           < View style={{
             height: 61, flexDirection: "row", backgroundColor: '#ffffff',
@@ -143,7 +127,7 @@ class HomeScreen extends Component {
           </View>
         </View >
         <PushController />
-      </ActivityPanel >
+      </View>
     );
   }
   swipe(targetIndex) {
