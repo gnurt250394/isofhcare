@@ -14,9 +14,7 @@ const store = createStore(AppReducer, applyMiddleware(thunk));
 const Kernel = () => (
     <Provider store={store}>
         <Root>
-            <MenuProvider>
-                <RootNavigator />
-            </MenuProvider>
+            <RootNavigator />
         </Root>
     </Provider>
 )
