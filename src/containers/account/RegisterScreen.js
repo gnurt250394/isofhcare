@@ -114,11 +114,14 @@ class RegisterScreen extends Component {
         <ActivityPanel
           style={{ flex: 1 }}
           title="Đăng ký"
+          titleStyle={{ textAlign: 'left', marginLeft: 20 }}
+          touchToDismiss={true}
           showFullScreen={true}
         >
           <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
             <KeyboardAvoidingView behavior="padding" style={styles.form}>
               <View style={{ flex: 1, padding: 20 }}>
+                <ScaleImage source={require("@images/new/isofhcare.png")} width={200} style={{ marginTop: 50, alignSelf: 'center' }} />
                 <Form ref={ref => (this.form = ref)}>
                   <TextField
                     getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
@@ -265,10 +268,6 @@ const DEVICE_WIDTH = Dimensions.get("window").width;
 const DEVICE_HEIGHT = Dimensions.get("window").height;
 
 const styles = StyleSheet.create({
-  form: {
-    marginTop: 80,
-    borderRadius: 10
-  },
   btnEye: {
     position: "absolute",
     right: 25,
