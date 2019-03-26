@@ -71,13 +71,54 @@ class Account extends Component {
       })
     }
   }
-  render() {
-    if (!this.props.userApp.isLogin) {
-      return (<View></View>);
-    }
+  renderCurrentUserInfo() {
     const icSupport = require("@images/new/user.png");
     const source = this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar.absoluteUrl() } : icSupport;
-
+    return (<View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 30 }}>
+      <View style={{ flex: 1 }}>
+        <Text style={{ color: '#000000', fontSize: 20 }}>{this.props.userApp.currentUser.name}</Text>
+        <TouchableOpacity onPress={() => {
+          snackbar.show("Chức năng đang phát triển");
+        }}><Text style={{ color: '#008D6F', marginTop: 10 }}>Xem hồ sơ cá nhân</Text></TouchableOpacity>
+      </View>
+      <TouchableOpacity style={{ position: 'relative' }} onPress={this.selectImage.bind(this)}>
+        <ImageLoad
+          resizeMode="cover"
+          imageStyle={{ borderRadius: 35 }}
+          borderRadius={35}
+          customImagePlaceholderDefaultStyle={{
+            width: 70,
+            height: 70,
+            alignSelf: "center"
+          }}
+          placeholderSource={icSupport}
+          style={{ width: 70, height: 70, alignSelf: "center" }}
+          resizeMode="cover"
+          loadingStyle={{ size: "small", color: "gray" }}
+          source={source}
+          defaultImage={() => {
+            return (
+              <ScaleImage
+                resizeMode="cover"
+                source={icSupport}
+                width={70}
+                style={{ width: 70, height: 70, alignSelf: "center" }}
+              />
+            );
+          }}
+        />
+        <ScaledImage source={require("@images/new/ic_account_add.png")} width={20} style={{ position: 'absolute', bottom: 0, right: 0 }} />
+      </TouchableOpacity>
+    </View>);
+  }
+  renderViewUserNotLogin() {
+    return <View style={{ alignItems: 'center', marginTop: 30 }}>
+      <TouchableOpacity onPress={() => {
+        this.props.navigation.navigate("login");
+      }} style={{ padding: 20, backgroundColor: '#02C39A', borderRadius: 30, width: 150 }}><Text style={{ color: '#FFF', fontWeight: 'bold', textAlign: 'center' }}>Đăng nhập</Text></TouchableOpacity>
+    </View>;
+  }
+  render() {
     return (
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -89,42 +130,10 @@ class Account extends Component {
           paddingTop: 20
         }}
       >
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <View style={{ flex: 1 }}>
-            <Text style={{ color: '#000000', fontSize: 20 }}>{this.props.userApp.currentUser.name}</Text>
-            <TouchableOpacity onPress={() => {
-              snackbar.show("Chức năng đang phát triển");
-            }}><Text style={{ color: '#008D6F', marginTop: 10 }}>Xem hồ sơ cá nhân</Text></TouchableOpacity>
-          </View>
-          <TouchableOpacity style={{ position: 'relative' }} onPress={this.selectImage.bind(this)}>
-            <ImageLoad
-              resizeMode="cover"
-              imageStyle={{ borderRadius: 35 }}
-              borderRadius={35}
-              customImagePlaceholderDefaultStyle={{
-                width: 70,
-                height: 70,
-                alignSelf: "center"
-              }}
-              placeholderSource={icSupport}
-              style={{ width: 70, height: 70, alignSelf: "center" }}
-              resizeMode="cover"
-              loadingStyle={{ size: "small", color: "gray" }}
-              source={source}
-              defaultImage={() => {
-                return (
-                  <ScaleImage
-                    resizeMode="cover"
-                    source={icSupport}
-                    width={70}
-                    style={{ width: 70, height: 70, alignSelf: "center" }}
-                  />
-                );
-              }}
-            />
-            <ScaledImage source={require("@images/new/ic_account_add.png")} width={20} style={{ position: 'absolute', bottom: 0, right: 0 }} />
-          </TouchableOpacity>
-        </View>
+        {
+          this.props.userApp.isLogin ? this.renderCurrentUserInfo() :
+            this.renderViewUserNotLogin()
+        }
         <TouchableOpacity style={[styles.itemMenu, { marginTop: 40 }]} onPress={() => {
           snackbar.show("Chức năng đang phát triển");
         }}>
