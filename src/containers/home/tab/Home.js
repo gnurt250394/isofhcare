@@ -126,6 +126,7 @@ class Home extends Component {
   render() {
     return (
       <ActivityPanel
+        hideStatusbar={true}
         style={[{ flex: 1 }, this.props.style]}
         titleStyle={{ marginRight: 60 }}
         imageStyle={{ marginRight: 10 }}
@@ -245,7 +246,7 @@ const styles = StyleSheet.create({
   icon: {
   },
   label: {
-    marginTop: 0, color: '#4A4A4A', fontFamily: 'Source Sans Pro', fontSize: 15, fontWeight: '600', lineHeight: 23
+    marginTop: 0, color: '#4A4A4A', fontSize: 15, fontWeight: '600', lineHeight: 23
   },
   subLabel: {
     color: '#9B9B9B', fontSize: 12, textAlign: 'center', marginTop: 5
