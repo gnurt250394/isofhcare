@@ -159,26 +159,18 @@ class DetailQuestionScreen extends Component {
     }
     onStarRatingPress(rating) {
         connectionUtils.isConnected().then(s => {
-
             this.setState({
                 star: rating
             }, () => {
                 this.setState({ isLoading: true }, () => {
-                    connectionUtils.checkConnect(c => {
-                        if (c) {
-                            questionProvider.review(this.state.post.post.id, rating).then(s => {
-                                let post = this.state.post;
-                                post.post.status = 6;
-                                this.setState({ isLoading: false, post })
-                                snackbar.show("Bạn đã gửi đánh giá thành công", "success");
-                            }).catch(e => {
-                                snackbar.show("Gửi đánh giá không thành công", "danger");
-                                this.setState({ isLoading: false })
-                            });
-                        }
-                        else {
-                            snackbar.show("Không có kết nối mạng", "danger");
-                        }
+                    questionProvider.review(this.state.post.post.id, rating).then(s => {
+                        let post = this.state.post;
+                        post.post.status = 6;
+                        this.setState({ isLoading: false, post })
+                        snackbar.show("Bạn đã gửi đánh giá thành công", "success");
+                    }).catch(e => {
+                        snackbar.show("Gửi đánh giá không thành công", "danger");
+                        this.setState({ isLoading: false })
                     });
                 });
             });

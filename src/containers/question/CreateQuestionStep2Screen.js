@@ -136,35 +136,31 @@ class CreateQuestionStep2Screen extends Component {
             return;
         }
 
-        connectionUtils.checkConnect(c => {
-            if (c) {
-                this.setState({ isLoading: true }, () => {
-                    var images = "";
-                    this.state.imageUris.forEach((item) => {
-                        if (images)
-                            images += ",";
-                        images += item.url;
-                    });
-                    questionProvider.create(this.state.content, this.state.gender, this.state.age, this.state.specialist_item ? this.state.specialist_item.specialist.id : "0", this.state.disease, this.state.otherContent, images).then(s => {
-                        this.setState({ isLoading: false });
-                        if (s && s.code == 0) {
-                            dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_POSTS, s.data);
-                            snackbar.show(constants.msg.question.create_question_success, "success");
-                            this.props.navigation.navigate("listQuestion", { reloadTime: new Date().getTime() });
-                        } else {
-                            snackbar.show(constants.msg.question.create_question_failed, "danger");
-                        }
-                    }).catch(e => {
-                        this.setState({ isLoading: false });
-                        snackbar.show(constants.msg.question.create_question_failed, "danger");
-                    });
+        connectionUtils.isConnected().then(s => {
+            this.setState({ isLoading: true }, () => {
+                var images = "";
+                this.state.imageUris.forEach((item) => {
+                    if (images)
+                        images += ",";
+                    images += item.url;
                 });
-            }
-            else {
-                snackbar.show("Không có kết nối mạng", "danger");
-            }
+                questionProvider.create(this.state.content, this.state.gender, this.state.age, this.state.specialist_item ? this.state.specialist_item.specialist.id : "0", this.state.disease, this.state.otherContent, images).then(s => {
+                    this.setState({ isLoading: false });
+                    if (s && s.code == 0) {
+                        dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_POSTS, s.data);
+                        snackbar.show(constants.msg.question.create_question_success, "success");
+                        this.props.navigation.navigate("listQuestion", { reloadTime: new Date().getTime() });
+                    } else {
+                        snackbar.show(constants.msg.question.create_question_failed, "danger");
+                    }
+                }).catch(e => {
+                    this.setState({ isLoading: false });
+                    snackbar.show(constants.msg.question.create_question_failed, "danger");
+                });
+            });
+        }).catch(e => {
+            snackbar.show("Không có kết nối mạng", "danger");
         })
-
     }
 
     toggleModalSpecialize() {

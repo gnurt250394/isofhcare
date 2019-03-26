@@ -7,9 +7,17 @@ module.exports = {
             NetInfo.isConnected.fetch().then(connect => {
                 if (connect)
                     resolve(true);
-                else
-                    reject(false);
-            }).catch(e => reject(false));
+                else {
+                    setTimeout(() => {
+                        NetInfo.isConnected.fetch().then(connect => {
+                            if (connect)
+                                resolve(true);
+                            else
+                                reject(false);
+                        }).catch(e => reject(false));
+                    }, 500);
+                }
+            }).catch(e => { alert(JSON.stringify(e)); reject(false) });
         })
     },
     checkConnect(callback) {
