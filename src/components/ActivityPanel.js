@@ -78,7 +78,6 @@ class ActivityPanel extends Component {
                 loadingView={this.getLoadingView()}
                 paddingTop={this.state.paddingTop}
                 // translucent={true}
-                statusbarBackgroundColor="#000"
             >
                 {/* {this.props.children} */}
             </Activity>
