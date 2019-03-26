@@ -213,6 +213,8 @@ class CreateQuestionStep2Screen extends Component {
                 actionbarStyle={{
                     backgroundColor: '#02C39A'
                 }}
+                iosBarStyle={'light-content'}
+                statusbarBackgrouColor="#02C39A"
             >
                 <ScrollView style={{ flex: 1, position: 'relative' }} keyboardShouldPersistTaps="always">
                     <View style={{ backgroundColor: '#02C39A', height: 130, position: 'absolute', top: 0, left: 0, right: 0 }}></View>

@@ -126,6 +126,8 @@ class CreateQuestionStep1Screen extends Component {
         title={"Nội dung"}
         showFullScreen={true}
         isLoading={this.state.isLoading}
+        iosBarStyle={'light-content'}
+        statusbarBackgrouColor="#02C39A"
         actionbarStyle={{
           backgroundColor: '#02C39A'
         }}
