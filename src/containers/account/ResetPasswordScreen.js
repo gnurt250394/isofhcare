@@ -78,7 +78,9 @@ class ResetPasswordScreen extends Component {
         touchToDismiss={true}
         isLoading={this.state.isLoading}
       >
-        <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={{ flex: 1 }} keyboardShouldPersistTaps="always">
           <KeyboardAvoidingView behavior="padding" style={styles.form}>
             <View style={{ flex: 1, padding: 20 }}>
               <ScaleImage source={require("@images/new/isofhcare.png")} width={200} style={{ marginTop: 30, alignSelf: 'center' }} />

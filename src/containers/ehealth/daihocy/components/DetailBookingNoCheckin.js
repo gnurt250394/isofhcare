@@ -47,7 +47,9 @@ class DetailBookingNoCheckin extends Component {
                         </TouchableOpacity>
                     </View>
                 </View>
-                <ScrollView style={{ flex: 1 }}>
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    style={{ flex: 1 }}>
                     <View style={{ flexDirection: 'column' }}>
                         <Text style={{ marginTop: 10, fontWeight: 'bold' }}>Khoa</Text>
                         <ScaleImage width={60} source={require("@ehealth/daihocy/resources/images/img_breakline.png")} style={{ marginTop: 5 }} />

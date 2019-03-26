@@ -45,7 +45,9 @@ class DiseaseDetailScreen extends Component {
         const disease = this.props.navigation.getParam("disease", null);
         return (
             <ActivityPanel style={{ flex: 1 }} title="CHI TIẾT" showFullScreen={true}>
-                <ScrollView>
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                >
                     {
                         disease.images && disease.images.length > 0 ?
                             <Slide autoPlay={true} inteval={3000} dataArray={disease.images} renderItemPager={this.renderItemPager.bind(this)} style={{ height: 150 }} />

@@ -76,11 +76,13 @@ class TabSearch extends Component {
         const itemWidth = this.getItemWidth();
         return (
             <ActivityPanel style={[{ flex: 1 }, this.props.style]} title="TRA CỨU" icBack={require("@images/icmenu.png")} backButtonClick={() => { this.showDrawer() }} showFullScreen={true} >
-                <ScrollView style={{
-                    flex: 1,
-                    paddingLeft: 20, paddingRight: 20, paddingTop: 10,
-                    width: DEVICE_WIDTH
-                }}>
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    style={{
+                        flex: 1,
+                        paddingLeft: 20, paddingRight: 20, paddingTop: 10,
+                        width: DEVICE_WIDTH
+                    }}>
                     <Text style={{ color: "rgb(155,155,155)", fontSize: 14, textAlign: 'center', lineHeight: 20 }}>ISofH Care có hệ thống dữ liệu lớn từ các chuyên gia hàng đầu và thực sự đáng tin cậy cho cộng đồng.</Text>
                     <View style={{
                         marginTop: 20,

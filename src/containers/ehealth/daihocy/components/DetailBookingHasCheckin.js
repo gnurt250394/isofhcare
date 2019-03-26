@@ -280,7 +280,9 @@ class DetailBookingHasCheckin extends Component {
         let booking = this.props.booking;
         return (
             <View style={{ flexDirection: 'column', padding: 10, flex: 1 }}>
-                <ScrollView style={{ flex: 1 }}>
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    style={{ flex: 1 }}>
                     <View style={{ flexDirection: 'row' }}>
                         <View>
                             <Text style={{ fontWeight: 'bold', fontSize: 15 }}>Mã bệnh nhân</Text>

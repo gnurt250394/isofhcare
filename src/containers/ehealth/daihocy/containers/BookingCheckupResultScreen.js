@@ -88,7 +88,9 @@ class BookingCheckupResultScreen extends Component {
         const tableHead = ['STT', 'Tên thuốc', 'Số lượng', 'Đơn vị'];
         return (
             <ActivityPanel style={{ flex: 1, }} title="Kết quả khám và đơn thuốc" isLoading={this.state.isLoading} showFullScreen={true}>
-                <ScrollView style={{ padding: 10 }}>
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    style={{ padding: 10 }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 30 }}>
                         <Text style={{ flex: 1, fontWeight: 'bold', fontSize: 15, color: constants.colors.primary_bold }}>{this.state.checkupResult.ServiceName}</Text>
                         <TouchableOpacity onPress={() => this.exportPdf()}>

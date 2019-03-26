@@ -62,8 +62,8 @@ class SearchDiseaseScreen extends Component {
 
     renderFooter(keyword, data) {
         if (keyword)
-            return <TouchableOpacity 
-                style={{ padding: 5, paddingLeft: 15, flexDirection: 'row', alignItems: 'center', paddingTop: 10 }} 
+            return <TouchableOpacity
+                style={{ padding: 5, paddingLeft: 15, flexDirection: 'row', alignItems: 'center', paddingTop: 10 }}
                 onPress={() => this.props.navigation.navigate("searchDiseaseResult", { keyword })}>
                 <ScaledImage source={require("@images/search/icsearch2.png")} width={15} />
                 <Text style={{ paddingLeft: 10, color: 'rgb(74,144,226)' }}>Xem tất cả kết quả tìm kiếm</Text>
@@ -81,9 +81,11 @@ class SearchDiseaseScreen extends Component {
         return (
             <ActivityPanel style={{ flex: 1 }} title="TÌM KIẾM BỆNH" showFullScreen={true}>
                 <View style={{ flex: 1, padding: 14, position: 'relative' }}>
-                    <ScrollView style={{
-                        marginTop: 43
-                    }}>
+                    <ScrollView
+                        showsVerticalScrollIndicator={false}
+                        style={{
+                            marginTop: 43
+                        }}>
                         <View style={{ flex: 1 }}>
                             <TopSymptom onItemClick={this.onSymptomClick.bind(this)} />
                             <ListDisease />
@@ -93,15 +95,15 @@ class SearchDiseaseScreen extends Component {
                         this.state.showOverlay ?
                             <TouchableWithoutFeedback onPress={this.overlayClick.bind(this)} style={{}}><View style={{ position: 'absolute', top: 0, right: 0, left: 0, bottom: 0, backgroundColor: '#37a3ff59' }} /></TouchableWithoutFeedback> : null
                     }
-                    <SearchPanel 
-                        style={{ position: 'absolute', top: 12, left: 12, right: 12 }} 
-                        searchTypeId={realmModel.DISEASE_HISTORY} 
-                        resultPage="searchDiseaseResult" 
-                        ref={ref => this.searchPanel = ref} 
-                        onFocus={this.searchFocus.bind(this)} 
-                        placeholder="Tìm kiếm tên bệnh, triệu chứng" 
-                        onSearch={this.onSearch.bind(this)} 
-                        renderItem={this.renderSearchItem.bind(this)} 
+                    <SearchPanel
+                        style={{ position: 'absolute', top: 12, left: 12, right: 12 }}
+                        searchTypeId={realmModel.DISEASE_HISTORY}
+                        resultPage="searchDiseaseResult"
+                        ref={ref => this.searchPanel = ref}
+                        onFocus={this.searchFocus.bind(this)}
+                        placeholder="Tìm kiếm tên bệnh, triệu chứng"
+                        onSearch={this.onSearch.bind(this)}
+                        renderItem={this.renderSearchItem.bind(this)}
                         renderFooter={this.renderFooter.bind(this)} />
 
                 </View>

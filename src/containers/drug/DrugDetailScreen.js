@@ -138,7 +138,9 @@ class DrugDetailScreen extends Component {
 
         return (
             <ActivityPanel style={{ flex: 1 }} title="CHI TIẾT THUỐC" showFullScreen={true}>
-                <ScrollView>
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                >
                     {
                         arr.length > 0 ?
                             <Slide autoPlay={true} inteval={3000} dataArray={arr} renderItemPager={this.renderItemPager.bind(this)} style={{ height: 150 }} />

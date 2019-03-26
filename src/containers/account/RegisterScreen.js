@@ -118,7 +118,9 @@ class RegisterScreen extends Component {
           touchToDismiss={true}
           showFullScreen={true}
         >
-          <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            style={{ flex: 1 }} keyboardShouldPersistTaps="always">
             <KeyboardAvoidingView behavior="padding" style={styles.form}>
               <View style={{ flex: 1, padding: 20 }}>
                 <ScaleImage source={require("@images/new/isofhcare.png")} width={200} style={{ marginTop: 50, alignSelf: 'center' }} />

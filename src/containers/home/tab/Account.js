@@ -80,6 +80,8 @@ class Account extends Component {
 
     return (
       <ScrollView
+        showsVerticalScrollIndicator={false}
+
         style={{
           flex: 1,
           paddingTop: 0,

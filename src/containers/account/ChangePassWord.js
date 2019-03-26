@@ -67,7 +67,9 @@ class ProfileScreen extends Component {
                 titleStyle={{ textAlign: 'left', marginLeft: 20 }}
                 touchToDismiss={true}
                 showFullScreen={true} isLoading={this.state.isLoading}>
-                <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    style={{ flex: 1 }} keyboardShouldPersistTaps="always">
                     <KeyboardAvoidingView behavior="padding" style={styles.form}>
                         <ScaleImage source={require("@images/new/isofhcare.png")} width={200} style={{ marginTop: 50, alignSelf: 'center' }} />
                         <View style={{ flex: 1, padding: 30 }}>
@@ -145,7 +147,7 @@ class ProfileScreen extends Component {
                     </KeyboardAvoidingView>
                 </ScrollView>
                 <TouchableOpacity onPress={this.change.bind(this)} style={{ backgroundColor: 'rgb(2,195,154)', marginBottom: 30, alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center' }}>
-                    <Text style={{ color: '#FFF', fontSize: 17}}>{"CẬP NHẬT"}</Text>
+                    <Text style={{ color: '#FFF', fontSize: 17 }}>{"CẬP NHẬT"}</Text>
                 </TouchableOpacity>
             </ActivityPanel>
         )

@@ -257,7 +257,9 @@ class AddBookingScreen extends Component {
                             </View>
                         </View>
                     </View>
-                    <ScrollView style={{ flex: 1, padding: 10, flexDirection: 'column', paddingBottom: 20 }} keyboardShouldPersistTaps='always'>
+                    <ScrollView
+                        showsVerticalScrollIndicator={false}
+                        style={{ flex: 1, padding: 10, flexDirection: 'column', paddingBottom: 20 }} keyboardShouldPersistTaps='always'>
                         {
                             this.state.profile && (this.state.profile.length > 0 || this.state.profile.profile) ?
                                 <AddBookingHasProfile profile={this.state.profile}></AddBookingHasProfile> :

@@ -33,8 +33,8 @@ class ConfirmCodeScreen extends Component {
     let fromRegisterScreen = this.props.navigation.getParam(
       "fromRegisterScreen",
       null
-	);
-	this.nextScreen = this.props.navigation.getParam("nextScreen", null);
+    );
+    this.nextScreen = this.props.navigation.getParam("nextScreen", null);
 
     this.state = {
       press: false,
@@ -96,7 +96,9 @@ class ConfirmCodeScreen extends Component {
         showFullScreen={true}
         title="Xác thực tài khoản"
       >
-        <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={{ flex: 1 }} keyboardShouldPersistTaps="always">
           <View
             style={{
               marginTop: 60,

@@ -33,7 +33,9 @@ class BookingDiagnosticResultScreen extends Component {
     render() {
         return (
             <ActivityPanel style={{ flex: 1, }} title="Kết quả cận lâm sàng" isLoading={this.state.isLoading} showFullScreen={true}>
-                <ScrollView style={{ padding: 10 }}>
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    style={{ padding: 10 }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 30 }}>
                         <Text style={{ flex: 1, fontWeight: 'bold', fontSize: 15, color: constants.colors.primary_bold }}>{this.state.diagnosticResult.ServiceName}</Text>
                         <TouchableOpacity onPress={() => this.exportPdf()}>

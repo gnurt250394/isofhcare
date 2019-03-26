@@ -432,7 +432,9 @@ class DetailQuestionScreen extends Component {
         let { post } = this.state;
         return (
             <ActivityPanel style={{ flex: 1 }} title="Tư vấn online" showFullScreen={true} isLoading={this.state.isLoading}>
-                <ScrollView ref={(ref) => { this.scrollView = ref }} style={{ padding: 20 }} >
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    ref={(ref) => { this.scrollView = ref }} style={{ padding: 20 }} >
                     <View style={{ flexDirection: "row", alignItems: 'center' }}>
                         <View style={{ flex: 1 }} ><Text style={{ fontSize: 18, fontWeight: 'bold' }}>{post.author ? post.author.name : ""}</Text></View>
                         <View><Text style={{ color: '#00000038' }}>{this.getTime(post.post.createdDate)}</Text></View>

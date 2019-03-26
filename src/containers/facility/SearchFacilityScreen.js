@@ -77,9 +77,11 @@ class SearchFacilityScreen extends Component {
         return (
             <ActivityPanel style={{ flex: 1 }} title="TÌM KIẾM CSYT" showFullScreen={true}>
                 <View style={{ flex: 1, padding: 14, position: 'relative' }}>
-                    <ScrollView style={{
-                        marginTop: 43
-                    }}>
+                    <ScrollView
+                        showsVerticalScrollIndicator={false}
+                        style={{
+                            marginTop: 43
+                        }}>
                         <TouchableOpacity style={{ position: 'relative', marginTop: 20 }} onPress={() => { this.props.navigation.navigate("searchFacilityByLocation") }}>
                             <ScaledImage source={require("@images/facility/vitri.png")} width={Dimensions.get('window').width - 28} height={115} style={{ zIndex: 1000 }} />
                             <View style={{ flexDirection: 'row', zIndex: 1001, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center' }}>

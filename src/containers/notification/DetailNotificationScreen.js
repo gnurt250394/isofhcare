@@ -43,7 +43,9 @@ class NotificationScreen extends Component {
                     {
                         this.state.messaging && (this.state.messaging.type == 3) ?
                             this.renderWebview() :
-                            <ScrollView style={{ margin: 20 }}>
+                            <ScrollView
+                                showsVerticalScrollIndicator={false}
+                                style={{ margin: 20 }}>
                                 <Text>{this.state.messaging.message}</Text>
                             </ScrollView>
                     }

@@ -102,7 +102,9 @@ class BookingResultSwiperScreen extends Component {
                     {
                         datas.map((item, index) => {
                             return (
-                                <ScrollView style={{ padding: 10 }} key={index}>
+                                <ScrollView
+                                    showsVerticalScrollIndicator={false}
+                                    style={{ padding: 10 }} key={index}>
                                     <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 30 }}>
                                         <Text style={{ flex: 1, fontWeight: 'bold', fontSize: 15, color: constants.colors.primary_bold }}>{item.ServiceName}</Text>
                                         <TouchableOpacity onPress={() => this.exportPdf()}>

@@ -172,6 +172,7 @@ class Home extends Component {
         menuButton={<NotificationBadge />}
       >
         <ScrollView
+          showsVerticalScrollIndicator={false}
           style={{
             flex: 1,
             paddingTop: 0

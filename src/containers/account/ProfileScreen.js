@@ -143,7 +143,9 @@ class ProfileScreen extends Component {
             <ActivityPanel style={{ flex: 1 }} title="Thông tin cá nhân" showFullScreen={true} isLoading={this.state.isLoading}>
                 <ImageBackground source={bgImage} style={{ width: '100%', height: '100%' }}>
 
-                    <ScrollView style={styles.container} zIndex={2}>
+                    <ScrollView
+                        showsVerticalScrollIndicator={false}
+                        style={styles.container} zIndex={2}>
                         <View style={styles.header}>
                             <TouchableOpacity style={styles.boxAvatar} onPress={this.selectAvatar}>
                                 <ImageLoad

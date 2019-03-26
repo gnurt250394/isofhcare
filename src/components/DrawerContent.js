@@ -162,7 +162,9 @@ class DrawerContent extends Component {
               </Text>
             </View>
           ) : null}
-          <ScrollView style={{ flex: 1, marginLeft: 60, marginTop: 30 }}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            style={{ flex: 1, marginLeft: 60, marginTop: 30 }}>
             {this.props.userApp.isLogin ? (
               <View style={{ marginLeft: 30 }}>
                 <TouchableOpacity

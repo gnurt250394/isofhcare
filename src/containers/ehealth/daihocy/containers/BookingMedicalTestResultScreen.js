@@ -123,7 +123,7 @@ class BookingMedicalTestResultScreen extends Component {
         );
 
     }
-    
+
     renderMedical(item, index) {
         if (item.ServiceMedicTestLine && item.ServiceMedicTestLine.length > 0 && item.ServiceMedicTestLine[0].NameLine != 0) {
             return (this.renderMedicalTestLine(item, index));
@@ -185,7 +185,9 @@ class BookingMedicalTestResultScreen extends Component {
         const tableHead = this.state.currentGroup && this.state.currentGroup.type == 'Vi Sinh' ? ['TÊN XÉT NGHIỆM', 'KẾT QUẢ'] : ['TÊN XÉT NGHIỆM', 'KẾT QUẢ', 'GIÁ TRỊ BÌNH THƯỜNG', 'ĐƠN VỊ'];
         return (
             <ActivityPanel style={{ flex: 1, }} title="Kết quả xét nghiệm" isLoading={this.state.isLoading} showFullScreen={true}>
-                <ScrollView style={{ padding: 10 }}>
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    style={{ padding: 10 }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 30, justifyContent: 'flex-end' }}>
                         <TouchableOpacity onPress={() => this.exportPdf()}>
                             <Text style={{ borderColor: '#065cb4', borderWidth: 2, paddingLeft: 12, paddingRight: 12, paddingTop: 8, paddingBottom: 8, borderRadius: 20, color: "#065cb4", fontWeight: 'bold' }}>Xuất PDF</Text>

@@ -197,7 +197,7 @@ class DoctorTime extends Component {
             if (bookingInSchedule[item.time])
                 item.count = bookingInSchedule[item.time].length;
         }
-        
+
         this.setState({ time });
     }
 
@@ -225,7 +225,7 @@ class DoctorTime extends Component {
         //      Actions.addBooking();
         // }
         this.props.navigation.navigate("dhyAddBooking")
-    }   
+    }
     render() {
         return (
             <View style={{ marginBottom: 3, backgroundColor: "#FFF", padding: 10 }}>
@@ -235,7 +235,9 @@ class DoctorTime extends Component {
 
                 <View style={{ flexDirection: 'row', marginTop: 5, alignItems: 'center' }}>
                     <Text style={{ width: 60, color: '#00accc' }}>Sáng</Text>
-                    <ScrollView horizontal={true}>
+                    <ScrollView
+                        showsVerticalScrollIndicator={false}
+                        horizontal={true}>
                         <FlatList
                             extraData={this.state}
                             keyExtractor={(item, index) => index}
@@ -261,7 +263,9 @@ class DoctorTime extends Component {
                 </View>
                 <View style={{ flexDirection: 'row', marginTop: 5, alignItems: 'center' }}>
                     <Text style={{ width: 60, color: '#00accc', }}>Chiều</Text>
-                    <ScrollView horizontal={true}>
+                    <ScrollView
+                        showsVerticalScrollIndicator={false}
+                        horizontal={true}>
                         <FlatList
                             keyExtractor={(item, index) => index}
                             extraData={this.state}

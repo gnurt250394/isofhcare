@@ -121,7 +121,9 @@ class EnterPasswordScreen extends Component {
         showFullScreen={true}
       >
 
-        <ScrollView style={{ flex: 1 }} keyboardShouldPersistTaps="always">
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={{ flex: 1 }} keyboardShouldPersistTaps="always">
           <KeyboardAvoidingView behavior="padding" style={styles.form}>
             <View style={{ flex: 1, padding: 20 }}>
               <ScaleImage source={require("@images/new/isofhcare.png")} width={200} style={{ marginTop: 50, alignSelf: 'center' }} />
@@ -173,7 +175,7 @@ class EnterPasswordScreen extends Component {
                 />
 
                 <TouchableOpacity style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center' }} onPress={this.register.bind(this)}>
-                  <Text style={{ color: '#FFF', fontSize: 17}}>{"HOÀN THÀNH"}</Text>
+                  <Text style={{ color: '#FFF', fontSize: 17 }}>{"HOÀN THÀNH"}</Text>
                 </TouchableOpacity>
               </Form>
             </View>

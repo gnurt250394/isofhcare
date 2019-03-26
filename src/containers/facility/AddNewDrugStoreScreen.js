@@ -295,7 +295,9 @@ class AddNewDrugStoreScreen extends Component {
         return (
             <ActivityPanel style={{ flex: 1 }} title={this.state.editMode ? "CHỈNH SỬA NHÀ THUỐC" : "THÊM MỚI NHÀ THUỐC"} showFullScreen={true} isLoading={this.state.isLoading}>
                 <View style={{ flex: 1 }}>
-                    <ScrollView style={{ padding: 10, flex: 1 }}
+                    <ScrollView
+                        showsVerticalScrollIndicator={false}
+                        style={{ padding: 10, flex: 1 }}
                         keyboardShouldPersistTaps="always">
                         <View style={styles.row}>
                             <TextInput

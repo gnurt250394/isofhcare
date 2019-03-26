@@ -132,7 +132,9 @@ class CreateQuestionStep1Screen extends Component {
           backgroundColor: '#02C39A'
         }}
       >
-        <ScrollView style={{ flex: 1, position: 'relative' }} keyboardShouldPersistTaps="always">
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={{ flex: 1, position: 'relative' }} keyboardShouldPersistTaps="always">
           <View style={{ backgroundColor: '#02C39A', height: 130, position: 'absolute', top: 0, left: 0, right: 0 }}></View>
           <View style={{ margin: 22, marginTop: 10 }}>
             <Card style={{ padding: 22 }}>

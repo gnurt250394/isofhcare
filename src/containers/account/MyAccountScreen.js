@@ -115,7 +115,7 @@ class MyAccountScreen extends Component {
                 {/* <View style={{ position: 'relative', flex: 1 }}>
                     <ScaleImage source={bgImage} width={DEVICE_WIDTH} zIndex={0} />
                     <ScaleImage source={require("@images/rectangle.png")} zIndex={1} width={100} style={{ bottom: 0, left: 80, position: 'absolute' }} /> */}
-                    {/* <ScrollView style={styles.container} zIndex={2}>
+                {/* <ScrollView style={styles.container} zIndex={2}>
                         <View style={styles.header}>
                             <TouchableOpacity style={styles.boxAvatar} onPress={this.selectAvatar}>
                                 <ScaleImage source={icSupport} width={100} style={styles.avatar} />
@@ -165,22 +165,24 @@ class MyAccountScreen extends Component {
                             </View>
                         }
                     </ScrollView > */}
-                    <ScrollView style={styles.container} zIndex={2}>
-                        <View style={styles.container2}>
-                            <View>
-                                <Animated.View style={[styles.flipCard, frontAnimatedStyle]}>
-                                    <Text style={styles.flipText}> This text is flipping on the front. </Text>
-                                </Animated.View>
-                                <Animated.View style={[backAnimatedStyle, styles.flipCard, styles.flipCardBack]}>
-                                    <Text style={styles.flipText}> This text is flipping on the back. </Text>
-                                </Animated.View>
-                            </View>
-                            <TouchableOpacity onPress={() => this.flipCard()}>
-                                <Text>Flip!</Text>
-                            </TouchableOpacity>
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    style={styles.container} zIndex={2}>
+                    <View style={styles.container2}>
+                        <View>
+                            <Animated.View style={[styles.flipCard, frontAnimatedStyle]}>
+                                <Text style={styles.flipText}> This text is flipping on the front. </Text>
+                            </Animated.View>
+                            <Animated.View style={[backAnimatedStyle, styles.flipCard, styles.flipCardBack]}>
+                                <Text style={styles.flipText}> This text is flipping on the back. </Text>
+                            </Animated.View>
                         </View>
-                    </ScrollView>
-                    {/* <View style={styles.actions} zIndex={3}>
+                        <TouchableOpacity onPress={() => this.flipCard()}>
+                            <Text>Flip!</Text>
+                        </TouchableOpacity>
+                    </View>
+                </ScrollView>
+                {/* <View style={styles.actions} zIndex={3}>
                         <Animated.View style={[styles.boxAnimate, this.state.view ? animatedSizeTo : animatedSizeFrom]}>
                             <TouchableOpacity style={styles.fab} onPress={this.onChange} >
                                 {

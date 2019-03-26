@@ -14,7 +14,9 @@ class TermsScreen extends Component {
                 style={{ flex: 1 }}
                 title="ĐIỀU KHOẢN SỬ DỤNG"
                 showFullScreen={true}>
-                <ScrollView>
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                >
                     <View style={{ padding: 15 }}>
                         <Text>Vui lòng đọc kỹ thỏa thuận sử dụng trước khi bạn tiến hành tải cài đặt, sử dụng tất cả hoặc bất kỳ phần nào của ứng dụng ISofHcare (“Ứng dụng”) (bao gồm nhưng không giới hạn phần mềm, các file và các tài liệu liên quan) hoặc sử dụng các dịch vụ do Công ty cổ phần công nghệ iSofH (“ISofH”) cung cấp để kết nối đến Ứng dụng. Bạn chấp thuận và đồng ý bị ràng buộc bởi các quy định và điều kiện trong thỏa thuận này khi thực hiện các thao tác trên đây. Trường hợp bạn không đồng ý với bất kỳ điều khoản sử dụng nào của chúng tôi (phiên bản này và các phiên bản cập nhật), bạn vui lòng không tải, cài đặt, sử dụng Ứng dụng hoặc tháo gỡ Ứng dụng ra khỏi thiết bị di động của bạn</Text>
                         <Text style={styles.title}>1. Cập Nhật</Text>

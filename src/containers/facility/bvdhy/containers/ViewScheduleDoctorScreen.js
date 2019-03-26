@@ -151,7 +151,7 @@ class ViewScheduleDoctorScreen extends Component {
             this.props.dispatch({
                 type: dhyCommand.action.action_select_booking_specialist2, value: this.props.booking.specialist
             })
-        }        
+        }
     }
 
     toggleModalService() {
@@ -352,7 +352,9 @@ class ViewScheduleDoctorScreen extends Component {
         return (
             <ActivityPanel style={{ flex: 1, }} title={this.props.booking.currentDepartment ? this.props.booking.currentDepartment.name : ""} showFullScreen={true} >
                 {this.props.booking.doctor ?
-                    <ScrollView style={{ backgroundColor: "#e7fbff" }}>
+                    <ScrollView
+                        showsVerticalScrollIndicator={false}
+                        style={{ backgroundColor: "#e7fbff" }}>
                         <View style={{ marginBottom: 3, backgroundColor: "#FFF" }}>
                             <View style={{ backgroundColor: '#FFF', padding: 10, flexDirection: 'column' }}>
                                 <View style={{ flexDirection: 'row' }}>

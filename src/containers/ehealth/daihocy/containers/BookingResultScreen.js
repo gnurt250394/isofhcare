@@ -86,9 +86,9 @@ class BookingResultScreen extends Component {
         item.isContract = result.profile.IsContract;
         this.props.navigation.navigate("bookingCheckupResult", {
             result,
-            ListResultCheckup:result.data.ListResultCheckup, 
-            active: index, 
-            isContract:result.profile.IsContract
+            ListResultCheckup: result.data.ListResultCheckup,
+            active: index,
+            isContract: result.profile.IsContract
         })
     }
     viewResultSurgery(item) {
@@ -126,7 +126,9 @@ class BookingResultScreen extends Component {
         let result = this.props.navigation.getParam("result");
         return (
             <ActivityPanel style={{ flex: 1, }} title="Kết quả" isLoading={this.state.isLoading} touchToDismiss={false} showFullScreen={true}>
-                <ScrollView style={{ padding: 10 }}>
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    style={{ padding: 10 }}>
 
                     <View style={{ flexDirection: 'row' }}>
                         {result && result.profile && result.profile.Value &&
@@ -157,7 +159,7 @@ class BookingResultScreen extends Component {
                                 <FlatList
                                     keyExtractor={(i, index) => index.toString()}
                                     data={this.state.resultCheckup}
-                                    renderItem={({item, index}) =>
+                                    renderItem={({ item, index }) =>
                                         <TouchableOpacity onPress={() => { this.viewResultCheckup(item, index) }} style={styles.resultItemItem}>
                                             <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} />
                                             <Text style={styles.resultItemItemText}>
