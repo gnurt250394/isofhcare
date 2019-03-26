@@ -17,7 +17,8 @@ import advertiseProvider from "@data-access/advertise-provider";
 import snackbar from "@utils/snackbar-utils";
 import { Card } from "native-base";
 import NotificationBadge from "@components/notification/NotificationBadge";
-
+import redux from "@redux-store";
+import ImageLoad from "mainam-react-native-image-loader";
 class Home extends Component {
   constructor(props) {
     super(props);
@@ -124,6 +125,9 @@ class Home extends Component {
   }
 
   render() {
+    const icSupport = require("@images/new/user.png");
+    const source = this.props.userApp.isLogin ? (this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar.absoluteUrl() } : icSupport) : icSupport;
+
     return (
       <ActivityPanel
         hideStatusbar={true}
@@ -132,12 +136,37 @@ class Home extends Component {
         imageStyle={{ marginRight: 10 }}
         backButton={<TouchableOpacity style={{ paddingLeft: 15 }} onPress={() => {
           if (this.props.userApp.isLogin) {
-            this.logout();
+            if (this.props.userInfoClick)
+              this.props.userInfoClick();
           } else {
             this.props.navigation.navigate("login");
           }
         }}>
-          <ScaledImage source={require("@images/new/user.png")} width={30} />
+          <ImageLoad
+            resizeMode="cover"
+            imageStyle={{ borderRadius: 15 }}
+            borderRadius={15}
+            customImagePlaceholderDefaultStyle={{
+              width: 30,
+              height: 30,
+              alignSelf: "center"
+            }}
+            placeholderSource={icSupport}
+            style={{ width: 30, height: 30, alignSelf: "center" }}
+            resizeMode="cover"
+            loadingStyle={{ size: "small", color: "gray" }}
+            source={source}
+            defaultImage={() => {
+              return (
+                <ScaledImage
+                  resizeMode="cover"
+                  source={icSupport}
+                  width={30}
+                  style={{ width: 30, height: 30, alignSelf: "center" }}
+                />
+              );
+            }}
+          />
         </TouchableOpacity>}
         image={require("@images/logo_home.png")}
         menuButton={<NotificationBadge />}

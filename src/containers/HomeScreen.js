@@ -23,6 +23,8 @@ import NotificationBadge from "@components/notification/NotificationBadge";
 import ActivityPanel from "@components/ActivityPanel";
 import ScaledImage from "../../node_modules/mainam-react-native-scaleimage";
 import snackbar from '@utils/snackbar-utils';
+import { IndicatorViewPager } from 'mainam-react-native-viewpager';
+
 class HomeScreen extends Component {
   constructor(props) {
     super(props);
@@ -55,14 +57,45 @@ class HomeScreen extends Component {
   logout() {
     this.props.dispatch(redux.userLogout());
   }
-
+  onPageScroll(e) {
+    var tabIndex = e.position;
+    var offset = e.offset * 100;
+    if (tabIndex == -1 || (tabIndex == 1 && offset > 0))
+      return;
+    this.setState({
+      tabIndex: tabIndex
+    })
+  }
   render() {
     return (
       <ActivityPanel isLoading={this.state.isLoading} hideActionbar={true}>
         <View
           style={[{ flex: 1 }, this.props.style]}
         >
-          <Swiper
+          <IndicatorViewPager style={{ flex: 1 }} ref={(viewPager) => { this.viewPager = viewPager }} onPageScroll={this.onPageScroll.bind(this)}>
+            <View style={{ flex: 1 }}>
+              <Home
+                userInfoClick={() => {
+                  if (this.viewPager)
+                    this.viewPager.setPage(3);
+                }}
+                navigation={this.props.navigation}
+                style={{ flex: 1 }}
+              />
+
+            </View>
+            <View style={{ flex: 1, backgroundColor: "#000" }} />
+            <View style={{ flex: 1, backgroundColor: "#cac" }} />
+            <View style={{ flex: 1 }}>
+              <Account showLoading={(loading, callback) => {
+                debugger;
+                this.setState({ isLoading: loading }, callback);
+              }} />
+
+            </View>
+          </IndicatorViewPager >
+
+          {/* <Swiper
             ref={ref => (this.swiper = ref)}
             onIndexChanged={index => {
               this.setState({ tabIndex: index });
@@ -85,7 +118,7 @@ class HomeScreen extends Component {
               debugger;
               this.setState({ isLoading: loading }, callback);
             }} />
-          </Swiper>
+          </Swiper> */}
           <View style={{
           }}>
             < View style={{
@@ -136,9 +169,8 @@ class HomeScreen extends Component {
     );
   }
   swipe(targetIndex) {
-    const currentIndex = this.swiper.state.index;
-    const offset = targetIndex - currentIndex;
-    this.swiper.scrollBy(offset);
+    if (this.viewPager)
+      this.viewPager.setPage(targetIndex);
   }
 }
 
