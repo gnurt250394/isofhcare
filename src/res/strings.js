@@ -150,7 +150,7 @@ module.exports = {
       login_success: "Đăng nhập thành công",
       register_success: "Đăng ký thành công",
       username_or_email_existed:
-        "Email hoặc số điện thoại đã tồn tại. Vui lòng thử lại",
+        "SĐT đã được sử dụng trong hệ thống. Vui lòng sử dụng SĐT khác",
       username_or_email_empty: "Tên đăng nhập hoặc email trống",
       account_blocked: "Tài khoản đã bị khóa. Vui lòng liên hệ với Admin của Isofhcare",
       username_or_password_incorrect:

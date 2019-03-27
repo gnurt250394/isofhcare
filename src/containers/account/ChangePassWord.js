@@ -89,7 +89,7 @@ class ProfileScreen extends Component {
                                             minlength: 8
                                         },
                                         messages: {
-                                            required: "Vui lòng nhập đầy đủ thông tin!",
+                                            required: "Mật khẩu cũ không được để trống",
                                             minlength: "Mật khẩu dài ít nhất 8 ký tự"
                                         }
                                     }}
@@ -111,7 +111,7 @@ class ProfileScreen extends Component {
                                             minlength: 8
                                         },
                                         messages: {
-                                            required: "Vui lòng nhập đầy đủ thông tin!",
+                                            required: "Mật khẩu không được để trống",
                                             minlength: "Mật khẩu dài ít nhất 8 ký tự"
                                         }
                                     }}
@@ -134,7 +134,7 @@ class ProfileScreen extends Component {
                                             minlength: 8
                                         },
                                         messages: {
-                                            required: "Vui lòng nhập đầy đủ thông tin!",
+                                            required: "Xác nhận mật khẩu không được để trống",
                                             minlength: "Xác nhận mật khẩu dài ít nhất 8 kí tự",
                                             equalTo: 'Mật khẩu và xác nhận mật khẩu không giống nhau'
                                         }

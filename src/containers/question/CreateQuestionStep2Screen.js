@@ -144,6 +144,7 @@ class CreateQuestionStep2Screen extends Component {
                         images += ",";
                     images += item.url;
                 });
+                debugger;
                 questionProvider.create(this.state.content, this.state.gender, this.state.age, this.state.specialist_item ? this.state.specialist_item.specialist.id : "0", this.state.disease, this.state.otherContent, images).then(s => {
                     this.setState({ isLoading: false });
                     if (s && s.code == 0) {
@@ -189,9 +190,8 @@ class CreateQuestionStep2Screen extends Component {
             <Text style={{ flex: 1 }} numberOfLines={1} ellipsizeMode='tail'>{text}</Text>
             <View style={{ flexDirection: 'row' }}>
                 {
-                    selected ?
-                        <ScaleImage source={require("@images/ic_check_tick.png")} width={20} /> :
-                        <ScaleImage source={require("@images/ic_check.png")} width={20} />
+                    selected &&
+                        <ScaleImage source={require("@images/new/ic_question_check_specialist.png")} width={20} />
                 }
             </View>
         </TouchableOpacity></View>

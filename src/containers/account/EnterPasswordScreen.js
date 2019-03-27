@@ -153,7 +153,7 @@ class EnterPasswordScreen extends Component {
                 />
                 <TextField
                   getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-                    placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.confirm_password}
+                    placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Xác nhận mật khẩu"}
                     secureTextEntry={true}
                     onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
                   onChangeText={s => {
@@ -167,7 +167,7 @@ class EnterPasswordScreen extends Component {
                     },
                     messages: {
                       required: "Xác nhận mật khẩu không được bỏ trống!",
-                      equalTo: "Xác Mật khẩu và xác nhận mật khẩu không giống nhau"
+                      equalTo: "Mật khẩu và xác nhận mật khẩu không giống nhau"
                     }
                   }}
                   placeholder={constants.input_password}

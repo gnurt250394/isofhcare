@@ -122,6 +122,8 @@ class DetailQuestionScreen extends Component {
         }
     }
     userSend() {
+        if (!this.state.content)
+            return;
         connectionUtils.isConnected().then(s => {
             if (!this.form.isValid()) { return; }
             this.setState({ isLoading: true }, () => {
@@ -242,12 +244,12 @@ class DetailQuestionScreen extends Component {
                     validate={{
                         rules: {
                             required: true,
-                            maxlength: 20000
+                            maxlength: 2000
                         },
                         messages:
                         {
                             required: "Câu trả lời bắt buộc phải nhập",
-                            maxlength: "Không cho phép nhập quá 20000 ký tự"
+                            maxlength: "Không cho phép nhập quá 2000 ký tự"
                         }
                     }}
                 />
@@ -379,7 +381,7 @@ class DetailQuestionScreen extends Component {
         if (this.state.post.post.status == 4) {
             return <View>
                 <View style={{ marginTop: 25 }}>
-                    <Text style={{ fontSize: 15, color: 'rgb(106,1,54)' }}>Trạng thái: Bị từ chối</Text>
+                    <Text style={{ fontSize: 15, color: 'rgb(106,1,54)' }}>Trạng thái: Đã bị từ chối</Text>
                 </View>
                 {
                     this.state.post.post.reject ?
@@ -490,7 +492,7 @@ class DetailQuestionScreen extends Component {
 const styles = StyleSheet.create({
     moreInfo:
     {
-        color: '#00000080', fontSize: 15, fontWeight: '500', marginTop: 7
+        color: '#00000080', fontSize: 15, fontWeight: 'bold', marginTop: 7
     },
     errorStyle: {
         color: "red",

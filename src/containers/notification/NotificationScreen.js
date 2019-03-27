@@ -167,6 +167,9 @@ class NotificationScreen extends Component {
       </View>
     );
   }
+  isToday(item) {
+    return item.notification.createdDate.toDateObject('-').ddmmyyyy() == (new Date()).ddmmyyyy();
+  }
 
   render() {
     return (
@@ -207,7 +210,7 @@ class NotificationScreen extends Component {
                   if (index == 0) {
                     let date = new Date();
                     if (date.ddmmyyyy() == notiTime.ddmmyyyy())
-                      return <Text style={{ marginLeft: 20, marginRight: 20, marginBottom: 10, marginTop: 20 }}>Today</Text>
+                      return <Text style={{ marginLeft: 20, marginRight: 20, marginBottom: 10, marginTop: 20 }}>Hôm nay</Text>
                     else
                       return <Text style={{ marginLeft: 20, marginRight: 20, marginBottom: 10, marginTop: 20 }}>Ngày {notiTime.format('dd/MM/yyyy')}</Text>
                   }
@@ -249,14 +252,16 @@ class NotificationScreen extends Component {
                     >
                       {item.notification.title.trim()}
                     </Text>
-                    <Text
-                      style={{ fontSize: 12, color: "#00000060", marginTop: 8 }}
-                    >
-                      {((item) => {
-                        var date = item.notification.createdDate.toDateObject('-');
-                        return date.format("HH:mm") + " - " + date.format("dd/MM/yyyy")
-                      }).call(this, item)}
-                    </Text>
+                    {
+                      this.isToday(item) &&
+                      <Text
+                        style={{ fontSize: 12, color: "#00000060", marginTop: 8 }}
+                      >
+                        {
+                          item.notification.createdDate.toDateObject('-').getPostTime()
+                        }
+                      </Text>
+                    }
                   </View>
                 </View>
                 <View

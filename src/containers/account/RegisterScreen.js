@@ -96,6 +96,10 @@ class RegisterScreen extends Component {
     });
   }
 
+  showDatePicker() {
+    this.setState({ toggelDateTimePickerVisible: true });
+  }
+
   render() {
     let maxDate = new Date();
     maxDate = new Date(
@@ -143,8 +147,6 @@ class RegisterScreen extends Component {
                         maxlength: "Không được nhập quá 255 kí tự"
                       }
                     }}
-
-                    placeholder={constants.input_password}
                     autoCapitalize={"none"}
                   />
 
@@ -157,9 +159,7 @@ class RegisterScreen extends Component {
                   >
                     <TextField
                       value={this.state.date || ""}
-                      onPress={() => {
-                        this.setState({ toggelDateTimePickerVisible: true });
-                      }}
+                      onPress={this.showDatePicker.bind(this)}
                       dateFormat={"dd/MM/yyyy"}
                       splitDate={"/"}
                       editable={false}
@@ -179,6 +179,7 @@ class RegisterScreen extends Component {
                       inputStyle={{
                         backgroundColor: "#FFF",
                         color: "#006ac6",
+                        paddingBottom: Platform.OS == 'ios' ? 10 : 0,
                         borderBottomWidth: 2,
                         borderBottomColor: "#02C39A",
 

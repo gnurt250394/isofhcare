@@ -11,8 +11,8 @@ import clientUtils from '@utils/client-utils';
 import Dimensions from 'Dimensions';
 import constants from '@resources/strings';
 import snackbar from '@utils/snackbar-utils';
-import Swiper from 'react-native-swiper';
 import ListQuestion from '@components/question/ListQuestion';
+import { IndicatorViewPager } from 'mainam-react-native-viewpager';
 
 class ListQuestionScreen extends Component {
     constructor(props) {
@@ -41,9 +41,17 @@ class ListQuestionScreen extends Component {
         }
     }
     swipe(targetIndex) {
-        const currentIndex = this.swiper.state.index;
-        const offset = targetIndex - currentIndex;
-        this.swiper.scrollBy(offset);
+        if (this.viewPager)
+            this.viewPager.setPage(targetIndex);
+    }
+    onPageScroll(e) {
+        var tabIndex = e.position;
+        var offset = e.offset * 100;
+        if (tabIndex == -1 || (tabIndex == 1 && offset > 0))
+            return;
+        this.setState({
+            tabIndex: tabIndex
+        })
     }
     render() {
         return (
@@ -73,19 +81,14 @@ class ListQuestionScreen extends Component {
                                 </TouchableOpacity>
                             </View>
 
-                            <Swiper
-                                ref={ref => this.swiper = ref}
-                                onIndexChanged={index => {
-                                    this.setState({ tabIndex: index });
-                                }}
-                                dot={<View />}
-                                activeDot={<View />}
-                                loop={false}
-                                style={{ flex: 1 }}
-                            >
-                                <ListQuestion isAnswered={true} ref={ref => this.listAnswered = ref} />
-                                <ListQuestion isAnswered={false} ref={ref => this.listNotAnswered = ref} />
-                            </Swiper>
+                            <IndicatorViewPager style={{ flex: 1 }} ref={(viewPager) => { this.viewPager = viewPager }} onPageScroll={this.onPageScroll.bind(this)}>
+                                <View>
+                                    <ListQuestion isAnswered={true} ref={ref => this.listAnswered = ref} />
+                                </View>
+                                <View>
+                                    <ListQuestion isAnswered={false} ref={ref => this.listNotAnswered = ref} />
+                                </View>
+                            </IndicatorViewPager>
                         </View> :
                         <View style={{ flex: 1, alignItems: 'center', marginTop: 50 }}>
                             <View style={{ flex: 1, alignItems: 'center' }}>

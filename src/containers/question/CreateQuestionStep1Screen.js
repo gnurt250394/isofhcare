@@ -48,7 +48,7 @@ class CreateQuestionStep1Screen extends Component {
       if (s && s.post) {
         this.setState({
           gender: s.post.gender ? 1 : 0,
-          age: s.post.age && s.post.age != 0 ? (s.post.age + "") : "0",
+          age: s.post.age && s.post.age != 0 ? (s.post.age + "") : "",
           content: s.post.content || ""
         })
       }
@@ -191,7 +191,7 @@ class CreateQuestionStep1Screen extends Component {
                     }}
                     value={this.state.age}
                     style={{ marginTop: 6 }}
-                    inputStyle={[styles.textinput, { lineHeight: 20, paddingTop: 8, paddingLeft: 17, paddingRight: 17, paddingBottom: 8, fontWeight: '600' }]}
+                    inputStyle={[styles.textinput, { lineHeight: 20, paddingTop: 0, paddingLeft: 17, paddingRight: 17, paddingBottom: Platform.OS == 'ios' ? 15 : 8, fontWeight: '600' }]}
                     onChangeText={s => {
                       this.setState({ age: s });
                     }}
