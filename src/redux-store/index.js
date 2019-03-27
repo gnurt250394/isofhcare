@@ -56,6 +56,7 @@ module.exports = {
     },
     userLogout() {
         return (dispatch) => {
+            firebase.notifications().setBadge(0);
             userProvider.saveAccount(undefined);
             dispatch({ type: constants.action.action_user_logout })
         };

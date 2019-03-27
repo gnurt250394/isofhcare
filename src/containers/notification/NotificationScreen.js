@@ -15,6 +15,9 @@ import questionProvider from "@data-access/question-provider";
 import snackbar from "@utils/snackbar-utils";
 import DialogBox from "react-native-dialogbox";
 import constants from "@resources/strings";
+import firebase from 'react-native-firebase';
+import redux from '@redux-store'
+
 
 class NotificationScreen extends Component {
   constructor(props) {
@@ -103,7 +106,10 @@ class NotificationScreen extends Component {
   viewNotification(item) {
     var data = JSON.parse(item.notification.value);
     this.openQuestion(data.id);
-    notificationProvider.setRead(item.notification.id);
+    notificationProvider.setRead(item.notification.id).then(s => {
+      firebase.notifications().setBadge(this.props.userApp.unReadNotificationCount > 0 ? this.props.userApp.unReadNotificationCount - 1 : 0);
+      this.props.dispatch(redux.getUnreadNotificationCount());
+    });
     item.notification.watched = 1;
     this.setState({ data: [...this.state.data] });
   }
@@ -272,86 +278,6 @@ class NotificationScreen extends Component {
           )}
         />
 
-        {/* <TouchableOpacity style={{ backgroundColor: 'rgb(238,248,247)' }}>
-                    <View style={{ flexDirection: 'row', padding: 11, paddingLeft: 13, paddingRight: 13 }}>
-                        <ScaleImage source={require("@images/doctor.png")} width={47} />
-                        <View style={{ paddingTop: 4, marginLeft: 19 }}>
-                            <Text style={{ fontSize: 14 }}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Test</Text> Dữ liệu demo 17/10/2018</Text>
-                            <Text style={{ fontSize: 12, color: '#00000060', marginTop: 8 }}>5 giờ trước</Text>
-                        </View>
-                    </View>
-                    <View style={{ height: 0.5, backgroundColor: "rgb(204,204,204)" }} />
-                </TouchableOpacity>
-                <TouchableOpacity style={{ backgroundColor: 'rgb(238,248,247)' }}>
-                    <View style={{ flexDirection: 'row', padding: 11, paddingLeft: 13, paddingRight: 13 }}>
-                        <ScaleImage source={require("@images/doctor.png")} width={47} />
-                        <View style={{ paddingTop: 4, marginLeft: 19 }}>
-                            <Text style={{ fontSize: 14 }}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Test</Text> Dữ liệu demo 17/10/2018</Text>
-                            <Text style={{ fontSize: 12, color: '#00000060', marginTop: 8 }}>5 giờ trước</Text>
-                        </View>
-                    </View>
-                    <View style={{ height: 0.5, backgroundColor: "rgb(204,204,204)" }} />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                    <View style={{ flexDirection: 'row', padding: 11, paddingLeft: 13, paddingRight: 13 }}>
-                        <ScaleImage source={require("@images/doctor.png")} width={47} />
-                        <View style={{ paddingTop: 4, marginLeft: 19 }}>
-                            <Text style={{ fontSize: 14 }}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Test</Text> Dữ liệu demo 17/10/2018</Text>
-                            <Text style={{ fontSize: 12, color: '#00000060', marginTop: 8 }}>5 giờ trước</Text>
-                        </View>
-                    </View>
-                    <View style={{ height: 0.5, backgroundColor: "rgb(204,204,204)" }} />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                    <View style={{ flexDirection: 'row', padding: 11, paddingLeft: 13, paddingRight: 13 }}>
-                        <ScaleImage source={require("@images/doctor.png")} width={47} />
-                        <View style={{ paddingTop: 4, marginLeft: 19 }}>
-                            <Text style={{ fontSize: 14 }}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Test</Text> Dữ liệu demo 17/10/2018</Text>
-                            <Text style={{ fontSize: 12, color: '#00000060', marginTop: 8 }}>5 giờ trước</Text>
-                        </View>
-                    </View>
-                    <View style={{ height: 0.5, backgroundColor: "rgb(204,204,204)" }} />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                    <View style={{ flexDirection: 'row', padding: 11, paddingLeft: 13, paddingRight: 13 }}>
-                        <ScaleImage source={require("@images/doctor.png")} width={47} />
-                        <View style={{ paddingTop: 4, marginLeft: 19 }}>
-                            <Text style={{ fontSize: 14 }}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Test</Text> Dữ liệu demo 17/10/2018</Text>
-                            <Text style={{ fontSize: 12, color: '#00000060', marginTop: 8 }}>5 giờ trước</Text>
-                        </View>
-                    </View>
-                    <View style={{ height: 0.5, backgroundColor: "rgb(204,204,204)" }} />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                    <View style={{ flexDirection: 'row', padding: 11, paddingLeft: 13, paddingRight: 13 }}>
-                        <ScaleImage source={require("@images/doctor.png")} width={47} />
-                        <View style={{ paddingTop: 4, marginLeft: 19 }}>
-                            <Text style={{ fontSize: 14 }}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Test</Text> Dữ liệu demo 17/10/2018</Text>
-                            <Text style={{ fontSize: 12, color: '#00000060', marginTop: 8 }}>5 giờ trước</Text>
-                        </View>
-                    </View>
-                    <View style={{ height: 0.5, backgroundColor: "rgb(204,204,204)" }} />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                    <View style={{ flexDirection: 'row', padding: 11, paddingLeft: 13, paddingRight: 13 }}>
-                        <ScaleImage source={require("@images/doctor.png")} width={47} />
-                        <View style={{ paddingTop: 4, marginLeft: 19 }}>
-                            <Text style={{ fontSize: 14 }}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Test</Text> Dữ liệu demo 17/10/2018</Text>
-                            <Text style={{ fontSize: 12, color: '#00000060', marginTop: 8 }}>5 giờ trước</Text>
-                        </View>
-                    </View>
-                    <View style={{ height: 0.5, backgroundColor: "rgb(204,204,204)" }} />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                    <View style={{ flexDirection: 'row', padding: 11, paddingLeft: 13, paddingRight: 13 }}>
-                        <ScaleImage source={require("@images/doctor.png")} width={47} />
-                        <View style={{ paddingTop: 4, marginLeft: 19 }}>
-                            <Text style={{ fontSize: 14 }}><Text style={{ fontWeight: 'bold', fontSize: 14 }}>Test</Text> Dữ liệu demo 17/10/2018</Text>
-                            <Text style={{ fontSize: 12, color: '#00000060', marginTop: 8 }}>5 giờ trước</Text>
-                        </View>
-                    </View>
-                    <View style={{ height: 0.5, backgroundColor: "rgb(204,204,204)" }} />
-                </TouchableOpacity> */}
         <DialogBox
           ref={dialogbox => {
             this.dialogbox = dialogbox;

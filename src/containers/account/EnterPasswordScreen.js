@@ -161,7 +161,7 @@ class EnterPasswordScreen extends Component {
                   }}
                   errorStyle={styles.errorStyle}
                   validate={{
-                    rules: {
+                    rules: { 
                       required: true,
                       equalTo: this.state.password
                     },
