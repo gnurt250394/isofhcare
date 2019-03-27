@@ -204,6 +204,8 @@ class Account extends Component {
         {this.props.userApp.isLogin &&
           <TouchableOpacity style={[styles.itemMenu]} onPress={() => {
             this.props.dispatch(redux.userLogout());
+            if (this.props.onLogout)
+              this.props.onLogout();
           }}>
             <Text style={styles.itemText}>Đăng xuất</Text>
             <ScaledImage source={require("@images/new/ic_menu_logout.png")} width={24} height={24} />

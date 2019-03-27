@@ -195,6 +195,8 @@ class DetailQuestionScreen extends Component {
         })
     }
     showItemComment(item, key) {
+        if (!item.user)
+            return null;
         const source = item.user && item.user.avatar ? { uri: item.user.avatar.absoluteUrl() } : require("@images/new/user.png");
         return <View key={key}>
             {item.user &&
@@ -264,7 +266,7 @@ class DetailQuestionScreen extends Component {
         if (this.state.post.post.status == 3) {
             if (this.state.userCommentCount == 3)
                 return null;
-            if (this.state.lastComment && this.state.lastComment2 && (this.state.lastComment2.user.id != this.props.userApp.currentUser.id))
+            if (this.state.lastComment && this.state.lastComment2 && this.state.lastComment2.user && (this.state.lastComment2.user.id != this.props.userApp.currentUser.id))
                 return (<View style={{ marginTop: 10 }}>
                     {
                         !this.state.confirmed &&

@@ -87,8 +87,9 @@ class HomeScreen extends Component {
             <View style={{ flex: 1, backgroundColor: "#000" }} />
             <View style={{ flex: 1, backgroundColor: "#cac" }} />
             <View style={{ flex: 1 }}>
-              <Account showLoading={(loading, callback) => {
-                debugger;
+              <Account onLogout={() => {
+                this.viewPager.setPage(0);
+              }} showLoading={(loading, callback) => {
                 this.setState({ isLoading: loading }, callback);
               }} />
 
