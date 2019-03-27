@@ -149,6 +149,8 @@ class NotificationScreen extends Component {
                   notificationProvider
                     .deleteAll()
                     .then(s => {
+                      firebase.notifications().setBadge(0);
+                      this.props.dispatch(redux.getUnreadNotificationCount());
                       this.setState({ isLoading: false });
                       this.onRefresh();
                     })
