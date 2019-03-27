@@ -25,6 +25,7 @@ class ItemQuestion extends Component {
     }
     render() {
         let { item } = this.props;
+        debugger;
         const source = item.user && item.user.avatar ? { uri: item.user.avatar.absoluteUrl() } : require("@images/new/user.png");
         return this.props.item && this.props.item.post ?
             <View style={{ margin: 20, marginTop: 0 }}>

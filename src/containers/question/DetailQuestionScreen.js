@@ -51,6 +51,7 @@ class DetailQuestionScreen extends Component {
         super(props);
         const post = this.props.navigation.getParam("post", null);
         this.state = {
+            star: (post && post.post) ? (post.post.review || 0) : 0,
             post,
             writeQuestion: false,
             confirmed: false,
@@ -72,7 +73,7 @@ class DetailQuestionScreen extends Component {
 
                 }
 
-                this.setState({ post: s.data, showMore: post.post.status == 1 || post.post.status == 2 || post.post.status == 4 || post.post.status == 5, diagnose: post.post.diagnose, userCommentCount: post.post.numberCommentUser || 0, lastComment: doctorComment }, () => {
+                this.setState({ star: (post && post.post) ? (post.post.review || 0) : 0, post: s.data, showMore: post.post.status == 1 || post.post.status == 2 || post.post.status == 4 || post.post.status == 5, diagnose: post.post.diagnose, userCommentCount: post.post.numberCommentUser || 0, lastComment: doctorComment }, () => {
                     commentProvider.search(this.state.post.post.id, 1, 1).then(s => {
                         if (s.code == 0) {
                             if (s.data && s.data.data && s.data.data.length > 0) {
@@ -89,7 +90,7 @@ class DetailQuestionScreen extends Component {
         }).catch(e => {
             this.props.navigation.pop();
         });
-        if (this.state.post.assignee)
+        if (this.state.post.assignee) {
             questionProvider.getResultReview(this.state.post.assignee.id).then(s => {
                 if (s.code == 0) {
                     this.setState({ ratedoctor: (s.data.ratingCount || s.data.ratingCout) || 0 });
@@ -97,6 +98,7 @@ class DetailQuestionScreen extends Component {
             }).catch(e => {
 
             });
+        }
     }
     renderImages(post) {
         var image = post.images;

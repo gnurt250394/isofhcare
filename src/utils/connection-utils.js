@@ -17,7 +17,7 @@ module.exports = {
                         }).catch(e => reject(false));
                     }, 500);
                 }
-            }).catch(e => { alert(JSON.stringify(e)); reject(false) });
+            }).catch(e => {reject(false) });
         })
     },
     checkConnect(callback) {
