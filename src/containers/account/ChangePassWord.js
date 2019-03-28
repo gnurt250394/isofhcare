@@ -134,7 +134,7 @@ class ProfileScreen extends Component {
                                             minlength: 8
                                         },
                                         messages: {
-                                            required: "Xác nhận mật khẩu không được để trống",
+                                            required: "Xác nhận mật khẩu không được bỏ trống",
                                             minlength: "Xác nhận mật khẩu dài ít nhất 8 kí tự",
                                             equalTo: 'Mật khẩu và xác nhận mật khẩu không giống nhau'
                                         }
