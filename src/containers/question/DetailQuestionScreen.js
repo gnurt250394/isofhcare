@@ -96,12 +96,15 @@ class DetailQuestionScreen extends Component {
                 commentProvider.create(this.state.post.post.id, this.state.content, "", "").then(s => {
                     this.setState({ isLoading: false });
                     if (s.code == 0) {
+                        let listComment = this.state.dataComment || [];
+                        listComment.push(s.data);
                         this.setState({
                             lastComment: s.data,
                             commentCount: ((this.state.commentCount || 0) + 1),
                             content: "",
                             writeQuestion: false,
-                            userCommentCount: this.state.userCommentCount + 1
+                            userCommentCount: this.state.userCommentCount + 1,
+                            listComment: [...listComment]
                         });
                         snackbar.show("Bạn đã gửi ý kiến thành công", "success");
                     }
@@ -236,6 +239,7 @@ class DetailQuestionScreen extends Component {
     }
 
     renderViewReview() {
+        debugger;
         if (this.state.post.post.status == 3) {
             if (this.state.userCommentCount == 3)
                 return null;
@@ -420,11 +424,24 @@ class DetailQuestionScreen extends Component {
                     state.showMore = post.post.status == 1 || post.post.status == 2 || post.post.status == 4 || post.post.status == 5;
                     state.diagnose = post.post.diagnose;
                     state.userCommentCount = post.post.numberCommentUser || 0;
+                    state.confirmed = false;
                 }
                 if (values[1].code == 0) {
                     state.commentCount = values[1].data.total - 1;
                     state.lastComment = values[1].data.data[0];
                     state.lastInteractive = values[1].data.data[0].comment.createdDate.toDateObject('-')
+                    commentProvider.search(this.state.post.post.id, 1, values[1].data.total).then(s => {
+                        if (s.code == 0) {
+                            if (s.data && s.data.data && s.data.data.length > 0) {
+                                this.setState({ dataComment: (s.data.data || []).reverse(), showComment: true }, () => {
+                                    if (this.state.showComment)
+                                        setTimeout(() => {
+                                            this.scrollView.scrollToEnd({ animated: true });
+                                        }, 500);
+                                });
+                            }
+                        }
+                    })
                 }
                 if (values.length >= 3) {
                     if (values[2].code == 0) {
