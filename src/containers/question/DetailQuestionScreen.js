@@ -419,7 +419,7 @@ class DetailQuestionScreen extends Component {
                 let state = {};
                 if (values[0].code == 0) {
                     let post = values[0].data;
-                    state.start = (post && post.post) ? (post.post.review || 0) : 0;
+                    state.star = (post && post.post) ? (post.post.review || 0) : 0;
                     state.post = post;
                     state.showMore = post.post.status == 1 || post.post.status == 2 || post.post.status == 4 || post.post.status == 5;
                     state.diagnose = post.post.diagnose;
@@ -433,7 +433,7 @@ class DetailQuestionScreen extends Component {
                     commentProvider.search(this.state.post.post.id, 1, values[1].data.total).then(s => {
                         if (s.code == 0) {
                             if (s.data && s.data.data && s.data.data.length > 0) {
-                                this.setState({ dataComment: (s.data.data || []).reverse(), showComment: true }, () => {
+                                this.setState({ dataComment: (s.data.data || []).reverse() }, () => {
                                     if (this.state.showComment)
                                         setTimeout(() => {
                                             this.scrollView.scrollToEnd({ animated: true });
