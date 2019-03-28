@@ -77,7 +77,7 @@ class DetailQuestionScreen extends Component {
                     commentProvider.search(this.state.post.post.id, 1, 1).then(s => {
                         if (s.code == 0) {
                             if (s.data && s.data.data && s.data.data.length > 0) {
-                                this.setState({ commentCount: s.data.total - 1, lastComment: this.state.lastComment || s.data.data[0], lastInteractive: s.data.data[0].comment.createdDate.toDateObject('-'), lastComment2: s.data.data[0] })
+                                this.setState({ commentCount: s.data.total - 1, lastComment:s.data.data[0], lastInteractive: s.data.data[0].comment.createdDate.toDateObject('-') })
                             }
                         }
                     }).catch(e => {
@@ -134,7 +134,6 @@ class DetailQuestionScreen extends Component {
                     if (s.code == 0) {
                         this.setState({
                             lastComment: s.data,
-                            lastComment2: s.data,
                             commentCount: ((this.state.commentCount || 0) + 1),
                             content: "",
                             writeQuestion: false,
@@ -268,7 +267,7 @@ class DetailQuestionScreen extends Component {
         if (this.state.post.post.status == 3) {
             if (this.state.userCommentCount == 3)
                 return null;
-            if (this.state.lastComment && this.state.lastComment2 && this.state.lastComment2.user && (this.state.lastComment2.user.id != this.props.userApp.currentUser.id))
+            if (this.state.lastComment && this.state.lastComment.user && (this.state.lastComment.user.id != this.props.userApp.currentUser.id))
                 return (<View style={{ marginTop: 10 }}>
                     {
                         !this.state.confirmed &&
