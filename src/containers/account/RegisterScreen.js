@@ -240,11 +240,12 @@ class RegisterScreen extends Component {
 
                 </Form>
               </View>
-              <TouchableOpacity style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center' }} onPress={this.register.bind(this)}>
-                <Text style={{ color: '#FFF', fontSize: 17 }}>{"TIẾP TỤC"}</Text>
-              </TouchableOpacity>
             </KeyboardAvoidingView>
           </ScrollView>
+          <TouchableOpacity style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center', marginBottom: 20 }} onPress={this.register.bind(this)}>
+            <Text style={{ color: '#FFF', fontSize: 17 }}>{"TIẾP TỤC"}</Text>
+          </TouchableOpacity>
+
           <DateTimePicker
             isVisible={this.state.toggelDateTimePickerVisible}
             onConfirm={newDate => {
