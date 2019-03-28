@@ -130,7 +130,10 @@ class CreateQuestionStep2Screen extends Component {
             this.props.navigation.navigate("login", {
                 nextScreen: {
                     screen: "createQuestionStep2",
-                    param: { fromlogin: true }
+                    param: {
+                        fromlogin: true,
+                        state: this.state
+                    }
                 }
             });
             return;
@@ -191,15 +194,17 @@ class CreateQuestionStep2Screen extends Component {
             <View style={{ flexDirection: 'row' }}>
                 {
                     selected &&
-                        <ScaleImage source={require("@images/new/ic_question_check_specialist.png")} width={20} />
+                    <ScaleImage source={require("@images/new/ic_question_check_specialist.png")} width={20} />
                 }
             </View>
         </TouchableOpacity></View>
     }
 
     componentWillReceiveProps(props) {
-        if (props.navigation.getParam("fromlogin", null)) {
-            this.createQuestion();
+        if (props.navigation.getParam("fromlogin", null) && props.navigation.getParam("state", null)) {
+            this.setState(props.navigation.getParam("state", null) || {}, () => {
+                this.createQuestion();
+            });
         }
     }
 

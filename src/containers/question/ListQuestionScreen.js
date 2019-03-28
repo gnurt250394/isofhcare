@@ -59,7 +59,7 @@ class ListQuestionScreen extends Component {
                 style={{ flex: 1 }}
                 title={"Tư vấn online"}
                 showFullScreen={true}
-                menuButton={this.props.userApp.isLogin && this.menuCreate()}
+                menuButton={this.props.userApp.isLogin ? this.menuCreate() : null}
                 isLoading={this.state.isLoading}
                 actionbarStyle={[this.props.userApp.isLogin ? {
                     backgroundColor: '#02C39A'
