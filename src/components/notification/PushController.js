@@ -143,6 +143,8 @@ class PushController extends Component {
         firebase.notifications().getInitialNotification().then(this.getInitialNotification.bind(this));
     }
     onNotification(notification) {
+        if (!this.props.userApp.isLogin)
+            return;
         console.log(notification);
         if (!notification || notification.show_in_foreground)
             return;
@@ -179,6 +181,8 @@ class PushController extends Component {
         }
     }
     openQuestion(id) {
+        if (!this.props.userApp.isLogin)
+        return;
         questionProvider.detail(id).then(s => {
             if (s && s.data) {
                 this.props.navigation.navigate("detailQuestion", { post: s.data })
