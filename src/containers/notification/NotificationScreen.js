@@ -223,7 +223,7 @@ class NotificationScreen extends Component {
                       return <Text style={{ marginLeft: 20, marginRight: 20, marginBottom: 10, marginTop: 20 }}>Ngày {notiTime.format('dd/MM/yyyy')}</Text>
                   }
                   else {
-                    let preNoti = this.state.data[0];
+                    let preNoti = this.state.data[index - 1];
                     let preNotiDate = preNoti.notification.createdDate.toDateObject('-');
                     if (preNotiDate.ddmmyyyy() != notiTime.ddmmyyyy())
                       return <Text style={{ marginLeft: 20, marginRight: 20, marginBottom: 10, marginTop: 20 }}>Ngày {notiTime.format('dd/MM/yyyy')}</Text>
