@@ -183,7 +183,7 @@ class LoginScreen extends Component {
 													},
 													messages: {
 														required: "Số điện thoại không được bỏ trống!",
-														phone: "Nhập SĐT không hợp lệ"
+														phone: "SĐT không hợp lệ"
 													}
 												}}
 
