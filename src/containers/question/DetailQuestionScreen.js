@@ -206,7 +206,7 @@ class DetailQuestionScreen extends Component {
 
     renderFormSendWithoutDiagnostic() {
         return (<View style={{ marginTop: 20 }}>
-            <Text style={{ color: 'rgb(155,155,155)' }}>Còn {(num => { let x = 3 - num; if (x < 0) return 0; return x }).call(this, this.state.post.post.numberCommentUser)} lượt hỏi</Text>
+            <Text style={{ color: 'rgb(155,155,155)' }}>Bạn còn {(num => { let x = 3 - num; if (x < 0) return 0; return x }).call(this, this.state.post.post.numberCommentUser)} lượt hỏi</Text>
             <View style={{
                 marginTop: 5,
                 flexDirection: 'row', borderRadius: 6, borderColor: "#cacaca", borderWidth: 1
