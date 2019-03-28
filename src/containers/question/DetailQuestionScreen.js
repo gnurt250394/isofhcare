@@ -198,33 +198,37 @@ class DetailQuestionScreen extends Component {
     }
 
     renderFormSendWithoutDiagnostic() {
-        return (<View style={{
-            marginTop: 20,
-            flexDirection: 'row', borderRadius: 6, borderColor: "#cacaca", borderWidth: 1
-        }}>
-            <Form ref={ref => this.form = ref} style={{ flex: 1, marginTop: 10 }}>
-                <TextField placeholder={"Viết trả lời"}
-                    inputStyle={[{ textAlignVertical: 'top', paddingLeft: 10, paddingBottom: 5, paddingRight: 10 }]}
-                    errorStyle={[styles.errorStyle, { marginLeft: 10, marginBottom: 10 }]}
-                    onChangeText={(s) => this.setState({ content: s })}
-                    value={this.state.content}
-                    validate={{
-                        rules: {
-                            required: true,
-                            maxlength: 2000
-                        },
-                        messages:
-                        {
-                            required: "Câu trả lời bắt buộc phải nhập",
-                            maxlength: "Không cho phép nhập quá 2000 ký tự"
-                        }
-                    }}
-                />
-            </Form>
-            <TouchableOpacity style={{ padding: 20 }} onPress={this.userSend.bind(this)}>
-                <ScaleImage width={22} source={this.state.content && this.state.content.trim().length > 0 ? require("@images/new/send2.png") : require("@images/new/send.png")} />
-            </TouchableOpacity>
-        </View>);
+        return (<View style={{ marginTop: 20 }}>
+            <Text style={{ color: 'rgb(155,155,155)' }}>Còn {(num => { let x = 3 - num; if (x < 0) return 0; return x }).call(this, this.state.post.post.numberCommentUser)} lượt hỏi</Text>
+            <View style={{
+                marginTop: 5,
+                flexDirection: 'row', borderRadius: 6, borderColor: "#cacaca", borderWidth: 1
+            }}>
+                <Form ref={ref => this.form = ref} style={{ flex: 1, marginTop: 10 }}>
+                    <TextField placeholder={"Viết trả lời"}
+                        inputStyle={[{ textAlignVertical: 'top', paddingLeft: 10, paddingBottom: 5, paddingRight: 10 }]}
+                        errorStyle={[styles.errorStyle, { marginLeft: 10, marginBottom: 10 }]}
+                        onChangeText={(s) => this.setState({ content: s })}
+                        value={this.state.content}
+                        validate={{
+                            rules: {
+                                required: true,
+                                maxlength: 2000
+                            },
+                            messages:
+                            {
+                                required: "Câu trả lời bắt buộc phải nhập",
+                                maxlength: "Không cho phép nhập quá 2000 ký tự"
+                            }
+                        }}
+                    />
+                </Form>
+                <TouchableOpacity style={{ padding: 20 }} onPress={this.userSend.bind(this)}>
+                    <ScaleImage width={22} source={this.state.content && this.state.content.trim().length > 0 ? require("@images/new/send2.png") : require("@images/new/send.png")} />
+                </TouchableOpacity>
+            </View>
+        </View>
+        );
     }
 
     renderViewReview() {
