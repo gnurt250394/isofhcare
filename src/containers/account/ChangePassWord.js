@@ -89,7 +89,7 @@ class ProfileScreen extends Component {
                                             minlength: 8
                                         },
                                         messages: {
-                                            required: "Mật khẩu cũ không được để trống",
+                                            required: "Mật khẩu cũ không được bỏ trống",
                                             minlength: "Mật khẩu dài ít nhất 8 ký tự"
                                         }
                                     }}
@@ -111,7 +111,7 @@ class ProfileScreen extends Component {
                                             minlength: 8
                                         },
                                         messages: {
-                                            required: "Mật khẩu không được để trống",
+                                            required: "Mật khẩu không được bỏ trống",
                                             minlength: "Mật khẩu dài ít nhất 8 ký tự"
                                         }
                                     }}
