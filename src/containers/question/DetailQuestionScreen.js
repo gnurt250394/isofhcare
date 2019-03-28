@@ -152,7 +152,11 @@ class DetailQuestionScreen extends Component {
             this.setState({ loadingComment: false });
             if (s.code == 0) {
                 if (s.data && s.data.data && s.data.data.length > 0) {
-                    this.setState({ dataComment: (s.data.data || []).reverse(), showComment: true });
+                    this.setState({ dataComment: (s.data.data || []).reverse(), showComment: true }, () => {
+                        setTimeout(() => {
+                            this.scrollView.scrollToEnd({ animated: true });
+                        }, 500);
+                    });
                 }
             }
         }).catch(e => {
