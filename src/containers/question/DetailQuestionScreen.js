@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { TouchableOpacity, ActivityIndicator } from 'react-native';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, Text, FlatList, Image, ScrollView, TextInput, KeyboardAvoidingView, Keyboard, StyleSheet, Platform } from 'react-native';
+import { View, Text, FlatList, Image, ScrollView, TextInput, KeyboardAvoidingView, Keyboard, StyleSheet, Platform, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import questionProvider from '@data-access/question-provider';
@@ -57,48 +57,12 @@ class DetailQuestionScreen extends Component {
             confirmed: false,
             rating: false,
             dataComment: [],
-            userCommentCount: 0
+            userCommentCount: 0,
+            commentCount: 0
         }
     }
     componentDidMount() {
-        questionProvider.detail(this.state.post.post.id).then(s => {
-            if (s.code == 0) {
-                let post = s.data;
-                let doctorComment;
-                try {
-                    doctorComment = JSON.parse(post.post.doctorComment);
-                    if (!doctorComment.user)
-                        doctorComment = null;
-                } catch (error) {
-
-                }
-
-                this.setState({ star: (post && post.post) ? (post.post.review || 0) : 0, post: s.data, showMore: post.post.status == 1 || post.post.status == 2 || post.post.status == 4 || post.post.status == 5, diagnose: post.post.diagnose, userCommentCount: post.post.numberCommentUser || 0, lastComment: doctorComment }, () => {
-                    commentProvider.search(this.state.post.post.id, 1, 1).then(s => {
-                        if (s.code == 0) {
-                            if (s.data && s.data.data && s.data.data.length > 0) {
-                                this.setState({ commentCount: s.data.total - 1, lastComment:s.data.data[0], lastInteractive: s.data.data[0].comment.createdDate.toDateObject('-') })
-                            }
-                        }
-                    }).catch(e => {
-                    })
-                });
-            }
-            else {
-                this.props.navigation.pop();
-            }
-        }).catch(e => {
-            this.props.navigation.pop();
-        });
-        if (this.state.post.assignee) {
-            questionProvider.getResultReview(this.state.post.assignee.id).then(s => {
-                if (s.code == 0) {
-                    this.setState({ ratedoctor: (s.data.ratingCount || s.data.ratingCout) || 0 });
-                }
-            }).catch(e => {
-
-            });
-        }
+        this.onRefresh();
     }
     renderImages(post) {
         var image = post.images;
@@ -188,7 +152,7 @@ class DetailQuestionScreen extends Component {
             this.setState({ loadingComment: false });
             if (s.code == 0) {
                 if (s.data && s.data.data && s.data.data.length > 0) {
-                    this.setState({ dataComment: s.data.data, showComment: true });
+                    this.setState({ dataComment: (s.data.data || []).reverse(), showComment: true });
                 }
             }
         }).catch(e => {
@@ -346,13 +310,12 @@ class DetailQuestionScreen extends Component {
                             </Text> : null
                     }
                     {
-                        this.state.post.post.otherContent &&
-                        <View>
+                        this.state.post.post.otherContent ? <View>
                             <Text style={styles.moreInfo}>Thông tin khác:</Text>
                             <Text style={{ fontSize: 16, marginTop: 6, color: '#00000064' }}>
                                 {this.state.post.post.otherContent}
                             </Text>
-                        </View>
+                        </View> : null
                     }
                     {
                         this.renderImages(this.state.post.post)
@@ -364,8 +327,7 @@ class DetailQuestionScreen extends Component {
     renderListComment() {
         if (this.state.showComment)
             return this.state.dataComment.map((item, index) => {
-                return !this.state.lastComment || item.comment.id != this.state.lastComment.comment.id ?
-                    this.showItemComment(item, index) : null
+                return this.showItemComment(item, index)
             });
         return null;
     }
@@ -432,51 +394,94 @@ class DetailQuestionScreen extends Component {
                     null
                 : null
     }
+    onRefresh() {
+        this.setState({ refreshing: true }, () => {
+            var promise = [
+                questionProvider.detail(this.state.post.post.id),
+                commentProvider.search(this.state.post.post.id, 1, 1)
+            ];
+            if (this.state.post.assignee) {
+                promise.push(questionProvider.getResultReview(this.state.post.assignee.id))
+            }
+            Promise.all(promise).then(values => {
+                let state = {};
+                if (values[0].code == 0) {
+                    let post = values[0].data;
+                    state.start = (post && post.post) ? (post.post.review || 0) : 0;
+                    state.post = post;
+                    state.showMore = post.post.status == 1 || post.post.status == 2 || post.post.status == 4 || post.post.status == 5;
+                    state.diagnose = post.post.diagnose;
+                    state.userCommentCount = post.post.numberCommentUser || 0;
+                }
+                if (values[1].code == 0) {
+                    state.commentCount = values[1].data.total - 1;
+                    state.lastComment = values[1].data.data[0];
+                    state.lastInteractive = values[1].data.data[0].comment.createdDate.toDateObject('-')
+                }
+                if (values.length >= 3) {
+                    if (values[2].code == 0) {
+                        state.ratedoctor = (values[2].data.ratingCount || values[2].data.ratingCout) || 0;
+                    }
+                }
+                state.refreshing = false;
+                this.setState(state);
+            }).catch(s => {
+                this.setState({ refreshing: false });
+            })
+        })
+    }
     render() {
         // const post = this.props.navigation.getParam("post", null);
         let { post } = this.state;
         return (
             <ActivityPanel style={{ flex: 1 }} title="Tư vấn online" showFullScreen={true} isLoading={this.state.isLoading}>
-                <ScrollView
-                    showsVerticalScrollIndicator={false}
-                    ref={(ref) => { this.scrollView = ref }} style={{ padding: 20 }} >
-                    <View style={{ flexDirection: "row", alignItems: 'center' }}>
-                        <View style={{ flex: 1 }} ><Text style={{ fontSize: 18, fontWeight: 'bold' }}>{post.author ? post.author.name : ""}</Text></View>
-                        <View><Text style={{ color: '#00000038' }}>{this.getTime(post.post.createdDate)}</Text></View>
-                    </View>
-                    <Text style={{ color: '#00000064', marginTop: 7 }}>
-                        {this.state.post.post.content}
-                    </Text>
-                    {
-                        this.showMoreInfo()
-                    }
-                    <View>
+                <View style={{ padding: 20, flex: 1 }}>
+                    <ScrollView
+                        refreshControl={<RefreshControl
+                            refreshing={this.state.refreshing}
+                            onRefresh={this.onRefresh.bind(this)}
+                        />}
+                        showsVerticalScrollIndicator={false}
+                        ref={(ref) => { this.scrollView = ref }}>
+                        <View style={{ flexDirection: "row", alignItems: 'center' }}>
+                            <View style={{ flex: 1 }} ><Text style={{ fontSize: 18, fontWeight: 'bold' }}>{post.author ? post.author.name : ""}</Text></View>
+                            <View><Text style={{ color: '#00000038' }}>{this.getTime(post.post.createdDate)}</Text></View>
+                        </View>
+                        <Text style={{ color: '#00000064', marginTop: 7 }}>
+                            {this.state.post.post.content}
+                        </Text>
                         {
-                            this.state.lastComment &&
-                            <View style={{ marginTop: 10 }}>
-                                {
-                                    this.showItemComment(this.state.lastComment, -1)
-                                }
-                                {
-                                    this.renderShowMoreComment()
-                                }
-                                {
-                                    this.renderListComment()
-                                }
-                                {
-                                    this.renderDiagnosticView()
-                                }
-                            </View>
+                            this.showMoreInfo()
                         }
-                    </View>
-                    {
-                        this.renderViewReview()
-                    }
-                    {
-                        this.renderStatusPost()
-                    }
-                    <View style={{ height: 100 }} />
-                </ScrollView>
+                        <View>
+                            {
+                                this.state.lastComment &&
+                                <View style={{ marginTop: 10 }}>
+                                    {
+                                        !this.state.showComment &&
+                                        this.showItemComment(this.state.lastComment, -1)
+                                    }
+                                    {
+                                        this.renderShowMoreComment()
+                                    }
+                                    {
+                                        this.renderListComment()
+                                    }
+                                    {
+                                        this.renderDiagnosticView()
+                                    }
+                                </View>
+                            }
+                        </View>
+                        {
+                            this.renderViewReview()
+                        }
+                        {
+                            this.renderStatusPost()
+                        }
+                        <View style={{ height: 100 }} />
+                    </ScrollView>
+                </View>
                 {
                     this.renderViewRating()
                 }

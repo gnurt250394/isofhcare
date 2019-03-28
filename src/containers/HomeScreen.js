@@ -116,7 +116,6 @@ class HomeScreen extends Component {
             <View style={{ flex: 1, backgroundColor: "#000" }} />
             <View style={{ flex: 1, backgroundColor: "#cac" }} />
             <Account showLoading={(loading, callback) => {
-              debugger;
               this.setState({ isLoading: loading }, callback);
             }} />
           </Swiper> */}
