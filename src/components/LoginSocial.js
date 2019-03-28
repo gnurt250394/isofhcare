@@ -62,7 +62,19 @@ class LoginSocial extends Component {
             } else {
                 let account = await RNAccountKit.getCurrentAccount();
                 if (account && account.phoneNumber) {
-                    this.props.navigation.navigate("register", { user: { avatar, phone: "0" + account.phoneNumber.number, token: token.token, socialType, socialId, fullname: name, avatar, email } })
+                    this.props.navigation.navigate("enterPassword", {
+                        user: {
+                            phone: "0" + account.phoneNumber.number,
+                            // email: this.state.email,
+                            fullname: name,
+                            dob: null,
+                            gender: 1,
+                            token: token.token,
+                            socialId: socialId,
+                            socialType: socialType
+                        },
+                        nextScreen: this.nextScreen
+                    });
                 } else {
                     snackbar.show("Xác minh số điện thoại không thành công", "danger");
                 }
