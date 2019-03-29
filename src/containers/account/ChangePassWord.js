@@ -98,7 +98,7 @@ class ProfileScreen extends Component {
                                 />
                                 <TextField
                                     getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-                                        placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.input_password}
+                                        placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Nhập mật khẩu mới"}
                                         secureTextEntry={true}
                                         onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
                                     onChangeText={s => {
@@ -111,7 +111,7 @@ class ProfileScreen extends Component {
                                             minlength: 8
                                         },
                                         messages: {
-                                            required: "Mật khẩu không được bỏ trống",
+                                            required: "Mật khẩu mới không được bỏ trống",
                                             minlength: "Mật khẩu dài ít nhất 8 ký tự"
                                         }
                                     }}
@@ -134,7 +134,7 @@ class ProfileScreen extends Component {
                                             minlength: 8
                                         },
                                         messages: {
-                                            required: "Xác nhận mật khẩu không được bỏ trống",
+                                            required: "Xác nhận mật khẩu mới không được bỏ trống",
                                             minlength: "Xác nhận mật khẩu dài ít nhất 8 kí tự",
                                             equalTo: 'Mật khẩu và xác nhận mật khẩu không giống nhau'
                                         }

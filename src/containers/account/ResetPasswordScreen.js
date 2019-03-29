@@ -101,7 +101,7 @@ class ResetPasswordScreen extends Component {
                       minlength: 8
                     },
                     messages: {
-                      required: "Mật khẩu không được bỏ trống!",
+                      required: "Mật khẩu không được bỏ trống",
                       maxlength: "Không được nhập quá 255 kí tự",
                       minlength: "Mật khẩu dài ít nhất 8 ký tự"
                     }
