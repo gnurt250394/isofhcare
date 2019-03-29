@@ -16,26 +16,18 @@ class ProfileScreen extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            isLoading: false,
-            showPass: true,
-            press: false,
-            user: this.props.userApp
+            isLoading: false
         }
     }
 
-    showPass() {
-        this.state.press === false ? this.setState({ showPass: false, press: true }) : this.setState({ showPass: true, press: false });
-    }
-
     change() {
-        const { user } = this.state;
         Keyboard.dismiss();
         if (!this.form.isValid()) {
             return;
         }
         connectionUtils.isConnected().then(s => {
             this.setState({ isLoading: true }, () => {
-                userProvider.changePassword(user.currentUser.id, this.state.passwordOld, this.state.passwordNew).then(s => {
+                userProvider.changePassword(this.props.userApp.currentUser.id, this.state.passwordOld, this.state.passwordNew).then(s => {
                     this.setState({ isLoading: false });
                     switch (s.code) {
                         case 0:
