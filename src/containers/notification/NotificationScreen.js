@@ -252,7 +252,7 @@ class NotificationScreen extends Component {
                 >
                   <ScaleImage source={require("@images/doctor.png")} width={47} />
                   <View style={{ paddingTop: 4, marginLeft: 19, flex: 1 }}>
-                    <Text style={{ fontSize: 14 }}>Tư vấn - đặt câu hỏi</Text>
+                    <Text style={{ fontSize: 14, fontWeight: 'bold' }}>Tư vấn - đặt câu hỏi</Text>
                     <Text
                       style={{ fontSize: 14 }}
                       numberOfLines={2}
