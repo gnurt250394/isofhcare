@@ -182,7 +182,7 @@ class LoginScreen extends Component {
 														phone: true
 													},
 													messages: {
-														required: "Số điện thoại không được bỏ trống!",
+														required: "Số điện thoại không được bỏ trống",
 														phone: "SĐT không hợp lệ"
 													}
 												}}
@@ -201,7 +201,7 @@ class LoginScreen extends Component {
 														required: true,
 													},
 													messages: {
-														required: "Mật khẩu không được bỏ trống!"
+														required: "Mật khẩu không được bỏ trống"
 													}
 												}}
 												inputStyle={styles.input}

@@ -124,7 +124,7 @@ class ResetPasswordScreen extends Component {
                       equalTo: this.state.password
                     },
                     messages: {
-                      required: "Xác nhận mật khẩu không được bỏ trống!",
+                      required: "Xác nhận mật khẩu không được bỏ trống",
                       equalTo: "Mật khẩu và xác nhận mật khẩu không giống nhau"
                     }
                   }}

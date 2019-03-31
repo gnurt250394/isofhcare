@@ -154,7 +154,7 @@ module.exports = {
       username_or_email_empty: "Tên đăng nhập hoặc email trống",
       account_blocked: "Tài khoản đã bị khóa. Vui lòng liên hệ với Admin của Isofhcare",
       username_or_password_incorrect:
-        "Số điện thoại hoặc mặt khẩu không đúng. Vui lòng thử lại!",
+        "Số điện thoại hoặc mặt khẩu không đúng. Vui lòng thử lại",
       send_mail_recovery_success:
         "Link xác nhận mật khẩu mới đã được gửi về email bạn đăng ký",
       send_sms_recovery_success:
@@ -175,11 +175,11 @@ module.exports = {
       not_found_account: "Không tìm thấy thông tin tài khoản",
       password_incorrect: "Mật khẩu không đúng",
       update_email_success:
-        "Thông tin xác nhận đã được gửi về Email mới của bạn. Vui lòng kiểm tra email để xác nhận!",
+        "Thông tin xác nhận đã được gửi về Email mới của bạn. Vui lòng kiểm tra email để xác nhận",
       update_email_same_current_email:
         "Email mới giống với email hiện tại của bạn",
       exist_account_with_this_email:
-        "Địa chỉ email này đã tồn tại. Bạn vui lòng kiểm tra lại!",
+        "Địa chỉ email này đã tồn tại. Bạn vui lòng kiểm tra lại",
       update_email_failed: "Cập nhật email không thành công",
       new_email_equal_current_current_email: "Email trùng với email hiện tại",
       update_avatar: "Cập nhật ảnh đại diện",

@@ -144,7 +144,7 @@ class EnterPasswordScreen extends Component {
                       minlength: 8
                     },
                     messages: {
-                      required: "Mật khẩu không được bỏ trống!",
+                      required: "Mật khẩu không được bỏ trống",
                       minlength: "Mật khẩu dài ít nhất 8 ký tự"
                     }
                   }}
@@ -166,7 +166,7 @@ class EnterPasswordScreen extends Component {
                       equalTo: this.state.password
                     },
                     messages: {
-                      required: "Xác nhận mật khẩu không được bỏ trống!",
+                      required: "Xác nhận mật khẩu không được bỏ trống",
                       equalTo: "Mật khẩu và xác nhận mật khẩu không giống nhau"
                     }
                   }}
