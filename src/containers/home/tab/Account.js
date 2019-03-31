@@ -135,19 +135,19 @@ class Account extends Component {
             this.renderViewUserNotLogin()
         }
         <TouchableOpacity style={[styles.itemMenu, { marginTop: 40 }]} onPress={() => {
-          snackbar.show("Chức năng đang phát triển");
+          this.props.navigation.navigate("emptyScreen", { title: "Kích hoạt ví" });
         }}>
           <Text style={[styles.itemText, { fontWeight: 'bold' }]}>Kích hoạt ví IsofhCare</Text>
           <ScaledImage source={require("@images/new/ic_menu_wallet.png")} width={24} height={24} />
         </TouchableOpacity>
         <TouchableOpacity style={[styles.itemMenu]} onPress={() => {
-          snackbar.show("Chức năng đang phát triển");
+          this.props.navigation.navigate("emptyScreen", { title: "Y bạ điện tử" });
         }}>
           <Text style={styles.itemText}>Y bạ điện tử</Text>
           <ScaledImage source={require("@images/new/ic_menu_ehealth.png")} width={24} height={24} />
         </TouchableOpacity>
         <TouchableOpacity style={[styles.itemMenu]} onPress={() => {
-          snackbar.show("Chức năng đang phát triển");
+          this.props.navigation.navigate("emptyScreen", { title: "Lịch khám" });
         }}>
           <Text style={styles.itemText}>Lịch khám</Text>
           <ScaledImage source={require("@images/new/ic_menu_list_booking.png")} width={24} height={24} />
