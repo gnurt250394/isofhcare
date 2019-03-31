@@ -1,6 +1,10 @@
 const server_url = 'http://api.test.isofhcare.com:8382'; //dev
 // const server_url = 'http://api.test.isofhcare.com:8483'; //demo
 // const server_url = 'https://api.isofhcare.com'; //release
+import axios from 'axios'
+
+const httpClient = axios.create();
+httpClient.defaults.timeout = 5000;
 
 String.prototype.absoluteUrl = String.prototype.absolute || function (defaultValue) {
     var _this = this.toString();
@@ -73,8 +77,8 @@ module.exports = {
                 Accept: 'application/json',
                 'Content-Type': 'multipart/form-data',
                 'Authorization': this.auth,
-                'MobileMode':'user'
-                // 'MobileMode':'vender',                
+                // 'MobileMode':'user',
+                'MobileMode': 'vender',
             }, data, (s, e) => {
                 if (s) {
                     s.json().then(val => {
@@ -98,51 +102,59 @@ module.exports = {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
                 'Authorization': this.auth,
-                'MobileMode':'user'//,
-                // 'MobileMode':'vender',        
-            }, dataBody, (s, e) => {
-                if (s) {
-                    s.json().then(val => {
-                        console.log(val);
-                        if (funRes)
-                            funRes(val);
-                    });
-                }
-                if (e) {
-                    if (funRes)
+                // 'MobileMode':'user',
+                'MobileMode': 'vender',
+                "timeout": 0
+            }, dataBody).then(s => {
+                if (funRes) {
+                    if (s.data) {
+                        funRes(s.data);
+                    } else {
                         funRes(undefined, e);
+                    }
                 }
+            }).catch(e => {
+                if (funRes)
+                    funRes(undefined, e);
             });
     },
-    requestFetch(methodType, url, header, body, funRes) {
+    requestFetch(methodType, url, headers, body) {
         let data = {
             methodType,
             url: url.getServiceUrl(),
-            header,
+            headers,
             body
         };
-        console.log(data);
-        let fetchParam = {
-            method: methodType,
-            headers: header,
-        }
-
-        if (methodType.toLowerCase() !== "get") {
-            fetchParam.body = body;
-
-        }
-        return fetch(url, fetchParam).then((json) => {
-            if (!json.ok) {
-                if (funRes)
-                    funRes(undefined, json);
+        console.log(JSON.stringify(data));
+        return new Promise((resolve, reject) => {
+            let promise1 = null;
+            headers.timeout=1
+            switch (methodType) {
+                case "post":
+                    promise1 = httpClient .post(url.getServiceUrl().toString(), body, { headers });
+                    break;
+                case "get":
+                    promise1 = httpClient .get(url.getServiceUrl().toString(), { headers });
+                    break;
+                case "put":
+                    promise1 = httpClient .put(url.getServiceUrl(), body, { headers });
+                    break;
+                case "delete":
+                    promise1 = httpClient .delete(url.getServiceUrl(), { headers });
+                    break;
             }
-            else
-                if (funRes)
-                    funRes(json);
-        }).catch((e) => {
-            console.log(e);
-            if (funRes)
-                funRes(undefined, e);
+
+            promise1.then(json => {
+                console.log(json);
+                if (json.status != 200) {
+                    reject(json);
+                }
+                else
+                    resolve(json);
+            }).catch((e) => {
+                console.log(e);
+                reject(e);
+            });
         });
     }
 }
