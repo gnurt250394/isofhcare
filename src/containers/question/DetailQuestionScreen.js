@@ -104,7 +104,7 @@ class DetailQuestionScreen extends Component {
                             content: "",
                             writeQuestion: false,
                             userCommentCount: this.state.userCommentCount + 1,
-                            listComment: [...listComment]
+                            dataComment: [...listComment]
                         });
                         snackbar.show("Bạn đã gửi ý kiến thành công", "success");
                     }
