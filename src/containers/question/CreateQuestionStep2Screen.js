@@ -189,11 +189,54 @@ class CreateQuestionStep2Screen extends Component {
     renderItemDisease(value, text, left) {
         let selected = (this.state.disease & value) == value;
         return <View style={{ height: 50 }}><TouchableOpacity onPress={this.selectDisease.bind(this, value)} style={{ flexDirection: 'row', alignItems: 'center', borderWidth: selected ? 2 : 1, borderColor: selected ? '#02C39A' : 'rgba(151,151,151,0.36)', padding: 10, marginTop: 6, marginRight: left ? 5 : 0, marginLeft: !left ? 5 : 0, borderRadius: 6 }}>
-            <Text style={{ flex: 1 }} numberOfLines={1} ellipsizeMode='tail'>{text}</Text>
+            {
+                ((disease, value, selected) => {
+                    if (selected) {
+                        switch (value) {
+                            case 1:
+                                return <ScaleImage source={require("@images/new/timmach1.png")} height={18} />
+                            case 4:
+                                return <ScaleImage source={require("@images/new/tieuduong1.png")} height={18} />
+                            case 16:
+                                return <ScaleImage source={require("@images/new/hohap1.png")} height={18} />
+                            case 64:
+                                return <ScaleImage source={require("@images/new/xuongkhop1.png")} height={18} />
+                            case 2:
+                                return <ScaleImage source={require("@images/new/momau1.png")} height={18} />
+                            case 8:
+                                return <ScaleImage source={require("@images/new/hiv1.png")} height={18} />
+                            case 32:
+                                return <ScaleImage source={require("@images/new/daday1.png")} height={18} />
+                            case 128:
+                                return <ScaleImage source={require("@images/new/thieuchat1.png")} height={18} />
+                        }
+                    } else {
+                        switch (value) {
+                            case 1:
+                                return <ScaleImage source={require("@images/new/timmach0.png")} height={18} />
+                            case 4:
+                                return <ScaleImage source={require("@images/new/tieuduong0.png")} height={18} />
+                            case 16:
+                                return <ScaleImage source={require("@images/new/hohap0.png")} height={18} />
+                            case 64:
+                                return <ScaleImage source={require("@images/new/xuongkhop0.png")} height={18} />
+                            case 2:
+                                return <ScaleImage source={require("@images/new/momau0.png")} height={18} />
+                            case 8:
+                                return <ScaleImage source={require("@images/new/hiv0.png")} height={18} />
+                            case 32:
+                                return <ScaleImage source={require("@images/new/daday0.png")} height={18} />
+                            case 128:
+                                return <ScaleImage source={require("@images/new/thieuchat0.png")} height={18} />
+                        }
+                    }
+                }).call(this, this.state.disease, value, selected)
+            }
+            <Text style={{ flex: 1, marginHorizontal: 5, fontSize: 13, fontWeight: '500' }} numberOfLines={1} ellipsizeMode='tail'>{text}</Text>
             <View style={{ flexDirection: 'row' }}>
                 {
                     selected &&
-                    <ScaleImage source={require("@images/new/ic_question_check_specialist.png")} width={20} />
+                    <ScaleImage source={require("@images/new/ic_question_check_specialist.png")} width={18} />
                 }
             </View>
         </TouchableOpacity></View>
@@ -288,12 +331,12 @@ class CreateQuestionStep2Screen extends Component {
                                     errorStyle={[styles.errorStyle, { marginLeft: 10, marginBottom: 10 }]}
                                     autoCorrect={false} />
                             </Form>
-                            <Text style={[styles.label, { marginTop: 20 }]}>Tải ảnh lên <Text style={{ fontStyle: 'italic', fontWeight: 'normal' }}>(Tối đa 5 ảnh)</Text></Text>
+                            <Text style={[styles.label, { marginTop: 20 }]}>Tải ảnh lên</Text>
                             <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 10 }}>
                                 {
                                     this.state.imageUris.map((item, index) => <View key={index} style={{ margin: 2, width: 88, height: 88, position: 'relative' }}>
-                                        <View style={{ marginTop: 8, width: 80, height: 80, borderColor: '#00000020', borderWidth: 1 }}>
-                                            <Image source={{ uri: item.uri }} resizeMode="cover" style={{ width: 80, height: 80, backgroundColor: '#000' }} />
+                                        <View style={{ marginTop: 8, width: 80, height: 80, borderColor: '#00000020', borderWidth: 1, borderRadius: 6 }}>
+                                            <Image source={{ uri: item.uri }} resizeMode="cover" style={{ width: 80, height: 80, backgroundColor: '#000', borderRadius: 6 }} />
                                             {
                                                 item.error ?
                                                     <View style={{ position: 'absolute', left: 20, top: 20 }} >
@@ -306,16 +349,15 @@ class CreateQuestionStep2Screen extends Component {
                                                         : null
                                             }
                                         </View>
-                                        <TouchableOpacity onPress={this.removeImage.bind(this, index)} style={{ position: 'absolute', top: 0, right: 0, backgroundColor: '#00000070', padding: 1, borderRadius: 8, width: 16, height: 16, alignItems: 'center', justifyContent: 'center' }} >
-                                            <ScaleImage source={require("@images/icclose.png")} width={8} />
+                                        <TouchableOpacity onPress={this.removeImage.bind(this, index)} style={{ position: 'absolute', top: 0, right: 0 }} >
+                                            <ScaleImage source={require("@images/new/ic_close.png")} width={16} />
                                         </TouchableOpacity>
                                     </View>)
                                 }
                                 {
                                     !this.state.imageUris || this.state.imageUris.length < 5 ?
-                                        <TouchableOpacity onPress={this.selectImage.bind(this)} style={{ marginTop: 10, width: 80, height: 80, borderColor: '#00000020', borderWidth: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                            <ScaleImage width={40} source={require("@images/ic_add_image.png")} />
-                                            <Text>Thêm ảnh</Text>
+                                        <TouchableOpacity onPress={this.selectImage.bind(this)} style={{ marginTop: 10, width: 80, height: 80 }}>
+                                            <ScaleImage width={80} source={require("@images/new/ic_new_image.png")} />
                                         </TouchableOpacity> : null
                                 }
                             </View>
