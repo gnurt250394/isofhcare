@@ -166,7 +166,7 @@ class DetailQuestionScreen extends Component {
             this.setState({ loadingComment: false });
         })
     }
-    showItemComment(item, key) {
+    showItemComment(item, key, size) {
         if (!item.user)
             return null;
         const source = item.user && item.user.avatar ? { uri: item.user.avatar.absoluteUrl() } : require("@images/new/user.png");
@@ -193,7 +193,10 @@ class DetailQuestionScreen extends Component {
                 </View>
             }
             <View style={{ position: 'relative', marginTop: 10 }}>
-                <Dash style={{ width: 1, position: 'absolute', top: 0, bottom: 7, flexDirection: 'column', marginLeft: 25 }} dashStyle={{ backgroundColor: '#cacaca' }} />
+                {
+                    (key != -1 && key != size - 1) &&
+                    < Dash style={{ width: 1, position: 'absolute', top: 0, bottom: 7, flexDirection: 'column', marginLeft: 25 }} dashStyle={{ backgroundColor: '#cacaca' }} />
+                }
                 <View style={{ marginLeft: 37, marginBottom: 20 }}>
                     <Text style={{ color: '#00000038' }}>
                         {this.getTime(item.comment.createdDate)}
@@ -338,7 +341,7 @@ class DetailQuestionScreen extends Component {
     renderListComment() {
         if (this.state.showComment)
             return this.state.dataComment.map((item, index) => {
-                return this.showItemComment(item, index)
+                return this.showItemComment(item, index, this.state.dataComment.length)
             });
         return null;
     }
