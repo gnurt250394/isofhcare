@@ -1,3 +1,4 @@
+let isofhcare_service = 'isofh-care/';
 module.exports = {
   fbApplicationId: "457683741386685",
   username: "Tên tài khoản",
@@ -216,87 +217,86 @@ module.exports = {
   },
   api: {
     notification: {
-      search: "notification/search",
-      get_detail: "notification/get-detail",
-      delete: "notification/delete/all",
-      set_read: "notification/active-watched",
-      get_unread_notification_count:
-        "notification/count-notification"
+      search: isofhcare_service + "notification/search",
+      get_detail: isofhcare_service + "notification/get-detail",
+      delete: isofhcare_service + "notification/delete/all",
+      set_read: isofhcare_service + "notification/active-watched",
+      get_unread_notification_count: isofhcare_service + "notification/count-notification"
     },
     location: {
-      getListCountry: "profile/get-countries",
-      getListProvince: "province/get-all",
-      getListDistrict: "profile/get-districts",
-      getListZone: "profile/get-zone-by-district"
+      getListCountry: isofhcare_service + "profile/get-countries",
+      getListProvince: isofhcare_service + "province/get-all",
+      getListDistrict: isofhcare_service + "profile/get-districts",
+      getListZone: isofhcare_service + "profile/get-zone-by-district"
     },
     upload: {
-      image: "image/upload"
+      image: isofhcare_service + "image/upload"
     },
     user: {
-      login: "user/login",
-      login_social: "user/login-social",
-      logout: "user/logout",
-      register: "user/register",
-      forgot_password: "user/forget-password",
-      update: "user/update",
-      change_password: "user/update-password",
-      refresh_token: "user/refresh-token",
-      change_email: "user/update-email",
-      confirm_code: "user/confirm-code",
-      get_detail: "user/get-detail",
-      refresh_password_by_token: "user/refresh-password-by-token"
+      login: isofhcare_service + "user/login",
+      login_social: isofhcare_service + "user/login-social",
+      logout: isofhcare_service + "user/logout",
+      register: isofhcare_service + "user/register",
+      forgot_password: isofhcare_service + "user/forget-password",
+      update: isofhcare_service + "user/update",
+      change_password: isofhcare_service + "user/update-password",
+      refresh_token: isofhcare_service + "user/refresh-token",
+      change_email: isofhcare_service + "user/update-email",
+      confirm_code: isofhcare_service + "user/confirm-code",
+      get_detail: isofhcare_service + "user/get-detail",
+      refresh_password_by_token: isofhcare_service + "user/refresh-password-by-token"
     },
     keyvalue: {
-      get: "key-value/get-value",
-      set: "key-value/set-value"
+      get: isofhcare_service + "key-value/get-value",
+      set: isofhcare_service + "key-value/set-value"
     },
     drug: {
-      search: "drug/search",
-      update_view_count: "drug/update-view-count"
+      search: isofhcare_service + "drug/search",
+      update_view_count: isofhcare_service + "drug/update-view-count"
     },
     facility: {
-      search: "facility/search",
-      update: "facility/update",
-      create: "facility/create",
-      search_by_query: "facility/search-by-query",
-      review: "facility/review",
-      search_from_drug: "facility/search-from-drug"
+      search: isofhcare_service + "facility/search",
+      update: isofhcare_service + "facility/update",
+      create: isofhcare_service + "facility/create",
+      search_by_query: isofhcare_service + "facility/search-by-query",
+      review: isofhcare_service + "facility/review",
+      search_from_drug: isofhcare_service + "facility/search-from-drug"
     },
     disease: {
-      search: "disease/search",
-      update_view_count: "disease/update-view-count",
-      get_detail: "disease/get-detail",
-      search_by_disease_symptom: "disease/search-by-disease-symptom",
-      search_disease_by_symptom: "disease/search-disease-by-symptom"
+      search: isofhcare_service + "disease/search",
+      update_view_count: isofhcare_service + "disease/update-view-count",
+      get_detail: isofhcare_service + "disease/get-detail",
+      search_by_disease_symptom: isofhcare_service + "disease/search-by-disease-symptom",
+      search_disease_by_symptom: isofhcare_service + "disease/search-disease-by-symptom"
     },
     symptom: {
-      search: "symptom/search"
+      search: isofhcare_service + "symptom/search"
     },
     specialist: {
-      search: "specialist/search",
-      update_view_count: "specialist/update-view-count"
+      search: isofhcare_service + "specialist/search",
+      update_view_count: isofhcare_service + "specialist/update-view-count"
     },
     booking: {
-      get_list_booking: "booking/get-all-patient-history-by-user",
-      get_detail_patient_historyid: "booking/get-detail-patient-history",
-      get_result_patient_historyid: "booking/get-result-patient-history",
-      delete: "booking/delete"
+      get_list_booking: isofhcare_service + "booking/get-all-patient-history-by-user",
+      get_detail_patient_historyid: isofhcare_service + "booking/get-detail-patient-history",
+      get_result_patient_historyid: isofhcare_service + "booking/get-result-patient-history",
+      delete: isofhcare_service + "booking/delete"
     },
     question: {
-      create: "post/create",
-      search: "post/search",
-      like: "post/like",
-      detail: "post/get-detail",
-      review: "post/review",
-      get_result_review: "post/get-result-review"
+      create: isofhcare_service + "post/create",
+      search: isofhcare_service + "post/search",
+      like: isofhcare_service + "post/like",
+      detail: isofhcare_service + "post/get-detail",
+      review: isofhcare_service + "post/review",
+      get_result_review: isofhcare_service + "post/get-result-review"
     },
     comment: {
-      create: "comment/create",
-      search: "comment/search"
+      create: isofhcare_service + "comment/create",
+      search: isofhcare_service + "comment/search"
     },
     advertise: {
-      create: "advertise/create",
-      search: "advertise/search"
+      create: isofhcare_service + "advertise/create",
+      search: isofhcare_service + "advertise/search"
     }
   }
 };
