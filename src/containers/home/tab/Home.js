@@ -41,7 +41,7 @@ class Home extends Component {
   }
   renderAds() {
     return (<View style={{ padding: 12 }}>
-      <Text style={{ marginBottom: 5, color: 'rgb(74,74,74)' }}>Ưu đãi</Text>
+      <Text style={{ marginBottom: 5, color: 'rgb(74,74,74)', fontWeight: 'bold' }}>Ưu đãi</Text>
       <Carousel
         enableSnap={false}
         loop={true}

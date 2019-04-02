@@ -460,55 +460,63 @@ class DetailQuestionScreen extends Component {
     render() {
         // const post = this.props.navigation.getParam("post", null);
         let { post } = this.state;
+        if (!post.post) {
+            snackbar.show("Bài viết không tồn tại", "danger");
+            this.props.navigation.pop();
+        }
+
         return (
             <ActivityPanel style={{ flex: 1 }} title="Tư vấn online" showFullScreen={true} isLoading={this.state.isLoading}>
-                <View style={{ padding: 20, flex: 1 }}>
-                    <ScrollView
-                        refreshControl={<RefreshControl
-                            refreshing={this.state.refreshing}
-                            onRefresh={this.onRefresh.bind(this)}
-                        />}
-                        showsVerticalScrollIndicator={false}
-                        ref={(ref) => { this.scrollView = ref }}>
-                        <View style={{ flexDirection: "row", alignItems: 'center' }}>
-                            <View style={{ flex: 1 }} ><Text style={{ fontSize: 18, fontWeight: 'bold' }}>{post.author ? post.author.name : ""}</Text></View>
-                            <View><Text style={{ color: '#00000038' }}>{this.getTime(post.post.createdDate)}</Text></View>
-                        </View>
-                        <Text style={{ color: '#00000064', marginTop: 7 }}>
-                            {this.state.post.post.content}
-                        </Text>
-                        {
-                            this.showMoreInfo()
-                        }
-                        <View>
+                {
+                    post.post &&
+                    <View style={{ padding: 20, flex: 1 }}>
+                        <ScrollView
+                            refreshControl={<RefreshControl
+                                refreshing={this.state.refreshing}
+                                onRefresh={this.onRefresh.bind(this)}
+                            />}
+                            showsVerticalScrollIndicator={false}
+                            ref={(ref) => { this.scrollView = ref }}>
+                            <View style={{ flexDirection: "row", alignItems: 'center' }}>
+                                <View style={{ flex: 1 }} ><Text style={{ fontSize: 18, fontWeight: 'bold' }}>{post.author ? post.author.name : ""}</Text></View>
+                                <View><Text style={{ color: '#00000038' }}>{this.getTime(post.post.createdDate)}</Text></View>
+                            </View>
+                            <Text style={{ color: '#00000064', marginTop: 7 }}>
+                                {this.state.post.post.content}
+                            </Text>
                             {
-                                this.state.lastComment &&
-                                <View style={{ marginTop: 10 }}>
-                                    {
-                                        !this.state.showComment &&
-                                        this.showItemComment(this.state.lastComment, -1)
-                                    }
-                                    {
-                                        this.renderShowMoreComment()
-                                    }
-                                    {
-                                        this.renderListComment()
-                                    }
-                                    {
-                                        this.renderDiagnosticView()
-                                    }
-                                </View>
+                                this.showMoreInfo()
                             }
-                        </View>
-                        {
-                            this.renderViewReview()
-                        }
-                        {
-                            this.renderStatusPost()
-                        }
-                        <View style={{ height: 100 }} />
-                    </ScrollView>
-                </View>
+                            <View>
+                                {
+                                    this.state.lastComment &&
+                                    <View style={{ marginTop: 10 }}>
+                                        {
+                                            !this.state.showComment &&
+                                            this.showItemComment(this.state.lastComment, -1)
+                                        }
+                                        {
+                                            this.renderShowMoreComment()
+                                        }
+                                        {
+                                            this.renderListComment()
+                                        }
+                                        {
+                                            this.renderDiagnosticView()
+                                        }
+                                    </View>
+                                }
+                            </View>
+                            {
+                                this.renderViewReview()
+                            }
+                            {
+                                this.renderStatusPost()
+                            }
+                            <View style={{ height: 100 }} />
+                        </ScrollView>
+                    </View>
+                }
                 {
                     this.renderViewRating()
                 }
@@ -518,6 +526,7 @@ class DetailQuestionScreen extends Component {
                 }
                 <DialogBox ref={dialogbox => { this.dialogbox = dialogbox }} />
                 <ImagePicker ref={ref => this.imagePicker = ref} />
+
             </ActivityPanel >
         );
     }
