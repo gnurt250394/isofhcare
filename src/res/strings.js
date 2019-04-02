@@ -178,8 +178,7 @@ module.exports = {
         "Thông tin xác nhận đã được gửi về Email mới của bạn. Vui lòng kiểm tra email để xác nhận",
       update_email_same_current_email:
         "Email mới giống với email hiện tại của bạn",
-      exist_account_with_this_email:
-        "Địa chỉ email này đã tồn tại. Bạn vui lòng kiểm tra lại",
+      exist_account_with_this_phone: "SĐT đã được sử dụng trong hệ thống. Vui lòng sử dụng SĐT khác",
       update_email_failed: "Cập nhật email không thành công",
       new_email_equal_current_current_email: "Email trùng với email hiện tại",
       update_avatar: "Cập nhật ảnh đại diện",
