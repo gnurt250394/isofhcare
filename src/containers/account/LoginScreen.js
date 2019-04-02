@@ -114,9 +114,9 @@ class LoginScreen extends Component {
 						snackbar.show(constants.msg.user.account_blocked, "danger");
 						return;
 				}
-			}).then(e => {
+			}).catch(e => {
 				this.setState({ isLoading: false });
-				// snackbar.show(constants.msg.error_occur);
+				snackbar.show(constants.msg.error_occur, "danger");
 			});
 		})
 

@@ -77,19 +77,19 @@ module.exports = {
                 Accept: 'application/json',
                 'Content-Type': 'multipart/form-data',
                 'Authorization': this.auth,
-                // 'MobileMode':'user',
-                'MobileMode': 'vender',
-            }, data, (s, e) => {
-                if (s) {
-                    s.json().then(val => {
-                        if (funRes)
-                            funRes(val);
-                    });
-                }
-                if (e) {
-                    if (funRes)
+                'MobileMode':'user',
+                // 'MobileMode': 'vender',
+            }, data).then(s => {
+                if (funRes) {
+                    if (s.data) {
+                        funRes(s.data);
+                    } else {
                         funRes(undefined, e);
+                    }
                 }
+            }).catch(e => {
+                if (funRes)
+                    funRes(undefined, e);
             });
     },
     requestApi(methodType, url, body, funRes) {
@@ -102,9 +102,8 @@ module.exports = {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
                 'Authorization': this.auth,
-                // 'MobileMode':'user',
-                'MobileMode': 'vender',
-                "timeout": 0
+                'MobileMode':'user',
+                // 'MobileMode': 'vender'
             }, dataBody).then(s => {
                 if (funRes) {
                     if (s.data) {
@@ -128,19 +127,18 @@ module.exports = {
         console.log(JSON.stringify(data));
         return new Promise((resolve, reject) => {
             let promise1 = null;
-            headers.timeout=1
             switch (methodType) {
                 case "post":
-                    promise1 = httpClient .post(url.getServiceUrl().toString(), body, { headers });
+                    promise1 = httpClient.post(url.getServiceUrl().toString(), body, { headers });
                     break;
                 case "get":
-                    promise1 = httpClient .get(url.getServiceUrl().toString(), { headers });
+                    promise1 = httpClient.get(url.getServiceUrl().toString(), { headers });
                     break;
                 case "put":
-                    promise1 = httpClient .put(url.getServiceUrl(), body, { headers });
+                    promise1 = httpClient.put(url.getServiceUrl().toString(), body, { headers });
                     break;
                 case "delete":
-                    promise1 = httpClient .delete(url.getServiceUrl(), { headers });
+                    promise1 = httpClient.delete(url.getServiceUrl().toString(), { headers });
                     break;
             }
 

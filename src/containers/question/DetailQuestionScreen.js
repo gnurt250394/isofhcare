@@ -239,7 +239,6 @@ class DetailQuestionScreen extends Component {
     }
 
     renderViewReview() {
-        debugger;
         if (this.state.post.post.status == 3) {
             if (this.state.userCommentCount == 3)
                 return null;
