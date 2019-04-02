@@ -42,7 +42,9 @@ class ListQuestion extends Component {
             refreshing: page == 1,
             loadMore: page != 1
         })
-        questionProvider.search(this.props.userApp.isLogin ? this.props.userApp.currentUser.id : "", page, size, this.props.isAnswered).then(s => {
+        questionProvider.search(this.props.userApp.isLogin ? this.props.userApp.currentUser.id : "", page, size, this.props.isAnswered
+            , 6 //createdDate des
+        ).then(s => {
             this.setState({
                 loading: false,
                 refreshing: false,
