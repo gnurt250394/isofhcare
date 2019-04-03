@@ -193,7 +193,7 @@ class CreateQuestionStep1Screen extends Component {
                       }}
                       value={this.state.age}
                       style={{ marginTop: 6 }}
-                      inputStyle={[styles.textinput, { width: 100, lineHeight: 20, paddingTop: 0, paddingLeft: 17, paddingRight: 17, paddingBottom: Platform.OS == 'ios' ? 15 : 8, fontWeight: '600' }]}
+                      inputStyle={[styles.textinput, { width: 100,  paddingTop: 10, paddingLeft: 17, paddingRight: 17, paddingBottom: Platform.OS == 'ios' ? 8 : 8, fontWeight: '600' }]}
                       onChangeText={s => {
                         this.setState({ age: s });
                       }}
