@@ -216,10 +216,12 @@ class DetailQuestionScreen extends Component {
             }}>
                 <Form ref={ref => this.form = ref} style={{ flex: 1, marginTop: 10 }}>
                     <TextField placeholder={"Viết trả lời"}
-                        inputStyle={[{ textAlignVertical: 'top', paddingLeft: 10, paddingBottom: 5, paddingRight: 10 }]}
+                        inputStyle={[{ maxHeight: 200, textAlignVertical: 'top', paddingLeft: 10, paddingBottom: 5, paddingRight: 10 }]}
                         errorStyle={[styles.errorStyle, { marginLeft: 10, marginBottom: 10 }]}
                         onChangeText={(s) => this.setState({ content: s })}
                         value={this.state.content}
+                        multiline={true}
+                        hideError={true}
                         validate={{
                             rules: {
                                 required: true,
@@ -231,12 +233,21 @@ class DetailQuestionScreen extends Component {
                                 maxlength: "Không cho phép nhập quá 2000 ký tự"
                             }
                         }}
+                        onValidate={(valid, messages) => {
+                            if (valid) {
+                                this.setState({ contentError: "" });
+                            }
+                            else {
+                                this.setState({ contentError: messages });
+                            }
+                        }}
                     />
                 </Form>
                 <TouchableOpacity style={{ padding: 20 }} onPress={this.userSend.bind(this)}>
                     <ScaleImage width={22} source={this.state.content && this.state.content.trim().length > 0 ? require("@images/new/send2.png") : require("@images/new/send.png")} />
                 </TouchableOpacity>
             </View>
+            <Text style={[styles.errorStyle]}>{this.state.contentError}</Text>
         </View>
         );
     }
