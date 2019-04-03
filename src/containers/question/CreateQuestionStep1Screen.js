@@ -165,7 +165,6 @@ class CreateQuestionStep1Screen extends Component {
                   onChangeText={s => {
                     this.setState({ content: s });
                   }}
-                  placeholder={"Nội dung"}
                   value={this.state.content}
                   autoCapitalize={"none"}
                   returnKeyType={"next"}

@@ -335,8 +335,8 @@ class CreateQuestionStep2Screen extends Component {
                             <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 10 }}>
                                 {
                                     this.state.imageUris.map((item, index) => <View key={index} style={{ margin: 2, width: 88, height: 88, position: 'relative' }}>
-                                        <View style={{ marginTop: 8, width: 80, height: 80, borderColor: '#00000020', borderWidth: 1, borderRadius: 6 }}>
-                                            <Image source={{ uri: item.uri }} resizeMode="cover" style={{ width: 80, height: 80, backgroundColor: '#000', borderRadius: 6 }} />
+                                        <View style={{ marginTop: 8, width: 80, height: 80 }}>
+                                            <Image source={{ uri: item.uri }} resizeMode="cover" style={{ width: 80, height: 80, borderRadius: 8 }} />
                                             {
                                                 item.error ?
                                                     <View style={{ position: 'absolute', left: 20, top: 20 }} >
