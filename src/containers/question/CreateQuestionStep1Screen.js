@@ -18,6 +18,7 @@ import KeyboardSpacer from "react-native-keyboard-spacer";
 import Form from "mainam-react-native-form-validate/Form";
 import TextField from "mainam-react-native-form-validate/TextField";
 import dataCacheProvider from '@data-access/datacache-provider';
+import Field from "../../../node_modules/mainam-react-native-form-validate/Field";
 
 const padding = Platform.select({
   ios: 7,
@@ -173,71 +174,77 @@ class CreateQuestionStep1Screen extends Component {
                   multiline={true}
                   autoCorrect={false}
                 />
-
-                <Form>
-                  <Text style={[styles.label, { marginTop: 15 }]}>Tuổi</Text>
-                  <TextField
-                    validate={{
-                      rules: {
-                        min: 1,
-                        max: 150,
-                        number: true
-                      },
-                      messages: {
-                        min: "Tuổi bệnh nhân cần lớn hơn 1",
-                        max: "Tuổi bệnh nhân cần nhỏ hơn 150",
-                        number: "Tuổi không hợp lệ"
-                      }
-                    }}
-                    value={this.state.age}
-                    style={{ marginTop: 6 }}
-                    inputStyle={[styles.textinput, { lineHeight: 20, paddingTop: 0, paddingLeft: 17, paddingRight: 17, paddingBottom: Platform.OS == 'ios' ? 15 : 8, fontWeight: '600' }]}
-                    onChangeText={s => {
-                      this.setState({ age: s });
-                    }}
-                    returnKeyType={"next"}
-                    keyboardType="numeric"
-                    errorStyle={styles.errorStyle}
-                  />
-                </Form>
+                <Field style={{ flexDirection: 'row', marginTop: 15 }}>
+                  <Field>
+                    <Text style={[styles.label]}>Tuổi</Text>
+                    <TextField
+                      hideError={true}
+                      validate={{
+                        rules: {
+                          min: 1,
+                          max: 150,
+                          number: true
+                        },
+                        messages: {
+                          min: "Tuổi bệnh nhân cần lớn hơn 1",
+                          max: "Tuổi bệnh nhân cần nhỏ hơn 150",
+                          number: "Tuổi không hợp lệ"
+                        }
+                      }}
+                      value={this.state.age}
+                      style={{ marginTop: 6 }}
+                      inputStyle={[styles.textinput, { width: 100, lineHeight: 20, paddingTop: 0, paddingLeft: 17, paddingRight: 17, paddingBottom: Platform.OS == 'ios' ? 15 : 8, fontWeight: '600' }]}
+                      onChangeText={s => {
+                        this.setState({ age: s });
+                      }}
+                      onValidate={(valid, messages) => {
+                        if (valid) {
+                          this.setState({ ageError: "" });
+                        }
+                        else {
+                          this.setState({ ageError: messages });
+                        }
+                      }}
+                      returnKeyType={"next"}
+                      keyboardType="numeric"
+                      errorStyle={styles.errorStyle}
+                    />
+                  </Field>
+                  <View style={{ marginLeft: 10 }}>
+                    <Text style={[styles.label]}>Giới tính</Text>
+                    <View style={{ flexDirection: "row" }}>
+                      <TouchableOpacity
+                        onPress={() => {
+                          this.setState({ gender: 1, changed: true });
+                        }}
+                        style={{ padding: 10, flexDirection: "row" }}
+                      >
+                        <View style={{ width: 19, height: 19, borderWidth: 2, borderColor: '#02C39A', borderRadius: 10, alignItems: 'center', justifyContent: 'center' }}>
+                          {
+                            this.state.gender == 1 && <View style={{ width: 12, height: 12, backgroundColor: '#02C39A', borderRadius: 6 }}></View>
+                          }
+                        </View>
+                        <Text style={{ marginLeft: 5 }}>Nam</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() => {
+                          this.setState({ gender: 0, changed: true });
+                        }}
+                        style={{ padding: 10, flexDirection: "row" }}
+                      >
+                        <View style={{ width: 19, height: 19, borderWidth: 2, borderColor: '#02C39A', borderRadius: 10, alignItems: 'center', justifyContent: 'center' }}>
+                          {
+                            this.state.gender == 0 && <View style={{ width: 12, height: 12, backgroundColor: '#02C39A', borderRadius: 6 }}></View>
+                          }
+                        </View>
+                        <Text style={{ marginLeft: 5 }}>Nữ</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </Field>
               </Form>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: "center",
-                  marginTop: 25
-                }}
-              >
-                <Text style={[styles.label]}>Giới tính</Text>
-                <View style={{ flexDirection: "row" }}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.setState({ gender: 1, changed: true });
-                    }}
-                    style={{ padding: 10, flexDirection: "row" }}
-                  >
-                    <View style={{ width: 19, height: 19, borderWidth: 2, borderColor: '#02C39A', borderRadius: 10, alignItems: 'center', justifyContent: 'center' }}>
-                      {
-                        this.state.gender == 1 && <View style={{ width: 12, height: 12, backgroundColor: '#02C39A', borderRadius: 6 }}></View>
-                      }
-                    </View>
-                    <Text style={{ marginLeft: 5 }}>Nam</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.setState({ gender: 0, changed: true });
-                    }}
-                    style={{ padding: 10, flexDirection: "row" }}
-                  >
-                    <View style={{ width: 19, height: 19, borderWidth: 2, borderColor: '#02C39A', borderRadius: 10, alignItems: 'center', justifyContent: 'center' }}>
-                      {
-                        this.state.gender == 0 && <View style={{ width: 12, height: 12, backgroundColor: '#02C39A', borderRadius: 6 }}></View>
-                      }
-                    </View>
-                    <Text style={{ marginLeft: 5 }}>Nữ</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
+              <Text style={[styles.errorStyle]}>{this.state.ageError}</Text>
+
               <TouchableOpacity
                 disabled={!this.state.changed}
                 onPress={this.createQuestion.bind(this)}
