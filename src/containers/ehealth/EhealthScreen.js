@@ -1,6 +1,6 @@
 import React, { Component, PropTypes, PureComponent } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, Text, ScrollView, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, FlatList, TouchableOpacity, StyleSheet, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import Dash from 'mainam-react-native-dash-view';
@@ -24,12 +24,7 @@ class LoginScreen extends PureComponent {
         }
     }
     componentDidMount() {
-        // this.onRefresh();
-        this.loadListHospital();
-        profileProvider.getByUser(this.props.userApp.currentUser.id, (s, e) => {
-            this.setState({ profile: s }, () => {
-            })
-        }, false);
+        this.onRefresh();
     }
     getListBooking(hospitalId) {
         if (this.state.profile && this.state.profile.profile) {
@@ -37,27 +32,43 @@ class LoginScreen extends PureComponent {
                 if (s.code == 0) {
                     let data = [...s.data.bookingNotInHis, ...s.data.patientHistory];
                     this.setState({
-                        bookings: data
+                        bookings: data,
+                        refreshing: false
                     })
                 }
             }).catch(e => {
+                this.setState({
+                    refreshing: false
+                })
             });
+        } else {
+            this.setState({
+                refreshing: false
+            })
         }
     }
 
-    // // onRefresh() {
-    // //     if (!this.state.loading)
-    // //         this.setState({ refreshing: true, loading: true }, () => {
-    // //             this.onLoad();
-    // //         });
-    // // }
-    loadListHospital() {
-        hospitalProvider.getAll().then(s => {
-            if (s.code == 0) {
-                this.setState({ hospitals: (s.data.hospitals || []).filter(item => item.id == 65) });
-            }
-        }).catch(e => {
-        });
+    onRefresh() {
+        this.setState({ refreshing: true }, () => {
+            hospitalProvider.getAll().then(s => {
+                if (s.code == 0) {
+                    this.setState({ hospitals: (s.data.hospitals || []).filter(item => item.id == 65) }, () => {
+                        profileProvider.getByUserPromise(this.props.userApp.currentUser.id).then(s => {
+                            this.setState({ profile: s }, () => {
+                                this.getListBooking(65);
+                            })
+                        }).catch(e => {
+                            this.setState({ refreshing: false });
+                        })
+                    });
+                }
+                else {
+                    this.setState({ refreshing: false });
+                }
+            }).catch(e => {
+                this.setState({ refreshing: false });
+            });
+        })
     }
 
     // componentWillReceiveProps(nextProps) {
@@ -166,7 +177,7 @@ class LoginScreen extends PureComponent {
             let bookingResult = JSON.parse((item.result || "{}"));
             if (bookingDetail.Profile) {
                 let booking = bookingDetail.Profile;
-                return <View style={styles.item_ehealth}>
+                return <View style={styles.item_ehealth} key={index}>
                     <TouchableOpacity style={{ position: 'relative', marginLeft: 15, right: 35 }} onPress={this.openBookingInHis.bind(this, bookingDetail, bookingResult)}>
                         <View style={styles.item_ehealth2}>
                             <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{booking.PatientName}</Text>
@@ -187,7 +198,7 @@ class LoginScreen extends PureComponent {
     renderItemBookingNotInHis(booking, index) {
         if (booking) {
             if (booking.hospitalId == constants.hospital.BENH_VIEN_DAI_HOC_Y) {
-                return <View style={{ position: 'relative', left: 20, right: 30 }}>
+                return <View style={{ position: 'relative', left: 20, right: 30 }} key={index}>
                     <TouchableOpacity style={{ position: 'relative', marginLeft: 15, right: 35 }} onPress={this.openBooking.bind(this, booking, booking.hospitalId)}>
                         <View style={{
                             backgroundColor: '#f8fcf4',
@@ -216,61 +227,59 @@ class LoginScreen extends PureComponent {
     render() {
         return (
             <ActivityPanel style={{ flex: 1 }} title="Y BẠ ĐIỆN TỬ" showFullScreen={true} isLoading={this.state.isLoading}>
-                <View>
-                    <Text style={[styles.text1, {
-                        marginLeft: 20, marginBottom: 10
-                    }]}>Cơ sở y tế đã khám</Text>
-                    <FlatList
-                        horizontal={true}
-                        showsHorizontalScrollIndicator={false}
-                        keyExtractor={(item, index) => index.toString()}
-                        extraData={this.state}
-                        data={this.state.hospitals}
-                        ListFooterComponent={() => <View style={{ height: 10 }}></View>}
-                        renderItem={({ item, index }) => <TouchableOpacity key={index}
-                            onPress={() => {
-                                this.setState({ hospitalId: item.id }, () => {
-                                    this.props.dispatch({ type: constants2.action.action_select_hospital, value: item.id });
-                                    this.getListBooking(item.id);
-                                });
-                            }}
-                            style={this.state.hospitalId == item.id ? styles.hospital_selected : styles.hospital}>
-                            <ScaledImage source={require("@images/logo.png")} height={45} style={{ marginTop: 10 }} />
-                            <View style={{ flex: 1, alignContent: 'flex-end', justifyContent: 'flex-end' }}>
-                                <Text numberOfLines={2} style={styles.hospital_text}>
-                                    {item.name}
-                                </Text>
-                            </View>
-                        </TouchableOpacity>
-                        }
-                    />
+                <ScrollView style={{ flex: 1 }}
+                    refreshControl={<RefreshControl
+                        refreshing={this.state.refreshing}
+                        onRefresh={this.onRefresh.bind(this)}
+                    />}>
+                    {
+                        (this.state.hospitals && this.state.hospitals.length > 0) &&
+                        <View>
+                            <Text style={[styles.text1, {
+                                marginLeft: 20, marginBottom: 10
+                            }]}>Cơ sở y tế đã khám</Text>
+                            <FlatList
+                                horizontal={true}
+                                showsHorizontalScrollIndicator={false}
+                                keyExtractor={(item, index) => index.toString()}
+                                extraData={this.state}
+                                data={this.state.hospitals}
+                                ListFooterComponent={() => <View style={{ height: 10 }}></View>}
+                                renderItem={({ item, index }) => <TouchableOpacity key={index}
+                                    onPress={() => {
+                                        this.setState({ hospitalId: item.id }, () => {
+                                            this.props.dispatch({ type: constants2.action.action_select_hospital, value: item.id });
+                                            this.getListBooking(item.id);
+                                        });
+                                    }}
+                                    style={this.state.hospitalId == item.id ? styles.hospital_selected : styles.hospital}>
+                                    <ScaledImage source={require("@images/logo.png")} height={45} style={{ marginTop: 10 }} />
+                                    <View style={{ flex: 1, alignContent: 'flex-end', justifyContent: 'flex-end' }}>
+                                        <Text numberOfLines={2} style={styles.hospital_text}>
+                                            {item.name}
+                                        </Text>
+                                    </View>
+                                </TouchableOpacity>
+                                }
+                            />
+                        </View>
+                    }
                     <View style={styles.style1}>
                         <ScaledImage source={require("@images/ehealth/ichistory.png")} width={20} style={{ marginRight: 8 }} />
                         <Text style={styles.text1}>Lịch sử</Text>
                     </View>
-                </View>
-                <FlatList
-                    // onRefresh={this.onRefresh.bind(this)}
-                    // refreshing={this.state.refreshing}
-                    style={{ flex: 1 }}
-                    keyExtractor={(item, index) => index.toString()}
-                    extraData={this.state}
-                    data={this.state.bookings}
-                    ListHeaderComponent={() => {
-                        if (!this.state.bookings || this.state.bookings.length == 0)
-                            return <View style={{ alignItems: 'center', marginTop: 50 }}>
+                    {
+                        (!this.state.bookings || this.state.bookings.length == 0) ?
+                            <View style={{ alignItems: 'center', marginTop: 50 }}>
                                 <Text style={{ fontStyle: 'italic' }}>Không thấy lịch sử khám nào</Text>
-                            </View>
-                        return null
-                    }}
-                    ListFooterComponent={() => <View style={{ height: 10 }}></View>}
-                    renderItem={({ item, index }) => {
-                        if (!item.booking)
-                            return this.renderItemBookingInHis(item, index)
-                        return this.renderItemBookingNotInHis(item, index)
+                            </View> :
+                            this.state.bookings.map((item, index) => {
+                                if (!item.booking)
+                                    return this.renderItemBookingInHis(item, index)
+                                return this.renderItemBookingNotInHis(item, index)
+                            })
                     }
-                    }
-                />
+                </ScrollView>
             </ActivityPanel >
         );
     }
