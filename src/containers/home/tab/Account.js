@@ -140,12 +140,15 @@ class Account extends Component {
           <Text style={[styles.itemText, { fontWeight: 'bold' }]}>Kích hoạt ví IsofhCare</Text>
           <ScaledImage source={require("@images/new/ic_menu_wallet.png")} width={24} height={24} />
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.itemMenu]} onPress={() => {
-          this.props.navigation.navigate("emptyScreen", { title: "Y bạ điện tử" });
-        }}>
-          <Text style={styles.itemText}>Y bạ điện tử</Text>
-          <ScaledImage source={require("@images/new/ic_menu_ehealth.png")} width={24} height={24} />
-        </TouchableOpacity>
+        {
+          this.props.userApp.isLogin &&
+          <TouchableOpacity style={[styles.itemMenu]} onPress={() => {
+            this.props.navigation.navigate("ehealth");
+          }}>
+            <Text style={styles.itemText}>Y bạ điện tử</Text>
+            <ScaledImage source={require("@images/new/ic_menu_ehealth.png")} width={24} height={24} />
+          </TouchableOpacity>
+        }
         <TouchableOpacity style={[styles.itemMenu]} onPress={() => {
           this.props.navigation.navigate("emptyScreen", { title: "Lịch khám" });
         }}>
