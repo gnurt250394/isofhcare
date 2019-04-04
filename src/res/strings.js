@@ -297,6 +297,9 @@ module.exports = {
     advertise: {
       create: isofhcare_service + "advertise/create",
       search: isofhcare_service + "advertise/search"
+    },
+    hospital: {
+      get_all: isofhcare_service + "hospital/get-all"
     }
   }
 };
