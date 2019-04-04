@@ -76,6 +76,7 @@ module.exports = {
       DATA_TOP_SYMPTOM: "DATA_TOP_SYMPTOM",
       DATA_TOP_DRUG: "DATA_TOP_DRUG",
       DATA_TOP_ADS: "DATA_TOP_ADS",
+      USER_PROFILE: "USER_PROFILE",
       DATA_PROVINCE: "DATA_PROVINCE",
       CURRENT_LOCATION: "CURRENT_LOCATION",
       INTRO_FINISHED: "INTRO_FINISHED",
@@ -277,7 +278,7 @@ module.exports = {
       update_view_count: isofhcare_service + "specialist/update-view-count"
     },
     booking: {
-      get_list_booking: isofhcare_service + "booking/get-all-patient-history-by-user",
+      get_list_booking: isofhcare_service + "booking/get-list-patient-history-by-profile",
       get_detail_patient_historyid: isofhcare_service + "booking/get-detail-patient-history",
       get_result_patient_historyid: isofhcare_service + "booking/get-result-patient-history",
       delete: isofhcare_service + "booking/delete"
@@ -300,6 +301,9 @@ module.exports = {
     },
     hospital: {
       get_all: isofhcare_service + "hospital/get-all"
+    },
+    profile: {
+      get_by_user: isofhcare_service + "profile/get-by-user"
     }
   }
 };

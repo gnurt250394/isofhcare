@@ -1,4 +1,4 @@
-const server_url = 'http://10.0.0.98:8000'; //dev
+const server_url = 'http://10.0.0.99:8000'; //dev
 // const server_url = 'http://api.test.isofhcare.com:8483'; //demo
 // const server_url = 'https://api.isofhcare.com'; //release
 import axios from 'axios'

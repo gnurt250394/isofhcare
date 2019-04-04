@@ -18,7 +18,8 @@ class DetailBookingScreen extends Component {
         this.setState({ isLoading }, callback);
     }
     render() {
-        let booking = this.props.navigation.getParam("booking");
+        let booking = this.props.navigation.getParam("bookingDetail");
+        let bookingResult = this.props.navigation.getParam("bookingResult");
         if (!booking) {
             this.props.navigation.pop();
             return null;
@@ -26,7 +27,7 @@ class DetailBookingScreen extends Component {
         return (
             <ActivityPanel style={{ flex: 1, }} title="Y bạ điện tử" isLoading={this.state.isLoading} showFullScreen={true}>
                 {
-                    booking.hasCheckin ? <DetailBookingHasCheckin booking={booking} onLoading={this.onLoading.bind(this)} />
+                    booking.hasCheckin ? <DetailBookingHasCheckin booking={booking} bookingResult={bookingResult} onLoading={this.onLoading.bind(this)} />
                         :
                         <DetailBookingNoCheckin booking={booking} activity={this} />
                 }
