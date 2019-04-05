@@ -245,7 +245,8 @@ module.exports = {
       change_email: isofhcare_service + "user/update-email",
       confirm_code: isofhcare_service + "user/confirm-code",
       get_detail: isofhcare_service + "user/get-detail",
-      refresh_password_by_token: isofhcare_service + "user/refresh-password-by-token"
+      refresh_password_by_token: isofhcare_service + "user/refresh-password-by-token",
+      check_used_phone:  isofhcare_service + "user/check-used-phone",
     },
     keyvalue: {
       get: isofhcare_service + "key-value/get-value",
