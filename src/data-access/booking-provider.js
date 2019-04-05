@@ -24,7 +24,7 @@ module.exports = {
     },
     resultPatientHistory(patientHistoryId, source) {
         return new Promise((resolve, reject) => {
-            client.requestApi("get", constants.api.booking.get_result_patient_historyid + "/" + patientHistoryId + "?source=" + source, {}, (s, e) => {
+            client.requestApi("get", constants.api.booking.get_result_patient_historyid + "/" + patientHistoryId + "?hospitalId=" + source, {}, (s, e) => {
                 if (s)
                     resolve(s)
                 else

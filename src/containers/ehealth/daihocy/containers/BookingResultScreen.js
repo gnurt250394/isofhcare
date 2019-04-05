@@ -114,7 +114,6 @@ class BookingResultScreen extends Component {
         this.setState({
             isLoading: true
         }, () => {
-            debugger;
             this.exportPdfCom.getWrappedInstance().exportPdf({
                 type: "all",
                 result: this.state.result,

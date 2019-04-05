@@ -103,6 +103,7 @@ class DetailBookingHasCheckin extends Component {
     }
 
     viewResult() {
+        bookingProvider.resultPatientHistory(this.props.booking.patientHistoryId, this.props.booking.hospitalId);
         if (!this.props.bookingResult || !this.props.bookingResult.Profile) {
             snackbar.show(constants.msg.ehealth.not_found_result_of_this_booking);
             return;
@@ -262,7 +263,6 @@ class DetailBookingHasCheckin extends Component {
             || (result.data.ListDiagnostic && result.data.ListDiagnostic.length > 0)
             || (result.data.ListResulOther && result.data.ListResulOther.length > 0)
         ) {
-            debugger;
             result.booking = this.props.booking;
             this.props.navigation.navigate("viewBookingResult", { result })
             return;
@@ -274,7 +274,6 @@ class DetailBookingHasCheckin extends Component {
 
     render() {
         let bookingDetail = this.props.bookingDetail;
-        debugger;
         return (
             <View style={{ flexDirection: 'column', padding: 10, flex: 1 }}>
                 <ScrollView
