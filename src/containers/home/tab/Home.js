@@ -6,7 +6,8 @@ import {
   ScrollView,
   TouchableOpacity,
   Platform,
-  Linking, StyleSheet
+  Linking, StyleSheet,
+  FlatList
 } from "react-native";
 import { connect } from "react-redux";
 import ScaledImage from "mainam-react-native-scaleimage";
@@ -24,14 +25,15 @@ class Home extends Component {
     super(props);
     this.state = {
       ads: [],
-      ads0: [1, 2, 3, 4, 5]
+      ads0: []
     };
   }
   componentWillMount() {
     advertiseProvider.getTop(100, (s, e) => {
       if (s) {
         this.setState({
-          ads: s
+          ads: (s||[]).filter(x=>x.advertise && x.advertise.type==2 && x.advertise.images),
+          ads0: (s||[]).filter(x=>x.advertise && x.advertise.type==1 && x.advertise.images)
           // .filter(item => { return item.advertise && item.advertise.images })
         });
       }
@@ -40,26 +42,22 @@ class Home extends Component {
     });
   }
   renderAds() {
-    return (<View style={{ padding: 12 }}>
-      <Text style={{ marginBottom: 5, color: 'rgb(74,74,74)', fontWeight: 'bold' }}>Ưu đãi</Text>
-      <Carousel
-        enableSnap={false}
-        loop={true}
-        // onSnapToItem={(index) => {
-        //   this.setState({ adsActiveIndex: index })
-        // }}
-        activeSlideAlignment={'start'}
-        // firstItem={this.state.ads && this.state.ads.length > 1 ? 1 : 0}
-        ref={c => {
-          this._carousel = c;
-        }}
+    return (<View>
+      <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={{ padding: 12, paddingBottom: 5, color: 'rgba(74,74,74,0.6)', fontWeight: '500', flex: 1 }}>Tin tức</Text>
+        <ScaledImage source={require("@images/new/ic_more.png")} width={20} style={{ marginTop: 10, marginRight: 10 }} />
+      </View>
+      <FlatList
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        keyExtractor={(item, index) => index.toString()}
+        extraData={this.state}
         data={this.state.ads}
-        layoutCardOffset={3}
-        stagePadding={3}
-        // layout={'stack'}
         renderItem={({ item, index }) => {
+          if(!item || !item.advertise || !item.advertise.images)
+            return null;
           return (
-            <Card>
+            <Card style={{ width: DEVICE_WIDTH - 60, borderRadius: 6, marginRight: 10 }}>
               <TouchableOpacity
                 onPress={() => {
                   if (item.advertise && item.advertise.value) {
@@ -70,16 +68,14 @@ class Home extends Component {
                 }}
               >
                 <ScaledImage
-                  source={require("@images/banner/bannerbooking.png")}
-                  width={DEVICE_WIDTH - 100}
+                  uri={item.advertise.images.absoluteUrl()}
+                  width={DEVICE_WIDTH - 60}
                 />
-                <Text numberOfLines={1} ellipsizeMode='tail' style={{ color: '#00000064', margin: 13 }}>{item.advertise ? item.advertise.content : ""}</Text>
+                <Text numberOfLines={1} ellipsizeMode='tail' style={{ color: '#000', margin: 13 }}>{item.advertise ? item.advertise.title : ""}</Text>
               </TouchableOpacity>
             </Card>
           );
         }}
-        sliderWidth={DEVICE_WIDTH}
-        itemWidth={DEVICE_WIDTH - 100}
       />
     </View>)
   }
@@ -132,43 +128,48 @@ class Home extends Component {
       <ActivityPanel
         hideStatusbar={true}
         style={[{ flex: 1 }, this.props.style]}
-        titleStyle={{ marginRight: 60 }}
-        imageStyle={{ marginRight: 10 }}
-        backButton={<TouchableOpacity style={{ paddingLeft: 15 }} onPress={() => {
-          if (this.props.userApp.isLogin) {
-            if (this.props.userInfoClick)
-              this.props.userInfoClick();
-          } else {
-            this.props.navigation.navigate("login");
-          }
-        }}>
-          <ImageLoad
-            resizeMode="cover"
-            imageStyle={{ borderRadius: 15 }}
-            borderRadius={15}
-            customImagePlaceholderDefaultStyle={{
-              width: 30,
-              height: 30,
-              alignSelf: "center"
-            }}
-            placeholderSource={icSupport}
-            style={{ width: 30, height: 30, alignSelf: "center" }}
-            resizeMode="cover"
-            loadingStyle={{ size: "small", color: "gray" }}
-            source={source}
-            defaultImage={() => {
-              return (
-                <ScaledImage
-                  resizeMode="cover"
-                  source={icSupport}
-                  width={30}
-                  style={{ width: 30, height: 30, alignSelf: "center" }}
-                />
-              );
-            }}
-          />
-        </TouchableOpacity>}
-        image={require("@images/logo_home.png")}
+        // titleStyle={{ marginRight: 60 }}
+        // imageStyle={{ marginRight: 20 }}
+        hideBackButton={true}
+        // backButton={<TouchableOpacity style={{ paddingLeft: 15 }} onPress={() => {
+        //   if (this.props.userApp.isLogin) {
+        //     if (this.props.userInfoClick)
+        //       this.props.userInfoClick();
+        //   } else {
+        //     this.props.navigation.navigate("login");
+        //   }
+        // }}>
+        //   <ImageLoad
+        //     resizeMode="cover"
+        //     imageStyle={{ borderRadius: 15 }}
+        //     borderRadius={15}
+        //     customImagePlaceholderDefaultStyle={{
+        //       width: 30,
+        //       height: 30,
+        //       alignSelf: "center"
+        //     }}
+        //     placeholderSource={icSupport}
+        //     style={{ width: 30, height: 30, alignSelf: "center" }}
+        //     resizeMode="cover"
+        //     loadingStyle={{ size: "small", color: "gray" }}
+        //     source={source}
+        //     defaultImage={() => {
+        //       return (
+        //         <ScaledImage
+        //           resizeMode="cover"
+        //           source={icSupport}
+        //           width={30}
+        //           style={{ width: 30, height: 30, alignSelf: "center" }}
+        //         />
+        //       );
+        //     }}
+        //   />
+        // </TouchableOpacity>}
+        // image={}
+        titleView={<View>
+          <ScaledImage source={require("@images/logotext.png")} width={116} />
+        </View>}
+        titleViewStyle={{ marginLeft: 10 }}
         menuButton={<NotificationBadge />}
       >
         <ScrollView
@@ -199,67 +200,47 @@ class Home extends Component {
                       }
                     }}
                   >
-                    <ScaledImage
-                      source={require("@images/banner/bannerbooking.png")}
-                      width={DEVICE_WIDTH}
-                    />
+                  <ScaledImage
+                    uri={item.advertise.images.absoluteUrl()}
+                    width={DEVICE_WIDTH}
+                />
                   </TouchableOpacity>
                 );
               }}
               sliderWidth={DEVICE_WIDTH}
               itemWidth={DEVICE_WIDTH}
             />
-            {
+            {/* {
               this.pagination()
-            }
+            } */}
           </View>
-          <View style={{ flexDirection: "row", padding: 10, marginTop: 25 }}>
-            <TouchableOpacity
-              style={{ flex: 1, marginLeft: 5, alignItems: 'center' }}
-              onPress={() => {
-                if (this.props.userApp.isLogin)
-                  this.props.navigation.navigate("dhyBooking");
-                else
-                  this.props.navigation.navigate("login", {
-                    nextScreen: {
-                      screen: "dhyBooking",
-                      param: {}
-                    }
-                  });
-              }}
-            >
-              <View style={{ position: 'relative', padding: 5 }}><ScaledImage style={[styles.icon]} source={require("@images/new/ic_home_addbooking.png")} width={60} />
-              </View>
-              <Text style={[styles.label]}>Đặt khám</Text>
-              <Text style={[styles.subLabel]}>
-                1000+ người đã dùng
-            </Text>
-            </TouchableOpacity>
+          <View style={{ flexDirection: "row", padding: 10, marginTop: 20 }}>
             <TouchableOpacity
               style={{ flex: 1, marginLeft: 5, alignItems: 'center' }}
               onPress={() => {
                 this.props.navigation.navigate("listQuestion");
               }}
             >
-              <View style={{ position: 'relative', padding: 5 }}>
-                <ScaledImage style={[styles.icon]} source={require("@images/new/ic_home_question.png")} width={60} />
-                <ScaledImage style={[{ position: 'absolute', right: 0, top: 0 }]} source={require("@images/new/ic_home_chat.png")} width={30} />
+              <View style={{ position: 'relative', padding: 5 }}><ScaledImage style={[styles.icon]} source={require("@images/new/ic_question.png")} height={48} />
               </View>
-              <Text style={[styles.label]}>Tư vấn</Text>
-              <Text style={[styles.subLabel]}>
-                1000+ người yêu thích
-            </Text>
+              <Text style={[styles.label]}>Hỏi đáp</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={{ flex: 1, marginLeft: 5, alignItems: 'center' }}
-              onPress={() => { snackbar.show("Chức năng đang phát triển") }}
+              onPress={() => {
+                if (this.props.userApp.isLogin)
+                  this.props.navigation.navigate("ehealth");
+                else
+                  this.props.navigation.navigate("login", {
+                    nextScreen: { screen: 'ehealth' }
+                  });
+              }}
             >
-              <View style={{ position: 'relative', padding: 5 }}><ScaledImage style={[styles.icon]} source={require("@images/new/ic_home_search.png")} width={60} />
+              <View style={{ position: 'relative', padding: 5 }}>
+                <ScaledImage style={[styles.icon]} source={require("@images/new/ic_ehealth.png")} height={48} />
+                <ScaledImage style={[{ position: 'absolute', right: 0, top: 0 }]} source={require("@images/new/ic_home_chat.png")} width={30} />
               </View>
-              <Text style={[styles.label]}>Tra cứu</Text>
-              <Text style={[styles.subLabel]}>
-                1000+ người hài lòng
-            </Text>
+              <Text style={[styles.label]}>Y bạ điện tử</Text>
             </TouchableOpacity>
           </View>
           {
@@ -276,7 +257,7 @@ const styles = StyleSheet.create({
   icon: {
   },
   label: {
-    marginTop: 0, color: '#4A4A4A', fontSize: 15, fontWeight: '600', lineHeight: 23
+    marginTop: 10, color: '#4A4A4A', fontSize: 15, fontWeight: '600', lineHeight: 23
   },
   subLabel: {
     color: '#9B9B9B', fontSize: 12, textAlign: 'center', marginTop: 5
