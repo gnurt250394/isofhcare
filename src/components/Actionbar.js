@@ -25,7 +25,7 @@ class Actionbar extends Component {
     render() {
         return (
             <View>
-                <View style={[styles.actionbar, this.props.actionbarStyle, { paddingTop: this.props.hideBackButton ? 15 : 5, paddingBottom: this.props.hideBackButton ? 15 : 5, minHeight: 70 }]}>
+                <View style={[styles.actionbar, this.props.actionbarStyle, { paddingTop: 10, minHeight: 60 }]}>
                     {
                         this.props.backButton ?
                             this.props.backButton :
@@ -39,36 +39,23 @@ class Actionbar extends Component {
                                 </View>
                     }
                     {
-                        this.props.title ?
-                            <Text style={[styles.title, this.props.actionbarTextColor, this.props.titleStyle]}>
-                                {this.props.title}
-                            </Text>
-                            :
-                            this.props.image &&
-                            <View style={[{ height: 45, flex: 1, justifyContent: 'center', alignItems: 'center' }, this.props.imageStyle]}>
-                                <ScaleImage source={this.props.image} height={32} />
-                            </View>
+                        this.props.titleView ?
+                            <View style={this.props.titleViewStyle}>{this.props.titleView}</View> :
+                            this.props.title ?
+                                <Text style={[styles.title, this.props.actionbarTextColor, this.props.titleStyle]}>
+                                    {this.props.title}
+                                </Text>
+                                :
+                                this.props.image &&
+                                <View style={[{ height: 45, flex: 1, justifyContent: 'center', alignItems: 'center' }, this.props.imageStyle]}>
+                                    <ScaleImage source={this.props.image} height={32} />
+                                </View>
                     }
                     <View style={styles.menuButton}>
                         {
                             this.props.menuButton
                         }
                     </View>
-                    {
-                        this.props.showMessenger &&
-                        <View style={[styles.notifi]}>
-                            <TouchableOpacity onPress={() => this.showMessengerClicked()} style={{ paddingTop: 12, paddingBottom: 12 }}>
-                                <ScaleImage source={this.props.ic_msg ? this.props.ic_msg : ic_msg} style={[styles.ic_msg, this.props.styleMessenger]} height={23}></ScaleImage>
-                                {this.props.badge ?
-                                    <Text style={styles.badge} zIndex={2} >{this.props.badge < 100 ? this.props.badge :
-                                        <Text style={{ fontSize: 9, paddingTop: 15 }}>99+</Text>}</Text> : null
-                                }
-                            </TouchableOpacity>
-                        </View>
-                        // :
-                        // <View style={[styles.notifi]}>
-                        // </View>
-                    }
                 </View>
             </View >
         );
