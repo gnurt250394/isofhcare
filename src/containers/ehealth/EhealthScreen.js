@@ -56,7 +56,7 @@ class LoginScreen extends PureComponent {
                     this.setState({ hospitals: (s.data.hospitals || []).filter(item => item.id == 65 || item.id == 66) }, () => {
                         profileProvider.getByUserPromise(this.props.userApp.currentUser.id).then(s => {
                             this.setState({ profile: s }, () => {
-                                this.getListBooking(65);
+                                this.getListBooking(this.state.hospitalId);
                             })
                         }).catch(e => {
                             this.setState({ refreshing: false });
