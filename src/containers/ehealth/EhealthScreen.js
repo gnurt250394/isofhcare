@@ -10,6 +10,7 @@ import constants from '@resources/strings';
 import constants2 from '@ehealth/daihocy/resources/strings';
 import dateUtils from 'mainam-react-native-date-utils';
 import profileProvider from '@data-access/profile-provider';
+import snackbar from '@utils/snackbar-utils';
 class LoginScreen extends PureComponent {
     constructor(props) {
         super(props)
@@ -52,10 +53,10 @@ class LoginScreen extends PureComponent {
         this.setState({ refreshing: true }, () => {
             hospitalProvider.getAll().then(s => {
                 if (s.code == 0) {
-                    this.setState({ hospitals: (s.data.hospitals || []).filter(item => item.id == 65) }, () => {
+                    this.setState({ hospitals: (s.data.hospitals || []).filter(item => item.id == 65 || item.id == 66) }, () => {
                         profileProvider.getByUserPromise(this.props.userApp.currentUser.id).then(s => {
                             this.setState({ profile: s }, () => {
-                                this.getListBooking(65);
+                                this.getListBooking(this.state.hospitalId);
                             })
                         }).catch(e => {
                             this.setState({ refreshing: false });
@@ -150,19 +151,12 @@ class LoginScreen extends PureComponent {
     //     });
     // }
 
-    openBookingInHis(bookingDetail, bookingResult) {
+    openBookingInHis(booking) {
         // this.setState({ isLoading: true }, () => {
-        // bookingProvider.detailPatientHistory(patientHistoryId, hospitalId, (s, e) => {
-        //     if (s && s.code == 0) {
-        // this.setState({ isLoading: false });
-        // let booking = s.data.data;
-        bookingDetail.hasCheckin = true;
-        bookingDetail.hospitalId = 65;
-        // booking.patientHistoryId = patientHistoryId;
-        this.props.navigation.navigate("ehealthDHY", { bookingDetail, bookingResult })
-        //     }
-        // });
-        // });
+        let patientHistoryId = booking.patientHistoryId;
+        bookingProvider.detailPatientHistory(patientHistoryId, this.state.hospitalId);
+        booking.hasCheckin = true;
+        this.props.navigation.navigate("ehealthDHY", { booking })
     }
     openBooking(booking, hospitalId) {
         this.props.dispatch({ type: constants2.action.action_select_hospital, value: hospitalId });
@@ -174,11 +168,10 @@ class LoginScreen extends PureComponent {
     renderItemBookingInHis(item, index) {
         if (item && item.resultDetail) {
             let bookingDetail = JSON.parse(item.resultDetail);
-            let bookingResult = JSON.parse((item.result || "{}"));
             if (bookingDetail.Profile) {
                 let booking = bookingDetail.Profile;
                 return <View style={styles.item_ehealth} key={index}>
-                    <TouchableOpacity style={{ position: 'relative', marginLeft: 15, right: 35 }} onPress={this.openBookingInHis.bind(this, bookingDetail, bookingResult)}>
+                    <TouchableOpacity style={{ position: 'relative', marginLeft: 15, right: 35 }} onPress={this.openBookingInHis.bind(this, item)}>
                         <View style={styles.item_ehealth2}>
                             <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{booking.PatientName}</Text>
                             {/* <Text style={{ marginTop: 13 }}>Bệnh viện: <Text style={{ fontWeight: 'bold' }}>{booking.hospitalName}</Text></Text> */}
@@ -247,10 +240,14 @@ class LoginScreen extends PureComponent {
                                 ListFooterComponent={() => <View style={{ height: 10 }}></View>}
                                 renderItem={({ item, index }) => <TouchableOpacity key={index}
                                     onPress={() => {
-                                        this.setState({ hospitalId: item.id }, () => {
-                                            this.props.dispatch({ type: constants2.action.action_select_hospital, value: item.id });
-                                            this.getListBooking(item.id);
-                                        });
+                                        if (!this.state.refreshing) {
+                                            this.setState({ hospitalId: item.id, refreshing: true }, () => {
+                                                this.props.dispatch({ type: constants2.action.action_select_hospital, value: item.id });
+                                                this.getListBooking(item.id);
+                                            });
+                                        } else {
+                                            snackbar.show("Dữ liệu đang được tải, vui lòng chờ");
+                                        }
                                     }}
                                     style={this.state.hospitalId == item.id ? styles.hospital_selected : styles.hospital}>
                                     <ScaledImage source={require("@images/logo.png")} height={45} style={{ marginTop: 10 }} />

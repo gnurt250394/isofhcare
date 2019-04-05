@@ -113,14 +113,15 @@ class BookingResultScreen extends Component {
     exportPdf() {
         this.setState({
             isLoading: true
-        })
-        this.exportPdfCom.getWrappedInstance().exportPdf({
-            type: "all",
-            result: this.state.result,
-            fileName: constants.filenamePDF + this.state.result.booking.patientHistoryId
         }, () => {
-            this.setState({ isLoading: false });
-        });
+            this.exportPdfCom.getWrappedInstance().exportPdf({
+                type: "all",
+                result: this.state.result,
+                fileName: constants.filenamePDF + this.state.result.booking.patientHistoryId
+            }, () => {
+                this.setState({ isLoading: false });
+            });
+        })
     }
     render() {
         let result = this.props.navigation.getParam("result");
@@ -274,8 +275,7 @@ var styles = StyleSheet.create({
 });
 function mapStateToProps(state) {
     return {
-        userApp: state.userApp,
-        booking: state.booking
+        userApp: state.userApp
     };
 }
 export default connect(mapStateToProps, null, null, { withRef: true })(BookingResultScreen);
