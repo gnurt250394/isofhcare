@@ -201,8 +201,8 @@ class DetailQuestionScreen extends Component {
             }
             <View style={{ position: 'relative', marginTop: 10 }}>
                 {
-                    (key != -1 && key != size - 1) &&
-                    < Dash style={{ width: 1, position: 'absolute', top: 0, bottom: 7, flexDirection: 'column', marginLeft: 25 }} dashStyle={{ backgroundColor: '#cacaca' }} />
+                    ((key != -1 || (key == -1 && this.state.commentCount > 0)) && key != size - 1) &&
+                    <Dash style={{ width: 1, position: 'absolute', top: 0, bottom: 7, flexDirection: 'column', marginLeft: 25 }} dashStyle={{ backgroundColor: '#cacaca' }} />
                 }
                 <View style={{ marginLeft: 37, marginBottom: 20 }}>
                     <Text style={{ color: '#00000038' }}>
