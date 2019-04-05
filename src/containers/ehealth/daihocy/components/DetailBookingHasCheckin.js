@@ -262,6 +262,7 @@ class DetailBookingHasCheckin extends Component {
             || (result.data.ListDiagnostic && result.data.ListDiagnostic.length > 0)
             || (result.data.ListResulOther && result.data.ListResulOther.length > 0)
         ) {
+            debugger;
             result.booking = this.props.booking;
             this.props.navigation.navigate("viewBookingResult", { result })
             return;
@@ -272,7 +273,8 @@ class DetailBookingHasCheckin extends Component {
 
 
     render() {
-        let booking = this.props.booking;
+        let bookingDetail = this.props.bookingDetail;
+        debugger;
         return (
             <View style={{ flexDirection: 'column', padding: 10, flex: 1 }}>
                 <ScrollView
@@ -282,9 +284,9 @@ class DetailBookingHasCheckin extends Component {
                         <View>
                             <Text style={{ fontWeight: 'bold', fontSize: 15 }}>Mã bệnh nhân</Text>
                             <View style={{ marginLeft: -10 }}>
-                                <Barcode value={booking.Profile.Value + ""} height={60} width={1.17} />
+                                <Barcode value={bookingDetail.Profile.Value + ""} height={60} width={1.17} />
                             </View>
-                            <Text style={{ fontWeight: 'bold', fontSize: 16, color: constants.colors.primaryColor }}>{booking.Profile.Value}</Text>
+                            <Text style={{ fontWeight: 'bold', fontSize: 16, color: constants.colors.primaryColor }}>{bookingDetail.Profile.Value}</Text>
                         </View>
                         <View style={{ marginLeft: 'auto' }}>
                             <TouchableOpacity onPress={this.viewResult.bind(this)}>
@@ -293,30 +295,30 @@ class DetailBookingHasCheckin extends Component {
                         </View>
                     </View>
                     {
-                        booking.ListService && booking.ListService.length > 0 ?
+                        bookingDetail.ListService && bookingDetail.ListService.length > 0 ?
                             <View >
                                 {
-                                    booking.ListService && booking.ListService.length > 0 && booking.ListService[0].DepartmentName ?
+                                    bookingDetail.ListService && bookingDetail.ListService.length > 0 && bookingDetail.ListService[0].DepartmentName ?
                                         <View>
                                             <Text style={{ marginTop: 10, fontWeight: 'bold' }}>Khoa</Text>
                                             <View style={{ width: 60, height: 3, backgroundColor: constants.colors.primaryColor, marginTop: 10 }}></View>
                                             <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
                                                 <Text style={{ flex: 1 }}>
-                                                    {booking.ListService[0].DepartmentName}
+                                                    {bookingDetail.ListService[0].DepartmentName}
                                                 </Text>
                                             </View>
                                         </View> : null
                                 }
-                                <Text style={{ marginTop: 20, fontWeight: 'bold' }}>Dịch vụ: {booking.Profile.IsContract ? '' : '(giá tạm tính)'} </Text>
+                                <Text style={{ marginTop: 20, fontWeight: 'bold' }}>Dịch vụ: {bookingDetail.Profile.IsContract ? '' : '(giá tạm tính)'} </Text>
                                 <View style={{ width: 60, height: 3, backgroundColor: constants.colors.primaryColor, marginTop: 10 }}></View>
-                                {booking.ListService.map((item, i) =>
+                                {bookingDetail.ListService.map((item, i) =>
                                     <View key={i}>
                                         <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
                                             <ScaleImage width={7} source={require("@ehealth/daihocy/resources/images/ic_dot.png")} />
                                             <Text style={{ flex: 1, marginLeft: 10 }}> {item.Name.trim()} </Text>
-                                            <Text> {booking.Profile.IsContract ? "" : item.PriceService.formatPrice() + " đ"} </Text>
+                                            <Text> {bookingDetail.Profile.IsContract ? "" : item.PriceService.formatPrice() + " đ"} </Text>
                                         </View>
-                                        {!booking.Profile.IsContract &&
+                                        {!bookingDetail.Profile.IsContract &&
                                             (item.ServiceType == "CheckUp" && (item.RoomName || item.Location)) ?
                                             <View style={{ marginTop: 10, marginLeft: 17, flexDirection: 'row' }}>
                                                 <Text style={{ fontWeight: 'bold', marginRight: 10 }}> Nơi khám: </Text>
@@ -325,7 +327,7 @@ class DetailBookingHasCheckin extends Component {
                                                 </Text>
                                             </View> : null
                                         }
-                                        {!booking.Profile.IsContract && item.DoctorFullName ?
+                                        {!bookingDetail.Profile.IsContract && item.DoctorFullName ?
                                             <View style={{ flexDirection: 'row', marginLeft: 17, alignItems: 'center', marginTop: 10 }}>
                                                 <Text style={{ fontWeight: 'bold', marginRight: 10 }}> Bác sĩ: </Text>
                                                 <Text> {item.DoctorFullName} </Text>
@@ -340,9 +342,9 @@ class DetailBookingHasCheckin extends Component {
 
                                 )}
                                 {
-                                    !booking.Profile.IsContract &&
+                                    !bookingDetail.Profile.IsContract &&
                                     <View>
-                                        {booking.ListInvoice && booking.ListInvoice.length > 0 ?
+                                        {bookingDetail.ListInvoice && bookingDetail.ListInvoice.length > 0 ?
                                             <View>
                                                 <View style={{ marginLeft: 17, width: 150, height: 3, backgroundColor: constants.colors.primaryColor, marginTop: 10 }}></View>
                                                 <View style={{ marginLeft: 17, marginTop: 10, flexDirection: 'row' }}>
@@ -350,8 +352,8 @@ class DetailBookingHasCheckin extends Component {
                                                     <Text style={{ fontWeight: 'bold', marginLeft: 10 }}>
                                                         {
                                                             (
-                                                                booking.ListInvoice.reduce((a, b) => a + b.Amount, 0) -
-                                                                (booking.ListPayment && booking.ListPayment.length > 0 ? booking.ListPayment.reduce((a, b) => a + b.Amount, 0) : 0)
+                                                                bookingDetail.ListInvoice.reduce((a, b) => a + b.Amount, 0) -
+                                                                (bookingDetail.ListPayment && bookingDetail.ListPayment.length > 0 ? bookingDetail.ListPayment.reduce((a, b) => a + b.Amount, 0) : 0)
                                                             ).formatPrice() + " đ"
                                                         }</Text>
                                                 </View>
@@ -362,7 +364,7 @@ class DetailBookingHasCheckin extends Component {
                                                     <Text style={{ fontWeight: 'bold' }}>Tổng tiền dịch vụ:</Text>
                                                     <Text style={{ fontWeight: 'bold', marginLeft: 10 }}>
                                                         {
-                                                            booking.ListService.reduce((a, b) => a + b.PriceService, 0).formatPrice() + " đ"
+                                                            bookingDetail.ListService.reduce((a, b) => a + b.PriceService, 0).formatPrice() + " đ"
                                                         }</Text>
                                                 </View>
                                             </View>
@@ -377,28 +379,28 @@ class DetailBookingHasCheckin extends Component {
                         <ScaleImage width={20} source={require("@ehealth/daihocy/resources/images/ic_info.png")} style={{ marginTop: 5 }} />
                         <Text style={{ marginLeft: 10 }}>
                             {
-                                this.props.booking.Profile.PatientName
+                                this.props.bookingDetail.Profile.PatientName
                             }
                         </Text>
 
                     </View>
                     {
-                        this.props.booking.Profile.Address ? <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
+                        this.props.bookingDetail.Profile.Address ? <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
                             <ScaleImage width={18} source={require("@ehealth/daihocy/resources/images/ic_location.png")} style={{ marginTop: 5 }} />
                             <Text style={{ marginLeft: 10 }}>
                                 {
-                                    this.props.booking.Profile.Address
+                                    this.props.bookingDetail.Profile.Address
                                 }
                             </Text>
                         </View> : null
                     }
                     {
-                        this.props.booking.Profile.PhoneNumber ?
+                        this.props.bookingDetail.Profile.PhoneNumber ?
                             <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
                                 <ScaleImage width={20} source={require("@ehealth/daihocy/resources/images/ic_phone.png")} style={{ marginTop: 5 }} />
                                 <Text style={{ marginLeft: 10 }}>
                                     {
-                                        this.props.booking.Profile.PhoneNumber
+                                        this.props.bookingDetail.Profile.PhoneNumber
                                     }
                                 </Text>
                             </View> : null}
@@ -406,7 +408,7 @@ class DetailBookingHasCheckin extends Component {
                         <ScaleImage width={20} source={require("@ehealth/daihocy/resources/images/ic_bookingDate.png")} style={{ marginTop: 5 }} />
                         <Text style={{ marginLeft: 10 }}>
                             {
-                                (booking.Profile.TimeGoIn).toDateObject().format("hh:mm Ngày dd/MM/yyyy")
+                                (bookingDetail.Profile.TimeGoIn).toDateObject().format("hh:mm Ngày dd/MM/yyyy")
                             }
                         </Text>
                     </View>
