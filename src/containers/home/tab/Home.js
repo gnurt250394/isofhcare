@@ -25,14 +25,15 @@ class Home extends Component {
     super(props);
     this.state = {
       ads: [],
-      ads0: [1]
+      ads0: []
     };
   }
   componentWillMount() {
     advertiseProvider.getTop(100, (s, e) => {
       if (s) {
         this.setState({
-          ads: s
+          ads: (s||[]).filter(x=>x.advertise && x.advertise.type==2 && x.advertise.images),
+          ads0: (s||[]).filter(x=>x.advertise && x.advertise.type==1 && x.advertise.images)
           // .filter(item => { return item.advertise && item.advertise.images })
         });
       }
@@ -53,8 +54,10 @@ class Home extends Component {
         extraData={this.state}
         data={this.state.ads}
         renderItem={({ item, index }) => {
+          if(!item || !item.advertise || !item.advertise.images)
+            return null;
           return (
-            <Card style={{ width: DEVICE_WIDTH - 60 }}>
+            <Card style={{ width: DEVICE_WIDTH - 60, borderRadius: 6, marginRight: 10 }}>
               <TouchableOpacity
                 onPress={() => {
                   if (item.advertise && item.advertise.value) {
@@ -65,10 +68,10 @@ class Home extends Component {
                 }}
               >
                 <ScaledImage
-                  source={require("@images/banner/bannerbooking.png")}
+                  uri={item.advertise.images.absoluteUrl()}
                   width={DEVICE_WIDTH - 60}
                 />
-                <Text numberOfLines={1} ellipsizeMode='tail' style={{ color: '#00000064', margin: 13 }}>{item.advertise ? item.advertise.content : ""}</Text>
+                <Text numberOfLines={1} ellipsizeMode='tail' style={{ color: '#000', margin: 13 }}>{item.advertise ? item.advertise.title : ""}</Text>
               </TouchableOpacity>
             </Card>
           );
@@ -197,10 +200,10 @@ class Home extends Component {
                       }
                     }}
                   >
-                    <ScaledImage
-                      source={require("@images/banner/bannerbooking.png")}
-                      width={DEVICE_WIDTH}
-                    />
+                  <ScaledImage
+                    uri={item.advertise.images.absoluteUrl()}
+                    width={DEVICE_WIDTH}
+                />
                   </TouchableOpacity>
                 );
               }}
@@ -211,7 +214,7 @@ class Home extends Component {
               this.pagination()
             } */}
           </View>
-          <View style={{ flexDirection: "row", padding: 10, marginTop: 25 }}>
+          <View style={{ flexDirection: "row", padding: 10, marginTop: 20 }}>
             <TouchableOpacity
               style={{ flex: 1, marginLeft: 5, alignItems: 'center' }}
               onPress={() => {
@@ -254,7 +257,7 @@ const styles = StyleSheet.create({
   icon: {
   },
   label: {
-    marginTop: 17, color: '#4A4A4A', fontSize: 15, fontWeight: '600', lineHeight: 23
+    marginTop: 10, color: '#4A4A4A', fontSize: 15, fontWeight: '600', lineHeight: 23
   },
   subLabel: {
     color: '#9B9B9B', fontSize: 12, textAlign: 'center', marginTop: 5
