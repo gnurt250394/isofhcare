@@ -4,11 +4,19 @@ import constants from '@resources/strings';
 module.exports = {
     getListBooking(profileId, hospitalId) {
         return new Promise((resolve, reject) => {
-            client.requestApi("get", constants.api.booking.get_list_booking + "/" + profileId + "?hospitalId=" + hospitalId, {}, (s, e) => {
-                if (s)
-                    resolve(s);
-                reject(e);
-            });
+            if (hospitalId)
+                client.requestApi("get", constants.api.booking.get_list_booking + "/" + profileId + "?hospitalId=" + hospitalId, {}, (s, e) => {
+                    if (s)
+                        resolve(s);
+                    reject(e);
+                });
+            else {
+                client.requestApi("get", constants.api.booking.get_list_booking, {}, (s, e) => {
+                    if (s)
+                        resolve(s);
+                    reject(e);
+                });
+            }
 
         })
     },

@@ -4,7 +4,7 @@ const server_url = 'http://10.0.0.99:8000'; //dev
 import axios from 'axios'
 
 const httpClient = axios.create();
-httpClient.defaults.timeout = 5000;
+httpClient.defaults.timeout = 50000;
 
 String.prototype.absoluteUrl = String.prototype.absolute || function (defaultValue) {
     var _this = this.toString();
