@@ -30,7 +30,7 @@ class LoginScreen extends PureComponent {
         if (this.state.profile && this.state.profile.profile) {
             bookingProvider.getListBooking(this.state.profile.profile.id, hospitalId).then(s => {
                 if (s.code == 0) {
-                    let data = [...s.data.bookingNotInHis, ...s.data.patientHistory];
+                    let data = [...s.data.bookingNotInHis, ...s.data.patientHistorys];
                     this.setState({
                         bookings: data,
                         refreshing: false
@@ -165,16 +165,16 @@ class LoginScreen extends PureComponent {
     }
 
     renderItemBookingInHis(item, index) {
-        if (item && item.resultDetail) {
-            let bookingDetail = JSON.parse(item.resultDetail);
+        if (item && item.patientHistory && item.patientHistory.resultDetail) {
+            let bookingDetail = JSON.parse(item.patientHistory.resultDetail);
             if (bookingDetail.Profile) {
                 let booking = bookingDetail.Profile;
                 return <View style={styles.item_ehealth} key={index}>
-                    <TouchableOpacity style={{ position: 'relative', marginLeft: 15, right: 35 }} onPress={this.openBookingInHis.bind(this, item)}>
+                    <TouchableOpacity style={{ position: 'relative', marginLeft: 15, right: 35 }} onPress={this.openBookingInHis.bind(this, item.patientHistory)}>
                         <View style={styles.item_ehealth2}>
                             <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{booking.PatientName}</Text>
                             {/* <Text style={{ marginTop: 13 }}>Bệnh viện: <Text style={{ fontWeight: 'bold' }}>{booking.hospitalName}</Text></Text> */}
-                            <Text style={{ marginTop: 13 }}>Bệnh viện: <Text style={{ fontWeight: 'bold' }}>{"Bệnh Viện ĐHY Hà Nội"}</Text></Text>
+                            <Text style={{ marginTop: 13 }}>Bệnh viện: <Text style={{ fontWeight: 'bold' }}>{item.hospital.name}</Text></Text>
                             <Text style={{ marginTop: 8 }}>Mã hồ sơ: <Text style={{ fontWeight: 'bold' }}>{booking.PatientDocument}</Text></Text>
                             <Text style={{ marginTop: 8 }}>Thời gian: <Text style={{ fontWeight: 'bold' }}>{booking.TimeGoIn.toDateObject().format("dd/MM/yyyy hh:mm tt")}</Text></Text>
                         </View>
