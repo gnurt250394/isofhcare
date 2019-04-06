@@ -246,7 +246,7 @@ module.exports = {
       confirm_code: isofhcare_service + "user/confirm-code",
       get_detail: isofhcare_service + "user/get-detail",
       refresh_password_by_token: isofhcare_service + "user/refresh-password-by-token",
-      check_used_phone:  isofhcare_service + "user/check-used-phone",
+      check_used_phone: isofhcare_service + "user/check-used-phone",
     },
     keyvalue: {
       get: isofhcare_service + "key-value/get-value",
@@ -301,7 +301,8 @@ module.exports = {
       search: isofhcare_service + "advertise/search"
     },
     hospital: {
-      get_all: isofhcare_service + "hospital/get-all"
+      get_all: isofhcare_service + "hospital/get-all",
+      get_hospital_by_profile: isofhcare_service + "hospital-profile/get-hospital-by-profile"
     },
     profile: {
       get_by_user: isofhcare_service + "profile/get-by-user"
