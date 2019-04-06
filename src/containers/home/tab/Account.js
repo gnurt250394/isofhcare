@@ -134,12 +134,12 @@ class Account extends Component {
           this.props.userApp.isLogin ? this.renderCurrentUserInfo() :
             this.renderViewUserNotLogin()
         }
-        <TouchableOpacity style={[styles.itemMenu, { marginTop: 40 }]} onPress={() => {
+        {/* <TouchableOpacity style={[styles.itemMenu, { marginTop: 40 }]} onPress={() => {
           this.props.navigation.navigate("emptyScreen", { title: "Kích hoạt ví" });
         }}>
           <Text style={[styles.itemText, { fontWeight: 'bold' }]}>Kích hoạt ví IsofhCare</Text>
           <ScaledImage source={require("@images/new/ic_menu_wallet.png")} width={24} height={24} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         {
           this.props.userApp.isLogin &&
           <TouchableOpacity style={[styles.itemMenu]} onPress={() => {
@@ -149,12 +149,12 @@ class Account extends Component {
             <ScaledImage source={require("@images/new/ic_menu_ehealth.png")} width={24} height={24} />
           </TouchableOpacity>
         }
-        <TouchableOpacity style={[styles.itemMenu]} onPress={() => {
+        {/* <TouchableOpacity style={[styles.itemMenu]} onPress={() => {
           this.props.navigation.navigate("emptyScreen", { title: "Lịch khám" });
         }}>
           <Text style={styles.itemText}>Lịch khám</Text>
           <ScaledImage source={require("@images/new/ic_menu_list_booking.png")} width={24} height={24} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity style={[styles.itemMenu, this.state.showSetting ? { backgroundColor: 'rgb(230,249,245)' } : {}]} onPress={() => {
           this.setState({ showSetting: !this.state.showSetting });
         }}>
@@ -170,12 +170,12 @@ class Account extends Component {
             <ScaledImage source={require("@images/new/ic_menu_change_password.png")} width={24} height={24} />
           </TouchableOpacity>
         }
-        {
+        {/* {
           this.state.showSetting && <TouchableOpacity style={[styles.itemMenu, { paddingLeft: 40 }]}>
             <Text style={styles.itemText}>Đăng nhập vân tay</Text>
             <ScaledImage source={require("@images/new/ic_menu_fingerprint.png")} width={24} height={24} />
           </TouchableOpacity>
-        }
+        } */}
         <TouchableOpacity style={[styles.itemMenu]} onPress={() => {
           this.props.navigation.navigate("about");
         }}>

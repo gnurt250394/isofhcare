@@ -90,7 +90,8 @@ const RootNavigator = createStackNavigator({
         headerMode: 'none',
         header: null,
         navigationOptions: {
-            header: null
+            header: null,
+            gesturesEnabled: false
         },
         mode: Platform.OS == 'ios' ? 'modal' : 'card'
     }
