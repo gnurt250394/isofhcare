@@ -320,7 +320,7 @@ class DetailBookingHasCheckin extends Component {
                                         {!bookingDetail.Profile.IsContract &&
                                             (item.ServiceType == "CheckUp" && (item.RoomName || item.Location)) ?
                                             <View style={{ marginTop: 10, marginLeft: 17, flexDirection: 'row' }}>
-                                                <Text style={{ fontWeight: 'bold', marginRight: 10 }}> Nơi khám: </Text>
+                                                <Text style={{ fontWeight: 'bold', marginRight: 10, minWidth: 100 }}> Nơi khám: </Text>
                                                 <Text style={{ flexWrap: 'wrap', flex: 1 }}>
                                                     {item.RoomName} {item.Location}
                                                 </Text>
@@ -328,13 +328,13 @@ class DetailBookingHasCheckin extends Component {
                                         }
                                         {!bookingDetail.Profile.IsContract && item.DoctorFullName ?
                                             <View style={{ flexDirection: 'row', marginLeft: 17, alignItems: 'center', marginTop: 10 }}>
-                                                <Text style={{ fontWeight: 'bold', marginRight: 10 }}> Bác sĩ: </Text>
+                                                <Text style={{ fontWeight: 'bold', marginRight: 10, minWidth: 100 }}> Bác sĩ: </Text>
                                                 <Text> {item.DoctorFullName} </Text>
                                             </View> : null}
 
                                         {item.SequenceNoInt ?
                                             <View style={{ marginTop: 10, marginLeft: 17, flexDirection: 'row' }}>
-                                                <Text style={{ fontWeight: 'bold', marginRight: 10 }}> Số khám: </Text>
+                                                <Text style={{ fontWeight: 'bold', marginRight: 10, minWidth: 100 }}> Số khám: </Text>
                                                 <Text> {item.SequenceNoInt} </Text>
                                             </View> : null}
                                     </View>
