@@ -32,8 +32,8 @@ class Home extends Component {
     advertiseProvider.getTop(100, (s, e) => {
       if (s) {
         this.setState({
-          ads: (s||[]).filter(x=>x.advertise && x.advertise.type==2 && x.advertise.images),
-          ads0: (s||[]).filter(x=>x.advertise && x.advertise.type==1 && x.advertise.images)
+          ads: (s || []).filter(x => x.advertise && x.advertise.type == 2 && x.advertise.images),
+          ads0: (s || []).filter(x => x.advertise && x.advertise.type == 1 && x.advertise.images)
           // .filter(item => { return item.advertise && item.advertise.images })
         });
       }
@@ -44,17 +44,18 @@ class Home extends Component {
   renderAds() {
     return (<View>
       <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-        <Text style={{ padding: 12, paddingBottom: 5, color: 'rgba(74,74,74,0.6)', fontWeight: '500', flex: 1 }}>Tin tức</Text>
+        <Text style={{ padding: 12, paddingLeft: 20, paddingBottom: 5, color: 'rgba(74,74,74,0.6)', fontWeight: '500', flex: 1 }}>Tin tức</Text>
         <ScaledImage source={require("@images/new/ic_more.png")} width={20} style={{ marginTop: 10, marginRight: 10 }} />
       </View>
       <FlatList
+        style={{ paddingHorizontal: 10 }}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
         extraData={this.state}
         data={this.state.ads}
         renderItem={({ item, index }) => {
-          if(!item || !item.advertise || !item.advertise.images)
+          if (!item || !item.advertise || !item.advertise.images)
             return null;
           return (
             <Card style={{ width: DEVICE_WIDTH - 60, borderRadius: 6, marginRight: 10 }}>
@@ -200,10 +201,10 @@ class Home extends Component {
                       }
                     }}
                   >
-                  <ScaledImage
-                    uri={item.advertise.images.absoluteUrl()}
-                    width={DEVICE_WIDTH}
-                />
+                    <ScaledImage
+                      uri={item.advertise.images.absoluteUrl()}
+                      width={DEVICE_WIDTH}
+                    />
                   </TouchableOpacity>
                 );
               }}
@@ -238,7 +239,6 @@ class Home extends Component {
             >
               <View style={{ position: 'relative', padding: 5 }}>
                 <ScaledImage style={[styles.icon]} source={require("@images/new/ic_ehealth.png")} height={48} />
-                <ScaledImage style={[{ position: 'absolute', right: 0, top: 0 }]} source={require("@images/new/ic_home_chat.png")} width={30} />
               </View>
               <Text style={[styles.label]}>Y bạ điện tử</Text>
             </TouchableOpacity>
