@@ -154,7 +154,7 @@ class LoginScreen extends PureComponent {
         // this.setState({ isLoading: true }, () => {
         bookingProvider.detailPatientHistory(booking.patientHistory.patientHistoryId, booking.hospital ? booking.hospital.id : "");
         booking.patientHistory.hasCheckin = true;
-        this.props.navigation.navigate("ehealthDHY", { booking: booking.patientHistory })
+        this.props.navigation.navigate("ehealthDHY", { booking: booking.patientHistory, hospital: booking.hospital })
     }
     openBooking(booking, hospitalId) {
         this.props.dispatch({ type: constants2.action.action_select_hospital, value: hospitalId });

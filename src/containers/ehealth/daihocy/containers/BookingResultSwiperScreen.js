@@ -48,15 +48,17 @@ class BookingResultSwiperScreen extends Component {
     exportPdf() {
         this.setState({
             isLoading: true
-        })
-        this.exportPdfCom.getWrappedInstance().exportPdf({
-            type: "checkup",
-            data: this.state.ListResultCheckup[this.state.index],
-            result: this.state.result,
-            fileName: constants.filenameCheckupPDF + this.state.result.booking.patientHistoryId
         }, () => {
-            this.setState({ isLoading: false });
-        });
+            this.props;
+            this.exportPdfCom.getWrappedInstance().exportPdf({
+                type: "checkup",
+                data: this.state.ListResultCheckup[this.state.index],
+                result: this.state.result,
+                fileName: constants.filenameCheckupPDF + this.state.result.booking.patientHistoryId
+            }, () => {
+                this.setState({ isLoading: false });
+            });
+        })
     }
 
     renderItem(lable, value) {

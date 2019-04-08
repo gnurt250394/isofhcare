@@ -20,15 +20,16 @@ class BookingDiagnosticResultScreen extends Component {
     exportPdf() {
         this.setState({
             isLoading: true
-        })
-        this.exportPdfCom.getWrappedInstance().exportPdf({
-            type: "diagnostic",
-            data: this.state.diagnosticResult,
-            result: this.state.result,
-            fileName: constants.filenameDiagnosticPDF + this.state.result.booking.patientHistoryId
         }, () => {
-            this.setState({ isLoading: false });
-        });
+            this.exportPdfCom.getWrappedInstance().exportPdf({
+                type: "diagnostic",
+                data: this.state.diagnosticResult,
+                result: this.state.result,
+                fileName: constants.filenameDiagnosticPDF + this.state.result.booking.patientHistoryId
+            }, () => {
+                this.setState({ isLoading: false });
+            });
+        })
     }
     render() {
         return (
