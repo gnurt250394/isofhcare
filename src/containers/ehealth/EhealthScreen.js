@@ -152,10 +152,9 @@ class LoginScreen extends PureComponent {
 
     openBookingInHis(booking) {
         // this.setState({ isLoading: true }, () => {
-        let patientHistoryId = booking.patientHistoryId;
-        bookingProvider.detailPatientHistory(patientHistoryId, this.state.hospitalId);
-        booking.hasCheckin = true;
-        this.props.navigation.navigate("ehealthDHY", { booking })
+        bookingProvider.detailPatientHistory(booking.patientHistory.patientHistoryId, booking.hospital ? booking.hospital.id : "");
+        booking.patientHistory.hasCheckin = true;
+        this.props.navigation.navigate("ehealthDHY", { booking: booking.patientHistory })
     }
     openBooking(booking, hospitalId) {
         this.props.dispatch({ type: constants2.action.action_select_hospital, value: hospitalId });
@@ -170,7 +169,7 @@ class LoginScreen extends PureComponent {
             if (bookingDetail.Profile) {
                 let booking = bookingDetail.Profile;
                 return <View style={styles.item_ehealth} key={index}>
-                    <TouchableOpacity style={{ position: 'relative', marginLeft: 15, right: 35 }} onPress={this.openBookingInHis.bind(this, item.patientHistory)}>
+                    <TouchableOpacity style={{ position: 'relative', marginLeft: 15, right: 35 }} onPress={this.openBookingInHis.bind(this, item)}>
                         <View style={styles.item_ehealth2}>
                             <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{booking.PatientName}</Text>
                             {/* <Text style={{ marginTop: 13 }}>Bệnh viện: <Text style={{ fontWeight: 'bold' }}>{booking.hospitalName}</Text></Text> */}
