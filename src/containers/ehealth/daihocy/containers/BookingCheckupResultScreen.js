@@ -44,15 +44,16 @@ class BookingCheckupResultScreen extends Component {
     exportPdf() {
         this.setState({
             isLoading: true
-        })
-        this.exportPdfCom.getWrappedInstance().exportPdf({
-            type: "checkup",
-            data: this.state.checkupResult,
-            result: this.state.result,
-            fileName: constants.filenameCheckupPDF + this.state.result.booking.patientHistoryId
         }, () => {
-            this.setState({ isLoading: false });
-        });
+            this.exportPdfCom.getWrappedInstance().exportPdf({
+                type: "checkup",
+                data: this.state.checkupResult,
+                result: this.state.result,
+                fileName: constants.filenameCheckupPDF + this.state.result.booking.patientHistoryId
+            }, () => {
+                this.setState({ isLoading: false });
+            });
+        })
     }
 
     renderItem(lable, value) {
@@ -88,6 +89,7 @@ class BookingCheckupResultScreen extends Component {
         const tableHead = ['STT', 'Tên thuốc', 'Số lượng', 'Đơn vị'];
         return (
             <ActivityPanel style={{ flex: 1, }} title="Kết quả khám và đơn thuốc" isLoading={this.state.isLoading} showFullScreen={true}>
+                <Text>xxx</Text>
                 <ScrollView
                     showsVerticalScrollIndicator={false}
                     style={{ padding: 10 }}>

@@ -8,7 +8,7 @@ import permission from 'mainam-react-native-permission';
 import resultUtils from '@ehealth/daihocy/utils/result-utils';
 
 class ExportPDF extends Component {
-    renderResult(result) {
+    renderResult(result, hospital) {
         if (result.profile.IsContract) {
 
         }
@@ -36,44 +36,44 @@ class ExportPDF extends Component {
         if (resultSurgery && resultSurgery.length > 0) {
             for (var i = 0; i < resultSurgery.length; i++) {
                 var item = resultSurgery[i];
-                div += this.renderResultSurgery(result, profile, item);
+                div += this.renderResultSurgery(result, profile, item, hospital);
                 div += "<style>.pagebreak { page-break-before: always; }</style><div class='pagebreak'></div>";
             }
         }
         if (resultCheckup && resultCheckup.length > 0) {
             for (var i = 0; i < resultCheckup.length; i++) {
                 var item = resultCheckup[i];
-                div += this.renderResultCheckup(result, profile, item);
+                div += this.renderResultCheckup(result, profile, item, hospital);
                 div += "<style>.pagebreak { page-break-before: always; }</style><div class='pagebreak'></div>";
             }
         }
         if (resultDiagnostic && resultDiagnostic.length > 0) {
             for (var i = 0; i < resultDiagnostic.length; i++) {
                 var item = resultDiagnostic[i];
-                div += this.renderResultDiagnostic(result, profile, item);
+                div += this.renderResultDiagnostic(result, profile, item, hospital);
                 div += "<style>.pagebreak { page-break-before: always; }</style><div class='pagebreak'></div>";
             }
         }
         if (resultMedicalTest) {
             if (div)
                 div += "<style>.pagebreak { page-break-before: always; }</style><div class='pagebreak'></div>";
-            div += this.renderResultMedicalTest(result, profile, resultMedicalTest);
+            div += this.renderResultMedicalTest(result, profile, resultMedicalTest, hospital);
         }
 
         return div;
     }
 
-    renderHeader(booking) {
+    renderHeader(booking, hospital) {
         var date = booking.profile.TimeGoIn.toDateObject().format("dd/MM/yyyy");
         var div = "<div style='height:50px'> </div>";
-        div += "<div style='width: 100%;'><strong >Bệnh viện Đại học y Hà Nội</strong><strong style='float: right'>Ngày " + date + "</strong></div>";
+        div += "<div style='width: 100%;'><strong >" + hospital.name + "</strong><strong style='float: right'>Ngày " + date + "</strong></div>";
         return div;
     }
-    renderResultSurgery(booking, profile, item) {
+    renderResultSurgery(booking, profile, item, hospital) {
         var unCheck = "<img style='width: 16px; margin-right:10px' src='data:image/png;base64,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SwIKICibAgggGdKSgAIIyqYAAkiGtCSgAIKyKYAAkiEtCSiAoGwKIIBkSEsCCiAomwIIIBnSkoACCMqmAAJIhrQkoACCsimAAJIhLQkogKBsCiCAZEhLAgogKJsCCCAZ0pKAAgjKpgACSIa0JKAAgrIpgACSIS0JKICgbAoggGRISwIKICibAgggGdKSgAIIyqYAAkiGtCSgAIKyKYAAkiEtCSiAoGwKIIBkSEsCCiAomwIIIBnSkoACCMqmAAJIhrQkoACCsimAAJIhLQkogKBsCiCAZEhLAgogKJsCCCAZ0pKAAgjKpgACSIa0JKAAgrIpgACSIS0JKICgbAoggGRISwIKICibAgggGdKSgAIIyqYAAkiGtCSgAIKyKYAAkiEtCSiAoGwKIIBkSEsCCiAomwIIIBnSkoACCMqmAAJIhrQkoACCsimAAJIhLQkogKBsCiCAZEhLAgogKJsCCCAZ0pKAAgjKpgACSIa0JKAAgrIpgACSIS0JKICgbAoggGRISwIKICibAgggGdKSgAIIyqYAAkiGtCSgAIKyKYAAkiEtCSiAoGwKIIBkSEsCCiAomwIIIBnSkoACCMqmAAJIhrQkoACCsimAAJIhLQkogKBsCiCAZEhLAgogKJsCCCAZ0pKAAgjKpgACSIa0JKAAgrIpgACSIS0JKICgbAoggGRISwIKICibAgggGdKSgAIIyqYAAkiGtCSgAIKyKYAAkiEtCSiAoGwKIIBkSEsCCiAomwIIIBnSkoACCMqmAAJIhrQkoACCsimAAJIhLQkogKBsCiCAZEhLAgogKJsCCCAZ0pKAAgjKpgACSIa0JKAAgrIpgACSIS0JKICgbAoggGRISwIKICibAgggGdKSgAIIyqYAAkiGtCSgAIKyKYAAkiEtCSiAoGwKIIBkSEsCCiAomwIIIBnSkoACCMqmAAJIhrQkoACCsimAAJIhLQkogKBsCiCAZEhLAgogKJsCCCAZ0pKAAgjKpgACSIa0JKAAgrIpgACSIS0JKICgbAoggGRISwIKICibAgggGdKSgAIIyqYAAkiGtCSgAIKyKYAAkiEtCSiAoGwKIIBkSEsCCiAomwIIIBnSkoACCMqmAAJIhrQkoACCsimAAJIhLQkogKBsCiCAZEhLAgogKJsCCCAZ0pKAAgjKpgACSIa0JKAAgrIpgACSIS0JKICgbAog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' alt=''>"
         var checked = "<img style='width: 16px; margin-right:10px' src='data:image/png;base64,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' alt=''>"
         var div = "<div style='margin-left: 50px; margin-right: 50px;'>";
-        div += this.renderHeader(booking);
+        div += this.renderHeader(booking, hospital);
         div += "<div style='font-weight: bold;    margin-bottom: 30px; text-align: center;    margin-top: 30px;'>Phiếu kết quả giải phẫu</div>"
         div += "<div class=\"content-filter-yba\"> <p> <span>Họ và tên : </span> <span class=\"ten-nb\">" + profile.PatientName + "</span> <br />"
         div += "<br /> </p> <p class=\"yc-kt\">Tên dịch vụ:" + item.ServiceName + "</p>";
@@ -115,7 +115,7 @@ class ExportPDF extends Component {
         return div;
     }
 
-    renderResultMedicalTest(booking, profile, resultMedical) {
+    renderResultMedicalTest(booking, profile, resultMedical, hospital) {
         var result = [];
         if (resultMedical.resultKhac) {
             var item = {
@@ -174,7 +174,7 @@ class ExportPDF extends Component {
         for (var i = 0; i < result.length; i++) {
             var item = result[i];
             if (item.value.ListMedical && item.value.ListMedical.length > 0) {
-                div += this.renderMedItem(booking, profile, item);
+                div += this.renderMedItem(booking, profile, item, hospital);
                 div += "<style>.pagebreak { page-break-before: always; }.bold{font-weight:bold; color: red}</style><div class='pagebreak'></div>";
             }
         }
@@ -242,9 +242,9 @@ class ExportPDF extends Component {
         }
         return this.renderTr(result);
     }
-    renderMedItem(booking, profile, result) {
+    renderMedItem(booking, profile, result, hospital) {
         var div = "<div style='margin-left: 50px; margin-right: 50px;'>";
-        div += this.renderHeader(booking);
+        div += this.renderHeader(booking, hospital);
         div += "<div style='font-weight: bold;  margin-bottom: 30px; text-align: center;    margin-top: 30px;'>Phiếu kết quả " + (result.type == "Xét Nghiệm Khác" ? "xét nghiệm khác" : result.type) + "</div>"
         div += "<div class=\"content-filter-yba\"> <p> <span>Họ và tên : </span> <span class=\"ten-nb\">" + profile.PatientName + "</span> <br />"
         div += "<style>.resultMedical {background-color: #fff; border: 1px solid #ddd; width: 100%; text-align:'center'} .resultMedical th{    border-bottom: 0;     background-color: #486677;     color: #fff;} .resultMedical .serviceName{font-weight: bold } .resultMedical td{border-right: 1px solid #ddd; 	    padding: 8px;     line-height: 1.42857143;     vertical-align: top;     border-top: 1px solid #ddd;} </style>"
@@ -320,9 +320,9 @@ class ExportPDF extends Component {
         }
         return div;
     }
-    renderResultCheckup(booking, profile, item) {
+    renderResultCheckup(booking, profile, item, hospital) {
         var div = "<div style='margin-left: 50px; margin-right: 50px;'>";
-        div += this.renderHeader(booking);
+        div += this.renderHeader(booking, hospital);
         div += "<div style='font-weight: bold;    margin-bottom: 30px; text-align: center;    margin-top: 30px;'>Phiếu kết quả khám và đơn thuốc</div>"
         div += "<div class=\"content-filter-yba\"> <p> <span>Họ và tên : </span> <span class=\"ten-nb\">" + profile.PatientName + "</span> <br />"
         div += "<br /> </p> <p class=\"yc-kt\">" + (item.ServiceName == "Đơn thuốc" ? "" : item.ServiceName) + "</p>";
@@ -725,9 +725,9 @@ class ExportPDF extends Component {
         div += " </div>"
         return div;
     }
-    renderResultDiagnostic(booking, profile, item) {
+    renderResultDiagnostic(booking, profile, item, hospital) {
         var div = "<div style='margin-left: 50px; margin-right: 50px;'>";
-        div += this.renderHeader(booking);
+        div += this.renderHeader(booking, hospital);
         div += "<div style='font-weight: bold;  margin-bottom: 30px; text-align: center;    margin-top: 30px;'>Phiếu kết quả cận lâm sàng</div>"
         div += "<div class=\"content-filter-yba\"> <p> <span>Họ và tên : </span> <span class=\"ten-nb\">" + profile.PatientName + "</span> <br />"
         div += "<br /> </p> <p class=\"yc-kt\">Tên dịch vụ: " + item.ServiceName + "</p>";
@@ -762,9 +762,9 @@ class ExportPDF extends Component {
                 }, 500);
         var html = "";
         var result = option.result;
-        let booking = result.booking;
-        var profile = booking.Profile;
+        var profile = result.profile;
         var filename = option.fileName;
+        var hospital = result.hospital || {}
         if (!filename)
             filename = "ket_qua";
         filename += new Date().format("ddMMyyyyhhmmss");
@@ -772,19 +772,19 @@ class ExportPDF extends Component {
             case "surgery":
                 var item = option.data;
                 if (item) {
-                    html = this.renderResultSurgery(result, profile, item);
+                    html = this.renderResultSurgery(result, profile, item, hospital);
                 }
                 break;
             case "checkup":
                 var item = option.data;
                 if (item) {
-                    html = this.renderResultCheckup(result, profile, item);
+                    html = this.renderResultCheckup(result, profile, item, hospital);
                 }
                 break;
             case "diagnostic":
                 var item = option.data;
                 if (item) {
-                    html = this.renderResultDiagnostic(result, profile, item);
+                    html = this.renderResultDiagnostic(result, profile, item, hospital);
                 }
                 break;
             case "medicaltest":
@@ -801,10 +801,10 @@ class ExportPDF extends Component {
                         resultHuyetHoc: result.data.ListResulHuyetHoc,
                         resultKhac: result.data.ListResulOther
                     }
-                html = this.renderResultMedicalTest(result, profile, resultMedicalTest);
+                html = this.renderResultMedicalTest(result, profile, resultMedicalTest, hospital);
                 break;
             default:
-                html = this.renderResult(result)
+                html = this.renderResult(result, hospital)
         }
 
         console.log(html);
