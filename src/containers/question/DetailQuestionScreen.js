@@ -80,7 +80,7 @@ class DetailQuestionScreen extends Component {
                         }} key={index} style={{ marginRight: 10, borderRadius: 10, marginBottom: 10, width: 70, height: 70 }}>
                             <FastImage
                                 style={{ width: 70, height: 70, borderRadius: 10 }}
-                                source={{ 
+                                source={{
                                     uri: item.absoluteUrl(),
                                     priority: FastImage.priority.normal,
                                 }}
@@ -259,9 +259,19 @@ class DetailQuestionScreen extends Component {
         );
     }
 
+    isFinish() {
+        let lastInteractive = new Date();
+        if (this.state.lastComment) {
+            if (this.state.lastComment.author && this.state.lastComment.author.id != this.props.userApp.currentUser.id)
+                lastInteractive = this.state.lastComment.comment.createdDate.toDateObject('-')
+        }
+
+        totalTime = new Date() - lastInteractive;
+        return totalTime > 2 * 24 * 60 * 60 * 1000;
+    }
     renderViewReview() {
         if (this.state.post.post.status == 3) {
-            if (this.state.userCommentCount == 3)
+            if (this.state.userCommentCount == 3 || this.isFinish())
                 return null;
             if (this.state.lastComment && this.state.lastComment.user && (this.state.lastComment.user.id != this.props.userApp.currentUser.id))
                 return (<View style={{ marginTop: 10 }}>
@@ -296,7 +306,12 @@ class DetailQuestionScreen extends Component {
         return null;
     }
     renderViewRating() {
-        if (this.state.post.post.status == 6 || this.state.rating || (this.state.post.post.status == 3 && this.state.userCommentCount >= 3))
+        if (
+            this.state.post.post.status == 6 ||
+            this.state.rating ||
+            (this.state.post.post.status == 3
+                && (this.state.userCommentCount >= 3 || 
+                    this.isFinish())))
             return (<View style={{ flexDirection: 'row', padding: 20, borderTopColor: '#cacaca', borderTopWidth: 2 }}>
                 <Text style={{ flex: 1 }}>Đánh giá</Text>
                 <StarRating
@@ -362,11 +377,6 @@ class DetailQuestionScreen extends Component {
                 return this.showItemComment(item, index, this.state.dataComment.length)
             });
         return null;
-    }
-    isFinish() {
-        let lastInteractive = this.state.lastInteractive;
-        totalTime = new Date() - (lastInteractive || new Date());
-        return (totalTime > (1000 * 60 * 60 * 2) || this.state.post.post.status == 6);
     }
     renderStatusPost() {
         if (this.state.post.post.status == 1 || this.state.post.post.status == 2 || this.state.post.post.status == 5) {
