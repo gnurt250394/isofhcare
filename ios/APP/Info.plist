@@ -42,7 +42,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLIconFile</key>
-			<string></string>
+			<string/>
 			<key>CFBundleURLName</key>
 			<string>com.isofh.isofhcare</string>
 			<key>CFBundleURLSchemes</key>
@@ -57,8 +57,7 @@
 	<string>457683741386685</string>
 	<key>AccountKitClientToken</key>
 	<string>a9ae7d8852eab508b86896d5cd375999</string>
-	
-  <key>FacebookDisplayName</key>
+	<key>FacebookDisplayName</key>
 	<string>iSofH Care</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
@@ -110,6 +109,10 @@
 		<string>rubicon-icon-font.ttf</string>
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
+		<string>AntDesign.ttf</string>
+		<string>FontAwesome5_Brands.ttf</string>
+		<string>FontAwesome5_Regular.ttf</string>
+		<string>FontAwesome5_Solid.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
