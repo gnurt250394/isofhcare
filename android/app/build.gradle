@@ -153,6 +153,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-vector-icons')
     implementation project(':react-native-fast-image')
     implementation project(':react-native-facebook-account-kit')
     implementation project(':react-native-linear-gradient')
