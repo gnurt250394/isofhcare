@@ -109,13 +109,15 @@ class Account extends Component {
         />
         <ScaledImage source={require("@images/new/ic_account_add.png")} width={20} style={{ position: 'absolute', bottom: 0, right: 0 }} />
       </TouchableOpacity>
+      
     </View>);
   }
   renderViewUserNotLogin() {
     return <View style={{ alignItems: 'center', marginTop: 30 }}>
+    <View style={{marginBottom:30}}><ScaledImage source={require("@images/logotext.png")} width={116} height={21} /></View>
       <TouchableOpacity onPress={() => {
         this.props.navigation.navigate("login");
-      }} style={{ padding: 20, backgroundColor: '#02C39A', borderRadius: 30, width: 150 }}><Text style={{ color: '#FFF', fontWeight: 'bold', textAlign: 'center' }}>Đăng nhập</Text></TouchableOpacity>
+      }} style={{ padding: 18, backgroundColor: '#02C39A', borderRadius: 5,width:270,marginBottom:20,marginTop:20  }}><Text style={{ color: '#FFF', fontWeight: 'bold', textAlign: 'center',fontSize:17 }}>Đăng nhập/ Đăng Ký</Text></TouchableOpacity>
     </View>;
   }
   render() {
@@ -134,33 +136,36 @@ class Account extends Component {
           this.props.userApp.isLogin ? this.renderCurrentUserInfo() :
             this.renderViewUserNotLogin()
         }
-        {/* <TouchableOpacity style={[styles.itemMenu, { marginTop: 40 }]} onPress={() => {
+      
+        
+      {this.props.userApp.isLogin ? (
+        <View>
+        <TouchableOpacity style={[styles.itemMenu, { marginTop: 40 }]} onPress={() => {
           this.props.navigation.navigate("emptyScreen", { title: "Kích hoạt ví" });
         }}>
           <Text style={[styles.itemText, { fontWeight: 'bold' }]}>Kích hoạt ví IsofhCare</Text>
           <ScaledImage source={require("@images/new/ic_menu_wallet.png")} width={24} height={24} />
-        </TouchableOpacity> */}
-        {
-          this.props.userApp.isLogin &&
-          <TouchableOpacity style={[styles.itemMenu]} onPress={() => {
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.itemMenu]} onPress={() => {
             this.props.navigation.navigate("ehealth");
           }}>
             <Text style={styles.itemText}>Y bạ điện tử</Text>
             <ScaledImage source={require("@images/new/ic_menu_ehealth.png")} width={24} height={24} />
           </TouchableOpacity>
-        }
-        {/* <TouchableOpacity style={[styles.itemMenu]} onPress={() => {
+        <TouchableOpacity style={[styles.itemMenu]} onPress={() => {
           this.props.navigation.navigate("emptyScreen", { title: "Lịch khám" });
         }}>
           <Text style={styles.itemText}>Lịch khám</Text>
           <ScaledImage source={require("@images/new/ic_menu_list_booking.png")} width={24} height={24} />
-        </TouchableOpacity> */}
+        </TouchableOpacity>
         <TouchableOpacity style={[styles.itemMenu, this.state.showSetting ? { backgroundColor: 'rgb(230,249,245)' } : {}]} onPress={() => {
           this.setState({ showSetting: !this.state.showSetting });
         }}>
           <Text style={[styles.itemText, this.state.showSetting ? { color: '#000', fontWeight: "bold" } : {}]}>Cài đặt</Text>
           <ScaledImage source={require("@images/new/ic_menu_setting.png")} width={24} height={24} />
         </TouchableOpacity>
+        </View>
+      ):(null)}
         {
           this.state.showSetting &&
           <TouchableOpacity style={[styles.itemMenu, { paddingLeft: 40 }]} onPress={() => {
@@ -216,7 +221,7 @@ class Account extends Component {
         }
         <View style={{ height: 100 }} />
         <ImagePicker ref={ref => this.imagePicker = ref} />
-      </ScrollView >
+      </ScrollView>
     );
   }
 }
