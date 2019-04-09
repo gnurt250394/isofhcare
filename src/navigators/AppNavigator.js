@@ -89,6 +89,7 @@ const RootNavigator = createStackNavigator({
 }, {
         headerMode: 'none',
         header: null,
+        gesturesEnabled: false,
         navigationOptions: {
             header: null,
             gesturesEnabled: false
