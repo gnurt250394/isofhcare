@@ -310,7 +310,7 @@ class DetailQuestionScreen extends Component {
             this.state.post.post.status == 6 ||
             this.state.rating ||
             (this.state.post.post.status == 3
-                && (this.state.userCommentCount >= 3 || 
+                && (this.state.userCommentCount >= 3 ||
                     this.isFinish())))
             return (<View style={{ flexDirection: 'row', padding: 20, borderTopColor: '#cacaca', borderTopWidth: 2 }}>
                 <Text style={{ flex: 1 }}>Đánh giá</Text>
@@ -437,53 +437,54 @@ class DetailQuestionScreen extends Component {
                 : null
     }
     onRefresh() {
-        this.setState({ refreshing: true }, () => {
-            var promise = [
-                questionProvider.detail(this.state.post.post.id),
-                commentProvider.search(this.state.post.post.id, 1, 1)
-            ];
-            if (this.state.post.assignee) {
-                promise.push(questionProvider.getResultReview(this.state.post.assignee.id))
-            }
-            Promise.all(promise).then(values => {
-                let state = {};
-                if (values[0].code == 0) {
-                    let post = values[0].data;
-                    state.star = (post && post.post) ? (post.post.review || 0) : 0;
-                    state.post = post;
-                    state.showMore = post.post.status == 1 || post.post.status == 2 || post.post.status == 4 || post.post.status == 5;
-                    state.diagnose = post.post.diagnose;
-                    state.userCommentCount = post.post.numberCommentUser || 0;
-                    state.confirmed = false;
+        if (this.state.post && this.state.post.post)
+            this.setState({ refreshing: true }, () => {
+                var promise = [
+                    questionProvider.detail(this.state.post.post.id),
+                    commentProvider.search(this.state.post.post.id, 1, 1)
+                ];
+                if (this.state.post.assignee) {
+                    promise.push(questionProvider.getResultReview(this.state.post.assignee.id))
                 }
-                if (values[1].code == 0) {
-                    state.commentCount = values[1].data.total - 1;
-                    state.lastComment = values[1].data.data[0];
-                    state.lastInteractive = values[1].data.data[0].comment.createdDate.toDateObject('-')
-                    commentProvider.search(this.state.post.post.id, 1, values[1].data.total).then(s => {
-                        if (s.code == 0) {
-                            if (s.data && s.data.data && s.data.data.length > 0) {
-                                this.setState({ dataComment: (s.data.data || []).reverse() }, () => {
-                                    if (this.state.showComment)
-                                        setTimeout(() => {
-                                            this.scrollView.scrollToEnd({ animated: true });
-                                        }, 500);
-                                });
-                            }
-                        }
-                    })
-                }
-                if (values.length >= 3) {
-                    if (values[2].code == 0) {
-                        state.ratedoctor = (values[2].data.ratingCount || values[2].data.ratingCout) || 0;
+                Promise.all(promise).then(values => {
+                    let state = {};
+                    if (values[0].code == 0) {
+                        let post = values[0].data;
+                        state.star = (post && post.post) ? (post.post.review || 0) : 0;
+                        state.post = post;
+                        state.showMore = post.post.status == 1 || post.post.status == 2 || post.post.status == 4 || post.post.status == 5;
+                        state.diagnose = post.post.diagnose;
+                        state.userCommentCount = post.post.numberCommentUser || 0;
+                        state.confirmed = false;
                     }
-                }
-                state.refreshing = false;
-                this.setState(state);
-            }).catch(s => {
-                this.setState({ refreshing: false });
+                    if (values[1].code == 0) {
+                        state.commentCount = values[1].data.total - 1;
+                        state.lastComment = values[1].data.data[0];
+                        state.lastInteractive = values[1].data.data[0].comment.createdDate.toDateObject('-')
+                        commentProvider.search(this.state.post.post.id, 1, values[1].data.total).then(s => {
+                            if (s.code == 0) {
+                                if (s.data && s.data.data && s.data.data.length > 0) {
+                                    this.setState({ dataComment: (s.data.data || []).reverse() }, () => {
+                                        if (this.state.showComment)
+                                            setTimeout(() => {
+                                                this.scrollView.scrollToEnd({ animated: true });
+                                            }, 500);
+                                    });
+                                }
+                            }
+                        })
+                    }
+                    if (values.length >= 3) {
+                        if (values[2].code == 0) {
+                            state.ratedoctor = (values[2].data.ratingCount || values[2].data.ratingCout) || 0;
+                        }
+                    }
+                    state.refreshing = false;
+                    this.setState(state);
+                }).catch(s => {
+                    this.setState({ refreshing: false });
+                })
             })
-        })
     }
     render() {
         // const post = this.props.navigation.getParam("post", null);
@@ -497,64 +498,65 @@ class DetailQuestionScreen extends Component {
             <ActivityPanel style={{ flex: 1 }} title="Tư vấn online" showFullScreen={true} isLoading={this.state.isLoading}>
                 {
                     post.post &&
-                    <View style={{ padding: 20, flex: 1 }}>
-                        <ScrollView
-                            refreshControl={<RefreshControl
-                                refreshing={this.state.refreshing}
-                                onRefresh={this.onRefresh.bind(this)}
-                            />}
-                            showsVerticalScrollIndicator={false}
-                            ref={(ref) => { this.scrollView = ref }}>
-                            <View style={{ flexDirection: "row", alignItems: 'center' }}>
-                                <View style={{ flex: 1 }} ><Text style={{ fontSize: 18, fontWeight: 'bold' }}>{post.author ? post.author.name : ""}</Text></View>
-                                <View><Text style={{ color: '#00000038' }}>{this.getTime(post.post.createdDate)}</Text></View>
-                            </View>
-                            <Text style={{ color: '#00000064', marginTop: 7 }}>
-                                {this.state.post.post.content}
-                            </Text>
-                            {
-                                this.showMoreInfo()
-                            }
-                            <View>
+                    <View style={{ flex: 1 }}>
+                        <View style={{ padding: 20, flex: 1 }}>
+                            <ScrollView
+                                refreshControl={<RefreshControl
+                                    refreshing={this.state.refreshing}
+                                    onRefresh={this.onRefresh.bind(this)}
+                                />}
+                                showsVerticalScrollIndicator={false}
+                                ref={(ref) => { this.scrollView = ref }}>
+                                <View style={{ flexDirection: "row", alignItems: 'center' }}>
+                                    <View style={{ flex: 1 }} ><Text style={{ fontSize: 18, fontWeight: 'bold' }}>{post.author ? post.author.name : ""}</Text></View>
+                                    <View><Text style={{ color: '#00000038' }}>{this.getTime(post.post.createdDate)}</Text></View>
+                                </View>
+                                <Text style={{ color: '#00000064', marginTop: 7 }}>
+                                    {this.state.post.post.content}
+                                </Text>
                                 {
-                                    this.state.lastComment &&
-                                    <View style={{ marginTop: 10 }}>
-                                        {
-                                            !this.state.showComment &&
-                                            this.showItemComment(this.state.lastComment, -1)
-                                        }
-                                        {
-                                            this.renderShowMoreComment()
-                                        }
-                                        {
-                                            this.renderListComment()
-                                        }
-                                        {
-                                            this.renderDiagnosticView()
-                                        }
-                                    </View>
+                                    this.showMoreInfo()
                                 }
-                            </View>
-                            {
-                                this.renderViewReview()
-                            }
-                            {
-                                this.renderStatusPost()
-                            }
-                            <View style={{ height: 100 }} />
-                        </ScrollView>
+                                <View>
+                                    {
+                                        this.state.lastComment &&
+                                        <View style={{ marginTop: 10 }}>
+                                            {
+                                                !this.state.showComment &&
+                                                this.showItemComment(this.state.lastComment, -1)
+                                            }
+                                            {
+                                                this.renderShowMoreComment()
+                                            }
+                                            {
+                                                this.renderListComment()
+                                            }
+                                            {
+                                                this.renderDiagnosticView()
+                                            }
+                                        </View>
+                                    }
+                                </View>
+                                {
+                                    this.renderViewReview()
+                                }
+                                {
+                                    this.renderStatusPost()
+                                }
+                                <View style={{ height: 100 }} />
+                            </ScrollView>
+                        </View>
+                        {
+                            this.renderViewRating()
+                        }
+                        {
+                            Platform.OS == "ios" &&
+                            <KeyboardSpacer />
+                        }
+                        <DialogBox ref={dialogbox => { this.dialogbox = dialogbox }} />
+                        <ImagePicker ref={ref => this.imagePicker = ref} />
                     </View>
                 }
-                {
-                    this.renderViewRating()
-                }
-                {
-                    Platform.OS == "ios" &&
-                    <KeyboardSpacer />
-                }
-                <DialogBox ref={dialogbox => { this.dialogbox = dialogbox }} />
-                <ImagePicker ref={ref => this.imagePicker = ref} />
-
             </ActivityPanel >
         );
     }

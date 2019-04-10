@@ -5,7 +5,8 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  FlatList
+  FlatList,
+  StyleSheet
 } from "react-native";
 import { connect } from "react-redux";
 import ScaleImage from "mainam-react-native-scaleimage";
@@ -234,10 +235,6 @@ class NotificationScreen extends Component {
 
               <TouchableOpacity
                 style={{
-                  // backgroundColor:
-                  //   item.notification.watched == 0
-                  //     ? "rgb(238,248,247)"
-                  //     : "#FFF",
                   marginLeft: 20, marginRight: 20
                 }}
                 onPress={this.viewNotification.bind(this, item)}
@@ -252,12 +249,11 @@ class NotificationScreen extends Component {
                 >
                   <ScaleImage source={require("@images/new/user.png")} width={47} />
                   <View style={{ paddingTop: 4, marginLeft: 19, flex: 1 }}>
-                    <Text style={{ fontSize: 14, fontWeight: 'bold' }}>Tư vấn - đặt câu hỏi</Text>
+                    <Text style={[{ fontSize: 14, fontWeight: 'bold' }, item.notification.watched == 1 ? styles.title_watch : styles.title]}>Tư vấn - đặt câu hỏi</Text>
                     <Text
-                      style={{ fontSize: 14 }}
+                      style={item.notification.watched == 1 ? styles.title_watch : styles.title}
                       numberOfLines={2}
-                      ellipsizeMode="tail"
-                    >
+                      ellipsizeMode="tail">
                       {item.notification.title.trim()}
                     </Text>
                     {
@@ -289,6 +285,10 @@ class NotificationScreen extends Component {
     );
   }
 }
+const styles = StyleSheet.create({
+  title: { fontSize: 14, color: '#000000' },
+  title_watch: { fontSize: 14, color: '#00000070' }
+})
 
 function mapStateToProps(state) {
   return {
