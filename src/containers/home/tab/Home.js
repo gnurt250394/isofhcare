@@ -28,18 +28,31 @@ class Home extends Component {
       ads0: []
     };
   }
-  componentWillMount() {
+  getTopAds(reload) {
     advertiseProvider.getTop(100, (s, e) => {
       if (s) {
+        if (s.length == 0) {
+          if (!reload)
+            this.getTopAds(true);
+        }
         this.setState({
           ads: (s || []).filter(x => x.advertise && x.advertise.type == 2 && x.advertise.images),
           ads0: (s || []).filter(x => x.advertise && x.advertise.type == 1 && x.advertise.images)
           // .filter(item => { return item.advertise && item.advertise.images })
         });
       }
+      else {
+        if (!reload)
+          this.getTopAds(true);
+      }
       if (e) {
+        if (!reload)
+          this.getTopAds(true);
       }
     });
+  }
+  componentWillMount() {
+    this.getTopAds();
   }
   renderAds() {
     return (<View>
