@@ -63,6 +63,7 @@
     "react-native-swiper": "^1.5.13",
     "react-native-table-component": "^1.1.8",
     "react-native-thumbnail-grid": "^0.3.0",
+    "react-native-ux-cam": "^5.0.1",
     "react-native-vector-icons": "^6.4.2",
     "react-native-viewport-units": "0.0.5",
     "react-navigation": "^2.10.0",

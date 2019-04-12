@@ -6,6 +6,7 @@ import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 import com.facebook.CallbackManager;
 import com.facebook.react.ReactApplication;
+import com.uxcam.RNUxcamPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import io.underscope.react.fbak.RNAccountKitPackage;
 import com.reactnative.photoview.PhotoViewPackage;
@@ -52,6 +53,7 @@ private static CallbackManager mCallbackManager = CallbackManager.Factory.create
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
+            new RNUxcamPackage(),
             new VectorIconsPackage(),
             new RNAccountKitPackage(),
             new PhotoViewPackage(),
