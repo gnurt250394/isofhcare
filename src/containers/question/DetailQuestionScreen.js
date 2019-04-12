@@ -58,7 +58,8 @@ class DetailQuestionScreen extends Component {
             rating: false,
             dataComment: [],
             userCommentCount: 0,
-            commentCount: 0
+            commentCount: 0,
+            refreshing: false
         }
     }
     componentDidMount() {
