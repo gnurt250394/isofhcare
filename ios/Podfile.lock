@@ -35,6 +35,7 @@ PODS:
     - FirebaseInstanceID (~> 2.0)
     - GoogleToolboxForMac/Logger (~> 2.1)
     - Protobuf (~> 3.5)
+  - FLAnimatedImage (1.0.12)
   - Google-Maps-iOS-Utils (2.1.0):
     - Google-Maps-iOS-Utils/Clustering (= 2.1.0)
     - Google-Maps-iOS-Utils/Geometry (= 2.1.0)
@@ -91,6 +92,30 @@ PODS:
     - GoogleToolboxForMac/Defines (= 2.2.0)
   - GoogleUtilities (1.3.2):
     - GoogleSymbolUtilities (~> 1.1)
+  - libwebp (0.6.1):
+    - libwebp/core (= 0.6.1)
+    - libwebp/dec (= 0.6.1)
+    - libwebp/demux (= 0.6.1)
+    - libwebp/dsp (= 0.6.1)
+    - libwebp/enc (= 0.6.1)
+    - libwebp/mux (= 0.6.1)
+    - libwebp/utils (= 0.6.1)
+    - libwebp/webp (= 0.6.1)
+  - libwebp/core (0.6.1):
+    - libwebp/webp
+  - libwebp/dec (0.6.1):
+    - libwebp/core
+  - libwebp/demux (0.6.1):
+    - libwebp/core
+  - libwebp/dsp (0.6.1):
+    - libwebp/core
+  - libwebp/enc (0.6.1):
+    - libwebp/core
+  - libwebp/mux (0.6.1):
+    - libwebp/core
+  - libwebp/utils (0.6.1):
+    - libwebp/core
+  - libwebp/webp (0.6.1)
   - nanopb (0.3.901):
     - nanopb/decode (= 0.3.901)
     - nanopb/encode (= 0.3.901)
@@ -100,6 +125,12 @@ PODS:
   - QBImagePickerController (3.4.0)
   - React (0.55.3):
     - React/Core (= 0.55.3)
+  - react-native-fast-image (5.2.0):
+    - FLAnimatedImage
+    - React
+    - SDWebImage/Core
+    - SDWebImage/GIF
+    - SDWebImage/WebP
   - react-native-google-maps (0.23.0):
     - Google-Maps-iOS-Utils (= 2.1.0)
     - GoogleMaps (= 2.5.0)
@@ -145,7 +176,16 @@ PODS:
     - QBImagePickerController
     - React/Core
     - RSKImageCropper
+  - RNVectorIcons (6.4.2):
+    - React
   - RSKImageCropper (2.2.1)
+  - SDWebImage/Core (4.4.4)
+  - SDWebImage/GIF (4.4.4):
+    - FLAnimatedImage (~> 1.0)
+    - SDWebImage/Core
+  - SDWebImage/WebP (4.4.4):
+    - libwebp (~> 0.5)
+    - SDWebImage/Core
   - yoga (0.55.3.React)
 
 DEPENDENCIES:
@@ -161,6 +201,7 @@ DEPENDENCIES:
   - GoogleMaps
   - GooglePlacePicker
   - GooglePlaces
+  - react-native-fast-image (from `../node_modules/react-native-fast-image`)
   - react-native-google-maps (from `../node_modules/react-native-maps`)
   - react-native-maps (from `../node_modules/react-native-maps`)
   - React/Core (from `../node_modules/react-native`)
@@ -178,6 +219,7 @@ DEPENDENCIES:
   - rn-fetch-blob (from `../node_modules/rn-fetch-blob`)
   - RNAccountKit (from `../node_modules/react-native-facebook-account-kit/ios`)
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
+  - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga/yoga.podspec`)
 
 SPEC REPOS:
@@ -192,6 +234,7 @@ SPEC REPOS:
     - FirebaseCore
     - FirebaseInstanceID
     - FirebaseMessaging
+    - FLAnimatedImage
     - Google
     - Google-Maps-iOS-Utils
     - GoogleAppUtilities
@@ -205,14 +248,18 @@ SPEC REPOS:
     - GoogleSymbolUtilities
     - GoogleToolboxForMac
     - GoogleUtilities
+    - libwebp
     - nanopb
     - Protobuf
     - QBImagePickerController
     - RSKImageCropper
+    - SDWebImage
 
 EXTERNAL SOURCES:
   React:
     :path: "../node_modules/react-native"
+  react-native-fast-image:
+    :path: "../node_modules/react-native-fast-image"
   react-native-google-maps:
     :path: "../node_modules/react-native-maps"
   react-native-maps:
@@ -225,6 +272,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-facebook-account-kit/ios"
   RNImageCropPicker:
     :path: "../node_modules/react-native-image-crop-picker"
+  RNVectorIcons:
+    :path: "../node_modules/react-native-vector-icons"
   yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga/yoga.podspec"
 
@@ -239,6 +288,7 @@ SPEC CHECKSUMS:
   FirebaseCore: 90cb1c53d69b556f112a1bf72b5fcfaad7650790
   FirebaseInstanceID: 8d20d890d65c917f9f7d9950b6e10a760ad34321
   FirebaseMessaging: 75cdb862e86c30e0913a2ff307e48d49357c5b73
+  FLAnimatedImage: 4a0b56255d9b05f18b6dd7ee06871be5d3b89e31
   Google: d536877ec602555b755cc28ce6fed104825c693c
   Google-Maps-iOS-Utils: c32891ff472eaaa1fca032beedafa1a013af7875
   GoogleAppUtilities: a8a552aa74f6597f805e45b5a3962766c3134973
@@ -252,19 +302,23 @@ SPEC CHECKSUMS:
   GoogleSymbolUtilities: 631ee17048aa5e9ab133470d768ea997a5ef9b96
   GoogleToolboxForMac: ff31605b7d66400dcec09bed5861689aebadda4d
   GoogleUtilities: 8bbc733218aad26306f9d4a253823986110e3358
+  libwebp: 0f01098c6c17175391af621b2f14150f3ca16e16
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   Protobuf: 1eb9700044745f00181c136ef21b8ff3ad5a0fd5
   QBImagePickerController: d54cf93db6decf26baf6ed3472f336ef35cae022
   React: aa2040dbb6f317b95314968021bd2888816e03d5
+  react-native-fast-image: 4170ad074e9de6c428fc4580ecbaacabf74901a6
   react-native-google-maps: b946d62e25dc66097921ed82520e45b0b081768a
   react-native-maps: 066c2afcc89e18726377bcc685315f989ca22449
   ReactNativePermissions: 9f2d9c45c98800795e6c2ed330e25d11a66a8169
   rn-fetch-blob: 76a8f798dae965bbcd146a2438f2e1d381c91ae3
   RNAccountKit: 3dd31fff73c90378ac89dc7611da0dc22b29f84b
   RNImageCropPicker: 32ca4b9fef4e1b7b85ba69494242122948117e06
+  RNVectorIcons: 8c52e1e8da1153613fdef44748e865c25556cb9c
   RSKImageCropper: 98296ad26b41753f796b6898d015509598f13d97
+  SDWebImage: c00ec18ab25d10e5ffac109b0f78d1b4341c9691
   yoga: a23273df0088bf7f2bb7e5d7b00044ea57a2a54a
 
-PODFILE CHECKSUM: ba01732b3ec88337a4ad256d1e82c076da647d54
+PODFILE CHECKSUM: 5f49b878e767c964aa6612a4c095fc957be64c6f
 
 COCOAPODS: 1.5.3
