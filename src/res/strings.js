@@ -1,4 +1,4 @@
-let isofhcare_service = 'isofh-care/';
+let isofhcare_service = 'pg/';
 module.exports = {
   fbApplicationId: "457683741386685",
   username: "Tên tài khoản",
