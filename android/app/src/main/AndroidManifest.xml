@@ -20,8 +20,6 @@ xmlns:tools="http://schemas.android.com/tools"
 
     <uses-permission android:name="com.isofh.isofhcare.permission.C2D_MESSAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-<uses-permission android:name="android.permission.READ_SMS" />
-<uses-permission android:name="android.permission.RECEIVE_SMS" />
 <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <application
         android:name=".MainApplication"
