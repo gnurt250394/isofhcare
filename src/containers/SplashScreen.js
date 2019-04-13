@@ -9,7 +9,6 @@ import ScaleImage from 'mainam-react-native-scaleimage';
 import { StackActions, NavigationActions } from 'react-navigation';
 import * as Animatable from 'react-native-animatable';
 MyScaleImage = Animatable.createAnimatableComponent(ScaleImage);
-import RNUxcam from 'react-native-ux-cam';
 const resetAction = (route) => {
 	return StackActions.reset({
 		index: 0,
@@ -21,7 +20,6 @@ class SplashScreen extends Component {
 	constructor(props) {
 		super(props);
 		this.Actions = this.props.navigation;
-		RNUxcam.startWithKey('zq6xvzqq6tamcjy');
 	}
 	componentDidMount() {
 		console.disableYellowBox = true;
