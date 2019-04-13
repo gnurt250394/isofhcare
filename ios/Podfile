@@ -69,6 +69,7 @@ target 'APP' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+  pod 'react-native-ux-cam', path: "../node_modules/react-native-ux-cam"
 end
 
 # very important to have, unless you removed React dependencies for Libraries
