@@ -1,4 +1,4 @@
-const server_url = 'http://10.0.0.98:8000'; //dev
+const server_url = 'http://123.24.206.9:8000'; //dev
 // const server_url = 'http://api.test.isofhcare.com:8483'; //demo
 // const server_url = 'https://api.isofhcare.com'; //release
 import axios from 'axios'
@@ -19,7 +19,9 @@ String.prototype.absoluteUrl = String.prototype.absolute || function (defaultVal
     }
     let _this2 = _this.toLowerCase();
     if (_this2.endsWith(".jpg") || _this2.endsWith(".png") || _this2.endsWith(".gif")) {
-        return server_url + _this + "";
+        let image = server_url + "/isofhcare-resources" + _this + "";
+        console.log(image);
+        return image;
     }
     if (!_this2.endsWith(".jpg") || !_this2.endsWith(".png") || !_this2.endsWith(".gif")) {
         return defaultValue;
@@ -77,7 +79,7 @@ module.exports = {
                 Accept: 'application/json',
                 'Content-Type': 'multipart/form-data',
                 'Authorization': this.auth,
-                'MobileMode':'user',
+                'MobileMode': 'user',
                 // 'MobileMode': 'vender',
             }, data).then(s => {
                 if (funRes) {
@@ -102,7 +104,7 @@ module.exports = {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
                 'Authorization': this.auth,
-                'MobileMode':'user',
+                'MobileMode': 'user',
                 // 'MobileMode': 'vender'
             }, dataBody).then(s => {
                 if (funRes) {

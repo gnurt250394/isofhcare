@@ -1,4 +1,5 @@
 let isofhcare_service = 'pg/';
+let isofhcare_resources = 'isofhcare-resources/';
 module.exports = {
   fbApplicationId: "457683741386685",
   username: "Tên tài khoản",
@@ -231,7 +232,7 @@ module.exports = {
       getListZone: isofhcare_service + "profile/get-zone-by-district"
     },
     upload: {
-      image: isofhcare_service + "image/upload"
+      image: isofhcare_resources + "image/upload"
     },
     user: {
       login: isofhcare_service + "user/login",
