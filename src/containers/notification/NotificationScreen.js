@@ -18,6 +18,7 @@ import DialogBox from "react-native-dialogbox";
 import constants from "@resources/strings";
 import firebase from 'react-native-firebase';
 import redux from '@redux-store'
+import ImageLoad from 'mainam-react-native-image-loader';
 
 
 class NotificationScreen extends Component {
@@ -180,6 +181,87 @@ class NotificationScreen extends Component {
     return item.notification.createdDate.toDateObject('-').ddmmyyyy() == (new Date()).ddmmyyyy();
   }
 
+  renderItem(item, index) {
+    const source = item.user && item.user.avatar ? { uri: item.user.avatar.absoluteUrl() } : require("@images/new/user.png");
+
+    return (
+      <View>
+        {
+          ((item, index) => {
+            let notiTime = item.notification.createdDate.toDateObject('-');
+            if (index == 0) {
+              let date = new Date();
+              if (date.ddmmyyyy() == notiTime.ddmmyyyy())
+                return <Text style={{ marginLeft: 20, marginRight: 20, marginBottom: 10, marginTop: 20 }}>Hôm nay</Text>
+              else
+                return <Text style={{ marginLeft: 20, marginRight: 20, marginBottom: 10, marginTop: 20 }}>Ngày {notiTime.format('dd/MM/yyyy')}</Text>
+            }
+            else {
+              let preNoti = this.state.data[index - 1];
+              let preNotiDate = preNoti.notification.createdDate.toDateObject('-');
+              if (preNotiDate.ddmmyyyy() != notiTime.ddmmyyyy())
+                return <Text style={{ marginLeft: 20, marginRight: 20, marginBottom: 10, marginTop: 20 }}>Ngày {notiTime.format('dd/MM/yyyy')}</Text>
+            }
+            return null
+          }).call(this, item, index)
+        }
+
+        <TouchableOpacity
+          style={{
+            marginLeft: 20, marginRight: 20
+          }}
+          onPress={this.viewNotification.bind(this, item)}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+              padding: 11,
+              paddingLeft: 13,
+              paddingRight: 13
+            }}
+          >
+            <ImageLoad
+              resizeMode="cover"
+              imageStyle={{ borderRadius: 25 }}
+              borderRadius={25}
+              customImagePlaceholderDefaultStyle={[styles.avatar, { width: 50, height: 50 }]}
+              placeholderSource={require("@images/new/user.png")}
+              style={styles.avatar}
+              resizeMode="cover"
+              loadingStyle={{ size: 'small', color: 'gray' }}
+              source={source}
+              defaultImage={() => {
+                return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={50} height={50} style={styles.avatar} />
+              }}
+            />
+            <View style={{ paddingTop: 4, marginLeft: 19, flex: 1 }}>
+              <Text style={[{ fontSize: 14, fontWeight: 'bold' }, item.notification.watched == 1 ? styles.title_watch : styles.title]}>Tư vấn - đặt câu hỏi</Text>
+              <Text
+                style={item.notification.watched == 1 ? styles.title_watch : styles.title}
+                numberOfLines={2}
+                ellipsizeMode="tail">
+                {item.notification.title.trim()}
+              </Text>
+              {
+                this.isToday(item) &&
+                <Text
+                  style={{ fontSize: 12, color: "#00000060", marginTop: 8 }}
+                >
+                  {
+                    item.notification.createdDate.toDateObject('-').getPostTime()
+                  }
+                </Text>
+              }
+            </View>
+          </View>
+          <View
+            style={{ height: 0.5, backgroundColor: "rgb(204,204,204)" }}
+          />
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
   render() {
     return (
       <ActivityPanel
@@ -211,69 +293,7 @@ class NotificationScreen extends Component {
               ) : null
           }
           ListFooterComponent={() => <View style={{ height: 10 }} />}
-          renderItem={({ item, index }) => (
-            <View>
-              {
-                ((item, index) => {
-                  let notiTime = item.notification.createdDate.toDateObject('-');
-                  if (index == 0) {
-                    let date = new Date();
-                    if (date.ddmmyyyy() == notiTime.ddmmyyyy())
-                      return <Text style={{ marginLeft: 20, marginRight: 20, marginBottom: 10, marginTop: 20 }}>Hôm nay</Text>
-                    else
-                      return <Text style={{ marginLeft: 20, marginRight: 20, marginBottom: 10, marginTop: 20 }}>Ngày {notiTime.format('dd/MM/yyyy')}</Text>
-                  }
-                  else {
-                    let preNoti = this.state.data[index - 1];
-                    let preNotiDate = preNoti.notification.createdDate.toDateObject('-');
-                    if (preNotiDate.ddmmyyyy() != notiTime.ddmmyyyy())
-                      return <Text style={{ marginLeft: 20, marginRight: 20, marginBottom: 10, marginTop: 20 }}>Ngày {notiTime.format('dd/MM/yyyy')}</Text>
-                  }
-                  return null
-                }).call(this, item, index)
-              }
-
-              <TouchableOpacity
-                style={{
-                  marginLeft: 20, marginRight: 20
-                }}
-                onPress={this.viewNotification.bind(this, item)}
-              >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    padding: 11,
-                    paddingLeft: 13,
-                    paddingRight: 13
-                  }}
-                >
-                  <ScaleImage source={require("@images/new/user.png")} width={47} />
-                  <View style={{ paddingTop: 4, marginLeft: 19, flex: 1 }}>
-                    <Text style={[{ fontSize: 14, fontWeight: 'bold' }, item.notification.watched == 1 ? styles.title_watch : styles.title]}>Tư vấn - đặt câu hỏi</Text>
-                    <Text
-                      style={item.notification.watched == 1 ? styles.title_watch : styles.title}
-                      numberOfLines={2}
-                      ellipsizeMode="tail">
-                      {item.notification.title.trim()}
-                    </Text>
-                    {
-                      this.isToday(item) &&
-                      <Text
-                        style={{ fontSize: 12, color: "#00000060", marginTop: 8 }}
-                      >
-                        {
-                          item.notification.createdDate.toDateObject('-').getPostTime()
-                        }
-                      </Text>
-                    }
-                  </View>
-                </View>
-                <View
-                  style={{ height: 0.5, backgroundColor: "rgb(204,204,204)" }}
-                />
-              </TouchableOpacity>
-            </View>
-          )}
+          renderItem={({ item, index }) => this.renderItem(item, index)}
         />
 
         <DialogBox
@@ -287,7 +307,13 @@ class NotificationScreen extends Component {
 }
 const styles = StyleSheet.create({
   title: { fontSize: 14, color: '#000000' },
-  title_watch: { fontSize: 14, color: '#00000070' }
+  title_watch: { fontSize: 14, color: '#00000070' },
+  avatar: {
+    alignSelf: 'center',
+    borderRadius: 25,
+    width: 50,
+    height: 50
+  }
 })
 
 function mapStateToProps(state) {
