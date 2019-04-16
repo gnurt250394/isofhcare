@@ -154,7 +154,7 @@ class RegisterScreen extends Component {
                     style={{
                       flexDirection: 'row',
                       alignItems: "center",
-                      marginTop: 35, position: 'relative'
+                      position: 'relative'
                     }}
                   >
                     <TextField
@@ -163,6 +163,13 @@ class RegisterScreen extends Component {
                       dateFormat={"dd/MM/yyyy"}
                       splitDate={"/"}
                       editable={false}
+                      getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
+                        editable={false}
+                        placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.dob}
+                        onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
+                      onChangeText={s => {
+                        this.setState({ date: s });
+                      }}
                       errorStyle={styles.errorStyle}
                       validate={{
                         rules: {
@@ -176,21 +183,6 @@ class RegisterScreen extends Component {
                           min: "Không cho phép chon trên 150 tuổi"
                         }
                       }}
-                      inputStyle={{
-                        backgroundColor: "#FFF",
-                        color: "#006ac6",
-                        paddingBottom: Platform.OS == 'ios' ? 10 : 0,
-                        borderBottomWidth: 2,
-                        borderBottomColor: "#02C39A",
-
-                        color: "#53657B",
-                        fontWeight: "600",
-                        fontSize: 20
-                      }}
-                      onChangeText={s => {
-                        this.setState({ date: s });
-                      }}
-                      placeholder={constants.dob}
                       returnKeyType={"next"}
                       autoCapitalize={"none"}
                       autoCorrect={false}
@@ -198,7 +190,7 @@ class RegisterScreen extends Component {
                         flex: 1
                       }}
                     />
-                    <ScaleImage source={require("@images/new/calendar.png")} width={20} style={{ position: 'absolute', right: 0, top: 10 }} />
+                    <ScaleImage source={require("@images/new/calendar.png")} width={20} style={{ position: 'absolute', right: 0, top: this.state.date ? 40 : 40 }} />
                   </Field>
                   <View
                     style={{
