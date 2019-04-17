@@ -48,9 +48,9 @@ class CreateQuestionStep2Screen extends Component {
                 });
                 this.setState({
                     disease: s.post.diseaseHistory || 0,
-                    specialist_item: s.specialist ? { specialist: s.specialist } : null,
-                    otherContent: s.post.otherContent,
-                    imageUris: images
+                    // specialist_item: s.specialist ? { specialist: s.specialist } : null,
+                    // otherContent: s.post.otherContent,
+                    // imageUris: images
                 })
             }
         })
