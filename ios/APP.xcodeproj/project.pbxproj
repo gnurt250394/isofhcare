@@ -2067,7 +2067,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.isofh.isofhcare;
+				PRODUCT_BUNDLE_IDENTIFIER = com.isofh.appisofhcaretest;
 				PRODUCT_NAME = APP;
 				PROVISIONING_PROFILE = "0f5fbbc4-4172-466c-97bb-95964499866b";
 				PROVISIONING_PROFILE_SPECIFIER = "isofhcare development";
@@ -2118,7 +2118,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.isofh.isofhcare;
+				PRODUCT_BUNDLE_IDENTIFIER = com.isofh.appisofhcaretest;
 				PRODUCT_NAME = APP;
 				PROVISIONING_PROFILE = "a85727cc-7f0e-4e39-81ab-abf948e917c6";
 				PROVISIONING_PROFILE_SPECIFIER = "isofhcare distribution";

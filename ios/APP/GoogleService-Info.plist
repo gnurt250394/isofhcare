@@ -2,30 +2,26 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>AD_UNIT_ID_FOR_BANNER_TEST</key>
-	<string>ca-app-pub-3940256099942544/2934735716</string>
-	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
-	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>553446981035-bo2beb0me37ooagphjp7b1rg17lpp5qr.apps.googleusercontent.com</string>
+	<string>553446981035-3c865duee0vo38befkkmcatt57l30n20.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.553446981035-bo2beb0me37ooagphjp7b1rg17lpp5qr</string>
+	<string>com.googleusercontent.apps.553446981035-3c865duee0vo38befkkmcatt57l30n20</string>
 	<key>ANDROID_CLIENT_ID</key>
 	<string>553446981035-13crntjue56vmtueclp5q04uf695ll65.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAuxCg_cGhru90abVUxnkTVVdsLzyr4sQ4</string>
+	<string>AIzaSyA72BEhiTVyAV0TF-w-Y6z7OAGtlmMmkBw</string>
 	<key>GCM_SENDER_ID</key>
 	<string>553446981035</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.isofh.isofhcare</string>
+	<string>com.isofh.appisofhcaretest</string>
 	<key>PROJECT_ID</key>
 	<string>isofhcare</string>
 	<key>STORAGE_BUCKET</key>
 	<string>isofhcare.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<true></true>
+	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
 	<false></false>
 	<key>IS_APPINVITE_ENABLED</key>
@@ -35,7 +31,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:553446981035:ios:0d5303158b711b04</string>
+	<string>1:553446981035:ios:09e58b0cd6888cb6</string>
 	<key>DATABASE_URL</key>
 	<string>https://isofhcare.firebaseio.com</string>
 </dict>
