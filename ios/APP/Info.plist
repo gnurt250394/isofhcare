@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>ISOFH CARE</string>
+	<string>iSofHCare</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -44,10 +44,10 @@
 			<key>CFBundleURLIconFile</key>
 			<string/>
 			<key>CFBundleURLName</key>
-			<string>com.isofh.isofhcare</string>
+			<string>com.isofh.appisofhcare</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.isofh.isofhcare</string>
+				<string>com.isofh.appisofhcare</string>
 			</array>
 		</dict>
 	</array>
