@@ -44,10 +44,10 @@
 			<key>CFBundleURLIconFile</key>
 			<string/>
 			<key>CFBundleURLName</key>
-			<string>com.isofh.appisofhcare</string>
+			<string>com.isofh.appisofhcaretest</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.isofh.appisofhcare</string>
+				<string>com.isofh.appisofhcaretest</string>
 			</array>
 		</dict>
 	</array>
