@@ -32,10 +32,46 @@
               "client_type": 3
             },
             {
-              "client_id": "553446981035-a0m637l0u8sg9i2eiufmf1i7mjapbvum.apps.googleusercontent.com",
+              "client_id": "553446981035-6a4dl7bc1fckb18q9lsidr34795qok69.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.isofh.isofhcarefordoctor"
+                "bundle_id": "com.isofh.appisofhcare"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:553446981035:android:09e58b0cd6888cb6",
+        "android_client_info": {
+          "package_name": "com.isofh.appisofhcaretest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "553446981035-buqufol8jocasl65igl4erla5s3qtc7p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAO9Eg_F6gav0Q3WLwLWl2l2iVHoC94HaM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "553446981035-buqufol8jocasl65igl4erla5s3qtc7p.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "553446981035-6a4dl7bc1fckb18q9lsidr34795qok69.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.isofh.appisofhcare"
               }
             }
           ]
@@ -76,10 +112,10 @@
               "client_type": 3
             },
             {
-              "client_id": "553446981035-a0m637l0u8sg9i2eiufmf1i7mjapbvum.apps.googleusercontent.com",
+              "client_id": "553446981035-6a4dl7bc1fckb18q9lsidr34795qok69.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.isofh.isofhcarefordoctor"
+                "bundle_id": "com.isofh.appisofhcare"
               }
             }
           ]
@@ -112,10 +148,46 @@
               "client_type": 3
             },
             {
-              "client_id": "553446981035-a0m637l0u8sg9i2eiufmf1i7mjapbvum.apps.googleusercontent.com",
+              "client_id": "553446981035-6a4dl7bc1fckb18q9lsidr34795qok69.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.isofh.isofhcarefordoctor"
+                "bundle_id": "com.isofh.appisofhcare"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:553446981035:android:edd42dd361408c05",
+        "android_client_info": {
+          "package_name": "com.isofh.isofhcarefordoctortest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "553446981035-buqufol8jocasl65igl4erla5s3qtc7p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAO9Eg_F6gav0Q3WLwLWl2l2iVHoC94HaM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "553446981035-buqufol8jocasl65igl4erla5s3qtc7p.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "553446981035-6a4dl7bc1fckb18q9lsidr34795qok69.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.isofh.appisofhcare"
               }
             }
           ]
