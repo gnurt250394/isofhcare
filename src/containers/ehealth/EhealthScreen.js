@@ -11,6 +11,7 @@ import constants2 from '@ehealth/daihocy/resources/strings';
 import dateUtils from 'mainam-react-native-date-utils';
 import profileProvider from '@data-access/profile-provider';
 import snackbar from '@utils/snackbar-utils';
+import ImageLoad from 'mainam-react-native-image-loader';
 class LoginScreen extends PureComponent {
     constructor(props) {
         super(props)
@@ -213,6 +214,40 @@ class LoginScreen extends PureComponent {
         }
         return null;
     }
+    renderItemHospital(item, index) {
+        const source = item.hospital && item.hospital.logo ? { uri: item.hospital.logo.absoluteUrl() } : require("@images/logo.png");
+
+        return <TouchableOpacity key={index}
+            onPress={() => {
+                if (!this.state.refreshing) {
+                    this.setState({ hospitalId: item.hospital.id, refreshing: true }, () => {
+                        this.props.dispatch({ type: constants2.action.action_select_hospital, value: item.id });
+                        this.getListBooking(item.hospital.id);
+                    });
+                } else {
+                    snackbar.show("Dữ liệu đang được tải, vui lòng chờ");
+                }
+            }}
+            style={this.state.hospitalId == item.hospital.id ? styles.hospital_selected : styles.hospital}>
+            <ImageLoad
+                resizeMode="contain"
+                customImagePlaceholderDefaultStyle={[{ width: 45, height: 45 }]}
+                placeholderSource={require("@images/new/user.png")}
+                style={[styles.avatar, { marginTop: 10 }]}
+                resizeMode="contain"
+                loadingStyle={{ size: 'small', color: 'gray' }}
+                source={source}
+                defaultImage={() => {
+                    return <ScaleImage resizeMode='cover' source={require("@images/logo.png")} width={50} height={50} />
+                }}
+            />
+            <View style={{ flex: 1, alignContent: 'flex-end', justifyContent: 'flex-end' }}>
+                <Text numberOfLines={2} style={styles.hospital_text}>
+                    {item.hospital.name}
+                </Text>
+            </View>
+        </TouchableOpacity>
+    }
     render() {
         return (
             <ActivityPanel style={{ flex: 1 }} title="Y BẠ ĐIỆN TỬ" showFullScreen={true} isLoading={this.state.isLoading}>
@@ -234,26 +269,7 @@ class LoginScreen extends PureComponent {
                                 extraData={this.state}
                                 data={this.state.hospitals}
                                 ListFooterComponent={() => <View style={{ height: 10 }}></View>}
-                                renderItem={({ item, index }) => <TouchableOpacity key={index}
-                                    onPress={() => {
-                                        if (!this.state.refreshing) {
-                                            this.setState({ hospitalId: item.hospital.id, refreshing: true }, () => {
-                                                this.props.dispatch({ type: constants2.action.action_select_hospital, value: item.id });
-                                                this.getListBooking(item.hospital.id);
-                                            });
-                                        } else {
-                                            snackbar.show("Dữ liệu đang được tải, vui lòng chờ");
-                                        }
-                                    }}
-                                    style={this.state.hospitalId == item.hospital.id ? styles.hospital_selected : styles.hospital}>
-                                    <ScaledImage source={require("@images/logo.png")} height={45} style={{ marginTop: 10 }} />
-                                    <View style={{ flex: 1, alignContent: 'flex-end', justifyContent: 'flex-end' }}>
-                                        <Text numberOfLines={2} style={styles.hospital_text}>
-                                            {item.hospital.name}
-                                        </Text>
-                                    </View>
-                                </TouchableOpacity>
-                                }
+                                renderItem={({ item, index }) => this.renderItemHospital(item, index)}
                             />
                         </View>
                     }
@@ -328,7 +344,13 @@ const styles = StyleSheet.create({
     },
     dash: { width: 2, flexDirection: 'column', position: 'absolute', top: 0, left: 10, bottom: 0 },
     item_cycle: { width: 10, height: 10, backgroundColor: '#02c39a', borderRadius: 5, position: 'absolute', left: 6, top: '50%', marginTop: -5 },
-    hospital_text: { alignItems: 'flex-end', textAlign: 'center', margin: 5, fontSize: 13 }
+    hospital_text: { alignItems: 'flex-end', textAlign: 'center', margin: 5, fontSize: 13 },
+    avatar: {
+        alignSelf: 'center',
+        borderRadius: 25,
+        width: 45,
+        height: 45
+    }
 });
 
 function mapStateToProps(state) {

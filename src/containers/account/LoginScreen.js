@@ -26,6 +26,8 @@ import Form from "mainam-react-native-form-validate/Form";
 import Field from "mainam-react-native-form-validate/Field";
 import TextField from "mainam-react-native-form-validate/TextField";
 import FloatingLabel from 'mainam-react-native-floating-label';
+import DeviceInfo from 'react-native-device-info';
+import firebase from 'react-native-firebase';
 class LoginScreen extends Component {
 	constructor(props) {
 		super(props);
@@ -43,6 +45,15 @@ class LoginScreen extends Component {
 			countryWhitelist: ["VN"], // [] by default
 			defaultCountry: "VN"
 		});
+	}
+	componentDidMount() {
+		firebase.messaging().getToken()
+			.then((token) => {
+				console.log('Device FCM Token: ', token);
+				userProvider.deviceId = DeviceInfo.getUniqueID();
+				userProvider.deviceToken = token;
+				firebase.messaging().subscribeToTopic("isofhcare_test");
+			});
 	}
 
 
