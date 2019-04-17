@@ -1,4 +1,4 @@
-package com.isofh.appisofhcaretest;
+package com.isofh.appisofhcare;
 
 import android.app.Application;
 import android.content.Context;
