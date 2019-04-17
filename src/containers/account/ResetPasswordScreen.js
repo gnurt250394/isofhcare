@@ -55,6 +55,12 @@ class ResetPasswordScreen extends Component {
                 nextScreen: this.nextScreen
               });
               return;
+            case 2:
+              snackbar.show(
+                "Số điện thoại không tồn tại trong hệ thống",
+                "danger"
+              );
+              return;
           }
         }).catch(e => {
           this.setState({ isLoading: false })
