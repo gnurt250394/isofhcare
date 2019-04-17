@@ -74,11 +74,18 @@ module.exports = {
             });
         });
     },
-    logout(callback) {
-        client.requestApi("post", constants.api.user.logout + "/" + this.deviceId, {}, (s, e) => {
-            if (callback)
-                callback(s, e);
-        });
+    logout(userId) {
+        if (userId)
+            return new Promise((resolve, reject) => {
+                client.requestApi("put", constants.api.user.logout + "/" + userId, {
+                    device: { os: os, deviceId: this.deviceId, token: this.deviceToken }
+                }, (s, e) => {
+                    if (s)
+                        resolve(s)
+                    else
+                        reject(e)
+                });
+            });
     },
     loginSocial(socialType, socialId, name, avatar, email) {
         return new Promise((resolve, reject) => {
