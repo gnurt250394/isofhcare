@@ -49,8 +49,8 @@ class CreateQuestionStep1Screen extends Component {
       if (s && s.post) {
         this.setState({
           gender: s.post.gender ? 1 : 0,
-          age: s.post.age && s.post.age != 0 ? (s.post.age + "") : "",
-          content: s.post.content || ""
+          age: s.post.age && s.post.age != 0 ? (s.post.age + "") : ""
+          // ,content: s.post.content || ""
         })
       }
     })
