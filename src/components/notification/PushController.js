@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Platform } from 'react-native';
-import DeviceInfo from 'react-native-device-info'
-import StringUtils from 'mainam-react-native-string-utils'
+import DeviceInfo from 'react-native-device-info';
+import StringUtils from 'mainam-react-native-string-utils';
 import userProvider from '@data-access/user-provider';
 import notificationProvider from '@data-access/notification-provider';
 import questionProvider from '@data-access/question-provider';
