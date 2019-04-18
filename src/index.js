@@ -10,7 +10,6 @@ import AppReducer from '@reducers';
 import { RootNavigator } from '@navigators/AppNavigator';
 
 const store = createStore(AppReducer, applyMiddleware(thunk));
-
 const Kernel = () => (
     <Provider store={store}>
         <Root>

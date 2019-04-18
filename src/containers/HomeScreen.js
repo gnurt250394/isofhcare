@@ -3,7 +3,7 @@ import {
   Text,
   StatusBar,
   View,
-  Image,
+  Platform,
   StyleSheet,
   TouchableOpacity,
   Dimensions,
@@ -48,6 +48,8 @@ class HomeScreen extends Component {
 
   componentWillUnmount() {
     DeviceEventEmitter.removeAllListeners("hardwareBackPress");
+   
+
   }
 
   handleHardwareBack = () => {
@@ -70,8 +72,7 @@ class HomeScreen extends Component {
     return (
       <ActivityPanel isLoading={this.state.isLoading} hideActionbar={true}>
         <View
-          style={[{ flex: 1 }, this.props.style]}
-        >
+          style={[{ flex: 1 }, this.props.style]}>
           <IndicatorViewPager style={{ flex: 1 }} ref={(viewPager) => { this.viewPager = viewPager }} onPageScroll={this.onPageScroll.bind(this)}>
             <View style={{ flex: 1 }}>
               <Home
@@ -94,7 +95,7 @@ class HomeScreen extends Component {
               }} />
 
             </View>
-          </IndicatorViewPager >
+          </IndicatorViewPager>
 
           {/* <Swiper
             ref={ref => (this.swiper = ref)}
@@ -121,7 +122,7 @@ class HomeScreen extends Component {
           </Swiper> */}
           <View style={{
           }}>
-            < View style={{
+            <View style={{
               height: 61, flexDirection: "row", backgroundColor: '#ffffff',
               shadowColor: 'rgba(0, 0, 0, 0.09)',
               shadowOffset: {
@@ -162,9 +163,9 @@ class HomeScreen extends Component {
                 <Text style={[this.state.tabIndex == 1 ? styles.tab_label_selected : styles.tab_label]}>Tài khoản</Text>
               </TouchableOpacity>
             </View>
-          </View >
-          <PushController />
-        </View>
+          </View>
+          <PushController/>
+          </View>
       </ActivityPanel>
     );
   }

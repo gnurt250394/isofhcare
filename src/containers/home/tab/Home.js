@@ -20,6 +20,7 @@ import { Card } from "native-base";
 import NotificationBadge from "@components/notification/NotificationBadge";
 import redux from "@redux-store";
 import ImageLoad from "mainam-react-native-image-loader";
+
 class Home extends Component {
   constructor(props) {
     super(props);
