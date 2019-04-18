@@ -101,7 +101,7 @@ android {
         applicationId "com.isofh.appisofhcaretest"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 18
+        versionCode 23
         versionName "3.1"
         ndk {
             abiFilters "armeabi-v7a", "x86"
