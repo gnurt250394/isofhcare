@@ -171,52 +171,6 @@ class AddBookingScreen extends Component {
                     <TouchableOpacity style={styles.button}><Text style={styles.datkham}>Đặt khám</Text></TouchableOpacity>
                 </View>
                 <ImagePicker ref={ref => this.imagePicker = ref} />
-                <Modal
-                    isVisible={this.state.toggleService}
-                    onBackdropPress={() => this.setState({ toggleService: false })}
-                    backdropOpacity={0.5}
-                    animationInTiming={500}
-                    animationOutTiming={500}
-                    backdropTransitionInTiming={1000}
-                    backdropTransitionOutTiming={1000}
-                    style={stylemodal.bottomModal}>
-                    <View style={{ backgroundColor: '#fff', elevation: 3, flexDirection: 'column', maxHeight: 400, minHeight: 100 }}>
-                        <View style={{ flexDirection: 'row', alignItems: "center" }}>
-                            <Text style={{ padding: 20, flex: 1, color: "rgb(0,121,107)", textAlign: 'center', fontSize: 16, fontWeight: '900' }}>
-                                CHỌN TỈNH
-                            </Text>
-                        </View>
-                        <FlatList
-                            style={{ padding: 10 }}
-                            keyExtractor={(item, index) => index.toString()}
-                            extraData={this.state}
-                            data={this.state.listProvinces}
-                            ListHeaderComponent={() =>
-                                !this.state.listProvinces || this.state.listProvinces.length == 0 ?
-                                    <View style={{ alignItems: 'center', marginTop: 50 }}>
-                                        <Text style={{ fontStyle: 'italic' }}>Không tìm thấy dữ liệu tỉnh thành phố</Text>
-                                    </View>
-                                    : null//<Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" />
-                            }
-                            ListFooterComponent={() => <View style={{ height: 50 }}></View>}
-                            renderItem={({ item, index }) =>
-                                <Card>
-                                    <TouchableOpacity onPress={() => { this.setState({ province: item, toggleService: false }) }}>
-                                        <Text style={{ padding: 10, fontWeight: '300', color: this.state.province == item ? "red" : "black" }}>{item.name}</Text>
-                                        {/* <Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" /> */}
-                                    </TouchableOpacity>
-                                </Card>
-                            }
-                        />
-                    </View>
-                </Modal>
-
-                <TouchableHighlight
-                    onPress={() => {
-                        this.setModalVisible(true);
-                    }}>
-                    <Text>Show Modal</Text>
-                </TouchableHighlight>
             </ActivityPanel >
         );
     }

@@ -1,4 +1,4 @@
-let isofhcare_service = 'pg/';
+let isofhcare_service = 'isofhcare/';
 let isofhcare_resources = 'isofhcare-resources/';
 module.exports = {
   fbApplicationId: "457683741386685",
