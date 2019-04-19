@@ -41,6 +41,13 @@ import CreateQuestionStep2Screen from '@containers/question/CreateQuestionStep2S
 import DetailQuestionScreen from '@containers/question/DetailQuestionScreen';
 import TestVNPayScreen from '@containers/test/TestVNPayScreen';
 import ChangePass from '@containers/account/ChangePassWord'
+//=========BOOKING NAVIGATION
+import AddBookingScreen from '@containers/booking/AddBookingScreen'
+
+//---------------------------
+
+
+
 import EmptyScreen from '@containers/EmptyScreen2';
 const RootNavigator = createStackNavigator({
     // testVNPay: { screen: TestVNPayScreen },
@@ -84,8 +91,11 @@ const RootNavigator = createStackNavigator({
     createQuestionStep1: { screen: CreateQuestionStep1Screen },
     createQuestionStep2: { screen: CreateQuestionStep2Screen },
     detailQuestion: { screen: DetailQuestionScreen },
-    changePass : { screen: ChangePass} ,
-    emptyScreen : { screen: EmptyScreen} 
+    changePass: { screen: ChangePass },
+    //---------------booking navigation
+    addBooking: { screen: AddBookingScreen },
+    //---------------------------------
+    emptyScreen: { screen: EmptyScreen }
 }, {
         headerMode: 'none',
         header: null,

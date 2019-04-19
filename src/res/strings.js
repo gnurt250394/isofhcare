@@ -309,6 +309,9 @@ module.exports = {
     },
     profile: {
       get_by_user: isofhcare_service + "profile/get-by-user"
+    },
+    serviceType: {
+      get_all: isofhcare_service + "service-type/get-all"
     }
   }
 };
