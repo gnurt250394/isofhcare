@@ -1,7 +1,7 @@
-// const server_url = "http://123.24.206.9:8000"; //dev
-const server_url = "http://10.0.0.98:9454" ; //test
-// const server_url = 'http://api.test.isofhcare.com:8483'; //demo
-// const server_url = 'https://api.isofhcare.com'; //release
+const server_url = "http://123.24.206.9:9454" ; //dev
+// const server_url = "http://123.24.206.9:8000"; //test
+// const server_url = "https://api.produce.isofhcare.com"; //release
+// const server_url = "http://34.95.91.81"; //stable
 import axios from 'axios';
 
 const httpClient = axios.create();
