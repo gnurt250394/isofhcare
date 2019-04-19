@@ -159,7 +159,7 @@ class LoginScreen extends Component {
                         this.nextScreen.param
                       );
                     } else {
-                      this.props.navigation.navigate("home", {
+                      this.props.navigation.navigate("FingerScreen", {
                         showDraw: false
                       });
                     }
@@ -174,7 +174,7 @@ class LoginScreen extends Component {
                         this.nextScreen.param
                       );
                     } else {
-                      this.props.navigation.navigate("home", {
+                      this.props.navigation.navigate("FingerScreen", {
                         showDraw: false
                       });
                     }
