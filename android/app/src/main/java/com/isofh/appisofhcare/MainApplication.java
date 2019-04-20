@@ -96,7 +96,7 @@ private static CallbackManager mCallbackManager = CallbackManager.Factory.create
   
   @Override
   public String getFileProviderAuthority() {
-         return "com.isofh.isofhcare.provider";
+         return "com.isofh.appisofhcare.provider";
   }
 
   @Override
