@@ -13,6 +13,9 @@ const DEVICE_HEIGHT = Dimensions.get('window').height;
 import Modal from "react-native-modal";
 import stylemodal from "@styles/modal-style";
 import serviceTypeProvider from '@data-access/service-type-provider';
+import DateTimePicker from 'mainam-react-native-date-picker';
+
+import dateUtils from "mainam-react-native-date-utils";
 class AddBookingScreen extends Component {
     constructor() {
         super();
@@ -88,7 +91,6 @@ class AddBookingScreen extends Component {
     }
 
     render() {
-
         return (
 
             <ActivityPanel style={{ flex: 1, backgroundColor: '#f7f9fb' }} title="Đặt Khám" iosBarStyle={'light-content'}
@@ -117,10 +119,10 @@ class AddBookingScreen extends Component {
                             <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
                         </TouchableOpacity>
                         <View style={styles.border}></View>
-                        <TouchableOpacity style={styles.mucdichkham}>
+                        <TouchableOpacity style={styles.mucdichkham} onPress={() => this.setState({ toggelDateTimePickerVisible: true })}>
                             <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_bookingDate.png")} />
                             <Text style={styles.mdk}>Ngày khám</Text>
-                            <Text style={styles.ktq}>Khám tổng quát</Text>
+                            <Text style={styles.ktq}>{this.state.date ? this.state.date : "Chọn ngày khám"}</Text>
                             <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
                         </TouchableOpacity>
                         <View style={styles.border}></View>
@@ -217,6 +219,21 @@ class AddBookingScreen extends Component {
                         />
                     </View>
                 </Modal>
+                <DateTimePicker
+                    isVisible={this.state.toggelDateTimePickerVisible}
+                    onConfirm={newDate => {
+                        this.setState({ dob: newDate, date: newDate.format("dd/MM/yyyy"), toggelDateTimePickerVisible: false }, () => {
+                        });
+                    }}
+                    onCancel={() => {
+                        this.setState({ toggelDateTimePickerVisible: false })
+                    }}
+                    date={new Date()}
+                    minimumDate={new Date()}
+                    cancelTextIOS={"Hủy bỏ"}
+                    confirmTextIOS={"Xác nhận"}
+                    date={this.state.dob || new Date()}
+                />
             </ActivityPanel >
         );
     }
@@ -291,7 +308,7 @@ const styles = StyleSheet.create({
         letterSpacing: 0,
         textAlign: "right",
         color: "#8e8e93",
-        marginRight: 10, 
+        marginRight: 10,
         marginLeft: 20
     },
     border: {
