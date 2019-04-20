@@ -1,5 +1,3 @@
-// const server_url = "http://123.24.206.9:9454" ; //dev
-const server_url = "http://123.24.206.9:8000"; //test
 const server_url = "http://123.24.206.9:8000" ; //dev
 // const server_url = "http://123.24.206.9:8000"; //test
 // const server_url = "https://api.produce.isofhcare.com"; //release
