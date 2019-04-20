@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:tools="http://schemas.android.com/tools"
-    package="com.isofh.appisofhcare">
+    package="com.isofh.isofhcare">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -15,10 +15,10 @@ xmlns:tools="http://schemas.android.com/tools"
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>  
     <permission
-        android:name="com.isofh.appisofhcare.permission.C2D_MESSAGE"
+        android:name="com.isofh.isofhcare.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.isofh.appisofhcare.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.isofh.isofhcare.permission.C2D_MESSAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <application
@@ -107,7 +107,7 @@ xmlns:tools="http://schemas.android.com/tools"
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.isofh.appisofhcare.provider"
+            android:authorities="com.isofh.isofhcare.provider"
             android:exported="false"
             android:grantUriPermissions="true">
                 <meta-data

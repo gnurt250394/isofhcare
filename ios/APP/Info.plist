@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>AccountKitClientToken</key>
+	<string>a9ae7d8852eab508b86896d5cd375999</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -42,7 +44,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLIconFile</key>
-			<string/>
+			<string></string>
 			<key>CFBundleURLName</key>
 			<string>com.isofh.appisofhcare</string>
 			<key>CFBundleURLSchemes</key>
@@ -55,8 +57,6 @@
 	<string>1</string>
 	<key>FacebookAppID</key>
 	<string>457683741386685</string>
-	<key>AccountKitClientToken</key>
-	<string>a9ae7d8852eab508b86896d5cd375999</string>
 	<key>FacebookDisplayName</key>
 	<string>iSofH Care</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
@@ -82,7 +82,7 @@
 	<key>NSCalendarsUsageDescription</key>
 	<string>This app requires access to the calenda.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>This app requires access to the camera.</string>
+	<string>Granting access will allow you to select photos and add them to attachment fields.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>This app requires access to the location to get and find all facilities near you </string>
 	<key>NSLocationWhenInUseUsageDescription</key>
@@ -90,7 +90,7 @@
 	<key>NSMotionUsageDescription</key>
 	<string>This app requires access to motion.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app requires access to the photo library.</string>
+	<string>Granting access will allow you to take photos and add them to attachment fields.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>This app requires access to the speech recognition library.</string>
 	<key>UIAppFonts</key>
