@@ -94,7 +94,7 @@ class FingerprintPopup extends Component {
       })
       .catch(error => {
         this.setState({
-          errorMessage: "Vân tay không trùng khớp",
+          errorMessage: "Thử lại",
           error: true
         });
         this.description.shake();

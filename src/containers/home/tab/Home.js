@@ -271,7 +271,7 @@ class Home extends Component {
             this.renderAds()
           }
           <View style={{ height: 30 }} />
-        </ScrollView >
+        </ScrollView>
       </ActivityPanel>
     );
   }
