@@ -230,7 +230,7 @@ class Home extends Component {
             } */}
           </View>
           <View style={{ flexDirection: "row", padding: 10, marginTop: 20 }}>
-            {/* <TouchableOpacity
+            <TouchableOpacity
               style={{ flex: 1, marginLeft: 5, alignItems: 'center' }}
               onPress={() => {
                 this.props.navigation.navigate("addBooking");
@@ -239,7 +239,7 @@ class Home extends Component {
               <View style={{ position: 'relative', padding: 5 }}><ScaledImage style={[styles.icon]} source={require("@images/new/ic_question.png")} height={48} />
               </View>
               <Text style={[styles.label]}>Đặt khám</Text>
-            </TouchableOpacity> */}
+            </TouchableOpacity>
             <TouchableOpacity
               style={{ flex: 1, marginLeft: 5, alignItems: 'center' }}
               onPress={() => {

@@ -1,4 +1,4 @@
-let isofhcare_service = 'isofhcare/';
+let isofhcare_service = 'isofhcare-dev/';
 let isofhcare_resources = 'isofhcare-resources/';
 module.exports = {
   fbApplicationId: "457683741386685",
@@ -75,6 +75,7 @@ module.exports = {
       DATA_TOP_FACILITY: "DATA_TOP_FACILITY",
       DATA_TOP_DISEASE: "DATA_TOP_DISEASE",
       DATA_TOP_SYMPTOM: "DATA_TOP_SYMPTOM",
+      DATA_SERVICE_TYPE: "DATA_SERVICE_TYPE",
       DATA_TOP_DRUG: "DATA_TOP_DRUG",
       DATA_TOP_ADS: "DATA_TOP_ADS",
       USER_PROFILE: "USER_PROFILE",

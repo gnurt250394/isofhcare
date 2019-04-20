@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Keyboard, Image, Modal, TouchableHighlight, FlatList } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Keyboard, Image, TouchableHighlight, FlatList, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
 import ScaleImage from "mainam-react-native-scaleimage";
 import ImagePicker from 'mainam-react-native-select-image';
@@ -9,6 +9,10 @@ import connectionUtils from '@utils/connection-utils';
 import clientUtils from '@utils/client-utils';
 import { Card } from 'native-base';
 
+const DEVICE_HEIGHT = Dimensions.get('window').height;
+import Modal from "react-native-modal";
+import stylemodal from "@styles/modal-style";
+import serviceTypeProvider from '@data-access/service-type-provider';
 class AddBookingScreen extends Component {
     constructor() {
         super();
@@ -28,6 +32,13 @@ class AddBookingScreen extends Component {
     }
     setModalVisible(visible) {
         this.setState({ modalVisible: visible });
+    }
+    componentDidMount() {
+        serviceTypeProvider.getAll().then(s => {
+            this.setState({ serviceTypes: s });
+        }).catch(e => {
+            this.setState({ serviceTypes: e });
+        })
     }
     selectImage() {
         connectionUtils.isConnected().then(s => {
@@ -88,7 +99,7 @@ class AddBookingScreen extends Component {
                     backgroundColor: "#f7f9fb"
                 }}
                 actionbarStyle={{
-                    backgroundColor: '#f7f9fb', marginLeft: 10
+                    marginLeft: 10
                 }}>
 
                 <ScrollView style={styles.container}>
@@ -99,10 +110,10 @@ class AddBookingScreen extends Component {
                         <ScaleImage style={styles.img} height={10} source={require("@images/new/booking/ic_next.png")} />
                     </TouchableOpacity>
                     <View style={styles.article}>
-                        <TouchableOpacity style={styles.mucdichkham}>
+                        <TouchableOpacity style={styles.mucdichkham} onPress={() => this.setState({ toggleServiceType: true })}>
                             <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_serviceType.png")} />
                             <Text style={styles.mdk}>Dịch vụ khám</Text>
-                            <Text style={styles.ktq}>Khám tổng quát</Text>
+                            <Text numberOfLines={1} style={styles.ktq}>{this.state.serviceType ? this.state.serviceType.name : "Chọn loại dịch vụ"}</Text>
                             <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
                         </TouchableOpacity>
                         <View style={styles.border}></View>
@@ -171,6 +182,41 @@ class AddBookingScreen extends Component {
                     <TouchableOpacity style={styles.button}><Text style={styles.datkham}>Đặt khám</Text></TouchableOpacity>
                 </View>
                 <ImagePicker ref={ref => this.imagePicker = ref} />
+                <Modal
+                    isVisible={this.state.toggleServiceType}
+                    onBackdropPress={() => this.setState({ toggleServiceType: false })}
+                    style={stylemodal.bottomModal}>
+                    <View style={{ backgroundColor: '#fff', elevation: 3, flexDirection: 'column', maxHeight: 400, minHeight: 100 }}>
+                        <View style={{ flexDirection: 'row', alignItems: "center" }}>
+                            <Text style={{ padding: 20, flex: 1, color: "rgb(0,121,107)", textAlign: 'center', fontSize: 16, fontWeight: '900' }}>
+                                CHỌN DỊCH VỤ KHÁM
+                            </Text>
+                        </View>
+
+                        <FlatList
+                            style={{ padding: 10 }}
+                            keyExtractor={(item, index) => index.toString()}
+                            extraData={this.state}
+                            data={this.state.serviceTypes}
+                            ListHeaderComponent={() =>
+                                !this.state.serviceTypes || this.state.serviceTypes.length == 0 ?
+                                    <View style={{ alignItems: 'center', marginTop: 50 }}>
+                                        <Text style={{ fontStyle: 'italic' }}>Không tìm thấy dữ liệu loại dịch vụ</Text>
+                                    </View>
+                                    : null//<Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" />
+                            }
+                            ListFooterComponent={() => <View style={{ height: 50 }}></View>}
+                            renderItem={({ item, index }) =>
+                                <Card>
+                                    <TouchableOpacity onPress={() => { this.setState({ serviceType: item, toggleServiceType: false }) }}>
+                                        <Text style={{ padding: 10, fontWeight: '300', color: this.state.serviceType == item ? "red" : "black" }}>{item.name}</Text>
+                                        {/* <Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" /> */}
+                                    </TouchableOpacity>
+                                </Card>
+                            }
+                        />
+                    </View>
+                </Modal>
             </ActivityPanel >
         );
     }
@@ -229,7 +275,6 @@ const styles = StyleSheet.create({
         padding: 10
     },
     mdk: {
-        flex: 1,
         marginLeft: 12,
         fontSize: 14,
         fontWeight: "normal",
@@ -239,13 +284,15 @@ const styles = StyleSheet.create({
 
     },
     ktq: {
+        flex: 1,
         fontSize: 12,
         fontWeight: "normal",
         fontStyle: "normal",
         letterSpacing: 0,
         textAlign: "right",
         color: "#8e8e93",
-        marginRight: 10
+        marginRight: 10, 
+        marginLeft: 20
     },
     border: {
         borderWidth: 0.5,
