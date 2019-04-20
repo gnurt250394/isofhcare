@@ -1,4 +1,4 @@
-package com.isofh.appisofhcare;
+package com.isofh.isofhcare;
 
 import android.app.Application;
 import android.content.Context;
@@ -96,7 +96,7 @@ private static CallbackManager mCallbackManager = CallbackManager.Factory.create
   
   @Override
   public String getFileProviderAuthority() {
-         return "com.isofh.appisofhcare.provider";
+         return "com.isofh.isofhcare.provider";
   }
 
   @Override
