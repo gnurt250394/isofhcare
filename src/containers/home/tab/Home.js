@@ -5,6 +5,7 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
+  RefreshControl,
   Platform,
   Linking, StyleSheet,
   FlatList
@@ -26,6 +27,7 @@ class Home extends Component {
     super(props);
     this.state = {
       ads: [],
+      refreshing: false,
       ads0: []
     };
   }
@@ -53,7 +55,7 @@ class Home extends Component {
     });
   }
   componentWillMount() {
-    this.getTopAds();
+    this.onRefresh();
   }
   renderAds() {
     return (<View>
@@ -135,6 +137,45 @@ class Home extends Component {
     this.props.dispatch(redux.userLogout());
   }
 
+  onRefresh(reload) {
+    this.setState({ refreshing: true }, () => {
+      advertiseProvider.getTop(100, (s, e) => {
+        if (s) {
+          if (s.length == 0) {
+            if (!reload)
+              this.getTopAds(true);
+              this.setState({
+                refreshing: false,
+
+              })
+          }
+          this.setState({
+            ads: (s || []).filter(x => x.advertise && x.advertise.type == 2 && x.advertise.images),
+            ads0: (s || []).filter(x => x.advertise && x.advertise.type == 1 && x.advertise.images),
+            refreshing: false,
+
+            // .filter(item => { return item.advertise && item.advertise.images })
+          });
+        }
+        else {
+          this.setState({
+            refreshing: false,
+
+          })
+          if (!reload)
+            this.getTopAds(true);
+        }
+        if (e) {
+          this.setState({
+            refreshing: false,
+
+          })
+          if (!reload)
+            this.getTopAds(true);
+        }
+      });
+    })
+}
   render() {
     const icSupport = require("@images/new/user.png");
     const source = this.props.userApp.isLogin ? (this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar.absoluteUrl() } : icSupport) : icSupport;
@@ -188,6 +229,10 @@ class Home extends Component {
         menuButton={<NotificationBadge />}
       >
         <ScrollView
+        refreshControl={<RefreshControl
+                        refreshing={this.state.refreshing}
+                        onRefresh={this.onRefresh.bind(this)}
+                    />}
           showsVerticalScrollIndicator={false}
           style={{
             flex: 1,

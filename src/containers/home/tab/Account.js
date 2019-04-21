@@ -404,9 +404,10 @@ class Account extends Component {
     });
   };
   onFingerClick = () => {
-    this.setState({
-      isFinger: true
-    });
+    this.props.navigation.navigate('FingerSettingScreen')
+    // this.setState({
+    //   isFinger: true
+    // });
   };
 }
 const width = Dimensions.get("window").width;

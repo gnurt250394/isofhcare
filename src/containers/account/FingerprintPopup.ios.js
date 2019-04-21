@@ -89,7 +89,7 @@ class FingerprintPopup extends Component {
           userId: this.props.userApp.currentUser.id,
           refreshToken: this.props.userApp.currentUser.loginToken
         });
-        this.props.handlePopupDismissed();
+        this.props.handlePopupDismissedDone();
         Alert.alert("Thành công", "Bạn đã đăng ký vân tay thành công");
       })
       .catch(error => {

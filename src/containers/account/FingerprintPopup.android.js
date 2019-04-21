@@ -42,11 +42,9 @@ class FingerprintPopup extends Component {
               Alert.alert("Bạn chưa đăng ký vân tay trên tài khoản này");
             }
             if (s) {
-              console.log('chua chay vao')
               userProvider
                 .refreshToken(s.userId,s.refreshToken)
                 .then(s => {
-                  console.log(s,'chay vao sssssss')
                     switch (s.code) {
                       case 0:
                         var user = s.data.user;
@@ -82,7 +80,6 @@ class FingerprintPopup extends Component {
                   
                 })
                 .catch(e => {
-                  console.log(e,'loi mat roi')
                 });
             }
           });
@@ -105,7 +102,7 @@ class FingerprintPopup extends Component {
             userId: this.props.userApp.currentUser.id,
             refreshToken: this.props.userApp.currentUser.loginToken
           });
-          this.props.handlePopupDismissed();
+          this.props.handlePopupDismissedDone();
           Alert.alert("Thành công", "Bạn đã đăng ký vân tay thành công");
         })
         .catch(error => {
