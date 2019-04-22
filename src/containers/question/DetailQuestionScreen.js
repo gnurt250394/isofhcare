@@ -20,7 +20,7 @@ import DialogBox from 'react-native-dialogbox';
 import StarRating from 'react-native-star-rating';
 import Dash from 'mainam-react-native-dash-view';
 import connectionUtils from '@utils/connection-utils';
-import FastImage from 'react-native-fast-image';
+// import FastImage from 'react-native-fast-image';
 const disease = [{
     value: 1,
     text: "Tim mạch"
@@ -79,13 +79,13 @@ class DetailQuestionScreen extends Component {
                                 }), index
                             });
                         }} key={index} style={{ marginRight: 10, borderRadius: 10, marginBottom: 10, width: 70, height: 70 }}>
-                            <FastImage
+                            <Image
                                 style={{ width: 70, height: 70, borderRadius: 10 }}
                                 source={{
                                     uri: item.absoluteUrl(),
-                                    priority: FastImage.priority.normal,
+                                    // priority: FastImage.priority.normal,
                                 }}
-                                resizeMode={FastImage.resizeMode.cover}
+                                resizeMode={'cover'}
                             />
                         </TouchableOpacity>)
                     }
