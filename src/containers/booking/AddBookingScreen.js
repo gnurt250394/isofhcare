@@ -13,6 +13,7 @@ const DEVICE_HEIGHT = Dimensions.get('window').height;
 import Modal from "react-native-modal";
 import stylemodal from "@styles/modal-style";
 import serviceTypeProvider from '@data-access/service-type-provider';
+import specialistProvider from '@data-access/specialist-provider';
 import DateTimePicker from 'mainam-react-native-date-picker';
 
 import dateUtils from "mainam-react-native-date-utils";
@@ -41,7 +42,13 @@ class AddBookingScreen extends Component {
             this.setState({ serviceTypes: s });
         }).catch(e => {
             this.setState({ serviceTypes: e });
-        })
+        });
+
+        specialistProvider.getAll().then(s => {
+            this.setState({ specialists: s });
+        }).catch(e => {
+            this.setState({ specialists: e });
+        });
     }
     selectImage() {
         connectionUtils.isConnected().then(s => {
@@ -126,10 +133,10 @@ class AddBookingScreen extends Component {
                             <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
                         </TouchableOpacity>
                         <View style={styles.border}></View>
-                        <TouchableOpacity style={styles.mucdichkham}>
+                        <TouchableOpacity style={styles.mucdichkham} onPress={() => this.setState({ toggleSpecialist: true })}>
                             <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_specialist.png")} />
                             <Text style={styles.mdk}>Chuyên khoa</Text>
-                            <Text style={styles.ktq}>Thứ 5, 4 tháng 3</Text>
+                            <Text numberOfLines={1} style={styles.ktq}>{this.state.specialist ? this.state.specialist.name : "Chọn chuyên khoa"}</Text>
                             <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
                         </TouchableOpacity>
                     </View>
@@ -212,6 +219,41 @@ class AddBookingScreen extends Component {
                                 <Card>
                                     <TouchableOpacity onPress={() => { this.setState({ serviceType: item, toggleServiceType: false }) }}>
                                         <Text style={{ padding: 10, fontWeight: '300', color: this.state.serviceType == item ? "red" : "black" }}>{item.name}</Text>
+                                        {/* <Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" /> */}
+                                    </TouchableOpacity>
+                                </Card>
+                            }
+                        />
+                    </View>
+                </Modal>
+                <Modal
+                    isVisible={this.state.toggleSpecialist}
+                    onBackdropPress={() => this.setState({ toggleSpecialist: false })}
+                    style={stylemodal.bottomModal}>
+                    <View style={{ backgroundColor: '#fff', elevation: 3, flexDirection: 'column', maxHeight: 400, minHeight: 100 }}>
+                        <View style={{ flexDirection: 'row', alignItems: "center" }}>
+                            <Text style={{ padding: 20, flex: 1, color: "rgb(0,121,107)", textAlign: 'center', fontSize: 16, fontWeight: '900' }}>
+                                CHỌN CHUYÊN KHOA
+                            </Text>
+                        </View>
+
+                        <FlatList
+                            style={{ padding: 10 }}
+                            keyExtractor={(item, index) => index.toString()}
+                            extraData={this.state}
+                            data={this.state.specialists}
+                            ListHeaderComponent={() =>
+                                !this.state.specialists || this.state.specialists.length == 0 ?
+                                    <View style={{ alignItems: 'center', marginTop: 50 }}>
+                                        <Text style={{ fontStyle: 'italic' }}>Không tìm thấy dữ liệu loại dịch vụ</Text>
+                                    </View>
+                                    : null//<Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" />
+                            }
+                            ListFooterComponent={() => <View style={{ height: 50 }}></View>}
+                            renderItem={({ item, index }) =>
+                                <Card>
+                                    <TouchableOpacity onPress={() => { this.setState({ specialist: item, toggleSpecialist: false }) }}>
+                                        <Text style={{ padding: 10, fontWeight: '300', color: this.state.specialist == item ? "red" : "black" }}>{item.name}</Text>
                                         {/* <Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" /> */}
                                     </TouchableOpacity>
                                 </Card>

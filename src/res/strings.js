@@ -76,6 +76,7 @@ module.exports = {
       DATA_TOP_DISEASE: "DATA_TOP_DISEASE",
       DATA_TOP_SYMPTOM: "DATA_TOP_SYMPTOM",
       DATA_SERVICE_TYPE: "DATA_SERVICE_TYPE",
+      DATA_SPECIALIST: "DATA_SPECIALIST",
       DATA_TOP_DRUG: "DATA_TOP_DRUG",
       DATA_TOP_ADS: "DATA_TOP_ADS",
       USER_PROFILE: "USER_PROFILE",
@@ -83,8 +84,8 @@ module.exports = {
       CURRENT_LOCATION: "CURRENT_LOCATION",
       INTRO_FINISHED: "INTRO_FINISHED",
       LASTEST_POST: "LASTEST_POSTS",
-      KEY_FINGER:'KEY_FINGER',
-      KEY_REFRESH_TOKEN:'KEY_REFRESH_TOKEN'
+      KEY_FINGER: 'KEY_FINGER',
+      KEY_REFRESH_TOKEN: 'KEY_REFRESH_TOKEN'
     }
   },
   msg: {
@@ -279,6 +280,7 @@ module.exports = {
       search: isofhcare_service + "symptom/search"
     },
     specialist: {
+      get_all: isofhcare_service + "specialist/get-all",
       search: isofhcare_service + "specialist/search",
       update_view_count: isofhcare_service + "specialist/update-view-count"
     },
