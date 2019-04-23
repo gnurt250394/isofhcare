@@ -32,10 +32,46 @@
               "client_type": 3
             },
             {
-              "client_id": "553446981035-6a4dl7bc1fckb18q9lsidr34795qok69.apps.googleusercontent.com",
+              "client_id": "553446981035-cu9tmh8te934n26t20ghfmpnho9appok.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.isofh.appisofhcare"
+                "bundle_id": "com.isofh.isofhcarefordoctortest"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:553446981035:android:a77eeb0a190a5425",
+        "android_client_info": {
+          "package_name": "com.isofh.appisofhcarestable"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "553446981035-buqufol8jocasl65igl4erla5s3qtc7p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAO9Eg_F6gav0Q3WLwLWl2l2iVHoC94HaM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "553446981035-buqufol8jocasl65igl4erla5s3qtc7p.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "553446981035-cu9tmh8te934n26t20ghfmpnho9appok.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.isofh.isofhcarefordoctortest"
               }
             }
           ]
@@ -68,10 +104,10 @@
               "client_type": 3
             },
             {
-              "client_id": "553446981035-6a4dl7bc1fckb18q9lsidr34795qok69.apps.googleusercontent.com",
+              "client_id": "553446981035-cu9tmh8te934n26t20ghfmpnho9appok.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.isofh.appisofhcare"
+                "bundle_id": "com.isofh.isofhcarefordoctortest"
               }
             }
           ]
@@ -112,10 +148,10 @@
               "client_type": 3
             },
             {
-              "client_id": "553446981035-6a4dl7bc1fckb18q9lsidr34795qok69.apps.googleusercontent.com",
+              "client_id": "553446981035-cu9tmh8te934n26t20ghfmpnho9appok.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.isofh.appisofhcare"
+                "bundle_id": "com.isofh.isofhcarefordoctortest"
               }
             }
           ]
@@ -148,10 +184,10 @@
               "client_type": 3
             },
             {
-              "client_id": "553446981035-6a4dl7bc1fckb18q9lsidr34795qok69.apps.googleusercontent.com",
+              "client_id": "553446981035-cu9tmh8te934n26t20ghfmpnho9appok.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.isofh.appisofhcare"
+                "bundle_id": "com.isofh.isofhcarefordoctortest"
               }
             }
           ]
@@ -184,10 +220,10 @@
               "client_type": 3
             },
             {
-              "client_id": "553446981035-6a4dl7bc1fckb18q9lsidr34795qok69.apps.googleusercontent.com",
+              "client_id": "553446981035-cu9tmh8te934n26t20ghfmpnho9appok.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.isofh.appisofhcare"
+                "bundle_id": "com.isofh.isofhcarefordoctortest"
               }
             }
           ]

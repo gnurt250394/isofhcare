@@ -1,4 +1,4 @@
-package com.isofh.appisofhcaretest;
+package com.isofh.appisofhcarestable;
 
 import com.facebook.react.ReactActivity;
  import android.content.Intent; // <--- import
