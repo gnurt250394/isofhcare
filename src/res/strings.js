@@ -80,6 +80,7 @@ module.exports = {
       DATA_TOP_DRUG: "DATA_TOP_DRUG",
       DATA_TOP_ADS: "DATA_TOP_ADS",
       USER_PROFILE: "USER_PROFILE",
+      USER_MEDICAL_RECORD: "USER_MEDICAL_RECORD",
       DATA_PROVINCE: "DATA_PROVINCE",
       CURRENT_LOCATION: "CURRENT_LOCATION",
       INTRO_FINISHED: "INTRO_FINISHED",
@@ -315,6 +316,9 @@ module.exports = {
     },
     serviceType: {
       get_all: isofhcare_service + "service-type/get-all"
+    },
+    medicalRecord: {
+      get_by_user: isofhcare_service + "medical-records/get-by-user"
     }
   }
 };

@@ -20,6 +20,7 @@ import firebase from 'react-native-firebase';
 import redux from '@redux-store'
 import ImageLoad from 'mainam-react-native-image-loader';
 
+import clientUtils from '@utils/client-utils';
 
 class NotificationScreen extends Component {
   constructor(props) {

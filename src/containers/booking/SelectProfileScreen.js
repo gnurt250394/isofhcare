@@ -7,13 +7,18 @@ import {
 import { connect } from 'react-redux';
 import ScaleImage from "mainam-react-native-scaleimage";
 import { Card } from 'native-base';
+import medicalRecordProvider from '@data-access/medical-record-provider';
+import ImageLoad from 'mainam-react-native-image-loader';
 
+import clientUtils from '@utils/client-utils';
 class SelectProfileScreen extends Component {
     constructor() {
         super();
         this.state = {
             data: [],
-            refreshing: false
+            refreshing: false,
+            size: 10,
+            page: 1
         }
     }
     onRefresh() {
@@ -35,36 +40,43 @@ class SelectProfileScreen extends Component {
             loading: true,
             refreshing: page == 1,
             loadMore: page != 1
+        }, () => {
+            medicalRecordProvider.getByUser(this.props.userApp.currentUser.id, page, size).then(s => {
+                this.setState({
+                    loading: false,
+                    refreshing: false,
+                    loadMore: false
+                }, () => {
+                    switch (s.code) {
+                        case 0:
+                            if (s.data && s.data.data) {
+                                var list = [];
+                                var finish = false;
+                                if (s.data.data.length == 0) {
+                                    finish = true;
+                                }
+                                if (page != 1) {
+                                    list = this.state.data;
+                                    list.push.apply(list, s.data.data);
+                                } else {
+                                    list = s.data.data;
+                                }
+                                this.setState({
+                                    data: [...list],
+                                    finish: finish
+                                });
+                            }
+                            break;
+                    }
+                });
+            }).catch(e => {
+                this.setState({
+                    loading: false,
+                    refreshing: false,
+                    loadMore: false
+                });
+            })
         });
-        setTimeout(() => {
-            this.setState({
-                loading: false,
-                refreshing: false,
-                loadMore: false,
-                data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29]
-            });
-            // if (s) {
-            //     switch (s.code) {
-            //         case 0:
-            //             var list = [];
-            //             var finish = false;
-            //             if (s.data.length == 0) {
-            //                 finish = true;
-            //             }
-            //             if (page != 1) {
-            //                 list = this.state.data;
-            //                 list.push.apply(list, s.data);
-            //             } else {
-            //                 list = s.data;
-            //             }
-            //             this.setState({
-            //                 data: [...list],
-            //                 finish: finish
-            //             });
-            //             break;
-            //     }
-            // }
-        }, 5000);
     }
     onLoadMore() {
         if (!this.state.finish && !this.state.loading)
@@ -79,6 +91,13 @@ class SelectProfileScreen extends Component {
                     this.onLoad(this.state.page);
                 }
             );
+    }
+    selectPofile(profile) {
+        let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
+        if (callback) {
+            callback(profile);
+            this.props.navigation.pop();
+        }
     }
     render() {
         return (
@@ -113,15 +132,35 @@ class SelectProfileScreen extends Component {
                     }
                     ListFooterComponent={() => <View style={{ height: 10 }} />}
                     renderItem={({ item, index }) => {
-                        return (<View style={styles.bn}>
-                            <ScaleImage height={40} source={require("@images/new/profile/ic_home_addbooking.png")} />
-                            <Text style={styles.bntext}>Lê Thị Hoàng</Text>
+                        const source = item.medicalRecords && item.medicalRecords.avatar ? { uri: item.medicalRecords.avatar.absoluteUrl() } : require("@images/new/user.png");
+
+                        return (<TouchableOpacity style={styles.bn} onPress={this.selectPofile.bind(this, item)}>
+                            <ImageLoad
+                                resizeMode="cover"
+                                imageStyle={{ borderRadius: 20, borderWidth: 1, borderColor: '#CAC' }}
+                                borderRadius={20}
+                                customImagePlaceholderDefaultStyle={[styles.avatar, { width: 40, height: 40 }]}
+                                placeholderSource={require("@images/new/user.png")}
+                                resizeMode="cover"
+                                loadingStyle={{ size: 'small', color: 'gray' }}
+                                source={source}
+                                style={{
+                                    alignSelf: 'center',
+                                    borderRadius: 20,
+                                    width: 40,
+                                    height: 40
+                                }}
+                                defaultImage={() => {
+                                    return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={40} height={40} />
+                                }}
+                            />
+                            <Text style={styles.bntext}>{item.medicalRecords.name}</Text>
                             {/* <ScaleImage style={styles.ckeck} height={18} source={require("@images/new/profile/ic_question_check_specialist.png")} /> */}
-                        </View>);
+                        </TouchableOpacity>);
                     }}
                 />
 
-                <TouchableOpacity style={{ backgroundColor: "#02c39a", width: 200, borderRadius: 6, alignSelf: 'center', marginVertical: 10 }} onPress={() => this.props.navigation.navigate("createProfile")}>
+                <TouchableOpacity style={{ backgroundColor: "#02c39a", width: 200, borderRadius: 6, alignSelf: 'center', marginVertical: 10, marginBottom: 30 }} onPress={() => this.props.navigation.navigate("createProfile")}>
                     <Text style={styles.btntext}>Thêm hồ sơ</Text>
                 </TouchableOpacity>
             </ActivityPanel>
@@ -154,7 +193,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     bntext: {
-        marginLeft: 5,
+        marginLeft: 10,
         fontSize: 14,
         fontWeight: "normal",
         fontStyle: "normal",

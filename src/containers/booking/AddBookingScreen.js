@@ -18,6 +18,8 @@ import DateTimePicker from 'mainam-react-native-date-picker';
 
 import snackbar from '@utils/snackbar-utils';
 import dateUtils from "mainam-react-native-date-utils";
+import ImageLoad from 'mainam-react-native-image-loader';
+
 class AddBookingScreen extends Component {
     constructor() {
         super();
@@ -97,8 +99,13 @@ class AddBookingScreen extends Component {
             snackbar.show("Không có kết nối mạng", "danger");
         });
     }
-
+    selectProfile(profile) {
+        this.setState({ profile });
+    }
     render() {
+        let avatar = ((this.state.profile || {}).medicalRecords || {}).avatar;
+        const source = avatar ? { uri: avatar.absoluteUrl() } : require("@images/new/user.png");
+
         return (
 
             <ActivityPanel style={{ flex: 1, backgroundColor: '#f7f9fb' }} title="Đặt Khám"
@@ -114,12 +121,30 @@ class AddBookingScreen extends Component {
                 <ScrollView style={styles.container}>
 
                     <TouchableOpacity style={styles.name} onPress={() => {
-                        this.props.navigation.navigate("selectProfile");
+                        this.props.navigation.navigate("selectProfile", { onSelected: this.selectProfile.bind(this) });
                     }}>
-                        {this.props.profile ?
+                        {this.state.profile ?
                             <View style={{ flexDirection: 'row', height: 38, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                <ScaleImage style={styles.imgName} height={38} source={require("@images/new/user.png")} />
-                                <Text style={styles.txtname}>Lê Thị Hoàng</Text>
+                                <ImageLoad
+                                    resizeMode="cover"
+                                    imageStyle={{ borderRadius: 20, borderWidth: 1, borderColor: '#CAC' }}
+                                    borderRadius={20}
+                                    customImagePlaceholderDefaultStyle={[styles.avatar, { width: 40, height: 40 }]}
+                                    placeholderSource={require("@images/new/user.png")}
+                                    resizeMode="cover"
+                                    loadingStyle={{ size: 'small', color: 'gray' }}
+                                    source={source}
+                                    style={{
+                                        alignSelf: 'center',
+                                        borderRadius: 20,
+                                        width: 40,
+                                        height: 40
+                                    }}
+                                    defaultImage={() => {
+                                        return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={40} height={40} />
+                                    }}
+                                />
+                                <Text style={styles.txtname}>{this.state.profile.medicalRecords.name}</Text>
                             </View> :
                             <View style={{ flexDirection: 'row', height: 38, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                                 <View style={{ justifyContent: 'center', alignItems: 'center', width: 38, height: 38, borderRadius: 19, borderColor: 'rgba(151, 151, 151, 0.29)', borderWidth: 1 }}>
