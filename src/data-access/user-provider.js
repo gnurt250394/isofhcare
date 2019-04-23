@@ -185,16 +185,16 @@ module.exports = {
       if (callback) callback(s, e);
     });
   },
-  refreshToken(token, callback) {
-    client.requestApi(
-      "put",
-      constants.api.user.refresh_token + "/" + token,
-      {},
-      (s, e) => {
-        if (callback) callback(s, e);
-      }
-    );
-  },
+  // refreshToken(token, callback) {
+  //   client.requestApi(
+  //     "put",
+  //     constants.api.user.refresh_token + "/" + token,
+  //     {},
+  //     (s, e) => {
+  //       if (callback) callback(s, e);
+  //     }
+  //   );
+  // },
   detail(userId, callback) {
     client.requestApi(
       "get",
@@ -249,8 +249,10 @@ module.exports = {
         },
         (s, e) => {
           if (s) {
+            console.log(s)
             resolve(s);
           } else {
+            console.log(e)
             reject(e);
           }
         }

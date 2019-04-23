@@ -52,6 +52,11 @@ class LoginScreen extends Component {
       defaultCountry: "VN"
     });
   }
+  componentWillMount(){
+    if(this.props.navigation.state.params && this.props.navigation.state.params.isLogin){
+      console.log(this.props.navigation.state.params,'xoa data')
+    }
+  }
   componentDidMount() {
     firebase
       .messaging()
@@ -160,12 +165,13 @@ class LoginScreen extends Component {
                       );
                     } else {
                       this.props.navigation.navigate("FingerScreen", {
-                        showDraw: false
+                        showDraw: false,
+                        nextScreen:this.nextScreen
                       });
                     }
                     return;
                   }
-                  if (!s) {
+                  if (!s || s.userId == '') {
                     snackbar.show(constants.msg.user.login_success, "success");
                     this.props.dispatch(redux.userLogin(user));
                     if (this.nextScreen) {
@@ -175,7 +181,8 @@ class LoginScreen extends Component {
                       );
                     } else {
                       this.props.navigation.navigate("FingerScreen", {
-                        showDraw: false
+                        showDraw: false,
+                        nextScreen:this.nextScreen
                       });
                     }
                     return;
@@ -430,6 +437,9 @@ class LoginScreen extends Component {
                   handlePopupDismissed={this.handleFingerprintDismissed}
                   style={styles.popup}
                   isLogin={true}
+                  onNavigate = {this.onNavigate}
+
+                  nextScreen ={this.nextScreen}
                 />
               </Modal>
             </View>
@@ -437,6 +447,14 @@ class LoginScreen extends Component {
         </ScrollView>
       </ActivityPanel>
     );
+  }
+  onNavigate = () => {
+    if (this.nextScreen) {
+      this.props.navigation.replace(
+        this.nextScreen.screen,
+        this.nextScreen.param
+      );
+    } 
   }
   onFigner = async () => {
     this.setState({

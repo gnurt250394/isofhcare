@@ -16,6 +16,7 @@ import userProvider from "@data-access/user-provider";
 import snackbar from "@utils/snackbar-utils";
 import constants from "@resources/strings";
 import redux from "@redux-store";
+import NavigationService from "@navigators/NavigationService";
 
 import { connect } from "react-redux";
 class FingerprintPopup extends Component {
@@ -27,8 +28,6 @@ class FingerprintPopup extends Component {
       isLogin: this.props.isLogin
       // userId:this.props.userId
     };
-    this.nextScreen = this.props.navigation.getParam("nextScreen", null);
-
   }
 
   componentDidMount() {
@@ -36,51 +35,58 @@ class FingerprintPopup extends Component {
       FingerprintScanner.authenticate({
         onAttempt: this.handleAuthenticationAttempted
       })
-        .then(  () => {
-          dataCacheProvider.read("", constants.key.storage.KEY_FINGER, s  => {
-            if (!s) {
+        .then(() => {
+          dataCacheProvider.read("", constants.key.storage.KEY_FINGER, s => {
+
+            if (!s || s.userId == '') {
               Alert.alert("Bạn chưa đăng ký vân tay trên tài khoản này");
             }
             if (s) {
               userProvider
-                .refreshToken(s.userId,s.refreshToken)
+                .refreshToken(s.userId, s.refreshToken)
                 .then(s => {
-                    switch (s.code) {
-                      case 0:
-                        var user = s.data.user;
-                        snackbar.show(constants.msg.user.login_success, "success");
-                        this.props.dispatch(redux.userLogin(user));
-                        console.log(this.nextScreen)
-                        if (this.nextScreen) {
-                          this.props.navigation.replace(
-                            this.nextScreen.screen,
-                            this.nextScreen.param
-                          );
-                        } else {
-                          this.props.navigation.navigate("home", { showDraw: false });
-                        }
+                  switch (s.code) {
+                    case 0:
+                      var user = s.data.user;
+                      snackbar.show(
+                        constants.msg.user.login_success,
+                        "success"
+                      );
+                      this.props.dispatch(redux.userLogin(user));
+                      if (this.props.nextScreen) {
+                        this.props.onNavigate()
                         return;
-                      case 4:
-                        snackbar.show(
-                          constants.msg.user.this_account_not_active,
-                          "danger"
-                        );
-                        return;
-                      case 3:
-                        snackbar.show(
-                          constants.msg.user.username_or_password_incorrect,
-                          "danger"
-                        );
-                        return;
-                      case 2:Alert.alert("Phiên đăng nhập đã hết hạn, xin vui lòng đăng nhập lại")
-                      case 1:
-                        snackbar.show(constants.msg.user.account_blocked, "danger");
-                        return;
-                    }
-                  
+                      } else {
+                        this.props.navigation.navigate("home", {
+                          showDraw: false
+                        });
+                      }
+                      return;
+                    case 4:
+                      snackbar.show(
+                        constants.msg.user.this_account_not_active,
+                        "danger"
+                      );
+                      return;
+                    case 3:
+                      snackbar.show(
+                        constants.msg.user.username_or_password_incorrect,
+                        "danger"
+                      );
+                      return;
+                    case 2:
+                      Alert.alert(
+                        "Phiên đăng nhập đã hết hạn, xin vui lòng đăng nhập lại"
+                      );
+                    case 1:
+                      snackbar.show(
+                        constants.msg.user.account_blocked,
+                        "danger"
+                      );
+                      return;
+                  }
                 })
-                .catch(e => {
-                });
+                .catch(e => {});
             }
           });
 
@@ -88,7 +94,7 @@ class FingerprintPopup extends Component {
         })
         .catch(error => {
           this.setState({
-            errorMessage: "Vân tay không trùng khớp",
+            errorMessage: "Thử lại \n Sử dụng Touch ID để mở khoá Isofhcare ",
             error: true
           });
           this.description.shake();
@@ -103,11 +109,12 @@ class FingerprintPopup extends Component {
             refreshToken: this.props.userApp.currentUser.loginToken
           });
           this.props.handlePopupDismissedDone();
-          Alert.alert("Thành công", "Bạn đã đăng ký vân tay thành công");
+          Alert.alert("Thành công");
         })
         .catch(error => {
+          console.log(error)
           this.setState({
-            errorMessage: "Thử lại",
+            errorMessage: "Thử lại \n Sử dụng Touch ID để mở khoá Isofhcare ",
             error: true
           });
           this.description.shake();
@@ -122,8 +129,16 @@ class FingerprintPopup extends Component {
   }
 
   handleAuthenticationAttempted = error => {
-    this.setState({ errorMessage: "Thử lại", error: true });
-    this.description.shake();
+    if(this.props.isDismiss) {
+      this.props.isShowPass()
+      this.description.shake();
+    }else{
+      console.log('esl',this.props.isDismiss)
+      this.setState({ errorMessage: "Thử lại \n "+"Sử dụng Touch ID để mở khoá Isofhcare ", error: true });
+      this.description.shake();
+    }
+      
+    
   };
 
   render() {
@@ -138,7 +153,7 @@ class FingerprintPopup extends Component {
             // source={require('./assets/finger_print.png')}
           />
 
-          <Text style={styles.heading}>Đăng ký vân tay</Text>
+          <Text style={styles.heading}>Touch ID cho "IsofHcare"</Text>
           <ShakingText
             ref={instance => {
               this.description = instance;
@@ -149,7 +164,7 @@ class FingerprintPopup extends Component {
             ]}
           >
             {errorMessage ||
-              "Quét dấu vân tay của bạn trên máy quét thiết bị để tiếp tục"}
+              "Sử dụng Touch ID để mở khoá Isofhcare"}
           </ShakingText>
           <ScaledImage
             source={require("@images/new/fingerprint.png")}
