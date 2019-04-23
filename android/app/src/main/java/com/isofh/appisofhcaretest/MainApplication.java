@@ -7,7 +7,6 @@ import android.support.multidex.MultiDexApplication;
 import com.facebook.CallbackManager;
 import com.facebook.react.ReactApplication;
 import com.dylanvann.fastimage.FastImageViewPackage;
-import com.hieuvp.fingerprint.ReactNativeFingerprintScannerPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import io.underscope.react.fbak.RNAccountKitPackage;
 import com.reactnative.photoview.PhotoViewPackage;
@@ -54,7 +53,6 @@ private static CallbackManager mCallbackManager = CallbackManager.Factory.create
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
             new FastImageViewPackage(),
-            new ReactNativeFingerprintScannerPackage(),
             new VectorIconsPackage(),
             new RNAccountKitPackage(),
             new PhotoViewPackage(),

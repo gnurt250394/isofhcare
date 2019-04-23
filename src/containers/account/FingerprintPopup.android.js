@@ -8,7 +8,7 @@ import {
   View,
   StyleSheet
 } from "react-native";
-import FingerprintScanner from "react-native-fingerprint-scanner";
+// import FingerprintScanner from "react-native-fingerprint-scanner";
 import ShakingText from "./ShakingText";
 import ScaledImage from "mainam-react-native-scaleimage";
 import dataCacheProvider from "../../data-access/datacache-provider";

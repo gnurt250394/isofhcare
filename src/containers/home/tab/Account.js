@@ -290,7 +290,10 @@ class Account extends Component {
                 height={24}
               />
             </TouchableOpacity>
-            <TouchableOpacity
+            {
+              /* login with finger*/
+            }
+            {/* <TouchableOpacity
               style={[styles.itemMenu, { paddingLeft: 40 }]}
               onPress={this.onFingerClick}
             >
@@ -312,7 +315,7 @@ class Account extends Component {
                   handlePopupDismissed={this.handleFingerprintDismissed}
                   style={styles.popup}
                 />
-              </Modal>
+              </Modal> */}
           </View>
         )}
         {/* {
