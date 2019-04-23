@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import { AlertIOS, View } from "react-native";
-// import FingerprintScanner from "react-native-fingerprint-scanner";
+import FingerprintScanner from "react-native-fingerprint-scanner";
 import dataCacheProvider from "../../data-access/datacache-provider";
 import userProvider from "@data-access/user-provider";
 import snackbar from "@utils/snackbar-utils";

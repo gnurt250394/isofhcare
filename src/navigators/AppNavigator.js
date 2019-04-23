@@ -49,6 +49,7 @@ import FingerSettingScreen from "@containers/account/FingerSettingScreen";
 //=========BOOKING NAVIGATION
 import AddBookingScreen from "@containers/booking/AddBookingScreen";
 import SelectHospitalScreen from "@containers/booking/SelectHospitalScreen";
+import createProfile from "@containers/booking/CreateProfile";
 
 //=========PROFILE NAVIGATION
 import SelectProfileScreen from "@containers/booking/SelectProfileScreen";
@@ -58,6 +59,7 @@ import SelectProfileScreen from "@containers/booking/SelectProfileScreen";
 import EmptyScreen from "@containers/EmptyScreen2";
 const RootNavigator = createStackNavigator(
     {
+      createProfile: { screen: createProfile },
       // testVNPay: { screen: TestVNPayScreen },
       splash: { screen: SplashScreen },
       ehealth: { screen: EHealthNavigator },
