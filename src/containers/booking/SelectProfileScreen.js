@@ -82,7 +82,7 @@ class SelectProfileScreen extends Component {
     }
     render() {
         return (
-            <ActivityPanel style={styles.AcPanel} title="Tất cả hồ sơ" 
+            <ActivityPanel style={styles.AcPanel} title="Tất cả hồ sơ"
                 containerStyle={{
                     backgroundColor: "#f7f9fb"
                 }}
@@ -116,16 +116,14 @@ class SelectProfileScreen extends Component {
                         return (<View style={styles.bn}>
                             <ScaleImage height={40} source={require("@images/new/profile/ic_home_addbooking.png")} />
                             <Text style={styles.bntext}>Lê Thị Hoàng</Text>
-                            <ScaleImage style={styles.ckeck} height={18} source={require("@images/new/profile/ic_question_check_specialist.png")} />
+                            {/* <ScaleImage style={styles.ckeck} height={18} source={require("@images/new/profile/ic_question_check_specialist.png")} /> */}
                         </View>);
                     }}
                 />
 
-                <View style={styles.container}>
-                    <TouchableOpacity>
-                        <Text style={styles.btntext}>Thêm hồ sơ</Text>
-                    </TouchableOpacity>
-                </View>
+                <TouchableOpacity style={{ backgroundColor: "#02c39a", width: 200, borderRadius: 6, alignSelf: 'center', marginVertical: 10 }} onPress={() => this.props.navigation.navigate("createProfile")}>
+                    <Text style={styles.btntext}>Thêm hồ sơ</Text>
+                </TouchableOpacity>
             </ActivityPanel>
         );
     }
@@ -173,9 +171,9 @@ const styles = StyleSheet.create({
         fontWeight: "600",
         fontStyle: "normal",
         letterSpacing: 0,
-        color: "#02c39a",
+        color: "#FFF",
         textAlign: 'center',
-        marginTop: 20,
+        margin: 10,
 
     },
     btntext2: {
