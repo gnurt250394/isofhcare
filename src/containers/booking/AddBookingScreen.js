@@ -16,6 +16,7 @@ import serviceTypeProvider from '@data-access/service-type-provider';
 import specialistProvider from '@data-access/specialist-provider';
 import DateTimePicker from 'mainam-react-native-date-picker';
 
+import snackbar from '@utils/snackbar-utils';
 import dateUtils from "mainam-react-native-date-utils";
 class AddBookingScreen extends Component {
     constructor() {
@@ -100,9 +101,8 @@ class AddBookingScreen extends Component {
     render() {
         return (
 
-            <ActivityPanel style={{ flex: 1, backgroundColor: '#f7f9fb' }} title="Đặt Khám" iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#f7f9fb"
-                menuButton={<TouchableOpacity style={styles.menu}><ScaleImage style={styles.img} height={20} source={require("@images/new/booking/ic_info.png")} /></TouchableOpacity>}
+            <ActivityPanel style={{ flex: 1, backgroundColor: '#f7f9fb' }} title="Đặt Khám"
+                menuButton={<TouchableOpacity style={styles.menu} onPress={() => snackbar.show("Chức năng đang phát triển")}><ScaleImage style={styles.img} height={20} source={require("@images/new/booking/ic_info.png")} /></TouchableOpacity>}
                 titleStyle={{ marginLeft: 40 }}
                 containerStyle={{
                     backgroundColor: "#f7f9fb"
@@ -113,9 +113,21 @@ class AddBookingScreen extends Component {
 
                 <ScrollView style={styles.container}>
 
-                    <TouchableOpacity style={styles.name}>
-                        <ScaleImage style={styles.imgName} height={38} source={require("@images/new/user.png")} />
-                        <Text style={styles.txtname}>Lê Thị Hoàng</Text>
+                    <TouchableOpacity style={styles.name} onPress={() => {
+                        this.props.navigation.navigate("selectProfile");
+                    }}>
+                        {this.props.profile ?
+                            <View style={{ flexDirection: 'row', height: 38, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                <ScaleImage style={styles.imgName} height={38} source={require("@images/new/user.png")} />
+                                <Text style={styles.txtname}>Lê Thị Hoàng</Text>
+                            </View> :
+                            <View style={{ flexDirection: 'row', height: 38, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                <View style={{ justifyContent: 'center', alignItems: 'center', width: 38, height: 38, borderRadius: 19, borderColor: 'rgba(151, 151, 151, 0.29)', borderWidth: 1 }}>
+                                    <ScaleImage source={require("@images/new/profile/ic_profile.png")} width={20} />
+                                </View>
+                                <Text style={styles.txtname}>Chọn hồ sơ</Text>
+                            </View>
+                        }
                         <ScaleImage style={styles.img} height={10} source={require("@images/new/booking/ic_next.png")} />
                     </TouchableOpacity>
                     <View style={styles.article}>
@@ -300,7 +312,8 @@ const styles = StyleSheet.create({
         borderColor: "rgba(0, 0, 0, 0.06)",
         flexDirection: 'row',
         alignItems: 'center',
-        padding: 10
+        padding: 10,
+        minHeight: 18
     },
     imgName: {
         marginLeft: 5,
