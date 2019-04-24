@@ -7,7 +7,7 @@ import {
 import { connect } from 'react-redux';
 import ScaleImage from "mainam-react-native-scaleimage";
 import { Card } from 'native-base';
-import medicalRecordProvider from '@data-access/medical-record-provider';
+import hospitalProvider from '@data-access/hospital-provider';
 import ImageLoad from 'mainam-react-native-image-loader';
 
 import clientUtils from '@utils/client-utils';
@@ -25,9 +25,9 @@ class SelectHospitalScreen extends Component {
             page: 1,
             profile,
             serviceType,
-            specialist
+            specialist,
+            keyword: ""
         }
-        debugger;
     }
     onRefresh() {
         if (!this.state.loading)
@@ -49,7 +49,8 @@ class SelectHospitalScreen extends Component {
             refreshing: page == 1,
             loadMore: page != 1
         }, () => {
-            medicalRecordProvider.getByUser(this.props.userApp.currentUser.id, page, size).then(s => {
+            hospitalProvider.getByServiceType(this.state.serviceType.id, this.state.keyword).then(s => {
+                debugger;
                 this.setState({
                     loading: false,
                     refreshing: false,
@@ -181,6 +182,7 @@ const styles = StyleSheet.create({
         marginLeft: 15
     },
     container: {
+        flex: 1,
         backgroundColor: 'rgb(246, 249, 251)',
         borderStyle: 'solid',
         paddingTop: 20
@@ -250,7 +252,7 @@ const styles = StyleSheet.create({
         borderBottomColor: 'rgba(0, 0, 0, 0.06)'
     },
     sc: {
-        backgroundColor: '#FFF'
+        backgroundColor: '#FFF', flex: 1
     },
     bv: {
         fontSize: 15,

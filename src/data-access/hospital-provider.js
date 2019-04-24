@@ -22,9 +22,9 @@ module.exports = {
             });
         });
     },
-    getByServiceType(serviceType) {
+    getByServiceType(serviceType, name) {
         return new Promise((resolve, reject) => {
-            client.requestApi("get", `${constants.api.hospital.get_hospital_by_service_type}?serviceTypeId=${serviceType}`, {}, (s, e) => {
+            client.requestApi("get", `${constants.api.hospital.get_hospital_by_service_type}?serviceTypeId=${serviceType}&name=${name}`, {}, (s, e) => {
                 if (s)
                     resolve(s);
                 else

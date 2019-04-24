@@ -22,7 +22,7 @@ import DateTimePicker from "mainam-react-native-date-picker";
 import Modal from "react-native-modal";
 import connectionUtils from "@utils/connection-utils";
 import snackbar from "@utils/snackbar-utils";
-import medicalProvider from "@data-access/medical-provider";
+import medicalRecordProvider from "@data-access/medical-record-provider";
 import NavigationService from "@navigators/NavigationService";
 import Form from "mainam-react-native-form-validate/Form";
 import Field from "mainam-react-native-form-validate/Field";
@@ -513,7 +513,7 @@ componentDidMount(){
           });
           snackbar.show("Bạn chưa chọn giới tính", "danger");
         } else {
-          medicalProvider
+          medicalRecordProvider
             .createMedical(name, gender, date, image)
             .then(res => {
               if (res.code == 0) {
