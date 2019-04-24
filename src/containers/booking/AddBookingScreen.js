@@ -358,48 +358,6 @@ class AddBookingScreen extends Component {
                             </Text>
                     </View>
 
-<<<<<<< HEAD
-                    <FlatList
-                        style={{ padding: 10 }}
-                        keyExtractor={(item, index) => index.toString()}
-                        extraData={this.state}
-                        data={this.state.specialists}
-                        ListHeaderComponent={() =>
-                            !this.state.specialists || this.state.specialists.length == 0 ?
-                                <View style={{ alignItems: 'center', marginTop: 50 }}>
-                                    <Text style={{ fontStyle: 'italic' }}>Không tìm thấy dữ liệu loại dịch vụ</Text>
-                                </View>
-                                : null//<Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" />
-                        }
-                        ListFooterComponent={() => <View style={{ height: 50 }}></View>}
-                        renderItem={({ item, index }) =>
-                            <Card>
-                                <TouchableOpacity onPress={() => { this.setState({ specialist: item, toggleSpecialist: false }) }}>
-                                    <Text style={{ padding: 10, fontWeight: '300', color: this.state.specialist == item ? "red" : "black" }}>{item.name}</Text>
-                                    {/* <Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" /> */}
-                                </TouchableOpacity>
-                            </Card>
-                        }
-                    />
-                </View>
-            </Modal>
-            <DateTimePicker
-                isVisible={this.state.toggelDateTimePickerVisible}
-                onConfirm={newDate => {
-                    this.setState({ bookingDate: newDate, date: newDate.format("dd/MM/yyyy"), toggelDateTimePickerVisible: false }, () => {
-                    });
-                }}
-                onCancel={() => {
-                    this.setState({ toggelDateTimePickerVisible: false })
-                }}
-                date={new Date()}
-                minimumDate={new Date()}
-                cancelTextIOS={"Hủy bỏ"}
-                confirmTextIOS={"Xác nhận"}
-                date={this.state.dob || new Date()}
-            />
-        </ActivityPanel >
-=======
                         <FlatList
                             style={{ padding: 10 }}
                             keyExtractor={(item, index) => index.toString()}
@@ -440,7 +398,6 @@ class AddBookingScreen extends Component {
                     date={this.state.dob || new Date()}
                 />
             </ActivityPanel>
->>>>>>> feature create profile
         );
     }
 }
