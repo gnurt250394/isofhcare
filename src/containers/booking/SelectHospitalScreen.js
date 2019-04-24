@@ -46,29 +46,26 @@ class SelectHospitalScreen extends Component {
         const { page, size } = this.state;
         this.setState({
             loading: true,
-            refreshing: page == 1,
-            loadMore: page != 1
+            refreshing: page == 1
         }, () => {
             hospitalProvider.getByServiceType(this.state.serviceType.id, this.state.keyword).then(s => {
-                debugger;
                 this.setState({
                     loading: false,
-                    refreshing: false,
-                    loadMore: false
+                    refreshing: false
                 }, () => {
                     switch (s.code) {
                         case 0:
-                            if (s.data && s.data.data) {
+                            if (s.data) {
                                 var list = [];
                                 var finish = false;
-                                if (s.data.data.length == 0) {
+                                if (s.data.length == 0) {
                                     finish = true;
                                 }
                                 if (page != 1) {
                                     list = this.state.data;
-                                    list.push.apply(list, s.data.data);
+                                    list.push.apply(list, s.data);
                                 } else {
-                                    list = s.data.data;
+                                    list = s.data;
                                 }
                                 this.setState({
                                     data: [...list],
@@ -81,25 +78,21 @@ class SelectHospitalScreen extends Component {
             }).catch(e => {
                 this.setState({
                     loading: false,
-                    refreshing: false,
-                    loadMore: false
+                    refreshing: false
                 });
             })
         });
     }
-    onLoadMore() {
-        if (!this.state.finish && !this.state.loading)
-            this.setState(
-                {
-                    loadMore: true,
-                    refreshing: false,
-                    loading: true,
-                    page: this.state.page + 1
-                },
-                () => {
-                    this.onLoad(this.state.page);
-                }
-            );
+    selectHospital(hospital) {
+        let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
+        if (callback) {
+            callback(hospital);
+            this.props.navigation.pop();
+        }
+    }
+    search()
+    {
+        
     }
     render() {
         return (
@@ -125,14 +118,15 @@ class SelectHospitalScreen extends Component {
                         borderBottomColor: 'rgba(0, 0, 0, 0.06)'
                     }]} >
                         <ScaleImage style={styles.aa} width={18} source={require("@images/new/hospital/ic_search.png")} />
-                        <TextInput style={styles.tkdiachi1} placeholder={"Tìm kiếm…"} underlineColorAndroid={"transparent"} />
+                        <TextInput
+                            onSubmitEditing={this.search.bind(this)}
+                            returnKeyType='search'
+                            style={styles.tkdiachi1} placeholder={"Tìm kiếm…"} underlineColorAndroid={"transparent"} />
                     </View>
                     <View style={{ height: 1, backgroundColor: 'rgba(0, 0, 0, 0.06)', marginTop: 27 }}></View>
                     <FlatList
                         onRefresh={this.onRefresh.bind(this)}
                         refreshing={this.state.refreshing}
-                        onEndReached={this.onLoadMore.bind(this)}
-                        onEndReachedThreshold={1}
                         style={styles.sc}
                         keyExtractor={(item, index) => index.toString()}
                         extraData={this.state}
@@ -149,14 +143,14 @@ class SelectHospitalScreen extends Component {
                         ListFooterComponent={() => <View style={{ height: 10 }} />}
                         renderItem={({ item, index }) => {
                             const source = item.medicalRecords && item.medicalRecords.avatar ? { uri: item.medicalRecords.avatar.absoluteUrl() } : require("@images/new/user.png");
-                            return <TouchableOpacity style={styles.details}>
-                                <View style={styles.help}>
+                            return <TouchableOpacity style={styles.details} onPress={this.selectHospital.bind(this, item)}>
+                                {/* <View style={styles.help}>
                                     <ScaleImage style={styles.plac} height={21} source={require("@images/new/hospital/ic_place.png")} />
                                     <Text style={styles.bv1}>1km</Text>
-                                </View>
-                                <View style={{ flex: 1 }}>
-                                    <Text style={styles.bv} numberOfLines={1}>Bệnh viện Đại học Y Hà Nội</Text>
-                                    <Text style={styles.bv1} numberOfLines={2}>703 Trần Cung, Cổ Nhuế, Từ Liêm, Hà Nội</Text>
+                                </View> */}
+                                <View style={{ flex: 1, marginLeft: 20 }}>
+                                    <Text style={styles.bv} numberOfLines={1}>{item.hospital.name}</Text>
+                                    <Text style={styles.bv1} numberOfLines={2}>{item.hospital.address}</Text>
                                 </View>
                                 <ScaleImage style={styles.help} height={21} source={require("@images/new/hospital/ic_info.png")} />
                             </TouchableOpacity>

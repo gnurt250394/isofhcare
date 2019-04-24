@@ -105,6 +105,9 @@ class AddBookingScreen extends Component {
     selectProfile(profile) {
         this.setState({ profile });
     }
+    selecteHospital(hospital) {
+        this.setState({ hospital });
+    }
     addBooking() {
 
         let error = false;
@@ -124,13 +127,19 @@ class AddBookingScreen extends Component {
         if (this.state.serviceType) {
             this.setState({ serviceError: "" })
         } else {
-            this.setState({ serviceError: "Dịch vụ khám không được bỏ trống" })
+            this.setState({ serviceError: "Yêu cầu không được bỏ trống" })
             error = true;
         }
         if (this.state.bookingDate) {
             this.setState({ bookingError: "" })
         } else {
             this.setState({ bookingError: "Ngày khám không được bỏ trống" })
+            error = true;
+        }
+        if (this.state.hospital) {
+            this.setState({ hospitalError: "" })
+        } else {
+            this.setState({ hospitalError: "Địa điểm không được bỏ trống" })
             error = true;
         }
 
@@ -153,6 +162,8 @@ class AddBookingScreen extends Component {
     render() {
         let avatar = ((this.state.profile || {}).medicalRecords || {}).avatar;
         const source = avatar ? { uri: avatar.absoluteUrl() } : require("@images/new/user.png");
+        let minDate = new Date();
+        minDate.setDate(minDate.getDate() + 1);
 
         return (<ActivityPanel style={{ flex: 1, backgroundColor: '#f7f9fb' }} title="Đặt Khám"
             menuButton={<TouchableOpacity style={styles.menu} onPress={() => snackbar.show("Chức năng đang phát triển")}><ScaleImage style={styles.img} height={20} source={require("@images/new/booking/ic_info.png")} /></TouchableOpacity>}
@@ -169,37 +180,45 @@ class AddBookingScreen extends Component {
                 <TouchableOpacity style={styles.name} onPress={() => {
                     this.props.navigation.navigate("selectProfile", { onSelected: this.selectProfile.bind(this) });
                 }}>
-                    {this.state.profile ?
-                        <View style={{ flexDirection: 'row', height: 38, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                            <ImageLoad
-                                resizeMode="cover"
-                                imageStyle={{ borderRadius: 20, borderWidth: 1, borderColor: '#CAC' }}
-                                borderRadius={20}
-                                customImagePlaceholderDefaultStyle={[styles.avatar, { width: 40, height: 40 }]}
-                                placeholderSource={require("@images/new/user.png")}
-                                resizeMode="cover"
-                                loadingStyle={{ size: 'small', color: 'gray' }}
-                                source={source}
-                                style={{
-                                    alignSelf: 'center',
-                                    borderRadius: 20,
-                                    width: 40,
-                                    height: 40
-                                }}
-                                defaultImage={() => {
-                                    return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={40} height={40} />
-                                }}
-                            />
-                            <Text style={styles.txtname}>{this.state.profile.medicalRecords.name}</Text>
-                        </View> :
-                        <View style={{ flexDirection: 'row', height: 38, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                            <View style={{ justifyContent: 'center', alignItems: 'center', width: 38, height: 38, borderRadius: 19, borderColor: 'rgba(151, 151, 151, 0.29)', borderWidth: 1 }}>
-                                <ScaleImage source={require("@images/new/profile/ic_profile.png")} width={20} />
+                    <View style={{
+                        flexDirection: 'row', alignItems: 'center', padding: 10, paddingBottom: this.state.profileError ? 0 : 10
+                    }}>
+                        {this.state.profile ?
+                            <View style={{ flexDirection: 'row', height: 38, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                <ImageLoad
+                                    resizeMode="cover"
+                                    imageStyle={{ borderRadius: 20, borderWidth: 1, borderColor: '#CAC' }}
+                                    borderRadius={20}
+                                    customImagePlaceholderDefaultStyle={[styles.avatar, { width: 40, height: 40 }]}
+                                    placeholderSource={require("@images/new/user.png")}
+                                    resizeMode="cover"
+                                    loadingStyle={{ size: 'small', color: 'gray' }}
+                                    source={source}
+                                    style={{
+                                        alignSelf: 'center',
+                                        borderRadius: 20,
+                                        width: 40,
+                                        height: 40
+                                    }}
+                                    defaultImage={() => {
+                                        return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={40} height={40} />
+                                    }}
+                                />
+                                <Text style={styles.txtname}>{this.state.profile.medicalRecords.name}</Text>
+                            </View> :
+                            <View style={{ flexDirection: 'row', height: 38, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                <View style={{ justifyContent: 'center', alignItems: 'center', width: 38, height: 38, borderRadius: 19, borderColor: 'rgba(151, 151, 151, 0.29)', borderWidth: 1 }}>
+                                    <ScaleImage source={require("@images/new/profile/ic_profile.png")} width={20} />
+                                </View>
+                                <Text style={styles.txtname}>Chọn hồ sơ</Text>
                             </View>
-                            <Text style={styles.txtname}>Chọn hồ sơ</Text>
-                        </View>
+                        }
+                        <ScaleImage style={styles.img} height={10} source={require("@images/new/booking/ic_next.png")} />
+                    </View>
+                    {
+                        this.state.profileError ?
+                            <Text style={[styles.errorStyle]}>{this.state.profileError}</Text> : null
                     }
-                    <ScaleImage style={styles.img} height={10} source={require("@images/new/booking/ic_next.png")} />
                 </TouchableOpacity>
                 <View style={styles.article}>
                     <TouchableOpacity style={styles.mucdichkham} onPress={() => this.setState({ toggleServiceType: true })}>
@@ -220,19 +239,26 @@ class AddBookingScreen extends Component {
                         <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
                     </TouchableOpacity>
                     {
-                        this.state.specialistError ?
-                            <Text style={[styles.errorStyle]}>{this.state.specialistError}</Text> : null
+                        this.state.bookingError ?
+                            <Text style={[styles.errorStyle]}>{this.state.bookingError}</Text> : null
                     }
                     <View style={styles.border}></View>
-                    <TouchableOpacity style={styles.mucdichkham} onPress={() => this.setState({ toggleSpecialist: true })}>
+                    <TouchableOpacity style={styles.mucdichkham} onPress={() => {
+                        if (!this.state.serviceType) {
+                            snackbar.show("Vui lòng chọn yêu cầu khám", "danger");
+                            return;
+                        }
+                        this.props.navigation.navigate("selectHospital", { serviceType: this.state.serviceType, onSelected: this.selecteHospital.bind(this) })
+                    }
+                    }>
                         <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_placeholder.png")} />
                         <Text style={styles.mdk}>Địa điểm</Text>
-                        <Text numberOfLines={1} style={styles.ktq}>{this.state.specialist ? this.state.specialist.name : "Chọn chuyên khoa"}</Text>
+                        <Text numberOfLines={1} style={styles.ktq}>{this.state.hospital ? this.state.hospital.hospital.name : "Chọn địa điểm"}</Text>
                         <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
                     </TouchableOpacity>
                     {
-                        this.state.bookingError ?
-                            <Text style={[styles.errorStyle]}>{this.state.bookingError}</Text> : null
+                        this.state.hospitalError ?
+                            <Text style={[styles.errorStyle]}>{this.state.hospitalError}</Text> : null
                     }
                     <View style={styles.border}></View>
                     <TouchableOpacity style={styles.mucdichkham} onPress={() => this.setState({ toggleSpecialist: true })}>
@@ -242,8 +268,8 @@ class AddBookingScreen extends Component {
                         <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
                     </TouchableOpacity>
                     {
-                        this.state.bookingError ?
-                            <Text style={[styles.errorStyle]}>{this.state.bookingError}</Text> : null
+                        this.state.specialistError ?
+                            <Text style={[styles.errorStyle]}>{this.state.specialistError}</Text> : null
                     }
                 </View>
                 <Text style={styles.lienlac}>Liên lạc với tôi qua</Text>
@@ -373,46 +399,45 @@ class AddBookingScreen extends Component {
                             </Text>
                     </View>
 
-                        <FlatList
-                            style={{ padding: 10 }}
-                            keyExtractor={(item, index) => index.toString()}
-                            extraData={this.state}
-                            data={this.state.specialists}
-                            ListHeaderComponent={() =>
-                                !this.state.specialists || this.state.specialists.length == 0 ?
-                                    <View style={{ alignItems: 'center', marginTop: 50 }}>
-                                        <Text style={{ fontStyle: 'italic' }}>Không tìm thấy dữ liệu loại dịch vụ</Text>
-                                    </View>
-                                    : null//<Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" />
-                            }
-                            ListFooterComponent={() => <View style={{ height: 50 }}></View>}
-                            renderItem={({ item, index }) =>
-                                <Card>
-                                    <TouchableOpacity onPress={() => { this.setState({ specialist: item, toggleSpecialist: false }) }}>
-                                        <Text style={{ padding: 10, fontWeight: '300', color: this.state.specialist == item ? "red" : "black" }}>{item.name}</Text>
-                                        {/* <Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" /> */}
-                                    </TouchableOpacity>
-                                </Card>
-                            }
-                        />
-                    </View>
-                </Modal>
-                <DateTimePicker
-                    isVisible={this.state.toggelDateTimePickerVisible}
-                    onConfirm={newDate => {
-                        this.setState({ dob: newDate, date: newDate.format("dd/MM/yyyy"), toggelDateTimePickerVisible: false }, () => {
-                        });
-                    }}
-                    onCancel={() => {
-                        this.setState({ toggelDateTimePickerVisible: false })
-                    }}
-                    date={new Date()}
-                    minimumDate={new Date()}
-                    cancelTextIOS={"Hủy bỏ"}
-                    confirmTextIOS={"Xác nhận"}
-                    date={this.state.dob || new Date()}
-                />
-            </ActivityPanel>
+                    <FlatList
+                        style={{ padding: 10 }}
+                        keyExtractor={(item, index) => index.toString()}
+                        extraData={this.state}
+                        data={this.state.specialists}
+                        ListHeaderComponent={() =>
+                            !this.state.specialists || this.state.specialists.length == 0 ?
+                                <View style={{ alignItems: 'center', marginTop: 50 }}>
+                                    <Text style={{ fontStyle: 'italic' }}>Không tìm thấy dữ liệu loại dịch vụ</Text>
+                                </View>
+                                : null//<Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" />
+                        }
+                        ListFooterComponent={() => <View style={{ height: 50 }}></View>}
+                        renderItem={({ item, index }) =>
+                            <Card>
+                                <TouchableOpacity onPress={() => { this.setState({ specialist: item, toggleSpecialist: false }) }}>
+                                    <Text style={{ padding: 10, fontWeight: '300', color: this.state.specialist == item ? "red" : "black" }}>{item.name}</Text>
+                                    {/* <Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" /> */}
+                                </TouchableOpacity>
+                            </Card>
+                        }
+                    />
+                </View>
+            </Modal>
+            <DateTimePicker
+                isVisible={this.state.toggelDateTimePickerVisible}
+                onConfirm={newDate => {
+                    this.setState({ bookingDate: newDate, date: newDate.format("dd/MM/yyyy"), toggelDateTimePickerVisible: false }, () => {
+                    });
+                }}
+                onCancel={() => {
+                    this.setState({ toggelDateTimePickerVisible: false })
+                }}
+                minimumDate={minDate}
+                cancelTextIOS={"Hủy bỏ"}
+                confirmTextIOS={"Xác nhận"}
+                date={this.state.bookingDate || minDate}
+            />
+        </ActivityPanel>
         );
     }
 }
@@ -434,9 +459,6 @@ const styles = StyleSheet.create({
         borderStyle: "solid",
         borderWidth: 1,
         borderColor: "rgba(0, 0, 0, 0.06)",
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 10,
         minHeight: 18
     },
     imgName: {
