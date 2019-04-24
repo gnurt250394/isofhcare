@@ -18,7 +18,7 @@ import KeyboardSpacer from "react-native-keyboard-spacer";
 import Form from "mainam-react-native-form-validate/Form";
 import TextField from "mainam-react-native-form-validate/TextField";
 import dataCacheProvider from '@data-access/datacache-provider';
-import Field from "../../../node_modules/mainam-react-native-form-validate/Field";
+import Field from "mainam-react-native-form-validate/Field";
 
 const padding = Platform.select({
   ios: 7,

@@ -48,6 +48,7 @@ import FingerScreen from "@containers/account/FingerScreen";
 import FingerSettingScreen from "@containers/account/FingerSettingScreen";
 //=========BOOKING NAVIGATION
 import AddBookingScreen from "@containers/booking/AddBookingScreen";
+import SelectHospitalScreen from "@containers/booking/SelectHospitalScreen";
 
 //=========PROFILE NAVIGATION
 import SelectProfileScreen from "@containers/booking/SelectProfileScreen";
@@ -103,6 +104,7 @@ const RootNavigator = createStackNavigator(
       FingerSettingScreen: { screen: FingerSettingScreen },
       //---------------booking navigation
       addBooking: { screen: AddBookingScreen },
+      selectHospital: { screen: SelectHospitalScreen },
       //---------------------------------
       selectProfile: {screen: SelectProfileScreen},
       //
