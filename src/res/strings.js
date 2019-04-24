@@ -317,8 +317,13 @@ module.exports = {
     serviceType: {
       get_all: isofhcare_service + "service-type/get-all"
     },
+<<<<<<< HEAD
     medicalRecord: {
       get_by_user: isofhcare_service + "medical-records/get-by-user"
+=======
+    medical:{
+      createMedical : isofhcare_service + "medical-records/create"
+>>>>>>> feature create profile
     }
   }
 };

@@ -106,7 +106,12 @@ const RootNavigator = createStackNavigator(
       FingerSettingScreen: { screen: FingerSettingScreen },
       //---------------booking navigation
       addBooking: { screen: AddBookingScreen },
+<<<<<<< HEAD
       selectHospital: { screen: SelectHospitalScreen },
+=======
+      createProfile: { screen: createProfile },
+
+>>>>>>> feature create profile
       //---------------------------------
       selectProfile: {screen: SelectProfileScreen},
       //

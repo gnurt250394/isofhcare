@@ -1,15 +1,16 @@
-import React, { Component, PropTypes } from "react";
+import React, { Component, PropTypes, PureComponent } from "react";
 import ActivityPanel from "@components/ActivityPanel";
 import {
   View,
   StyleSheet,
   ScrollView,
+  Keyboard,
   Text,
   TouchableOpacity,
-  Modal,
   TextInput,
   FlatList
 } from "react-native";
+import constants from "@resources/strings";
 import { connect } from "react-redux";
 import ScaleImage from "mainam-react-native-scaleimage";
 import { Card } from "native-base";
@@ -17,28 +18,89 @@ import ImagePicker from "mainam-react-native-select-image";
 import imageProvider from "@data-access/image-provider";
 import ImageLoad from "mainam-react-native-image-loader";
 import stylemodal from "@styles/modal-style";
+import DateTimePicker from "mainam-react-native-date-picker";
+import Modal from "react-native-modal";
+import connectionUtils from "@utils/connection-utils";
+import snackbar from "@utils/snackbar-utils";
+import medicalProvider from "@data-access/medical-provider";
+import NavigationService from "@navigators/NavigationService";
+import Form from "mainam-react-native-form-validate/Form";
+import Field from "mainam-react-native-form-validate/Field";
+import TextField from "mainam-react-native-form-validate/TextField";
+import FloatingLabel from "mainam-react-native-floating-label";
+import { cleanSingle } from "react-native-image-crop-picker";
+import dateUtils from "mainam-react-native-date-utils";
 
 class createProfile extends Component {
   constructor() {
     super();
     this.state = {
-      isGender:false,
-      genderUser:[{gender:'nam'},{gender:'nữ'}]
+      isGender: false,
+      genderUser: [{ gender: "Nam", value: 1 }, { gender: "Nữ", value: 2 }],
+      toggelDateTimePickerVisible: false,
+      valueGender: "",
+      txGender:'',
+      name: '',
+      email: "",
+      dob: "",
+      imgLocal: "",
+      date: "",
+      image: "",
+      imageUris: [],
+      valid:''
     };
   }
-
+componentDidMount(){
+  if(this.props.userApp.isLogin){
+    var name = this.props.userApp.currentUser.name
+    var image = this.props.userApp.currentUser.image
+    var dob = this.props.userApp.currentUser.dob
+    var gender = this.props.userApp.currentUser.gender
+    this.setState({
+      name:name,
+      image:image,
+      date:dob ? dob.toDateObject('-').format('dd/MM/yyyy'):(''),
+      dob:dob ? dob.toDateObject('-') :(''),
+      valueGender:gender,
+      txGender: gender && gender == 1 ?('Nam'):('Nữ')
+    })
+  }
+}
+  onChangeText = type => text => {
+    this.setState({ [type]: text });
+  };
+  setDate(newDate) {
+    this.setState({ dob: newDate, date: newDate.format("dd/MM/yyyy") }, () => {
+      this.form.isValid();
+    });
+  }
   render() {
+    let maxDate = new Date();
+    maxDate = new Date(
+      maxDate.getFullYear() - 15,
+      maxDate.getMonth(),
+      maxDate.getDate()
+    );
+    let minDate = new Date();
+    minDate = new Date(
+      maxDate.getFullYear() - 150,
+      maxDate.getMonth(),
+      maxDate.getDate()
+    );
     const icSupport = require("@images/new/user.png");
-    const source = this.props.userApp.currentUser.avatar
-      ? { uri: this.props.userApp.currentUser.avatar.absoluteUrl() }
+    const source = this.state.imgLocal
+      ? { uri: this.state.imgLocal.absoluteUrl() }
       : icSupport;
+    console.log(source);
+
     return (
       <ActivityPanel
         style={styles.AcPanel}
         title="Thêm hồ sơ"
+        isLoading={this.state.isLoading}
         iosBarStyle={"light-content"}
         backButton={
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => this.props.navigation.pop()}>
             <Text style={styles.btnhuy}>Huỷ</Text>
           </TouchableOpacity>
         }
@@ -46,9 +108,8 @@ class createProfile extends Component {
         containerStyle={{
           backgroundColor: "rgb(247,249,251)"
         }}
-        titleStyle={{ marginLeft: 55 }}
         menuButton={
-          <TouchableOpacity>
+          <TouchableOpacity onPress={this.onUpdate}>
             <Text style={styles.btnmenu}>Lưu</Text>
           </TouchableOpacity>
         }
@@ -95,121 +156,405 @@ class createProfile extends Component {
             </TouchableOpacity>
           </View>
           <View style={styles.container}>
-            <View style={[styles.ViewRow]}>
-              <Text style={styles.textho1}>Họ và Tên</Text>
-              <TextInput style={styles.txInput} underlineColorAndroid = {"#fff"}  placeholder = {'Nhập họ tên'}/>
-            </View>
-            <View style={styles.ViewRow}>
-              <Text style={styles.textho1}>Giới tính</Text>
-              <TouchableOpacity onPress = {this.onShowGender}><Text>{!this.state.txGender ? 'Chọn giới tính' : this.state.txGender}</Text></TouchableOpacity>
-    
+            <Form ref={ref => (this.form = ref)} style={{ flex: 1 }}>
+              <Field style={[styles.mucdichkham, { height: 41, flex: 1 }]}>
+                <Text style={styles.mdk}>Họ và Tên</Text>
+                <TextField
+                  hideError={true}
+                  onValidate={(valid, messages) => {
+                    if (valid) {
+                      this.setState({ nameError: "" });
+                    } else {
+                      this.setState({ nameError: messages });
+                    }
+                  }}
+                  validate={{
+                    rules: {
+                      required: true,
+                      minlength: 1,
+                      maxlength: 256
+                    },
+                    messages: {
+                      required: "Vui lòng nhập họ và tên",
+                      maxlength: "Không cho phép nhập quá 256 kí tự"
+                    }
+                  }}
+                  placeholder={"Nhập họ tên"}
+                  inputStyle={[
+                    styles.ktq,
+                    { marginRight: 30, height: 41, width: 200 }
+                  ]}
+                  errorStyle={styles.errorStyle}
+                  onChangeText={this.onChangeText("name")}
+                  value={this.state.name}
+                  autoCapitalize={"none"}
+                  returnKeyType={"next"}
+                  // underlineColorAndroid="transparent"
+                  autoCorrect={false}
+                />
+              </Field>
+              <Text style={[styles.errorStyle]}>{this.state.nameError}</Text>
+
+              <TouchableOpacity
+                style={[
+                  styles.mucdichkham,
+                  { marginTop: 20, paddingTop: 10, paddingBottom: 10 }
+                ]}
+                onPress={this.onShowGender}
+              >
+                <Text style={styles.mdk}>Giới tính</Text>
+                <Text style={styles.ktq}>
+                  {!this.state.txGender
+                    ? "Chọn giới tính"
+                    : this.state.txGender}
+                </Text>
+                <ScaleImage
+                  style={styles.imgmdk}
+                  height={10}
+                  source={require("@images/new/booking/ic_next.png")}
+                />
+              </TouchableOpacity>
               <Modal
-                    visible={this.state.isGender}
-                    onBackdropPress={() => this.setState({ isGender: false })}
-                    style={stylemodal.bottomModal}>
-                    <View style={{ backgroundColor: '#fff', elevation: 3, flexDirection: 'column', maxHeight: 400, minHeight: 100 }}>
-                        <View style={{ flexDirection: 'row', alignItems: "center" }}>
-                            <Text style={{ padding: 20, flex: 1, color: "rgb(0,121,107)", textAlign: 'center', fontSize: 16, fontWeight: '900' }}>
-                                Chọn giới tính
-                            </Text>
-                        </View>
-                        <FlatList
-                            style={{ padding: 10 }}
-                            keyExtractor={(item, index) => index.toString()}
-                            extraData={this.state}
-                            data={this.state.genderUser}
-                            renderItem={({ item, index }) =>
-                                <Card>
-                                    <TouchableOpacity onPress = { () => this.onSetGender(item)}>
-                                        <Text style={{ padding: 10, fontWeight: '300',}}>{item.gender}</Text>
-                                        {/* <Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" /> */}
-                                    </TouchableOpacity>
-                                </Card>
-                            }
-                        />
-                    </View>
-                </Modal>
-            </View>
-            <View style={styles.ViewRow}>
-              <Text style={styles.textho1}>Họ và Tên</Text>
-              <TextInput style={styles.txInput}  placeholder = {'Nhập họ tên'}/>
-            </View>
-            <View style={styles.ViewRow}>
-              <Text style={styles.textho1}>Họ và Tên</Text>
-              <TextInput style={styles.txInput}  placeholder = {'Nhập họ tên'}/>
-            </View>
-            <Text style={styles.textbot}>
-              Vui lòng nhập email với người trên 16 tuổi
-            </Text>
+                isVisible={this.state.isGender}
+                onBackdropPress={() => this.setState({ isGender: false })}
+                style={stylemodal.bottomModal}
+              >
+                <View
+                  style={{
+                    backgroundColor: "#fff",
+                    elevation: 3,
+                    flexDirection: "column",
+                    maxHeight: 400,
+                    minHeight: 100
+                  }}
+                >
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <Text
+                      style={{
+                        padding: 20,
+                        flex: 1,
+                        color: "rgb(0,121,107)",
+                        textAlign: "center",
+                        fontSize: 16,
+                        fontWeight: "900"
+                      }}
+                    >
+                      Chọn giới tính
+                    </Text>
+                  </View>
+                  <FlatList
+                    style={{ padding: 10 }}
+                    keyExtractor={(item, index) => index.toString()}
+                    extraData={this.state}
+                    data={this.state.genderUser}
+                    renderItem={({ item, index }) => (
+                      <Card>
+                        <TouchableOpacity
+                          onPress={() => this.onSetGender(item)}
+                        >
+                          <Text style={{ padding: 10, fontWeight: "300" }}>
+                            {item.gender}
+                          </Text>
+                          {/* <Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" /> */}
+                        </TouchableOpacity>
+                      </Card>
+                    )}
+                  />
+                </View>
+
+              </Modal>
+              <Field
+               
+                style={[styles.mucdichkham, { height: 41, flex: 1 }]}
+              >
+                <Text style={styles.mdk}>Ngày sinh</Text>
+
+                <TextField
+                  // value={this.state.date || ""}
+                  onPress={() =>
+                  this.setState({ toggelDateTimePickerVisible: true })
+                }                  
+                dateFormat={"dd/MM/yyyy"}
+                  splitDate={"/"}
+                  editable={false}
+                  getComponent={(
+                    value,
+                    onChangeText,
+                    onFocus,
+                    onBlur,
+                    isError
+                  ) => (
+                    <Text style={{marginLeft:60}}>{value? (value):('Chọn ngày sinh')}</Text>
+                  )}
+                  // onChangeText={s => {
+                  //   this.setState({ date: s });
+                  // }}
+                  value={this.state.date}
+                  errorStyle={styles.errorStyle}
+                  hideError={true}
+                  onValidate={(valid, messages) => {
+                    if (valid) {
+                      this.setState({ nameError: "" });
+                    } else {
+                     messages ? 
+                     ( this.setState({ valid: 'Không cho phép chọn lớn hơn 150 tuổi' })) :(this.setState({ isMin:true}));
+                    }
+                  }}
+                  validate={{
+                    rules: {
+                      require:true,
+                      max: maxDate,
+                      min: minDate
+                    },
+                    messages: {
+                      require:'Vui lòng nhập ngày sinh',
+                      max: true,
+                      min: false
+                    }
+                  }}
+                  hideError={true}
+                  onValidate={(valid, messages) => {
+                    if (valid) {
+                      this.setState({ dateError: "" });
+                    } else {
+                      this.setState({ isMin: messages });
+                    }
+                  }}
+                  returnKeyType={"next"}
+                  autoCapitalize={"none"}
+                  autoCorrect={false}
+                  style={{
+                    flex: 1
+                  }}
+                />
+                 <ScaleImage
+                  style={styles.imgmdk}
+                  height={10}
+                  source={require("@images/new/booking/ic_next.png")}
+                />
+              </Field>
+              <Text style={[styles.errorStyle]}>{this.state.valid}</Text>
+{/* 
+              <Field
+                style={[styles.mucdichkham, { marginTop: 20, height: 41 }]}
+              >
+                <Text style={styles.mdk}>Email</Text>
+
+                <TextField
+                  hideError={true}
+                  onValidate={(valid, messages) => {
+                    if (valid) {
+                      this.setState({ emailError: "" });
+                    } else {
+                      this.setState({ emailError: messages });
+                    }
+                  }}
+                  validate={{
+                    rules: {
+                      required: true,
+                      minlength: 1,
+                      email: true
+                    },
+                    messages: {
+                      required: "Vui lòng nhập email",
+                      email: "Email không hợp lệ"
+                    }
+                  }}
+                  placeholder={"Nhập email"}
+                  inputStyle={[
+                    styles.ktq,
+                    { marginRight: 30, height: 41, width: 200 }
+                  ]}
+                  errorStyle={styles.errorStyle}
+                  onChangeText={this.onChangeText("email")}
+                  value={this.state.email}
+                  autoCapitalize={"none"}
+                  returnKeyType={"next"}
+                  // underlineColorAndroid="transparent"
+                  autoCorrect={false}
+                />
+              </Field>
+              <Text style={[styles.errorStyle]}>{this.state.isMin ?(' Vui lòng nhập email với người trên 15 tuổi.'):(this.state.emailError)}</Text> */}
+            </Form>
           </View>
+
+          <Text style={styles.textbot}>
+            Vui lòng nhập email với người trên 15 tuổi
+          </Text>
         </ScrollView>
         <ImagePicker ref={ref => (this.imagePicker = ref)} />
+        <DateTimePicker
+          isVisible={this.state.toggelDateTimePickerVisible}
+          onConfirm={newDate => {
+            this.setState(
+              {
+                dob: newDate,
+                date: newDate.format("dd/MM/yyyy"),
+                toggelDateTimePickerVisible: false
+              },
+              () => {
+                this.form.isValid();
+              }
+            );
+          }}
+          onCancel={() => {
+            this.setState({ toggelDateTimePickerVisible: false });
+          }}
+          date={new Date()}
+          // minimumDate={minDate}
+          maximumDate={new Date()}
+          cancelTextIOS={"Hủy bỏ"}
+          confirmTextIOS={"Xác nhận"}
+          date={this.state.dob || new Date()}
+        />
       </ActivityPanel>
     );
   }
   onShowGender = () => {
     this.setState({
-      isGender:true
-    })
-  }
+      isGender: true
+    });
+  };
   showLoading(loading, callback) {
     if (this.props.showLoading) {
       this.props.showLoading(loading, callback);
     } else {
-      callback();
+      callback;
     }
   }
   onSetGender = item => {
-   this.setState({
-     isGender:false,
-     txGender:item.gender
-   })
-   console.log(item)
-  }
+    this.setState({
+      isGender: false,
+      txGender: item.gender,
+      valueGender: item.value
+    });
+  };
+  
   selectImage() {
-    if (this.imagePicker) {
-      this.imagePicker.open(true, 200, 200, image => {
-        this.showLoading(true, () => {
-          imageProvider
-            .upload(image.path)
-            .then(s => {
-              this.showLoading(false, () => {
-                if (s && s.data.code == 0) {
-                  let user = objectUtils.clone(this.props.userApp.currentUser);
-                  user.avatar = s.data.data.images[0].thumbnail;
-                  this.showLoading(true, () => {
-                    userProvider
-                      .update(this.props.userApp.currentUser.id, user)
-                      .then(s => {
-                        this.showLoading(false);
-                        if (s.code == 0) {
-                          this.props.dispatch(redux.userLogin(s.data.user));
-                        } else {
-                          snackbar.show(
-                            "Cập nhật ảnh đại diện không thành công",
-                            "danger"
-                          );
-                        }
-                      })
-                      .catch(e => {
-                        this.showLoading(false);
-                        snackbar.show(
-                          "Cập nhật ảnh đại diện không thành công",
-                          "danger"
-                        );
-                      });
-                  });
-                }
-              });
-            })
-            .catch(e => {
-              this.showLoading(false);
-              snackbar.show("Upload ảnh không thành công", "danger");
+    connectionUtils
+      .isConnected()
+      .then(s => {
+        if (this.imagePicker) {
+          this.imagePicker.open(false, 200, 200, image => {
+            setTimeout(() => {
+              Keyboard.dismiss();
+            }, 500);
+            console.log(image);
+            this.setState({
+              image
             });
+            imageProvider.upload(this.state.image.path, (s, e) => {
+              if (s.success && s.data.code == 0) {
+                let images = s.data.data.images[0].thumbnail;
+                this.setState({
+                  imgLocal: images
+                });
+              }
+              if (e) {
+                this.setState({
+                  isLoading: false
+                });
+              }
+            });
+          });
+        }
+      })
+      .catch(e => {
+        snackbar.show("Không có kết nối mạng", "danger");
+      });
+  }
+  onUpdate2(image) {
+    this.setState(
+      {
+        isLoading: true
+      },
+      () => {
+        this.form.isValid();
+
+        const { name } = this.state;
+        const gender = this.state.valueGender;
+        let date = this.state.dob ? this.state.dob.format('yyyy-MM-dd HH:mm:ss') :('')
+        console.log(date)
+        if (name.length > 256) {
+          this.setState({
+            isLoading: false
+          });
+          snackbar.show("Không cho phép nhập quá 256 ký tự", "danger");
+
+          return;
+        }
+        if (!name) {
+          this.setState({
+            isLoading: false
+          });
+          snackbar.show("Tên không được để trống", "danger");
+
+          return;
+        }
+        if (!this.state.date) {
+          this.setState({
+            isLoading: false
+          });
+          snackbar.show("Bạn chưa chọn ngày sinh", "danger");
+
+          return;
+        }
+        if (!image) {
+          this.setState({
+            isLoading: false
+          });
+          snackbar.show("Bạn chưa chọn ảnh", "danger");
+
+          return;
+        }
+        if (!gender) {
+          this.setState({
+            isLoading: false
+          });
+          snackbar.show("Bạn chưa chọn giới tính", "danger");
+        } else {
+          medicalProvider
+            .createMedical(name, gender, date, image)
+            .then(res => {
+              if (res.code == 0) {
+                this.setState({
+                  isLoading: false
+                });
+                snackbar.show("Bạn đã thêm người thân thành công", "success");
+                NavigationService.pop();
+              } else {
+                this.setState({
+                  isLoading: false
+                });
+              }
+            })
+            .catch(err => {
+              this.setState({
+                isLoading: false
+              });
+              snackbar.show("Có lỗi, xin vui lòng thử lại", "danger");
+            });
+        }
+      }
+    );
+  }
+  onUpdate = () => {
+    if (this.state.image)
+      this.setState({ isLoading: true }, () => {
+        imageProvider.upload(this.state.image.path, (s, e) => {
+          if (s.success && s.data.code == 0) {
+            let image = s.data.data.images[0].thumbnail;
+            this.onUpdate2(image);
+          }
+          if (e) {
+            this.setState({
+              isLoading: false
+            });
+          }
         });
       });
-    }
-  }
+    else this.onUpdate2("");
+  };
 }
 
 function mapStateToProps(state) {
@@ -222,10 +567,44 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "rgb(247,249,251)"
   },
+  imgIc: {
+    marginLeft: 10
+  },
+  imgmdk: {
+    marginRight: 5
+  },
+  mucdichkham: {
+    backgroundColor: "rgb(255,255,255)",
+    borderStyle: "solid",
+    borderWidth: 1,
+    alignItems: "center",
+    borderColor: "rgba(0, 0, 0, 0.06)",
+    flexDirection: "row"
+  },
+  mdk: {
+    marginLeft: 12,
+    flex: 1,
+    fontSize: 14,
+    fontWeight: "normal",
+    fontStyle: "normal",
+    letterSpacing: 0,
+    color: "#000000"
+  },
+  ktq: {
+    flex: 1,
+    fontSize: 12,
+    fontWeight: "normal",
+    fontStyle: "normal",
+    letterSpacing: 0,
+    textAlign: "right",
+    color: "#8e8e93",
+    marginRight: 10,
+    marginLeft: 20
+  },
   container: {
     backgroundColor: "rgb(247,249,251)",
     borderStyle: "solid",
-    marginVertical:20,
+    marginVertical: 20,
     borderWidth: 1,
     borderColor: "rgba(0, 0, 0, 0.07)"
   },
@@ -251,17 +630,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center"
   },
-  ViewRow: {
-    backgroundColor: "rgb(255,255,255)",
-    borderStyle: "solid",
-    borderWidth: 1,
-    alignItems:'center',
-    height:41,
-    width:'100%',
-    borderColor: "rgba(0, 0, 0, 0.06)",
-    justifyContent:'space-around',
-    flexDirection: 'row',
-  },
+  ViewRow: {},
   textho1: {
     fontSize: 17,
     fontWeight: "normal",
@@ -270,9 +639,9 @@ const styles = StyleSheet.create({
     color: "#000000"
   },
   txInput: {
-    alignItems:'flex-end',
-    width:'50%',
-    height:41,
+    alignItems: "flex-end",
+    width: "50%",
+    height: 41,
     color: "#8e8e93"
   },
   view2: {
@@ -311,13 +680,23 @@ const styles = StyleSheet.create({
     fontStyle: "normal",
     letterSpacing: 0,
     color: "#0a7ffe",
-    marginRight: 35
+    marginRight: 10
   },
   ic_icon: {
     position: "absolute",
     bottom: 0,
     right: 8
-  }
+  },
+  errorStyle: {
+    color: "red",
+    marginTop: 10,
+    marginLeft: 12
+  },
+  textInputStyle: {
+    color: "#53657B",
+    height: 45,
+  },
+  labelStyle: {  color: '#53657B', fontSize: 16 ,marginBottom: 10,marginLeft:50}
 });
 function mapStateToProps(state) {
   return {
@@ -326,5 +705,3 @@ function mapStateToProps(state) {
   };
 }
 export default connect(mapStateToProps)(createProfile);
-
-
