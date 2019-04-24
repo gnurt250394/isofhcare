@@ -59,7 +59,6 @@ import SelectProfileScreen from "@containers/booking/SelectProfileScreen";
 import EmptyScreen from "@containers/EmptyScreen2";
 const RootNavigator = createStackNavigator(
     {
-      createProfile: { screen: createProfile },
       // testVNPay: { screen: TestVNPayScreen },
       splash: { screen: SplashScreen },
       ehealth: { screen: EHealthNavigator },
