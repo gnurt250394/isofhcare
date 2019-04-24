@@ -9,6 +9,7 @@ import ScaleImage from "mainam-react-native-scaleimage";
 import { Card } from 'native-base';
 import hospitalProvider from '@data-access/hospital-provider';
 import ImageLoad from 'mainam-react-native-image-loader';
+import snackbar from '@utils/snackbar-utils';
 
 import clientUtils from '@utils/client-utils';
 class SelectHospitalScreen extends Component {
@@ -90,9 +91,8 @@ class SelectHospitalScreen extends Component {
             this.props.navigation.pop();
         }
     }
-    search()
-    {
-        
+    search() {
+        this.onLoad();
     }
     render() {
         return (
@@ -109,16 +109,18 @@ class SelectHospitalScreen extends Component {
                 }}>
 
                 <View style={styles.container}>
-                    <View style={styles.search}>
+                    <TouchableOpacity style={styles.search} onPress={() => { snackbar.show("Chức năng đang phát triển", "danger") }}>
                         <ScaleImage style={styles.aa} width={18} source={require("@images/new/hospital/ic_placeholder.png")} />
                         <Text style={styles.tkdiachi}>Tìm kiếm gần tôi</Text>
-                    </View>
+                    </TouchableOpacity>
                     <View style={[styles.search, {
                         borderBottomWidth: 1,
                         borderBottomColor: 'rgba(0, 0, 0, 0.06)'
                     }]} >
                         <ScaleImage style={styles.aa} width={18} source={require("@images/new/hospital/ic_search.png")} />
                         <TextInput
+                            value={this.state.keyword}
+                            onChangeText={s => this.setState({ keyword: s })}
                             onSubmitEditing={this.search.bind(this)}
                             returnKeyType='search'
                             style={styles.tkdiachi1} placeholder={"Tìm kiếm…"} underlineColorAndroid={"transparent"} />
