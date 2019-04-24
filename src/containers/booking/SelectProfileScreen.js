@@ -12,8 +12,8 @@ import ImageLoad from 'mainam-react-native-image-loader';
 
 import clientUtils from '@utils/client-utils';
 class SelectProfileScreen extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);        
         this.state = {
             data: [],
             refreshing: false,

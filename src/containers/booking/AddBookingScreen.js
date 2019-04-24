@@ -24,8 +24,8 @@ import TextField from "mainam-react-native-form-validate/TextField";
 import Field from "mainam-react-native-form-validate/Field";
 
 class AddBookingScreen extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             colorButton: 'red',
             imageUris: [],
@@ -143,8 +143,12 @@ class AddBookingScreen extends Component {
 
         let validForm = this.form.isValid();
         if (!error && validForm) {
-            this.props.navigation.navigate("selectHospital", {});
-        }        
+            this.props.navigation.navigate("selectHospital", {
+                profile: this.state.profile,
+                specialist: this.state.specialist,
+                serviceType: this.state.serviceType
+            });
+        }
     }
     render() {
         let avatar = ((this.state.profile || {}).medicalRecords || {}).avatar;
@@ -200,7 +204,7 @@ class AddBookingScreen extends Component {
                 <View style={styles.article}>
                     <TouchableOpacity style={styles.mucdichkham} onPress={() => this.setState({ toggleServiceType: true })}>
                         <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_serviceType.png")} />
-                        <Text style={styles.mdk}>Dịch vụ khám</Text>
+                        <Text style={styles.mdk}>Yêu cầu</Text>
                         <Text numberOfLines={1} style={styles.ktq}>{this.state.serviceType ? this.state.serviceType.name : "Chọn loại dịch vụ"}</Text>
                         <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
                     </TouchableOpacity>
@@ -218,6 +222,17 @@ class AddBookingScreen extends Component {
                     {
                         this.state.specialistError ?
                             <Text style={[styles.errorStyle]}>{this.state.specialistError}</Text> : null
+                    }
+                    <View style={styles.border}></View>
+                    <TouchableOpacity style={styles.mucdichkham} onPress={() => this.setState({ toggleSpecialist: true })}>
+                        <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_placeholder.png")} />
+                        <Text style={styles.mdk}>Địa điểm</Text>
+                        <Text numberOfLines={1} style={styles.ktq}>{this.state.specialist ? this.state.specialist.name : "Chọn chuyên khoa"}</Text>
+                        <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
+                    </TouchableOpacity>
+                    {
+                        this.state.bookingError ?
+                            <Text style={[styles.errorStyle]}>{this.state.bookingError}</Text> : null
                     }
                     <View style={styles.border}></View>
                     <TouchableOpacity style={styles.mucdichkham} onPress={() => this.setState({ toggleSpecialist: true })}>

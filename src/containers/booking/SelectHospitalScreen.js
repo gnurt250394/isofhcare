@@ -12,14 +12,22 @@ import ImageLoad from 'mainam-react-native-image-loader';
 
 import clientUtils from '@utils/client-utils';
 class SelectHospitalScreen extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
+        let profile = this.props.navigation.state.params.profile;
+        let serviceType = this.props.navigation.state.params.serviceType;
+        let specialist = this.props.navigation.state.params.specialist;
+
         this.state = {
             data: [],
             refreshing: false,
             size: 10,
-            page: 1
+            page: 1,
+            profile,
+            serviceType,
+            specialist
         }
+        debugger;
     }
     onRefresh() {
         if (!this.state.loading)
@@ -91,13 +99,6 @@ class SelectHospitalScreen extends Component {
                     this.onLoad(this.state.page);
                 }
             );
-    }
-    selectPofile(profile) {
-        let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
-        if (callback) {
-            callback(profile);
-            this.props.navigation.pop();
-        }
     }
     render() {
         return (

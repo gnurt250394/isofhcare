@@ -309,7 +309,8 @@ module.exports = {
     },
     hospital: {
       get_all: isofhcare_service + "hospital/get-all",
-      get_hospital_by_profile: isofhcare_service + "hospital-profile/get-hospital-by-profile"
+      get_hospital_by_profile: isofhcare_service + "hospital-profile/get-hospital-by-profile",
+      get_hospital_by_service_type: isofhcare_service + "hospital/get-hospital-by-service-type"
     },
     profile: {
       get_by_user: isofhcare_service + "profile/get-by-user"
