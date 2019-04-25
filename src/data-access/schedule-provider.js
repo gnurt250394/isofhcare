@@ -12,5 +12,15 @@ module.exports = {
                 reject(e);
             });
         });
+    },
+    search(serviceId, dateValue, dateValue2, page, size) {
+        return new Promise((resolve, reject) => {
+            client.requestApi("get", `${constants.api.schedule.search}?serviceId=${serviceId}&startDate=${dateValue}&endDate=${dateValue2}&page=${page}&size=${size}`, {}, (s, e) => {
+                if (s) {
+                    resolve(s);
+                }
+                reject(e);
+            });
+        });
     }
 }

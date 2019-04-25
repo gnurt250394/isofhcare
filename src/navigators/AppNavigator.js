@@ -51,11 +51,11 @@ import AddBookingScreen from "@containers/booking/AddBookingScreen";
 import SelectHospitalScreen from "@containers/booking/SelectHospitalScreen";
 import SelectTimeScreen from "@containers/booking/SelectTimeScreen";
 import SelectServiceScreen from "@containers/booking/SelectServiceScreen";
-import CreateProfile from "@containers/booking/CreateProfile";
+import ConfirmBookingScreen from "@containers/booking/ConfirmBookingScreen";
 
 //=========PROFILE NAVIGATION
 import SelectProfileScreen from "@containers/booking/SelectProfileScreen";
-import createProfile from "@containers/booking/CreateProfile";
+import CreateProfile from "@containers/booking/CreateProfile";
 //---------------------------
 import PatientHistoryScreen from  "@containers/booking/PatientHistoryScreen";
 
@@ -113,6 +113,7 @@ const RootNavigator = createStackNavigator(
       selectHospital: { screen: SelectHospitalScreen },
       selectTime: { screen: SelectTimeScreen },
       selectService: { screen: SelectServiceScreen },
+      confirmBooking: { screen: ConfirmBookingScreen },
       //---------------------------------
       createProfile: { screen: CreateProfile },
       selectProfile: {screen: SelectProfileScreen},

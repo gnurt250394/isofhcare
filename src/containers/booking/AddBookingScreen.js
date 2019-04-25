@@ -156,12 +156,25 @@ class AddBookingScreen extends Component {
 
         let validForm = this.form.isValid();
         if (!error && validForm) {
+            for (var i = 0; i < this.state.imageUris.length; i++) {
+                if (this.state.imageUris[i].loading) {
+                    snackbar.show('Một số ảnh đang được tải lên. Vui lòng chờ', 'danger');
+                    return;
+                }
+                if (this.state.imageUris[i].error) {
+                    snackbar.show('Ảnh tải lên bị lỗi, vui lòng kiểm tra lại', 'danger');
+                    return;
+                }
+            }
+            
             this.props.navigation.navigate("selectTime", {
                 profile: this.state.profile,
                 hospital: this.state.hospital,
                 specialist: this.state.specialist,
                 serviceType: this.state.serviceType,
-                bookingDate: this.state.bookingDate
+                bookingDate: this.state.bookingDate,
+                reason: this.state.reason,
+                images: this.state.imageUris
             });
         }
     }
@@ -169,7 +182,8 @@ class AddBookingScreen extends Component {
         let avatar = ((this.state.profile || {}).medicalRecords || {}).avatar;
         const source = avatar ? { uri: avatar.absoluteUrl() } : require("@images/new/user.png");
         let minDate = new Date();
-        minDate.setDate(minDate.getDate() + 1);
+        // minDate.setDate(minDate.getDate() + 1);
+        minDate.setDate(minDate.getDate());
 
         return (<ActivityPanel style={{ flex: 1, backgroundColor: '#f7f9fb' }} title="Đặt Khám"
             menuButton={<TouchableOpacity style={styles.menu} onPress={() => snackbar.show("Chức năng đang phát triển")}><ScaleImage style={styles.img} height={20} source={require("@images/new/booking/ic_info.png")} /></TouchableOpacity>}
@@ -317,6 +331,9 @@ class AddBookingScreen extends Component {
                             else {
                                 this.setState({ symptonError: messages });
                             }
+                        }}
+                        onChangeText={s => {
+                            this.setState({ reason: s })
                         }}
                         style={{ flex: 1 }}
                         inputStyle={styles.mtTr}

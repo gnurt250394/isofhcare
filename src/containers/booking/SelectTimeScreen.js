@@ -31,13 +31,18 @@ class SelectTimeScreen extends Component {
         let profile = this.props.navigation.state.params.profile;
         let specialist = this.props.navigation.state.params.specialist;
         let bookingDate = this.props.navigation.state.params.bookingDate;
+        let reason = this.props.navigation.state.params.reason;
+        let images = this.props.navigation.state.params.images;
+
         this.state = {
             serviceType,
             hospital,
             profile,
             specialist,
             bookingDate,
-            listTime: []
+            listTime: [],
+            reason,
+            images
         }
     }
     getLable(time) {
@@ -46,7 +51,9 @@ class SelectTimeScreen extends Component {
         return (h ? h < 10 ? "0" + h : h : "00") + ":" + (m ? m : "00");
     }
     selectService(service) {
-        this.setState({ service }, () => {
+        // alert(JSON.stringify(service));
+        // return;
+        this.setState({ service: service }, () => {
             this.setState({ isLoading: true }, () => {
                 scheduleProvider.getByDateAndService(service.id, this.state.bookingDate.format("yyyy-MM-dd")).then(s => {
                     let listTime = [];
@@ -65,7 +72,10 @@ class SelectTimeScreen extends Component {
                                         listTime.push({
                                             date,
                                             time: i,
-                                            label: this.getLable(i)
+                                            label: this.getLable(i),
+                                            count: 0,
+                                            allowBooking: true,
+                                            isAvailable: true
                                         })
                                 }
                             }
@@ -84,6 +94,56 @@ class SelectTimeScreen extends Component {
                     })
                 });
             })
+        });
+    }
+
+    analyzeDoctorTime(listBooking) {
+        return;
+        var time = this.state.listTime;
+        var bookingInSchedule = {}
+        var isToday = this.state.bookingDate ? this.state.bookingDate.format("yyyy-MM-dd") == new Date().format("yyyy-MM-dd") : false;
+
+        for (var i = 0; i < listBooking.length; i++) {
+            var item = listBooking[i];
+            var dateFormat = new Date(item.booking.bookingTime).format("HH:mm")
+            if (!bookingInSchedule[dateFormat])
+                bookingInSchedule[dateFormat] = [];
+            bookingInSchedule[dateFormat].push(item);
+        }
+        // check buoi sang 
+        for (var i = 0; i < time.am.length; i++) {
+            var item = time.am[i];
+            if (isToday) {
+                item.isAvailable = this.checkTimeAvailable(this.props.booking.date.timestamp, item.value);
+            }
+            item.allowBooking = this.checkAllowThisTime(item);
+            if (bookingInSchedule[item.time])
+                item.count = bookingInSchedule[item.time].length;
+        }
+        // check buoi chieu
+        for (var i = 0; i < time.pm.length; i++) {
+            var item = time.pm[i];
+            if (isToday) {
+                item.isAvailable = this.checkTimeAvailable(this.props.booking.date.timestamp, item.value);
+            }
+            item.allowBooking = this.checkAllowThisTime(item);
+            if (bookingInSchedule[item.time])
+                item.count = bookingInSchedule[item.time].length;
+        }
+
+        this.setState({ time });
+    }
+    confirmBooking() {
+        this.props.navigation.navigate("confirmBooking", {
+            serviceType: this.state.serviceType,
+            service: this.state.service,
+            profile: this.state.profile,
+            hospital: this.state.hospital,
+            specialist: this.state.specialist,
+            bookingDate: this.state.bookingDate,
+            schedule: this.state.schedule,
+            reason: this.state.reason,
+            images:this.state.images
         });
     }
     render() {
@@ -142,7 +202,7 @@ class SelectTimeScreen extends Component {
                         }
                     </View>
                     <View style={styles.btn}>
-                        <TouchableOpacity style={styles.button}>
+                        <TouchableOpacity style={styles.button} onPress={this.confirmBooking.bind(this)}>
                             <Text style={styles.txtbtn}>Xác nhận</Text>
                         </TouchableOpacity>
                     </View>

@@ -329,7 +329,8 @@ module.exports = {
       get_all: isofhcare_service + "service/get-all"
     },
     schedule: {
-      get_by_date_and_service: isofhcare_service + "/schedule-booking/get-by-date-and-service"
+      get_by_date_and_service: isofhcare_service + "/schedule-booking/get-by-date-and-service",
+      search: isofhcare_service + "/schedule-booking/search"
     }
   }
 };
