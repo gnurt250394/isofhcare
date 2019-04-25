@@ -15,18 +15,19 @@ import clientUtils from '@utils/client-utils';
 class SelectHospitalScreen extends Component {
     constructor(props) {
         super(props);
-        let profile = this.props.navigation.state.params.profile;
         let serviceType = this.props.navigation.state.params.serviceType;
-        let specialist = this.props.navigation.state.params.specialist;
+        if (!serviceType) {
+            this.props.navigation.pop();
+            snackbar.show("Vui lòng chọn yêu cầu khám", "danger");
+
+        }
 
         this.state = {
             data: [],
             refreshing: false,
             size: 10,
             page: 1,
-            profile,
-            serviceType,
-            specialist,
+            serviceType: serviceType || {},
             keyword: ""
         }
     }

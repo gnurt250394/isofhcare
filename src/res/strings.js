@@ -324,6 +324,9 @@ module.exports = {
     },
     patientHistory :{
       getListPatient: isofhcare_service +"patient-history-booking/get-all/"
+    },
+    service: {
+      get_all: isofhcare_service + "service/get-all"
     }
   }
 };

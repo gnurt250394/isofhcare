@@ -57,6 +57,10 @@ class AddBookingScreen extends Component {
         });
     }
     selectImage() {
+        if (this.state.imageUris && this.state.imageUris.length >= 5) {
+            snackbar.show("Chỉ được chọn tối đa 5 ảnh", "danger");
+            return;
+        }
         connectionUtils.isConnected().then(s => {
             if (this.imagePicker) {
                 this.imagePicker.open(false, 200, 200, image => {
@@ -152,8 +156,9 @@ class AddBookingScreen extends Component {
 
         let validForm = this.form.isValid();
         if (!error && validForm) {
-            this.props.navigation.navigate("selectHospital", {
+            this.props.navigation.navigate("selectTime", {
                 profile: this.state.profile,
+                hospital: this.state.hospital,
                 specialist: this.state.specialist,
                 serviceType: this.state.serviceType
             });
@@ -167,12 +172,9 @@ class AddBookingScreen extends Component {
 
         return (<ActivityPanel style={{ flex: 1, backgroundColor: '#f7f9fb' }} title="Đặt Khám"
             menuButton={<TouchableOpacity style={styles.menu} onPress={() => snackbar.show("Chức năng đang phát triển")}><ScaleImage style={styles.img} height={20} source={require("@images/new/booking/ic_info.png")} /></TouchableOpacity>}
-            titleStyle={{ marginLeft: 40 }}
+            titleStyle={{ marginLeft: 50 }}
             containerStyle={{
                 backgroundColor: "#f7f9fb"
-            }}
-            actionbarStyle={{
-                marginLeft: 10
             }}>
 
             <ScrollView style={styles.container}>
