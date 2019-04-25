@@ -320,13 +320,16 @@ module.exports = {
     },
     medicalRecord: {
       get_by_user: isofhcare_service + "medical-records/get-by-user",
-      createMedical : isofhcare_service + "medical-records/create"
+      createMedical: isofhcare_service + "medical-records/create"
     },
-    patientHistory :{
-      getListPatient: isofhcare_service +"patient-history-booking/get-all/"
+    patientHistory: {
+      getListPatient: isofhcare_service + "patient-history-booking/get-all/"
     },
     service: {
       get_all: isofhcare_service + "service/get-all"
+    },
+    schedule: {
+      get_by_date_and_service: isofhcare_service + "/schedule-booking/get-by-date-and-service"
     }
   }
 };

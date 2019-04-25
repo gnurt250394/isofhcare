@@ -160,7 +160,8 @@ class AddBookingScreen extends Component {
                 profile: this.state.profile,
                 hospital: this.state.hospital,
                 specialist: this.state.specialist,
-                serviceType: this.state.serviceType
+                serviceType: this.state.serviceType,
+                bookingDate: this.state.bookingDate
             });
         }
     }

@@ -9,16 +9,22 @@ class SelectServiceScreen extends Component {
     constructor(props) {
         super(props);
         let hospital = this.props.navigation.state.params.hospital;
+        let specialist = this.props.navigation.state.params.specialist;
         if (!hospital) {
             this.props.navigation.pop();
             snackbar.show("Vui lòng chọn địa điểm khám", "danger");
+        }
+        if (!specialist) {
+            this.props.navigation.pop();
+            snackbar.show("Vui lòng chọn chuyên khoa", "danger");
         }
         this.state = {
             listService: [],
             listServiceSearch: [],
             searchValue: "",
             refreshing: false,
-            hospital: hospital || { hospital: {} }
+            hospital: hospital || { hospital: {} },
+            specialist
         }
     }
     componentDidMount() {
@@ -27,7 +33,7 @@ class SelectServiceScreen extends Component {
     selectService(service) {
         let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
         if (callback) {
-            callback(service);
+            callback(service.service);
             this.props.navigation.pop();
         }
     }
@@ -35,13 +41,21 @@ class SelectServiceScreen extends Component {
 
     onRefresh = () => {
         this.setState({ refreshing: true }, () => {
-            serviceProvider.getAll(this.state.hospital.hospital.id).then(s => {
-                alert(JSON.stringify(s));
+            serviceProvider.getAll(this.state.hospital.hospital.id, this.state.specialist.id).then(s => {
                 this.setState({
-                    listService: s,
                     refreshing: false
+                }, () => {
+                    if (s) {
+                        switch (s.code) {
+                            case 0:
+                                this.setState({
+                                    listService: s.data.services
+                                }, () => {
+                                    this.onSearch();
+                                });
+                        }
+                    }
                 })
-                this.onSearch();
             }).catch(e => {
                 this.setState({
                     listService: [],
@@ -63,7 +77,7 @@ class SelectServiceScreen extends Component {
     onSearch() {
         var s = this.state.searchValue;
         var listSearch = this.state.listService.filter(function (item) {
-            return s == null || item.name && item.name.toLowerCase().indexOf(s.toLowerCase()) != -1;
+            return s == null || item.service.name && item.service.name.toLowerCase().indexOf(s.toLowerCase()) != -1;
         });
         this.setState({ listServiceSearch: listSearch });
     }
@@ -129,7 +143,7 @@ class SelectServiceScreen extends Component {
                         <TouchableOpacity onPress={this.selectService.bind(this, item)}>
                             <View style={{ marginBottom: 2, backgroundColor: '#FFF', padding: 20, flexDirection: 'column', borderBottomColor: '#e5fafe', borderBottomWidth: 2 }}>
                                 <Text style={{ fontWeight: 'bold' }}>
-                                    {item.name}
+                                    {item.service.name}
                                 </Text>
                             </View>
                         </TouchableOpacity>

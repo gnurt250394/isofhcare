@@ -12,7 +12,7 @@ import { Card } from 'native-base';
 const DEVICE_HEIGHT = Dimensions.get('window').height;
 import Modal from "react-native-modal";
 import stylemodal from "@styles/modal-style";
-import serviceTypeProvider from '@data-access/service-type-provider';
+import scheduleProvider from '@data-access/schedule-provider';
 import specialistProvider from '@data-access/specialist-provider';
 import DateTimePicker from 'mainam-react-native-date-picker';
 
@@ -30,15 +30,19 @@ class SelectTimeScreen extends Component {
         let hospital = this.props.navigation.state.params.hospital;
         let profile = this.props.navigation.state.params.profile;
         let specialist = this.props.navigation.state.params.specialist;
+        let bookingDate = this.props.navigation.state.params.bookingDate;
         this.state = {
             serviceType,
             hospital,
             profile,
-            specialist
+            specialist,
+            bookingDate
         }
     }
     selectService(service) {
-        this.setState({ service });
+        this.setState({ service }, () => {
+            scheduleProvider.getByDateAndService(service.id, this.state.bookingDate.format("yyyy-MM-dd"))
+        });
     }
     render() {
         return (<ActivityPanel style={{ flex: 1, backgroundColor: '#f7f9fb' }} title="Thời gian"
@@ -55,23 +59,46 @@ class SelectTimeScreen extends Component {
             <View style={styles.container}>
                 <View style={styles.article}>
                     <TouchableOpacity style={styles.mucdichkham} onPress={() => {
-                        this.props.navigation.navigate("selectService", { hospital: this.state.hospital, onSelected: this.selectService.bind(this) })
+                        this.props.navigation.navigate("selectService", { hospital: this.state.hospital, specialist: this.state.specialist, onSelected: this.selectService.bind(this) })
                     }}>
                         <ScaleImage style={styles.imgIc} height={15} source={require("@images/new/booking/ic_specialist.png")} />
                         <Text style={styles.mdk}>{this.state.service ? this.state.service.name : "Chọn dịch vụ"}</Text>
                         <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
                     </TouchableOpacity>
                     <View style={styles.border}></View>
-                    {/* <View style={styles.mucdichkham}>
-                            <ScaleImage style={styles.imgIc} height={20} source={require("@images/new/bitmap3x.png")} />
-                            <Text style={styles.mdk}>PGS. Trần Văn Ngọc</Text>
-
-                        </View> */}
                 </View>
 
                 <View style={styles.chonGioKham}>
-                    <Text style={styles.txtchongiokham}>Chọn giờ khám</Text>
-                    <Slider style={styles.slider}></Slider>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <ScaleImage source={require("@images/new/booking/ic_bookingDate.png")} width={20} />
+                        <Text style={styles.txtchongiokham}>Chọn giờ khám</Text>
+                    </View>
+                    <Text style={{ marginTop: 20, fontSize: 13 }}>Gợi ý: Chọn những giờ màu xanh sẽ giúp bạn được phục vụ nhanh hơn</Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 20 }}>
+                        {
+                            [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18].map((item, index) => {
+                                return <TouchableOpacity style={{ justifyContent: 'center', alignItems: 'center' }}
+                                    onPress={() => {
+                                        this.setState({ item: index })
+                                    }}
+                                >
+                                    {
+                                        index == this.state.item ?
+                                            <ScaleImage height={30} source={require("@images/new/booking/ic_timepicker1.png")} />
+                                            : <View style={{ height: 30 }}></View>
+                                    }
+
+                                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: "center" }}>
+                                        <View style={{ width: 12, height: 5, backgroundColor: index != 0 ? '#02c39a' : 'transparent', marginRight: -1 }}></View>
+                                        <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: '#02c39a', justifyContent: 'center', alignItems: 'center' }}>
+                                            <View style={{ width: 2, height: 2, backgroundColor: '#FFF', borderRadius: 1 }}></View>
+                                        </View>
+                                        <View style={{ width: 12, height: 5, backgroundColor: index < 11 ? '#02c39a' : 'transparent', marginLeft: -1 }}></View>
+                                    </View>
+                                    <Text style={{ fontSize: 12 }}>{item}</Text></TouchableOpacity>
+                            })
+                        }
+                    </View>
                     <View style={styles.btn}>
                         <TouchableOpacity style={styles.button}>
                             <Text style={styles.txtbtn}>Xác nhận</Text>
@@ -175,17 +202,17 @@ const styles = StyleSheet.create({
         paddingRight: 100
     },
     txtchongiokham: {
-        fontSize: 16,
+        fontSize: 14,
+        marginLeft: 20,
         fontWeight: "normal",
         fontStyle: "normal",
         letterSpacing: 0,
-        color: "#4a4a4a",
-        textAlign: 'center',
-        padding: 30
+        color: "#4a4a4a"
     },
     chonGioKham: {
         flex: 1, marginTop: 20,
-        backgroundColor: '#fff'
+        backgroundColor: '#fff',
+        padding: 20
     },
     btn: {
         position: 'absolute',
