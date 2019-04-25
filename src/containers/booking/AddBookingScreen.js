@@ -109,7 +109,7 @@ class AddBookingScreen extends Component {
     selectProfile(profile) {
         this.setState({ profile });
     }
-    selecteHospital(hospital) {
+    selectHospital(hospital) {
         this.setState({ hospital });
     }
     addBooking() {
@@ -265,7 +265,7 @@ class AddBookingScreen extends Component {
                             snackbar.show("Vui lòng chọn yêu cầu khám", "danger");
                             return;
                         }
-                        this.props.navigation.navigate("selectHospital", { serviceType: this.state.serviceType, onSelected: this.selecteHospital.bind(this) })
+                        this.props.navigation.navigate("selectHospital", { serviceType: this.state.serviceType, onSelected: this.selectHospital.bind(this) })
                     }
                     }>
                         <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_placeholder.png")} />
