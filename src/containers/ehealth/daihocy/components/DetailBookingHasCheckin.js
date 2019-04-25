@@ -7,7 +7,6 @@ import snackbar from '@utils/snackbar-utils';
 import dateUtils from 'mainam-react-native-date-utils';
 import bookingProvider from '@data-access/booking-provider'
 import Barcode from 'react-native-barcode-builder';
-
 import {
     StyleSheet
 } from 'react-native';
@@ -410,7 +409,7 @@ class DetailBookingHasCheckin extends Component {
                         </Text>
                     </View>
                 </ScrollView>
-            </View >
+            </View>
         )
     };
 }

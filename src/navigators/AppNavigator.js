@@ -50,7 +50,7 @@ import FingerSettingScreen from "@containers/account/FingerSettingScreen";
 import AddBookingScreen from "@containers/booking/AddBookingScreen";
 import SelectHospitalScreen from "@containers/booking/SelectHospitalScreen";
 import createProfile from "@containers/booking/CreateProfile";
-
+import PatientHistoryScreen from  "@containers/booking/PatientHistoryScreen";
 //=========PROFILE NAVIGATION
 import SelectProfileScreen from "@containers/booking/SelectProfileScreen";
 //---------------------------
@@ -60,6 +60,7 @@ import EmptyScreen from "@containers/EmptyScreen2";
 const RootNavigator = createStackNavigator(
     {
       // testVNPay: { screen: TestVNPayScreen },
+
       splash: { screen: SplashScreen },
       ehealth: { screen: EHealthNavigator },
       addBookingBVDHY: { screen: BookingDHYNavigation },
@@ -106,6 +107,8 @@ const RootNavigator = createStackNavigator(
       //---------------booking navigation
       addBooking: { screen: AddBookingScreen },
       selectHospital: { screen: SelectHospitalScreen },
+      PatientHistoryScreen:{screen:PatientHistoryScreen},
+
       //---------------------------------
       createProfile: { screen: createProfile },
       selectProfile: {screen: SelectProfileScreen},
