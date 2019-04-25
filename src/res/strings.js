@@ -289,7 +289,9 @@ module.exports = {
       get_list_booking: isofhcare_service + "booking/get-list-patient-history-by-profile",
       get_detail_patient_historyid: isofhcare_service + "booking/get-detail-patient-history",
       get_result_patient_historyid: isofhcare_service + "booking/get-result-patient-history",
-      delete: isofhcare_service + "booking/delete"
+      delete: isofhcare_service + "booking/delete",
+      create: isofhcare_service + "booking/create"
+
     },
     question: {
       create: isofhcare_service + "post/create",

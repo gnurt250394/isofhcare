@@ -53,7 +53,7 @@ class SelectTimeScreen extends Component {
     selectService(service) {
         // alert(JSON.stringify(service));
         // return;
-        this.setState({ service: service }, () => {
+        this.setState({ service: service, schedule: null, serviceError: "", scheduleError: "" }, () => {
             this.setState({ isLoading: true }, () => {
                 scheduleProvider.getByDateAndService(service.id, this.state.bookingDate.format("yyyy-MM-dd")).then(s => {
                     let listTime = [];
@@ -63,6 +63,8 @@ class SelectTimeScreen extends Component {
                             let dateString = this.state.bookingDate.format("yyyy-MM-dd") + "T" + this.getLable(i);
                             let date = new Date(dateString);
                             for (var j = 0; j < schedule.length; j++) {
+                                if (schedule[j].deleted != 0)
+                                    continue;
                                 let startWorking = new Date(schedule[j].startWorking);
                                 let endWorking = new Date(schedule[j].endWorking);
                                 if (startWorking <= date && date <= endWorking) {
@@ -75,7 +77,8 @@ class SelectTimeScreen extends Component {
                                             label: this.getLable(i),
                                             count: 0,
                                             allowBooking: true,
-                                            isAvailable: true
+                                            isAvailable: true,
+                                            schedule: schedule[j]
                                         })
                                 }
                             }
@@ -133,7 +136,39 @@ class SelectTimeScreen extends Component {
 
         this.setState({ time });
     }
+    showLabel(item, index) {
+        if (item.time % 60 == 0)
+            return true;
+        if (index == 0)
+            return true;
+        let hour1 = parseInt(item.time / 60);
+        let hour0 = parseInt(this.state.listTime[index - 1].time / 60);
+        if (hour0 != hour1)
+            return true;
+        return false;
+
+    }
     confirmBooking() {
+        let error = false;
+
+        if (this.state.service) {
+            if (!this.state.listTime || this.state.listTime.length == 0)
+                this.setState({ serviceError: "Không tồn tại lịch khám của dịch vụ này" })
+            else
+                this.setState({ serviceError: "" })
+        } else {
+            this.setState({ serviceError: "Dịch vụ không được bỏ trống" })
+            error = true;
+        }
+        if (this.state.schedule) {
+            this.setState({ scheduleError: "" })
+        } else {
+            this.setState({ scheduleError: "Giờ khám không được bỏ trống" })
+            error = true;
+        }
+
+        if (error)
+            return;
         this.props.navigation.navigate("confirmBooking", {
             serviceType: this.state.serviceType,
             service: this.state.service,
@@ -143,7 +178,7 @@ class SelectTimeScreen extends Component {
             bookingDate: this.state.bookingDate,
             schedule: this.state.schedule,
             reason: this.state.reason,
-            images:this.state.images
+            images: this.state.images
         });
     }
     render() {
@@ -167,48 +202,72 @@ class SelectTimeScreen extends Component {
                         <Text style={styles.mdk}>{this.state.service ? this.state.service.name : "Chọn dịch vụ"}</Text>
                         <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
                     </TouchableOpacity>
+                    {
+                        this.state.serviceError ?
+                            <Text style={[styles.errorStyle]}>{this.state.serviceError}</Text> : null
+                    }
+
                     <View style={styles.border}></View>
                 </View>
 
-                <View style={styles.chonGioKham}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <ScaleImage source={require("@images/new/booking/ic_bookingDate.png")} width={20} />
-                        <Text style={styles.txtchongiokham}>Chọn giờ khám</Text>
-                    </View>
-                    <Text style={{ marginTop: 20, fontSize: 13 }}>Gợi ý: Chọn những giờ màu xanh sẽ giúp bạn được phục vụ nhanh hơn</Text>
-                    <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 20 }}>
-                        {
-                            this.state.listTime.map((item, index) => {
-                                return <TouchableOpacity style={{ justifyContent: 'center', alignItems: 'center' }}
-                                    onPress={() => {
-                                        this.setState({ item: index })
-                                    }}
-                                >
-                                    {
-                                        index == this.state.item ?
-                                            <ScaleImage height={30} source={require("@images/new/booking/ic_timepicker1.png")} />
-                                            : <View style={{ height: 30 }}></View>
-                                    }
-
-                                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: "center" }}>
-                                        <View style={{ width: 12, height: 5, backgroundColor: index != 0 ? '#02c39a' : 'transparent', marginRight: -1 }}></View>
-                                        <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: '#02c39a', justifyContent: 'center', alignItems: 'center' }}>
-                                            <View style={{ width: 2, height: 2, backgroundColor: '#FFF', borderRadius: 1 }}></View>
-                                        </View>
-                                        <View style={{ width: 12, height: 5, backgroundColor: index < 11 ? '#02c39a' : 'transparent', marginLeft: -1 }}></View>
+                {
+                    this.state.listTime && this.state.listTime.length > 0 ?
+                        <View style={styles.chonGioKham}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <ScaleImage source={require("@images/new/booking/ic_bookingDate.png")} width={20} />
+                                <Text style={styles.txtchongiokham}>Chọn giờ khám</Text>
+                            </View>
+                            <Text style={{ marginTop: 20, fontSize: 13 }}>Gợi ý: Chọn những giờ màu xanh sẽ giúp bạn được phục vụ nhanh hơn</Text>
+                            <View style={{ width: this.state.listTime.length * 32 + 100, alignSelf: 'center', position: 'relative', marginTop: 20 }}>
+                                {this.state.schedule &&
+                                    <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', left: (this.state.index || 0) * 32 + 53, top: 0 }}>
+                                        <ScaleImage height={30} source={require("@images/new/booking/ic_timepicker1.png")} />
+                                        <Text style={{ fontSize: 9, marginLeft: 5, fontWeight: 'bold' }}>{this.state.schedule.label}</Text>
                                     </View>
-                                    <Text style={{ fontSize: 10 }}>{item.label}</Text></TouchableOpacity>
-                            })
-                        }
-                    </View>
-                    <View style={styles.btn}>
-                        <TouchableOpacity style={styles.button} onPress={this.confirmBooking.bind(this)}>
-                            <Text style={styles.txtbtn}>Xác nhận</Text>
-                        </TouchableOpacity>
-                    </View>
+                                }
+                                <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+
+                                    {
+                                        this.state.listTime.map((item, index) => {
+                                            return <TouchableOpacity style={{ justifyContent: 'center' }}
+                                                onPress={() => {
+                                                    this.setState({ schedule: item, index })
+                                                }}
+                                            >
+                                                {
+                                                    item == this.state.schedule ?
+                                                        <View style={{ height: 30 }}></View>
+                                                        // <ScaleImage height={30} source={require("@images/new/booking/ic_timepicker1.png")} />
+                                                        : <View style={{ height: 30 }}></View>
+                                                }
+
+                                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: "center" }}>
+                                                    <View style={{ width: 12, height: 5, backgroundColor: index != 0 ? '#02c39a' : 'transparent' }}></View>
+                                                    <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: '#02c39a', justifyContent: 'center', alignItems: 'center' }}>
+                                                        <View style={{ width: 2, height: 2, backgroundColor: '#FFF', borderRadius: 1 }}></View>
+                                                    </View>
+                                                    <View style={{ width: 12, height: 5, backgroundColor: index < this.state.listTime.length - 1 ? '#02c39a' : 'transparent' }}></View>
+                                                </View>
+                                                <Text style={{ fontSize: 9 }}>{this.showLabel(item, index) ?
+                                                    item.label : " "}</Text>
+                                            </TouchableOpacity>
+                                        })
+                                    }
+                                </View>
+                            </View>
+                            {
+                                this.state.scheduleError ?
+                                    <Text style={[styles.errorStyle]}>{this.state.scheduleError}</Text> : null
+                            }
+
+                        </View> : null
+                }
+
+                <View style={styles.btn}>
+                    <TouchableOpacity style={styles.button} onPress={this.confirmBooking.bind(this)}>
+                        <Text style={styles.txtbtn}>Xác nhận</Text>
+                    </TouchableOpacity>
                 </View>
-
-
             </View>
         </ActivityPanel>
         );
@@ -357,6 +416,11 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "rgba(151, 151, 151, 0.29)",
         marginLeft: 5
+    },
+    errorStyle: {
+        color: 'red',
+        marginTop: 10,
+        marginLeft: 25
     }
 })
 export default connect(mapStateToProps)(SelectTimeScreen);
