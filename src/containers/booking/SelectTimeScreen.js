@@ -36,16 +36,58 @@ class SelectTimeScreen extends Component {
             hospital,
             profile,
             specialist,
-            bookingDate
+            bookingDate,
+            listTime: []
         }
+    }
+    getLable(time) {
+        let h = parseInt(time / 60);
+        let m = time % 60;
+        return (h ? h < 10 ? "0" + h : h : "00") + ":" + (m ? m : "00");
     }
     selectService(service) {
         this.setState({ service }, () => {
-            scheduleProvider.getByDateAndService(service.id, this.state.bookingDate.format("yyyy-MM-dd"))
+            this.setState({ isLoading: true }, () => {
+                scheduleProvider.getByDateAndService(service.id, this.state.bookingDate.format("yyyy-MM-dd")).then(s => {
+                    let listTime = [];
+                    if (s.code == 0 && s.data) {
+                        let schedule = s.data.schedule;
+                        for (var i = 0; i < 1410; i += 30) {
+                            let dateString = this.state.bookingDate.format("yyyy-MM-dd") + "T" + this.getLable(i);
+                            let date = new Date(dateString);
+                            for (var j = 0; j < schedule.length; j++) {
+                                let startWorking = new Date(schedule[j].startWorking);
+                                let endWorking = new Date(schedule[j].endWorking);
+                                if (startWorking <= date && date <= endWorking) {
+                                    if (listTime.filter(item => {
+                                        return item.time == i;
+                                    }).length == 0)
+                                        listTime.push({
+                                            date,
+                                            time: i,
+                                            label: this.getLable(i)
+                                        })
+                                }
+                            }
+                        }
+                    }
+                    this.setState({
+                        isLoading: false,
+                        listTime: listTime.sort((a, b) => {
+                            return a.time - b.time
+                        })
+                    })
+                }).catch(e => {
+                    this.setState({
+                        isLoading: false,
+                        listTime: []
+                    })
+                });
+            })
         });
     }
     render() {
-        return (<ActivityPanel style={{ flex: 1, backgroundColor: '#f7f9fb' }} title="Thời gian"
+        return (<ActivityPanel isLoading={this.state.isLoading} style={{ flex: 1, backgroundColor: '#f7f9fb' }} title="Thời gian"
             titleStyle={{ marginLeft: 0 }}
             containerStyle={{
                 backgroundColor: "#f7f9fb"
@@ -76,7 +118,7 @@ class SelectTimeScreen extends Component {
                     <Text style={{ marginTop: 20, fontSize: 13 }}>Gợi ý: Chọn những giờ màu xanh sẽ giúp bạn được phục vụ nhanh hơn</Text>
                     <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 20 }}>
                         {
-                            [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18].map((item, index) => {
+                            this.state.listTime.map((item, index) => {
                                 return <TouchableOpacity style={{ justifyContent: 'center', alignItems: 'center' }}
                                     onPress={() => {
                                         this.setState({ item: index })
@@ -95,7 +137,7 @@ class SelectTimeScreen extends Component {
                                         </View>
                                         <View style={{ width: 12, height: 5, backgroundColor: index < 11 ? '#02c39a' : 'transparent', marginLeft: -1 }}></View>
                                     </View>
-                                    <Text style={{ fontSize: 12 }}>{item}</Text></TouchableOpacity>
+                                    <Text style={{ fontSize: 12 }}>{item.label}</Text></TouchableOpacity>
                             })
                         }
                     </View>
