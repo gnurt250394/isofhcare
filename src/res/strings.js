@@ -1,5 +1,8 @@
 let isofhcare_service = 'isofhcare-dev/';
 let isofhcare_resources = 'isofhcare-resources/';
+let wallet_services = 'wallet-services-test/'; //test
+// let wallet_services = '/wallet-services'; //dev
+
 module.exports = {
   fbApplicationId: "457683741386685",
   username: "Tên tài khoản",
@@ -333,6 +336,10 @@ module.exports = {
     schedule: {
       get_by_date_and_service: isofhcare_service + "/schedule-booking/get-by-date-and-service",
       search: isofhcare_service + "/schedule-booking/search"
+    },
+    wallet: {
+      createOnlinePayment: wallet_services + "/integrate/customers/{id}/online-payments",
+      onlineTransactionPaid: wallet_services + "/integrate/online-transactions/{transactionId}/paid"
     }
   }
 };

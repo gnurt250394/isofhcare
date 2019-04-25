@@ -39,7 +39,7 @@ class createProfile extends Component {
       genderUser: [{ gender: "Nam", value: 1 }, { gender: "Nữ", value: 2 }],
       toggelDateTimePickerVisible: false,
       valueGender: "",
-      txGender:'',
+      txGender: '',
       name: '',
       email: "",
       dob: "",
@@ -47,25 +47,25 @@ class createProfile extends Component {
       date: "",
       image: "",
       imageUris: [],
-      valid:''
+      valid: ''
     };
   }
-componentDidMount(){
-  if(this.props.userApp.isLogin){
-    var name = this.props.userApp.currentUser.name
-    var image = this.props.userApp.currentUser.image
-    var dob = this.props.userApp.currentUser.dob
-    var gender = this.props.userApp.currentUser.gender
-    this.setState({
-      name:name,
-      image:image,
-      date:dob ? dob.toDateObject('-').format('dd/MM/yyyy'):(''),
-      dob:dob ? dob.toDateObject('-') :(''),
-      valueGender:gender,
-      txGender: gender && gender == 1 ?('Nam'):('Nữ')
-    })
+  componentDidMount() {
+    if (this.props.userApp.isLogin) {
+      var name = this.props.userApp.currentUser.name
+      var image = this.props.userApp.currentUser.image
+      var dob = this.props.userApp.currentUser.dob
+      var gender = this.props.userApp.currentUser.gender
+      this.setState({
+        name: name,
+        image: image,
+        date: dob ? dob.toDateObject('-').format('dd/MM/yyyy') : (''),
+        dob: dob ? dob.toDateObject('-') : (''),
+        valueGender: gender,
+        txGender: gender && gender == 1 ? ('Nam') : ('Nữ')
+      })
+    }
   }
-}
   onChangeText = type => text => {
     this.setState({ [type]: text });
   };
@@ -264,7 +264,7 @@ componentDidMount(){
 
               </Modal>
               <Field
-               
+
                 style={[styles.mucdichkham, { height: 41, flex: 1 }]}
               >
                 <Text style={styles.mdk}>Ngày sinh</Text>
@@ -272,9 +272,9 @@ componentDidMount(){
                 <TextField
                   // value={this.state.date || ""}
                   onPress={() =>
-                  this.setState({ toggelDateTimePickerVisible: true })
-                }                  
-                dateFormat={"dd/MM/yyyy"}
+                    this.setState({ toggelDateTimePickerVisible: true })
+                  }
+                  dateFormat={"dd/MM/yyyy"}
                   splitDate={"/"}
                   editable={false}
                   getComponent={(
@@ -284,8 +284,8 @@ componentDidMount(){
                     onBlur,
                     isError
                   ) => (
-                    <Text style={{marginLeft:60}}>{value? (value):('Chọn ngày sinh')}</Text>
-                  )}
+                      <Text style={{ marginLeft: 60 }}>{value ? (value) : ('Chọn ngày sinh')}</Text>
+                    )}
                   // onChangeText={s => {
                   //   this.setState({ date: s });
                   // }}
@@ -296,18 +296,18 @@ componentDidMount(){
                     if (valid) {
                       this.setState({ nameError: "" });
                     } else {
-                     messages ? 
-                     ( this.setState({ valid: 'Không cho phép chọn lớn hơn 150 tuổi' })) :(this.setState({ isMin:true}));
+                      messages ?
+                        (this.setState({ valid: 'Không cho phép chọn lớn hơn 150 tuổi' })) : (this.setState({ isMin: true }));
                     }
                   }}
                   validate={{
                     rules: {
-                      require:true,
+                      require: true,
                       max: maxDate,
                       min: minDate
                     },
                     messages: {
-                      require:'Vui lòng nhập ngày sinh',
+                      require: 'Vui lòng nhập ngày sinh',
                       max: true,
                       min: false
                     }
@@ -327,14 +327,14 @@ componentDidMount(){
                     flex: 1
                   }}
                 />
-                 <ScaleImage
+                <ScaleImage
                   style={styles.imgmdk}
                   height={10}
                   source={require("@images/new/booking/ic_next.png")}
                 />
               </Field>
               <Text style={[styles.errorStyle]}>{this.state.valid}</Text>
-{/* 
+              {/* 
               <Field
                 style={[styles.mucdichkham, { marginTop: 20, height: 41 }]}
               >
@@ -429,7 +429,7 @@ componentDidMount(){
       valueGender: item.value
     });
   };
-  
+
   selectImage() {
     connectionUtils
       .isConnected()
@@ -473,7 +473,7 @@ componentDidMount(){
 
         const { name } = this.state;
         const gender = this.state.valueGender;
-        let date = this.state.dob ? this.state.dob.format('yyyy-MM-dd HH:mm:ss') :('')
+        let date = this.state.dob ? this.state.dob.format('yyyy-MM-dd HH:mm:ss') : ('')
         console.log(date)
         if (name.length > 256) {
           this.setState({
@@ -521,6 +521,9 @@ componentDidMount(){
                   isLoading: false
                 });
                 snackbar.show("Bạn đã thêm người thân thành công", "success");
+                if (this.props.navigation.state.params.onCreate) {
+                  this.props.navigation.state.params.onCreate();
+                }
                 NavigationService.pop();
               } else {
                 this.setState({
@@ -696,11 +699,10 @@ const styles = StyleSheet.create({
     color: "#53657B",
     height: 45,
   },
-  labelStyle: {  color: '#53657B', fontSize: 16 ,marginBottom: 10,marginLeft:50}
+  labelStyle: { color: '#53657B', fontSize: 16, marginBottom: 10, marginLeft: 50 }
 });
 function mapStateToProps(state) {
   return {
-    navigation: state.navigation,
     userApp: state.userApp
   };
 }

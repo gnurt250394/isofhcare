@@ -13,7 +13,7 @@ import ImageLoad from 'mainam-react-native-image-loader';
 import clientUtils from '@utils/client-utils';
 class SelectProfileScreen extends Component {
     constructor(props) {
-        super(props);        
+        super(props);
         this.state = {
             data: [],
             refreshing: false,
@@ -160,7 +160,11 @@ class SelectProfileScreen extends Component {
                     }}
                 />
 
-                <TouchableOpacity style={{ backgroundColor: "#02c39a", width: 200, borderRadius: 6, alignSelf: 'center', marginVertical: 10, marginBottom: 30 }} onPress={() => this.props.navigation.navigate("createProfile")}>
+                <TouchableOpacity style={{ backgroundColor: "#02c39a", width: 200, borderRadius: 6, alignSelf: 'center', marginVertical: 10, marginBottom: 30 }} onPress={() =>
+                    this.props.navigation.navigate("createProfile",
+                        {
+                            onCreate: this.onRefresh.bind(this)
+                        })}>
                     <Text style={styles.btntext}>Thêm hồ sơ</Text>
                 </TouchableOpacity>
             </ActivityPanel>
