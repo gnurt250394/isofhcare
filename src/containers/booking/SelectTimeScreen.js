@@ -137,7 +137,7 @@ class SelectTimeScreen extends Component {
                                         </View>
                                         <View style={{ width: 12, height: 5, backgroundColor: index < 11 ? '#02c39a' : 'transparent', marginLeft: -1 }}></View>
                                     </View>
-                                    <Text style={{ fontSize: 12 }}>{item.label}</Text></TouchableOpacity>
+                                    <Text style={{ fontSize: 10 }}>{item.label}</Text></TouchableOpacity>
                             })
                         }
                     </View>
