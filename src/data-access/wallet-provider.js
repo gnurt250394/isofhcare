@@ -7,7 +7,7 @@ module.exports = {
         return new Promise((resolve, reject) => {
             let url = constants.api.wallet.createOnlinePayment;
             url = url.replace("{id}", userId);
-            client.requestApi("post", url, {
+            client.requestApiWithHeader("post", url, {
                 payment_method_type,
                 vendor_id,
                 order_ref_id,
@@ -15,7 +15,7 @@ module.exports = {
                 amount,
                 memo,
                 secure_hash
-            }, (s, e) => {
+            }, { Authorization: "Bearer " + client.auth }, (s, e) => {
                 if (s) {
                     resolve(s);
                 }

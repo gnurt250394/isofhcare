@@ -6,6 +6,7 @@ import dateUtils from 'mainam-react-native-date-utils';
 import stringUtils from 'mainam-react-native-string-utils';
 import ScaleImage from "mainam-react-native-scaleimage";
 import bookingProvider from '@data-access/booking-provider';
+import walletProvider from '@data-access/wallet-provider';
 import snackbar from '@utils/snackbar-utils';
 
 class ConfirmBookingScreen extends Component {
@@ -34,9 +35,32 @@ class ConfirmBookingScreen extends Component {
             paymentMethod: 1
         }
     }
+    confirmPayment(booking, bookingId) {
+        this.setState({ isLoading: true }, () => {
+            bookingProvider.confirmPayment(bookingId).then(s => {
+                if (s.code == 0) {
+                    this.props.navigation.navigate("home", {
+                        navigate: {
+                            screen: "createBookingSuccess",
+                            params: {
+                                booking
+                            }
+                        }
+                    });
+                }
+                else {
+                    this.setState({ isLoading: false }, () => {
+                        snackbar.show("Xác nhận đặt khám không thành công", "danger");
+                    });
+                }
+            }).catch(e => {
+                this.setState({ isLoading: false }, () => {
+                    snackbar.show("Xác nhận đặt khám không thành công", "danger");
+                });
+            });
+        })
+    }
     createBooking() {
-        // alert(JSON.stringify(this.state.specialist))
-        // return;
         this.setState({ isLoading: true }, () => {
             bookingProvider.create(
                 this.state.hospital.hospital.id,
@@ -46,19 +70,41 @@ class ConfirmBookingScreen extends Component {
                 this.state.service.id,
                 this.state.bookingDate.format("yyyy-MM-dd") + " " + this.state.schedule.label + ":00",
                 this.state.reason,
-                ""
+                this.state.images
             ).then(s => {
-                this.setState({ isLoading: false }, () => {
-                    if (s) {
-                        switch (s.code) {
-                            case 500:
-                                snackbar.show("Đặt khám không thành công", "danger");
-                                return;
-                            case 0:
-                                return;
-                        }
+                if (s) {
+                    switch (s.code) {
+                        case 0:
+                            if (this.state.paymentMethod == 2)
+                                this.confirmPayment(s.data.book, s.data.book.id);
+                            break;
                     }
-                });
+                }
+
+
+
+
+
+                // this.setState({ isLoading: false }, () => {
+                //     if (s) {
+                //         switch (s.code) {
+                //             case 500:
+                //                 snackbar.show("Đặt khám không thành công", "danger");
+                //                 return;
+                //             case 0:
+                //                 if (this.state.paymentMethod == 2) {
+                //                     snackbar.show("Đặt khám thành công", "success");
+                //                 } else {
+                //                     walletProvider.createOnlinePayment(this.props.userApp.currentUser.id, "VNPAY", this.state.hospital.hospital.id, s.data.book.id, "http://localhost:3000/vnpay/", this.state.service.price, "", s.data.book.hash).then(s => {
+                //                         alert(JSON.stringify(s));
+                //                     }).catch(e => {
+                //                         alert(JSON.stringify(e));
+                //                     });
+                //                 }
+                //                 return;
+                //         }
+                //     }
+                // });
             }).catch(e => {
                 this.setState({ isLoading: false }, () => {
                 });
@@ -102,7 +148,7 @@ class ConfirmBookingScreen extends Component {
                                 <ScaleImage style={styles.ic_Location} width={20} source={require("@images/new/booking/ic_bookingDate2.png")} />
                                 <View>
                                     <Text style={[styles.text5, {}]}>Thời gian</Text>
-                                    <Text style={[styles.text5, { marginTop: 10 }]}><Text style={{ color: 'rgb(106,1,54)', fontWeight: 'bold' }}>{this.state.schedule.label} {this.state.schedule.time/60 < 12 ? "sáng" : "chiều"} - {this.state.bookingDate.format("thu")}</Text> ngày {this.state.bookingDate.format("dd/MM/yyyy")} </Text>
+                                    <Text style={[styles.text5, { marginTop: 10 }]}><Text style={{ color: 'rgb(106,1,54)', fontWeight: 'bold' }}>{this.state.schedule.label} {this.state.schedule.time / 60 < 12 ? "sáng" : "chiều"} - {this.state.bookingDate.format("thu")}</Text> ngày {this.state.bookingDate.format("dd/MM/yyyy")} </Text>
                                 </View>
                             </View>
 

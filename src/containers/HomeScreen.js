@@ -73,13 +73,25 @@ class HomeScreen extends Component {
   onAction = active => {
     console.log(active, "active");
   };
- 
+
+  componentWillReceiveProps(newProps) {
+    let navigate = newProps.navigation.getParam('navigate', undefined);
+    if (this.state.navigate != navigate) {
+      debugger;
+      this.setState({ navigate }, () => {
+        if (navigate) {
+          this.props.navigation.navigate(navigate.screen, navigate.params);
+        }
+      });
+    }
+  }
+
   render() {
     const { active } = this.state;
     return (
       <ActivityPanel isLoading={this.state.isLoading} hideActionbar={true}>
         <View style={[{ flex: 1 }, this.props.style]}>
-        {/* <UserInactivity
+          {/* <UserInactivity
           timeForInactivity={2000}
           onAction={this.onAction}
           style={[{ flex: 1 }, this.props.style]}

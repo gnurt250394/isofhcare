@@ -1,7 +1,7 @@
 let isofhcare_service = 'isofhcare-dev/';
 let isofhcare_resources = 'isofhcare-resources/';
-let wallet_services = 'wallet-services-test/'; //test
-// let wallet_services = '/wallet-services'; //dev
+// let wallet_services = 'wallet-services-test/'; //test
+let wallet_services = 'wallet-services-dev/'; //dev
 
 module.exports = {
   fbApplicationId: "457683741386685",
@@ -293,8 +293,8 @@ module.exports = {
       get_detail_patient_historyid: isofhcare_service + "booking/get-detail-patient-history",
       get_result_patient_historyid: isofhcare_service + "booking/get-result-patient-history",
       delete: isofhcare_service + "booking/delete",
-      create: isofhcare_service + "booking/create"
-
+      create: isofhcare_service + "booking/create",
+      confirmPay: isofhcare_service + "booking/confirm-pay"
     },
     question: {
       create: isofhcare_service + "post/create",
@@ -334,12 +334,12 @@ module.exports = {
       get_all: isofhcare_service + "service/get-all"
     },
     schedule: {
-      get_by_date_and_service: isofhcare_service + "/schedule-booking/get-by-date-and-service",
-      search: isofhcare_service + "/schedule-booking/search"
+      get_by_date_and_service: isofhcare_service + "schedule-booking/get-by-date-and-service",
+      search: isofhcare_service + "schedule-booking/search"
     },
     wallet: {
-      createOnlinePayment: wallet_services + "/integrate/customers/{id}/online-payments",
-      onlineTransactionPaid: wallet_services + "/integrate/online-transactions/{transactionId}/paid"
+      createOnlinePayment: wallet_services + "customers/{id}/online-payments",
+      onlineTransactionPaid: wallet_services + "online-transactions/{transactionId}/paid"
     }
   }
 };

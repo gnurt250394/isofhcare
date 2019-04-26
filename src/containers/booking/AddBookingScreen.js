@@ -114,6 +114,7 @@ class AddBookingScreen extends Component {
     }
     addBooking() {
 
+
         let error = false;
 
         if (this.state.contact) {
@@ -166,7 +167,12 @@ class AddBookingScreen extends Component {
                     return;
                 }
             }
-            
+            var images = "";
+            this.state.imageUris.forEach((item) => {
+                if (images)
+                    images += ",";
+                images += item.url;
+            });
             this.props.navigation.navigate("selectTime", {
                 profile: this.state.profile,
                 hospital: this.state.hospital,
@@ -174,7 +180,7 @@ class AddBookingScreen extends Component {
                 serviceType: this.state.serviceType,
                 bookingDate: this.state.bookingDate,
                 reason: this.state.reason,
-                images: this.state.imageUris
+                images
             });
         }
     }

@@ -229,7 +229,7 @@ class SelectTimeScreen extends Component {
 
                                     {
                                         this.state.listTime.map((item, index) => {
-                                            return <TouchableOpacity style={{ justifyContent: 'center' }}
+                                            return <TouchableOpacity key={index} style={{ justifyContent: 'center' }}
                                                 onPress={() => {
                                                     this.setState({ schedule: item, index })
                                                 }}

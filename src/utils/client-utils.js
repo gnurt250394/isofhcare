@@ -1,4 +1,4 @@
-const server_url = "http://123.24.206.9:8000" ; //dev
+const server_url = "http://123.24.206.9:8000"; //dev
 // const server_url = "http://123.24.206.9:8000"; //test
 // const server_url = "https://api.produce.isofhcare.com"; //release
 // const server_url = "http://34.95.91.81"; //stable
@@ -9,7 +9,7 @@ httpClient.defaults.timeout = 50000;
 
 String.prototype.absoluteUrl =
   String.prototype.absolute ||
-  function(defaultValue) {
+  function (defaultValue) {
     var _this = this.toString();
     if (_this == "")
       if (defaultValue != undefined) return defaultValue;
@@ -43,7 +43,7 @@ String.prototype.absoluteUrl =
 
 String.prototype.getServiceUrl =
   String.prototype.absolute ||
-  function(defaultValue) {
+  function (defaultValue) {
     if (this == "")
       if (defaultValue != undefined) return defaultValue;
       else return this;
@@ -107,6 +107,9 @@ module.exports = {
       });
   },
   requestApi(methodType, url, body, funRes) {
+    this.requestApiWithAuthorization(methodType, url, body, this.auth, funRes);
+  },
+  requestApiWithAuthorization(methodType, url, body, auth, funRes) {
     var dataBody = "";
     if (!body) body = {};
     dataBody = JSON.stringify(body);
@@ -116,7 +119,7 @@ module.exports = {
       {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: this.auth,
+        Authorization: auth,
         MobileMode: "user"
         // 'MobileMode': 'vender'
       },
