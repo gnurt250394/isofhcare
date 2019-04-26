@@ -102,5 +102,40 @@ module.exports = {
         else resolve(e)
       })
     })
+  },
+  create(hospitalId, detailScheduleId, medicalRecordId, specialistId, serviceId, bookingTime, note, images) {
+    return new Promise((resolve, reject) => {
+      client.requestApi(
+        "post",
+        `${constants.api.booking.create}/${hospitalId}`
+        , {
+          detailScheduleId,
+          medicalRecordId,
+          specialistId,
+          serviceId,
+          booking: {
+            bookingTime,
+            note,
+            images
+          }
+        }, (s, e) => {
+          if (s) resolve(s);
+          else reject(e);
+        }
+      );
+    });
+  },
+  confirmPayment(bookingId) {
+    return new Promise((resolve, reject) => {
+      client.requestApi(
+        "put",
+        `${constants.api.booking.confirmPay}/${bookingId}`
+        , {
+        }, (s, e) => {
+          if (s) resolve(s);
+          else reject(e);
+        }
+      );
+    });
   }
 };

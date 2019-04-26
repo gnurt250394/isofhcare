@@ -188,8 +188,8 @@ class AddBookingScreen extends Component {
         let avatar = ((this.state.profile || {}).medicalRecords || {}).avatar;
         const source = avatar ? { uri: avatar.absoluteUrl() } : require("@images/new/user.png");
         let minDate = new Date();
-        // minDate.setDate(minDate.getDate() + 1);
-        minDate.setDate(minDate.getDate());
+        minDate.setDate(minDate.getDate() + 1);
+        // minDate.setDate(minDate.getDate());
 
         return (<ActivityPanel style={{ flex: 1, backgroundColor: '#f7f9fb' }} title="Đặt Khám"
             menuButton={<TouchableOpacity style={styles.menu} onPress={() => snackbar.show("Chức năng đang phát triển")}><ScaleImage style={styles.img} height={20} source={require("@images/new/booking/ic_info.png")} /></TouchableOpacity>}

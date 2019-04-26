@@ -88,7 +88,7 @@ class ConfirmBookingScreen extends Component {
                 this.state.profile.medicalRecords.id,
                 this.state.specialist.id,
                 this.state.service.id,
-                this.state.bookingDate.format("yyyy-MM-dd") + " " + this.state.schedule.label + ":00",
+                this.state.schedule.time.format("yyyy-MM-dd HH:mm:ss"),
                 this.state.reason,
                 this.state.images
             ).then(s => {

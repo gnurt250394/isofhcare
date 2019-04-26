@@ -58,31 +58,50 @@ class SelectTimeScreen extends Component {
                 scheduleProvider.getByDateAndService(service.id, this.state.bookingDate.format("yyyy-MM-dd")).then(s => {
                     let listTime = [];
                     if (s.code == 0 && s.data) {
-                        let schedule = s.data.schedule;
-                        for (var i = 0; i < 1410; i += 30) {
-                            let dateString = this.state.bookingDate.format("yyyy-MM-dd") + "T" + this.getLable(i);
-                            let date = new Date(dateString);
-                            for (var j = 0; j < schedule.length; j++) {
-                                if (schedule[j].deleted != 0)
-                                    continue;
-                                let startWorking = new Date(schedule[j].startWorking);
-                                let endWorking = new Date(schedule[j].endWorking);
-                                if (startWorking <= date && date <= endWorking) {
-                                    if (listTime.filter(item => {
-                                        return item.time == i;
-                                    }).length == 0)
-                                        listTime.push({
-                                            date,
-                                            time: i,
-                                            label: this.getLable(i),
-                                            count: 0,
-                                            allowBooking: true,
-                                            isAvailable: true,
-                                            schedule: schedule[j]
-                                        })
+                        let data = s.data || [];
+                        data.forEach((item, index) => {
+                            for (var key in item) {
+                                try {
+                                    let time = new Date(key);
+                                    let label = time.format("HH:mm");
+                                    let schedule = {
+                                        label,
+                                        time,
+                                        percent: 100
+                                    }
+                                    let schedules = ((item[key] || {}).detailSchedules || []);
+                                    schedules.forEach((item2, index2) => {
+                                        let detailSchedule = item2.detailSchedule;
+                                        if (item2.numberCase && detailSchedule) {
+                                            let percent = ((item2.numberSlot || 0) * 100) / (item2.numberCase || 1);
+                                            if (percent < schedule.percent) {
+                                                schedule.percent = percent;
+                                                schedule.schedule = detailSchedule;
+                                                schedule.numberSlot = item2.numberSlot || 0;
+                                                schedule.numberCase = item2.numberCase || 1;
+
+                                                let available = 100 - percent;
+                                                if (available == 0)
+                                                    schedule.type = 0;
+                                                else
+                                                    if (available < 30)
+                                                        schedule.type = 1;
+                                                    else
+                                                        if (available < 70)
+                                                            schedule.type = 2;
+                                                        else
+                                                            schedule.type = 3;
+                                            }
+                                        }
+                                    });
+                                    if (schedule.schedule) {
+                                        listTime.push(schedule);
+                                    }
+                                } catch (error) {
+
                                 }
                             }
-                        }
+                        });
                     }
                     this.setState({
                         isLoading: false,
@@ -99,54 +118,17 @@ class SelectTimeScreen extends Component {
             })
         });
     }
-
-    analyzeDoctorTime(listBooking) {
-        return;
-        var time = this.state.listTime;
-        var bookingInSchedule = {}
-        var isToday = this.state.bookingDate ? this.state.bookingDate.format("yyyy-MM-dd") == new Date().format("yyyy-MM-dd") : false;
-
-        for (var i = 0; i < listBooking.length; i++) {
-            var item = listBooking[i];
-            var dateFormat = new Date(item.booking.bookingTime).format("HH:mm")
-            if (!bookingInSchedule[dateFormat])
-                bookingInSchedule[dateFormat] = [];
-            bookingInSchedule[dateFormat].push(item);
-        }
-        // check buoi sang 
-        for (var i = 0; i < time.am.length; i++) {
-            var item = time.am[i];
-            if (isToday) {
-                item.isAvailable = this.checkTimeAvailable(this.props.booking.date.timestamp, item.value);
-            }
-            item.allowBooking = this.checkAllowThisTime(item);
-            if (bookingInSchedule[item.time])
-                item.count = bookingInSchedule[item.time].length;
-        }
-        // check buoi chieu
-        for (var i = 0; i < time.pm.length; i++) {
-            var item = time.pm[i];
-            if (isToday) {
-                item.isAvailable = this.checkTimeAvailable(this.props.booking.date.timestamp, item.value);
-            }
-            item.allowBooking = this.checkAllowThisTime(item);
-            if (bookingInSchedule[item.time])
-                item.count = bookingInSchedule[item.time].length;
-        }
-
-        this.setState({ time });
-    }
     showLabel(item, index) {
-        if (item.time % 60 == 0)
+        let minute = item.time.format("mm");
+        if (minute == 0)
             return true;
         if (index == 0)
             return true;
-        let hour1 = parseInt(item.time / 60);
-        let hour0 = parseInt(this.state.listTime[index - 1].time / 60);
+        let hour1 = item.time.format("HH");
+        let hour0 = this.state.listTime[index - 1].time.format("HH");
         if (hour0 != hour1)
             return true;
         return false;
-
     }
     confirmBooking() {
         let error = false;
@@ -181,6 +163,17 @@ class SelectTimeScreen extends Component {
             images: this.state.images
         });
     }
+
+    getColor(item) {
+        if (item.type == 0)
+            return "#d0021b";
+        if (item.type == 1)
+            return "#ffa500";
+        if (item.type == 2)
+            return "#efd100";
+        return "#02c39a";
+    }
+
     render() {
         return (<ActivityPanel isLoading={this.state.isLoading} style={{ flex: 1, backgroundColor: '#f7f9fb' }} title="Thời gian"
             titleStyle={{ marginLeft: 0 }}
@@ -242,11 +235,11 @@ class SelectTimeScreen extends Component {
                                                 }
 
                                                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: "center" }}>
-                                                    <View style={{ width: 12, height: 5, backgroundColor: index != 0 ? '#02c39a' : 'transparent' }}></View>
-                                                    <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: '#02c39a', justifyContent: 'center', alignItems: 'center' }}>
+                                                    <View style={{ width: 12, height: 5, backgroundColor: index != 0 ? this.getColor(item) : 'transparent' }}></View>
+                                                    <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: this.getColor(item), justifyContent: 'center', alignItems: 'center' }}>
                                                         <View style={{ width: 2, height: 2, backgroundColor: '#FFF', borderRadius: 1 }}></View>
                                                     </View>
-                                                    <View style={{ width: 12, height: 5, backgroundColor: index < this.state.listTime.length - 1 ? '#02c39a' : 'transparent' }}></View>
+                                                    <View style={{ width: 12, height: 5, backgroundColor: index < this.state.listTime.length - 1 ? this.getColor(item) : 'transparent' }}></View>
                                                 </View>
                                                 <Text style={{ fontSize: 9 }}>{this.showLabel(item, index) ?
                                                     item.label : " "}</Text>

@@ -96,8 +96,8 @@ class SelectProfileScreen extends Component {
         let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
         if (callback) {
             callback(profile);
-            this.props.navigation.pop();
         }
+        this.props.navigation.pop();
     }
     render() {
         return (
