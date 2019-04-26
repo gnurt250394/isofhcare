@@ -76,52 +76,31 @@ module.exports = {
       }
     );
   },
-  getPatientHistory(hospitalId) {
+  getPatientHistory(toDate,page,size) {
     return new Promise((resolve, reject) => {
+    // var queryString = ""
+    // var codeBooking = ""
+    // var status = -10
+    // var type = 1
+    // var stype = 1
+    // var hospitalId = -1
+    // var fromDate = '1970-01-01 00:00:00'
 
       client.requestApi(
         "get",
-        `${constants.api.patientHistory.getListPatient}/${hospitalId}`
-        , {}, (s, e) => {
-          if (s) resolve(s);
+        `${constants.api.patientHistory.getListPatient}`,{},(s,e)=>{
+            if (s) resolve(s);
           else reject(e);
         }
       );
     });
   },
-  create(hospitalId, scheduleId, medicalRecordId, specialistId, serviceId, bookingTime, note, images) {
-    return new Promise((resolve, reject) => {
-      client.requestApi(
-        "post",
-        `${constants.api.booking.create}/${hospitalId}`
-        , {
-          scheduleId,
-          medicalRecordId,
-          specialistId,
-          serviceId,
-          booking: {
-            bookingTime,
-            note,
-            images
-          }
-        }, (s, e) => {
-          if (s) resolve(s);
-          else reject(e);
-        }
-      );
-    });
-  },
-  confirmPayment(bookingId) {
-    return new Promise((resolve, reject) => {
-      client.requestApi(
-        "put",
-        `${constants.api.booking.confirmPay}/${bookingId}`
-        , {
-        }, (s, e) => {
-          if (s) resolve(s);
-          else reject(e);
-        }
-      );
-    });
+  detailsPatientHistory(id){
+    return new Promise((resolve,reject) => {
+      client.requestApi('get',`${constants.api.patientHistory.getDetailsHistory}/${id}`,{},(s,e) =>{
+        if(s) resolve(s)
+        else resolve(e)
+      })
+    })
   }
 };

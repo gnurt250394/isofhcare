@@ -54,7 +54,7 @@ import SelectServiceScreen from "@containers/booking/SelectServiceScreen";
 import ConfirmBookingScreen from "@containers/booking/ConfirmBookingScreen";
 import CreateBookingSuccessScreen from "@containers/booking/CreateBookingSuccessScreen";
 import PaymentBookingErrorScreen from "@containers/booking/PaymentBookingErrorScreen";
-
+import DetailsHistoryScreen from "@containers/booking/DetailsHistoryScreen"
 //=========PROFILE NAVIGATION
 import SelectProfileScreen from "@containers/booking/SelectProfileScreen";
 import CreateProfile from "@containers/booking/CreateProfile";
@@ -66,8 +66,8 @@ import EmptyScreen from "@containers/EmptyScreen2";
 const RootNavigator = createStackNavigator(
     {
       // testVNPay: { screen: TestVNPayScreen },
-
       splash: { screen: SplashScreen },
+      DetailsHistoryScreen:{screen:DetailsHistoryScreen},
       ehealth: { screen: EHealthNavigator },
       addBookingBVDHY: { screen: BookingDHYNavigation },
       groupChat: { screen: GroupChatScreen },

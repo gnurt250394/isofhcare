@@ -327,8 +327,9 @@ module.exports = {
       get_by_user: isofhcare_service + "medical-records/get-by-user",
       createMedical: isofhcare_service + "medical-records/create"
     },
-    patientHistory: {
-      getListPatient: isofhcare_service + "patient-history-booking/get-all/"
+    patientHistory :{
+      getListPatient: isofhcare_service +"booking/get-by-author",
+      getDetailsHistory:isofhcare_service + "booking/get-detail"
     },
     service: {
       get_all: isofhcare_service + "service/get-all"

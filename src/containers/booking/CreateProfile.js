@@ -10,7 +10,6 @@ import {
   TextInput,
   FlatList
 } from "react-native";
-import constants from "@resources/strings";
 import { connect } from "react-redux";
 import ScaleImage from "mainam-react-native-scaleimage";
 import { Card } from "native-base";
@@ -30,6 +29,7 @@ import TextField from "mainam-react-native-form-validate/TextField";
 import FloatingLabel from "mainam-react-native-floating-label";
 import { cleanSingle } from "react-native-image-crop-picker";
 import dateUtils from "mainam-react-native-date-utils";
+import constants from "@resources/strings";
 
 class createProfile extends Component {
   constructor() {
@@ -172,11 +172,11 @@ class createProfile extends Component {
                     rules: {
                       required: true,
                       minlength: 1,
-                      maxlength: 256
+                      maxlength: 255
                     },
                     messages: {
-                      required: "Vui lòng nhập họ và tên",
-                      maxlength: "Không cho phép nhập quá 256 kí tự"
+                      required: "Họ và tên không được bỏ trống",
+                      maxlength: "Không cho phép nhập quá 255 kí tự"
                     }
                   }}
                   placeholder={"Nhập họ tên"}
@@ -302,12 +302,10 @@ class createProfile extends Component {
                   }}
                   validate={{
                     rules: {
-                      require: true,
                       max: maxDate,
                       min: minDate
                     },
                     messages: {
-                      require: 'Vui lòng nhập ngày sinh',
                       max: true,
                       min: false
                     }
@@ -378,9 +376,9 @@ class createProfile extends Component {
             </Form>
           </View>
 
-          <Text style={styles.textbot}>
+          {/* <Text style={styles.textbot}>
             Vui lòng nhập email với người trên 15 tuổi
-          </Text>
+          </Text> */}
         </ScrollView>
         <ImagePicker ref={ref => (this.imagePicker = ref)} />
         <DateTimePicker
@@ -464,55 +462,24 @@ class createProfile extends Component {
       });
   }
   onUpdate2(image) {
+    if (!this.form.isValid()) {
+      return;
+    }
+    
+    connectionUtils
+    .isConnected()
+    .then(s => {
     this.setState(
       {
         isLoading: true
       },
       () => {
-        this.form.isValid();
+        
 
         const { name } = this.state;
         const gender = this.state.valueGender;
         let date = this.state.dob ? this.state.dob.format('yyyy-MM-dd HH:mm:ss') : ('')
         console.log(date)
-        if (name.length > 256) {
-          this.setState({
-            isLoading: false
-          });
-          snackbar.show("Không cho phép nhập quá 256 ký tự", "danger");
-
-          return;
-        }
-        if (!name) {
-          this.setState({
-            isLoading: false
-          });
-          snackbar.show("Tên không được để trống", "danger");
-
-          return;
-        }
-        if (!this.state.date) {
-          this.setState({
-            isLoading: false
-          });
-          snackbar.show("Bạn chưa chọn ngày sinh", "danger");
-
-          return;
-        }
-        if (!image) {
-          this.setState({
-            isLoading: false
-          });
-          snackbar.show("Bạn chưa chọn ảnh", "danger");
-
-          return;
-        }
-        if (!gender) {
-          this.setState({
-            isLoading: false
-          });
-          snackbar.show("Bạn chưa chọn giới tính", "danger");
-        } else {
           medicalRecordProvider
             .createMedical(name, gender, date, image)
             .then(res => {
@@ -520,10 +487,7 @@ class createProfile extends Component {
                 this.setState({
                   isLoading: false
                 });
-                snackbar.show("Bạn đã thêm người thân thành công", "success");
-                if (this.props.navigation.state.params.onCreate) {
-                  this.props.navigation.state.params.onCreate();
-                }
+                snackbar.show("Bạn đã tạo hồ sơ thành công", "success");
                 NavigationService.pop();
               } else {
                 this.setState({
@@ -538,10 +502,16 @@ class createProfile extends Component {
               snackbar.show("Có lỗi, xin vui lòng thử lại", "danger");
             });
         }
-      }
-    );
+    )
+  })
+  .catch(e => {
+    snackbar.show("Không có kết nối mạng", "danger");
+  });
   }
   onUpdate = () => {
+    if (!this.form.isValid()) {
+      return;
+    }
     if (this.state.image)
       this.setState({ isLoading: true }, () => {
         imageProvider.upload(this.state.image.path, (s, e) => {
@@ -578,7 +548,7 @@ const styles = StyleSheet.create({
   },
   mucdichkham: {
     backgroundColor: "rgb(255,255,255)",
-    borderStyle: "solid",
+    // borderStyle: "solid",
     borderWidth: 1,
     alignItems: "center",
     borderColor: "rgba(0, 0, 0, 0.06)",
@@ -606,10 +576,10 @@ const styles = StyleSheet.create({
   },
   container: {
     backgroundColor: "rgb(247,249,251)",
-    borderStyle: "solid",
+    // borderStyle: "solid",
     marginVertical: 20,
-    borderWidth: 1,
-    borderColor: "rgba(0, 0, 0, 0.07)"
+    // borderWidth: 1,
+    // borderColor: "rgba(0, 0, 0, 0.07)"
   },
   btnhuy: {
     fontSize: 18,
