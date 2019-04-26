@@ -78,6 +78,11 @@ class ConfirmBookingScreen extends Component {
                             if (this.state.paymentMethod == 2)
                                 this.confirmPayment(s.data.book, s.data.book.id);
                             break;
+                        case 2:
+                            this.setState({ isLoading: false }, () => {
+                                snackbar.show("Đã kín lịch trong khung giờ này", "danger");
+                            });
+                            break;
                     }
                 }
 
