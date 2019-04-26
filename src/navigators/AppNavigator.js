@@ -67,7 +67,6 @@ const RootNavigator = createStackNavigator(
     {
       // testVNPay: { screen: TestVNPayScreen },
       splash: { screen: SplashScreen },
-      DetailsHistoryScreen:{screen:DetailsHistoryScreen},
       ehealth: { screen: EHealthNavigator },
       addBookingBVDHY: { screen: BookingDHYNavigation },
       groupChat: { screen: GroupChatScreen },
@@ -118,7 +117,7 @@ const RootNavigator = createStackNavigator(
       confirmBooking: { screen: ConfirmBookingScreen },
       createBookingSuccess: { screen: CreateBookingSuccessScreen },
       paymentBookingError: { screen: PaymentBookingErrorScreen },
-      
+      DetailsHistoryScreen:{screen:DetailsHistoryScreen},
       paymentVNPay: { screen: PaymentWithVNPayScreen },
       //---------------------------------
       createProfile: { screen: CreateProfile },
