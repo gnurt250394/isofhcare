@@ -42,7 +42,7 @@ import MyQuestionScreen from "@containers/question/MyQuestionScreen";
 import CreateQuestionStep1Screen from "@containers/question/CreateQuestionStep1Screen";
 import CreateQuestionStep2Screen from "@containers/question/CreateQuestionStep2Screen";
 import DetailQuestionScreen from "@containers/question/DetailQuestionScreen";
-import TestVNPayScreen from "@containers/test/TestVNPayScreen";
+import PaymentWithVNPayScreen from "@containers/payment/PaymentWithVNPayScreen";
 import ChangePass from "@containers/account/ChangePassWord";
 import FingerScreen from "@containers/account/FingerScreen";
 import FingerSettingScreen from "@containers/account/FingerSettingScreen";
@@ -118,6 +118,8 @@ const RootNavigator = createStackNavigator(
       confirmBooking: { screen: ConfirmBookingScreen },
       createBookingSuccess: { screen: CreateBookingSuccessScreen },
       paymentBookingError: { screen: PaymentBookingErrorScreen },
+      
+      paymentVNPay: { screen: PaymentWithVNPayScreen },
       //---------------------------------
       createProfile: { screen: CreateProfile },
       selectProfile: {screen: SelectProfileScreen},

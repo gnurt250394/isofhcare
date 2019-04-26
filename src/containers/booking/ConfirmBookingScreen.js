@@ -36,6 +36,7 @@ class ConfirmBookingScreen extends Component {
         }
     }
     confirmPayment(booking, bookingId) {
+        booking.hospital = this.state.hospital;
         this.setState({ isLoading: true }, () => {
             bookingProvider.confirmPayment(bookingId).then(s => {
                 if (s.code == 0) {
@@ -60,6 +61,25 @@ class ConfirmBookingScreen extends Component {
             });
         })
     }
+    getPaymentLink(booking) {
+        booking.hospital = this.state.hospital;
+        this.setState({ isLoading: true }, () => {
+            walletProvider.createOnlinePayment(this.props.userApp.currentUser.id, "VNPAY", this.state.hospital.hospital.id, booking.book.id, "http://localhost:8888/order/vnpay_return", this.state.service.price, "", booking.book.hash).then(s => {
+                this.setState({ isLoading: false }, () => {
+                    this.props.navigation.navigate("paymentVNPay", {
+                        urlPayment: s.payment_url,
+                        onSuccess: url => {
+                            alert(url);
+                        }
+                    })
+                })
+            }).catch(e => {
+                this.setState({ isLoading: false }, () => {
+                    this.props.navigation.navigate("paymentBookingError", { booking })
+                })
+            });
+        })
+    }
     createBooking() {
         this.setState({ isLoading: true }, () => {
             bookingProvider.create(
@@ -76,11 +96,19 @@ class ConfirmBookingScreen extends Component {
                     switch (s.code) {
                         case 0:
                             if (this.state.paymentMethod == 2)
-                                this.confirmPayment(s.data.book, s.data.book.id);
+                                this.confirmPayment(s.data, s.data.book.id);
+                            else {
+                                this.getPaymentLink(s.data);
+                            }
                             break;
                         case 2:
                             this.setState({ isLoading: false }, () => {
                                 snackbar.show("Đã kín lịch trong khung giờ này", "danger");
+                            });
+                            break;
+                        default:
+                            this.setState({ isLoading: false }, () => {
+                                snackbar.show("Đặt khám không thành công", "danger");
                             });
                             break;
                     }
@@ -100,11 +128,6 @@ class ConfirmBookingScreen extends Component {
                 //                 if (this.state.paymentMethod == 2) {
                 //                     snackbar.show("Đặt khám thành công", "success");
                 //                 } else {
-                //                     walletProvider.createOnlinePayment(this.props.userApp.currentUser.id, "VNPAY", this.state.hospital.hospital.id, s.data.book.id, "http://localhost:3000/vnpay/", this.state.service.price, "", s.data.book.hash).then(s => {
-                //                         alert(JSON.stringify(s));
-                //                     }).catch(e => {
-                //                         alert(JSON.stringify(e));
-                //                     });
                 //                 }
                 //                 return;
                 //         }
