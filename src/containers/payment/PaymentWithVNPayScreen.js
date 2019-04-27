@@ -63,6 +63,12 @@ class PaymentWithVNPayScreen extends Component {
     // }
 
     navigationStateChangedHandler = ({ url }) => {
+        console.log(url);
+        if (url.indexOf("/Error.html") != -1) {
+            if ((this.props.navigation.state.params || {}).onError)
+                (this.props.navigation.state.params || {}).onError(url);
+            this.props.navigation.pop();
+        }
         if (url.indexOf("http://localhost:8888/order/vnpay_return") == 0) {
             if ((this.props.navigation.state.params || {}).onSuccess)
                 (this.props.navigation.state.params || {}).onSuccess(url);
@@ -71,7 +77,16 @@ class PaymentWithVNPayScreen extends Component {
     };
     render() {
         return (
-            <ActivityPanel style={{ flex: 1 }} title="TestVNPayScreen">
+            <ActivityPanel title="Thanh toán với VNPay"
+                isLoading={this.state.isLoading}
+                titleStyle={{ marginLeft: 0 }}
+                containerStyle={{
+                    backgroundColor: "#FFF"
+                }} actionbarStyle={{
+                    backgroundColor: '#ffffff',
+                    borderBottomWidth: 1,
+                    borderBottomColor: 'rgba(0, 0, 0, 0.06)'
+                }}>
                 <WebView
                     style={{ flex: 1 }}
                     automaticallyAdjustContentInsets={true}

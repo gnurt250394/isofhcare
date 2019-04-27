@@ -69,7 +69,21 @@ class ConfirmBookingScreen extends Component {
                     this.props.navigation.navigate("paymentVNPay", {
                         urlPayment: s.payment_url,
                         onSuccess: url => {
-                            alert(url);
+                            let obj = {};
+                            let arr = url.split('=');
+                            if (arr.length == 2) {
+                                arr = arr[1].split("&");
+                                arr.forEach(item => {
+                                    let arr2 = item.split("=");
+                                    if (arr2.length == 2) {
+                                        obj[arr[0]] = arr[1];
+                                    }
+                                })
+                            }
+                            console.log(obj);
+                        },
+                        onError: url => {
+                            this.props.navigation.navigate("paymentBookingError", { booking })
                         }
                     })
                 })
@@ -82,6 +96,7 @@ class ConfirmBookingScreen extends Component {
     }
     createBooking() {
         this.setState({ isLoading: true }, () => {
+            console.log(this.state.schedule.time);
             bookingProvider.create(
                 this.state.hospital.hospital.id,
                 this.state.schedule.schedule.id,
@@ -100,6 +115,11 @@ class ConfirmBookingScreen extends Component {
                             else {
                                 this.getPaymentLink(s.data);
                             }
+                            break;
+                        case 1:
+                            this.setState({ isLoading: false }, () => {
+                                snackbar.show("Đặt khám phải cùng ngày giờ với lịch làm việc", "danger");
+                            });
                             break;
                         case 2:
                             this.setState({ isLoading: false }, () => {
@@ -169,7 +189,7 @@ class ConfirmBookingScreen extends Component {
 
                             <View style={styles.view2}>
                                 <ScaleImage style={styles.ic_Location} width={20} source={require("@images/new/booking/ic_doctor.png")} />
-                                <Text style={styles.text5}>Bác sĩ khám: ThS. Lê Văn Tú</Text>
+                                <Text style={styles.text5}>{this.state.schedule.doctor.name}</Text>
                             </View>
 
                             <View style={[styles.view2, { alignItems: 'flex-start' }]}>
