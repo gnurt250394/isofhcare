@@ -2,7 +2,10 @@ import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
+import dateUtils from 'mainam-react-native-date-utils';
 import ScaleImage from "mainam-react-native-scaleimage";
+import BarCode from "mainam-react-native-barcode";
+
 class CreateBookingSuccessScreen extends Component {
     constructor(props) {
         super(props)
@@ -10,6 +13,14 @@ class CreateBookingSuccessScreen extends Component {
 
 
     render() {
+        let booking = this.props.navigation.state.params.booking;
+        if (!booking || !booking.profile || !booking.hospital || !booking.hospital.hospital || !booking.book) {
+            this.props.navigation.pop();
+            return null;
+        }
+        console.log(this.props.navigation.state.params.booking.book)
+        let bookingTime = booking.book.bookingTime.toDateObject("-");
+        console.log(bookingTime);
         return (
             <ActivityPanel
                 hideBackButton={true}
@@ -24,21 +35,42 @@ class CreateBookingSuccessScreen extends Component {
                     <ScrollView style={{ flex: 1 }}>
                         <ScaleImage style={styles.image1} height={80} source={require("@images/new/booking/ic_rating.png")} />
                         <Text style={styles.text1}>Đặt khám thành công!</Text>
-                        <View style={{ backgroundColor: '#effbf9' }}>
+                        <View style={{ backgroundColor: '#effbf9', padding: 20, marginTop: 20 }}>
+                            <View style={styles.row}>
+                                <Text style={styles.label}>Họ tên:</Text>
+                                <Text style={styles.text}>{(booking.profile.medicalRecords.name || "").toUpperCase()}</Text>
+                            </View>
+                            <View style={styles.row}>
+                                <Text style={styles.label}>Địa chỉ đặt khám:</Text>
+                                <Text style={styles.text}>{booking.hospital.hospital.name}</Text>
+                            </View>
                             <View style={styles.row}>
                                 <Text style={styles.label}>Thời gian:</Text>
-                                <Text style={styles.text}>Nguyễn Thị Hằng</Text>
+                                <Text style={styles.text}>{bookingTime.format("HH:mm tt - thu, dd/MM/yyyy")}</Text>
                             </View>
-
-                        </View>
-                        <View style={styles.view3}>
-                            <Text style={styles.diachi}>Địa chỉ đặt khám: Bệnh viện Đại học Y Hà Nội</Text>
-                            <Text style={styles.time}>Thời gian:<Text style={styles.time1}>10h00 sáng - Thứ 5, 06/03/2019</Text></Text>
-                            <Text style={styles.sokham}>Số khám: 124 - Thanh toán tại viện</Text>
+                            <View style={styles.row}>
+                                <Text style={styles.label}>Số khám:</Text>
+                                <Text style={styles.text}>{booking.book.sequenceNo}</Text>
+                            </View>
+                            <View style={styles.row}>
+                                <Text style={styles.label}>Hình thức thanh toán:</Text>
+                                <Text style={styles.text}>{booking.payment == 2 ? "Thanh toán tại viện" : "VNPay"}</Text>
+                            </View>
                         </View>
                         <View style={styles.view2}>
                             <View style={styles.col}>
                                 <Text style={styles.col1}>Mã code:</Text>
+
+                                <BarCode
+                                    // format={'CODE128'}
+                                    // lineColor={'#000000'}
+                                    style={{ height: 20, width: 120, alignSelf: 'center', marginTop: 10 }}
+                                    height={50}
+                                    width={120}
+                                    value={booking.book.codeBooking}
+                                />
+                                {/* <Text style={{ textAlign: 'center' }}>{booking.book.codeBooking}</Text> */}
+
                                 {/* <ScaleImage style={styles.image2} height={71} source={require("@images/new/ic_code.png")} /> */}
                             </View>
                         </View>
@@ -96,25 +128,22 @@ const styles = StyleSheet.create({
         fontStyle: 'italic'
     },
     row: {
+        marginTop: 10,
         flexDirection: 'row',
         alignItems: 'center',
     },
     label: {
         opacity: 0.8,
-        fontSize: 22,
-        fontWeight: "600",
+        fontSize: 13,
         fontStyle: "normal",
         letterSpacing: 0,
-        textAlign: "center",
         color: "#000000",
-        marginTop: 20,
-        flex: 1
     },
     text: {
-        fontSize: 22,
+        textAlign: 'right',
+        flex: 1,
+        fontSize: 13,
         fontWeight: "600",
-        fontStyle: "normal",
-        letterSpacing: 0,
         color: "#000000",
     },
     view1: {
@@ -123,12 +152,11 @@ const styles = StyleSheet.create({
         paddingRight: 25,
     },
     view2: {
-        backgroundColor: '#effbf9',
     },
     col1: {
         textAlign: 'center',
-        fontWeight: "bold",
-        fontSize: 16,
+        fontSize: 14,
+        marginTop: 20,
         fontStyle: "normal",
         letterSpacing: 0,
         color: "#000000"
@@ -159,8 +187,9 @@ const styles = StyleSheet.create({
     btntext: {
         color: '#ffffff',
         textAlign: 'center',
-        padding: 15,
-        fontSize: 20
+        padding: 12,
+        fontWeight: 'bold',
+        fontSize: 16
     },
     view3: {
         flexDirection: 'column',

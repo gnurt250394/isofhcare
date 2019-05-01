@@ -37,6 +37,8 @@ class ConfirmBookingScreen extends Component {
     }
     confirmPayment(booking, bookingId) {
         booking.hospital = this.state.hospital;
+        booking.profile = this.state.profile;
+        booking.payment = this.state.paymentMethod;
         this.setState({ isLoading: true }, () => {
             bookingProvider.confirmPayment(bookingId).then(s => {
                 if (s.code == 0) {
