@@ -76,7 +76,12 @@ class SelectTimeScreen extends Component {
                                     // let date = new Date(key).format("yyyy/MM/dd HH:mm:ss") + " GMT +7";
                                     // let key1 = key.replace("T", " ") + ":00 GMT +7";
                                     let time = this.getTime(key);
-                                    let label = time.format("HH:mm");
+                                    let minute = time.format("mm");
+                                    let label = "";
+                                    if (minute == 0)
+                                        label = time.format("HH:mm");
+                                    else
+                                        label = time.format("HH");
                                     let schedule = {
                                         label,
                                         time,

@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import ScaleImage from "mainam-react-native-scaleimage";
 class CreateBookingSuccessScreen extends Component {
@@ -21,24 +21,31 @@ class CreateBookingSuccessScreen extends Component {
                     backgroundColor: '#02C39A'
                 }}>
                 <View style={styles.container}>
-                    <ScaleImage style={styles.image1} height={80} source={require("@images/new/booking/ic_rating.png")} />
-                    <Text style={styles.text1}>Đặt khám thành công!</Text>
-                    <View style={styles.view1}>
-                        <Text style={styles.text2}>Lịch đặt khám của bạn đã được gửi đi. Vui lòng đến trước hẹn 15 phút để thực hiện các thủ tục khác.</Text>
-                    </View>
-                    <Text style={styles.thanhngang}>- - - - - - - - - - - - - - - - - - - - - - - - - - - - -  </Text>
-                    <Text style={styles.text3}>Nguyễn Thị Hằng</Text>
-                    <View style={styles.view3}>
-                        <Text style={styles.diachi}>Địa chỉ đặt khám: Bệnh viện Đại học Y Hà Nội</Text>
-                        <Text style={styles.time}>Thời gian:<Text style={styles.time1}>10h00 sáng - Thứ 5, 06/03/2019</Text></Text>
-                        <Text style={styles.sokham}>Số khám: 124 - Thanh toán tại viện</Text>
-                    </View>
-                    <View style={styles.view2}>
-                        <View style={styles.col}>
-                            <Text style={styles.col1}>Mã code:</Text>
-                            {/* <ScaleImage style={styles.image2} height={71} source={require("@images/new/ic_code.png")} /> */}
+                    <ScrollView style={{ flex: 1 }}>
+                        <ScaleImage style={styles.image1} height={80} source={require("@images/new/booking/ic_rating.png")} />
+                        <Text style={styles.text1}>Đặt khám thành công!</Text>
+                        <View style={{ backgroundColor: '#effbf9' }}>
+                            <View style={styles.row}>
+                                <Text style={styles.label}>Thời gian:</Text>
+                                <Text style={styles.text}>Nguyễn Thị Hằng</Text>
+                            </View>
+
                         </View>
-                    </View>
+                        <View style={styles.view3}>
+                            <Text style={styles.diachi}>Địa chỉ đặt khám: Bệnh viện Đại học Y Hà Nội</Text>
+                            <Text style={styles.time}>Thời gian:<Text style={styles.time1}>10h00 sáng - Thứ 5, 06/03/2019</Text></Text>
+                            <Text style={styles.sokham}>Số khám: 124 - Thanh toán tại viện</Text>
+                        </View>
+                        <View style={styles.view2}>
+                            <View style={styles.col}>
+                                <Text style={styles.col1}>Mã code:</Text>
+                                {/* <ScaleImage style={styles.image2} height={71} source={require("@images/new/ic_code.png")} /> */}
+                            </View>
+                        </View>
+                        <View style={styles.view1}>
+                            <Text style={styles.text2}>Lịch đặt khám của bạn đã được gửi đi. Vui lòng đến trước hẹn 15 phút để thực hiện các thủ tục khác.</Text>
+                        </View>
+                    </ScrollView>
                     <TouchableOpacity style={styles.btn}><Text style={styles.btntext} onPress={() => {
                         this.props.navigation.pop();
                     }}>Về trang chủ</Text></TouchableOpacity>
@@ -78,16 +85,21 @@ const styles = StyleSheet.create({
         fontWeight: "600",
         fontStyle: "normal",
         letterSpacing: 0,
-        color: "#00b38d"
+        color: "#02c39a"
     },
     text2: {
         fontSize: 15,
         fontWeight: "normal",
         fontStyle: "normal",
         color: "#000000",
-        textAlign: 'center'
+        textAlign: 'center',
+        fontStyle: 'italic'
     },
-    text3: {
+    row: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    label: {
         opacity: 0.8,
         fontSize: 22,
         fontWeight: "600",
@@ -95,7 +107,15 @@ const styles = StyleSheet.create({
         letterSpacing: 0,
         textAlign: "center",
         color: "#000000",
-        marginTop: 20
+        marginTop: 20,
+        flex: 1
+    },
+    text: {
+        fontSize: 22,
+        fontWeight: "600",
+        fontStyle: "normal",
+        letterSpacing: 0,
+        color: "#000000",
     },
     view1: {
         marginTop: 10,
@@ -133,7 +153,8 @@ const styles = StyleSheet.create({
         shadowOpacity: 1,
         marginTop: 30,
         marginLeft: 50,
-        marginRight: 50
+        marginRight: 50,
+        marginVertical: 20
     },
     btntext: {
         color: '#ffffff',
