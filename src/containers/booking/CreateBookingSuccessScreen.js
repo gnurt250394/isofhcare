@@ -25,6 +25,7 @@ class CreateBookingSuccessScreen extends Component {
             <ActivityPanel
                 hideBackButton={true}
                 style={styles.AcPanel} title="Đặt lịch khám"
+                titleStyle={{ color: '#FFF', marginRight: 31 }}
                 containerStyle={{
                     backgroundColor: "#02C39A"
                 }}
@@ -187,7 +188,7 @@ const styles = StyleSheet.create({
     btntext: {
         color: '#ffffff',
         textAlign: 'center',
-        padding: 12,
+        padding: 15,
         fontWeight: 'bold',
         fontSize: 16
     },

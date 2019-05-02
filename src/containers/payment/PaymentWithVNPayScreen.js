@@ -77,9 +77,8 @@ class PaymentWithVNPayScreen extends Component {
     };
     render() {
         return (
-            <ActivityPanel title="Thanh toán với VNPay"
+            <ActivityPanel title="VNPay"
                 isLoading={this.state.isLoading}
-                titleStyle={{ marginLeft: 0 }}
                 containerStyle={{
                     backgroundColor: "#FFF"
                 }} actionbarStyle={{

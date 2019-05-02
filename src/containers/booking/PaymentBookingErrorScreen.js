@@ -10,10 +10,16 @@ class PaymentBookingErrorScreen extends Component {
 
 
     render() {
+        console.log(this.props.navigation.state.params)
+        let booking = (this.props.navigation.state.params || {}).booking;
         return (
             <ActivityPanel
-                hideBackButton={true}
-                style={styles.AcPanel} title="Đặt lịch khám"
+                // hideBackButton={true}
+                style={styles.AcPanel} title="Đặt khám"
+                statusbarBackgroundColor="#02C39A"
+                titleStyle={{
+                    color: '#FFF'
+                }}
                 containerStyle={{
                     backgroundColor: "#02C39A"
                 }}
@@ -21,27 +27,28 @@ class PaymentBookingErrorScreen extends Component {
                     backgroundColor: '#02C39A'
                 }}>
                 <View style={styles.container}>
-                    <ScaleImage style={styles.image1} height={80} source={require("@images/new/booking/ic_rating.png")} />
-                    <Text style={styles.text1}>Đặt khám thành công!</Text>
-                    <View style={styles.view1}>
-                        <Text style={styles.text2}>Lịch đặt khám của bạn đã được gửi đi. Vui lòng đến trước hẹn 15 phút để thực hiện các thủ tục khác.</Text>
-                    </View>
-                    <Text style={styles.thanhngang}>- - - - - - - - - - - - - - - - - - - - - - - - - - - - -  </Text>
-                    <Text style={styles.text3}>Nguyễn Thị Hằng</Text>
-                    <View style={styles.view3}>
-                        <Text style={styles.diachi}>Địa chỉ đặt khám: Bệnh viện Đại học Y Hà Nội</Text>
-                        <Text style={styles.time}>Thời gian:<Text style={styles.time1}>10h00 sáng - Thứ 5, 06/03/2019</Text></Text>
-                        <Text style={styles.sokham}>Số khám: 124 - Thanh toán tại viện</Text>
-                    </View>
+                    <ScaleImage style={styles.image1} height={68} source={require("@images/new/ic_failed.png")} />
+                    <Text style={styles.text1}>Thanh toán không thành công!</Text>
+                    <Text style={styles.text6}>Chúng tôi gặp khó khăn trong quá trình kết nối với đối tác. Vui lòng gọi tới số hotline 0923678905 nếu như bạn đã bị trừ tiền.</Text>
+
                     <View style={styles.view2}>
-                        <View style={styles.col}>
-                            <Text style={styles.col1}>Mã code:</Text>
-                            {/* <ScaleImage style={styles.image2} height={71} source={require("@images/new/ic_code.png")} /> */}
+                        <View style={styles.colt}>
+                            <Text style={styles.col1}>Mã giao dịch:</Text>
+                            <Text style={styles.col2}>ABC-123456</Text>
+                        </View>
+                        <View style={styles.colb}>
+                            <Text style={styles.col1}>Dịch vụ:</Text>
+                            <Text style={styles.col2}>{booking.service.name}</Text>
+                        </View>
+                        <View style={styles.colb}>
+                            <Text style={styles.col1}>Dịch vụ:</Text>
+                            <Text style={styles.col2}>{booking.service.name}</Text>
                         </View>
                     </View>
-                    <TouchableOpacity style={styles.btn}><Text style={styles.btntext}>Về trang chủ</Text></TouchableOpacity>
+
+                    <TouchableOpacity style={styles.btn}><Text style={styles.btntext}>Đổi phương thức thanh toán</Text></TouchableOpacity>
                 </View>
-            </ActivityPanel>
+            </ActivityPanel >
         );
     }
 }
@@ -62,62 +69,67 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 18,
         backgroundColor: '#fff',
     },
-    thanhngang: {
-        textAlign: 'center',
-        marginTop: 10,
-    },
+
     image1: {
         alignSelf: 'center',
-        marginTop: 30,
+        marginTop: 40,
     },
     text1: {
+        marginTop: 16,
         textAlign: 'center',
-        fontSize: 22,
+        fontSize: 20,
         fontWeight: "600",
         fontStyle: "normal",
         letterSpacing: 0,
-        color: "#00b38d"
+        color: "#6a0136"
     },
-    text2: {
-        fontSize: 15,
-        fontWeight: "normal",
-        fontStyle: "normal",
-        color: "#000000",
-        textAlign: 'center'
-    },
-    text3: {
-        opacity: 0.8,
-        fontSize: 22,
-        fontWeight: "600",
-        fontStyle: "normal",
-        letterSpacing: 0,
-        textAlign: "center",
-        color: "#000000",
-        marginTop: 20
-    },
-    view1: {
-        marginTop: 10,
-        paddingLeft: 25,
-        paddingRight: 25,
+    text5: {
+        color: '#000',
+        fontSize: 18,
+        fontWeight: 'bold'
     },
     view2: {
-        backgroundColor: '#effbf9',
+        padding: 20,
+        backgroundColor: '#f8f3f5',
+        marginTop: 80,
     },
     col1: {
-        textAlign: 'center',
-        fontWeight: "bold",
-        fontSize: 16,
-        fontStyle: "normal",
-        letterSpacing: 0,
-        color: "#000000"
-    },
-    image2: {
-        alignSelf: 'center'
+        fontSize: 15,
+        padding: 5
     },
     col: {
-        flexDirection: 'column',
-        marginTop: 5,
-        marginBottom: 15,
+        flexDirection: 'row',
+    },
+    colt: {
+        marginTop: 10,
+        flexDirection: 'row'
+    },
+    colb: {
+        marginBottom: 10,
+        flexDirection: 'row'
+    },
+    col2: {
+        textAlign: 'right',
+        flex: 1,
+        padding: 5,
+        fontSize: 15,
+        fontWeight: 'bold',
+        fontStyle: "normal",
+        color: '#000000',
+        opacity: 0.8,
+    },
+    text6: {
+        opacity: 0.8,
+        fontSize: 16,
+        lineHeight: 23,
+        fontWeight: "normal",
+        fontStyle: "italic",
+        letterSpacing: 0,
+        color: "#000000",
+        textAlign: 'center',
+        marginLeft: 10,
+        marginRight: 10,
+        marginTop: 30,
     },
     btn: {
         borderRadius: 6,
@@ -129,7 +141,7 @@ const styles = StyleSheet.create({
         },
         shadowRadius: 10,
         shadowOpacity: 1,
-        marginTop: 30,
+        marginTop: 90,
         marginLeft: 50,
         marginRight: 50
     },
@@ -138,34 +150,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         padding: 15,
         fontSize: 20
-    },
-    view3: {
-        flexDirection: 'column',
-        marginTop: 10,
-        marginBottom: 10,
-    },
-    diachi: {
-        textAlign: 'center',
-        letterSpacing: 0,
-        color: "#000000",
-        opacity: 0.7,
-    },
-    time: {
-        textAlign: 'center',
-        letterSpacing: 0,
-        color: "#000000",
-        opacity: 0.7,
-        padding: 5
-    },
-    sokham: {
-        textAlign: 'center',
-        letterSpacing: 0,
-        color: "#000000",
-        opacity: 0.7,
-    },
-    time1: {
-        color: '#6a0136',
-        fontWeight: 'bold'
+
     }
 })
 export default connect(mapStateToProps)(PaymentBookingErrorScreen);
