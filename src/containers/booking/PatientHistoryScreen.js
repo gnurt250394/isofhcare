@@ -74,7 +74,7 @@ class PatientHistoryScreen extends Component {
       loadMore: page != 1
     });
     bookingProvider
-      .getPatientHistory( page, size)
+      .getPatientHistory(page, size)
       .then(s => {
         this.setState({
           loading: false,
@@ -89,13 +89,7 @@ class PatientHistoryScreen extends Component {
               finish: finish
             });
           }
-
-          if (page != 1) {
-            this.setState(previousState => ({
-              data: previousState.data.concat(s.data.bookings),
-              finish: finish
-            }));
-          } else {
+          else {
             console.log(s.data.bookings);
             this.setState({
               data: s.data.bookings,
@@ -127,21 +121,21 @@ class PatientHistoryScreen extends Component {
       );
   }
   onClickItem = (item) => {
-    this.props.navigation.navigate("DetailsHistoryScreen",{
-      id:item.item.booking.id,
-      name:item.item.author.name,
-      image:item.item.author.avatar,
-      service:item.item.service.name,
-      location:item.item.hospital.name,
-      address:item.item.hospital.address,
-      date:item.item.booking.bookingTime,
-      info:item.item.specialist.name,
-      price:item.item.service.price,
-      statusPay:item.item.booking.statusPay,
-      codeBooking:item.item.booking.codeBooking,
-      note:item.item.booking.note,
-      imgNote:item.item.booking.image,
-      status :item.item.booking.status
+    this.props.navigation.navigate("DetailsHistoryScreen", {
+      id: item.item.booking.id,
+      name: item.item.author.name,
+      image: item.item.author.avatar,
+      service: item.item.service.name,
+      location: item.item.hospital.name,
+      address: item.item.hospital.address,
+      date: item.item.booking.bookingTime,
+      info: item.item.specialist.name,
+      price: item.item.service.price,
+      statusPay: item.item.booking.statusPay,
+      codeBooking: item.item.booking.codeBooking,
+      note: item.item.booking.note,
+      imgNote: item.item.booking.image,
+      status: item.item.booking.status
     });
   };
   renderItem = item => {
@@ -165,16 +159,16 @@ class PatientHistoryScreen extends Component {
             <Text style={{ fontWeight: "bold" }}>
               {item.item.booking.bookingTime
                 ? item.item.booking.bookingTime
-                    .toDateObject("-")
-                    .format("MM/yyyy")
+                  .toDateObject("-")
+                  .format("MM/yyyy")
                 : ""}
             </Text>
             <Text>
               {" "}
               {item.item.booking.bookingTime
                 ? item.item.booking.bookingTime
-                    .toDateObject("-")
-                    .format("HH:mm")
+                  .toDateObject("-")
+                  .format("HH:mm")
                 : ""}
             </Text>
           </View>
@@ -203,48 +197,48 @@ class PatientHistoryScreen extends Component {
             <Text style={{ color: "#fff" }}>Chờ phục vụ</Text>
           </View>
         );
-        case 1:
-        return(
-          <View style = {styles.statusReject}>
-          <Text style={{color:'rgb(208,2,27)'}}>Đã huỷ ( không đến )</Text>
-        </View>
+      case 1:
+        return (
+          <View style={styles.statusReject}>
+            <Text style={{ color: 'rgb(208,2,27)' }}>Đã huỷ ( không đến )</Text>
+          </View>
 
         )
-        case 2 : return(
-          <View style = {styles.statusReject}>
-          <Text style={{color:'rgb(208,2,27)'}}>Thanh toán thất bại</Text>
+      case 2: return (
+        <View style={styles.statusReject}>
+          <Text style={{ color: 'rgb(208,2,27)' }}>Thanh toán thất bại</Text>
         </View>
-        )
-        case 3 : return(
-          <View style={styles.statusTx}>
-            <Text style={{ color: "#fff" }}>Đã thanh toán</Text>
-          </View>
-        )
-        case 4 : return(
-          <View style={[styles.statusTx,{width:120}]}>
-            <Text style={{ color: "#fff" }}>Thanh toán sau</Text>
-          </View>
-        )
-        case 5 : return(
-          <View style={styles.statusTx}>
-            <Text style={{ color: "#fff" }}>Chờ thanh toán</Text>
-          </View>
-        )
-        case 6 : return(
-          <View style={styles.statusTx}>
-            <Text style={{ color: "#fff" }}>Đã xác nhận</Text>
-          </View>
-        )
-        case 7 : return(
-          <View style={styles.statusTx}>
-            <Text style={{ color: "#fff" }}>Đã có hồ sơ</Text>
-          </View>
-        )
-        case 8 : return(
-          <View style = {styles.statusReject}>
-          <Text style={{color:'rgb(208,2,27)'}}>Đã huỷ ( không phục vụ )</Text>
+      )
+      case 3: return (
+        <View style={styles.statusTx}>
+          <Text style={{ color: "#fff" }}>Đã thanh toán</Text>
         </View>
-        )
+      )
+      case 4: return (
+        <View style={[styles.statusTx, { width: 120 }]}>
+          <Text style={{ color: "#fff" }}>Thanh toán sau</Text>
+        </View>
+      )
+      case 5: return (
+        <View style={styles.statusTx}>
+          <Text style={{ color: "#fff" }}>Chờ thanh toán</Text>
+        </View>
+      )
+      case 6: return (
+        <View style={styles.statusTx}>
+          <Text style={{ color: "#fff" }}>Đã xác nhận</Text>
+        </View>
+      )
+      case 7: return (
+        <View style={styles.statusTx}>
+          <Text style={{ color: "#fff" }}>Đã có hồ sơ</Text>
+        </View>
+      )
+      case 8: return (
+        <View style={styles.statusReject}>
+          <Text style={{ color: 'rgb(208,2,27)' }}>Đã huỷ ( không phục vụ )</Text>
+        </View>
+      )
 
 
     }
@@ -267,17 +261,17 @@ class PatientHistoryScreen extends Component {
           refreshing={this.state.refreshing}
           onRefresh={this.onRefresh}
           extraData={this.state}
-          onEndReached={this.onLoadMore.bind(this)}
-          onEndReachedThreshold={1}
+          // onEndReached={this.onLoadMore.bind(this)}
+          // onEndReachedThreshold={1}
           ListFooterComponent={() => <View style={{ height: 10 }} />}
           renderItem={this.renderItem}
           ListHeaderComponent={() =>
             !this.state.refreshing &&
-            (!this.state.data || this.state.data.length == 0) ? (
-              <View style={{ alignItems: "center", marginTop: 50 }}>
-                <Text style={{ fontStyle: "italic" }}>Không có dữ liệu</Text>
-              </View>
-            ) : null
+              (!this.state.data || this.state.data.length == 0) ? (
+                <View style={{ alignItems: "center", marginTop: 50 }}>
+                  <Text style={{ fontStyle: "italic" }}>Không có dữ liệu</Text>
+                </View>
+              ) : null
           }
           keyExtractor={(item, index) => index.toString()}
         />
@@ -311,7 +305,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     backgroundColor: "rgb(2,195,154)",
     borderRadius: 10,
-    padding:2,
+    padding: 2,
     width: 100,
     justifyContent: "center",
     alignItems: "center"

@@ -47,7 +47,8 @@ class createProfile extends Component {
       date: "",
       image: "",
       imageUris: [],
-      valid: ''
+      valid: '',
+      isDataNull: ''
     };
   }
   componentDidMount() {
@@ -56,14 +57,22 @@ class createProfile extends Component {
       var image = this.props.userApp.currentUser.image
       var dob = this.props.userApp.currentUser.dob
       var gender = this.props.userApp.currentUser.gender
-      this.setState({
-        name: name,
-        image: image,
-        date: dob ? dob.toDateObject('-').format('dd/MM/yyyy') : (''),
-        dob: dob ? dob.toDateObject('-') : (''),
-        valueGender: gender,
-        txGender: gender && gender == 1 ? ('Nam') : ('Nữ')
-      })
+      var email = this.props.userApp.currentUser.email
+      var isDataNull = this.props.navigation.state.params.isDataNull
+      console.log(this.props)
+      if (isDataNull) {
+        this.setState({
+          name: name,
+          image: image,
+          date: dob ? dob.toDateObject('-').format('dd/MM/yyyy') : (''),
+          dob: dob ? dob.toDateObject('-') : (''),
+          email:email,
+          valueGender: gender,
+          txGender: gender && gender == 1 ? ('Nam') : ('Nữ'),
+          isDataNull: isDataNull
+        })
+        return
+      }
     }
   }
   onChangeText = type => text => {
@@ -91,12 +100,13 @@ class createProfile extends Component {
     const source = this.state.imgLocal
       ? { uri: this.state.imgLocal.absoluteUrl() }
       : icSupport;
-    console.log(source);
 
     return (
       <ActivityPanel
+      statusbarBackgroundColor="#0049B0"
+
         style={styles.AcPanel}
-        title="Thêm hồ sơ"
+        title={this.state.isDataNull ? "Thêm hồ sơ" : "Thêm người thân"}
         isLoading={this.state.isLoading}
         iosBarStyle={"light-content"}
         backButton={
@@ -104,10 +114,7 @@ class createProfile extends Component {
             <Text style={styles.btnhuy}>Huỷ</Text>
           </TouchableOpacity>
         }
-        statusbarBackgroundColor="rgb(247,249,251)"
-        containerStyle={{
-          backgroundColor: "rgb(247,249,251)"
-        }}
+
         menuButton={
           <TouchableOpacity onPress={this.onUpdate}>
             <Text style={styles.btnmenu}>Lưu</Text>
@@ -297,7 +304,7 @@ class createProfile extends Component {
                       this.setState({ nameError: "" });
                     } else {
                       messages ?
-                        (this.setState({ valid: 'Không cho phép chọn lớn hơn 150 tuổi' })) : (this.setState({ isMin: true }));
+                        (this.setState({ valid: 'Không cho phép chọn lớn hơn 150 tuổi', isMin: false })) : (this.setState({ isMin: true }));
                     }
                   }}
                   validate={{
@@ -306,14 +313,14 @@ class createProfile extends Component {
                       min: minDate
                     },
                     messages: {
-                      max: true,
-                      min: false
+                      max: false,
+                      min: true
                     }
                   }}
                   hideError={true}
                   onValidate={(valid, messages) => {
                     if (valid) {
-                      this.setState({ dateError: "" });
+                      this.setState({ dateError: "", });
                     } else {
                       this.setState({ isMin: messages });
                     }
@@ -332,7 +339,6 @@ class createProfile extends Component {
                 />
               </Field>
               <Text style={[styles.errorStyle]}>{this.state.valid}</Text>
-              {/* 
               <Field
                 style={[styles.mucdichkham, { marginTop: 20, height: 41 }]}
               >
@@ -349,9 +355,8 @@ class createProfile extends Component {
                   }}
                   validate={{
                     rules: {
-                      required: true,
-                      minlength: 1,
-                      email: true
+                      required: this.state.dob && this.state.dob.getAge() > 15 ? true : false,
+                      email: true,
                     },
                     messages: {
                       required: "Vui lòng nhập email",
@@ -372,13 +377,14 @@ class createProfile extends Component {
                   autoCorrect={false}
                 />
               </Field>
-              <Text style={[styles.errorStyle]}>{this.state.isMin ?(' Vui lòng nhập email với người trên 15 tuổi.'):(this.state.emailError)}</Text> */}
+              <Text style={[styles.errorStyle]}>{this.state.isMin ? (' Vui lòng nhập email với người trên 15 tuổi.') : (this.state.emailError)}</Text>
             </Form>
+            <Text style={styles.textbot}>
+              Vui lòng nhập email với người trên 15 tuổi
+          </Text>
           </View>
 
-          {/* <Text style={styles.textbot}>
-            Vui lòng nhập email với người trên 15 tuổi
-          </Text> */}
+
         </ScrollView>
         <ImagePicker ref={ref => (this.imagePicker = ref)} />
         <DateTimePicker
@@ -437,7 +443,6 @@ class createProfile extends Component {
             setTimeout(() => {
               Keyboard.dismiss();
             }, 500);
-            console.log(image);
             this.setState({
               image
             });
@@ -465,48 +470,48 @@ class createProfile extends Component {
     if (!this.form.isValid()) {
       return;
     }
-    
-    connectionUtils
-    .isConnected()
-    .then(s => {
-    this.setState(
-      {
-        isLoading: true
-      },
-      () => {
-        
 
-        const { name } = this.state;
-        const gender = this.state.valueGender;
-        let date = this.state.dob ? this.state.dob.format('yyyy-MM-dd HH:mm:ss') : ('')
-        console.log(date)
-          medicalRecordProvider
-            .createMedical(name, gender, date, image)
-            .then(res => {
-              if (res.code == 0) {
+    connectionUtils
+      .isConnected()
+      .then(s => {
+        this.setState(
+          {
+            isLoading: true
+          },
+            ()  => {
+
+
+            const { name } = this.state;
+            const gender = this.state.valueGender;
+            const email = this.state.email
+            let date = this.state.dob ? this.state.dob.format('yyyy-MM-dd HH:mm:ss') : ('')
+            medicalRecordProvider
+              .createMedical(name, gender, date,email, image)
+              .then( res  => {
+                if (res.code == 0) {
+                  this.setState({
+                    isLoading: false
+                  });
+                  snackbar.show("Bạn đã tạo hồ sơ thành công", "success");
+                  NavigationService.navigate('selectProfile',{loading:true});
+                } else {
+                  this.setState({
+                    isLoading: false
+                  });
+                }
+              })
+              .catch(err => {
                 this.setState({
                   isLoading: false
                 });
-                snackbar.show("Bạn đã tạo hồ sơ thành công", "success");
-                NavigationService.pop();
-              } else {
-                this.setState({
-                  isLoading: false
-                });
-              }
-            })
-            .catch(err => {
-              this.setState({
-                isLoading: false
+                snackbar.show("Có lỗi, xin vui lòng thử lại", "danger");
               });
-              snackbar.show("Có lỗi, xin vui lòng thử lại", "danger");
-            });
-        }
-    )
-  })
-  .catch(e => {
-    snackbar.show("Không có kết nối mạng", "danger");
-  });
+          }
+        )
+      })
+      .catch(e => {
+        snackbar.show("Không có kết nối mạng", "danger");
+      });
   }
   onUpdate = () => {
     if (!this.form.isValid()) {

@@ -33,7 +33,11 @@ class SelectProfileScreen extends Component {
     componentDidMount() {
         this.onRefresh();
     }
-
+componentWillReceiveProps(nextProps){
+    if(nextProps.navigation.state.params && nextProps.navigation.state.params.loading){
+        this.onRefresh()
+    }
+}
     onLoad() {
         const { page, size } = this.state;
         this.setState({
@@ -101,7 +105,9 @@ class SelectProfileScreen extends Component {
     }
     render() {
         return (
-            <ActivityPanel style={styles.AcPanel} title="Tất cả hồ sơ"
+            <ActivityPanel 
+            style={styles.AcPanel} 
+            title="Tất cả hồ sơ"
                 containerStyle={{
                     backgroundColor: "#f7f9fb"
                 }}
@@ -109,7 +115,13 @@ class SelectProfileScreen extends Component {
                     backgroundColor: '#ffffff',
                     borderBottomWidth: 1,
                     borderBottomColor: 'rgba(0, 0, 0, 0.06)'
-                }}>
+                }}
+                // menuButton={
+                //     <View style ={{width:15,marginLeft: 10
+                //     }}>
+                //     </View>
+                //   }
+                >
 
                 <FlatList
                     onRefresh={this.onRefresh.bind(this)}
@@ -162,10 +174,11 @@ class SelectProfileScreen extends Component {
 
                 <TouchableOpacity style={{ backgroundColor: "#02c39a", width: 200, borderRadius: 6, alignSelf: 'center', marginVertical: 10, marginBottom: 30 }} onPress={() =>
                     this.props.navigation.navigate("createProfile",
-                        {
+                        {   isDataNull : !this.state.data || this.state.data.length == 0 ? true : false,
                             onCreate: this.onRefresh.bind(this)
                         })}>
-                    <Text style={styles.btntext}>Thêm hồ sơ</Text>
+                        {!this.state.data || this.state.data.length == 0 ? (  <Text style={styles.btntext}>Thêm hồ sơ</Text>) : (  <Text style={styles.btntext}>Thêm người thân</Text>)}
+                  
                 </TouchableOpacity>
             </ActivityPanel>
         );
