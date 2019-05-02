@@ -84,7 +84,6 @@
 		D7702B4C40934E18B292AC84 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AA31D3091DF94E6A8C75258F /* SimpleLineIcons.ttf */; };
 		E07215313F5549D9AEBE46BD /* slidingPanel-tvOS.app in Frameworks */ = {isa = PBXBuildFile; fileRef = CBE99AB0CCAC437FBB1626B2 /* slidingPanel-tvOS.app */; };
 		E2B4ECEA53E94E508AF87928 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DFF531B1D8384E1281521AFF /* FontAwesome.ttf */; };
-		E32668C44D474034A5E97CBB /* libReactNativeFingerprintScanner.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 541168A76E1943F395A41E87 /* libReactNativeFingerprintScanner.a */; };
 		E504019A736C4E52B5CA4464 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 94798CE8149C4557AC458707 /* libz.tbd */; };
 		E829ED23B13342C4906334F4 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD5F71DCE6BD49A78D01066B /* Foundation.ttf */; };
 		EA0D849EE00B42DCA60EF83D /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 14969897889B4A598908EBF5 /* Foundation.ttf */; };
@@ -637,7 +636,6 @@
 				46EBBF0F9A944D0C81C1B3EC /* slidingPanel.app in Frameworks */,
 				D5A48EC5F69E4BAA84B12B90 /* libRNPhotoView.a in Frameworks */,
 				AB0127FAE3D449368C677EF7 /* libRNAccountKit.a in Frameworks */,
-				E32668C44D474034A5E97CBB /* libReactNativeFingerprintScanner.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
