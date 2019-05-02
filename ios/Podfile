@@ -12,14 +12,14 @@ target 'APP' do
   pod 'Google/SignIn'
  
   pod 'react-native-fbsdk', :path => '../node_modules/react-native-fbsdk'
-  # pod 'FBSDKCoreKit', '4.38'
-  # pod 'FBSDKLoginKit', '4.38'
-  # pod 'FBSDKShareKit', '4.38'
+  pod 'FBSDKCoreKit', '4.38'
+  pod 'FBSDKLoginKit', '4.38'
+  pod 'FBSDKShareKit', '4.38'
 
   pod 'Bolts'
-  pod 'FBSDKCoreKit'
-  pod 'FBSDKLoginKit'
-  pod 'FBSDKShareKit'
+  # pod 'FBSDKCoreKit'
+  # pod 'FBSDKLoginKit'
+  # pod 'FBSDKShareKit'
   # facebook account kit
   pod 'RNAccountKit', :path => '../node_modules/react-native-facebook-account-kit/ios'
 
