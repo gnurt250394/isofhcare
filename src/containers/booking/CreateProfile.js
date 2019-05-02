@@ -643,14 +643,15 @@ const styles = StyleSheet.create({
     top: 60
   },
   textbot: {
-    fontSize: 15,
-    fontWeight: "normal",
-    fontStyle: "normal",
-    letterSpacing: 0.2,
-    color: "#4a4a4a",
-    position: "relative",
-    top: 70,
-    padding: 10
+    marginLeft:20
+    // fontSize: 15,
+    // fontWeight: "normal",
+    // fontStyle: "normal",
+    // letterSpacing: 0.2,
+    // color: "#4a4a4a",
+    // position: "relative",
+    // top: 70,
+    // padding: 10
   },
   btnmenu: {
     fontSize: 18,
