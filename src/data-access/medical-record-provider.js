@@ -26,14 +26,14 @@ module.exports = {
         });
 
     },
-    createMedical(name, gender, dob, avatar) {
+    createMedical(name, gender, dob,email, avatar) {
         return new Promise((resolve, reject) => {
           var body = {
             medicalRecords: {
               name: name,
               gender: gender,
               dob: dob,
-              mail: '',
+              mail: email ? email : '',
               status: 1,
               avatar: avatar
             }
