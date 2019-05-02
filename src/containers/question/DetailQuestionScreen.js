@@ -20,7 +20,6 @@ import DialogBox from 'react-native-dialogbox';
 import StarRating from 'react-native-star-rating';
 import Dash from 'mainam-react-native-dash-view';
 import connectionUtils from '@utils/connection-utils';
-// import FastImage from 'react-native-fast-image';
 const disease = [{
     value: 1,
     text: "Tim mạch"

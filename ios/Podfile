@@ -65,8 +65,6 @@ target 'APP' do
   pod 'rn-fetch-blob',
     :path => '../node_modules/rn-fetch-blob'
 
-  pod 'react-native-fast-image', :path => '../node_modules/react-native-fast-image'
-
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 end
 
