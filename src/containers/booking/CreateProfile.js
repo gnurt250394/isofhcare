@@ -86,7 +86,7 @@ class createProfile extends Component {
   render() {
     let maxDate = new Date();
     maxDate = new Date(
-      maxDate.getFullYear() - 15,
+      maxDate.getFullYear(),
       maxDate.getMonth(),
       maxDate.getDate()
     );
@@ -405,7 +405,7 @@ class createProfile extends Component {
             this.setState({ toggelDateTimePickerVisible: false });
           }}
           date={new Date()}
-          // minimumDate={minDate}
+          minimumDate={minDate}
           maximumDate={new Date()}
           cancelTextIOS={"Hủy bỏ"}
           confirmTextIOS={"Xác nhận"}
