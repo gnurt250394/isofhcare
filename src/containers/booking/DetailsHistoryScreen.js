@@ -218,7 +218,7 @@ export default class DetailsHistoryScreen extends Component {
               />
               <Text style={styles.txLabelPrice}>Giá dịch vụ</Text>
               <Text style={styles.txPrice}>
-                {Number(this.state.price).formatPrice()}
+                {Number(this.state.price).formatPrice() + 'đ'}
               </Text>
             </View>
             <View style={styles.viewPayment}>
