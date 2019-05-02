@@ -81,8 +81,7 @@ class DetailQuestionScreen extends Component {
                             <Image
                                 style={{ width: 70, height: 70, borderRadius: 10 }}
                                 source={{
-                                    uri: item.absoluteUrl(),
-                                    // priority: FastImage.priority.normal,
+                                    uri: item.absoluteUrl()
                                 }}
                                 resizeMode={'cover'}
                             />
