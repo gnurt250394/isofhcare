@@ -120,8 +120,6 @@ class ConfirmBookingScreen extends Component {
                         }
                         snackbar.show("Đặt khám không thành công", "danger");
                     }
-
-                    snackbar.show("Đặt khám không thành công", "danger");
                     // this.props.navigation.navigate("paymentBookingError", { booking })
                 })
             });
