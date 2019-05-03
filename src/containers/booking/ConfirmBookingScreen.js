@@ -104,7 +104,25 @@ class ConfirmBookingScreen extends Component {
                 })
             }).catch(e => {
                 this.setState({ isLoading: false }, () => {
-                    this.props.navigation.navigate("paymentBookingError", { booking })
+                    if (e && e.response && e.response.data) {
+                        let response = e.response.data;
+                        switch (response.type) {
+                            case "ValidationError":
+                                let message = response.message;
+                                for (let key in message) {
+                                    switch (key) {
+                                        case "id":
+                                            snackbar.show("Tài khoản không tồn tại trong hệ thống", "danger");
+                                            return;
+                                    }
+                                }
+                                break;
+                        }
+                        snackbar.show("Đặt khám không thành công", "danger");
+                    }
+
+                    snackbar.show("Đặt khám không thành công", "danger");
+                    // this.props.navigation.navigate("paymentBookingError", { booking })
                 })
             });
         })
