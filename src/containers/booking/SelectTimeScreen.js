@@ -76,12 +76,12 @@ class SelectTimeScreen extends Component {
                                     // let date = new Date(key).format("yyyy/MM/dd HH:mm:ss") + " GMT +7";
                                     // let key1 = key.replace("T", " ") + ":00 GMT +7";
                                     let time = this.getTime(key);
-                                    let minute = time.format("mm");
-                                    let label = "";
-                                    if (minute == 0)
-                                        label = time.format("HH:mm");
-                                    else
-                                        label = time.format("HH");
+                                    // let minute = time.format("mm");
+                                    // let label = "";
+                                    // if (minute == 0)
+                                    //     label = time.format("HH:mm");
+                                    // else
+                                    label = time.format("HH:mm");
                                     let schedule = {
                                         label,
                                         time,
@@ -269,7 +269,7 @@ class SelectTimeScreen extends Component {
                                                     </View>
                                                     <View style={{ width: 8, height: 5, backgroundColor: index < this.state.listTime.length - 1 ? this.getColor(item) : 'transparent' }}></View>
                                                 </View>
-                                                <Text style={{ fontSize: 8 }}>{this.showLabel(item, index) ?
+                                                <Text style={{ fontSize: 7 }}>{this.showLabel(item, index) ?
                                                     item.label : " "}</Text>
                                             </TouchableOpacity>
                                         })
