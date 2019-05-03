@@ -95,9 +95,9 @@ class PatientHistoryScreen extends Component {
           }
           else {
             this.setState({
-              data: s.data.bookings,
+              data: s.data.bookings.reverse(),
               finish: false,
-              data1:s.data.bookings.filter((item,index) =>{
+              data1:s.data.bookings.reverse().filter((item,index) =>{
                 return index < size
               })
             });
@@ -132,7 +132,6 @@ class PatientHistoryScreen extends Component {
             finish: false
           })
         }
-        console.log(data2,'sssssssssssssssssssssssss',this.state.data1)
       }
   }
   onLoadMore() {
@@ -212,7 +211,7 @@ class PatientHistoryScreen extends Component {
             <Text style={{ fontWeight: "bold" }}>{item.item.service.name ? item.item.service.name : ''}</Text>
             <Text>{item.item.author.name ? item.item.author.name : ''}</Text>
             <Text>{item.item.hospital.name ? item.item.hospital.name : item.item.hospital.name}</Text>
-            {item.item.booking.status ? this.renderStatus(item.item.booking.status) : null}
+            {item.item.booking.status || item.item.booking.status == 0  ? this.renderStatus(item.item.booking.status) :  null}
           </View>
         </View>
       </TouchableOpacity>
