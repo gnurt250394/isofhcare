@@ -23,25 +23,14 @@ module.exports = {
             });
         });
     },
-    onlineTransactionPaid(transactionId, payment_method_type, vnp_TmnCode, vnp_TxnRef, vnp_Amount, vnp_OrderInfo, vnp_ResponseCode, vnp_BankCode, vnp_BankTranNo, vnp_PayDate, vnp_TransactionNo, vnp_SecureHash) {
+    onlineTransactionPaid(transactionId, payment_method_type, transaction_data) {
         return new Promise((resolve, reject) => {
             let url = constants.api.wallet.onlineTransactionPaid;
             url = url.replace("{transactionId}", transactionId);
-            client.requestApi("post", url, {
+            client.requestApiWithHeader("post", url, {
                 payment_method_type,
-                transaction_data: {
-                    vnp_Amount,
-                    vnp_BankCode,
-                    vnp_BankTranNo,
-                    vnp_OrderInfo,
-                    vnp_PayDate,
-                    vnp_ResponseCode,
-                    vnp_SecureHash,
-                    vnp_TmnCode,
-                    vnp_TransactionNo,
-                    vnp_TxnRef
-                }
-            }, (s, e) => {
+                transaction_data
+            }, { Authorization: "Bearer " + client.auth }, (s, e) => {
                 if (s) {
                     resolve(s);
                 }
