@@ -107,10 +107,11 @@ class createProfile extends Component {
 
         style={styles.AcPanel}
         title={this.state.isDataNull ? "Thêm hồ sơ" : "Thêm người thân"}
+        titleStyle ={{marginRight: -25}}
         isLoading={this.state.isLoading}
         iosBarStyle={"light-content"}
         backButton={
-          <TouchableOpacity onPress={() => this.props.navigation.pop()}>
+          <TouchableOpacity style ={styles.btnCancel} onPress={() => this.props.navigation.pop()}>
             <Text style={styles.btnhuy}>Huỷ</Text>
           </TouchableOpacity>
         }
@@ -492,7 +493,9 @@ class createProfile extends Component {
                   this.setState({
                     isLoading: false
                   });
-                  snackbar.show("Bạn đã tạo hồ sơ thành công", "success");
+                  this.state.isDataNull ? snackbar.show("Bạn đã tạo hồ sơ thành công", "success") : snackbar.show("Bạn đã thêm người thân thành công", "success");
+
+                  
                   NavigationService.navigate('selectProfile',{loading:true});
                 } else {
                   this.setState({
@@ -642,6 +645,7 @@ const styles = StyleSheet.create({
 
     top: 60
   },
+
   textbot: {
     marginLeft:20
     // fontSize: 15,

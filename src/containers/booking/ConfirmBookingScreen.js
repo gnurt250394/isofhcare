@@ -87,17 +87,7 @@ class ConfirmBookingScreen extends Component {
                                     }
                                 })
                             }
-                            walletProvider.onlineTransactionPaid(obj["vnp_TxnRef"], "VNPAY", this.state.hospital.hospital.id,
-                                obj["vnp_TxnRef"],
-                                obj["vnp_Amount"],
-                                obj["vnp_OrderInfo"],
-                                obj["vnp_ResponseCode"],
-                                obj["vnp_BankCode"],
-                                obj["vnp_BankTranNo"],
-                                obj["vnp_PayDate"],
-                                obj["vnp_TransactionNo"],
-                                obj["vnp_SecureHash"]
-                            );
+                            walletProvider.onlineTransactionPaid(obj["vnp_TxnRef"], "VNPAY", obj);
                             this.props.navigation.navigate("home", {
                                 navigate: {
                                     screen: "createBookingSuccess",

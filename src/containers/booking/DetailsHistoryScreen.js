@@ -143,9 +143,7 @@ export default class DetailsHistoryScreen extends Component {
         containerStyle={{
           backgroundColor: "#f7f9fb"
         }}
-        actionbarStyle={{
-          marginLeft: 10
-        }}
+      
       >
         <ScrollView>
           <View>

@@ -280,9 +280,9 @@ class PatientHistoryScreen extends Component {
         containerStyle={{
           backgroundColor: "#f7f9fb"
         }}
-        actionbarStyle={{
-          marginLeft: 10
-        }}
+        // actionbarStyle={{
+        //   marginLeft: 10
+        // }}
       >
         <FlatList
           data={this.state.data1}
