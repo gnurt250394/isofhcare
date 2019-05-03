@@ -108,6 +108,8 @@ componentWillReceiveProps(nextProps){
             <ActivityPanel 
             style={styles.AcPanel} 
             title="Tất cả hồ sơ"
+            // titleStyle={{ marginRight: -10 }}
+
                 containerStyle={{
                     backgroundColor: "#f7f9fb"
                 }}
