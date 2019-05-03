@@ -359,7 +359,7 @@ class createProfile extends Component {
                   validate={{
                     rules: {
                       required: this.state.dob && this.state.dob.getAge() > 15 ? true : false,
-                      email: true,
+                      email: this.state.dob ? true : true,
                     },
                     messages: {
                       required: "Vui lòng nhập email",

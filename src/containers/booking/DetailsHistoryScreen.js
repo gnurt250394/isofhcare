@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import {
   View,
   Text,
-  FlatList,
+  Image,
   TouchableOpacity,
   ScrollView,
   StyleSheet
@@ -126,15 +126,41 @@ export default class DetailsHistoryScreen extends Component {
         <Text style={styles.txStatus} />;
     }
   };
+  renderImages() {
+    var image = this.state.imgNote
+    if (image) {
+      var images = image.split(",");
+      return (<View>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 10 }}>
+          {
+            images.map((item, index) => <TouchableOpacity  key={index} style={{ marginRight: 10, borderRadius: 10, marginBottom: 10, width: 70, height: 70 }}>
+              <Image
+                style={{ width: 70, height: 70, borderRadius: 10 }}
+                source={{
+                  uri: item.absoluteUrl()
+                }}
+                resizeMode={'cover'}
+              />
+            </TouchableOpacity>)
+          }
+        </View>
+      </View>);
+    } else {
+      return null;
+    }
+  }
   checkAm = () => {
-   let hours = '2019-04-12 11:59:00' 
-   console.log(hours.toDateObject('-').format('HH:mm'),'sssss',this.state.date.toDateObject("-").format("HH:mm"))
-   if( this.state.date.toDateObject("-").format("HH:mm") < hours.toDateObject('-').format('HH:mm')){
-     return(<Text>{' Sáng'}</Text>)
-   }else{
-    return(<Text>{' Chiều'}</Text>)
-  }}
+    let hours = '2019-04-12 11:59:00'
+    console.log(hours.toDateObject('-').format('HH:mm'), 'sssss', this.state.date.toDateObject("-").format("HH:mm"))
+    if (this.state.date.toDateObject("-").format("HH:mm") < hours.toDateObject('-').format('HH:mm')) {
+      return (<Text>{' Sáng'}</Text>)
+    } else {
+      return (<Text>{' Chiều'}</Text>)
+    }
+  }
   render() {
+    console.log(this.state.image.absoluteUrl(), 'xnxnxnxnxnx')
+    const avatar = this.state.image ? { uri: this.state.image.absoluteUrl() } : require("@images/new/user.png")
     return (
       <ActivityPanel
         style={{ flex: 1, backgroundColor: "#f7f9fb" }}
@@ -143,18 +169,17 @@ export default class DetailsHistoryScreen extends Component {
         containerStyle={{
           backgroundColor: "#f7f9fb"
         }}
-      
+
       >
         <ScrollView>
           <View>
             <View style={styles.viewName}>
               <ScaledImage
-                height={20}
                 width={20}
+                borderRadius={10}
+                height={20}
                 source={
-                  this.state.image
-                    ? { uri: this.state.image.absoluteUrl() }
-                    : require("@images/new/user.png")
+                  avatar
                 }
               />
               <Text style={styles.txName}>{this.state.name}</Text>
@@ -201,11 +226,12 @@ export default class DetailsHistoryScreen extends Component {
             <View style={styles.viewSymptom}>
               <Text>Triệu chứng:{this.state.note}</Text>
               <View>
-                <ScaledImage
+                {this.renderImages()}
+                {/* <ScaledImage
                   width={70}
                   height={70}
                   source={{ uri: this.state.imgNote ? this.state.imgNote.absoluteUrl() :'' }}
-                />
+                /> */}
               </View>
             </View>
             <View style={styles.viewPrice}>
