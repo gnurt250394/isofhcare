@@ -95,7 +95,7 @@ class PatientHistoryScreen extends Component {
           }
           else {
             this.setState({
-              data: s.data.bookings.reverse(),
+              data: s.data.bookings,
               finish: false,
               data1:s.data.bookings.reverse().filter((item,index) =>{
                 return index < size
