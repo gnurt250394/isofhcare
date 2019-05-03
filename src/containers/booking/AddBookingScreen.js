@@ -113,7 +113,7 @@ class AddBookingScreen extends Component {
         this.setState({ hospital });
     }
     addBooking() {
-
+        Keyboard.dismiss();
 
         let error = false;
 

@@ -8,6 +8,7 @@ import ScaleImage from "mainam-react-native-scaleimage";
 import bookingProvider from '@data-access/booking-provider';
 import walletProvider from '@data-access/wallet-provider';
 import snackbar from '@utils/snackbar-utils';
+import connectionUtils from '@utils/connection-utils';
 
 class ConfirmBookingScreen extends Component {
     constructor(props) {
@@ -126,68 +127,52 @@ class ConfirmBookingScreen extends Component {
         })
     }
     createBooking() {
-        this.setState({ isLoading: true }, () => {
-            console.log(this.state.schedule.time);
-            bookingProvider.create(
-                this.state.hospital.hospital.id,
-                this.state.schedule.schedule.id,
-                this.state.profile.medicalRecords.id,
-                this.state.specialist.id,
-                this.state.service.id,
-                this.state.schedule.time.format("yyyy-MM-dd HH:mm:ss"),
-                this.state.reason,
-                this.state.images
-            ).then(s => {
-                if (s) {
-                    switch (s.code) {
-                        case 0:
-                            if (this.state.paymentMethod == 2)
-                                this.confirmPayment(s.data, s.data.book.id);
-                            else {
-                                this.getPaymentLink(s.data);
-                            }
-                            break;
-                        case 1:
-                            this.setState({ isLoading: false }, () => {
-                                snackbar.show("Đặt khám phải cùng ngày giờ với lịch làm việc", "danger");
-                            });
-                            break;
-                        case 2:
-                            this.setState({ isLoading: false }, () => {
-                                snackbar.show("Đã kín lịch trong khung giờ này", "danger");
-                            });
-                            break;
-                        default:
-                            this.setState({ isLoading: false }, () => {
-                                snackbar.show("Đặt khám không thành công", "danger");
-                            });
-                            break;
+        connectionUtils.isConnected().then(s => {
+            this.setState({ isLoading: true }, () => {
+                console.log(this.state.schedule.time);
+                bookingProvider.create(
+                    this.state.hospital.hospital.id,
+                    this.state.schedule.schedule.id,
+                    this.state.profile.medicalRecords.id,
+                    this.state.specialist.id,
+                    this.state.service.id,
+                    this.state.schedule.time.format("yyyy-MM-dd HH:mm:ss"),
+                    this.state.reason,
+                    this.state.images
+                ).then(s => {
+                    if (s) {
+                        switch (s.code) {
+                            case 0:
+                                if (this.state.paymentMethod == 2)
+                                    this.confirmPayment(s.data, s.data.book.id);
+                                else {
+                                    this.getPaymentLink(s.data);
+                                }
+                                break;
+                            case 1:
+                                this.setState({ isLoading: false }, () => {
+                                    snackbar.show("Đặt khám phải cùng ngày giờ với lịch làm việc", "danger");
+                                });
+                                break;
+                            case 2:
+                                this.setState({ isLoading: false }, () => {
+                                    snackbar.show("Đã kín lịch trong khung giờ này", "danger");
+                                });
+                                break;
+                            default:
+                                this.setState({ isLoading: false }, () => {
+                                    snackbar.show("Đặt khám không thành công", "danger");
+                                });
+                                break;
+                        }
                     }
-                }
-
-
-
-
-
-                // this.setState({ isLoading: false }, () => {
-                //     if (s) {
-                //         switch (s.code) {
-                //             case 500:
-                //                 snackbar.show("Đặt khám không thành công", "danger");
-                //                 return;
-                //             case 0:
-                //                 if (this.state.paymentMethod == 2) {
-                //                     snackbar.show("Đặt khám thành công", "success");
-                //                 } else {
-                //                 }
-                //                 return;
-                //         }
-                //     }
-                // });
-            }).catch(e => {
-                this.setState({ isLoading: false }, () => {
-                });
-            })
+                }).catch(e => {
+                    this.setState({ isLoading: false }, () => {
+                    });
+                })
+            });
+        }).catch(e => {
+            snackbar.show("Không có kết nối mạng", "danger");
         })
     }
 

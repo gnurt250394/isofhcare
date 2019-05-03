@@ -199,10 +199,10 @@ export default class DetailsHistoryScreen extends Component {
                 width={20}
                 source={require("@images/ic_location.png")}
               />
-              <Text style={styles.txLocation}>Địa điểm</Text>
+              <Text numberOfLines={5} style={styles.txLocation}>Địa điểm</Text>
               <View style={styles.viewInfoLocation}>
                 <Text style={styles.txClinic}>{this.state.location}</Text>
-                <Text style={styles.txAddress}>{this.state.address}</Text>
+                <Text numberOfLines={5} style={styles.txAddress}>{this.state.address}</Text>
               </View>
             </View>
             <View style={styles.viewDate}>
@@ -272,8 +272,8 @@ export default class DetailsHistoryScreen extends Component {
               <Text style={styles.txLabelBarcode}>Mã code</Text>
               <BarCode
                 style={{ height: 40, width: 80 }}
-                height={40}
-                width={80}
+                // height={40}
+                // width={80}
                 value={this.state.codeBooking ? this.state.codeBooking : 0}
               />
             </View>
@@ -348,7 +348,9 @@ const styles = StyleSheet.create({
   viewInfoLocation: {
     paddingVertical: 5,
     paddingHorizontal: 5,
-
+    justifyContent:'center',
+    alignItems:'flex-end',
+    width:'50%'
   },
   txAddress: {
     color: "#8F8E93"
