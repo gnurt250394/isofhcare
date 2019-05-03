@@ -10,16 +10,11 @@ target 'APP' do
   pod 'Firebase/Messaging'
   pod 'Firebase/Core', '~> 4.13.0'
   pod 'Google/SignIn'
- 
-  pod 'react-native-fbsdk', :path => '../node_modules/react-native-fbsdk'
+  
   pod 'Bolts'
   pod 'FBSDKCoreKit'
   pod 'FBSDKLoginKit'
   pod 'FBSDKShareKit'
-
-  # pod 'FBSDKCoreKit'
-  # pod 'FBSDKLoginKit'
-  # pod 'FBSDKShareKit'
   # facebook account kit
   pod 'RNAccountKit', :path => '../node_modules/react-native-facebook-account-kit/ios'
 

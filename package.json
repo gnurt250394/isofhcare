@@ -69,6 +69,7 @@
     "redux": "^4.0.0",
     "redux-thunk": "^2.2.0",
     "rn-fetch-blob": "^0.10.11",
+    "rn-tooltip": "^1.1.2",
     "yarn": "^1.9.4"
   },
   "devDependencies": {
