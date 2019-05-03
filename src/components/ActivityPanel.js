@@ -44,6 +44,7 @@ class ActivityPanel extends Component {
           { color: constants.colors.actionbar_title_color },
           this.props.actionbarTextColor
         ]}
+        titleStyle={{ marginLeft: 60 }}
         backButtonClick={() => this.backPress()}
         showMessengerClicked={() => this.msgPress()}
         {...this.props}

@@ -1,5 +1,8 @@
 let isofhcare_service = 'isofhcare/';
 let isofhcare_resources = 'isofhcare-resources/';
+// let wallet_services = 'wallet-services-test/'; //test
+let wallet_services = 'wallet-services-dev/'; //dev
+
 module.exports = {
   fbApplicationId: "457683741386685",
   username: "Tên tài khoản",
@@ -80,6 +83,7 @@ module.exports = {
       DATA_TOP_DRUG: "DATA_TOP_DRUG",
       DATA_TOP_ADS: "DATA_TOP_ADS",
       USER_PROFILE: "USER_PROFILE",
+      USER_MEDICAL_RECORD: "USER_MEDICAL_RECORD",
       DATA_PROVINCE: "DATA_PROVINCE",
       CURRENT_LOCATION: "CURRENT_LOCATION",
       INTRO_FINISHED: "INTRO_FINISHED",
@@ -288,7 +292,9 @@ module.exports = {
       get_list_booking: isofhcare_service + "booking/get-list-patient-history-by-profile",
       get_detail_patient_historyid: isofhcare_service + "booking/get-detail-patient-history",
       get_result_patient_historyid: isofhcare_service + "booking/get-result-patient-history",
-      delete: isofhcare_service + "booking/delete"
+      delete: isofhcare_service + "booking/delete",
+      create: isofhcare_service + "booking/create",
+      confirmPay: isofhcare_service + "booking/confirm-pay"
     },
     question: {
       create: isofhcare_service + "post/create",
@@ -308,13 +314,33 @@ module.exports = {
     },
     hospital: {
       get_all: isofhcare_service + "hospital/get-all",
-      get_hospital_by_profile: isofhcare_service + "hospital-profile/get-hospital-by-profile"
+      get_hospital_by_profile: isofhcare_service + "hospital-profile/get-hospital-by-profile",
+      get_hospital_by_service_type: isofhcare_service + "hospital/get-hospital-by-service-type"
     },
     profile: {
       get_by_user: isofhcare_service + "profile/get-by-user"
     },
     serviceType: {
       get_all: isofhcare_service + "service-type/get-all"
+    },
+    medicalRecord: {
+      get_by_user: isofhcare_service + "medical-records/get-by-user",
+      createMedical: isofhcare_service + "medical-records/create"
+    },
+    patientHistory :{
+      getListPatient: isofhcare_service +"booking/get-by-author",
+      getDetailsHistory:isofhcare_service + "booking/get-detail"
+    },
+    service: {
+      get_all: isofhcare_service + "service/get-all"
+    },
+    schedule: {
+      get_by_date_and_service: isofhcare_service + "schedule-booking/get-by-date-and-service",
+      search: isofhcare_service + "schedule-booking/search"
+    },
+    wallet: {
+      createOnlinePayment: wallet_services + "customers/{id}/online-payments",
+      onlineTransactionPaid: wallet_services + "online-transactions/{transactionId}/paid"
     }
   }
 };

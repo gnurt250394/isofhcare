@@ -144,10 +144,10 @@ class Home extends Component {
           if (s.length == 0) {
             if (!reload)
               this.getTopAds(true);
-              this.setState({
-                refreshing: false,
+            this.setState({
+              refreshing: false,
 
-              })
+            })
           }
           this.setState({
             ads: (s || []).filter(x => x.advertise && x.advertise.type == 2 && x.advertise.images),
@@ -175,7 +175,7 @@ class Home extends Component {
         }
       });
     })
-}
+  }
   render() {
     const icSupport = require("@images/new/user.png");
     const source = this.props.userApp.isLogin ? (this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar.absoluteUrl() } : icSupport) : icSupport;
@@ -229,10 +229,10 @@ class Home extends Component {
         menuButton={<NotificationBadge />}
       >
         <ScrollView
-        refreshControl={<RefreshControl
-                        refreshing={this.state.refreshing}
-                        onRefresh={this.onRefresh.bind(this)}
-                    />}
+          refreshControl={<RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this.onRefresh.bind(this)}
+          />}
           showsVerticalScrollIndicator={false}
           style={{
             flex: 1,
@@ -278,7 +278,12 @@ class Home extends Component {
             <TouchableOpacity
               style={{ flex: 1, marginLeft: 5, alignItems: 'center' }}
               onPress={() => {
-                this.props.navigation.navigate("addBooking");
+                if (this.props.userApp.isLogin)
+                  this.props.navigation.navigate("addBooking");
+                else
+                  this.props.navigation.navigate("login", {
+                    nextScreen: { screen: "addBooking", param: {} }
+                  });
               }}
             >
               <View style={{ position: 'relative', padding: 5 }}><ScaledImage style={[styles.icon]} source={require("@images/new/ic_question.png")} height={48} />

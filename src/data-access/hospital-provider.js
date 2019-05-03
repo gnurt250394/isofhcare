@@ -12,10 +12,19 @@ module.exports = {
             });
         });
     },
-    getByProfile()
-    {
+    getByProfile() {
         return new Promise((resolve, reject) => {
             client.requestApi("get", `${constants.api.hospital.get_hospital_by_profile}`, {}, (s, e) => {
+                if (s)
+                    resolve(s);
+                else
+                    reject(e);
+            });
+        });
+    },
+    getByServiceType(serviceType, name) {
+        return new Promise((resolve, reject) => {
+            client.requestApi("get", `${constants.api.hospital.get_hospital_by_service_type}?serviceTypeId=${serviceType}&name=${name}`, {}, (s, e) => {
                 if (s)
                     resolve(s);
                 else

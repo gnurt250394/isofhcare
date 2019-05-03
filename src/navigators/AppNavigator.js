@@ -38,18 +38,28 @@ import { EHealthNavigator } from "@ehealth/navigator";
 import { BookingDHYNavigation } from "@dhy/navigator";
 import NotificationScreen from "@containers/notification/NotificationScreen";
 import ListQuestionScreen from "@containers/question/ListQuestionScreen";
-import MyQuestionScreen from "@containers/question/MyQuestionScreen";
 import CreateQuestionStep1Screen from "@containers/question/CreateQuestionStep1Screen";
 import CreateQuestionStep2Screen from "@containers/question/CreateQuestionStep2Screen";
 import DetailQuestionScreen from "@containers/question/DetailQuestionScreen";
-import TestVNPayScreen from "@containers/test/TestVNPayScreen";
+import PaymentWithVNPayScreen from "@containers/payment/PaymentWithVNPayScreen";
 import ChangePass from "@containers/account/ChangePassWord";
 import FingerScreen from "@containers/account/FingerScreen";
 import FingerSettingScreen from "@containers/account/FingerSettingScreen";
 //=========BOOKING NAVIGATION
 import AddBookingScreen from "@containers/booking/AddBookingScreen";
-
+import SelectHospitalScreen from "@containers/booking/SelectHospitalScreen";
+import SelectTimeScreen from "@containers/booking/SelectTimeScreen";
+import SelectServiceScreen from "@containers/booking/SelectServiceScreen";
+import ConfirmBookingScreen from "@containers/booking/ConfirmBookingScreen";
+import CreateBookingSuccessScreen from "@containers/booking/CreateBookingSuccessScreen";
+import PaymentBookingErrorScreen from "@containers/booking/PaymentBookingErrorScreen";
+import DetailsHistoryScreen from "@containers/booking/DetailsHistoryScreen"
+//=========PROFILE NAVIGATION
+import SelectProfileScreen from "@containers/booking/SelectProfileScreen";
+import CreateProfile from "@containers/booking/CreateProfile";
 //---------------------------
+import PatientHistoryScreen from  "@containers/booking/PatientHistoryScreen";
+
 
 import EmptyScreen from "@containers/EmptyScreen2";
 const RootNavigator = createStackNavigator(
@@ -91,7 +101,6 @@ const RootNavigator = createStackNavigator(
       profile: { screen: ProfileScreen },
       notification: { screen: NotificationScreen },
       listQuestion: { screen: ListQuestionScreen },
-      myQuestion: { screen: MyQuestionScreen },
       createQuestionStep1: { screen: CreateQuestionStep1Screen },
       createQuestionStep2: { screen: CreateQuestionStep2Screen },
       detailQuestion: { screen: DetailQuestionScreen },
@@ -100,7 +109,20 @@ const RootNavigator = createStackNavigator(
       FingerSettingScreen: { screen: FingerSettingScreen },
       //---------------booking navigation
       addBooking: { screen: AddBookingScreen },
+      selectHospital: { screen: SelectHospitalScreen },
+      selectTime: { screen: SelectTimeScreen },
+      selectService: { screen: SelectServiceScreen },
+      confirmBooking: { screen: ConfirmBookingScreen },
+      createBookingSuccess: { screen: CreateBookingSuccessScreen },
+      paymentBookingError: { screen: PaymentBookingErrorScreen },
+      DetailsHistoryScreen:{screen:DetailsHistoryScreen},
+      paymentVNPay: { screen: PaymentWithVNPayScreen },
       //---------------------------------
+      createProfile: { screen: CreateProfile },
+      selectProfile: {screen: SelectProfileScreen},
+      //
+      PatientHistoryScreen:{screen:PatientHistoryScreen},
+
       emptyScreen: { screen: EmptyScreen }
     },
     {

@@ -35,7 +35,7 @@ class DetailBookingNoCheckin extends Component {
     }
     render() {
         let booking = this.props.booking;
-        console.log(booking);
+        console.log(booking,'dasad');
         return (
             <View style={{ padding: 10, flex: 1 }}>
                 <View style={{ flexDirection: 'row' }}>
