@@ -63,16 +63,9 @@ class CreateBookingSuccessScreen extends Component {
                                 <Text style={styles.col1}>Mã code:</Text>
 
                                 <BarCode
-                                    // format={'CODE128'}
-                                    // lineColor={'#000000'}
-                                    style={{ height: 20, width: 120, alignSelf: 'center', marginTop: 10 }}
-                                    height={50}
-                                    width={120}
+                                    style={{ height: 50, width: 120, alignSelf: 'center', marginTop: 10 }}
                                     value={booking.book.codeBooking}
                                 />
-                                {/* <Text style={{ textAlign: 'center' }}>{booking.book.codeBooking}</Text> */}
-
-                                {/* <ScaleImage style={styles.image2} height={71} source={require("@images/new/ic_code.png")} /> */}
                             </View>
                         </View>
                         <View style={styles.view1}>

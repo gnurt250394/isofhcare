@@ -22,7 +22,6 @@ import ImageLoad from 'mainam-react-native-image-loader';
 import Form from "mainam-react-native-form-validate/Form";
 import TextField from "mainam-react-native-form-validate/TextField";
 import Field from "mainam-react-native-form-validate/Field";
-
 class SelectTimeScreen extends Component {
     constructor(props) {
         super(props);
@@ -216,7 +215,6 @@ class SelectTimeScreen extends Component {
                 borderBottomWidth: 1,
                 borderBottomColor: 'rgba(0, 0, 0, 0.06)'
             }}>
-
 
             <View style={styles.container}>
                 <View style={styles.article}>
