@@ -33,11 +33,11 @@ class SelectProfileScreen extends Component {
     componentDidMount() {
         this.onRefresh();
     }
-componentWillReceiveProps(nextProps){
-    if(nextProps.navigation.state.params && nextProps.navigation.state.params.loading){
-        this.onRefresh()
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.navigation.state.params && nextProps.navigation.state.params.loading) {
+            this.onRefresh()
+        }
     }
-}
     onLoad() {
         const { page, size } = this.state;
         this.setState({
@@ -105,10 +105,10 @@ componentWillReceiveProps(nextProps){
     }
     render() {
         return (
-            <ActivityPanel 
-            style={styles.AcPanel} 
-            title="Tất cả hồ sơ"
-            // titleStyle={{ marginRight: -10 }}
+            <ActivityPanel
+                style={styles.AcPanel}
+                title="Tất cả hồ sơ"
+                // titleStyle={{ marginRight: -10 }}
 
                 containerStyle={{
                     backgroundColor: "#f7f9fb"
@@ -118,12 +118,12 @@ componentWillReceiveProps(nextProps){
                     borderBottomWidth: 1,
                     borderBottomColor: 'rgba(0, 0, 0, 0.06)'
                 }}
-                // menuButton={
-                //     <View style ={{width:15,marginLeft: 10
-                //     }}>
-                //     </View>
-                //   }
-                >
+            // menuButton={
+            //     <View style ={{width:15,marginLeft: 10
+            //     }}>
+            //     </View>
+            //   }
+            >
 
                 <FlatList
                     onRefresh={this.onRefresh.bind(this)}
@@ -174,18 +174,20 @@ componentWillReceiveProps(nextProps){
                     }}
                 />
 
-                {this.state.data && this.state.data.length <10 || !this.state.data ?(
-                    <TouchableOpacity style={{ backgroundColor: "#02c39a", width: 200, borderRadius: 6, alignSelf: 'center', marginVertical: 10, marginBottom: 30 }} onPress={() =>
-                        this.props.navigation.navigate("createProfile",
-                            {   isDataNull : !this.state.data || this.state.data.length == 0 ? true : false,
-                                onCreate: this.onRefresh.bind(this)
-                            })}>
-                            {!this.state.data || this.state.data.length == 0 ? (  <Text style={styles.btntext}>Thêm hồ sơ</Text>) : (  <Text style={styles.btntext}>Thêm người thân</Text>)}
-                      
-                    </TouchableOpacity>
-                ):(
-                    null
-                )}
+                {this.state.data && this.state.data.length < 10 || !this.state.data ?
+                    (
+                        <TouchableOpacity style={{ alignSelf: 'center', marginVertical: 10, marginBottom: 30 }} onPress={() =>
+                            this.props.navigation.navigate("createProfile",
+                                {
+                                    isDataNull: !this.state.data || this.state.data.length == 0 ? true : false,
+                                    onCreate: this.onRefresh.bind(this)
+                                })}>
+                            {!this.state.data || this.state.data.length == 0 ? (<Text style={styles.btntext}>Thêm hồ sơ</Text>) : (<Text style={styles.btntext}>Thêm người thân</Text>)}
+
+                        </TouchableOpacity>
+                    ) : (
+                        null
+                    )}
             </ActivityPanel>
         );
     }
@@ -233,7 +235,7 @@ const styles = StyleSheet.create({
         fontWeight: "600",
         fontStyle: "normal",
         letterSpacing: 0,
-        color: "#FFF",
+        color: "#02c39a",
         textAlign: 'center',
         margin: 10,
 
