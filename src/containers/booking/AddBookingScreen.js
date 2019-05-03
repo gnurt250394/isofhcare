@@ -205,7 +205,11 @@ class AddBookingScreen extends Component {
             <ScrollView style={styles.container}>
 
                 <TouchableOpacity style={styles.name} onPress={() => {
-                    this.props.navigation.navigate("selectProfile", { onSelected: this.selectProfile.bind(this) });
+                    connectionUtils.isConnected().then(s => {
+                        this.props.navigation.navigate("selectProfile", { onSelected: this.selectProfile.bind(this) });
+                    }).catch(e => {
+                        snackbar.show("Không có kết nối mạng", "danger");
+                    });
                 }}>
                     <View style={{
                         flexDirection: 'row', alignItems: 'center', padding: 10, paddingBottom: this.state.profileError ? 0 : 10
@@ -275,7 +279,11 @@ class AddBookingScreen extends Component {
                             snackbar.show("Vui lòng chọn yêu cầu khám", "danger");
                             return;
                         }
-                        this.props.navigation.navigate("selectHospital", { serviceType: this.state.serviceType, onSelected: this.selectHospital.bind(this) })
+                        connectionUtils.isConnected().then(s => {
+                            this.props.navigation.navigate("selectHospital", { serviceType: this.state.serviceType, onSelected: this.selectHospital.bind(this) })
+                        }).catch(e => {
+                            snackbar.show("Không có kết nối mạng", "danger");
+                        });
                     }
                     }>
                         <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_placeholder.png")} />
