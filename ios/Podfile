@@ -12,11 +12,11 @@ target 'APP' do
   pod 'Google/SignIn'
  
   pod 'react-native-fbsdk', :path => '../node_modules/react-native-fbsdk'
-  pod 'FBSDKCoreKit', '4.40'
-  pod 'FBSDKLoginKit', '4.40'
-  pod 'FBSDKShareKit', '4.40'
-
   pod 'Bolts'
+  pod 'FBSDKCoreKit'
+  pod 'FBSDKLoginKit'
+  pod 'FBSDKShareKit'
+
   # pod 'FBSDKCoreKit'
   # pod 'FBSDKLoginKit'
   # pod 'FBSDKShareKit'
