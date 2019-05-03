@@ -645,8 +645,7 @@ const styles = StyleSheet.create({
         fontStyle: "normal",
         letterSpacing: 0.2,
         color: "#4a4a4a",
-        padding: 25,
-        textAlign: 'center'
+        padding: 25
     },
     btn: {
         alignItems: 'center',
