@@ -15,7 +15,7 @@ String.prototype.absoluteUrl =
       if (defaultValue != undefined) return defaultValue;
       else return _this;
 
-    if (_this.startsWith("http") || _this.startsWith("blob")) {
+    if (_this.indexOf("http") == 0 || _this.indexOf("blob") == 0) {
       return _this;
     }
     let _this2 = _this.toLowerCase();
@@ -44,13 +44,16 @@ String.prototype.absoluteUrl =
 String.prototype.getServiceUrl =
   String.prototype.absolute ||
   function (defaultValue) {
-    if (this == "")
-      if (defaultValue != undefined) return defaultValue;
-      else return this;
-    if (this.startsWith("http") || this.startsWith("blob")) {
-      return this;
+    let _this = this ? this.toString() : "";
+    if (_this == "")
+      if (defaultValue != undefined)
+        return defaultValue;
+      else
+        return _this;
+    if (_this.indexOf("http") == 0 || _this.indexOf("blob") == 0) {
+      return _this;
     }
-    return server_url + this;
+    return server_url + _this;
   };
 
 module.exports = {
@@ -113,6 +116,7 @@ module.exports = {
     var dataBody = "";
     if (!body) body = {};
     dataBody = JSON.stringify(body);
+
     this.requestFetch(
       methodType,
       url && url.indexOf("http") == 0 ? url : this.serverApi + url,
