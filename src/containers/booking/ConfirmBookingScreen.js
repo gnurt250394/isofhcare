@@ -65,6 +65,11 @@ class ConfirmBookingScreen extends Component {
     }
     getPaymentLink(booking) {
         booking.hospital = this.state.hospital;
+        booking.profile = this.state.profile;
+        booking.payment = this.state.paymentMethod;
+        // this.props.navigation.navigate("paymentBookingError", { booking })
+        // return;
+
         this.setState({ isLoading: true }, () => {
             walletProvider.createOnlinePayment(this.props.userApp.currentUser.id, "VNPAY", this.state.hospital.hospital.id, booking.book.id, "http://localhost:8888/order/vnpay_return", this.state.service.price, "", booking.book.hash).then(s => {
                 this.setState({ isLoading: false }, () => {
@@ -72,17 +77,35 @@ class ConfirmBookingScreen extends Component {
                         urlPayment: s.payment_url,
                         onSuccess: url => {
                             let obj = {};
-                            let arr = url.split('=');
+                            let arr = url.split('?');
                             if (arr.length == 2) {
                                 arr = arr[1].split("&");
                                 arr.forEach(item => {
                                     let arr2 = item.split("=");
                                     if (arr2.length == 2) {
-                                        obj[arr[0]] = arr[1];
+                                        obj[arr2[0]] = arr2[1];
                                     }
                                 })
                             }
-                            console.log(obj);
+                            walletProvider.onlineTransactionPaid(obj["vnp_TxnRef"], "VNPAY", this.state.hospital.hospital.id,
+                                obj["vnp_TxnRef"],
+                                obj["vnp_Amount"],
+                                obj["vnp_OrderInfo"],
+                                obj["vnp_ResponseCode"],
+                                obj["vnp_BankCode"],
+                                obj["vnp_BankTranNo"],
+                                obj["vnp_PayDate"],
+                                obj["vnp_TransactionNo"],
+                                obj["vnp_SecureHash"]
+                            );
+                            this.props.navigation.navigate("home", {
+                                navigate: {
+                                    screen: "createBookingSuccess",
+                                    params: {
+                                        booking
+                                    }
+                                }
+                            });
                         },
                         onError: url => {
                             this.props.navigation.navigate("paymentBookingError", { booking })
@@ -166,7 +189,6 @@ class ConfirmBookingScreen extends Component {
         return (
             <ActivityPanel style={styles.AcPanel} title="Đặt Lịch Khám"
                 isLoading={this.state.isLoading}
-                titleStyle={{ marginLeft: 0 }}
                 containerStyle={{
                     backgroundColor: "#FFF"
                 }} actionbarStyle={{

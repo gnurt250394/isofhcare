@@ -22,6 +22,7 @@ class PatientHistoryScreen extends Component {
       loading: false,
       page: 1,
       size: 10,
+      data1: [],
       data: []
     };
   }
@@ -65,6 +66,7 @@ class PatientHistoryScreen extends Component {
   //     }
   //   );
   // };
+  
   onLoad() {
     const { page, size } = this.state;
     const toDate = new Date().format("yyyy-MM-dd HH:mm:ss");
@@ -73,8 +75,9 @@ class PatientHistoryScreen extends Component {
       refreshing: page == 1,
       loadMore: page != 1
     });
-    bookingProvider
-      .getPatientHistory(page, size)
+    if(page == 1)
+    {bookingProvider
+      .getPatientHistory()
       .then(s => {
         this.setState({
           loading: false,
@@ -86,14 +89,17 @@ class PatientHistoryScreen extends Component {
           if (s.data.bookings.length == 0) {
             finish = true;
             this.setState({
-              finish: finish
+              finish: finish,
+              data1:[],
             });
           }
           else {
-            console.log(s.data.bookings);
             this.setState({
               data: s.data.bookings,
-              finish: finish
+              finish: false,
+              data1:s.data.bookings.filter((item,index) =>{
+                return index < size
+              })
             });
           }
         }
@@ -104,7 +110,30 @@ class PatientHistoryScreen extends Component {
           refreshing: false,
           loadMore: false
         });
-      });
+      }) }else{
+        let data2 = this.state.data.filter((item,index) =>{
+          return index >= ((page -1) * size) && index < ( page * size);
+          
+        })
+        if(!data2 && data2.length == 0 ){
+          this.setState({
+            data1 : [...this.state.data1,...data2],
+            loading:false,
+            refreshing:false,
+            loadMore: false,
+            finish:true
+          })
+        }else{
+          this.setState({
+            data1 : [...this.state.data1,...data2],
+            loading:false,
+            refreshing:false,
+            loadMore: false,
+            finish: false
+          })
+        }
+        console.log(data2,'sssssssssssssssssssssssss',this.state.data1)
+      }
   }
   onLoadMore() {
     if (!this.state.finish && !this.state.loading)
@@ -202,7 +231,6 @@ class PatientHistoryScreen extends Component {
           <View style={styles.statusReject}>
             <Text style={{ color: 'rgb(208,2,27)' }}>Đã huỷ ( không đến )</Text>
           </View>
-
         )
       case 2: return (
         <View style={styles.statusReject}>
@@ -257,17 +285,17 @@ class PatientHistoryScreen extends Component {
         }}
       >
         <FlatList
-          data={this.state.data}
+          data={this.state.data1}
           refreshing={this.state.refreshing}
           onRefresh={this.onRefresh}
           extraData={this.state}
-          // onEndReached={this.onLoadMore.bind(this)}
-          // onEndReachedThreshold={1}
+          onEndReached={this.onLoadMore.bind(this)}
+          onEndReachedThreshold={0.1}
           ListFooterComponent={() => <View style={{ height: 10 }} />}
           renderItem={this.renderItem}
           ListHeaderComponent={() =>
             !this.state.refreshing &&
-              (!this.state.data || this.state.data.length == 0) ? (
+              (!this.state.data1 || this.state.data1.length == 0) ? (
                 <View style={{ alignItems: "center", marginTop: 50 }}>
                   <Text style={{ fontStyle: "italic" }}>Không có dữ liệu</Text>
                 </View>

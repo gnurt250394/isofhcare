@@ -76,7 +76,7 @@ module.exports = {
       }
     );
   },
-  getPatientHistory(toDate,page,size) {
+  getPatientHistory() {
     return new Promise((resolve, reject) => {
     // var queryString = ""
     // var codeBooking = ""

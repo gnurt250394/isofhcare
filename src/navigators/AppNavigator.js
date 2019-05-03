@@ -38,7 +38,6 @@ import { EHealthNavigator } from "@ehealth/navigator";
 import { BookingDHYNavigation } from "@dhy/navigator";
 import NotificationScreen from "@containers/notification/NotificationScreen";
 import ListQuestionScreen from "@containers/question/ListQuestionScreen";
-import MyQuestionScreen from "@containers/question/MyQuestionScreen";
 import CreateQuestionStep1Screen from "@containers/question/CreateQuestionStep1Screen";
 import CreateQuestionStep2Screen from "@containers/question/CreateQuestionStep2Screen";
 import DetailQuestionScreen from "@containers/question/DetailQuestionScreen";
@@ -102,7 +101,6 @@ const RootNavigator = createStackNavigator(
       profile: { screen: ProfileScreen },
       notification: { screen: NotificationScreen },
       listQuestion: { screen: ListQuestionScreen },
-      myQuestion: { screen: MyQuestionScreen },
       createQuestionStep1: { screen: CreateQuestionStep1Screen },
       createQuestionStep2: { screen: CreateQuestionStep2Screen },
       detailQuestion: { screen: DetailQuestionScreen },
