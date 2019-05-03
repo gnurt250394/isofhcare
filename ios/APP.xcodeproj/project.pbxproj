@@ -525,7 +525,6 @@
 		3E72252139704C53943BA947 /* libc++.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		41432D5DBC86498C8F9537DB /* RNGoogleSignin.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNGoogleSignin.xcodeproj; path = "../node_modules/react-native-google-signin/ios/RNGoogleSignin.xcodeproj"; sourceTree = "<group>"; };
 		523C2A71A68745E49752E186 /* libRNAccountKit.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNAccountKit.a; sourceTree = "<group>"; };
-		541168A76E1943F395A41E87 /* libReactNativeFingerprintScanner.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativeFingerprintScanner.a; sourceTree = "<group>"; };
 		5988393358F04E1091F14092 /* libRNPhotoView.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNPhotoView.a; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		5EF70384890E42079EEF5EA1 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/native-base/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
@@ -935,7 +934,6 @@
 				649837A561B94C52BBA3B4B0 /* slidingPanel-tvOSTests.xctest */,
 				5988393358F04E1091F14092 /* libRNPhotoView.a */,
 				523C2A71A68745E49752E186 /* libRNAccountKit.a */,
-				541168A76E1943F395A41E87 /* libReactNativeFingerprintScanner.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -1935,8 +1933,7 @@
 					"$(SRCROOT)/../node_modules/react-native-google-places/ios",
 					"$(SRCROOT)/../node_modules/mainam-react-native-sliding-up-down/ios/slidingPanel/**",
 					"$(SRCROOT)..\node_modules\neact-native-photo-viewios/**",
-					"$(SRCROOT)..\node_modules\neact-native-facebook-account-kitios/**",
-					"$(SRCROOT)/../node_modules/react-native-fingerprint-scanner/ios",
+					"$(SRCROOT)..\node_modules\neact-native-facebook-account-kitios/**"
 				);
 				INFOPLIST_FILE = APPTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1974,7 +1971,6 @@
 					"$(SRCROOT)/../node_modules/mainam-react-native-sliding-up-down/ios/slidingPanel/**",
 					"$(SRCROOT)..\node_modules\neact-native-photo-viewios/**",
 					"$(SRCROOT)..\node_modules\neact-native-facebook-account-kitios/**",
-					"$(SRCROOT)/../node_modules/react-native-fingerprint-scanner/ios",
 				);
 				INFOPLIST_FILE = APPTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -2027,7 +2023,6 @@
 					ode_modules,
 					"eact-native-photo-viewios/**",
 					"$(SRCROOT)..\node_modules\neact-native-facebook-account-kitios/**",
-					"$(SRCROOT)/../node_modules/react-native-fingerprint-scanner/ios",
 				);
 				INFOPLIST_FILE = APP/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -2078,7 +2073,6 @@
 					ode_modules,
 					"eact-native-photo-viewios/**",
 					"$(SRCROOT)..\node_modules\neact-native-facebook-account-kitios/**",
-					"$(SRCROOT)/../node_modules/react-native-fingerprint-scanner/ios",
 				);
 				INFOPLIST_FILE = APP/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -2121,7 +2115,6 @@
 					"$(SRCROOT)/../node_modules/mainam-react-native-sliding-up-down/ios/slidingPanel/**",
 					"$(SRCROOT)..\node_modules\neact-native-photo-viewios/**",
 					"$(SRCROOT)..\node_modules\neact-native-facebook-account-kitios/**",
-					"$(SRCROOT)/../node_modules/react-native-fingerprint-scanner/ios",
 				);
 				INFOPLIST_FILE = "APP-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2166,7 +2159,6 @@
 					"$(SRCROOT)/../node_modules/mainam-react-native-sliding-up-down/ios/slidingPanel/**",
 					"$(SRCROOT)..\node_modules\neact-native-photo-viewios/**",
 					"$(SRCROOT)..\node_modules\neact-native-facebook-account-kitios/**",
-					"$(SRCROOT)/../node_modules/react-native-fingerprint-scanner/ios",
 				);
 				INFOPLIST_FILE = "APP-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2210,7 +2202,6 @@
 					"$(SRCROOT)/../node_modules/mainam-react-native-sliding-up-down/ios/slidingPanel/**",
 					"$(SRCROOT)..\node_modules\neact-native-photo-viewios/**",
 					"$(SRCROOT)..\node_modules\neact-native-facebook-account-kitios/**",
-					"$(SRCROOT)/../node_modules/react-native-fingerprint-scanner/ios",
 				);
 				INFOPLIST_FILE = "APP-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -2254,7 +2245,6 @@
 					"$(SRCROOT)/../node_modules/mainam-react-native-sliding-up-down/ios/slidingPanel/**",
 					"$(SRCROOT)..\node_modules\neact-native-photo-viewios/**",
 					"$(SRCROOT)..\node_modules\neact-native-facebook-account-kitios/**",
-					"$(SRCROOT)/../node_modules/react-native-fingerprint-scanner/ios",
 				);
 				INFOPLIST_FILE = "APP-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
