@@ -27,7 +27,7 @@
     "mainam-react-native-scaleimage": "^1.0.4",
     "mainam-react-native-select-image": "^1.0.3",
     "mainam-react-native-sliding-up-down": "^1.0.3",
-    "mainam-react-native-string-utils": "^2.0.1",
+    "mainam-react-native-string-utils": "^2.0.5",
     "mainam-react-native-viewpager": "^1.0.1",
     "native-base": "^2.12.0",
     "prop-types": "^15.6.1",

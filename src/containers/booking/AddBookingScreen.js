@@ -18,6 +18,7 @@ import DateTimePicker from 'mainam-react-native-date-picker';
 
 import snackbar from '@utils/snackbar-utils';
 import dateUtils from "mainam-react-native-date-utils";
+import stringUtils from "mainam-react-native-string-utils";
 import ImageLoad from 'mainam-react-native-image-loader';
 import Form from "mainam-react-native-form-validate/Form";
 import TextField from "mainam-react-native-form-validate/TextField";
@@ -455,7 +456,11 @@ class AddBookingScreen extends Component {
             <DateTimePicker
                 isVisible={this.state.toggelDateTimePickerVisible}
                 onConfirm={newDate => {
-                    this.setState({ bookingDate: newDate, date: newDate.format("dd/MM/yyyy"), toggelDateTimePickerVisible: false, allowBooking: true }, () => {
+                    this.setState({
+                        bookingDate: newDate,
+                        date: newDate.format("thu, dd tháng MM").replaceAll(" 0", " "),
+                        toggelDateTimePickerVisible: false, allowBooking: true
+                    }, () => {
                     });
                 }}
                 onCancel={() => {
