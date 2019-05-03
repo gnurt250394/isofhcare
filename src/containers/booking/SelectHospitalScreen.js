@@ -139,7 +139,7 @@ class SelectHospitalScreen extends Component {
                                 (!this.state.data || this.state.data.length == 0) ? (
                                     <View style={{ alignItems: "center", marginTop: 50 }}>
                                         <Text style={{ fontStyle: "italic" }}>
-                                            Hiện tại chưa có thông tin</Text>
+                                        Không có dữ liệu</Text>
                                     </View>
                                 ) : null
                         }
