@@ -165,7 +165,7 @@ class createProfile extends Component {
           </View>
           <View style={styles.container}>
             <Form ref={ref => (this.form = ref)} style={{ flex: 1 }}>
-              <Field style={[styles.mucdichkham, { height: 41, flex: 1 }]}>
+              <Field style={[styles.mucdichkham, {  flex: 1 }]}>
                 <Text style={styles.mdk}>Họ và Tên</Text>
                 <TextField
                   hideError={true}
@@ -188,9 +188,10 @@ class createProfile extends Component {
                     }
                   }}
                   placeholder={"Nhập họ tên"}
+                  multiline = {true}
                   inputStyle={[
                     styles.ktq,
-                    { marginRight: 30, height: 41, width: 200 }
+                    { marginRight: 30, width: 200 }
                   ]}
                   errorStyle={styles.errorStyle}
                   onChangeText={this.onChangeText("name")}
@@ -341,12 +342,13 @@ class createProfile extends Component {
               </Field>
               <Text style={[styles.errorStyle]}>{this.state.valid}</Text>
               <Field
-                style={[styles.mucdichkham, { marginTop: 20, height: 41 }]}
+                style={[styles.mucdichkham, {flex:1, marginTop: 20}]}
               >
                 <Text style={styles.mdk}>Email</Text>
 
                 <TextField
                   hideError={true}
+                  multiline = {true}
                   onValidate={(valid, messages) => {
                     if (valid) {
                       this.setState({ emailError: "" });
@@ -367,7 +369,7 @@ class createProfile extends Component {
                   placeholder={"Nhập email"}
                   inputStyle={[
                     styles.ktq,
-                    { marginRight: 30, height: 41, width: 200 }
+                    { marginRight: 30,width: 200 }
                   ]}
                   errorStyle={styles.errorStyle}
                   onChangeText={this.onChangeText("email")}
