@@ -66,8 +66,8 @@ class createProfile extends Component {
           image: image,
           date: dob ? dob.toDateObject('-').format('dd/MM/yyyy') : (''),
           dob: dob ? dob.toDateObject('-') : (''),
-          email:email,
-          valueGender: gender,
+          email:email ? email : '',
+          valueGender: gender ? gender : '',
           txGender: gender && gender == 1 ? ('Nam') : ('Nữ'),
           isDataNull: isDataNull
         })
@@ -430,7 +430,7 @@ class createProfile extends Component {
     }
   }
   onSetGender = item => {
-    this.setState({
+    this.setState({ 
       isGender: false,
       txGender: item.gender,
       valueGender: item.value
