@@ -168,6 +168,18 @@ class ConfirmBookingScreen extends Component {
                                     snackbar.show("Đã kín lịch trong khung giờ này", "danger");
                                 });
                                 break;
+                            case 401:
+                                this.setState({ isLoading: false }, () => {
+                                    snackbar.show("Vui lòng đăng nhập để thực hiện", "danger");
+                                    this.props.navigation.navigate("login"
+                                    // , {
+                                    //     nextScreen: {
+                                    //         screen: "confirmBooking", params: this.props.navigation.state.params
+                                    //     }
+                                    // }
+                                    );
+                                });
+                                break;
                             default:
                                 this.setState({ isLoading: false }, () => {
                                     snackbar.show("Đặt khám không thành công", "danger");
