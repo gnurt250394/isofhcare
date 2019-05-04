@@ -199,7 +199,7 @@ class ConfirmBookingScreen extends Component {
 
     render() {
         return (
-            <ActivityPanel style={styles.AcPanel} title="Đặt Lịch Khám"
+            <ActivityPanel style={styles.AcPanel} title="Xác nhận lịch khám"
                 isLoading={this.state.isLoading}
                 containerStyle={{
                     backgroundColor: "#FFF"
