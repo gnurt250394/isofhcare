@@ -88,12 +88,12 @@ class ConfirmBookingScreen extends Component {
                                     }
                                 })
                             }
+                            walletProvider.onlineTransactionPaid(obj["vnp_TxnRef"], "VNPAY", obj);
                             if (obj["vnp_TransactionNo"] == 0) {
                                 booking.transactionCode = obj["vnp_TxnRef"];
                                 this.props.navigation.navigate("paymentBookingError", { booking })
                             }
                             else {
-                                walletProvider.onlineTransactionPaid(obj["vnp_TxnRef"], "VNPAY", obj);
                                 this.props.navigation.navigate("home", {
                                     navigate: {
                                         screen: "createBookingSuccess",
@@ -172,11 +172,11 @@ class ConfirmBookingScreen extends Component {
                                 this.setState({ isLoading: false }, () => {
                                     snackbar.show("Vui lòng đăng nhập để thực hiện", "danger");
                                     this.props.navigation.navigate("login"
-                                    // , {
-                                    //     nextScreen: {
-                                    //         screen: "confirmBooking", params: this.props.navigation.state.params
-                                    //     }
-                                    // }
+                                        // , {
+                                        //     nextScreen: {
+                                        //         screen: "confirmBooking", params: this.props.navigation.state.params
+                                        //     }
+                                        // }
                                     );
                                 });
                                 break;
@@ -225,7 +225,7 @@ class ConfirmBookingScreen extends Component {
 
                             <View style={styles.view2}>
                                 <ScaleImage style={styles.ic_Location} width={20} source={require("@images/new/booking/ic_doctor.png")} />
-                                <Text style={styles.text5}>{this.state.schedule.doctor.name}</Text>
+                                <Text style={[styles.text5, { marginTop: 10 }]}>Bác sĩ khám: <Text>{this.state.schedule.doctor.name}</Text></Text>
                             </View>
 
                             <View style={[styles.view2, { alignItems: 'flex-start' }]}>
