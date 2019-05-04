@@ -88,15 +88,21 @@ class ConfirmBookingScreen extends Component {
                                     }
                                 })
                             }
-                            walletProvider.onlineTransactionPaid(obj["vnp_TxnRef"], "VNPAY", obj);
-                            this.props.navigation.navigate("home", {
-                                navigate: {
-                                    screen: "createBookingSuccess",
-                                    params: {
-                                        booking
+                            if (obj["vnp_TransactionNo"] == 0) {
+                                booking.transactionCode = obj["vnp_TxnRef"];
+                                this.props.navigation.navigate("paymentBookingError", { booking })
+                            }
+                            else {
+                                walletProvider.onlineTransactionPaid(obj["vnp_TxnRef"], "VNPAY", obj);
+                                this.props.navigation.navigate("home", {
+                                    navigate: {
+                                        screen: "createBookingSuccess",
+                                        params: {
+                                            booking
+                                        }
                                     }
-                                }
-                            });
+                                });
+                            }
                         },
                         onError: url => {
                             this.props.navigation.navigate("paymentBookingError", { booking })
@@ -114,6 +120,9 @@ class ConfirmBookingScreen extends Component {
                                     switch (key) {
                                         case "id":
                                             snackbar.show("Tài khoản không tồn tại trong hệ thống", "danger");
+                                            return;
+                                        case "order_ref_id":
+                                            snackbar.show("Đặt khám đã tồn tại trong hệ thống", "danger");
                                             return;
                                     }
                                 }
@@ -373,25 +382,27 @@ const styles = StyleSheet.create({
         marginTop: 20
     },
     btn: {
-        backgroundColor: '#02c39a',
-        shadowColor: 'rgba(0, 0, 0, 0.21)',
+        borderRadius: 6,
+        backgroundColor: "#02c39a",
+        shadowColor: "rgba(0, 0, 0, 0.21)",
         shadowOffset: {
             width: 2,
             height: 4
         },
         shadowRadius: 10,
         shadowOpacity: 1,
-        borderRadius: 6,
-        marginTop: 40,
         width: 250,
-        marginBottom: 40,
+        marginVertical: 20,
         alignSelf: 'center'
     },
     btntext: {
-        color: "#fff",
-        textAlign: 'center',
-        padding: 10,
-        fontWeight: 'bold'
+        fontSize: 15,
+        fontWeight: "600",
+        fontStyle: "normal",
+        letterSpacing: 0,
+        color: "#ffffff",
+        padding: 15,
+        textAlign: 'center'
     },
     view11: {
 

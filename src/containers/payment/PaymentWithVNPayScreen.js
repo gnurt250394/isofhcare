@@ -70,9 +70,9 @@ class PaymentWithVNPayScreen extends Component {
             this.props.navigation.pop();
         }
         if (url.indexOf("http://localhost:8888/order/vnpay_return") == 0) {
+            this.props.navigation.pop();
             if ((this.props.navigation.state.params || {}).onSuccess)
                 (this.props.navigation.state.params || {}).onSuccess(url);
-            this.props.navigation.pop();
         }
     };
     render() {
