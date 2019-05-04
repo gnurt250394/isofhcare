@@ -7,7 +7,7 @@ import {
   Keyboard,
   Text,
   TouchableOpacity,
-  TextInput,
+  Platform,
   FlatList
 } from "react-native";
 import { connect } from "react-redux";
@@ -30,6 +30,7 @@ import FloatingLabel from "mainam-react-native-floating-label";
 import { cleanSingle } from "react-native-image-crop-picker";
 import dateUtils from "mainam-react-native-date-utils";
 import constants from "@resources/strings";
+import KeyboardSpacer from "react-native-keyboard-spacer";
 
 class createProfile extends Component {
   constructor() {
@@ -80,7 +81,6 @@ class createProfile extends Component {
   };
   setDate(newDate) {
     this.setState({ dob: newDate, date: newDate.format("dd/MM/yyyy") }, () => {
-      this.form.isValid();
     });
   }
   render() {
@@ -104,11 +104,18 @@ class createProfile extends Component {
     return (
       <ActivityPanel
       statusbarBackgroundColor="#0049B0"
-
+      containerStyle={{
+        backgroundColor: "#f7f9fb"
+    }}
         style={styles.AcPanel}
         title={this.state.isDataNull ? "Thêm hồ sơ" : "Thêm người thân"}
-        titleStyle ={{marginRight: -25}}
+        titleStyle ={{marginRight:0}}
         isLoading={this.state.isLoading}
+        actionbarStyle={{
+          backgroundColor: '#ffffff',
+          borderBottomWidth: 1,
+          borderBottomColor: 'rgba(0, 0, 0, 0.06)'
+      }}
         iosBarStyle={"light-content"}
         backButton={
           <TouchableOpacity style ={styles.btnCancel} onPress={() => this.props.navigation.pop()}>
@@ -121,9 +128,7 @@ class createProfile extends Component {
             <Text style={styles.btnmenu}>Lưu</Text>
           </TouchableOpacity>
         }
-        actionbarStyle={{
-          backgroundColor: "rgb(247,249,251)"
-        }}
+       
       >
         <ScrollView style={{ flex: 1, paddingVertical: 5 }}>
           <View style={styles.viewImgUpload}>
@@ -191,7 +196,7 @@ class createProfile extends Component {
                   multiline = {true}
                   inputStyle={[
                     styles.ktq,
-                    { marginRight: 30, width: 200 }
+                    {justifyContent:'center',alignItems: 'flex-end',paddingRight: 10, width: 200 }
                   ]}
                   errorStyle={styles.errorStyle}
                   onChangeText={this.onChangeText("name")}
@@ -207,7 +212,7 @@ class createProfile extends Component {
               <TouchableOpacity
                 style={[
                   styles.mucdichkham,
-                  { marginTop: 20, paddingTop: 10, paddingBottom: 10 }
+                  { marginTop: 20,justifyContent:'center',alignItems:'flex-end',paddingVertical:12}
                 ]}
                 onPress={this.onShowGender}
               >
@@ -218,7 +223,7 @@ class createProfile extends Component {
                     : this.state.txGender}
                 </Text>
                 <ScaleImage
-                  style={styles.imgmdk}
+                  style={[styles.imgmdk,{marginBottom: 3,}]}
                   height={10}
                   source={require("@images/new/booking/ic_next.png")}
                 />
@@ -274,7 +279,7 @@ class createProfile extends Component {
               </Modal>
               <Field
 
-                style={[styles.mucdichkham, { height: 41, flex: 1 }]}
+                style={[styles.mucdichkham, {justifyContent:'center',alignItems: 'flex-end', flex:1,paddingVertical: 12,}]}
               >
                 <Text style={styles.mdk}>Ngày sinh</Text>
 
@@ -293,7 +298,7 @@ class createProfile extends Component {
                     onBlur,
                     isError
                   ) => (
-                      <Text style={{ marginLeft: 60 }}>{value ? (value) : ('Chọn ngày sinh')}</Text>
+                      <Text style={styles.ktq}>{value ? (value) : ('Chọn ngày sinh')}</Text>
                     )}
                   // onChangeText={s => {
                   //   this.setState({ date: s });
@@ -335,7 +340,7 @@ class createProfile extends Component {
                   }}
                 />
                 <ScaleImage
-                  style={styles.imgmdk}
+                  style={[styles.imgmdk,{marginBottom: 5,}]}
                   height={10}
                   source={require("@images/new/booking/ic_next.png")}
                 />
@@ -360,16 +365,18 @@ class createProfile extends Component {
                     rules: {
                       required: this.state.dob && this.state.dob.getAge() > 15 ? true : false,
                       email: this.state.dob ? true : true,
+                      maxlength: 255,
+                      maxlength: "Không cho phép nhập quá 255 kí tự"
                     },
                     messages: {
-                      required: "Vui lòng nhập email",
+                      required: "Email không được bỏ trống",
                       email: "Email không hợp lệ"
                     }
                   }}
                   placeholder={"Nhập email"}
                   inputStyle={[
                     styles.ktq,
-                    { marginRight: 30,width: 200 }
+                    {justifyContent:'center',alignItems: 'flex-end',paddingRight: 10,width: 200, }
                   ]}
                   errorStyle={styles.errorStyle}
                   onChangeText={this.onChangeText("email")}
@@ -400,7 +407,6 @@ class createProfile extends Component {
                 toggelDateTimePickerVisible: false
               },
               () => {
-                this.form.isValid();
               }
             );
           }}
@@ -414,6 +420,7 @@ class createProfile extends Component {
           confirmTextIOS={"Xác nhận"}
           date={this.state.dob || new Date()}
         />
+         {Platform.OS == "ios" && <KeyboardSpacer />}
       </ActivityPanel>
     );
   }
@@ -519,6 +526,7 @@ class createProfile extends Component {
       });
   }
   onUpdate = () => {
+    this.form.isValid();
     if (!this.form.isValid()) {
       return;
     }
@@ -563,6 +571,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderColor: "rgba(0, 0, 0, 0.06)",
     flexDirection: "row"
+   
   },
   mdk: {
     marginLeft: 12,
@@ -571,7 +580,8 @@ const styles = StyleSheet.create({
     fontWeight: "normal",
     fontStyle: "normal",
     letterSpacing: 0,
-    color: "#000000"
+    color: "#000000",
+ 
   },
   ktq: {
     flex: 1,
