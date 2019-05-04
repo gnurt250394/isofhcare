@@ -217,76 +217,75 @@ class SelectTimeScreen extends Component {
             }}>
 
             <View style={styles.container}>
-                <View style={styles.article}>
-                    <TouchableOpacity style={styles.mucdichkham} onPress={() => {
-                        this.props.navigation.navigate("selectService", { hospital: this.state.hospital, specialist: this.state.specialist, onSelected: this.selectService.bind(this) })
-                    }}>
-                        <ScaleImage style={styles.imgIc} height={15} source={require("@images/new/booking/ic_specialist.png")} />
-                        <Text style={styles.mdk}>{this.state.service ? this.state.service.name : "Chọn dịch vụ"}</Text>
-                        <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
-                    </TouchableOpacity>
+                <ScrollView>
+                    <View style={styles.article}>
+                        <TouchableOpacity style={styles.mucdichkham} onPress={() => {
+                            this.props.navigation.navigate("selectService", { hospital: this.state.hospital, specialist: this.state.specialist, onSelected: this.selectService.bind(this) })
+                        }}>
+                            <ScaleImage style={styles.imgIc} height={15} source={require("@images/new/booking/ic_specialist.png")} />
+                            <Text style={styles.mdk}>{this.state.service ? this.state.service.name : "Chọn dịch vụ"}</Text>
+                            <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
+                        </TouchableOpacity>
+                        {
+                            this.state.serviceError ?
+                                <Text style={[styles.errorStyle]}>{this.state.serviceError}</Text> : null
+                        }
+
+                        <View style={styles.border}></View>
+                    </View>
+
                     {
-                        this.state.serviceError ?
-                            <Text style={[styles.errorStyle]}>{this.state.serviceError}</Text> : null
-                    }
-
-                    <View style={styles.border}></View>
-                </View>
-
-                {
-                    this.state.listTime && this.state.listTime.length > 0 ?
-                        <View style={styles.chonGioKham}>
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <ScaleImage source={require("@images/new/booking/ic_bookingDate.png")} width={20} />
-                                <Text style={styles.txtchongiokham}>Chọn giờ khám</Text>
-                            </View>
-                            <Text style={{ marginTop: 20, fontSize: 13 }}>Gợi ý: Chọn những giờ màu xanh sẽ giúp bạn được phục vụ nhanh hơn</Text>
-                            <View style={{ width: this.state.listTime.length * 24 + 100, alignSelf: 'center', position: 'relative', marginTop: 20 }}>
-                                {this.state.schedule &&
-                                    <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', left: (this.state.index || 0) * 24 + 50, top: 0 }}>
-                                        <ScaleImage height={30} source={this.getIcon(this.state.schedule)} />
-                                        <Text style={{ fontSize: 9, marginLeft: 5, fontWeight: 'bold' }}>{this.state.schedule.label}</Text>
-                                    </View>
-                                }
-                                <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                                    {
-                                        this.state.listTime.map((item, index) => {
-                                            return <TouchableOpacity key={index} style={{ justifyContent: 'center' }}
-                                                onPress={() => {
-                                                    if (item.type == 0) {
-                                                        snackbar.show("Đã kín lịch trong khung giờ này", "danger");
-                                                        return;
-                                                    }
-                                                    this.setState({ schedule: item, index })
-                                                }}
-                                            >
-                                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: "center", marginTop: 30 }}>
-                                                    <View style={{ width: 8, height: 5, backgroundColor: index != 0 ? this.getColor(item) : 'transparent' }}></View>
-                                                    <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: this.getColor(item), justifyContent: 'center', alignItems: 'center' }}>
-                                                        <View style={{ width: 2, height: 2, backgroundColor: '#FFF', borderRadius: 1 }}></View>
-                                                    </View>
-                                                    <View style={{ width: 8, height: 5, backgroundColor: index < this.state.listTime.length - 1 ? this.getColor(item) : 'transparent' }}></View>
-                                                </View>
-                                                <Text style={{ fontSize: 7 }}>{this.showLabel(item, index) ?
-                                                    item.label : " "}</Text>
-                                            </TouchableOpacity>
-                                        })
-                                    }
+                        this.state.listTime && this.state.listTime.length > 0 ?
+                            <View style={styles.chonGioKham}>
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <ScaleImage source={require("@images/new/booking/ic_bookingDate.png")} width={20} />
+                                    <Text style={styles.txtchongiokham}>Chọn giờ khám</Text>
                                 </View>
-                            </View>
-                            {
-                                this.state.scheduleError ?
-                                    <Text style={[styles.errorStyle]}>{this.state.scheduleError}</Text> : null
-                            }
+                                <Text style={{ marginTop: 20, fontSize: 13 }}>Gợi ý: Chọn những giờ màu xanh sẽ giúp bạn được phục vụ nhanh hơn</Text>
+                                <View style={{ width: this.state.listTime.length * 24 + 100, alignSelf: 'center', position: 'relative', marginTop: 20 }}>
+                                    {this.state.schedule &&
+                                        <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', left: (this.state.index || 0) * 24 + 50, top: 0 }}>
+                                            <ScaleImage height={30} source={this.getIcon(this.state.schedule)} />
+                                            <Text style={{ fontSize: 9, marginLeft: 5, fontWeight: 'bold' }}>{this.state.schedule.label}</Text>
+                                        </View>
+                                    }
+                                    <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                                        {
+                                            this.state.listTime.map((item, index) => {
+                                                return <TouchableOpacity key={index} style={{ justifyContent: 'center' }}
+                                                    onPress={() => {
+                                                        if (item.type == 0) {
+                                                            snackbar.show("Đã kín lịch trong khung giờ này", "danger");
+                                                            return;
+                                                        }
+                                                        this.setState({ schedule: item, index })
+                                                    }}
+                                                >
+                                                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: "center", marginTop: 30 }}>
+                                                        <View style={{ width: 8, height: 5, backgroundColor: index != 0 ? this.getColor(item) : 'transparent' }}></View>
+                                                        <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: this.getColor(item), justifyContent: 'center', alignItems: 'center' }}>
+                                                            <View style={{ width: 2, height: 2, backgroundColor: '#FFF', borderRadius: 1 }}></View>
+                                                        </View>
+                                                        <View style={{ width: 8, height: 5, backgroundColor: index < this.state.listTime.length - 1 ? this.getColor(item) : 'transparent' }}></View>
+                                                    </View>
+                                                    <Text style={{ fontSize: 7 }}>{this.showLabel(item, index) ?
+                                                        item.label : " "}</Text>
+                                                </TouchableOpacity>
+                                            })
+                                        }
+                                    </View>
+                                </View>
+                                {
+                                    this.state.scheduleError ?
+                                        <Text style={[styles.errorStyle]}>{this.state.scheduleError}</Text> : null
+                                }
 
-                        </View> : null
-                }
-
-                <View style={styles.btn}>
-                    <TouchableOpacity style={styles.button} onPress={this.confirmBooking.bind(this)}>
-                        <Text style={styles.txtbtn}>Xác nhận</Text>
-                    </TouchableOpacity>
-                </View>
+                            </View> : null
+                    }
+                </ScrollView>
+                <TouchableOpacity style={styles.button} onPress={this.confirmBooking.bind(this)}>
+                    <Text style={styles.btntext}>Xác nhận</Text>
+                </TouchableOpacity>
             </View>
         </ActivityPanel>
         );
@@ -394,15 +393,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         padding: 20
     },
-    btn: {
-        position: 'absolute',
-        alignItems: 'center',
-        left: 0,
-        right: 0,
-        bottom: 0,
-        padding: 30
-
-    },
     button: {
         borderRadius: 6,
         backgroundColor: "#02c39a",
@@ -412,18 +402,19 @@ const styles = StyleSheet.create({
             height: 4
         },
         shadowRadius: 10,
-        shadowOpacity: 1
-
+        shadowOpacity: 1,
+        width: 250,
+        marginVertical: 20,
+        alignSelf: 'center'
     },
-    txtbtn: {
-        fontSize: 18,
+    btntext: {
+        fontSize: 15,
         fontWeight: "600",
         fontStyle: "normal",
         letterSpacing: 0,
         color: "#ffffff",
         padding: 15,
-        paddingLeft: 100,
-        paddingRight: 100
+        textAlign: 'center'
     },
     slider: {
         marginLeft: 20,
