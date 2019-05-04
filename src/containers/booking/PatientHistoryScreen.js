@@ -75,9 +75,8 @@ class PatientHistoryScreen extends Component {
       refreshing: page == 1,
       loadMore: page != 1
     });
-    if(page == 1)
-    {bookingProvider
-      .getPatientHistory()
+    if(page == 1){
+      bookingProvider.getPatientHistory()
       .then(s => {
         this.setState({
           loading: false,
@@ -111,6 +110,13 @@ class PatientHistoryScreen extends Component {
           loadMore: false
         });
       }) }else{
+      setTimeout(() => {
+        console.log(this.state.loadMore,'xxxxxxx')
+        this.setState({
+          loading: true,
+          refreshing: page == 1,
+          loadMore:true
+        });
         let data2 = this.state.data.filter((item,index) =>{
           return index >= ((page -1) * size) && index < ( page * size);
           
@@ -132,6 +138,7 @@ class PatientHistoryScreen extends Component {
             finish: false
           })
         }
+      } ,500)
       }
   }
   onLoadMore() {
@@ -283,14 +290,15 @@ class PatientHistoryScreen extends Component {
         //   marginLeft: 10
         // }}
       >
+      <View style ={{flex:1}}>
         <FlatList
           data={this.state.data1}
           refreshing={this.state.refreshing}
           onRefresh={this.onRefresh}
           extraData={this.state}
           onEndReached={this.onLoadMore.bind(this)}
-          onEndReachedThreshold={0.1}
-          ListFooterComponent={() => <View style={{ height: 10 }} />}
+          onEndReachedThreshold={1}
+          ListFooterComponent={() => <View style={{ height: 10 }}></View>}
           renderItem={this.renderItem}
           ListHeaderComponent={() =>
             !this.state.refreshing &&
@@ -300,24 +308,37 @@ class PatientHistoryScreen extends Component {
                 </View>
               ) : null
           }
+
           keyExtractor={(item, index) => index.toString()}
         />
-        {this.state.loadMore ? (
-          <View
-            style={{
-              alignItems: "center",
-              padding: 10,
-              position: "absolute",
-              bottom: 0,
-              left: 0,
-              right: 0
-            }}
-          >
-            <ActivityIndicator size={"small"} color={"gray"} />
-          </View>
-        ) : null}
+       </View>
+         {
+                this.state.loadMore ?
+                    <View style={{ alignItems: 'center', padding: 10, position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+                        <ActivityIndicator
+                            size={'small'}
+                            color={'gray'}
+                        />
+                    </View> : null
+            }
       </ActivityPanel>
     );
+  }
+  
+  renderFooter() {
+    if(this.state.loadMore){
+      console.log('renderFooter')
+      return(
+        <View style={{ alignItems: 'center', position: 'absolute'}}>
+        <ActivityIndicator size={16} color={"#000"} />
+        </View>
+      )
+    }else{
+      return(   <View style={{ padding: 10,
+        justifyContent: 'center',
+        alignItems: 'center',}}>
+      </View>)
+    }
   }
 }
 const styles = StyleSheet.create({
