@@ -133,7 +133,7 @@ class createProfile extends Component {
         <ScrollView style={{ flex: 1, paddingVertical: 5 }}>
           <View style={styles.viewImgUpload}>
             <TouchableOpacity
-              style={{ position: "relative", width: 70 }}
+              style={{ position: "relative", width: 70,marginTop:20 }}
               onPress={this.selectImage.bind(this)}
             >
               <ImageLoad
@@ -169,8 +169,8 @@ class createProfile extends Component {
             </TouchableOpacity>
           </View>
           <View style={styles.container}>
-            <Form ref={ref => (this.form = ref)} style={{ flex: 1 }}>
-              <Field style={[styles.mucdichkham, {  flex: 1 }]}>
+            <Form ref={ref => (this.form = ref)} style={[{ flex: 1}]}>
+              <Field style={[styles.mucdichkham, {  flex: 1 },,Platform.OS == "ios" ? {paddingVertical: 12,}:{}]}>
                 <Text style={styles.mdk}>Họ và Tên</Text>
                 <TextField
                   hideError={true}
@@ -196,7 +196,7 @@ class createProfile extends Component {
                   multiline = {true}
                   inputStyle={[
                     styles.ktq,
-                    {justifyContent:'center',alignItems: 'flex-end',paddingRight: 10, width: 200 }
+                    {justifyContent:'center',alignItems: 'flex-end',paddingRight: 10, width: 200}
                   ]}
                   errorStyle={styles.errorStyle}
                   onChangeText={this.onChangeText("name")}
@@ -347,7 +347,7 @@ class createProfile extends Component {
               </Field>
               <Text style={[styles.errorStyle]}>{this.state.valid}</Text>
               <Field
-                style={[styles.mucdichkham, {flex:1, marginTop: 20}]}
+                style={[styles.mucdichkham, {flex:1, marginTop: 20},Platform.OS == "ios" ? {paddingVertical: 12,}:{}]}
               >
                 <Text style={styles.mdk}>Email</Text>
 
@@ -659,7 +659,7 @@ const styles = StyleSheet.create({
   },
 
   textbot: {
-    marginLeft:20
+    marginLeft:15
     // fontSize: 15,
     // fontWeight: "normal",
     // fontStyle: "normal",
