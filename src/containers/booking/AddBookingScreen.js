@@ -415,14 +415,16 @@ class AddBookingScreen extends Component {
                                 : null//<Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" />
                         }
                         ListFooterComponent={() => <View style={{ height: 50 }}></View>}
-                        renderItem={({ item, index }) =>
-                            <Card>
-                                <TouchableOpacity onPress={() => { this.setState({ serviceType: item, toggleServiceType: false, allowBooking: true }) }}>
-                                    <Text style={{ padding: 10, fontWeight: '300', color: this.state.serviceType == item ? "red" : "black" }}>{item.name}</Text>
-                                    {/* <Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" /> */}
-                                </TouchableOpacity>
-                            </Card>
-                        }
+                        renderItem={({ item, index }) => {
+                            if (item.deleted == 0)
+                                return <Card>
+                                    <TouchableOpacity onPress={() => { this.setState({ serviceType: item, toggleServiceType: false, allowBooking: true }) }}>
+                                        <Text style={{ padding: 10, fontWeight: '300', color: this.state.serviceType == item ? "red" : "black" }}>{item.name}</Text>
+                                        {/* <Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" /> */}
+                                    </TouchableOpacity>
+                                </Card>
+                            return null;
+                        }}
                     />
                 </View>
             </Modal>
