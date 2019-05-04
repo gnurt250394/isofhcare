@@ -18,6 +18,7 @@ import DateTimePicker from 'mainam-react-native-date-picker';
 
 import snackbar from '@utils/snackbar-utils';
 import dateUtils from "mainam-react-native-date-utils";
+import stringUtils from "mainam-react-native-string-utils";
 import ImageLoad from 'mainam-react-native-image-loader';
 import Form from "mainam-react-native-form-validate/Form";
 import TextField from "mainam-react-native-form-validate/TextField";
@@ -29,7 +30,8 @@ class AddBookingScreen extends Component {
         this.state = {
             colorButton: 'red',
             imageUris: [],
-            modalVisible: false
+            modalVisible: false,
+            allowBooking: false
         }
     }
     _changeColor = () => {
@@ -99,7 +101,7 @@ class AddBookingScreen extends Component {
                             }
                         });
                     }
-                    this.setState({ imageUris: [...imageUris] });
+                    this.setState({ imageUris: [...imageUris], allowBooking: true });
                 });
             }
         }).catch(e => {
@@ -107,13 +109,15 @@ class AddBookingScreen extends Component {
         });
     }
     selectProfile(profile) {
-        this.setState({ profile });
+        this.setState({ profile, allowBooking: true });
     }
     selectHospital(hospital) {
-        this.setState({ hospital });
+        this.setState({ hospital, allowBooking: true });
     }
     addBooking() {
         Keyboard.dismiss();
+        if (!this.state.allowBooking)
+            return;
 
         let error = false;
 
@@ -201,7 +205,11 @@ class AddBookingScreen extends Component {
             <ScrollView style={styles.container}>
 
                 <TouchableOpacity style={styles.name} onPress={() => {
-                    this.props.navigation.navigate("selectProfile", { onSelected: this.selectProfile.bind(this) });
+                    connectionUtils.isConnected().then(s => {
+                        this.props.navigation.navigate("selectProfile", { onSelected: this.selectProfile.bind(this) });
+                    }).catch(e => {
+                        snackbar.show("Không có kết nối mạng", "danger");
+                    });
                 }}>
                     <View style={{
                         flexDirection: 'row', alignItems: 'center', padding: 10, paddingBottom: this.state.profileError ? 0 : 10
@@ -271,7 +279,11 @@ class AddBookingScreen extends Component {
                             snackbar.show("Vui lòng chọn yêu cầu khám", "danger");
                             return;
                         }
-                        this.props.navigation.navigate("selectHospital", { serviceType: this.state.serviceType, onSelected: this.selectHospital.bind(this) })
+                        connectionUtils.isConnected().then(s => {
+                            this.props.navigation.navigate("selectHospital", { serviceType: this.state.serviceType, onSelected: this.selectHospital.bind(this) })
+                        }).catch(e => {
+                            snackbar.show("Không có kết nối mạng", "danger");
+                        });
                     }
                     }>
                         <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_placeholder.png")} />
@@ -299,13 +311,13 @@ class AddBookingScreen extends Component {
 
                 <View style={styles.phoneSMS}>
                     <TouchableOpacity onPress={() => {
-                        this.setState({ contact: 1 });
+                        this.setState({ contact: 1, allowBooking: true });
                     }} style={[styles.phone, this.state.contact == 1 ? styles.contact_selected : styles.contact_normal]}>
                         <ScaleImage style={styles.imgPhone} height={18} source={this.state.contact == 1 ? require("@images/new/booking/ic_phone1.png") : require("@images/new/booking/ic_phone0.png")} />
                         <Text style={[styles.tinnhan, this.state.contact == 1 ? styles.contact_text_selected : styles.contact_text_normal]}>Điện thoại</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => {
-                        this.setState({ contact: 2 });
+                        this.setState({ contact: 2, allowBooking: true });
                     }} style={[styles.sms, this.state.contact == 2 ? styles.contact_selected : styles.contact_normal]}>
                         <ScaleImage style={styles.imgPhone} height={18} source={this.state.contact == 2 ? require("@images/new/booking/ic_send_sms1.png") : require("@images/new/booking/ic_send_sms0.png")} />
                         <Text style={[styles.tinnhan, this.state.contact == 2 ? styles.contact_text_selected : styles.contact_text_normal]}>SMS</Text>
@@ -339,7 +351,7 @@ class AddBookingScreen extends Component {
                             }
                         }}
                         onChangeText={s => {
-                            this.setState({ reason: s })
+                            this.setState({ reason: s, allowBooking: true })
                         }}
                         style={{ flex: 1 }}
                         inputStyle={styles.mtTr}
@@ -376,7 +388,7 @@ class AddBookingScreen extends Component {
                 <Text style={styles.des}>Mô tả triệu chứng sẽ giúp bạn được phục vụ tốt hơn</Text>
             </ScrollView>
             <View style={styles.btn}>
-                <TouchableOpacity onPress={this.addBooking.bind(this)} style={styles.button}><Text style={styles.datkham}>Đặt khám</Text></TouchableOpacity>
+                <TouchableOpacity onPress={this.addBooking.bind(this)} style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]}><Text style={styles.datkham}>Đặt khám</Text></TouchableOpacity>
             </View>
             <ImagePicker ref={ref => this.imagePicker = ref} />
             <Modal
@@ -405,7 +417,7 @@ class AddBookingScreen extends Component {
                         ListFooterComponent={() => <View style={{ height: 50 }}></View>}
                         renderItem={({ item, index }) =>
                             <Card>
-                                <TouchableOpacity onPress={() => { this.setState({ serviceType: item, toggleServiceType: false }) }}>
+                                <TouchableOpacity onPress={() => { this.setState({ serviceType: item, toggleServiceType: false, allowBooking: true }) }}>
                                     <Text style={{ padding: 10, fontWeight: '300', color: this.state.serviceType == item ? "red" : "black" }}>{item.name}</Text>
                                     {/* <Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" /> */}
                                 </TouchableOpacity>
@@ -440,7 +452,7 @@ class AddBookingScreen extends Component {
                         ListFooterComponent={() => <View style={{ height: 50 }}></View>}
                         renderItem={({ item, index }) =>
                             <Card>
-                                <TouchableOpacity onPress={() => { this.setState({ specialist: item, toggleSpecialist: false }) }}>
+                                <TouchableOpacity onPress={() => { this.setState({ specialist: item, toggleSpecialist: false, allowBooking: true }) }}>
                                     <Text style={{ padding: 10, fontWeight: '300', color: this.state.specialist == item ? "red" : "black" }}>{item.name}</Text>
                                     {/* <Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" /> */}
                                 </TouchableOpacity>
@@ -452,7 +464,11 @@ class AddBookingScreen extends Component {
             <DateTimePicker
                 isVisible={this.state.toggelDateTimePickerVisible}
                 onConfirm={newDate => {
-                    this.setState({ bookingDate: newDate, date: newDate.format("dd/MM/yyyy"), toggelDateTimePickerVisible: false }, () => {
+                    this.setState({
+                        bookingDate: newDate,
+                        date: newDate.format("thu, dd tháng MM").replaceAll(" 0", " "),
+                        toggelDateTimePickerVisible: false, allowBooking: true
+                    }, () => {
                     });
                 }}
                 onCancel={() => {
@@ -645,8 +661,7 @@ const styles = StyleSheet.create({
         fontStyle: "normal",
         letterSpacing: 0.2,
         color: "#4a4a4a",
-        padding: 25,
-        textAlign: 'center'
+        padding: 25
     },
     btn: {
         alignItems: 'center',
@@ -655,7 +670,8 @@ const styles = StyleSheet.create({
     },
     button: {
         borderRadius: 6,
-        backgroundColor: "#02c39a",
+        backgroundColor: "#cacaca",
+        // backgroundColor: "#02c39a",
         shadowColor: "rgba(0, 0, 0, 0.21)",
         shadowOffset: {
             width: 2,
