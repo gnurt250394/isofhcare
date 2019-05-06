@@ -101,7 +101,7 @@ class Account extends Component {
           </Text>
           <TouchableOpacity
             onPress={() => {
-              snackbar.show("Chức năng đang phát triển");
+              this.props.navigation.navigate('detailsProfile')
             }}
           >
             <Text style={{ color: "#008D6F", marginTop: 10 }}>
