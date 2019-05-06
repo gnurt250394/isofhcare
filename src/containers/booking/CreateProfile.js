@@ -511,7 +511,7 @@ class createProfile extends Component {
                   this.setState({
                     isLoading: false
                   });
-                  this.state.isDataNull ? snackbar.show("Hồ sơ đã tồn tại trong hệ thống",'danger') : snackbar.show("Người thân đã tồn tại trong hệ thống")
+                  this.state.isDataNull ? snackbar.show("Hồ sơ đã tồn tại trong hệ thống",'danger') : snackbar.show("Hồ sơ đã tồn tại trong hệ thống",'danger')
                 } else {
                   this.setState({
                     isLoading: false
