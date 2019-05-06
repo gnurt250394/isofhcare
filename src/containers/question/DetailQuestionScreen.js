@@ -12,8 +12,6 @@ import clientUtils from '@utils/client-utils';
 import constants from '@resources/strings';
 import snackbar from '@utils/snackbar-utils';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
-import ImagePicker from 'mainam-react-native-select-image';
-import imageProvider from '@data-access/image-provider';
 import Form from "mainam-react-native-form-validate/Form";
 import TextField from "mainam-react-native-form-validate/TextField";
 import DialogBox from 'react-native-dialogbox';
@@ -553,7 +551,6 @@ class DetailQuestionScreen extends Component {
                             <KeyboardSpacer />
                         }
                         <DialogBox ref={dialogbox => { this.dialogbox = dialogbox }} />
-                        <ImagePicker ref={ref => this.imagePicker = ref} />
                     </View>
                 }
             </ActivityPanel >

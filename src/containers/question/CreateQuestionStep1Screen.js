@@ -11,8 +11,6 @@ import {
 import { Card } from 'native-base';
 import ActivityPanel from "@components/ActivityPanel";
 import { connect } from "react-redux";
-import ImagePicker from "mainam-react-native-select-image";
-import imageProvider from "@data-access/image-provider";
 import constants from "@resources/strings";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import Form from "mainam-react-native-form-validate/Form";
@@ -215,7 +213,6 @@ class CreateQuestionStep1Screen extends Component {
             </Card>
           </View>
         </ScrollView>
-        <ImagePicker ref={ref => (this.imagePicker = ref)} />
         {Platform.OS == "ios" && <KeyboardSpacer />}
       </ActivityPanel >
     );
