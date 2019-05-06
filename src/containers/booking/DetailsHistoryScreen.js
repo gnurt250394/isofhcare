@@ -70,7 +70,7 @@ export default class DetailsHistoryScreen extends Component {
       imgNote,
       status
     });
-    console.log(     id,
+    console.log(id,
       name,
       image,
       service,
@@ -182,10 +182,14 @@ export default class DetailsHistoryScreen extends Component {
       <ActivityPanel
         style={{ flex: 1, backgroundColor: "#f7f9fb" }}
         title="Chi tiết đặt lịch"
-        titleStyle={{ marginLeft: 40 }}
         containerStyle={{
           backgroundColor: "#f7f9fb"
         }}
+        actionbarStyle={{
+          backgroundColor: '#ffffff',
+          borderBottomWidth: 1,
+          borderBottomColor: 'rgba(0, 0, 0, 0.06)'
+      }}
 
       >
         <ScrollView>
@@ -241,7 +245,7 @@ export default class DetailsHistoryScreen extends Component {
               </View>
             </View>
             <View style={styles.viewSymptom}>
-              <Text>{'Triệu chứng: '+this.state.note}</Text>
+              <Text>{this.state.note ? 'Triệu chứng: '+this.state.note : 'Triệu chứng: '}</Text>
               <View>
                 {this.renderImages()}
                 {/* <ScaledImage
@@ -462,6 +466,7 @@ const styles = StyleSheet.create({
   viewStatus: {
     paddingVertical: 15,
     flexDirection: "row",
+    marginTop:15,
     width: "100%",
     alignItems: "center",
     paddingHorizontal: 15,
