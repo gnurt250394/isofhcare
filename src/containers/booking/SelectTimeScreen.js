@@ -31,6 +31,7 @@ class SelectTimeScreen extends Component {
         let specialist = this.props.navigation.state.params.specialist;
         let bookingDate = this.props.navigation.state.params.bookingDate;
         let reason = this.props.navigation.state.params.reason;
+        let contact = this.props.navigation.state.params.contact;
         let images = this.props.navigation.state.params.images;
 
         this.state = {
@@ -41,7 +42,8 @@ class SelectTimeScreen extends Component {
             bookingDate,
             listTime: [],
             reason,
-            images
+            images,
+            contact
         }
     }
     getLable(time) {
@@ -180,7 +182,8 @@ class SelectTimeScreen extends Component {
             bookingDate: this.state.bookingDate,
             schedule: this.state.schedule,
             reason: this.state.reason,
-            images: this.state.images
+            images: this.state.images,
+            contact: this.state.contact
         });
     }
 

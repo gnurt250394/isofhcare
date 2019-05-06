@@ -184,7 +184,8 @@ class AddBookingScreen extends Component {
                 serviceType: this.state.serviceType,
                 bookingDate: this.state.bookingDate,
                 reason: this.state.reason,
-                images
+                images,
+                contact: this.state.contact
             });
         }
     }
