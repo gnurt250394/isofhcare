@@ -494,9 +494,10 @@ class createProfile extends Component {
             const { name } = this.state;
             const gender = this.state.valueGender;
             const email = this.state.email
-            let date = this.state.dob ? this.state.dob.format('yyyy-MM-dd HH:mm:ss') : ('')
+            let date = this.state.dob ? this.state.dob.format('yyyy-MM-dd') : ('')
+            let date2 = date + ' 00:00:00'
             medicalRecordProvider
-              .createMedical(name, gender, date,email, image)
+              .createMedical(name, gender, date2,email, image)
               .then( res  => {
                 if (res.code == 0) {
                   this.setState({
@@ -506,6 +507,11 @@ class createProfile extends Component {
 
                   
                   NavigationService.navigate('selectProfile',{loading:true});
+                }if(res.code == 2){
+                  this.setState({
+                    isLoading: false
+                  });
+                  this.state.isDataNull ? snackbar.show("Hồ sơ đã tồn tại trong hệ thống",'danger') : snackbar.show("Người thân đã tồn tại trong hệ thống")
                 } else {
                   this.setState({
                     isLoading: false

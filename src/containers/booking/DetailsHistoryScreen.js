@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component,PropTypes } from "react";
 import {
   View,
   Text,
@@ -14,7 +14,9 @@ import ScaledImage from "mainam-react-native-scaleimage";
 import BarCode from "mainam-react-native-barcode";
 import dateUtils from "mainam-react-native-date-utils";
 import stringUtils from "mainam-react-native-string-utils";
-import clientUtils from "@utils/client-utils.js"
+import clientUtils from '@utils/client-utils';
+import ImageLoad from 'mainam-react-native-image-loader';
+
 export default class DetailsHistoryScreen extends Component {
   constructor(props) {
     super(props);
@@ -36,6 +38,7 @@ export default class DetailsHistoryScreen extends Component {
       data: {}
     };
   }
+  
   componentDidMount() {
     var id = this.props.navigation.state.params.id;
     var name = this.props.navigation.state.params.name;
@@ -67,6 +70,20 @@ export default class DetailsHistoryScreen extends Component {
       imgNote,
       status
     });
+    console.log(     id,
+      name,
+      image,
+      service,
+      location,
+      address,
+      date,
+      info,
+      price,
+      statusPay,
+      codeBooking,
+      note,
+      imgNote,
+      status)
     this.onGetDetails();
   }
   onGetDetails = () => {
@@ -137,7 +154,8 @@ export default class DetailsHistoryScreen extends Component {
               <Image
                 style={{ width: 70, height: 70, borderRadius: 10 }}
                 source={{
-                  uri: item.absoluteUrl()
+                  uri: item ? item.absoluteUrl() : ''
+           
                 }}
                 resizeMode={'cover'}
               />
@@ -159,7 +177,6 @@ export default class DetailsHistoryScreen extends Component {
     }
   }
   render() {
-    console.log(this.state.image.absoluteUrl(), 'xnxnxnxnxnx')
     const avatar = this.state.image ? { uri: this.state.image.absoluteUrl() } : require("@images/new/user.png")
     return (
       <ActivityPanel
@@ -224,7 +241,7 @@ export default class DetailsHistoryScreen extends Component {
               </View>
             </View>
             <View style={styles.viewSymptom}>
-              <Text>Triệu chứng:{this.state.note}</Text>
+              <Text>{'Triệu chứng: '+this.state.note}</Text>
               <View>
                 {this.renderImages()}
                 {/* <ScaledImage
@@ -271,7 +288,8 @@ export default class DetailsHistoryScreen extends Component {
               />
               <Text style={styles.txLabelBarcode}>Mã code</Text>
               <BarCode
-                style={{ height: 40, width: 80 }}
+                style={{ height: 40, width: 80,    marginRight: 12,
+                }}
                 // height={40}
                 // width={80}
                 value={this.state.codeBooking ? this.state.codeBooking : 0}
@@ -321,6 +339,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10
   },
   txInfoService: {
+    marginRight:12,
     color: "#8F8E93"
   },
   viewLocation: {
@@ -342,6 +361,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10
   },
   txClinic: {
+    marginRight:12,
     color: "#8F8E93",
     fontWeight: "bold"
   },
@@ -353,7 +373,9 @@ const styles = StyleSheet.create({
     width:'50%'
   },
   txAddress: {
-    color: "#8F8E93"
+    color: "#8F8E93",
+       flex: 1,
+    marginHorizontal: 10
   },
   viewDate: {
     paddingVertical: 10,
@@ -412,7 +434,7 @@ const styles = StyleSheet.create({
   },
   txPrice: {
     alignItems: "flex-end",
-    marginRight: 10,
+    marginRight: 12,
     color: "#8F8E93"
   },
   viewPayment: {
@@ -433,7 +455,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 10
   },
   paymentHospital: {
-    color: "#8F8E93"
+    color: "#8F8E93",
+    marginRight: 12,
+
   },
   viewStatus: {
     paddingVertical: 15,
@@ -453,7 +477,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 10
   },
   txStatus: {
-    color: "#8F8E93"
+    color: "#8F8E93",
+    marginRight: 12,
+
   },
   viewBaCode: {
     paddingVertical: 15,
