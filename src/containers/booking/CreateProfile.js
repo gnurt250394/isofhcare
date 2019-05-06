@@ -450,7 +450,7 @@ class createProfile extends Component {
       .isConnected()
       .then(s => {
         if (this.imagePicker) {
-          this.imagePicker.open(false, 200, 200, image => {
+          this.imagePicker.open(true, 200, 200, image => {
             setTimeout(() => {
               Keyboard.dismiss();
             }, 500);
