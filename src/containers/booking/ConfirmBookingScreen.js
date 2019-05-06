@@ -22,6 +22,7 @@ class ConfirmBookingScreen extends Component {
         let schedule = this.props.navigation.state.params.schedule;
         let reason = this.props.navigation.state.params.reason;
         let images = this.props.navigation.state.params.images;
+        let contact = this.props.navigation.state.params.contact;
 
         this.state = {
             serviceType,
@@ -33,7 +34,8 @@ class ConfirmBookingScreen extends Component {
             schedule,
             reason,
             images,
-            paymentMethod: 1
+            paymentMethod: 1,
+            contact
         }
     }
     confirmPayment(booking, bookingId) {
@@ -147,7 +149,8 @@ class ConfirmBookingScreen extends Component {
                     this.state.service.id,
                     this.state.schedule.time.format("yyyy-MM-dd HH:mm:ss"),
                     this.state.reason,
-                    this.state.images
+                    this.state.images,
+                    this.state.contact
                 ).then(s => {
                     if (s) {
                         switch (s.code) {
