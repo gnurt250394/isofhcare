@@ -318,7 +318,8 @@ module.exports = {
       get_hospital_by_service_type: isofhcare_service + "hospital/get-hospital-by-service-type"
     },
     profile: {
-      get_by_user: isofhcare_service + "profile/get-by-user"
+      get_by_user: isofhcare_service + "profile/get-by-user",
+      get_details_user: isofhcare_service + '/user/get-detail'
     },
     serviceType: {
       get_all: isofhcare_service + "service-type/get-all"

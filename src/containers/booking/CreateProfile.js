@@ -366,11 +366,12 @@ class createProfile extends Component {
                       required: this.state.dob && this.state.dob.getAge() > 15 ? true : false,
                       email: this.state.dob ? true : true,
                       maxlength: 255,
-                      maxlength: "Không cho phép nhập quá 255 kí tự"
                     },
                     messages: {
                       required: "Email không được bỏ trống",
-                      email: "Email không hợp lệ"
+                      email: "Email không hợp lệ",
+                      maxlength: "Không cho phép nhập quá 255 kí tự"
+
                     }
                   }}
                   placeholder={"Nhập email"}
@@ -691,7 +692,7 @@ const styles = StyleSheet.create({
   errorStyle: {
     color: "red",
     marginTop: 10,
-    marginLeft: 12
+    marginLeft: 13
   },
   textInputStyle: {
     color: "#53657B",
