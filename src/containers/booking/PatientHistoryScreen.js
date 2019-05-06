@@ -78,6 +78,7 @@ class PatientHistoryScreen extends Component {
     if(page == 1){
       bookingProvider.getPatientHistory()
       .then(s => {
+        console.log(s.data.bookings.reverse(),'data sever')
         this.setState({
           loading: false,
           refreshing: false,
@@ -96,7 +97,7 @@ class PatientHistoryScreen extends Component {
             this.setState({
               data: s.data.bookings,
               finish: false,
-              data1:s.data.bookings.reverse().filter((item,index) =>{
+              data1:s.data.bookings.filter((item,index) =>{
                 return index < size
               })
             });
@@ -111,7 +112,6 @@ class PatientHistoryScreen extends Component {
         });
       }) }else{
       setTimeout(() => {
-        console.log(this.state.loadMore,'xxxxxxx')
         this.setState({
           loading: true,
           refreshing: page == 1,
