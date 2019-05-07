@@ -39,7 +39,7 @@ class createProfile extends Component {
       isGender: false,
       genderUser: [{ gender: "Nam", value: 1 }, { gender: "Nữ", value: 0 }],
       toggelDateTimePickerVisible: false,
-      valueGender:2,
+      valueGender: 2,
       txGender: '',
       name: '',
       email: "",
@@ -49,7 +49,8 @@ class createProfile extends Component {
       image: "",
       imageUris: [],
       valid: '',
-      isDataNull: ''
+      isDataNull: '',
+      status: 2
     };
   }
   componentDidMount() {
@@ -67,10 +68,11 @@ class createProfile extends Component {
           image: image,
           date: dob ? dob.toDateObject('-').format('dd/MM/yyyy') : (''),
           dob: dob ? dob.toDateObject('-') : (''),
-          email:email ? email : '',
+          email: email ? email : '',
           valueGender: gender ? gender : 2,
           txGender: gender == 1 ? ('Nam') : ('Nữ'),
-          isDataNull: isDataNull
+          isDataNull: isDataNull,
+          status: 1
         })
         return
       }
@@ -103,22 +105,22 @@ class createProfile extends Component {
 
     return (
       <ActivityPanel
-      statusbarBackgroundColor="#0049B0"
-      containerStyle={{
-        backgroundColor: "#f7f9fb"
-    }}
+        statusbarBackgroundColor="#0049B0"
+        containerStyle={{
+          backgroundColor: "#f7f9fb"
+        }}
         style={styles.AcPanel}
         title={this.state.isDataNull ? "Thêm hồ sơ" : "Thêm người thân"}
-        titleStyle ={{marginRight:0}}
+        titleStyle={{ marginRight: 0 }}
         isLoading={this.state.isLoading}
         actionbarStyle={{
           backgroundColor: '#ffffff',
           borderBottomWidth: 1,
           borderBottomColor: 'rgba(0, 0, 0, 0.06)'
-      }}
+        }}
         iosBarStyle={"light-content"}
         backButton={
-          <TouchableOpacity style ={styles.btnCancel} onPress={() => this.props.navigation.pop()}>
+          <TouchableOpacity style={styles.btnCancel} onPress={() => this.props.navigation.pop()}>
             <Text style={styles.btnhuy}>Huỷ</Text>
           </TouchableOpacity>
         }
@@ -128,12 +130,12 @@ class createProfile extends Component {
             <Text style={styles.btnmenu}>Lưu</Text>
           </TouchableOpacity>
         }
-       
+
       >
         <ScrollView style={{ flex: 1, paddingVertical: 5 }}>
           <View style={styles.viewImgUpload}>
             <TouchableOpacity
-              style={{ position: "relative", width: 70,marginTop:20 }}
+              style={{ position: "relative", width: 70, marginTop: 20 }}
               onPress={this.selectImage.bind(this)}
             >
               <ImageLoad
@@ -169,8 +171,8 @@ class createProfile extends Component {
             </TouchableOpacity>
           </View>
           <View style={styles.container}>
-            <Form ref={ref => (this.form = ref)} style={[{ flex: 1}]}>
-              <Field style={[styles.mucdichkham, {  flex: 1 },,Platform.OS == "ios" ? {paddingVertical: 12,}:{}]}>
+            <Form ref={ref => (this.form = ref)} style={[{ flex: 1 }]}>
+              <Field style={[styles.mucdichkham, { flex: 1 }, , Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
                 <Text style={styles.mdk}>Họ và Tên</Text>
                 <TextField
                   hideError={true}
@@ -193,10 +195,10 @@ class createProfile extends Component {
                     }
                   }}
                   placeholder={"Nhập họ tên"}
-                  multiline = {true}
+                  multiline={true}
                   inputStyle={[
                     styles.ktq,
-                    {justifyContent:'center',alignItems: 'flex-end',paddingRight: 10, width: 200}
+                    { justifyContent: 'center', alignItems: 'flex-end', paddingRight: 10, width: 200 }
                   ]}
                   errorStyle={styles.errorStyle}
                   onChangeText={this.onChangeText("name")}
@@ -212,7 +214,7 @@ class createProfile extends Component {
               <TouchableOpacity
                 style={[
                   styles.mucdichkham,
-                  { marginTop: 20,justifyContent:'center',alignItems:'flex-end',paddingVertical:12}
+                  { marginTop: 20, justifyContent: 'center', alignItems: 'flex-end', paddingVertical: 12 }
                 ]}
                 onPress={this.onShowGender}
               >
@@ -223,7 +225,7 @@ class createProfile extends Component {
                     : this.state.txGender}
                 </Text>
                 <ScaleImage
-                  style={[styles.imgmdk,{marginBottom: 3,}]}
+                  style={[styles.imgmdk, { marginBottom: 3, }]}
                   height={10}
                   source={require("@images/new/booking/ic_next.png")}
                 />
@@ -279,7 +281,7 @@ class createProfile extends Component {
               </Modal>
               <Field
 
-                style={[styles.mucdichkham, {justifyContent:'center',alignItems: 'flex-end', flex:1,paddingVertical: 12,borderTopWidth: 0,}]}
+                style={[styles.mucdichkham, { justifyContent: 'center', alignItems: 'flex-end', flex: 1, paddingVertical: 12, borderTopWidth: 0, }]}
               >
                 <Text style={styles.mdk}>Ngày sinh</Text>
 
@@ -340,20 +342,20 @@ class createProfile extends Component {
                   }}
                 />
                 <ScaleImage
-                  style={[styles.imgmdk,{marginBottom: 5,}]}
+                  style={[styles.imgmdk, { marginBottom: 5, }]}
                   height={10}
                   source={require("@images/new/booking/ic_next.png")}
                 />
               </Field>
               <Text style={[styles.errorStyle]}>{this.state.valid}</Text>
               <Field
-                style={[styles.mucdichkham, {flex:1, marginTop: 20},Platform.OS == "ios" ? {paddingVertical: 12,}:{}]}
+                style={[styles.mucdichkham, { flex: 1, marginTop: 20 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}
               >
                 <Text style={styles.mdk}>Email</Text>
 
                 <TextField
                   hideError={true}
-                  multiline = {true}
+                  multiline={true}
                   onValidate={(valid, messages) => {
                     if (valid) {
                       this.setState({ emailError: "" });
@@ -377,7 +379,7 @@ class createProfile extends Component {
                   placeholder={"Nhập email"}
                   inputStyle={[
                     styles.ktq,
-                    {justifyContent:'center',alignItems: 'flex-end',paddingRight: 10,width: 200, }
+                    { justifyContent: 'center', alignItems: 'flex-end', paddingRight: 10, width: 200, }
                   ]}
                   errorStyle={styles.errorStyle}
                   onChangeText={this.onChangeText("email")}
@@ -421,7 +423,7 @@ class createProfile extends Component {
           confirmTextIOS={"Xác nhận"}
           date={this.state.dob || new Date()}
         />
-         {Platform.OS == "ios" && <KeyboardSpacer />}
+        {Platform.OS == "ios" && <KeyboardSpacer />}
       </ActivityPanel>
     );
   }
@@ -438,7 +440,7 @@ class createProfile extends Component {
     }
   }
   onSetGender = item => {
-    this.setState({ 
+    this.setState({
       isGender: false,
       txGender: item.gender,
       valueGender: item.value
@@ -489,29 +491,28 @@ class createProfile extends Component {
           {
             isLoading: true
           },
-            ()  => {
-
-
+          () => {
             const { name } = this.state;
             const gender = this.state.valueGender;
             const email = this.state.email
-            let date2 =  this.state.dob ? this.state.dob.format('yyyy-MM-dd') + ' 00:00:00' : null
+            const status = this.state.status
+            let date2 = this.state.dob ? this.state.dob.format('yyyy-MM-dd') + ' 00:00:00' : null
             medicalRecordProvider
-              .createMedical(name, gender, date2,email, image)
-              .then( res  => {
+              .createMedical(name, gender, date2, email, image, status)
+              .then(res => {
                 if (res.code == 0) {
                   this.setState({
                     isLoading: false
                   });
                   this.state.isDataNull ? snackbar.show("Bạn đã tạo hồ sơ thành công", "success") : snackbar.show("Bạn đã thêm người thân thành công", "success");
 
-                  
-                  NavigationService.navigate('selectProfile',{loading:true});
-                }if(res.code == 2){
+
+                  NavigationService.navigate('selectProfile', { loading: true });
+                } if (res.code == 2) {
                   this.setState({
                     isLoading: false
                   });
-                  this.state.isDataNull ? snackbar.show("Hồ sơ đã tồn tại trong hệ thống",'danger') : snackbar.show("Hồ sơ đã tồn tại trong hệ thống",'danger')
+                  this.state.isDataNull ? snackbar.show("Hồ sơ đã tồn tại trong hệ thống", 'danger') : snackbar.show("Hồ sơ đã tồn tại trong hệ thống", 'danger')
                 } else {
                   this.setState({
                     isLoading: false
@@ -577,7 +578,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderColor: "rgba(0, 0, 0, 0.06)",
     flexDirection: "row"
-   
+
   },
   mdk: {
     marginLeft: 12,
@@ -587,7 +588,7 @@ const styles = StyleSheet.create({
     fontStyle: "normal",
     letterSpacing: 0,
     color: "#000000",
- 
+
   },
   ktq: {
     flex: 1,
@@ -665,7 +666,7 @@ const styles = StyleSheet.create({
   },
 
   textbot: {
-    marginLeft:15
+    marginLeft: 15
     // fontSize: 15,
     // fontWeight: "normal",
     // fontStyle: "normal",
