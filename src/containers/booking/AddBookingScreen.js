@@ -306,7 +306,13 @@ class AddBookingScreen extends Component {
                             <Text style={[styles.errorStyle]}>{this.state.hospitalError}</Text> : null
                     }
                     <View style={styles.border}></View>
-                    <TouchableOpacity style={styles.mucdichkham} onPress={() => this.setState({ toggleSpecialist: true })}>
+                    <TouchableOpacity style={styles.mucdichkham} onPress={() => {
+                        connectionUtils.isConnected().then(s => {
+                            this.props.navigation.navigate("selectSpecialist", {})
+                        }).catch(e => {
+                            snackbar.show("Không có kết nối mạng", "danger");
+                        });
+                    }}>
                         <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_specialist.png")} />
                         <Text style={styles.mdk}>Chuyên khoa</Text>
                         <Text numberOfLines={1} style={styles.ktq}>{this.state.specialist ? this.state.specialist.name : "Chọn chuyên khoa"}</Text>

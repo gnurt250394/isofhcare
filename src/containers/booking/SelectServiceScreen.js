@@ -5,6 +5,8 @@ import ActivityPanel from '@components/ActivityPanel'
 import serviceProvider from '@data-access/service-provider';
 import constants from '@resources/strings';
 import ScaleImage from 'mainam-react-native-scaleimage';
+import snackbar from '@utils/snackbar-utils';
+
 class SelectServiceScreen extends Component {
     constructor(props) {
         super(props);
