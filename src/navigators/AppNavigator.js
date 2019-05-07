@@ -50,6 +50,8 @@ import AddBookingScreen from "@containers/booking/AddBookingScreen";
 import SelectHospitalScreen from "@containers/booking/SelectHospitalScreen";
 import SelectTimeScreen from "@containers/booking/SelectTimeScreen";
 import SelectServiceScreen from "@containers/booking/SelectServiceScreen";
+import SelectServiceTypeScreen from "@containers/booking/SelectServiceTypeScreen";
+import SelectSpecialistScreen from "@containers/booking/SelectSpecialistScreen";
 import ConfirmBookingScreen from "@containers/booking/ConfirmBookingScreen";
 import CreateBookingSuccessScreen from "@containers/booking/CreateBookingSuccessScreen";
 import PaymentBookingErrorScreen from "@containers/booking/PaymentBookingErrorScreen";
@@ -57,9 +59,9 @@ import DetailsHistoryScreen from "@containers/booking/DetailsHistoryScreen"
 //=========PROFILE NAVIGATION
 import SelectProfileScreen from "@containers/booking/SelectProfileScreen";
 import CreateProfile from "@containers/booking/CreateProfile";
+import ProfileInfo from '@containers/account/ProfileInfo'
 //---------------------------
 import PatientHistoryScreen from  "@containers/booking/PatientHistoryScreen";
-
 
 import EmptyScreen from "@containers/EmptyScreen2";
 const RootNavigator = createStackNavigator(
@@ -112,6 +114,8 @@ const RootNavigator = createStackNavigator(
       selectHospital: { screen: SelectHospitalScreen },
       selectTime: { screen: SelectTimeScreen },
       selectService: { screen: SelectServiceScreen },
+      selectServiceType: { screen: SelectServiceTypeScreen },
+      selectSpecialist: { screen: SelectSpecialistScreen },
       confirmBooking: { screen: ConfirmBookingScreen },
       createBookingSuccess: { screen: CreateBookingSuccessScreen },
       paymentBookingError: { screen: PaymentBookingErrorScreen },
@@ -120,6 +124,8 @@ const RootNavigator = createStackNavigator(
       //---------------------------------
       createProfile: { screen: CreateProfile },
       selectProfile: {screen: SelectProfileScreen},
+      detailsProfile: {screen:ProfileInfo},
+
       //
       PatientHistoryScreen:{screen:PatientHistoryScreen},
 

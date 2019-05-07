@@ -1,8 +1,8 @@
-import React, { Component } from "react";
+import React, { Component, PropTypes } from "react";
 import {
   View,
   Text,
-  FlatList,
+  Image,
   TouchableOpacity,
   ScrollView,
   StyleSheet
@@ -11,10 +11,12 @@ import bookingProvider from "@data-access/booking-provider";
 import { connect } from "react-redux";
 import ActivityPanel from "@components/ActivityPanel";
 import ScaledImage from "mainam-react-native-scaleimage";
-import BarCode from "mainam-react-native-barcode";
+import QRCode from 'react-native-qrcode';
 import dateUtils from "mainam-react-native-date-utils";
 import stringUtils from "mainam-react-native-string-utils";
-import clientUtils from "@utils/client-utils.js"
+import clientUtils from '@utils/client-utils';
+import ImageLoad from 'mainam-react-native-image-loader';
+
 export default class DetailsHistoryScreen extends Component {
   constructor(props) {
     super(props);
@@ -36,10 +38,11 @@ export default class DetailsHistoryScreen extends Component {
       data: {}
     };
   }
+
   componentDidMount() {
     var id = this.props.navigation.state.params.id;
     var name = this.props.navigation.state.params.name;
-    var image = this.props.navigation.state.params.image;
+    var image = this.props.navigation.state.params.image ? this.props.navigation.state.params.image.absoluteUrl() : '';
     var service = this.props.navigation.state.params.service;
     var location = this.props.navigation.state.params.location;
     var address = this.props.navigation.state.params.address;
@@ -67,6 +70,20 @@ export default class DetailsHistoryScreen extends Component {
       imgNote,
       status
     });
+    console.log(  id,
+      name,
+      image,
+      service,
+      location,
+      address,
+      date,
+      info,
+      price,
+      statusPay,
+      codeBooking,
+      note,
+      imgNote,
+      status)
     this.onGetDetails();
   }
   onGetDetails = () => {
@@ -126,35 +143,69 @@ export default class DetailsHistoryScreen extends Component {
         <Text style={styles.txStatus} />;
     }
   };
+  renderImages() {
+    var image = this.state.imgNote
+    if (image) {
+      var images = image.split(",");
+      return (<View>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 10 }}>
+            {
+                        images.map((item, index) => <TouchableOpacity onPress={() => {
+                            this.props.navigation.navigate("photoViewer", {
+                                urls: images.map(item => {
+                                    return item.absoluteUrl()
+                                }), index
+                            });
+                        }} key={index} style={{ marginRight: 10, borderRadius: 10, marginBottom: 10, width: 70, height: 70 }}>
+                            <Image
+                                style={{ width: 70, height: 70, borderRadius: 10 }}
+                                source={{
+                                    uri:item ? item.absoluteUrl() : ''
+                                }}
+                                resizeMode={'cover'}
+                            />
+                        </TouchableOpacity>)
+                    }
+          
+        </View>
+      </View>);
+    } else {
+      return null;
+    }
+  }
   checkAm = () => {
-   let hours = '2019-04-12 11:59:00' 
-   console.log(hours.toDateObject('-').format('HH:mm'),'sssss',this.state.date.toDateObject("-").format("HH:mm"))
-   if( this.state.date.toDateObject("-").format("HH:mm") < hours.toDateObject('-').format('HH:mm')){
-     return(<Text>{' Sáng'}</Text>)
-   }else{
-    return(<Text>{' Chiều'}</Text>)
-  }}
+    let hours = '2019-04-12 11:59:00'
+    console.log(hours.toDateObject('-').format('HH:mm'), 'sssss', this.state.date.toDateObject("-").format("HH:mm"))
+    if (this.state.date.toDateObject("-").format("HH:mm") < hours.toDateObject('-').format('HH:mm')) {
+      return (<Text>{' Sáng'}</Text>)
+    } else {
+      return (<Text>{' Chiều'}</Text>)
+    }
+  }
   render() {
+    const avatar = this.state.image ? { uri:`${this.state.image}`} : require("@images/new/user.png")
+    console.log(this.state.image.absoluteUrl(),'avatar')
     return (
       <ActivityPanel
         style={{ flex: 1, backgroundColor: "#f7f9fb" }}
         title="Chi tiết đặt lịch"
-        titleStyle={{ marginLeft: 40 }}
         containerStyle={{
           backgroundColor: "#f7f9fb"
         }}
-      
+        actionbarStyle={{
+          backgroundColor: '#ffffff',
+          borderBottomWidth: 1,
+          borderBottomColor: 'rgba(0, 0, 0, 0.06)'
+        }}
+
       >
         <ScrollView>
           <View>
             <View style={styles.viewName}>
-              <ScaledImage
-                height={20}
-                width={20}
+              <Image
+               style={{width:20,height:20,borderRadius:10}}
                 source={
-                  this.state.image
-                    ? { uri: this.state.image.absoluteUrl() }
-                    : require("@images/new/user.png")
+                  avatar
                 }
               />
               <Text style={styles.txName}>{this.state.name}</Text>
@@ -168,18 +219,20 @@ export default class DetailsHistoryScreen extends Component {
               <Text style={styles.txService}>Dịch vụ khám</Text>
               <Text style={styles.txInfoService}>{this.state.service}</Text>
             </View>
+            <View style={{backgroundColor:'#EDECED',height:1,marginLeft:12}}></View>
             <View style={styles.viewLocation}>
               <ScaledImage
                 height={20}
                 width={20}
                 source={require("@images/ic_location.png")}
-              />
-              <Text style={styles.txLocation}>Địa điểm</Text>
+              /> 
+              <Text numberOfLines={5} style={styles.txLocation}>Địa điểm</Text>
               <View style={styles.viewInfoLocation}>
                 <Text style={styles.txClinic}>{this.state.location}</Text>
-                <Text style={styles.txAddress}>{this.state.address}</Text>
+                <Text numberOfLines={5} style={styles.txAddress}>{this.state.address}</Text>
               </View>
             </View>
+            <View style={{backgroundColor:'#EDECED',height:1,marginLeft:12}}></View>
             <View style={styles.viewDate}>
               <ScaledImage
                 height={19}
@@ -199,13 +252,14 @@ export default class DetailsHistoryScreen extends Component {
               </View>
             </View>
             <View style={styles.viewSymptom}>
-              <Text>Triệu chứng:{this.state.note}</Text>
+              <Text>{this.state.note ? 'Triệu chứng: ' + this.state.note : 'Triệu chứng: '}</Text>
               <View>
-                <ScaledImage
+                {this.renderImages()}
+                {/* <ScaledImage
                   width={70}
                   height={70}
                   source={{ uri: this.state.imgNote ? this.state.imgNote.absoluteUrl() :'' }}
-                />
+                /> */}
               </View>
             </View>
             <View style={styles.viewPrice}>
@@ -219,6 +273,7 @@ export default class DetailsHistoryScreen extends Component {
                 {Number(this.state.price).formatPrice() + 'đ'}
               </Text>
             </View>
+            <View style={{backgroundColor:'#EDECED',height:1,marginLeft:12}}></View>
             <View style={styles.viewPayment}>
               <ScaledImage
                 height={19}
@@ -237,6 +292,8 @@ export default class DetailsHistoryScreen extends Component {
               <Text style={styles.txStatusLabel}>Trạng thái</Text>
               {this.status()}
             </View>
+            <View style={{backgroundColor:'#EDECED',height:1,marginLeft:12}}></View>
+
             <View style={styles.viewBaCode}>
               <ScaledImage
                 width={20}
@@ -244,12 +301,12 @@ export default class DetailsHistoryScreen extends Component {
                 source={require("@images/ic_barcode.png")}
               />
               <Text style={styles.txLabelBarcode}>Mã code</Text>
-              <BarCode
-                style={{ height: 40, width: 80 }}
-                height={40}
-                width={80}
-                value={this.state.codeBooking ? this.state.codeBooking : 0}
-              />
+              <View style={{ marginRight: 10 }}>
+                <QRCode
+                  value={this.state.codeBooking ? this.state.codeBooking : 0}
+                  size={80}
+                  fgColor='white' />
+              </View>
             </View>
           </View>
         </ScrollView>
@@ -274,7 +331,7 @@ const styles = StyleSheet.create({
   txName: {
     fontWeight: "bold",
     flex: 1,
-    marginLeft: 5
+    marginLeft: 8
   },
   viewService: {
     paddingVertical: 15,
@@ -285,8 +342,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderTopColor: "#EDECED",
     borderTopWidth: 1,
-    borderBottomColor: "#EDECED",
-    borderBottomWidth: 1,
     marginTop: 10
   },
   txService: {
@@ -295,6 +350,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10
   },
   txInfoService: {
+    marginRight: 12,
     color: "#8F8E93"
   },
   viewLocation: {
@@ -305,10 +361,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 15,
     backgroundColor: "#fff",
-    borderTopColor: "#EDECED",
-    borderTopWidth: 1,
-    borderBottomColor: "#EDECED",
-    borderBottomWidth: 1
+    
+ 
   },
   txLocation: {
     fontWeight: "bold",
@@ -316,16 +370,21 @@ const styles = StyleSheet.create({
     marginHorizontal: 10
   },
   txClinic: {
+    marginRight: 12,
     color: "#8F8E93",
     fontWeight: "bold"
   },
   viewInfoLocation: {
     paddingVertical: 5,
     paddingHorizontal: 5,
-
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    width: '50%'
   },
   txAddress: {
-    color: "#8F8E93"
+    color: "#8F8E93",
+    flex: 1,
+    marginHorizontal: 10
   },
   viewDate: {
     paddingVertical: 10,
@@ -334,8 +393,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 15,
     backgroundColor: "#fff",
-    borderTopColor: "#EDECED",
-    borderTopWidth: 1,
     borderBottomColor: "#EDECED",
     borderBottomWidth: 1
   },
@@ -362,6 +419,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     marginVertical: 20,
     width: "100%",
+    borderBottomColor: "#EDECED",
+    borderBottomWidth: 1,
+    borderTopColor: "#EDECED",
+    borderTopWidth:1,
     paddingHorizontal: 15,
     paddingVertical: 20
   },
@@ -374,8 +435,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderTopColor: "#EDECED",
     borderTopWidth: 1,
-    borderBottomColor: "#EDECED",
-    borderBottomWidth: 1
+  
   },
   txLabelPrice: {
     fontWeight: "bold",
@@ -384,7 +444,7 @@ const styles = StyleSheet.create({
   },
   txPrice: {
     alignItems: "flex-end",
-    marginRight: 10,
+    marginRight: 12,
     color: "#8F8E93"
   },
   viewPayment: {
@@ -394,8 +454,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 15,
     backgroundColor: "#fff",
-    borderTopColor: "#EDECED",
-    borderTopWidth: 1,
     borderBottomColor: "#EDECED",
     borderBottomWidth: 1
   },
@@ -405,19 +463,19 @@ const styles = StyleSheet.create({
     marginHorizontal: 10
   },
   paymentHospital: {
-    color: "#8F8E93"
+    color: "#8F8E93",
+    marginRight: 12,
+
   },
   viewStatus: {
     paddingVertical: 15,
     flexDirection: "row",
+    marginTop: 15,
     width: "100%",
     alignItems: "center",
     paddingHorizontal: 15,
     backgroundColor: "#fff",
-    borderTopColor: "#EDECED",
-    borderTopWidth: 1,
-    borderBottomColor: "#EDECED",
-    borderBottomWidth: 1
+
   },
   txStatusLabel: {
     fontWeight: "bold",
@@ -425,7 +483,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 10
   },
   txStatus: {
-    color: "#8F8E93"
+    color: "#8F8E93",
+    marginRight: 12,
+
   },
   viewBaCode: {
     paddingVertical: 15,
@@ -434,8 +494,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 15,
     backgroundColor: "#fff",
-    borderTopColor: "#EDECED",
-    borderTopWidth: 1,
     borderBottomColor: "#EDECED",
     borderBottomWidth: 1
   },

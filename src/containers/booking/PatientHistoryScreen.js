@@ -66,7 +66,7 @@ class PatientHistoryScreen extends Component {
   //     }
   //   );
   // };
-  
+
   onLoad() {
     const { page, size } = this.state;
     const toDate = new Date().format("yyyy-MM-dd HH:mm:ss");
@@ -75,65 +75,72 @@ class PatientHistoryScreen extends Component {
       refreshing: page == 1,
       loadMore: page != 1
     });
-    if(page == 1)
-    {bookingProvider
-      .getPatientHistory()
-      .then(s => {
-        this.setState({
-          loading: false,
-          refreshing: false,
-          loadMore: false
-        });
-        if (s && s.code == 0) {
-          var finish = false;
-          if (s.data.bookings.length == 0) {
-            finish = true;
-            this.setState({
-              finish: finish,
-              data1:[],
-            });
+    if (page == 1) {
+      bookingProvider.getPatientHistory()
+        .then(s => {
+          console.log(s.data.bookings.reverse(), 'data sever')
+          this.setState({
+            loading: false,
+            refreshing: false,
+            loadMore: false
+          });
+          if (s && s.code == 0) {
+            var finish = false;
+            if (s.data.bookings.length == 0) {
+              finish = true;
+              this.setState({
+                finish: finish,
+                data1: [],
+              });
+            }
+            else {
+              this.setState({
+                data: s.data.bookings,
+                finish: false,
+                data1: s.data.bookings.filter((item, index) => {
+                  return index < size
+                })
+              });
+            }
           }
-          else {
-            this.setState({
-              data: s.data.bookings,
-              finish: false,
-              data1:s.data.bookings.filter((item,index) =>{
-                return index < size
-              })
-            });
-          }
-        }
-      })
-      .catch(e => {
-        this.setState({
-          loading: false,
-          refreshing: false,
-          loadMore: false
-        });
-      }) }else{
-        let data2 = this.state.data.filter((item,index) =>{
-          return index >= ((page -1) * size) && index < ( page * size);
-          
         })
-        if(!data2 && data2.length == 0 ){
+        .catch(e => {
           this.setState({
-            data1 : [...this.state.data1,...data2],
-            loading:false,
-            refreshing:false,
+            loading: false,
+            refreshing: false,
+            loadMore: false
+          });
+        })
+    } else {
+      setTimeout(() => {
+        this.setState({
+          loading: true,
+          refreshing: page == 1,
+          loadMore: true
+        });
+        let data2 = this.state.data.filter((item, index) => {
+          return index >= ((page - 1) * size) && index < (page * size);
+
+        })
+        if (!data2 && data2.length == 0) {
+          this.setState({
+            data1: [...this.state.data1, ...data2],
+            loading: false,
+            refreshing: false,
             loadMore: false,
-            finish:true
+            finish: true
           })
-        }else{
+        } else {
           this.setState({
-            data1 : [...this.state.data1,...data2],
-            loading:false,
-            refreshing:false,
+            data1: [...this.state.data1, ...data2],
+            loading: false,
+            refreshing: false,
             loadMore: false,
             finish: false
           })
         }
-        console.log(data2,'sssssssssssssssssssssssss',this.state.data1)
-      }
+      }, 500)
+    }
   }
   onLoadMore() {
     if (!this.state.finish && !this.state.loading)
@@ -150,10 +157,11 @@ class PatientHistoryScreen extends Component {
       );
   }
   onClickItem = (item) => {
+    console.log(item)
     this.props.navigation.navigate("DetailsHistoryScreen", {
       id: item.item.booking.id,
-      name: item.item.author.name,
-      image: item.item.author.avatar,
+      name: item.item.medicalRecords.name,
+      image: item.item.medicalRecords.avatar,
       service: item.item.service.name,
       location: item.item.hospital.name,
       address: item.item.hospital.address,
@@ -163,7 +171,7 @@ class PatientHistoryScreen extends Component {
       statusPay: item.item.booking.statusPay,
       codeBooking: item.item.booking.codeBooking,
       note: item.item.booking.note,
-      imgNote: item.item.booking.image,
+      imgNote: item.item.booking.images,
       status: item.item.booking.status
     });
   };
@@ -174,10 +182,10 @@ class PatientHistoryScreen extends Component {
           <View
             style={{
               width: "25%",
-              justifyContent: "center",
               alignItems: "center"
             }}
           >
+          <View style={{marginVertical:10}}>
             <Text
               style={{ fontSize: 40, fontWeight: "bold", color: "#C6C6C9" }}
             >
@@ -185,15 +193,16 @@ class PatientHistoryScreen extends Component {
                 ? item.item.booking.bookingTime.toDateObject("-").format("dd")
                 : ""}
             </Text>
-            <Text style={{ fontWeight: "bold" }}>
+            <Text style={{ fontWeight: "bold",color:'rgb(74,74,74)',marginTop:-5 }}>
               {item.item.booking.bookingTime
                 ? item.item.booking.bookingTime
                   .toDateObject("-")
                   .format("MM/yyyy")
                 : ""}
             </Text>
-            <Text>
-              {" "}
+            </View>
+
+            <Text style={{marginTop:10}}>
               {item.item.booking.bookingTime
                 ? item.item.booking.bookingTime
                   .toDateObject("-")
@@ -209,10 +218,12 @@ class PatientHistoryScreen extends Component {
               padding: 10
             }}
           >
-            <Text style={{ fontWeight: "bold" }}>{item.item.service.name ? item.item.service.name : ''}</Text>
-            <Text>{item.item.author.name ? item.item.author.name : ''}</Text>
-            <Text>{item.item.hospital.name ? item.item.hospital.name : item.item.hospital.name}</Text>
-            {item.item.booking.status ? this.renderStatus(item.item.booking.status) : null}
+            <Text style={{ fontWeight: "bold", color: 'rgb(74,74,74)' }}>{item.item.service.name ? item.item.service.name : ''}</Text>
+            <View style={{marginVertical:10}}> 
+              <Text style={{ color: 'rgb(142,142,147)' }}>{item.item.medicalRecords.name ? item.item.medicalRecords.name : ''}</Text>
+              <Text style={{ color: 'rgb(142,142,147)' }}>{item.item.hospital.name ? item.item.hospital.name : item.item.hospital.name}</Text>
+            </View>
+            {item.item.booking.status || item.item.booking.status == 0 ? this.renderStatus(item.item.booking.status) : null}
           </View>
         </View>
       </TouchableOpacity>
@@ -276,49 +287,70 @@ class PatientHistoryScreen extends Component {
       <ActivityPanel
         style={{ flex: 1, backgroundColor: "#f7f9fb" }}
         title="Lịch sử đặt lịch"
-        titleStyle={{ marginLeft: 40 }}
         containerStyle={{
-          backgroundColor: "#f7f9fb"
+          backgroundColor: "#f7f9fb",
+          
         }}
-        // actionbarStyle={{
-        //   marginLeft: 10
-        // }}
+        actionbarStyle={{
+          backgroundColor: '#ffffff',
+          borderBottomWidth: 1,
+          borderBottomColor: 'rgba(0, 0, 0, 0.06)'
+      }}
+      // actionbarStyle={{
+      //   marginLeft: 10
+      // }}
       >
-        <FlatList
-          data={this.state.data1}
-          refreshing={this.state.refreshing}
-          onRefresh={this.onRefresh}
-          extraData={this.state}
-          onEndReached={this.onLoadMore.bind(this)}
-          onEndReachedThreshold={0.1}
-          ListFooterComponent={() => <View style={{ height: 10 }} />}
-          renderItem={this.renderItem}
-          ListHeaderComponent={() =>
-            !this.state.refreshing &&
-              (!this.state.data1 || this.state.data1.length == 0) ? (
-                <View style={{ alignItems: "center", marginTop: 50 }}>
-                  <Text style={{ fontStyle: "italic" }}>Không có dữ liệu</Text>
-                </View>
-              ) : null
-          }
-          keyExtractor={(item, index) => index.toString()}
-        />
-        {this.state.loadMore ? (
-          <View
-            style={{
-              alignItems: "center",
-              padding: 10,
-              position: "absolute",
-              bottom: 0,
-              left: 0,
-              right: 0
-            }}
-          >
-            <ActivityIndicator size={"small"} color={"gray"} />
-          </View>
-        ) : null}
+        <View style={{ flex: 1 }}>
+          <FlatList
+            data={this.state.data1}
+            refreshing={this.state.refreshing}
+            onRefresh={this.onRefresh}
+            extraData={this.state}
+            onEndReached={this.onLoadMore.bind(this)}
+            onEndReachedThreshold={1}
+            ListFooterComponent={() => <View style={{ height: 10 }}></View>}
+            renderItem={this.renderItem}
+            ListHeaderComponent={() =>
+              !this.state.refreshing &&
+                (!this.state.data1 || this.state.data1.length == 0) ? (
+                  <View style={{ alignItems: "center", marginTop: 50 }}>
+                    <Text style={{ fontStyle: "italic" }}>Không có dữ liệu</Text>
+                  </View>
+                ) : null
+            }
+
+            keyExtractor={(item, index) => index.toString()}
+          />
+        </View>
+        {
+          this.state.loadMore ?
+            <View style={{ alignItems: 'center', padding: 10, position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+              <ActivityIndicator
+                size={'small'}
+                color={'gray'}
+              />
+            </View> : null
+        }
       </ActivityPanel>
     );
+  }
+
+  renderFooter() {
+    if (this.state.loadMore) {
+      console.log('renderFooter')
+      return (
+        <View style={{ alignItems: 'center', position: 'absolute' }}>
+          <ActivityIndicator size={16} color={"#000"} />
+        </View>
+      )
+    } else {
+      return (<View style={{
+        padding: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
+      </View>)
+    }
   }
 }
 const styles = StyleSheet.create({
@@ -343,7 +375,7 @@ const styles = StyleSheet.create({
     borderColor: "#E5E5E5",
     borderWidth: 1,
     borderRadius: 10,
-    width: 200,
+    width: 180,
     justifyContent: "center",
     alignItems: "center"
   }

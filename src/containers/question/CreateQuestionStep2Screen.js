@@ -71,44 +71,52 @@ class CreateQuestionStep2Screen extends Component {
     selectImage() {
         connectionUtils.isConnected().then(s => {
             if (this.imagePicker) {
-                this.imagePicker.open(false, 200, 200, image => {
-                    setTimeout(() => {
-                        Keyboard.dismiss();
-                    }, 500);
+                this.imagePicker.show({
+                    multiple: true,
+                    mediaType: 'photo',
+                    maxFiles: 2,
+                    compressImageMaxWidth: 500,
+                    compressImageMaxHeight: 500
+                }).then(images => {
                     let imageUris = this.state.imageUris;
-                    let temp = null;
-                    imageUris.forEach((item) => {
-                        if (item.uri == image.path)
-                            temp = item;
-                    })
-                    if (!temp) {
-                        imageUris.push({ uri: image.path, loading: true });
-                        imageProvider.upload(image.path, (s, e) => {
-                            if (s.success) {
-                                if (s.data.code == 0 && s.data.data && s.data.data.images && s.data.data.images.length > 0) {
-                                    let imageUris = this.state.imageUris;
+                    images.forEach(image => {
+                        if (imageUris.length >= 5)
+                            return;
+                        let temp = null;
+                        imageUris.forEach((item) => {
+                            if (item.uri == image.path)
+                                temp = item;
+                        })
+                        if (!temp) {
+                            imageUris.push({ uri: image.path, loading: true });
+                            imageProvider.upload(image.path, (s, e) => {
+                                if (s.success) {
+                                    if (s.data.code == 0 && s.data.data && s.data.data.images && s.data.data.images.length > 0) {
+                                        let imageUris = this.state.imageUris;
+                                        imageUris.forEach((item) => {
+                                            if (item.uri == s.uri) {
+                                                item.loading = false;
+                                                item.url = s.data.data.images[0].image;
+                                                item.thumbnail = s.data.data.images[0].thumbnail;
+                                            }
+                                        });
+                                        this.setState({
+                                            imageUris
+                                        });
+                                    }
+                                } else {
                                     imageUris.forEach((item) => {
                                         if (item.uri == s.uri) {
-                                            item.loading = false;
-                                            item.url = s.data.data.images[0].image;
-                                            item.thumbnail = s.data.data.images[0].thumbnail;
+                                            item.error = true;
                                         }
                                     });
-                                    this.setState({
-                                        imageUris
-                                    });
                                 }
-                            } else {
-                                imageUris.forEach((item) => {
-                                    if (item.uri == s.uri) {
-                                        item.error = true;
-                                    }
-                                });
-                            }
-                        });
-                    }
+                            });
+                        }
+                    })
                     this.setState({ imageUris: [...imageUris] });
                 });
+
             }
         }).catch(e => {
             snackbar.show("Không có kết nối mạng", "danger");

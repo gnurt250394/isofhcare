@@ -7,7 +7,7 @@ import {
   Keyboard,
   Text,
   TouchableOpacity,
-  TextInput,
+  Platform,
   FlatList
 } from "react-native";
 import { connect } from "react-redux";
@@ -30,15 +30,16 @@ import FloatingLabel from "mainam-react-native-floating-label";
 import { cleanSingle } from "react-native-image-crop-picker";
 import dateUtils from "mainam-react-native-date-utils";
 import constants from "@resources/strings";
+import KeyboardSpacer from "react-native-keyboard-spacer";
 
 class createProfile extends Component {
   constructor() {
     super();
     this.state = {
       isGender: false,
-      genderUser: [{ gender: "Nam", value: 1 }, { gender: "Nữ", value: 2 }],
+      genderUser: [{ gender: "Nam", value: 1 }, { gender: "Nữ", value: 0 }],
       toggelDateTimePickerVisible: false,
-      valueGender: "",
+      valueGender: 2,
       txGender: '',
       name: '',
       email: "",
@@ -48,7 +49,8 @@ class createProfile extends Component {
       image: "",
       imageUris: [],
       valid: '',
-      isDataNull: ''
+      isDataNull: '',
+      status: 2
     };
   }
   componentDidMount() {
@@ -66,10 +68,11 @@ class createProfile extends Component {
           image: image,
           date: dob ? dob.toDateObject('-').format('dd/MM/yyyy') : (''),
           dob: dob ? dob.toDateObject('-') : (''),
-          email:email,
-          valueGender: gender,
-          txGender: gender && gender == 1 ? ('Nam') : ('Nữ'),
-          isDataNull: isDataNull
+          email: email ? email : '',
+          valueGender: gender ? gender : 2,
+          txGender: gender == 1 ? ('Nam') : ('Nữ'),
+          isDataNull: isDataNull,
+          status: 1
         })
         return
       }
@@ -80,7 +83,6 @@ class createProfile extends Component {
   };
   setDate(newDate) {
     this.setState({ dob: newDate, date: newDate.format("dd/MM/yyyy") }, () => {
-      this.form.isValid();
     });
   }
   render() {
@@ -103,15 +105,22 @@ class createProfile extends Component {
 
     return (
       <ActivityPanel
-      statusbarBackgroundColor="#0049B0"
-
+        statusbarBackgroundColor="#0049B0"
+        containerStyle={{
+          backgroundColor: "#f7f9fb"
+        }}
         style={styles.AcPanel}
         title={this.state.isDataNull ? "Thêm hồ sơ" : "Thêm người thân"}
-        titleStyle ={{marginRight: -25}}
+        titleStyle={{ marginRight: 0 }}
         isLoading={this.state.isLoading}
+        actionbarStyle={{
+          backgroundColor: '#ffffff',
+          borderBottomWidth: 1,
+          borderBottomColor: 'rgba(0, 0, 0, 0.06)'
+        }}
         iosBarStyle={"light-content"}
         backButton={
-          <TouchableOpacity style ={styles.btnCancel} onPress={() => this.props.navigation.pop()}>
+          <TouchableOpacity style={styles.btnCancel} onPress={() => this.props.navigation.pop()}>
             <Text style={styles.btnhuy}>Huỷ</Text>
           </TouchableOpacity>
         }
@@ -121,14 +130,12 @@ class createProfile extends Component {
             <Text style={styles.btnmenu}>Lưu</Text>
           </TouchableOpacity>
         }
-        actionbarStyle={{
-          backgroundColor: "rgb(247,249,251)"
-        }}
+
       >
         <ScrollView style={{ flex: 1, paddingVertical: 5 }}>
           <View style={styles.viewImgUpload}>
             <TouchableOpacity
-              style={{ position: "relative", width: 70 }}
+              style={{ position: "relative", width: 70, marginTop: 20 }}
               onPress={this.selectImage.bind(this)}
             >
               <ImageLoad
@@ -164,8 +171,8 @@ class createProfile extends Component {
             </TouchableOpacity>
           </View>
           <View style={styles.container}>
-            <Form ref={ref => (this.form = ref)} style={{ flex: 1 }}>
-              <Field style={[styles.mucdichkham, { height: 41, flex: 1 }]}>
+            <Form ref={ref => (this.form = ref)} style={[{ flex: 1 }]}>
+              <Field style={[styles.mucdichkham, { flex: 1 }, , Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
                 <Text style={styles.mdk}>Họ và Tên</Text>
                 <TextField
                   hideError={true}
@@ -188,9 +195,10 @@ class createProfile extends Component {
                     }
                   }}
                   placeholder={"Nhập họ tên"}
+                  multiline={true}
                   inputStyle={[
                     styles.ktq,
-                    { marginRight: 30, height: 41, width: 200 }
+                    { justifyContent: 'center', alignItems: 'flex-end', paddingRight: 10, width: 200 }
                   ]}
                   errorStyle={styles.errorStyle}
                   onChangeText={this.onChangeText("name")}
@@ -206,7 +214,7 @@ class createProfile extends Component {
               <TouchableOpacity
                 style={[
                   styles.mucdichkham,
-                  { marginTop: 20, paddingTop: 10, paddingBottom: 10 }
+                  { marginTop: 20, justifyContent: 'center', alignItems: 'flex-end', paddingVertical: 12 }
                 ]}
                 onPress={this.onShowGender}
               >
@@ -217,7 +225,7 @@ class createProfile extends Component {
                     : this.state.txGender}
                 </Text>
                 <ScaleImage
-                  style={styles.imgmdk}
+                  style={[styles.imgmdk, { marginBottom: 3, }]}
                   height={10}
                   source={require("@images/new/booking/ic_next.png")}
                 />
@@ -273,7 +281,7 @@ class createProfile extends Component {
               </Modal>
               <Field
 
-                style={[styles.mucdichkham, { height: 41, flex: 1 }]}
+                style={[styles.mucdichkham, { justifyContent: 'center', alignItems: 'flex-end', flex: 1, paddingVertical: 12, borderTopWidth: 0, }]}
               >
                 <Text style={styles.mdk}>Ngày sinh</Text>
 
@@ -292,7 +300,7 @@ class createProfile extends Component {
                     onBlur,
                     isError
                   ) => (
-                      <Text style={{ marginLeft: 60 }}>{value ? (value) : ('Chọn ngày sinh')}</Text>
+                      <Text style={styles.ktq}>{value ? (value) : ('Chọn ngày sinh')}</Text>
                     )}
                   // onChangeText={s => {
                   //   this.setState({ date: s });
@@ -334,19 +342,20 @@ class createProfile extends Component {
                   }}
                 />
                 <ScaleImage
-                  style={styles.imgmdk}
+                  style={[styles.imgmdk, { marginBottom: 5, }]}
                   height={10}
                   source={require("@images/new/booking/ic_next.png")}
                 />
               </Field>
               <Text style={[styles.errorStyle]}>{this.state.valid}</Text>
               <Field
-                style={[styles.mucdichkham, { marginTop: 20, height: 41 }]}
+                style={[styles.mucdichkham, { flex: 1, marginTop: 20 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}
               >
                 <Text style={styles.mdk}>Email</Text>
 
                 <TextField
                   hideError={true}
+                  multiline={true}
                   onValidate={(valid, messages) => {
                     if (valid) {
                       this.setState({ emailError: "" });
@@ -357,17 +366,20 @@ class createProfile extends Component {
                   validate={{
                     rules: {
                       required: this.state.dob && this.state.dob.getAge() > 15 ? true : false,
-                      email: true,
+                      email: this.state.dob ? true : true,
+                      maxlength: 255,
                     },
                     messages: {
-                      required: "Vui lòng nhập email",
-                      email: "Email không hợp lệ"
+                      required: "Email không được bỏ trống",
+                      email: "Email không hợp lệ",
+                      maxlength: "Không cho phép nhập quá 255 kí tự"
+
                     }
                   }}
                   placeholder={"Nhập email"}
                   inputStyle={[
                     styles.ktq,
-                    { marginRight: 30, height: 41, width: 200 }
+                    { justifyContent: 'center', alignItems: 'flex-end', paddingRight: 10, width: 200, }
                   ]}
                   errorStyle={styles.errorStyle}
                   onChangeText={this.onChangeText("email")}
@@ -398,7 +410,6 @@ class createProfile extends Component {
                 toggelDateTimePickerVisible: false
               },
               () => {
-                this.form.isValid();
               }
             );
           }}
@@ -412,6 +423,7 @@ class createProfile extends Component {
           confirmTextIOS={"Xác nhận"}
           date={this.state.dob || new Date()}
         />
+        {Platform.OS == "ios" && <KeyboardSpacer />}
       </ActivityPanel>
     );
   }
@@ -440,7 +452,7 @@ class createProfile extends Component {
       .isConnected()
       .then(s => {
         if (this.imagePicker) {
-          this.imagePicker.open(false, 200, 200, image => {
+          this.imagePicker.open(true, 200, 200, image => {
             setTimeout(() => {
               Keyboard.dismiss();
             }, 500);
@@ -479,24 +491,28 @@ class createProfile extends Component {
           {
             isLoading: true
           },
-            ()  => {
-
-
+          () => {
             const { name } = this.state;
             const gender = this.state.valueGender;
             const email = this.state.email
-            let date = this.state.dob ? this.state.dob.format('yyyy-MM-dd HH:mm:ss') : ('')
+            const status = this.state.status
+            let date2 = this.state.dob ? this.state.dob.format('yyyy-MM-dd') + ' 00:00:00' : null
             medicalRecordProvider
-              .createMedical(name, gender, date,email, image)
-              .then( res  => {
+              .createMedical(name, gender, date2, email, image, status)
+              .then(res => {
                 if (res.code == 0) {
                   this.setState({
                     isLoading: false
                   });
                   this.state.isDataNull ? snackbar.show("Bạn đã tạo hồ sơ thành công", "success") : snackbar.show("Bạn đã thêm người thân thành công", "success");
 
-                  
-                  NavigationService.navigate('selectProfile',{loading:true});
+
+                  NavigationService.navigate('selectProfile', { loading: true });
+                } if (res.code == 2) {
+                  this.setState({
+                    isLoading: false
+                  });
+                  this.state.isDataNull ? snackbar.show("Hồ sơ đã tồn tại trong hệ thống", 'danger') : snackbar.show("Hồ sơ đã tồn tại trong hệ thống", 'danger')
                 } else {
                   this.setState({
                     isLoading: false
@@ -517,6 +533,7 @@ class createProfile extends Component {
       });
   }
   onUpdate = () => {
+    this.form.isValid();
     if (!this.form.isValid()) {
       return;
     }
@@ -561,6 +578,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderColor: "rgba(0, 0, 0, 0.06)",
     flexDirection: "row"
+
   },
   mdk: {
     marginLeft: 12,
@@ -569,7 +587,8 @@ const styles = StyleSheet.create({
     fontWeight: "normal",
     fontStyle: "normal",
     letterSpacing: 0,
-    color: "#000000"
+    color: "#000000",
+
   },
   ktq: {
     flex: 1,
@@ -647,7 +666,7 @@ const styles = StyleSheet.create({
   },
 
   textbot: {
-    marginLeft:20
+    marginLeft: 15
     // fontSize: 15,
     // fontWeight: "normal",
     // fontStyle: "normal",
@@ -673,7 +692,7 @@ const styles = StyleSheet.create({
   errorStyle: {
     color: "red",
     marginTop: 10,
-    marginLeft: 12
+    marginLeft: 13
   },
   textInputStyle: {
     color: "#53657B",

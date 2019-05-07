@@ -70,6 +70,7 @@ class Home extends Component {
         keyExtractor={(item, index) => index.toString()}
         extraData={this.state}
         data={this.state.ads}
+        ListFooterComponent={<View style={{ width: 15 }}></View>}
         renderItem={({ item, index }) => {
           if (!item || !item.advertise || !item.advertise.images)
             return null;

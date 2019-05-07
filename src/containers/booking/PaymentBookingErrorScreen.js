@@ -1,8 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import ScaleImage from "mainam-react-native-scaleimage";
+import stringUtils from 'mainam-react-native-string-utils';
 class PaymentBookingErrorScreen extends Component {
     constructor(props) {
         super(props)
@@ -12,6 +13,8 @@ class PaymentBookingErrorScreen extends Component {
     render() {
         console.log(this.props.navigation.state.params)
         let booking = (this.props.navigation.state.params || {}).booking;
+        if (!booking)
+            return null;
         return (
             <ActivityPanel
                 // hideBackButton={true}
@@ -27,26 +30,31 @@ class PaymentBookingErrorScreen extends Component {
                     backgroundColor: '#02C39A'
                 }}>
                 <View style={styles.container}>
-                    <ScaleImage style={styles.image1} height={68} source={require("@images/new/ic_failed.png")} />
-                    <Text style={styles.text1}>Thanh toán không thành công!</Text>
-                    <Text style={styles.text6}>Chúng tôi gặp khó khăn trong quá trình kết nối với đối tác. Vui lòng gọi tới số hotline 0923678905 nếu như bạn đã bị trừ tiền.</Text>
+                    <ScrollView>
+                        <ScaleImage style={styles.image1} height={68} source={require("@images/new/ic_failed.png")} />
+                        <Text style={styles.text1}>Thanh toán không thành công!</Text>
+                        <Text style={styles.text6}>Chúng tôi gặp khó khăn trong quá trình kết nối với đối tác. Vui lòng gọi tới số hotline 0923678905 nếu như bạn đã bị trừ tiền.</Text>
 
-                    <View style={styles.view2}>
-                        <View style={styles.colt}>
-                            <Text style={styles.col1}>Mã giao dịch:</Text>
-                            <Text style={styles.col2}>ABC-123456</Text>
+                        <View style={styles.view2}>
+                            {
+                                booking.transactionCode &&
+                                <View style={styles.colt}>
+                                    <Text style={styles.col1}>Mã giao dịch:</Text>
+                                    <Text style={styles.col2}>{booking.transactionCode}</Text>
+                                </View>
+                            }
+                            <View style={styles.colb}>
+                                <Text style={styles.col1}>Dịch vụ:</Text>
+                                <Text style={styles.col2}>{booking.service.name}</Text>
+                            </View>
+                            <View style={styles.colb}>
+                                <Text style={styles.col1}>Số tiền thanh toán:</Text>
+                                <Text style={styles.col2}>{booking.service.price.formatPrice()} đ</Text>
+                            </View>
                         </View>
-                        <View style={styles.colb}>
-                            <Text style={styles.col1}>Dịch vụ:</Text>
-                            <Text style={styles.col2}>{booking.service.name}</Text>
-                        </View>
-                        <View style={styles.colb}>
-                            <Text style={styles.col1}>Dịch vụ:</Text>
-                            <Text style={styles.col2}>{booking.service.name}</Text>
-                        </View>
-                    </View>
 
-                    <TouchableOpacity style={styles.btn}><Text style={styles.btntext}>Đổi phương thức thanh toán</Text></TouchableOpacity>
+                    </ScrollView>
+                    <TouchableOpacity style={styles.button}><Text style={styles.btntext} onPress={() => { this.props.navigation.pop() }}>Đổi phương thức thanh toán</Text></TouchableOpacity>
                 </View>
             </ActivityPanel >
         );
@@ -131,7 +139,7 @@ const styles = StyleSheet.create({
         marginRight: 10,
         marginTop: 30,
     },
-    btn: {
+    button: {
         borderRadius: 6,
         backgroundColor: "#02c39a",
         shadowColor: "rgba(0, 0, 0, 0.21)",
@@ -141,16 +149,18 @@ const styles = StyleSheet.create({
         },
         shadowRadius: 10,
         shadowOpacity: 1,
-        marginTop: 90,
-        marginLeft: 50,
-        marginRight: 50
+        width: 250,
+        marginVertical: 20,
+        alignSelf: 'center'
     },
     btntext: {
-        color: '#ffffff',
-        textAlign: 'center',
+        fontSize: 15,
+        fontWeight: "600",
+        fontStyle: "normal",
+        letterSpacing: 0,
+        color: "#ffffff",
         padding: 15,
-        fontSize: 20
-
+        textAlign: 'center'
     }
 })
 export default connect(mapStateToProps)(PaymentBookingErrorScreen);

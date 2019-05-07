@@ -3,25 +3,14 @@ import ActivityPanel from '@components/ActivityPanel';
 import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Keyboard, Image, TouchableHighlight, FlatList, Dimensions, Slider } from 'react-native';
 import { connect } from 'react-redux';
 import ScaleImage from "mainam-react-native-scaleimage";
-import ImagePicker from 'mainam-react-native-select-image';
-import imageProvider from '@data-access/image-provider';
 import connectionUtils from '@utils/connection-utils';
 import clientUtils from '@utils/client-utils';
-import { Card } from 'native-base';
-
-const DEVICE_HEIGHT = Dimensions.get('window').height;
-import Modal from "react-native-modal";
-import stylemodal from "@styles/modal-style";
 import scheduleProvider from '@data-access/schedule-provider';
-import specialistProvider from '@data-access/specialist-provider';
-import DateTimePicker from 'mainam-react-native-date-picker';
-
 import snackbar from '@utils/snackbar-utils';
 import dateUtils from "mainam-react-native-date-utils";
-import ImageLoad from 'mainam-react-native-image-loader';
-import Form from "mainam-react-native-form-validate/Form";
-import TextField from "mainam-react-native-form-validate/TextField";
-import Field from "mainam-react-native-form-validate/Field";
+import bookingProvider from '@data-access/booking-provider';
+import dataCacheProvider from '@data-access/datacache-provider';
+import constants from '@resources/strings';
 
 class SelectTimeScreen extends Component {
     constructor(props) {
@@ -32,6 +21,7 @@ class SelectTimeScreen extends Component {
         let specialist = this.props.navigation.state.params.specialist;
         let bookingDate = this.props.navigation.state.params.bookingDate;
         let reason = this.props.navigation.state.params.reason;
+        let contact = this.props.navigation.state.params.contact;
         let images = this.props.navigation.state.params.images;
 
         this.state = {
@@ -42,7 +32,8 @@ class SelectTimeScreen extends Component {
             bookingDate,
             listTime: [],
             reason,
-            images
+            images,
+            contact
         }
     }
     getLable(time) {
@@ -64,7 +55,7 @@ class SelectTimeScreen extends Component {
     selectService(service) {
         // alert(JSON.stringify(service));
         // return;
-        this.setState({ service: service, schedule: null, serviceError: "", scheduleError: "" }, () => {
+        this.setState({ service: service, schedule: null, serviceError: "", scheduleError: "", allowBooking: true }, () => {
             this.setState({ isLoading: true }, () => {
                 scheduleProvider.getByDateAndService(service.id, this.state.bookingDate.format("yyyy-MM-dd")).then(s => {
                     let listTime = [];
@@ -76,12 +67,12 @@ class SelectTimeScreen extends Component {
                                     // let date = new Date(key).format("yyyy/MM/dd HH:mm:ss") + " GMT +7";
                                     // let key1 = key.replace("T", " ") + ":00 GMT +7";
                                     let time = this.getTime(key);
-                                    let minute = time.format("mm");
-                                    let label = "";
-                                    if (minute == 0)
-                                        label = time.format("HH:mm");
-                                    else
-                                        label = time.format("HH");
+                                    // let minute = time.format("mm");
+                                    // let label = "";
+                                    // if (minute == 0)
+                                    //     label = time.format("HH:mm");
+                                    // else
+                                    label = time.format("HH:mm");
                                     let schedule = {
                                         label,
                                         time,
@@ -152,6 +143,8 @@ class SelectTimeScreen extends Component {
         return false;
     }
     confirmBooking() {
+        if (!this.state.allowBooking)
+            return;
         let error = false;
 
         if (this.state.service) {
@@ -172,17 +165,91 @@ class SelectTimeScreen extends Component {
 
         if (error)
             return;
-        this.props.navigation.navigate("confirmBooking", {
-            serviceType: this.state.serviceType,
-            service: this.state.service,
-            profile: this.state.profile,
-            hospital: this.state.hospital,
-            specialist: this.state.specialist,
-            bookingDate: this.state.bookingDate,
-            schedule: this.state.schedule,
-            reason: this.state.reason,
-            images: this.state.images
-        });
+        connectionUtils.isConnected().then(s => {
+            this.setState({ isLoading: true }, () => {
+                console.log(this.state.schedule.time);
+                bookingProvider.create(
+                    this.state.hospital.hospital.id,
+                    this.state.schedule.schedule.id,
+                    this.state.profile.medicalRecords.id,
+                    this.state.specialist.id,
+                    this.state.service.id,
+                    this.state.schedule.time.format("yyyy-MM-dd HH:mm:ss"),
+                    this.state.reason,
+                    this.state.images,
+                    this.state.contact
+                ).then(s => {
+                    this.setState({ isLoading: false }, () => {
+                        if (s) {
+                            switch (s.code) {
+                                case 0:
+                                    dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_POSTS, this.state.profile);
+
+                                    this.props.navigation.navigate("confirmBooking", {
+                                        serviceType: this.state.serviceType,
+                                        service: this.state.service,
+                                        profile: this.state.profile,
+                                        hospital: this.state.hospital,
+                                        specialist: this.state.specialist,
+                                        bookingDate: this.state.bookingDate,
+                                        schedule: this.state.schedule,
+                                        reason: this.state.reason,
+                                        images: this.state.images,
+                                        contact: this.state.contact,
+                                        booking: s.data
+                                    });
+                                    break;
+                                case 1:
+                                    this.setState({ isLoading: false }, () => {
+                                        snackbar.show("Đặt khám phải cùng ngày giờ với lịch làm việc", "danger");
+                                    });
+                                    break;
+                                case 2:
+                                    this.setState({ isLoading: false }, () => {
+                                        snackbar.show("Đã kín lịch trong khung giờ này", "danger");
+                                    });
+                                    break;
+                                case 401:
+                                    this.setState({ isLoading: false }, () => {
+                                        snackbar.show("Vui lòng đăng nhập để thực hiện", "danger");
+                                        this.props.navigation.navigate("login"
+                                            // , {
+                                            //     nextScreen: {
+                                            //         screen: "confirmBooking", params: this.props.navigation.state.params
+                                            //     }
+                                            // }
+                                        );
+                                    });
+                                    break;
+                                default:
+                                    this.setState({ isLoading: false }, () => {
+                                        snackbar.show("Đặt khám không thành công", "danger");
+                                    });
+                                    break;
+                            }
+                        }
+                    });
+                }).catch(e => {
+                    this.setState({ isLoading: false }, () => {
+                    });
+                })
+            });
+        }).catch(e => {
+            snackbar.show("Không có kết nối mạng", "danger");
+        })
+        return;
+        // this.props.navigation.navigate("confirmBooking", {
+        //     serviceType: this.state.serviceType,
+        //     service: this.state.service,
+        //     profile: this.state.profile,
+        //     hospital: this.state.hospital,
+        //     specialist: this.state.specialist,
+        //     bookingDate: this.state.bookingDate,
+        //     schedule: this.state.schedule,
+        //     reason: this.state.reason,
+        //     images: this.state.images,
+        //     contact: this.state.contact
+        // });
     }
 
     getColor(item) {
@@ -217,78 +284,81 @@ class SelectTimeScreen extends Component {
                 borderBottomColor: 'rgba(0, 0, 0, 0.06)'
             }}>
 
-
             <View style={styles.container}>
-                <View style={styles.article}>
-                    <TouchableOpacity style={styles.mucdichkham} onPress={() => {
-                        this.props.navigation.navigate("selectService", { hospital: this.state.hospital, specialist: this.state.specialist, onSelected: this.selectService.bind(this) })
-                    }}>
-                        <ScaleImage style={styles.imgIc} height={15} source={require("@images/new/booking/ic_specialist.png")} />
-                        <Text style={styles.mdk}>{this.state.service ? this.state.service.name : "Chọn dịch vụ"}</Text>
-                        <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
-                    </TouchableOpacity>
+                <ScrollView>
+                    <View style={styles.article}>
+                        <TouchableOpacity style={styles.mucdichkham} onPress={() => {
+                            this.props.navigation.navigate("selectService", {
+                                hospital: this.state.hospital,
+                                specialist: this.state.specialist,
+                                serviceType: this.state.serviceType,
+                                onSelected: this.selectService.bind(this)
+                            })
+                        }}>
+                            <ScaleImage style={styles.imgIc} height={15} source={require("@images/new/booking/ic_specialist.png")} />
+                            <Text style={styles.mdk}>{this.state.service ? this.state.service.name : "Chọn dịch vụ"}</Text>
+                            <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
+                        </TouchableOpacity>
+                        {
+                            this.state.serviceError ?
+                                <Text style={[styles.errorStyle]}>{this.state.serviceError}</Text> : null
+                        }
+
+                        <View style={styles.border}></View>
+                    </View>
+
                     {
-                        this.state.serviceError ?
-                            <Text style={[styles.errorStyle]}>{this.state.serviceError}</Text> : null
-                    }
-
-                    <View style={styles.border}></View>
-                </View>
-
-                {
-                    this.state.listTime && this.state.listTime.length > 0 ?
-                        <View style={styles.chonGioKham}>
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <ScaleImage source={require("@images/new/booking/ic_bookingDate.png")} width={20} />
-                                <Text style={styles.txtchongiokham}>Chọn giờ khám</Text>
-                            </View>
-                            <Text style={{ marginTop: 20, fontSize: 13 }}>Gợi ý: Chọn những giờ màu xanh sẽ giúp bạn được phục vụ nhanh hơn</Text>
-                            <View style={{ width: this.state.listTime.length * 24 + 100, alignSelf: 'center', position: 'relative', marginTop: 20 }}>
-                                {this.state.schedule &&
-                                    <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', left: (this.state.index || 0) * 24 + 50, top: 0 }}>
-                                        <ScaleImage height={30} source={this.getIcon(this.state.schedule)} />
-                                        <Text style={{ fontSize: 9, marginLeft: 5, fontWeight: 'bold' }}>{this.state.schedule.label}</Text>
-                                    </View>
-                                }
-                                <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                                    {
-                                        this.state.listTime.map((item, index) => {
-                                            return <TouchableOpacity key={index} style={{ justifyContent: 'center' }}
-                                                onPress={() => {
-                                                    if (item.type == 0) {
-                                                        snackbar.show("Đã kín lịch trong khung giờ này", "danger");
-                                                        return;
-                                                    }
-                                                    this.setState({ schedule: item, index })
-                                                }}
-                                            >
-                                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: "center", marginTop: 30 }}>
-                                                    <View style={{ width: 8, height: 5, backgroundColor: index != 0 ? this.getColor(item) : 'transparent' }}></View>
-                                                    <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: this.getColor(item), justifyContent: 'center', alignItems: 'center' }}>
-                                                        <View style={{ width: 2, height: 2, backgroundColor: '#FFF', borderRadius: 1 }}></View>
-                                                    </View>
-                                                    <View style={{ width: 8, height: 5, backgroundColor: index < this.state.listTime.length - 1 ? this.getColor(item) : 'transparent' }}></View>
-                                                </View>
-                                                <Text style={{ fontSize: 8 }}>{this.showLabel(item, index) ?
-                                                    item.label : " "}</Text>
-                                            </TouchableOpacity>
-                                        })
-                                    }
+                        this.state.listTime && this.state.listTime.length > 0 ?
+                            <View style={styles.chonGioKham}>
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <ScaleImage source={require("@images/new/booking/ic_bookingDate.png")} width={20} />
+                                    <Text style={styles.txtchongiokham}>Chọn giờ khám</Text>
                                 </View>
-                            </View>
-                            {
-                                this.state.scheduleError ?
-                                    <Text style={[styles.errorStyle]}>{this.state.scheduleError}</Text> : null
-                            }
+                                <Text style={{ marginTop: 20, fontSize: 13 }}>Gợi ý: Chọn những giờ màu xanh sẽ giúp bạn được phục vụ nhanh hơn</Text>
+                                <View style={{ width: this.state.listTime.length * 24 + 100, alignSelf: 'center', position: 'relative', marginTop: 20 }}>
+                                    {this.state.schedule &&
+                                        <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', left: (this.state.index || 0) * 24 + 50, top: 0 }}>
+                                            <ScaleImage height={30} source={this.getIcon(this.state.schedule)} />
+                                            <Text style={{ fontSize: 9, marginLeft: 5, fontWeight: 'bold' }}>{this.state.schedule.label}</Text>
+                                        </View>
+                                    }
+                                    <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                                        {
+                                            this.state.listTime.map((item, index) => {
+                                                return <TouchableOpacity key={index} style={{ justifyContent: 'center' }}
+                                                    onPress={() => {
+                                                        if (item.type == 0) {
+                                                            snackbar.show("Đã kín lịch trong khung giờ này", "danger");
+                                                            return;
+                                                        }
+                                                        this.setState({ schedule: item, index })
+                                                    }}
+                                                >
+                                                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: "center", marginTop: 30 }}>
+                                                        <View style={{ width: 8, height: 5, backgroundColor: index != 0 ? this.getColor(item) : 'transparent' }}></View>
+                                                        <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: this.getColor(item), justifyContent: 'center', alignItems: 'center' }}>
+                                                            <View style={{ width: 2, height: 2, backgroundColor: '#FFF', borderRadius: 1 }}></View>
+                                                        </View>
+                                                        <View style={{ width: 8, height: 5, backgroundColor: index < this.state.listTime.length - 1 ? this.getColor(item) : 'transparent' }}></View>
+                                                    </View>
+                                                    <Text style={{ fontSize: 7 }}>{this.showLabel(item, index) ?
+                                                        item.label : " "}</Text>
+                                                </TouchableOpacity>
+                                            })
+                                        }
+                                    </View>
+                                </View>
+                                {
+                                    this.state.scheduleError ?
+                                        <Text style={[styles.errorStyle]}>{this.state.scheduleError}</Text> : null
+                                }
 
-                        </View> : null
-                }
-
-                <View style={styles.btn}>
-                    <TouchableOpacity style={styles.button} onPress={this.confirmBooking.bind(this)}>
-                        <Text style={styles.txtbtn}>Xác nhận</Text>
-                    </TouchableOpacity>
-                </View>
+                            </View> : null
+                    }
+                </ScrollView>
+                <TouchableOpacity style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]} onPress={this.confirmBooking.bind(this)}>
+                    <Text style={styles.btntext}>Xác nhận</Text>
+                </TouchableOpacity>
             </View>
         </ActivityPanel>
         );
@@ -396,36 +466,28 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         padding: 20
     },
-    btn: {
-        position: 'absolute',
-        alignItems: 'center',
-        left: 0,
-        right: 0,
-        bottom: 0,
-        padding: 30
-
-    },
     button: {
         borderRadius: 6,
-        backgroundColor: "#02c39a",
+        backgroundColor: "#cacaca",
         shadowColor: "rgba(0, 0, 0, 0.21)",
         shadowOffset: {
             width: 2,
             height: 4
         },
         shadowRadius: 10,
-        shadowOpacity: 1
-
+        shadowOpacity: 1,
+        width: 250,
+        marginVertical: 20,
+        alignSelf: 'center'
     },
-    txtbtn: {
-        fontSize: 18,
+    btntext: {
+        fontSize: 15,
         fontWeight: "600",
         fontStyle: "normal",
         letterSpacing: 0,
         color: "#ffffff",
         padding: 15,
-        paddingLeft: 100,
-        paddingRight: 100
+        textAlign: 'center'
     },
     slider: {
         marginLeft: 20,

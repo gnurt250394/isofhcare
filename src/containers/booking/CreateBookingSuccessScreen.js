@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-nati
 import { connect } from 'react-redux';
 import dateUtils from 'mainam-react-native-date-utils';
 import ScaleImage from "mainam-react-native-scaleimage";
-import BarCode from "mainam-react-native-barcode";
+import QRCode from 'react-native-qrcode';
 
 class CreateBookingSuccessScreen extends Component {
     constructor(props) {
@@ -61,18 +61,13 @@ class CreateBookingSuccessScreen extends Component {
                         <View style={styles.view2}>
                             <View style={styles.col}>
                                 <Text style={styles.col1}>Mã code:</Text>
-
-                                <BarCode
-                                    // format={'CODE128'}
-                                    // lineColor={'#000000'}
-                                    style={{ height: 20, width: 120, alignSelf: 'center', marginTop: 10 }}
-                                    height={50}
-                                    width={120}
-                                    value={booking.book.codeBooking}
-                                />
-                                {/* <Text style={{ textAlign: 'center' }}>{booking.book.codeBooking}</Text> */}
-
-                                {/* <ScaleImage style={styles.image2} height={71} source={require("@images/new/ic_code.png")} /> */}
+                                <View style={{ alignItems: 'center', marginTop: 10 }}>
+                                    <QRCode
+                                        style={{ alignSelf: 'center', backgroundColor: '#000' }}
+                                        value={booking.book.codeBooking}
+                                        size={100}
+                                        fgColor='white' />
+                                </View>
                             </View>
                         </View>
                         <View style={styles.view1}>

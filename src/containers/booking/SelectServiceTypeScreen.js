@@ -2,42 +2,30 @@ import React, { Component, PropTypes } from 'react';
 import { View, FlatList, TouchableOpacity, Text, TextInput } from 'react-native'
 import { connect } from 'react-redux';
 import ActivityPanel from '@components/ActivityPanel'
-import serviceProvider from '@data-access/service-provider';
+import serviceTypeProvider from '@data-access/service-type-provider';
 import constants from '@resources/strings';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import snackbar from '@utils/snackbar-utils';
 
-class SelectServiceScreen extends Component {
+class SelectServiceTypeScreen extends Component {
     constructor(props) {
         super(props);
-        let hospital = this.props.navigation.state.params.hospital;
-        let specialist = this.props.navigation.state.params.specialist;
         let serviceType = this.props.navigation.state.params.serviceType;
-        if (!hospital) {
-            this.props.navigation.pop();
-            snackbar.show("Vui lòng chọn địa điểm khám", "danger");
-        }
-        if (!specialist) {
-            this.props.navigation.pop();
-            snackbar.show("Vui lòng chọn chuyên khoa", "danger");
-        }
         this.state = {
             listService: [],
             listServiceSearch: [],
             searchValue: "",
             refreshing: false,
-            hospital: hospital || { hospital: {} },
-            specialist,
             serviceType
         }
     }
     componentDidMount() {
         this.onRefresh();
     }
-    selectService(service) {
+    selectServiceType(serviceType) {
         let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
         if (callback) {
-            callback(service.service);
+            callback(serviceType);
             this.props.navigation.pop();
         }
     }
@@ -45,24 +33,21 @@ class SelectServiceScreen extends Component {
 
     onRefresh = () => {
         this.setState({ refreshing: true }, () => {
-            serviceProvider.getAll(this.state.hospital.hospital.id, this.state.specialist.id, this.state.serviceType.id).then(s => {
+            serviceTypeProvider.getAll().then(s => {
                 this.setState({
                     refreshing: false
                 }, () => {
                     if (s) {
-                        switch (s.code) {
-                            case 0:
-                                this.setState({
-                                    listService: s.data.services
-                                }, () => {
-                                    this.onSearch();
-                                });
-                        }
+                        this.setState({
+                            listServiceType: s
+                        }, () => {
+                            this.onSearch();
+                        });
                     }
                 })
             }).catch(e => {
                 this.setState({
-                    listService: [],
+                    listServiceType: [],
                     refreshing: false
                 })
             })
@@ -80,10 +65,11 @@ class SelectServiceScreen extends Component {
     }
     onSearch() {
         var s = this.state.searchValue;
-        var listSearch = this.state.listService.filter(function (item) {
-            return s == null || item.service.name && item.service.name.toLowerCase().indexOf(s.toLowerCase()) != -1;
+        alert(JSON.stringify(this.state.listServiceType))
+        var listSearch = this.state.listServiceType.filter(function (item) {
+            return item.deleted == 0 && (item == null || item.name && item.name.toLowerCase().indexOf(s.toLowerCase()) != -1);
         });
-        this.setState({ listServiceSearch: listSearch });
+        this.setState({ listServiceTypeSearch: listSearch });
     }
     renderSearchButton() {
         return (
@@ -97,7 +83,7 @@ class SelectServiceScreen extends Component {
         return (
             <ActivityPanel
                 backButton={<TouchableOpacity style={{ paddingLeft: 20 }} onPress={() => this.props.navigation.pop()}><Text>Hủy</Text></TouchableOpacity>}
-                titleStyle={{ marginRight: 0 }} title={"Chọn dịch vụ"}
+                titleStyle={{ marginRight: 0 }} title={"Chọn loại dịch vụ"}
                 isLoading={this.state.isLoading} menuButton={this.renderSearchButton()} style={{ backgroundColor: '#e5fafe' }} showFullScreen={true}
                 containerStyle={{
                     backgroundColor: "#f7f9fb"
@@ -135,19 +121,19 @@ class SelectServiceScreen extends Component {
                     extraData={this.state}
                     ListHeaderComponent={() =>
                         !this.state.refreshing &&
-                            (!this.state.listServiceSearch || this.state.listServiceSearch.length == 0) ?
+                            (!this.state.listServiceTypeSearch || this.state.listServiceTypeSearch.length == 0) ?
                             <View style={{ width: '100%', marginTop: 50, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center' }}>
                                 <ScaleImage source={require("@images/empty_result.png")} width={120} />
-                                <Text>Không tìm thấy dịch vụ nào phù hợp <Text style={{ fontWeight: 'bold', color: constants.colors.actionbar_title_color }}>{this.state.searchValue}</Text></Text>
+                                <Text>Không tìm thấy loại dịch vụ nào phù hợp <Text style={{ fontWeight: 'bold', color: constants.colors.actionbar_title_color }}>{this.state.searchValue}</Text></Text>
                             </View> : null
                     }
                     ListFooterComponent={() => <View style={{ height: 10 }} />}
-                    data={this.state.listServiceSearch}
+                    data={this.state.listServiceTypeSearch}
                     renderItem={({ item }) =>
-                        <TouchableOpacity onPress={this.selectService.bind(this, item)}>
+                        <TouchableOpacity onPress={this.selectServiceType.bind(this, item)}>
                             <View style={{ marginBottom: 2, backgroundColor: '#FFF', padding: 20, flexDirection: 'column', borderBottomColor: '#e5fafe', borderBottomWidth: 2 }}>
                                 <Text style={{ fontWeight: 'bold' }}>
-                                    {item.service.name}
+                                    {item.name}
                                 </Text>
                             </View>
                         </TouchableOpacity>
@@ -166,4 +152,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps)(SelectServiceScreen);
+export default connect(mapStateToProps)(SelectServiceTypeScreen);

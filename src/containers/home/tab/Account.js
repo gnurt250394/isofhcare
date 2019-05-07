@@ -101,7 +101,7 @@ class Account extends Component {
           </Text>
           <TouchableOpacity
             onPress={() => {
-              snackbar.show("Chức năng đang phát triển");
+              this.props.navigation.navigate('detailsProfile')
             }}
           >
             <Text style={{ color: "#008D6F", marginTop: 10 }}>
@@ -115,7 +115,7 @@ class Account extends Component {
         >
           <ImageLoad
             resizeMode="cover"
-            imageStyle={{ borderRadius: 35 }}
+            imageStyle={{ borderRadius: 35, borderWidth: 1, borderColor: 'rgba(151, 151, 151, 0.29)' }}
             borderRadius={35}
             customImagePlaceholderDefaultStyle={{
               width: 70,
@@ -423,7 +423,8 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     lineHeight: 23
   },
-  popup:{    width: width * 0.8
+  popup: {
+    width: width * 0.8
   },
   subLabel: {
     color: "#9B9B9B",

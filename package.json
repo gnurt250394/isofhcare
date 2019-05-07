@@ -25,9 +25,9 @@
     "mainam-react-native-photo-viewer": "^1.1.0",
     "mainam-react-native-qrcode-scanner": "^1.0.1",
     "mainam-react-native-scaleimage": "^1.0.4",
-    "mainam-react-native-select-image": "^1.0.3",
+    "mainam-react-native-select-image": "^3.0.2",
     "mainam-react-native-sliding-up-down": "^1.0.3",
-    "mainam-react-native-string-utils": "^2.0.1",
+    "mainam-react-native-string-utils": "^3.0.2",
     "mainam-react-native-viewpager": "^1.0.1",
     "native-base": "^2.12.0",
     "prop-types": "^15.6.1",
@@ -69,6 +69,7 @@
     "redux": "^4.0.0",
     "redux-thunk": "^2.2.0",
     "rn-fetch-blob": "^0.10.11",
+    "rn-tooltip": "^1.1.2",
     "yarn": "^1.9.4"
   },
   "devDependencies": {

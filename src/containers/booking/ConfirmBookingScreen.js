@@ -8,6 +8,7 @@ import ScaleImage from "mainam-react-native-scaleimage";
 import bookingProvider from '@data-access/booking-provider';
 import walletProvider from '@data-access/wallet-provider';
 import snackbar from '@utils/snackbar-utils';
+import connectionUtils from '@utils/connection-utils';
 
 class ConfirmBookingScreen extends Component {
     constructor(props) {
@@ -21,6 +22,12 @@ class ConfirmBookingScreen extends Component {
         let schedule = this.props.navigation.state.params.schedule;
         let reason = this.props.navigation.state.params.reason;
         let images = this.props.navigation.state.params.images;
+        let contact = this.props.navigation.state.params.contact;
+        let booking = this.props.navigation.state.params.booking;
+        if (!booking) {
+            snackbar.show("Không tồn tại đặt khám", "danger");
+            this.props.navigation.pop();
+        }
 
         this.state = {
             serviceType,
@@ -32,7 +39,9 @@ class ConfirmBookingScreen extends Component {
             schedule,
             reason,
             images,
-            paymentMethod: 1
+            paymentMethod: 1,
+            contact,
+            booking
         }
     }
     confirmPayment(booking, bookingId) {
@@ -88,14 +97,20 @@ class ConfirmBookingScreen extends Component {
                                 })
                             }
                             walletProvider.onlineTransactionPaid(obj["vnp_TxnRef"], "VNPAY", obj);
-                            this.props.navigation.navigate("home", {
-                                navigate: {
-                                    screen: "createBookingSuccess",
-                                    params: {
-                                        booking
+                            if (obj["vnp_TransactionNo"] == 0) {
+                                booking.transactionCode = obj["vnp_TxnRef"];
+                                this.props.navigation.navigate("paymentBookingError", { booking })
+                            }
+                            else {
+                                this.props.navigation.navigate("home", {
+                                    navigate: {
+                                        screen: "createBookingSuccess",
+                                        params: {
+                                            booking
+                                        }
                                     }
-                                }
-                            });
+                                });
+                            }
                         },
                         onError: url => {
                             this.props.navigation.navigate("paymentBookingError", { booking })
@@ -104,80 +119,47 @@ class ConfirmBookingScreen extends Component {
                 })
             }).catch(e => {
                 this.setState({ isLoading: false }, () => {
-                    this.props.navigation.navigate("paymentBookingError", { booking })
+                    if (e && e.response && e.response.data) {
+                        let response = e.response.data;
+                        switch (response.type) {
+                            case "ValidationError":
+                                let message = response.message;
+                                for (let key in message) {
+                                    switch (key) {
+                                        case "id":
+                                            snackbar.show("Tài khoản của bạn chưa thể thanh toán trả trước. Vui lòng liên hệ Admin để được giải quyết", "danger");
+                                            return;
+                                        case "order_ref_id":
+                                            snackbar.show("Đặt khám đã tồn tại trong hệ thống", "danger");
+                                            return;
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                    snackbar.show("Tạo thanh toán không thành công", "danger");
+                    // this.props.navigation.navigate("paymentBookingError", { booking })
                 })
             });
         })
     }
     createBooking() {
-        this.setState({ isLoading: true }, () => {
-            console.log(this.state.schedule.time);
-            bookingProvider.create(
-                this.state.hospital.hospital.id,
-                this.state.schedule.schedule.id,
-                this.state.profile.medicalRecords.id,
-                this.state.specialist.id,
-                this.state.service.id,
-                this.state.schedule.time.format("yyyy-MM-dd HH:mm:ss"),
-                this.state.reason,
-                this.state.images
-            ).then(s => {
-                if (s) {
-                    switch (s.code) {
-                        case 0:
-                            if (this.state.paymentMethod == 2)
-                                this.confirmPayment(s.data, s.data.book.id);
-                            else {
-                                this.getPaymentLink(s.data);
-                            }
-                            break;
-                        case 1:
-                            this.setState({ isLoading: false }, () => {
-                                snackbar.show("Đặt khám phải cùng ngày giờ với lịch làm việc", "danger");
-                            });
-                            break;
-                        case 2:
-                            this.setState({ isLoading: false }, () => {
-                                snackbar.show("Đã kín lịch trong khung giờ này", "danger");
-                            });
-                            break;
-                        default:
-                            this.setState({ isLoading: false }, () => {
-                                snackbar.show("Đặt khám không thành công", "danger");
-                            });
-                            break;
-                    }
+        connectionUtils.isConnected().then(s => {
+            this.setState({ isLoading: true }, () => {
+                if (this.state.paymentMethod == 2)
+                    this.confirmPayment(this.state.booking, this.state.booking.book.id);
+                else {
+                    this.getPaymentLink(this.state.booking);
                 }
-
-
-
-
-
-                // this.setState({ isLoading: false }, () => {
-                //     if (s) {
-                //         switch (s.code) {
-                //             case 500:
-                //                 snackbar.show("Đặt khám không thành công", "danger");
-                //                 return;
-                //             case 0:
-                //                 if (this.state.paymentMethod == 2) {
-                //                     snackbar.show("Đặt khám thành công", "success");
-                //                 } else {
-                //                 }
-                //                 return;
-                //         }
-                //     }
-                // });
-            }).catch(e => {
-                this.setState({ isLoading: false }, () => {
-                });
-            })
+            });
+        }).catch(e => {
+            snackbar.show("Không có kết nối mạng", "danger");
         })
     }
 
     render() {
         return (
-            <ActivityPanel style={styles.AcPanel} title="Đặt Lịch Khám"
+            <ActivityPanel style={styles.AcPanel} title="Xác nhận lịch khám"
                 isLoading={this.state.isLoading}
                 containerStyle={{
                     backgroundColor: "#FFF"
@@ -203,7 +185,7 @@ class ConfirmBookingScreen extends Component {
 
                             <View style={styles.view2}>
                                 <ScaleImage style={styles.ic_Location} width={20} source={require("@images/new/booking/ic_doctor.png")} />
-                                <Text style={styles.text5}>{this.state.schedule.doctor.name}</Text>
+                                <Text style={[styles.text5, { marginTop: 10 }]}>Bác sĩ khám: <Text>{this.state.schedule.doctor.name}</Text></Text>
                             </View>
 
                             <View style={[styles.view2, { alignItems: 'flex-start' }]}>
@@ -372,25 +354,27 @@ const styles = StyleSheet.create({
         marginTop: 20
     },
     btn: {
-        backgroundColor: '#02c39a',
-        shadowColor: 'rgba(0, 0, 0, 0.21)',
+        borderRadius: 6,
+        backgroundColor: "#02c39a",
+        shadowColor: "rgba(0, 0, 0, 0.21)",
         shadowOffset: {
             width: 2,
             height: 4
         },
         shadowRadius: 10,
         shadowOpacity: 1,
-        borderRadius: 6,
-        marginTop: 40,
         width: 250,
-        marginBottom: 40,
+        marginVertical: 20,
         alignSelf: 'center'
     },
     btntext: {
-        color: "#fff",
-        textAlign: 'center',
-        padding: 10,
-        fontWeight: 'bold'
+        fontSize: 15,
+        fontWeight: "600",
+        fontStyle: "normal",
+        letterSpacing: 0,
+        color: "#ffffff",
+        padding: 15,
+        textAlign: 'center'
     },
     view11: {
 

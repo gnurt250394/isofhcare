@@ -9,16 +9,17 @@ import ScaleImage from "mainam-react-native-scaleimage";
 import { Card } from 'native-base';
 import medicalRecordProvider from '@data-access/medical-record-provider';
 import ImageLoad from 'mainam-react-native-image-loader';
-
 import clientUtils from '@utils/client-utils';
 class SelectProfileScreen extends Component {
     constructor(props) {
         super(props);
+        let profile = this.props.navigation.state.params.profile;
         this.state = {
             data: [],
             refreshing: false,
             size: 10,
-            page: 1
+            page: 1,
+            profile
         }
     }
     onRefresh() {
@@ -33,11 +34,11 @@ class SelectProfileScreen extends Component {
     componentDidMount() {
         this.onRefresh();
     }
-componentWillReceiveProps(nextProps){
-    if(nextProps.navigation.state.params && nextProps.navigation.state.params.loading){
-        this.onRefresh()
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.navigation.state.params && nextProps.navigation.state.params.loading) {
+            this.onRefresh()
+        }
     }
-}
     onLoad() {
         const { page, size } = this.state;
         this.setState({
@@ -105,10 +106,10 @@ componentWillReceiveProps(nextProps){
     }
     render() {
         return (
-            <ActivityPanel 
-            style={styles.AcPanel} 
-            title="Tất cả hồ sơ"
-            // titleStyle={{ marginRight: -10 }}
+            <ActivityPanel
+                style={styles.AcPanel}
+                title="Tất cả hồ sơ"
+                // titleStyle={{ marginRight: -10 }}
 
                 containerStyle={{
                     backgroundColor: "#f7f9fb"
@@ -118,12 +119,12 @@ componentWillReceiveProps(nextProps){
                     borderBottomWidth: 1,
                     borderBottomColor: 'rgba(0, 0, 0, 0.06)'
                 }}
-                // menuButton={
-                //     <View style ={{width:15,marginLeft: 10
-                //     }}>
-                //     </View>
-                //   }
-                >
+            // menuButton={
+            //     <View style ={{width:15,marginLeft: 10
+            //     }}>
+            //     </View>
+            //   }
+            >
 
                 <FlatList
                     onRefresh={this.onRefresh.bind(this)}
@@ -151,7 +152,7 @@ componentWillReceiveProps(nextProps){
                         return (<TouchableOpacity style={styles.bn} onPress={this.selectPofile.bind(this, item)}>
                             <ImageLoad
                                 resizeMode="cover"
-                                imageStyle={{ borderRadius: 20, borderWidth: 1, borderColor: '#CAC' }}
+                                imageStyle={{ borderRadius: 20, borderWidth: 1, borderColor: 'rgba(151, 151, 151, 0.29)' }}
                                 borderRadius={20}
                                 customImagePlaceholderDefaultStyle={[styles.avatar, { width: 40, height: 40 }]}
                                 placeholderSource={require("@images/new/user.png")}
@@ -169,23 +170,28 @@ componentWillReceiveProps(nextProps){
                                 }}
                             />
                             <Text style={styles.bntext}>{item.medicalRecords.name}</Text>
-                            {/* <ScaleImage style={styles.ckeck} height={18} source={require("@images/new/profile/ic_question_check_specialist.png")} /> */}
+                            {
+                                this.state.profile && this.state.profile.medicalRecords && this.state.profile.medicalRecords.id == item.medicalRecords.id ?
+                                    <ScaleImage style={styles.ckeck} height={18} source={require("@images/new/profile/ic_tick.png")} /> : null
+                            }
                         </TouchableOpacity>);
                     }}
                 />
 
-                {this.state.data && this.state.data.length <10 || !this.state.data ?(
-                    <TouchableOpacity style={{ backgroundColor: "#02c39a", width: 200, borderRadius: 6, alignSelf: 'center', marginVertical: 10, marginBottom: 30 }} onPress={() =>
-                        this.props.navigation.navigate("createProfile",
-                            {   isDataNull : !this.state.data || this.state.data.length == 0 ? true : false,
-                                onCreate: this.onRefresh.bind(this)
-                            })}>
-                            {!this.state.data || this.state.data.length == 0 ? (  <Text style={styles.btntext}>Thêm hồ sơ</Text>) : (  <Text style={styles.btntext}>Thêm người thân</Text>)}
-                      
-                    </TouchableOpacity>
-                ):(
-                    null
-                )}
+                {this.state.data && this.state.data.length < 10 || !this.state.data ?
+                    (
+                        <TouchableOpacity style={{ alignSelf: 'center', marginVertical: 10, marginBottom: 30 }} onPress={() =>
+                            this.props.navigation.navigate("createProfile",
+                                {
+                                    isDataNull: !this.state.data || this.state.data.length == 0 ? true : false,
+                                    onCreate: this.onRefresh.bind(this)
+                                })}>
+                            {!this.state.data || this.state.data.length == 0 ? (<Text style={styles.btntext}>Thêm hồ sơ</Text>) : (<Text style={styles.btntext}>Thêm người thân</Text>)}
+
+                        </TouchableOpacity>
+                    ) : (
+                        null
+                    )}
             </ActivityPanel>
         );
     }
@@ -221,19 +227,18 @@ const styles = StyleSheet.create({
         fontWeight: "normal",
         fontStyle: "normal",
         letterSpacing: 0,
-        color: "#000000"
+        color: "#000000",
+        flex: 1
     },
     ckeck: {
-        position: 'absolute',
-        top: 17,
-        right: 20,
+        marginRight: 15
     },
     btntext: {
         fontSize: 18,
         fontWeight: "600",
         fontStyle: "normal",
         letterSpacing: 0,
-        color: "#FFF",
+        color: "#02c39a",
         textAlign: 'center',
         margin: 10,
 

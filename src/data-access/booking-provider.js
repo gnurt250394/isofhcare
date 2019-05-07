@@ -103,7 +103,7 @@ module.exports = {
       })
     })
   },
-  create(hospitalId, detailScheduleId, medicalRecordId, specialistId, serviceId, bookingTime, note, images) {
+  create(hospitalId, detailScheduleId, medicalRecordId, specialistId, serviceId, bookingTime, content, images, contact) {
     return new Promise((resolve, reject) => {
       client.requestApi(
         "post",
@@ -115,8 +115,9 @@ module.exports = {
           serviceId,
           booking: {
             bookingTime,
-            note,
-            images
+            content,
+            images, 
+            contact
           }
         }, (s, e) => {
           if (s) resolve(s);

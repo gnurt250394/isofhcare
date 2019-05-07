@@ -7,21 +7,19 @@ import ImagePicker from 'mainam-react-native-select-image';
 import imageProvider from '@data-access/image-provider';
 import connectionUtils from '@utils/connection-utils';
 import clientUtils from '@utils/client-utils';
-import { Card } from 'native-base';
-
 const DEVICE_HEIGHT = Dimensions.get('window').height;
-import Modal from "react-native-modal";
-import stylemodal from "@styles/modal-style";
-import serviceTypeProvider from '@data-access/service-type-provider';
-import specialistProvider from '@data-access/specialist-provider';
 import DateTimePicker from 'mainam-react-native-date-picker';
 
 import snackbar from '@utils/snackbar-utils';
 import dateUtils from "mainam-react-native-date-utils";
+import stringUtils from "mainam-react-native-string-utils";
 import ImageLoad from 'mainam-react-native-image-loader';
 import Form from "mainam-react-native-form-validate/Form";
 import TextField from "mainam-react-native-form-validate/TextField";
-import Field from "mainam-react-native-form-validate/Field";
+
+import dataCacheProvider from '@data-access/datacache-provider';
+import constants from '@resources/strings';
+import medicalRecordProvider from '@data-access/medical-record-provider';
 
 class AddBookingScreen extends Component {
     constructor(props) {
@@ -29,7 +27,7 @@ class AddBookingScreen extends Component {
         this.state = {
             colorButton: 'red',
             imageUris: [],
-            modalVisible: false
+            allowBooking: false
         }
     }
     _changeColor = () => {
@@ -40,21 +38,30 @@ class AddBookingScreen extends Component {
         imageUris.splice(index, 1);
         this.setState({ imageUris });
     }
-    setModalVisible(visible) {
-        this.setState({ modalVisible: visible });
-    }
     componentDidMount() {
-        serviceTypeProvider.getAll().then(s => {
-            this.setState({ serviceTypes: s });
-        }).catch(e => {
-            this.setState({ serviceTypes: e });
-        });
+        dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_POSTS, (s, e) => {
+            if (s) {
+                this.setState({ profile: s })
+            } else {
+                medicalRecordProvider.getByUser(this.props.userApp.currentUser.id, 1, 100).then(s => {
+                    switch (s.code) {
+                        case 0:
+                            if (s.data && s.data.data && s.data.data.length != 0) {
 
-        specialistProvider.getAll().then(s => {
-            this.setState({ specialists: s });
-        }).catch(e => {
-            this.setState({ specialists: e });
-        });
+                                let data = s.data.data;
+                                let profile = data.find(item => {
+                                    return item.medicalRecords.status == 1;
+                                })
+                                if (profile) {
+                                    this.setState({ profile: profile })
+                                    dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_POSTS, profile);
+                                }
+                            }
+                            break;
+                    }
+                });
+            }
+        })
     }
     selectImage() {
         if (this.state.imageUris && this.state.imageUris.length >= 5) {
@@ -63,57 +70,73 @@ class AddBookingScreen extends Component {
         }
         connectionUtils.isConnected().then(s => {
             if (this.imagePicker) {
-                this.imagePicker.open(false, 200, 200, image => {
-                    setTimeout(() => {
-                        Keyboard.dismiss();
-                    }, 500);
+                this.imagePicker.show({
+                    multiple: true,
+                    mediaType: 'photo',
+                    maxFiles: 2,
+                    compressImageMaxWidth: 500,
+                    compressImageMaxHeight: 500
+                }).then(images => {
                     let imageUris = this.state.imageUris;
-                    let temp = null;
-                    imageUris.forEach((item) => {
-                        if (item.uri == image.path)
-                            temp = item;
-                    })
-                    if (!temp) {
-                        imageUris.push({ uri: image.path, loading: true });
-                        imageProvider.upload(image.path, (s, e) => {
-                            if (s.success) {
-                                if (s.data.code == 0 && s.data.data && s.data.data.images && s.data.data.images.length > 0) {
-                                    let imageUris = this.state.imageUris;
+                    images.forEach(image => {
+                        if (imageUris.length >= 5)
+                            return;
+                        let temp = null;
+                        imageUris.forEach((item) => {
+                            if (item.uri == image.path)
+                                temp = item;
+                        })
+                        if (!temp) {
+                            imageUris.push({ uri: image.path, loading: true });
+                            imageProvider.upload(image.path, (s, e) => {
+                                if (s.success) {
+                                    if (s.data.code == 0 && s.data.data && s.data.data.images && s.data.data.images.length > 0) {
+                                        let imageUris = this.state.imageUris;
+                                        imageUris.forEach((item) => {
+                                            if (item.uri == s.uri) {
+                                                item.loading = false;
+                                                item.url = s.data.data.images[0].image;
+                                                item.thumbnail = s.data.data.images[0].thumbnail;
+                                            }
+                                        });
+                                        this.setState({
+                                            imageUris
+                                        });
+                                    }
+                                } else {
                                     imageUris.forEach((item) => {
                                         if (item.uri == s.uri) {
-                                            item.loading = false;
-                                            item.url = s.data.data.images[0].image;
-                                            item.thumbnail = s.data.data.images[0].thumbnail;
+                                            item.error = true;
                                         }
                                     });
-                                    this.setState({
-                                        imageUris
-                                    });
                                 }
-                            } else {
-                                imageUris.forEach((item) => {
-                                    if (item.uri == s.uri) {
-                                        item.error = true;
-                                    }
-                                });
-                            }
-                        });
-                    }
+                            });
+                        }
+                    })
                     this.setState({ imageUris: [...imageUris] });
                 });
+
             }
         }).catch(e => {
             snackbar.show("Không có kết nối mạng", "danger");
         });
     }
     selectProfile(profile) {
-        this.setState({ profile });
+        this.setState({ profile, allowBooking: true });
+    }
+    selectServiceType(serviceType) {
+        this.setState({ serviceType, allowBooking: true });
     }
     selectHospital(hospital) {
-        this.setState({ hospital });
+        this.setState({ hospital, allowBooking: true });
+    }
+    selectSpecialist(specialist) {
+        this.setState({ specialist, allowBooking: true });
     }
     addBooking() {
-
+        Keyboard.dismiss();
+        if (!this.state.allowBooking)
+            return;
 
         let error = false;
 
@@ -180,7 +203,8 @@ class AddBookingScreen extends Component {
                 serviceType: this.state.serviceType,
                 bookingDate: this.state.bookingDate,
                 reason: this.state.reason,
-                images
+                images,
+                contact: this.state.contact
             });
         }
     }
@@ -201,7 +225,14 @@ class AddBookingScreen extends Component {
             <ScrollView style={styles.container}>
 
                 <TouchableOpacity style={styles.name} onPress={() => {
-                    this.props.navigation.navigate("selectProfile", { onSelected: this.selectProfile.bind(this) });
+                    connectionUtils.isConnected().then(s => {
+                        this.props.navigation.navigate("selectProfile", {
+                            onSelected: this.selectProfile.bind(this),
+                            profile: this.state.profile
+                        });
+                    }).catch(e => {
+                        snackbar.show("Không có kết nối mạng", "danger");
+                    });
                 }}>
                     <View style={{
                         flexDirection: 'row', alignItems: 'center', padding: 10, paddingBottom: this.state.profileError ? 0 : 10
@@ -236,6 +267,7 @@ class AddBookingScreen extends Component {
                                 <Text style={styles.txtname}>Chọn hồ sơ</Text>
                             </View>
                         }
+
                         <ScaleImage style={styles.img} height={10} source={require("@images/new/booking/ic_next.png")} />
                     </View>
                     {
@@ -244,7 +276,17 @@ class AddBookingScreen extends Component {
                     }
                 </TouchableOpacity>
                 <View style={styles.article}>
-                    <TouchableOpacity style={styles.mucdichkham} onPress={() => this.setState({ toggleServiceType: true })}>
+                    <TouchableOpacity style={styles.mucdichkham} onPress={() => {
+                        connectionUtils.isConnected().then(s => {
+                            this.props.navigation.navigate("selectServiceType", {
+                                serviceType: this.state.serviceType,
+                                onSelected: this.selectServiceType.bind(this)
+                            })
+                        }).catch(e => {
+                            snackbar.show("Không có kết nối mạng", "danger");
+                        });
+                    }
+                    }>
                         <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_serviceType.png")} />
                         <Text style={styles.mdk}>Yêu cầu</Text>
                         <Text numberOfLines={1} style={styles.ktq}>{this.state.serviceType ? this.state.serviceType.name : "Chọn loại dịch vụ"}</Text>
@@ -271,7 +313,15 @@ class AddBookingScreen extends Component {
                             snackbar.show("Vui lòng chọn yêu cầu khám", "danger");
                             return;
                         }
-                        this.props.navigation.navigate("selectHospital", { serviceType: this.state.serviceType, onSelected: this.selectHospital.bind(this) })
+                        connectionUtils.isConnected().then(s => {
+                            this.props.navigation.navigate("selectHospital", {
+                                serviceType: this.state.serviceType,
+                                hospital: this.state.hospital,
+                                onSelected: this.selectHospital.bind(this)
+                            })
+                        }).catch(e => {
+                            snackbar.show("Không có kết nối mạng", "danger");
+                        });
                     }
                     }>
                         <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_placeholder.png")} />
@@ -284,7 +334,13 @@ class AddBookingScreen extends Component {
                             <Text style={[styles.errorStyle]}>{this.state.hospitalError}</Text> : null
                     }
                     <View style={styles.border}></View>
-                    <TouchableOpacity style={styles.mucdichkham} onPress={() => this.setState({ toggleSpecialist: true })}>
+                    <TouchableOpacity style={styles.mucdichkham} onPress={() => {
+                        connectionUtils.isConnected().then(s => {
+                            this.props.navigation.navigate("selectSpecialist", { onSelected: this.selectSpecialist.bind(this) });
+                        }).catch(e => {
+                            snackbar.show("Không có kết nối mạng", "danger");
+                        });
+                    }}>
                         <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_specialist.png")} />
                         <Text style={styles.mdk}>Chuyên khoa</Text>
                         <Text numberOfLines={1} style={styles.ktq}>{this.state.specialist ? this.state.specialist.name : "Chọn chuyên khoa"}</Text>
@@ -299,13 +355,13 @@ class AddBookingScreen extends Component {
 
                 <View style={styles.phoneSMS}>
                     <TouchableOpacity onPress={() => {
-                        this.setState({ contact: 1 });
+                        this.setState({ contact: 1, allowBooking: true });
                     }} style={[styles.phone, this.state.contact == 1 ? styles.contact_selected : styles.contact_normal]}>
                         <ScaleImage style={styles.imgPhone} height={18} source={this.state.contact == 1 ? require("@images/new/booking/ic_phone1.png") : require("@images/new/booking/ic_phone0.png")} />
                         <Text style={[styles.tinnhan, this.state.contact == 1 ? styles.contact_text_selected : styles.contact_text_normal]}>Điện thoại</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => {
-                        this.setState({ contact: 2 });
+                        this.setState({ contact: 2, allowBooking: true });
                     }} style={[styles.sms, this.state.contact == 2 ? styles.contact_selected : styles.contact_normal]}>
                         <ScaleImage style={styles.imgPhone} height={18} source={this.state.contact == 2 ? require("@images/new/booking/ic_send_sms1.png") : require("@images/new/booking/ic_send_sms0.png")} />
                         <Text style={[styles.tinnhan, this.state.contact == 2 ? styles.contact_text_selected : styles.contact_text_normal]}>SMS</Text>
@@ -339,7 +395,7 @@ class AddBookingScreen extends Component {
                             }
                         }}
                         onChangeText={s => {
-                            this.setState({ reason: s })
+                            this.setState({ reason: s, allowBooking: true })
                         }}
                         style={{ flex: 1 }}
                         inputStyle={styles.mtTr}
@@ -376,83 +432,18 @@ class AddBookingScreen extends Component {
                 <Text style={styles.des}>Mô tả triệu chứng sẽ giúp bạn được phục vụ tốt hơn</Text>
             </ScrollView>
             <View style={styles.btn}>
-                <TouchableOpacity onPress={this.addBooking.bind(this)} style={styles.button}><Text style={styles.datkham}>Đặt khám</Text></TouchableOpacity>
+                <TouchableOpacity onPress={this.addBooking.bind(this)} style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]}><Text style={styles.datkham}>Đặt khám</Text></TouchableOpacity>
             </View>
             <ImagePicker ref={ref => this.imagePicker = ref} />
-            <Modal
-                isVisible={this.state.toggleServiceType}
-                onBackdropPress={() => this.setState({ toggleServiceType: false })}
-                style={stylemodal.bottomModal}>
-                <View style={{ backgroundColor: '#fff', elevation: 3, flexDirection: 'column', maxHeight: 400, minHeight: 100 }}>
-                    <View style={{ flexDirection: 'row', alignItems: "center" }}>
-                        <Text style={{ padding: 20, flex: 1, color: "rgb(0,121,107)", textAlign: 'center', fontSize: 16, fontWeight: '900' }}>
-                            CHỌN DỊCH VỤ KHÁM
-                            </Text>
-                    </View>
 
-                    <FlatList
-                        style={{ padding: 10 }}
-                        keyExtractor={(item, index) => index.toString()}
-                        extraData={this.state}
-                        data={this.state.serviceTypes}
-                        ListHeaderComponent={() =>
-                            !this.state.serviceTypes || this.state.serviceTypes.length == 0 ?
-                                <View style={{ alignItems: 'center', marginTop: 50 }}>
-                                    <Text style={{ fontStyle: 'italic' }}>Không tìm thấy dữ liệu loại dịch vụ</Text>
-                                </View>
-                                : null//<Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" />
-                        }
-                        ListFooterComponent={() => <View style={{ height: 50 }}></View>}
-                        renderItem={({ item, index }) =>
-                            <Card>
-                                <TouchableOpacity onPress={() => { this.setState({ serviceType: item, toggleServiceType: false }) }}>
-                                    <Text style={{ padding: 10, fontWeight: '300', color: this.state.serviceType == item ? "red" : "black" }}>{item.name}</Text>
-                                    {/* <Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" /> */}
-                                </TouchableOpacity>
-                            </Card>
-                        }
-                    />
-                </View>
-            </Modal>
-            <Modal
-                isVisible={this.state.toggleSpecialist}
-                onBackdropPress={() => this.setState({ toggleSpecialist: false })}
-                style={stylemodal.bottomModal}>
-                <View style={{ backgroundColor: '#fff', elevation: 3, flexDirection: 'column', maxHeight: 400, minHeight: 100 }}>
-                    <View style={{ flexDirection: 'row', alignItems: "center" }}>
-                        <Text style={{ padding: 20, flex: 1, color: "rgb(0,121,107)", textAlign: 'center', fontSize: 16, fontWeight: '900' }}>
-                            CHỌN CHUYÊN KHOA
-                            </Text>
-                    </View>
-
-                    <FlatList
-                        style={{ padding: 10 }}
-                        keyExtractor={(item, index) => index.toString()}
-                        extraData={this.state}
-                        data={this.state.specialists}
-                        ListHeaderComponent={() =>
-                            !this.state.specialists || this.state.specialists.length == 0 ?
-                                <View style={{ alignItems: 'center', marginTop: 50 }}>
-                                    <Text style={{ fontStyle: 'italic' }}>Không tìm thấy dữ liệu loại dịch vụ</Text>
-                                </View>
-                                : null//<Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" />
-                        }
-                        ListFooterComponent={() => <View style={{ height: 50 }}></View>}
-                        renderItem={({ item, index }) =>
-                            <Card>
-                                <TouchableOpacity onPress={() => { this.setState({ specialist: item, toggleSpecialist: false }) }}>
-                                    <Text style={{ padding: 10, fontWeight: '300', color: this.state.specialist == item ? "red" : "black" }}>{item.name}</Text>
-                                    {/* <Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" /> */}
-                                </TouchableOpacity>
-                            </Card>
-                        }
-                    />
-                </View>
-            </Modal>
             <DateTimePicker
                 isVisible={this.state.toggelDateTimePickerVisible}
                 onConfirm={newDate => {
-                    this.setState({ bookingDate: newDate, date: newDate.format("dd/MM/yyyy"), toggelDateTimePickerVisible: false }, () => {
+                    this.setState({
+                        bookingDate: newDate,
+                        date: newDate.format("thu, dd tháng MM").replaceAll(" 0", " "),
+                        toggelDateTimePickerVisible: false, allowBooking: true
+                    }, () => {
                     });
                 }}
                 onCancel={() => {
@@ -645,8 +636,7 @@ const styles = StyleSheet.create({
         fontStyle: "normal",
         letterSpacing: 0.2,
         color: "#4a4a4a",
-        padding: 25,
-        textAlign: 'center'
+        padding: 25
     },
     btn: {
         alignItems: 'center',
@@ -655,7 +645,8 @@ const styles = StyleSheet.create({
     },
     button: {
         borderRadius: 6,
-        backgroundColor: "#02c39a",
+        backgroundColor: "#cacaca",
+        // backgroundColor: "#02c39a",
         shadowColor: "rgba(0, 0, 0, 0.21)",
         shadowOffset: {
             width: 2,
