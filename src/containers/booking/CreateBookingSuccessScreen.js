@@ -61,10 +61,13 @@ class CreateBookingSuccessScreen extends Component {
                         <View style={styles.view2}>
                             <View style={styles.col}>
                                 <Text style={styles.col1}>Mã code:</Text>
-                                <QRCode
-                                    value={booking.book.codeBooking}
-                                    size={100}
-                                    fgColor='white' />
+                                <View style={{ alignItems: 'center', marginTop: 10 }}>
+                                    <QRCode
+                                        style={{ alignSelf: 'center', backgroundColor: '#000' }}
+                                        value={booking.book.codeBooking}
+                                        size={100}
+                                        fgColor='white' />
+                                </View>
                             </View>
                         </View>
                         <View style={styles.view1}>
