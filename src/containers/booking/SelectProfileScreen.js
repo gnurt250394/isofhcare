@@ -14,11 +14,14 @@ import clientUtils from '@utils/client-utils';
 class SelectProfileScreen extends Component {
     constructor(props) {
         super(props);
+        let profile = this.props.navigation.state.params.profile;
+        alert(JSON.stringify(profile));
         this.state = {
             data: [],
             refreshing: false,
             size: 10,
-            page: 1
+            page: 1,
+            profile
         }
     }
     onRefresh() {
@@ -169,7 +172,10 @@ class SelectProfileScreen extends Component {
                                 }}
                             />
                             <Text style={styles.bntext}>{item.medicalRecords.name}</Text>
-                            {/* <ScaleImage style={styles.ckeck} height={18} source={require("@images/new/profile/ic_question_check_specialist.png")} /> */}
+                            {
+                                this.state.profile && this.state.profile.medicalRecords && this.state.profile.medicalRecords.id == item.medicalRecords.id ?
+                                    <ScaleImage style={styles.ckeck} height={18} source={require("@images/new/profile/ic_tick.png")} /> : null
+                            }
                         </TouchableOpacity>);
                     }}
                 />
@@ -223,12 +229,11 @@ const styles = StyleSheet.create({
         fontWeight: "normal",
         fontStyle: "normal",
         letterSpacing: 0,
-        color: "#000000"
+        color: "#000000",
+        flex: 1
     },
     ckeck: {
-        position: 'absolute',
-        top: 17,
-        right: 20,
+        marginRight: 15
     },
     btntext: {
         fontSize: 18,
