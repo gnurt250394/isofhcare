@@ -37,9 +37,9 @@ class createProfile extends Component {
     super();
     this.state = {
       isGender: false,
-      genderUser: [{ gender: "Nam", value: 1 }, { gender: "Nữ", value: 2 }],
+      genderUser: [{ gender: "Nam", value: 1 }, { gender: "Nữ", value: 0 }],
       toggelDateTimePickerVisible: false,
-      valueGender: "",
+      valueGender:2,
       txGender: '',
       name: '',
       email: "",
@@ -68,8 +68,8 @@ class createProfile extends Component {
           date: dob ? dob.toDateObject('-').format('dd/MM/yyyy') : (''),
           dob: dob ? dob.toDateObject('-') : (''),
           email:email ? email : '',
-          valueGender: gender ? gender : '',
-          txGender: gender && gender == 1 ? ('Nam') : ('Nữ'),
+          valueGender: gender ? gender : 2,
+          txGender: gender == 1 ? ('Nam') : ('Nữ'),
           isDataNull: isDataNull
         })
         return
@@ -279,7 +279,7 @@ class createProfile extends Component {
               </Modal>
               <Field
 
-                style={[styles.mucdichkham, {justifyContent:'center',alignItems: 'flex-end', flex:1,paddingVertical: 12,}]}
+                style={[styles.mucdichkham, {justifyContent:'center',alignItems: 'flex-end', flex:1,paddingVertical: 12,borderTopWidth: 0,}]}
               >
                 <Text style={styles.mdk}>Ngày sinh</Text>
 
@@ -495,8 +495,7 @@ class createProfile extends Component {
             const { name } = this.state;
             const gender = this.state.valueGender;
             const email = this.state.email
-            let date = this.state.dob ? this.state.dob.format('yyyy-MM-dd') : ('')
-            let date2 = date + ' 00:00:00'
+            let date2 =  this.state.dob ? this.state.dob.format('yyyy-MM-dd') + ' 00:00:00' : null
             medicalRecordProvider
               .createMedical(name, gender, date2,email, image)
               .then( res  => {

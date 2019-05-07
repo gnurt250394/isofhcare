@@ -23,6 +23,11 @@ class ConfirmBookingScreen extends Component {
         let reason = this.props.navigation.state.params.reason;
         let images = this.props.navigation.state.params.images;
         let contact = this.props.navigation.state.params.contact;
+        let booking = this.props.navigation.state.params.booking;
+        if (!booking) {
+            snackbar.show("Không tồn tại đặt khám", "danger");
+            this.props.navigation.pop();
+        }
 
         this.state = {
             serviceType,
@@ -35,7 +40,8 @@ class ConfirmBookingScreen extends Component {
             reason,
             images,
             paymentMethod: 1,
-            contact
+            contact,
+            booking
         }
     }
     confirmPayment(booking, bookingId) {
@@ -140,60 +146,11 @@ class ConfirmBookingScreen extends Component {
     createBooking() {
         connectionUtils.isConnected().then(s => {
             this.setState({ isLoading: true }, () => {
-                console.log(this.state.schedule.time);
-                bookingProvider.create(
-                    this.state.hospital.hospital.id,
-                    this.state.schedule.schedule.id,
-                    this.state.profile.medicalRecords.id,
-                    this.state.specialist.id,
-                    this.state.service.id,
-                    this.state.schedule.time.format("yyyy-MM-dd HH:mm:ss"),
-                    this.state.reason,
-                    this.state.images,
-                    this.state.contact
-                ).then(s => {
-                    if (s) {
-                        switch (s.code) {
-                            case 0:
-                                if (this.state.paymentMethod == 2)
-                                    this.confirmPayment(s.data, s.data.book.id);
-                                else {
-                                    this.getPaymentLink(s.data);
-                                }
-                                break;
-                            case 1:
-                                this.setState({ isLoading: false }, () => {
-                                    snackbar.show("Đặt khám phải cùng ngày giờ với lịch làm việc", "danger");
-                                });
-                                break;
-                            case 2:
-                                this.setState({ isLoading: false }, () => {
-                                    snackbar.show("Đã kín lịch trong khung giờ này", "danger");
-                                });
-                                break;
-                            case 401:
-                                this.setState({ isLoading: false }, () => {
-                                    snackbar.show("Vui lòng đăng nhập để thực hiện", "danger");
-                                    this.props.navigation.navigate("login"
-                                        // , {
-                                        //     nextScreen: {
-                                        //         screen: "confirmBooking", params: this.props.navigation.state.params
-                                        //     }
-                                        // }
-                                    );
-                                });
-                                break;
-                            default:
-                                this.setState({ isLoading: false }, () => {
-                                    snackbar.show("Đặt khám không thành công", "danger");
-                                });
-                                break;
-                        }
-                    }
-                }).catch(e => {
-                    this.setState({ isLoading: false }, () => {
-                    });
-                })
+                if (this.state.paymentMethod == 2)
+                    this.confirmPayment(this.state.booking, this.state.booking.book.id);
+                else {
+                    this.getPaymentLink(this.state.booking);
+                }
             });
         }).catch(e => {
             snackbar.show("Không có kết nối mạng", "danger");

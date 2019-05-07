@@ -31,17 +31,27 @@ module.exports = {
           var body = {
             medicalRecords: {
               name: name,
-              gender: gender,
-              dob: dob,
+              gender: gender != 0 && gender != 1 ? 2 : gender,
+              dob:dob ,
               mail: email ? email : '',
               status: 1,
               avatar: avatar
             }
           };
+          var body2 = {
+            medicalRecords: {
+              name: name,
+              gender: gender != 0 && gender != 1 ? 2 : gender,
+              mail: email ? email : '',
+              status: 1,
+              avatar: avatar
+            }
+          };
+          body3 = dob ? body2 : body
           client.requestApi(
             "post",
             constants.api.medicalRecord.createMedical,
-            body,
+            body3,
             (s, e) => {
               if (s) resolve(s);
               if (e) reject(e);

@@ -3,25 +3,13 @@ import ActivityPanel from '@components/ActivityPanel';
 import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Keyboard, Image, TouchableHighlight, FlatList, Dimensions, Slider } from 'react-native';
 import { connect } from 'react-redux';
 import ScaleImage from "mainam-react-native-scaleimage";
-import ImagePicker from 'mainam-react-native-select-image';
-import imageProvider from '@data-access/image-provider';
 import connectionUtils from '@utils/connection-utils';
 import clientUtils from '@utils/client-utils';
-import { Card } from 'native-base';
-
-const DEVICE_HEIGHT = Dimensions.get('window').height;
-import Modal from "react-native-modal";
-import stylemodal from "@styles/modal-style";
 import scheduleProvider from '@data-access/schedule-provider';
-import specialistProvider from '@data-access/specialist-provider';
-import DateTimePicker from 'mainam-react-native-date-picker';
-
 import snackbar from '@utils/snackbar-utils';
 import dateUtils from "mainam-react-native-date-utils";
-import ImageLoad from 'mainam-react-native-image-loader';
-import Form from "mainam-react-native-form-validate/Form";
-import TextField from "mainam-react-native-form-validate/TextField";
-import Field from "mainam-react-native-form-validate/Field";
+import bookingProvider from '@data-access/booking-provider';
+
 class SelectTimeScreen extends Component {
     constructor(props) {
         super(props);
@@ -173,18 +161,89 @@ class SelectTimeScreen extends Component {
 
         if (error)
             return;
-        this.props.navigation.navigate("confirmBooking", {
-            serviceType: this.state.serviceType,
-            service: this.state.service,
-            profile: this.state.profile,
-            hospital: this.state.hospital,
-            specialist: this.state.specialist,
-            bookingDate: this.state.bookingDate,
-            schedule: this.state.schedule,
-            reason: this.state.reason,
-            images: this.state.images,
-            contact: this.state.contact
-        });
+        connectionUtils.isConnected().then(s => {
+            this.setState({ isLoading: true }, () => {
+                console.log(this.state.schedule.time);
+                bookingProvider.create(
+                    this.state.hospital.hospital.id,
+                    this.state.schedule.schedule.id,
+                    this.state.profile.medicalRecords.id,
+                    this.state.specialist.id,
+                    this.state.service.id,
+                    this.state.schedule.time.format("yyyy-MM-dd HH:mm:ss"),
+                    this.state.reason,
+                    this.state.images,
+                    this.state.contact
+                ).then(s => {
+                    this.setState({ isLoading: false }, () => {
+                        if (s) {
+                            switch (s.code) {
+                                case 0:
+                                    this.props.navigation.navigate("confirmBooking", {
+                                        serviceType: this.state.serviceType,
+                                        service: this.state.service,
+                                        profile: this.state.profile,
+                                        hospital: this.state.hospital,
+                                        specialist: this.state.specialist,
+                                        bookingDate: this.state.bookingDate,
+                                        schedule: this.state.schedule,
+                                        reason: this.state.reason,
+                                        images: this.state.images,
+                                        contact: this.state.contact,
+                                        booking: s.data
+                                    });
+                                    break;
+                                case 1:
+                                    this.setState({ isLoading: false }, () => {
+                                        snackbar.show("Đặt khám phải cùng ngày giờ với lịch làm việc", "danger");
+                                    });
+                                    break;
+                                case 2:
+                                    this.setState({ isLoading: false }, () => {
+                                        snackbar.show("Đã kín lịch trong khung giờ này", "danger");
+                                    });
+                                    break;
+                                case 401:
+                                    this.setState({ isLoading: false }, () => {
+                                        snackbar.show("Vui lòng đăng nhập để thực hiện", "danger");
+                                        this.props.navigation.navigate("login"
+                                            // , {
+                                            //     nextScreen: {
+                                            //         screen: "confirmBooking", params: this.props.navigation.state.params
+                                            //     }
+                                            // }
+                                        );
+                                    });
+                                    break;
+                                default:
+                                    this.setState({ isLoading: false }, () => {
+                                        snackbar.show("Đặt khám không thành công", "danger");
+                                    });
+                                    break;
+                            }
+                        }
+                    });
+                }).catch(e => {
+                    this.setState({ isLoading: false }, () => {
+                    });
+                })
+            });
+        }).catch(e => {
+            snackbar.show("Không có kết nối mạng", "danger");
+        })
+        return;
+        // this.props.navigation.navigate("confirmBooking", {
+        //     serviceType: this.state.serviceType,
+        //     service: this.state.service,
+        //     profile: this.state.profile,
+        //     hospital: this.state.hospital,
+        //     specialist: this.state.specialist,
+        //     bookingDate: this.state.bookingDate,
+        //     schedule: this.state.schedule,
+        //     reason: this.state.reason,
+        //     images: this.state.images,
+        //     contact: this.state.contact
+        // });
     }
 
     getColor(item) {
@@ -223,11 +282,12 @@ class SelectTimeScreen extends Component {
                 <ScrollView>
                     <View style={styles.article}>
                         <TouchableOpacity style={styles.mucdichkham} onPress={() => {
-                            this.props.navigation.navigate("selectService", { 
-                                hospital: this.state.hospital, 
-                                specialist: this.state.specialist, 
-                                serviceType: this.state.serviceType, 
-                                onSelected: this.selectService.bind(this) })
+                            this.props.navigation.navigate("selectService", {
+                                hospital: this.state.hospital,
+                                specialist: this.state.specialist,
+                                serviceType: this.state.serviceType,
+                                onSelected: this.selectService.bind(this)
+                            })
                         }}>
                             <ScaleImage style={styles.imgIc} height={15} source={require("@images/new/booking/ic_specialist.png")} />
                             <Text style={styles.mdk}>{this.state.service ? this.state.service.name : "Chọn dịch vụ"}</Text>

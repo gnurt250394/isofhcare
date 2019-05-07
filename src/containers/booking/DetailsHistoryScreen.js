@@ -42,7 +42,7 @@ export default class DetailsHistoryScreen extends Component {
   componentDidMount() {
     var id = this.props.navigation.state.params.id;
     var name = this.props.navigation.state.params.name;
-    var image = this.props.navigation.state.params.image;
+    var image = this.props.navigation.state.params.image ? this.props.navigation.state.params.image.absoluteUrl() : '';
     var service = this.props.navigation.state.params.service;
     var location = this.props.navigation.state.params.location;
     var address = this.props.navigation.state.params.address;
@@ -70,7 +70,7 @@ export default class DetailsHistoryScreen extends Component {
       imgNote,
       status
     });
-    console.log(id,
+    console.log(  id,
       name,
       image,
       service,
@@ -149,18 +149,24 @@ export default class DetailsHistoryScreen extends Component {
       var images = image.split(",");
       return (<View>
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 10 }}>
-          {
-            images.map((item, index) => <TouchableOpacity key={index} style={{ marginRight: 10, borderRadius: 10, marginBottom: 10, width: 70, height: 70 }}>
-              <Image
-                style={{ width: 70, height: 70, borderRadius: 10 }}
-                source={{
-                  uri: item ? item.absoluteUrl() : ''
-
-                }}
-                resizeMode={'cover'}
-              />
-            </TouchableOpacity>)
-          }
+            {
+                        images.map((item, index) => <TouchableOpacity onPress={() => {
+                            this.props.navigation.navigate("photoViewer", {
+                                urls: images.map(item => {
+                                    return item.absoluteUrl()
+                                }), index
+                            });
+                        }} key={index} style={{ marginRight: 10, borderRadius: 10, marginBottom: 10, width: 70, height: 70 }}>
+                            <Image
+                                style={{ width: 70, height: 70, borderRadius: 10 }}
+                                source={{
+                                    uri:item ? item.absoluteUrl() : ''
+                                }}
+                                resizeMode={'cover'}
+                            />
+                        </TouchableOpacity>)
+                    }
+          
         </View>
       </View>);
     } else {
@@ -177,7 +183,8 @@ export default class DetailsHistoryScreen extends Component {
     }
   }
   render() {
-    const avatar = this.state.image ? { uri: this.state.image.absoluteUrl() } : require("@images/new/user.png")
+    const avatar = this.state.image ? { uri:`${this.state.image}`} : require("@images/new/user.png")
+    console.log(this.state.image.absoluteUrl(),'avatar')
     return (
       <ActivityPanel
         style={{ flex: 1, backgroundColor: "#f7f9fb" }}
@@ -195,10 +202,8 @@ export default class DetailsHistoryScreen extends Component {
         <ScrollView>
           <View>
             <View style={styles.viewName}>
-              <ScaledImage
-                width={20}
-                borderRadius={10}
-                height={20}
+              <Image
+               style={{width:20,height:20,borderRadius:10}}
                 source={
                   avatar
                 }
@@ -214,18 +219,20 @@ export default class DetailsHistoryScreen extends Component {
               <Text style={styles.txService}>Dịch vụ khám</Text>
               <Text style={styles.txInfoService}>{this.state.service}</Text>
             </View>
+            <View style={{backgroundColor:'#EDECED',height:1,marginLeft:12}}></View>
             <View style={styles.viewLocation}>
               <ScaledImage
                 height={20}
                 width={20}
                 source={require("@images/ic_location.png")}
-              />
+              /> 
               <Text numberOfLines={5} style={styles.txLocation}>Địa điểm</Text>
               <View style={styles.viewInfoLocation}>
                 <Text style={styles.txClinic}>{this.state.location}</Text>
                 <Text numberOfLines={5} style={styles.txAddress}>{this.state.address}</Text>
               </View>
             </View>
+            <View style={{backgroundColor:'#EDECED',height:1,marginLeft:12}}></View>
             <View style={styles.viewDate}>
               <ScaledImage
                 height={19}
@@ -266,6 +273,7 @@ export default class DetailsHistoryScreen extends Component {
                 {Number(this.state.price).formatPrice() + 'đ'}
               </Text>
             </View>
+            <View style={{backgroundColor:'#EDECED',height:1,marginLeft:12}}></View>
             <View style={styles.viewPayment}>
               <ScaledImage
                 height={19}
@@ -284,6 +292,8 @@ export default class DetailsHistoryScreen extends Component {
               <Text style={styles.txStatusLabel}>Trạng thái</Text>
               {this.status()}
             </View>
+            <View style={{backgroundColor:'#EDECED',height:1,marginLeft:12}}></View>
+
             <View style={styles.viewBaCode}>
               <ScaledImage
                 width={20}
@@ -321,7 +331,7 @@ const styles = StyleSheet.create({
   txName: {
     fontWeight: "bold",
     flex: 1,
-    marginLeft: 5
+    marginLeft: 8
   },
   viewService: {
     paddingVertical: 15,
@@ -332,8 +342,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderTopColor: "#EDECED",
     borderTopWidth: 1,
-    borderBottomColor: "#EDECED",
-    borderBottomWidth: 1,
     marginTop: 10
   },
   txService: {
@@ -353,10 +361,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 15,
     backgroundColor: "#fff",
-    borderTopColor: "#EDECED",
-    borderTopWidth: 1,
-    borderBottomColor: "#EDECED",
-    borderBottomWidth: 1
+    
+ 
   },
   txLocation: {
     fontWeight: "bold",
@@ -387,8 +393,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 15,
     backgroundColor: "#fff",
-    borderTopColor: "#EDECED",
-    borderTopWidth: 1,
     borderBottomColor: "#EDECED",
     borderBottomWidth: 1
   },
@@ -415,6 +419,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     marginVertical: 20,
     width: "100%",
+    borderBottomColor: "#EDECED",
+    borderBottomWidth: 1,
+    borderTopColor: "#EDECED",
+    borderTopWidth:1,
     paddingHorizontal: 15,
     paddingVertical: 20
   },
@@ -427,8 +435,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderTopColor: "#EDECED",
     borderTopWidth: 1,
-    borderBottomColor: "#EDECED",
-    borderBottomWidth: 1
+  
   },
   txLabelPrice: {
     fontWeight: "bold",
@@ -447,8 +454,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 15,
     backgroundColor: "#fff",
-    borderTopColor: "#EDECED",
-    borderTopWidth: 1,
     borderBottomColor: "#EDECED",
     borderBottomWidth: 1
   },
@@ -470,10 +475,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 15,
     backgroundColor: "#fff",
-    borderTopColor: "#EDECED",
-    borderTopWidth: 1,
-    borderBottomColor: "#EDECED",
-    borderBottomWidth: 1
+
   },
   txStatusLabel: {
     fontWeight: "bold",
@@ -492,8 +494,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 15,
     backgroundColor: "#fff",
-    borderTopColor: "#EDECED",
-    borderTopWidth: 1,
     borderBottomColor: "#EDECED",
     borderBottomWidth: 1
   },
