@@ -65,8 +65,9 @@ class SelectServiceTypeScreen extends Component {
     }
     onSearch() {
         var s = this.state.searchValue;
+        alert(JSON.stringify(this.state.listServiceType))
         var listSearch = this.state.listServiceType.filter(function (item) {
-            return s == null || item.name && item.name.toLowerCase().indexOf(s.toLowerCase()) != -1;
+            return item.deleted == 0 && (item == null || item.name && item.name.toLowerCase().indexOf(s.toLowerCase()) != -1);
         });
         this.setState({ listServiceTypeSearch: listSearch });
     }
