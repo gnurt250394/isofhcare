@@ -80,7 +80,8 @@ class ConfirmBookingScreen extends Component {
         // return;
 
         this.setState({ isLoading: true }, () => {
-            walletProvider.createOnlinePayment(this.props.userApp.currentUser.id, "VNPAY", this.state.hospital.hospital.id, booking.book.id, "http://localhost:8888/order/vnpay_return", this.state.service.price, "", booking.book.hash).then(s => {
+            let memo = `THANH TOÁN VNPAY - ${this.state.serviceType.name} - ${this.state.hospital.hospital.name} - ${this.state.schedule.time.format("yyyy-MM-dd HH:mm:ss")} - ${this.state.profile.medicalRecords.name}`;
+            walletProvider.createOnlinePayment(this.props.userApp.currentUser.id, "VNPAY", this.state.hospital.hospital.id, booking.book.id, "http://localhost:8888/order/vnpay_return", this.state.service.price, memo, booking.book.hash).then(s => {
                 this.setState({ isLoading: false }, () => {
                     this.props.navigation.navigate("paymentVNPay", {
                         urlPayment: s.payment_url,
