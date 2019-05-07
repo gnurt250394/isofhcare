@@ -53,7 +53,7 @@ class SelectTimeScreen extends Component {
     selectService(service) {
         // alert(JSON.stringify(service));
         // return;
-        this.setState({ service: service, schedule: null, serviceError: "", scheduleError: "" }, () => {
+        this.setState({ service: service, schedule: null, serviceError: "", scheduleError: "", allowBooking: true }, () => {
             this.setState({ isLoading: true }, () => {
                 scheduleProvider.getByDateAndService(service.id, this.state.bookingDate.format("yyyy-MM-dd")).then(s => {
                     let listTime = [];
@@ -141,6 +141,8 @@ class SelectTimeScreen extends Component {
         return false;
     }
     confirmBooking() {
+        if (!this.state.allowBooking)
+            return;
         let error = false;
 
         if (this.state.service) {
@@ -350,7 +352,7 @@ class SelectTimeScreen extends Component {
                             </View> : null
                     }
                 </ScrollView>
-                <TouchableOpacity style={styles.button} onPress={this.confirmBooking.bind(this)}>
+                <TouchableOpacity style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]} onPress={this.confirmBooking.bind(this)}>
                     <Text style={styles.btntext}>Xác nhận</Text>
                 </TouchableOpacity>
             </View>
@@ -462,7 +464,7 @@ const styles = StyleSheet.create({
     },
     button: {
         borderRadius: 6,
-        backgroundColor: "#02c39a",
+        backgroundColor: "#cacaca",
         shadowColor: "rgba(0, 0, 0, 0.21)",
         shadowOffset: {
             width: 2,
