@@ -133,6 +133,9 @@ class ConfirmBookingScreen extends Component {
                                         case "order_ref_id":
                                             snackbar.show("Đặt khám đã tồn tại trong hệ thống", "danger");
                                             return;
+                                        case "vendor_id":
+                                            snackbar.show("Vender không tồn tại trong hệ thống", "danger");
+                                            return;
                                     }
                                 }
                                 break;
