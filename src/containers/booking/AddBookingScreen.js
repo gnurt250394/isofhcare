@@ -7,13 +7,7 @@ import ImagePicker from 'mainam-react-native-select-image';
 import imageProvider from '@data-access/image-provider';
 import connectionUtils from '@utils/connection-utils';
 import clientUtils from '@utils/client-utils';
-import { Card } from 'native-base';
-
 const DEVICE_HEIGHT = Dimensions.get('window').height;
-import Modal from "react-native-modal";
-import stylemodal from "@styles/modal-style";
-import serviceTypeProvider from '@data-access/service-type-provider';
-import specialistProvider from '@data-access/specialist-provider';
 import DateTimePicker from 'mainam-react-native-date-picker';
 
 import snackbar from '@utils/snackbar-utils';
@@ -22,7 +16,6 @@ import stringUtils from "mainam-react-native-string-utils";
 import ImageLoad from 'mainam-react-native-image-loader';
 import Form from "mainam-react-native-form-validate/Form";
 import TextField from "mainam-react-native-form-validate/TextField";
-import Field from "mainam-react-native-form-validate/Field";
 
 class AddBookingScreen extends Component {
     constructor(props) {
@@ -30,7 +23,6 @@ class AddBookingScreen extends Component {
         this.state = {
             colorButton: 'red',
             imageUris: [],
-            modalVisible: false,
             allowBooking: false
         }
     }
@@ -42,21 +34,7 @@ class AddBookingScreen extends Component {
         imageUris.splice(index, 1);
         this.setState({ imageUris });
     }
-    setModalVisible(visible) {
-        this.setState({ modalVisible: visible });
-    }
     componentDidMount() {
-        serviceTypeProvider.getAll().then(s => {
-            this.setState({ serviceTypes: s });
-        }).catch(e => {
-            this.setState({ serviceTypes: e });
-        });
-
-        specialistProvider.getAll().then(s => {
-            this.setState({ specialists: s });
-        }).catch(e => {
-            this.setState({ specialists: e });
-        });
     }
     selectImage() {
         if (this.state.imageUris && this.state.imageUris.length >= 5) {
@@ -113,12 +91,14 @@ class AddBookingScreen extends Component {
 
             }
         }).catch(e => {
-            alert(JSON.stringify(e));
             snackbar.show("Không có kết nối mạng", "danger");
         });
     }
     selectProfile(profile) {
         this.setState({ profile, allowBooking: true });
+    }    
+    selectServiceType(serviceType) {
+        this.setState({ serviceType, allowBooking: true });
     }
     selectHospital(hospital) {
         this.setState({ hospital, allowBooking: true });
@@ -269,7 +249,17 @@ class AddBookingScreen extends Component {
                     }
                 </TouchableOpacity>
                 <View style={styles.article}>
-                    <TouchableOpacity style={styles.mucdichkham} onPress={() => this.setState({ toggleServiceType: true })}>
+                    <TouchableOpacity style={styles.mucdichkham} onPress={() => {
+                        connectionUtils.isConnected().then(s => {
+                            this.props.navigation.navigate("selectServiceType", {
+                                serviceType: this.state.serviceType,
+                                onSelected: this.selectServiceType.bind(this)
+                            })
+                        }).catch(e => {
+                            snackbar.show("Không có kết nối mạng", "danger");
+                        });
+                    }
+                    }>
                         <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_serviceType.png")} />
                         <Text style={styles.mdk}>Yêu cầu</Text>
                         <Text numberOfLines={1} style={styles.ktq}>{this.state.serviceType ? this.state.serviceType.name : "Chọn loại dịch vụ"}</Text>
@@ -418,43 +408,7 @@ class AddBookingScreen extends Component {
                 <TouchableOpacity onPress={this.addBooking.bind(this)} style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]}><Text style={styles.datkham}>Đặt khám</Text></TouchableOpacity>
             </View>
             <ImagePicker ref={ref => this.imagePicker = ref} />
-            <Modal
-                isVisible={this.state.toggleServiceType}
-                onBackdropPress={() => this.setState({ toggleServiceType: false })}
-                style={stylemodal.bottomModal}>
-                <View style={{ backgroundColor: '#fff', elevation: 3, flexDirection: 'column', maxHeight: 400, minHeight: 100 }}>
-                    <View style={{ flexDirection: 'row', alignItems: "center" }}>
-                        <Text style={{ padding: 20, flex: 1, color: "rgb(0,121,107)", textAlign: 'center', fontSize: 16, fontWeight: '900' }}>
-                            CHỌN DỊCH VỤ KHÁM
-                            </Text>
-                    </View>
-
-                    <FlatList
-                        style={{ padding: 10 }}
-                        keyExtractor={(item, index) => index.toString()}
-                        extraData={this.state}
-                        data={this.state.serviceTypes}
-                        ListHeaderComponent={() =>
-                            !this.state.serviceTypes || this.state.serviceTypes.length == 0 ?
-                                <View style={{ alignItems: 'center', marginTop: 50 }}>
-                                    <Text style={{ fontStyle: 'italic' }}>Không tìm thấy dữ liệu loại dịch vụ</Text>
-                                </View>
-                                : null//<Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" />
-                        }
-                        ListFooterComponent={() => <View style={{ height: 50 }}></View>}
-                        renderItem={({ item, index }) => {
-                            if (item.deleted == 0)
-                                return <Card>
-                                    <TouchableOpacity onPress={() => { this.setState({ serviceType: item, toggleServiceType: false, allowBooking: true }) }}>
-                                        <Text style={{ padding: 10, fontWeight: '300', color: this.state.serviceType == item ? "red" : "black" }}>{item.name}</Text>
-                                        {/* <Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" /> */}
-                                    </TouchableOpacity>
-                                </Card>
-                            return null;
-                        }}
-                    />
-                </View>
-            </Modal>
+            
             <DateTimePicker
                 isVisible={this.state.toggelDateTimePickerVisible}
                 onConfirm={newDate => {
