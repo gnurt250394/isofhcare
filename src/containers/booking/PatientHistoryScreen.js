@@ -157,10 +157,11 @@ class PatientHistoryScreen extends Component {
       );
   }
   onClickItem = (item) => {
+    console.log(item)
     this.props.navigation.navigate("DetailsHistoryScreen", {
       id: item.item.booking.id,
-      name: item.item.author.name,
-      image: item.item.author.avatar,
+      name: item.item.medicalRecords.name,
+      image: item.item.medicalRecords.avatar,
       service: item.item.service.name,
       location: item.item.hospital.name,
       address: item.item.hospital.address,
@@ -170,7 +171,7 @@ class PatientHistoryScreen extends Component {
       statusPay: item.item.booking.statusPay,
       codeBooking: item.item.booking.codeBooking,
       note: item.item.booking.note,
-      imgNote: item.item.booking.image,
+      imgNote: item.item.booking.images,
       status: item.item.booking.status
     });
   };
@@ -219,7 +220,7 @@ class PatientHistoryScreen extends Component {
           >
             <Text style={{ fontWeight: "bold", color: 'rgb(74,74,74)' }}>{item.item.service.name ? item.item.service.name : ''}</Text>
             <View style={{marginVertical:10}}> 
-              <Text style={{ color: 'rgb(142,142,147)' }}>{item.item.author.name ? item.item.author.name : ''}</Text>
+              <Text style={{ color: 'rgb(142,142,147)' }}>{item.item.medicalRecords.name ? item.item.medicalRecords.name : ''}</Text>
               <Text style={{ color: 'rgb(142,142,147)' }}>{item.item.hospital.name ? item.item.hospital.name : item.item.hospital.name}</Text>
             </View>
             {item.item.booking.status || item.item.booking.status == 0 ? this.renderStatus(item.item.booking.status) : null}
