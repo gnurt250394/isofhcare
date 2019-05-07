@@ -12,6 +12,7 @@ class SelectServiceScreen extends Component {
         super(props);
         let hospital = this.props.navigation.state.params.hospital;
         let specialist = this.props.navigation.state.params.specialist;
+        let serviceType = this.props.navigation.state.params.serviceType;
         if (!hospital) {
             this.props.navigation.pop();
             snackbar.show("Vui lòng chọn địa điểm khám", "danger");
@@ -26,7 +27,8 @@ class SelectServiceScreen extends Component {
             searchValue: "",
             refreshing: false,
             hospital: hospital || { hospital: {} },
-            specialist
+            specialist,
+            serviceType
         }
     }
     componentDidMount() {
@@ -43,7 +45,7 @@ class SelectServiceScreen extends Component {
 
     onRefresh = () => {
         this.setState({ refreshing: true }, () => {
-            serviceProvider.getAll(this.state.hospital.hospital.id, this.state.specialist.id).then(s => {
+            serviceProvider.getAll(this.state.hospital.hospital.id, this.state.specialist.id, this.state.serviceType.id).then(s => {
                 this.setState({
                     refreshing: false
                 }, () => {

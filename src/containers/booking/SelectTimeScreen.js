@@ -223,7 +223,11 @@ class SelectTimeScreen extends Component {
                 <ScrollView>
                     <View style={styles.article}>
                         <TouchableOpacity style={styles.mucdichkham} onPress={() => {
-                            this.props.navigation.navigate("selectService", { hospital: this.state.hospital, specialist: this.state.specialist, onSelected: this.selectService.bind(this) })
+                            this.props.navigation.navigate("selectService", { 
+                                hospital: this.state.hospital, 
+                                specialist: this.state.specialist, 
+                                serviceType: this.state.serviceType, 
+                                onSelected: this.selectService.bind(this) })
                         }}>
                             <ScaleImage style={styles.imgIc} height={15} source={require("@images/new/booking/ic_specialist.png")} />
                             <Text style={styles.mdk}>{this.state.service ? this.state.service.name : "Chọn dịch vụ"}</Text>
