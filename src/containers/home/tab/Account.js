@@ -115,7 +115,7 @@ class Account extends Component {
         >
           <ImageLoad
             resizeMode="cover"
-            imageStyle={{ borderRadius: 35 }}
+            imageStyle={{ borderRadius: 35, borderWidth: 1, borderColor: 'rgba(151, 151, 151, 0.29)' }}
             borderRadius={35}
             customImagePlaceholderDefaultStyle={{
               width: 70,
@@ -149,7 +149,7 @@ class Account extends Component {
   }
   renderViewUserNotLogin() {
     return (
-      <View style={{ alignItems: "center",marginTop:20 }}>
+      <View style={{ alignItems: "center", marginTop: 20 }}>
         <View style={{ marginBottom: 15 }}>
         </View>
         <TouchableOpacity
@@ -415,7 +415,8 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     lineHeight: 23
   },
-  popup:{    width: width * 0.8
+  popup: {
+    width: width * 0.8
   },
   subLabel: {
     color: "#9B9B9B",

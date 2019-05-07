@@ -223,7 +223,7 @@ class NotificationScreen extends Component {
           >
             <ImageLoad
               resizeMode="cover"
-              imageStyle={{ borderRadius: 25 }}
+              imageStyle={{ borderRadius: 25, borderWidth: 1, borderColor: 'rgba(151, 151, 151, 0.29)'  }}
               borderRadius={25}
               customImagePlaceholderDefaultStyle={[styles.avatar, { width: 50, height: 50 }]}
               placeholderSource={require("@images/new/user.png")}
