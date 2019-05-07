@@ -149,8 +149,13 @@ class Account extends Component {
   }
   renderViewUserNotLogin() {
     return (
-      <View style={{ alignItems: "center", marginTop: 20 }}>
-        <View style={{ marginBottom: 15 }}>
+      <View style={{ alignItems: "center", marginTop: 30 }}>
+        <View style={{ marginBottom: 30 }}>
+          <ScaledImage
+            source={require("@images/logotext.png")}
+            width={116}
+            height={21}
+          />
         </View>
         <TouchableOpacity
           onPress={() => {
@@ -159,9 +164,10 @@ class Account extends Component {
           style={{
             padding: 18,
             backgroundColor: "#02C39A",
-            borderRadius: 30,
-            width: 170,
+            borderRadius: 5,
+            width: 270,
             marginBottom: 20,
+            marginTop: 20
           }}
         >
           <Text
@@ -169,10 +175,10 @@ class Account extends Component {
               color: "#FFF",
               fontWeight: "bold",
               textAlign: "center",
-              fontSize: 15
+              fontSize: 17
             }}
           >
-            Đăng nhập
+            Đăng nhập/ Đăng Ký
           </Text>
         </TouchableOpacity>
       </View>
@@ -184,7 +190,9 @@ class Account extends Component {
         showsVerticalScrollIndicator={false}
         style={{
           flex: 1,
+          paddingTop: 0,
           paddingHorizontal: 20,
+          paddingTop: 20
         }}
       >
         {this.props.userApp.isLogin
