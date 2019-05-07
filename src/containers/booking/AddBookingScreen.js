@@ -123,6 +123,9 @@ class AddBookingScreen extends Component {
     selectHospital(hospital) {
         this.setState({ hospital, allowBooking: true });
     }
+    selectSpecialist(specialist) {
+        this.setState({ specialist, allowBooking: true });
+    }
     addBooking() {
         Keyboard.dismiss();
         if (!this.state.allowBooking)
@@ -306,7 +309,13 @@ class AddBookingScreen extends Component {
                             <Text style={[styles.errorStyle]}>{this.state.hospitalError}</Text> : null
                     }
                     <View style={styles.border}></View>
-                    <TouchableOpacity style={styles.mucdichkham} onPress={() => this.setState({ toggleSpecialist: true })}>
+                    <TouchableOpacity style={styles.mucdichkham} onPress={() => {
+                        connectionUtils.isConnected().then(s => {
+                            this.props.navigation.navigate("selectSpecialist", { onSelected: this.selectSpecialist.bind(this) });
+                        }).catch(e => {
+                            snackbar.show("Không có kết nối mạng", "danger");
+                        });
+                    }}>
                         <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_specialist.png")} />
                         <Text style={styles.mdk}>Chuyên khoa</Text>
                         <Text numberOfLines={1} style={styles.ktq}>{this.state.specialist ? this.state.specialist.name : "Chọn chuyên khoa"}</Text>
@@ -435,41 +444,6 @@ class AddBookingScreen extends Component {
                                 </Card>
                             return null;
                         }}
-                    />
-                </View>
-            </Modal>
-            <Modal
-                isVisible={this.state.toggleSpecialist}
-                onBackdropPress={() => this.setState({ toggleSpecialist: false })}
-                style={stylemodal.bottomModal}>
-                <View style={{ backgroundColor: '#fff', elevation: 3, flexDirection: 'column', maxHeight: 400, minHeight: 100 }}>
-                    <View style={{ flexDirection: 'row', alignItems: "center" }}>
-                        <Text style={{ padding: 20, flex: 1, color: "rgb(0,121,107)", textAlign: 'center', fontSize: 16, fontWeight: '900' }}>
-                            CHỌN CHUYÊN KHOA
-                            </Text>
-                    </View>
-
-                    <FlatList
-                        style={{ padding: 10 }}
-                        keyExtractor={(item, index) => index.toString()}
-                        extraData={this.state}
-                        data={this.state.specialists}
-                        ListHeaderComponent={() =>
-                            !this.state.specialists || this.state.specialists.length == 0 ?
-                                <View style={{ alignItems: 'center', marginTop: 50 }}>
-                                    <Text style={{ fontStyle: 'italic' }}>Không tìm thấy dữ liệu loại dịch vụ</Text>
-                                </View>
-                                : null//<Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" />
-                        }
-                        ListFooterComponent={() => <View style={{ height: 50 }}></View>}
-                        renderItem={({ item, index }) =>
-                            <Card>
-                                <TouchableOpacity onPress={() => { this.setState({ specialist: item, toggleSpecialist: false, allowBooking: true }) }}>
-                                    <Text style={{ padding: 10, fontWeight: '300', color: this.state.specialist == item ? "red" : "black" }}>{item.name}</Text>
-                                    {/* <Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" /> */}
-                                </TouchableOpacity>
-                            </Card>
-                        }
                     />
                 </View>
             </Modal>

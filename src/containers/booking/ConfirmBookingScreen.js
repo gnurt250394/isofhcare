@@ -121,7 +121,7 @@ class ConfirmBookingScreen extends Component {
                                 for (let key in message) {
                                     switch (key) {
                                         case "id":
-                                            snackbar.show("Tài khoản không tồn tại trong hệ thống", "danger");
+                                            snackbar.show("Tài khoản của bạn chưa thể thanh toán trả trước. Vui lòng liên hệ Admin để được giải quyết", "danger");
                                             return;
                                         case "order_ref_id":
                                             snackbar.show("Đặt khám đã tồn tại trong hệ thống", "danger");
