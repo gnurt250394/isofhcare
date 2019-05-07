@@ -87,7 +87,8 @@ module.exports = {
       DATA_PROVINCE: "DATA_PROVINCE",
       CURRENT_LOCATION: "CURRENT_LOCATION",
       INTRO_FINISHED: "INTRO_FINISHED",
-      LASTEST_POST: "LASTEST_POSTS",
+      LASTEST_POSTS: "LASTEST_POSTS",
+      LASTEST_PROFILE: "LASTEST_PROFILE",
       KEY_FINGER: 'KEY_FINGER',
       KEY_REFRESH_TOKEN: 'KEY_REFRESH_TOKEN'
     }
@@ -328,9 +329,9 @@ module.exports = {
       get_by_user: isofhcare_service + "medical-records/get-by-user",
       createMedical: isofhcare_service + "medical-records/create"
     },
-    patientHistory :{
-      getListPatient: isofhcare_service +"booking/get-by-author",
-      getDetailsHistory:isofhcare_service + "booking/get-detail"
+    patientHistory: {
+      getListPatient: isofhcare_service + "booking/get-by-author",
+      getDetailsHistory: isofhcare_service + "booking/get-detail"
     },
     service: {
       get_all: isofhcare_service + "service/get-all"

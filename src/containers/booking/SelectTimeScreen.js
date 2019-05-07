@@ -9,6 +9,8 @@ import scheduleProvider from '@data-access/schedule-provider';
 import snackbar from '@utils/snackbar-utils';
 import dateUtils from "mainam-react-native-date-utils";
 import bookingProvider from '@data-access/booking-provider';
+import dataCacheProvider from '@data-access/datacache-provider';
+import constants from '@resources/strings';
 
 class SelectTimeScreen extends Component {
     constructor(props) {
@@ -181,6 +183,8 @@ class SelectTimeScreen extends Component {
                         if (s) {
                             switch (s.code) {
                                 case 0:
+                                    dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_POSTS, this.state.profile);
+
                                     this.props.navigation.navigate("confirmBooking", {
                                         serviceType: this.state.serviceType,
                                         service: this.state.service,
