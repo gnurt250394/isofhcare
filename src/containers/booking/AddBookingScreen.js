@@ -17,6 +17,10 @@ import ImageLoad from 'mainam-react-native-image-loader';
 import Form from "mainam-react-native-form-validate/Form";
 import TextField from "mainam-react-native-form-validate/TextField";
 
+import dataCacheProvider from '@data-access/datacache-provider';
+import constants from '@resources/strings';
+import medicalRecordProvider from '@data-access/medical-record-provider';
+
 class AddBookingScreen extends Component {
     constructor(props) {
         super(props);
@@ -35,6 +39,29 @@ class AddBookingScreen extends Component {
         this.setState({ imageUris });
     }
     componentDidMount() {
+        dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_POSTS, (s, e) => {
+            if (s) {
+                this.setState({ profile: s })
+            } else {
+                medicalRecordProvider.getByUser(this.props.userApp.currentUser.id, 1, 100).then(s => {
+                    switch (s.code) {
+                        case 0:
+                            if (s.data && s.data.data && s.data.data.length != 0) {
+
+                                let data = s.data.data;
+                                let profile = data.find(item => {
+                                    return item.medicalRecords.status == 1;
+                                })
+                                if (profile) {
+                                    this.setState({ profile: profile })
+                                    dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_POSTS, profile);
+                                }
+                            }
+                            break;
+                    }
+                });
+            }
+        })
     }
     selectImage() {
         if (this.state.imageUris && this.state.imageUris.length >= 5) {
@@ -96,7 +123,7 @@ class AddBookingScreen extends Component {
     }
     selectProfile(profile) {
         this.setState({ profile, allowBooking: true });
-    }    
+    }
     selectServiceType(serviceType) {
         this.setState({ serviceType, allowBooking: true });
     }
@@ -408,7 +435,7 @@ class AddBookingScreen extends Component {
                 <TouchableOpacity onPress={this.addBooking.bind(this)} style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]}><Text style={styles.datkham}>Đặt khám</Text></TouchableOpacity>
             </View>
             <ImagePicker ref={ref => this.imagePicker = ref} />
-            
+
             <DateTimePicker
                 isVisible={this.state.toggelDateTimePickerVisible}
                 onConfirm={newDate => {
