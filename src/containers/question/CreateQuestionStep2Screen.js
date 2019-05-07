@@ -119,7 +119,6 @@ class CreateQuestionStep2Screen extends Component {
 
             }
         }).catch(e => {
-            alert(JSON.stringify(e));
             snackbar.show("Không có kết nối mạng", "danger");
         });
     }

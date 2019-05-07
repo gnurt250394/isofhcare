@@ -1,4 +1,4 @@
-import React, { Component,PropTypes } from "react";
+import React, { Component, PropTypes } from "react";
 import {
   View,
   Text,
@@ -11,7 +11,7 @@ import bookingProvider from "@data-access/booking-provider";
 import { connect } from "react-redux";
 import ActivityPanel from "@components/ActivityPanel";
 import ScaledImage from "mainam-react-native-scaleimage";
-import BarCode from "mainam-react-native-barcode";
+import QRCode from 'react-native-qrcode';
 import dateUtils from "mainam-react-native-date-utils";
 import stringUtils from "mainam-react-native-string-utils";
 import clientUtils from '@utils/client-utils';
@@ -38,7 +38,7 @@ export default class DetailsHistoryScreen extends Component {
       data: {}
     };
   }
-  
+
   componentDidMount() {
     var id = this.props.navigation.state.params.id;
     var name = this.props.navigation.state.params.name;
@@ -150,12 +150,12 @@ export default class DetailsHistoryScreen extends Component {
       return (<View>
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 10 }}>
           {
-            images.map((item, index) => <TouchableOpacity  key={index} style={{ marginRight: 10, borderRadius: 10, marginBottom: 10, width: 70, height: 70 }}>
+            images.map((item, index) => <TouchableOpacity key={index} style={{ marginRight: 10, borderRadius: 10, marginBottom: 10, width: 70, height: 70 }}>
               <Image
                 style={{ width: 70, height: 70, borderRadius: 10 }}
                 source={{
                   uri: item ? item.absoluteUrl() : ''
-           
+
                 }}
                 resizeMode={'cover'}
               />
@@ -189,7 +189,7 @@ export default class DetailsHistoryScreen extends Component {
           backgroundColor: '#ffffff',
           borderBottomWidth: 1,
           borderBottomColor: 'rgba(0, 0, 0, 0.06)'
-      }}
+        }}
 
       >
         <ScrollView>
@@ -245,7 +245,7 @@ export default class DetailsHistoryScreen extends Component {
               </View>
             </View>
             <View style={styles.viewSymptom}>
-              <Text>{this.state.note ? 'Triệu chứng: '+this.state.note : 'Triệu chứng: '}</Text>
+              <Text>{this.state.note ? 'Triệu chứng: ' + this.state.note : 'Triệu chứng: '}</Text>
               <View>
                 {this.renderImages()}
                 {/* <ScaledImage
@@ -291,13 +291,12 @@ export default class DetailsHistoryScreen extends Component {
                 source={require("@images/ic_barcode.png")}
               />
               <Text style={styles.txLabelBarcode}>Mã code</Text>
-              <BarCode
-                style={{ height: 40, width: 80,    marginRight: 12,
-                }}
-                // height={40}
-                // width={80}
-                value={this.state.codeBooking ? this.state.codeBooking : 0}
-              />
+              <View style={{ marginRight: 10 }}>
+                <QRCode
+                  value={this.state.codeBooking ? this.state.codeBooking : 0}
+                  size={80}
+                  fgColor='white' />
+              </View>
             </View>
           </View>
         </ScrollView>
@@ -343,7 +342,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10
   },
   txInfoService: {
-    marginRight:12,
+    marginRight: 12,
     color: "#8F8E93"
   },
   viewLocation: {
@@ -365,20 +364,20 @@ const styles = StyleSheet.create({
     marginHorizontal: 10
   },
   txClinic: {
-    marginRight:12,
+    marginRight: 12,
     color: "#8F8E93",
     fontWeight: "bold"
   },
   viewInfoLocation: {
     paddingVertical: 5,
     paddingHorizontal: 5,
-    justifyContent:'center',
-    alignItems:'flex-end',
-    width:'50%'
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    width: '50%'
   },
   txAddress: {
     color: "#8F8E93",
-       flex: 1,
+    flex: 1,
     marginHorizontal: 10
   },
   viewDate: {
@@ -466,7 +465,7 @@ const styles = StyleSheet.create({
   viewStatus: {
     paddingVertical: 15,
     flexDirection: "row",
-    marginTop:15,
+    marginTop: 15,
     width: "100%",
     alignItems: "center",
     paddingHorizontal: 15,
