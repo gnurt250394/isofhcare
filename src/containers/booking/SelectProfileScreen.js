@@ -15,7 +15,6 @@ class SelectProfileScreen extends Component {
     constructor(props) {
         super(props);
         let profile = this.props.navigation.state.params.profile;
-        alert(JSON.stringify(profile));
         this.state = {
             data: [],
             refreshing: false,
