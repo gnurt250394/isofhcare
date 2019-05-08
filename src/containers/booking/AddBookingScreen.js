@@ -566,11 +566,13 @@ const styles = StyleSheet.create({
     },
     contact_selected:
     {
+        backgroundColor:'#FFF',
         borderColor: '#02c39a', borderWidth: 1,
         height: 40
     },
     contact_normal:
     {
+        backgroundColor:'#FFF',
         borderColor: 'rgba(0, 0, 0, 0.06)', borderWidth: 1,
         height: 40
     },
