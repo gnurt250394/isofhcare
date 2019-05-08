@@ -172,24 +172,24 @@ class PatientHistoryScreen extends Component {
               alignItems: "center"
             }}
           >
-          <View style={{marginVertical:10}}>
-            <Text
-              style={{ fontSize: 40, fontWeight: "bold", color: "#C6C6C9" }}
-            >
-              {item.item.booking.bookingTime
-                ? item.item.booking.bookingTime.toDateObject("-").format("dd")
-                : ""}
-            </Text>
-            <Text style={{ fontWeight: "bold",color:'rgb(74,74,74)',marginTop:-5 }}>
-              {item.item.booking.bookingTime
-                ? item.item.booking.bookingTime
-                  .toDateObject("-")
-                  .format("MM/yyyy")
-                : ""}
-            </Text>
+            <View style={{ marginVertical: 10 }}>
+              <Text
+                style={{ fontSize: 40, fontWeight: "bold", color: "#C6C6C9" }}
+              >
+                {item.item.booking.bookingTime
+                  ? item.item.booking.bookingTime.toDateObject("-").format("dd")
+                  : ""}
+              </Text>
+              <Text style={{ fontWeight: "bold", color: 'rgb(74,74,74)', marginTop: -5 }}>
+                {item.item.booking.bookingTime
+                  ? item.item.booking.bookingTime
+                    .toDateObject("-")
+                    .format("MM/yyyy")
+                  : ""}
+              </Text>
             </View>
 
-            <Text style={{marginTop:10}}>
+            <Text style={{ marginTop: 10 }}>
               {item.item.booking.bookingTime
                 ? item.item.booking.bookingTime
                   .toDateObject("-")
@@ -206,7 +206,7 @@ class PatientHistoryScreen extends Component {
             }}
           >
             <Text style={{ fontWeight: "bold", color: 'rgb(74,74,74)' }}>{item.item.service.name ? item.item.service.name : ''}</Text>
-            <View style={{marginVertical:10}}> 
+            <View style={{ marginVertical: 10 }}>
               <Text style={{ color: 'rgb(142,142,147)' }}>{item.item.medicalRecords.name ? item.item.medicalRecords.name : ''}</Text>
               <Text style={{ color: 'rgb(142,142,147)' }}>{item.item.hospital.name ? item.item.hospital.name : item.item.hospital.name}</Text>
             </View>
@@ -220,50 +220,59 @@ class PatientHistoryScreen extends Component {
     switch (status) {
       case 0:
         return (
-          <View style={styles.statusTx}>
-            <Text style={{ color: "#fff" }}>Chờ phục vụ</Text>
-          </View>
+          <Text style={[styles.statusTx, {
+            color: '#FFF', paddingHorizontal: 5,
+            alignSelf: 'flex-start'
+          }]}>Chờ phục vụ</Text>
         );
       case 1:
         return (
-          <View style={styles.statusReject}>
-            <Text style={{ color: 'rgb(208,2,27)' }}>Đã huỷ ( không đến )</Text>
-          </View>
+          <Text style={[styles.statusReject, {
+            color: 'rgb(208,2,27)', paddingHorizontal: 5,
+            alignSelf: 'flex-start'
+          }]}>Đã huỷ (không đến)</Text>
         )
       case 2: return (
-        <View style={styles.statusReject}>
-          <Text style={{ color: 'rgb(208,2,27)' }}>Thanh toán thất bại</Text>
-        </View>
+        <Text style={[styles.statusReject, {
+          color: 'rgb(208,2,27)', paddingHorizontal: 5,
+          alignSelf: 'flex-start'
+        }]}>Thanh toán thất bại</Text>
       )
       case 3: return (
-        <View style={styles.statusTx}>
-          <Text style={{ color: "#fff" }}>Đã thanh toán</Text>
-        </View>
+        <Text style={[styles.statusTx, {
+          color: '#FFF', paddingHorizontal: 5,
+          alignSelf: 'flex-start'
+        }]}>Đã thanh toán</Text>
       )
       case 4: return (
-        <View style={[styles.statusTx, { width: 120 }]}>
-          <Text style={{ color: "#fff" }}>Thanh toán sau</Text>
-        </View>
+        <Text style={[styles.statusTx, {
+          color: '#FFF', paddingHorizontal: 5,
+          alignSelf: 'flex-start'
+        }]}>Thanh toán sau</Text>
       )
       case 5: return (
-        <View style={styles.statusTx}>
-          <Text style={{ color: "#fff" }}>Chờ thanh toán</Text>
-        </View>
+        <Text style={[styles.statusTx, {
+          color: '#FFF', paddingHorizontal: 5,
+          alignSelf: 'flex-start'
+        }]}>Chờ thanh toán</Text>
       )
       case 6: return (
-        <View style={styles.statusTx}>
-          <Text style={{ color: "#fff" }}>Đã xác nhận</Text>
-        </View>
+        <Text style={[styles.statusTx, {
+          color: '#FFF', paddingHorizontal: 5,
+          alignSelf: 'flex-start'
+        }]}>Đã xác nhận</Text>
       )
       case 7: return (
-        <View style={styles.statusTx}>
-          <Text style={{ color: "#fff" }}>Đã có hồ sơ</Text>
-        </View>
+        <Text style={[styles.statusTx, {
+          color: '#FFF', paddingHorizontal: 5,
+          alignSelf: 'flex-start'
+        }]}>Đã có hồ sơ</Text>
       )
       case 8: return (
-        <View style={styles.statusReject}>
-          <Text style={{ color: 'rgb(208,2,27)' }}>Đã huỷ ( không phục vụ )</Text>
-        </View>
+        <Text style={[styles.statusReject, {
+          color: 'rgb(208,2,27)', paddingHorizontal: 5,
+          alignSelf: 'flex-start'
+        }]}>Đã huỷ (không phục vụ)</Text>
       )
 
 
@@ -276,13 +285,13 @@ class PatientHistoryScreen extends Component {
         title="Lịch sử đặt lịch"
         containerStyle={{
           backgroundColor: "#f7f9fb",
-          
+
         }}
         actionbarStyle={{
           backgroundColor: '#ffffff',
           borderBottomWidth: 1,
           borderBottomColor: 'rgba(0, 0, 0, 0.06)'
-      }}
+        }}
       // actionbarStyle={{
       //   marginLeft: 10
       // }}
@@ -353,18 +362,16 @@ const styles = StyleSheet.create({
     backgroundColor: "rgb(2,195,154)",
     borderRadius: 10,
     padding: 2,
-    width: 100,
-    justifyContent: "center",
-    alignItems: "center"
+
   },
   statusReject: {
     marginVertical: 5,
     borderColor: "#E5E5E5",
     borderWidth: 1,
+    width: 'auto',
     borderRadius: 10,
-    width: 180,
-    justifyContent: "center",
-    alignItems: "center"
+    padding: 1,
+
   }
 });
 function mapStateToProps(state) {
