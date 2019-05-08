@@ -326,12 +326,15 @@ const styles = StyleSheet.create({
   txLocation: {
     fontWeight: "bold",
     flex: 1,
-    marginHorizontal: 10
+    marginHorizontal: 10,
+    
   },
   txClinic: {
     marginRight: 12,
     color: "#8F8E93",
-    fontWeight: "bold"
+    fontWeight: "bold",
+    textAlign:'right'
+
   },
   viewInfoLocation: {
     paddingVertical: 5,
@@ -343,7 +346,8 @@ const styles = StyleSheet.create({
   txAddress: {
     color: "#8F8E93",
     flex: 1,
-    marginHorizontal: 10
+    marginHorizontal: 10,
+    textAlign:'right'
   },
   viewDate: {
     paddingVertical: 10,
