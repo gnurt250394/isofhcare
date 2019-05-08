@@ -174,15 +174,28 @@ class PushController extends Component {
             firebase.notifications().removeDeliveredNotification(notificationOpen.notification.notificationId);
             if (notificationOpen && notificationOpen.notification && notificationOpen.notification.data) {
                 var id = notificationOpen.notification.data.id;
-                this.openQuestion(id);
+                switch (notificationOpen.notification.data.type) {
+                    case 2:
+                        this.openQuestion(id);
+                        break;
+                    case 4:
+                        this.openBooking(id);
+                        break;
+
+                }
             }
         } catch (error) {
             console.log(error);
         }
     }
+    openBooking(id) {
+        this.props.navigation.navigate("detailsHistory", {
+            id
+        });
+    }
     openQuestion(id) {
         if (!this.props.userApp.isLogin)
-        return;
+            return;
         questionProvider.detail(id).then(s => {
             if (s && s.data) {
                 this.props.navigation.navigate("detailQuestion", { post: s.data })
@@ -199,11 +212,14 @@ class PushController extends Component {
             try {
                 firebase.notifications().removeDeliveredNotification(notificationOpen.notification.notificationId);
                 const id = notificationOpen.notification.data.id;
-                this.openQuestion(id);
-                // if (notificationOpen.notification.data.type)
-                //     this.showDetailBroadcast(notificationId);
-                // else
-                //     this.showDetailNotification(notificationId);
+                switch (notificationOpen.notification.data.type) {
+                    case 2:
+                        this.openQuestion(id);
+                        break;
+                    case 4:
+                        this.openBooking(id);
+                        break;
+                }
             } catch (error) {
                 console.log(error);
             }

@@ -20,6 +20,7 @@ import TextField from "mainam-react-native-form-validate/TextField";
 import dataCacheProvider from '@data-access/datacache-provider';
 import constants from '@resources/strings';
 import medicalRecordProvider from '@data-access/medical-record-provider';
+import serviceTypeProvider from '@data-access/service-type-provider';
 
 class AddBookingScreen extends Component {
     constructor(props) {
@@ -39,7 +40,7 @@ class AddBookingScreen extends Component {
         this.setState({ imageUris });
     }
     componentDidMount() {
-        dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_POSTS, (s, e) => {
+        dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, (s, e) => {
             if (s) {
                 this.setState({ profile: s })
             } else {
@@ -54,14 +55,23 @@ class AddBookingScreen extends Component {
                                 })
                                 if (profile) {
                                     this.setState({ profile: profile })
-                                    dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_POSTS, profile);
+                                    dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, profile);
                                 }
                             }
                             break;
                     }
                 });
             }
-        })
+        });
+
+        serviceTypeProvider.getAll().then(s => {
+            if (s) {
+                let serviceType = s.find(item => {
+                    return item.status == 1;
+                })
+                this.setState({ serviceType: serviceType })
+            }
+        });
     }
     selectImage() {
         if (this.state.imageUris && this.state.imageUris.length >= 5) {
