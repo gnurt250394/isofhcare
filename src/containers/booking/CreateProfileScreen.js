@@ -31,6 +31,7 @@ import { cleanSingle } from "react-native-image-crop-picker";
 import dateUtils from "mainam-react-native-date-utils";
 import constants from "@resources/strings";
 import KeyboardSpacer from "react-native-keyboard-spacer";
+import ActionSheet from 'react-native-actionsheet'
 
 class createProfile extends Component {
   constructor() {
@@ -230,55 +231,7 @@ class createProfile extends Component {
                   source={require("@images/new/booking/ic_next.png")}
                 />
               </TouchableOpacity>
-              <Modal
-                isVisible={this.state.isGender}
-                onBackdropPress={() => this.setState({ isGender: false })}
-                style={stylemodal.bottomModal}
-              >
-                <View
-                  style={{
-                    backgroundColor: "#fff",
-                    elevation: 3,
-                    flexDirection: "column",
-                    maxHeight: 400,
-                    minHeight: 100
-                  }}
-                >
-                  <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <Text
-                      style={{
-                        padding: 20,
-                        flex: 1,
-                        color: "rgb(0,121,107)",
-                        textAlign: "center",
-                        fontSize: 16,
-                        fontWeight: "900"
-                      }}
-                    >
-                      Chọn giới tính
-                    </Text>
-                  </View>
-                  <FlatList
-                    style={{ padding: 10 }}
-                    keyExtractor={(item, index) => index.toString()}
-                    extraData={this.state}
-                    data={this.state.genderUser}
-                    renderItem={({ item, index }) => (
-                      <Card>
-                        <TouchableOpacity
-                          onPress={() => this.onSetGender(item)}
-                        >
-                          <Text style={{ padding: 10, fontWeight: "300" }}>
-                            {item.gender}
-                          </Text>
-                          {/* <Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" /> */}
-                        </TouchableOpacity>
-                      </Card>
-                    )}
-                  />
-                </View>
 
-              </Modal>
               <Field
 
                 style={[styles.mucdichkham, { justifyContent: 'center', alignItems: 'flex-end', flex: 1, paddingVertical: 12, borderTopWidth: 0, }]}
@@ -423,14 +376,20 @@ class createProfile extends Component {
           confirmTextIOS={"Xác nhận"}
           date={this.state.dob || new Date()}
         />
+        <ActionSheet
+          ref={o => this.actionSheetGender = o}
+          options={['Nam', 'Nữ', 'Hủy']}
+          cancelButtonIndex={2}
+          // destructiveButtonIndex={1}
+          onPress={this.onSetGender}
+        />
         {Platform.OS == "ios" && <KeyboardSpacer />}
       </ActivityPanel>
     );
   }
   onShowGender = () => {
-    this.setState({
-      isGender: true
-    });
+    this.actionSheetGender.show();
+
   };
   showLoading(loading, callback) {
     if (this.props.showLoading) {
@@ -439,12 +398,28 @@ class createProfile extends Component {
       callback;
     }
   }
-  onSetGender = item => {
-    this.setState({
-      isGender: false,
-      txGender: item.gender,
-      valueGender: item.value
-    });
+  onSetGender = index => {
+    try {
+      switch (index) {
+        case 0:
+          this.setState(
+            {
+              valueGender: 1,
+              txGender: 'Nam'
+            });
+          return;
+        case 1:
+          this.setState(
+            {
+              valueGender: 0,
+              txGender: 'Nữ'
+            });
+          return;
+      }
+    } catch (error) {
+
+    }
+
   };
 
   selectImage() {
