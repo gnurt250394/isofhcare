@@ -107,14 +107,25 @@ class NotificationScreen extends Component {
   }
 
   viewNotification(item) {
-    var data = JSON.parse(item.notification.value);
-    this.openQuestion(data.id);
-    notificationProvider.setRead(item.notification.id).then(s => {
-      firebase.notifications().setBadge(this.props.userApp.unReadNotificationCount > 0 ? this.props.userApp.unReadNotificationCount - 1 : 0);
-      this.props.dispatch(redux.getUnreadNotificationCount());
-    });
-    item.notification.watched = 1;
-    this.setState({ data: [...this.state.data] });
+    try {
+      var data = JSON.parse(item.notification.value);
+      notificationProvider.setRead(item.notification.id).then(s => {
+        firebase.notifications().setBadge(this.props.userApp.unReadNotificationCount > 0 ? this.props.userApp.unReadNotificationCount - 1 : 0);
+        this.props.dispatch(redux.getUnreadNotificationCount());
+      });
+      item.notification.watched = 1;
+      this.setState({ data: [...this.state.data] });
+      switch (data.type) {
+        case 2:
+          this.openQuestion(data.id);
+          break;
+        case 4:
+          this.openBooking(data.id);
+          break;
+      }
+    } catch (error) {
+
+    }
   }
   openQuestion(id) {
     questionProvider
@@ -129,6 +140,11 @@ class NotificationScreen extends Component {
       .catch(e => {
         snackbar.show("Lỗi, vui lòng thử lại", "danger");
       });
+  }
+  openBooking(id) {
+    this.props.navigation.navigate("detailsHistory", {
+      id
+    });
   }
 
   menuCreate() {

@@ -51,7 +51,7 @@ class PatientHistoryScreen extends Component {
   //     () => {
   //       const id = -1;
   //       bookingProvider
-  //         .getPatientHistory(id)
+  //         .getByAuthor(id)
   //         .then(res => {
   //           this.setState({
   //             refreshing: false
@@ -76,7 +76,7 @@ class PatientHistoryScreen extends Component {
       loadMore: page != 1
     });
     if (page == 1) {
-      bookingProvider.getPatientHistory()
+      bookingProvider.getByAuthor()
         .then(s => {
           console.log(s.data.bookings.reverse(), 'data sever')
           this.setState({
@@ -158,21 +158,8 @@ class PatientHistoryScreen extends Component {
   }
   onClickItem = (item) => {
     console.log(item)
-    this.props.navigation.navigate("DetailsHistoryScreen", {
-      id: item.item.booking.id,
-      name: item.item.medicalRecords.name,
-      image: item.item.medicalRecords.avatar,
-      service: item.item.service.name,
-      location: item.item.hospital.name,
-      address: item.item.hospital.address,
-      date: item.item.booking.bookingTime,
-      info: item.item.specialist.name,
-      price: item.item.service.price,
-      statusPay: item.item.booking.statusPay,
-      codeBooking: item.item.booking.codeBooking,
-      note: item.item.booking.note,
-      imgNote: item.item.booking.images,
-      status: item.item.booking.status
+    this.props.navigation.navigate("detailsHistory", {
+      id: item.item.booking.id
     });
   };
   renderItem = item => {

@@ -113,13 +113,14 @@ const styles = StyleSheet.create({
         fontWeight: "600",
         fontStyle: "normal",
         letterSpacing: 0,
-        color: "#02c39a"
+        color: "#02c39a",
+        marginTop: 15
     },
     text2: {
         fontSize: 15,
         fontWeight: "normal",
         fontStyle: "normal",
-        color: "#000000",
+        color: "#4a4a4a",
         textAlign: 'center',
         fontStyle: 'italic'
     },

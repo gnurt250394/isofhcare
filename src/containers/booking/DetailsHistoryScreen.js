@@ -16,95 +16,43 @@ import dateUtils from "mainam-react-native-date-utils";
 import stringUtils from "mainam-react-native-string-utils";
 import clientUtils from '@utils/client-utils';
 import ImageLoad from 'mainam-react-native-image-loader';
+import snackbar from '@utils/snackbar-utils';
 
-export default class DetailsHistoryScreen extends Component {
+class DetailsHistoryScreen extends Component {
   constructor(props) {
     super(props);
+    var id = this.props.navigation.state.params.id;
+
     this.state = {
-      id: "",
-      name: "",
-      image: "",
-      service: "",
-      location: "",
-      address: "",
-      date: "",
-      info: "",
-      price: "",
-      statusPay: "",
-      codeBooking: "",
-      note: "",
-      imgNote: "",
-      status: "",
-      data: {}
+      id: id
     };
   }
 
   componentDidMount() {
-    var id = this.props.navigation.state.params.id;
-    var name = this.props.navigation.state.params.name;
-    var image = this.props.navigation.state.params.image ? this.props.navigation.state.params.image.absoluteUrl() : '';
-    var service = this.props.navigation.state.params.service;
-    var location = this.props.navigation.state.params.location;
-    var address = this.props.navigation.state.params.address;
-    var date = this.props.navigation.state.params.date;
-    var info = this.props.navigation.state.params.info;
-    var price = this.props.navigation.state.params.price;
-    var statusPay = this.props.navigation.state.params.statusPay;
-    var codeBooking = this.props.navigation.state.params.codeBooking;
-    var note = this.props.navigation.state.params.note;
-    var imgNote = this.props.navigation.state.params.imgNote;
-    var status = this.props.navigation.state.params.status;
-    this.setState({
-      id,
-      name,
-      image,
-      service,
-      location,
-      address,
-      date,
-      info,
-      price,
-      statusPay,
-      codeBooking,
-      note,
-      imgNote,
-      status
-    });
-    console.log(  id,
-      name,
-      image,
-      service,
-      location,
-      address,
-      date,
-      info,
-      price,
-      statusPay,
-      codeBooking,
-      note,
-      imgNote,
-      status)
-    this.onGetDetails();
-  }
-  onGetDetails = () => {
-    var id = this.props.navigation.state.params.id;
-    bookingProvider
-      .detailsPatientHistory(id)
-      .then(res => {
-        if (res.code == 0) {
+    this.setState({ isLoading: true }, () => {
+      bookingProvider.detail(this.state.id).then(s => {
+        if (s.code == 0 && s.data) {
           this.setState({
-            data: res.data.booking
+            booking: s.data.booking || {},
+            service: s.data.service || {},
+            hospital: s.data.hospital || {},
+            medicalRecords: s.data.medicalRecords || {},
+            isLoading: false
           });
+        } else {
+          snackbar.show("Không thể xem chi tiết đặt khám này", "danger");
+          this.props.navigation.pop();
+          return;
         }
-      })
-      .catch(err => {
-        this.setState({
-          res: false
-        });
+      }).catch(err => {
+        snackbar.show("Không thể xem chi tiết đặt khám này", "danger");
+        this.props.navigation.pop();
+        return;
       });
-  };
+    });
+  }
   renderStatus = () => {
-    switch (Number(this.state.statusPay)) {
+    switch (Number(this.state.booking.statusPay)) {
       case 0:
         return <Text style={styles.paymentHospital}>Chưa chọn hình thức</Text>;
       case 1:
@@ -116,7 +64,7 @@ export default class DetailsHistoryScreen extends Component {
     }
   };
   status = () => {
-    switch (this.state.status) {
+    switch (this.state.booking.status) {
       case 0:
         return (
           <View style={styles.statusTx}>
@@ -144,29 +92,29 @@ export default class DetailsHistoryScreen extends Component {
     }
   };
   renderImages() {
-    var image = this.state.imgNote
+    var image = this.state.booking.images;
     if (image) {
       var images = image.split(",");
       return (<View>
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 10 }}>
-            {
-                        images.map((item, index) => <TouchableOpacity onPress={() => {
-                            this.props.navigation.navigate("photoViewer", {
-                                urls: images.map(item => {
-                                    return item.absoluteUrl()
-                                }), index
-                            });
-                        }} key={index} style={{ marginRight: 10, borderRadius: 10, marginBottom: 10, width: 70, height: 70 }}>
-                            <Image
-                                style={{ width: 70, height: 70, borderRadius: 10 }}
-                                source={{
-                                    uri:item ? item.absoluteUrl() : ''
-                                }}
-                                resizeMode={'cover'}
-                            />
-                        </TouchableOpacity>)
-                    }
-          
+          {
+            images.map((item, index) => <TouchableOpacity onPress={() => {
+              this.props.navigation.navigate("photoViewer", {
+                urls: images.map(item => {
+                  return item.absoluteUrl()
+                }), index
+              });
+            }} key={index} style={{ marginRight: 10, borderRadius: 10, marginBottom: 10, width: 70, height: 70 }}>
+              <Image
+                style={{ width: 70, height: 70, borderRadius: 10 }}
+                source={{
+                  uri: item ? item.absoluteUrl() : ''
+                }}
+                resizeMode={'cover'}
+              />
+            </TouchableOpacity>)
+          }
+
         </View>
       </View>);
     } else {
@@ -174,19 +122,17 @@ export default class DetailsHistoryScreen extends Component {
     }
   }
   checkAm = () => {
-    let hours = '2019-04-12 11:59:00'
-    console.log(hours.toDateObject('-').format('HH:mm'), 'sssss', this.state.date.toDateObject("-").format("HH:mm"))
-    if (this.state.date.toDateObject("-").format("HH:mm") < hours.toDateObject('-').format('HH:mm')) {
+    if (this.state.booking.bookingTime.toDateObject("-").format("HH") < 12) {
       return (<Text>{' Sáng'}</Text>)
     } else {
       return (<Text>{' Chiều'}</Text>)
     }
   }
   render() {
-    const avatar = this.state.image ? { uri:`${this.state.image}`} : require("@images/new/user.png")
-    console.log(this.state.image.absoluteUrl(),'avatar')
+    const avatar = this.state.medicalRecords && this.state.medicalRecords.image ? { uri: `${this.state.medicalRecords.image.absoluteUrl()}` } : require("@images/new/user.png")
     return (
       <ActivityPanel
+        isLoading={this.state.isLoading}
         style={{ flex: 1, backgroundColor: "#f7f9fb" }}
         title="Chi tiết đặt lịch"
         containerStyle={{
@@ -197,18 +143,17 @@ export default class DetailsHistoryScreen extends Component {
           borderBottomWidth: 1,
           borderBottomColor: 'rgba(0, 0, 0, 0.06)'
         }}
-
       >
-        <ScrollView>
+        {this.state.booking && <ScrollView>
           <View>
             <View style={styles.viewName}>
               <Image
-               style={{width:20,height:20,borderRadius:10}}
+                style={{ width: 20, height: 20, borderRadius: 10 }}
                 source={
                   avatar
                 }
               />
-              <Text style={styles.txName}>{this.state.name}</Text>
+              <Text style={styles.txName}>{this.state.medicalRecords.name}</Text>
             </View>
             <View style={styles.viewService}>
               <ScaledImage
@@ -217,22 +162,22 @@ export default class DetailsHistoryScreen extends Component {
                 source={require("@images/ic_service.png")}
               />
               <Text style={styles.txService}>Dịch vụ khám</Text>
-              <Text style={styles.txInfoService}>{this.state.service}</Text>
+              <Text style={styles.txInfoService}>{this.state.service.name}</Text>
             </View>
-            <View style={{backgroundColor:'#EDECED',height:1,marginLeft:12}}></View>
+            <View style={{ backgroundColor: '#EDECED', height: 1, marginLeft: 12 }}></View>
             <View style={styles.viewLocation}>
               <ScaledImage
                 height={20}
                 width={20}
                 source={require("@images/ic_location.png")}
-              /> 
+              />
               <Text numberOfLines={5} style={styles.txLocation}>Địa điểm</Text>
               <View style={styles.viewInfoLocation}>
-                <Text style={styles.txClinic}>{this.state.location}</Text>
-                <Text numberOfLines={5} style={styles.txAddress}>{this.state.address}</Text>
+                <Text style={styles.txClinic}>{this.state.hospital.name}</Text>
+                <Text numberOfLines={5} style={styles.txAddress}>{this.state.hospital.address}</Text>
               </View>
             </View>
-            <View style={{backgroundColor:'#EDECED',height:1,marginLeft:12}}></View>
+            <View style={{ backgroundColor: '#EDECED', height: 1, marginLeft: 12 }}></View>
             <View style={styles.viewDate}>
               <ScaledImage
                 height={19}
@@ -242,17 +187,17 @@ export default class DetailsHistoryScreen extends Component {
               <Text style={styles.txDate}>Ngày khám</Text>
               <View style={styles.viewDateTime}>
                 <Text style={styles.txTime}>
-                  {this.state.date.toDateObject("-").format("HH:mm")}
+                  {this.state.booking.bookingTime.toDateObject("-").format("HH:mm")}
                   {this.checkAm()}
                 </Text>
                 <Text style={styles.txDateInfo}>
                   {"Ngày " +
-                    this.state.date.toDateObject("-").format("dd/MM/yyyy")}
+                    this.state.booking.bookingTime.toDateObject("-").format("dd/MM/yyyy")}
                 </Text>
               </View>
             </View>
             <View style={styles.viewSymptom}>
-              <Text>{this.state.note ? 'Triệu chứng: ' + this.state.note : 'Triệu chứng: '}</Text>
+              <Text>Triệu chứng: {this.state.booking.content}</Text>
               <View>
                 {this.renderImages()}
                 {/* <ScaledImage
@@ -270,10 +215,10 @@ export default class DetailsHistoryScreen extends Component {
               />
               <Text style={styles.txLabelPrice}>Giá dịch vụ</Text>
               <Text style={styles.txPrice}>
-                {Number(this.state.price).formatPrice() + 'đ'}
+                {Number(this.state.service.price).formatPrice() + 'đ'}
               </Text>
             </View>
-            <View style={{backgroundColor:'#EDECED',height:1,marginLeft:12}}></View>
+            <View style={{ backgroundColor: '#EDECED', height: 1, marginLeft: 12 }}></View>
             <View style={styles.viewPayment}>
               <ScaledImage
                 height={19}
@@ -292,7 +237,7 @@ export default class DetailsHistoryScreen extends Component {
               <Text style={styles.txStatusLabel}>Trạng thái</Text>
               {this.status()}
             </View>
-            <View style={{backgroundColor:'#EDECED',height:1,marginLeft:12}}></View>
+            <View style={{ backgroundColor: '#EDECED', height: 1, marginLeft: 12 }}></View>
 
             <View style={styles.viewBaCode}>
               <ScaledImage
@@ -303,13 +248,14 @@ export default class DetailsHistoryScreen extends Component {
               <Text style={styles.txLabelBarcode}>Mã code</Text>
               <View style={{ marginRight: 10 }}>
                 <QRCode
-                  value={this.state.codeBooking ? this.state.codeBooking : 0}
+                  value={this.state.booking.codeBooking ? this.state.booking.codeBooking : 0}
                   size={80}
                   fgColor='white' />
               </View>
             </View>
           </View>
         </ScrollView>
+        }
       </ActivityPanel>
     );
   }
@@ -361,8 +307,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 15,
     backgroundColor: "#fff",
-    
- 
+
+
   },
   txLocation: {
     fontWeight: "bold",
@@ -422,7 +368,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "#EDECED",
     borderBottomWidth: 1,
     borderTopColor: "#EDECED",
-    borderTopWidth:1,
+    borderTopWidth: 1,
     paddingHorizontal: 15,
     paddingVertical: 20
   },
@@ -435,7 +381,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderTopColor: "#EDECED",
     borderTopWidth: 1,
-  
+
   },
   txLabelPrice: {
     fontWeight: "bold",
@@ -503,3 +449,9 @@ const styles = StyleSheet.create({
     flex: 1
   }
 });
+function mapStateToProps(state) {
+  return {
+    userApp: state.userApp
+  };
+}
+export default connect(mapStateToProps)(DetailsHistoryScreen);

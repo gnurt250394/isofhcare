@@ -189,7 +189,7 @@ class ConfirmBookingScreen extends Component {
 
                             <View style={styles.view2}>
                                 <ScaleImage style={styles.ic_Location} width={20} source={require("@images/new/booking/ic_doctor.png")} />
-                                <Text style={[styles.text5, { marginTop: 10 }]}>Bác sĩ khám: <Text>{this.state.schedule.doctor.name}</Text></Text>
+                                <Text style={[styles.text5]}>Bác sĩ khám: <Text>{this.state.schedule.doctor.name}</Text></Text>
                             </View>
 
                             <View style={[styles.view2, { alignItems: 'flex-start' }]}>
@@ -206,7 +206,7 @@ class ConfirmBookingScreen extends Component {
                             </View>
                             <View style={styles.view2}>
                                 <ScaleImage style={[styles.ic_Location]} width={20} source={require("@images/new/booking/ic_coin.png")} />
-                                <Text style={styles.text5}>Giá dịch vụ: {parseFloat(this.state.service.price).formatPrice()} đ</Text>
+                                <Text style={styles.text5}>Giá dịch vụ: {parseFloat(this.state.service.price).formatPrice()}đ</Text>
                             </View>
 
 
