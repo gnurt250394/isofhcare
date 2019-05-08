@@ -52,7 +52,7 @@ class AddBookingScreen extends Component {
                                 let data = s.data.data;
                                 let profile = data.find(item => {
                                     return item.medicalRecords.status == 1;
-                                })
+                                });
                                 if (profile) {
                                     this.setState({ profile: profile })
                                     dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, profile);
@@ -67,7 +67,7 @@ class AddBookingScreen extends Component {
         serviceTypeProvider.getAll().then(s => {
             if (s) {
                 let serviceType = s.find(item => {
-                    return item.status == 1;
+                    return item.status == 1 && item.deleted == 0;
                 })
                 this.setState({ serviceType: serviceType })
             }
