@@ -83,7 +83,7 @@ class AddBookingScreen extends Component {
                 this.imagePicker.show({
                     multiple: true,
                     mediaType: 'photo',
-                    maxFiles: 2,
+                    maxFiles: 5,
                     compressImageMaxWidth: 500,
                     compressImageMaxHeight: 500
                 }).then(images => {
