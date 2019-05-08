@@ -251,7 +251,7 @@ class AddBookingScreen extends Component {
                             <View style={{ flexDirection: 'row', height: 38, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                                 <ImageLoad
                                     resizeMode="cover"
-                                    imageStyle={{ borderRadius: 20, borderWidth: 1, borderColor: '#CAC' }}
+                                    imageStyle={{ borderRadius: 20, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
                                     borderRadius={20}
                                     customImagePlaceholderDefaultStyle={[styles.avatar, { width: 40, height: 40 }]}
                                     placeholderSource={require("@images/new/user.png")}
@@ -271,7 +271,7 @@ class AddBookingScreen extends Component {
                                 <Text style={styles.txtname}>{this.state.profile.medicalRecords.name}</Text>
                             </View> :
                             <View style={{ flexDirection: 'row', height: 38, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                <View style={{ justifyContent: 'center', alignItems: 'center', width: 38, height: 38, borderRadius: 19, borderColor: 'rgba(151, 151, 151, 0.29)', borderWidth: 1 }}>
+                                <View style={{ justifyContent: 'center', alignItems: 'center', width: 38, height: 38, borderRadius: 19, borderColor: 'rgba(151, 151, 151, 0.29)', borderWidth: 0.5 }}>
                                     <ScaleImage source={require("@images/new/profile/ic_profile.png")} width={20} />
                                 </View>
                                 <Text style={styles.txtname}>Chọn hồ sơ</Text>

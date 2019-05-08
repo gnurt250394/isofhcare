@@ -152,7 +152,7 @@ class SelectProfileScreen extends Component {
                         return (<TouchableOpacity style={styles.bn} onPress={this.selectPofile.bind(this, item)}>
                             <ImageLoad
                                 resizeMode="cover"
-                                imageStyle={{ borderRadius: 20, borderWidth: 1, borderColor: 'rgba(151, 151, 151, 0.29)' }}
+                                imageStyle={{ borderRadius: 20, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
                                 borderRadius={20}
                                 customImagePlaceholderDefaultStyle={[styles.avatar, { width: 40, height: 40 }]}
                                 placeholderSource={require("@images/new/user.png")}
