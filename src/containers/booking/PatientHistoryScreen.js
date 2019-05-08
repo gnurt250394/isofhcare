@@ -174,7 +174,7 @@ class PatientHistoryScreen extends Component {
           >
             <View style={{ marginVertical: 10 }}>
               <Text
-                style={{ fontSize: 40, fontWeight: "bold", color: "#C6C6C9" }}
+                style={{ fontSize: 40, fontWeight: "bold", color: "#C6C6C9",textAlign:'center' }}
               >
                 {item.item.booking.bookingTime
                   ? item.item.booking.bookingTime.toDateObject("-").format("dd")
