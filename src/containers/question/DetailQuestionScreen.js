@@ -181,7 +181,7 @@ class DetailQuestionScreen extends Component {
         return <View key={key}>
             {item.user &&
                 <TouchableOpacity onPress={this.onNavigateDetails} style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Image source={source} style={{ width: 50, height: 50, borderRadius: 25 }} resizeMode="cover" />
+                    <Image source={source} style={{ width: 50, height: 50, borderRadius: 25, borderWidth: 0.5, borderColor:'rgba(151, 151, 151, 0.29)' }} resizeMode="cover" />
                     <View style={{ marginLeft: 10 }}>
                         <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 5 }}>{item.user.name}</Text>
                         {item.user && item.user.id != this.props.userApp.currentUser.id ?
