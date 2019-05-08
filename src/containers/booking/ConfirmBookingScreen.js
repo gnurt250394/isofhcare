@@ -80,7 +80,8 @@ class ConfirmBookingScreen extends Component {
         // return;
 
         this.setState({ isLoading: true }, () => {
-            walletProvider.createOnlinePayment(this.props.userApp.currentUser.id, "VNPAY", this.state.hospital.hospital.id, booking.book.id, "http://localhost:8888/order/vnpay_return", this.state.service.price, "", booking.book.hash).then(s => {
+            let memo = `THANH TOÁN VNPAY - ${this.state.serviceType.name} - ${this.state.hospital.hospital.name} - ${this.state.schedule.time.format("yyyy-MM-dd HH:mm:ss")} - ${this.state.profile.medicalRecords.name}`;
+            walletProvider.createOnlinePayment(this.props.userApp.currentUser.id, "VNPAY", this.state.hospital.hospital.id, booking.book.id, "http://localhost:8888/order/vnpay_return", this.state.service.price, memo, booking.book.hash).then(s => {
                 this.setState({ isLoading: false }, () => {
                     this.props.navigation.navigate("paymentVNPay", {
                         urlPayment: s.payment_url,
@@ -131,6 +132,9 @@ class ConfirmBookingScreen extends Component {
                                             return;
                                         case "order_ref_id":
                                             snackbar.show("Đặt khám đã tồn tại trong hệ thống", "danger");
+                                            return;
+                                        case "vendor_id":
+                                            snackbar.show("Vender không tồn tại trong hệ thống", "danger");
                                             return;
                                     }
                                 }
@@ -185,7 +189,7 @@ class ConfirmBookingScreen extends Component {
 
                             <View style={styles.view2}>
                                 <ScaleImage style={styles.ic_Location} width={20} source={require("@images/new/booking/ic_doctor.png")} />
-                                <Text style={[styles.text5, { marginTop: 10 }]}>Bác sĩ khám: <Text>{this.state.schedule.doctor.name}</Text></Text>
+                                <Text style={[styles.text5]}>Bác sĩ khám: <Text>{this.state.schedule.doctor.name}</Text></Text>
                             </View>
 
                             <View style={[styles.view2, { alignItems: 'flex-start' }]}>
@@ -202,7 +206,7 @@ class ConfirmBookingScreen extends Component {
                             </View>
                             <View style={styles.view2}>
                                 <ScaleImage style={[styles.ic_Location]} width={20} source={require("@images/new/booking/ic_coin.png")} />
-                                <Text style={styles.text5}>Giá dịch vụ: {parseFloat(this.state.service.price).formatPrice()} đ</Text>
+                                <Text style={styles.text5}>Giá dịch vụ: {parseFloat(this.state.service.price).formatPrice()}đ</Text>
                             </View>
 
 

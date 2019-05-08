@@ -295,7 +295,9 @@ module.exports = {
       get_result_patient_historyid: isofhcare_service + "booking/get-result-patient-history",
       delete: isofhcare_service + "booking/delete",
       create: isofhcare_service + "booking/create",
-      confirmPay: isofhcare_service + "booking/confirm-pay"
+      confirmPay: isofhcare_service + "booking/confirm-pay",
+      detail: isofhcare_service + "booking/get-detail",
+      getByAuthor: isofhcare_service + "booking/get-by-author"
     },
     question: {
       create: isofhcare_service + "post/create",
@@ -328,10 +330,6 @@ module.exports = {
     medicalRecord: {
       get_by_user: isofhcare_service + "medical-records/get-by-user",
       createMedical: isofhcare_service + "medical-records/create"
-    },
-    patientHistory: {
-      getListPatient: isofhcare_service + "booking/get-by-author",
-      getDetailsHistory: isofhcare_service + "booking/get-detail"
     },
     service: {
       get_all: isofhcare_service + "service/get-all"

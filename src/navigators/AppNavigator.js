@@ -119,7 +119,7 @@ const RootNavigator = createStackNavigator(
       confirmBooking: { screen: ConfirmBookingScreen },
       createBookingSuccess: { screen: CreateBookingSuccessScreen },
       paymentBookingError: { screen: PaymentBookingErrorScreen },
-      DetailsHistoryScreen:{screen:DetailsHistoryScreen},
+      detailsHistory:{screen:DetailsHistoryScreen},
       paymentVNPay: { screen: PaymentWithVNPayScreen },
       //---------------------------------
       createProfile: { screen: CreateProfile },
