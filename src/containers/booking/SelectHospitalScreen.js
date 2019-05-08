@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         paddingVertical: 20,
         backgroundColor: '#ffffff',
-        borderBottomWidth: 1,
+        borderBottomWidth: 0.7,
         borderBottomColor: 'rgba(0, 0, 0, 0.06)'
     },
     sc: {

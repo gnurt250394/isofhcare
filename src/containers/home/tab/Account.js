@@ -115,7 +115,7 @@ class Account extends Component {
         >
           <ImageLoad
             resizeMode="cover"
-            imageStyle={{ borderRadius: 35, borderWidth: 1, borderColor: 'rgba(151, 151, 151, 0.29)' }}
+            imageStyle={{ borderRadius: 35, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
             borderRadius={35}
             customImagePlaceholderDefaultStyle={{
               width: 70,
@@ -435,7 +435,7 @@ const styles = StyleSheet.create({
   itemMenu: {
     flexDirection: "row",
     borderBottomColor: "#00000011",
-    borderBottomWidth: 1,
+    borderBottomWidth: 0.7,
     paddingBottom: 20,
     paddingTop: 20,
     paddingLeft: 10,

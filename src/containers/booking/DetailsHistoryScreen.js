@@ -129,7 +129,7 @@ class DetailsHistoryScreen extends Component {
     }
   }
   render() {
-    const avatar = this.state.medicalRecords && this.state.medicalRecords.image ? { uri: `${this.state.medicalRecords.image.absoluteUrl()}` } : require("@images/new/user.png")
+    const avatar = this.state.medicalRecords && this.state.medicalRecords.avatar ? { uri: `${this.state.medicalRecords.avatar.absoluteUrl()}` } : require("@images/new/user.png")
     return (
       <ActivityPanel
         isLoading={this.state.isLoading}
@@ -147,12 +147,25 @@ class DetailsHistoryScreen extends Component {
         {this.state.booking && <ScrollView>
           <View>
             <View style={styles.viewName}>
-              <Image
-                style={{ width: 20, height: 20, borderRadius: 10 }}
-                source={
-                  avatar
-                }
-              />
+              <ImageLoad
+                resizeMode="cover"
+                imageStyle={{ borderRadius: 10, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
+                borderRadius={10}
+                customImagePlaceholderDefaultStyle={[styles.avatar, { width: 20, height: 20 }]}
+                placeholderSource={require("@images/new/user.png")}
+                resizeMode="cover"
+                loadingStyle={{ size: 'small', color: 'gray' }}
+                source={avatar}
+                style={{
+                  alignSelf: 'center',
+                  borderRadius: 10,
+                  width: 20,
+                  height: 20
+                }}
+                defaultImage={() => {
+                  return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={20} height={20} />
+                }}
+              />            
               <Text style={styles.txName}>{this.state.medicalRecords.name}</Text>
             </View>
             <View style={styles.viewService}>

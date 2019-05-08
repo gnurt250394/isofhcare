@@ -51,7 +51,7 @@ class DetailsDoctorScreen extends Component {
     };
   }
   componentDidMount() {
-    var id = this.props.navigation.state.params ? this.props.navigation.state.params.id : 4382
+    var id = this.props.navigation.state.params ? this.props.navigation.state.params.id : ''
     this.setState({
       id : id
     })
@@ -92,7 +92,7 @@ getRatting = () => {
   questionProvider.getResultReview(this.state.id).then(res =>{
    if(res.code == 0){
      this.setState({
-      rating:res.data.ratingNumber
+      rating:res.data.ratingCount
      })
    }
   }).catch(err =>{
@@ -174,9 +174,9 @@ getRatting = () => {
           <View style={styles.viewIntro}>
             <Text style={{fontSize:18,paddingVertical:20,color:'#000',fontWeight:'400'}}>Giới thiệu</Text>
             <Text style ={{width:'80%',marginTop:-10,marginBottom:10,textAlign:'center'}}>{this.state.intro}</Text>
-            <TouchableOpacity style ={styles.viewBtn}>
+            {/* <TouchableOpacity style ={styles.viewBtn}>
               <Text style={{color:'#fff'}}>Đặt khám</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
 
 
