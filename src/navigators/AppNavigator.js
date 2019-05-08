@@ -62,7 +62,8 @@ import CreateProfile from "@containers/booking/CreateProfile";
 import ProfileInfo from '@containers/account/ProfileInfo'
 //---------------------------
 import PatientHistoryScreen from  "@containers/booking/PatientHistoryScreen";
-
+//.....details doctor.......
+import DetailsDoctorScreen from "@containers/question/DetailsDoctorScreen";
 import EmptyScreen from "@containers/EmptyScreen2";
 const RootNavigator = createStackNavigator(
     {
@@ -125,6 +126,7 @@ const RootNavigator = createStackNavigator(
       createProfile: { screen: CreateProfile },
       selectProfile: {screen: SelectProfileScreen},
       detailsProfile: {screen:ProfileInfo},
+      detailsDoctorScreen:{screen : DetailsDoctorScreen},
 
       //
       PatientHistoryScreen:{screen:PatientHistoryScreen},
