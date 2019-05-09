@@ -78,7 +78,6 @@ class PatientHistoryScreen extends Component {
     if (page == 1) {
       bookingProvider.getByAuthor()
         .then(s => {
-          console.log(s.data.bookings.reverse(), 'data sever')
           this.setState({
             loading: false,
             refreshing: false,
@@ -157,7 +156,6 @@ class PatientHistoryScreen extends Component {
       );
   }
   onClickItem = (item) => {
-    console.log(item)
     this.props.navigation.navigate("detailsHistory", {
       id: item.item.booking.id
     });
@@ -339,7 +337,6 @@ class PatientHistoryScreen extends Component {
 
   renderFooter() {
     if (this.state.loadMore) {
-      console.log('renderFooter')
       return (
         <View style={{ alignItems: 'center', position: 'absolute' }}>
           <ActivityIndicator size={16} color={"#000"} />

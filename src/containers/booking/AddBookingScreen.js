@@ -25,10 +25,18 @@ import serviceTypeProvider from '@data-access/service-type-provider';
 class AddBookingScreen extends Component {
     constructor(props) {
         super(props);
+        let minDate = new Date();
+        minDate.setDate(minDate.getDate() + 1);
+
+        let bookingDate = minDate;
+        let date = minDate.format("thu, dd tháng MM").replaceAll(" 0", " ");
+
         this.state = {
             colorButton: 'red',
             imageUris: [],
-            allowBooking: false
+            allowBooking: false,
+            bookingDate,
+            date
         }
     }
     _changeColor = () => {
@@ -392,11 +400,11 @@ class AddBookingScreen extends Component {
                         hideError={true}
                         validate={{
                             rules: {
-                                required: true,
+                                // required: true,
                                 maxlength: 500
                             },
                             messages: {
-                                required: "Mô tả triệu chứng không được bỏ trống",
+                                // required: "Mô tả triệu chứng không được bỏ trống",
                                 maxlength: "Không cho phép nhập quá 500 kí tự"
                             }
                         }}
