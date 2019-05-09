@@ -183,7 +183,7 @@ class SelectTimeScreen extends Component {
                         if (s) {
                             switch (s.code) {
                                 case 0:
-                                    dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_POSTS, this.state.profile);
+                                    dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, this.state.profile);
 
                                     this.props.navigation.navigate("confirmBooking", {
                                         serviceType: this.state.serviceType,

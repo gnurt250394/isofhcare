@@ -62,7 +62,7 @@ class AddBookingScreen extends Component {
                                     return item.medicalRecords.status == 1;
                                 });
                                 if (profile) {
-                                    this.setState({ profile: profile })
+                                    this.setState({ profile: profile });
                                     dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, profile);
                                 }
                             }
