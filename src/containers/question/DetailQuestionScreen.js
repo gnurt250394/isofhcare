@@ -152,10 +152,12 @@ class DetailQuestionScreen extends Component {
             snackbar.show("Không có kết nối mạng", "danger");
         })
     }
-    onNavigateDetails =()=>{
-        this.props.navigation.navigate('detailsDoctorScreen',{
+    onNavigateDetails =(item)=>{
+        item.user && item.user.id != this.props.userApp.currentUser.id ? this.props.navigation.navigate('detailsDoctorScreen',{
             id : this.state.post.assignee.id
-        })
+        }) : this.props.navigation.navigate('detailsProfile',{
+            id : item.user.id
+        }) 
     }
     showAllComment() {
         this.setState({ loadingComment: true })
@@ -180,7 +182,7 @@ class DetailQuestionScreen extends Component {
         const source = item.user && item.user.avatar ? { uri: item.user.avatar.absoluteUrl() } : require("@images/new/user.png");
         return <View key={key}>
             {item.user &&
-                <TouchableOpacity onPress={this.onNavigateDetails} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <TouchableOpacity onPress={() => this.onNavigateDetails(item)} style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Image source={source} style={{ width: 50, height: 50, borderRadius: 25, borderWidth: 0.5, borderColor:'rgba(151, 151, 151, 0.29)' }} resizeMode="cover" />
                     <View style={{ marginLeft: 10 }}>
                         <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 5 }}>{item.user.name}</Text>

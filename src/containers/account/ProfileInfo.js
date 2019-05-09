@@ -45,7 +45,7 @@ class ProfileInfo extends Component {
     };
   }
   componentDidMount() {
-      let id = this.props.userApp.currentUser.id
+      let id = this.props.navigation.state.params && this.props.navigation.state.params.id ? this.props.navigation.state.params.id : userApp.currentUser.id
     profileProvider.getUserInfo(id).then(res => {
       if(res.code == 0 ){
           this.setState({
@@ -57,7 +57,7 @@ class ProfileInfo extends Component {
               gender:res.data.user.gender,
               dob:res.data.user.dob
           })
-      }s
+      }
     }).catch(err =>{
         console.log(err)
     })
@@ -85,8 +85,10 @@ class ProfileInfo extends Component {
       }}
         iosBarStyle={"light-content"}
       >
-        <ScrollView keyboardShouldPersistTaps='handled' style={{ flex: 1, paddingVertical: 5 }}>
-          <View style={styles.viewImgUpload}>
+        <ScrollView style={{ flex: 1, paddingVertical: 5 }}>
+        {this.state.username ?  
+        <View>
+        <View style={styles.viewImgUpload}>
             <View
               style={{ position: "relative", width: 70,marginTop:20 ,}}
             >
@@ -169,6 +171,8 @@ class ProfileInfo extends Component {
               </Field>
             </Form>
           </View>
+          </View>
+           : null } 
 
 
         </ScrollView>

@@ -127,7 +127,6 @@ const RootNavigator = createStackNavigator(
       selectProfile: {screen: SelectProfileScreen},
       detailsProfile: {screen:ProfileInfo},
       detailsDoctorScreen:{screen : DetailsDoctorScreen},
-
       //
       PatientHistoryScreen:{screen:PatientHistoryScreen},
 
