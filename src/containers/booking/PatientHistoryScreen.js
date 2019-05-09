@@ -222,7 +222,8 @@ class PatientHistoryScreen extends Component {
         return (
           <Text style={[styles.statusTx, {
             color: '#FFF', paddingHorizontal: 5,
-            alignSelf: 'flex-start'
+            alignSelf: 'flex-start',
+            overflow:'hidden'
           }]}>Chờ phục vụ</Text>
         );
       case 1:
@@ -241,31 +242,36 @@ class PatientHistoryScreen extends Component {
       case 3: return (
         <Text style={[styles.statusTx, {
           color: '#FFF', paddingHorizontal: 5,
-          alignSelf: 'flex-start'
+          alignSelf: 'flex-start',
+          overflow:'hidden'
         }]}>Đã thanh toán</Text>
       )
       case 4: return (
         <Text style={[styles.statusTx, {
           color: '#FFF', paddingHorizontal: 5,
-          alignSelf: 'flex-start'
+          alignSelf: 'flex-start',
+          overflow:'hidden'
         }]}>Thanh toán sau</Text>
       )
       case 5: return (
         <Text style={[styles.statusTx, {
           color: '#FFF', paddingHorizontal: 5,
-          alignSelf: 'flex-start'
+          alignSelf: 'flex-start',
+          overflow:'hidden'
         }]}>Chờ thanh toán</Text>
       )
       case 6: return (
         <Text style={[styles.statusTx, {
           color: '#FFF', paddingHorizontal: 5,
-          alignSelf: 'flex-start'
+          alignSelf: 'flex-start',
+          overflow:'hidden'
         }]}>Đã xác nhận</Text>
       )
       case 7: return (
         <Text style={[styles.statusTx, {
           color: '#FFF', paddingHorizontal: 5,
-          alignSelf: 'flex-start'
+          alignSelf: 'flex-start',
+          overflow:'hidden'
         }]}>Đã có hồ sơ</Text>
       )
       case 8: return (
