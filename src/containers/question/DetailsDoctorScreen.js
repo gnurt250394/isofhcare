@@ -178,8 +178,6 @@ getRatting = () => {
               <Text style={{color:'#fff'}}>Đặt khám</Text>
             </TouchableOpacity> */}
           </View>
-
-
         </ScrollView>
       </ActivityPanel>
     );

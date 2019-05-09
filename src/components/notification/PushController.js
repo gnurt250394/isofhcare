@@ -18,7 +18,10 @@ class PushController extends Component {
     setBroadcastListener(listener) {
         this.listener = listener;
     }
-
+constructor(props){
+    super(props)
+    console.log('chay maf thoong bao')
+}
     showNotification(notificationId) {
         // notificationProvider.getDetail(notificationId, function (s, e) {
         //     if (s) {
@@ -209,6 +212,7 @@ class PushController extends Component {
     }
     getInitialNotification(notificationOpen) {
         if (notificationOpen) {
+            console.log(notificationOpen)
             try {
                 firebase.notifications().removeDeliveredNotification(notificationOpen.notification.notificationId);
                 const id = notificationOpen.notification.data.id;

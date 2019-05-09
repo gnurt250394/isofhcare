@@ -144,8 +144,8 @@ class DetailsHistoryScreen extends Component {
           borderBottomColor: 'rgba(0, 0, 0, 0.06)'
         }}
       >
-        {this.state.booking && <ScrollView>
-          <View>
+         {this.state.booking && <ScrollView>
+         <View>
             <View style={styles.viewName}>
               <ImageLoad
                 resizeMode="cover"
@@ -213,7 +213,7 @@ class DetailsHistoryScreen extends Component {
               </View>
             </View>
             <View style={styles.viewSymptom}>
-              <Text>Triệu chứng: {this.state.booking.content}</Text>
+              <Text><Text style={{fontWeight:'bold'}}>Triệu chứng: </Text> {this.state.booking.content}</Text>
               <View>
                 {this.renderImages()}
                 {/* <ScaledImage
@@ -270,8 +270,7 @@ class DetailsHistoryScreen extends Component {
               </View>
             </View>
           </View>
-        </ScrollView>
-        }
+        </ScrollView>}
       </ActivityPanel>
     );
   }
