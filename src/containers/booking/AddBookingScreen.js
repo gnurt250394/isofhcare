@@ -86,7 +86,7 @@ class AddBookingScreen extends Component {
                     maxFiles: 5,
                     compressImageMaxWidth: 500,
                     compressImageMaxHeight: 500
-                }).then(images => {
+                }, images => {
                     let imageUris = this.state.imageUris;
                     images.forEach(image => {
                         if (imageUris.length >= 5)
@@ -566,13 +566,13 @@ const styles = StyleSheet.create({
     },
     contact_selected:
     {
-        backgroundColor:'#FFF',
+        backgroundColor: '#FFF',
         borderColor: '#02c39a', borderWidth: 1,
         height: 40
     },
     contact_normal:
     {
-        backgroundColor:'#FFF',
+        backgroundColor: '#FFF',
         borderColor: 'rgba(0, 0, 0, 0.06)', borderWidth: 1,
         height: 40
     },

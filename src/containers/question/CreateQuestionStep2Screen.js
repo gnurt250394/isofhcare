@@ -74,10 +74,10 @@ class CreateQuestionStep2Screen extends Component {
                 this.imagePicker.show({
                     multiple: true,
                     mediaType: 'photo',
-                    maxFiles: 2,
+                    maxFiles: 5,
                     compressImageMaxWidth: 500,
                     compressImageMaxHeight: 500
-                }).then(images => {
+                }, images => {
                     let imageUris = this.state.imageUris;
                     images.forEach(image => {
                         if (imageUris.length >= 5)
