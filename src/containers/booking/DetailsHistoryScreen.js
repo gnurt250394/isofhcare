@@ -165,7 +165,7 @@ class DetailsHistoryScreen extends Component {
                 defaultImage={() => {
                   return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={20} height={20} />
                 }}
-              />            
+              />
               <Text style={styles.txName}>{this.state.medicalRecords.name}</Text>
             </View>
             <View style={styles.viewService}>
@@ -187,7 +187,10 @@ class DetailsHistoryScreen extends Component {
               <Text numberOfLines={5} style={styles.txLocation}>Địa điểm</Text>
               <View style={styles.viewInfoLocation}>
                 <Text style={styles.txClinic}>{this.state.hospital.name}</Text>
-                <Text numberOfLines={5} style={styles.txAddress}>{this.state.hospital.address}</Text>
+                {this.state.hospital.address ?
+                  <Text numberOfLines={5} style={styles.txAddress}>{this.state.hospital.address}</Text> : null
+
+                }
               </View>
             </View>
             <View style={{ backgroundColor: '#EDECED', height: 1, marginLeft: 12 }}></View>
@@ -327,13 +330,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     flex: 1,
     marginHorizontal: 10,
-    
+
   },
   txClinic: {
     marginRight: 12,
     color: "#8F8E93",
     fontWeight: "bold",
-    textAlign:'right'
+    textAlign: 'right'
 
   },
   viewInfoLocation: {
@@ -347,7 +350,7 @@ const styles = StyleSheet.create({
     color: "#8F8E93",
     flex: 1,
     marginHorizontal: 10,
-    textAlign:'right'
+    textAlign: 'right'
   },
   viewDate: {
     paddingVertical: 10,

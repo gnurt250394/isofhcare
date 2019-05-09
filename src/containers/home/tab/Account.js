@@ -218,7 +218,7 @@ class Account extends Component {
                 height={24}
               />
             </TouchableOpacity>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={[styles.itemMenu]}
               onPress={() => {
                 this.props.navigation.navigate("ehealth");
@@ -230,7 +230,7 @@ class Account extends Component {
                 width={24}
                 height={24}
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity
               style={[styles.itemMenu]}
               onPress={() => {

@@ -251,7 +251,7 @@ class LoginScreen extends PureComponent {
     render() {
         return (
             <ActivityPanel style={{ flex: 1 }} title="Y BẠ ĐIỆN TỬ" showFullScreen={true} isLoading={this.state.isLoading}>
-                <ScrollView style={{ flex: 1 }}
+                <ScrollView keyboardShouldPersistTaps='handled' style={{ flex: 1 }}
                     refreshControl={<RefreshControl
                         refreshing={this.state.refreshing}
                         onRefresh={this.onRefresh.bind(this)}
