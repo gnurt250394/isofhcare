@@ -122,7 +122,7 @@ getRatting = () => {
       }}
         iosBarStyle={"light-content"}
       >
-        <ScrollView style={{ flex: 1, paddingVertical: 5 }}>
+        <ScrollView keyboardShouldPersistTaps='handled' style={{ flex: 1, paddingVertical: 5 }}>
           <View style={styles.viewImgUpload}>
             <View
               style={{ position: "relative", width: 70,marginTop:20 ,}}

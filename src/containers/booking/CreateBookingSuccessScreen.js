@@ -33,7 +33,7 @@ class CreateBookingSuccessScreen extends Component {
                     backgroundColor: '#02C39A'
                 }}>
                 <View style={styles.container}>
-                    <ScrollView style={{ flex: 1 }}>
+                    <ScrollView keyboardShouldPersistTaps='handled' style={{ flex: 1 }}>
                         <ScaleImage style={styles.image1} height={80} source={require("@images/new/booking/ic_rating.png")} />
                         <Text style={styles.text1}>Đặt khám thành công!</Text>
                         <View style={{ backgroundColor: '#effbf9', padding: 20, marginTop: 20 }}>

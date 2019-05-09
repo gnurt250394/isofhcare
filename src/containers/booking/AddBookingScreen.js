@@ -232,7 +232,7 @@ class AddBookingScreen extends Component {
                 backgroundColor: "#f7f9fb"
             }}>
 
-            <ScrollView style={styles.container}>
+            <ScrollView keyboardShouldPersistTaps='handled' style={styles.container}>
 
                 <TouchableOpacity style={styles.name} onPress={() => {
                     connectionUtils.isConnected().then(s => {
