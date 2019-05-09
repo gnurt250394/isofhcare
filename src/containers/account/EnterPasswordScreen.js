@@ -77,6 +77,7 @@ class EnterPasswordScreen extends Component {
         )
         .then(s => {
           this.setState({ isLoading: false });
+          console.log(s.code,'s.codeeeeeee')
           switch (s.code) {
             case 0:
               var user = s.data.user;
@@ -95,7 +96,7 @@ class EnterPasswordScreen extends Component {
               );
               return;
             case 2:
-              snackbar.show(
+              snackbar.show( 
                 constants.msg.user.username_or_email_existed,
                 "danger"
               );

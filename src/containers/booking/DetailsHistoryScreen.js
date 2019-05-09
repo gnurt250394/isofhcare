@@ -104,9 +104,9 @@ class DetailsHistoryScreen extends Component {
                   return item.absoluteUrl()
                 }), index
               });
-            }} key={index} style={{ marginRight: 10, borderRadius: 10, marginBottom: 10, width: 70, height: 70 }}>
+            }} key={index} style={{ marginRight: 10, marginBottom: 10, width: 70, height: 70 }}>
               <Image
-                style={{ width: 70, height: 70, borderRadius: 10 }}
+                style={{ width: 70, height: 70,  }}
                 source={{
                   uri: item ? item.absoluteUrl() : ''
                 }}
@@ -149,18 +149,18 @@ class DetailsHistoryScreen extends Component {
             <View style={styles.viewName}>
               <ImageLoad
                 resizeMode="cover"
-                imageStyle={{ borderRadius: 10, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
-                borderRadius={10}
-                customImagePlaceholderDefaultStyle={[styles.avatar, { width: 20, height: 20 }]}
+                imageStyle={{ borderRadius: 20, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
+                borderRadius={20}
+                customImagePlaceholderDefaultStyle={[styles.avatar, { width: 40, height: 40 }]}
                 placeholderSource={require("@images/new/user.png")}
                 resizeMode="cover"
                 loadingStyle={{ size: 'small', color: 'gray' }}
                 source={avatar}
                 style={{
                   alignSelf: 'center',
-                  borderRadius: 10,
-                  width: 20,
-                  height: 20
+                  borderRadius: 20,
+                  width: 40,
+                  height: 40
                 }}
                 defaultImage={() => {
                   return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={20} height={20} />
@@ -332,7 +332,7 @@ const styles = StyleSheet.create({
 
   },
   txClinic: {
-    marginRight: 12,
+    marginRight: 10,
     color: "#8F8E93",
     fontWeight: "bold",
     textAlign: 'right'
