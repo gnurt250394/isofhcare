@@ -77,9 +77,14 @@ class CreateQuestionStep2Screen extends Component {
                     maxFiles: 5,
                     compressImageMaxWidth: 500,
                     compressImageMaxHeight: 500
-                }, images => {
+                }).then(images => {
+                    let listImages = [];
+                    if (images.length)
+                        listImages = [...images];
+                    else
+                        listImages.push(images);
                     let imageUris = this.state.imageUris;
-                    images.forEach(image => {
+                    listImages.forEach(image => {
                         if (imageUris.length >= 5)
                             return;
                         let temp = null;
