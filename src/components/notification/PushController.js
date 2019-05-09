@@ -18,10 +18,6 @@ class PushController extends Component {
     setBroadcastListener(listener) {
         this.listener = listener;
     }
-constructor(props){
-    super(props)
-    console.log('chay maf thoong bao')
-}
     showNotification(notificationId) {
         // notificationProvider.getDetail(notificationId, function (s, e) {
         //     if (s) {
@@ -114,7 +110,7 @@ constructor(props){
     }
     componentDidMount() {
         // Build a channel
-        const channel = new firebase.notifications.Android.Channel('isofh-care-channel', 'nmc event Channel', firebase.notifications.Android.Importance.Max).setDescription('Nhât Minh Notification channel');
+        const channel = new firebase.notifications.Android.Channel('isofh-care-channel', 'isofh-care-channel', firebase.notifications.Android.Importance.Max).setDescription('Nhât Minh Notification channel');
 
         // Create the channel
         firebase.notifications().android.createChannel(channel);
@@ -162,6 +158,7 @@ constructor(props){
                 .setSound("default")
                 .setData(notification.data);
             firebase.notifications().displayNotification(fbNotification)
+            console.log(fbNotification,'fbNotification')
         }
         if (this.props.userApp.isLogin) {
             firebase.notifications().setBadge(this.props.userApp.unReadNotificationCount + 1);
@@ -177,7 +174,8 @@ constructor(props){
             firebase.notifications().removeDeliveredNotification(notificationOpen.notification.notificationId);
             if (notificationOpen && notificationOpen.notification && notificationOpen.notification.data) {
                 var id = notificationOpen.notification.data.id;
-                switch (notificationOpen.notification.data.type) {
+                const type = Number(notificationOpen.notification.data.type)
+                switch (type) {
                     case 2:
                         this.openQuestion(id);
                         break;
@@ -216,7 +214,8 @@ constructor(props){
             try {
                 firebase.notifications().removeDeliveredNotification(notificationOpen.notification.notificationId);
                 const id = notificationOpen.notification.data.id;
-                switch (notificationOpen.notification.data.type) {
+                const type = Number(notificationOpen.notification.data.type)
+                switch (type) {
                     case 2:
                         this.openQuestion(id);
                         break;

@@ -45,7 +45,7 @@ class ProfileInfo extends Component {
     };
   }
   componentDidMount() {
-      let id = this.props.navigation.state.params && this.props.navigation.state.params.id ? this.props.navigation.state.params.id : userApp.currentUser.id
+      let id = this.props.navigation.state.params && this.props.navigation.state.params.id ? this.props.navigation.state.params.id : this.props.userApp.currentUser.id
     profileProvider.getUserInfo(id).then(res => {
       if(res.code == 0 ){
           this.setState({
