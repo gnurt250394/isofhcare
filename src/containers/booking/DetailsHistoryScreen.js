@@ -72,7 +72,7 @@ class DetailsHistoryScreen extends Component {
           </View>
         );
       case 1:
-        return <Text style={styles.txStatus}>Đã huỷ ( không đến )</Text>;
+        return <Text style={styles.txStatus}>Đã huỷ (không đến)</Text>;
       case 2:
         return <Text style={styles.txStatus}>Thanh toán thất bại</Text>;
       case 3:
@@ -86,7 +86,7 @@ class DetailsHistoryScreen extends Component {
       case 7:
         return <Text style={styles.txStatus}>Đã có hồ sơ</Text>;
       case 8:
-        return <Text style={styles.txStatus}>Đã huỷ ( không phục vụ )</Text>;
+        return <Text style={styles.txStatus}>Đã huỷ (không phục vụ)</Text>;
       default:
         <Text style={styles.txStatus} />;
     }
