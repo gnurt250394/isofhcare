@@ -148,17 +148,26 @@ class PushController extends Component {
         if (!notification || notification.show_in_foreground)
             return;
         if (notification.data && notification.data.id) {
+            let body = "";
+            let title = "";
+            if (Platform.OS == 'ios') {
+                body = notification.title;
+                title = "iSofhCare";
+            } else {
+                title = notification.title;
+                body = "";
+            }
             const fbNotification = new firebase.notifications.Notification()
                 .setNotificationId(StringUtils.guid())
-                .setBody("")
-                .setTitle(notification.title)
+                .setBody(body)
+                .setTitle(title)
                 .android.setChannelId("isofh-care-channel")
                 .android.setSmallIcon("ic_launcher")
                 .android.setPriority(2)
                 .setSound("default")
                 .setData(notification.data);
             firebase.notifications().displayNotification(fbNotification)
-            console.log(fbNotification,'fbNotification')
+            console.log(fbNotification, 'fbNotification')
         }
         if (this.props.userApp.isLogin) {
             firebase.notifications().setBadge(this.props.userApp.unReadNotificationCount + 1);
