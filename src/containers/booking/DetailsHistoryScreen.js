@@ -96,7 +96,7 @@ class DetailsHistoryScreen extends Component {
     if (image) {
       var images = image.split(",");
       return (<View>
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 10 }}>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 10,borderRadius:10 }}>
           {
             images.map((item, index) => <TouchableOpacity onPress={() => {
               this.props.navigation.navigate("photoViewer", {
@@ -104,9 +104,9 @@ class DetailsHistoryScreen extends Component {
                   return item.absoluteUrl()
                 }), index
               });
-            }} key={index} style={{ marginRight: 10, marginBottom: 10, width: 70, height: 70 }}>
+            }} key={index} style={{ marginRight: 10, marginBottom: 10, width: 70, height: 70,borderRadius:10 }}>
               <Image
-                style={{ width: 70, height: 70,  }}
+                style={{ width: 70, height: 70,borderRadius:10  }}
                 source={{
                   uri: item ? item.absoluteUrl() : ''
                 }}
