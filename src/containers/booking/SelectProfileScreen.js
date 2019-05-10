@@ -233,13 +233,11 @@ const styles = StyleSheet.create({
     },
     btntext: {
         fontSize: 18,
-        fontWeight: "600",
         fontStyle: "normal",
         letterSpacing: 0,
         color: "#02c39a",
         textAlign: 'center',
         margin: 10,
-
     },
     btntext2: {
         fontSize: 18,
