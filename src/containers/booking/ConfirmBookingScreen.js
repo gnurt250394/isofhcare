@@ -50,20 +50,21 @@ class ConfirmBookingScreen extends Component {
         booking.payment = this.state.paymentMethod;
         this.setState({ isLoading: true }, () => {
             bookingProvider.confirmPayment(bookingId).then(s => {
-                if (s.code == 0) {
-                    this.props.navigation.navigate("home", {
-                        navigate: {
-                            screen: "createBookingSuccess",
-                            params: {
-                                booking
+                switch (s.code) {
+                    case 0:
+                        this.props.navigation.navigate("home", {
+                            navigate: {
+                                screen: "createBookingSuccess",
+                                params: {
+                                    booking
+                                }
                             }
-                        }
-                    });
-                }
-                else {
-                    this.setState({ isLoading: false }, () => {
-                        snackbar.show("Xác nhận đặt khám không thành công", "danger");
-                    });
+                        });
+                        break;
+                    case 5:
+                        this.setState({ isLoading: false }, () => {
+                            snackbar.show("Phiên đặt khám của bạn đã hết hạn. Vui lòng thực hiện lại", "danger");
+                        });
                 }
             }).catch(e => {
                 this.setState({ isLoading: false }, () => {
