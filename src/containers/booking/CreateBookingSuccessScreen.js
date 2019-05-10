@@ -58,6 +58,9 @@ class CreateBookingSuccessScreen extends Component {
                                 <Text style={styles.text}>{booking.payment == 2 ? "Thanh toán tại viện" : "VNPay"}</Text>
                             </View>
                         </View>
+                        <View style={styles.view1}>
+                            <Text style={styles.text2}>Lịch đặt khám của bạn đã được gửi đi. Vui lòng đến trước hẹn 15 phút để thực hiện các thủ tục khác.</Text>
+                        </View>
                         <View style={styles.view2}>
                             <View style={styles.col}>
                                 <Text style={styles.col1}>Mã code:</Text>
@@ -69,9 +72,6 @@ class CreateBookingSuccessScreen extends Component {
                                         fgColor='white' />
                                 </View>
                             </View>
-                        </View>
-                        <View style={styles.view1}>
-                            <Text style={styles.text2}>Lịch đặt khám của bạn đã được gửi đi. Vui lòng đến trước hẹn 15 phút để thực hiện các thủ tục khác.</Text>
                         </View>
                     </ScrollView>
                     <TouchableOpacity style={styles.btn}><Text style={styles.btntext} onPress={() => {
@@ -117,10 +117,10 @@ const styles = StyleSheet.create({
         marginTop: 15
     },
     text2: {
-        fontSize: 15,
+        fontSize: 14,
         fontWeight: "normal",
         fontStyle: "normal",
-        color: "#4a4a4a",
+        color: "#4a4a4a90",
         textAlign: 'center',
         fontStyle: 'italic'
     },
