@@ -57,7 +57,7 @@ class SelectTimeScreen extends Component {
     analyseTime(listTime) {
         let numberIgnore = 0;
         let itemWidth = 30;
-        let widthIgnore = 35;
+        let widthIgnore = 30;
 
         length = listTime.length;
         for (let i = 0; i < listTime.length; i++) {
@@ -143,7 +143,7 @@ class SelectTimeScreen extends Component {
                                     // if (minute == 0)
                                     //     label = time.format("HH:mm");
                                     // else
-                                    label = time.format("HH:mm");
+                                    label = time.format("HH") + "h" + time.format("mm");
                                     let schedule = {
                                         label,
                                         time,
@@ -203,32 +203,6 @@ class SelectTimeScreen extends Component {
                 });
             })
         });
-    }
-    showLabel(item, index) {
-        // let minute = item.time.format("mm");
-        // if (minute == 0)
-        //     return true;
-        // return true;
-        if (index == 0)
-            return true;
-
-        if (index == this.state.listTime.length - 1)
-            return true;
-
-        let pre = this.state.listTime[index - 1];
-        let nex = this.state.listTime[index + 1];
-
-        if (item.time - pre.time > 30 * 60 * 1000)
-            return true;
-        if (nex.time - item.time > 30 * 60 * 1000)
-            return true;
-
-
-        // let hour1 = item.time.format("HH");
-        // let hour0 = this.state.listTime[index - 1].time.format("HH");
-        // if (hour0 != hour1)
-        //     return true;
-        return false;
     }
     confirmBooking() {
         if (!this.state.allowBooking)
@@ -365,7 +339,7 @@ class SelectTimeScreen extends Component {
         let label = item.label;
         if (item.right && index != 0 && !(item.left & item.right)) {
             let time = new Date(item.time.getTime() + 30 * 60000);
-            label = time.format("HH:mm");
+            label = time.format("HH") + "h" + time.format("mm");
             margin += this.state.itemWidth;
         }
         margin += 7;
@@ -465,7 +439,7 @@ class SelectTimeScreen extends Component {
                                     <ScaleImage source={require("@images/new/booking/ic_bookingDate.png")} width={20} />
                                     <Text style={styles.txtchongiokham}>Chọn giờ khám</Text>
                                 </View>
-                                <Text style={{ marginTop: 20, fontSize: 13 }}>Gợi ý: Chọn những giờ màu xanh sẽ giúp bạn được phục vụ nhanh hơn</Text>
+                                <Text style={{ marginTop: 20, fontSize: 14, color:'#8e8e93' }}>Gợi ý: Chọn những giờ màu xanh sẽ giúp bạn được phục vụ nhanh hơn</Text>
 
                                 <View style={{ position: 'relative', marginTop: 20, height: 100, paddingTop: 40 }}>
                                     {
@@ -475,7 +449,7 @@ class SelectTimeScreen extends Component {
                                     {this.state.schedule &&
                                         <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', left: this.state.schedule.marginLeft - 1, top: 10 }}>
                                             <ScaleImage height={30} source={this.getIcon(this.state.schedule)} />
-                                            <Text style={{ fontSize: 9, marginLeft: 5, fontWeight: 'bold' }}>{this.state.schedule.label}</Text>
+                                            <Text style={{ fontSize: 11, marginLeft: 2, fontWeight: 'bold' }}>{this.state.schedule.label}</Text>
                                         </View>
                                     }
                                     {
