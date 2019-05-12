@@ -90,7 +90,7 @@ class SelectTimeScreen extends Component {
                 width = 0;
             else {
                 if (item.left) {
-                    width += widthIgnore;
+                    width += widthIgnore + itemWidth;
                 }
                 else {
                     width += itemWidth;
@@ -344,42 +344,66 @@ class SelectTimeScreen extends Component {
     }
     renderLabel(item, index) {
         let margin = 0;
-        if (index == this.state.listTime.length - 1)
-            margin += 10;
-        if (index == 0)
-            margin -= 0;
+        let label = item.label;
+        if (item.right && index != 0 && !(item.left & item.right)) {
+            let time = new Date(item.time.getTime() + 30 * 60000);
+            label = time.format("HH:mm");
+            margin += this.state.itemWidth;
+        }
+        margin += 7;
         if (index == 0 || index == this.state.listTime.length - 1 || item.left || item.right)
-            return (<Text style={{ fontSize: 7, position: 'absolute', left: item.marginLeft + margin }}>{item.label}</Text>)
+            return (<Text style={{ fontSize: 9, position: 'absolute', left: item.marginLeft + margin, top: 50 }}>{label}</Text>)
         return null;
     }
-    renderTime(item, index) {
-        return <TouchableWithoutFeedback style={{ position: 'absolute', left: item.marginLeft + 8 }}
+    renderIgnoreTime(item, index) {
+        return <TouchableOpacity
             onPress={() => {
-                if (item.type == 0) {
-                    snackbar.show("Đã kín lịch trong khung giờ này", "danger");
-                    return;
-                }
-                this.setState({ schedule: item, index })
+                snackbar.show("Không có lịch trong khung giờ này", "danger");
+                return;
+            }}
+            style={{
+                position: 'absolute', left: this.state.itemWidth - 0, flexDirection: 'row', alignItems: 'center', paddingVertical: 20,
             }}>
-            <View
-                style={{ flexDirection: 'row', position: 'absolute', paddingVertical: 10, left: item.marginLeft + 8, alignItems: 'center', marginTop: 20 }}>
-
-                {
-                    item.right ?
-                        <View style={{ width: this.state.widthIgnore + 1, height: 5, backgroundColor: '#53657b50', marginLeft: 0, borderTopLeftRadius: 2.5, borderBottomLeftRadius: 2.5 }}>
-                        </View> :
-                        <View style={{ width: this.state.itemWidth + 1, height: 5, backgroundColor: '#02c39a', marginLeft: 0, borderTopLeftRadius: 2.5, borderBottomLeftRadius: 2.5 }}>
-                        </View>
-                }
-                <View style={{
-                    top: 8.7, position: 'absolute', width: 8, height: 8,
-                    borderRadius: 4,
-                    backgroundColor: this.getColor(item), justifyContent: 'center', alignItems: 'center'
-                }}>
-                    <View style={{ width: 2, height: 2, backgroundColor: '#FFF', borderRadius: 1 }}></View>
-                </View>
+            <View style={{ width: this.state.widthIgnore + 10, height: 5, backgroundColor: '#cacaca' }}>
             </View>
-        </TouchableWithoutFeedback>
+            <View style={{
+                position: 'absolute',
+                width: 8, height: 8,
+                borderRadius: 4,
+                backgroundColor: '#cacaca', justifyContent: 'center', alignItems: 'center'
+            }}>
+                <View style={{ width: 2, height: 2, backgroundColor: '#FFF', borderRadius: 1 }}></View>
+            </View>
+        </TouchableOpacity>
+    }
+    renderPointer(item, time) {
+        return <View style={{
+            top: 18.7, position: 'absolute', width: 8, height: 8,
+            borderRadius: 4,
+            backgroundColor: this.getColor(item), justifyContent: 'center', alignItems: 'center'
+        }}>
+            <View style={{ width: 2, height: 2, backgroundColor: '#FFF', borderRadius: 1 }}></View>
+        </View>
+    }
+    renderTime(item, index) {
+        return <TouchableOpacity onPress={() => {
+            if (item.type == 0) {
+                snackbar.show("Đã kín lịch trong khung giờ này", "danger");
+                return;
+            }
+            this.setState({ schedule: item, index })
+        }}
+            style={[{ flexDirection: 'row', position: 'absolute', paddingVertical: 20, left: item.marginLeft + 7, alignItems: 'center', marginTop: 20 }, item.right ? { width: this.state.itemWidth + this.state.widthIgnore + 1 } : {}]}>
+
+            <View style={[{ width: this.state.itemWidth + 1, height: 5, backgroundColor: this.getColor(item), marginLeft: 0, borderTopLeftRadius: 2.5, borderBottomLeftRadius: 2.5 }, index == this.state.listTime.length - 1 ? { borderTopRightRadius: 2.5, borderBottomRightRadius: 2.5 } : {}]}>
+            </View>
+            {
+                item.right && this.renderIgnoreTime(item, index)
+            }
+            {
+                this.renderPointer(item, index)
+            }
+        </TouchableOpacity>
     }
 
     render() {
@@ -425,14 +449,13 @@ class SelectTimeScreen extends Component {
                                 </View>
                                 <Text style={{ marginTop: 20, fontSize: 13 }}>Gợi ý: Chọn những giờ màu xanh sẽ giúp bạn được phục vụ nhanh hơn</Text>
 
-                                {/* <View style={{ alignItems: 'center' }}> */}
                                 <View style={{ position: 'relative', marginTop: 20, height: 100, paddingTop: 40 }}>
                                     {
                                         this.state.listTime.map((item, index) =>
                                             this.renderTime(item, index))
                                     }
                                     {this.state.schedule &&
-                                        <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', left: this.state.schedule.marginLeft, top: 0 }}>
+                                        <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', left: this.state.schedule.marginLeft - 1, top: 10 }}>
                                             <ScaleImage height={30} source={this.getIcon(this.state.schedule)} />
                                             <Text style={{ fontSize: 9, marginLeft: 5, fontWeight: 'bold' }}>{this.state.schedule.label}</Text>
                                         </View>
@@ -446,7 +469,7 @@ class SelectTimeScreen extends Component {
 
 
 
-                                <View style={{ width: this.state.listTime.length * 24 + 100, alignSelf: 'center', position: 'relative', marginTop: 20 }}>
+                                {/* <View style={{ width: this.state.listTime.length * 24 + 100, alignSelf: 'center', position: 'relative', marginTop: 20 }}>
                                     {this.state.schedule &&
                                         <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', left: (this.state.index || 0) * 24 + 50, top: 0 }}>
                                             <ScaleImage height={30} source={this.getIcon(this.state.schedule)} />
@@ -478,7 +501,7 @@ class SelectTimeScreen extends Component {
                                             })
                                         }
                                     </View>
-                                </View>
+                                </View> */}
                                 {
                                     this.state.scheduleError ?
                                         <Text style={[styles.errorStyle]}>{this.state.scheduleError}</Text> : null
