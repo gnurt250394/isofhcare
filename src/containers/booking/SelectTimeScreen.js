@@ -56,8 +56,8 @@ class SelectTimeScreen extends Component {
     }
     analyseTime(listTime) {
         let numberIgnore = 0;
-        let itemWidth = 20;
-        let widthIgnore = 30;
+        let itemWidth = 30;
+        let widthIgnore = 35;
 
         length = listTime.length;
         for (let i = 0; i < listTime.length; i++) {
@@ -71,38 +71,56 @@ class SelectTimeScreen extends Component {
                 numberIgnore++;
             }
         }
-        let length = length - 1;
-        if (length < 0)
-            length = 0;
 
-        let width = length * itemWidth + numberIgnore * widthIgnore;
+        // let width = (length * itemWidth) + (numberIgnore * (itemWidth + 5));
 
-        if (width >= DEVICE_WIDTH - 50) {
-            width = DEVICE_WIDTH - 50;
-            width = width - (numberIgnore * widthIgnore);
-            itemWidth = width / length;
+        // if (width >= DEVICE_WIDTH - 80) {
+        //     width = DEVICE_WIDTH - 80;
+
+        //     itemWidth = (width - (5 * numberIgnore)) / (length + numberIgnore);
+        //     widthIgnore = itemWidth + 5;
+        // }
+
+        let width = (length * itemWidth) + (numberIgnore * widthIgnore);
+
+        if (width >= DEVICE_WIDTH - 80) {
+            width = DEVICE_WIDTH - 80;
+
+            itemWidth = (width - numberIgnore * widthIgnore) / (length);
+            // widthIgnore = itemWidth + 5;
+        }
+        if (itemWidth < 15) {
+            widthIgnore = 30;
+            width = (length * itemWidth) + (numberIgnore * widthIgnore);
+
+            if (width >= DEVICE_WIDTH - 80) {
+                width = DEVICE_WIDTH - 80;
+
+                itemWidth = (width - numberIgnore * widthIgnore) / (length);
+                // widthIgnore = itemWidth + 5;
+            }
+
         }
 
-        width = 0;
+        let marginLeft = (DEVICE_WIDTH - width) / 2 - 30;
         for (let i = 0; i < listTime.length; i++) {
             let item = listTime[i];
-            if (i == 0)
-                width = 0;
-            else {
+            if (i != 0) {
                 if (item.left) {
-                    width += widthIgnore + itemWidth;
+                    marginLeft += widthIgnore + itemWidth;
                 }
                 else {
-                    width += itemWidth;
+                    marginLeft += itemWidth;
                 }
             }
-            item.marginLeft = width;
+            item.marginLeft = marginLeft;
         }
         console.log(listTime);
         this.setState({
             itemWidth,
             numberIgnore,
-            widthIgnore
+            widthIgnore,
+            timeWidth: width
         })
     }
     selectService(service) {
