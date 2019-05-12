@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Keyboard, Image, TouchableHighlight, FlatList, Dimensions, Slider } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Keyboard, Image, TouchableHighlight, FlatList, Dimensions, TouchableWithoutFeedback } from 'react-native';
 import { connect } from 'react-redux';
 import ScaleImage from "mainam-react-native-scaleimage";
 import connectionUtils from '@utils/connection-utils';
@@ -11,6 +11,8 @@ import dateUtils from "mainam-react-native-date-utils";
 import bookingProvider from '@data-access/booking-provider';
 import dataCacheProvider from '@data-access/datacache-provider';
 import constants from '@resources/strings';
+const DEVICE_WIDTH = Dimensions.get('window').width;
+
 
 class SelectTimeScreen extends Component {
     constructor(props) {
@@ -51,6 +53,57 @@ class SelectTimeScreen extends Component {
             console.log(error);
         }
         return yourDate;
+    }
+    analyseTime(listTime) {
+        let numberIgnore = 0;
+        let itemWidth = 20;
+        let widthIgnore = 30;
+
+        length = listTime.length;
+        for (let i = 0; i < listTime.length; i++) {
+            if (i == length - 1)
+                continue;
+            let nex = listTime[i + 1];
+            let item = listTime[i];
+            if (nex.time - item.time > 30 * 60 * 1000) {
+                nex.left = 1;
+                item.right = 1;
+                numberIgnore++;
+            }
+        }
+        let length = length - 1;
+        if (length < 0)
+            length = 0;
+
+        let width = length * itemWidth + numberIgnore * widthIgnore;
+
+        if (width >= DEVICE_WIDTH - 50) {
+            width = DEVICE_WIDTH - 50;
+            width = width - (numberIgnore * widthIgnore);
+            itemWidth = width / length;
+        }
+
+        width = 0;
+        for (let i = 0; i < listTime.length; i++) {
+            let item = listTime[i];
+            if (i == 0)
+                width = 0;
+            else {
+                if (item.left) {
+                    width += widthIgnore;
+                }
+                else {
+                    width += itemWidth;
+                }
+            }
+            item.marginLeft = width;
+        }
+        console.log(listTime);
+        this.setState({
+            itemWidth,
+            numberIgnore,
+            widthIgnore
+        })
     }
     selectService(service) {
         // alert(JSON.stringify(service));
@@ -115,12 +168,15 @@ class SelectTimeScreen extends Component {
                         });
                     }
                     console.log(listTime);
+
                     this.setState({
                         isLoading: false,
                         listTime: listTime.sort((a, b) => {
                             return a.time - b.time
                         })
-                    })
+                    }, () => {
+                        this.analyseTime(this.state.listTime);
+                    });
                 }).catch(e => {
                     this.setState({
                         isLoading: false,
@@ -131,15 +187,29 @@ class SelectTimeScreen extends Component {
         });
     }
     showLabel(item, index) {
-        let minute = item.time.format("mm");
-        if (minute == 0)
-            return true;
+        // let minute = item.time.format("mm");
+        // if (minute == 0)
+        //     return true;
+        // return true;
         if (index == 0)
             return true;
-        let hour1 = item.time.format("HH");
-        let hour0 = this.state.listTime[index - 1].time.format("HH");
-        if (hour0 != hour1)
+
+        if (index == this.state.listTime.length - 1)
             return true;
+
+        let pre = this.state.listTime[index - 1];
+        let nex = this.state.listTime[index + 1];
+
+        if (item.time - pre.time > 30 * 60 * 1000)
+            return true;
+        if (nex.time - item.time > 30 * 60 * 1000)
+            return true;
+
+
+        // let hour1 = item.time.format("HH");
+        // let hour0 = this.state.listTime[index - 1].time.format("HH");
+        // if (hour0 != hour1)
+        //     return true;
         return false;
     }
     confirmBooking() {
@@ -272,6 +342,45 @@ class SelectTimeScreen extends Component {
             return require("@images/new/booking/ic_timepicker2.png");
         return require("@images/new/booking/ic_timepicker3.png");
     }
+    renderLabel(item, index) {
+        let margin = 0;
+        if (index == this.state.listTime.length - 1)
+            margin += 10;
+        if (index == 0)
+            margin -= 0;
+        if (index == 0 || index == this.state.listTime.length - 1 || item.left || item.right)
+            return (<Text style={{ fontSize: 7, position: 'absolute', left: item.marginLeft + margin }}>{item.label}</Text>)
+        return null;
+    }
+    renderTime(item, index) {
+        return <TouchableWithoutFeedback style={{ position: 'absolute', left: item.marginLeft + 8 }}
+            onPress={() => {
+                if (item.type == 0) {
+                    snackbar.show("Đã kín lịch trong khung giờ này", "danger");
+                    return;
+                }
+                this.setState({ schedule: item, index })
+            }}>
+            <View
+                style={{ flexDirection: 'row', position: 'absolute', paddingVertical: 10, left: item.marginLeft + 8, alignItems: 'center', marginTop: 20 }}>
+
+                {
+                    item.right ?
+                        <View style={{ width: this.state.widthIgnore + 1, height: 5, backgroundColor: '#53657b50', marginLeft: 0, borderTopLeftRadius: 2.5, borderBottomLeftRadius: 2.5 }}>
+                        </View> :
+                        <View style={{ width: this.state.itemWidth + 1, height: 5, backgroundColor: '#02c39a', marginLeft: 0, borderTopLeftRadius: 2.5, borderBottomLeftRadius: 2.5 }}>
+                        </View>
+                }
+                <View style={{
+                    top: 8.7, position: 'absolute', width: 8, height: 8,
+                    borderRadius: 4,
+                    backgroundColor: this.getColor(item), justifyContent: 'center', alignItems: 'center'
+                }}>
+                    <View style={{ width: 2, height: 2, backgroundColor: '#FFF', borderRadius: 1 }}></View>
+                </View>
+            </View>
+        </TouchableWithoutFeedback>
+    }
 
     render() {
         return (<ActivityPanel isLoading={this.state.isLoading} style={{ flex: 1, backgroundColor: '#f7f9fb' }} title="Thời gian"
@@ -315,6 +424,28 @@ class SelectTimeScreen extends Component {
                                     <Text style={styles.txtchongiokham}>Chọn giờ khám</Text>
                                 </View>
                                 <Text style={{ marginTop: 20, fontSize: 13 }}>Gợi ý: Chọn những giờ màu xanh sẽ giúp bạn được phục vụ nhanh hơn</Text>
+
+                                {/* <View style={{ alignItems: 'center' }}> */}
+                                <View style={{ position: 'relative', marginTop: 20, height: 100, paddingTop: 40 }}>
+                                    {
+                                        this.state.listTime.map((item, index) =>
+                                            this.renderTime(item, index))
+                                    }
+                                    {this.state.schedule &&
+                                        <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', left: this.state.schedule.marginLeft, top: 0 }}>
+                                            <ScaleImage height={30} source={this.getIcon(this.state.schedule)} />
+                                            <Text style={{ fontSize: 9, marginLeft: 5, fontWeight: 'bold' }}>{this.state.schedule.label}</Text>
+                                        </View>
+                                    }
+                                    {
+                                        this.state.listTime.map((item, index) =>
+                                            this.renderLabel(item, index))
+                                    }
+                                </View>
+                                {/* </View> */}
+
+
+
                                 <View style={{ width: this.state.listTime.length * 24 + 100, alignSelf: 'center', position: 'relative', marginTop: 20 }}>
                                     {this.state.schedule &&
                                         <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', left: (this.state.index || 0) * 24 + 50, top: 0 }}>
