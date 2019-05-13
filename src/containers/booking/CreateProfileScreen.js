@@ -86,6 +86,147 @@ class createProfile extends Component {
     this.setState({ dob: newDate, date: newDate.format("dd/MM/yyyy") }, () => {
     });
   }
+  onShowGender = () => {
+    this.actionSheetGender.show();
+
+  };
+  showLoading(loading, callback) {
+    if (this.props.showLoading) {
+      this.props.showLoading(loading, callback);
+    } else {
+      callback;
+    }
+  }
+  onSetGender = index => {
+    try {
+      switch (index) {
+        case 0:
+          this.setState(
+            {
+              valueGender: 1,
+              txGender: 'Nam'
+            });
+          return;
+        case 1:
+          this.setState(
+            {
+              valueGender: 0,
+              txGender: 'Nữ'
+            });
+          return;
+      }
+    } catch (error) {
+
+    }
+
+  };
+
+  selectImage() {
+    connectionUtils
+      .isConnected()
+      .then(s => {
+        if (this.imagePicker) {
+          this.imagePicker.open(true, 200, 200, image => {
+            setTimeout(() => {
+              Keyboard.dismiss();
+            }, 500);
+            this.setState({
+              image
+            });
+            imageProvider.upload(this.state.image.path, (s, e) => {
+              if (s.success && s.data.code == 0) {
+                let images = s.data.data.images[0].thumbnail;
+                this.setState({
+                  imgLocal: images
+                });
+              }
+              if (e) {
+                this.setState({
+                  isLoading: false
+                });
+              }
+            });
+          });
+        }
+      })
+      .catch(e => {
+        snackbar.show("Không có kết nối mạng", "danger");
+      });
+  }
+  onUpdate2(image) {
+    if (!this.form.isValid()) {
+      return;
+    }
+
+    connectionUtils
+      .isConnected()
+      .then(s => {
+        this.setState(
+          {
+            isLoading: true
+          },
+          () => {
+            const { name } = this.state;
+            const gender = this.state.valueGender;
+            const email = this.state.email
+            const status = this.state.status
+            let date2 = this.state.dob ? this.state.dob.format('yyyy-MM-dd') + ' 00:00:00' : null
+            medicalRecordProvider
+              .createMedical(name, gender, date2, email, image, status)
+              .then(res => {
+                if (res.code == 0) {
+                  this.setState({
+                    isLoading: false
+                  });
+                  this.state.isDataNull ? snackbar.show("Bạn đã tạo hồ sơ thành công", "success") : snackbar.show("Bạn đã thêm người thân thành công", "success");
+
+
+                  NavigationService.navigate('selectProfile', { loading: true });
+                } if (res.code == 2) {
+                  this.setState({
+                    isLoading: false
+                  });
+                  this.state.isDataNull ? snackbar.show("Hồ sơ đã tồn tại trong hệ thống", 'danger') : snackbar.show("Hồ sơ đã tồn tại trong hệ thống", 'danger')
+                } else {
+                  this.setState({
+                    isLoading: false
+                  });
+                }
+              })
+              .catch(err => {
+                this.setState({
+                  isLoading: false
+                });
+                snackbar.show("Có lỗi, xin vui lòng thử lại", "danger");
+              });
+          }
+        )
+      })
+      .catch(e => {
+        snackbar.show("Không có kết nối mạng", "danger");
+      });
+  }
+  onUpdate = () => {
+    this.form.isValid();
+    if (!this.form.isValid()) {
+      return;
+    }
+    if (this.state.image)
+      this.setState({ isLoading: true }, () => {
+        imageProvider.upload(this.state.image.path, (s, e) => {
+          if (s.success && s.data.code == 0) {
+            let image = s.data.data.images[0].thumbnail;
+            this.onUpdate2(image);
+          }
+          if (e) {
+            this.setState({
+              isLoading: false
+            });
+          }
+        });
+      });
+    else this.onUpdate2("");
+  };
   render() {
     let maxDate = new Date();
     maxDate = new Date(
@@ -387,147 +528,7 @@ class createProfile extends Component {
       </ActivityPanel>
     );
   }
-  onShowGender = () => {
-    this.actionSheetGender.show();
 
-  };
-  showLoading(loading, callback) {
-    if (this.props.showLoading) {
-      this.props.showLoading(loading, callback);
-    } else {
-      callback;
-    }
-  }
-  onSetGender = index => {
-    try {
-      switch (index) {
-        case 0:
-          this.setState(
-            {
-              valueGender: 1,
-              txGender: 'Nam'
-            });
-          return;
-        case 1:
-          this.setState(
-            {
-              valueGender: 0,
-              txGender: 'Nữ'
-            });
-          return;
-      }
-    } catch (error) {
-
-    }
-
-  };
-
-  selectImage() {
-    connectionUtils
-      .isConnected()
-      .then(s => {
-        if (this.imagePicker) {
-          this.imagePicker.open(true, 200, 200, image => {
-            setTimeout(() => {
-              Keyboard.dismiss();
-            }, 500);
-            this.setState({
-              image
-            });
-            imageProvider.upload(this.state.image.path, (s, e) => {
-              if (s.success && s.data.code == 0) {
-                let images = s.data.data.images[0].thumbnail;
-                this.setState({
-                  imgLocal: images
-                });
-              }
-              if (e) {
-                this.setState({
-                  isLoading: false
-                });
-              }
-            });
-          });
-        }
-      })
-      .catch(e => {
-        snackbar.show("Không có kết nối mạng", "danger");
-      });
-  }
-  onUpdate2(image) {
-    if (!this.form.isValid()) {
-      return;
-    }
-
-    connectionUtils
-      .isConnected()
-      .then(s => {
-        this.setState(
-          {
-            isLoading: true
-          },
-          () => {
-            const { name } = this.state;
-            const gender = this.state.valueGender;
-            const email = this.state.email
-            const status = this.state.status
-            let date2 = this.state.dob ? this.state.dob.format('yyyy-MM-dd') + ' 00:00:00' : null
-            medicalRecordProvider
-              .createMedical(name, gender, date2, email, image, status)
-              .then(res => {
-                if (res.code == 0) {
-                  this.setState({
-                    isLoading: false
-                  });
-                  this.state.isDataNull ? snackbar.show("Bạn đã tạo hồ sơ thành công", "success") : snackbar.show("Bạn đã thêm người thân thành công", "success");
-
-
-                  NavigationService.navigate('selectProfile', { loading: true });
-                } if (res.code == 2) {
-                  this.setState({
-                    isLoading: false
-                  });
-                  this.state.isDataNull ? snackbar.show("Hồ sơ đã tồn tại trong hệ thống", 'danger') : snackbar.show("Hồ sơ đã tồn tại trong hệ thống", 'danger')
-                } else {
-                  this.setState({
-                    isLoading: false
-                  });
-                }
-              })
-              .catch(err => {
-                this.setState({
-                  isLoading: false
-                });
-                snackbar.show("Có lỗi, xin vui lòng thử lại", "danger");
-              });
-          }
-        )
-      })
-      .catch(e => {
-        snackbar.show("Không có kết nối mạng", "danger");
-      });
-  }
-  onUpdate = () => {
-    this.form.isValid();
-    if (!this.form.isValid()) {
-      return;
-    }
-    if (this.state.image)
-      this.setState({ isLoading: true }, () => {
-        imageProvider.upload(this.state.image.path, (s, e) => {
-          if (s.success && s.data.code == 0) {
-            let image = s.data.data.images[0].thumbnail;
-            this.onUpdate2(image);
-          }
-          if (e) {
-            this.setState({
-              isLoading: false
-            });
-          }
-        });
-      });
-    else this.onUpdate2("");
-  };
 }
 
 function mapStateToProps(state) {

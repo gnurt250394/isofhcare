@@ -77,7 +77,6 @@ class EnterPasswordScreen extends Component {
         )
         .then(s => {
           this.setState({ isLoading: false });
-          console.log(s.code,'s.codeeeeeee')
           switch (s.code) {
             case 0:
               var user = s.data.user;
@@ -96,7 +95,7 @@ class EnterPasswordScreen extends Component {
               );
               return;
             case 2:
-              snackbar.show( 
+              snackbar.show(
                 constants.msg.user.username_or_email_existed,
                 "danger"
               );
@@ -127,7 +126,6 @@ class EnterPasswordScreen extends Component {
         touchToDismiss={true}
         showFullScreen={true}
       >
-
         <ScrollView
           showsVerticalScrollIndicator={false}
           style={{ flex: 1 }} keyboardShouldPersistTaps="always">
@@ -187,7 +185,8 @@ class EnterPasswordScreen extends Component {
         <TouchableOpacity style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center', marginBottom: 20 }} onPress={this.register.bind(this)}>
           <Text style={{ color: '#FFF', fontSize: 17 }}>{"HOÀN THÀNH"}</Text>
         </TouchableOpacity>
-      </ActivityPanel >
+      </ActivityPanel>
+
     );
   }
 }

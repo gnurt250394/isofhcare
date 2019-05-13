@@ -1,37 +1,17 @@
-import React, { Component, PropTypes, PureComponent } from "react";
+import React, { Component } from "react";
 import ActivityPanel from "@components/ActivityPanel";
 import {
   View,
   StyleSheet,
   ScrollView,
-  Keyboard,
   Text,
-  TouchableOpacity,
-  Platform,
-  FlatList
 } from "react-native";
 import { connect } from "react-redux";
 import ScaleImage from "mainam-react-native-scaleimage";
-import { Card } from "native-base";
 import ImagePicker from "mainam-react-native-select-image";
-import imageProvider from "@data-access/image-provider";
 import ImageLoad from "mainam-react-native-image-loader";
-import stylemodal from "@styles/modal-style";
-import DateTimePicker from "mainam-react-native-date-picker";
-import Modal from "react-native-modal";
 import connectionUtils from "@utils/connection-utils";
-import snackbar from "@utils/snackbar-utils";
-import medicalRecordProvider from "@data-access/medical-record-provider";
-import NavigationService from "@navigators/NavigationService";
-import Form from "mainam-react-native-form-validate/Form";
-import Field from "mainam-react-native-form-validate/Field";
-import TextField from "mainam-react-native-form-validate/TextField";
-import FloatingLabel from "mainam-react-native-floating-label";
-import { cleanSingle } from "react-native-image-crop-picker";
 import dateUtils from "mainam-react-native-date-utils";
-import constants from "@resources/strings";
-import profileProvider from "@data-access/profile-provider"
-import KeyboardSpacer from "react-native-keyboard-spacer";
 import StarRating from 'react-native-star-rating';
 import userProvider from '@data-access/user-provider';
 import questionProvider from '@data-access/question-provider';

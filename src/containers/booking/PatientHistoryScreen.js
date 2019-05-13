@@ -138,7 +138,7 @@ class PatientHistoryScreen extends Component {
             finish: false
           })
         }
-      }, 500)
+      }, 100)
     }
   }
   onLoadMore() {
