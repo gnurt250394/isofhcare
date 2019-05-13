@@ -605,7 +605,7 @@ const styles = StyleSheet.create({
         fontWeight: "normal",
         fontStyle: "normal",
         letterSpacing: 0,
-        color: "#4a4a4a"
+        color: "#000000"
     },
     chonGioKham: {
         flex: 1, marginTop: 20,
