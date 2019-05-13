@@ -50,7 +50,7 @@ class SelectHospitalScreen extends Component {
             loading: true,
             refreshing: page == 1
         }, () => {
-            hospitalProvider.getByServiceType(this.state.serviceType.id, this.state.keyword).then(s => {
+            hospitalProvider.getByServiceType(this.state.serviceType.id, (this.state.keyword || "").trim()).then(s => {
                 this.setState({
                     loading: false,
                     refreshing: false
@@ -139,7 +139,7 @@ class SelectHospitalScreen extends Component {
                                 (!this.state.data || this.state.data.length == 0) ? (
                                     <View style={{ alignItems: "center", marginTop: 50 }}>
                                         <Text style={{ fontStyle: "italic" }}>
-                                        Không có dữ liệu</Text>
+                                            Không có dữ liệu</Text>
                                     </View>
                                 ) : null
                         }
@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         paddingVertical: 20,
         backgroundColor: '#ffffff',
-        borderBottomWidth: 1,
+        borderBottomWidth: 0.7,
         borderBottomColor: 'rgba(0, 0, 0, 0.06)'
     },
     sc: {

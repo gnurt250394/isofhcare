@@ -76,30 +76,30 @@ module.exports = {
       }
     );
   },
-  getPatientHistory() {
+  getByAuthor() {
     return new Promise((resolve, reject) => {
-    // var queryString = ""
-    // var codeBooking = ""
-    // var status = -10
-    // var type = 1
-    // var stype = 1
-    // var hospitalId = -1
-    // var fromDate = '1970-01-01 00:00:00'
+      // var queryString = ""
+      // var codeBooking = ""
+      // var status = -10
+      // var type = 1
+      // var stype = 1
+      // var hospitalId = -1
+      // var fromDate = '1970-01-01 00:00:00'
 
       client.requestApi(
         "get",
-        `${constants.api.patientHistory.getListPatient}`,{},(s,e)=>{
-            if (s) resolve(s);
+        `${constants.api.booking.getByAuthor}`, {}, (s, e) => {
+          if (s) resolve(s);
           else reject(e);
         }
       );
     });
   },
-  detailsPatientHistory(id){
-    return new Promise((resolve,reject) => {
-      client.requestApi('get',`${constants.api.patientHistory.getDetailsHistory}/${id}`,{},(s,e) =>{
-        if(s) resolve(s)
-        else resolve(e)
+  detail(id) {
+    return new Promise((resolve, reject) => {
+      client.requestApi('get', `${constants.api.booking.detail}/${id}`, {}, (s, e) => {
+        if (s) resolve(s)
+        else reject(e)
       })
     })
   },
@@ -116,7 +116,7 @@ module.exports = {
           booking: {
             bookingTime,
             content,
-            images, 
+            images,
             contact
           }
         }, (s, e) => {

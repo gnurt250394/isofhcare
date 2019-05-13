@@ -6,19 +6,13 @@ import {
   ScrollView,
   Keyboard,
   Text,
-  TouchableOpacity,
   Platform,
-  FlatList
 } from "react-native";
 import { connect } from "react-redux";
 import ScaleImage from "mainam-react-native-scaleimage";
-import { Card } from "native-base";
 import ImagePicker from "mainam-react-native-select-image";
 import imageProvider from "@data-access/image-provider";
 import ImageLoad from "mainam-react-native-image-loader";
-import stylemodal from "@styles/modal-style";
-import DateTimePicker from "mainam-react-native-date-picker";
-import Modal from "react-native-modal";
 import connectionUtils from "@utils/connection-utils";
 import snackbar from "@utils/snackbar-utils";
 import medicalRecordProvider from "@data-access/medical-record-provider";
@@ -26,12 +20,8 @@ import NavigationService from "@navigators/NavigationService";
 import Form from "mainam-react-native-form-validate/Form";
 import Field from "mainam-react-native-form-validate/Field";
 import TextField from "mainam-react-native-form-validate/TextField";
-import FloatingLabel from "mainam-react-native-floating-label";
-import { cleanSingle } from "react-native-image-crop-picker";
 import dateUtils from "mainam-react-native-date-utils";
-import constants from "@resources/strings";
 import profileProvider from "@data-access/profile-provider"
-import KeyboardSpacer from "react-native-keyboard-spacer";
 class ProfileInfo extends Component {
   constructor() {
     super();
@@ -45,7 +35,7 @@ class ProfileInfo extends Component {
     };
   }
   componentDidMount() {
-      let id = this.props.userApp.currentUser.id
+      let id = this.props.navigation.state.params && this.props.navigation.state.params.id ? this.props.navigation.state.params.id : this.props.userApp.currentUser.id
     profileProvider.getUserInfo(id).then(res => {
       if(res.code == 0 ){
           this.setState({
@@ -57,7 +47,7 @@ class ProfileInfo extends Component {
               gender:res.data.user.gender,
               dob:res.data.user.dob
           })
-      }s
+      }
     }).catch(err =>{
         console.log(err)
     })
@@ -86,7 +76,9 @@ class ProfileInfo extends Component {
         iosBarStyle={"light-content"}
       >
         <ScrollView style={{ flex: 1, paddingVertical: 5 }}>
-          <View style={styles.viewImgUpload}>
+        {this.state.username ?  
+        <View>
+        <View style={styles.viewImgUpload}>
             <View
               style={{ position: "relative", width: 70,marginTop:20 ,}}
             >
@@ -169,6 +161,8 @@ class ProfileInfo extends Component {
               </Field>
             </Form>
           </View>
+          </View>
+           : null } 
 
 
         </ScrollView>

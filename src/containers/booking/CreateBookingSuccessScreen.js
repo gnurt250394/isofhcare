@@ -33,7 +33,7 @@ class CreateBookingSuccessScreen extends Component {
                     backgroundColor: '#02C39A'
                 }}>
                 <View style={styles.container}>
-                    <ScrollView style={{ flex: 1 }}>
+                    <ScrollView keyboardShouldPersistTaps='handled' style={{ flex: 1 }}>
                         <ScaleImage style={styles.image1} height={80} source={require("@images/new/booking/ic_rating.png")} />
                         <Text style={styles.text1}>Đặt khám thành công!</Text>
                         <View style={{ backgroundColor: '#effbf9', padding: 20, marginTop: 20 }}>
@@ -58,6 +58,9 @@ class CreateBookingSuccessScreen extends Component {
                                 <Text style={styles.text}>{booking.payment == 2 ? "Thanh toán tại viện" : "VNPay"}</Text>
                             </View>
                         </View>
+                        <View style={styles.view1}>
+                            <Text style={styles.text2}>Lịch đặt khám của bạn đã được gửi đi. Vui lòng đến trước hẹn 15 phút để thực hiện các thủ tục khác.</Text>
+                        </View>
                         <View style={styles.view2}>
                             <View style={styles.col}>
                                 <Text style={styles.col1}>Mã code:</Text>
@@ -69,9 +72,6 @@ class CreateBookingSuccessScreen extends Component {
                                         fgColor='white' />
                                 </View>
                             </View>
-                        </View>
-                        <View style={styles.view1}>
-                            <Text style={styles.text2}>Lịch đặt khám của bạn đã được gửi đi. Vui lòng đến trước hẹn 15 phút để thực hiện các thủ tục khác.</Text>
                         </View>
                     </ScrollView>
                     <TouchableOpacity style={styles.btn}><Text style={styles.btntext} onPress={() => {
@@ -113,13 +113,14 @@ const styles = StyleSheet.create({
         fontWeight: "600",
         fontStyle: "normal",
         letterSpacing: 0,
-        color: "#02c39a"
+        color: "#02c39a",
+        marginTop: 15
     },
     text2: {
-        fontSize: 15,
+        fontSize: 14,
         fontWeight: "normal",
         fontStyle: "normal",
-        color: "#000000",
+        color: "#4a4a4a90",
         textAlign: 'center',
         fontStyle: 'italic'
     },

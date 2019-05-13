@@ -20,14 +20,23 @@ import TextField from "mainam-react-native-form-validate/TextField";
 import dataCacheProvider from '@data-access/datacache-provider';
 import constants from '@resources/strings';
 import medicalRecordProvider from '@data-access/medical-record-provider';
+import serviceTypeProvider from '@data-access/service-type-provider';
 
 class AddBookingScreen extends Component {
     constructor(props) {
         super(props);
+        let minDate = new Date();
+        minDate.setDate(minDate.getDate() + 1);
+
+        let bookingDate = minDate;
+        let date = minDate.format("thu, dd tháng MM").replaceAll(" 0", " ");
+
         this.state = {
             colorButton: 'red',
             imageUris: [],
-            allowBooking: false
+            allowBooking: false,
+            bookingDate,
+            date
         }
     }
     _changeColor = () => {
@@ -39,7 +48,7 @@ class AddBookingScreen extends Component {
         this.setState({ imageUris });
     }
     componentDidMount() {
-        dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_POSTS, (s, e) => {
+        dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, (s, e) => {
             if (s) {
                 this.setState({ profile: s })
             } else {
@@ -51,17 +60,26 @@ class AddBookingScreen extends Component {
                                 let data = s.data.data;
                                 let profile = data.find(item => {
                                     return item.medicalRecords.status == 1;
-                                })
+                                });
                                 if (profile) {
-                                    this.setState({ profile: profile })
-                                    dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_POSTS, profile);
+                                    this.setState({ profile: profile });
+                                    dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, profile);
                                 }
                             }
                             break;
                     }
                 });
             }
-        })
+        });
+
+        serviceTypeProvider.getAll().then(s => {
+            if (s) {
+                let serviceType = s.find(item => {
+                    return item.status == 1 && item.deleted == 0;
+                })
+                this.setState({ serviceType: serviceType })
+            }
+        });
     }
     selectImage() {
         if (this.state.imageUris && this.state.imageUris.length >= 5) {
@@ -73,12 +91,17 @@ class AddBookingScreen extends Component {
                 this.imagePicker.show({
                     multiple: true,
                     mediaType: 'photo',
-                    maxFiles: 2,
+                    maxFiles: 5,
                     compressImageMaxWidth: 500,
                     compressImageMaxHeight: 500
                 }).then(images => {
+                    let listImages = [];
+                    if (images.length)
+                        listImages = [...images];
+                    else
+                        listImages.push(images);
                     let imageUris = this.state.imageUris;
-                    images.forEach(image => {
+                    listImages.forEach(image => {
                         if (imageUris.length >= 5)
                             return;
                         let temp = null;
@@ -222,7 +245,7 @@ class AddBookingScreen extends Component {
                 backgroundColor: "#f7f9fb"
             }}>
 
-            <ScrollView style={styles.container}>
+            <ScrollView keyboardShouldPersistTaps='handled' style={styles.container}>
 
                 <TouchableOpacity style={styles.name} onPress={() => {
                     connectionUtils.isConnected().then(s => {
@@ -241,7 +264,7 @@ class AddBookingScreen extends Component {
                             <View style={{ flexDirection: 'row', height: 38, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                                 <ImageLoad
                                     resizeMode="cover"
-                                    imageStyle={{ borderRadius: 20, borderWidth: 1, borderColor: '#CAC' }}
+                                    imageStyle={{ borderRadius: 20, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
                                     borderRadius={20}
                                     customImagePlaceholderDefaultStyle={[styles.avatar, { width: 40, height: 40 }]}
                                     placeholderSource={require("@images/new/user.png")}
@@ -261,7 +284,7 @@ class AddBookingScreen extends Component {
                                 <Text style={styles.txtname}>{this.state.profile.medicalRecords.name}</Text>
                             </View> :
                             <View style={{ flexDirection: 'row', height: 38, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                <View style={{ justifyContent: 'center', alignItems: 'center', width: 38, height: 38, borderRadius: 19, borderColor: 'rgba(151, 151, 151, 0.29)', borderWidth: 1 }}>
+                                <View style={{ justifyContent: 'center', alignItems: 'center', width: 38, height: 38, borderRadius: 19, borderColor: 'rgba(151, 151, 151, 0.29)', borderWidth: 0.5 }}>
                                     <ScaleImage source={require("@images/new/profile/ic_profile.png")} width={20} />
                                 </View>
                                 <Text style={styles.txtname}>Chọn hồ sơ</Text>
@@ -377,11 +400,11 @@ class AddBookingScreen extends Component {
                         hideError={true}
                         validate={{
                             rules: {
-                                required: true,
+                                // required: true,
                                 maxlength: 500
                             },
                             messages: {
-                                required: "Mô tả triệu chứng không được bỏ trống",
+                                // required: "Mô tả triệu chứng không được bỏ trống",
                                 maxlength: "Không cho phép nhập quá 500 kí tự"
                             }
                         }}
@@ -556,11 +579,13 @@ const styles = StyleSheet.create({
     },
     contact_selected:
     {
+        backgroundColor: '#FFF',
         borderColor: '#02c39a', borderWidth: 1,
         height: 40
     },
     contact_normal:
     {
+        backgroundColor: '#FFF',
         borderColor: 'rgba(0, 0, 0, 0.06)', borderWidth: 1,
         height: 40
     },

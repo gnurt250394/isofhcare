@@ -25,7 +25,7 @@ String.prototype.absoluteUrl =
       _this2.endsWith(".gif")
     ) {
       let image = server_url + "/isofhcare-resources" + _this + "";
-      console.log(image);
+      // console.log(image);
       return image;
     }
     if (

@@ -71,13 +71,22 @@ class ActivityPanel extends Component {
     }
 
     render() {
+        let touchToDismiss = this.props.touchToDismiss;
+        if (touchToDismiss != undefined) {
+            if (Platform.OS == 'ios')
+                touchToDismiss = true;
+        }
         return (
             <Activity
                 {...this.props}
+                containerStyle={[{
+                    backgroundColor: "#f7f9fb"
+                }, this.props.containerStyle]}
+                touchToDismiss={touchToDismiss}
                 actionbar={this.props.actionbar ? this.props.actionbar : this.getActionbar.bind(this)}
                 loadingView={this.getLoadingView()}
                 paddingTop={this.state.paddingTop}
-                // translucent={true}
+            // translucent={true}
             >
                 {/* {this.props.children} */}
             </Activity>

@@ -152,7 +152,7 @@ class SelectProfileScreen extends Component {
                         return (<TouchableOpacity style={styles.bn} onPress={this.selectPofile.bind(this, item)}>
                             <ImageLoad
                                 resizeMode="cover"
-                                imageStyle={{ borderRadius: 20, borderWidth: 1, borderColor: 'rgba(151, 151, 151, 0.29)' }}
+                                imageStyle={{ borderRadius: 20, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
                                 borderRadius={20}
                                 customImagePlaceholderDefaultStyle={[styles.avatar, { width: 40, height: 40 }]}
                                 placeholderSource={require("@images/new/user.png")}
@@ -189,9 +189,7 @@ class SelectProfileScreen extends Component {
                             {!this.state.data || this.state.data.length == 0 ? (<Text style={styles.btntext}>Thêm hồ sơ</Text>) : (<Text style={styles.btntext}>Thêm người thân</Text>)}
 
                         </TouchableOpacity>
-                    ) : (
-                        null
-                    )}
+                    ) : null}
             </ActivityPanel>
         );
     }
@@ -235,13 +233,11 @@ const styles = StyleSheet.create({
     },
     btntext: {
         fontSize: 18,
-        fontWeight: "600",
         fontStyle: "normal",
         letterSpacing: 0,
         color: "#02c39a",
         textAlign: 'center',
         margin: 10,
-
     },
     btntext2: {
         fontSize: 18,

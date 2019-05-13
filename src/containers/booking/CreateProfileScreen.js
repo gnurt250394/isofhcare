@@ -31,6 +31,7 @@ import { cleanSingle } from "react-native-image-crop-picker";
 import dateUtils from "mainam-react-native-date-utils";
 import constants from "@resources/strings";
 import KeyboardSpacer from "react-native-keyboard-spacer";
+import ActionSheet from 'react-native-actionsheet'
 
 class createProfile extends Component {
   constructor() {
@@ -85,6 +86,147 @@ class createProfile extends Component {
     this.setState({ dob: newDate, date: newDate.format("dd/MM/yyyy") }, () => {
     });
   }
+  onShowGender = () => {
+    this.actionSheetGender.show();
+
+  };
+  showLoading(loading, callback) {
+    if (this.props.showLoading) {
+      this.props.showLoading(loading, callback);
+    } else {
+      callback;
+    }
+  }
+  onSetGender = index => {
+    try {
+      switch (index) {
+        case 0:
+          this.setState(
+            {
+              valueGender: 1,
+              txGender: 'Nam'
+            });
+          return;
+        case 1:
+          this.setState(
+            {
+              valueGender: 0,
+              txGender: 'Nữ'
+            });
+          return;
+      }
+    } catch (error) {
+
+    }
+
+  };
+
+  selectImage() {
+    connectionUtils
+      .isConnected()
+      .then(s => {
+        if (this.imagePicker) {
+          this.imagePicker.open(true, 200, 200, image => {
+            setTimeout(() => {
+              Keyboard.dismiss();
+            }, 500);
+            this.setState({
+              image
+            });
+            imageProvider.upload(this.state.image.path, (s, e) => {
+              if (s.success && s.data.code == 0) {
+                let images = s.data.data.images[0].thumbnail;
+                this.setState({
+                  imgLocal: images
+                });
+              }
+              if (e) {
+                this.setState({
+                  isLoading: false
+                });
+              }
+            });
+          });
+        }
+      })
+      .catch(e => {
+        snackbar.show("Không có kết nối mạng", "danger");
+      });
+  }
+  onUpdate2(image) {
+    if (!this.form.isValid()) {
+      return;
+    }
+
+    connectionUtils
+      .isConnected()
+      .then(s => {
+        this.setState(
+          {
+            isLoading: true
+          },
+          () => {
+            const { name } = this.state;
+            const gender = this.state.valueGender;
+            const email = this.state.email
+            const status = this.state.status
+            let date2 = this.state.dob ? this.state.dob.format('yyyy-MM-dd') + ' 00:00:00' : null
+            medicalRecordProvider
+              .createMedical(name, gender, date2, email, image, status)
+              .then(res => {
+                if (res.code == 0) {
+                  this.setState({
+                    isLoading: false
+                  });
+                  this.state.isDataNull ? snackbar.show("Bạn đã tạo hồ sơ thành công", "success") : snackbar.show("Bạn đã thêm người thân thành công", "success");
+
+
+                  NavigationService.navigate('selectProfile', { loading: true });
+                } if (res.code == 2) {
+                  this.setState({
+                    isLoading: false
+                  });
+                  this.state.isDataNull ? snackbar.show("Hồ sơ đã tồn tại trong hệ thống", 'danger') : snackbar.show("Hồ sơ đã tồn tại trong hệ thống", 'danger')
+                } else {
+                  this.setState({
+                    isLoading: false
+                  });
+                }
+              })
+              .catch(err => {
+                this.setState({
+                  isLoading: false
+                });
+                snackbar.show("Có lỗi, xin vui lòng thử lại", "danger");
+              });
+          }
+        )
+      })
+      .catch(e => {
+        snackbar.show("Không có kết nối mạng", "danger");
+      });
+  }
+  onUpdate = () => {
+    this.form.isValid();
+    if (!this.form.isValid()) {
+      return;
+    }
+    if (this.state.image)
+      this.setState({ isLoading: true }, () => {
+        imageProvider.upload(this.state.image.path, (s, e) => {
+          if (s.success && s.data.code == 0) {
+            let image = s.data.data.images[0].thumbnail;
+            this.onUpdate2(image);
+          }
+          if (e) {
+            this.setState({
+              isLoading: false
+            });
+          }
+        });
+      });
+    else this.onUpdate2("");
+  };
   render() {
     let maxDate = new Date();
     maxDate = new Date(
@@ -132,7 +274,7 @@ class createProfile extends Component {
         }
 
       >
-        <ScrollView style={{ flex: 1, paddingVertical: 5 }}>
+        <ScrollView keyboardShouldPersistTaps='handled' style={{ flex: 1, paddingVertical: 5 }}>
           <View style={styles.viewImgUpload}>
             <TouchableOpacity
               style={{ position: "relative", width: 70, marginTop: 20 }}
@@ -230,55 +372,7 @@ class createProfile extends Component {
                   source={require("@images/new/booking/ic_next.png")}
                 />
               </TouchableOpacity>
-              <Modal
-                isVisible={this.state.isGender}
-                onBackdropPress={() => this.setState({ isGender: false })}
-                style={stylemodal.bottomModal}
-              >
-                <View
-                  style={{
-                    backgroundColor: "#fff",
-                    elevation: 3,
-                    flexDirection: "column",
-                    maxHeight: 400,
-                    minHeight: 100
-                  }}
-                >
-                  <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <Text
-                      style={{
-                        padding: 20,
-                        flex: 1,
-                        color: "rgb(0,121,107)",
-                        textAlign: "center",
-                        fontSize: 16,
-                        fontWeight: "900"
-                      }}
-                    >
-                      Chọn giới tính
-                    </Text>
-                  </View>
-                  <FlatList
-                    style={{ padding: 10 }}
-                    keyExtractor={(item, index) => index.toString()}
-                    extraData={this.state}
-                    data={this.state.genderUser}
-                    renderItem={({ item, index }) => (
-                      <Card>
-                        <TouchableOpacity
-                          onPress={() => this.onSetGender(item)}
-                        >
-                          <Text style={{ padding: 10, fontWeight: "300" }}>
-                            {item.gender}
-                          </Text>
-                          {/* <Dash style={{ height: 1, width: '100%', flexDirection: 'row' }} dashColor="#00977c" /> */}
-                        </TouchableOpacity>
-                      </Card>
-                    )}
-                  />
-                </View>
 
-              </Modal>
               <Field
 
                 style={[styles.mucdichkham, { justifyContent: 'center', alignItems: 'flex-end', flex: 1, paddingVertical: 12, borderTopWidth: 0, }]}
@@ -423,136 +517,18 @@ class createProfile extends Component {
           confirmTextIOS={"Xác nhận"}
           date={this.state.dob || new Date()}
         />
+        <ActionSheet
+          ref={o => this.actionSheetGender = o}
+          options={['Nam', 'Nữ', 'Hủy']}
+          cancelButtonIndex={2}
+          // destructiveButtonIndex={1}
+          onPress={this.onSetGender}
+        />
         {Platform.OS == "ios" && <KeyboardSpacer />}
       </ActivityPanel>
     );
   }
-  onShowGender = () => {
-    this.setState({
-      isGender: true
-    });
-  };
-  showLoading(loading, callback) {
-    if (this.props.showLoading) {
-      this.props.showLoading(loading, callback);
-    } else {
-      callback;
-    }
-  }
-  onSetGender = item => {
-    this.setState({
-      isGender: false,
-      txGender: item.gender,
-      valueGender: item.value
-    });
-  };
 
-  selectImage() {
-    connectionUtils
-      .isConnected()
-      .then(s => {
-        if (this.imagePicker) {
-          this.imagePicker.open(true, 200, 200, image => {
-            setTimeout(() => {
-              Keyboard.dismiss();
-            }, 500);
-            this.setState({
-              image
-            });
-            imageProvider.upload(this.state.image.path, (s, e) => {
-              if (s.success && s.data.code == 0) {
-                let images = s.data.data.images[0].thumbnail;
-                this.setState({
-                  imgLocal: images
-                });
-              }
-              if (e) {
-                this.setState({
-                  isLoading: false
-                });
-              }
-            });
-          });
-        }
-      })
-      .catch(e => {
-        snackbar.show("Không có kết nối mạng", "danger");
-      });
-  }
-  onUpdate2(image) {
-    if (!this.form.isValid()) {
-      return;
-    }
-
-    connectionUtils
-      .isConnected()
-      .then(s => {
-        this.setState(
-          {
-            isLoading: true
-          },
-          () => {
-            const { name } = this.state;
-            const gender = this.state.valueGender;
-            const email = this.state.email
-            const status = this.state.status
-            let date2 = this.state.dob ? this.state.dob.format('yyyy-MM-dd') + ' 00:00:00' : null
-            medicalRecordProvider
-              .createMedical(name, gender, date2, email, image, status)
-              .then(res => {
-                if (res.code == 0) {
-                  this.setState({
-                    isLoading: false
-                  });
-                  this.state.isDataNull ? snackbar.show("Bạn đã tạo hồ sơ thành công", "success") : snackbar.show("Bạn đã thêm người thân thành công", "success");
-
-
-                  NavigationService.navigate('selectProfile', { loading: true });
-                } if (res.code == 2) {
-                  this.setState({
-                    isLoading: false
-                  });
-                  this.state.isDataNull ? snackbar.show("Hồ sơ đã tồn tại trong hệ thống", 'danger') : snackbar.show("Hồ sơ đã tồn tại trong hệ thống", 'danger')
-                } else {
-                  this.setState({
-                    isLoading: false
-                  });
-                }
-              })
-              .catch(err => {
-                this.setState({
-                  isLoading: false
-                });
-                snackbar.show("Có lỗi, xin vui lòng thử lại", "danger");
-              });
-          }
-        )
-      })
-      .catch(e => {
-        snackbar.show("Không có kết nối mạng", "danger");
-      });
-  }
-  onUpdate = () => {
-    this.form.isValid();
-    if (!this.form.isValid()) {
-      return;
-    }
-    if (this.state.image)
-      this.setState({ isLoading: true }, () => {
-        imageProvider.upload(this.state.image.path, (s, e) => {
-          if (s.success && s.data.code == 0) {
-            let image = s.data.data.images[0].thumbnail;
-            this.onUpdate2(image);
-          }
-          if (e) {
-            this.setState({
-              isLoading: false
-            });
-          }
-        });
-      });
-    else this.onUpdate2("");
-  };
 }
 
 function mapStateToProps(state) {

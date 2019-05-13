@@ -65,7 +65,6 @@ class SelectServiceTypeScreen extends Component {
     }
     onSearch() {
         var s = this.state.searchValue;
-        alert(JSON.stringify(this.state.listServiceType))
         var listSearch = this.state.listServiceType.filter(function (item) {
             return item.deleted == 0 && (item == null || item.name && item.name.toLowerCase().indexOf(s.toLowerCase()) != -1);
         });
@@ -131,7 +130,7 @@ class SelectServiceTypeScreen extends Component {
                     data={this.state.listServiceTypeSearch}
                     renderItem={({ item }) =>
                         <TouchableOpacity onPress={this.selectServiceType.bind(this, item)}>
-                            <View style={{ marginBottom: 2, backgroundColor: '#FFF', padding: 20, flexDirection: 'column', borderBottomColor: '#e5fafe', borderBottomWidth: 2 }}>
+                            <View style={{ marginBottom: 2, backgroundColor: '#FFF', padding: 20, flexDirection: 'column', borderBottomColor: '#00000011', borderBottomWidth: 0.7 }}>
                                 <Text style={{ fontWeight: 'bold' }}>
                                     {item.name}
                                 </Text>

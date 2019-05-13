@@ -127,7 +127,7 @@ class SelectSpecialistScreen extends Component {
                     data={this.state.listSpecialistSearch}
                     renderItem={({ item }) =>
                         <TouchableOpacity onPress={this.selectSpecilist.bind(this, item)}>
-                            <View style={{ marginBottom: 2, backgroundColor: '#FFF', padding: 20, flexDirection: 'column', borderBottomColor: '#e5fafe', borderBottomWidth: 2 }}>
+                            <View style={{ marginBottom: 2, backgroundColor: '#FFF', padding: 20, flexDirection: 'column', borderBottomColor: '#00000011', borderBottomWidth: 0.7 }}>
                                 <Text style={{ fontWeight: 'bold' }}>
                                     {item.name}
                                 </Text>

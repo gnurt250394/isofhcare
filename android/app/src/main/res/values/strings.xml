@@ -2,7 +2,7 @@
     <string name="app_name">USER STABLE</string>
     <string name="facebook_app_id">457683741386685</string>
 <string name="fb_login_protocol_scheme">fb1457683741386685</string>
-    <string name="default_notification_channel_id">isofh-care</string>
+    <string name="default_notification_channel_id">isofh-care-channel</string>
     <string name="fb_app_id">fb1457683741386685</string>
 <string name="ak_client_token">a9ae7d8852eab508b86896d5cd375999</string>
 </resources>

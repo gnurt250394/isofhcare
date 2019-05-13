@@ -107,14 +107,29 @@ class NotificationScreen extends Component {
   }
 
   viewNotification(item) {
-    var data = JSON.parse(item.notification.value);
-    this.openQuestion(data.id);
-    notificationProvider.setRead(item.notification.id).then(s => {
-      firebase.notifications().setBadge(this.props.userApp.unReadNotificationCount > 0 ? this.props.userApp.unReadNotificationCount - 1 : 0);
-      this.props.dispatch(redux.getUnreadNotificationCount());
-    });
-    item.notification.watched = 1;
-    this.setState({ data: [...this.state.data] });
+    try {
+      var data = JSON.parse(item.notification.value);
+      notificationProvider.setRead(item.notification.id).then(s => {
+        firebase.notifications().setBadge(this.props.userApp.unReadNotificationCount > 0 ? this.props.userApp.unReadNotificationCount - 1 : 0);
+        this.props.dispatch(redux.getUnreadNotificationCount());
+      });
+      item.notification.watched = 1;
+      this.setState({ data: [...this.state.data] });
+      switch (data.type) {
+        case 1:{
+          this.openQuestion(data.id);
+          break
+        }
+        case 2:
+          this.openQuestion(data.id);
+          break;
+        case 4:
+          this.openBooking(data.id);
+          break;
+      }
+    } catch (error) {
+
+    }
   }
   openQuestion(id) {
     questionProvider
@@ -129,6 +144,11 @@ class NotificationScreen extends Component {
       .catch(e => {
         snackbar.show("Lỗi, vui lòng thử lại", "danger");
       });
+  }
+  openBooking(id) {
+    this.props.navigation.navigate("detailsHistory", {
+      id
+    });
   }
 
   menuCreate() {
@@ -181,6 +201,25 @@ class NotificationScreen extends Component {
   isToday(item) {
     return item.notification.createdDate.toDateObject('-').ddmmyyyy() == (new Date()).ddmmyyyy();
   }
+  getNotificationType(item) {
+    try {
+      if (item.notification) {
+        let value = JSON.parse(item.notification.value);
+        switch (value.type) {
+          case 2:
+            return "Tư vấn - đặt câu hỏi";
+          case 4:
+            return "Đặt khám";
+            break;
+        }
+
+      }
+
+    } catch (error) {
+
+    }
+    return "Thông báo";
+  }
 
   renderItem(item, index) {
     const source = item.user && item.user.avatar ? { uri: item.user.avatar.absoluteUrl() } : require("@images/new/user.png");
@@ -223,7 +262,7 @@ class NotificationScreen extends Component {
           >
             <ImageLoad
               resizeMode="cover"
-              imageStyle={{ borderRadius: 25, borderWidth: 1, borderColor: 'rgba(151, 151, 151, 0.29)'  }}
+              imageStyle={{ borderRadius: 25, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
               borderRadius={25}
               customImagePlaceholderDefaultStyle={[styles.avatar, { width: 50, height: 50 }]}
               placeholderSource={require("@images/new/user.png")}
@@ -236,10 +275,9 @@ class NotificationScreen extends Component {
               }}
             />
             <View style={{ paddingTop: 4, marginLeft: 19, flex: 1 }}>
-              <Text style={[{ fontSize: 14, fontWeight: 'bold' }, item.notification.watched == 1 ? styles.title_watch : styles.title]}>Tư vấn - đặt câu hỏi</Text>
+              <Text style={[{ fontSize: 14, fontWeight: 'bold' }, item.notification.watched == 1 ? styles.title_watch : styles.title]}>{this.getNotificationType(item)}</Text>
               <Text
                 style={item.notification.watched == 1 ? styles.title_watch : styles.title}
-                numberOfLines={2}
                 ellipsizeMode="tail">
                 {item.notification.title.trim()}
               </Text>

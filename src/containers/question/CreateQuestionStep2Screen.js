@@ -74,12 +74,17 @@ class CreateQuestionStep2Screen extends Component {
                 this.imagePicker.show({
                     multiple: true,
                     mediaType: 'photo',
-                    maxFiles: 2,
+                    maxFiles: 5,
                     compressImageMaxWidth: 500,
                     compressImageMaxHeight: 500
                 }).then(images => {
+                    let listImages = [];
+                    if (images.length)
+                        listImages = [...images];
+                    else
+                        listImages.push(images);
                     let imageUris = this.state.imageUris;
-                    images.forEach(image => {
+                    listImages.forEach(image => {
                         if (imageUris.length >= 5)
                             return;
                         let temp = null;
@@ -276,6 +281,7 @@ class CreateQuestionStep2Screen extends Component {
                 statusbarBackgroundColor="#02C39A"
             >
                 <ScrollView
+                    bounces = {false}
                     showsVerticalScrollIndicator={false}
                     style={{ flex: 1, position: 'relative' }} keyboardShouldPersistTaps="always">
                     <View style={{ backgroundColor: '#02C39A', height: 130, position: 'absolute', top: 0, left: 0, right: 0 }}></View>

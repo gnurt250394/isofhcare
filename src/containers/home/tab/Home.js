@@ -287,7 +287,7 @@ class Home extends Component {
                   });
               }}
             >
-              <View style={{ position: 'relative', padding: 5 }}><ScaledImage style={[styles.icon]} source={require("@images/new/ic_question.png")} height={48} />
+              <View style={{ position: 'relative', padding: 5 }}><ScaledImage style={[styles.icon]} source={require("@images/new/ic_booking.png")} height={48} />
               </View>
               <Text style={[styles.label]}>Đặt khám</Text>
             </TouchableOpacity>

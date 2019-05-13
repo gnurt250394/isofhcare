@@ -50,20 +50,21 @@ class ConfirmBookingScreen extends Component {
         booking.payment = this.state.paymentMethod;
         this.setState({ isLoading: true }, () => {
             bookingProvider.confirmPayment(bookingId).then(s => {
-                if (s.code == 0) {
-                    this.props.navigation.navigate("home", {
-                        navigate: {
-                            screen: "createBookingSuccess",
-                            params: {
-                                booking
+                switch (s.code) {
+                    case 0:
+                        this.props.navigation.navigate("home", {
+                            navigate: {
+                                screen: "createBookingSuccess",
+                                params: {
+                                    booking
+                                }
                             }
-                        }
-                    });
-                }
-                else {
-                    this.setState({ isLoading: false }, () => {
-                        snackbar.show("Xác nhận đặt khám không thành công", "danger");
-                    });
+                        });
+                        break;
+                    case 5:
+                        this.setState({ isLoading: false }, () => {
+                            snackbar.show("Phiên đặt khám của bạn đã hết hạn. Vui lòng thực hiện lại", "danger");
+                        });
                 }
             }).catch(e => {
                 this.setState({ isLoading: false }, () => {
@@ -80,7 +81,18 @@ class ConfirmBookingScreen extends Component {
         // return;
 
         this.setState({ isLoading: true }, () => {
-            walletProvider.createOnlinePayment(this.props.userApp.currentUser.id, "VNPAY", this.state.hospital.hospital.id, booking.book.id, "http://localhost:8888/order/vnpay_return", this.state.service.price, "", booking.book.hash).then(s => {
+            let memo = `THANH TOÁN VNPAY - ${this.state.serviceType.name} - ${this.state.hospital.hospital.name} - ${this.state.schedule.time.format("yyyy-MM-dd HH:mm:ss")} - ${this.state.profile.medicalRecords.name}`;
+            walletProvider.createOnlinePayment(
+                this.props.userApp.currentUser.id,
+                "VNPAY",
+                this.state.hospital.hospital.id,
+                booking.book.id,
+                "http://localhost:8888/order/vnpay_return",
+                this.state.service.price,
+                memo,
+                booking.book.hash,
+                booking.jwtData
+            ).then(s => {
                 this.setState({ isLoading: false }, () => {
                     this.props.navigation.navigate("paymentVNPay", {
                         urlPayment: s.payment_url,
@@ -132,6 +144,9 @@ class ConfirmBookingScreen extends Component {
                                         case "order_ref_id":
                                             snackbar.show("Đặt khám đã tồn tại trong hệ thống", "danger");
                                             return;
+                                        case "vendor_id":
+                                            snackbar.show("Vender không tồn tại trong hệ thống", "danger");
+                                            return;
                                     }
                                 }
                                 break;
@@ -168,7 +183,7 @@ class ConfirmBookingScreen extends Component {
                     borderBottomWidth: 1,
                     borderBottomColor: 'rgba(0, 0, 0, 0.06)'
                 }}>
-                <ScrollView style={styles.container}>
+                <ScrollView keyboardShouldPersistTaps='handled' style={styles.container}>
                     <View style={styles.viewDetails}>
                         <View style={{ paddingHorizontal: 20, marginTop: 20, flexDirection: 'row', alignItems: 'center' }}>
                             <Text style={{ fontWeight: 'bold', color: 'rgb(2,195,154)', marginRight: 10 }}>DỊCH VỤ {(this.state.service.name || "").toUpperCase()}</Text>
@@ -185,14 +200,14 @@ class ConfirmBookingScreen extends Component {
 
                             <View style={styles.view2}>
                                 <ScaleImage style={styles.ic_Location} width={20} source={require("@images/new/booking/ic_doctor.png")} />
-                                <Text style={[styles.text5, { marginTop: 10 }]}>Bác sĩ khám: <Text>{this.state.schedule.doctor.name}</Text></Text>
+                                <Text style={[styles.text5]}>Bác sĩ khám: <Text>{this.state.schedule.doctor.name}</Text></Text>
                             </View>
 
                             <View style={[styles.view2, { alignItems: 'flex-start' }]}>
                                 <ScaleImage style={styles.ic_Location} width={20} source={require("@images/new/booking/ic_bookingDate2.png")} />
                                 <View>
                                     <Text style={[styles.text5, {}]}>Thời gian</Text>
-                                    <Text style={[styles.text5, { marginTop: 10 }]}><Text style={{ color: 'rgb(106,1,54)', fontWeight: 'bold' }}>{this.state.schedule.label} {this.state.schedule.time / 60 < 12 ? "sáng" : "chiều"} - {this.state.bookingDate.format("thu")}</Text> ngày {this.state.bookingDate.format("dd/MM/yyyy")} </Text>
+                                    <Text style={[styles.text5, { marginTop: 10 }]}><Text style={{ color: 'rgb(106,1,54)', fontWeight: 'bold' }}>{this.state.schedule.label} {this.state.schedule.time.format("HH") < 12 ? "sáng" : "chiều"} - {this.state.bookingDate.format("thu")}</Text> ngày {this.state.bookingDate.format("dd/MM/yyyy")} </Text>
                                 </View>
                             </View>
 
@@ -202,7 +217,7 @@ class ConfirmBookingScreen extends Component {
                             </View>
                             <View style={styles.view2}>
                                 <ScaleImage style={[styles.ic_Location]} width={20} source={require("@images/new/booking/ic_coin.png")} />
-                                <Text style={styles.text5}>Giá dịch vụ: {parseFloat(this.state.service.price).formatPrice()} đ</Text>
+                                <Text style={styles.text5}>Giá dịch vụ: {parseFloat(this.state.service.price).formatPrice()}đ</Text>
                             </View>
 
 
