@@ -123,7 +123,7 @@ module.exports = {
       {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: auth,
+        Authorization: auth ? auth : '',
         MobileMode: "user"
         // 'MobileMode': 'vender'
       },

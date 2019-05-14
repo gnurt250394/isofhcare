@@ -15,8 +15,6 @@ import constants from "@resources/strings";
 import redux from "@redux-store";
 import Home from "@containers/home/tab/Home";
 import Account from "@containers/home/tab/Account";
-import TabSearch from "@containers/home/tab/TabSearch";
-import Swiper from "react-native-swiper";
 const { width, height } = Dimensions.get("window");
 import PushController from "@components/notification/PushController";
 import NotificationBadge from "@components/notification/NotificationBadge";
