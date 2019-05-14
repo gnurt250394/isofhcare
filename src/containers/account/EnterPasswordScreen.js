@@ -89,11 +89,15 @@ class EnterPasswordScreen extends Component {
               } else this.props.navigation.navigate("home", { showDraw: false });
               return;
             case 9:
-              snackbar.show(
-                constants.msg.user.exist_account_with_this_phone,
-                "danger"
+            var user = s.data.user;
+            this.props.dispatch(redux.userLogin(user));
+            if (this.nextScreen) {
+              this.props.navigation.replace(
+                this.nextScreen.screen,
+                this.nextScreen.param
               );
-              return;
+            } else this.props.navigation.navigate("home", { showDraw: false });
+            return;
             case 2:
               snackbar.show(
                 constants.msg.user.username_or_email_existed,
