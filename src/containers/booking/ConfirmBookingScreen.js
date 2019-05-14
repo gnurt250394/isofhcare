@@ -44,6 +44,9 @@ class ConfirmBookingScreen extends Component {
             booking
         }
     }
+    componentDidMount(){
+     console.log(this.state.hospital,'sssssssss');
+    }
     confirmPayment(booking, bookingId) {
         booking.hospital = this.state.hospital;
         booking.profile = this.state.profile;

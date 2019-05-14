@@ -58,6 +58,7 @@ class SelectHospitalScreen extends Component {
                     switch (s.code) {
                         case 0:
                             if (s.data) {
+                                console.log(s.data, 'sssss');
                                 var list = [];
                                 var finish = false;
                                 if (s.data.length == 0) {
@@ -85,10 +86,10 @@ class SelectHospitalScreen extends Component {
             })
         });
     }
-    selectHospital(hospital) {
+    selectHospital(item) {
         let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
         if (callback) {
-            callback(hospital);
+            callback(item);
             this.props.navigation.pop();
         }
     }
@@ -146,6 +147,13 @@ class SelectHospitalScreen extends Component {
                         ListFooterComponent={() => <View style={{ height: 10 }} />}
                         renderItem={({ item, index }) => {
                             const source = item.medicalRecords && item.medicalRecords.avatar ? { uri: item.medicalRecords.avatar.absoluteUrl() } : require("@images/new/user.png");
+                            if (!item.merge) {
+                                let address = item.hospital.address + ", " + item.zone.name + ", " + item.district.name + ", " + item.province.countryCode;
+                                item.hospital.address = address;
+                                item.merge = true;
+                            }
+
+
                             return <TouchableOpacity style={styles.details} onPress={this.selectHospital.bind(this, item)}>
                                 {/* <View style={styles.help}>
                                     <ScaleImage style={styles.plac} height={21} source={require("@images/new/hospital/ic_place.png")} />
@@ -160,7 +168,7 @@ class SelectHospitalScreen extends Component {
                         }}
                     />
                 </View>
-            </ActivityPanel >
+            </ActivityPanel>
         );
     }
 }
