@@ -11,7 +11,6 @@ import clientUtils from '@utils/client-utils';
 import Dimensions from 'Dimensions';
 import constants from '@resources/strings';
 import snackbar from '@utils/snackbar-utils';
-import Swiper from 'react-native-swiper';
 import ItemQuestion from '@components/question/ItemQuestion';
 
 class ListQuestion extends Component {
