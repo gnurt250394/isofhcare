@@ -108,6 +108,12 @@ class EnterPasswordScreen extends Component {
             case 1:
               snackbar.show(constants.msg.user.account_blocked, "danger");
               return;
+              case 12:
+              snackbar.show(constants.msg.user.account_blocked, "danger");
+              return;
+              case 13: 
+              snackbar.show(constants.msg.user.this_account_not_active, "danger");
+              return;
             case 500:
               snackbar.show(constants.msg.error_occur, "danger");
               return;
