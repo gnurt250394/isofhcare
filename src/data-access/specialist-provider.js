@@ -6,6 +6,31 @@ import datacacheProvider from '@data-access/datacache-provider';
 const Realm = require('realm');
 import realmModel from '@models/realm-models';
 module.exports = {
+    getAll(requestApi) {
+        return new Promise((resolve, reject) => {
+            if (!requestApi) {
+                datacacheProvider.readPromise("", constants.key.storage.DATA_SPECIALIST).then(s => {
+                    this.getAll(true);
+                    resolve(s);
+                }).catch(e => {
+                    this.getAll(true).then(s => {
+                        resolve(s);
+                    }).catch(e => {
+                        reject(e);
+                    })
+                });
+            }
+            else {
+                client.requestApi("get", constants.api.specialist.get_all, {}, (s, e) => {
+                    if (s && s.code == 0 && s.data && s.data.specialists) {
+                        datacacheProvider.save("", constants.key.storage.DATA_SPECIALIST, s.data.specialists);
+                        resolve(s.data.specialists);
+                    }
+                    reject(e);
+                });
+            }
+        });
+    },
     getTop(top, callback, requestApi) {
         if (requestApi) {
             client.requestApi("get", constants.api.specialist.search + "?page=" + 1 + "&size=" + top, {}, (s, e) => {

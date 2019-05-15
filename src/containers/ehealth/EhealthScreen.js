@@ -174,7 +174,7 @@ class LoginScreen extends PureComponent {
                         <View style={styles.item_ehealth2}>
                             <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{booking.PatientName}</Text>
                             {/* <Text style={{ marginTop: 13 }}>Bệnh viện: <Text style={{ fontWeight: 'bold' }}>{booking.hospitalName}</Text></Text> */}
-                            <Text style={{ marginTop: 13 }}>Bệnh viện: <Text style={{ fontWeight: 'bold' }}>{item.hospital.name}</Text></Text>
+                            <Text style={{ marginTop: 13 }}>Bệnh viện: <Text style={{ fontWeight: 'bold' }}>{item.hospital ? item.hospital.name : ""}</Text></Text>
                             <Text style={{ marginTop: 8 }}>Mã hồ sơ: <Text style={{ fontWeight: 'bold' }}>{booking.PatientDocument}</Text></Text>
                             <Text style={{ marginTop: 8 }}>Thời gian: <Text style={{ fontWeight: 'bold' }}>{booking.TimeGoIn.toDateObject().format("dd/MM/yyyy hh:mm tt")}</Text></Text>
                         </View>
@@ -251,7 +251,7 @@ class LoginScreen extends PureComponent {
     render() {
         return (
             <ActivityPanel style={{ flex: 1 }} title="Y BẠ ĐIỆN TỬ" showFullScreen={true} isLoading={this.state.isLoading}>
-                <ScrollView style={{ flex: 1 }}
+                <ScrollView keyboardShouldPersistTaps='handled' style={{ flex: 1 }}
                     refreshControl={<RefreshControl
                         refreshing={this.state.refreshing}
                         onRefresh={this.onRefresh.bind(this)}

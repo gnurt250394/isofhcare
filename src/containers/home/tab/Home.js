@@ -5,6 +5,7 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
+  RefreshControl,
   Platform,
   Linking, StyleSheet,
   FlatList
@@ -20,11 +21,13 @@ import { Card } from "native-base";
 import NotificationBadge from "@components/notification/NotificationBadge";
 import redux from "@redux-store";
 import ImageLoad from "mainam-react-native-image-loader";
+
 class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
       ads: [],
+      refreshing: false,
       ads0: []
     };
   }
@@ -52,7 +55,7 @@ class Home extends Component {
     });
   }
   componentWillMount() {
-    this.getTopAds();
+    this.onRefresh();
   }
   renderAds() {
     return (<View>
@@ -67,6 +70,7 @@ class Home extends Component {
         keyExtractor={(item, index) => index.toString()}
         extraData={this.state}
         data={this.state.ads}
+        ListFooterComponent={<View style={{ width: 15 }}></View>}
         renderItem={({ item, index }) => {
           if (!item || !item.advertise || !item.advertise.images)
             return null;
@@ -134,6 +138,45 @@ class Home extends Component {
     this.props.dispatch(redux.userLogout());
   }
 
+  onRefresh(reload) {
+    this.setState({ refreshing: true }, () => {
+      advertiseProvider.getTop(100, (s, e) => {
+        if (s) {
+          if (s.length == 0) {
+            if (!reload)
+              this.getTopAds(true);
+            this.setState({
+              refreshing: false,
+
+            })
+          }
+          this.setState({
+            ads: (s || []).filter(x => x.advertise && x.advertise.type == 2 && x.advertise.images),
+            ads0: (s || []).filter(x => x.advertise && x.advertise.type == 1 && x.advertise.images),
+            refreshing: false,
+
+            // .filter(item => { return item.advertise && item.advertise.images })
+          });
+        }
+        else {
+          this.setState({
+            refreshing: false,
+
+          })
+          if (!reload)
+            this.getTopAds(true);
+        }
+        if (e) {
+          this.setState({
+            refreshing: false,
+
+          })
+          if (!reload)
+            this.getTopAds(true);
+        }
+      });
+    })
+  }
   render() {
     const icSupport = require("@images/new/user.png");
     const source = this.props.userApp.isLogin ? (this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar.absoluteUrl() } : icSupport) : icSupport;
@@ -187,6 +230,10 @@ class Home extends Component {
         menuButton={<NotificationBadge />}
       >
         <ScrollView
+          refreshControl={<RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this.onRefresh.bind(this)}
+          />}
           showsVerticalScrollIndicator={false}
           style={{
             flex: 1,
@@ -232,6 +279,21 @@ class Home extends Component {
             <TouchableOpacity
               style={{ flex: 1, marginLeft: 5, alignItems: 'center' }}
               onPress={() => {
+                if (this.props.userApp.isLogin)
+                  this.props.navigation.navigate("addBooking");
+                else
+                  this.props.navigation.navigate("login", {
+                    nextScreen: { screen: "addBooking", param: {} }
+                  });
+              }}
+            >
+              <View style={{ position: 'relative', padding: 5 }}><ScaledImage style={[styles.icon]} source={require("@images/new/ic_booking.png")} height={48} />
+              </View>
+              <Text style={[styles.label]}>Đặt khám</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{ flex: 1, marginLeft: 5, alignItems: 'center' }}
+              onPress={() => {
                 this.props.navigation.navigate("listQuestion");
               }}
             >
@@ -260,7 +322,7 @@ class Home extends Component {
             this.renderAds()
           }
           <View style={{ height: 30 }} />
-        </ScrollView >
+        </ScrollView>
       </ActivityPanel>
     );
   }

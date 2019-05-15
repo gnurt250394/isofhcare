@@ -19,6 +19,9 @@ class ProfileScreen extends Component {
             isLoading: false
         }
     }
+    componentDidMount ()  {
+
+    }
 
     change() {
         Keyboard.dismiss();

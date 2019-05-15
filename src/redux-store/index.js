@@ -66,6 +66,6 @@ module.exports = {
         return (dispatch) => {
             dispatch(_getUnreadNotificationCount());
         }
-    }
-
+    },
+  
 }

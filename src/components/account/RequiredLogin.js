@@ -22,7 +22,8 @@ class RequiredLogin extends Component {
         return (
             <View>
                 {!this.props.userApp.isLogin ?
-                    <TouchableOpacity onPress={() => {
+                    <TouchableOpacity onPress={
+                        () => {
                         this.login()
                     }}>
                         <View style={{ flexDirection: 'row', backgroundColor: constants.colors.primaryColor, padding: 10, alignItems: 'center' }}>
@@ -35,7 +36,7 @@ class RequiredLogin extends Component {
                                     </TouchableOpacity>
                                     <Text style={{
                                         marginLeft: 5, marginRight: 5, color: constants.colors.white
-                                    }} > /</Text >
+                                    }} > /</Text>
                                     <TouchableOpacity onPress={() => { this.register() }}>
                                         <Text style={{ fontWeight: 'bold', color: constants.colors.white }}>Đăng ký</Text>
                                     </TouchableOpacity>

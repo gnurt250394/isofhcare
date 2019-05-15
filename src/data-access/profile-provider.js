@@ -5,6 +5,7 @@ import datacacheProvider from '@data-access/datacache-provider';
 
 const Realm = require('realm');
 import realmModel from '@models/realm-models';
+import { resolve } from 'uri-js';
 module.exports = {
     getByUser(userId, callback, requestApi) {
         if (!requestApi) {
@@ -39,5 +40,15 @@ module.exports = {
                 reject(e);
             }, false);
         })
+    },
+    getUserInfo(id){
+        return new Promise((resolve, reject) => {
+        client.requestApi('get',constants.api.profile.get_details_user+ "/" + id, {}, (s, e) =>{
+            if(s)
+            resolve(s)
+            if(e)
+            reject(e)
+        })
+    })
     }
 }

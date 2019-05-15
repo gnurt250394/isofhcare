@@ -11,14 +11,12 @@ import {
 import { Card } from 'native-base';
 import ActivityPanel from "@components/ActivityPanel";
 import { connect } from "react-redux";
-import ImagePicker from "mainam-react-native-select-image";
-import imageProvider from "@data-access/image-provider";
 import constants from "@resources/strings";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import Form from "mainam-react-native-form-validate/Form";
 import TextField from "mainam-react-native-form-validate/TextField";
 import dataCacheProvider from '@data-access/datacache-provider';
-import Field from "../../../node_modules/mainam-react-native-form-validate/Field";
+import Field from "mainam-react-native-form-validate/Field";
 
 const padding = Platform.select({
   ios: 7,
@@ -84,6 +82,7 @@ class CreateQuestionStep1Screen extends Component {
       >
         <ScrollView
           showsVerticalScrollIndicator={false}
+          bounces = {false}
           style={{ flex: 1, position: 'relative' }} keyboardShouldPersistTaps="always">
           <View style={{ backgroundColor: '#02C39A', height: 130, position: 'absolute', top: 0, left: 0, right: 0 }}></View>
           <View style={{ margin: 22, marginTop: 10 }}>
@@ -215,7 +214,6 @@ class CreateQuestionStep1Screen extends Component {
             </Card>
           </View>
         </ScrollView>
-        <ImagePicker ref={ref => (this.imagePicker = ref)} />
         {Platform.OS == "ios" && <KeyboardSpacer />}
       </ActivityPanel >
     );

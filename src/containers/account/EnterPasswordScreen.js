@@ -89,11 +89,15 @@ class EnterPasswordScreen extends Component {
               } else this.props.navigation.navigate("home", { showDraw: false });
               return;
             case 9:
-              snackbar.show(
-                constants.msg.user.exist_account_with_this_phone,
-                "danger"
+            var user = s.data.user;
+            this.props.dispatch(redux.userLogin(user));
+            if (this.nextScreen) {
+              this.props.navigation.replace(
+                this.nextScreen.screen,
+                this.nextScreen.param
               );
-              return;
+            } else this.props.navigation.navigate("home", { showDraw: false });
+            return;
             case 2:
               snackbar.show(
                 constants.msg.user.username_or_email_existed,
@@ -103,6 +107,12 @@ class EnterPasswordScreen extends Component {
             case 3:
             case 1:
               snackbar.show(constants.msg.user.account_blocked, "danger");
+              return;
+              case 12:
+              snackbar.show(constants.msg.user.account_blocked, "danger");
+              return;
+              case 13: 
+              snackbar.show(constants.msg.user.this_account_not_active, "danger");
               return;
             case 500:
               snackbar.show(constants.msg.error_occur, "danger");
@@ -126,7 +136,6 @@ class EnterPasswordScreen extends Component {
         touchToDismiss={true}
         showFullScreen={true}
       >
-
         <ScrollView
           showsVerticalScrollIndicator={false}
           style={{ flex: 1 }} keyboardShouldPersistTaps="always">
@@ -186,7 +195,8 @@ class EnterPasswordScreen extends Component {
         <TouchableOpacity style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center', marginBottom: 20 }} onPress={this.register.bind(this)}>
           <Text style={{ color: '#FFF', fontSize: 17 }}>{"HOÀN THÀNH"}</Text>
         </TouchableOpacity>
-      </ActivityPanel >
+      </ActivityPanel>
+
     );
   }
 }

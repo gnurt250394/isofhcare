@@ -71,44 +71,57 @@ class CreateQuestionStep2Screen extends Component {
     selectImage() {
         connectionUtils.isConnected().then(s => {
             if (this.imagePicker) {
-                this.imagePicker.open(false, 200, 200, image => {
-                    setTimeout(() => {
-                        Keyboard.dismiss();
-                    }, 500);
+                this.imagePicker.show({
+                    multiple: true,
+                    mediaType: 'photo',
+                    maxFiles: 5,
+                    compressImageMaxWidth: 500,
+                    compressImageMaxHeight: 500
+                }).then(images => {
+                    let listImages = [];
+                    if (images.length)
+                        listImages = [...images];
+                    else
+                        listImages.push(images);
                     let imageUris = this.state.imageUris;
-                    let temp = null;
-                    imageUris.forEach((item) => {
-                        if (item.uri == image.path)
-                            temp = item;
-                    })
-                    if (!temp) {
-                        imageUris.push({ uri: image.path, loading: true });
-                        imageProvider.upload(image.path, (s, e) => {
-                            if (s.success) {
-                                if (s.data.code == 0 && s.data.data && s.data.data.images && s.data.data.images.length > 0) {
-                                    let imageUris = this.state.imageUris;
+                    listImages.forEach(image => {
+                        if (imageUris.length >= 5)
+                            return;
+                        let temp = null;
+                        imageUris.forEach((item) => {
+                            if (item.uri == image.path)
+                                temp = item;
+                        })
+                        if (!temp) {
+                            imageUris.push({ uri: image.path, loading: true });
+                            imageProvider.upload(image.path, (s, e) => {
+                                if (s.success) {
+                                    if (s.data.code == 0 && s.data.data && s.data.data.images && s.data.data.images.length > 0) {
+                                        let imageUris = this.state.imageUris;
+                                        imageUris.forEach((item) => {
+                                            if (item.uri == s.uri) {
+                                                item.loading = false;
+                                                item.url = s.data.data.images[0].image;
+                                                item.thumbnail = s.data.data.images[0].thumbnail;
+                                            }
+                                        });
+                                        this.setState({
+                                            imageUris
+                                        });
+                                    }
+                                } else {
                                     imageUris.forEach((item) => {
                                         if (item.uri == s.uri) {
-                                            item.loading = false;
-                                            item.url = s.data.data.images[0].image;
-                                            item.thumbnail = s.data.data.images[0].thumbnail;
+                                            item.error = true;
                                         }
                                     });
-                                    this.setState({
-                                        imageUris
-                                    });
                                 }
-                            } else {
-                                imageUris.forEach((item) => {
-                                    if (item.uri == s.uri) {
-                                        item.error = true;
-                                    }
-                                });
-                            }
-                        });
-                    }
+                            });
+                        }
+                    })
                     this.setState({ imageUris: [...imageUris] });
                 });
+
             }
         }).catch(e => {
             snackbar.show("Không có kết nối mạng", "danger");
@@ -268,6 +281,7 @@ class CreateQuestionStep2Screen extends Component {
                 statusbarBackgroundColor="#02C39A"
             >
                 <ScrollView
+                    bounces = {false}
                     showsVerticalScrollIndicator={false}
                     style={{ flex: 1, position: 'relative' }} keyboardShouldPersistTaps="always">
                     <View style={{ backgroundColor: '#02C39A', height: 130, position: 'absolute', top: 0, left: 0, right: 0 }}></View>

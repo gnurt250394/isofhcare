@@ -12,8 +12,10 @@
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>$(ISOFH_CARE) requires FaceID access to allows you quick and secure access</string>
 	<key>CFBundleInfoDictionaryVersion</key>
-	<string>18</string>
+	<string>23</string>
 	<key>CFBundleName</key>
 	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundlePackageType</key>
@@ -23,6 +25,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
+
 	<array>
 		<dict>
 			<key>CFBundleURLSchemes</key>

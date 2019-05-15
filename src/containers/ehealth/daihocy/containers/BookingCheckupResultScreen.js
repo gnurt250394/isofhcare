@@ -88,7 +88,7 @@ class BookingCheckupResultScreen extends Component {
         let datas = this.state.checkupResult;
         const tableHead = ['STT', 'Tên thuốc', 'Số lượng', 'Đơn vị'];
         return (
-            <ActivityPanel style={{ flex: 1, }} title="Kết quả khám và đơn thuốc" isLoading={this.state.isLoading} showFullScreen={true}>
+            <ActivityPanel style={{ flex: 1, }} title="Kết quả khám đơn thuốc" isLoading={this.state.isLoading} showFullScreen={true}>
                 <Text>xxx</Text>
                 <ScrollView
                     showsVerticalScrollIndicator={false}

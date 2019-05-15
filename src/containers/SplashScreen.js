@@ -69,7 +69,7 @@ class SplashScreen extends Component {
 					</View>
 
 				</View>
-			</ActivityPanel >
+			</ActivityPanel>
 		);
 	}
 }

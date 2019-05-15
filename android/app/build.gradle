@@ -101,7 +101,7 @@ android {
         applicationId "com.isofh.isofhcare"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 18
+        versionCode 23
         versionName "3.1"
         ndk {
             abiFilters "armeabi-v7a", "x86"
@@ -154,7 +154,6 @@ android {
 
 dependencies {
     compile project(':react-native-vector-icons')
-    implementation project(':react-native-fast-image')
     implementation project(':react-native-facebook-account-kit')
     implementation project(':react-native-linear-gradient')
     implementation project(':react-native-photo-view')
