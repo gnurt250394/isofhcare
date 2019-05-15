@@ -32,13 +32,23 @@ class DetailsHistoryScreen extends Component {
     this.setState({ isLoading: true }, () => {
       bookingProvider.detail(this.state.id).then(s => {
         if (s.code == 0 && s.data) {
-          this.setState({
-            booking: s.data.booking || {},
-            service: s.data.service || {},
-            hospital: s.data.hospital || {},
-            medicalRecords: s.data.medicalRecords || {},
-            isLoading: false
-          });
+          let address = s.data.hospital.address;
+          if (s.data.zone && s.data.zone.name)
+              address += ", " + s.data.zone.name;
+          if (s.data.district && s.data.district.name)
+              address += ", " + s.data.district.name;
+          if (s.data.province && s.data.province.countryCode )
+              address += ", " + s.data.province.countryCode
+
+              console.log(s.data.province,'s.data.province');
+         this.setState({
+           address : address,
+           booking: s.data.booking || {},
+           service: s.data.service || {},
+           hospital: s.data.hospital || {},
+           medicalRecords: s.data.medicalRecords || {},
+           isLoading: false
+         })
         } else {
           snackbar.show("Không thể xem chi tiết đặt khám này", "danger");
           this.props.navigation.pop();
@@ -188,7 +198,7 @@ class DetailsHistoryScreen extends Component {
               <View style={styles.viewInfoLocation}>
                 <Text style={styles.txClinic}>{this.state.hospital.name}</Text>
                 {this.state.hospital.address ?
-                  <Text numberOfLines={5} style={styles.txAddress}>{this.state.hospital.address}</Text> : null
+                  <Text numberOfLines={5} style={styles.txAddress}>{this.state.address}</Text> : null
 
                 }
               </View>
