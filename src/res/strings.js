@@ -1,11 +1,9 @@
-<<<<<<< HEAD
 let isofhcare_service = 'isofhcare/';
-=======
-let isofhcare_service = 'isofhcare-dev/';
->>>>>>> user/develop
 let isofhcare_resources = 'isofhcare-resources/';
 // let wallet_services = 'wallet-services-test/'; //test
-let wallet_services = 'wallet-services-dev/'; //dev
+// let wallet_services = 'wallet-services-dev/'; //dev
+// let wallet_services = 'wallet-services/'; //stable
+let wallet_services = 'wallet-services/'; //release
 
 module.exports = {
   fbApplicationId: "457683741386685",
