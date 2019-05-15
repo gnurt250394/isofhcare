@@ -151,7 +151,7 @@ module.exports = {
         accessToken,
         socialId,
         socialType: socialType ? socialType : 1,
-        device: { os: 0, deviceId: "", token: "" }
+        device: {  os: os, deviceId: this.deviceId, token: this.deviceToken  }
       };
       client.requestApi("post", constants.api.user.register, body, (s, e) => {
         if (s) resolve(s);
