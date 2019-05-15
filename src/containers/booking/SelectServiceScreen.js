@@ -11,23 +11,23 @@ class SelectServiceScreen extends Component {
     constructor(props) {
         super(props);
         let hospital = this.props.navigation.state.params.hospital;
-        let specialist = this.props.navigation.state.params.specialist;
+        // let specialist = this.props.navigation.state.params.specialist;
         let serviceType = this.props.navigation.state.params.serviceType;
         if (!hospital) {
             this.props.navigation.pop();
             snackbar.show("Vui lòng chọn địa điểm khám", "danger");
         }
-        if (!specialist) {
-            this.props.navigation.pop();
-            snackbar.show("Vui lòng chọn chuyên khoa", "danger");
-        }
+        // if (!specialist) {
+        //     this.props.navigation.pop();
+        //     snackbar.show("Vui lòng chọn chuyên khoa", "danger");
+        // }
         this.state = {
             listService: [],
             listServiceSearch: [],
             searchValue: "",
             refreshing: false,
             hospital: hospital || { hospital: {} },
-            specialist,
+            // specialist,
             serviceType
         }
     }
@@ -44,8 +44,10 @@ class SelectServiceScreen extends Component {
 
 
     onRefresh = () => {
+        let serviceType =  this.state.serviceType ?  this.state.serviceType.id : ''
+        let specialist = this.state.specialist ? this.state.specialist.id : ''
         this.setState({ refreshing: true }, () => {
-            serviceProvider.getAll(this.state.hospital.hospital.id, this.state.specialist.id, this.state.serviceType.id).then(s => {
+            serviceProvider.getAll(this.state.hospital.hospital.id, specialist,serviceType).then(s => {
                 this.setState({
                     refreshing: false
                 }, () => {
@@ -155,7 +157,7 @@ class SelectServiceScreen extends Component {
                 />
 
 
-            </ActivityPanel >
+            </ActivityPanel>
         )
     }
 }

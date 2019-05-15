@@ -194,12 +194,12 @@ class AddBookingScreen extends Component {
             error = true;
         }
 
-        if (this.state.specialist) {
-            this.setState({ specialistError: "" })
-        } else {
-            this.setState({ specialistError: "Chuyên khoa không được bỏ trống" })
-            error = true;
-        }
+        // if (this.state.specialist) {
+        //     this.setState({ specialistError: "" })
+        // } else {
+        //     this.setState({ specialistError: "Chuyên khoa không được bỏ trống" })
+        //     error = true;
+        // }
 
         let validForm = this.form.isValid();
         if (!error && validForm) {
@@ -219,14 +219,16 @@ class AddBookingScreen extends Component {
                     images += ",";
                 images += item.url;
             });
+            let reason = this.state.reason ? this.state.reason : ''
+            let img = images ? images : ''
             this.props.navigation.navigate("selectTime", {
                 profile: this.state.profile,
                 hospital: this.state.hospital,
                 specialist: this.state.specialist,
-                serviceType: this.state.serviceType,
+                serviceType: this.state.serviceType ? this.state.serviceType : '',
                 bookingDate: this.state.bookingDate,
-                reason: this.state.reason,
-                images,
+                reason:reason,
+                img,
                 contact: this.state.contact
             });
         }
@@ -312,7 +314,7 @@ class AddBookingScreen extends Component {
                     }>
                         <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_serviceType.png")} />
                         <Text style={styles.mdk}>Yêu cầu</Text>
-                        <Text numberOfLines={1} style={styles.ktq}>{this.state.serviceType ? this.state.serviceType.name : "Chọn loại dịch vụ"}</Text>
+                        <Text numberOfLines={1} style={styles.ktq}>{this.state.serviceType ? this.state.serviceType.name : "Khám tổng quát"}</Text>
                         <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
                     </TouchableOpacity>
                     {
@@ -357,7 +359,7 @@ class AddBookingScreen extends Component {
                             <Text style={[styles.errorStyle]}>{this.state.hospitalError}</Text> : null
                     }
                     <View style={styles.border}></View>
-                    <TouchableOpacity style={styles.mucdichkham} onPress={() => {
+                  {/*  <TouchableOpacity style={styles.mucdichkham} onPress={() => {
                         connectionUtils.isConnected().then(s => {
                             this.props.navigation.navigate("selectSpecialist", { onSelected: this.selectSpecialist.bind(this) });
                         }).catch(e => {
@@ -368,11 +370,8 @@ class AddBookingScreen extends Component {
                         <Text style={styles.mdk}>Chuyên khoa</Text>
                         <Text numberOfLines={1} style={styles.ktq}>{this.state.specialist ? this.state.specialist.name : "Chọn chuyên khoa"}</Text>
                         <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
-                    </TouchableOpacity>
-                    {
-                        this.state.specialistError ?
-                            <Text style={[styles.errorStyle]}>{this.state.specialistError}</Text> : null
-                    }
+                </TouchableOpacity> */}
+                   
                 </View>
                 <Text style={styles.lienlac}>Liên lạc với tôi qua</Text>
 
