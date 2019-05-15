@@ -96,6 +96,16 @@ class SelectHospitalScreen extends Component {
     search() {
         this.onLoad();
     }
+    getAddress(item) {
+        let address = item.hospital.address;
+        if (item.zone && item.zone.name)
+            address += ", " + item.zone.name;
+        if (item.district && item.district.name)
+            address += ", " + item.district.name;
+        if (item.province && item.province.countryCode)
+            address += ", " + item.province.countryCode;
+        return address;
+    }
     render() {
         return (
             <ActivityPanel style={styles.AcPanel} title="Địa điểm"
@@ -148,7 +158,7 @@ class SelectHospitalScreen extends Component {
                         renderItem={({ item, index }) => {
                             const source = item.medicalRecords && item.medicalRecords.avatar ? { uri: item.medicalRecords.avatar.absoluteUrl() } : require("@images/new/user.png");
                             if (!item.merge) {
-                                let address = item.hospital.address + ", " + item.zone.name + ", " + item.district.name + ", " + item.province.countryCode;
+                                let address = this.getAddress(item);
                                 item.hospital.address = address;
                                 item.merge = true;
                             }
