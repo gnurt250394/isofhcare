@@ -83,7 +83,7 @@ class SelectServiceScreen extends Component {
     onSearch() {
         var s = this.state.searchValue;
         var listSearch = this.state.listService.filter(function (item) {
-            return s == null || item.service.name && item.service.name.toLowerCase().indexOf(s.toLowerCase()) != -1;
+            return s == null || item.service.name && item.service.name.toLowerCase().unsignText().indexOf(s.toLowerCase().unsignText()) != -1;
         });
         this.setState({ listServiceSearch: listSearch });
     }
