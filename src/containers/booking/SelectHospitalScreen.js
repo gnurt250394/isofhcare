@@ -60,14 +60,15 @@ class SelectHospitalScreen extends Component {
                 }
             );
     }
-    onLoad() {
+    onLoad(s) {
         const { page, size } = this.state;
+        let stringQuyery = s ? s : null
         this.setState({
             loading: true,
             refreshing: page == 1,
             loadMore: page != 1
         }, () => {
-            hospitalProvider.getBySearch(page, size).then(s => {
+            hospitalProvider.getBySearch(page, size,stringQuyery).then(s => {
                 console.log(s, 'hopspitalllll');
                 this.setState({
                     loading: false,
@@ -77,6 +78,12 @@ class SelectHospitalScreen extends Component {
                     if (s) {
                         switch (s.code) {
                             case 0:
+                            if(stringQuyery){
+                                console.log(s.data.data,stringQuyery,'stringQuyerystringQuyerystringQuyery');
+                                this.setState({
+                                    data:s.data.data
+                                });
+                            }else{
                                 var list = [];
                                 var finish = false;
                                 if (s.data.data.length == 0) {
@@ -94,6 +101,8 @@ class SelectHospitalScreen extends Component {
                                     finish: finish
                                 });
                                 break;
+                            }
+                              
                         }
                     }
                 });
@@ -152,7 +161,9 @@ class SelectHospitalScreen extends Component {
                         <ScaleImage style={styles.aa} width={18} source={require("@images/new/hospital/ic_search.png")} />
                         <TextInput
                             value={this.state.keyword}
-                            onChangeText={s => this.setState({ keyword: s })}
+                            onChangeText={s => {
+                                this.onLoad(s)
+                                this.setState({ keyword: s })}}
                             onSubmitEditing={this.search.bind(this)}
                             returnKeyType='search'
                             style={styles.tkdiachi1} placeholder={"Tìm kiếm…"} underlineColorAndroid={"transparent"} />
