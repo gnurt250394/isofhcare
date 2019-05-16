@@ -63,7 +63,7 @@ class SelectSpecialistScreen extends Component {
     onSearch() {
         var s = this.state.searchValue;
         var listSearch = this.state.listSpecialist.filter(function (item) {
-            return s == null || item.name && item.name.toLowerCase().indexOf(s.toLowerCase()) != -1;
+            return s == null || item.name && item.name.toLowerCase().unsignText().indexOf(s.toLowerCase().unsignText()) != -1;
         });
         this.setState({ listSpecialistSearch: listSearch });
     }

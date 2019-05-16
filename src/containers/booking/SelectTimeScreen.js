@@ -25,7 +25,7 @@ class SelectTimeScreen extends Component {
         let reason = this.props.navigation.state.params.reason;
         let contact = this.props.navigation.state.params.contact;
         let images = this.props.navigation.state.params.images;
-
+console.log(specialist,'s');
         this.state = {
             serviceType,
             hospital,

@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
 import {
     View, StyleSheet, Text, TouchableOpacity,
-    FlatList, ScrollView, TextInput
+    FlatList, ActivityIndicator, TextInput
 } from 'react-native';
 import { connect } from 'react-redux';
 import ScaleImage from "mainam-react-native-scaleimage";
@@ -15,8 +15,8 @@ import clientUtils from '@utils/client-utils';
 class SelectHospitalScreen extends Component {
     constructor(props) {
         super(props);
-        let serviceType = this.props.navigation.state.params.serviceType;
-        if (!serviceType) {
+        let specialist = this.props.navigation.state.params.specialist;
+        if (!specialist) {
             this.props.navigation.pop();
             snackbar.show("Vui lòng chọn yêu cầu khám", "danger");
 
@@ -27,8 +27,11 @@ class SelectHospitalScreen extends Component {
             refreshing: false,
             size: 10,
             page: 1,
-            serviceType: serviceType || {},
-            keyword: ""
+            serviceType: specialist || {},
+            keyword: "",
+            loadMore: false,
+            finish: false,
+            loading: false,
         }
     }
     onRefresh() {
@@ -43,45 +46,73 @@ class SelectHospitalScreen extends Component {
     componentDidMount() {
         this.onRefresh();
     }
-
-    onLoad() {
+    onLoadMore() {
+        if (!this.state.finish && !this.state.loading)
+            this.setState(
+                {
+                    loadMore: true,
+                    refreshing: false,
+                    loading: true,
+                    page: this.state.page + 1
+                },
+                () => {
+                    this.onLoad()
+                }
+            );
+    }
+    onLoad(s) {
         const { page, size } = this.state;
+        let stringQuyery = s ? s : null
         this.setState({
             loading: true,
-            refreshing: page == 1
+            refreshing: page == 1,
+            loadMore: page != 1
         }, () => {
-            hospitalProvider.getByServiceType(this.state.serviceType.id, (this.state.keyword || "").trim()).then(s => {
+            hospitalProvider.getBySearch(page, size,stringQuyery).then(s => {
+                console.log(s, 'hopspitalllll');
                 this.setState({
                     loading: false,
-                    refreshing: false
+                    refreshing: false,
+                    loadMore: false
                 }, () => {
-                    switch (s.code) {
-                        case 0:
-                            if (s.data) {
-                                console.log(s.data, 'sssss');
+                    if (s) {
+                        switch (s.code) {
+                            case 0:
+                            if(stringQuyery){
+                                console.log(stringQuyery,'stringQuyery');
+                                this.setState({
+                                    data:s.data.data,
+                                    finish : false
+                                });
+                                return
+                            }else{
                                 var list = [];
                                 var finish = false;
-                                if (s.data.length == 0) {
+                                if (s.data.data.length == 0) {
                                     finish = true;
                                 }
                                 if (page != 1) {
                                     list = this.state.data;
-                                    list.push.apply(list, s.data);
-                                } else {
-                                    list = s.data;
+                                    list.push.apply(list, s.data.data);
+                                }
+                                else {
+                                    list = s.data.data;
                                 }
                                 this.setState({
                                     data: [...list],
                                     finish: finish
                                 });
+                                break;
                             }
-                            break;
+                              
+                        }
                     }
                 });
             }).catch(e => {
                 this.setState({
                     loading: false,
-                    refreshing: false
+                    refreshing: false,
+                    loadMore: false
                 });
             })
         });
@@ -94,7 +125,7 @@ class SelectHospitalScreen extends Component {
         }
     }
     search() {
-        this.onLoad();
+        
     }
     getAddress(item) {
         let address = item.hospital.address;
@@ -132,7 +163,9 @@ class SelectHospitalScreen extends Component {
                         <ScaleImage style={styles.aa} width={18} source={require("@images/new/hospital/ic_search.png")} />
                         <TextInput
                             value={this.state.keyword}
-                            onChangeText={s => this.setState({ keyword: s })}
+                            onChangeText={s => {
+                                this.onLoad(s)
+                                this.setState({ keyword: s })}}
                             onSubmitEditing={this.search.bind(this)}
                             returnKeyType='search'
                             style={styles.tkdiachi1} placeholder={"Tìm kiếm…"} underlineColorAndroid={"transparent"} />
@@ -145,6 +178,8 @@ class SelectHospitalScreen extends Component {
                         keyExtractor={(item, index) => index.toString()}
                         extraData={this.state}
                         data={this.state.data}
+                        onEndReached={this.onLoadMore.bind(this)}
+                        onEndReachedThreshold={1}
                         ListHeaderComponent={() =>
                             !this.state.refreshing &&
                                 (!this.state.data || this.state.data.length == 0) ? (
@@ -178,6 +213,15 @@ class SelectHospitalScreen extends Component {
                         }}
                     />
                 </View>
+                {
+                    this.state.loadMore ?
+                        <View style={{ alignItems: 'center', padding: 10, position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+                            <ActivityIndicator
+                                size={'small'}
+                                color={'gray'}
+                            />
+                        </View> : null
+                }
             </ActivityPanel>
         );
     }

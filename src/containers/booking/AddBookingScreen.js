@@ -16,7 +16,7 @@ import stringUtils from "mainam-react-native-string-utils";
 import ImageLoad from 'mainam-react-native-image-loader';
 import Form from "mainam-react-native-form-validate/Form";
 import TextField from "mainam-react-native-form-validate/TextField";
-
+import specialistProvider from '@data-access/specialist-provider'
 import dataCacheProvider from '@data-access/datacache-provider';
 import constants from '@resources/strings';
 import medicalRecordProvider from '@data-access/medical-record-provider';
@@ -72,12 +72,11 @@ class AddBookingScreen extends Component {
             }
         });
 
-        serviceTypeProvider.getAll().then(s => {
+        specialistProvider.getAll().then(s => {
             if (s) {
-                let serviceType = s.find(item => {
-                    return item.status == 1 && item.deleted == 0;
-                })
-                this.setState({ serviceType: serviceType })
+                let specialist = s[0]
+                console.log(specialist,'specialistspecialist')
+                this.setState({ specialist: specialist })
             }
         });
     }
@@ -147,9 +146,6 @@ class AddBookingScreen extends Component {
     selectProfile(profile) {
         this.setState({ profile, allowBooking: true });
     }
-    selectServiceType(serviceType) {
-        this.setState({ serviceType, allowBooking: true });
-    }
     selectHospital(hospital) {
         this.setState({ hospital, allowBooking: true });
     }
@@ -175,7 +171,7 @@ class AddBookingScreen extends Component {
             this.setState({ profileError: "Hồ sơ không được bỏ trống" })
             error = true;
         }
-        if (this.state.serviceType) {
+        if (this.state.specialist) {
             this.setState({ serviceError: "" })
         } else {
             this.setState({ serviceError: "Yêu cầu không được bỏ trống" })
@@ -194,12 +190,12 @@ class AddBookingScreen extends Component {
             error = true;
         }
 
-        if (this.state.specialist) {
-            this.setState({ specialistError: "" })
-        } else {
-            this.setState({ specialistError: "Chuyên khoa không được bỏ trống" })
-            error = true;
-        }
+        // if (this.state.specialist) {
+        //     this.setState({ specialistError: "" })
+        // } else {
+        //     this.setState({ specialistError: "Chuyên khoa không được bỏ trống" })
+        //     error = true;
+        // }
 
         let validForm = this.form.isValid();
         if (!error && validForm) {
@@ -219,14 +215,16 @@ class AddBookingScreen extends Component {
                     images += ",";
                 images += item.url;
             });
+            let reason = this.state.reason ? this.state.reason : ''
+            let img = images ? images : ''
             this.props.navigation.navigate("selectTime", {
                 profile: this.state.profile,
                 hospital: this.state.hospital,
                 specialist: this.state.specialist,
-                serviceType: this.state.serviceType,
+                serviceType: this.state.serviceType ? this.state.serviceType : '',
                 bookingDate: this.state.bookingDate,
-                reason: this.state.reason,
-                images,
+                reason:reason,
+                img,
                 contact: this.state.contact
             });
         }
@@ -301,18 +299,15 @@ class AddBookingScreen extends Component {
                 <View style={styles.article}>
                     <TouchableOpacity style={styles.mucdichkham} onPress={() => {
                         connectionUtils.isConnected().then(s => {
-                            this.props.navigation.navigate("selectServiceType", {
-                                serviceType: this.state.serviceType,
-                                onSelected: this.selectServiceType.bind(this)
-                            })
+                            this.props.navigation.navigate("selectSpecialist", { onSelected: this.selectSpecialist.bind(this) });
                         }).catch(e => {
                             snackbar.show("Không có kết nối mạng", "danger");
                         });
-                    }
-                    }>
+                    }}
+                    >
                         <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_serviceType.png")} />
                         <Text style={styles.mdk}>Yêu cầu</Text>
-                        <Text numberOfLines={1} style={styles.ktq}>{this.state.serviceType ? this.state.serviceType.name : "Chọn loại dịch vụ"}</Text>
+                        <Text numberOfLines={1} style={styles.ktq}>{this.state.specialist ? this.state.specialist.name : "Chọn chuyên khoa"}</Text>
                         <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
                     </TouchableOpacity>
                     {
@@ -332,13 +327,13 @@ class AddBookingScreen extends Component {
                     }
                     <View style={styles.border}></View>
                     <TouchableOpacity style={styles.mucdichkham} onPress={() => {
-                        if (!this.state.serviceType) {
+                        if (!this.state.specialist) {
                             snackbar.show("Vui lòng chọn yêu cầu khám", "danger");
                             return;
                         }
                         connectionUtils.isConnected().then(s => {
                             this.props.navigation.navigate("selectHospital", {
-                                serviceType: this.state.serviceType,
+                                specialist: this.state.specialist,
                                 hospital: this.state.hospital,
                                 onSelected: this.selectHospital.bind(this)
                             })
@@ -357,7 +352,7 @@ class AddBookingScreen extends Component {
                             <Text style={[styles.errorStyle]}>{this.state.hospitalError}</Text> : null
                     }
                     <View style={styles.border}></View>
-                    <TouchableOpacity style={styles.mucdichkham} onPress={() => {
+                  {/*  <TouchableOpacity style={styles.mucdichkham} onPress={() => {
                         connectionUtils.isConnected().then(s => {
                             this.props.navigation.navigate("selectSpecialist", { onSelected: this.selectSpecialist.bind(this) });
                         }).catch(e => {
@@ -368,11 +363,8 @@ class AddBookingScreen extends Component {
                         <Text style={styles.mdk}>Chuyên khoa</Text>
                         <Text numberOfLines={1} style={styles.ktq}>{this.state.specialist ? this.state.specialist.name : "Chọn chuyên khoa"}</Text>
                         <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
-                    </TouchableOpacity>
-                    {
-                        this.state.specialistError ?
-                            <Text style={[styles.errorStyle]}>{this.state.specialistError}</Text> : null
-                    }
+                </TouchableOpacity> */}
+                   
                 </View>
                 <Text style={styles.lienlac}>Liên lạc với tôi qua</Text>
 
