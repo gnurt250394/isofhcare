@@ -309,7 +309,7 @@ class SelectHospitalScreen extends Component {
 
 
                             return <TouchableOpacity style={styles.details} onPress={this.selectHospital.bind(this, item)}>
-                                {/* <View style={styles.help}>
+                                {/* <View style={{ marginLeft: 20, alignItems: 'center', marginTop: 5 }}>
                                     <ScaleImage style={styles.plac} height={21} source={require("@images/new/hospital/ic_place.png")} />
                                     <Text style={styles.bv1}>1km</Text>
                                 </View> */}

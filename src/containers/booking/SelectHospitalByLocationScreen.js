@@ -172,10 +172,10 @@ class SelectHospitalScreenLocation extends Component {
 
 
                             return <TouchableOpacity style={styles.details} onPress={this.selectHospital.bind(this, item)}>
-                                {/* <View style={styles.help}>
+                                <View style={{ marginLeft: 20, alignItems: 'center', marginTop: 5 }}>
                                     <ScaleImage style={styles.plac} height={21} source={require("@images/new/hospital/ic_place.png")} />
-                                    <Text style={styles.bv1}>1km</Text>
-                                </View> */}
+                                    <Text style={styles.bv1}>{(Math.round(item.hospital.distance*100)/100).toFixed(2)} km</Text>
+                                </View>
                                 <View style={{ flex: 1, marginLeft: 20 }}>
                                     <Text style={styles.bv} numberOfLines={1}>{item.hospital.name}</Text>
                                     <Text style={styles.bv1} numberOfLines={2}>{item.hospital.address}</Text>
