@@ -174,7 +174,7 @@ class SelectHospitalScreen extends Component {
     }
     onLoad(s) {
         const { page, size } = this.state;
-        let stringQuyery = s ? s : null
+        let stringQuyery = s ? s.trim() : null
         this.setState({
             loading: true,
             refreshing: page == 1,
