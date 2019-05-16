@@ -75,37 +75,25 @@ class SelectHospitalScreenLocation extends Component {
                         case 500:
                             snackbar.show(constants.msg.error_occur, "danger");
                             break;
+                        case 0:
+                            var list = [];
+                            var finish = false;
+                            if (s.data.data.length == 0) {
+                                finish = true;
+                            }
+                            if (page != 1) {
+                                list = this.state.data;
+                                list.push.apply(list, s.data.data);
+                            }
+                            else {
+                                list = s.data.data;
+                            }
+                            this.setState({
+                                data: [...list],
+                                finish: finish
+                            });
+                            break;
                     }
-                    //     if (s) {
-                    //         switch (s.code) {
-                    //             case 0:
-                    //                 if (stringQuyery) {
-                    //                     console.log(s.data.data, stringQuyery, 'stringQuyerystringQuyerystringQuyery');
-                    //                     this.setState({
-                    //                         data: s.data.data
-                    //                     });
-                    //                 } else {
-                    //                     var list = [];
-                    //                     var finish = false;
-                    //                     if (s.data.data.length == 0) {
-                    //                         finish = true;
-                    //                     }
-                    //                     if (page != 1) {
-                    //                         list = this.state.data;
-                    //                         list.push.apply(list, s.data.data);
-                    //                     }
-                    //                     else {
-                    //                         list = s.data.data;
-                    //                     }
-                    //                     this.setState({
-                    //                         data: [...list],
-                    //                         finish: finish
-                    //                     });
-                    //                     break;
-                    //                 }
-
-                    //         }
-                    //     }
                 });
             }).catch(e => {
                 this.setState({

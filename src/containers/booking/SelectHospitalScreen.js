@@ -190,31 +190,24 @@ class SelectHospitalScreen extends Component {
                     if (s) {
                         switch (s.code) {
                             case 0:
-                                if (stringQuyery) {
-                                    console.log(s.data.data, stringQuyery, 'stringQuyerystringQuyerystringQuyery');
-                                    this.setState({
-                                        data: s.data.data
-                                    });
-                                } else {
-                                    var list = [];
-                                    var finish = false;
-                                    if (s.data.data.length == 0) {
-                                        finish = true;
-                                    }
-                                    if (page != 1) {
-                                        list = this.state.data;
-                                        list.push.apply(list, s.data.data);
-                                    }
-                                    else {
-                                        list = s.data.data;
-                                    }
-                                    this.setState({
-                                        data: [...list],
-                                        finish: finish
-                                    });
-                                    break;
-                                }
 
+                                var list = [];
+                                var finish = false;
+                                if (s.data.data.length == 0) {
+                                    finish = true;
+                                }
+                                if (page != 1) {
+                                    list = this.state.data;
+                                    list.push.apply(list, s.data.data);
+                                }
+                                else {
+                                    list = s.data.data;
+                                }
+                                this.setState({
+                                    data: [...list],
+                                    finish: finish
+                                });
+                                break;
                         }
                     }
                 });
@@ -235,7 +228,9 @@ class SelectHospitalScreen extends Component {
         }
     }
     search() {
-
+        this.setState({ page: 1 }, () => {
+            this.onLoad(this.state.keyword);
+        })
     }
     getAddress(item) {
         let address = item.hospital.address;
@@ -278,7 +273,6 @@ class SelectHospitalScreen extends Component {
                         <TextInput
                             value={this.state.keyword}
                             onChangeText={s => {
-                                this.onLoad(s)
                                 this.setState({ keyword: s })
                             }}
                             onSubmitEditing={this.search.bind(this)}
