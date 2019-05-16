@@ -56,7 +56,7 @@ class SelectHospitalScreen extends Component {
                     page: this.state.page + 1
                 },
                 () => {
-                    this.onLoad(this.state.page);
+                    this.onLoad()
                 }
             );
     }
@@ -79,10 +79,12 @@ class SelectHospitalScreen extends Component {
                         switch (s.code) {
                             case 0:
                             if(stringQuyery){
-                                console.log(s.data.data,stringQuyery,'stringQuyerystringQuyerystringQuyery');
+                                console.log(stringQuyery,'stringQuyery');
                                 this.setState({
-                                    data:s.data.data
+                                    data:s.data.data,
+                                    finish : false
                                 });
+                                return
                             }else{
                                 var list = [];
                                 var finish = false;
@@ -123,7 +125,7 @@ class SelectHospitalScreen extends Component {
         }
     }
     search() {
-        this.onLoad();
+        
     }
     getAddress(item) {
         let address = item.hospital.address;
