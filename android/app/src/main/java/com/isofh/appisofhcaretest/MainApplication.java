@@ -6,6 +6,7 @@ import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 import com.facebook.CallbackManager;
 import com.facebook.react.ReactApplication;
+import com.github.reactnativecommunity.location.RNLocationPackage;
 import com.showlocationservicesdialogbox.LocationServicesDialogBoxPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import io.underscope.react.fbak.RNAccountKitPackage;
@@ -52,6 +53,7 @@ private static CallbackManager mCallbackManager = CallbackManager.Factory.create
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
+            new RNLocationPackage(),
             new LocationServicesDialogBoxPackage(),
             new VectorIconsPackage(),
             new RNAccountKitPackage(),

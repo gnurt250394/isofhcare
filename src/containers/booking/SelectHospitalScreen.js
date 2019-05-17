@@ -17,8 +17,10 @@ import constants from '@dhy/strings';
 import LocationServicesDialogBox from "react-native-android-location-services-dialog-box";
 import dataCacheProvider from '@data-access/datacache-provider';
 import locationProvider from '@data-access/location-provider';
-
+import RNLocation from 'react-native-location';
 import clientUtils from '@utils/client-utils';
+
+
 class SelectHospitalScreen extends Component {
     constructor(props) {
         super(props);
@@ -44,45 +46,18 @@ class SelectHospitalScreen extends Component {
             );
     }
     getCurrentLocation(callAgain) {
-        let getLocation = () => {
-            return new Promise((resolve, reject) => {
-                this.setState({ isLoading: true }, () => {
-                    navigator.geolocation.getCurrentPosition(
-                        position => {
-                            this.setState({ isLoading: false }, () => {
-                                console.log(position);
-                                resolve(position)
-                            })
-                        });
-                },
-                    error => {
-                        this.setState({ isLoading: false }, () => {
-                            console.log(error);
-                            reject(e)
-                        })
-                    },
-                    { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-                );
+        RNLocation.getLatestLocation().then(region => {
+            locationProvider.saveCurrentLocation(region.latitude, region.longitude);
+            this.setState({
+                region
+            }, () => {
+                this.onRefresh();
+                // // alert(JSON.stringify(this.state.region));
+                // this.props.navigation.replace("selectHospitalByLocation", {
+                //     region: this.state.region
+                // })
             });
-        }
-        getLocation().then(position => {
-            if (position) {
-                let region = {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                    latitudeDelta: 0.1,
-                    longitudeDelta: 0.1,
-                };
-                locationProvider.saveCurrentLocation(position.coords.latitude, position.coords.longitude);
-                this.setState({
-                    region,
-                }, () => {
-                    this.props.navigation.replace("selectHospitalByLocation", {
-                        region: this.state.region
-                    })
-                });
-            }
-        }).catch(x => {
+        }).catch(() => {
             locationProvider.getCurrentLocationHasSave((s, e) => {
                 if (s && s.latitude && s.longitude) {
                     s.latitudeDelta = 0.1;
@@ -90,10 +65,7 @@ class SelectHospitalScreen extends Component {
                     this.setState({
                         region: s,
                     }, () => {
-                        console.log("get from lastest location");
-                        this.props.navigation.replace("selectHospitalByLocation", {
-                            region: this.state.region
-                        })
+                        this.onRefresh();
                     });
                 } else {
                     if (!callAgain) {
@@ -127,6 +99,45 @@ class SelectHospitalScreen extends Component {
     }
 
     getLocation() {
+        RNLocation.configure({
+            distanceFilter: 5.0
+        })
+
+        RNLocation.requestPermission({
+            ios: 'whenInUse', // or 'always'
+            android: {
+                detail: 'coarse', // or 'fine'
+                rationale: {
+                    title: "We need to access your location",
+                    message: "We use your location to show where you are on the map",
+                    buttonPositive: "OK",
+                    buttonNegative: "Cancel"
+                }
+            }
+        }).then(granted => {
+            if (granted) {
+                this.getCurrentLocation();
+                // this.locationSubscription = RNLocation.getLatestLocation(locations => {
+                //     alert(JSON.stringify(locations));
+                //     // console.log(locations);
+                //     /* Example location returned
+                //     {
+                //       speed: -1,
+                //       longitude: -0.1337,
+                //       latitude: 51.50998,
+                //       accuracy: 5,
+                //       heading: -1,
+                //       altitude: 0,
+                //       altitudeAccuracy: -1
+                //       floor: 0
+                //       timestamp: 1446007304457.029
+                //     }
+                //     */
+                // })
+            }
+        })
+
+        return;
         if (Platform.OS == "ios") {
             this.getCurrentLocation();
         } else {
@@ -157,7 +168,19 @@ class SelectHospitalScreen extends Component {
         }
     }
     componentDidMount() {
-        this.onRefresh();
+        locationProvider.getCurrentLocationHasSave((s, e) => {
+            if (s && s.latitude && s.longitude) {
+                s.latitudeDelta = 0.1;
+                s.longitudeDelta = 0.1;
+                this.setState({
+                    region: s,
+                }, () => {
+                    this.onRefresh();
+                });
+            } else {
+                this.onRefresh();
+            }
+        });
     }
     onLoadMore() {
         if (!this.state.finish && !this.state.loading)
@@ -173,43 +196,50 @@ class SelectHospitalScreen extends Component {
                 }
             );
     }
-    onLoad(s) {
+    onLoad() {
         const { page, size } = this.state;
-        let stringQuyery = s ? s.trim() : null
+        let stringQuyery = this.state.keyword ? this.state.keyword.trim() : ""
         this.setState({
             loading: true,
             refreshing: page == 1,
             loadMore: page != 1
         }, () => {
-            hospitalProvider.getBySearch(page, size, stringQuyery).then(s => {
-                console.log(s, 'hopspitalllll');
+            let promise = null;
+            if (this.state.region) {
+                promise = hospitalProvider.getByLocation(page, size, this.state.region.latitude, this.state.region.longitude, stringQuyery);
+            }
+            else {
+                promise = hospitalProvider.getBySearch(page, size, stringQuyery);
+            };
+            promise.then(s => {
                 this.setState({
                     loading: false,
                     refreshing: false,
                     loadMore: false
                 }, () => {
-                    if (s) {
-                        switch (s.code) {
-                            case 0:
-
-                                var list = [];
-                                var finish = false;
-                                if (s.data.data.length == 0) {
-                                    finish = true;
-                                }
-                                if (page != 1) {
-                                    list = this.state.data;
-                                    list.push.apply(list, s.data.data);
-                                }
-                                else {
-                                    list = s.data.data;
-                                }
-                                this.setState({
-                                    data: [...list],
-                                    finish: finish
-                                });
-                                break;
-                        }
+                    switch (s.code) {
+                        case 500:
+                            // alert(JSON.stringify(s));
+                            snackbar.show(constants.msg.error_occur, "danger");
+                            break;
+                        case 0:
+                            var list = [];
+                            var finish = false;
+                            if (s.data.data.length == 0) {
+                                finish = true;
+                            }
+                            if (page != 1) {
+                                list = this.state.data;
+                                list.push.apply(list, s.data.data);
+                            }
+                            else {
+                                list = s.data.data;
+                            }
+                            this.setState({
+                                data: [...list],
+                                finish: finish
+                            });
+                            break;
                     }
                 });
             }).catch(e => {
@@ -230,7 +260,7 @@ class SelectHospitalScreen extends Component {
     }
     search() {
         this.setState({ page: 1 }, () => {
-            this.onLoad(this.state.keyword);
+            this.onLoad();
         })
     }
   
@@ -294,19 +324,22 @@ class SelectHospitalScreen extends Component {
                         renderItem={({ item, index }) => {
                             const source = item.medicalRecords && item.medicalRecords.avatar ? { uri: item.medicalRecords.avatar.absoluteUrl() } : require("@images/new/user.png");
                             return <TouchableOpacity style={styles.details} onPress={this.selectHospital.bind(this, item)}>
-                                {/* <View style={{ marginLeft: 20, alignItems: 'center', marginTop: 5 }}>
-                                    <ScaleImage style={styles.plac} height={21} source={require("@images/new/hospital/ic_place.png")} />
-                                    <Text style={styles.bv1}>1km</Text>
-                                </View> */}
+                                {this.state.region &&
+                                    < View style={{ marginLeft: 20, alignItems: 'center', marginTop: 5 }}>
+                                        <ScaleImage style={styles.plac} height={21} source={require("@images/new/hospital/ic_place.png")} />
+                                        <Text style={styles.bv1}>{(Math.round(item.hospital.distance * 100) / 100).toFixed(2)} km</Text>
+                                    </View>
+                                }
                                 <View style={{ flex: 1, marginLeft: 20 }}>
                                     <Text style={styles.bv} numberOfLines={1}>{item.hospital.name}</Text>
                                     <Text style={styles.bv1} numberOfLines={2}>{item.hospital.address}</Text>
                                 </View>
                                 <ScaleImage style={styles.help} height={21} source={require("@images/new/hospital/ic_info.png")} />
                             </TouchableOpacity>
-                        }}
+                        }
+                        }
                     />
-                </View>
+                </View >
                 {
                     this.state.loadMore ?
                         <View style={{ alignItems: 'center', padding: 10, position: 'absolute', bottom: 0, left: 0, right: 0 }}>
@@ -316,7 +349,7 @@ class SelectHospitalScreen extends Component {
                             />
                         </View> : null
                 }
-            </ActivityPanel>
+            </ActivityPanel >
         );
     }
 }
