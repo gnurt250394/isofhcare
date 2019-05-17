@@ -46,15 +46,22 @@ class SelectHospitalScreen extends Component {
     getCurrentLocation = () => {
         return new Promise((resolve, reject) => {
             this.setState({ isLoading: true }, () => {
-                navigator.geolocation.getCurrentPosition(position => {
+                this.watchID = navigator.geolocation.watchPosition((position) => {
                     this.setState({ isLoading: false }, () => {
+                        console.log(position);
+                        if (this.watchID)
+                            navigator.geolocation.clearWatch(this.watchID);
                         resolve(position)
-                    })
-                }, e => {
+                    });
+                }, (error) => {
                     this.setState({ isLoading: false }, () => {
+                        console.log(error);
+                        if (this.watchID)
+                            navigator.geolocation.clearWatch(this.watchID);
+                        this.watchID = null;
                         reject(e)
                     })
-                }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 1000 });
+                });
             });
         });
     }
@@ -77,26 +84,25 @@ class SelectHospitalScreen extends Component {
                 });
             }
         }).catch(x => {
-            locationProvider.pickLocation({}, () => { });
-            // locationProvider.getCurrentLocationHasSave((s, e) => {
-            //     if (s && s.latitude && s.longitude) {
-            //         s.latitudeDelta = 0.1;
-            //         s.longitudeDelta = 0.1;
-            //         this.setState({
-            //             region: s,
-            //         }, () => {
-            //             console.log("get from lastest location");
-            //             this.props.navigation.replace("selectHospitalByLocation", {
-            //                 region: this.state.region
-            //             })
-            //         });
-            //     } else {
-            //         if (!callAgain) {
-            //             console.log("callAgain");
-            //             this.getLocation(true);
-            //         }
-            //     }
-            // });
+            locationProvider.getCurrentLocationHasSave((s, e) => {
+                if (s && s.latitude && s.longitude) {
+                    s.latitudeDelta = 0.1;
+                    s.longitudeDelta = 0.1;
+                    this.setState({
+                        region: s,
+                    }, () => {
+                        console.log("get from lastest location");
+                        this.props.navigation.replace("selectHospitalByLocation", {
+                            region: this.state.region
+                        })
+                    });
+                } else {
+                    if (!callAgain) {
+                        console.log("callAgain");
+                        this.getLocation(true);
+                    }
+                }
+            });
         });
     }
 
@@ -122,38 +128,36 @@ class SelectHospitalScreen extends Component {
     }
 
     x() {
-        locationProvider.pickLocation({}, (place) => {
-            console.log(place);
-            this.props.navigation.replace("selectHospitalByLocation", {
-                region: place,
-                onSelected: ((this.props.navigation.state || {}).params || {}).onSelected
-            })
-        });
-
-        // if (Platform.OS == "ios") {
-        //     this.getLocation();
-        // } else {
-        //     this.requestLocationPermission().then(() => {
-        //         LocationServicesDialogBox.checkLocationServicesIsEnabled({
-        //             message: "<h2 style='color: #0af13e'>Sử dụng vị trí?</h2>Ứng dụng cần quyền truy cập vào vị trí của bạn",
-        //             ok: "YES",
-        //             cancel: "NO",
-        //             enableHighAccuracy: true, // true => GPS AND NETWORK PROVIDER, false => GPS OR NETWORK PROVIDER
-        //             showDialog: true, // false => Opens the Location access page directly
-        //             openLocationServices: true, // false => Directly catch method is called if location services are turned off
-        //             preventOutSideTouch: false, // true => To prevent the location services window from closing when it is clicked outside
-        //             preventBackClick: false, // true => To prevent the location services popup from closing when it is clicked back button
-        //             providerListener: false // true ==> Trigger locationProviderStatusChange listener when the location state changes
-        //         }).then(function (success) {
-        //             setTimeout(this.getLocation.bind(this), 1000);
-        //         }).catch((error) => {
-        //             setTimeout(this.getLocation.bind(this), 1000);
-        //         });
-        //     }).catch(x => {
-        //         snackbar.show("Ứng dụng cần quyền truy cập vị trí hiện tại của bạn để tìm kiếm địa điểm", "danger");
-        //         return;
-        //     });
-        // }
+        if (Platform.OS == "ios") {
+            this.getLocation();
+        } else {
+            this.requestLocationPermission().then(() => {
+                RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({ interval: 10000, fastInterval: 5000 })
+                    .then(data => {
+                        setTimeout(this.getLocation.bind(this), 1000);
+                    }).catch(err => {
+                        setTimeout(this.getLocation.bind(this), 1000);
+                    });
+                // LocationServicesDialogBox.checkLocationServicesIsEnabled({
+                //     message: "<h2 style='color: #0af13e'>Sử dụng vị trí?</h2>Ứng dụng cần quyền truy cập vào vị trí của bạn",
+                //     ok: "YES",
+                //     cancel: "NO",
+                //     enableHighAccuracy: true, // true => GPS AND NETWORK PROVIDER, false => GPS OR NETWORK PROVIDER
+                //     showDialog: true, // false => Opens the Location access page directly
+                //     openLocationServices: true, // false => Directly catch method is called if location services are turned off
+                //     preventOutSideTouch: false, // true => To prevent the location services window from closing when it is clicked outside
+                //     preventBackClick: false, // true => To prevent the location services popup from closing when it is clicked back button
+                //     providerListener: false // true ==> Trigger locationProviderStatusChange listener when the location state changes
+                // }).then(function (success) {
+                //     setTimeout(this.getLocation.bind(this), 1000);
+                // }).catch((error) => {
+                //     setTimeout(this.getLocation.bind(this), 1000);
+                // });
+            }).catch(x => {
+                snackbar.show("Ứng dụng cần quyền truy cập vị trí hiện tại của bạn để tìm kiếm địa điểm", "danger");
+                return;
+            });
+        }
     }
     componentDidMount() {
         this.onRefresh();
