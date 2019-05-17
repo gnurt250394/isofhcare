@@ -46,30 +46,26 @@ class SelectHospitalScreen extends Component {
     getCurrentLocation(callAgain) {
         let getLocation = () => {
             return new Promise((resolve, reject) => {
-                debugger;
                 this.setState({ isLoading: true }, () => {
-                    this.watchID = navigator.geolocation.watchPosition((position) => {
-                        this.setState({ isLoading: false }, () => {
-                            console.log(position);
-                            if (this.watchID)
-                                navigator.geolocation.clearWatch(this.watchID);
-                            resolve(position)
+                    navigator.geolocation.getCurrentPosition(
+                        position => {
+                            this.setState({ isLoading: false }, () => {
+                                console.log(position);
+                                resolve(position)
+                            })
                         });
-                    }, (error) => {
+                },
+                    error => {
                         this.setState({ isLoading: false }, () => {
                             console.log(error);
-                            if (this.watchID)
-                                navigator.geolocation.clearWatch(this.watchID);
-                            this.watchID = null;
                             reject(e)
                         })
-                    });
-                });
+                    },
+                    { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+                );
             });
         }
-        debugger;
         getLocation().then(position => {
-            debugger;
             if (position) {
                 let region = {
                     latitude: position.coords.latitude,
@@ -87,7 +83,6 @@ class SelectHospitalScreen extends Component {
                 });
             }
         }).catch(x => {
-            debugger;
             locationProvider.getCurrentLocationHasSave((s, e) => {
                 if (s && s.latitude && s.longitude) {
                     s.latitudeDelta = 0.1;
@@ -132,15 +127,14 @@ class SelectHospitalScreen extends Component {
     }
 
     getLocation() {
-        debugger;
         if (Platform.OS == "ios") {
             this.getCurrentLocation();
         } else {
             this.requestLocationPermission().then(() => {
                 LocationServicesDialogBox.checkLocationServicesIsEnabled({
                     message: "<h2 style='color: #0af13e'>Sử dụng vị trí?</h2>Ứng dụng cần quyền truy cập vào vị trí của bạn",
-                    ok: "YES",
-                    cancel: "NO",
+                    ok: "Đồng ý",
+                    cancel: "Hủy",
                     enableHighAccuracy: true, // true => GPS AND NETWORK PROVIDER, false => GPS OR NETWORK PROVIDER
                     showDialog: true, // false => Opens the Location access page directly
                     openLocationServices: true, // false => Directly catch method is called if location services are turned off

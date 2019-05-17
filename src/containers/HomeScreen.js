@@ -75,7 +75,6 @@ class HomeScreen extends Component {
   componentWillReceiveProps(newProps) {
     let navigate = newProps.navigation.getParam('navigate', undefined);
     if (this.state.navigate != navigate) {
-      debugger;
       this.setState({ navigate }, () => {
         if (navigate) {
           this.props.navigation.navigate(navigate.screen, navigate.params);
