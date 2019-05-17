@@ -153,6 +153,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-location')
     compile project(':react-native-vector-icons')
     implementation project(':react-native-android-location-services-dialog-box')
     implementation project(':react-native-facebook-account-kit')

@@ -65,7 +65,7 @@ class SelectHospitalScreenLocation extends Component {
             refreshing: page == 1,
             loadMore: page != 1
         }, () => {
-            hospitalProvider.getByLocation(page, size, this.state.lat, this.state.lon).then(s => {
+            hospitalProvider.getByLocation(page, size, this.state.lat, this.state.lon, "").then(s => {
                 this.setState({
                     loading: false,
                     refreshing: false,
@@ -73,6 +73,7 @@ class SelectHospitalScreenLocation extends Component {
                 }, () => {
                     switch (s.code) {
                         case 500:
+                            // alert(JSON.stringify(s));
                             snackbar.show(constants.msg.error_occur, "danger");
                             break;
                         case 0:
@@ -174,7 +175,7 @@ class SelectHospitalScreenLocation extends Component {
                             return <TouchableOpacity style={styles.details} onPress={this.selectHospital.bind(this, item)}>
                                 <View style={{ marginLeft: 20, alignItems: 'center', marginTop: 5 }}>
                                     <ScaleImage style={styles.plac} height={21} source={require("@images/new/hospital/ic_place.png")} />
-                                    <Text style={styles.bv1}>{(Math.round(item.hospital.distance*100)/100).toFixed(2)} km</Text>
+                                    <Text style={styles.bv1}>{(Math.round(item.hospital.distance * 100) / 100).toFixed(2)} km</Text>
                                 </View>
                                 <View style={{ flex: 1, marginLeft: 20 }}>
                                     <Text style={styles.bv} numberOfLines={1}>{item.hospital.name}</Text>

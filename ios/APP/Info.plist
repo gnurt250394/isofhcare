@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>AccountKitClientToken</key>
+	<string>a9ae7d8852eab508b86896d5cd375999</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -10,8 +12,6 @@
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-	<key>NSFaceIDUsageDescription</key>
-	<string>$(ISOFH_CARE) requires FaceID access to allows you quick and secure access</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>23</string>
 	<key>CFBundleName</key>
@@ -23,7 +23,6 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
-
 	<array>
 		<dict>
 			<key>CFBundleURLSchemes</key>
@@ -45,7 +44,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLIconFile</key>
-			<string/>
+			<string></string>
 			<key>CFBundleURLName</key>
 			<string>com.isofh.appisofhcaretest</string>
 			<key>CFBundleURLSchemes</key>
@@ -58,8 +57,6 @@
 	<string>1</string>
 	<key>FacebookAppID</key>
 	<string>457683741386685</string>
-	<key>AccountKitClientToken</key>
-	<string>a9ae7d8852eab508b86896d5cd375999</string>
 	<key>FacebookDisplayName</key>
 	<string>iSofH Care</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
@@ -86,6 +83,8 @@
 	<string>This app requires access to the calenda.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>This app requires access to the camera.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>$(ISOFH_CARE) requires FaceID access to allows you quick and secure access</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>This app requires access to the location to get and find all facilities near you </string>
 	<key>NSLocationWhenInUseUsageDescription</key>
@@ -120,6 +119,7 @@
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
+		<string>location</string>
 		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
