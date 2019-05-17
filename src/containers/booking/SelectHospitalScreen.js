@@ -331,7 +331,7 @@ class SelectHospitalScreen extends Component {
                                     </View>
                                 }
                                 <View style={{ flex: 1, marginLeft: 20 }}>
-                                    <Text style={styles.bv} numberOfLines={1}>{item.hospital.name}</Text>
+                                    <Text style={styles.bv} numberOfLines={2}>{item.hospital.name}</Text>
                                     <Text style={styles.bv1} numberOfLines={2}>{item.hospital.address}</Text>
                                 </View>
                                 <ScaleImage style={styles.help} height={21} source={require("@images/new/hospital/ic_info.png")} />
