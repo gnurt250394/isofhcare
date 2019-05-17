@@ -33,7 +33,6 @@ import java.util.Arrays;
 import java.util.List;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
-import com.dylanvann.fastimage.FastImageViewPackage;
 
 public class MainApplication extends MultiDexApplication implements ReactApplication, ShareApplication{
 private static CallbackManager mCallbackManager = CallbackManager.Factory.create();
@@ -71,9 +70,7 @@ private static CallbackManager mCallbackManager = CallbackManager.Factory.create
         new RNDeviceInfo(),
         new RNGoogleSigninPackage(),
         new FBSDKPackage(mCallbackManager),
-              new LinearGradientPackage(),
-              new FastImageViewPackage()
-
+              new LinearGradientPackage()
       );
     }
     
