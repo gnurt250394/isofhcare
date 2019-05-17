@@ -84,7 +84,7 @@ class ConfirmBookingScreen extends Component {
         // return;
 
         this.setState({ isLoading: true }, () => {
-            let memo = `THANH TOÁN VNPAY - Đặt khám - ${this.state.hospital.hospital.name} - ${this.state.schedule.time.format("yyyy-MM-dd HH:mm:ss")} - ${this.state.profile.medicalRecords.name}`;
+            let memo = `THANH TOÁN VNPAY - Đặt khám - ${this.state.hospital.hospital.name} - ${this.state.service.id} - ${this.state.schedule.time.format("yyyy-MM-dd HH:mm:ss")} - ${this.state.profile.medicalRecords.name}`;
             walletProvider.createOnlinePayment(
                 this.props.userApp.currentUser.id,
                 "VNPAY",
