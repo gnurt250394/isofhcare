@@ -233,16 +233,7 @@ class SelectHospitalScreen extends Component {
             this.onLoad(this.state.keyword);
         })
     }
-    getAddress(item) {
-        let address = item.hospital.address;
-        if (item.zone && item.zone.name)
-            address += ", " + item.zone.name;
-        if (item.district && item.district.name)
-            address += ", " + item.district.name;
-        if (item.province && item.province.countryCode)
-            address += ", " + item.province.countryCode;
-        return address;
-    }
+  
     render() {
         return (
             <ActivityPanel
@@ -302,13 +293,6 @@ class SelectHospitalScreen extends Component {
                         ListFooterComponent={() => <View style={{ height: 10 }} />}
                         renderItem={({ item, index }) => {
                             const source = item.medicalRecords && item.medicalRecords.avatar ? { uri: item.medicalRecords.avatar.absoluteUrl() } : require("@images/new/user.png");
-                            if (!item.merge) {
-                                let address = this.getAddress(item);
-                                item.hospital.address = address;
-                                item.merge = true;
-                            }
-
-
                             return <TouchableOpacity style={styles.details} onPress={this.selectHospital.bind(this, item)}>
                                 {/* <View style={{ marginLeft: 20, alignItems: 'center', marginTop: 5 }}>
                                     <ScaleImage style={styles.plac} height={21} source={require("@images/new/hospital/ic_place.png")} />
