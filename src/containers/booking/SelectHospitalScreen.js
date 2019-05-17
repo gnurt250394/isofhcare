@@ -58,7 +58,7 @@ class SelectHospitalScreen extends Component {
                 // })
             });
         }).catch(() => {
-            locationProvider.getCurrentLocationHasSave((s, e) => {
+            locationProvider.getCurrentLocationHasSave().then(s => {
                 if (s && s.latitude && s.longitude) {
                     s.latitudeDelta = 0.1;
                     s.longitudeDelta = 0.1;
@@ -67,11 +67,11 @@ class SelectHospitalScreen extends Component {
                     }, () => {
                         this.onRefresh();
                     });
-                } else {
-                    if (!callAgain) {
-                        console.log("callAgain");
-                        this.getCurrentLocation(true);
-                    }
+                }
+            }).catch(e => {
+                if (!callAgain) {
+                    console.log("callAgain");
+                    this.getCurrentLocation(true);
                 }
             });
         });
@@ -168,7 +168,7 @@ class SelectHospitalScreen extends Component {
         }
     }
     componentDidMount() {
-        locationProvider.getCurrentLocationHasSave((s, e) => {
+        locationProvider.getCurrentLocationHasSave().then(s => {
             if (s && s.latitude && s.longitude) {
                 s.latitudeDelta = 0.1;
                 s.longitudeDelta = 0.1;
@@ -177,9 +177,9 @@ class SelectHospitalScreen extends Component {
                 }, () => {
                     this.onRefresh();
                 });
-            } else {
-                this.onRefresh();
             }
+        }).catch(e => {
+            this.onRefresh();
         });
     }
     onLoadMore() {
@@ -263,7 +263,7 @@ class SelectHospitalScreen extends Component {
             this.onLoad();
         })
     }
-  
+
     render() {
         return (
             <ActivityPanel
