@@ -116,24 +116,17 @@ class SelectHospitalScreen extends Component {
             }
         }).then(granted => {
             if (granted) {
-                this.getCurrentLocation();
-                // this.locationSubscription = RNLocation.getLatestLocation(locations => {
-                //     alert(JSON.stringify(locations));
-                //     // console.log(locations);
-                //     /* Example location returned
-                //     {
-                //       speed: -1,
-                //       longitude: -0.1337,
-                //       latitude: 51.50998,
-                //       accuracy: 5,
-                //       heading: -1,
-                //       altitude: 0,
-                //       altitudeAccuracy: -1
-                //       floor: 0
-                //       timestamp: 1446007304457.029
-                //     }
-                //     */
-                // })
+                LocationServicesDialogBox.checkLocationServicesIsEnabled({
+                    message: "<h2 style='color: #0af13e'>Sử dụng vị trí?</h2>Ứng dụng cần quyền truy cập vào vị trí của bạn",
+                    ok: "Đồng ý",
+                    cancel: "Hủy",
+                    enableHighAccuracy: true, // true => GPS AND NETWORK PROVIDER, false => GPS OR NETWORK PROVIDER
+                    showDialog: true, // false => Opens the Location access page directly
+                    openLocationServices: true, // false => Directly catch method is called if location services are turned off
+                    preventOutSideTouch: false, // true => To prevent the location services window from closing when it is clicked outside
+                    preventBackClick: false, // true => To prevent the location services popup from closing when it is clicked back button
+                    providerListener: false // true ==> Trigger locationProviderStatusChange listener when the location state changes
+                }).then(this.getCurrentLocation.bind(this)).catch(this.getCurrentLocation.bind(this));
             }
         })
 
