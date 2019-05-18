@@ -35,7 +35,7 @@ module.exports = {
     getBySearch(page, size, stringQuyery) {
         let keyWord = stringQuyery ? `stringQuyery=${stringQuyery}` : 'stringQuyery='
         return new Promise((resolve, reject) => {
-            client.requestApi("get", `${constants.api.hospital.get_hospital_by_search}?page=${page}&size=${size}&${keyWord}&active=-1&type=-1`, {}, (s, e) => {
+            client.requestApi("get", `${constants.api.hospital.get_hospital_by_search}?page=${page}&size=${size}&${keyWord}&active=1&type=-1`, {}, (s, e) => {
                 if (s)
                     resolve(s);
                 else
