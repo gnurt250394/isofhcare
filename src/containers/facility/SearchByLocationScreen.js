@@ -14,7 +14,7 @@ import historyProvider from '@data-access/history-provider';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 import snackbar from '@utils/snackbar-utils';
 import SlidingPanel from 'mainam-react-native-sliding-up-down';
-class SearchByLocastionScreen extends Component {
+class SelectHospitalByLocationScreen extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -355,4 +355,4 @@ function mapStateToProps(state) {
         userApp: state.userApp
     };
 }
-export default connect(mapStateToProps)(SearchByLocastionScreen);
+export default connect(mapStateToProps)(SelectHospitalByLocationScreen);

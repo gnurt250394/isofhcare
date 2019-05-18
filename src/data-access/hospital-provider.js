@@ -32,10 +32,20 @@ module.exports = {
             });
         });
     },
-    getBySearch(page,size,stringQuyery){
-      let keyWord =   stringQuyery ? `stringQuyery=${stringQuyery}` : 'stringQuyery='
-        return new Promise((resolve,reject) => {
+    getBySearch(page, size, stringQuyery) {
+        let keyWord = stringQuyery ? `stringQuyery=${stringQuyery}` : 'stringQuyery='
+        return new Promise((resolve, reject) => {
             client.requestApi("get", `${constants.api.hospital.get_hospital_by_search}?page=${page}&size=${size}&${keyWord}&active=-1&type=-1`, {}, (s, e) => {
+                if (s)
+                    resolve(s);
+                else
+                    reject(e);
+            });
+        })
+    },
+    getByLocation(page, size, lat, lon, stringQuyery) {
+        return new Promise((resolve, reject) => {
+            client.requestApi("get", `${constants.api.hospital.get_by_location}?page=${page}&size=${size}&lat=${lat}&lon=${lon}&stringQuyery=${stringQuyery}`, {}, (s, e) => {
                 if (s)
                     resolve(s);
                 else

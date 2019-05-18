@@ -2,7 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
 import {
     View, StyleSheet, Text, TouchableOpacity,
-    FlatList, ActivityIndicator, TextInput
+    FlatList, ActivityIndicator, TextInput, Platform,
+    PermissionsAndroid
 } from 'react-native';
 import { connect } from 'react-redux';
 import ScaleImage from "mainam-react-native-scaleimage";
@@ -10,24 +11,25 @@ import { Card } from 'native-base';
 import hospitalProvider from '@data-access/hospital-provider';
 import ImageLoad from 'mainam-react-native-image-loader';
 import snackbar from '@utils/snackbar-utils';
-
+import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
+import DialogBox from 'react-native-dialogbox';
+import constants from '@dhy/strings';
+import LocationServicesDialogBox from "react-native-android-location-services-dialog-box";
+import dataCacheProvider from '@data-access/datacache-provider';
+import locationProvider from '@data-access/location-provider';
+import RNLocation from 'react-native-location';
 import clientUtils from '@utils/client-utils';
+
+
 class SelectHospitalScreen extends Component {
     constructor(props) {
         super(props);
-        let specialist = this.props.navigation.state.params.specialist;
-        if (!specialist) {
-            this.props.navigation.pop();
-            snackbar.show("Vui lòng chọn yêu cầu khám", "danger");
-
-        }
 
         this.state = {
             data: [],
             refreshing: false,
             size: 10,
             page: 1,
-            serviceType: specialist || {},
             keyword: "",
             loadMore: false,
             finish: false,
@@ -43,8 +45,142 @@ class SelectHospitalScreen extends Component {
                 }
             );
     }
+    getCurrentLocation(callAgain) {
+        RNLocation.getLatestLocation().then(region => {
+            locationProvider.saveCurrentLocation(region.latitude, region.longitude);
+            this.setState({
+                region
+            }, () => {
+                this.onRefresh();
+                // // alert(JSON.stringify(this.state.region));
+                // this.props.navigation.replace("selectHospitalByLocation", {
+                //     region: this.state.region
+                // })
+            });
+        }).catch(() => {
+            locationProvider.getCurrentLocationHasSave().then(s => {
+                if (s && s.latitude && s.longitude) {
+                    s.latitudeDelta = 0.1;
+                    s.longitudeDelta = 0.1;
+                    this.setState({
+                        region: s,
+                    }, () => {
+                        this.onRefresh();
+                    });
+                }
+            }).catch(e => {
+                if (!callAgain) {
+                    console.log("callAgain");
+                    this.getCurrentLocation(true);
+                }
+            });
+        });
+    }
+
+    requestLocationPermission() {
+        return new Promise((resolve, reject) => {
+            try {
+                PermissionsAndroid.requestMultiple(
+                    [PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+                    PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION]
+                ).then(granted => {
+                    if (
+                        granted['android.permission.ACCESS_FINE_LOCATION'] === PermissionsAndroid.RESULTS.GRANTED
+                        &&
+                        granted['android.permission.ACCESS_COARSE_LOCATION'] === PermissionsAndroid.RESULTS.GRANTED
+                    )
+                        resolve();
+                    reject();
+                })
+            } catch (err) {
+                reject();
+            }
+        });
+    }
+
+    getLocation() {
+        RNLocation.configure({
+            distanceFilter: 5.0
+        })
+
+        RNLocation.requestPermission({
+            ios: 'whenInUse', // or 'always'
+            android: {
+                detail: 'coarse', // or 'fine'
+                rationale: {
+                    title: "We need to access your location",
+                    message: "We use your location to show where you are on the map",
+                    buttonPositive: "OK",
+                    buttonNegative: "Cancel"
+                }
+            }
+        }).then(granted => {
+            if (granted) {
+                this.getCurrentLocation();
+                // this.locationSubscription = RNLocation.getLatestLocation(locations => {
+                //     alert(JSON.stringify(locations));
+                //     // console.log(locations);
+                //     /* Example location returned
+                //     {
+                //       speed: -1,
+                //       longitude: -0.1337,
+                //       latitude: 51.50998,
+                //       accuracy: 5,
+                //       heading: -1,
+                //       altitude: 0,
+                //       altitudeAccuracy: -1
+                //       floor: 0
+                //       timestamp: 1446007304457.029
+                //     }
+                //     */
+                // })
+            }
+        })
+
+        return;
+        if (Platform.OS == "ios") {
+            this.getCurrentLocation();
+        } else {
+            this.requestLocationPermission().then(() => {
+                LocationServicesDialogBox.checkLocationServicesIsEnabled({
+                    message: "<h2 style='color: #0af13e'>Sử dụng vị trí?</h2>Ứng dụng cần quyền truy cập vào vị trí của bạn",
+                    ok: "Đồng ý",
+                    cancel: "Hủy",
+                    enableHighAccuracy: true, // true => GPS AND NETWORK PROVIDER, false => GPS OR NETWORK PROVIDER
+                    showDialog: true, // false => Opens the Location access page directly
+                    openLocationServices: true, // false => Directly catch method is called if location services are turned off
+                    preventOutSideTouch: false, // true => To prevent the location services window from closing when it is clicked outside
+                    preventBackClick: false, // true => To prevent the location services popup from closing when it is clicked back button
+                    providerListener: false // true ==> Trigger locationProviderStatusChange listener when the location state changes
+                }).then(this.getCurrentLocation.bind(this)).catch(this.getCurrentLocation.bind(this));
+
+
+                // RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({ interval: 10000, fastInterval: 5000 })
+                //     .then(data => {
+                //         this.getCurrentLocation.bind(this);
+                //     }).catch(err => {
+                //         this.getCurrentLocation.bind(this);
+                //     });
+            }).catch(x => {
+                snackbar.show("Ứng dụng cần quyền truy cập vị trí hiện tại của bạn để tìm kiếm địa điểm", "danger");
+                return;
+            });
+        }
+    }
     componentDidMount() {
-        this.onRefresh();
+        locationProvider.getCurrentLocationHasSave().then(s => {
+            if (s && s.latitude && s.longitude) {
+                s.latitudeDelta = 0.1;
+                s.longitudeDelta = 0.1;
+                this.setState({
+                    region: s,
+                }, () => {
+                    this.onRefresh();
+                });
+            }
+        }).catch(e => {
+            this.onRefresh();
+        });
     }
     onLoadMore() {
         if (!this.state.finish && !this.state.loading)
@@ -60,52 +196,50 @@ class SelectHospitalScreen extends Component {
                 }
             );
     }
-    onLoad(s) {
+    onLoad() {
         const { page, size } = this.state;
-        let stringQuyery = s ? s : null
+        let stringQuyery = this.state.keyword ? this.state.keyword.trim() : ""
         this.setState({
             loading: true,
             refreshing: page == 1,
             loadMore: page != 1
         }, () => {
-            hospitalProvider.getBySearch(page, size,stringQuyery).then(s => {
-                console.log(s, 'hopspitalllll');
+            let promise = null;
+            if (this.state.region) {
+                promise = hospitalProvider.getByLocation(page, size, this.state.region.latitude, this.state.region.longitude, stringQuyery);
+            }
+            else {
+                promise = hospitalProvider.getBySearch(page, size, stringQuyery);
+            };
+            promise.then(s => {
                 this.setState({
                     loading: false,
                     refreshing: false,
                     loadMore: false
                 }, () => {
-                    if (s) {
-                        switch (s.code) {
-                            case 0:
-                            if(stringQuyery){
-                                console.log(stringQuyery,'stringQuyery');
-                                this.setState({
-                                    data:s.data.data,
-                                    finish : false
-                                });
-                                return
-                            }else{
-                                var list = [];
-                                var finish = false;
-                                if (s.data.data.length == 0) {
-                                    finish = true;
-                                }
-                                if (page != 1) {
-                                    list = this.state.data;
-                                    list.push.apply(list, s.data.data);
-                                }
-                                else {
-                                    list = s.data.data;
-                                }
-                                this.setState({
-                                    data: [...list],
-                                    finish: finish
-                                });
-                                break;
+                    switch (s.code) {
+                        case 500:
+                            // alert(JSON.stringify(s));
+                            snackbar.show(constants.msg.error_occur, "danger");
+                            break;
+                        case 0:
+                            var list = [];
+                            var finish = false;
+                            if (s.data.data.length == 0) {
+                                finish = true;
                             }
-                              
-                        }
+                            if (page != 1) {
+                                list = this.state.data;
+                                list.push.apply(list, s.data.data);
+                            }
+                            else {
+                                list = s.data.data;
+                            }
+                            this.setState({
+                                data: [...list],
+                                finish: finish
+                            });
+                            break;
                     }
                 });
             }).catch(e => {
@@ -125,21 +259,16 @@ class SelectHospitalScreen extends Component {
         }
     }
     search() {
-        
+        this.setState({ page: 1 }, () => {
+            this.onLoad();
+        })
     }
-    getAddress(item) {
-        let address = item.hospital.address;
-        if (item.zone && item.zone.name)
-            address += ", " + item.zone.name;
-        if (item.district && item.district.name)
-            address += ", " + item.district.name;
-        if (item.province && item.province.countryCode)
-            address += ", " + item.province.countryCode;
-        return address;
-    }
+
     render() {
         return (
-            <ActivityPanel style={styles.AcPanel} title="Địa điểm"
+            <ActivityPanel
+                isLoading={this.state.isLoading}
+                style={styles.AcPanel} title="Địa điểm"
                 backButton={<TouchableOpacity style={{ paddingLeft: 20 }} onPress={() => this.props.navigation.pop()}><Text>Hủy</Text></TouchableOpacity>}
                 titleStyle={{ marginLeft: 10 }}
                 containerStyle={{
@@ -150,9 +279,11 @@ class SelectHospitalScreen extends Component {
                     borderBottomWidth: 1,
                     borderBottomColor: 'rgba(0, 0, 0, 0.06)'
                 }}>
+                <DialogBox ref={dialogbox => { this.dialogbox = dialogbox }} />
+
 
                 <View style={styles.container}>
-                    <TouchableOpacity style={styles.search} onPress={() => { snackbar.show("Chức năng đang phát triển", "danger") }}>
+                    <TouchableOpacity style={styles.search} onPress={this.getLocation.bind(this)}>
                         <ScaleImage style={styles.aa} width={18} source={require("@images/new/hospital/ic_placeholder.png")} />
                         <Text style={styles.tkdiachi}>Tìm kiếm gần tôi</Text>
                     </TouchableOpacity>
@@ -164,8 +295,8 @@ class SelectHospitalScreen extends Component {
                         <TextInput
                             value={this.state.keyword}
                             onChangeText={s => {
-                                this.onLoad(s)
-                                this.setState({ keyword: s })}}
+                                this.setState({ keyword: s })
+                            }}
                             onSubmitEditing={this.search.bind(this)}
                             returnKeyType='search'
                             style={styles.tkdiachi1} placeholder={"Tìm kiếm…"} underlineColorAndroid={"transparent"} />
@@ -192,27 +323,23 @@ class SelectHospitalScreen extends Component {
                         ListFooterComponent={() => <View style={{ height: 10 }} />}
                         renderItem={({ item, index }) => {
                             const source = item.medicalRecords && item.medicalRecords.avatar ? { uri: item.medicalRecords.avatar.absoluteUrl() } : require("@images/new/user.png");
-                            if (!item.merge) {
-                                let address = this.getAddress(item);
-                                item.hospital.address = address;
-                                item.merge = true;
-                            }
-
-
                             return <TouchableOpacity style={styles.details} onPress={this.selectHospital.bind(this, item)}>
-                                {/* <View style={styles.help}>
-                                    <ScaleImage style={styles.plac} height={21} source={require("@images/new/hospital/ic_place.png")} />
-                                    <Text style={styles.bv1}>1km</Text>
-                                </View> */}
+                                {this.state.region &&
+                                    < View style={{ marginLeft: 20, alignItems: 'center', marginTop: 5 }}>
+                                        <ScaleImage style={styles.plac} height={21} source={require("@images/new/hospital/ic_place.png")} />
+                                        <Text style={styles.bv1}>{(Math.round(item.hospital.distance * 100) / 100).toFixed(2)} km</Text>
+                                    </View>
+                                }
                                 <View style={{ flex: 1, marginLeft: 20 }}>
-                                    <Text style={styles.bv} numberOfLines={1}>{item.hospital.name}</Text>
+                                    <Text style={styles.bv} numberOfLines={2}>{item.hospital.name}</Text>
                                     <Text style={styles.bv1} numberOfLines={2}>{item.hospital.address}</Text>
                                 </View>
                                 <ScaleImage style={styles.help} height={21} source={require("@images/new/hospital/ic_info.png")} />
                             </TouchableOpacity>
-                        }}
+                        }
+                        }
                     />
-                </View>
+                </View >
                 {
                     this.state.loadMore ?
                         <View style={{ alignItems: 'center', padding: 10, position: 'absolute', bottom: 0, left: 0, right: 0 }}>
@@ -222,7 +349,7 @@ class SelectHospitalScreen extends Component {
                             />
                         </View> : null
                 }
-            </ActivityPanel>
+            </ActivityPanel >
         );
     }
 }

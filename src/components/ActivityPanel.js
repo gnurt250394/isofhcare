@@ -72,7 +72,7 @@ class ActivityPanel extends Component {
 
     render() {
         let touchToDismiss = this.props.touchToDismiss;
-        if (touchToDismiss != undefined) {
+        if (touchToDismiss == undefined) {
             if (Platform.OS == 'ios')
                 touchToDismiss = true;
         }

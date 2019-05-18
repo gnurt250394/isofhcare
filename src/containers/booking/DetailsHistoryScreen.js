@@ -32,17 +32,17 @@ class DetailsHistoryScreen extends Component {
     this.setState({ isLoading: true }, () => {
       bookingProvider.detail(this.state.id).then(s => {
         if (s.code == 0 && s.data) {
-          let address = s.data.hospital.address;
-          if (s.data.zone && s.data.zone.name)
-              address += ", " + s.data.zone.name;
-          if (s.data.district && s.data.district.name)
-              address += ", " + s.data.district.name;
-          if (s.data.province && s.data.province.countryCode )
-              address += ", " + s.data.province.countryCode
+          // let address = s.data.hospital.address;
+          // if (s.data.zone && s.data.zone.name)
+          //     address += ", " + s.data.zone.name;
+          // if (s.data.district && s.data.district.name)
+          //     address += ", " + s.data.district.name;
+          // if (s.data.province && s.data.province.countryCode )
+          //     address += ", " + s.data.province.countryCode
 
-              console.log(s.data.province,'s.data.province');
+              console.log(s.data,'s.data.province');
          this.setState({
-           address : address,
+           address : s.data.hospital.address,
            booking: s.data.booking || {},
            service: s.data.service || {},
            hospital: s.data.hospital || {},
