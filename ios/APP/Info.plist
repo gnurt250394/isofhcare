@@ -7,13 +7,15 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
+<<<<<<< HEAD
 	<string>iSofHCare</string>
+=======
+	<string>USER DEV</string>
+>>>>>>> user/develop
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-	<key>NSFaceIDUsageDescription</key>
-	<string>$(ISOFH_CARE) requires FaceID access to allows you quick and secure access</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>23</string>
 	<key>CFBundleName</key>
@@ -25,7 +27,6 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
-
 	<array>
 		<dict>
 			<key>CFBundleURLSchemes</key>
@@ -49,10 +50,17 @@
 			<key>CFBundleURLIconFile</key>
 			<string></string>
 			<key>CFBundleURLName</key>
+<<<<<<< HEAD
 			<string>com.isofh.appisofhcare</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>com.isofh.appisofhcare</string>
+=======
+			<string>com.isofh.appisofhcaredev</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.isofh.appisofhcaredev</string>
+>>>>>>> user/develop
 			</array>
 		</dict>
 	</array>
@@ -85,7 +93,13 @@
 	<key>NSCalendarsUsageDescription</key>
 	<string>This app requires access to the calenda.</string>
 	<key>NSCameraUsageDescription</key>
+<<<<<<< HEAD
 	<string>Granting access will allow you to select photos and add them to attachment fields.</string>
+=======
+	<string>This app requires access to the camera.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>$(ISOFH_CARE) requires FaceID access to allows you quick and secure access</string>
+>>>>>>> user/develop
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>This app requires access to the location to get and find all facilities near you </string>
 	<key>NSLocationWhenInUseUsageDescription</key>

@@ -206,7 +206,6 @@
     <orderEntry type="module" module-name="react-native-google-places" />
     <orderEntry type="module" module-name="react-native-share" />
     <orderEntry type="module" module-name="rn-fetch-blob" />
-    <orderEntry type="module" module-name="react-native-android-location-enabler" />
     <orderEntry type="module" module-name="react-native-fbsdk" />
     <orderEntry type="module" module-name="react-native-maps" />
     <orderEntry type="module" module-name="react-native-exit-app" />

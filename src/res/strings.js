@@ -92,7 +92,8 @@ module.exports = {
       LASTEST_POSTS: "LASTEST_POSTS",
       LASTEST_PROFILE: "LASTEST_PROFILE",
       KEY_FINGER: 'KEY_FINGER',
-      KEY_REFRESH_TOKEN: 'KEY_REFRESH_TOKEN'
+      KEY_REFRESH_TOKEN: 'KEY_REFRESH_TOKEN',
+      LOCATION: "LOCATION"
     }
   },
   msg: {
@@ -320,7 +321,9 @@ module.exports = {
     hospital: {
       get_all: isofhcare_service + "hospital/get-all",
       get_hospital_by_profile: isofhcare_service + "hospital-profile/get-hospital-by-profile",
-      get_hospital_by_service_type: isofhcare_service + "hospital/get-hospital-by-service-type"
+      get_hospital_by_service_type: isofhcare_service + "hospital/get-hospital-by-service-type",
+      get_hospital_by_search: isofhcare_service + "hospital/search",
+      get_by_location: isofhcare_service + "hospital/get-hospital-by-locate",
     },
     profile: {
       get_by_user: isofhcare_service + "profile/get-by-user",

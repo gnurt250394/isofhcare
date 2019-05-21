@@ -3,23 +3,22 @@ import ActivityPanel from '@components/ActivityPanel';
 import {
     View, StyleSheet, Text, TouchableOpacity,
     FlatList, ActivityIndicator, TextInput, Platform,
-    Alert
+    PermissionsAndroid
 } from 'react-native';
 import { connect } from 'react-redux';
 import ScaleImage from "mainam-react-native-scaleimage";
+import { Card } from 'native-base';
 import hospitalProvider from '@data-access/hospital-provider';
 import ImageLoad from 'mainam-react-native-image-loader';
 import snackbar from '@utils/snackbar-utils';
-import DialogBox from 'react-native-dialogbox';
 import constants from '@dhy/strings';
-import locationProvider from '@data-access/location-provider';
-import RNLocation from 'react-native-location';
+
+
 import clientUtils from '@utils/client-utils';
-import LocationSwitch from 'react-native-location-switch';
-class SelectHospitalScreen extends Component {
+class SelectHospitalScreenLocation extends Component {
     constructor(props) {
         super(props);
-
+        let location = this.props.navigation.state.params.region || {};
         this.state = {
             data: [],
             refreshing: false,
@@ -29,6 +28,8 @@ class SelectHospitalScreen extends Component {
             loadMore: false,
             finish: false,
             loading: false,
+            lat: location.latitude,
+            lon: location.longitude,
         }
     }
     onRefresh() {
@@ -40,129 +41,8 @@ class SelectHospitalScreen extends Component {
                 }
             );
     }
-    getCurrentLocation(callAgain) {
-        RNLocation.getLatestLocation().then(region => {
-            locationProvider.saveCurrentLocation(region.latitude, region.longitude);
-            this.setState({
-                region
-            }, () => {
-                this.onRefresh();
-            });
-        }).catch(() => {
-            locationProvider.getCurrentLocationHasSave().then(s => {
-                if (s && s.latitude && s.longitude) {
-                    s.latitudeDelta = 0.1;
-                    s.longitudeDelta = 0.1;
-                    this.setState({
-                        region: s,
-                    }, () => {
-                        this.onRefresh();
-                    });
-                }
-            }).catch(e => {
-                if (!callAgain) {
-                    console.log("callAgain");
-                    this.getCurrentLocation(true);
-                }
-            });
-        });
-    }
-
-    getLocation() {
-        let getLocation = () => {
-            RNLocation.requestPermission({
-                ios: 'whenInUse', // or 'always'
-                android: {
-                    detail: 'coarse', // or 'fine'
-                    rationale: {
-                        title: "We need to access your location",
-                        message: "We use your location to show where you are on the map",
-                        buttonPositive: "OK",
-                        buttonNegative: "Cancel"
-                    }
-                }
-            }).then(granted => {
-                if (granted) {
-                    RNLocation.getLatestLocation().then(region => {
-                        locationProvider.saveCurrentLocation(region.latitude, region.longitude);
-                        this.setState({
-                            region
-                        }, () => {
-                            this.onRefresh();
-                        });
-                    }).catch(() => {
-                        locationProvider.getCurrentLocationHasSave().then(s => {
-                            if (s && s.latitude && s.longitude) {
-                                s.latitudeDelta = 0.1;
-                                s.longitudeDelta = 0.1;
-                                this.setState({
-                                    region: s,
-                                }, () => {
-                                    this.onRefresh();
-                                });
-                            }
-                        }).catch(e => {
-                            if (!callAgain) {
-                                console.log("callAgain");
-                                this.getCurrentLocation(true);
-                            }
-                        });
-                    });
-                }
-            });
-        }
-
-        if (Platform.OS == 'android') {
-            LocationSwitch.enableLocationService(1000, true,
-                () => {
-                    getLocation();
-                },
-                () => {
-                    snackbar.show("VBật định vị để tìm kiếm cơ sở y tế gần bạn", "danger");
-                },
-            );
-        }
-        else
-            LocationSwitch.isLocationEnabled(() => {
-                getLocation();
-            }, () => {
-                Alert.alert(
-                    '',
-                    'Bật định vị để tìm kiếm cơ sở y tế gần bạn',
-                    [
-                        {
-                            text: 'Huỷ',
-                            onPress: () => console.log('Cancel Pressed'),
-                        },
-                        {
-                            text: 'Đồng ý',
-                            onPress: () => {
-                                LocationSwitch.enableLocationService(1000, true, () => {
-                                    getLocation();
-                                }, () => {
-                                    this.setState({ locationEnabled: false });
-                                });
-                            },
-                            style: 'default'
-                        }],
-                    { cancelable: false },
-                );
-            });
-    }
     componentDidMount() {
-        locationProvider.getCurrentLocationHasSave().then(s => {
-            if (s && s.latitude && s.longitude) {
-                s.latitudeDelta = 0.1;
-                s.longitudeDelta = 0.1;
-                this.setState({
-                    region: s,
-                }, () => {
-                    this.onRefresh();
-                });
-            }
-        }).catch(e => {
-            this.onRefresh();
-        });
+        this.onRefresh();
     }
     onLoadMore() {
         if (!this.state.finish && !this.state.loading)
@@ -178,22 +58,14 @@ class SelectHospitalScreen extends Component {
                 }
             );
     }
-    onLoad() {
+    onLoad(s) {
         const { page, size } = this.state;
-        let stringQuyery = this.state.keyword ? this.state.keyword.trim() : ""
         this.setState({
             loading: true,
             refreshing: page == 1,
             loadMore: page != 1
         }, () => {
-            let promise = null;
-            if (this.state.region) {
-                promise = hospitalProvider.getByLocation(page, size, this.state.region.latitude, this.state.region.longitude, stringQuyery);
-            }
-            else {
-                promise = hospitalProvider.getBySearch(page, size, stringQuyery);
-            };
-            promise.then(s => {
+            hospitalProvider.getByLocation(page, size, this.state.lat, this.state.lon, "").then(s => {
                 this.setState({
                     loading: false,
                     refreshing: false,
@@ -241,16 +113,23 @@ class SelectHospitalScreen extends Component {
         }
     }
     search() {
-        this.setState({ page: 1 }, () => {
-            this.onLoad();
-        })
-    }
 
+    }
+    getAddress(item) {
+        let address = item.hospital.address;
+        if (item.zone && item.zone.name)
+            address += ", " + item.zone.name;
+        if (item.district && item.district.name)
+            address += ", " + item.district.name;
+        if (item.province && item.province.countryCode)
+            address += ", " + item.province.countryCode;
+        return address;
+    }
     render() {
         return (
             <ActivityPanel
                 isLoading={this.state.isLoading}
-                style={styles.AcPanel} title="Địa điểm"
+                style={styles.AcPanel} title="Địa điểm gần bạn"
                 backButton={<TouchableOpacity style={{ paddingLeft: 20 }} onPress={() => this.props.navigation.pop()}><Text>Hủy</Text></TouchableOpacity>}
                 titleStyle={{ marginLeft: 10 }}
                 containerStyle={{
@@ -261,29 +140,10 @@ class SelectHospitalScreen extends Component {
                     borderBottomWidth: 1,
                     borderBottomColor: 'rgba(0, 0, 0, 0.06)'
                 }}>
-                <DialogBox ref={dialogbox => { this.dialogbox = dialogbox }} />
 
 
                 <View style={styles.container}>
-                    <TouchableOpacity style={styles.search} onPress={this.getLocation.bind(this)}>
-                        <ScaleImage style={styles.aa} width={18} source={require("@images/new/hospital/ic_placeholder.png")} />
-                        <Text style={styles.tkdiachi}>Tìm kiếm gần tôi</Text>
-                    </TouchableOpacity>
-                    <View style={[styles.search, {
-                        borderBottomWidth: 1,
-                        borderBottomColor: 'rgba(0, 0, 0, 0.06)'
-                    }]} >
-                        <ScaleImage style={styles.aa} width={18} source={require("@images/new/hospital/ic_search.png")} />
-                        <TextInput
-                            value={this.state.keyword}
-                            onChangeText={s => {
-                                this.setState({ keyword: s })
-                            }}
-                            onSubmitEditing={this.search.bind(this)}
-                            returnKeyType='search'
-                            style={styles.tkdiachi1} placeholder={"Tìm kiếm…"} underlineColorAndroid={"transparent"} />
-                    </View>
-                    <View style={{ height: 1, backgroundColor: 'rgba(0, 0, 0, 0.06)', marginTop: 27 }}></View>
+                    <View style={{ height: 1, backgroundColor: 'rgba(0, 0, 0, 0.06)' }}></View>
                     <FlatList
                         onRefresh={this.onRefresh.bind(this)}
                         refreshing={this.state.refreshing}
@@ -305,23 +165,27 @@ class SelectHospitalScreen extends Component {
                         ListFooterComponent={() => <View style={{ height: 10 }} />}
                         renderItem={({ item, index }) => {
                             const source = item.medicalRecords && item.medicalRecords.avatar ? { uri: item.medicalRecords.avatar.absoluteUrl() } : require("@images/new/user.png");
+                            if (!item.merge) {
+                                let address = this.getAddress(item);
+                                item.hospital.address = address;
+                                item.merge = true;
+                            }
+
+
                             return <TouchableOpacity style={styles.details} onPress={this.selectHospital.bind(this, item)}>
-                                {this.state.region &&
-                                    < View style={{ marginLeft: 20, alignItems: 'center', marginTop: 5 }}>
-                                        <ScaleImage style={styles.plac} height={21} source={require("@images/new/hospital/ic_place.png")} />
-                                        <Text style={styles.bv1}>{(Math.round(item.hospital.distance * 100) / 100).toFixed(2)} km</Text>
-                                    </View>
-                                }
+                                <View style={{ marginLeft: 20, alignItems: 'center', marginTop: 5 }}>
+                                    <ScaleImage style={styles.plac} height={21} source={require("@images/new/hospital/ic_place.png")} />
+                                    <Text style={styles.bv1}>{(Math.round(item.hospital.distance * 100) / 100).toFixed(2)} km</Text>
+                                </View>
                                 <View style={{ flex: 1, marginLeft: 20 }}>
-                                    <Text style={styles.bv} numberOfLines={2}>{item.hospital.name}</Text>
+                                    <Text style={styles.bv} numberOfLines={1}>{item.hospital.name}</Text>
                                     <Text style={styles.bv1} numberOfLines={2}>{item.hospital.address}</Text>
                                 </View>
                                 <ScaleImage style={styles.help} height={21} source={require("@images/new/hospital/ic_info.png")} />
                             </TouchableOpacity>
-                        }
-                        }
+                        }}
                     />
-                </View >
+                </View>
                 {
                     this.state.loadMore ?
                         <View style={{ alignItems: 'center', padding: 10, position: 'absolute', bottom: 0, left: 0, right: 0 }}>
@@ -331,7 +195,7 @@ class SelectHospitalScreen extends Component {
                             />
                         </View> : null
                 }
-            </ActivityPanel >
+            </ActivityPanel>
         );
     }
 }
@@ -451,4 +315,4 @@ const styles = StyleSheet.create({
     }
 
 })
-export default connect(mapStateToProps)(SelectHospitalScreen);
+export default connect(mapStateToProps)(SelectHospitalScreenLocation);
