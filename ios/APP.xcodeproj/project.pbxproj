@@ -2126,17 +2126,10 @@
 					"-ObjC",
 					"-lc++",
 				);
-<<<<<<< HEAD
 				PRODUCT_BUNDLE_IDENTIFIER = com.isofh.appisofhcarestable;
 				PRODUCT_NAME = APP;
 				PROVISIONING_PROFILE = "0f5fbbc4-4172-466c-97bb-95964499866b";
 				PROVISIONING_PROFILE_SPECIFIER = "isofhcare for user development stable branch";
-=======
-				PRODUCT_BUNDLE_IDENTIFIER = com.isofh.appisofhcaredev;
-				PRODUCT_NAME = APP;
-				PROVISIONING_PROFILE = "0f5fbbc4-4172-466c-97bb-95964499866b";
-				PROVISIONING_PROFILE_SPECIFIER = "isofhcare for user development develop branch";
->>>>>>> user/develop
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};

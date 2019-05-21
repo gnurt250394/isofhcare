@@ -1,19 +1,17 @@
 package com.isofh.appisofhcarestable;
-
 import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 import com.facebook.CallbackManager;
 import com.facebook.react.ReactApplication;
+import org.pweitz.reactnative.locationswitch.LocationSwitchPackage;
 import com.github.reactnativecommunity.location.RNLocationPackage;
-import com.showlocationservicesdialogbox.LocationServicesDialogBoxPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import io.underscope.react.fbak.RNAccountKitPackage;
 import com.reactnative.photoview.PhotoViewPackage;
 import com.arttitude360.reactnative.rngoogleplaces.RNGooglePlacesPackage;
 import io.realm.react.RealmReactPackage;
-import com.heanoria.library.reactnative.locationenabler.RNAndroidLocationEnablerPackage;
 import org.reactnative.camera.RNCameraPackage;
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import com.github.wumke.RNExitApp.RNExitAppPackage;
@@ -53,15 +51,14 @@ private static CallbackManager mCallbackManager = CallbackManager.Factory.create
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
+            new LocationSwitchPackage(),
             new RNLocationPackage(),
-            new LocationServicesDialogBoxPackage(),
             new VectorIconsPackage(),
             new RNAccountKitPackage(),
             new PhotoViewPackage(),
             new RNGooglePlacesPackage(),
             new RealmReactPackage(),
         new RNFetchBlobPackage(),
-            new RNAndroidLocationEnablerPackage(),
             new RNCameraPackage(),
         new MapsPackage(),
             new PickerPackage(),
@@ -98,7 +95,7 @@ private static CallbackManager mCallbackManager = CallbackManager.Factory.create
   
   @Override
   public String getFileProviderAuthority() {
-         return "com.isofh.isofhcare.provider";
+         return "com.isofh.appisofhcarestable.provider";
   }
 
   @Override
