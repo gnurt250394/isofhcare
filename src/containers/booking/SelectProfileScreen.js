@@ -6,7 +6,6 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import ScaleImage from "mainam-react-native-scaleimage";
-import { Card } from 'native-base';
 import medicalRecordProvider from '@data-access/medical-record-provider';
 import ImageLoad from 'mainam-react-native-image-loader';
 import clientUtils from '@utils/client-utils';

@@ -11,7 +11,6 @@ import SearchPanel from '@components/SearchPanel';
 import realmModel from '@models/realm-models';
 import locationProvider from '@data-access/location-provider';
 import historyProvider from '@data-access/history-provider';
-import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 import snackbar from '@utils/snackbar-utils';
 import SlidingPanel from 'mainam-react-native-sliding-up-down';
 class SelectHospitalByLocationScreen extends Component {
