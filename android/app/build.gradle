@@ -156,13 +156,11 @@ dependencies {
     compile project(':react-native-location-switch')
     compile project(':react-native-location')
     compile project(':react-native-vector-icons')
-    implementation project(':react-native-android-location-services-dialog-box')
     implementation project(':react-native-facebook-account-kit')
     implementation project(':react-native-linear-gradient')
     implementation project(':react-native-photo-view')
     implementation project(':react-native-google-places')
     implementation project(':realm')
-    implementation project(':react-native-android-location-enabler')
     implementation(project(':react-native-maps')){
         exclude group: 'com.google.android.gms', module: 'play-services-base'
         exclude group: 'com.google.android.gms', module: 'play-services-maps'

@@ -3,26 +3,19 @@ import ActivityPanel from '@components/ActivityPanel';
 import {
     View, StyleSheet, Text, TouchableOpacity,
     FlatList, ActivityIndicator, TextInput, Platform,
-    PermissionsAndroid,
-    Alert,
-    Linking
+    Alert
 } from 'react-native';
 import { connect } from 'react-redux';
 import ScaleImage from "mainam-react-native-scaleimage";
-import { Card } from 'native-base';
 import hospitalProvider from '@data-access/hospital-provider';
 import ImageLoad from 'mainam-react-native-image-loader';
 import snackbar from '@utils/snackbar-utils';
-import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 import DialogBox from 'react-native-dialogbox';
 import constants from '@dhy/strings';
-import LocationServicesDialogBox from "react-native-android-location-services-dialog-box";
-import dataCacheProvider from '@data-access/datacache-provider';
 import locationProvider from '@data-access/location-provider';
 import RNLocation from 'react-native-location';
 import clientUtils from '@utils/client-utils';
 import LocationSwitch from 'react-native-location-switch';
-import Permissions from 'react-native-permissions'
 class SelectHospitalScreen extends Component {
     constructor(props) {
         super(props);
@@ -54,10 +47,6 @@ class SelectHospitalScreen extends Component {
                 region
             }, () => {
                 this.onRefresh();
-                // // alert(JSON.stringify(this.state.region));
-                // this.props.navigation.replace("selectHospitalByLocation", {
-                //     region: this.state.region
-                // })
             });
         }).catch(() => {
             locationProvider.getCurrentLocationHasSave().then(s => {
@@ -79,82 +68,67 @@ class SelectHospitalScreen extends Component {
         });
     }
 
-    requestLocationPermission() {
-        return new Promise((resolve, reject) => {
-            try {
-                PermissionsAndroid.requestMultiple(
-                    [PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
-                    PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION]
-                ).then(granted => {
-                    if (
-                        granted['android.permission.ACCESS_FINE_LOCATION'] === PermissionsAndroid.RESULTS.GRANTED
-                        &&
-                        granted['android.permission.ACCESS_COARSE_LOCATION'] === PermissionsAndroid.RESULTS.GRANTED
-                    )
-                        resolve();
-                    reject();
-                })
-            } catch (err) {
-                reject();
-            }
-        });
-    }
-
-    y() {
-        RNLocation.requestPermission({
-            ios: 'whenInUse', // or 'always'
-            android: {
-                detail: 'coarse', // or 'fine'
-                rationale: {
-                    title: "We need to access your location",
-                    message: "We use your location to show where you are on the map",
-                    buttonPositive: "OK",
-                    buttonNegative: "Cancel"
-                }
-            }
-        }).then(granted => {
-            if (granted) {
-                RNLocation.getLatestLocation().then(region => {
-                    locationProvider.saveCurrentLocation(region.latitude, region.longitude);
-                    this.setState({
-                        region
-                    }, () => {
-                        this.onRefresh();
-                        // // alert(JSON.stringify(this.state.region));
-                        // this.props.navigation.replace("selectHospitalByLocation", {
-                        //     region: this.state.region
-                        // })
-                    });
-                }).catch(() => {
-                    locationProvider.getCurrentLocationHasSave().then(s => {
-                        if (s && s.latitude && s.longitude) {
-                            s.latitudeDelta = 0.1;
-                            s.longitudeDelta = 0.1;
-                            this.setState({
-                                region: s,
-                            }, () => {
-                                this.onRefresh();
-                            });
-                        }
-                    }).catch(e => {
-                        if (!callAgain) {
-                            console.log("callAgain");
-                            this.getCurrentLocation(true);
-                        }
-                    });
-                });
-            }
-        });
-    }
     getLocation() {
-        LocationSwitch.isLocationEnabled(
-            () => {
-                this.y();
-            },
-            () => {
+        let getLocation = () => {
+            RNLocation.requestPermission({
+                ios: 'whenInUse', // or 'always'
+                android: {
+                    detail: 'coarse', // or 'fine'
+                    rationale: {
+                        title: "We need to access your location",
+                        message: "We use your location to show where you are on the map",
+                        buttonPositive: "OK",
+                        buttonNegative: "Cancel"
+                    }
+                }
+            }).then(granted => {
+                if (granted) {
+                    RNLocation.getLatestLocation().then(region => {
+                        locationProvider.saveCurrentLocation(region.latitude, region.longitude);
+                        this.setState({
+                            region
+                        }, () => {
+                            this.onRefresh();
+                        });
+                    }).catch(() => {
+                        locationProvider.getCurrentLocationHasSave().then(s => {
+                            if (s && s.latitude && s.longitude) {
+                                s.latitudeDelta = 0.1;
+                                s.longitudeDelta = 0.1;
+                                this.setState({
+                                    region: s,
+                                }, () => {
+                                    this.onRefresh();
+                                });
+                            }
+                        }).catch(e => {
+                            if (!callAgain) {
+                                console.log("callAgain");
+                                this.getCurrentLocation(true);
+                            }
+                        });
+                    });
+                }
+            });
+        }
+
+        if (Platform.OS == 'android') {
+            LocationSwitch.enableLocationService(1000, true,
+                () => {
+                    getLocation();
+                },
+                () => {
+                    snackbar.show("VBật định vị để tìm kiếm cơ sở y tế gần bạn", "danger");
+                },
+            );
+        }
+        else
+            LocationSwitch.isLocationEnabled(() => {
+                getLocation();
+            }, () => {
                 Alert.alert(
                     '',
-                    'Bật vị trí để tìm kiếm cơ sở y tế gần bạn',
+                    'Bật định vị để tìm kiếm cơ sở y tế gần bạn',
                     [
                         {
                             text: 'Huỷ',
@@ -163,219 +137,19 @@ class SelectHospitalScreen extends Component {
                         {
                             text: 'Đồng ý',
                             onPress: () => {
-                                LocationSwitch.enableLocationService(1000, true,
-                                    () => {
-                                        this.y();
-                                    },
-                                    () => {
-                                        this.setState({ locationEnabled: false });
-                                    },
-                                );
+                                LocationSwitch.enableLocationService(1000, true, () => {
+                                    getLocation();
+                                }, () => {
+                                    this.setState({ locationEnabled: false });
+                                });
                             },
                             style: 'default'
                         }],
                     { cancelable: false },
                 );
-            },
-        );
-        return;
-        // RNLocation.getLatestLocation().then(region => {
-        //     locationProvider.saveCurrentLocation(region.latitude, region.longitude);
-        //     this.setState({
-        //         region
-        //     }, () => {
-        //         this.onRefresh();
-        //         // // alert(JSON.stringify(this.state.region));
-        //         // this.props.navigation.replace("selectHospitalByLocation", {
-        //         //     region: this.state.region
-        //         // })
-        //     });
-        // }).catch(() => {
-        //     locationProvider.getCurrentLocationHasSave().then(s => {
-        //         if (s && s.latitude && s.longitude) {
-        //             s.latitudeDelta = 0.1;
-        //             s.longitudeDelta = 0.1;
-        //             this.setState({
-        //                 region: s,
-        //             }, () => {
-        //                 this.onRefresh();
-        //             });
-        //         }
-        //     }).catch(e => {
-        //         if (!callAgain) {
-        //             console.log("callAgain");
-        //             this.getCurrentLocation(true);
-        //         }
-        //     });
-        // });
-        // return;
-        LocationServicesDialogBox.checkLocationServicesIsEnabled({
-            message: "<h2 style='color: #0af13e'>Sử dụng vị trí?</h2>Ứng dụng cần quyền truy cập vào vị trí của bạn",
-            ok: "Đồng ý",
-            cancel: "Hủy",
-            enableHighAccuracy: true, // true => GPS AND NETWORK PROVIDER, false => GPS OR NETWORK PROVIDER
-            showDialog: true, // false => Opens the Location access page directly
-            openLocationServices: true, // false => Directly catch method is called if location services are turned off
-            preventOutSideTouch: false, // true => To prevent the location services window from closing when it is clicked outside
-            preventBackClick: false, // true => To prevent the location services popup from closing when it is clicked back button
-            providerListener: false // true ==> Trigger locationProviderStatusChange listener when the location state changes
-        }).then(this.getCurrentLocation.bind(this)).catch(this.getCurrentLocation.bind(this));
-        return;
-        navigator.geolocation.setRNConfiguration({
-            skipPermissionRequests: false
-        })
-        // Linking.openURL('app-settings:');
-        // return;
-        Permissions.check('location', { type: 'whenInUse' }).then(response => {
-            alert(response);
-            this.setState({ locationPermission: response })
-        })
-
-        Permissions.request('location', { type: 'whenInUse' }).then(response => {
-            alert(2);
-            this.setState({ locationPermission: response })
-        })
-        return;
-        this.watchId = navigator.geolocation.watchPosition(
-            (position) => {
-                alert(JSON.stringify(position));
-                return;
-                this.setState({
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                    error: null,
-                });
-            },
-            (error) => this.setState({ error: error.message }),
-            { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 10 },
-        );
-        return;
-        Permissions.request('photo').then(response => {
-            // Returns once the user has chosen to 'allow' or to 'not allow' access
-            // Response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
-            this.setState({ photoPermission: response })
-        })
-        return;
-
-        Permissions.request('location', { type: 'always' }).then(response => {
-            this.setState({ locationPermission: response })
-        })
-        return;
-        navigator.geolocation.setRNConfiguration({
-            skipPermissionRequests: true
-        }).then(() => {
-            navigator.geolocation.getCurrentPosition((position) => {
-                alert(JSON.stringify(position));
-            }, e => {
-                alert(JSON.stringify(e));
-            }, { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 });
-        });
-        return;
-        Permissions.check('location').then(response => {
-            // Response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
-            alert(JSON.stringify(response));
-            if (response == "authorized") {
-                // alert(1);
-            }
-            else {
-                navigator.geolocation.setRNConfiguration({
-                    skipPermissionRequests: true
-                });
-                navigator.geolocation.getCurrentPosition((position) => {
-                    alert(JSON.stringify(position));
-                }).catch(e => {
-                    alert(JSON.stringify(e));
-                });
-                return;
-                // alert(2);
-                Permissions.request('location', 'always').then(response => {
-                    // Returns once the user has chosen to 'allow' or to 'not allow' access
-                    // Response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
-                    if (response == "authorized") {
-                        alert(3);
-                    }
-                    this.setState({ locationPermission: response })
-                })
-            }
-            // this.setState({ photoPermission: response })
-        });
-        return;
-        LocationSwitch.isLocationEnabled(
-            () => {
-                Alert.alert('Location is enabled');
-                this.setState({ locationEnabled: true });
-            },
-            () => {
-                LocationSwitch.enableLocationService(1000, true,
-                    () => { this.setState({ locationEnabled: true }); },
-                    () => { this.setState({ locationEnabled: false }); },
-                );
-            },
-        );
-        return;
-        RNLocation.configure({
-            distanceFilter: 5.0
-        })
-
-        RNLocation.requestPermission({
-            ios: 'whenInUse', // or 'always'
-            android: {
-                detail: 'coarse', // or 'fine'
-                rationale: {
-                    title: "We need to access your location",
-                    message: "We use your location to show where you are on the map",
-                    buttonPositive: "OK",
-                    buttonNegative: "Cancel"
-                }
-            }
-        }).then(granted => {
-            if (granted) {
-                LocationServicesDialogBox.checkLocationServicesIsEnabled({
-                    message: "<h2 style='color: #0af13e'>Sử dụng vị trí?</h2>Ứng dụng cần quyền truy cập vào vị trí của bạn",
-                    ok: "Đồng ý",
-                    cancel: "Hủy",
-                    enableHighAccuracy: true, // true => GPS AND NETWORK PROVIDER, false => GPS OR NETWORK PROVIDER
-                    showDialog: true, // false => Opens the Location access page directly
-                    openLocationServices: true, // false => Directly catch method is called if location services are turned off
-                    preventOutSideTouch: false, // true => To prevent the location services window from closing when it is clicked outside
-                    preventBackClick: false, // true => To prevent the location services popup from closing when it is clicked back button
-                    providerListener: false // true ==> Trigger locationProviderStatusChange listener when the location state changes
-                }).then(this.getCurrentLocation.bind(this)).catch(this.getCurrentLocation.bind(this));
-            }
-        })
-
-        return;
-        if (Platform.OS == "ios") {
-            this.getCurrentLocation();
-        } else {
-            this.requestLocationPermission().then(() => {
-                LocationServicesDialogBox.checkLocationServicesIsEnabled({
-                    message: "<h2 style='color: #0af13e'>Sử dụng vị trí?</h2>Ứng dụng cần quyền truy cập vào vị trí của bạn",
-                    ok: "Đồng ý",
-                    cancel: "Hủy",
-                    enableHighAccuracy: true, // true => GPS AND NETWORK PROVIDER, false => GPS OR NETWORK PROVIDER
-                    showDialog: true, // false => Opens the Location access page directly
-                    openLocationServices: true, // false => Directly catch method is called if location services are turned off
-                    preventOutSideTouch: false, // true => To prevent the location services window from closing when it is clicked outside
-                    preventBackClick: false, // true => To prevent the location services popup from closing when it is clicked back button
-                    providerListener: false // true ==> Trigger locationProviderStatusChange listener when the location state changes
-                }).then(this.getCurrentLocation.bind(this)).catch(this.getCurrentLocation.bind(this));
-
-
-                // RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({ interval: 10000, fastInterval: 5000 })
-                //     .then(data => {
-                //         this.getCurrentLocation.bind(this);
-                //     }).catch(err => {
-                //         this.getCurrentLocation.bind(this);
-                //     });
-            }).catch(x => {
-                snackbar.show("Ứng dụng cần quyền truy cập vị trí hiện tại của bạn để tìm kiếm địa điểm", "danger");
-                return;
             });
-        }
     }
     componentDidMount() {
-
         locationProvider.getCurrentLocationHasSave().then(s => {
             if (s && s.latitude && s.longitude) {
                 s.latitudeDelta = 0.1;
