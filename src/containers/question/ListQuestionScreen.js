@@ -70,7 +70,7 @@ class ListQuestionScreen extends Component {
             >
                 {
                     this.props.userApp.isLogin ?
-                        <View style={{ flex: 1, position: 'relative' }} keyboardShouldPersistTaps="always">
+                        <View style={{ flex: 1, position: 'relative' }} keyboardShouldPersistTaps="handled">
                             <View style={{ backgroundColor: '#02C39A', height: 130, position: 'absolute', top: 0, left: 0, right: 0 }}></View>
                             <View style={{ height: 50, flexDirection: "row" }}>
                                 <TouchableOpacity style={{ flex: 1 }} onPress={this.swipe.bind(this, 0)}>
