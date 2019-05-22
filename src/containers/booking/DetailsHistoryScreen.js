@@ -198,7 +198,7 @@ class DetailsHistoryScreen extends Component {
               <View style={styles.viewInfoLocation}>
                 <Text style={styles.txClinic}>{this.state.hospital.name}</Text>
                 {this.state.hospital.address ?
-                  <Text numberOfLines={5} style={styles.txAddress}>{this.state.address}</Text> : null
+                  <Text style={styles.txAddress}>{this.state.address}</Text> : null
 
                 }
               </View>
