@@ -44,6 +44,7 @@ class NotificationScreen extends Component {
       );
   }
   componentDidMount() {
+    this.props.dispatch(redux.getUnreadNotificationCount());
     this.onRefresh();
   }
   onLoad() {
