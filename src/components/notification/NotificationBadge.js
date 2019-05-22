@@ -11,15 +11,7 @@ class NotificationBadge extends Component {
     constructor(props) {
         super(props)
     }
-componentDidMount(){
-    if (this.props.userApp.isLogin) {
-        firebase.notifications().setBadge(this.props.userApp.unReadNotificationCount + 1);
-        this.props.dispatch(redux.getUnreadNotificationCount());
-    }
-    else {
-        firebase.notifications().setBadge(0);
-    }
-}
+
     render() {
         return (
             <TouchableOpacity
