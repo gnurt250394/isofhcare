@@ -298,7 +298,7 @@ class AddNewDrugStoreScreen extends Component {
                     <ScrollView
                         showsVerticalScrollIndicator={false}
                         style={{ padding: 10, flex: 1 }}
-                        keyboardShouldPersistTaps="always">
+                        keyboardShouldPersistTaps="handled">
                         <View style={styles.row}>
                             <TextInput
                                 onChangeText={(s) => this.setState({ name: s })}

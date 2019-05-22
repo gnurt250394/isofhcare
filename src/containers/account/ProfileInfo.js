@@ -26,30 +26,30 @@ class ProfileInfo extends Component {
   constructor() {
     super();
     this.state = {
-        avatar:'',
-        email:'',
-        username:'',
-        phone:'',
-        dob:'',
-        medicalRecords:[]
+      avatar: '',
+      email: '',
+      username: '',
+      phone: '',
+      dob: '',
+      medicalRecords: []
     };
   }
   componentDidMount() {
-      let id = this.props.navigation.state.params && this.props.navigation.state.params.id ? this.props.navigation.state.params.id : this.props.userApp.currentUser.id
+    let id = this.props.navigation.state.params && this.props.navigation.state.params.id ? this.props.navigation.state.params.id : this.props.userApp.currentUser.id
     profileProvider.getUserInfo(id).then(res => {
-      if(res.code == 0 ){
-          this.setState({
-              avatar:res.data.user.avatar,
-              email:res.data.user.email,
-              username:res.data.user.username,
-              phone:res.data.user.phone,
-              medicalRecords:res.data.medicalRecords,
-              gender:res.data.user.gender,
-              dob:res.data.user.dob
-          })
+      if (res.code == 0) {
+        this.setState({
+          avatar: res.data.user.avatar,
+          email: res.data.user.email,
+          username: res.data.user.username,
+          phone: res.data.user.phone,
+          medicalRecords: res.data.medicalRecords,
+          gender: res.data.user.gender,
+          dob: res.data.user.dob
+        })
       }
-    }).catch(err =>{
-        console.log(err)
+    }).catch(err => {
+      console.log(err)
     })
   }
 
@@ -61,10 +61,10 @@ class ProfileInfo extends Component {
 
     return (
       <ActivityPanel
-      statusbarBackgroundColor="#0049B0"
-      containerStyle={{
-        backgroundColor: "#rgb(255,255,255)"
-    }}
+        statusbarBackgroundColor="#0049B0"
+        containerStyle={{
+          backgroundColor: "#rgb(255,255,255)"
+        }}
         style={styles.AcPanel}
         title={"Hồ sơ cá nhân"}
         isLoading={this.state.isLoading}
@@ -72,97 +72,99 @@ class ProfileInfo extends Component {
           backgroundColor: '#ffffff',
           borderBottomWidth: 1,
           borderBottomColor: 'rgba(0, 0, 0, 0.06)'
-      }}
+        }}
         iosBarStyle={"light-content"}
       >
-        <ScrollView style={{ flex: 1, paddingVertical: 5 }}>
-        {this.state.username ?  
-        <View>
-        <View style={styles.viewImgUpload}>
-            <View
-              style={{ position: "relative", width: 70,marginTop:20 ,}}
-            >
-              <ImageLoad
-                resizeMode="cover"
-                imageStyle={{ borderRadius: 35,borderWidth:1,borderColor:'rgba(0,0,0,0.07)' }}
-                borderRadius={35}
-                customImagePlaceholderDefaultStyle={{
-                  width: 70,
-                  height: 70,
-                  alignSelf: "center"
-                }}
-                placeholderSource={icSupport}
-                style={{ width: 70, height: 70, alignSelf: "center" }}
-                resizeMode="cover"
-                loadingStyle={{ size: "small", color: "gray" }}
-                source={source}
-                defaultImage={() => {
-                  return (
-                    <ScaleImage
-                      resizeMode="cover"
-                      source={icSupport}
-                      width={70}
-                      style={{ width: 70, height: 70, alignSelf: "center" }}
-                    />
-                  );
-                }}
-              />
-            </View>
-          </View>
-                <View style={{flex:1,alignItems:'center',justifyContent:'center',marginVertical:20}}>
-                <Text style ={{fontSize:18,color:'#000'}}>{this.state.username ? this.state.username : ''}</Text>
-                <Text style ={{color:'rgb(2,195,154)',marginVertical:5}}>{this.state.phone ? this.state.phone : ''}</Text>
-                <Text style ={{marginTop:15}}>{this.state.medicalRecords ? `${this.state.medicalRecords.length} ` : '0 '}lượt sử dụng dịch vụ</Text>
+        <ScrollView
+          style={{ flex: 1, paddingVertical: 5 }}
+          keyboardShouldPersistTaps="handled">
+          {this.state.username ?
+            <View>
+              <View style={styles.viewImgUpload}>
+                <View
+                  style={{ position: "relative", width: 70, marginTop: 20, }}
+                >
+                  <ImageLoad
+                    resizeMode="cover"
+                    imageStyle={{ borderRadius: 35, borderWidth: 1, borderColor: 'rgba(0,0,0,0.07)' }}
+                    borderRadius={35}
+                    customImagePlaceholderDefaultStyle={{
+                      width: 70,
+                      height: 70,
+                      alignSelf: "center"
+                    }}
+                    placeholderSource={icSupport}
+                    style={{ width: 70, height: 70, alignSelf: "center" }}
+                    resizeMode="cover"
+                    loadingStyle={{ size: "small", color: "gray" }}
+                    source={source}
+                    defaultImage={() => {
+                      return (
+                        <ScaleImage
+                          resizeMode="cover"
+                          source={icSupport}
+                          width={70}
+                          style={{ width: 70, height: 70, alignSelf: "center" }}
+                        />
+                      );
+                    }}
+                  />
                 </View>
-          <View style={styles.container}>
-            <Form ref={ref => (this.form = ref)} style={[{ flex: 1}]}>
-              <Text style={[styles.errorStyle]}>{this.state.nameError}</Text>
-
-              <View
-                style={[
-                  styles.mucdichkham,
-                  { marginTop: 5,justifyContent:'center',alignItems:'flex-end',paddingVertical:12,borderBottomWidth:0}
-                ]}
-              >
-                <Text style={styles.mdk}>Giới tính</Text>
-                <Text style={styles.ktq}>
-                  {this.state.gender && this.state.gender == 1
-                    ? 'Nam'
-                    : 'Nữ'}
-                </Text>
-
               </View>
-             
-              <Field
+              <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginVertical: 20 }}>
+                <Text style={{ fontSize: 18, color: '#000' }}>{this.state.username ? this.state.username : ''}</Text>
+                <Text style={{ color: 'rgb(2,195,154)', marginVertical: 5 }}>{this.state.phone ? this.state.phone : ''}</Text>
+                <Text style={{ marginTop: 15 }}>{this.state.medicalRecords ? `${this.state.medicalRecords.length} ` : '0 '}lượt sử dụng dịch vụ</Text>
+              </View>
+              <View style={styles.container}>
+                <Form ref={ref => (this.form = ref)} style={[{ flex: 1 }]}>
+                  <Text style={[styles.errorStyle]}>{this.state.nameError}</Text>
 
-                style={[styles.mucdichkham, {justifyContent:'center',alignItems: 'flex-end', flex:1,paddingVertical: 12,borderBottomWidth:0}]}
-              >
-                <Text style={styles.mdk}>Ngày sinh</Text>
+                  <View
+                    style={[
+                      styles.mucdichkham,
+                      { marginTop: 5, justifyContent: 'center', alignItems: 'flex-end', paddingVertical: 12, borderBottomWidth: 0 }
+                    ]}
+                  >
+                    <Text style={styles.mdk}>Giới tính</Text>
+                    <Text style={styles.ktq}>
+                      {this.state.gender && this.state.gender == 1
+                        ? 'Nam'
+                        : 'Nữ'}
+                    </Text>
 
-                <Text style={styles.ktq}> {this.state.dob ? this.state.dob.toDateObject('-').format('dd-MM-yyyy') : ('')}
-</Text>
-              </Field>
-              <Field
-                style={[styles.mucdichkham, {flex:1}]}
-              >
-                <Text style={styles.mdk}>Email</Text>
-                <TextField
-                  hideError={true}
-                  editable={false}
-                  multiline = {true}
-                  inputStyle={[
-                    styles.ktq,
-                    Platform.OS == "ios" ? {paddingVertical: 12,}:{},
-                    {justifyContent:'center',alignItems: 'flex-end',width: 200, }
-                  ]}
-                  value={this.state.email}
-                  // underlineColorAndroid="transparent"
-                />
-              </Field>
-            </Form>
-          </View>
-          </View>
-           : null } 
+                  </View>
+
+                  <Field
+
+                    style={[styles.mucdichkham, { justifyContent: 'center', alignItems: 'flex-end', flex: 1, paddingVertical: 12, borderBottomWidth: 0 }]}
+                  >
+                    <Text style={styles.mdk}>Ngày sinh</Text>
+
+                    <Text style={styles.ktq}> {this.state.dob ? this.state.dob.toDateObject('-').format('dd-MM-yyyy') : ('')}
+                    </Text>
+                  </Field>
+                  <Field
+                    style={[styles.mucdichkham, { flex: 1 }]}
+                  >
+                    <Text style={styles.mdk}>Email</Text>
+                    <TextField
+                      hideError={true}
+                      editable={false}
+                      multiline={true}
+                      inputStyle={[
+                        styles.ktq,
+                        Platform.OS == "ios" ? { paddingVertical: 12, } : {},
+                        { justifyContent: 'center', alignItems: 'flex-end', width: 200, }
+                      ]}
+                      value={this.state.email}
+                    // underlineColorAndroid="transparent"
+                    />
+                  </Field>
+                </Form>
+              </View>
+            </View>
+            : null}
 
 
         </ScrollView>
@@ -182,7 +184,7 @@ class ProfileInfo extends Component {
     }
   }
   onSetGender = item => {
-    this.setState({ 
+    this.setState({
       isGender: false,
       txGender: item.gender,
       valueGender: item.value
@@ -233,7 +235,7 @@ class ProfileInfo extends Component {
           {
             isLoading: true
           },
-            ()  => {
+          () => {
 
 
             const { name } = this.state;
@@ -242,21 +244,21 @@ class ProfileInfo extends Component {
             let date = this.state.dob ? this.state.dob.format('yyyy-MM-dd') : ('')
             let date2 = date + ' 00:00:00'
             medicalRecordProvider
-              .createMedical(name, gender, date2,email, image)
-              .then( res  => {
+              .createMedical(name, gender, date2, email, image)
+              .then(res => {
                 if (res.code == 0) {
                   this.setState({
                     isLoading: false
                   });
                   this.state.isDataNull ? snackbar.show("Bạn đã tạo hồ sơ thành công", "success") : snackbar.show("Bạn đã thêm người thân thành công", "success");
 
-                  
-                  NavigationService.navigate('selectProfile',{loading:true});
-                }if(res.code == 2){
+
+                  NavigationService.navigate('selectProfile', { loading: true });
+                } if (res.code == 2) {
                   this.setState({
                     isLoading: false
                   });
-                  this.state.isDataNull ? snackbar.show("Hồ sơ đã tồn tại trong hệ thống",'danger') : snackbar.show("Hồ sơ đã tồn tại trong hệ thống",'danger')
+                  this.state.isDataNull ? snackbar.show("Hồ sơ đã tồn tại trong hệ thống", 'danger') : snackbar.show("Hồ sơ đã tồn tại trong hệ thống", 'danger')
                 } else {
                   this.setState({
                     isLoading: false
@@ -322,7 +324,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderColor: "rgba(0, 0, 0, 0.06)",
     flexDirection: "row"
-   
+
   },
   mdk: {
     marginLeft: 12,
@@ -332,7 +334,7 @@ const styles = StyleSheet.create({
     fontStyle: "normal",
     letterSpacing: 0,
     color: "#000000",
- 
+
   },
   ktq: {
     flex: 1,
@@ -409,7 +411,7 @@ const styles = StyleSheet.create({
   },
 
   textbot: {
-    marginLeft:15
+    marginLeft: 15
     // fontSize: 15,
     // fontWeight: "normal",
     // fontStyle: "normal",

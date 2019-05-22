@@ -358,7 +358,7 @@ class AddNewClinicScreen extends Component {
                     <ScrollView
                         showsVerticalScrollIndicator={false}
                         style={{ padding: 10, flex: 1 }}
-                        keyboardShouldPersistTaps="always">
+                        keyboardShouldPersistTaps="handled">
                         <View style={styles.row}>
                             <TextInput
                                 value={this.state.name}

@@ -145,6 +145,7 @@ class ProfileScreen extends Component {
 
                     <ScrollView
                         showsVerticalScrollIndicator={false}
+                        keyboardShouldPersistTaps="handled"
                         style={styles.container} zIndex={2}>
                         <View style={styles.header}>
                             <TouchableOpacity style={styles.boxAvatar} onPress={this.selectAvatar}>

@@ -119,12 +119,11 @@ class RegisterScreen extends Component {
           style={{ flex: 1 }}
           title="Đăng ký"
           titleStyle={{ textAlign: 'left', marginLeft: 20 }}
-          touchToDismiss={true}
           showFullScreen={true}
         >
           <ScrollView
             showsVerticalScrollIndicator={false}
-            style={{ flex: 1 }} keyboardShouldPersistTaps="always">
+            style={{ flex: 1 }} keyboardShouldPersistTaps="handled">
             <KeyboardAvoidingView behavior="padding" style={styles.form}>
               <View style={{ flex: 1, padding: 20 }}>
                 <ScaleImage source={require("@images/new/isofhcare.png")} width={200} style={{ marginTop: 50, alignSelf: 'center' }} />

@@ -167,7 +167,9 @@ class MyAccountScreen extends Component {
                     </ScrollView > */}
                 <ScrollView
                     showsVerticalScrollIndicator={false}
-                    style={styles.container} zIndex={2}>
+                    style={styles.container} zIndex={2}
+                    keyboardShouldPersistTaps="handled"
+                >
                     <View style={styles.container2}>
                         <View>
                             <Animated.View style={[styles.flipCard, frontAnimatedStyle]}>
