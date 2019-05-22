@@ -33,6 +33,7 @@ class HomeScreen extends Component {
       active: true,
       text: ""
     };
+
   }
   componentWillMount() {
     this.props.dispatch({
@@ -58,16 +59,16 @@ class HomeScreen extends Component {
     if (
       nextAppState === 'active'
     ) {
+      if (this.props.userApp.isLogin) {
+        this.props.dispatch(redux.getUnreadNotificationCount());
+        console.log('active');
+      }
+      else {
+        firebase.notifications().setBadge(0);
+      }
     }
-    if (this.props.userApp.isLogin) {
-      firebase.notifications().setBadge(this.props.userApp.unReadNotificationCount + 1);
-      this.props.dispatch(redux.getUnreadNotificationCount());
-      console.log('active');
-  }
-  else {
-      firebase.notifications().setBadge(0);
-  }
-    this.setState({appState: nextAppState});
+
+    this.setState({ appState: nextAppState });
   };
   handleHardwareBack = () => {
     this.props.navigation.pop();
