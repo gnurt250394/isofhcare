@@ -56,17 +56,17 @@ class HomeScreen extends Component {
   }
   _handleAppStateChange = (nextAppState) => {
     if (
-      this.state.appState.match(/inactive|background/) &&
       nextAppState === 'active'
     ) {
-      if (this.props.userApp.isLogin) {
-        firebase.notifications().setBadge(this.props.userApp.unReadNotificationCount + 1);
-        this.props.dispatch(redux.getUnreadNotificationCount());
     }
-    else {
-        firebase.notifications().setBadge(0);
-    }
-    }
+    if (this.props.userApp.isLogin) {
+      firebase.notifications().setBadge(this.props.userApp.unReadNotificationCount + 1);
+      this.props.dispatch(redux.getUnreadNotificationCount());
+      console.log('active');
+  }
+  else {
+      firebase.notifications().setBadge(0);
+  }
     this.setState({appState: nextAppState});
   };
   handleHardwareBack = () => {
