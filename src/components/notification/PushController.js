@@ -139,7 +139,7 @@ class PushController extends Component {
 
         this.notificationListener = firebase.notifications().onNotification(this.onNotification.bind(this));
         this.notificationOpenedListener = firebase.notifications().onNotificationOpened(this.onNotificationOpened.bind(this));
-        firebase.notifications().getInitialNotification().then(this.getInitialNotification.bind(this));
+        this.notificationInitialListener = firebase.notifications().getInitialNotification().then(this.getInitialNotification.bind(this));
     }
     onNotification(notification) {
         if (!this.props.userApp.isLogin)
@@ -239,7 +239,7 @@ class PushController extends Component {
     }
     componentWillUnmount() {
         try {
-            this.notificationDisplayedListener();
+            this.notificationInitialListener();
             this.notificationListener();
             this.notificationOpenedListener();
         } catch (error) {
