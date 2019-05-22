@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     row: {
         marginTop: 10,
         flexDirection: 'row',
-        alignItems: 'center',
+        alignItems: 'flex-start',
     },
     label: {
         opacity: 0.8,
