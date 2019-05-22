@@ -75,10 +75,10 @@ class SelectHospitalScreen extends Component {
                 android: {
                     detail: 'coarse', // or 'fine'
                     rationale: {
-                        title: "We need to access your location",
-                        message: "We use your location to show where you are on the map",
-                        buttonPositive: "OK",
-                        buttonNegative: "Cancel"
+                        title: "Quyền truy cập vị trí",
+                        message: "iSofHCare cần quyền truy cập vào vị trí của bạn",
+                        buttonPositive: "Đồng ý",
+                        buttonNegative: "Hủy"
                     }
                 }
             }).then(granted => {
@@ -90,7 +90,7 @@ class SelectHospitalScreen extends Component {
                         }, () => {
                             this.onRefresh();
                         });
-                    }).catch(() => {
+                    }).catch((e) => {
                         locationProvider.getCurrentLocationHasSave().then(s => {
                             if (s && s.latitude && s.longitude) {
                                 s.latitudeDelta = 0.1;
@@ -113,14 +113,32 @@ class SelectHospitalScreen extends Component {
         }
 
         if (Platform.OS == 'android') {
-            LocationSwitch.enableLocationService(1000, true,
-                () => {
-                    getLocation();
-                },
-                () => {
-                    snackbar.show("VBật định vị để tìm kiếm cơ sở y tế gần bạn", "danger");
-                },
-            );
+            RNLocation.requestPermission({
+                ios: 'whenInUse', // or 'always'
+                android: {
+                    detail: 'coarse', // or 'fine'
+                    rationale: {
+                        title: "Quyền truy cập vị trí",
+                        message: "iSofHCare cần quyền truy cập vào vị trí của bạn",
+                        buttonPositive: "Đồng ý",
+                        buttonNegative: "Hủy"
+                    }
+                }
+            }).then(granted => {
+                if (granted) {
+
+                    LocationSwitch.enableLocationService(1000, true,
+                        () => {
+                            getLocation();
+                        },
+                        () => {
+                            snackbar.show("Bật vị trí trên thiết bị để tìm kiếm địa điểm gần bạn", "danger");
+                        },
+                    );
+                } else {
+                    snackbar.show("iSofHCare cần quyền truy cập vào vị trí của bạn", "danger");
+                }
+            })
         }
         else
             LocationSwitch.isLocationEnabled(() => {
@@ -128,7 +146,7 @@ class SelectHospitalScreen extends Component {
             }, () => {
                 Alert.alert(
                     '',
-                    'Bật định vị để tìm kiếm cơ sở y tế gần bạn',
+                    'Bật vị trí trên thiết bị để tìm kiếm địa điểm gần bạn',
                     [
                         {
                             text: 'Huỷ',
