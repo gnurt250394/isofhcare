@@ -186,6 +186,7 @@ class Account extends Component {
   }
   render() {
     return (
+      <ActivityPanel hideActionbar ={true} >
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{
@@ -399,6 +400,7 @@ class Account extends Component {
         <View style={{ height: 100 }} />
         <ImagePicker ref={ref => (this.imagePicker = ref)} />
       </ScrollView>
+      </ActivityPanel>
     );
   }
   handleFingerprintDismissed = () => {
