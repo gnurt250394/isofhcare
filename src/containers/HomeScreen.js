@@ -7,6 +7,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  AppState,
   DeviceEventEmitter
 } from "react-native";
 import { connect } from "react-redux";
@@ -23,8 +24,7 @@ import ScaledImage from "../../node_modules/mainam-react-native-scaleimage";
 import snackbar from "@utils/snackbar-utils";
 import { IndicatorViewPager } from "mainam-react-native-viewpager";
 import UserInactivity from "react-native-user-inactivity";
-
-
+import firebase from 'react-native-firebase';
 class HomeScreen extends Component {
   constructor(props) {
     super(props);
@@ -42,6 +42,7 @@ class HomeScreen extends Component {
   }
   componentDidMount() {
     DeviceEventEmitter.removeAllListeners("hardwareBackPress");
+    AppState.addEventListener('change', this._handleAppStateChange);
     DeviceEventEmitter.addListener(
       "hardwareBackPress",
       this.handleHardwareBack.bind(this)
@@ -50,9 +51,24 @@ class HomeScreen extends Component {
   }
 
   componentWillUnmount() {
+    AppState.removeEventListener('change', this._handleAppStateChange);
     DeviceEventEmitter.removeAllListeners("hardwareBackPress");
   }
-
+  _handleAppStateChange = (nextAppState) => {
+    if (
+      nextAppState === 'active'
+    ) {
+    }
+    if (this.props.userApp.isLogin) {
+      firebase.notifications().setBadge(this.props.userApp.unReadNotificationCount + 1);
+      this.props.dispatch(redux.getUnreadNotificationCount());
+      console.log('active');
+  }
+  else {
+      firebase.notifications().setBadge(0);
+  }
+    this.setState({appState: nextAppState});
+  };
   handleHardwareBack = () => {
     this.props.navigation.pop();
     return true;
