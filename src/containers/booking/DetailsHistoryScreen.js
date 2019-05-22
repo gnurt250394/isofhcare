@@ -280,6 +280,7 @@ class DetailsHistoryScreen extends Component {
               </View>
             </View>
           </View>
+          <View style={{with:'100%',height:50,backgroundColor:"#f7f9fb"}}></View>
         </ScrollView>}
       </ActivityPanel>
     );
