@@ -92,11 +92,12 @@ class ForgotPasswordScreen extends Component {
       <ActivityPanel
         style={{ flex: 1 }}
         title="Quên mật khẩu"
-        touchToDismiss={true}
       >
         <ScrollView
           showsVerticalScrollIndicator={false}
-          style={{ flex: 1 }} keyboardShouldPersistTaps="always">
+          style={{ flex: 1 }}
+          keyboardShouldPersistTaps="handled"
+        >
           <View
             style={{
               marginTop: 60,

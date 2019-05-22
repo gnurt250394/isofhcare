@@ -92,13 +92,14 @@ class ConfirmCodeScreen extends Component {
     return (
       <ActivityPanel
         style={{ flex: 1 }}
-        touchToDismiss={true}
         showFullScreen={true}
         title="Xác thực tài khoản"
       >
         <ScrollView
           showsVerticalScrollIndicator={false}
-          style={{ flex: 1 }} keyboardShouldPersistTaps="always">
+          style={{ flex: 1 }}
+          keyboardShouldPersistTaps="handled"
+        >
           <View
             style={{
               marginTop: 60,

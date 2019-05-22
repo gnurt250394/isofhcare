@@ -175,7 +175,9 @@ class LoginScreen extends Component {
 			>
 				<ScrollView
 					showsVerticalScrollIndicator={false}
-					style={{ flex: 1 }} keyboardShouldPersistTaps="always">
+					style={{ flex: 1 }}
+					keyboardShouldPersistTaps="handled"
+				>
 					<KeyboardAvoidingView behavior="padding">
 						<View style={{ flex: 1 }}>
 							<View style={{ margin: 22 }}>
