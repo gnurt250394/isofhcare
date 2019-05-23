@@ -14,6 +14,7 @@ import stylemodal from "@styles/modal-style";
 import specialistProvider from '@data-access/specialist-provider';
 import connectionUtils from '@utils/connection-utils';
 import clientUtils from '@utils/client-utils';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import Form from 'mainam-react-native-form-validate/Form';
 import TextField from 'mainam-react-native-form-validate/TextField';
@@ -287,6 +288,7 @@ class CreateQuestionStep2Screen extends Component {
                     keyboardShouldPersistTaps="handled"
                     keyboardDismissMode='on-drag'
                 >
+                    <KeyboardAwareScrollView >
                     <View style={{ backgroundColor: '#02C39A', height: 130, position: 'absolute', top: 0, left: 0, right: 0 }}></View>
                     <View style={{ margin: 22, marginTop: 10 }}>
                         <Card style={{ padding: 22 }}>
@@ -396,6 +398,7 @@ class CreateQuestionStep2Screen extends Component {
                             </TouchableOpacity>
                         </Card>
                     </View>
+                    </KeyboardAwareScrollView>
                 </ScrollView>
                 <ImagePicker ref={ref => this.imagePicker = ref} />
                 {
