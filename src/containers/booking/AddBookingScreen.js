@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Keyboard, Image, TouchableHighlight, FlatList, Dimensions } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Keyboard, Image, TouchableHighlight, Platform, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
 import ScaleImage from "mainam-react-native-scaleimage";
 import ImagePicker from 'mainam-react-native-select-image';
@@ -9,7 +9,7 @@ import connectionUtils from '@utils/connection-utils';
 import clientUtils from '@utils/client-utils';
 const DEVICE_HEIGHT = Dimensions.get('window').height;
 import DateTimePicker from 'mainam-react-native-date-picker';
-
+import KeyboardSpacer from "react-native-keyboard-spacer";
 import snackbar from '@utils/snackbar-utils';
 import dateUtils from "mainam-react-native-date-utils";
 import stringUtils from "mainam-react-native-string-utils";
@@ -445,6 +445,8 @@ class AddBookingScreen extends Component {
                     }
                 </View>
                 <Text style={styles.des}>Mô tả triệu chứng sẽ giúp bạn được phục vụ tốt hơn</Text>
+                {Platform.OS == "ios" && <KeyboardSpacer />}
+
             </ScrollView>
             <View style={styles.btn}>
                 <TouchableOpacity onPress={this.addBooking.bind(this)} style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]}><Text style={styles.datkham}>Đặt khám</Text></TouchableOpacity>
@@ -469,6 +471,7 @@ class AddBookingScreen extends Component {
                 confirmTextIOS={"Xác nhận"}
                 date={this.state.bookingDate || minDate}
             />
+            
         </ActivityPanel>
         );
     }
