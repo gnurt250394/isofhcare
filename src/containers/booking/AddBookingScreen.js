@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Keyboard, Image, TouchableHighlight, Platform, Dimensions } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Keyboard, Image, KeyboardAvoidingView, Platform, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
 import ScaleImage from "mainam-react-native-scaleimage";
 import ImagePicker from 'mainam-react-native-select-image';
@@ -21,6 +21,7 @@ import dataCacheProvider from '@data-access/datacache-provider';
 import constants from '@resources/strings';
 import medicalRecordProvider from '@data-access/medical-record-provider';
 import serviceTypeProvider from '@data-access/service-type-provider';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 class AddBookingScreen extends Component {
     constructor(props) {
@@ -243,9 +244,8 @@ class AddBookingScreen extends Component {
                 backgroundColor: "#f7f9fb"
             }}>
 
-            <ScrollView keyboardShouldPersistTaps='handled' style={styles.container}>
-
-                <TouchableOpacity style={styles.name} onPress={() => {
+            <KeyboardAwareScrollView>
+            <TouchableOpacity style={styles.name} onPress={() => {
                     connectionUtils.isConnected().then(s => {
                         this.props.navigation.navigate("selectProfile", {
                             onSelected: this.selectProfile.bind(this),
@@ -446,8 +446,8 @@ class AddBookingScreen extends Component {
                 </View>
                 <Text style={styles.des}>Mô tả triệu chứng sẽ giúp bạn được phục vụ tốt hơn</Text>
                 {Platform.OS == "ios" && <KeyboardSpacer />}
+                </KeyboardAwareScrollView>
 
-            </ScrollView>
             <View style={styles.btn}>
                 <TouchableOpacity onPress={this.addBooking.bind(this)} style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]}><Text style={styles.datkham}>Đặt khám</Text></TouchableOpacity>
             </View>
