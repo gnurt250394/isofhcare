@@ -17,6 +17,8 @@ import stringUtils from "mainam-react-native-string-utils";
 import clientUtils from '@utils/client-utils';
 import ImageLoad from 'mainam-react-native-image-loader';
 import snackbar from '@utils/snackbar-utils';
+import Modal from "react-native-modal";
+import stylemodal from "@styles/modal-style";
 
 class DetailsHistoryScreen extends Component {
   constructor(props) {
@@ -24,7 +26,8 @@ class DetailsHistoryScreen extends Component {
     var id = this.props.navigation.state.params.id;
 
     this.state = {
-      id: id
+      id: id,
+      value:0
     };
   }
 
@@ -137,6 +140,12 @@ class DetailsHistoryScreen extends Component {
     } else {
       return (<Text>{' Chiều'}</Text>)
     }
+  }
+  onQrClick = () => {
+this.setState({
+  isVisible:true,
+  value:this.state.booking.codeBooking ? this.state.booking.codeBooking : 0
+})
   }
   render() {
     const avatar = this.state.medicalRecords && this.state.medicalRecords.avatar ? { uri: `${this.state.medicalRecords.avatar.absoluteUrl()}` } : require("@images/new/user.png")
@@ -272,16 +281,32 @@ class DetailsHistoryScreen extends Component {
                 source={require("@images/ic_barcode.png")}
               />
               <Text style={styles.txLabelBarcode}>Mã code</Text>
-              <View style={{ marginRight: 10 }}>
+              <TouchableOpacity onPress={this.onQrClick} style={{ marginRight: 10 }}>
                 <QRCode
                   value={this.state.booking.codeBooking ? this.state.booking.codeBooking : 0}
                   size={80}
                   fgColor='white' />
-              </View>
+              </TouchableOpacity>
             </View>
           </View>
           <View style={{with:'100%',height:50,backgroundColor:"#f7f9fb"}}></View>
         </ScrollView>}
+        <Modal
+        isVisible={this.state.isVisible}
+        onBackdropPress={() => this.setState({ isVisible: false })}
+        backdropOpacity={0.5}
+        animationInTiming={500}
+        animationOutTiming={500}
+        style={{flex:1,alignItems: 'center',justifyContent:'center'}}
+        backdropTransitionInTiming={1000}
+        backdropTransitionOutTiming={1000}
+       >
+       <QRCode
+       value={this.state.value}
+       size={250}
+      
+       fgColor='white' />
+    </Modal>
       </ActivityPanel>
     );
   }
