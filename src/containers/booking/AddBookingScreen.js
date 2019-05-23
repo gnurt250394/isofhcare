@@ -445,7 +445,6 @@ class AddBookingScreen extends Component {
                     }
                 </View>
                 <Text style={styles.des}>Mô tả triệu chứng sẽ giúp bạn được phục vụ tốt hơn</Text>
-                {Platform.OS == "ios" && <KeyboardSpacer />}
                 </KeyboardAwareScrollView>
 
             <View style={styles.btn}>
