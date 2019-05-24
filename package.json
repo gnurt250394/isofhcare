@@ -29,6 +29,8 @@
     "mainam-react-native-sliding-up-down": "^1.0.3",
     "mainam-react-native-string-utils": "^3.0.2",
     "mainam-react-native-viewpager": "^1.0.1",
+    "mainam-react-native-payoo": "^1.0.2",
+    "xml-js": "^1.6.11",
     "native-base": "^2.12.0",
     "prop-types": "^15.6.1",
     "react": "16.3.1",

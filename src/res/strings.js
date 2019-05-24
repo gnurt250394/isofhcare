@@ -66,6 +66,11 @@ module.exports = {
     buttonOkColor: "#ff9999"
   },
   key: {
+    payment_return_url:
+    {
+      vnpay:"vnpay://payment_isofhcare_return",
+      payoo:"payoo://payment_isofhcare_return"
+    },
     storage: {
       android_version: "ANDROID_VERSION",
       ios_version: "IOS_VERSION",

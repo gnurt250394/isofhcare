@@ -153,6 +153,8 @@ android {
 }
 
 dependencies {
+    compile(name: 'payoo-payment-sdk-release-2.2.0', ext: 'aar') { transitive = true }
+    compile project(':mainam-react-native-payoo')
     compile project(':react-native-location-switch')
     compile project(':react-native-location')
     compile project(':react-native-vector-icons')

@@ -1,4 +1,6 @@
 rootProject.name = 'APP'
+include ':mainam-react-native-payoo'
+project(':mainam-react-native-payoo').projectDir = new File(rootProject.projectDir, '../node_modules/mainam-react-native-payoo/android')
 include ':react-native-location-switch'
 project(':react-native-location-switch').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-location-switch/android')
 include ':react-native-location'
