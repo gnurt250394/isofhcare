@@ -2,19 +2,19 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import ActivityPanel from '@components/ActivityPanel';
 import { IndicatorViewPager } from "mainam-react-native-viewpager";
-import GetNewNumber from '../booking/GetNewNumber'
-import GetHistoryNumber from '../booking/GetHistoryNumber'
+import GetNewTicket from '@components/ticket/GetNewTicket'
+import TicketHistory from '@components/ticket/TicketHistory'
 
 export default class SelectHealthFacilitiesScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isGetNewNumber: true,
+      isGetNewTicket: true,
       tabIndex: 0,
 
     };
   }
-  onGetNewNumber = () => {   
+  onGetNewTicket = () => {   
       if (this.viewPager) this.viewPager.setPage(0);
   }
   onGetHistory = () => {
@@ -29,7 +29,7 @@ export default class SelectHealthFacilitiesScreen extends Component {
     var offset = e.offset * 100;
     if (tabIndex == -1 || (tabIndex == 1 && offset > 0)) return;
     this.setState({
-      isGetNewNumber: tabIndex==0
+      isGetNewTicket: tabIndex==0
     });
     }
   render() {
@@ -54,11 +54,11 @@ export default class SelectHealthFacilitiesScreen extends Component {
       //   }
       >
         <View style={styles.viewBtn}>
-          <TouchableOpacity onPress={this.onGetNewNumber} style={[styles.btnGetNumber, this.state.isGetNewNumber ? { backgroundColor: '#27AE60' } : { backgroundColor: '#fff' }]}>
-            <Text style={this.state.isGetNewNumber ? { color: '#fff' } : { color: '#27AE60' }}>Lấy số mới</Text>
+          <TouchableOpacity onPress={this.onGetNewTicket} style={[styles.btnGetNumber, this.state.isGetNewTicket ? { backgroundColor: '#27AE60' } : { backgroundColor: '#fff' }]}>
+            <Text style={this.state.isGetNewTicket ? { color: '#fff' } : { color: '#27AE60' }}>Lấy số mới</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={this.onGetHistory} style={[styles.btnGetNumber, , this.state.isGetNewNumber ? { backgroundColor: '#fff' } : { backgroundColor: '#27AE60' }]}>
-            <Text style={this.state.isGetNewNumber ? { color: '#27AE60' } : { color: '#fff' }}>Lịch sử lấy số</Text>
+          <TouchableOpacity onPress={this.onGetHistory} style={[styles.btnGetNumber, , this.state.isGetNewTicket ? { backgroundColor: '#fff' } : { backgroundColor: '#27AE60' }]}>
+            <Text style={this.state.isGetNewTicket ? { color: '#27AE60' } : { color: '#fff' }}>Lịch sử lấy số</Text>
           </TouchableOpacity>
         </View>
         <IndicatorViewPager style={{ flex: 1 }}
@@ -67,10 +67,10 @@ export default class SelectHealthFacilitiesScreen extends Component {
           }}
           onPageScroll={this.onPageScroll.bind(this)}>
           <View style={{ flex: 1 }}>
-            <GetNewNumber></GetNewNumber>
+            <GetNewTicket></GetNewTicket>
           </View>
           <View style={{ flex: 1 }}>
-            <GetHistoryNumber></GetHistoryNumber>
+            <TicketHistory></TicketHistory>
           </View>
 
         </IndicatorViewPager>
