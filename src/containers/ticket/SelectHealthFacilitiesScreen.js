@@ -14,24 +14,24 @@ export default class SelectHealthFacilitiesScreen extends Component {
 
     };
   }
-  onGetNewTicket = () => {   
-      if (this.viewPager) this.viewPager.setPage(0);
+  onGetNewTicket = () => {
+    if (this.viewPager) this.viewPager.setPage(0);
   }
   onGetHistory = () => {
-      if (this.viewPager) this.viewPager.setPage(1);
+    if (this.viewPager) this.viewPager.setPage(1);
   }
   swipe(targetIndex) {
     if (this.viewPager) this.viewPager.setPage(targetIndex);
-   
+
   }
   onPageScroll(e) {
     var tabIndex = e.position;
     var offset = e.offset * 100;
     if (tabIndex == -1 || (tabIndex == 1 && offset > 0)) return;
     this.setState({
-      isGetNewTicket: tabIndex==0
+      isGetNewTicket: tabIndex == 0
     });
-    }
+  }
   render() {
     return (
       <ActivityPanel
@@ -54,11 +54,12 @@ export default class SelectHealthFacilitiesScreen extends Component {
       //   }
       >
         <View style={styles.viewBtn}>
-          <TouchableOpacity onPress={this.onGetNewTicket} style={[styles.btnGetNumber, this.state.isGetNewTicket ? { backgroundColor: '#27AE60' } : { backgroundColor: '#fff' }]}>
-            <Text style={this.state.isGetNewTicket ? { color: '#fff' } : { color: '#27AE60' }}>Lấy số mới</Text>
+          <View style={styles.separateBackground}></View>
+          <TouchableOpacity onPress={this.onGetNewTicket} style={[styles.btnGetNumber, this.state.isGetNewTicket ? { backgroundColor: '#27AE60' } : {}]}>
+            <Text style={this.state.isGetNewTicket ? { color: '#fff', fontWeight: "bold", } : { color: '#27AE60', fontWeight: "bold", }}>Lấy số mới</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={this.onGetHistory} style={[styles.btnGetNumber, , this.state.isGetNewTicket ? { backgroundColor: '#fff' } : { backgroundColor: '#27AE60' }]}>
-            <Text style={this.state.isGetNewTicket ? { color: '#27AE60' } : { color: '#fff' }}>Lịch sử lấy số</Text>
+          <TouchableOpacity onPress={this.onGetHistory} style={[styles.btnGetNumber, , this.state.isGetNewTicket ? {} : { backgroundColor: '#27AE60' }]}>
+            <Text style={this.state.isGetNewTicket ? { color: '#27AE60', fontWeight: "bold", } : { color: '#fff', fontWeight: "bold", }}>Lịch sử lấy số</Text>
           </TouchableOpacity>
         </View>
         <IndicatorViewPager style={{ flex: 1 }}
@@ -83,6 +84,23 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#cacaca',
   },
-  viewBtn: { flexDirection: 'row', justifyContent: 'center', marginHorizontal: 10, borderWidth: 1, borderColor: '#27AE60', borderRadius: 8, marginVertical: 20,},
-  btnGetNumber: { alignItems: 'center', paddingVertical: 8, justifyContent: 'center', backgroundColor: '#27AE60', flex: 1 / 2, borderRadius: 8 }
+  viewBtn: {
+    flexDirection: 'row',
+    height: 40,
+    margin: 15,
+    borderRadius: 6,
+    backgroundColor: "#ffffff",
+    position: 'relative'
+  },
+  separateBackground:
+  {
+    borderColor: "#27ae60",
+    borderWidth: 1,
+    borderRadius: 6,
+    position: 'absolute',
+    top: 0, left: 0, right: 0, bottom: 0
+  },
+  btnGetNumber: {
+    alignItems: 'center', paddingVertical: 8, justifyContent: 'center', flex: 1, borderRadius: 6, overflow: 'hidden'
+  },
 })
