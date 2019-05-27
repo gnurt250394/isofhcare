@@ -87,6 +87,20 @@ export default class GetNewNumber extends PureComponent {
                     renderItem={this.renderItem}
                     keyExtractor={(item, index) => index.toString()}
                 ></FlatList>
+                <Modal animationType="fade"
+                onBackdropPress={() => this.setState({ isVisible: false,service:0 })}
+                    transparent={true} isVisible={this.state.isVisible} style={styles.viewModal} >
+                    <View style={styles.viewModal}>
+                       <View style={styles.viewDialog}>
+                       <Text style={styles.txDialog}>Lấy số khám</Text>
+                       <View style={styles.viewBtnModal}>
+                           <TouchableOpacity style={styles.viewBtn}><Text style={{color:'#fff'}} >Lấy số cho tôi</Text></TouchableOpacity>
+                           <TouchableOpacity style={styles.viewBtn2}><Text style={{color:'#4A4A4A'}}>Lấy số hộ</Text></TouchableOpacity>
+                       </View>
+                       </View>
+                    </View>
+                </Modal>
+
             </ActivityPanel>
         )
     }
@@ -94,6 +108,12 @@ export default class GetNewNumber extends PureComponent {
 const styles = StyleSheet.create({
     viewTx: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: '100%', borderTopWidth: 1, borderBottomWidth: 1, borderColor: 'rgba(0,0,0,0.26)' },
     viewItem: { padding: 10, borderBottomWidth: 1, borderColor: 'rgba(0,0,0,0.26)', flexDirection: 'row' },
-    btnService: { justifyContent: 'center', alignItems: 'center', width: 64, height: 22, marginRight: 5, borderRadius: 6 ,marginVertical: 10,},
-    txService:{ fontSize: 10, }
+    btnService: { justifyContent: 'center', alignItems: 'center', width: 64, height: 22, marginRight: 5, borderRadius: 6, marginVertical: 10, },
+    txService: { fontSize: 10, },
+    viewBtnModal: { flexDirection: 'row' },
+    viewModal:{flex:1,justifyContent:'center',alignItems:'center',},
+    viewDialog:{height:147,width:318,backgroundColor:'#fff',alignItems:'center',borderRadius:6},
+    viewBtn:{width:120,height:40,justifyContent:'center',alignItems:'center',borderRadius:6,backgroundColor: '#0A9BE1',marginRight:5},
+    txDialog:{marginVertical:20},
+    viewBtn2:{width:120,height:40,justifyContent:'center',alignItems:'center',borderRadius:6,backgroundColor: 'rgba(0,0,0,0.06)',marginRight:5,borderWidth: 1,borderColor:'#979797'}
 })
