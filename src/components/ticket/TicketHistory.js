@@ -24,23 +24,23 @@ export default class TicketHistory extends Component {
                     flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 1, alignItems: 'center', borderBottomColor: "rgba(0, 0, 0, 0.06)", paddingVertical: 5, paddingHorizontal: 10
                 }}>
                     <View style={{ flexDirection: 'row' }}>
-                        <Text style={{ textAlign: 'left', fontWeight: 'bold', color: '#000000', fontSize: 14 }}>{item.item.name}</Text>
-                        <ScaledImage style={{ marginLeft: 10, }} height={18} source={require("@images/new/profile/ic_tick.png")} ></ScaledImage>
+                        <Text style={{ textAlign: 'left', fontWeight: 'bold', color: '#000000', fontSize: 14 }}>{(item.item.name).toUpperCase()}</Text>
+                        <ScaledImage style={{ marginLeft: 10, }} height={18} source={require("@images/new/ticket/ic_verified.png")} ></ScaledImage>
                     </View>
-                    <TouchableOpacity style={{ borderRadius: 12, backgroundColor: '#0A9BE1', paddingVertical: 2, paddingHorizontal: 8, justifyContent: 'center', alignItems: 'center' }}>
-                        <Text style={{ color: '#fff', fontSize: 11 }}>Số khám: {item.item.number}</Text>
+                    <TouchableOpacity style={{ borderRadius: 12, backgroundColor: '#0A9BE1', paddingVertical: 3, paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center' }}>
+                        <Text style={{ color: '#fff', fontSize: 14 }}>Số khám: {item.item.number}</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={{ flexDirection: 'row' }}>
                     <View style={{ flex: 1 / 4, justifyContent: 'center', alignItems: 'center', padding: 10 }}>
-                        <ScaledImage style={{ borderRadius: 30, height: 60, width: 60, borderWidth: 1, borderColor: 'rgba(0, 0, 0, 0.06)' }} source={{ uri: item.item.image}}></ScaledImage>
+                        <ScaledImage style={{ borderRadius: 30, height: 60, width: 60, borderWidth: 1, borderColor: 'rgba(0, 0, 0, 0.06)' }} source={{ uri: item.item.image }}></ScaledImage>
                         <Text style={{ fontWeight: 'bold', color: '#27AE60', marginTop: 5 }}>1231243</Text>
                     </View>
                     <View style={{ justifyContent: 'center', padding: 10, flex: 3 / 4 }}>
-                        <Text style={{ fontSize: 13 }}>BỆNH VIỆN E TRUNG ƯƠNG</Text>
-                        <Text style={{ fontSize: 13 }}>SĐT:<Text style={{ color: '#F05673',fontWeight:'bold' }}> 0123456789</Text></Text>
-                        <Text>Ngày sinh:<Text style={{ fontWeight: 'bold', color: '#4A4A4A' }}> 08/12/1998</Text></Text>
-                        <Text>Địa chỉ: {'418 Phạm Văn Đồng, Mai Dịch, Cầu Giấy, Hà Nội…'}</Text>
+                        <Text style={{ fontSize: 14 }}>BỆNH VIỆN E TRUNG ƯƠNG</Text>
+                        <Text style={{ fontSize: 14, marginTop: 5 }}>SĐT:<Text style={{ color: '#F05673', fontWeight: 'bold' }}> 0123456789</Text></Text>
+                        <Text style={{ fontSize: 14, marginTop: 5 }}>Ngày sinh:<Text style={{ fontWeight: 'bold', color: '#4A4A4A' }}> 08/12/1998</Text></Text>
+                        <Text numberOfLines={2} style={{ fontSize: 14, marginTop: 5 }}>Địa chỉ: {'418 Phạm Văn Đồng, Mai Dịch, Cầu Giấy, Hà Nội…'}</Text>
                     </View>
                 </View>
             </TouchableOpacity>
@@ -48,8 +48,8 @@ export default class TicketHistory extends Component {
     }
     render() {
         return (
-            <View style={{padding:10}}>
-            <Text>Hôm nay</Text>
+            <View style={{ padding: 10 }}>
+                <Text>Hôm nay</Text>
                 <FlatList
                     data={this.state.data}
                     extraData={this.state}
@@ -67,10 +67,18 @@ const styles = StyleSheet.create({
         backgroundColor: '#cacaca',
     },
     itemView: {
-        width: '100%',
+        borderRadius: 6,
+        backgroundColor: "#ffffff",
+        shadowColor: "rgba(39, 174, 96, 0.42)",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowRadius: 6,
+        shadowOpacity: 1,
+        borderStyle: "solid",
         borderWidth: 1,
-        borderColor: 'rgb(2,195,154)',
-        borderRadius: 5,
-        marginVertical:10
+        borderColor: "#27ae60",
+        marginVertical: 10
     }
 })
