@@ -4,8 +4,9 @@ import Modal from 'react-native-modal';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import StarRating from 'react-native-star-rating';
 import ActivityPanel from "@components/ActivityPanel";
-
-export default class GetNewTicket extends PureComponent {
+import { connect } from "react-redux";
+import hospitalProvider from '@data-access/hospital-provider';
+ class GetNewTicket extends PureComponent {
     state = {
         data: [{
             name: 'Bệnh viện E trung ương ',
@@ -32,6 +33,19 @@ export default class GetNewTicket extends PureComponent {
         index: ''
 
     }
+    componentDidMount(){
+        this.getListHospital()
+    }
+    getListHospital = () => {
+        hospitalProvider.getDefaultHospital().then(res => {
+            console.log(res);
+        })}
+    onAssignTicket = () => {
+        this.setState({
+            isVisible:false
+        })
+       this.props.navigation.navigate('login')
+    }
     onPressService = (key, index) => {
         this.setState({
             service: key,
@@ -39,6 +53,7 @@ export default class GetNewTicket extends PureComponent {
             index: index,
         })
     }
+    onCloseModal = () => this.setState({ isVisible: false, service: 0 })
     renderItem = (item) => {
         return (
             <View style={styles.viewItem}>
@@ -69,39 +84,38 @@ export default class GetNewTicket extends PureComponent {
                         <TouchableOpacity onPress={() => this.onPressService(3, item.index)} style={[styles.btnService, this.state.service && this.state.service == 3 && this.state.index == item.index ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, this.state.service && this.state.service == 3 && this.state.index == item.index ? { color: '#fff' } : { color: '#6B6B6C' }]}>BHYT CA</Text></TouchableOpacity>
                     </View>
                 </View>
-
             </View>
         )
     }
     render() {
         return (
-            <ActivityPanel hideActionbar={true} >
+            <View style={{flex:1}}>
                 <View style={styles.viewTx}>
                     <TextInput placeholder={"Tìm kiếm…"} underlineColorAndroid={"transparent"} returnKeyType='search'
                         style={{ width: '80%', height: 41 }}></TextInput>
                     <ScaledImage source={require('@images/new/hospital/ic_search.png')} height={16}></ScaledImage>
                 </View>
                 <FlatList
+            
                     data={this.state.data}
                     extraData={this.state}
                     renderItem={this.renderItem}
                     keyExtractor={(item, index) => index.toString()}
                 ></FlatList>
                 <Modal animationType="fade"
-                    onBackdropPress={() => this.setState({ isVisible: false, service: 0 })}
+                    onBackdropPress={this.onCloseModal}
                     transparent={true} isVisible={this.state.isVisible} style={styles.viewModal} >
                     <View style={styles.viewModal}>
                         <View style={styles.viewDialog}>
                             <Text style={styles.txDialog}>Lấy số khám</Text>
                             <View style={styles.viewBtnModal}>
                                 <TouchableOpacity style={styles.viewBtn}><Text style={{ color: '#fff' }} >Lấy số cho tôi</Text></TouchableOpacity>
-                                <TouchableOpacity style={styles.viewBtn2}><Text style={{ color: '#4A4A4A' }}>Lấy số hộ</Text></TouchableOpacity>
+                                <TouchableOpacity onPress = {this.onAssignTicket} style={styles.viewBtn2}><Text style={{ color: '#4A4A4A' }}>Lấy số hộ</Text></TouchableOpacity>
                             </View>
                         </View>
                     </View>
                 </Modal>
-
-            </ActivityPanel>
+            </View>
         )
     }
 }
@@ -117,3 +131,10 @@ const styles = StyleSheet.create({
     txDialog: { marginVertical: 20 },
     viewBtn2: { width: 120, height: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 6, backgroundColor: 'rgba(0,0,0,0.06)', marginRight: 5, borderWidth: 1, borderColor: '#979797' }
 })
+function mapStateToProps(state) {
+    return {
+      userApp: state.userApp,
+      navigation: state.navigation
+    };
+  }
+  export default connect(mapStateToProps)(GetNewTicket);

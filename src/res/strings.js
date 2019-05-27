@@ -322,6 +322,7 @@ module.exports = {
       get_hospital_by_service_type: isofhcare_service + "hospital/get-hospital-by-service-type",
       get_hospital_by_search: isofhcare_service + "hospital/search",
       get_by_location: isofhcare_service + "hospital/get-hospital-by-locate",
+      get_default_hospital : isofhcare_service + 'hospital/get-default-hospital'
     },
     profile: {
       get_by_user: isofhcare_service + "profile/get-by-user",
@@ -344,6 +345,7 @@ module.exports = {
     wallet: {
       createOnlinePayment: wallet_services + "customers/{id}/online-payments",
       onlineTransactionPaid: wallet_services + "online-transactions/{transactionId}/paid"
-    }
+    },
+
   }
 };

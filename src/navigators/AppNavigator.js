@@ -74,6 +74,8 @@ import ScanQRCodeScreen from "@containers/ticket/ScanQRCodeScreen";
 //---------------------------------
 const RootNavigator = createStackNavigator(
   {
+    // createProfileTicketScreen : {screen:CreateProfileTicketScreen},
+    // selectLocationScreen : {screen:SelectLocationScreen},
     // testVNPay: { screen: TestVNPayScreen },
     // scanQRCode: { screen: ScanQRCodeScreen },
     splash: { screen: SplashScreen },
@@ -139,11 +141,11 @@ const RootNavigator = createStackNavigator(
     //
     PatientHistoryScreen: { screen: PatientHistoryScreen },
     //------------------get ticket ----------------
-    confirmInfoScreen: { screen: ConfirmInfoScreen },
     selectHealthFacilitiesScreen: { screen: SelectHealthFacilitiesScreen },
     selectProfileMedical: { screen: SelectProfileMedicalScreen },
     scanQRCode: { screen: ScanQRCodeScreen },
     //----------------------------------------
+    confirmInfoScreen: { screen: ConfirmInfoScreen },
     emptyScreen: { screen: EmptyScreen }
   },
   {
