@@ -67,13 +67,15 @@ import PatientHistoryScreen from "@containers/booking/PatientHistoryScreen";
 import DetailsDoctorScreen from "@containers/question/DetailsDoctorScreen";
 import EmptyScreen from "@containers/EmptyScreen2";
 //-------get ticket----------------
-import SelectProfileMedicalScreen from "@containers/ticket/SelectProfileMedicalScreen"
-import SelectHealthFacilitiesScreen from "@containers/ticket/SelectHealthFacilitiesScreen"
-import ConfirmInfoScreen from "@containers/ticket/ConfirmInfoScreen"
+import SelectProfileMedicalScreen from "@containers/ticket/SelectProfileMedicalScreen";
+import SelectHealthFacilitiesScreen from "@containers/ticket/SelectHealthFacilitiesScreen";
+import ConfirmInfoScreen from "@containers/ticket/ConfirmInfoScreen";
+import ScanQRCodeScreen from "@containers/ticket/ScanQRCodeScreen";
 //---------------------------------
 const RootNavigator = createStackNavigator(
   {
     // testVNPay: { screen: TestVNPayScreen },
+    // scanQRCode: { screen: ScanQRCodeScreen },
     splash: { screen: SplashScreen },
     ehealth: { screen: EHealthNavigator },
     addBookingBVDHY: { screen: BookingDHYNavigation },
@@ -140,6 +142,8 @@ const RootNavigator = createStackNavigator(
     confirmInfoScreen: { screen: ConfirmInfoScreen },
     selectHealthFacilitiesScreen: { screen: SelectHealthFacilitiesScreen },
     selectProfileMedical: { screen: SelectProfileMedicalScreen },
+    scanQRCode: { screen: ScanQRCodeScreen },
+    //----------------------------------------
     emptyScreen: { screen: EmptyScreen }
   },
   {
