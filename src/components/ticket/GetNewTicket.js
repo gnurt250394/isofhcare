@@ -35,6 +35,7 @@ export default class GetNewTicket extends PureComponent {
     onPressService = (key, index) => {
         this.setState({
             service: key,
+            isVisible:true,
             index: index,
         })
     }
@@ -42,8 +43,8 @@ export default class GetNewTicket extends PureComponent {
         return (
             <View style={styles.viewItem}>
 
-                <View style={{ justifyContent: 'center' }}>
-                    <ScaledImage style={{ width: 60, height: 60, borderRadius: 30, }} source={{ uri: item.item.image }}></ScaledImage>
+                <View style={{ justifyContent: 'center',alignItems:'center',marginTop:-10}}>
+                    <ScaledImage style={{ width: 60, height:60, borderRadius: 30,borderColor:'rgba(0,0,0,0.15)',borderWidth:1 }} source={{ uri: item.item.image }}></ScaledImage>
                     <View style={{ width: 60, marginTop: 5 }}>
                         <StarRating
                             disabled={true}
@@ -56,18 +57,16 @@ export default class GetNewTicket extends PureComponent {
                         />
                     </View>
                 </View>
-                <View style={{ flex: 3 / 4, marginHorizontal: 20 }}>
-                    <View style={{ flexDirection: 'row' }}>
-                        <Text>Bệnh viện E Trung Ương</Text>
-                        <ScaledImage style={{ marginLeft: 10, }} height={18} source={require("@images/new/profile/ic_tick.png")} ></ScaledImage>
+                <View style={{ marginHorizontal: 20,flex:1 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <Text style={{ fontWeight: 'bold', color: '#000' }}>Bệnh viện E Trung Ương</Text>
+                        <ScaledImage style={{ marginLeft: 8, }} height={12} source={require("@images/new/booking/ic_checked.png")} ></ScaledImage>
                     </View>
-                    <Text style={{ width: 200 }}>{item.item.location}</Text>
+                    <Text>{item.item.location}</Text>
                     <View style={{ flexDirection: 'row' }}>
                         <TouchableOpacity onPress={() => this.onPressService(1, item.index)} style={[styles.btnService, this.state.service && this.state.service == 1 && this.state.index == item.index ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, this.state.service && this.state.service == 1 && this.state.index == item.index ? { color: '#fff' } : { color: '#6B6B6C' }]}>Khám DV</Text></TouchableOpacity>
-                        <TouchableOpacity onPress={() => this.onPressService(2, item.index)} style={[styles.btnService, this.state.service && this.state.service == 2 && this.state.index == item.index ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, this.state.service && this.state.service == 2 && this.state.index == item.index ? { color: '#fff' } : { color: '#6B6B6C' }]}>BHYT</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.onPressService(2, item.index)} style={[styles.btnService, { width: 62 }, this.state.service && this.state.service == 2 && this.state.index == item.index ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, this.state.service && this.state.service == 2 && this.state.index == item.index ? { color: '#fff' } : { color: '#6B6B6C' }]}>BHYT</Text></TouchableOpacity>
                         <TouchableOpacity onPress={() => this.onPressService(3, item.index)} style={[styles.btnService, this.state.service && this.state.service == 3 && this.state.index == item.index ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, this.state.service && this.state.service == 3 && this.state.index == item.index ? { color: '#fff' } : { color: '#6B6B6C' }]}>BHYT CA</Text></TouchableOpacity>
-
-
                     </View>
                 </View>
 
@@ -109,11 +108,11 @@ export default class GetNewTicket extends PureComponent {
 const styles = StyleSheet.create({
     viewTx: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: '100%', borderTopWidth: 1, borderBottomWidth: 1, borderColor: 'rgba(0,0,0,0.26)' },
     viewItem: { padding: 10, borderBottomWidth: 1, borderColor: 'rgba(0,0,0,0.26)', flexDirection: 'row' },
-    btnService: { justifyContent: 'center', alignItems: 'center', width: 64, height: 22, marginRight: 5, borderRadius: 6, marginVertical: 10, },
-    txService: { fontSize: 10, },
+    btnService: { justifyContent: 'center', alignItems: 'center', width: 82, height: 25, marginRight: 5, borderRadius: 6, marginVertical: 10, },
+    txService: { fontSize: 11, },
     viewBtnModal: { flexDirection: 'row' },
     viewModal: { flex: 1, justifyContent: 'center', alignItems: 'center', },
-    viewDialog: { height: 147, width: 318, backgroundColor: '#fff', alignItems: 'center', borderRadius: 6 },
+    viewDialog: { height: 147, width: 308, backgroundColor: '#fff', alignItems: 'center', borderRadius: 6 },
     viewBtn: { width: 120, height: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 6, backgroundColor: '#0A9BE1', marginRight: 5 },
     txDialog: { marginVertical: 20 },
     viewBtn2: { width: 120, height: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 6, backgroundColor: 'rgba(0,0,0,0.06)', marginRight: 5, borderWidth: 1, borderColor: '#979797' }
