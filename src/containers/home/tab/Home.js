@@ -294,6 +294,23 @@ class Home extends Component {
             <TouchableOpacity
               style={{ flex: 1, marginLeft: 5, alignItems: 'center' }}
               onPress={() => {
+                if (this.props.userApp.isLogin)
+                {
+                  this.props.navigation.navigate("selectHealthFacilitiesScreen");
+                }
+                else
+                  this.props.navigation.navigate("login", {
+                    nextScreen: { screen: "selectHealthFacilitiesScreen", param: {} }
+                  });
+              }}
+            >
+              <View style={{ position: 'relative', padding: 5 }}><ScaledImage style={[styles.icon]} source={require("@images/new/ic_ticket.png")} height={48} />
+              </View>
+              <Text style={[styles.label]}>Lấy số nhanh</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{ flex: 1, marginLeft: 5, alignItems: 'center' }}
+              onPress={() => {
                 this.props.navigation.navigate("listQuestion");
               }}
             >

@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import ActivityPanel from '@components/ActivityPanel';
 import { IndicatorViewPager } from "mainam-react-native-viewpager";
-import GetNewNumber from './GetNewNumber'
-import GetHistoryNumber from './GetHistoryNumber'
+import GetNewNumber from '../booking/GetNewNumber'
+import GetHistoryNumber from '../booking/GetHistoryNumber'
 
 export default class SelectHealthFacilitiesScreen extends Component {
   constructor(props) {

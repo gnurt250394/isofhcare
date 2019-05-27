@@ -57,100 +57,101 @@ import ConfirmBookingScreen from "@containers/booking/ConfirmBookingScreen";
 import CreateBookingSuccessScreen from "@containers/booking/CreateBookingSuccessScreen";
 import PaymentBookingErrorScreen from "@containers/booking/PaymentBookingErrorScreen";
 import DetailsHistoryScreen from "@containers/booking/DetailsHistoryScreen"
-import SelectProfileMedical from "@containers/booking/SelectProfileMedical"
-import SelectHealthFacilitiesScreen from "@containers/booking/SelectHealthFacilitiesScreen"
-import ConfirmInfoScreen from "@containers/booking/ConfirmInfoScreen"
 //=========PROFILE NAVIGATION
 import SelectProfileScreen from "@containers/booking/SelectProfileScreen";
 import CreateProfileScreen from "@containers/booking/CreateProfileScreen";
 import ProfileInfo from '@containers/account/ProfileInfo'
 //---------------------------
-import PatientHistoryScreen from  "@containers/booking/PatientHistoryScreen";
+import PatientHistoryScreen from "@containers/booking/PatientHistoryScreen";
 //.....details doctor.......
 import DetailsDoctorScreen from "@containers/question/DetailsDoctorScreen";
 import EmptyScreen from "@containers/EmptyScreen2";
-
+//-------get ticket----------------
+import SelectProfileMedicalScreen from "@containers/ticket/SelectProfileMedicalScreen"
+import SelectHealthFacilitiesScreen from "@containers/ticket/SelectHealthFacilitiesScreen"
+import ConfirmInfoScreen from "@containers/ticket/ConfirmInfoScreen"
+//---------------------------------
 const RootNavigator = createStackNavigator(
-    {
-      // confirmInfoScreen:{screen:ConfirmInfoScreen},
-      // selectHealthFacilitiesScreen:{screen:SelectHealthFacilitiesScreen},
-      // selectProfileMedical :{screen:SelectProfileMedical},
-      // testVNPay: { screen: TestVNPayScreen },
-      splash: { screen: SplashScreen },
-      ehealth: { screen: EHealthNavigator },
-      addBookingBVDHY: { screen: BookingDHYNavigation },
-      groupChat: { screen: GroupChatScreen },
-      groupChatFacility: { screen: GroupChatScreen },
-      chat: { screen: ChatScreen },
-      intro: { screen: IntroScreen },
-      home: { screen: HomeScreen },
-      login: { screen: LoginScreen },
-      forgotPassword: { screen: ForgotPasswordScreen },
-      enterPassword: { screen: EnterPasswordScreen },
-      register: { screen: RegisterScreen },
-      searchFacility: { screen: SearchFacilityScreen },
-      searchFacilityResult: { screen: SearchFacilityResultScreen },
-      searchFacilityByLocation: { screen: SearchByLocationScreen },
-      searchDrug: { screen: SearchDrugScreen },
-      searchDrugResult: { screen: SearchDrugResultScreen },
-      searchDisease: { screen: SearchDiseaseScreen },
-      diseaseDetail: { screen: DiseaseDetailScreen },
-      searchDiseaseResult: { screen: SearchDiseaseResultScreen },
-      drugDetailScreen: { screen: DrugDetailScreen },
-      facilityDetailScreen: { screen: FacilityDetailScreen },
-      myFacility: { screen: MyFacilityScreen },
-      addNewDrugStore: { screen: AddNewDrugStoreScreen },
-      addNewClinic: { screen: AddNewClinicScreen },
-      photoViewer: { screen: PhotoViewerScreen },
-      about: { screen: AboutScreen },
-      terms: { screen: TermsScreen },
-      policy: { screen: PolicyScreen },
-      specialist: { screen: SpecialistScreen },
-      confirmCode: { screen: ConfirmCodeScreen },
-      resetPassword: { screen: ResetPasswordScreen },
-      symptom: { screen: SymptomScreen },
-      profile: { screen: ProfileScreen },
-      notification: { screen: NotificationScreen },
-      listQuestion: { screen: ListQuestionScreen },
-      createQuestionStep1: { screen: CreateQuestionStep1Screen },
-      createQuestionStep2: { screen: CreateQuestionStep2Screen },
-      detailQuestion: { screen: DetailQuestionScreen },
-      changePass: { screen: ChangePass },
-      FingerScreen: { screen: FingerScreen },
-      FingerSettingScreen: { screen: FingerSettingScreen },
-      //---------------booking navigation
-      addBooking: { screen: AddBookingScreen },
-      selectHospital: { screen: SelectHospitalScreen },
-      selectHospitalByLocation: { screen: SelectHospitalByLocationScreen },
-      selectTime: { screen: SelectTimeScreen },
-      selectService: { screen: SelectServiceScreen },
-      selectServiceType: { screen: SelectServiceTypeScreen },
-      selectSpecialist: { screen: SelectSpecialistScreen },
-      confirmBooking: { screen: ConfirmBookingScreen },
-      createBookingSuccess: { screen: CreateBookingSuccessScreen },
-      paymentBookingError: { screen: PaymentBookingErrorScreen },
-      detailsHistory:{screen:DetailsHistoryScreen},
-      paymentVNPay: { screen: PaymentWithVNPayScreen },
-      //---------------------------------
-      createProfile: { screen: CreateProfileScreen },
-      selectProfile: {screen: SelectProfileScreen},
-      detailsProfile: {screen:ProfileInfo},
-      detailsDoctorScreen:{screen : DetailsDoctorScreen},
-      //
-      PatientHistoryScreen:{screen:PatientHistoryScreen},
-
-      emptyScreen: { screen: EmptyScreen }
-    },
-    {
-      headerMode: "none",
+  {
+    // testVNPay: { screen: TestVNPayScreen },
+    splash: { screen: SplashScreen },
+    ehealth: { screen: EHealthNavigator },
+    addBookingBVDHY: { screen: BookingDHYNavigation },
+    groupChat: { screen: GroupChatScreen },
+    groupChatFacility: { screen: GroupChatScreen },
+    chat: { screen: ChatScreen },
+    intro: { screen: IntroScreen },
+    home: { screen: HomeScreen },
+    login: { screen: LoginScreen },
+    forgotPassword: { screen: ForgotPasswordScreen },
+    enterPassword: { screen: EnterPasswordScreen },
+    register: { screen: RegisterScreen },
+    searchFacility: { screen: SearchFacilityScreen },
+    searchFacilityResult: { screen: SearchFacilityResultScreen },
+    searchFacilityByLocation: { screen: SearchByLocationScreen },
+    searchDrug: { screen: SearchDrugScreen },
+    searchDrugResult: { screen: SearchDrugResultScreen },
+    searchDisease: { screen: SearchDiseaseScreen },
+    diseaseDetail: { screen: DiseaseDetailScreen },
+    searchDiseaseResult: { screen: SearchDiseaseResultScreen },
+    drugDetailScreen: { screen: DrugDetailScreen },
+    facilityDetailScreen: { screen: FacilityDetailScreen },
+    myFacility: { screen: MyFacilityScreen },
+    addNewDrugStore: { screen: AddNewDrugStoreScreen },
+    addNewClinic: { screen: AddNewClinicScreen },
+    photoViewer: { screen: PhotoViewerScreen },
+    about: { screen: AboutScreen },
+    terms: { screen: TermsScreen },
+    policy: { screen: PolicyScreen },
+    specialist: { screen: SpecialistScreen },
+    confirmCode: { screen: ConfirmCodeScreen },
+    resetPassword: { screen: ResetPasswordScreen },
+    symptom: { screen: SymptomScreen },
+    profile: { screen: ProfileScreen },
+    notification: { screen: NotificationScreen },
+    listQuestion: { screen: ListQuestionScreen },
+    createQuestionStep1: { screen: CreateQuestionStep1Screen },
+    createQuestionStep2: { screen: CreateQuestionStep2Screen },
+    detailQuestion: { screen: DetailQuestionScreen },
+    changePass: { screen: ChangePass },
+    FingerScreen: { screen: FingerScreen },
+    FingerSettingScreen: { screen: FingerSettingScreen },
+    //---------------booking navigation
+    addBooking: { screen: AddBookingScreen },
+    selectHospital: { screen: SelectHospitalScreen },
+    selectHospitalByLocation: { screen: SelectHospitalByLocationScreen },
+    selectTime: { screen: SelectTimeScreen },
+    selectService: { screen: SelectServiceScreen },
+    selectServiceType: { screen: SelectServiceTypeScreen },
+    selectSpecialist: { screen: SelectSpecialistScreen },
+    confirmBooking: { screen: ConfirmBookingScreen },
+    createBookingSuccess: { screen: CreateBookingSuccessScreen },
+    paymentBookingError: { screen: PaymentBookingErrorScreen },
+    detailsHistory: { screen: DetailsHistoryScreen },
+    paymentVNPay: { screen: PaymentWithVNPayScreen },
+    //---------------------------------
+    createProfile: { screen: CreateProfileScreen },
+    selectProfile: { screen: SelectProfileScreen },
+    detailsProfile: { screen: ProfileInfo },
+    detailsDoctorScreen: { screen: DetailsDoctorScreen },
+    //
+    PatientHistoryScreen: { screen: PatientHistoryScreen },
+    //------------------get ticket ----------------
+    confirmInfoScreen: { screen: ConfirmInfoScreen },
+    selectHealthFacilitiesScreen: { screen: SelectHealthFacilitiesScreen },
+    selectProfileMedical: { screen: SelectProfileMedicalScreen },
+    emptyScreen: { screen: EmptyScreen }
+  },
+  {
+    headerMode: "none",
+    header: null,
+    gesturesEnabled: false,
+    navigationOptions: {
       header: null,
-      gesturesEnabled: false,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: false
-      },
-      mode: Platform.OS == "ios" ? "modal" : "card"
-    }
-  )
+      gesturesEnabled: false
+    },
+    mode: Platform.OS == "ios" ? "modal" : "card"
+  }
+)
 
 export { RootNavigator };
