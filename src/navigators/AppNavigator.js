@@ -57,6 +57,9 @@ import ConfirmBookingScreen from "@containers/booking/ConfirmBookingScreen";
 import CreateBookingSuccessScreen from "@containers/booking/CreateBookingSuccessScreen";
 import PaymentBookingErrorScreen from "@containers/booking/PaymentBookingErrorScreen";
 import DetailsHistoryScreen from "@containers/booking/DetailsHistoryScreen"
+import SelectProfileMedical from "@containers/booking/SelectProfileMedical"
+import SelectHealthFacilitiesScreen from "@containers/booking/SelectHealthFacilitiesScreen"
+import ConfirmInfoScreen from "@containers/booking/ConfirmInfoScreen"
 //=========PROFILE NAVIGATION
 import SelectProfileScreen from "@containers/booking/SelectProfileScreen";
 import CreateProfileScreen from "@containers/booking/CreateProfileScreen";
@@ -66,8 +69,12 @@ import PatientHistoryScreen from  "@containers/booking/PatientHistoryScreen";
 //.....details doctor.......
 import DetailsDoctorScreen from "@containers/question/DetailsDoctorScreen";
 import EmptyScreen from "@containers/EmptyScreen2";
+
 const RootNavigator = createStackNavigator(
     {
+      // confirmInfoScreen:{screen:ConfirmInfoScreen},
+      // selectHealthFacilitiesScreen:{screen:SelectHealthFacilitiesScreen},
+      // selectProfileMedical :{screen:SelectProfileMedical},
       // testVNPay: { screen: TestVNPayScreen },
       splash: { screen: SplashScreen },
       ehealth: { screen: EHealthNavigator },
