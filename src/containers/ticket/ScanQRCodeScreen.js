@@ -299,7 +299,7 @@ const styles = StyleSheet.create({
     centerText: {
         flex: 1,
         textAlign: 'center',
-        fontSize: 12,
+        fontSize: 13,
         padding: 32,
         color: '#FFF',
     },
