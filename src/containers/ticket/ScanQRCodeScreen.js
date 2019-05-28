@@ -23,6 +23,7 @@ import {
 
 import QRCodeScanner from 'mainam-react-native-qrcode-scanner';
 import ticketProvider from '@data-access/ticket-provider';
+const deviceWidth = Dimensions.get("window").width;
 
 class ScanQRCodeScreen extends Component {
     constructor(props) {
@@ -141,11 +142,28 @@ class ScanQRCodeScreen extends Component {
                 case 0:
                     if (s.data.informationUserHospital.oderCode) {
                         data.oderCode = s.data.informationUserHospital.oderCode;
-                        this.props.navigation.replace("confirmGetTicket", {
-                            data
-                        })
+                        this.setState({ isLoading: false }, () => {
+                            this.props.navigation.replace("confirmGetTicket", {
+                                data
+                            })
+                        });
                     }
+                    else
+                        this.setState({ isLoading: false }, () => {
+                            snackbar.show(constants.msg.error_occur, "danger");
+                            this.restart();
+                        })
+
                     break;
+                case 3:
+                    this.setState({
+                        showError: true, dialog: {
+                            title: "SỐ KHÁM VƯỢT ĐỊNH MỨC", content: "Bạn đã lấy quá nhiều số khám trong ngày. Hãy quay lại vào ngày mai", button: "Xem lịch sử lấy số", onPress: () => {
+                                this.props.navigation.navigate("selectHealthFacilitiesScreen");
+                            }
+                        }
+                    });
+                    return;
                 default:
                     this.setState({ isLoading: false }, () => {
                         snackbar.show(constants.msg.error_occur, "danger");
@@ -194,7 +212,6 @@ class ScanQRCodeScreen extends Component {
     onCloseModal = () => this.setState({ isVisible: false })
 
     render() {
-        const deviceWidth = Dimensions.get("window").width;
         const deviceHeight = Platform.OS === "ios"
             ? Dimensions.get("window").height
             : require("react-native-extra-dimensions-android").get("REAL_WINDOW_HEIGHT");
@@ -202,7 +219,6 @@ class ScanQRCodeScreen extends Component {
             <ActivityPanel isLoading={this.state.isLoading} style={{ flex: 1 }} title="Quét QR BHYT" >
 
                 <QRCodeScanner
-                    // reactivate={true}
                     ref={(node) => { this.scanner = node }}
                     showMarker={true}
                     onRead={this.onSuccess.bind(this)}
@@ -210,39 +226,29 @@ class ScanQRCodeScreen extends Component {
                         <Text style={styles.centerText}>
                             Di chuyển camera tới vùng có QR của bảo hiểm y tế để quét</Text>
                     }
-                // bottomContent={
-                //     <TouchableOpacity style={styles.buttonTouchable} onPress={() => Actions.pop()}>
-                //         <Text style={styles.buttonText}>Quay về</Text>
-                //     </TouchableOpacity>
-                // }
                 />
                 <Modal animationType="fade"
                     onBackdropPress={this.onCloseModal}
-                    transparent={true} isVisible={this.state.isVisible} style={[styles.viewModal]}
+                    transparent={true}
+                    isVisible={this.state.showError}
                     deviceWidth={deviceWidth}
                     deviceHeight={deviceHeight}
                 >
                     <View style={styles.viewModal}>
                         <View style={styles.viewDialog}>
-                            <Text style={styles.txDialog}>Lấy số khám</Text>
-                            <View style={styles.viewBtnModal}>
-                                <TouchableOpacity style={styles.viewBtn} onPress={() => {
-                                    this.setState({ isVisible: false }, () => {
-                                        this.props.navigation.navigate("scanQRCode");
-                                    });
-                                }} ><Text style={{ color: '#fff', fontWeight: 'bold' }} >Lấy số cho tôi</Text></TouchableOpacity>
-                                <TouchableOpacity style={styles.viewBtn2} onPress={() => {
-                                    this.setState({ isVisible: false }, () => {
-                                        this.props.navigation.navigate("login", {
-                                            nextScreen: { screen: "scanQRCode", param: {} }
-                                        });
-                                    });
-                                }} ><Text style={{ color: '#4A4A4A', fontWeight: 'bold' }}>Lấy số hộ</Text></TouchableOpacity>
-                            </View>
+                            <Text style={styles.txDialog}>{(this.state.dialog || {}).title}</Text>
+                            <Text style={styles.txDialog2}>{(this.state.dialog || {}).content}</Text>
+                            <View style={{ height: 1, backgroundColor: "#00000050", width: 300, maxWidth: deviceWidth, marginTop: 20 }} />
+                            <TouchableOpacity style={styles.viewBtnModal} onPress={() => {
+                                if (this.state.dialog && this.state.dialog.onPress)
+                                    this.state.dialog.onPress();
+                            }}
+                            ><Text style={{ fontWeight: 'bold', color: '#02c39a', fontSize: 15 }} >{(this.state.dialog || {}).button}</Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
                 </Modal>
-            </ActivityPanel>
+            </ActivityPanel >
         );
     }
 }
@@ -266,6 +272,20 @@ const styles = StyleSheet.create({
     buttonTouchable: {
         padding: 16,
     },
+    viewModal: { justifyContent: 'center', alignItems: 'center', margin: 0, padding: 0 },
+    viewDialog: { backgroundColor: '#fff', alignItems: 'center', borderRadius: 6, paddingHorizontal: 20, maxHeight: 300, width: 300, maxWidth: deviceWidth },
+    txDialog: { fontWeight: 'bold', marginTop: 20 },
+    txDialog2: {
+        fontSize: 14,
+        color: '#000', marginTop: 20, maxWidth: deviceWidth,
+        textAlign: 'center'
+    },
+    viewBtnModal: {
+        flexDirection: 'row',
+        padding: 20
+    },
+
+
 });
 function mapStateToProps(state) {
     return {
