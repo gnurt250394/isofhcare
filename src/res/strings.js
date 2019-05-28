@@ -53,7 +53,8 @@ module.exports = {
     action_change_notification_count: "ACTION_CHANGE_NOTIFICATION_COUNT",
     action_show_popup_notice_new_version:
       "ACTION_SHOW_POPUP_NOTICE_NEW_VERSION",
-    action_set_my_facility: "ACTION_SET_MY_FACILITY"
+    action_set_my_facility: "ACTION_SET_MY_FACILITY",
+    action_select_hospital_get_ticket: "ACTION_SELECT_HOSPITAL_GET_TICKET"
   },
   colors: {
     breakline: "#c0c0c0",
@@ -322,7 +323,7 @@ module.exports = {
       get_hospital_by_service_type: isofhcare_service + "hospital/get-hospital-by-service-type",
       get_hospital_by_search: isofhcare_service + "hospital/search",
       get_by_location: isofhcare_service + "hospital/get-hospital-by-locate",
-      get_default_hospital : isofhcare_service + 'hospital/get-default-hospital'
+      get_default_hospital: isofhcare_service + 'hospital/get-default-hospital'
     },
     profile: {
       get_by_user: isofhcare_service + "profile/get-by-user",
