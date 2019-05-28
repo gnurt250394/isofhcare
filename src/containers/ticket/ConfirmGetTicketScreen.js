@@ -4,6 +4,7 @@ import ActivityPanel from '@components/ActivityPanel';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import snackbar from '@utils/snackbar-utils';
 import { connect } from 'react-redux';
+import SendSMS from 'react-native-sms';
 
 class ConfirmGetTicketScreen extends Component {
   constructor(props) {
@@ -83,10 +84,24 @@ class ConfirmGetTicketScreen extends Component {
             </View>
           </View>
         </ScrollView>
-        <TouchableOpacity style={[styles.button]}><Text style={{
+        <TouchableOpacity style={[styles.button]} onPress={() => {
+          SendSMS.send({
+            body: this.state.code,
+            recipients: ['8300'],
+            successTypes: ['sent', 'queued'],
+            allowAndroidSendWithoutReadPermission: true
+          }, (completed, cancelled, error) => {
+            if (completed) {
+              this.props.navigation.navigate("selectHealthFacilitiesScreen", {
+                selectTab: 1,
+                requestTime: new Date()
+              });
+            }
+          });
+        }}><Text style={{
           color: "#ffffff", fontSize: 16, fontWeight: '600'
-        }}>Gửi tin nhắn lấy số</Text></TouchableOpacity>
-      </ActivityPanel>
+        }}>Gửi tin nhắn lấy số</Text></TouchableOpacity >
+      </ActivityPanel >
 
     );
   }

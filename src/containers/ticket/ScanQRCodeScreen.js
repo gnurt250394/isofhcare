@@ -33,7 +33,7 @@ class ScanQRCodeScreen extends Component {
         }
     }
     componentDidMount() {
-        console.disableYellowBox = true;
+        console.disableYellowBox = true;        
     }
     loginSuccess(s, e) {
         this.setState({ isLoading: false });
