@@ -38,9 +38,9 @@ class ConfirmGetTicketScreen extends Component {
       >
         <ScrollView>
           <View style={{ width: '100%', paddingHorizontal: 20, marginTop: 10 }}>
-            <Text style={{ textAlign: 'center', color: '#000' }}>Bạn cần nhắn tin tới tổng đài <Text style={{ fontWeight: 'bold' }}>8300</Text> (5.000đ) để lấy số thứ tự tiếp đón.</Text>
+            <Text style={{ textAlign: 'center', color: '#000' }}>Bạn cần nhắn tin tới tổng đài <Text style={{ fontWeight: 'bold' }}>8300</Text> (3.000đ) để lấy số thứ tự tiếp đón.</Text>
             <View style={{ borderWidth: 1, borderColor: '#f05673', marginTop: 14, justifyContent: 'center', alignItems: 'center', borderRadius: 6, padding: 10 }}>
-              <Text style={{ fontSize: 15 }}>Cú pháp sms</Text>
+              <Text style={{ fontSize: 15 }}>Cú pháp SMS</Text>
               <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 5 }}>
                 <Text style={{ color: '#f05673', fontWeight: '600' }}>{this.state.code}</Text>
                 <TouchableOpacity onPress={this.onCopy}>
@@ -80,7 +80,7 @@ class ConfirmGetTicketScreen extends Component {
             </View>
             <View style={styles.viewInfo}>
               <Text style={styles.label}>Địa chỉ</Text>
-              <Text style={{ fontWeight: 'bold', textAlign: 'right', color: '#4A4A4A', flex: 1 }}>{data.address}</Text>
+              <Text style={{ fontWeight: 'bold', textAlign: 'right', color: '#4A4A4A', flex: 1, maxWidth: 200 }} numberOfLines={3}>{data.address}</Text>
             </View>
           </View>
         </ScrollView>
