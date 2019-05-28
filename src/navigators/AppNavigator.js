@@ -69,7 +69,7 @@ import EmptyScreen from "@containers/EmptyScreen2";
 //-------get ticket----------------
 import SelectProfileMedicalScreen from "@containers/ticket/SelectProfileMedicalScreen";
 import SelectHealthFacilitiesScreen from "@containers/ticket/SelectHealthFacilitiesScreen";
-import ConfirmInfoScreen from "@containers/ticket/ConfirmInfoScreen";
+import ConfirmGetTicketScreen from "@containers/ticket/ConfirmGetTicketScreen";
 import ScanQRCodeScreen from "@containers/ticket/ScanQRCodeScreen";
 import GetTicketFinishScreen from "@containers/ticket/GetTicketFinishScreen";
 //---------------------------------
@@ -146,8 +146,8 @@ const RootNavigator = createStackNavigator(
     selectProfileMedical: { screen: SelectProfileMedicalScreen },
     scanQRCode: { screen: ScanQRCodeScreen },
     getTicketFinishScreen: { screen: GetTicketFinishScreen },
+    confirmGetTicket: { screen: ConfirmGetTicketScreen },
     //----------------------------------------
-    confirmInfoScreen: { screen: ConfirmInfoScreen },
     emptyScreen: { screen: EmptyScreen }
   },
   {

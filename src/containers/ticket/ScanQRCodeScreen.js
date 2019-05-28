@@ -85,6 +85,7 @@ class ScanQRCodeScreen extends Component {
         if (obj.length < 7)
             throw "Vui lòng kiểm tra lại mã QR trên thẻ đảm bảo không bị mờ, rách...";
         console.log(info);
+        return info;
     }
     fromUTF8Array(data) { // array of bytes
         var str = '',
@@ -115,7 +116,13 @@ class ScanQRCodeScreen extends Component {
 
     onSuccess(e) {
         try {
-            this.getInfo(e.data);
+            let data = this.getInfo(e.data);
+            setTimeout(() => {
+                this.scanner.reactivate();
+            }, 3000);
+            this.props.navigation.replace("confirmGetTicket", {
+                data
+            })
             return;
         } catch (error) {
             if (error)

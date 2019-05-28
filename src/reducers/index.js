@@ -1,9 +1,9 @@
-
 import userProvider from '@data-access/user-provider';
 import constants from '@resources/strings';
 import client from '@utils/client-utils';
 import reduxBookingDHY from '@dhy/redux'
 import reduxEhealthDHY from '@ehealth/daihocy/redux'
+import { connect } from "react-redux";
 
 const defaultState = {
     userApp:
