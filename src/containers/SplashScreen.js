@@ -15,6 +15,7 @@ const resetAction = (route) => {
 		actions: [NavigationActions.navigate({ routeName: route })],
 	})
 };
+
 import dataCache from '@data-access/datacache-provider';
 class SplashScreen extends Component {
 	constructor(props) {

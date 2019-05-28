@@ -10,7 +10,6 @@ import {
   StyleSheet
 } from "react-native";
 import { connect } from "react-redux";
-import ScaledImage from "mainam-react-native-scaleimage";
 import Dimensions from "Dimensions";
 const DEVICE_WIDTH = Dimensions.get("window").width;
 import Carousel, { Pagination } from "react-native-snap-carousel";
@@ -20,7 +19,7 @@ import { Card } from "native-base";
 import ImageLoad from "mainam-react-native-image-loader";
 import clientUtils from "@utils/client-utils";
 import objectUtils from "@utils/object-utils";
-import ScaleImage from "mainam-react-native-scaleimage";
+import ScaledImage from "mainam-react-native-scaleimage";
 import redux from "@redux-store";
 import ImagePicker from "mainam-react-native-select-image";
 import imageProvider from "@data-access/image-provider";
@@ -129,7 +128,7 @@ class Account extends Component {
             source={source}
             defaultImage={() => {
               return (
-                <ScaleImage
+                <ScaledImage
                   resizeMode="cover"
                   source={icSupport}
                   width={70}
