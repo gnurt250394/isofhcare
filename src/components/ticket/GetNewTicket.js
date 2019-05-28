@@ -15,9 +15,9 @@ class GetNewTicket extends PureComponent {
         data: [],
         service: null,
         index: '',
-        keyword:'',
-        loading : true
-
+        keyword: '',
+        loading: true,
+        disabled: true,
     }
     componentDidMount() {
         this.getListHospital()
@@ -35,8 +35,8 @@ class GetNewTicket extends PureComponent {
     //   }
     onRefesh = () => {
         this.setState({
-            loading:true
-        } , () => {
+            loading: true
+        }, () => {
             this.getListHospital()
         })
     }
@@ -45,44 +45,42 @@ class GetNewTicket extends PureComponent {
         hospitalProvider.getDefaultHospital().then(res => {
             let data = res.data
             if (res.code == 0) {
-                let data2 = data.filter(data => data.hospital.defaultBookHospital)
-                let data3 = data.filter(data => !data.hospital.defaultBookHospital)
+                let keyword = (this.state.keyword || "").trim().toLowerCase().unsignText();
+                let data2 = data.filter(data => {
+                    return (data.hospital.defaultBookHospital && (
+                        !keyword ||
+                        ((data.hospital.name || "").trim().toLowerCase().unsignText().indexOf(keyword) != -1) ||
+                        ((data.hospital.address || "").trim().toLowerCase().unsignText().indexOf(keyword) != -1)
+                    ));
+                })
+                let data3 = data.filter(data => {
+                    return (!data.hospital.defaultBookHospital && (
+                        !keyword ||
+                        ((data.hospital.name || "").trim().toLowerCase().unsignText().indexOf(keyword) != -1) ||
+                        ((data.hospital.address || "").trim().toLowerCase().unsignText().indexOf(keyword) != -1)
+                    ));
+                })
                 this.setState({
                     data2,
                     data3,
-                    loading:false
+                    loading: false
                 })
-                let stringQuyery = this.state.keyword ? this.state.keyword.trim() : ""
-                if(stringQuyery){
-                    dataSearch = data.filter(data => { const dataItem = `${data.hospital.name.toUpperCase()} ${data.hospital.address.toUpperCase()}`
-                
-                    return(dataItem.indexOf(stringQuyery) > -1
-                    )
-                })
-                this.setState({
-                    dataSearch:dataSearch,
-                    loading:false
-
-                })
-                console.log(dataSearch);
-                }
-
             }
-        }).catch( err => {
+        }).catch(err => {
             this.setState({
-                loading:false
+                loading: false
             })
         })
     }
     onPressService = (item, key, index) => {
-        if(item.hospital.defaultBookHospital && key == 1 ){
+        if (item.hospital.defaultBookHospital && key == 1) {
             this.setState({
-                isShowErr : true
+                isShowErr: true
             })
             return
         }
-        if( item.hospital.defaultBookHospital  && key == 3 || !item.hospital.defaultBookHospital ){
-            
+        if (item.hospital.defaultBookHospital && key == 3 || !item.hospital.defaultBookHospital) {
+
             return
         }
         this.setState({
@@ -98,7 +96,7 @@ class GetNewTicket extends PureComponent {
 
     }
     onCloseModal = () => this.setState({ isVisible: false, service: 0 })
-    onCloseErr = () => this.setState({isShowErr:false})
+    onCloseErr = () => this.setState({ isShowErr: false })
     renderItem = (item, index) => {
         return (
             <View style={[styles.viewItem, index > 0 ? { borderTopWidth: 0 } : { borderTopWidth: 1 }]} key={index}>
@@ -122,11 +120,11 @@ class GetNewTicket extends PureComponent {
                         <Text style={{ fontWeight: 'bold', color: '#000' }}>{item.hospital.name}</Text>
                         <ScaledImage style={{ marginLeft: 8, }} height={12} source={require("@images/new/booking/ic_checked.png")} ></ScaledImage>
                     </View>
-                    <Text>{item.hospital.address}</Text>
+                    <Text style={{ color: '#000', opacity: 0.54, }}>{item.hospital.address}</Text>
                     <View style={{ flexDirection: 'row' }}>
-                        <TouchableOpacity onPress={this.onPressService.bind(this, item, 1, index)} style={[styles.btnService, this.state.service && this.state.service == 1 && this.state.index == item.hospital.id ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, this.state.service && this.state.service == 1 && this.state.index == item.hospital.id ? { color: '#fff' } : { color: '#6B6B6C' }]}>Khám DV</Text></TouchableOpacity>
-                        <TouchableOpacity onPress={this.onPressService.bind(this, item, 2, index)} style={[styles.btnService, { width: 62 }, this.state.service && this.state.service == 2 && this.state.index == item.hospital.id ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, this.state.service && this.state.service == 2 && this.state.index == item.hospital.id ? { color: '#fff' } : { color: '#6B6B6C' }]}>BHYT</Text></TouchableOpacity>
-                        <TouchableOpacity onPress={this.onPressService.bind(this, item, 3, index)} style={[styles.btnService, this.state.service && this.state.service == 3 && this.state.index == item.hospital.id ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, this.state.service && this.state.service == 3 && this.state.index == item.hospital.id ? { color: '#fff' } : { color: '#6B6B6C' }]}>BHYT CA</Text></TouchableOpacity>
+                        <TouchableOpacity disabled={item.hospital.defaultBookHospital ? false : true} onPress={this.onPressService.bind(this, item, 1, index)} style={[styles.btnService, this.state.service && this.state.service == 1 && this.state.index == item.hospital.id ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, this.state.service && this.state.service == 1 && this.state.index == item.hospital.id ? { color: '#fff' } : { color: '#6B6B6C' }]}>Khám DV</Text></TouchableOpacity>
+                        <TouchableOpacity disabled={item.hospital.defaultBookHospital ? false : true} onPress={this.onPressService.bind(this, item, 2, index)} style={[styles.btnService, { width: 62 }, item.hospital.defaultBookHospital ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, item.hospital.defaultBookHospital ? { color: '#fff' } : { color: '#6B6B6C' }]}>BHYT</Text></TouchableOpacity>
+                        <View onPress={this.onPressService.bind(this, item, 3, index)} style={[styles.btnService, this.state.service && this.state.service == 3 && this.state.index == item.hospital.id ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, this.state.service && this.state.service == 3 && this.state.index == item.hospital.id ? { color: '#fff' } : { color: '#6B6B6C' }]}>BHYT CA</Text></View>
                     </View>
                 </View>
             </View>
@@ -147,7 +145,7 @@ class GetNewTicket extends PureComponent {
                         }}
                         onSubmitEditing={this.search.bind(this)}
                         returnKeyType='search'
-                        style={{ width: '80%', height: 41 }} placeholder={"Tìm kiếm…"} underlineColorAndroid={"transparent"} />
+                        style={{ width: '80%', height: 41, marginLeft: -10 }} placeholder={"Tìm kiếm…"} underlineColorAndroid={"transparent"} />
                     <TouchableOpacity onPress={this.search}><ScaledImage source={require('@images/new/hospital/ic_search.png')} height={16}></ScaledImage></TouchableOpacity>
                 </View>
                 {this.state.dataSearch && this.state.keyword ? (
@@ -162,32 +160,32 @@ class GetNewTicket extends PureComponent {
                 ) : (
 
 
-                    <ScrollView   refreshControl={
-                        <RefreshControl
-                            onRefresh={this.onRefesh}
-                            refreshing={this.state.loading}
-                        />
-                    } >
-                    {
-                        (this.state.data2 && this.state.data2.length > 0) &&
-                        <View>
-                            <Text style={{marginLeft:10,marginTop:20,fontSize:15,marginBottom:10,color:'#4a4a4a'}}>Bệnh viện đã triển khai</Text>
-                            {this.state.data2.map((item, index) => {
-                                return this.renderItem(item, index)
-                            })}
-                        </View>
-                    }
-                    {
-                        (this.state.data3 && this.state.data3.length > 0) &&
-                        <View>
-                            <Text style={{marginLeft:10,marginTop:20,fontSize:15,marginBottom:10,color:'#4a4a4a'}}>Bệnh viện sắp triển khai</Text>
-                            {this.state.data3.map((item, index) => {
-                                return this.renderItem(item, index)
-                            })}
-                        </View>
-                    }
-                </ScrollView>
-                )}
+                        <ScrollView refreshControl={
+                            <RefreshControl
+                                onRefresh={this.onRefesh}
+                                refreshing={this.state.loading}
+                            />
+                        } >
+                            {
+                                (this.state.data2 && this.state.data2.length > 0) &&
+                                <View>
+                                    <Text style={{ marginLeft: 12, marginTop: 20, fontSize: 15, marginBottom: 10, color: '#4a4a4a' }}>Bệnh viện đã triển khai</Text>
+                                    {this.state.data2.map((item, index) => {
+                                        return this.renderItem(item, index)
+                                    })}
+                                </View>
+                            }
+                            {
+                                (this.state.data3 && this.state.data3.length > 0) &&
+                                <View>
+                                    <Text style={{ marginLeft: 12, marginTop: 20, fontSize: 15, marginBottom: 10, color: '#4a4a4a' }}>Bệnh viện sắp triển khai</Text>
+                                    {this.state.data3.map((item, index) => {
+                                        return this.renderItem(item, index)
+                                    })}
+                                </View>
+                            }
+                        </ScrollView>
+                    )}
                 <Modal animationType="fade"
                     onBackdropPress={this.onCloseModal}
                     transparent={true} isVisible={this.state.isVisible} style={[styles.viewModal]}
@@ -215,24 +213,24 @@ class GetNewTicket extends PureComponent {
                     </View>
                 </Modal>
                 <Modal animationType="fade"
-                onBackdropPress={this.onCloseErr}
-                transparent={true} isVisible={this.state.isShowErr} >
-                <View style={styles.viewModal}>
-                    <View style={{width:328,height:167,backgroundColor:'#fff',borderRadius:6,alignItems:'center'}}>
-                        <Text style={{marginVertical:10,fontWeight:'bold',color:'#4a4a4a'}}>Thông báo</Text>
-                       <Text style={{marginBottom:20, color:'#4a4a4a',marginHorizontal:20,textAlign:'center',}}>Đối tượng dịch vụ tại bệnh viện E không cần có số khám</Text>
-                       <View style={{width:'100%',height:1,backgroundColor:'#d8d8d8',marginTop:20}}></View>
-                       <TouchableOpacity style={{alignItems:'center',justifyContent:'center',flex:1}} onPress ={this.onCloseErr}><Text style={{color:'#02c39a'}}>OK</Text></TouchableOpacity>
+                    onBackdropPress={this.onCloseErr}
+                    transparent={true} isVisible={this.state.isShowErr} >
+                    <View style={styles.viewModal}>
+                        <View style={{ width: 328, height: 167, backgroundColor: '#fff', borderRadius: 6, alignItems: 'center' }}>
+                            <Text style={{ marginVertical: 10, fontWeight: 'bold', color: '#4a4a4a' }}>Thông báo</Text>
+                            <Text style={{ marginBottom: 20, color: '#4a4a4a', marginHorizontal: 20, textAlign: 'center', }}>Đối tượng dịch vụ tại bệnh viện E không cần có số khám</Text>
+                            <View style={{ width: '100%', height: 1, backgroundColor: '#d8d8d8', marginTop: 20 }}></View>
+                            <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }} onPress={this.onCloseErr}><Text style={{ color: '#02c39a' }}>OK</Text></TouchableOpacity>
+                        </View>
                     </View>
-                </View>
-            </Modal>
+                </Modal>
             </View>
         )
     }
 }
 const styles = StyleSheet.create({
-    viewTx: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: '100%', borderTopWidth: 0.5, borderBottomWidth: 0.5, borderColor: 'rgba(0,0,0,0.26)' },
-    viewItem: { padding: 10, borderBottomWidth: 1, borderColor: 'rgba(0,0,0,0.26)', flexDirection: 'row', borderTopWidth: 1 },
+    viewTx: { flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', width: '100%', borderTopWidth: 0.5, borderBottomWidth: 0.5, borderColor: 'rgba(0,0,0,0.26)' },
+    viewItem: { padding: 15, borderBottomWidth: 1, borderColor: 'rgba(0,0,0,0.26)', flexDirection: 'row', borderTopWidth: 1 },
     btnService: { justifyContent: 'center', alignItems: 'center', width: 82, height: 25, marginRight: 5, borderRadius: 6, marginVertical: 10, },
     txService: { fontSize: 11, },
     viewBtnModal: { flexDirection: 'row' },
