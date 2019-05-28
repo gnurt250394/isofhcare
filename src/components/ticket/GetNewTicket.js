@@ -14,7 +14,8 @@ class GetNewTicket extends PureComponent {
     state = {
         data: [],
         service: null,
-        index: ''
+        index: '',
+        keyword:''
 
     }
     componentDidMount() {
@@ -31,7 +32,9 @@ class GetNewTicket extends PureComponent {
     //     })
 
     //   }
+    
     getListHospital = () => {
+        
         hospitalProvider.getDefaultHospital().then(res => {
             let data = res.data
             if (res.code == 0) {
@@ -41,7 +44,19 @@ class GetNewTicket extends PureComponent {
                     data2,
                     data3
                 })
-                console.log(data2, 'data2');
+                let stringQuyery = this.state.keyword ? this.state.keyword.trim() : ""
+                if(stringQuyery){
+                    dataSearch = data.filter(data => { const dataItem = `${data.hospital.name.toUpperCase()} ${data.hospital.address.toUpperCase()}`
+                
+                    return(dataItem.indexOf(stringQuyery) > -1
+                    )
+                })
+                this.setState({
+                    dataSearch:dataSearch
+                })
+                console.log(dataSearch);
+                }
+
             }
         })
     }
@@ -49,12 +64,15 @@ class GetNewTicket extends PureComponent {
         this.setState({
             service: key,
             isVisible: true,
-            index: index,
+            index: item.hospital.id,
         }, () => {
             this.props.dispatch({ type: constants.action.action_select_hospital_get_ticket, value: item })
         });
     }
-    defaultBookHospital
+    search = () => {
+        this.getListHospital()
+
+    }
     onCloseModal = () => this.setState({ isVisible: false, service: 0 })
     renderItem = (item, index) => {
         return (
@@ -81,9 +99,9 @@ class GetNewTicket extends PureComponent {
                     </View>
                     <Text>{item.hospital.address}</Text>
                     <View style={{ flexDirection: 'row' }}>
-                        <TouchableOpacity onPress={this.onPressService.bind(this, item, 1, item.index)} style={[styles.btnService, this.state.service && this.state.service == 1 && this.state.index == item.index ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, this.state.service && this.state.service == 1 && this.state.index == item.index ? { color: '#fff' } : { color: '#6B6B6C' }]}>Khám DV</Text></TouchableOpacity>
-                        <TouchableOpacity onPress={this.onPressService.bind(this, item, 2, item.index)} style={[styles.btnService, { width: 62 }, this.state.service && this.state.service == 2 && this.state.index == item.index ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, this.state.service && this.state.service == 2 && this.state.index == item.index ? { color: '#fff' } : { color: '#6B6B6C' }]}>BHYT</Text></TouchableOpacity>
-                        <TouchableOpacity onPress={this.onPressService.bind(this, item, 3, item.index)} style={[styles.btnService, this.state.service && this.state.service == 3 && this.state.index == item.index ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, this.state.service && this.state.service == 3 && this.state.index == item.index ? { color: '#fff' } : { color: '#6B6B6C' }]}>BHYT CA</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={this.onPressService.bind(this, item, 1,index)} style={[styles.btnService, this.state.service && this.state.service == 1 && this.state.index == item.hospital.id ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, this.state.service && this.state.service == 1 && this.state.index == item.hospital.id ? { color: '#fff' } : { color: '#6B6B6C' }]}>Khám DV</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={this.onPressService.bind(this, item, 2,index)} style={[styles.btnService, { width: 62 }, this.state.service && this.state.service == 2 && this.state.index == item.hospital.id ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, this.state.service && this.state.service == 2 && this.state.index == item.hospital.id ? { color: '#fff' } : { color: '#6B6B6C' }]}>BHYT</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={this.onPressService.bind(this, item, 3, index)} style={[styles.btnService, this.state.service && this.state.service == 3 && this.state.index == item.hospital.id ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, this.state.service && this.state.service == 3 && this.state.index == item.hospital.id ? { color: '#fff' } : { color: '#6B6B6C' }]}>BHYT CA</Text></TouchableOpacity>
                     </View>
                 </View>
             </View>
@@ -93,15 +111,35 @@ class GetNewTicket extends PureComponent {
         return (
             <View style={{ flex: 1 }}>
                 <View style={styles.viewTx}>
-                    <TextInput placeholder={"Tìm kiếm…"} underlineColorAndroid={"transparent"} returnKeyType='search'
-                        style={{ width: '80%', height: 41 }}></TextInput>
-                    <ScaledImage source={require('@images/new/hospital/ic_search.png')} height={16}></ScaledImage>
+                <TextInput
+                            value={this.state.keyword}
+                            onChangeText={s => {
+                                this.setState({ keyword: s })
+                            }}
+                            onSubmitEditing={this.search.bind(this)}
+                            returnKeyType='search'
+                            style={{ width: '80%', height: 41 }} placeholder={"Tìm kiếm…"} underlineColorAndroid={"transparent"} />
+                  <TouchableOpacity onPress = {this.search}><ScaledImage source={require('@images/new/hospital/ic_search.png')} height={16}></ScaledImage></TouchableOpacity>
                 </View>
-                <ScrollView>
+                {this.state.dataSearch && this.state.keyword ? (
+                   
+                        (this.state.dataSearch && this.state.dataSearch.length > 0) &&
+                        <View>
+                            {this.state.dataSearch.map((item, index) => {
+                                return this.renderItem(item, index)
+                            })}
+                        </View>
+                    
+                ):(
+
+
+
+
+                    <ScrollView>
                     {
                         (this.state.data2 && this.state.data2.length > 0) &&
                         <View>
-                            <Text style={{marginLeft:10,marginTop:20,fontSize:12,marginBottom:10,color:'#4a4a4a'}}>Bệnh viện đã triển khai</Text>
+                            <Text style={{marginLeft:10,marginTop:20,fontSize:14,marginBottom:10,color:'#4a4a4a'}}>Bệnh viện đã triển khai</Text>
                             {this.state.data2.map((item, index) => {
                                 return this.renderItem(item, index)
                             })}
@@ -110,13 +148,14 @@ class GetNewTicket extends PureComponent {
                     {
                         (this.state.data3 && this.state.data3.length > 0) &&
                         <View>
-                            <Text style={{marginLeft:10,marginTop:20,fontSize:12,marginBottom:10,color:'#4a4a4a'}}>Bệnh viện sắp triển khai</Text>
+                            <Text style={{marginLeft:10,marginTop:20,fontSize:14,marginBottom:10,color:'#4a4a4a'}}>Bệnh viện sắp triển khai</Text>
                             {this.state.data3.map((item, index) => {
                                 return this.renderItem(item, index)
                             })}
                         </View>
                     }
                 </ScrollView>
+                )}
                 <Modal animationType="fade"
                     onBackdropPress={this.onCloseModal}
                     transparent={true} isVisible={this.state.isVisible} style={styles.viewModal} >
