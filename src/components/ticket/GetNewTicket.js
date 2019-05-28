@@ -15,7 +15,7 @@ class GetNewTicket extends PureComponent {
         data: [],
         service: null,
         index: '',
-        keyword:''
+        keyword: ''
 
     }
     componentDidMount() {
@@ -32,9 +32,9 @@ class GetNewTicket extends PureComponent {
     //     })
 
     //   }
-    
+
     getListHospital = () => {
-        
+
         hospitalProvider.getDefaultHospital().then(res => {
             let data = res.data
             if (res.code == 0) {
@@ -45,16 +45,17 @@ class GetNewTicket extends PureComponent {
                     data3
                 })
                 let stringQuyery = this.state.keyword ? this.state.keyword.trim() : ""
-                if(stringQuyery){
-                    dataSearch = data.filter(data => { const dataItem = `${data.hospital.name.toUpperCase()} ${data.hospital.address.toUpperCase()}`
-                
-                    return(dataItem.indexOf(stringQuyery) > -1
-                    )
-                })
-                this.setState({
-                    dataSearch:dataSearch
-                })
-                console.log(dataSearch);
+                if (stringQuyery) {
+                    dataSearch = data.filter(data => {
+                        const dataItem = `${data.hospital.name.toUpperCase()} ${data.hospital.address.toUpperCase()}`
+
+                        return (dataItem.indexOf(stringQuyery) > -1
+                        )
+                    })
+                    this.setState({
+                        dataSearch: dataSearch
+                    })
+                    console.log(dataSearch);
                 }
 
             }
@@ -110,8 +111,8 @@ class GetNewTicket extends PureComponent {
                     </View>
                     <Text>{item.hospital.address}</Text>
                     <View style={{ flexDirection: 'row' }}>
-                        <TouchableOpacity onPress={this.onPressService.bind(this, item, 1,index)} style={[styles.btnService, this.state.service && this.state.service == 1 && this.state.index == item.hospital.id ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, this.state.service && this.state.service == 1 && this.state.index == item.hospital.id ? { color: '#fff' } : { color: '#6B6B6C' }]}>Khám DV</Text></TouchableOpacity>
-                        <TouchableOpacity onPress={this.onPressService.bind(this, item, 2,index)} style={[styles.btnService, { width: 62 }, this.state.service && this.state.service == 2 && this.state.index == item.hospital.id ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, this.state.service && this.state.service == 2 && this.state.index == item.hospital.id ? { color: '#fff' } : { color: '#6B6B6C' }]}>BHYT</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={this.onPressService.bind(this, item, 1, index)} style={[styles.btnService, this.state.service && this.state.service == 1 && this.state.index == item.hospital.id ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, this.state.service && this.state.service == 1 && this.state.index == item.hospital.id ? { color: '#fff' } : { color: '#6B6B6C' }]}>Khám DV</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={this.onPressService.bind(this, item, 2, index)} style={[styles.btnService, { width: 62 }, this.state.service && this.state.service == 2 && this.state.index == item.hospital.id ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, this.state.service && this.state.service == 2 && this.state.index == item.hospital.id ? { color: '#fff' } : { color: '#6B6B6C' }]}>BHYT</Text></TouchableOpacity>
                         <TouchableOpacity onPress={this.onPressService.bind(this, item, 3, index)} style={[styles.btnService, this.state.service && this.state.service == 3 && this.state.index == item.hospital.id ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, this.state.service && this.state.service == 3 && this.state.index == item.hospital.id ? { color: '#fff' } : { color: '#6B6B6C' }]}>BHYT CA</Text></TouchableOpacity>
                     </View>
                 </View>
@@ -126,28 +127,26 @@ class GetNewTicket extends PureComponent {
         return (
             <View style={{ flex: 1 }}>
                 <View style={styles.viewTx}>
-                <TextInput
-                            value={this.state.keyword}
-                            onChangeText={s => {
-                                this.setState({ keyword: s })
-                            }}
-                            onSubmitEditing={this.search.bind(this)}
-                            returnKeyType='search'
-                            style={{ width: '80%', height: 41 }} placeholder={"Tìm kiếm…"} underlineColorAndroid={"transparent"} />
-                  <TouchableOpacity onPress = {this.search}><ScaledImage source={require('@images/new/hospital/ic_search.png')} height={16}></ScaledImage></TouchableOpacity>
+                    <TextInput
+                        value={this.state.keyword}
+                        onChangeText={s => {
+                            this.setState({ keyword: s })
+                        }}
+                        onSubmitEditing={this.search.bind(this)}
+                        returnKeyType='search'
+                        style={{ width: '80%', height: 41 }} placeholder={"Tìm kiếm…"} underlineColorAndroid={"transparent"} />
+                    <TouchableOpacity onPress={this.search}><ScaledImage source={require('@images/new/hospital/ic_search.png')} height={16}></ScaledImage></TouchableOpacity>
                 </View>
                 {this.state.dataSearch && this.state.keyword ? (
-                   
-                        (this.state.dataSearch && this.state.dataSearch.length > 0) &&
-                        <View>
-                            {this.state.dataSearch.map((item, index) => {
-                                return this.renderItem(item, index)
-                            })}
-                        </View>
-                    
-                ):(
 
+                    (this.state.dataSearch && this.state.dataSearch.length > 0) &&
+                    <View>
+                        {this.state.dataSearch.map((item, index) => {
+                            return this.renderItem(item, index)
+                        })}
+                    </View>
 
+                ) : (
 
 
                     <ScrollView>

@@ -92,7 +92,7 @@ class GroupChatScreen extends React.Component {
             });
         });
         if (this.state.userId == this.props.userApp.currentUser.id) {
-            userProvider.detail(this.props.userApp.currentUser.id, (s, e) => {
+            userProvider.detail(this.props.userApp.currentUser.id).then(s => {
                 if (s && s.code == 0) {
                     this.props.dispatch({ type: constants.action.action_set_my_facility, value: s.data.facilities })
                 }

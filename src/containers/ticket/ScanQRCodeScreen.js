@@ -5,6 +5,7 @@ import userProvider from '@data-access/user-provider';
 import constants from '@resources/strings';
 import redux from '@redux-store';
 import { connect } from 'react-redux';
+import Modal from 'react-native-modal';
 
 import React, { Component } from 'react';
 
@@ -13,10 +14,14 @@ import {
     StyleSheet,
     Text,
     TouchableOpacity,
+    Dimensions,
+    Platform,
+    View,
     Linking
 } from 'react-native';
 
 import QRCodeScanner from 'mainam-react-native-qrcode-scanner';
+import ticketProvider from '@data-access/ticket-provider';
 
 class ScanQRCodeScreen extends Component {
     constructor(props) {
@@ -57,10 +62,13 @@ class ScanQRCodeScreen extends Component {
             console.log(e);
         }
         snackbar.show(constants.msg.error_occur);
-        setTimeout(() => {
-            if (this.scanner)
-                this.scanner.reactivate();
-        }, 3000);
+        // setTimeout(() => {
+        //     try {
+        //         this.scanner.reactivate();
+        //     } catch (error) {
+
+        //     }
+        // }, 3000);
 
     }
     toByteArray(hexString) {
@@ -78,6 +86,7 @@ class ScanQRCodeScreen extends Component {
         let obj = data.split("|");
         let info = {};
         console.log(obj);
+        info.qrCode = data;
         info.id = obj[0];
         info.bod = obj[2];
         info.gender = obj[3] == 1 ? 1 : 0;
@@ -119,26 +128,59 @@ class ScanQRCodeScreen extends Component {
         return str;
     }
 
+    restart() {
+        setTimeout(() => {
+            if (this.scanner)
+                this.scanner.reactivate();
+        }, 3000);
+    }
+    getOrder(uid, data) {
+        ticketProvider.getTicket("A", "false", "1000004", data.qrCode, uid, this.props.bookingTicket.hospital.hospital.id).then(s => {
+            console.log(s);
+        })
+    }
     onSuccess(e) {
         try {
-            let data = this.getInfo(e.data);
-            setTimeout(() => {
-                this.scanner.reactivate();
-            }, 3000);
-            this.props.navigation.replace("confirmGetTicket", {
-                data
+            this.setState({ isLoading: true }, () => {
+                let data = this.getInfo(e.data);
+                if (!this.props.userApp.currentUser.uid) {
+                    this.setState({ isLoading: true }, () => {
+                        this.getOrder(this.props.userApp.currentUser.uid, data);
+                    })
+                }
+                else {
+                    userProvider.detail(this.props.userApp.currentUser.id).then(s => {
+                        if (!s.data || !s.data.profile || !s.data.profile.uid) {
+                            this.setState({ isLoading: false }, () => {
+                                snackbar.show("Tài khoản của bạn chưa được kết nối với bệnh viện này. Vui lòng liên hệ quản trị viên iSofHCare", "danger");
+                                this.restart();
+                            })
+                        }
+                        else {
+                            let uid = s.data.profile.uid;
+                            this.getOrder(uid, data);
+                        }
+                    }).catch(e => {
+                        this.setState({ isLoading: false }, () => {
+                            snackbar.show(constants.msg.error_occur, "danger");
+                            this.restart();
+                        })
+                    })
+                }
             })
             return;
         } catch (error) {
             if (error)
                 snackbar.show("Vui lòng kiểm tra lại mã QR trên thẻ đảm bảo không bị mờ, rách...", "danger");
         }
-        setTimeout(() => {
-            this.scanner.reactivate();
-        }, 3000);
     }
+    onCloseModal = () => this.setState({ isVisible: false })
 
     render() {
+        const deviceWidth = Dimensions.get("window").width;
+        const deviceHeight = Platform.OS === "ios"
+            ? Dimensions.get("window").height
+            : require("react-native-extra-dimensions-android").get("REAL_WINDOW_HEIGHT");
         return (
             <ActivityPanel isLoading={this.state.isLoading} style={{ flex: 1 }} title="Quét QR BHYT" >
 
@@ -157,6 +199,32 @@ class ScanQRCodeScreen extends Component {
                 //     </TouchableOpacity>
                 // }
                 />
+                <Modal animationType="fade"
+                    onBackdropPress={this.onCloseModal}
+                    transparent={true} isVisible={this.state.isVisible} style={[styles.viewModal]}
+                    deviceWidth={deviceWidth}
+                    deviceHeight={deviceHeight}
+                >
+                    <View style={styles.viewModal}>
+                        <View style={styles.viewDialog}>
+                            <Text style={styles.txDialog}>Lấy số khám</Text>
+                            <View style={styles.viewBtnModal}>
+                                <TouchableOpacity style={styles.viewBtn} onPress={() => {
+                                    this.setState({ isVisible: false }, () => {
+                                        this.props.navigation.navigate("scanQRCode");
+                                    });
+                                }} ><Text style={{ color: '#fff', fontWeight: 'bold' }} >Lấy số cho tôi</Text></TouchableOpacity>
+                                <TouchableOpacity style={styles.viewBtn2} onPress={() => {
+                                    this.setState({ isVisible: false }, () => {
+                                        this.props.navigation.navigate("login", {
+                                            nextScreen: { screen: "scanQRCode", param: {} }
+                                        });
+                                    });
+                                }} ><Text style={{ color: '#4A4A4A', fontWeight: 'bold' }}>Lấy số hộ</Text></TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
             </ActivityPanel>
         );
     }
@@ -184,7 +252,8 @@ const styles = StyleSheet.create({
 });
 function mapStateToProps(state) {
     return {
-        userApp: state.userApp
+        userApp: state.userApp,
+        bookingTicket: state.bookingTicket
     };
 }
 export default connect(mapStateToProps)(ScanQRCodeScreen);

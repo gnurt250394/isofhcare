@@ -151,7 +151,7 @@ module.exports = {
         accessToken,
         socialId,
         socialType: socialType ? socialType : 1,
-        device: {  os: os, deviceId: this.deviceId, token: this.deviceToken  }
+        device: { os: os, deviceId: this.deviceId, token: this.deviceToken }
       };
       client.requestApi("post", constants.api.user.register, body, (s, e) => {
         if (s) resolve(s);
@@ -195,15 +195,19 @@ module.exports = {
   //     }
   //   );
   // },
-  detail(userId, callback) {
-    client.requestApi(
-      "get",
-      constants.api.user.get_detail + "/" + userId,
-      {},
-      (s, e) => {
-        if (callback) callback(s, e);
-      }
-    );
+  detail(userId) {
+    return new Promise((resolve, reject) => {
+      client.requestApi(
+        "get",
+        constants.api.user.get_detail + "/" + userId,
+        {},
+        (s, e) => {
+          if (s)
+            resolve(s);
+          reject(e);
+        }
+      );
+    });
   },
   refreshPasswordByToken(phone, accessToken, applicationId, newPassword) {
     return new Promise((resolve, reject) => {
