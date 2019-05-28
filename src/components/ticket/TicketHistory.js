@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import ActivityPanel from '@components/ActivityPanel';
+import bookingProvider from '@data-access/booking-provider';
 import ScaledImage from 'mainam-react-native-scaleimage';
 export default class TicketHistory extends Component {
     state = {
@@ -16,6 +17,17 @@ export default class TicketHistory extends Component {
                 id: '2222212'
             }
         ]
+    }
+    componentDidMount(){
+        bookingProvider.getHistoryTicket().then(res => {
+            console.log(res);
+        }).catch(err => {
+            console.log(err);
+        })
+    }
+
+    onGetList = () => {
+
     }
     renderItems = (item) => {
         return (

@@ -61,7 +61,13 @@ class GetNewTicket extends PureComponent {
         })
     }
     onPressService = (item, key, index) => {
-        if(item.hospital.id == 165 && key == 1 || item.hospital.id == 165 && key == 3 || !item.hospital.defaultBookHospital ){
+        if(item.hospital.id == 165 && key == 1 ){
+            this.setState({
+                isShowErr : true
+            })
+            return
+        }
+        if( item.hospital.id == 165 && key == 3 || !item.hospital.defaultBookHospital ){
             
             return
         }
@@ -78,6 +84,7 @@ class GetNewTicket extends PureComponent {
 
     }
     onCloseModal = () => this.setState({ isVisible: false, service: 0 })
+    onCloseErr = () => this.setState({isShowErr:false})
     renderItem = (item, index) => {
         return (
             <View style={[styles.viewItem, index > 0 ? { borderTopWidth: 0 } : { borderTopWidth: 1 }]} key={index}>
@@ -147,7 +154,7 @@ class GetNewTicket extends PureComponent {
                     {
                         (this.state.data2 && this.state.data2.length > 0) &&
                         <View>
-                            <Text style={{ marginLeft: 10, marginTop: 20, fontSize: 12, marginBottom: 10, color: '#4a4a4a' }}>Bệnh viện đã triển khai</Text>
+                            <Text style={{marginLeft:10,marginTop:20,fontSize:15,marginBottom:10,color:'#4a4a4a'}}>Bệnh viện đã triển khai</Text>
                             {this.state.data2.map((item, index) => {
                                 return this.renderItem(item, index)
                             })}
@@ -156,7 +163,7 @@ class GetNewTicket extends PureComponent {
                     {
                         (this.state.data3 && this.state.data3.length > 0) &&
                         <View>
-                            <Text style={{ marginLeft: 10, marginTop: 20, fontSize: 12, marginBottom: 10, color: '#4a4a4a' }}>Bệnh viện sắp triển khai</Text>
+                            <Text style={{marginLeft:10,marginTop:20,fontSize:15,marginBottom:10,color:'#4a4a4a'}}>Bệnh viện sắp triển khai</Text>
                             {this.state.data3.map((item, index) => {
                                 return this.renderItem(item, index)
                             })}
@@ -190,7 +197,18 @@ class GetNewTicket extends PureComponent {
                         </View>
                     </View>
                 </Modal>
-
+                <Modal animationType="fade"
+                onBackdropPress={this.onCloseErr}
+                transparent={true} isVisible={this.state.isShowErr} >
+                <View style={styles.viewModal}>
+                    <View style={styles.viewDialog}>
+                        <Text style={{marginVertical:10,fontWeight:'bold',color:'#4a4a4a'}}>Thông báo</Text>
+                       <Text style={{marginBottom:20, color:'#4a4a4a',marginHorizontal:20,textAlign:'center'}}>Đối tượng dịch vụ tại bệnh viện E không cần có số khám</Text>
+                       <View style={{width:'100%',height:1,backgroundColor:'#d8d8d8',marginBottom:-10}}></View>
+                       <TouchableOpacity style={{alignItems:'center',justifyContent:'center',marginTop:10,flex:1}} onPress ={this.onCloseErr}><Text style={{color:'#02c39a'}}>OK</Text></TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
             </View>
         )
     }

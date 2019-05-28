@@ -299,7 +299,8 @@ module.exports = {
       create: isofhcare_service + "booking/create",
       confirmPay: isofhcare_service + "booking/confirm-pay",
       detail: isofhcare_service + "booking/get-detail",
-      getByAuthor: isofhcare_service + "booking/get-by-author"
+      getByAuthor: isofhcare_service + "booking/get-by-author",
+      get_history_ticket : isofhcare_service + "number-hospital/get-by-author"
     },
     question: {
       create: isofhcare_service + "post/create",
@@ -347,6 +348,5 @@ module.exports = {
       createOnlinePayment: wallet_services + "customers/{id}/online-payments",
       onlineTransactionPaid: wallet_services + "online-transactions/{transactionId}/paid"
     },
-
   }
 };
