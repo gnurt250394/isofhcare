@@ -321,7 +321,7 @@ class Home extends Component {
                   {
                     (this.state.features || []).map((item, position) => {
                       return (
-                        <Animatable.View key={position} delay={50 * position} animation={position % 2 == 0 ? "slideInLeft" : "slideInRight"} direction="alternate">
+                        <Animatable.View key={position} delay={100} animation={"swing"} direction="alternate">
                           {
                             item.empty ? <View style={{ flex: 1, marginLeft: 5, alignItems: 'center', height: 100, width: this.getItemWidth() }}
                             ></View> :
