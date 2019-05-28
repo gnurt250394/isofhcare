@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import ScaledImage from "mainam-react-native-scaleimage";
 import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from 'react-native'
 import React from 'react';
@@ -7,6 +8,36 @@ import NavigationService from "@navigators/NavigationService";
 import DeviceInfo from 'react-native-device-info';
 import ActivityPanel from "@components/ActivityPanel";
 import ImageLoad from "mainam-react-native-image-loader";
+=======
+import React, { Component, PropTypes } from "react";
+import ActivityPanel from "@components/ActivityPanel";
+import {
+  View,
+  Text,
+  Platform,
+  ScrollView,
+  TouchableOpacity,
+  Linking,
+  StyleSheet
+} from "react-native";
+import { connect } from "react-redux";
+import Dimensions from "Dimensions";
+const DEVICE_WIDTH = Dimensions.get("window").width;
+import Carousel, { Pagination } from "react-native-snap-carousel";
+import advertiseProvider from "@data-access/advertise-provider";
+import snackbar from "@utils/snackbar-utils";
+import { Card } from "native-base";
+import ImageLoad from "mainam-react-native-image-loader";
+import clientUtils from "@utils/client-utils";
+import objectUtils from "@utils/object-utils";
+import ScaledImage from "mainam-react-native-scaleimage";
+import redux from "@redux-store";
+import ImagePicker from "mainam-react-native-select-image";
+import imageProvider from "@data-access/image-provider";
+import userProvider from "@data-access/user-provider";
+import FingerprintPopup from "../../account/FingerprintPopup";
+import Modal from "react-native-modal";
+>>>>>>> show user infomation in home page
 
 class Account extends React.Component {
   constructor(props) {
@@ -44,6 +75,7 @@ class Account extends React.Component {
         isLoading={this.state.isLoading}
         hideActionbar={true}
       >
+<<<<<<< HEAD
         <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
           {this.props.userApp.isLogin ? (
             <View style={styles.viewHeader}>
@@ -59,6 +91,43 @@ class Account extends React.Component {
                   customImagePlaceholderDefaultStyle={styles.customImagePlace}
                   placeholderSource={icSupport}
                   style={styles.styleImgLoad}
+=======
+        <View style={{ flex: 1 }}>
+          <Text style={{ color: "#000000", fontSize: 20 }}>
+            {this.props.userApp.currentUser.name}
+          </Text>
+          <TouchableOpacity
+            onPress={() => {
+              this.props.navigation.navigate('detailsProfile')
+            }}
+          >
+            <Text style={{ color: "#008D6F", marginTop: 10 }}>
+              Xem hồ sơ cá nhân
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity
+          style={{ position: "relative" }}
+          onPress={this.selectImage.bind(this)}
+        >
+          <ImageLoad
+            resizeMode="cover"
+            imageStyle={{ borderRadius: 35, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
+            borderRadius={35}
+            customImagePlaceholderDefaultStyle={{
+              width: 70,
+              height: 70,
+              alignSelf: "center"
+            }}
+            placeholderSource={icSupport}
+            style={{ width: 70, height: 70, alignSelf: "center" }}
+            resizeMode="cover"
+            loadingStyle={{ size: "small", color: "gray" }}
+            source={source}
+            defaultImage={() => {
+              return (
+                <ScaledImage
+>>>>>>> show user infomation in home page
                   resizeMode="cover"
                   loadingStyle={{ size: "small", color: "gray" }}
                   source={source}
