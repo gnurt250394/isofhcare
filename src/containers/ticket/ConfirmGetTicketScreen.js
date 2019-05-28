@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
       width: 2,
       height: 4
     },
-    paddingVertical: 15,
+    paddingVertical: 17,
     shadowRadius: 10,
     marginVertical: 20,
     marginHorizontal: 60,

@@ -73,10 +73,6 @@ class Home extends Component {
                 nextScreen: { screen: 'ehealth' }
               });
           }
-        }, {
-          empty: true
-        }, {
-          empty: true
         }
       ]
     };
@@ -235,63 +231,19 @@ class Home extends Component {
       return 100;
     if (width > 300)
       return 140;
-    // if (width > 250)
-    //   return 115;
-    // if (width > 170)
-    //   return 160;
-    return width - 10;
+    return width - 30;
   }
 
   render() {
     const icSupport = require("@images/new/user.png");
     const source = this.props.userApp.isLogin ? (this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar.absoluteUrl() } : icSupport) : icSupport;
-
+   
     return (
       <ActivityPanel
         hideStatusbar={true}
         hideActionbar={true}
         style={[{ flex: 1 }, this.props.style]}
-        // titleStyle={{ marginRight: 60 }}
-        // imageStyle={{ marginRight: 20 }}
         hideBackButton={true}
-      // backButton={<TouchableOpacity style={{ paddingLeft: 15 }} onPress={() => {
-      //   if (this.props.userApp.isLogin) {
-      //     if (this.props.userInfoClick)
-      //       this.props.userInfoClick();
-      //   } else {
-      //     this.props.navigation.navigate("login");
-      //   }
-      // }}>
-      //   <ImageLoad
-      //     resizeMode="cover"
-      //     imageStyle={{ borderRadius: 15 }}
-      //     borderRadius={15}
-      //     customImagePlaceholderDefaultStyle={{
-      //       width: 30,
-      //       height: 30,
-      //       alignSelf: "center"
-      //     }}
-      //     placeholderSource={icSupport}
-      //     style={{ width: 30, height: 30, alignSelf: "center" }}
-      //     resizeMode="cover"
-      //     loadingStyle={{ size: "small", color: "gray" }}
-      //     source={source}
-      //     defaultImage={() => {
-      //       return (
-      //         <ScaledImage
-      //           resizeMode="cover"
-      //           source={icSupport}
-      //           width={30}
-      //           style={{ width: 30, height: 30, alignSelf: "center" }}
-      //         />
-      //       );
-      //     }}
-      //   />
-      // </TouchableOpacity>}
-      // image={}
-      // titleView={<View>
-      // </View>}
-      // titleViewStyle={{ marginLeft: 10 }}
       >
         <View style={{ flex: 1, position: 'relative' }}>
           <ScaledImage source={require("@images/new/home/bg_home.png")} width={DEVICE_WIDTH} style={{ position: 'absolute', top: 0, right: 0, left: 0 }} />

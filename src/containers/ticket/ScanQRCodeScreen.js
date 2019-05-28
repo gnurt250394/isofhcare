@@ -58,7 +58,8 @@ class ScanQRCodeScreen extends Component {
         }
         snackbar.show(constants.msg.error_occur);
         setTimeout(() => {
-            this.scanner.reactivate();
+            if (this.scanner)
+                this.scanner.reactivate();
         }, 3000);
 
     }
