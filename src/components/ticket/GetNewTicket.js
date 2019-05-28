@@ -61,6 +61,10 @@ class GetNewTicket extends PureComponent {
         })
     }
     onPressService = (item, key, index) => {
+        if(item.hospital.id == 165 && key == 1 || item.hospital.id == 165 && key == 3 || !item.hospital.defaultBookHospital ){
+            
+            return
+        }
         this.setState({
             service: key,
             isVisible: true,
