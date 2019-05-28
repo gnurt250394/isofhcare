@@ -268,6 +268,45 @@ class Home extends Component {
           >
             <View style={{ padding: 21 }}>
               <Card style={{ borderRadius: 6 }}>
+
+                {this.props.userApp.isLogin &&
+                  <View style={{ alignItems: 'center', flexDirection: 'row', borderBottomColor: '#f6d8ae', borderBottomWidth: 1, paddingVertical: 10, marginHorizontal: 20 }}>
+                    <ImageLoad
+                      resizeMode="cover"
+                      imageStyle={{ borderRadius: 20, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
+                      borderRadius={20}
+                      customImagePlaceholderDefaultStyle={{
+                        width: 40,
+                        height: 40,
+                        alignSelf: "center"
+                      }}
+                      placeholderSource={icSupport}
+                      style={{ width: 40, height: 40, alignSelf: "center" }}
+                      resizeMode="cover"
+                      loadingStyle={{ size: "small", color: "gray" }}
+                      source={source}
+                      defaultImage={() => {
+                        return (
+                          <ScaledImage
+                            resizeMode="cover"
+                            source={icSupport}
+                            width={40}
+                            style={{ width: 40, height: 40, alignSelf: "center" }}
+                          />
+                        );
+                      }}
+                    />
+                    <Text style={{ marginLeft: 5, fontSize: 18, fontWeight: 'bold', color: "#7c817f" }} >Xin chào, <Text style={{ color: '#f5c462' }}>{((name) => {
+                      if (!name) return "";
+                      let x = name.trim().split(" ");
+                      name = (x[x.length - 1]).toLowerCase();
+                      if (name[0])
+                        return name.charAt(0).toUpperCase() + name.slice(1);
+                      return name;
+                    }).call(this, this.props.userApp.currentUser.name)}</Text></Text>
+                  </View>
+                }
+
                 <View style={{
                   flexDirection: "row", padding: 10, marginVertical: 20, flexWrap: 'wrap',
                   justifyContent: 'center'
