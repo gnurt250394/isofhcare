@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { Text, View, TextInput, StyleSheet, FlatList, TouchableOpacity, ScrollView, Dimensions, Platform } from 'react-native'
+import { Text, View, TextInput, StyleSheet, RefreshControl, TouchableOpacity, ScrollView, Dimensions, Platform } from 'react-native'
 import Modal from 'react-native-modal';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import StarRating from 'react-native-star-rating';
@@ -15,7 +15,8 @@ class GetNewTicket extends PureComponent {
         data: [],
         service: null,
         index: '',
-        keyword: ''
+        keyword:'',
+        loading : true
 
     }
     componentDidMount() {
@@ -32,7 +33,13 @@ class GetNewTicket extends PureComponent {
     //     })
 
     //   }
-
+    onRefesh = () => {
+        this.setState({
+            loading:true
+        } , () => {
+            this.getListHospital()
+        })
+    }
     getListHospital = () => {
 
         hospitalProvider.getDefaultHospital().then(res => {
@@ -42,33 +49,39 @@ class GetNewTicket extends PureComponent {
                 let data3 = data.filter(data => !data.hospital.defaultBookHospital)
                 this.setState({
                     data2,
-                    data3
+                    data3,
+                    loading:false
                 })
                 let stringQuyery = this.state.keyword ? this.state.keyword.trim() : ""
-                if (stringQuyery) {
-                    dataSearch = data.filter(data => {
-                        const dataItem = `${data.hospital.name.toUpperCase()} ${data.hospital.address.toUpperCase()}`
+                if(stringQuyery){
+                    dataSearch = data.filter(data => { const dataItem = `${data.hospital.name.toUpperCase()} ${data.hospital.address.toUpperCase()}`
+                
+                    return(dataItem.indexOf(stringQuyery) > -1
+                    )
+                })
+                this.setState({
+                    dataSearch:dataSearch,
+                    loading:false
 
-                        return (dataItem.indexOf(stringQuyery) > -1
-                        )
-                    })
-                    this.setState({
-                        dataSearch: dataSearch
-                    })
-                    console.log(dataSearch);
+                })
+                console.log(dataSearch);
                 }
 
             }
+        }).catch( err => {
+            this.setState({
+                loading:false
+            })
         })
     }
     onPressService = (item, key, index) => {
-        if(item.hospital.id == 165 && key == 1 ){
+        if(item.hospital.defaultBookHospital && key == 1 ){
             this.setState({
                 isShowErr : true
             })
             return
         }
-        if( item.hospital.id == 165 && key == 3 || !item.hospital.defaultBookHospital ){
+        if( item.hospital.defaultBookHospital  && key == 3 || !item.hospital.defaultBookHospital ){
             
             return
         }
@@ -149,7 +162,12 @@ class GetNewTicket extends PureComponent {
                 ) : (
 
 
-                    <ScrollView>
+                    <ScrollView   refreshControl={
+                        <RefreshControl
+                            onRefresh={this.onRefesh}
+                            refreshing={this.state.loading}
+                        />
+                    } >
                     {
                         (this.state.data2 && this.state.data2.length > 0) &&
                         <View>
@@ -200,11 +218,11 @@ class GetNewTicket extends PureComponent {
                 onBackdropPress={this.onCloseErr}
                 transparent={true} isVisible={this.state.isShowErr} >
                 <View style={styles.viewModal}>
-                    <View style={styles.viewDialog}>
+                    <View style={{width:328,height:167,backgroundColor:'#fff',borderRadius:6,alignItems:'center'}}>
                         <Text style={{marginVertical:10,fontWeight:'bold',color:'#4a4a4a'}}>Thông báo</Text>
-                       <Text style={{marginBottom:20, color:'#4a4a4a',marginHorizontal:20,textAlign:'center'}}>Đối tượng dịch vụ tại bệnh viện E không cần có số khám</Text>
-                       <View style={{width:'100%',height:1,backgroundColor:'#d8d8d8',marginBottom:-10}}></View>
-                       <TouchableOpacity style={{alignItems:'center',justifyContent:'center',marginTop:10,flex:1}} onPress ={this.onCloseErr}><Text style={{color:'#02c39a'}}>OK</Text></TouchableOpacity>
+                       <Text style={{marginBottom:20, color:'#4a4a4a',marginHorizontal:20,textAlign:'center',}}>Đối tượng dịch vụ tại bệnh viện E không cần có số khám</Text>
+                       <View style={{width:'100%',height:1,backgroundColor:'#d8d8d8',marginTop:20}}></View>
+                       <TouchableOpacity style={{alignItems:'center',justifyContent:'center',flex:1}} onPress ={this.onCloseErr}><Text style={{color:'#02c39a'}}>OK</Text></TouchableOpacity>
                     </View>
                 </View>
             </Modal>
