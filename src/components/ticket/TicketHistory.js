@@ -69,14 +69,14 @@ export default class TicketHistory extends Component {
     }
     render() {
         return (
-            <View>
+            <View style={{flex:1}}>
             {this.state.isShowContent  ? (
                 <View style ={{width:'100%',marginVertical:10,backgroundColor:"rgba(39, 174, 96, 0.18)",alignItems:'center',justifyContent:'center',paddingVertical:20,paddingHorizontal:20}}>
                 <Text style={{textAlign:'center',color:'#000',fontSize:14}}>Xin chờ ít phút nếu bạn đã gửi tin nhắn mà chưa nhận được số tiếp đón.</Text>
                 </View>
             ) : null}
            
-            <View style={{ padding: 10 }}>
+            <View style={{ padding: 10,flex:1}}>
            
                 <Text>Hôm nay</Text>
                 <FlatList
