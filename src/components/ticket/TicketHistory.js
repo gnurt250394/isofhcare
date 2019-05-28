@@ -6,7 +6,8 @@ import ScaledImage from 'mainam-react-native-scaleimage';
 export default class TicketHistory extends Component {
     state = {
         data: [],
-        loading:true
+        loading:true,
+        isShowContent:false
     }
     componentDidMount(){
       this.onRefresh()
@@ -20,7 +21,13 @@ export default class TicketHistory extends Component {
     }
     onGetList = () => {
         bookingProvider.getHistoryTicket().then(res => {
-            console.log(res);
+            for(i = 0;i < res.data.numberHospital.length; i ++){
+                if(!res.data.numberHospital[i].numberHospital.number){
+                    this.setState({
+                        isShowContent:true
+                    })
+                }
+            }
             this.setState({
                 data:res.data.numberHospital,
                 loading:false
@@ -62,7 +69,15 @@ export default class TicketHistory extends Component {
     }
     render() {
         return (
+            <View>
+            {this.state.isShowContent  ? (
+                <View style ={{width:'100%',marginVertical:10,backgroundColor:"rgba(39, 174, 96, 0.18)",alignItems:'center',justifyContent:'center',paddingVertical:20,paddingHorizontal:20}}>
+                <Text style={{textAlign:'center',color:'#000',fontSize:14}}>Xin chờ ít phút nếu bạn đã gửi tin nhắn mà chưa nhận được số tiếp đón.</Text>
+                </View>
+            ) : null}
+           
             <View style={{ padding: 10 }}>
+           
                 <Text>Hôm nay</Text>
                 <FlatList
                 refreshing
@@ -73,6 +88,7 @@ export default class TicketHistory extends Component {
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={this.renderItems}
                 ></FlatList>
+            </View>
             </View>
         )
     }
