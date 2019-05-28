@@ -24,6 +24,14 @@ export default class SelectHealthFacilitiesScreen extends Component {
     if (this.viewPager) this.viewPager.setPage(targetIndex);
 
   }
+  componentWillReceiveProps(props) {
+    if (props.navigation.state && props.navigation.state.params && props.navigation.state.params.selectTab && this.state.requestTime != props.navigation.state.params.requestTime) {
+      this.setState({ requestTime: props.navigation.state.params.requestTime }, () => {
+        if (this.viewPager)
+          this.viewPager.setPage(1);
+      })
+    }
+  }
   onPageScroll(e) {
     var tabIndex = e.position;
     var offset = e.offset * 100;
