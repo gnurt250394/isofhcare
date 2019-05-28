@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { Text, View, TextInput, StyleSheet, FlatList, TouchableOpacity, ScrollView } from 'react-native'
+import { Text, View, TextInput, StyleSheet, FlatList, TouchableOpacity, ScrollView, Dimensions, Platform } from 'react-native'
 import Modal from 'react-native-modal';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import StarRating from 'react-native-star-rating';
@@ -80,7 +80,7 @@ class GetNewTicket extends PureComponent {
     onCloseModal = () => this.setState({ isVisible: false, service: 0 })
     renderItem = (item, index) => {
         return (
-            <View style={[styles.viewItem,index > 0 ? {borderTopWidth:0}:{borderTopWidth:1}]} key={index}>
+            <View style={[styles.viewItem, index > 0 ? { borderTopWidth: 0 } : { borderTopWidth: 1 }]} key={index}>
 
                 <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: -10 }}>
                     <ScaledImage style={{ width: 60, height: 60, borderRadius: 30, borderColor: 'rgba(0,0,0,0.15)', borderWidth: 1 }} source={{ uri: item.hospital.avatar.absoluteUrl() }}></ScaledImage>
@@ -112,6 +112,10 @@ class GetNewTicket extends PureComponent {
         )
     }
     render() {
+        const deviceWidth = Dimensions.get("window").width;
+        const deviceHeight = Platform.OS === "ios"
+            ? Dimensions.get("window").height
+            : require("react-native-extra-dimensions-android").get("REAL_WINDOW_HEIGHT");
         return (
             <View style={{ flex: 1 }}>
                 <View style={styles.viewTx}>
@@ -143,7 +147,7 @@ class GetNewTicket extends PureComponent {
                     {
                         (this.state.data2 && this.state.data2.length > 0) &&
                         <View>
-                            <Text style={{marginLeft:10,marginTop:20,fontSize:14,marginBottom:10,color:'#4a4a4a'}}>Bệnh viện đã triển khai</Text>
+                            <Text style={{ marginLeft: 10, marginTop: 20, fontSize: 12, marginBottom: 10, color: '#4a4a4a' }}>Bệnh viện đã triển khai</Text>
                             {this.state.data2.map((item, index) => {
                                 return this.renderItem(item, index)
                             })}
@@ -152,7 +156,7 @@ class GetNewTicket extends PureComponent {
                     {
                         (this.state.data3 && this.state.data3.length > 0) &&
                         <View>
-                            <Text style={{marginLeft:10,marginTop:20,fontSize:14,marginBottom:10,color:'#4a4a4a'}}>Bệnh viện sắp triển khai</Text>
+                            <Text style={{ marginLeft: 10, marginTop: 20, fontSize: 12, marginBottom: 10, color: '#4a4a4a' }}>Bệnh viện sắp triển khai</Text>
                             {this.state.data3.map((item, index) => {
                                 return this.renderItem(item, index)
                             })}
@@ -162,7 +166,10 @@ class GetNewTicket extends PureComponent {
                 )}
                 <Modal animationType="fade"
                     onBackdropPress={this.onCloseModal}
-                    transparent={true} isVisible={this.state.isVisible} style={styles.viewModal} >
+                    transparent={true} isVisible={this.state.isVisible} style={[styles.viewModal]}
+                    deviceWidth={deviceWidth}
+                    deviceHeight={deviceHeight}
+                >
                     <View style={styles.viewModal}>
                         <View style={styles.viewDialog}>
                             <Text style={styles.txDialog}>Lấy số khám</Text>
@@ -171,14 +178,14 @@ class GetNewTicket extends PureComponent {
                                     this.setState({ isVisible: false }, () => {
                                         this.props.navigation.navigate("scanQRCode");
                                     });
-                                }} ><Text style={{ color: '#fff' }} >Lấy số cho tôi</Text></TouchableOpacity>
+                                }} ><Text style={{ color: '#fff', fontWeight: 'bold' }} >Lấy số cho tôi</Text></TouchableOpacity>
                                 <TouchableOpacity style={styles.viewBtn2} onPress={() => {
                                     this.setState({ isVisible: false }, () => {
                                         this.props.navigation.navigate("login", {
                                             nextScreen: { screen: "scanQRCode", param: {} }
                                         });
                                     });
-                                }} ><Text style={{ color: '#4A4A4A' }}>Lấy số hộ</Text></TouchableOpacity>
+                                }} ><Text style={{ color: '#4A4A4A', fontWeight: 'bold' }}>Lấy số hộ</Text></TouchableOpacity>
                             </View>
                         </View>
                     </View>
@@ -190,15 +197,15 @@ class GetNewTicket extends PureComponent {
 }
 const styles = StyleSheet.create({
     viewTx: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: '100%', borderTopWidth: 0.5, borderBottomWidth: 0.5, borderColor: 'rgba(0,0,0,0.26)' },
-    viewItem: { padding: 10, borderBottomWidth: 1, borderColor: 'rgba(0,0,0,0.26)', flexDirection: 'row',borderTopWidth:1 },
+    viewItem: { padding: 10, borderBottomWidth: 1, borderColor: 'rgba(0,0,0,0.26)', flexDirection: 'row', borderTopWidth: 1 },
     btnService: { justifyContent: 'center', alignItems: 'center', width: 82, height: 25, marginRight: 5, borderRadius: 6, marginVertical: 10, },
     txService: { fontSize: 11, },
     viewBtnModal: { flexDirection: 'row' },
-    viewModal: { flex: 1, justifyContent: 'center', alignItems: 'center', },
-    viewDialog: { height: 147, width: 308, backgroundColor: '#fff', alignItems: 'center', borderRadius: 6 },
-    viewBtn: { width: 120, height: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 6, backgroundColor: '#0A9BE1', marginRight: 5 },
-    txDialog: { marginVertical: 20 },
-    viewBtn2: { width: 120, height: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 6, backgroundColor: 'rgba(0,0,0,0.06)', marginRight: 5, borderWidth: 1, borderColor: '#979797' }
+    viewModal: { flex: 1, justifyContent: 'center', alignItems: 'center', margin: 0, padding: 0 },
+    viewDialog: { backgroundColor: '#fff', alignItems: 'center', borderRadius: 6, padding: 20 },
+    viewBtn: { width: 120, height: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 6, backgroundColor: '#0A9BE1', marginRight: 7 },
+    txDialog: { marginBottom: 20, color: '#4a4a4a', fontWeight: 'bold', fontSize: 16 },
+    viewBtn2: { width: 120, height: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 6, backgroundColor: 'rgba(0,0,0,0.06)', marginLeft: 7, borderWidth: 1, borderColor: '#979797' }
 })
 function mapStateToProps(state) {
     return {
