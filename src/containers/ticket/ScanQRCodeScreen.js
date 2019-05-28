@@ -6,6 +6,7 @@ import constants from '@resources/strings';
 import redux from '@redux-store';
 import { connect } from 'react-redux';
 import Modal from 'react-native-modal';
+import stringUtils from 'mainam-react-native-string-utils';
 
 import React, { Component } from 'react';
 
@@ -136,13 +137,29 @@ class ScanQRCodeScreen extends Component {
     }
     getOrder(uid, data) {
         ticketProvider.getTicket("A", "false", "1000004", data.qrCode, uid, this.props.bookingTicket.hospital.hospital.id).then(s => {
-            console.log(s);
+            switch (s.code) {
+                case 0:
+                    if (s.data.informationUserHospital.oderCode) {
+                        data.oderCode = s.data.informationUserHospital.oderCode;
+                        this.props.navigation.replace("confirmGetTicket", {
+                            data
+                        })
+                    }
+                    break;
+                default:
+                    this.setState({ isLoading: false }, () => {
+                        snackbar.show(constants.msg.error_occur, "danger");
+                        this.restart();
+                    })
+            }
         })
     }
     onSuccess(e) {
         try {
             this.setState({ isLoading: true }, () => {
-                let data = this.getInfo(e.data);
+                let index = e.data.indexOf("$");
+                let data = e.data.substring(0, index + 1);
+                data = this.getInfo(data);
                 if (!this.props.userApp.currentUser.uid) {
                     this.setState({ isLoading: true }, () => {
                         this.getOrder(this.props.userApp.currentUser.uid, data);
