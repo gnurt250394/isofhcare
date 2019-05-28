@@ -69,6 +69,10 @@ class ScanQRCodeScreen extends Component {
         }
         return result;
     }
+    getAddress(address) {
+        let x = address.split(",");
+        return x.filter((item, index) => { return index < x.length - 3 });
+    }
     getInfo(data) {
         let obj = data.split("|");
         let info = {};
@@ -81,7 +85,7 @@ class ScanQRCodeScreen extends Component {
         info.startDate = obj[6];
         info.hospitalCode = obj[5];
         bytearr = this.toByteArray(obj[4]);
-        info.address = this.fromUTF8Array(bytearr);
+        info.address = this.getAddress(this.fromUTF8Array(bytearr)) + "";
         if (obj.length < 7)
             throw "Vui lòng kiểm tra lại mã QR trên thẻ đảm bảo không bị mờ, rách...";
         console.log(info);

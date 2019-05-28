@@ -17,10 +17,6 @@ class ConfirmGetTicketScreen extends Component {
     snackbar.show("Sao chép thành công");
 
   }
-  getAddress(address) {
-    let x = address.split(",");
-    return x.filter((item, index) => { return index < x.length - 3 });
-  }
   render() {
     let data = this.props.navigation.state.params.data;
     console.log(data.address);
@@ -81,13 +77,13 @@ class ConfirmGetTicketScreen extends Component {
             </View>
             <View style={styles.viewInfo}>
               <Text style={styles.label}>Địa chỉ</Text>
-              <Text style={{ fontWeight: 'bold', textAlign: 'right', color: '#4A4A4A', flex: 1 }}>{this.getAddress(data.address) + ""}</Text>
+              <Text style={{ fontWeight: 'bold', textAlign: 'right', color: '#4A4A4A', flex: 1 }}>{data.address}</Text>
             </View>
           </View>
-          <TouchableOpacity style={[styles.button]}><Text style={{
-            color: "#ffffff", fontSize: 16
-          }}>Gửi tin nhắn lấy số</Text></TouchableOpacity>
         </ScrollView>
+        <TouchableOpacity style={[styles.button]}><Text style={{
+          color: "#ffffff", fontSize: 16, fontWeight: '600'
+        }}>Gửi tin nhắn lấy số</Text></TouchableOpacity>
       </ActivityPanel>
 
     );
@@ -118,7 +114,7 @@ const styles = StyleSheet.create({
     },
     paddingVertical: 15,
     shadowRadius: 10,
-    marginVertical: 10,
+    marginVertical: 20,
     marginHorizontal: 60,
     shadowOpacity: 1
   },
