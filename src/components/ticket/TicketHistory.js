@@ -5,29 +5,31 @@ import bookingProvider from '@data-access/booking-provider';
 import ScaledImage from 'mainam-react-native-scaleimage';
 export default class TicketHistory extends Component {
     state = {
-        data: [
-            {
-                name: 'Mai ngọc nam',
-                number: 69,
-                hospital: 'Bệnh viện E trung ương',
-                phone: 755443354,
-                date: '08/12/1978',
-                location: '418 Phạm Văn Đồng, Mai Dịch, Cầu Giấy, Hà Nội…',
-                image: 'https://congly.vn/data/news/2018/8/21/41/ngoc-trinh-khoe-ve-dep-van-nguoi-me-tai-ha-noi-hinh-anh0378168001.jpg',
-                id: '2222212'
-            }
-        ]
+        data: [],
+        loading:true
     }
     componentDidMount(){
-        bookingProvider.getHistoryTicket().then(res => {
-            console.log(res);
-        }).catch(err => {
-            console.log(err);
+      this.onRefresh()
+    }
+    onRefresh = () => {
+        this.setState({
+            loading:true
+        },() =>{
+            this.onGetList()
         })
     }
-
     onGetList = () => {
-
+        bookingProvider.getHistoryTicket().then(res => {
+            console.log(res);
+            this.setState({
+                data:res.data.numberHospital,
+                loading:false
+            })
+        }).catch(err => {
+            this.setState({
+                loading:false
+            })
+        })
     }
     renderItems = (item) => {
         return (
@@ -36,17 +38,17 @@ export default class TicketHistory extends Component {
                     flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 1, alignItems: 'center', borderBottomColor: "rgba(0, 0, 0, 0.06)", paddingVertical: 5, paddingHorizontal: 10
                 }}>
                     <View style={{ flexDirection: 'row' }}>
-                        <Text style={{ textAlign: 'left', fontWeight: 'bold', color: '#000000', fontSize: 14 }}>{(item.item.name).toUpperCase()}</Text>
+                        <Text style={{ textAlign: 'left', fontWeight: 'bold', color: '#000000', fontSize: 14 }}>Mai ngọc nam</Text>
                         <ScaledImage style={{ marginLeft: 10, }} height={18} source={require("@images/new/ticket/ic_verified.png")} ></ScaledImage>
                     </View>
                     <TouchableOpacity style={{ borderRadius: 12, backgroundColor: '#0A9BE1', paddingVertical: 3, paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center' }}>
-                        <Text style={{ color: '#fff', fontSize: 14 }}>Số khám: {item.item.number}</Text>
+                        <Text style={{ color: '#fff', fontSize: 14 }}>Số khám: 69</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={{ flexDirection: 'row' }}>
                     <View style={{ flex: 1 / 4, justifyContent: 'center', alignItems: 'center', padding: 10 }}>
-                        <ScaledImage style={{ borderRadius: 30, height: 60, width: 60, borderWidth: 1, borderColor: 'rgba(0, 0, 0, 0.06)' }} source={{ uri: item.item.image }}></ScaledImage>
-                        <Text style={{ fontWeight: 'bold', color: '#27AE60', marginTop: 5 }}>1231243</Text>
+                        <ScaledImage style={{ borderRadius: 30, height: 60, width: 60, borderWidth: 1, borderColor: 'rgba(0, 0, 0, 0.06)' }} source={{ uri: 'https://congly.vn/data/news/2018/8/21/41/ngoc-trinh-khoe-ve-dep-van-nguoi-me-tai-ha-noi-hinh-anh0378168001.jpg' }}></ScaledImage>
+                        <Text style={{ fontWeight: 'bold', color: '#27AE60', marginTop: 5 }}> 6969</Text>
                     </View>
                     <View style={{ justifyContent: 'center', padding: 10, flex: 3 / 4 }}>
                         <Text style={{ fontSize: 14 }}>BỆNH VIỆN E TRUNG ƯƠNG</Text>
@@ -63,6 +65,9 @@ export default class TicketHistory extends Component {
             <View style={{ padding: 10 }}>
                 <Text>Hôm nay</Text>
                 <FlatList
+                refreshing
+                onRefresh  = {this.onRefresh}
+                refreshing = {this.state.loading}
                     data={this.state.data}
                     extraData={this.state}
                     keyExtractor={(item, index) => index.toString()}
