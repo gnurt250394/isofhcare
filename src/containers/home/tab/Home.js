@@ -231,13 +231,15 @@ class Home extends Component {
       return 100;
     if (width > 300)
       return 140;
+    if (width > 250)
+      return 100;
     return width - 30;
   }
 
   render() {
     const icSupport = require("@images/new/user.png");
     const source = this.props.userApp.isLogin ? (this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar.absoluteUrl() } : icSupport) : icSupport;
-   
+
     return (
       <ActivityPanel
         hideStatusbar={true}

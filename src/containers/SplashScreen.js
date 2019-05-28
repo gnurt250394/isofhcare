@@ -23,6 +23,7 @@ class SplashScreen extends Component {
 	}
 	componentDidMount() {
 		console.disableYellowBox = true;
+		console.reportErrorsAsExceptions = false;
 		// this.Actions.navigate('home')
 		// setTimeout(() => {
 		// 	this.Actions.dispatch(StackActions.reset({
