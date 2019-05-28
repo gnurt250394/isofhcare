@@ -86,6 +86,8 @@ class ScanQRCodeScreen extends Component {
     }
     getInfo(data) {
         let obj = data.split("|");
+        if (obj.length < 7)
+            throw "";
         let info = {};
         console.log(obj);
         info.qrCode = data;
@@ -98,8 +100,7 @@ class ScanQRCodeScreen extends Component {
         info.hospitalCode = obj[5];
         bytearr = this.toByteArray(obj[4]);
         info.address = this.getAddress(this.fromUTF8Array(bytearr)) + "";
-        if (obj.length < 7)
-            throw "Vui lòng kiểm tra lại mã QR trên thẻ đảm bảo không bị mờ, rách...";
+
         console.log(info);
         return info;
     }
@@ -157,6 +158,7 @@ class ScanQRCodeScreen extends Component {
                     break;
                 case 3:
                     this.setState({
+                        isLoading: false,
                         showError: true, dialog: {
                             title: "SỐ KHÁM VƯỢT ĐỊNH MỨC", content: "Bạn đã lấy quá nhiều số khám trong ngày. Hãy quay lại vào ngày mai", button: "Xem lịch sử lấy số", onPress: () => {
                                 this.props.navigation.navigate("selectHealthFacilitiesScreen", {
@@ -176,8 +178,9 @@ class ScanQRCodeScreen extends Component {
         })
     }
     onSuccess(e) {
-        try {
-            this.setState({ isLoading: true }, () => {
+        this.setState({ isLoading: true }, () => {
+            try {
+
                 let index = e.data.indexOf("$");
                 let data = e.data.substring(0, index + 1);
                 data = this.getInfo(data);
@@ -205,14 +208,11 @@ class ScanQRCodeScreen extends Component {
                         })
                     })
                 }
-            })
-            return;
-        } catch (error) {
-            if (error)
-                snackbar.show("Vui lòng kiểm tra lại mã QR trên thẻ đảm bảo không bị mờ, rách...", "danger");
-        }
+            } catch (error) {
+                this.setState({ isLoading: false, showError2: true })
+            }
+        })
     }
-    onCloseModal = () => this.setState({ isVisible: false })
 
     render() {
         const deviceHeight = Platform.OS === "ios"
@@ -231,7 +231,9 @@ class ScanQRCodeScreen extends Component {
                     }
                 />
                 <Modal animationType="fade"
-                    onBackdropPress={this.onCloseModal}
+                    onBackdropPress={() => {
+                        this.setState({ showError: false });
+                    }}
                     transparent={true}
                     isVisible={this.state.showError}
                     deviceWidth={deviceWidth}
@@ -247,6 +249,43 @@ class ScanQRCodeScreen extends Component {
                                     this.state.dialog.onPress();
                             }}
                             ><Text style={{ fontWeight: 'bold', color: '#02c39a', fontSize: 15 }} >{(this.state.dialog || {}).button}</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </Modal>
+                <Modal animationType="fade"
+                    onBackdropPress={() => {
+                        this.setState({ showError2: false });
+                    }} transparent={true}
+                    isVisible={this.state.showError2}
+                    deviceWidth={deviceWidth}
+                    deviceHeight={deviceHeight}
+                >
+                    <View style={styles.viewModal}>
+                        <View style={styles.viewDialog}>
+                            <Text style={styles.txDialog}>{"MÃ QRCODE KHÔNG HỢP LỆ"}</Text>
+                            <Text style={styles.txDialog2}>{"Vui lòng kiểm tra lại mã QR trên thẻ đảm bảo không bị mờ, rách..."}</Text>
+                            <View style={{ height: 1, backgroundColor: "#00000050", width: 300, maxWidth: deviceWidth, marginTop: 20 }} />
+                            <TouchableOpacity style={[styles.viewBtnModal, { padding: 15 }]} onPress={() => {
+                                this.props.navigation.navigate("home", {
+                                    navigate: { screen: "addBooking" }
+                                });
+                            }}
+                            ><Text style={{ color: '#1ca2e3', fontSize: 15 }} >{"Đặt khám thường"}</Text>
+                            </TouchableOpacity>
+                            <View style={{ height: 1, backgroundColor: "#00000050", width: 300, maxWidth: deviceWidth }} />
+                            <TouchableOpacity style={[styles.viewBtnModal, { padding: 15 }]} onPress={() => {
+                                this.props.navigation.navigate("selectHealthFacilitiesScreen");
+                            }}
+                            ><Text style={{ color: '#1ca2e3', fontSize: 15 }} >{"Lấy số khám dịch vụ"}</Text>
+                            </TouchableOpacity>
+                            <View style={{ height: 1, backgroundColor: "#00000050", width: 300, maxWidth: deviceWidth }} />
+                            <TouchableOpacity style={[styles.viewBtnModal, { padding: 15 }]} onPress={() => {
+                                this.setState({ showError2: false }, () => {
+                                    this.restart();
+                                })
+                            }}
+                            ><Text style={{ fontWeight: 'bold', color: '#02c39a', fontSize: 15 }} >{"OK"}</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -276,7 +315,7 @@ const styles = StyleSheet.create({
         padding: 16,
     },
     viewModal: { justifyContent: 'center', alignItems: 'center', margin: 0, padding: 0 },
-    viewDialog: { backgroundColor: '#fff', alignItems: 'center', borderRadius: 6, paddingHorizontal: 20, maxHeight: 300, width: 300, maxWidth: deviceWidth },
+    viewDialog: { backgroundColor: '#fff', alignItems: 'center', borderRadius: 6, paddingHorizontal: 20, width: 300, maxWidth: deviceWidth },
     txDialog: { fontWeight: 'bold', marginTop: 20 },
     txDialog2: {
         fontSize: 14,
@@ -284,8 +323,9 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     viewBtnModal: {
-        flexDirection: 'row',
-        padding: 20
+        padding: 20,
+        width: 300, maxWidth: deviceWidth,
+        alignItems: 'center'
     },
 
 
