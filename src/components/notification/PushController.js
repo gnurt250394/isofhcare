@@ -14,6 +14,8 @@ import { Notification, NotificationOpen } from 'react-native-firebase';
 import DialogBox from 'mainam-react-native-dialog-box';
 import constants from '@resources/strings';
 import redux from '@redux-store'
+import NavigationService from "@navigators/NavigationService";
+
 class PushController extends Component {
     setBroadcastListener(listener) {
         this.listener = listener;
@@ -111,7 +113,6 @@ class PushController extends Component {
     componentDidMount() {
         // Build a channel
         const channel = new firebase.notifications.Android.Channel('isofh-care-channel', 'isofh-care-channel', firebase.notifications.Android.Importance.Max).setDescription('Nhât Minh Notification channel');
-
         // Create the channel
         firebase.notifications().android.createChannel(channel);
         showNotification = this.showNotification;
@@ -172,6 +173,8 @@ class PushController extends Component {
         if (this.props.userApp.isLogin) {
             firebase.notifications().setBadge(this.props.userApp.unReadNotificationCount + 1);
             this.props.dispatch(redux.getUnreadNotificationCount());
+            // NavigationService.navigate('getTicketFinishScreen')
+
         }
         else {
             firebase.notifications().setBadge(0);
@@ -219,6 +222,7 @@ class PushController extends Component {
     }
     getInitialNotification(notificationOpen) {
         if (notificationOpen) {
+
             console.log(notificationOpen)
             try {
                 firebase.notifications().removeDeliveredNotification(notificationOpen.notification.notificationId);

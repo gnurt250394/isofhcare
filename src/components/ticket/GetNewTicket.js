@@ -123,6 +123,7 @@ class GetNewTicket extends PureComponent {
                         </View>
                     </View>
                 </Modal>
+              
             </View>
         )
     }
