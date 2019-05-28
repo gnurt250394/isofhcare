@@ -153,6 +153,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-extra-dimensions-android')
     compile project(':react-native-location-switch')
     compile project(':react-native-location')
     compile project(':react-native-vector-icons')

@@ -46,7 +46,7 @@ class DetailsDoctorScreen extends Component {
             isLoading: true
           },
           () => {
-            userProvider.detail(this.state.id, (s, e) => {
+            userProvider.detail(this.state.id).then(s => {
               if (s) {
                 console.log(s.data, 's.data')
 
@@ -60,6 +60,7 @@ class DetailsDoctorScreen extends Component {
                 })
                 this.getRatting()
               }
+            }).catch(e => {
               if (e) {
                 this.setState({
                   isLoading: false
