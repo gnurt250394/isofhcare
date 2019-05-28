@@ -6,6 +6,7 @@ import constants from '@resources/strings';
 import redux from '@redux-store';
 import { connect } from 'react-redux';
 import Modal from 'react-native-modal';
+import stringUtils from 'mainam-react-native-string-utils';
 
 import React, { Component } from 'react';
 
@@ -22,6 +23,7 @@ import {
 
 import QRCodeScanner from 'mainam-react-native-qrcode-scanner';
 import ticketProvider from '@data-access/ticket-provider';
+const deviceWidth = Dimensions.get("window").width;
 
 class ScanQRCodeScreen extends Component {
     constructor(props) {
@@ -31,7 +33,7 @@ class ScanQRCodeScreen extends Component {
         }
     }
     componentDidMount() {
-        console.disableYellowBox = true;
+        console.disableYellowBox = true;        
     }
     loginSuccess(s, e) {
         this.setState({ isLoading: false });
@@ -84,6 +86,8 @@ class ScanQRCodeScreen extends Component {
     }
     getInfo(data) {
         let obj = data.split("|");
+        if (obj.length < 7)
+            throw "";
         let info = {};
         console.log(obj);
         info.qrCode = data;
@@ -96,8 +100,7 @@ class ScanQRCodeScreen extends Component {
         info.hospitalCode = obj[5];
         bytearr = this.toByteArray(obj[4]);
         info.address = this.getAddress(this.fromUTF8Array(bytearr)) + "";
-        if (obj.length < 7)
-            throw "Vui lòng kiểm tra lại mã QR trên thẻ đảm bảo không bị mờ, rách...";
+
         console.log(info);
         return info;
     }
@@ -136,13 +139,51 @@ class ScanQRCodeScreen extends Component {
     }
     getOrder(uid, data) {
         ticketProvider.getTicket("A", "false", "1000004", data.qrCode, uid, this.props.bookingTicket.hospital.hospital.id).then(s => {
-            console.log(s);
+            switch (s.code) {
+                case 0:
+                    if (s.data.informationUserHospital.oderCode) {
+                        data.oderCode = s.data.informationUserHospital.oderCode;
+                        this.setState({ isLoading: false }, () => {
+                            this.props.navigation.replace("confirmGetTicket", {
+                                data
+                            })
+                        });
+                    }
+                    else
+                        this.setState({ isLoading: false }, () => {
+                            snackbar.show(constants.msg.error_occur, "danger");
+                            this.restart();
+                        })
+
+                    break;
+                case 3:
+                    this.setState({
+                        isLoading: false,
+                        showError: true, dialog: {
+                            title: "SỐ KHÁM VƯỢT ĐỊNH MỨC", content: "Bạn đã lấy quá nhiều số khám trong ngày. Hãy quay lại vào ngày mai", button: "Xem lịch sử lấy số", onPress: () => {
+                                this.props.navigation.navigate("selectHealthFacilitiesScreen", {
+                                    selectTab: 1,
+                                    requestTime: new Date()
+                                });
+                            }
+                        }
+                    });
+                    return;
+                default:
+                    this.setState({ isLoading: false }, () => {
+                        snackbar.show(constants.msg.error_occur, "danger");
+                        this.restart();
+                    })
+            }
         })
     }
     onSuccess(e) {
-        try {
-            this.setState({ isLoading: true }, () => {
-                let data = this.getInfo(e.data);
+        this.setState({ isLoading: true }, () => {
+            try {
+
+                let index = e.data.indexOf("$");
+                let data = e.data.substring(0, index + 1);
+                data = this.getInfo(data);
                 if (!this.props.userApp.currentUser.uid) {
                     this.setState({ isLoading: true }, () => {
                         this.getOrder(this.props.userApp.currentUser.uid, data);
@@ -167,17 +208,13 @@ class ScanQRCodeScreen extends Component {
                         })
                     })
                 }
-            })
-            return;
-        } catch (error) {
-            if (error)
-                snackbar.show("Vui lòng kiểm tra lại mã QR trên thẻ đảm bảo không bị mờ, rách...", "danger");
-        }
+            } catch (error) {
+                this.setState({ isLoading: false, showError2: true })
+            }
+        })
     }
-    onCloseModal = () => this.setState({ isVisible: false })
 
     render() {
-        const deviceWidth = Dimensions.get("window").width;
         const deviceHeight = Platform.OS === "ios"
             ? Dimensions.get("window").height
             : require("react-native-extra-dimensions-android").get("REAL_WINDOW_HEIGHT");
@@ -185,7 +222,6 @@ class ScanQRCodeScreen extends Component {
             <ActivityPanel isLoading={this.state.isLoading} style={{ flex: 1 }} title="Quét QR BHYT" >
 
                 <QRCodeScanner
-                    // reactivate={true}
                     ref={(node) => { this.scanner = node }}
                     showMarker={true}
                     onRead={this.onSuccess.bind(this)}
@@ -193,39 +229,68 @@ class ScanQRCodeScreen extends Component {
                         <Text style={styles.centerText}>
                             Di chuyển camera tới vùng có QR của bảo hiểm y tế để quét</Text>
                     }
-                // bottomContent={
-                //     <TouchableOpacity style={styles.buttonTouchable} onPress={() => Actions.pop()}>
-                //         <Text style={styles.buttonText}>Quay về</Text>
-                //     </TouchableOpacity>
-                // }
                 />
                 <Modal animationType="fade"
-                    onBackdropPress={this.onCloseModal}
-                    transparent={true} isVisible={this.state.isVisible} style={[styles.viewModal]}
+                    onBackdropPress={() => {
+                        this.setState({ showError: false });
+                    }}
+                    transparent={true}
+                    isVisible={this.state.showError}
                     deviceWidth={deviceWidth}
                     deviceHeight={deviceHeight}
                 >
                     <View style={styles.viewModal}>
                         <View style={styles.viewDialog}>
-                            <Text style={styles.txDialog}>Lấy số khám</Text>
-                            <View style={styles.viewBtnModal}>
-                                <TouchableOpacity style={styles.viewBtn} onPress={() => {
-                                    this.setState({ isVisible: false }, () => {
-                                        this.props.navigation.navigate("scanQRCode");
-                                    });
-                                }} ><Text style={{ color: '#fff', fontWeight: 'bold' }} >Lấy số cho tôi</Text></TouchableOpacity>
-                                <TouchableOpacity style={styles.viewBtn2} onPress={() => {
-                                    this.setState({ isVisible: false }, () => {
-                                        this.props.navigation.navigate("login", {
-                                            nextScreen: { screen: "scanQRCode", param: {} }
-                                        });
-                                    });
-                                }} ><Text style={{ color: '#4A4A4A', fontWeight: 'bold' }}>Lấy số hộ</Text></TouchableOpacity>
-                            </View>
+                            <Text style={styles.txDialog}>{(this.state.dialog || {}).title}</Text>
+                            <Text style={styles.txDialog2}>{(this.state.dialog || {}).content}</Text>
+                            <View style={{ height: 1, backgroundColor: "#00000050", width: 300, maxWidth: deviceWidth, marginTop: 20 }} />
+                            <TouchableOpacity style={styles.viewBtnModal} onPress={() => {
+                                if (this.state.dialog && this.state.dialog.onPress)
+                                    this.state.dialog.onPress();
+                            }}
+                            ><Text style={{ fontWeight: 'bold', color: '#02c39a', fontSize: 15 }} >{(this.state.dialog || {}).button}</Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
                 </Modal>
-            </ActivityPanel>
+                <Modal animationType="fade"
+                    onBackdropPress={() => {
+                        this.setState({ showError2: false });
+                    }} transparent={true}
+                    isVisible={this.state.showError2}
+                    deviceWidth={deviceWidth}
+                    deviceHeight={deviceHeight}
+                >
+                    <View style={styles.viewModal}>
+                        <View style={styles.viewDialog}>
+                            <Text style={styles.txDialog}>{"MÃ QRCODE KHÔNG HỢP LỆ"}</Text>
+                            <Text style={styles.txDialog2}>{"Vui lòng kiểm tra lại mã QR trên thẻ đảm bảo không bị mờ, rách..."}</Text>
+                            <View style={{ height: 1, backgroundColor: "#00000050", width: 300, maxWidth: deviceWidth, marginTop: 20 }} />
+                            <TouchableOpacity style={[styles.viewBtnModal, { padding: 15 }]} onPress={() => {
+                                this.props.navigation.navigate("home", {
+                                    navigate: { screen: "addBooking" }
+                                });
+                            }}
+                            ><Text style={{ color: '#1ca2e3', fontSize: 15 }} >{"Đặt khám thường"}</Text>
+                            </TouchableOpacity>
+                            <View style={{ height: 1, backgroundColor: "#00000050", width: 300, maxWidth: deviceWidth }} />
+                            <TouchableOpacity style={[styles.viewBtnModal, { padding: 15 }]} onPress={() => {
+                                this.props.navigation.navigate("selectHealthFacilitiesScreen");
+                            }}
+                            ><Text style={{ color: '#1ca2e3', fontSize: 15 }} >{"Lấy số khám dịch vụ"}</Text>
+                            </TouchableOpacity>
+                            <View style={{ height: 1, backgroundColor: "#00000050", width: 300, maxWidth: deviceWidth }} />
+                            <TouchableOpacity style={[styles.viewBtnModal, { padding: 15 }]} onPress={() => {
+                                this.setState({ showError2: false }, () => {
+                                    this.restart();
+                                })
+                            }}
+                            ><Text style={{ fontWeight: 'bold', color: '#02c39a', fontSize: 15 }} >{"OK"}</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </Modal>
+            </ActivityPanel >
         );
     }
 }
@@ -249,6 +314,21 @@ const styles = StyleSheet.create({
     buttonTouchable: {
         padding: 16,
     },
+    viewModal: { justifyContent: 'center', alignItems: 'center', margin: 0, padding: 0 },
+    viewDialog: { backgroundColor: '#fff', alignItems: 'center', borderRadius: 6, paddingHorizontal: 20, width: 300, maxWidth: deviceWidth },
+    txDialog: { fontWeight: 'bold', marginTop: 20 },
+    txDialog2: {
+        fontSize: 14,
+        color: '#000', marginTop: 20, maxWidth: deviceWidth,
+        textAlign: 'center'
+    },
+    viewBtnModal: {
+        padding: 20,
+        width: 300, maxWidth: deviceWidth,
+        alignItems: 'center'
+    },
+
+
 });
 function mapStateToProps(state) {
     return {

@@ -4,17 +4,20 @@ import ActivityPanel from '@components/ActivityPanel';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import snackbar from '@utils/snackbar-utils';
 import { connect } from 'react-redux';
+import SendSMS from 'react-native-sms';
 
 class ConfirmGetTicketScreen extends Component {
   constructor(props) {
     super(props);
+    let code = "LAYSO BVE " + this.props.navigation.state.params.data.oderCode;
     this.state = {
+      code
     };
   }
 
   onCopy = () => {
-    Clipboard.setString('LAYSO BVE 12345678');
-    snackbar.show("Sao chép thành công");
+    Clipboard.setString(this.state.code);
+    snackbar.show("Sao chép thành công", "success");
 
   }
   render() {
@@ -39,7 +42,7 @@ class ConfirmGetTicketScreen extends Component {
             <View style={{ borderWidth: 1, borderColor: '#f05673', marginTop: 14, justifyContent: 'center', alignItems: 'center', borderRadius: 6, padding: 10 }}>
               <Text style={{ fontSize: 15 }}>Cú pháp sms</Text>
               <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 5 }}>
-                <Text style={{ color: '#f05673', fontWeight: '600' }}>LAYSO BVE 12345678</Text>
+                <Text style={{ color: '#f05673', fontWeight: '600' }}>{this.state.code}</Text>
                 <TouchableOpacity onPress={this.onCopy}>
                   <ScaledImage style={{ marginLeft: 10 }} height={16} source={require('@images/new/booking/ic_Copy.png')}></ScaledImage></TouchableOpacity>
               </View>
@@ -81,10 +84,24 @@ class ConfirmGetTicketScreen extends Component {
             </View>
           </View>
         </ScrollView>
-        <TouchableOpacity style={[styles.button]}><Text style={{
+        <TouchableOpacity style={[styles.button]} onPress={() => {
+          SendSMS.send({
+            body: this.state.code,
+            recipients: ['8300'],
+            successTypes: ['sent', 'queued'],
+            allowAndroidSendWithoutReadPermission: true
+          }, (completed, cancelled, error) => {
+            if (completed) {
+              this.props.navigation.navigate("selectHealthFacilitiesScreen", {
+                selectTab: 1,
+                requestTime: new Date()
+              });
+            }
+          });
+        }}><Text style={{
           color: "#ffffff", fontSize: 16, fontWeight: '600'
-        }}>Gửi tin nhắn lấy số</Text></TouchableOpacity>
-      </ActivityPanel>
+        }}>Gửi tin nhắn lấy số</Text></TouchableOpacity >
+      </ActivityPanel >
 
     );
   }

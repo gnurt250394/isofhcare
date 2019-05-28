@@ -153,6 +153,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-sms')
     compile project(':react-native-extra-dimensions-android')
     compile project(':react-native-location-switch')
     compile project(':react-native-location')
