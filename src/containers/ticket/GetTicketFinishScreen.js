@@ -33,16 +33,12 @@ class GetTicketFinishScreen extends Component {
         if (width > DEVICE_WIDTH - 50)
             width = DEVICE_WIDTH - 50;
         return (
-            <View style={{ position: 'relative', flex: 1 }}>
+            <View style={{ position: 'relative', flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                 <TouchableOpacity onPress={() => {
                     this.props.navigation.pop();
-                }} style={{ position: 'absolute', top: 0, right: 0, left: 0, bottom: 0, backgroundColor: '#00000050' }}>
-                    <View></View>
-                </TouchableOpacity>
+                }} style={{ backgroundColor: '#00000050', position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}></TouchableOpacity>
 
-
-
-                <View style={styles.container}>
+                <View style={styles.container} pointerEvent='none'>
                     <View style={styles.viewDialog}>
                         <View style={{ backgroundColor: '#FFF', width: width, alignItems: 'center', borderTopLeftRadius: 7, borderTopRightRadius: 7 }}>
                             <Text style={{ color: 'rgb(39,174,96)', fontWeight: '600', marginVertical: 20, marginBottom: 15, fontSize: 16 }}>Lấy số khám thành công!</Text>
@@ -79,8 +75,7 @@ class GetTicketFinishScreen extends Component {
 }
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'center'
     },
     viewDialog: {
         position: 'relative',
