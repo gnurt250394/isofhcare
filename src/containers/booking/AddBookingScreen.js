@@ -76,7 +76,7 @@ class AddBookingScreen extends Component {
         specialistProvider.getAll().then(s => {
             if (s) {
                 let specialist = s[0]
-                console.log(specialist,'specialistspecialist')
+                console.log(specialist, 'specialistspecialist')
                 this.setState({ specialist: specialist })
             }
         });
@@ -224,7 +224,7 @@ class AddBookingScreen extends Component {
                 specialist: this.state.specialist,
                 serviceType: this.state.serviceType ? this.state.serviceType : '',
                 bookingDate: this.state.bookingDate,
-                reason:reason,
+                reason: reason,
                 img,
                 contact: this.state.contact
             });
@@ -237,15 +237,12 @@ class AddBookingScreen extends Component {
         minDate.setDate(minDate.getDate() + 1);
         // minDate.setDate(minDate.getDate());
 
-        return (<ActivityPanel style={{ flex: 1, backgroundColor: '#f7f9fb' }} title="Đặt Khám"
+        return (<ActivityPanel title="Đặt Khám"
             menuButton={<TouchableOpacity style={styles.menu} onPress={() => snackbar.show("Chức năng đang phát triển")}><ScaleImage style={styles.img} height={20} source={require("@images/new/booking/ic_info.png")} /></TouchableOpacity>}
-            titleStyle={{ marginLeft: 50 }}
-            containerStyle={{
-                backgroundColor: "#f7f9fb"
-            }}>
+            titleStyle={{ marginLeft: 50 }}>
 
             <KeyboardAwareScrollView>
-            <TouchableOpacity style={styles.name} onPress={() => {
+                <TouchableOpacity style={styles.name} onPress={() => {
                     connectionUtils.isConnected().then(s => {
                         this.props.navigation.navigate("selectProfile", {
                             onSelected: this.selectProfile.bind(this),
@@ -352,7 +349,7 @@ class AddBookingScreen extends Component {
                             <Text style={[styles.errorStyle]}>{this.state.hospitalError}</Text> : null
                     }
                     <View style={styles.border}></View>
-                  {/*  <TouchableOpacity style={styles.mucdichkham} onPress={() => {
+                    {/*  <TouchableOpacity style={styles.mucdichkham} onPress={() => {
                         connectionUtils.isConnected().then(s => {
                             this.props.navigation.navigate("selectSpecialist", { onSelected: this.selectSpecialist.bind(this) });
                         }).catch(e => {
@@ -364,7 +361,7 @@ class AddBookingScreen extends Component {
                         <Text numberOfLines={1} style={styles.ktq}>{this.state.specialist ? this.state.specialist.name : "Chọn chuyên khoa"}</Text>
                         <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
                 </TouchableOpacity> */}
-                   
+
                 </View>
                 <Text style={styles.lienlac}>Liên lạc với tôi qua</Text>
 
@@ -445,7 +442,7 @@ class AddBookingScreen extends Component {
                     }
                 </View>
                 <Text style={styles.des}>Mô tả triệu chứng sẽ giúp bạn được phục vụ tốt hơn</Text>
-                </KeyboardAwareScrollView>
+            </KeyboardAwareScrollView>
 
             <View style={styles.btn}>
                 <TouchableOpacity onPress={this.addBooking.bind(this)} style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]}><Text style={styles.datkham}>Đặt khám</Text></TouchableOpacity>
@@ -470,7 +467,7 @@ class AddBookingScreen extends Component {
                 confirmTextIOS={"Xác nhận"}
                 date={this.state.bookingDate || minDate}
             />
-            
+
         </ActivityPanel>
         );
     }

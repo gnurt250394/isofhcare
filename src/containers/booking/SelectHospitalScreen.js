@@ -270,15 +270,7 @@ class SelectHospitalScreen extends Component {
                 isLoading={this.state.isLoading}
                 style={styles.AcPanel} title="Địa điểm"
                 backButton={<TouchableOpacity style={{ paddingLeft: 20 }} onPress={() => this.props.navigation.pop()}><Text>Hủy</Text></TouchableOpacity>}
-                titleStyle={{ marginLeft: 10 }}
-                containerStyle={{
-                    backgroundColor: "rgb(246, 249, 251)"
-                }}
-                actionbarStyle={{
-                    backgroundColor: '#ffffff',
-                    borderBottomWidth: 1,
-                    borderBottomColor: 'rgba(0, 0, 0, 0.06)'
-                }}>
+                titleStyle={{ marginLeft: 10 }}>
                 <DialogBox ref={dialogbox => { this.dialogbox = dialogbox }} />
 
 

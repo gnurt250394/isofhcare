@@ -13,11 +13,11 @@ export default class SelectProfileMedical extends Component {
         return (
             <TouchableOpacity style={styles.itemView}>
                 <View style={{
-                    flexDirection: 'row',justifyContent:'space-between', borderBottomWidth: 1, alignItems: 'center', borderBottomColor: "rgba(0, 0, 0, 0.06)", paddingVertical:5,paddingHorizontal:10
+                    flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 1, alignItems: 'center', borderBottomColor: "rgba(0, 0, 0, 0.06)", paddingVertical: 5, paddingHorizontal: 10
                 }}>
-                    <View style={{flexDirection:'row'}}>
+                    <View style={{ flexDirection: 'row' }}>
                         <Text style={{ textAlign: 'left', fontWeight: 'bold', color: '#000000', fontSize: 14 }}>MAI NGỌC NAM</Text>
-                        <ScaledImage style={{marginLeft: 10,}} height={18} source={require("@images/new/profile/ic_tick.png")} ></ScaledImage>
+                        <ScaledImage style={{ marginLeft: 10, }} height={18} source={require("@images/new/profile/ic_tick.png")} ></ScaledImage>
                     </View>
                     <TouchableOpacity style={{ borderRadius: 12, backgroundColor: '#27AE60', paddingVertical: 2, paddingHorizontal: 8, justifyContent: 'center', alignItems: 'center' }}>
                         <Text style={{ color: '#fff', fontSize: 11 }}>Chọn hồ sơ</Text>
@@ -26,13 +26,13 @@ export default class SelectProfileMedical extends Component {
                 <View style={{ flexDirection: 'row' }}>
                     <View style={{ flex: 1 / 4, justifyContent: 'center', alignItems: 'center', padding: 10 }}>
                         <ScaledImage style={{ borderRadius: 30, height: 60, width: 60, borderWidth: 1, borderColor: 'rgba(0, 0, 0, 0.06)' }} source={{ uri: 'https://kenh14cdn.com/2018/9/25/hnn6110-15378732210561772501979.jpg' }}></ScaledImage>
-                        <Text style={{ fontWeight: 'bold', color: '#27AE60',marginTop:5 }}>1231243</Text>
+                        <Text style={{ fontWeight: 'bold', color: '#27AE60', marginTop: 5 }}>1231243</Text>
                     </View>
-                    <View style={{justifyContent:'center',padding:10,flex:3/4}}>
-                    <Text style={{fontSize:13}}>BỆNH VIỆN E TRUNG ƯƠNG</Text>
-                    <Text style={{fontSize:13}}>SĐT:<Text style={{color: '#F05673'}}> 0123456789</Text></Text>
-                    <Text>Ngày sinh:<Text style={{fontWeight:'bold',color: '#4A4A4A'}}> 08/12/1998</Text></Text>
-                    <Text>Địa chỉ: {'418 Phạm Văn Đồng, Mai Dịch, Cầu Giấy, Hà Nội…'}</Text>
+                    <View style={{ justifyContent: 'center', padding: 10, flex: 3 / 4 }}>
+                        <Text style={{ fontSize: 13 }}>BỆNH VIỆN E TRUNG ƯƠNG</Text>
+                        <Text style={{ fontSize: 13 }}>SĐT:<Text style={{ color: '#F05673' }}> 0123456789</Text></Text>
+                        <Text>Ngày sinh:<Text style={{ fontWeight: 'bold', color: '#4A4A4A' }}> 08/12/1998</Text></Text>
+                        <Text>Địa chỉ: {'418 Phạm Văn Đồng, Mai Dịch, Cầu Giấy, Hà Nội…'}</Text>
                     </View>
                 </View>
             </TouchableOpacity>
@@ -41,21 +41,11 @@ export default class SelectProfileMedical extends Component {
     render() {
         return (
             <ActivityPanel
-                style={styles.AcPanel}
                 title="Hồ sơ bệnh viện E"
                 titleStyle={{ marginRight: -10 }}
-
-                containerStyle={{
-                    backgroundColor: "#f7f9fb",
-                }}
-                actionbarStyle={{
-                    backgroundColor: '#ffffff',
-                    borderBottomWidth: 1,
-                    borderBottomColor: 'rgba(0, 0, 0, 0.06)'
-                }}
-            menuButton={
-                <Text style={{marginRight: 10,color: '#0A7FFE'}}>Tạo mới</Text>
-              }
+                menuButton={
+                    <Text style={{ marginRight: 10, color: '#0A7FFE' }}>Tạo mới</Text>
+                }
             >
                 <View style={{ paddingHorizontal: 10 }}>
                     <Text style={{ textAlign: 'center', marginVertical: 20 }}> Chọn hồ sơ bạn muốn lấy số </Text>
@@ -76,6 +66,6 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'rgb(2,195,154)',
         borderRadius: 5,
-        marginVertical:10
+        marginVertical: 10
     }
 })

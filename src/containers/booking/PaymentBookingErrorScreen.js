@@ -19,16 +19,16 @@ class PaymentBookingErrorScreen extends Component {
             <ActivityPanel
                 // hideBackButton={true}
                 style={styles.AcPanel} title="Đặt khám"
+                titleStyle={{ color: '#FFF' }}
+                iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#02C39A"
-                titleStyle={{
-                    color: '#FFF'
-                }}
                 containerStyle={{
                     backgroundColor: "#02C39A"
                 }}
                 actionbarStyle={{
                     backgroundColor: '#02C39A'
-                }}>
+                }}
+            >
                 <View style={styles.container}>
                     <ScrollView>
                         <ScaleImage style={styles.image1} height={68} source={require("@images/new/ic_failed.png")} />

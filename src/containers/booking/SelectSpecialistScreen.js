@@ -80,14 +80,8 @@ class SelectSpecialistScreen extends Component {
             <ActivityPanel
                 backButton={<TouchableOpacity style={{ paddingLeft: 20 }} onPress={() => this.props.navigation.pop()}><Text>Hủy</Text></TouchableOpacity>}
                 titleStyle={{ marginRight: 0 }} title={"Chọn chuyên khoa"}
-                isLoading={this.state.isLoading} menuButton={this.renderSearchButton()} style={{ backgroundColor: '#e5fafe' }} showFullScreen={true}
-                containerStyle={{
-                    backgroundColor: "#f7f9fb"
-                }} actionbarStyle={{
-                    backgroundColor: '#ffffff',
-                    borderBottomWidth: 1,
-                    borderBottomColor: 'rgba(0, 0, 0, 0.06)'
-                }}>
+                isLoading={this.state.isLoading} menuButton={this.renderSearchButton()} showFullScreen={true}
+            >
                 {
                     this.state.showSearch ?
                         <View style={{

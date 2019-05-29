@@ -49,24 +49,8 @@ export default class SelectHealthFacilitiesScreen extends Component {
   render() {
     return (
       <ActivityPanel
-        style={styles.AcPanel}
         title="Chọn CSYT"
-        // titleStyle={{ marginRight: -10 }}
-
-        containerStyle={{
-          backgroundColor: "#f7f9fb"
-        }}
-        actionbarStyle={{
-          backgroundColor: '#ffffff',
-          borderBottomWidth: 1,
-          borderBottomColor: 'rgba(0, 0, 0, 0.06)'
-        }}
-      // menuButton={
-      //     <View style ={{width:15,marginLeft: 10
-      //     }}>
-      //     </View>
-      //   }
-      >
+        showFullScreen={true} isLoading={this.state.isLoading}>
         <View style={styles.viewBtn}>
           <View style={styles.separateBackground}></View>
           <TouchableOpacity onPress={this.onGetNewTicket} style={[styles.btnGetNumber, this.state.isGetNewTicket ? { backgroundColor: '#27AE60' } : {}]}>

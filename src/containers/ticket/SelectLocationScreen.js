@@ -31,7 +31,7 @@ class SelectLocationScreen extends Component {
     onRefresh = () => {
         this.setState({ refreshing: true }, () => {
             locationProvider.getListProvince((s, e) => {
-                console.log(s,e);
+                console.log(s, e);
                 this.setState({
                     refreshing: false
                 }, () => {
@@ -79,14 +79,8 @@ class SelectLocationScreen extends Component {
             <ActivityPanel
                 backButton={<TouchableOpacity style={{ paddingLeft: 20 }} onPress={() => this.props.navigation.pop()}><Text>Hủy</Text></TouchableOpacity>}
                 titleStyle={{ marginRight: 0 }} title={"Tỉnh/ TP"}
-                isLoading={this.state.isLoading} menuButton={this.renderSearchButton()} style={{ backgroundColor: '#e5fafe' }} showFullScreen={true}
-                containerStyle={{
-                    backgroundColor: "#f7f9fb"
-                }} actionbarStyle={{
-                    backgroundColor: '#ffffff',
-                    borderBottomWidth: 1,
-                    borderBottomColor: 'rgba(0, 0, 0, 0.06)'
-                }}>
+                isLoading={this.state.isLoading} menuButton={this.renderSearchButton()} showFullScreen={true}
+            >
                 {
                     this.state.showSearch ?
                         <View style={{

@@ -172,7 +172,7 @@ class PatientHistoryScreen extends Component {
           >
             <View style={{ marginVertical: 10 }}>
               <Text
-                style={{ fontSize: 40, fontWeight: "bold", color: "#C6C6C9",textAlign:'center' }}
+                style={{ fontSize: 40, fontWeight: "bold", color: "#C6C6C9", textAlign: 'center' }}
               >
                 {item.item.booking.bookingTime
                   ? item.item.booking.bookingTime.toDateObject("-").format("dd")
@@ -221,7 +221,7 @@ class PatientHistoryScreen extends Component {
           <Text style={[styles.statusTx, {
             color: '#FFF', paddingHorizontal: 5,
             alignSelf: 'flex-start',
-            overflow:'hidden'
+            overflow: 'hidden'
           }]}>Chờ phục vụ</Text>
         );
       case 1:
@@ -241,35 +241,35 @@ class PatientHistoryScreen extends Component {
         <Text style={[styles.statusTx, {
           color: '#FFF', paddingHorizontal: 5,
           alignSelf: 'flex-start',
-          overflow:'hidden'
+          overflow: 'hidden'
         }]}>Đã thanh toán</Text>
       )
       case 4: return (
         <Text style={[styles.statusTx, {
           color: '#FFF', paddingHorizontal: 5,
           alignSelf: 'flex-start',
-          overflow:'hidden'
+          overflow: 'hidden'
         }]}>Thanh toán sau</Text>
       )
       case 5: return (
         <Text style={[styles.statusTx, {
           color: '#FFF', paddingHorizontal: 5,
           alignSelf: 'flex-start',
-          overflow:'hidden'
+          overflow: 'hidden'
         }]}>Chờ thanh toán</Text>
       )
       case 6: return (
         <Text style={[styles.statusTx, {
           color: '#FFF', paddingHorizontal: 5,
           alignSelf: 'flex-start',
-          overflow:'hidden'
+          overflow: 'hidden'
         }]}>Đã xác nhận</Text>
       )
       case 7: return (
         <Text style={[styles.statusTx, {
           color: '#FFF', paddingHorizontal: 5,
           alignSelf: 'flex-start',
-          overflow:'hidden'
+          overflow: 'hidden'
         }]}>Đã có hồ sơ</Text>
       )
       case 8: return (
@@ -285,20 +285,7 @@ class PatientHistoryScreen extends Component {
   render() {
     return (
       <ActivityPanel
-        style={{ flex: 1, backgroundColor: "#f7f9fb" }}
         title="Lịch sử đặt lịch"
-        containerStyle={{
-          backgroundColor: "#f7f9fb",
-
-        }}
-        actionbarStyle={{
-          backgroundColor: '#ffffff',
-          borderBottomWidth: 1,
-          borderBottomColor: 'rgba(0, 0, 0, 0.06)'
-        }}
-      // actionbarStyle={{
-      //   marginLeft: 10
-      // }}
       >
         <View style={{ flex: 1 }}>
           <FlatList
