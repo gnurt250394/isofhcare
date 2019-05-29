@@ -88,7 +88,7 @@ class PushController extends Component {
         if (notification.data && notification.data.id) {
             const type = Number(notification.data.type)
             if (type == 5) {
-                this.openTicket(id);
+                this.openTicket(notification.data.id);
             }
             let body = "";
             let title = "";
