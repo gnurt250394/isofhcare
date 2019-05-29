@@ -38,7 +38,7 @@ class ScanQRCodeScreen extends Component {
     componentWillMount() {
         Permissions.check('camera').then(response => {
             // Response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
-            if (response == 'authorized') {
+            if (response == 'authorized' || response == 'undetermined') {
             } else {
                 Alert.alert(
                     'Thông báo',
