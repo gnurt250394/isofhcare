@@ -141,11 +141,11 @@ class TicketHistory extends Component {
                             <Text style={{ textAlign: 'left', fontWeight: 'bold', color: '#000000', fontSize: 14 }}>{info.fullname}</Text>
                             <ScaledImage style={{ marginLeft: 10, }} height={18} source={require("@images/new/ticket/ic_verified.png")} ></ScaledImage>
                         </View>
-                        {/* {
-                        <TouchableOpacity style={{ borderRadius: 12, backgroundColor: '#0A9BE1', paddingVertical: 3, paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center' }}>
-                            <Text style={{ color: '#fff', fontSize: 14 }}>Số khám: 69</Text>
-                        </TouchableOpacity>
-                    } */}
+                        {numberHospital.number ? 
+                            <TouchableOpacity style={{ borderRadius: 12, backgroundColor: '#0A9BE1', paddingVertical: 3, paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center' }}>
+                                <Text style={{ color: '#fff', fontSize: 14 }}>Số khám: {numberHospital.number}</Text>
+                            </TouchableOpacity> : null
+                        }
                     </View>
                     <View style={{ flexDirection: 'row' }}>
                         <View style={{ alignItems: 'center', padding: 20, paddingTop: 15, paddingRight: 10 }}>
@@ -174,7 +174,7 @@ class TicketHistory extends Component {
                                     );
                                 }}
                             />
-                            <Text  style={{ fontWeight: 'bold', color: '#27AE60', marginTop: 5,maxWidth:50 }}> {informationUserHospital.isofhCareValue}</Text>
+                            <Text style={{ fontWeight: 'bold', color: '#27AE60', marginTop: 5, maxWidth: 50 }}> {informationUserHospital.isofhCareValue}</Text>
                         </View>
                         <View style={{ justifyContent: 'center', padding: 10, flex: 1 }}>
                             <Text style={{ fontSize: 14 }}>{hospital.name}</Text>
@@ -189,32 +189,32 @@ class TicketHistory extends Component {
     }
     render() {
         return (
-            <View style={{flex:1}}>
-            {this.state.isShowContent ? (
-                <View style={{ width: '100%', marginBottom: 10, backgroundColor: "rgba(39, 174, 96, 0.18)", alignItems: 'center', justifyContent: 'center', paddingVertical: 20, paddingHorizontal: 20 }}>
-                    <Text style={{ textAlign: 'center', color: '#000', fontSize: 14 }}>Xin chờ ít phút nếu bạn đã gửi tin nhắn mà chưa nhận được số tiếp đón.</Text>
+            <View style={{ flex: 1 }}>
+                {this.state.isShowContent ? (
+                    <View style={{ width: '100%', marginBottom: 10, backgroundColor: "rgba(39, 174, 96, 0.18)", alignItems: 'center', justifyContent: 'center', paddingVertical: 20, paddingHorizontal: 20 }}>
+                        <Text style={{ textAlign: 'center', color: '#000', fontSize: 14 }}>Xin chờ ít phút nếu bạn đã gửi tin nhắn mà chưa nhận được số tiếp đón.</Text>
+                    </View>
+                ) : null}
+                <View style={{ flex: 1, padding: 14 }}>
+
+
+                    <FlatList
+                        style={{ flex: 1 }}
+                        onRefresh={this.onRefresh}
+                        refreshing={this.state.loading}
+                        data={this.state.data}
+                        extraData={this.state}
+                        ListHeaderComponent={() => !this.state.loading && (!this.state.data || this.state.data.length == 0) ?
+                            <View style={{ alignItems: 'center', marginTop: 50 }}>
+                                <Text style={{ fontStyle: 'italic' }}>Hiện tại chưa có dữ liệu</Text>
+                            </View> : null
+                        }
+                        keyExtractor={(item, index) => index.toString()}
+                        renderItem={({ item, index }) => {
+                            return this.renderItems(item, index)
+                        }}
+                    ></FlatList>
                 </View>
-            ) : null}
-            <View style={{ flex: 1, padding: 14 }}>
-
-
-                <FlatList
-                    style={{ flex: 1 }}
-                    onRefresh={this.onRefresh}
-                    refreshing={this.state.loading}
-                    data={this.state.data}
-                    extraData={this.state}
-                    ListHeaderComponent={() => !this.state.loading && (!this.state.data || this.state.data.length == 0) ?
-                        <View style={{ alignItems: 'center', marginTop: 50 }}>
-                            <Text style={{ fontStyle: 'italic' }}>Hiện tại chưa có dữ liệu</Text>
-                        </View> : null
-                    }
-                    keyExtractor={(item, index) => index.toString()}
-                    renderItem={({ item, index }) => {
-                        return this.renderItems(item, index)
-                    }}
-                ></FlatList>
-            </View>
             </View>
         )
     }
