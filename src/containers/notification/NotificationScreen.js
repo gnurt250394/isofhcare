@@ -244,7 +244,7 @@ class NotificationScreen extends Component {
           case 4:
             return "Đặt khám";
           case 5:
-            return "Lấy số khám";
+            return "Lấy số nhanh";
         }
 
       }

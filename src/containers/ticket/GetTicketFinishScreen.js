@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, ImageBackground, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, ImageBackground, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Dimensions } from 'react-native';
 import Dash from 'mainam-react-native-dash-view';
 import Modal from 'react-native-modal';
 import NavigationService from "@navigators/NavigationService";
 import dateUtils from 'mainam-react-native-date-utils'
 import { connect } from "react-redux";
+import ScaledImage from 'mainam-react-native-scaleimage';
 class GetTicketFinishScreen extends Component {
     state = {
 
@@ -26,6 +27,11 @@ class GetTicketFinishScreen extends Component {
             this.props.navigation.pop();
             return null;
         }
+        let width = 300;
+        const DEVICE_WIDTH = Dimensions.get('window').width;
+
+        if (width > DEVICE_WIDTH - 50)
+            width = DEVICE_WIDTH - 50;
         return (
             <View style={{ position: 'relative', flex: 1 }}>
                 <TouchableOpacity onPress={() => {
@@ -33,14 +39,25 @@ class GetTicketFinishScreen extends Component {
                 }} style={{ position: 'absolute', top: 0, right: 0, left: 0, bottom: 0, backgroundColor: '#00000050' }}>
                     <View></View>
                 </TouchableOpacity>
+
+
+
                 <View style={styles.container}>
                     <View style={styles.viewDialog}>
-                        <Text style={{ color: 'rgb(39,174,96)', fontWeight: '600', marginVertical: 20 }}>Lấy số khám thành công!</Text>
-                        <Dash dashColor={'gray'} style={{ height: 1, flexDirection: 'row', width: '90%' }} />
-                        <Text style={{ textAlign: 'center', marginTop: 10 }}>Số khám của bạn tại bệnh viện E ngày {data.createdDate.toDateObject('-').format("dd/MM/yyyy")} là:</Text>
-                        <Text style={{ fontSize: 55, color: '#9013fe', textAlign: 'center', fontWeight: 'bold', marginVertical: 10, }}>{data.number}</Text>
-                        <View style={{ height: 1, width: '100%', backgroundColor: 'gray' }}></View>
-                        <TouchableOpacity onPress={() => {
+                        <View style={{ backgroundColor: '#FFF', width: width, alignItems: 'center', borderTopLeftRadius: 7, borderTopRightRadius: 7 }}>
+                            <Text style={{ color: 'rgb(39,174,96)', fontWeight: '600', marginVertical: 20, marginBottom: 15, fontSize: 16 }}>Lấy số khám thành công!</Text>
+                        </View>
+                        <ScaledImage source={require("@images/new/ticket/split.png")} width={width} />
+                        <View style={{ backgroundColor: '#FFF', width: width, alignItems: 'center', marginTop: -2 }}>
+                            <Text style={{ textAlign: 'center', marginBottom: 20 }}>Số khám của bạn tại bệnh viện E {"\n"} ngày {data.createdDate.toDateObject('-').format("dd/MM/yyyy")} là:</Text>
+                        </View>
+                        <View style={{ position: "relative" }}>
+                            <ScaledImage source={require("@images/new/ticket/body.png")} width={width} />
+                            <Text style={{ fontSize: 80, color: '#9013fe', textAlign: 'center', fontWeight: 'bold', position: 'absolute', left: 0, right: 0, top: 0 }}>{data.number}</Text>
+                        </View>
+                        <View style={{ height: 1, width: width, backgroundColor: "#e5e5e5" }}></View>
+
+                        <TouchableOpacity style={{ backgroundColor: '#FFF', width: width, alignItems: 'center', paddingVertical: 5, borderBottomLeftRadius: 7, borderBottomRightRadius: 7 }} onPress={() => {
                             this.setState({ ticketFinish: false }, () => {
                                 this.props.navigation.navigate("selectHealthFacilitiesScreen", {
                                     selectTab: 1,
@@ -48,7 +65,7 @@ class GetTicketFinishScreen extends Component {
                                 });
                             })
                         }}>
-                            <Text style={{ color: "#27ae60", marginVertical: 10 }}>Xem chi tiết</Text>
+                            <Text style={{ color: "#27ae60", marginVertical: 10, fontSize: 16 }}>Xem chi tiết</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -63,7 +80,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     viewDialog: {
-        backgroundColor: '#fff',
+        position: 'relative',
         alignItems: 'center',
         marginHorizontal: 20,
         marginVertical: 20,
