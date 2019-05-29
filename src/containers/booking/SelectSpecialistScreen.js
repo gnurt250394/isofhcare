@@ -6,6 +6,8 @@ import specialistProvider from '@data-access/specialist-provider';
 import constants from '@resources/strings';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import snackbar from '@utils/snackbar-utils';
+import dataCacheProvider from '@data-access/datacache-provider';
+
 class SelectSpecialistScreen extends Component {
     constructor(props) {
         super(props);
@@ -24,6 +26,8 @@ class SelectSpecialistScreen extends Component {
         if (callback) {
             callback(specialist);
             this.props.navigation.pop();
+            dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_SPECIALIST, specialist);
+
         }
     }
 
