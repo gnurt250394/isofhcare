@@ -5,7 +5,7 @@ import userProvider from '@data-access/user-provider';
 import constants from '@resources/strings';
 import redux from '@redux-store';
 import { connect } from 'react-redux';
-import Modal from 'react-native-modal';
+import Modal from '@components/modal';
 import stringUtils from 'mainam-react-native-string-utils';
 
 import React, { Component } from 'react';

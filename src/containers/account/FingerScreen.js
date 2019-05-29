@@ -8,7 +8,7 @@ import {
   Dimensions
 } from "react-native";
 import ScaleImage from "mainam-react-native-scaleimage";
-import Modal from "react-native-modal";
+import Modal from "@components/modal";
 import FingerprintPopup from "./FingerprintPopup";
 import { connect } from "react-redux";
 

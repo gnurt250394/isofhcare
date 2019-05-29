@@ -18,7 +18,7 @@ import imageProvider from "@data-access/image-provider";
 import ImageLoad from "mainam-react-native-image-loader";
 import stylemodal from "@styles/modal-style";
 import DateTimePicker from "mainam-react-native-date-picker";
-import Modal from "react-native-modal";
+import Modal from "@components/modal";
 import connectionUtils from "@utils/connection-utils";
 import snackbar from "@utils/snackbar-utils";
 import medicalRecordProvider from "@data-access/medical-record-provider";

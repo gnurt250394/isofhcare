@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import { Text, View, TextInput, StyleSheet, RefreshControl, TouchableOpacity, ScrollView, Dimensions, Platform } from 'react-native'
-import Modal from 'react-native-modal';
+import Modal from '@components/modal';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import StarRating from 'react-native-star-rating';
 import ActivityPanel from "@components/ActivityPanel";
