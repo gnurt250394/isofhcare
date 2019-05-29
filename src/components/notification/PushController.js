@@ -86,6 +86,10 @@ class PushController extends Component {
         if (!notification || notification.show_in_foreground)
             return;
         if (notification.data && notification.data.id) {
+            const type = Number(notification.data.type)
+            if (type == 5) {
+                this.openTicket(id);
+            }
             let body = "";
             let title = "";
             if (Platform.OS == 'ios') {
@@ -110,8 +114,6 @@ class PushController extends Component {
         if (this.props.userApp.isLogin) {
             firebase.notifications().setBadge(this.props.userApp.unReadNotificationCount + 1);
             this.props.dispatch(redux.getUnreadNotificationCount());
-            // NavigationService.navigate('getTicketFinish')
-
         }
         else {
             firebase.notifications().setBadge(0);
@@ -184,6 +186,7 @@ class PushController extends Component {
                 firebase.notifications().removeDeliveredNotification(notificationOpen.notification.notificationId);
                 const id = notificationOpen.notification.data.id;
                 const type = Number(notificationOpen.notification.data.type)
+
                 switch (type) {
                     case 2:
                         this.openQuestion(id);
@@ -192,7 +195,9 @@ class PushController extends Component {
                         this.openBooking(id);
                         break;
                     case 5:
-                        this.openTicket(id);
+                        setTimeout(() => {
+                            this.openTicket(id);
+                        }, 4000);
                         break;
                 }
             } catch (error) {
