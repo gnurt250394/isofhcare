@@ -11,7 +11,6 @@ class TicketHistory extends Component {
     state = {
         data: [],
         loading: true,
-        isShowContent: false
     }
     componentDidMount() {
         this.onRefresh()
@@ -79,18 +78,10 @@ class TicketHistory extends Component {
 
     onGetList = () => {
         ticketProvider.getHistoryTicket().then(res => {
-            for (i = 0; i < res.data.numberHospital.length; i++) {
-                if (!res.data.numberHospital[i].numberHospital.number) {
-                    this.setState({
-                        isShowContent: true
-                    })
-                }else{
-                    this.setState({
-                        isShowContent: false
-                    })
-                }
-            }
+           let item =  res.data.numberHospital.find(item => item.numberHospital.number);
+
             this.setState({
+                isShowContent:item,
                 data: res.data.numberHospital,
                 loading: false
             })
