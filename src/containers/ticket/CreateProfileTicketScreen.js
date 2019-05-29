@@ -56,7 +56,7 @@ class CreateProfileTicketScreen extends Component {
     };
   }
   componentDidMount() {
-  
+
   }
   onSelectDistric = () => {
     this.props.navigation.navigate('selectLocationScreen')
@@ -230,19 +230,10 @@ class CreateProfileTicketScreen extends Component {
     return (
       <ActivityPanel
         statusbarBackgroundColor="#0049B0"
-        containerStyle={{
-          backgroundColor: "#f7f9fb"
-        }}
         style={styles.AcPanel}
         title={"Đăng ký tài khoản"}
         titleStyle={{ marginRight: 0 }}
         isLoading={this.state.isLoading}
-        actionbarStyle={{
-          backgroundColor: '#ffffff',
-          borderBottomWidth: 1,
-          borderBottomColor: 'rgba(0, 0, 0, 0.06)'
-        }}
-        iosBarStyle={"light-content"}
         backButton={
           <TouchableOpacity style={styles.btnCancel} onPress={() => this.props.navigation.pop()}>
             <Text style={styles.btnhuy}>Huỷ</Text>
@@ -335,11 +326,11 @@ class CreateProfileTicketScreen extends Component {
                   autoCorrect={false}
                 />
               </Field>
-                  {this.state.nameError ? <Text style={[styles.errorStyle]}>{this.state.nameError}</Text> : (<View></View>)}
+              {this.state.nameError ? <Text style={[styles.errorStyle]}>{this.state.nameError}</Text> : (<View></View>)}
               <TouchableOpacity
                 style={[
                   styles.mucdichkham,
-                  {justifyContent: 'center', alignItems: 'flex-end', paddingVertical: 12,borderTopWidth:0}
+                  { justifyContent: 'center', alignItems: 'flex-end', paddingVertical: 12, borderTopWidth: 0 }
                 ]}
                 onPress={this.onShowGender}
               >
@@ -424,118 +415,118 @@ class CreateProfileTicketScreen extends Component {
                   source={require("@images/new/booking/ic_next.png")}
                 />
               </Field>
-                  {this.state.isValid ? <Text style={[styles.errorStyle]}>{this.state.valid}</Text>: (<View></View>)}
+              {this.state.isValid ? <Text style={[styles.errorStyle]}>{this.state.valid}</Text> : (<View></View>)}
 
-              <Field style={[styles.mucdichkham, { flex: 1,borderTopWidth:0 }, , Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
-              <Text style={styles.mdk}>Số điện thoại(*)</Text>
-              <TextField
-                hideError={true}
-                onValidate={(valid, messages) => {
-                  if (valid) {
-                    this.setState({ phoneError: "" });
-                  } else {
-                    this.setState({ phoneError: messages });
-                  }
-                }}
-                validate={{
-                  rules: {
-                    required: true,
-                    minlength: 1,
-                    maxlength: 255
-                  },
-                  messages: {
-                    required: "Số điện thoại không được bỏ trống",
-                    maxlength: "Không cho phép nhập quá 255 kí tự"
-                  }
-                }}
-                placeholder={"Nhập số điện thoại"}
-                multiline={true}
-                inputStyle={[
-                  styles.ktq,
-                  { justifyContent: 'center', alignItems: 'flex-end', paddingRight: 10, width: 200 }
+              <Field style={[styles.mucdichkham, { flex: 1, borderTopWidth: 0 }, , Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
+                <Text style={styles.mdk}>Số điện thoại(*)</Text>
+                <TextField
+                  hideError={true}
+                  onValidate={(valid, messages) => {
+                    if (valid) {
+                      this.setState({ phoneError: "" });
+                    } else {
+                      this.setState({ phoneError: messages });
+                    }
+                  }}
+                  validate={{
+                    rules: {
+                      required: true,
+                      minlength: 1,
+                      maxlength: 255
+                    },
+                    messages: {
+                      required: "Số điện thoại không được bỏ trống",
+                      maxlength: "Không cho phép nhập quá 255 kí tự"
+                    }
+                  }}
+                  placeholder={"Nhập số điện thoại"}
+                  multiline={true}
+                  inputStyle={[
+                    styles.ktq,
+                    { justifyContent: 'center', alignItems: 'flex-end', paddingRight: 10, width: 200 }
+                  ]}
+                  errorStyle={styles.errorStyle}
+                  onChangeText={this.onChangeText("name")}
+                  value={this.state.name}
+                  autoCapitalize={"none"}
+                  returnKeyType={"next"}
+                  // underlineColorAndroid="transparent"
+                  autoCorrect={false}
+                />
+              </Field>
+              <Text style={[styles.errorStyle]}>{this.state.phoneError}</Text>
+
+              <TouchableOpacity
+                style={[
+                  styles.mucdichkham,
+                  { justifyContent: 'center', alignItems: 'flex-end', paddingVertical: 12, borderTopWidth: 0, marginTop: 10 }
                 ]}
-                errorStyle={styles.errorStyle}
-                onChangeText={this.onChangeText("name")}
-                value={this.state.name}
-                autoCapitalize={"none"}
-                returnKeyType={"next"}
-                // underlineColorAndroid="transparent"
-                autoCorrect={false}
-              />
-            </Field>
-            <Text style={[styles.errorStyle]}>{this.state.phoneError}</Text>
-
-            <TouchableOpacity
-            style={[
-              styles.mucdichkham,
-              {justifyContent: 'center', alignItems: 'flex-end', paddingVertical: 12,borderTopWidth:0,marginTop:10}
-            ]}
-            onPress={this.onSelectDistric}
-          >
-            <Text style={styles.mdk}>Địa chỉ(*)</Text>
-            <Text style={styles.ktq}>
-              Tỉnh/ TP
+                onPress={this.onSelectDistric}
+              >
+                <Text style={styles.mdk}>Địa chỉ(*)</Text>
+                <Text style={styles.ktq}>
+                  Tỉnh/ TP
             </Text>
-            <ScaleImage
-              style={[styles.imgmdk, { marginBottom: 3, }]}
-              height={10}
-              source={require("@images/new/booking/ic_next.png")}
-            />
-          </TouchableOpacity>
+                <ScaleImage
+                  style={[styles.imgmdk, { marginBottom: 3, }]}
+                  height={10}
+                  source={require("@images/new/booking/ic_next.png")}
+                />
+              </TouchableOpacity>
 
-          <TouchableOpacity
-          style={[
-            styles.mucdichkham,
-            {justifyContent: 'center', alignItems: 'flex-end', paddingVertical: 12,borderTopWidth:0}
-          ]}
-          onPress={this.onShowGender}
-        >
-          <Text style={styles.mdk}>Quận huyện(*)</Text>
-          <Text style={styles.ktq}>
-           Quận/ Huyện
+              <TouchableOpacity
+                style={[
+                  styles.mucdichkham,
+                  { justifyContent: 'center', alignItems: 'flex-end', paddingVertical: 12, borderTopWidth: 0 }
+                ]}
+                onPress={this.onShowGender}
+              >
+                <Text style={styles.mdk}>Quận huyện(*)</Text>
+                <Text style={styles.ktq}>
+                  Quận/ Huyện
           </Text>
-          <ScaleImage
-            style={[styles.imgmdk, { marginBottom: 3, }]}
-            height={10}
-            source={require("@images/new/booking/ic_next.png")}
-          />
-        </TouchableOpacity>
+                <ScaleImage
+                  style={[styles.imgmdk, { marginBottom: 3, }]}
+                  height={10}
+                  source={require("@images/new/booking/ic_next.png")}
+                />
+              </TouchableOpacity>
 
-        <TouchableOpacity
-        style={[
-          styles.mucdichkham,
-          {justifyContent: 'center', alignItems: 'flex-end', paddingVertical: 12,borderTopWidth:0}
-        ]}
-        onPress={this.onShowGender}
-      >
-        <Text style={styles.mdk}>Xã phường(*)</Text>
-        <Text style={styles.ktq}>
-          Xã/ Phường
+              <TouchableOpacity
+                style={[
+                  styles.mucdichkham,
+                  { justifyContent: 'center', alignItems: 'flex-end', paddingVertical: 12, borderTopWidth: 0 }
+                ]}
+                onPress={this.onShowGender}
+              >
+                <Text style={styles.mdk}>Xã phường(*)</Text>
+                <Text style={styles.ktq}>
+                  Xã/ Phường
         </Text>
-        <ScaleImage
-          style={[styles.imgmdk, { marginBottom: 3, }]}
-          height={10}
-          source={require("@images/new/booking/ic_next.png")}
-        />
-      </TouchableOpacity>
+                <ScaleImage
+                  style={[styles.imgmdk, { marginBottom: 3, }]}
+                  height={10}
+                  source={require("@images/new/booking/ic_next.png")}
+                />
+              </TouchableOpacity>
 
-      <TouchableOpacity
-      style={[
-        styles.mucdichkham,
-        {justifyContent: 'center', alignItems: 'flex-end', paddingVertical: 12,borderTopWidth:0}
-      ]}
-      onPress={this.onShowGender}
-    >
-      <Text style={styles.mdk}>Thôn xóm(*)</Text>
-      <Text style={styles.ktq}>
-        Thôn xóm
+              <TouchableOpacity
+                style={[
+                  styles.mucdichkham,
+                  { justifyContent: 'center', alignItems: 'flex-end', paddingVertical: 12, borderTopWidth: 0 }
+                ]}
+                onPress={this.onShowGender}
+              >
+                <Text style={styles.mdk}>Thôn xóm(*)</Text>
+                <Text style={styles.ktq}>
+                  Thôn xóm
       </Text>
-      <ScaleImage
-        style={[styles.imgmdk, { marginBottom: 3, }]}
-        height={10}
-        source={require("@images/new/booking/ic_next.png")}
-      />
-    </TouchableOpacity>
+                <ScaleImage
+                  style={[styles.imgmdk, { marginBottom: 3, }]}
+                  height={10}
+                  source={require("@images/new/booking/ic_next.png")}
+                />
+              </TouchableOpacity>
             </Form>
           </View>
 

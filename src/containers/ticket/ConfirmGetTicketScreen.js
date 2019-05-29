@@ -25,16 +25,7 @@ class ConfirmGetTicketScreen extends Component {
     console.log(data.address);
     return (
       <ActivityPanel
-        style={styles.AcPanel}
         title="Xác nhận thông tin"
-        containerStyle={{
-          backgroundColor: "#f7f9fb"
-        }}
-        actionbarStyle={{
-          backgroundColor: '#ffffff',
-          borderBottomWidth: 1,
-          borderBottomColor: 'rgba(0, 0, 0, 0.06)'
-        }}
       >
         <ScrollView>
           <View style={{ width: '100%', paddingHorizontal: 20, marginTop: 10 }}>

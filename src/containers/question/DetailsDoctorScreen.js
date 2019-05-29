@@ -90,19 +90,8 @@ class DetailsDoctorScreen extends Component {
 
     return (
       <ActivityPanel
-        statusbarBackgroundColor="#0049B0"
-        containerStyle={{
-          backgroundColor: "#rgb(255,255,255)"
-        }}
-        style={styles.AcPanel}
         title={"Hồ sơ"}
         isLoading={this.state.isLoading}
-        actionbarStyle={{
-          backgroundColor: '#ffffff',
-          borderBottomWidth: 1,
-          borderBottomColor: 'rgba(0, 0, 0, 0.06)'
-        }}
-        iosBarStyle={"light-content"}
       >
         <ScrollView
           keyboardShouldPersistTaps="handled"

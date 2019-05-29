@@ -27,7 +27,7 @@ class DetailsHistoryScreen extends Component {
 
     this.state = {
       id: id,
-      value:0
+      value: 0
     };
   }
 
@@ -43,15 +43,15 @@ class DetailsHistoryScreen extends Component {
           // if (s.data.province && s.data.province.countryCode )
           //     address += ", " + s.data.province.countryCode
 
-              console.log(s.data,'s.data.province');
-         this.setState({
-           address : s.data.hospital.address,
-           booking: s.data.booking || {},
-           service: s.data.service || {},
-           hospital: s.data.hospital || {},
-           medicalRecords: s.data.medicalRecords || {},
-           isLoading: false
-         })
+          console.log(s.data, 's.data.province');
+          this.setState({
+            address: s.data.hospital.address,
+            booking: s.data.booking || {},
+            service: s.data.service || {},
+            hospital: s.data.hospital || {},
+            medicalRecords: s.data.medicalRecords || {},
+            isLoading: false
+          })
         } else {
           snackbar.show("Không thể xem chi tiết đặt khám này", "danger");
           this.props.navigation.pop();
@@ -109,7 +109,7 @@ class DetailsHistoryScreen extends Component {
     if (image) {
       var images = image.split(",");
       return (<View>
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 10,borderRadius:10 }}>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 10, borderRadius: 10 }}>
           {
             images.map((item, index) => <TouchableOpacity onPress={() => {
               this.props.navigation.navigate("photoViewer", {
@@ -117,9 +117,9 @@ class DetailsHistoryScreen extends Component {
                   return item.absoluteUrl()
                 }), index
               });
-            }} key={index} style={{ marginRight: 10, marginBottom: 10, width: 70, height: 70,borderRadius:10 }}>
+            }} key={index} style={{ marginRight: 10, marginBottom: 10, width: 70, height: 70, borderRadius: 10 }}>
               <Image
-                style={{ width: 70, height: 70,borderRadius:10  }}
+                style={{ width: 70, height: 70, borderRadius: 10 }}
                 source={{
                   uri: item ? item.absoluteUrl() : ''
                 }}
@@ -142,10 +142,10 @@ class DetailsHistoryScreen extends Component {
     }
   }
   onQrClick = () => {
-this.setState({
-  isVisible:true,
-  value:this.state.booking.codeBooking ? this.state.booking.codeBooking : 0
-})
+    this.setState({
+      isVisible: true,
+      value: this.state.booking.codeBooking ? this.state.booking.codeBooking : 0
+    })
   }
   render() {
     const avatar = this.state.medicalRecords && this.state.medicalRecords.avatar ? { uri: `${this.state.medicalRecords.avatar.absoluteUrl()}` } : require("@images/new/user.png")
@@ -154,17 +154,9 @@ this.setState({
         isLoading={this.state.isLoading}
         style={{ flex: 1, backgroundColor: "#f7f9fb" }}
         title="Chi tiết đặt lịch"
-        containerStyle={{
-          backgroundColor: "#f7f9fb"
-        }}
-        actionbarStyle={{
-          backgroundColor: '#ffffff',
-          borderBottomWidth: 1,
-          borderBottomColor: 'rgba(0, 0, 0, 0.06)'
-        }}
       >
-         {this.state.booking && <ScrollView>
-         <View>
+        {this.state.booking && <ScrollView>
+          <View>
             <View style={styles.viewName}>
               <ImageLoad
                 resizeMode="cover"
@@ -232,7 +224,7 @@ this.setState({
               </View>
             </View>
             <View style={styles.viewSymptom}>
-              <Text><Text style={{fontWeight:'bold'}}>Triệu chứng: </Text> {this.state.booking.content}</Text>
+              <Text><Text style={{ fontWeight: 'bold' }}>Triệu chứng: </Text> {this.state.booking.content}</Text>
               <View>
                 {this.renderImages()}
                 {/* <ScaledImage
@@ -289,24 +281,24 @@ this.setState({
               </TouchableOpacity>
             </View>
           </View>
-          <View style={{with:'100%',height:50,backgroundColor:"#f7f9fb"}}></View>
+          <View style={{ with: '100%', height: 50, backgroundColor: "#f7f9fb" }}></View>
         </ScrollView>}
         <Modal
-        isVisible={this.state.isVisible}
-        onBackdropPress={() => this.setState({ isVisible: false })}
-        backdropOpacity={0.5}
-        animationInTiming={500}
-        animationOutTiming={500}
-        style={{flex:1,alignItems: 'center',justifyContent:'center'}}
-        backdropTransitionInTiming={1000}
-        backdropTransitionOutTiming={1000}
-       >
-       <QRCode
-       value={this.state.value}
-       size={250}
-      
-       fgColor='white' />
-    </Modal>
+          isVisible={this.state.isVisible}
+          onBackdropPress={() => this.setState({ isVisible: false })}
+          backdropOpacity={0.5}
+          animationInTiming={500}
+          animationOutTiming={500}
+          style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+          backdropTransitionInTiming={1000}
+          backdropTransitionOutTiming={1000}
+        >
+          <QRCode
+            value={this.state.value}
+            size={250}
+
+            fgColor='white' />
+        </Modal>
       </ActivityPanel>
     );
   }

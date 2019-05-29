@@ -62,19 +62,8 @@ class ProfileInfo extends Component {
     return (
       <ActivityPanel
         statusbarBackgroundColor="#0049B0"
-        containerStyle={{
-          backgroundColor: "#rgb(255,255,255)"
-        }}
-        style={styles.AcPanel}
         title={"Hồ sơ cá nhân"}
-        isLoading={this.state.isLoading}
-        actionbarStyle={{
-          backgroundColor: '#ffffff',
-          borderBottomWidth: 1,
-          borderBottomColor: 'rgba(0, 0, 0, 0.06)'
-        }}
-        iosBarStyle={"light-content"}
-      >
+        isLoading={this.state.isLoading}>
         <ScrollView
           style={{ flex: 1, paddingVertical: 5 }}
           keyboardShouldPersistTaps="handled">

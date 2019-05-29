@@ -24,8 +24,10 @@ class CreateBookingSuccessScreen extends Component {
         return (
             <ActivityPanel
                 hideBackButton={true}
-                style={styles.AcPanel} title="Đặt lịch khám"
+                title="Đặt lịch khám"
                 titleStyle={{ color: '#FFF', marginRight: 31 }}
+                iosBarStyle={'light-content'}
+                statusbarBackgroundColor="#02C39A"
                 containerStyle={{
                     backgroundColor: "#02C39A"
                 }}
