@@ -186,10 +186,14 @@ class ScanQRCodeScreen extends Component {
                         isLoading: false,
                         showError: true, dialog: {
                             title: "SỐ KHÁM ĐÃ VƯỢT ĐỊNH MỨC", content: "Bạn đã lấy quá nhiều số khám trong ngày. Hãy quay lại vào ngày mai.", button: "Xem lịch sử lấy số", onPress: () => {
-                                this.props.navigation.navigate("selectHealthFacilitiesScreen", {
-                                    selectTab: 1,
-                                    requestTime: new Date()
-                                });
+                                this.setState({ showError: false }, () => {
+                                    setTimeout(() => {
+                                        this.props.navigation.navigate("selectHealthFacilitiesScreen", {
+                                            selectTab: 1,
+                                            requestTime: new Date()
+                                        });
+                                    }, 300);
+                                })
                             }
                         }
                     });
@@ -290,15 +294,27 @@ class ScanQRCodeScreen extends Component {
                             <Text style={styles.txDialog2}>{"Vui lòng kiểm tra lại mã QR đảm bảo đúng mã của thẻ bảo hiểm, không bị mờ, rách ..."}</Text>
                             <View style={{ height: 1, backgroundColor: "#e5e5e5", width: 300, maxWidth: deviceWidth, marginTop: 20 }} />
                             <TouchableOpacity style={[styles.viewBtnModal, { padding: 15 }]} onPress={() => {
-                                this.props.navigation.navigate("home", {
-                                    navigate: { screen: "addBooking" }
-                                });
+                                this.setState({
+                                    showError2: false
+                                }, () => {
+                                    setTimeout(() => {
+                                        this.props.navigation.navigate("home", {
+                                            navigate: { screen: "addBooking" }
+                                        });
+                                    }, 400);
+                                })
                             }}
                             ><Text style={{ color: '#1ca2e3', fontSize: 15 }} >{"Đặt khám thường"}</Text>
                             </TouchableOpacity>
                             <View style={{ height: 0.7, backgroundColor: "#e5e5e5", width: 300, maxWidth: deviceWidth }} />
                             <TouchableOpacity style={[styles.viewBtnModal, { padding: 15 }]} onPress={() => {
-                                this.props.navigation.navigate("selectHealthFacilitiesScreen");
+                                this.setState({
+                                    showError2: false
+                                }, () => {
+                                    setTimeout(() => {
+                                        this.props.navigation.navigate("selectHealthFacilitiesScreen");
+                                    }, 400);
+                                })
                             }}
                             ><Text style={{ color: '#1ca2e3', fontSize: 15 }} >{"Lấy số khám dịch vụ"}</Text>
                             </TouchableOpacity>
