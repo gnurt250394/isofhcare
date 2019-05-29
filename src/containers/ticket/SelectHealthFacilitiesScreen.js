@@ -29,8 +29,16 @@ export default class SelectHealthFacilitiesScreen extends Component {
   componentWillReceiveProps(props) {
     if (props.navigation.state && props.navigation.state.params && props.navigation.state.params.selectTab && this.state.requestTime != props.navigation.state.params.requestTime) {
       this.setState({ requestTime: props.navigation.state.params.requestTime }, () => {
-        if (this.viewPager)
+        if (this.viewPager) {
           this.viewPager.setPage(1);
+          if (this.history) {
+            try {
+              this.history.getWrappedInstance().onRefresh();
+            } catch (error) {
+
+            }
+          }
+        }
       })
     }
   }
@@ -69,7 +77,7 @@ export default class SelectHealthFacilitiesScreen extends Component {
             <GetNewTicket></GetNewTicket>
           </View>
           <View style={{ flex: 1 }}>
-            <TicketHistory></TicketHistory>
+            <TicketHistory ref={ref => this.history = ref}></TicketHistory>
           </View>
 
         </IndicatorViewPager>

@@ -173,7 +173,9 @@ class GetNewTicket extends PureComponent {
                                 onRefresh={this.onRefesh}
                                 refreshing={this.state.loading}
                             />
-                        } >
+                        }
+                            showsVerticalScrollIndicator={false}
+                        >
                             {
                                 (this.state.data2 && this.state.data2.length > 0) &&
                                 <View>

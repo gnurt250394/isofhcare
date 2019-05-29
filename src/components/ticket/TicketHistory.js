@@ -194,6 +194,7 @@ class TicketHistory extends Component {
 
 
                     <FlatList
+                        showsVerticalScrollIndicator={false}
                         style={{ flex: 1 }}
                         onRefresh={this.onRefresh}
                         refreshing={this.state.loading}
@@ -243,4 +244,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps)(TicketHistory);
+export default connect(mapStateToProps, null, null, { withRef: true })(TicketHistory);
