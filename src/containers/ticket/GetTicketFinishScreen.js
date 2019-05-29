@@ -59,10 +59,13 @@ class GetTicketFinishScreen extends Component {
 
                         <TouchableOpacity style={{ backgroundColor: '#FFF', width: width, alignItems: 'center', paddingVertical: 5, borderBottomLeftRadius: 7, borderBottomRightRadius: 7 }} onPress={() => {
                             this.setState({ ticketFinish: false }, () => {
-                                this.props.navigation.navigate("selectHealthFacilitiesScreen", {
-                                    selectTab: 1,
-                                    requestTime: new Date()
-                                });
+                                setTimeout(() => {
+                                    this.props.navigation.navigate("selectHealthFacilitiesScreen", {
+                                        selectTab: 1,
+                                        requestTime: new Date()
+                                    });
+                                }, 700);
+                                this.props.navigation.pop();
                             })
                         }}>
                             <Text style={{ color: "#27ae60", marginVertical: 10, fontSize: 16 }}>Xem chi tiết</Text>
