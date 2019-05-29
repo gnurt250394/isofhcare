@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
   viewInfo: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 5
+    marginTop: 10
   },
   label: {
     marginRight: 10

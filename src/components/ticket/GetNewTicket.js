@@ -120,16 +120,16 @@ class GetNewTicket extends PureComponent {
                         <Text style={{ fontWeight: 'bold', color: '#000' }}>{item.hospital.name}</Text>
                         <ScaledImage style={{ marginLeft: 8, }} height={12} source={require("@images/new/booking/ic_checked.png")} ></ScaledImage>
                     </View>
-                    <Text style={{ color: '#000', opacity: 0.54, }}>{item.hospital.address}</Text>
+                    <Text style={{ color: '#00000050', marginTop: 5 }}>{item.hospital.address}</Text>
                     {item.hospital.defaultBookHospital ? <View style={{ flexDirection: 'row' }}>
-                        <TouchableOpacity  onPress={this.onPressService.bind(this, item, 1, index)} style={[styles.btnService, { backgroundColor: '#0A9BE1' } ]}><Text style={[styles.txService,  { color: '#fff' } ]}>Khám DV</Text></TouchableOpacity>
-                        <TouchableOpacity  onPress={this.onPressService.bind(this, item, 2, index)} style={[styles.btnService, { width: 62 }, item.hospital.defaultBookHospital ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, { color: '#fff' }]}>BHYT</Text></TouchableOpacity>
-                        <TouchableOpacity onPress={this.onPressService.bind(this, item, 3, index)} style={[styles.btnService,{ backgroundColor: '#0A9BE1' } ]}><Text style={[styles.txService,{ color: '#fff' } ]}>BHYT CA</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={this.onPressService.bind(this, item, 1, index)} style={[styles.btnService, { backgroundColor: '#0A9BE1' }]}><Text style={[styles.txService, { color: '#fff' }]}>Khám DV</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={this.onPressService.bind(this, item, 2, index)} style={[styles.btnService, { width: 62 }, item.hospital.defaultBookHospital ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, { color: '#fff' }]}>BHYT</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={this.onPressService.bind(this, item, 3, index)} style={[styles.btnService, { backgroundColor: '#0A9BE1' }]}><Text style={[styles.txService, { color: '#fff' }]}>BHYT CA</Text></TouchableOpacity>
                     </View> :
                         <View style={{ flexDirection: 'row' }}>
-                            <TouchableOpacity disabled={true} style={[styles.btnService, this.state.service && this.state.service == 1 && this.state.index == item.hospital.id ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService,{ color: '#6B6B6C' }]}>Khám DV</Text></TouchableOpacity>
-                            <TouchableOpacity disabled={true} style={[styles.btnService, { width: 62 }, item.hospital.defaultBookHospital ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService,{ color: '#6B6B6C' }]}>BHYT</Text></TouchableOpacity>
-                            <TouchableOpacity disabled={true} style={[styles.btnService, { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService,{ color:  '#6B6B6C' }]}>BHYT CA</Text></TouchableOpacity>
+                            <TouchableOpacity disabled={true} style={[styles.btnService, this.state.service && this.state.service == 1 && this.state.index == item.hospital.id ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, { color: '#6B6B6C' }]}>Khám DV</Text></TouchableOpacity>
+                            <TouchableOpacity disabled={true} style={[styles.btnService, { width: 62 }, item.hospital.defaultBookHospital ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, { color: '#6B6B6C' }]}>BHYT</Text></TouchableOpacity>
+                            <TouchableOpacity disabled={true} style={[styles.btnService, { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, { color: '#6B6B6C' }]}>BHYT CA</Text></TouchableOpacity>
                         </View>
                     }
                 </View>
@@ -151,7 +151,7 @@ class GetNewTicket extends PureComponent {
                         }}
                         onSubmitEditing={this.search.bind(this)}
                         returnKeyType='search'
-                        style={{ width: '80%', height: 41, marginLeft: -10 }} placeholder={"Tìm kiếm…"} underlineColorAndroid={"transparent"} />
+                        style={{ width: '80%', height: 41, marginLeft: -10, fontWeight: 'bold' }} placeholder={"Tìm kiếm…"} underlineColorAndroid={"transparent"} />
                     <TouchableOpacity onPress={this.search}><ScaledImage source={require('@images/new/hospital/ic_search.png')} height={16}></ScaledImage></TouchableOpacity>
                 </View>
                 {this.state.dataSearch && this.state.keyword ? (

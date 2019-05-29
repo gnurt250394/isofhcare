@@ -160,7 +160,7 @@ class ScanQRCodeScreen extends Component {
                     this.setState({
                         isLoading: false,
                         showError: true, dialog: {
-                            title: "SỐ KHÁM VƯỢT ĐỊNH MỨC", content: "Bạn đã lấy quá nhiều số khám trong ngày. Hãy quay lại vào ngày mai", button: "Xem lịch sử lấy số", onPress: () => {
+                            title: "SỐ KHÁM VƯỢT ĐỊNH MỨC", content: "Bạn đã lấy quá nhiều số khám trong ngày. Hãy quay lại vào ngày mai.", button: "Xem lịch sử lấy số", onPress: () => {
                                 this.props.navigation.navigate("selectHealthFacilitiesScreen", {
                                     selectTab: 1,
                                     requestTime: new Date()
@@ -243,7 +243,7 @@ class ScanQRCodeScreen extends Component {
                         <View style={styles.viewDialog}>
                             <Text style={styles.txDialog}>{(this.state.dialog || {}).title}</Text>
                             <Text style={styles.txDialog2}>{(this.state.dialog || {}).content}</Text>
-                            <View style={{ height: 1, backgroundColor: "#00000050", width: 300, maxWidth: deviceWidth, marginTop: 20 }} />
+                            <View style={{ height: 1, backgroundColor: "#e5e5e5", width: 300, maxWidth: deviceWidth, marginTop: 20 }} />
                             <TouchableOpacity style={styles.viewBtnModal} onPress={() => {
                                 if (this.state.dialog && this.state.dialog.onPress)
                                     this.state.dialog.onPress();
@@ -264,8 +264,8 @@ class ScanQRCodeScreen extends Component {
                     <View style={styles.viewModal}>
                         <View style={styles.viewDialog}>
                             <Text style={styles.txDialog}>{"MÃ QRCODE KHÔNG HỢP LỆ"}</Text>
-                            <Text style={styles.txDialog2}>{"Vui lòng kiểm tra lại mã QR trên thẻ đảm bảo không bị mờ, rách..."}</Text>
-                            <View style={{ height: 1, backgroundColor: "#00000050", width: 300, maxWidth: deviceWidth, marginTop: 20 }} />
+                            <Text style={styles.txDialog2}>{"Vui lòng kiểm tra lại mã QR đảm bảo đúng mã của thẻ bảo hiểm, không bị mờ, rách ..."}</Text>
+                            <View style={{ height: 1, backgroundColor: "#e5e5e5", width: 300, maxWidth: deviceWidth, marginTop: 20 }} />
                             <TouchableOpacity style={[styles.viewBtnModal, { padding: 15 }]} onPress={() => {
                                 this.props.navigation.navigate("home", {
                                     navigate: { screen: "addBooking" }
@@ -273,13 +273,13 @@ class ScanQRCodeScreen extends Component {
                             }}
                             ><Text style={{ color: '#1ca2e3', fontSize: 15 }} >{"Đặt khám thường"}</Text>
                             </TouchableOpacity>
-                            <View style={{ height: 1, backgroundColor: "#00000050", width: 300, maxWidth: deviceWidth }} />
+                            <View style={{ height: 0.7, backgroundColor: "#e5e5e5", width: 300, maxWidth: deviceWidth }} />
                             <TouchableOpacity style={[styles.viewBtnModal, { padding: 15 }]} onPress={() => {
                                 this.props.navigation.navigate("selectHealthFacilitiesScreen");
                             }}
                             ><Text style={{ color: '#1ca2e3', fontSize: 15 }} >{"Lấy số khám dịch vụ"}</Text>
                             </TouchableOpacity>
-                            <View style={{ height: 1, backgroundColor: "#00000050", width: 300, maxWidth: deviceWidth }} />
+                            <View style={{ height: 1, backgroundColor: "#e5e5e5", width: 300, maxWidth: deviceWidth }} />
                             <TouchableOpacity style={[styles.viewBtnModal, { padding: 15 }]} onPress={() => {
                                 this.setState({ showError2: false }, () => {
                                     this.restart();
