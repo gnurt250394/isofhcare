@@ -9,7 +9,7 @@ import SendSMS from 'react-native-sms';
 class ConfirmGetTicketScreen extends Component {
   constructor(props) {
     super(props);
-    let code = "LAYSO BVE " + this.props.navigation.state.params.data.oderCode;
+    let code = "LAYSO " + (this.props.bookingTicket.hospital.hospital.codeHospital || "") + " " + this.props.navigation.state.params.data.oderCode;
     this.state = {
       code
     };
