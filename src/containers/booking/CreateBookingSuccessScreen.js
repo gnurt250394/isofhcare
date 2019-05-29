@@ -5,13 +5,18 @@ import { connect } from 'react-redux';
 import dateUtils from 'mainam-react-native-date-utils';
 import ScaleImage from "mainam-react-native-scaleimage";
 import QRCode from 'react-native-qrcode';
+import Modal from "react-native-modal";
 
 class CreateBookingSuccessScreen extends Component {
     constructor(props) {
         super(props)
     }
 
-
+    onQrClick = () => {
+        this.setState({
+          isVisible:true,
+        })
+          }
     render() {
         let booking = this.props.navigation.state.params.booking;
         if (!booking || !booking.profile || !booking.hospital || !booking.hospital.hospital || !booking.book) {
@@ -66,13 +71,13 @@ class CreateBookingSuccessScreen extends Component {
                         <View style={styles.view2}>
                             <View style={styles.col}>
                                 <Text style={styles.col1}>Mã code:</Text>
-                                <View style={{ alignItems: 'center', marginTop: 10 }}>
+                                <TouchableOpacity onPress={this.onQrClick} style={{ alignItems: 'center', marginTop: 10 }}>
                                     <QRCode
                                         style={{ alignSelf: 'center', backgroundColor: '#000' }}
                                         value={booking.book.codeBooking}
                                         size={100}
                                         fgColor='white' />
-                                </View>
+                                </TouchableOpacity>
                             </View>
                         </View>
                     </ScrollView>
@@ -80,6 +85,22 @@ class CreateBookingSuccessScreen extends Component {
                         this.props.navigation.pop();
                     }}>Về trang chủ</Text></TouchableOpacity>
                 </View>
+                <Modal
+                isVisible={this.state.isVisible}
+                onBackdropPress={() => this.setState({ isVisible: false })}
+                backdropOpacity={0.5}
+                animationInTiming={500}
+                animationOutTiming={500}
+                style={{flex:1,alignItems: 'center',justifyContent:'center'}}
+                backdropTransitionInTiming={1000}
+                backdropTransitionOutTiming={1000}
+               >
+               <QRCode
+               value={booking.book.codeBooking}
+               size={250}
+              
+               fgColor='white' />
+            </Modal>
             </ActivityPanel>
         );
     }
