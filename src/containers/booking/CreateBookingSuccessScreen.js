@@ -11,7 +11,9 @@ class CreateBookingSuccessScreen extends Component {
     constructor(props) {
         super(props)
     }
-
+    state = {
+        isVisible:false
+    }
     onQrClick = () => {
         this.setState({
           isVisible:true,
@@ -57,29 +59,28 @@ class CreateBookingSuccessScreen extends Component {
                                 <Text style={styles.text}>{bookingTime.format("HH:mm tt - thu, dd/MM/yyyy")}</Text>
                             </View>
                             <View style={styles.row}>
-                                <Text style={styles.label}>Số khám:</Text>
-                                <Text style={styles.text}>{booking.book.sequenceNo}</Text>
-                            </View>
-                            <View style={styles.row}>
                                 <Text style={styles.label}>Hình thức thanh toán:</Text>
                                 <Text style={styles.text}>{booking.payment == 2 ? "Thanh toán tại viện" : "VNPay"}</Text>
                             </View>
                         </View>
+                        <View style={styles.view2}>
+                        <View style={styles.col}>
+                            <Text style={styles.col1}>Mã code:</Text>
+                            <TouchableOpacity onPress={this.onQrClick} style={{ alignItems: 'center', marginTop: 10 }}>
+                                <QRCode
+                                    style={{ alignSelf: 'center', backgroundColor: '#000' }}
+                                    value={booking.book.codeBooking}
+                                    size={100}
+                                    fgColor='white' />
+                            </TouchableOpacity>
+                            <Text style={{textAlign:'center',color:'#4a4a4a',marginVertical:5}}>Mã đặt khám: {booking.book.codeBooking}</Text>
+
+                        </View>
+                    </View>
                         <View style={styles.view1}>
                             <Text style={styles.text2}>Lịch đặt khám của bạn đã được gửi đi. Vui lòng đến trước hẹn 15 phút để thực hiện các thủ tục khác.</Text>
                         </View>
-                        <View style={styles.view2}>
-                            <View style={styles.col}>
-                                <Text style={styles.col1}>Mã code:</Text>
-                                <TouchableOpacity onPress={this.onQrClick} style={{ alignItems: 'center', marginTop: 10 }}>
-                                    <QRCode
-                                        style={{ alignSelf: 'center', backgroundColor: '#000' }}
-                                        value={booking.book.codeBooking}
-                                        size={100}
-                                        fgColor='white' />
-                                </TouchableOpacity>
-                            </View>
-                        </View>
+                     
                     </ScrollView>
                     <TouchableOpacity style={styles.btn}><Text style={styles.btntext} onPress={() => {
                         this.props.navigation.pop();
