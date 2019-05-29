@@ -7,6 +7,8 @@ import redux from '@redux-store';
 import { connect } from 'react-redux';
 import Modal from '@components/modal';
 import stringUtils from 'mainam-react-native-string-utils';
+import QRCodeScanner from 'mainam-react-native-qrcode-scanner';
+import Permissions from 'react-native-permissions'
 
 import React, { Component } from 'react';
 
@@ -18,10 +20,10 @@ import {
     Dimensions,
     Platform,
     View,
-    Linking
+    Linking,
+    Alert
 } from 'react-native';
 
-import QRCodeScanner from 'mainam-react-native-qrcode-scanner';
 import ticketProvider from '@data-access/ticket-provider';
 const deviceWidth = Dimensions.get("window").width;
 
@@ -31,6 +33,27 @@ class ScanQRCodeScreen extends Component {
         this.state = {
             isLoading: false
         }
+    }
+
+    componentWillMount() {
+        Permissions.check('camera').then(response => {
+            // Response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
+            if (response == 'authorized') {
+            } else {
+                Alert.alert(
+                    'Thông báo',
+                    'Bạn cần cho phép iSofHCare truy cập vào camera của bạn để quét mã QRCode?',
+                    [
+                        {
+                            text: 'Không',
+                            onPress: () => this.props.navigation.pop(),
+                            style: 'cancel',
+                        },
+                        { text: 'Mở cài đặt', onPress: Permissions.openSettings },
+                    ],
+                )
+            }
+        })
     }
     componentDidMount() {
         console.disableYellowBox = true;

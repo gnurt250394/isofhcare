@@ -7,7 +7,7 @@ import redux from '@redux-store';
 import { connect } from 'react-redux';
 
 import React, { Component } from 'react';
-
+import Permissions from 'react-native-permissions'
 import {
     AppRegistry,
     StyleSheet,
@@ -78,7 +78,12 @@ class ScanScreen extends Component {
             this.scanner.reactivate();
         }, 3000);
     }
-
+    componentWillMount() {
+        Permissions.check('camera').then(response => {
+            // Response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
+            alert(response);
+        })
+    }
     render() {
         return (
             <ActivityPanel isLoading={this.state.isLoading} style={{ flex: 1 }} title="Quét QR Code" showFullScreen={true} hideActionbar={true} barStyle={"default"} >
