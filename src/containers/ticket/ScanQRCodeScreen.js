@@ -160,7 +160,7 @@ class ScanQRCodeScreen extends Component {
                     this.setState({
                         isLoading: false,
                         showError: true, dialog: {
-                            title: "SỐ KHÁM VƯỢT ĐỊNH MỨC", content: "Bạn đã lấy quá nhiều số khám trong ngày. Hãy quay lại vào ngày mai.", button: "Xem lịch sử lấy số", onPress: () => {
+                            title: "SỐ KHÁM ĐÃ VƯỢT ĐỊNH MỨC", content: "Bạn đã lấy quá nhiều số khám trong ngày. Hãy quay lại vào ngày mai.", button: "Xem lịch sử lấy số", onPress: () => {
                                 this.props.navigation.navigate("selectHealthFacilitiesScreen", {
                                     selectTab: 1,
                                     requestTime: new Date()

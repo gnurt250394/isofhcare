@@ -8,10 +8,12 @@ import TicketHistory from '@components/ticket/TicketHistory'
 export default class SelectHealthFacilitiesScreen extends Component {
   constructor(props) {
     super(props);
+    let tabIndex = 0;
+    if (this.props.navigation.state.params && this.props.navigation.state.params.selectTab)
+      tabIndex = this.props.navigation.state.params.selectTab;
     this.state = {
       isGetNewTicket: true,
-      tabIndex: 0,
-
+      tabIndex,
     };
   }
   onGetNewTicket = () => {
@@ -39,6 +41,10 @@ export default class SelectHealthFacilitiesScreen extends Component {
     this.setState({
       isGetNewTicket: tabIndex == 0
     });
+  }
+  componentDidMount() {
+    if (this.viewPager)
+      this.viewPager.setPage(this.state.tabIndex);
   }
   render() {
     return (

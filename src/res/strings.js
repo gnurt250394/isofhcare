@@ -299,8 +299,7 @@ module.exports = {
       create: isofhcare_service + "booking/create",
       confirmPay: isofhcare_service + "booking/confirm-pay",
       detail: isofhcare_service + "booking/get-detail",
-      getByAuthor: isofhcare_service + "booking/get-by-author",
-      get_history_ticket: isofhcare_service + "number-hospital/get-by-author"
+      getByAuthor: isofhcare_service + "booking/get-by-author"
     },
     question: {
       create: isofhcare_service + "post/create",
@@ -349,7 +348,9 @@ module.exports = {
       onlineTransactionPaid: wallet_services + "online-transactions/{transactionId}/paid"
     },
     ticket: {
-      get_ticket: isofhcare_service + "information-user-hospital/create"
+      get_ticket: isofhcare_service + "information-user-hospital/create",
+      get_history_ticket: isofhcare_service + "number-hospital/get-by-author",
+      get_detail: isofhcare_service + "number-hospital/get-detail"
     }
   }
 };
