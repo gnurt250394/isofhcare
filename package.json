@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest"
+    "test": "jest",
+    "postinstall": "./node_modules/react-native-maps/enable-google-maps ./ios"
   },
   "dependencies": {
     "art": "^0.10.2",
@@ -52,7 +53,7 @@
     "react-native-linear-gradient": "^2.4.2",
     "react-native-location": "^2.2.0",
     "react-native-location-switch": "https://github.com/philiWeitz/react-native-location-switch",
-    "react-native-maps": "^0.23.0",
+    "react-native-maps": "^0.24.2",
     "react-native-md5": "^1.0.0",
     "react-native-modal": "^11.0.1",
     "react-native-permissions": "^1.1.1",
