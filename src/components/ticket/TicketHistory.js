@@ -78,10 +78,10 @@ class TicketHistory extends Component {
 
     onGetList = () => {
         ticketProvider.getHistoryTicket().then(res => {
-           let item =  res.data.numberHospital.find(item => item.numberHospital.number);
+            let item = res.data.numberHospital.find(item => !item.numberHospital.number);
 
             this.setState({
-                isShowContent:item,
+                isShowContent: item,
                 data: res.data.numberHospital,
                 loading: false
             })
@@ -136,7 +136,7 @@ class TicketHistory extends Component {
                             <Text style={{ textAlign: 'left', fontWeight: 'bold', color: '#000000', fontSize: 14 }}>{info.fullname}</Text>
                             <ScaledImage style={{ marginLeft: 10, }} height={18} source={require("@images/new/ticket/ic_verified.png")} ></ScaledImage>
                         </View>
-                        {numberHospital.number ? 
+                        {numberHospital.number ?
                             <TouchableOpacity style={{ borderRadius: 12, backgroundColor: '#0A9BE1', paddingVertical: 3, paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center' }}>
                                 <Text style={{ color: '#fff', fontSize: 14 }}>Số khám: {numberHospital.number}</Text>
                             </TouchableOpacity> : null
@@ -169,7 +169,7 @@ class TicketHistory extends Component {
                                     );
                                 }}
                             />
-                            <Text style={{ fontWeight: 'bold', color: '#27AE60', marginTop: 5, maxWidth: 50}}>{informationUserHospital.isofhCareValue}</Text>
+                            <Text style={{ fontWeight: 'bold', color: '#27AE60', marginTop: 5, maxWidth: 50 }}>{informationUserHospital.isofhCareValue}</Text>
                         </View>
                         <View style={{ justifyContent: 'center', padding: 10, flex: 1 }}>
                             <Text style={{ fontSize: 14 }}>{hospital.name}</Text>
