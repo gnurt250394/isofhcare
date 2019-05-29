@@ -37,7 +37,8 @@ class AddBookingScreen extends Component {
             imageUris: [],
             allowBooking: false,
             bookingDate,
-            date
+            date,
+            contact:2
         }
     }
     _changeColor = () => {
@@ -49,6 +50,19 @@ class AddBookingScreen extends Component {
         this.setState({ imageUris });
     }
     componentDidMount() {
+        dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_SPECIALIST, (s, e) => {
+            
+            if (s) {
+                this.setState({ specialist: s })
+            }else{
+                specialistProvider.getAll().then(s => {
+                    if (s) {
+                        let specialist = s[0]
+                        this.setState({ specialist: specialist })
+                    }
+                });
+            }
+        })
         dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, (s, e) => {
             if (s) {
                 this.setState({ profile: s })
@@ -73,13 +87,7 @@ class AddBookingScreen extends Component {
             }
         });
 
-        specialistProvider.getAll().then(s => {
-            if (s) {
-                let specialist = s[0]
-                console.log(specialist, 'specialistspecialist')
-                this.setState({ specialist: specialist })
-            }
-        });
+     
     }
     selectImage() {
         if (this.state.imageUris && this.state.imageUris.length >= 5) {
