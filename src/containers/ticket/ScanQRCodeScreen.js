@@ -184,7 +184,7 @@ class ScanQRCodeScreen extends Component {
                 let index = e.data.indexOf("$");
                 let data = e.data.substring(0, index + 1);
                 data = this.getInfo(data);
-                if (!this.props.userApp.currentUser.uid) {
+                if (this.props.userApp.currentUser.uid) {
                     this.setState({ isLoading: true }, () => {
                         this.getOrder(this.props.userApp.currentUser.uid, data);
                     })
