@@ -195,7 +195,7 @@ class TicketHistory extends Component {
                     <Text style={{ textAlign: 'center', color: '#000', fontSize: 14 }}>Xin chờ ít phút nếu bạn đã gửi tin nhắn mà chưa nhận được số tiếp đón.</Text>
                 </View>
             ) : null}
-            <View style={{ flex: 1, padding: 20 }}>
+            <View style={{ flex: 1, padding: 14 }}>
 
 
                 <FlatList
