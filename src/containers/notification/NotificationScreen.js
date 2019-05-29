@@ -13,6 +13,7 @@ import ScaleImage from "mainam-react-native-scaleimage";
 import notificationProvider from "@data-access/notification-provider";
 import dateUtils from "mainam-react-native-date-utils";
 import questionProvider from "@data-access/question-provider";
+import ticketProvider from "@data-access/ticket-provider";
 import snackbar from "@utils/snackbar-utils";
 import DialogBox from "react-native-dialogbox";
 import constants from "@resources/strings";
@@ -109,46 +110,77 @@ class NotificationScreen extends Component {
 
   viewNotification(item) {
     try {
-      var data = JSON.parse(item.notification.value);
-      notificationProvider.setRead(item.notification.id).then(s => {
-        firebase.notifications().setBadge(this.props.userApp.unReadNotificationCount > 0 ? this.props.userApp.unReadNotificationCount - 1 : 0);
-        this.props.dispatch(redux.getUnreadNotificationCount());
-      });
-      item.notification.watched = 1;
-      this.setState({ data: [...this.state.data] });
-      switch (data.type) {
-        case 1:{
-          this.openQuestion(data.id);
-          break
-        }
-        case 2:
-          this.openQuestion(data.id);
-          break;
-        case 4:
-          this.openBooking(data.id);
-          break;
-      }
-    } catch (error) {
-
-    }
-  }
-  openQuestion(id) {
-    questionProvider
-      .detail(id)
-      .then(s => {
-        if (s && s.data) {
-          this.props.navigation.navigate("detailQuestion", { post: s.data });
-        } else {
-          snackbar.show("Lỗi, bài viết không tồn tại", "danger");
+      this.setState({ isLoading: true }, () => {
+        var data = JSON.parse(item.notification.value);
+        notificationProvider.setRead(item.notification.id).then(s => {
+          firebase.notifications().setBadge(this.props.userApp.unReadNotificationCount > 0 ? this.props.userApp.unReadNotificationCount - 1 : 0);
+          this.props.dispatch(redux.getUnreadNotificationCount());
+        });
+        item.notification.watched = 1;
+        this.setState({ data: [...this.state.data] });
+        switch (data.type) {
+          case 1: {
+            this.openQuestion(data.id);
+            break
+          }
+          case 2:
+            this.openQuestion(data.id);
+            break;
+          case 4:
+            this.openBooking(data.id);
+            break;
+          case 5:
+            this.openTicket(data.id);
+            break;
+          default:
+            this.setState({ isLoading: false });
         }
       })
-      .catch(e => {
-        snackbar.show("Lỗi, vui lòng thử lại", "danger");
+    } catch (error) {
+      this.setState({ isLoading: false });
+    }
+  }
+  openTicket(id) {
+    this.setState({ isLoading: true }, () => {
+      ticketProvider.detail(id).then(s => {
+        this.setState({ isLoading: false }, () => {
+          switch (s.code) {
+            case 0:
+              if (s.data && s.data.numberHospital) {
+                this.props.navigation.navigate("getTicketFinish", { data: s.data.numberHospital });
+              }
+          }
+        });
+      }).catch(e => {
+        this.setState({ isLoading: false }, () => {
+
+        });
       });
+    });
+
+  }
+  openQuestion(id) {
+    this.setState({ isLoading: true }, () => {
+      questionProvider.detail(id).then(s => {
+        this.setState({ isLoading: true }, () => {
+          if (s && s.data) {
+            this.props.navigation.navigate("detailQuestion", { post: s.data });
+          } else {
+            snackbar.show("Lỗi, bài viết không tồn tại", "danger");
+          }
+        });
+      }).catch(e => {
+        this.setState({ isLoading: true }, () => {
+          snackbar.show("Lỗi, vui lòng thử lại", "danger");
+        });
+      });
+    });
   }
   openBooking(id) {
-    this.props.navigation.navigate("detailsHistory", {
-      id
+    this.setState({ isLoading: false }, () => {
+      this.props.navigation.navigate("detailsHistory", {
+        id
+      });
     });
   }
 
@@ -196,7 +228,7 @@ class NotificationScreen extends Component {
         >
           <ScaleImage source={require("@images/new/ic_remove.png")} width={20} />
         </TouchableOpacity>
-      </View>
+      </View >
     );
   }
   isToday(item) {
@@ -211,7 +243,8 @@ class NotificationScreen extends Component {
             return "Tư vấn - đặt câu hỏi";
           case 4:
             return "Đặt khám";
-            break;
+          case 5:
+            return "Lấy số khám";
         }
 
       }

@@ -173,7 +173,7 @@ class PushController extends Component {
         if (this.props.userApp.isLogin) {
             firebase.notifications().setBadge(this.props.userApp.unReadNotificationCount + 1);
             this.props.dispatch(redux.getUnreadNotificationCount());
-            // NavigationService.navigate('getTicketFinishScreen')
+            // NavigationService.navigate('getTicketFinish')
 
         }
         else {

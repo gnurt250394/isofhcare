@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import ActivityPanel from '@components/ActivityPanel';
-import bookingProvider from '@data-access/booking-provider';
+import ticketProvider from '@data-access/ticket-provider';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import { connect } from 'react-redux';
 import ImageLoad from "mainam-react-native-image-loader";
@@ -78,7 +78,7 @@ class TicketHistory extends Component {
     }
 
     onGetList = () => {
-        bookingProvider.getHistoryTicket().then(res => {
+        ticketProvider.getHistoryTicket().then(res => {
             for (i = 0; i < res.data.numberHospital.length; i++) {
                 if (!res.data.numberHospital[i].numberHospital.number) {
                     this.setState({

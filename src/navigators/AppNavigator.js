@@ -145,13 +145,21 @@ const RootNavigator = createStackNavigator(
     selectHealthFacilitiesScreen: { screen: SelectHealthFacilitiesScreen },
     selectProfileMedical: { screen: SelectProfileMedicalScreen },
     scanQRCode: { screen: ScanQRCodeScreen },
-    getTicketFinishScreen: { screen: GetTicketFinishScreen },
+    getTicketFinish: { screen: GetTicketFinishScreen },
     confirmGetTicket: { screen: ConfirmGetTicketScreen },
     //----------------------------------------
     emptyScreen: { screen: EmptyScreen }
   },
   {
     headerMode: "none",
+    cardStyle: {
+      backgroundColor: 'transparent', opacity: 1,
+    },
+    transitionConfig: () => ({
+      containerStyle: {
+        backgroundColor: 'transparent',
+      },
+    }),
     header: null,
     gesturesEnabled: false,
     navigationOptions: {
