@@ -194,6 +194,7 @@ class TicketHistory extends Component {
 
 
                     <FlatList
+                        showsVerticalScrollIndicator={false}
                         style={{ flex: 1 }}
                         onRefresh={this.onRefresh}
                         refreshing={this.state.loading}
