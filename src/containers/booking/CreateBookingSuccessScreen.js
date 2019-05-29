@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import dateUtils from 'mainam-react-native-date-utils';
 import ScaleImage from "mainam-react-native-scaleimage";
 import QRCode from 'react-native-qrcode';
-import Modal from "react-native-modal";
+import Modal from "@components/modal";
 
 class CreateBookingSuccessScreen extends Component {
     constructor(props) {

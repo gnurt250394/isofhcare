@@ -12,7 +12,7 @@ import realmModel from '@models/realm-models';
 import PhotoGrid from 'react-native-thumbnail-grid';
 import snackbar from '@utils/snackbar-utils';
 import ImageLoad from 'mainam-react-native-image-loader';
-import Modal from "react-native-modal";
+import Modal from "@components/modal";
 import stylemodal from "@styles/modal-style";
 import constants from '@resources/strings';
 import facilityProvider from '@data-access/facility-provider';

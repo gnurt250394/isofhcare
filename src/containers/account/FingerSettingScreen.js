@@ -6,7 +6,7 @@ import ScaledImage from "mainam-react-native-scaleimage";
 import * as Animatable from "react-native-animatable";
 import CheckPassword from "./CheckPassword";
 import FingerprintPopup from "./FingerprintPopup";
-import Modal from "react-native-modal";
+import Modal from "@components/modal";
 import userProvider from "@data-access/user-provider";
 import redux from "@redux-store";
 import dataCacheProvider from "../../data-access/datacache-provider";

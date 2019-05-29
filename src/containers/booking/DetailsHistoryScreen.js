@@ -17,7 +17,7 @@ import stringUtils from "mainam-react-native-string-utils";
 import clientUtils from '@utils/client-utils';
 import ImageLoad from 'mainam-react-native-image-loader';
 import snackbar from '@utils/snackbar-utils';
-import Modal from "react-native-modal";
+import Modal from "@components/modal";
 import stylemodal from "@styles/modal-style";
 
 class DetailsHistoryScreen extends Component {

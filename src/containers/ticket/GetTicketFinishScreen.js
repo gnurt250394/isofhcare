@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, ImageBackground, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Dimensions } from 'react-native';
 import Dash from 'mainam-react-native-dash-view';
-import Modal from 'react-native-modal';
+import Modal from '@components/modal';
 import NavigationService from "@navigators/NavigationService";
 import dateUtils from 'mainam-react-native-date-utils'
 import { connect } from "react-redux";

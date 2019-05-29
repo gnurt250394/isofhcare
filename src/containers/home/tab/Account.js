@@ -25,7 +25,7 @@ import ImagePicker from "mainam-react-native-select-image";
 import imageProvider from "@data-access/image-provider";
 import userProvider from "@data-access/user-provider";
 import FingerprintPopup from "../../account/FingerprintPopup";
-import Modal from "react-native-modal";
+import Modal from "@components/modal";
 
 class Account extends Component {
   constructor(props) {
