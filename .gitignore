@@ -8,3 +8,8 @@ ios/DerivedData/APP/Index/DataStore/v5/records/2A/FIRApp.h-3P98VTXHP192A
 android/local.properties
 package-lock.json
 yarn.lock
+ios/APP.xcodeproj/xcuserdata/socoboy.xcuserdatad/xcschemes/xcschememanagement.plist
+ios/APP.xcworkspace/xcuserdata/socoboy.xcuserdatad/UserInterfaceState.xcuserstate
+.idea
+ios/Pods
+ios/Podfile.lock
