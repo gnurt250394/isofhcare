@@ -26,6 +26,10 @@ class ConfirmGetTicketScreen extends Component {
     return (
       <ActivityPanel
         title="Xác nhận thông tin"
+        containerStyle={{
+          backgroundColor: "#fff"
+      }}
+        
       >
         <ScrollView>
           <View style={{ width: '100%', paddingHorizontal: 20, marginTop: 10 }}>
@@ -100,7 +104,7 @@ class ConfirmGetTicketScreen extends Component {
 const styles = StyleSheet.create({
   AcPanel: {
     flex: 1,
-    backgroundColor: '#cacaca',
+    backgroundColor: '#fff',
   },
   viewInfo: {
     flexDirection: 'row',
@@ -108,7 +112,7 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   label: {
-    marginRight: 10
+    marginRight: 10,
   },
   button: {
     justifyContent: 'center',
