@@ -59,9 +59,9 @@ class GetNewTicket extends PureComponent {
                         ((data.hospital.name || "").trim().toLowerCase().unsignText().indexOf(keyword) != -1) ||
                         ((data.hospital.address || "").trim().toLowerCase().unsignText().indexOf(keyword) != -1)
                     ));
-                }).sort(function (a,b) {
+                }).sort(function (a, b) {
                     return a.hospital.sttHospital - b.hospital.sttHospital
-                })  
+                })
                 this.setState({
                     data2,
                     data3,
@@ -153,8 +153,8 @@ class GetNewTicket extends PureComponent {
                         }}
                         onSubmitEditing={this.search.bind(this)}
                         returnKeyType='search'
-                        style={{ width: '80%', height: 41, marginLeft: -10, fontWeight: 'bold',paddingLeft:9 }} placeholder={"Tìm kiếm…"} underlineColorAndroid={"transparent"} />
-                    <TouchableOpacity style={{marginRight:-2}} onPress={this.search}><ScaledImage source={require('@images/new/hospital/ic_search.png')} height={16}></ScaledImage></TouchableOpacity>
+                        style={{ width: '80%', height: 41, marginLeft: -10, fontWeight: 'bold', paddingLeft: 9 }} placeholder={"Tìm kiếm…"} underlineColorAndroid={"transparent"} />
+                    <TouchableOpacity style={{ marginRight: -2 }} onPress={this.search}><ScaledImage source={require('@images/new/hospital/ic_search.png')} height={16}></ScaledImage></TouchableOpacity>
                 </View>
                 {this.state.dataSearch && this.state.keyword ? (
 
@@ -206,14 +206,18 @@ class GetNewTicket extends PureComponent {
                             <View style={styles.viewBtnModal}>
                                 <TouchableOpacity style={styles.viewBtn} onPress={() => {
                                     this.setState({ isVisible: false }, () => {
-                                        this.props.navigation.navigate("scanQRCode");
+                                        setTimeout(() => {
+                                            this.props.navigation.navigate("scanQRCode");
+                                        }, 500);
                                     });
                                 }} ><Text style={{ color: '#fff', fontWeight: 'bold' }} >Lấy số cho tôi</Text></TouchableOpacity>
                                 <TouchableOpacity style={styles.viewBtn2} onPress={() => {
                                     this.setState({ isVisible: false }, () => {
-                                        this.props.navigation.navigate("login", {
-                                            nextScreen: { screen: "scanQRCode", param: {} }
-                                        });
+                                        setTimeout(() => {
+                                            this.props.navigation.navigate("login", {
+                                                nextScreen: { screen: "scanQRCode", param: {} }
+                                            });
+                                        }, 500);
                                     });
                                 }} ><Text style={{ color: '#4A4A4A', fontWeight: 'bold' }}>Lấy số hộ</Text></TouchableOpacity>
                             </View>
@@ -237,7 +241,7 @@ class GetNewTicket extends PureComponent {
     }
 }
 const styles = StyleSheet.create({
-    viewTx: { flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', width: '100%', borderTopWidth: 0.5,borderStyle: "solid", borderBottomWidth: 0.5, borderColor: 'rgba(0,0,0,0.26)' },
+    viewTx: { flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', width: '100%', borderTopWidth: 0.5, borderStyle: "solid", borderBottomWidth: 0.5, borderColor: 'rgba(0,0,0,0.26)' },
     viewItem: { padding: 15, borderBottomWidth: 1, borderColor: 'rgba(0,0,0,0.26)', flexDirection: 'row', borderTopWidth: 1 },
     btnService: { justifyContent: 'center', alignItems: 'center', marginRight: 5, borderRadius: 6, marginVertical: 10, paddingVertical: 5, paddingHorizontal: 12, },
     txService: { fontSize: 11, },
