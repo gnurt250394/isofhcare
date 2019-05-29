@@ -103,6 +103,8 @@ class LoginScreen extends Component {
 				switch (s.code) {
 					case 0:
 						var user = s.data.user;
+						if (s.data.profile && s.data.profile.uid)
+							user.uid = s.data.profile.uid;
 						snackbar.show(constants.msg.user.login_success, "success");
 						this.props.dispatch(redux.userLogin(user));
 						if (this.nextScreen) {

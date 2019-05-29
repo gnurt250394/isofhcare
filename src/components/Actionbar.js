@@ -85,6 +85,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: 'white',
+        borderBottomWidth: 1,
+        borderBottomColor: 'rgba(0, 0, 0, 0.06)'
     },
     badge: {
         backgroundColor: '#fb5656',

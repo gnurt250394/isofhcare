@@ -6,6 +6,8 @@ import specialistProvider from '@data-access/specialist-provider';
 import constants from '@resources/strings';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import snackbar from '@utils/snackbar-utils';
+import dataCacheProvider from '@data-access/datacache-provider';
+
 class SelectSpecialistScreen extends Component {
     constructor(props) {
         super(props);
@@ -24,6 +26,8 @@ class SelectSpecialistScreen extends Component {
         if (callback) {
             callback(specialist);
             this.props.navigation.pop();
+            dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_SPECIALIST, specialist);
+
         }
     }
 
@@ -80,14 +84,8 @@ class SelectSpecialistScreen extends Component {
             <ActivityPanel
                 backButton={<TouchableOpacity style={{ paddingLeft: 20 }} onPress={() => this.props.navigation.pop()}><Text>Hủy</Text></TouchableOpacity>}
                 titleStyle={{ marginRight: 0 }} title={"Chọn chuyên khoa"}
-                isLoading={this.state.isLoading} menuButton={this.renderSearchButton()} style={{ backgroundColor: '#e5fafe' }} showFullScreen={true}
-                containerStyle={{
-                    backgroundColor: "#f7f9fb"
-                }} actionbarStyle={{
-                    backgroundColor: '#ffffff',
-                    borderBottomWidth: 1,
-                    borderBottomColor: 'rgba(0, 0, 0, 0.06)'
-                }}>
+                isLoading={this.state.isLoading} menuButton={this.renderSearchButton()} showFullScreen={true}
+            >
                 {
                     this.state.showSearch ?
                         <View style={{

@@ -178,14 +178,7 @@ class ConfirmBookingScreen extends Component {
     render() {
         return (
             <ActivityPanel style={styles.AcPanel} title="Xác nhận lịch khám"
-                isLoading={this.state.isLoading}
-                containerStyle={{
-                    backgroundColor: "#FFF"
-                }} actionbarStyle={{
-                    backgroundColor: '#ffffff',
-                    borderBottomWidth: 1,
-                    borderBottomColor: 'rgba(0, 0, 0, 0.06)'
-                }}>
+                isLoading={this.state.isLoading}>
                 <ScrollView keyboardShouldPersistTaps='handled' style={styles.container}>
                     <View style={styles.viewDetails}>
                         <View style={{ paddingHorizontal: 20, marginTop: 20, flexDirection: 'row', alignItems: 'center' }}>

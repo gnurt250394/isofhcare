@@ -26,15 +26,8 @@ class ConfirmBookingScreen extends Component {
 
     render() {
         return (
-            <ActivityPanel style={styles.AcPanel} title="Đặt Lịch Khám"
-                titleStyle={{ marginLeft: 0 }}
-                containerStyle={{
-                    backgroundColor: "#f7f9fb"
-                }} actionbarStyle={{
-                    backgroundColor: '#ffffff',
-                    borderBottomWidth: 1,
-                    borderBottomColor: 'rgba(0, 0, 0, 0.06)'
-                }}>
+            <ActivityPanel title="Đặt Lịch Khám"
+            >
                 <View style={styles.container}>
                     <View style={styles.view1}>
                         <Text style={styles.title}>Xác Nhận Đặt Khám</Text>

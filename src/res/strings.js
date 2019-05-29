@@ -54,7 +54,8 @@ module.exports = {
     action_change_notification_count: "ACTION_CHANGE_NOTIFICATION_COUNT",
     action_show_popup_notice_new_version:
       "ACTION_SHOW_POPUP_NOTICE_NEW_VERSION",
-    action_set_my_facility: "ACTION_SET_MY_FACILITY"
+    action_set_my_facility: "ACTION_SET_MY_FACILITY",
+    action_select_hospital_get_ticket: "ACTION_SELECT_HOSPITAL_GET_TICKET"
   },
   colors: {
     breakline: "#c0c0c0",
@@ -90,6 +91,7 @@ module.exports = {
       INTRO_FINISHED: "INTRO_FINISHED",
       LASTEST_POSTS: "LASTEST_POSTS",
       LASTEST_PROFILE: "LASTEST_PROFILE",
+      LASTEST_SPECIALIST:"LASTEST_SPECIALIST",
       KEY_FINGER: 'KEY_FINGER',
       KEY_REFRESH_TOKEN: 'KEY_REFRESH_TOKEN',
       LOCATION: "LOCATION"
@@ -323,6 +325,7 @@ module.exports = {
       get_hospital_by_service_type: isofhcare_service + "hospital/get-hospital-by-service-type",
       get_hospital_by_search: isofhcare_service + "hospital/search",
       get_by_location: isofhcare_service + "hospital/get-hospital-by-locate",
+      get_default_hospital: isofhcare_service + 'hospital/get-default-hospital'
     },
     profile: {
       get_by_user: isofhcare_service + "profile/get-by-user",
@@ -345,6 +348,11 @@ module.exports = {
     wallet: {
       createOnlinePayment: wallet_services + "customers/{id}/online-payments",
       onlineTransactionPaid: wallet_services + "online-transactions/{transactionId}/paid"
+    },
+    ticket: {
+      get_ticket: isofhcare_service + "information-user-hospital/create",
+      get_history_ticket: isofhcare_service + "number-hospital/get-by-author",
+      get_detail: isofhcare_service + "number-hospital/get-detail"
     }
   }
 };

@@ -4,7 +4,7 @@ import dhyCommand from '@dhy/strings';
 import ActivityPanel from '@components/ActivityPanel';
 import DoctorTime from '@dhy/components/DoctorTime';
 import { connect } from 'react-redux';
-import Modal from "react-native-modal";
+import Modal from "@components/modal";
 import userProvider from '@data-access/user-provider';
 import bookingProvider from '@dhy/data-access/booking-provider';
 import Dimensions from 'Dimensions';

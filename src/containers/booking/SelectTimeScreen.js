@@ -399,15 +399,7 @@ class SelectTimeScreen extends Component {
     }
 
     render() {
-        return (<ActivityPanel isLoading={this.state.isLoading} style={{ flex: 1, backgroundColor: '#f7f9fb' }} title="Thời gian"
-            titleStyle={{ marginLeft: 0 }}
-            containerStyle={{
-                backgroundColor: "#f7f9fb"
-            }} actionbarStyle={{
-                backgroundColor: '#ffffff',
-                borderBottomWidth: 1,
-                borderBottomColor: 'rgba(0, 0, 0, 0.06)'
-            }}>
+        return (<ActivityPanel isLoading={this.state.isLoading} style={{ flex: 1, backgroundColor: '#f7f9fb' }} title="Thời gian">
 
             <View style={styles.container}>
                 <ScrollView keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">

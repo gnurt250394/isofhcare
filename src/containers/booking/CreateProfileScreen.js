@@ -18,7 +18,7 @@ import imageProvider from "@data-access/image-provider";
 import ImageLoad from "mainam-react-native-image-loader";
 import stylemodal from "@styles/modal-style";
 import DateTimePicker from "mainam-react-native-date-picker";
-import Modal from "react-native-modal";
+import Modal from "@components/modal";
 import connectionUtils from "@utils/connection-utils";
 import snackbar from "@utils/snackbar-utils";
 import medicalRecordProvider from "@data-access/medical-record-provider";
@@ -247,20 +247,9 @@ class createProfile extends Component {
 
     return (
       <ActivityPanel
-        statusbarBackgroundColor="#0049B0"
-        containerStyle={{
-          backgroundColor: "#f7f9fb"
-        }}
-        style={styles.AcPanel}
         title={this.state.isDataNull ? "Thêm hồ sơ" : "Thêm người thân"}
         titleStyle={{ marginRight: 0 }}
         isLoading={this.state.isLoading}
-        actionbarStyle={{
-          backgroundColor: '#ffffff',
-          borderBottomWidth: 1,
-          borderBottomColor: 'rgba(0, 0, 0, 0.06)'
-        }}
-        iosBarStyle={"light-content"}
         backButton={
           <TouchableOpacity style={styles.btnCancel} onPress={() => this.props.navigation.pop()}>
             <Text style={styles.btnhuy}>Huỷ</Text>

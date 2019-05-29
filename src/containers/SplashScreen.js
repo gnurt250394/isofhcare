@@ -15,6 +15,7 @@ const resetAction = (route) => {
 		actions: [NavigationActions.navigate({ routeName: route })],
 	})
 };
+
 import dataCache from '@data-access/datacache-provider';
 class SplashScreen extends Component {
 	constructor(props) {
@@ -23,6 +24,7 @@ class SplashScreen extends Component {
 	}
 	componentDidMount() {
 		console.disableYellowBox = true;
+		console.reportErrorsAsExceptions = false;
 		// this.Actions.navigate('home')
 		// setTimeout(() => {
 		// 	this.Actions.dispatch(StackActions.reset({

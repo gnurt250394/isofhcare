@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Keyboard, Image, TouchableHighlight, FlatList, Dimensions } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Keyboard, Image, KeyboardAvoidingView, Platform, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
 import ScaleImage from "mainam-react-native-scaleimage";
 import ImagePicker from 'mainam-react-native-select-image';
@@ -9,7 +9,7 @@ import connectionUtils from '@utils/connection-utils';
 import clientUtils from '@utils/client-utils';
 const DEVICE_HEIGHT = Dimensions.get('window').height;
 import DateTimePicker from 'mainam-react-native-date-picker';
-
+import KeyboardSpacer from "react-native-keyboard-spacer";
 import snackbar from '@utils/snackbar-utils';
 import dateUtils from "mainam-react-native-date-utils";
 import stringUtils from "mainam-react-native-string-utils";
@@ -21,6 +21,7 @@ import dataCacheProvider from '@data-access/datacache-provider';
 import constants from '@resources/strings';
 import medicalRecordProvider from '@data-access/medical-record-provider';
 import serviceTypeProvider from '@data-access/service-type-provider';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 class AddBookingScreen extends Component {
     constructor(props) {
@@ -36,7 +37,8 @@ class AddBookingScreen extends Component {
             imageUris: [],
             allowBooking: false,
             bookingDate,
-            date
+            date,
+            contact:2
         }
     }
     _changeColor = () => {
@@ -48,6 +50,19 @@ class AddBookingScreen extends Component {
         this.setState({ imageUris });
     }
     componentDidMount() {
+        dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_SPECIALIST, (s, e) => {
+            
+            if (s) {
+                this.setState({ specialist: s })
+            }else{
+                specialistProvider.getAll().then(s => {
+                    if (s) {
+                        let specialist = s[0]
+                        this.setState({ specialist: specialist })
+                    }
+                });
+            }
+        })
         dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, (s, e) => {
             if (s) {
                 this.setState({ profile: s })
@@ -72,13 +87,7 @@ class AddBookingScreen extends Component {
             }
         });
 
-        specialistProvider.getAll().then(s => {
-            if (s) {
-                let specialist = s[0]
-                console.log(specialist,'specialistspecialist')
-                this.setState({ specialist: specialist })
-            }
-        });
+     
     }
     selectImage() {
         if (this.state.imageUris && this.state.imageUris.length >= 5) {
@@ -223,7 +232,7 @@ class AddBookingScreen extends Component {
                 specialist: this.state.specialist,
                 serviceType: this.state.serviceType ? this.state.serviceType : '',
                 bookingDate: this.state.bookingDate,
-                reason:reason,
+                reason: reason,
                 img,
                 contact: this.state.contact
             });
@@ -236,15 +245,11 @@ class AddBookingScreen extends Component {
         minDate.setDate(minDate.getDate() + 1);
         // minDate.setDate(minDate.getDate());
 
-        return (<ActivityPanel style={{ flex: 1, backgroundColor: '#f7f9fb' }} title="Đặt Khám"
+        return (<ActivityPanel title="Đặt Khám"
             menuButton={<TouchableOpacity style={styles.menu} onPress={() => snackbar.show("Chức năng đang phát triển")}><ScaleImage style={styles.img} height={20} source={require("@images/new/booking/ic_info.png")} /></TouchableOpacity>}
-            titleStyle={{ marginLeft: 50 }}
-            containerStyle={{
-                backgroundColor: "#f7f9fb"
-            }}>
+            titleStyle={{ marginLeft: 50 }}>
 
-            <ScrollView keyboardShouldPersistTaps='handled' style={styles.container}>
-
+            <KeyboardAwareScrollView>
                 <TouchableOpacity style={styles.name} onPress={() => {
                     connectionUtils.isConnected().then(s => {
                         this.props.navigation.navigate("selectProfile", {
@@ -352,7 +357,7 @@ class AddBookingScreen extends Component {
                             <Text style={[styles.errorStyle]}>{this.state.hospitalError}</Text> : null
                     }
                     <View style={styles.border}></View>
-                  {/*  <TouchableOpacity style={styles.mucdichkham} onPress={() => {
+                    {/*  <TouchableOpacity style={styles.mucdichkham} onPress={() => {
                         connectionUtils.isConnected().then(s => {
                             this.props.navigation.navigate("selectSpecialist", { onSelected: this.selectSpecialist.bind(this) });
                         }).catch(e => {
@@ -364,7 +369,7 @@ class AddBookingScreen extends Component {
                         <Text numberOfLines={1} style={styles.ktq}>{this.state.specialist ? this.state.specialist.name : "Chọn chuyên khoa"}</Text>
                         <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
                 </TouchableOpacity> */}
-                   
+
                 </View>
                 <Text style={styles.lienlac}>Liên lạc với tôi qua</Text>
 
@@ -445,7 +450,8 @@ class AddBookingScreen extends Component {
                     }
                 </View>
                 <Text style={styles.des}>Mô tả triệu chứng sẽ giúp bạn được phục vụ tốt hơn</Text>
-            </ScrollView>
+            </KeyboardAwareScrollView>
+
             <View style={styles.btn}>
                 <TouchableOpacity onPress={this.addBooking.bind(this)} style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]}><Text style={styles.datkham}>Đặt khám</Text></TouchableOpacity>
             </View>
@@ -469,6 +475,7 @@ class AddBookingScreen extends Component {
                 confirmTextIOS={"Xác nhận"}
                 date={this.state.bookingDate || minDate}
             />
+
         </ActivityPanel>
         );
     }

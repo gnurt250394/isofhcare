@@ -47,7 +47,7 @@ class SelectServiceScreen extends Component {
         let serviceType = ''
         let specialist = this.state.specialist ? this.state.specialist.id : ''
         this.setState({ refreshing: true }, () => {
-            serviceProvider.getAll(this.state.hospital.hospital.id, specialist,serviceType).then(s => {
+            serviceProvider.getAll(this.state.hospital.hospital.id, specialist, serviceType).then(s => {
                 this.setState({
                     refreshing: false
                 }, () => {
@@ -100,14 +100,8 @@ class SelectServiceScreen extends Component {
             <ActivityPanel
                 backButton={<TouchableOpacity style={{ paddingLeft: 20 }} onPress={() => this.props.navigation.pop()}><Text>Hủy</Text></TouchableOpacity>}
                 titleStyle={{ marginRight: 0 }} title={"Chọn dịch vụ"}
-                isLoading={this.state.isLoading} menuButton={this.renderSearchButton()} style={{ backgroundColor: '#e5fafe' }} showFullScreen={true}
-                containerStyle={{
-                    backgroundColor: "#f7f9fb"
-                }} actionbarStyle={{
-                    backgroundColor: '#ffffff',
-                    borderBottomWidth: 1,
-                    borderBottomColor: 'rgba(0, 0, 0, 0.06)'
-                }}>
+                isLoading={this.state.isLoading} menuButton={this.renderSearchButton()} showFullScreen={true}
+            >
                 {
                     this.state.showSearch ?
                         <View style={{

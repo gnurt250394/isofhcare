@@ -77,16 +77,20 @@ class CreateQuestionStep1Screen extends Component {
         iosBarStyle={'light-content'}
         statusbarBackgroundColor="#02C39A"
         actionbarStyle={{
-          backgroundColor: '#02C39A'
+          backgroundColor: '#02C39A',
+          borderBottomWidth: 0
+        }}
+        titleStyle={{
+          color: '#FFF'
         }}
       >
         <ScrollView
           showsVerticalScrollIndicator={false}
-          bounces = {false}
-          style={{ flex: 1, position: 'relative' }} 
+          bounces={false}
+          style={{ flex: 1, position: 'relative' }}
           keyboardShouldPersistTaps="handled"
-          keyboardDismissMode='on-drag' 
-          >
+        // keyboardDismissMode='on-drag' 
+        >
           <View style={{ backgroundColor: '#02C39A', height: 130, position: 'absolute', top: 0, left: 0, right: 0 }}></View>
           <View style={{ margin: 22, marginTop: 10 }}>
             <Card style={{ padding: 22 }}>
@@ -144,7 +148,7 @@ class CreateQuestionStep1Screen extends Component {
                       }}
                       value={this.state.age}
                       style={{ marginTop: 6 }}
-                      inputStyle={[styles.textinput, { width: 100,  paddingTop: 10, paddingLeft: 17, paddingRight: 17, paddingBottom: Platform.OS == 'ios' ? 8 : 8, fontWeight: '600' }]}
+                      inputStyle={[styles.textinput, { width: 100, paddingTop: 10, paddingLeft: 17, paddingRight: 17, paddingBottom: Platform.OS == 'ios' ? 8 : 8, fontWeight: '600' }]}
                       onChangeText={s => {
                         this.setState({ age: s });
                       }}

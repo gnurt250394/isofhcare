@@ -5,6 +5,8 @@ import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 import com.facebook.CallbackManager;
 import com.facebook.react.ReactApplication;
+import com.tkporter.sendsms.SendSMSPackage;
+import ca.jaysoo.extradimensions.ExtraDimensionsPackage;
 import org.pweitz.reactnative.locationswitch.LocationSwitchPackage;
 import com.github.reactnativecommunity.location.RNLocationPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -51,6 +53,8 @@ private static CallbackManager mCallbackManager = CallbackManager.Factory.create
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
+            SendSMSPackage.getInstance(),
+            new ExtraDimensionsPackage(),
             new LocationSwitchPackage(),
             new RNLocationPackage(),
             new VectorIconsPackage(),

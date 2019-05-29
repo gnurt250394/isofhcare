@@ -46,7 +46,7 @@ class DetailsDoctorScreen extends Component {
             isLoading: true
           },
           () => {
-            userProvider.detail(this.state.id, (s, e) => {
+            userProvider.detail(this.state.id).then(s => {
               if (s) {
                 console.log(s.data, 's.data')
 
@@ -60,6 +60,7 @@ class DetailsDoctorScreen extends Component {
                 })
                 this.getRatting()
               }
+            }).catch(e => {
               if (e) {
                 this.setState({
                   isLoading: false
@@ -89,19 +90,8 @@ class DetailsDoctorScreen extends Component {
 
     return (
       <ActivityPanel
-        statusbarBackgroundColor="#0049B0"
-        containerStyle={{
-          backgroundColor: "#rgb(255,255,255)"
-        }}
-        style={styles.AcPanel}
         title={"Hồ sơ"}
         isLoading={this.state.isLoading}
-        actionbarStyle={{
-          backgroundColor: '#ffffff',
-          borderBottomWidth: 1,
-          borderBottomColor: 'rgba(0, 0, 0, 0.06)'
-        }}
-        iosBarStyle={"light-content"}
       >
         <ScrollView
           keyboardShouldPersistTaps="handled"

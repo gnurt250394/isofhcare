@@ -89,6 +89,8 @@ class LoginSocial extends Component {
                     try {
                         snackbar.show(constants.msg.user.login_success, 'success');
                         var user = s.data.user;
+                        if (s.data.profile && s.data.profile.uid)
+                            user.uid = s.data.profile.uid;
                         this.props.dispatch(redux.userLogin(user));
                         if (this.props.directScreen) {
                             this.props.directScreen();
