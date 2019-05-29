@@ -144,9 +144,11 @@ class ScanQRCodeScreen extends Component {
                     if (s.data.informationUserHospital.oderCode) {
                         data.oderCode = s.data.informationUserHospital.oderCode;
                         this.setState({ isLoading: false }, () => {
-                            this.props.navigation.replace("confirmGetTicket", {
-                                data
-                            })
+                            setTimeout(() => {
+                                this.props.navigation.replace("confirmGetTicket", {
+                                    data
+                                })
+                            }, 300);
                         });
                     }
                     else
@@ -185,9 +187,7 @@ class ScanQRCodeScreen extends Component {
                 let data = e.data.substring(0, index + 1);
                 data = this.getInfo(data);
                 if (this.props.userApp.currentUser.uid) {
-                    this.setState({ isLoading: true }, () => {
-                        this.getOrder(this.props.userApp.currentUser.uid, data);
-                    })
+                    this.getOrder(this.props.userApp.currentUser.uid, data);
                 }
                 else {
                     userProvider.detail(this.props.userApp.currentUser.id).then(s => {
