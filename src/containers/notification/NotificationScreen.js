@@ -119,10 +119,9 @@ class NotificationScreen extends Component {
         item.notification.watched = 1;
         this.setState({ data: [...this.state.data] });
         switch (data.type) {
-          case 1: {
+          case 1:
             this.openQuestion(data.id);
-            break
-          }
+            break;
           case 2:
             this.openQuestion(data.id);
             break;
@@ -147,7 +146,7 @@ class NotificationScreen extends Component {
           switch (s.code) {
             case 0:
               if (s.data && s.data.numberHospital) {
-                this.props.navigation.navigate("getTicketFinish", { data: s.data.numberHospital });
+                this.props.navigation.navigate("getTicketFinish", s.data);
               }
           }
         });

@@ -22,8 +22,8 @@ class GetTicketFinishScreen extends Component {
         NavigationService.pop()
     }
     render() {
-        let data = this.props.navigation.state.params.data;
-        if (!data) {
+        let { hospital, numberHospital } = this.props.navigation.state.params;
+        if (!hospital || !numberHospital) {
             this.props.navigation.pop();
             return null;
         }
@@ -49,11 +49,11 @@ class GetTicketFinishScreen extends Component {
                         </View>
                         <ScaledImage source={require("@images/new/ticket/split.png")} width={width} />
                         <View style={{ backgroundColor: '#FFF', width: width, alignItems: 'center', marginTop: -2 }}>
-                            <Text style={{ textAlign: 'center', marginBottom: 20 }}>Số khám của bạn tại bệnh viện E {"\n"} ngày {data.createdDate.toDateObject('-').format("dd/MM/yyyy")} là:</Text>
+                            <Text style={{ textAlign: 'center', marginBottom: 20, paddingHorizontal: 10 }}>Số khám của bạn tại {hospital.name} ngày {numberHospital.createdDate.toDateObject('-').format("dd/MM/yyyy")} là:</Text>
                         </View>
                         <View style={{ position: "relative" }}>
                             <ScaledImage source={require("@images/new/ticket/body.png")} width={width} />
-                            <Text style={{ fontSize: 80, color: '#9013fe', textAlign: 'center', fontWeight: 'bold', position: 'absolute', left: 0, right: 0, top: 0 }}>{data.number}</Text>
+                            <Text style={{ fontSize: 80, color: '#9013fe', textAlign: 'center', fontWeight: 'bold', position: 'absolute', left: 0, right: 0, top: 0 }}>{numberHospital.number}</Text>
                         </View>
                         <View style={{ height: 1, width: width, backgroundColor: "#e5e5e5" }}></View>
 

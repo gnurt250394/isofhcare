@@ -15,39 +15,11 @@ import DialogBox from 'mainam-react-native-dialog-box';
 import constants from '@resources/strings';
 import redux from '@redux-store'
 import NavigationService from "@navigators/NavigationService";
+import ticketProvider from "@data-access/ticket-provider";
 
 class PushController extends Component {
     setBroadcastListener(listener) {
         this.listener = listener;
-    }
-    showNotification(notificationId) {
-        // notificationProvider.getDetail(notificationId, function (s, e) {
-        //     if (s) {
-        //         if (s.code == 0 && s.data && s.data.notification && s.data.notification.type) {
-        //             if (s.data.notification.type == 12) {
-        //                 if (props && props.dispatch) {
-        //                     props.dispatch({ type: constants.action.action_select_ehealth_tab, value: true });
-        //                     props.dispatch({ type: constants.action.action_trigger_load_list_booking, value: true });
-        //                 }
-        //             }
-        //             switch (s.data.notification.type) {
-        //                 case 10:
-        //                 case 12:
-        //                     const notification = new firebase.notifications.Notification()
-        //                         .setNotificationId(StringUtils.guid())
-        //                         .setBody(s.data.notification.content)
-        //                         .setTitle(s.data.notification.title)
-        //                         .android.setChannelId("isofh-care-channel")
-        //                         .android.setSmallIcon("ic_launcher")
-        //                         .setSound("default")
-        //                         .setData({
-        //                             uid: notificationId
-        //                         });
-        //                     firebase.notifications().displayNotification(notification)
-        //             }
-        //         }
-        //     }
-        // });
     }
     showBroadcast(notificationId) {
         notificationProvider.getDetailBroadcast(notificationId, function (s, e) {
@@ -76,46 +48,11 @@ class PushController extends Component {
             this.listener(s.data.advertise);
         }
     }
-    showDetailNotification(notificationId) {
-        // notificationProvider.getDetail(notificationId, function (s, e) {
-        //     if (s && s.code == 0 && s.data && s.data.notification && s.data.notification.type) {
-        //         switch (s.data.notification.type) {
-        //             case 10:
-        //                 bookingProvider.getDetail(s.data.notification.detailId, function (s, e) {
-        //                     {
-
-        //                         try {
-        //                             if (e) {
-        //                                 snackbar.show(constants.msg.booking.canot_view_detail_this_booking);
-        //                             } else {
-        //                                 var data = JSON.parse(s.data.dataHis);
-        //                                 data.Profile.PatientHistoryId = s.data.dataBook.hisPatientHistoryId;
-
-        //                                 if (s && s.code == 0) {
-        //                                     let booking = {
-        //                                         profile: data.Profile,
-        //                                         hasCheckin: true,
-        //                                         data: data
-        //                                     }
-        //                                     this.props.dispatch({ type: constants.action.action_view_booking_detail, value: booking });
-        //                                     Actions.detailBooking();
-        //                                 }
-        //                             }
-        //                         } catch (error) {
-        //                             snackbar.show(constants.msg.booking.canot_view_detail_this_booking);
-        //                         }
-        //                     }
-        //                 });
-        //         }
-        //     }
-        // });
-    }
     componentDidMount() {
         // Build a channel
         const channel = new firebase.notifications.Android.Channel('isofh-care-channel', 'isofh-care-channel', firebase.notifications.Android.Importance.Max).setDescription('Nhât Minh Notification channel');
         // Create the channel
         firebase.notifications().android.createChannel(channel);
-        showNotification = this.showNotification;
         showBroadcast = this.showBroadcast;
         firebase.messaging().hasPermission()
             .then(enabled => {
@@ -188,11 +125,17 @@ class PushController extends Component {
                 var id = notificationOpen.notification.data.id;
                 const type = Number(notificationOpen.notification.data.type)
                 switch (type) {
+                    case 1:
+                        this.openQuestion(id);
+                        break;
                     case 2:
                         this.openQuestion(id);
                         break;
                     case 4:
                         this.openBooking(id);
+                        break;
+                    case 5:
+                        this.openTicket(id);
                         break;
 
                 }
@@ -200,6 +143,19 @@ class PushController extends Component {
         } catch (error) {
             console.log(error);
         }
+    }
+
+    openTicket(id) {
+        if (!this.props.userApp.isLogin)
+            return;
+        ticketProvider.detail(id).then(s => {
+            switch (s.code) {
+                case 0:
+                    if (s.data && s.data.numberHospital) {
+                        NavigationService.navigate('getTicketFinish', s.data);
+                    }
+            }
+        });
     }
     openBooking(id) {
         this.props.navigation.navigate("detailsHistory", {
@@ -234,6 +190,9 @@ class PushController extends Component {
                         break;
                     case 4:
                         this.openBooking(id);
+                        break;
+                    case 5:
+                        this.openTicket(id);
                         break;
                 }
             } catch (error) {
