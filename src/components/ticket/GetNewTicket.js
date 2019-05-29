@@ -151,7 +151,7 @@ class GetNewTicket extends PureComponent {
                         }}
                         onSubmitEditing={this.search.bind(this)}
                         returnKeyType='search'
-                        style={{ width: '80%', height: 41, marginLeft: -10, fontWeight: 'bold' }} placeholder={"Tìm kiếm…"} underlineColorAndroid={"transparent"} />
+                        style={{ width: '80%', height: 41, marginLeft: -10, fontWeight: 'bold',paddingLeft:9 }} placeholder={"Tìm kiếm…"} underlineColorAndroid={"transparent"} />
                     <TouchableOpacity onPress={this.search}><ScaledImage source={require('@images/new/hospital/ic_search.png')} height={16}></ScaledImage></TouchableOpacity>
                 </View>
                 {this.state.dataSearch && this.state.keyword ? (
