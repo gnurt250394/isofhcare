@@ -33,7 +33,7 @@ class ScanQRCodeScreen extends Component {
         }
     }
     componentDidMount() {
-        console.disableYellowBox = true;        
+        console.disableYellowBox = true;
     }
     loginSuccess(s, e) {
         this.setState({ isLoading: false });
@@ -99,7 +99,7 @@ class ScanQRCodeScreen extends Component {
         info.startDate = obj[6];
         info.hospitalCode = obj[5];
         bytearr = this.toByteArray(obj[4]);
-        info.address = this.getAddress(this.fromUTF8Array(bytearr)) + "";
+        info.address = (this.fromUTF8Array(bytearr)) + "";
 
         console.log(info);
         return info;
@@ -299,7 +299,7 @@ const styles = StyleSheet.create({
     centerText: {
         flex: 1,
         textAlign: 'center',
-        fontSize: 12,
+        fontSize: 13,
         padding: 32,
         color: '#FFF',
     },

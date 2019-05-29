@@ -79,7 +79,7 @@ class GetNewTicket extends PureComponent {
             })
             return
         }
-        if (item.hospital.defaultBookHospital && key == 3 || !item.hospital.defaultBookHospital) {
+        if (!item.hospital.defaultBookHospital && key == 3 || !item.hospital.defaultBookHospital) {
 
             return
         }
@@ -121,11 +121,17 @@ class GetNewTicket extends PureComponent {
                         <ScaledImage style={{ marginLeft: 8, }} height={12} source={require("@images/new/booking/ic_checked.png")} ></ScaledImage>
                     </View>
                     <Text style={{ color: '#000', opacity: 0.54, }}>{item.hospital.address}</Text>
-                    <View style={{ flexDirection: 'row' }}>
-                        <TouchableOpacity disabled={item.hospital.defaultBookHospital ? false : true} onPress={this.onPressService.bind(this, item, 1, index)} style={[styles.btnService, this.state.service && this.state.service == 1 && this.state.index == item.hospital.id ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, this.state.service && this.state.service == 1 && this.state.index == item.hospital.id ? { color: '#fff' } : { color: '#6B6B6C' }]}>Khám DV</Text></TouchableOpacity>
-                        <TouchableOpacity disabled={item.hospital.defaultBookHospital ? false : true} onPress={this.onPressService.bind(this, item, 2, index)} style={[styles.btnService, { width: 62 }, item.hospital.defaultBookHospital ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, item.hospital.defaultBookHospital ? { color: '#fff' } : { color: '#6B6B6C' }]}>BHYT</Text></TouchableOpacity>
-                        <View onPress={this.onPressService.bind(this, item, 3, index)} style={[styles.btnService, this.state.service && this.state.service == 3 && this.state.index == item.hospital.id ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, this.state.service && this.state.service == 3 && this.state.index == item.hospital.id ? { color: '#fff' } : { color: '#6B6B6C' }]}>BHYT CA</Text></View>
-                    </View>
+                    {item.hospital.defaultBookHospital ? <View style={{ flexDirection: 'row' }}>
+                        <TouchableOpacity  onPress={this.onPressService.bind(this, item, 1, index)} style={[styles.btnService, { backgroundColor: '#0A9BE1' } ]}><Text style={[styles.txService,  { color: '#fff' } ]}>Khám DV</Text></TouchableOpacity>
+                        <TouchableOpacity  onPress={this.onPressService.bind(this, item, 2, index)} style={[styles.btnService, { width: 62 }, item.hospital.defaultBookHospital ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, { color: '#fff' }]}>BHYT</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={this.onPressService.bind(this, item, 3, index)} style={[styles.btnService,{ backgroundColor: '#0A9BE1' } ]}><Text style={[styles.txService,{ color: '#fff' } ]}>BHYT CA</Text></TouchableOpacity>
+                    </View> :
+                        <View style={{ flexDirection: 'row' }}>
+                            <TouchableOpacity disabled={true} style={[styles.btnService, this.state.service && this.state.service == 1 && this.state.index == item.hospital.id ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService,{ color: '#6B6B6C' }]}>Khám DV</Text></TouchableOpacity>
+                            <TouchableOpacity disabled={true} style={[styles.btnService, { width: 62 }, item.hospital.defaultBookHospital ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService,{ color: '#6B6B6C' }]}>BHYT</Text></TouchableOpacity>
+                            <TouchableOpacity disabled={true} style={[styles.btnService, { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService,{ color:  '#6B6B6C' }]}>BHYT CA</Text></TouchableOpacity>
+                        </View>
+                    }
                 </View>
             </View>
         )
