@@ -84,6 +84,10 @@ class TicketHistory extends Component {
                     this.setState({
                         isShowContent: true
                     })
+                }else{
+                    this.setState({
+                        isShowContent: false
+                    })
                 }
             }
             this.setState({
@@ -174,7 +178,7 @@ class TicketHistory extends Component {
                                     );
                                 }}
                             />
-                            <Text style={{ fontWeight: 'bold', color: '#27AE60', marginTop: 5, maxWidth: 50 }}> {informationUserHospital.isofhCareValue}</Text>
+                            <Text style={{ fontWeight: 'bold', color: '#27AE60', marginTop: 5, maxWidth: 50}}>{informationUserHospital.isofhCareValue}</Text>
                         </View>
                         <View style={{ justifyContent: 'center', padding: 10, flex: 1 }}>
                             <Text style={{ fontSize: 14 }}>{hospital.name}</Text>
