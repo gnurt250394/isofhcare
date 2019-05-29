@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   viewBtn: {
     flexDirection: 'row',
     height: 40,
-    margin: 15,
+    margin: 10,
     borderRadius: 6,
     backgroundColor: "#ffffff",
     position: 'relative'
