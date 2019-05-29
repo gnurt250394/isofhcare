@@ -200,11 +200,15 @@ class TicketHistory extends Component {
 
                 <FlatList
                     style={{ flex: 1 }}
-                    refreshing
                     onRefresh={this.onRefresh}
                     refreshing={this.state.loading}
                     data={this.state.data}
                     extraData={this.state}
+                    ListHeaderComponent={() => !this.state.loading && (!this.state.data || this.state.data.length == 0) ?
+                        <View style={{ alignItems: 'center', marginTop: 50 }}>
+                            <Text style={{ fontStyle: 'italic' }}>Hiện tại chưa có dữ liệu</Text>
+                        </View> : null
+                    }
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({ item, index }) => {
                         return this.renderItems(item, index)
