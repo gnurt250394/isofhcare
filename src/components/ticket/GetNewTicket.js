@@ -237,7 +237,7 @@ class GetNewTicket extends PureComponent {
 const styles = StyleSheet.create({
     viewTx: { flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', width: '100%', borderTopWidth: 0.5, borderBottomWidth: 0.5, borderColor: 'rgba(0,0,0,0.26)' },
     viewItem: { padding: 15, borderBottomWidth: 1, borderColor: 'rgba(0,0,0,0.26)', flexDirection: 'row', borderTopWidth: 1 },
-    btnService: { justifyContent: 'center', alignItems: 'center', width: 82, height: 25, marginRight: 5, borderRadius: 6, marginVertical: 10, },
+    btnService: { justifyContent: 'center', alignItems: 'center', marginRight: 5, borderRadius: 6, marginVertical: 10,paddingVertical: 5,paddingHorizontal: 12,},
     txService: { fontSize: 11, },
     viewBtnModal: { flexDirection: 'row' },
     viewModal: { flex: 1, justifyContent: 'center', alignItems: 'center', margin: 0, padding: 0 },
