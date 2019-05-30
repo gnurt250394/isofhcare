@@ -38,7 +38,7 @@ class AddBookingScreen extends Component {
             allowBooking: false,
             bookingDate,
             date,
-            contact:2
+            contact: 2
         }
     }
     _changeColor = () => {
@@ -50,44 +50,44 @@ class AddBookingScreen extends Component {
         this.setState({ imageUris });
     }
     componentDidMount() {
-        dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_SPECIALIST, (s, e) => {
-            
-            if (s) {
-                this.setState({ specialist: s })
-            }else{
-                specialistProvider.getAll().then(s => {
-                    if (s) {
-                        let specialist = s[0]
-                        this.setState({ specialist: specialist })
-                    }
-                });
-            }
-        })
-        dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, (s, e) => {
-            if (s) {
-                this.setState({ profile: s })
-            } else {
-                medicalRecordProvider.getByUser(this.props.userApp.currentUser.id, 1, 100).then(s => {
-                    switch (s.code) {
-                        case 0:
-                            if (s.data && s.data.data && s.data.data.length != 0) {
+        // dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_SPECIALIST, (s, e) => {
 
-                                let data = s.data.data;
-                                let profile = data.find(item => {
-                                    return item.medicalRecords.status == 1;
-                                });
-                                if (profile) {
-                                    this.setState({ profile: profile });
-                                    dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, profile);
-                                }
-                            }
-                            break;
-                    }
-                });
-            }
-        });
+        //     if (s) {
+        //         this.setState({ specialist: s })
+        //     } else {
+        //         specialistProvider.getAll().then(s => {
+        //             if (s) {
+        //                 let specialist = s[0]
+        //                 this.setState({ specialist: specialist })
+        //             }
+        //         });
+        //     }
+        // })
+        // dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, (s, e) => {
+        //     if (s) {
+        //         this.setState({ profile: s })
+        //     } else {
+        //         medicalRecordProvider.getByUser(this.props.userApp.currentUser.id, 1, 100).then(s => {
+        //             switch (s.code) {
+        //                 case 0:
+        //                     if (s.data && s.data.data && s.data.data.length != 0) {
 
-     
+        //                         let data = s.data.data;
+        //                         let profile = data.find(item => {
+        //                             return item.medicalRecords.status == 1;
+        //                         });
+        //                         if (profile) {
+        //                             this.setState({ profile: profile });
+        //                             dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, profile);
+        //                         }
+        //                     }
+        //                     break;
+        //             }
+        //         });
+        //     }
+        // });
+
+
     }
     selectImage() {
         if (this.state.imageUris && this.state.imageUris.length >= 5) {
@@ -160,6 +160,9 @@ class AddBookingScreen extends Component {
     }
     selectSpecialist(specialist) {
         this.setState({ specialist, allowBooking: true });
+    }
+    selectServiceType(serviceType) {
+        this.setState({ serviceType, allowBooking: true });
     }
     addBooking() {
         Keyboard.dismiss();
@@ -250,61 +253,63 @@ class AddBookingScreen extends Component {
             titleStyle={{ marginLeft: 50 }}>
 
             <KeyboardAwareScrollView>
-                <TouchableOpacity style={styles.name} onPress={() => {
-                    connectionUtils.isConnected().then(s => {
-                        this.props.navigation.navigate("selectProfile", {
-                            onSelected: this.selectProfile.bind(this),
-                            profile: this.state.profile
+                <View style={styles.article}>
+                    <TouchableOpacity style={styles.name} onPress={() => {
+                        connectionUtils.isConnected().then(s => {
+                            this.props.navigation.navigate("selectProfile", {
+                                onSelected: this.selectProfile.bind(this),
+                                profile: this.state.profile
+                            });
+                        }).catch(e => {
+                            snackbar.show("Không có kết nối mạng", "danger");
                         });
-                    }).catch(e => {
-                        snackbar.show("Không có kết nối mạng", "danger");
-                    });
-                }}>
-                    <View style={{
-                        flexDirection: 'row', alignItems: 'center', padding: 10, paddingBottom: this.state.profileError ? 0 : 10
                     }}>
-                        {this.state.profile ?
-                            <View style={{ flexDirection: 'row', height: 38, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                <ImageLoad
-                                    resizeMode="cover"
-                                    imageStyle={{ borderRadius: 20, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
-                                    borderRadius={20}
-                                    customImagePlaceholderDefaultStyle={[styles.avatar, { width: 40, height: 40 }]}
-                                    placeholderSource={require("@images/new/user.png")}
-                                    resizeMode="cover"
-                                    loadingStyle={{ size: 'small', color: 'gray' }}
-                                    source={source}
-                                    style={{
-                                        alignSelf: 'center',
-                                        borderRadius: 20,
-                                        width: 40,
-                                        height: 40
-                                    }}
-                                    defaultImage={() => {
-                                        return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={40} height={40} />
-                                    }}
-                                />
-                                <Text style={styles.txtname}>{this.state.profile.medicalRecords.name}</Text>
-                            </View> :
-                            <View style={{ flexDirection: 'row', height: 38, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                <View style={{ justifyContent: 'center', alignItems: 'center', width: 38, height: 38, borderRadius: 19, borderColor: 'rgba(151, 151, 151, 0.29)', borderWidth: 0.5 }}>
-                                    <ScaleImage source={require("@images/new/profile/ic_profile.png")} width={20} />
+                        <View style={{
+                            flexDirection: 'row', alignItems: 'center', padding: 10, paddingBottom: this.state.profileError ? 0 : 10
+                        }}>
+                            {this.state.profile ?
+                                <View style={{ flexDirection: 'row', height: 38, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                    <ImageLoad
+                                        resizeMode="cover"
+                                        imageStyle={{ borderRadius: 20, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
+                                        borderRadius={20}
+                                        customImagePlaceholderDefaultStyle={[styles.avatar, { width: 40, height: 40 }]}
+                                        placeholderSource={require("@images/new/user.png")}
+                                        resizeMode="cover"
+                                        loadingStyle={{ size: 'small', color: 'gray' }}
+                                        source={source}
+                                        style={{
+                                            alignSelf: 'center',
+                                            borderRadius: 20,
+                                            width: 40,
+                                            height: 40
+                                        }}
+                                        defaultImage={() => {
+                                            return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={40} height={40} />
+                                        }}
+                                    />
+                                    <Text style={styles.txtname}>{this.state.profile.medicalRecords.name}</Text>
+                                </View> :
+                                <View style={{ flexDirection: 'row', height: 38, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                    <View style={{ justifyContent: 'center', alignItems: 'center', width: 38, height: 38, borderRadius: 19, borderColor: 'rgba(151, 151, 151, 0.29)', borderWidth: 0.5 }}>
+                                        <ScaleImage source={require("@images/new/profile/ic_profile.png")} width={20} />
+                                    </View>
+                                    <Text style={styles.txtname}>Chọn hồ sơ</Text>
                                 </View>
-                                <Text style={styles.txtname}>Chọn hồ sơ</Text>
-                            </View>
-                        }
+                            }
 
-                        <ScaleImage style={styles.img} height={10} source={require("@images/new/booking/ic_next.png")} />
-                    </View>
-                    {
-                        this.state.profileError ?
-                            <Text style={[styles.errorStyle]}>{this.state.profileError}</Text> : null
-                    }
-                </TouchableOpacity>
+                            <ScaleImage style={styles.img} height={10} source={require("@images/new/booking/ic_next.png")} />
+                        </View>
+                        {
+                            this.state.profileError ?
+                                <Text style={[styles.errorStyle]}>{this.state.profileError}</Text> : null
+                        }
+                    </TouchableOpacity>
+                </View>
                 <View style={styles.article}>
                     <TouchableOpacity style={styles.mucdichkham} onPress={() => {
                         connectionUtils.isConnected().then(s => {
-                            this.props.navigation.navigate("selectSpecialist", { onSelected: this.selectSpecialist.bind(this) });
+                            this.props.navigation.navigate("selectServiceType", { onSelected: this.selectServiceType.bind(this) });
                         }).catch(e => {
                             snackbar.show("Không có kết nối mạng", "danger");
                         });
@@ -312,7 +317,7 @@ class AddBookingScreen extends Component {
                     >
                         <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_serviceType.png")} />
                         <Text style={styles.mdk}>Yêu cầu</Text>
-                        <Text numberOfLines={1} style={styles.ktq}>{this.state.specialist ? this.state.specialist.name : "Chọn chuyên khoa"}</Text>
+                        <Text numberOfLines={1} style={styles.ktq}>{this.state.serviceType ? this.state.serviceType.name : "Chọn yêu cầu"}</Text>
                         <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
                     </TouchableOpacity>
                     {
@@ -320,25 +325,14 @@ class AddBookingScreen extends Component {
                             <Text style={[styles.errorStyle]}>{this.state.serviceError}</Text> : null
                     }
                     <View style={styles.border}></View>
-                    <TouchableOpacity style={styles.mucdichkham} onPress={() => this.setState({ toggelDateTimePickerVisible: true })}>
-                        <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_bookingDate.png")} />
-                        <Text style={styles.mdk}>Ngày khám</Text>
-                        <Text style={styles.ktq}>{this.state.date ? this.state.date : "Chọn ngày khám"}</Text>
-                        <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
-                    </TouchableOpacity>
-                    {
-                        this.state.bookingError ?
-                            <Text style={[styles.errorStyle]}>{this.state.bookingError}</Text> : null
-                    }
-                    <View style={styles.border}></View>
                     <TouchableOpacity style={styles.mucdichkham} onPress={() => {
-                        if (!this.state.specialist) {
+                        if (!this.state.serviceType) {
                             snackbar.show("Vui lòng chọn yêu cầu khám", "danger");
                             return;
                         }
                         connectionUtils.isConnected().then(s => {
                             this.props.navigation.navigate("selectHospital", {
-                                specialist: this.state.specialist,
+                                serviceType: this.state.serviceType,
                                 hospital: this.state.hospital,
                                 onSelected: this.selectHospital.bind(this)
                             })
@@ -357,6 +351,56 @@ class AddBookingScreen extends Component {
                             <Text style={[styles.errorStyle]}>{this.state.hospitalError}</Text> : null
                     }
                     <View style={styles.border}></View>
+                    <TouchableOpacity style={styles.mucdichkham} onPress={() => {
+                        this.props.navigation.navigate("selectService", {
+                            hospital: this.state.hospital,
+                            specialist: this.state.specialist,
+                            serviceType: this.state.serviceType,
+                            // onSelected: this.selectService.bind(this)
+                        })
+                    }}>
+                        <ScaleImage style={styles.imgIc} height={15} source={require("@images/new/booking/ic_specialist.png")} />
+                        <Text style={styles.mdk}>Dịch vụ</Text>
+                        <Text numberOfLines={1} style={styles.ktq}>{this.state.service ? this.state.service.name : "Chọn dịch vụ"}</Text>
+                        <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
+                    </TouchableOpacity>
+                    {
+                        this.state.serviceError ?
+                            <Text style={[styles.errorStyle]}>{this.state.serviceError}</Text> : null
+                    }
+                </View>
+                <View style={styles.article}>
+                    <TouchableOpacity style={styles.mucdichkham} onPress={() => this.setState({ toggelDateTimePickerVisible: true })}>
+                        <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_bookingDate.png")} />
+                        <Text style={styles.mdk}>Ngày khám</Text>
+                        <Text style={styles.ktq}>{this.state.date ? this.state.date : "Chọn ngày khám"}</Text>
+                        <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
+                    </TouchableOpacity>
+                    {
+                        this.state.bookingError ?
+                            <Text style={[styles.errorStyle]}>{this.state.bookingError}</Text> : null
+                    }
+                    <View style={styles.border}></View>
+                    <TouchableOpacity style={styles.mucdichkham} onPress={() => {
+                        this.props.navigation.navigate("selectService", {
+                            hospital: this.state.hospital,
+                            specialist: this.state.specialist,
+                            serviceType: this.state.serviceType,
+                            // onSelected: this.selectService.bind(this)
+                        })
+                    }}>
+                        <ScaleImage style={styles.imgIc} height={15} source={require("@images/new/booking/ic_specialist.png")} />
+                        <Text style={styles.mdk}>Chọn giờ khám</Text>
+                    </TouchableOpacity>
+                    <View style={[styles.mucdichkham, { paddingHorizontal: 20 }]}>
+                        <Text style={{fontSize: 14, color: '#8e8e93' }}>Gợi ý: Chọn những giờ màu xanh sẽ giúp bạn được phục vụ nhanh hơn</Text>
+                    </View>
+
+                    {
+                        this.state.serviceError ?
+                            <Text style={[styles.errorStyle]}>{this.state.serviceError}</Text> : null
+                    }
+
                     {/*  <TouchableOpacity style={styles.mucdichkham} onPress={() => {
                         connectionUtils.isConnected().then(s => {
                             this.props.navigation.navigate("selectSpecialist", { onSelected: this.selectSpecialist.bind(this) });
@@ -493,13 +537,6 @@ const styles = StyleSheet.create({
         borderTopWidth: 1,
         borderTopColor: "rgba(0, 0, 0, 0.06)"
     },
-    name: {
-        backgroundColor: "#ffffff",
-        borderStyle: "solid",
-        borderWidth: 1,
-        borderColor: "rgba(0, 0, 0, 0.06)",
-        minHeight: 18
-    },
     imgName: {
         marginLeft: 5,
 
@@ -519,10 +556,10 @@ const styles = StyleSheet.create({
 
     },
     article: {
-        marginTop: 25,
+        marginTop: 12,
         backgroundColor: "#ffffff",
         borderStyle: "solid",
-        borderWidth: 1,
+        borderWidth: 0.5,
         borderColor: "rgba(0, 0, 0, 0.06)",
 
     },
@@ -533,7 +570,7 @@ const styles = StyleSheet.create({
     },
     mdk: {
         marginLeft: 12,
-        fontSize: 14,
+        fontSize: 15,
         fontWeight: "normal",
         fontStyle: "normal",
         letterSpacing: 0,
@@ -542,7 +579,7 @@ const styles = StyleSheet.create({
     },
     ktq: {
         flex: 1,
-        fontSize: 12,
+        fontSize: 14,
         fontWeight: "normal",
         fontStyle: "normal",
         letterSpacing: 0,

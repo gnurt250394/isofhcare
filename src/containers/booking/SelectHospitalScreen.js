@@ -19,6 +19,7 @@ import LocationSwitch from 'react-native-location-switch';
 class SelectHospitalScreen extends Component {
     constructor(props) {
         super(props);
+        let serviceType = this.props.navigation.state.params.serviceType;
 
         this.state = {
             data: [],
@@ -29,6 +30,7 @@ class SelectHospitalScreen extends Component {
             loadMore: false,
             finish: false,
             loading: false,
+            serviceType
         }
     }
     onRefresh() {
