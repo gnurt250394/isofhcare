@@ -315,14 +315,14 @@ class DetailQuestionScreen extends Component {
             (this.state.post.post.status == 3
                 && (this.state.userCommentCount >= 3 ||
                     this.isFinish())))
-            return (<View style={{ flexDirection: 'row', padding: 20, borderTopColor: '#cacaca', borderTopWidth: 2 }}>
-                <Text style={{ flex: 1 }}>Đánh giá</Text>
+            return (<View style={{ flexDirection: 'row', padding: 20, borderTopColor: '#cacaca', borderTopWidth: 0.5 }}>
+                <Text style={{ flex: 1,fontWeight:'bold' }}>Đánh giá</Text>
                 <StarRating
                     disabled={this.state.post.post.status == 6 ? true : false}
                     starSize={30}
                     maxStars={5}
                     rating={this.state.star}
-                    starStyle={{ margin: 0 }}
+                    starStyle={{ marginLeft:5 }}
                     fullStarColor={"#fbbd04"}
                     emptyStarColor={"#fbbd04"}
                     selectedStar={(rating) => this.onStarRatingPress(rating)}
