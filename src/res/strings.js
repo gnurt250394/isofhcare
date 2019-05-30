@@ -93,7 +93,9 @@ module.exports = {
       LASTEST_SPECIALIST:"LASTEST_SPECIALIST",
       KEY_FINGER: 'KEY_FINGER',
       KEY_REFRESH_TOKEN: 'KEY_REFRESH_TOKEN',
-      LOCATION: "LOCATION"
+      LOCATION: "LOCATION",
+      LASTEST_INFO: "LASTEST_INFO",
+
     }
   },
   msg: {

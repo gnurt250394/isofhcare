@@ -36,6 +36,14 @@ class CreateQuestionStep2Screen extends Component {
         this.state = post;
     }
     componentDidMount() {
+
+        dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_INFO, (s, e) => {
+            console.log(s,'asdasds');
+            this.setState({
+               specialist_item:s[0].specialist_item
+               ,disease:s[0].disease,otherContent:s[0].otherContent,imageUris:s[0].imageUris
+            })
+        })
         dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_POSTS, (s, e) => {
             if (s && s.post) {
                 let images = (s.post.images || "").split(',').filter(x => x != "").map(x => {
@@ -55,6 +63,12 @@ class CreateQuestionStep2Screen extends Component {
                 })
             }
         })
+    }
+    onClickBack = () => {
+    
+        let data = [{specialist_item:this.state.specialist_item,disease:this.state.disease,otherContent:this.state.otherContent,imageUris:this.state.imageUris}]
+        dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_INFO, data);
+        this.props.navigation.pop()
     }
     componentWillMount() {
         specialistProvider.getTop(1000, (s, e) => {
@@ -171,6 +185,7 @@ class CreateQuestionStep2Screen extends Component {
                         dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_POSTS, s.data);
                         snackbar.show(constants.msg.question.create_question_success, "success");
                         this.props.navigation.navigate("listQuestion", { reloadTime: new Date().getTime() });
+                        dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_INFO, '');
                     } else {
                         snackbar.show(constants.msg.question.create_question_failed, "danger");
                     }
@@ -267,10 +282,12 @@ class CreateQuestionStep2Screen extends Component {
             });
         }
     }
-
+   
     render() {
         return (
             <ActivityPanel
+            backButtonClick={this.onClickBack}
+
                 style={{ flex: 1 }}
                 title={"Thông tin bổ sung"}
                 showFullScreen={true}

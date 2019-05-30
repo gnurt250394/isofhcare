@@ -66,7 +66,10 @@ class CreateQuestionStep1Screen extends Component {
       }
     });
   }
+componentWillUnmount(){
+  dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_INFO, '');
 
+}
   render() {
     return (
       <ActivityPanel
