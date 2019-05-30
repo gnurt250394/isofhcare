@@ -103,9 +103,9 @@ class GetNewTicket extends PureComponent {
         return (
             <View style={[styles.viewItem, index > 0 ? { borderTopWidth: 0 } : { borderTopWidth: 1 }]} key={index}>
 
-                <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: -10 }}>
-                    <ScaledImage style={{ width: 60, height: 60, borderRadius: 30, borderColor: 'rgba(0,0,0,0.15)', borderWidth: 1 }} source={{ uri: item.hospital.avatar.absoluteUrl() }}></ScaledImage>
-                    <View style={{ width: 60, marginTop: 5 }}>
+                <View style={styles.viewImg}>
+                    <ScaledImage style={styles.viewAvt} source={{ uri: item.hospital.avatar.absoluteUrl() }}></ScaledImage>
+                    <View style={styles.viewRating}>
                         <StarRating
                             disabled={true}
                             starSize={12}
@@ -117,7 +117,7 @@ class GetNewTicket extends PureComponent {
                         />
                     </View>
                 </View>
-                <View style={{ marginHorizontal: 20, flex: 1 }}>
+                <View style={styles.viewService}>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <Text style={{ fontWeight: 'bold', color: '#000' }}>{item.hospital.name}</Text>
                         <ScaledImage style={{ marginLeft: 8, }} height={12} source={require("@images/new/booking/ic_checked.png")} ></ScaledImage>
@@ -179,7 +179,7 @@ class GetNewTicket extends PureComponent {
                             {
                                 (this.state.data2 && this.state.data2.length > 0) &&
                                 <View>
-                                    <Text style={{ marginLeft: 12, marginTop: 20, fontSize: 15, marginBottom: 10, color: '#4a4a4a' }}>Bệnh viện đã triển khai</Text>
+                                    <Text style={styles.txHospital}>Bệnh viện đã triển khai</Text>
                                     {this.state.data2.map((item, index) => {
                                         return this.renderItem(item, index)
                                     })}
@@ -188,7 +188,7 @@ class GetNewTicket extends PureComponent {
                             {
                                 (this.state.data3 && this.state.data3.length > 0) &&
                                 <View>
-                                    <Text style={{ marginLeft: 12, marginTop: 20, fontSize: 15, marginBottom: 10, color: '#4a4a4a' }}>Bệnh viện sắp triển khai</Text>
+                                    <Text style={styles.txHospital}>Bệnh viện sắp triển khai</Text>
                                     {this.state.data3.map((item, index) => {
                                         return this.renderItem(item, index)
                                     })}
@@ -198,7 +198,7 @@ class GetNewTicket extends PureComponent {
                     )}
                 <Modal animationType="fade"
                     onBackdropPress={this.onCloseModal}
-                    transparent={true} isVisible={this.state.isVisible} style={[styles.viewModal]}
+                    transparent={true} isVisible={this.state.isVisible}
                     deviceWidth={deviceWidth}
                     deviceHeight={deviceHeight}
                 >
@@ -230,11 +230,11 @@ class GetNewTicket extends PureComponent {
                     onBackdropPress={this.onCloseErr}
                     transparent={true} isVisible={this.state.isShowErr} >
                     <View style={styles.viewModal}>
-                        <View style={{ width: 328, height: 167, backgroundColor: '#fff', borderRadius: 6, alignItems: 'center' }}>
-                            <Text style={{ marginVertical: 10, fontWeight: 'bold', color: '#4a4a4a' }}>Thông báo</Text>
-                            <Text style={{ marginBottom: 20, color: '#4a4a4a', marginHorizontal: 20, textAlign: 'center', }}>Đối tượng dịch vụ tại bệnh viện E không cần có số khám</Text>
-                            <View style={{ width: '100%', height: 1, backgroundColor: '#d8d8d8', marginTop: 20 }}></View>
-                            <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }} onPress={this.onCloseErr}><Text style={{ color: '#02c39a' }}>OK</Text></TouchableOpacity>
+                        <View style={styles.viewContents}>
+                            <Text style={styles.viewNoty}>Thông báo</Text>
+                            <Text style={styles.TxContents}>Đối tượng dịch vụ tại bệnh viện E không cần có số khám</Text>
+                            <View style={styles.viewLine}></View>
+                            <TouchableOpacity style={styles.btnDone} onPress={this.onCloseErr}><Text style={{ color: '#02c39a' }}>OK</Text></TouchableOpacity>
                         </View>
                     </View>
                 </Modal>
@@ -252,7 +252,17 @@ const styles = StyleSheet.create({
     viewDialog: { backgroundColor: '#fff', alignItems: 'center', borderRadius: 6, padding: 20 },
     viewBtn: { width: 120, height: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 6, backgroundColor: '#0A9BE1', marginRight: 7 },
     txDialog: { marginBottom: 20, color: '#4a4a4a', fontWeight: 'bold', fontSize: 16 },
-    viewBtn2: { width: 120, height: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 6, backgroundColor: 'rgba(0,0,0,0.06)', marginLeft: 7, borderWidth: 1, borderColor: '#979797' }
+    viewBtn2: { width: 120, height: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 6, backgroundColor: 'rgba(0,0,0,0.06)', marginLeft: 7, borderWidth: 1, borderColor: '#979797' },
+    viewImg:{ justifyContent: 'center', alignItems: 'center', marginTop: -10 },
+    viewAvt:{ width: 60, height: 60, borderRadius: 30, borderColor: 'rgba(0,0,0,0.15)', borderWidth: 1 },
+    viewRating:{ width: 60, marginTop: 5 },
+    viewService:{ marginHorizontal: 20, flex: 1 },
+    txHospital:{ marginLeft: 12, marginTop: 20, fontSize: 15, marginBottom: 10, color: '#4a4a4a' },
+    viewContents:{ width: 328, height: 167, backgroundColor: '#fff', borderRadius: 6, alignItems: 'center' },
+    viewNoty:{ marginVertical: 10, fontWeight: 'bold', color: '#4a4a4a' },
+    TxContents:{ marginBottom: 20, color: '#4a4a4a', marginHorizontal: 20, textAlign: 'center', },
+    viewLine:{ width: '100%', height: 1, backgroundColor: '#d8d8d8', marginTop: 20 },
+    btnDone:{ alignItems: 'center', justifyContent: 'center', flex: 1 }
 })
 function mapStateToProps(state) {
     return {
