@@ -52,6 +52,8 @@ class SelectServiceScreen extends Component {
                     refreshing: false
                 }, () => {
                     if (s) {
+                        console.log(s,'ssssssssssss');
+
                         switch (s.code) {
                             case 0:
                                 this.setState({
@@ -80,7 +82,7 @@ class SelectServiceScreen extends Component {
     searchTextChange(s) {
         this.setState({ searchValue: s });
     }
-    onSearch() {
+    onSearch (){
         var s = this.state.searchValue;
         var listSearch = this.state.listService.filter(function (item) {
             return s == null || item.service.name && item.service.name.trim().toLowerCase().unsignText().indexOf(s.trim().toLowerCase().unsignText()) != -1;
@@ -99,30 +101,19 @@ class SelectServiceScreen extends Component {
         return (
             <ActivityPanel
                 backButton={<TouchableOpacity style={{ paddingLeft: 20 }} onPress={() => this.props.navigation.pop()}><Text>Hủy</Text></TouchableOpacity>}
-                titleStyle={{ marginRight: 0 }} title={"Chọn dịch vụ"}
-                isLoading={this.state.isLoading} menuButton={this.renderSearchButton()} showFullScreen={true}
+                titleStyle={{ marginRight: 0 }} title={"Dịch vụ"}
+                isLoading={this.state.isLoading}
+                 menuButton={<TouchableOpacity onPress = {() => this.props.navigation.navigate('filter')}><ScaleImage height={12} source={require('@images/new/right_arrow.png')}/></TouchableOpacity>} 
+                 showFullScreen={true}
             >
-                {
-                    this.state.showSearch ?
-                        <View style={{
-                            justifyContent: 'space-between',
-                            elevation: 5,
-                            height: 55,
-                            justifyContent: 'center', alignItems: 'center',
-                            backgroundColor: constants.colors.actionbar_color,
-                            flexDirection: 'row'
-                        }}>
-                            <TextInput autoFocus={true} style={{ flex: 1, color: constants.colors.actionbar_title_color, padding: 10 }} placeholderTextColor='#dddddd' underlineColorAndroid="transparent" placeholder={"Nhập từ khóa tìm kiếm"} onChangeText={(s) => {
-                                this.searchTextChange(s);
-                            }} returnKeyType="search" onSubmitEditing={() => { this.onSearch() }} />
-                            <TouchableOpacity onPress={() => this.onSearch()}>
-                                <Text style={{ backgroundColor: constants.colors.actionbar_title_color, padding: 7, borderRadius: 20, marginRight: 10, paddingLeft: 15, paddingRight: 15, fontWeight: 'bold', color: '#FFF' }}>{constants.search}</Text>
-                            </TouchableOpacity>
-                        </View>
-                        : null
-
-                }
-
+              
+                <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', width: '100%', borderTopWidth: 0.5, borderStyle: "solid", borderBottomWidth: 0.5, borderColor: 'rgba(0,0,0,0.26)',backgroundColor:'#fff',paddingHorizontal:10 }}>
+                <TextInput
+                autoFocus={true} style={{ flex: 1, color: '#8e8e93', padding: 10 }} placeholderTextColor='#dddddd' underlineColorAndroid="transparent" placeholder={"Tìm kiếm..."} onChangeText={(s) => {
+                    this.searchTextChange(s);
+                }} returnKeyType="search" onSubmitEditing={() => {this.onSearch() }}  />
+                <TouchableOpacity style={{ marginRight: -2 }} onPress={() => this.onSearch()}><ScaleImage source={require('@images/new/hospital/ic_search.png')} height={16}></ScaleImage></TouchableOpacity>
+            </View>
                 <FlatList
                     style={{ flex: 1, backgroundColor: '#FFF' }}
                     refreshing={this.state.refreshing}
@@ -142,8 +133,14 @@ class SelectServiceScreen extends Component {
                     renderItem={({ item }) =>
                         <TouchableOpacity onPress={this.selectService.bind(this, item)}>
                             <View style={{ marginBottom: 2, backgroundColor: '#FFF', padding: 20, flexDirection: 'column', borderBottomColor: '#00000011', borderBottomWidth: 0.7 }}>
+                                <View style = {{flexDirection:'row',justifyContent:'space-between'}}>
                                 <Text style={{ fontWeight: 'bold' }}>
                                     {item.service.name}
+                                </Text>
+                                <Text>{item.service.price.formatPrice() + 'đ'}</Text>
+                                </View>
+                                <Text>
+                                {item.service.name}
                                 </Text>
                             </View>
                         </TouchableOpacity>

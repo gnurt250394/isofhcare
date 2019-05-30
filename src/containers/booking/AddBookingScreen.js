@@ -50,42 +50,42 @@ class AddBookingScreen extends Component {
         this.setState({ imageUris });
     }
     componentDidMount() {
-        // dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_SPECIALIST, (s, e) => {
+        dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_SPECIALIST, (s, e) => {
+console.log(s,'specialist');
+            if (s) {
+                this.setState({ specialist: s })
+            } else {
+                specialistProvider.getAll().then(s => {
+                    if (s) {
+                        let specialist = s[0]
+                        this.setState({ specialist: specialist })
+                    }
+                });
+            }
+        })
+        dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, (s, e) => {
+            if (s) {
+                this.setState({ profile: s })
+            } else {
+                medicalRecordProvider.getByUser(this.props.userApp.currentUser.id, 1, 100).then(s => {
+                    switch (s.code) {
+                        case 0:
+                            if (s.data && s.data.data && s.data.data.length != 0) {
 
-        //     if (s) {
-        //         this.setState({ specialist: s })
-        //     } else {
-        //         specialistProvider.getAll().then(s => {
-        //             if (s) {
-        //                 let specialist = s[0]
-        //                 this.setState({ specialist: specialist })
-        //             }
-        //         });
-        //     }
-        // })
-        // dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, (s, e) => {
-        //     if (s) {
-        //         this.setState({ profile: s })
-        //     } else {
-        //         medicalRecordProvider.getByUser(this.props.userApp.currentUser.id, 1, 100).then(s => {
-        //             switch (s.code) {
-        //                 case 0:
-        //                     if (s.data && s.data.data && s.data.data.length != 0) {
-
-        //                         let data = s.data.data;
-        //                         let profile = data.find(item => {
-        //                             return item.medicalRecords.status == 1;
-        //                         });
-        //                         if (profile) {
-        //                             this.setState({ profile: profile });
-        //                             dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, profile);
-        //                         }
-        //                     }
-        //                     break;
-        //             }
-        //         });
-        //     }
-        // });
+                                let data = s.data.data;
+                                let profile = data.find(item => {
+                                    return item.medicalRecords.status == 1;
+                                });
+                                if (profile) {
+                                    this.setState({ profile: profile });
+                                    dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, profile);
+                                }
+                            }
+                            break;
+                    }
+                });
+            }
+        });
 
 
     }
