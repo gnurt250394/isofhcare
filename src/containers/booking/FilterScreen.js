@@ -77,7 +77,7 @@ class FilterScreen extends Component {
         let filterData = this.state.listSpecialist.filter(data => {
             return (data.selected);
         })
-        this.props.navigation.navigate('addBooking',{data:filterData})
+        this.props.navigation.navigate('addBooking', { data: filterData })
     }
     onSelected = (item) => {
         if (!item.selected) {
@@ -103,12 +103,8 @@ class FilterScreen extends Component {
         return (
             <TouchableOpacity onPress={() => this.onSelected(item)} style={styles.viewBtn}>
                 <View style={{ flexDirection: 'row' }}>
-                    <ScaleImage height={20} source={require("@images/ic_test.png")}>
-                    </ScaleImage>
-
-                    <Text style={{ fontWeight: 'bold', marginLeft: 10 }}>
-                        {item.name}
-                    </Text>
+                    <ScaleImage width={30} source={require("@images/ic_test.png")} />
+                    <Text style={{ fontWeight: 'bold', marginLeft: 10 }}>{item.name}</Text>
                 </View>
                 {item.selected ? (
                     <ScaleImage height={20} source={require('@images/new/ic_question_check_specialist.png')}></ScaleImage>
@@ -121,8 +117,9 @@ class FilterScreen extends Component {
     render() {
         return (
             <ActivityPanel
-                backButtonClick={this.onFilter}
-                titleStyle={{ marginRight: 0 }} title={"Lọc"}
+                backButtonClick={this.onFilter} title={"Lọc"}
+                titleStyle={{ marginLeft: 55 }}
+                menuButton={<TouchableOpacity style={styles.menu} onPress={() => this.props.navigation.navigate('filter')}><Text>Đồng ý</Text></TouchableOpacity>}
             >
                 <FlatList
                     style={{ flex: 1, backgroundColor: '#FFF' }}
@@ -149,7 +146,11 @@ class FilterScreen extends Component {
     }
 }
 const styles = StyleSheet.create({
-    viewBtn: { marginBottom: 2, padding: 20, flexDirection: 'row', alignItems: 'center', borderBottomColor: '#00000011', borderBottomWidth: 0.7, justifyContent: 'space-between' }
+    viewBtn: { marginBottom: 2, padding: 20, flexDirection: 'row', alignItems: 'center', borderBottomColor: '#00000011', borderBottomWidth: 0.7, justifyContent: 'space-between' },
+    menu: {
+        marginRight: 10
+    }
+
 })
 function mapStateToProps(state) {
     return {
