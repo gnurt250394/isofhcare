@@ -28,7 +28,9 @@ class SelectServiceScreen extends Component {
             refreshing: false,
             hospital: hospital || { hospital: {} },
             specialist,
-            serviceType
+            serviceType,
+            listSpecialist: [],
+            specialists: []
         }
     }
     componentDidMount() {
@@ -56,8 +58,17 @@ class SelectServiceScreen extends Component {
 
                         switch (s.code) {
                             case 0:
+                                let specialists = s.data.services.map(item => item.specialist);
+                                specialists = [].concat.apply([], specialists);
+                                let a = [];
+                                specialists.forEach(item => {
+                                    if (!a.find(item2 => item2.id == item.id))
+                                        a.push(item);
+                                });
+
                                 this.setState({
-                                    listService: s.data.services
+                                    listService: s.data.services,
+                                    specialists: specialists || []
                                 }, () => {
                                     this.onSearch();
                                 });
@@ -103,7 +114,15 @@ class SelectServiceScreen extends Component {
                 backButton={<TouchableOpacity style={{ paddingLeft: 20 }} onPress={() => this.props.navigation.pop()}><Text>Hủy</Text></TouchableOpacity>}
                 title={"Dịch vụ"}
                 isLoading={this.state.isLoading}
-                menuButton={<TouchableOpacity style={styles.menu} onPress={() => this.props.navigation.navigate('filter')}><ScaleImage style={styles.img} height={20} source={require("@images/new/booking/ic_info.png")} /></TouchableOpacity>}
+                menuButton={<TouchableOpacity style={styles.menu} onPress={() =>
+                    this.props.navigation.navigate('filter', {
+                        listSelected: this.state.listSpecialist,
+                        specialists: this.state.specialists,
+                        onSelected: items => {
+                            this.setState({ listSelected: items })
+                        }
+                    })
+                }><ScaleImage style={styles.img} height={20} source={require("@images/new/booking/ic_filter.png")} /></TouchableOpacity>}
                 titleStyle={{ marginLeft: 50 }}
                 showFullScreen={true}
             >

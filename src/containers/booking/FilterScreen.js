@@ -11,17 +11,24 @@ import dataCacheProvider from '@data-access/datacache-provider';
 class FilterScreen extends Component {
     constructor(props) {
         super(props);
+        let listSelected = ((this.props.navigation.state || {}).params || {}).listSelected;
+        let listSpecialist = ((this.props.navigation.state || {}).params || {}).specialists;
+        listSpecialist.map(item => {
+            if (listSelected.indexOf(item.id) != -1) {
+                item.selected = true;
+            }
+        })
         this.state = {
-            listSpecialist: [],
+            listSpecialist: listSpecialist,
             listSpecialistSearch: [],
             searchValue: "",
-            refreshing: false,
             index: '',
-            listSelected: [],
+            listSelected: listSelected || [],
+            listSpecialist: listSpecialist || []
         }
     }
     componentDidMount() {
-        this.onRefresh();
+        this.onSearch();
     }
     selectSpecilist(specialist) {
         let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
@@ -31,30 +38,6 @@ class FilterScreen extends Component {
             dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_SPECIALIST, specialist);
 
         }
-    }
-
-
-    onRefresh = () => {
-        this.setState({ refreshing: true }, () => {
-            specialistProvider.getAll().then(s => {
-                this.setState({
-                    refreshing: false
-                }, () => {
-                    if (s) {
-                        this.setState({
-                            listSpecialist: s
-                        }, () => {
-                            this.onSearch();
-                        });
-                    }
-                })
-            }).catch(e => {
-                this.setState({
-                    listSpecialist: [],
-                    refreshing: false
-                })
-            })
-        });
     }
 
     showSearch() {
@@ -91,12 +74,6 @@ class FilterScreen extends Component {
                 listSpecialist: [...this.state.listSpecialist]
             });
         }
-
-        //  this.setState({
-        //      listSelected:  this.state.listSelected.concat(item)
-        //  } ,() => {
-        //     console.log(this.state.listSelected,'ssssss');
-        //  })
     }
 
     renderItem = ({ item }) => {
@@ -113,18 +90,24 @@ class FilterScreen extends Component {
             </TouchableOpacity>
         )
     }
+    done() {
+        let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
+        if (callback) {
+            let listItem = this.state.listSpecialist.filter(item => item.selected).map(item => item.id);
+            callback(listItem);
+            this.props.navigation.pop();
+        }
+    }
 
     render() {
         return (
             <ActivityPanel
                 backButtonClick={this.onFilter} title={"Lọc"}
                 titleStyle={{ marginLeft: 55 }}
-                menuButton={<TouchableOpacity style={styles.menu} onPress={() => this.props.navigation.navigate('filter')}><Text>Đồng ý</Text></TouchableOpacity>}
+                menuButton={<TouchableOpacity style={styles.menu} onPress={this.done.bind(this)}><Text>Đồng ý</Text></TouchableOpacity>}
             >
                 <FlatList
                     style={{ flex: 1, backgroundColor: '#FFF' }}
-                    refreshing={this.state.refreshing}
-                    onRefresh={this.onRefresh}
                     keyExtractor={(item, index) => index.toString()}
                     extraData={this.state}
                     ListHeaderComponent={() =>

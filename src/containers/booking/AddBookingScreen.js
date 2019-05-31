@@ -29,7 +29,7 @@ class AddBookingScreen extends Component {
         let minDate = new Date();
         minDate.setDate(minDate.getDate() + 1);
 
-        let bookingDate =  minDate;
+        let bookingDate =    minDate;
         let date = minDate.format("thu, dd tháng MM").replaceAll(" 0", " ");
 
         this.state = {
