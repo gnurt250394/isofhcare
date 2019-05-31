@@ -12,7 +12,7 @@ class ModalComponent extends Component {
     render() {
         return (
             <Modal {...this.props}>
-                <TouchableWithoutFeedback style={{ flex: 1 }} onPress={()=>{this.props.onBackdropPress(); }}>
+             <TouchableWithoutFeedback style={{ flex: 1 }} onPress={()=>{this.props.onBackdropPress(); }}>
                     {this.props.children}
                 </TouchableWithoutFeedback>
             </Modal>

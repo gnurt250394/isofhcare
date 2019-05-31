@@ -19,6 +19,7 @@ import LocationSwitch from 'react-native-location-switch';
 class SelectHospitalScreen extends Component {
     constructor(props) {
         super(props);
+        let serviceType = this.props.navigation.state.params.serviceType;
 
         this.state = {
             data: [],
@@ -29,6 +30,7 @@ class SelectHospitalScreen extends Component {
             loadMore: false,
             finish: false,
             loading: false,
+            serviceType
         }
     }
     onRefresh() {
@@ -206,10 +208,10 @@ class SelectHospitalScreen extends Component {
         }, () => {
             let promise = null;
             if (this.state.region) {
-                promise = hospitalProvider.getByLocation(page, size, this.state.region.latitude, this.state.region.longitude, stringQuyery);
+                promise = hospitalProvider.getByLocation(page, size, this.state.region.latitude, this.state.region.longitude, stringQuyery, this.state.serviceType.id);
             }
             else {
-                promise = hospitalProvider.getBySearch(page, size, stringQuyery);
+                promise = hospitalProvider.getBySearch(page, size, stringQuyery, this.state.serviceType.id);
             };
             promise.then(s => {
                 this.setState({

@@ -18,6 +18,8 @@ class GetNewTicket extends PureComponent {
         keyword: '',
         loading: true,
         disabled: true,
+        isShowErr:false,
+        isVisible:false
     }
     componentDidMount() {
         this.getListHospital()
@@ -96,6 +98,22 @@ class GetNewTicket extends PureComponent {
     search = () => {
         this.getListHospital()
 
+    }
+    onScanQr =  () => {
+        this.setState({ isVisible: false }, () => {
+            setTimeout(() => {
+                this.props.navigation.navigate("scanQRCode");
+            }, 500);
+        });
+    }
+    onAssignTicket = () => {
+        this.setState({ isVisible: false }, () => {
+            setTimeout(() => {
+                this.props.navigation.navigate("login", {
+                    nextScreen: { screen: "scanQRCode", param: {} }
+                });
+            }, 500);
+        });
     }
     onCloseModal = () => this.setState({ isVisible: false, service: 0 })
     onCloseErr = () => this.setState({ isShowErr: false })
@@ -196,9 +214,10 @@ class GetNewTicket extends PureComponent {
                             }
                         </ScrollView>
                     )}
-                <Modal animationType="fade"
+                <Modal
                     onBackdropPress={this.onCloseModal}
                     transparent={true} isVisible={this.state.isVisible}
+                    onRequestClose ={this.onCloseModal} 
                     deviceWidth={deviceWidth}
                     deviceHeight={deviceHeight}
                 >
@@ -206,28 +225,15 @@ class GetNewTicket extends PureComponent {
                         <View style={styles.viewDialog}>
                             <Text style={styles.txDialog}>Lấy số khám</Text>
                             <View style={styles.viewBtnModal}>
-                                <TouchableOpacity style={styles.viewBtn} onPress={() => {
-                                    this.setState({ isVisible: false }, () => {
-                                        setTimeout(() => {
-                                            this.props.navigation.navigate("scanQRCode");
-                                        }, 500);
-                                    });
-                                }} ><Text style={{ color: '#fff', fontWeight: 'bold' }} >Lấy số cho tôi</Text></TouchableOpacity>
-                                <TouchableOpacity style={styles.viewBtn2} onPress={() => {
-                                    this.setState({ isVisible: false }, () => {
-                                        setTimeout(() => {
-                                            this.props.navigation.navigate("login", {
-                                                nextScreen: { screen: "scanQRCode", param: {} }
-                                            });
-                                        }, 500);
-                                    });
-                                }} ><Text style={{ color: '#4A4A4A', fontWeight: 'bold' }}>Lấy số hộ</Text></TouchableOpacity>
+                                <TouchableOpacity style={styles.viewBtn} onPress={this.onScanQr} ><Text style={styles.txGetTicket} >Lấy số cho tôi</Text></TouchableOpacity>
+                                <TouchableOpacity style={styles.viewBtn2} onPress={this.onAssignTicket} ><Text style={styles.txAssignTicket}>Lấy số hộ</Text></TouchableOpacity>
                             </View>
                         </View>
                     </View>
                 </Modal>
-                <Modal animationType="fade"
+                <Modal 
                     onBackdropPress={this.onCloseErr}
+                    onRequestClose ={this.onCloseErr} 
                     transparent={true} isVisible={this.state.isShowErr} >
                     <View style={styles.viewModal}>
                         <View style={styles.viewContents}>
@@ -243,6 +249,8 @@ class GetNewTicket extends PureComponent {
     }
 }
 const styles = StyleSheet.create({
+    txGetTicket:{ color: '#fff', fontWeight: 'bold' },
+    txAssignTicket:{ color: '#4A4A4A', fontWeight: 'bold' },
     viewTx: { flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', width: '100%', borderTopWidth: 0.5, borderStyle: "solid", borderBottomWidth: 0.5, borderColor: 'rgba(0,0,0,0.26)' },
     viewItem: { padding: 15, borderBottomWidth: 1, borderColor: 'rgba(0,0,0,0.26)', flexDirection: 'row', borderTopWidth: 1 },
     btnService: { justifyContent: 'center', alignItems: 'center', marginRight: 5, borderRadius: 6, marginVertical: 10, paddingVertical: 5, paddingHorizontal: 12, },
