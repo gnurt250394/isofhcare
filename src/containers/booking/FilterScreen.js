@@ -56,12 +56,6 @@ class FilterScreen extends Component {
         });
         this.setState({ listSpecialistSearch: listSearch });
     }
-    onFilter = () => {
-        let filterData = this.state.listSpecialist.filter(data => {
-            return (data.selected);
-        })
-        this.props.navigation.navigate('addBooking', { data: filterData })
-    }
     onSelected = (item) => {
         if (!item.selected) {
             item.selected = true;
@@ -102,9 +96,9 @@ class FilterScreen extends Component {
     render() {
         return (
             <ActivityPanel
-                backButtonClick={this.onFilter} title={"Lọc"}
+                title={"Lọc"}
                 titleStyle={{ marginLeft: 55 }}
-                menuButton={<TouchableOpacity style={styles.menu} onPress={this.done.bind(this)}><Text>Đồng ý</Text></TouchableOpacity>}
+                menuButton={<TouchableOpacity style={styles.menu} onPress={this.done.bind(this)}><Text style={{ fontWeight: 'bold' }}>Đồng ý</Text></TouchableOpacity>}
             >
                 <FlatList
                     style={{ flex: 1, backgroundColor: '#FFF' }}
