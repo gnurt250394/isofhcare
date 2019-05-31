@@ -29,18 +29,11 @@ import scheduleProvider from '@data-access/schedule-provider';
 class AddBookingScreen extends Component {
     constructor(props) {
         super(props);
-        let minDate = new Date();
-        minDate.setDate(minDate.getDate() + 1);
-
-        let bookingDate = minDate;
-        let date = minDate.format("thu, dd tháng MM").replaceAll(" 0", " ");
 
         this.state = {
             colorButton: 'red',
             imageUris: [],
             allowBooking: false,
-            bookingDate,
-            date,
             contact: 2
         }
     }
@@ -67,19 +60,19 @@ class AddBookingScreen extends Component {
             }
         });
 
-        dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_SPECIALIST, (s, e) => {
-            console.log(s, 'specialist');
-            if (s) {
-                this.setState({ specialist: s })
-            } else {
-                specialistProvider.getAll().then(s => {
-                    if (s) {
-                        let specialist = s[0]
-                        this.setState({ specialist: specialist })
-                    }
-                });
-            }
-        })
+        // dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_SPECIALIST, (s, e) => {
+        //     console.log(s, 'specialist');
+        //     if (s) {
+        //         this.setState({ specialist: s })
+        //     } else {
+        //         specialistProvider.getAll().then(s => {
+        //             if (s) {
+        //                 let specialist = s[0]
+        //                 this.setState({ specialist: specialist })
+        //             }
+        //         });
+        //     }
+        // })
         dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, (s, e) => {
             if (s) {
                 this.setState({ profile: s })
@@ -207,24 +200,35 @@ class AddBookingScreen extends Component {
     }
 
     reloadSchedule() {
-        if (this.state.service && this.state.bookingDate)
+        if (this.state.service && this.state.bookingDate && this.state.hospital) {
             this.setState({ isLoading: true }, () => {
                 scheduleProvider.getByDateAndService(this.state.service.id, this.state.bookingDate.format("yyyy-MM-dd")).then(s => {
                     if (s.code == 0 && s.data) {
                         let data = s.data || [];
                         let scheduleError = data.length > 0 ? "" : this.state.scheduleError;
-                        this.setState({ schedules: data, isLoading: false, scheduleError })
+                        this.setState({
+                            schedule: null,
+                            schedules: data, isLoading: false, scheduleError,
+                            scheduleError: data && data.length != 0 ? "" : "Không có lịch khám trong ngày thoả mãn yêu cầu của bạn, xin vui lòng chọn ngày khác"
+                        })
                     }
                     else {
-                        this.setState({ schedules: [], isLoading: false })
+                        this.setState({
+                            schedule: null,
+                            schedules: [], isLoading: false,
+                            scheduleError: "Không có lịch khám trong ngày thoả mãn yêu cầu của bạn, xin vui lòng chọn ngày khác"
+                        })
                     }
                 }).catch(e => {
                     this.setState({
+                        schedule:null,
                         isLoading: false,
-                        schedules: []
+                        schedules: [],
+                        scheduleError: "Không có lịch khám trong ngày thoả mãn yêu cầu của bạn, xin vui lòng chọn ngày khác"
                     })
                 });
             });
+        }
     }
 
     addBooking() {
@@ -279,7 +283,7 @@ class AddBookingScreen extends Component {
                 error = true;
             }
         } else {
-            this.setState({ scheduleError: "Không tồn tại lịch khám trong thời gian bạn chọn" })
+            this.setState({ scheduleError: "Không có lịch khám trong ngày thoả mãn yêu cầu của bạn, xin vui lòng chọn ngày khác" })
             error = true;
         }
 
@@ -518,6 +522,10 @@ class AddBookingScreen extends Component {
                     }
                     <View style={styles.border}></View>
                     <TouchableOpacity style={styles.mucdichkham} onPress={() => {
+                        if (!this.state.hospital) {
+                            snackbar.show("Vui lòng chọn địa điểm khám", "danger");
+                            return;
+                        }
                         this.props.navigation.navigate("selectService", {
                             hospital: this.state.hospital,
                             specialist: this.state.specialist,
@@ -527,7 +535,15 @@ class AddBookingScreen extends Component {
                     }}>
                         <ScaleImage style={styles.imgIc} height={15} source={require("@images/new/booking/ic_specialist.png")} />
                         <Text style={styles.mdk}>Dịch vụ</Text>
-                        <Text numberOfLines={1} style={styles.ktq}>{this.state.service ? this.state.service.name : "Chọn dịch vụ"}</Text>
+
+                        {this.state.service ?
+                            <View style={{ flex: 1 }}>
+                                <Text numberOfLines={1} style={styles.ktq}>{this.state.service.name}</Text>
+                                <Text numberOfLines={1} style={styles.ktq}>{this.state.service.price.formatPrice() + 'đ'}</Text>
+                            </View> :
+                            <Text numberOfLines={1} style={styles.ktq}>Chọn dịch vụ</Text>
+                        }
+
                         <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
                     </TouchableOpacity>
                     {
@@ -536,7 +552,13 @@ class AddBookingScreen extends Component {
                     }
                 </View>
                 <View style={styles.article}>
-                    <TouchableOpacity style={styles.mucdichkham} onPress={() => this.setState({ toggelDateTimePickerVisible: true })}>
+                    <TouchableOpacity style={styles.mucdichkham} onPress={() => {
+                        if (!this.state.service) {
+                            snackbar.show("Vui lòng chọn dịch vụ", "danger");
+                            return;
+                        }
+                        this.setState({ toggelDateTimePickerVisible: true })
+                    }}>
                         <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_bookingDate.png")} />
                         <Text style={styles.mdk}>Ngày khám</Text>
                         <Text style={styles.ktq}>{this.state.date ? this.state.date : "Chọn ngày khám"}</Text>
@@ -680,8 +702,7 @@ class AddBookingScreen extends Component {
                 date={this.state.bookingDate || minDate}
             />
 
-        </ActivityPanel>
-        );
+        </ActivityPanel>);
     }
 }
 
@@ -893,7 +914,8 @@ const styles = StyleSheet.create({
     errorStyle: {
         color: 'red',
         marginTop: 10,
-        marginLeft: 25
+        marginLeft: 25,
+        marginRight: 25
     }
 });
 
