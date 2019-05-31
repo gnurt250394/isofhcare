@@ -17,25 +17,8 @@ const DEVICE_WIDTH = Dimensions.get('window').width;
 class SelectTimeScreen extends Component {
     constructor(props) {
         super(props);
-        let serviceType = this.props.navigation.state.params.serviceType;
-        let hospital = this.props.navigation.state.params.hospital;
-        let profile = this.props.navigation.state.params.profile;
-        let specialist = this.props.navigation.state.params.specialist;
-        let bookingDate = this.props.navigation.state.params.bookingDate;
-        let reason = this.props.navigation.state.params.reason;
-        let contact = this.props.navigation.state.params.contact;
-        let images = this.props.navigation.state.params.images;
-        console.log(specialist, 's');
         this.state = {
-            serviceType,
-            hospital,
-            profile,
-            specialist,
-            bookingDate,
-            listTime: [],
-            reason,
-            images,
-            contact
+            listTime: []
         }
     }
     getLable(time) {
@@ -72,22 +55,12 @@ class SelectTimeScreen extends Component {
             }
         }
 
-        // let width = (length * itemWidth) + (numberIgnore * (itemWidth + 5));
-
-        // if (width >= DEVICE_WIDTH - 80) {
-        //     width = DEVICE_WIDTH - 80;
-
-        //     itemWidth = (width - (5 * numberIgnore)) / (length + numberIgnore);
-        //     widthIgnore = itemWidth + 5;
-        // }
-
         let width = (length * itemWidth) + (numberIgnore * widthIgnore);
 
         if (width >= DEVICE_WIDTH - 80) {
             width = DEVICE_WIDTH - 80;
 
             itemWidth = (width - numberIgnore * widthIgnore) / (length);
-            // widthIgnore = itemWidth + 5;
         }
         if (itemWidth < 15) {
             widthIgnore = 30;
@@ -123,197 +96,6 @@ class SelectTimeScreen extends Component {
             timeWidth: width
         })
     }
-    selectService(service) {
-        // alert(JSON.stringify(service));
-        // return;
-        this.setState({ service: service, schedule: null, serviceError: "", scheduleError: "", allowBooking: true }, () => {
-            this.setState({ isLoading: true }, () => {
-                scheduleProvider.getByDateAndService(service.id, this.state.bookingDate.format("yyyy-MM-dd")).then(s => {
-                    let listTime = [];
-                    if (s.code == 0 && s.data) {
-                        let data = s.data || [];
-                        data.forEach((item, index) => {
-                            for (var key in item) {
-                                try {
-                                    // let date = new Date(key).format("yyyy/MM/dd HH:mm:ss") + " GMT +7";
-                                    // let key1 = key.replace("T", " ") + ":00 GMT +7";
-                                    let time = this.getTime(key);
-                                    // let minute = time.format("mm");
-                                    // let label = "";
-                                    // if (minute == 0)
-                                    //     label = time.format("HH:mm");
-                                    // else
-                                    label = time.format("HH") + "h" + time.format("mm");
-                                    let schedule = {
-                                        label,
-                                        time,
-                                        key: key,
-                                        percent: 100
-                                    }
-                                    let schedules = ((item[key] || {}).detailSchedules || []);
-                                    schedules.forEach((item2, index2) => {
-                                        let detailSchedule = item2.detailSchedule;
-                                        if (item2.numberCase && detailSchedule) {
-                                            let percent = ((item2.numberSlot || 0) * 100) / (item2.numberCase || 1);
-                                            if (percent <= schedule.percent) {
-                                                schedule.percent = percent;
-                                                schedule.schedule = detailSchedule;
-                                                schedule.doctor = item2.doctorVendor;
-                                                schedule.numberSlot = item2.numberSlot || 0;
-                                                schedule.numberCase = item2.numberCase || 1;
-
-                                                let available = 100 - percent;
-                                                if (available == 0)
-                                                    schedule.type = 0;
-                                                else
-                                                    if (available < 30)
-                                                        schedule.type = 1;
-                                                    else
-                                                        if (available < 70)
-                                                            schedule.type = 2;
-                                                        else
-                                                            schedule.type = 3;
-                                            }
-                                        }
-                                    });
-                                    if (schedule.schedule) {
-                                        listTime.push(schedule);
-                                    }
-                                } catch (error) {
-
-                                }
-                            }
-                        });
-                    }
-                    console.log(listTime);
-
-                    this.setState({
-                        isLoading: false,
-                        listTime: listTime.sort((a, b) => {
-                            return a.time - b.time
-                        })
-                    }, () => {
-                        this.analyseTime(this.state.listTime);
-                    });
-                }).catch(e => {
-                    this.setState({
-                        isLoading: false,
-                        listTime: []
-                    })
-                });
-            })
-        });
-    }
-    confirmBooking() {
-        if (!this.state.allowBooking)
-            return;
-        let error = false;
-
-        if (this.state.service) {
-            if (!this.state.listTime || this.state.listTime.length == 0)
-                this.setState({ serviceError: "Không tồn tại lịch khám của dịch vụ này" })
-            else
-                this.setState({ serviceError: "" })
-        } else {
-            this.setState({ serviceError: "Dịch vụ không được bỏ trống" })
-            error = true;
-        }
-        if (this.state.schedule) {
-            this.setState({ scheduleError: "" })
-        } else {
-            this.setState({ scheduleError: "Giờ khám không được bỏ trống" })
-            error = true;
-        }
-
-        if (error)
-            return;
-        connectionUtils.isConnected().then(s => {
-            this.setState({ isLoading: true }, () => {
-                console.log(this.state.schedule.time);
-                bookingProvider.create(
-                    this.state.hospital.hospital.id,
-                    this.state.schedule.schedule.id,
-                    this.state.profile.medicalRecords.id,
-                    this.state.specialist.id,
-                    this.state.service.id,
-                    this.state.schedule.time.format("yyyy-MM-dd HH:mm:ss"),
-                    this.state.reason,
-                    this.state.images,
-                    this.state.contact
-                ).then(s => {
-                    this.setState({ isLoading: false }, () => {
-                        if (s) {
-                            switch (s.code) {
-                                case 0:
-                                    dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, this.state.profile);
-
-                                    this.props.navigation.navigate("confirmBooking", {
-                                        serviceType: this.state.serviceType,
-                                        service: this.state.service,
-                                        profile: this.state.profile,
-                                        hospital: this.state.hospital,
-                                        specialist: this.state.specialist,
-                                        bookingDate: this.state.bookingDate,
-                                        schedule: this.state.schedule,
-                                        reason: this.state.reason,
-                                        images: this.state.images,
-                                        contact: this.state.contact,
-                                        booking: s.data
-                                    });
-                                    break;
-                                case 1:
-                                    this.setState({ isLoading: false }, () => {
-                                        snackbar.show("Đặt khám phải cùng ngày giờ với lịch làm việc", "danger");
-                                    });
-                                    break;
-                                case 2:
-                                    this.setState({ isLoading: false }, () => {
-                                        snackbar.show("Đã kín lịch trong khung giờ này", "danger");
-                                    });
-                                    break;
-                                case 401:
-                                    this.setState({ isLoading: false }, () => {
-                                        snackbar.show("Vui lòng đăng nhập để thực hiện", "danger");
-                                        this.props.navigation.navigate("login"
-                                            // , {
-                                            //     nextScreen: {
-                                            //         screen: "confirmBooking", params: this.props.navigation.state.params
-                                            //     }
-                                            // }
-                                        );
-                                    });
-                                    break;
-                                default:
-                                    this.setState({ isLoading: false }, () => {
-                                        snackbar.show("Đặt khám không thành công", "danger");
-                                    });
-                                    break;
-                            }
-                        }
-                    });
-                }).catch(e => {
-                    this.setState({ isLoading: false }, () => {
-                    });
-                })
-            });
-        }).catch(e => {
-            snackbar.show("Không có kết nối mạng", "danger");
-        })
-        return;
-        // this.props.navigation.navigate("confirmBooking", {
-        //     serviceType: this.state.serviceType,
-        //     service: this.state.service,
-        //     profile: this.state.profile,
-        //     hospital: this.state.hospital,
-        //     specialist: this.state.specialist,
-        //     bookingDate: this.state.bookingDate,
-        //     schedule: this.state.schedule,
-        //     reason: this.state.reason,
-        //     images: this.state.images,
-        //     contact: this.state.contact
-        // });
-    }
-
     getColor(item) {
         if (item.type == 0)
             return "#d0021b";
@@ -324,6 +106,73 @@ class SelectTimeScreen extends Component {
         return "#02c39a";
     }
 
+    componentWillReceiveProps(props) {
+        if (this.state.schedules != props.schedules) {
+            this.setState({ schedules: props.schedules }, () => {
+                let listTime = [];
+                if (props.schedules) {
+                    let data = props.schedules || [];
+                    data.forEach((item, index) => {
+                        for (var key in item) {
+                            try {
+                                let time = this.getTime(key);
+                                label = time.format("HH") + "h" + time.format("mm");
+                                let schedule = {
+                                    label,
+                                    time,
+                                    key: key,
+                                    percent: 100
+                                }
+                                let schedules = ((item[key] || {}).detailSchedules || []);
+                                schedules.forEach((item2, index2) => {
+                                    let detailSchedule = item2.detailSchedule;
+                                    if (item2.numberCase && detailSchedule) {
+                                        let percent = ((item2.numberSlot || 0) * 100) / (item2.numberCase || 1);
+                                        if (percent <= schedule.percent) {
+                                            schedule.percent = percent;
+                                            schedule.schedule = detailSchedule;
+                                            schedule.doctor = item2.doctorVendor;
+                                            schedule.numberSlot = item2.numberSlot || 0;
+                                            schedule.numberCase = item2.numberCase || 1;
+
+                                            let available = 100 - percent;
+                                            if (available == 0)
+                                                schedule.type = 0;
+                                            else
+                                                if (available < 30)
+                                                    schedule.type = 1;
+                                                else
+                                                    if (available < 70)
+                                                        schedule.type = 2;
+                                                    else
+                                                        schedule.type = 3;
+                                        }
+                                    }
+                                });
+                                if (schedule.schedule) {
+                                    listTime.push(schedule);
+                                }
+                            } catch (error) {
+
+                            }
+                        }
+                    });
+                }
+                console.log(listTime);
+
+                this.setState({
+                    isLoading: false,
+                    listTime: listTime.sort((a, b) => {
+                        return a.time - b.time
+                    })
+                }, () => {
+                    this.analyseTime(this.state.listTime);
+                    if (this.props.onChange)
+                        this.props.onChange(null);
+                });
+            });
+        }
+    }
 
     getIcon(item) {
         if (item.type == 0)
@@ -383,7 +232,10 @@ class SelectTimeScreen extends Component {
                 snackbar.show("Đã kín lịch trong khung giờ này", "danger");
                 return;
             }
-            this.setState({ schedule: item, index })
+            this.setState({ schedule: item, index }, () => {
+                if (this.props.onChange)
+                    this.props.onChange(item);
+            })
         }}
             style={[{ flexDirection: 'row', position: 'absolute', paddingVertical: 20, left: item.marginLeft + 7, alignItems: 'center', marginTop: 20 }, item.right ? { width: this.state.itemWidth + this.state.widthIgnore + 1 } : {}]}>
 
@@ -401,12 +253,6 @@ class SelectTimeScreen extends Component {
     render() {
         if (this.state.listTime && this.state.listTime.length > 0)
             return <View style={styles.chonGioKham}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <ScaleImage source={require("@images/new/booking/ic_bookingDate.png")} width={20} />
-                    <Text style={styles.txtchongiokham}>Chọn giờ khám</Text>
-                </View>
-                <Text style={{ marginTop: 20, fontSize: 14, color: '#8e8e93' }}>Gợi ý: Chọn những giờ màu xanh sẽ giúp bạn được phục vụ nhanh hơn</Text>
-
                 <View style={{ position: 'relative', marginTop: 20, height: 100, paddingTop: 40 }}>
                     {
                         this.state.listTime.map((item, index) =>
@@ -424,7 +270,13 @@ class SelectTimeScreen extends Component {
                     }
                 </View>
             </View>
-        else return null;
+        else {
+            return (
+                <View style={{ alignItems: 'center', paddingVertical: 20, height: 100, justifyContent: 'center' }}>
+                    <View style={{ width: DEVICE_WIDTH - 80, height: 5, backgroundColor: '#cacaca', borderRadius: 2.5 }}></View>
+                </View>
+            );
+        }
 
     }
 }
@@ -526,7 +378,7 @@ const styles = StyleSheet.create({
         color: "#000000"
     },
     chonGioKham: {
-        flex: 1, marginTop: 20,
+        flex: 1,
         backgroundColor: '#fff',
         padding: 20
     },

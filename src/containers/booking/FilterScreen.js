@@ -11,17 +11,24 @@ import dataCacheProvider from '@data-access/datacache-provider';
 class FilterScreen extends Component {
     constructor(props) {
         super(props);
+        let listSelected = ((this.props.navigation.state || {}).params || {}).listSelected;
+        let listSpecialist = ((this.props.navigation.state || {}).params || {}).specialists;
+        listSpecialist.map(item => {
+            if (listSelected.indexOf(item.id) != -1) {
+                item.selected = true;
+            }
+        })
         this.state = {
-            listSpecialist: [],
+            listSpecialist: listSpecialist,
             listSpecialistSearch: [],
             searchValue: "",
-            refreshing: false,
             index: '',
-            listSelected: [],
+            listSelected: listSelected || [],
+            listSpecialist: listSpecialist || []
         }
     }
     componentDidMount() {
-        this.onRefresh();
+        this.onSearch();
     }
     selectSpecilist(specialist) {
         let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
@@ -31,30 +38,6 @@ class FilterScreen extends Component {
             dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_SPECIALIST, specialist);
 
         }
-    }
-
-
-    onRefresh = () => {
-        this.setState({ refreshing: true }, () => {
-            specialistProvider.getAll().then(s => {
-                this.setState({
-                    refreshing: false
-                }, () => {
-                    if (s) {
-                        this.setState({
-                            listSpecialist: s
-                        }, () => {
-                            this.onSearch();
-                        });
-                    }
-                })
-            }).catch(e => {
-                this.setState({
-                    listSpecialist: [],
-                    refreshing: false
-                })
-            })
-        });
     }
 
     showSearch() {
@@ -73,12 +56,6 @@ class FilterScreen extends Component {
         });
         this.setState({ listSpecialistSearch: listSearch });
     }
-    onFilter = () => {
-        let filterData = this.state.listSpecialist.filter(data => {
-            return (data.selected);
-        })
-        this.props.navigation.navigate('addBooking',{data:filterData})
-    }
     onSelected = (item) => {
         if (!item.selected) {
             item.selected = true;
@@ -91,25 +68,13 @@ class FilterScreen extends Component {
                 listSpecialist: [...this.state.listSpecialist]
             });
         }
-
-        //  this.setState({
-        //      listSelected:  this.state.listSelected.concat(item)
-        //  } ,() => {
-        //     console.log(this.state.listSelected,'ssssss');
-        //  })
     }
 
     renderItem = ({ item }) => {
         return (
             <TouchableOpacity onPress={() => this.onSelected(item)} style={styles.viewBtn}>
-                <View style={{ flexDirection: 'row' }}>
-                    <ScaleImage height={20} source={require("@images/ic_test.png")}>
-                    </ScaleImage>
-
-                    <Text style={{ fontWeight: 'bold', marginLeft: 10 }}>
-                        {item.name}
-                    </Text>
-                </View>
+                <ScaleImage width={30} source={require("@images/ic_test.png")} />
+                <Text style={{ fontWeight: 'bold', marginVertical: 10, flex: 1 }}>{item.name}</Text>
                 {item.selected ? (
                     <ScaleImage height={20} source={require('@images/new/ic_question_check_specialist.png')}></ScaleImage>
 
@@ -117,17 +82,24 @@ class FilterScreen extends Component {
             </TouchableOpacity>
         )
     }
+    done() {
+        let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
+        if (callback) {
+            let listItem = this.state.listSpecialist.filter(item => item.selected).map(item => item.id);
+            callback(listItem);
+            this.props.navigation.pop();
+        }
+    }
 
     render() {
         return (
             <ActivityPanel
-                backButtonClick={this.onFilter}
-                titleStyle={{ marginRight: 0 }} title={"Lọc"}
+                title={"Lọc"}
+                titleStyle={{ marginLeft: 55 }}
+                menuButton={<TouchableOpacity style={styles.menu} onPress={this.done.bind(this)}><Text style={{ fontWeight: 'bold' }}>Đồng ý</Text></TouchableOpacity>}
             >
                 <FlatList
                     style={{ flex: 1, backgroundColor: '#FFF' }}
-                    refreshing={this.state.refreshing}
-                    onRefresh={this.onRefresh}
                     keyExtractor={(item, index) => index.toString()}
                     extraData={this.state}
                     ListHeaderComponent={() =>
@@ -149,7 +121,11 @@ class FilterScreen extends Component {
     }
 }
 const styles = StyleSheet.create({
-    viewBtn: { marginBottom: 2, padding: 20, flexDirection: 'row', alignItems: 'center', borderBottomColor: '#00000011', borderBottomWidth: 0.7, justifyContent: 'space-between' }
+    viewBtn: { marginBottom: 2, padding: 20, flexDirection: 'row', alignItems: 'center', borderBottomColor: '#00000011', borderBottomWidth: 0.7, justifyContent: 'space-between' },
+    menu: {
+        marginRight: 10
+    }
+
 })
 function mapStateToProps(state) {
     return {

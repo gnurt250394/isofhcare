@@ -21,8 +21,11 @@ import dataCacheProvider from '@data-access/datacache-provider';
 import constants from '@resources/strings';
 import medicalRecordProvider from '@data-access/medical-record-provider';
 import serviceTypeProvider from '@data-access/service-type-provider';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import BookingTimePicker from '@components/booking/BookingTimePicker';
+import bookingProvider from '@data-access/booking-provider';
 
+import scheduleProvider from '@data-access/schedule-provider';
 class AddBookingScreen extends Component {
     constructor(props) {
         super(props);
@@ -51,7 +54,7 @@ class AddBookingScreen extends Component {
     }
     componentDidMount() {
         dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_SPECIALIST, (s, e) => {
-console.log(s,'specialist');
+            console.log(s, 'specialist');
             if (s) {
                 this.setState({ specialist: s })
             } else {
@@ -155,15 +158,61 @@ console.log(s,'specialist');
     selectProfile(profile) {
         this.setState({ profile, allowBooking: true });
     }
-    selectHospital(hospital) {
-        this.setState({ hospital, allowBooking: true });
-    }
+
     selectSpecialist(specialist) {
         this.setState({ specialist, allowBooking: true });
     }
     selectServiceType(serviceType) {
-        this.setState({ serviceType, allowBooking: true });
+        let serviceTypeError = serviceType ? "" : this.state.serviceTypeError;
+        if (!serviceType || !this.state.serviceType || serviceType.id != this.state.serviceType.id) {
+            this.setState({ serviceType, hospital: null, service: null, schedules: [], schedule: null, allowBooking: true, serviceTypeError })
+        } else {
+            this.setState({ serviceType, allowBooking: true, serviceTypeError: "", serviceTypeError });
+        }
     }
+    selectHospital(hospital) {
+        let hospitalError = hospital ? "" : this.state.hospitalError;
+
+        if (!hospital || !this.state.hospital || hospital.hospital.id != this.state.hospital.hospital.id) {
+            this.setState({ hospital, service: null, schedules: [], schedule: null, allowBooking: true, hospitalError })
+        } else {
+            this.setState({ hospital, allowBooking: true, hospitalError });
+        }
+    }
+    selectService(service) {
+        let serviceError = service ? "" : this.state.serviceError;
+        if (!service || !this.state.service || service.id != this.state.service.id) {
+            this.setState({ service, schedules: [], schedule: null, allowBooking: true, serviceError }, () => {
+                this.reloadSchedule();
+            })
+        } else {
+            this.setState({ service, allowBooking: true, serviceError }, () => {
+                this.reloadSchedule();
+            });
+        }
+    }
+
+    reloadSchedule() {
+        if (this.state.service && this.state.bookingDate)
+            this.setState({ isLoading: true }, () => {
+                scheduleProvider.getByDateAndService(this.state.service.id, this.state.bookingDate.format("yyyy-MM-dd")).then(s => {
+                    if (s.code == 0 && s.data) {
+                        let data = s.data || [];
+                        let scheduleError = data.length > 0 ? "" : this.state.scheduleError;
+                        this.setState({ schedules: data, isLoading: false, scheduleError })
+                    }
+                    else {
+                        this.setState({ schedules: [], isLoading: false })
+                    }
+                }).catch(e => {
+                    this.setState({
+                        isLoading: false,
+                        schedules: []
+                    })
+                });
+            });
+    }
+
     addBooking() {
         Keyboard.dismiss();
         if (!this.state.allowBooking)
@@ -183,10 +232,16 @@ console.log(s,'specialist');
             this.setState({ profileError: "Hồ sơ không được bỏ trống" })
             error = true;
         }
-        if (this.state.specialist) {
+        if (this.state.serviceType) {
+            this.setState({ serviceTypeError: "" })
+        } else {
+            this.setState({ serviceTypeError: "Yêu cầu không được bỏ trống" })
+            error = true;
+        }
+        if (this.state.service) {
             this.setState({ serviceError: "" })
         } else {
-            this.setState({ serviceError: "Yêu cầu không được bỏ trống" })
+            this.setState({ serviceError: "Dịch vụ không được bỏ trống" })
             error = true;
         }
         if (this.state.bookingDate) {
@@ -202,12 +257,17 @@ console.log(s,'specialist');
             error = true;
         }
 
-        // if (this.state.specialist) {
-        //     this.setState({ specialistError: "" })
-        // } else {
-        //     this.setState({ specialistError: "Chuyên khoa không được bỏ trống" })
-        //     error = true;
-        // }
+        if (this.state.schedules && this.state.schedules.length) {
+            if (this.state.schedule) {
+                this.setState({ scheduleError: "" })
+            } else {
+                this.setState({ scheduleError: "Giờ khám không được bỏ trống" })
+                error = true;
+            }
+        } else {
+            this.setState({ scheduleError: "Không tồn tại lịch khám trong thời gian bạn chọn" })
+            error = true;
+        }
 
         let validForm = this.form.isValid();
         if (!error && validForm) {
@@ -229,16 +289,107 @@ console.log(s,'specialist');
             });
             let reason = this.state.reason ? this.state.reason : ''
             let img = images ? images : ''
-            this.props.navigation.navigate("selectTime", {
-                profile: this.state.profile,
-                hospital: this.state.hospital,
-                specialist: this.state.specialist,
-                serviceType: this.state.serviceType ? this.state.serviceType : '',
-                bookingDate: this.state.bookingDate,
-                reason: reason,
-                img,
-                contact: this.state.contact
-            });
+
+
+
+
+
+
+
+            connectionUtils.isConnected().then(s => {
+                this.setState({ isLoading: true }, () => {
+                    console.log(this.state.schedule.time);
+                    bookingProvider.create(
+                        this.state.hospital.hospital.id,
+                        this.state.schedule.schedule.id,
+                        this.state.profile.medicalRecords.id,
+                        this.state.specialist.id,
+                        this.state.service.id,
+                        this.state.schedule.time.format("yyyy-MM-dd HH:mm:ss"),
+                        reason,
+                        img,
+                        this.state.contact
+                    ).then(s => {
+                        this.setState({ isLoading: false }, () => {
+                            if (s) {
+                                switch (s.code) {
+                                    case 0:
+                                        dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, this.state.profile);
+
+                                        this.props.navigation.navigate("confirmBooking", {
+                                            serviceType: this.state.serviceType,
+                                            service: this.state.service,
+                                            profile: this.state.profile,
+                                            hospital: this.state.hospital,
+                                            specialist: this.state.specialist,
+                                            bookingDate: this.state.bookingDate,
+                                            schedule: this.state.schedule,
+                                            reason: reason,
+                                            images: img,
+                                            contact: this.state.contact,
+                                            booking: s.data
+                                        });
+                                        break;
+                                    case 1:
+                                        this.setState({ isLoading: false }, () => {
+                                            snackbar.show("Đặt khám phải cùng ngày giờ với lịch làm việc", "danger");
+                                        });
+                                        break;
+                                    case 2:
+                                        this.setState({ isLoading: false }, () => {
+                                            snackbar.show("Đã kín lịch trong khung giờ này", "danger");
+                                        });
+                                        break;
+                                    case 401:
+                                        this.setState({ isLoading: false }, () => {
+                                            snackbar.show("Vui lòng đăng nhập để thực hiện", "danger");
+                                            this.props.navigation.navigate("login"
+                                                // , {
+                                                //     nextScreen: {
+                                                //         screen: "confirmBooking", params: this.props.navigation.state.params
+                                                //     }
+                                                // }
+                                            );
+                                        });
+                                        break;
+                                    default:
+                                        this.setState({ isLoading: false }, () => {
+                                            snackbar.show("Đặt khám không thành công", "danger");
+                                        });
+                                        break;
+                                }
+                            }
+                        });
+                    }).catch(e => {
+                        this.setState({ isLoading: false }, () => {
+                        });
+                    })
+                });
+            }).catch(e => {
+                snackbar.show("Không có kết nối mạng", "danger");
+            })
+
+
+
+
+
+            // this.props.navigation.navigate("selectTime", {
+            //     profile: this.state.profile,
+            //     hospital: this.state.hospital,
+            //     specialist: this.state.specialist,
+            //     serviceType: this.state.serviceType ? this.state.serviceType : '',
+            //     bookingDate: this.state.bookingDate,
+            //     reason: reason,
+            //     img,
+            //     contact: this.state.contact
+            // });
+        }
+    }
+    onTimePickerChange(schedule) {
+        if (schedule)
+            this.setState({ schedule, scheduleError: "" });
+        else {
+            this.setState({ schedule });
         }
     }
     render() {
@@ -249,6 +400,7 @@ console.log(s,'specialist');
         // minDate.setDate(minDate.getDate());
 
         return (<ActivityPanel title="Đặt Khám"
+            isLoading={this.state.isLoading}
             menuButton={<TouchableOpacity style={styles.menu} onPress={() => snackbar.show("Chức năng đang phát triển")}><ScaleImage style={styles.img} height={20} source={require("@images/new/booking/ic_info.png")} /></TouchableOpacity>}
             titleStyle={{ marginLeft: 50 }}>
 
@@ -321,8 +473,8 @@ console.log(s,'specialist');
                         <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
                     </TouchableOpacity>
                     {
-                        this.state.serviceError ?
-                            <Text style={[styles.errorStyle]}>{this.state.serviceError}</Text> : null
+                        this.state.serviceTypeError ?
+                            <Text style={[styles.errorStyle]}>{this.state.serviceTypeError}</Text> : null
                     }
                     <View style={styles.border}></View>
                     <TouchableOpacity style={styles.mucdichkham} onPress={() => {
@@ -356,7 +508,7 @@ console.log(s,'specialist');
                             hospital: this.state.hospital,
                             specialist: this.state.specialist,
                             serviceType: this.state.serviceType,
-                            // onSelected: this.selectService.bind(this)
+                            onSelected: this.selectService.bind(this)
                         })
                     }}>
                         <ScaleImage style={styles.imgIc} height={15} source={require("@images/new/booking/ic_specialist.png")} />
@@ -393,27 +545,13 @@ console.log(s,'specialist');
                         <Text style={styles.mdk}>Chọn giờ khám</Text>
                     </TouchableOpacity>
                     <View style={[styles.mucdichkham, { paddingHorizontal: 20 }]}>
-                        <Text style={{fontSize: 14, color: '#8e8e93' }}>Gợi ý: Chọn những giờ màu xanh sẽ giúp bạn được phục vụ nhanh hơn</Text>
+                        <Text style={{ fontSize: 14, color: '#8e8e93' }}>Gợi ý: Chọn những giờ màu xanh sẽ giúp bạn được phục vụ nhanh hơn</Text>
                     </View>
-
+                    <BookingTimePicker schedules={this.state.schedules} onChange={this.onTimePickerChange.bind(this)} />
                     {
-                        this.state.serviceError ?
-                            <Text style={[styles.errorStyle]}>{this.state.serviceError}</Text> : null
+                        this.state.scheduleError ?
+                            <Text style={[styles.errorStyle]}>{this.state.scheduleError}</Text> : null
                     }
-
-                    {/*  <TouchableOpacity style={styles.mucdichkham} onPress={() => {
-                        connectionUtils.isConnected().then(s => {
-                            this.props.navigation.navigate("selectSpecialist", { onSelected: this.selectSpecialist.bind(this) });
-                        }).catch(e => {
-                            snackbar.show("Không có kết nối mạng", "danger");
-                        });
-                    }}>
-                        <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_specialist.png")} />
-                        <Text style={styles.mdk}>Chuyên khoa</Text>
-                        <Text numberOfLines={1} style={styles.ktq}>{this.state.specialist ? this.state.specialist.name : "Chọn chuyên khoa"}</Text>
-                        <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
-                </TouchableOpacity> */}
-
                 </View>
                 <Text style={styles.lienlac}>Liên lạc với tôi qua</Text>
 
@@ -504,11 +642,19 @@ console.log(s,'specialist');
             <DateTimePicker
                 isVisible={this.state.toggelDateTimePickerVisible}
                 onConfirm={newDate => {
+                    if (newDate && this.state.bookingDate && newDate.ddmmyyyy() == this.state.bookingDate.ddmmyyyy())
+                        return;
                     this.setState({
                         bookingDate: newDate,
                         date: newDate.format("thu, dd tháng MM").replaceAll(" 0", " "),
-                        toggelDateTimePickerVisible: false, allowBooking: true
+                        toggelDateTimePickerVisible: false,
+                        allowBooking: true,
+                        schedule: null,
+                        serviceError: "",
+                        scheduleError: "",
+                        isLoading: true
                     }, () => {
+                        this.reloadSchedule();
                     });
                 }}
                 onCancel={() => {
