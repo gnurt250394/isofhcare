@@ -11,13 +11,12 @@ class SelectServiceScreen extends Component {
     constructor(props) {
         super(props);
         let hospital = this.props.navigation.state.params.hospital;
-        let specialist = this.props.navigation.state.params.specialist;
         let serviceType = this.props.navigation.state.params.serviceType;
         if (!hospital) {
             this.props.navigation.pop();
             snackbar.show("Vui lòng chọn địa điểm khám", "danger");
         }
-        if (!specialist) {
+        if (!serviceType) {
             this.props.navigation.pop();
             snackbar.show("Vui lòng chọn yêu cầu", "danger");
         }
@@ -27,7 +26,6 @@ class SelectServiceScreen extends Component {
             searchValue: "",
             refreshing: false,
             hospital: hospital || { hospital: {} },
-            specialist,
             serviceType,
             listSpecialist: [],
             specialists: []

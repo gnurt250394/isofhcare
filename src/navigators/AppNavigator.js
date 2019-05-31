@@ -154,21 +154,21 @@ const RootNavigator = createStackNavigator(
   },
   {
     headerMode: "none",
-    cardStyle: {
-      backgroundColor: 'transparent', opacity: 1,
-    },
-    transitionConfig: () => ({
-      containerStyle: {
-        backgroundColor: 'transparent',
-      },
-    }),
+    // cardStyle: {
+    //   backgroundColor: 'transparent', opacity: 1,
+    // },
+    // transitionConfig: () => ({
+    //   containerStyle: {
+    //     backgroundColor: 'transparent',
+    //   },
+    // }),
     header: null,
     gesturesEnabled: false,
     navigationOptions: {
       header: null,
       gesturesEnabled: false
     },
-    mode: Platform.OS == "ios" ? "modal" : "card"
+    // mode: Platform.OS == "ios" ? "modal" : "card"
   }
 )
 

@@ -6,6 +6,7 @@ import serviceTypeProvider from '@data-access/service-type-provider';
 import constants from '@resources/strings';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import snackbar from '@utils/snackbar-utils';
+import dataCacheProvider from '@data-access/datacache-provider';
 
 class SelectServiceTypeScreen extends Component {
     constructor(props) {
@@ -38,6 +39,13 @@ class SelectServiceTypeScreen extends Component {
                     refreshing: false
                 }, () => {
                     if (s) {
+                        try {
+                            let _default = s.find(item => item.status == 1);
+                            dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_SERVICE_TYPE, _default);
+                        } catch (error) {
+
+                        }
+
                         this.setState({
                             listServiceType: s
                         }, () => {
