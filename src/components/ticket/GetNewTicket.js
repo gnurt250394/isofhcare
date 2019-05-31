@@ -9,6 +9,7 @@ import hospitalProvider from '@data-access/hospital-provider';
 import constants from '@resources/strings';
 import questionProvider from '@data-access/question-provider';
 import clientUtils from '@utils/client-utils';
+import ActionSheet from 'react-native-actionsheet'
 const deviceWidth = Dimensions.get("window").width;
 const deviceHeight = Platform.OS === "ios"
     ? Dimensions.get("window").height
@@ -21,9 +22,7 @@ class GetNewTicket extends Component {
         index: '',
         keyword: '',
         loading: true,
-        disabled: true,
-        isShowErr: false,
-        isVisible: false
+        disabled: true
     }
 
     componentDidMount() {
@@ -82,12 +81,6 @@ class GetNewTicket extends Component {
         })
     }
     onPressService = (item, key, index) => {
-        if (item.hospital.defaultBookHospital && key == 1) {
-            this.setState({
-                isShowErr: true
-            })
-            return
-        }
         if (!item.hospital.defaultBookHospital && key == 3 || !item.hospital.defaultBookHospital) {
 
             return
@@ -97,7 +90,6 @@ class GetNewTicket extends Component {
             service: key,
             index: item.hospital.id,
         }, () => {
-            this.props.dispatch({ type: constants.action.action_select_hospital_get_ticket, value: item })
         });
     }
     search = () => {
@@ -120,8 +112,7 @@ class GetNewTicket extends Component {
             }, 500);
         });
     }
-    onCloseModal = () => { this.setState({ isVisible: false, service: 0 }) }
-    onCloseErr = () => { this.setState({ isShowErr: false }) }
+
     renderItem = (item, index) => {
         return (
             <View style={[styles.viewItem, index > 0 ? { borderTopWidth: 0 } : { borderTopWidth: 1 }]} key={index}>
@@ -147,9 +138,9 @@ class GetNewTicket extends Component {
                     </View>
                     <Text style={{ color: '#00000050', marginTop: 5 }}>{item.hospital.address}</Text>
                     {item.hospital.defaultBookHospital ? <View style={{ flexDirection: 'row' }}>
-                        <TouchableOpacity onPress={this.onPressService.bind(this, item, 1, index)} style={[styles.btnService, { backgroundColor: '#0A9BE1' }]}><Text style={[styles.txService, { color: '#fff' }]}>Khám DV</Text></TouchableOpacity>
-                        <TouchableOpacity onPress={this.onPressService.bind(this, item, 2, index)} style={[styles.btnService, { width: 62 }, item.hospital.defaultBookHospital ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, { color: '#fff' }]}>BHYT</Text></TouchableOpacity>
-                        <TouchableOpacity onPress={this.onPressService.bind(this, item, 3, index)} style={[styles.btnService, { backgroundColor: '#0A9BE1' }]}><Text style={[styles.txService, { color: '#fff' }]}>BHYT CA</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={() => { this.actionSheetErr.show(); }} style={[styles.btnService, { backgroundColor: '#0A9BE1' }]}><Text style={[styles.txService, { color: '#fff' }]}>Khám DV</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={() => { this.actionSheetGetTicket.show(); }} style={[styles.btnService, { width: 62 }, item.hospital.defaultBookHospital ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, { color: '#fff' }]}>BHYT</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={() => { this.actionSheetGetTicket.show(); }} style={[styles.btnService, { backgroundColor: '#0A9BE1' }]}><Text style={[styles.txService, { color: '#fff' }]}>BHYT CA</Text></TouchableOpacity>
                     </View> :
                         <View style={{ flexDirection: 'row' }}>
                             <TouchableOpacity disabled={true} style={[styles.btnService, this.state.service && this.state.service == 1 && this.state.index == item.hospital.id ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, { color: '#6B6B6C' }]}>Khám DV</Text></TouchableOpacity>
@@ -192,69 +183,60 @@ class GetNewTicket extends Component {
                         })}
                     </View>
 
-                ) : (
-
-
-                        <ScrollView refreshControl={
-                            <RefreshControl
-                                onRefresh={this.onRefesh}
-                                refreshing={this.state.loading}
-                            />
+                ) : (<ScrollView refreshControl={
+                    <RefreshControl
+                        onRefresh={this.onRefesh}
+                        refreshing={this.state.loading}
+                    />
+                }
+                    showsVerticalScrollIndicator={false}>
+                    {
+                        (this.state.data2 && this.state.data2.length > 0) &&
+                        <View>
+                            <Text style={styles.txHospital}>Bệnh viện đã triển khai</Text>
+                            {this.state.data2.map((item, index) => {
+                                return this.renderItem(item, index)
+                            })}
+                        </View>
+                    }
+                    {
+                        (this.state.data3 && this.state.data3.length > 0) &&
+                        <View>
+                            <Text style={styles.txHospital}>Bệnh viện sắp triển khai</Text>
+                            {this.state.data3.map((item, index) => {
+                                return this.renderItem(item, index)
+                            })}
+                        </View>
+                    }
+                </ScrollView>)}
+                <ActionSheet
+                    title={"Lấy số khám"}
+                    ref={o => this.actionSheetGetTicket = o}
+                    options={["Lấy số cho tôi", "Lấy số hộ", "Hủy"]}
+                    cancelButtonIndex={2}
+                    destructiveButtonIndex={2}
+                    onPress={(index) => {
+                        switch (index) {
+                            case 0:
+                                this.props.navigation.navigate("scanQRCode");
+                                break;
+                            case 1:
+                                this.props.navigation.navigate("login", {
+                                    nextScreen: { screen: "scanQRCode", param: {} }
+                                });
                         }
-                            showsVerticalScrollIndicator={false}
-                        >
-                            {
-                                (this.state.data2 && this.state.data2.length > 0) &&
-                                <View>
-                                    <Text style={styles.txHospital}>Bệnh viện đã triển khai</Text>
-                                    {this.state.data2.map((item, index) => {
-                                        return this.renderItem(item, index)
-                                    })}
-                                </View>
-                            }
-                            {
-                                (this.state.data3 && this.state.data3.length > 0) &&
-                                <View>
-                                    <Text style={styles.txHospital}>Bệnh viện sắp triển khai</Text>
-                                    {this.state.data3.map((item, index) => {
-                                        return this.renderItem(item, index)
-                                    })}
-                                </View>
-                            }
-                        </ScrollView>
-                    )}
-                <Modal
-                    isVisible={this.state.isVisible}
-                    onBackdropPress={this.onCloseModal}
-                    transparent={true}
-                    onRequestClose={this.onCloseModal}
-                    deviceWidth={deviceWidth}
-                    deviceHeight={deviceHeight}
-                >
-                    <View style={styles.viewModal}>
-                        <View style={styles.viewDialog}>
-                            <Text style={styles.txDialog}>Lấy số khám</Text>
-                            <View style={styles.viewBtnModal}>
-                                <TouchableOpacity style={styles.viewBtn} onPress={this.onScanQr} ><Text style={styles.txGetTicket} >Lấy số cho tôi</Text></TouchableOpacity>
-                                <TouchableOpacity style={styles.viewBtn2} onPress={this.onAssignTicket} ><Text style={styles.txAssignTicket}>Lấy số hộ</Text></TouchableOpacity>
-                            </View>
-                        </View>
-                    </View>
-                </Modal>
-                <Modal
-                    isVisible={this.state.isShowErr}
-                    onBackdropPress={this.onCloseErr}
-                    onRequestClose={this.onCloseErr}
-                    transparent={true}  >
-                    <View style={styles.viewModal}>
-                        <View style={styles.viewContents}>
-                            <Text style={styles.viewNoty}>Thông báo</Text>
-                            <Text style={styles.TxContents}>Đối tượng dịch vụ tại bệnh viện E không cần có số khám</Text>
-                            <View style={styles.viewLine}></View>
-                            <TouchableOpacity style={styles.btnDone} onPress={this.onCloseErr}><Text style={{ color: '#02c39a' }}>OK</Text></TouchableOpacity>
-                        </View>
-                    </View>
-                </Modal>
+                    }}
+                />
+                <ActionSheet
+                    title={"Thông báo"}
+                    message={"Đối tượng dịch vụ tại bệnh viện E không cần có số khám"}
+                    ref={o => this.actionSheetErr = o}
+                    options={["OK"]}
+                    cancelButtonIndex={0}
+                    destructiveButtonIndex={0}
+                    onPress={(index) => {
+                    }}
+                />
             </View>
         )
     }
