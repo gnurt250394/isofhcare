@@ -167,6 +167,8 @@ class SelectTimeScreen extends Component {
                     })
                 }, () => {
                     this.analyseTime(this.state.listTime);
+                    if (this.props.onChange)
+                        this.props.onChange(null);
                 });
             });
         }
@@ -230,7 +232,10 @@ class SelectTimeScreen extends Component {
                 snackbar.show("Đã kín lịch trong khung giờ này", "danger");
                 return;
             }
-            this.setState({ schedule: item, index })
+            this.setState({ schedule: item, index }, () => {
+                if (this.props.onChange)
+                    this.props.onChange(item);
+            })
         }}
             style={[{ flexDirection: 'row', position: 'absolute', paddingVertical: 20, left: item.marginLeft + 7, alignItems: 'center', marginTop: 20 }, item.right ? { width: this.state.itemWidth + this.state.widthIgnore + 1 } : {}]}>
 
@@ -268,7 +273,7 @@ class SelectTimeScreen extends Component {
         else {
             return (
                 <View style={{ alignItems: 'center', paddingVertical: 20, height: 100, justifyContent: 'center' }}>
-                    <View style={{ width: DEVICE_WIDTH - 80, height: 5, backgroundColor: '#cacaca', borderRadius: 2.5 }}><Text>12</Text></View>
+                    <View style={{ width: DEVICE_WIDTH - 80, height: 5, backgroundColor: '#cacaca', borderRadius: 2.5 }}></View>
                 </View>
             );
         }
