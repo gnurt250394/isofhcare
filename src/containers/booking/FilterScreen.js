@@ -73,10 +73,8 @@ class FilterScreen extends Component {
     renderItem = ({ item }) => {
         return (
             <TouchableOpacity onPress={() => this.onSelected(item)} style={styles.viewBtn}>
-                <View style={{ flexDirection: 'row' }}>
-                    <ScaleImage width={30} source={require("@images/ic_test.png")} />
-                    <Text style={{ fontWeight: 'bold', marginLeft: 10 }}>{item.name}</Text>
-                </View>
+                <ScaleImage width={30} source={require("@images/ic_test.png")} />
+                <Text style={{ fontWeight: 'bold', marginVertical: 10, flex: 1 }}>{item.name}</Text>
                 {item.selected ? (
                     <ScaleImage height={20} source={require('@images/new/ic_question_check_specialist.png')}></ScaleImage>
 

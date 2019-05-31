@@ -21,15 +21,17 @@ import dataCacheProvider from '@data-access/datacache-provider';
 import constants from '@resources/strings';
 import medicalRecordProvider from '@data-access/medical-record-provider';
 import serviceTypeProvider from '@data-access/service-type-provider';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import BookingTimePicker from '@components/booking/BookingTimePicker';
 
+import scheduleProvider from '@data-access/schedule-provider';
 class AddBookingScreen extends Component {
     constructor(props) {
         super(props);
         let minDate = new Date();
         minDate.setDate(minDate.getDate() + 1);
 
-        let bookingDate =    minDate;
+        let bookingDate = minDate;
         let date = minDate.format("thu, dd tháng MM").replaceAll(" 0", " ");
 
         this.state = {
@@ -164,6 +166,29 @@ class AddBookingScreen extends Component {
     selectServiceType(serviceType) {
         this.setState({ serviceType, allowBooking: true });
     }
+    selectService(service) {
+        this.setState({ service, allowBooking: true, schedule: null, serviceError: "", scheduleError: "", isLoading: true }, () => {
+            this.reloadSchedule();
+        });
+    }
+
+    reloadSchedule() {
+        scheduleProvider.getByDateAndService(this.state.service.id, this.state.bookingDate.format("yyyy-MM-dd")).then(s => {
+            if (s.code == 0 && s.data) {
+                let data = s.data || [];
+                this.setState({ schedules: data, isLoading: false })
+            }
+            else {
+                this.setState({ schedules: [], isLoading: false })
+            }
+        }).catch(e => {
+            this.setState({
+                isLoading: false,
+                schedules: []
+            })
+        });
+    }
+
     addBooking() {
         Keyboard.dismiss();
         if (!this.state.allowBooking)
@@ -255,6 +280,7 @@ class AddBookingScreen extends Component {
         // minDate.setDate(minDate.getDate());
 
         return (<ActivityPanel title="Đặt Khám"
+            isLoading={this.state.isLoading}
             menuButton={<TouchableOpacity style={styles.menu} onPress={() => snackbar.show("Chức năng đang phát triển")}><ScaleImage style={styles.img} height={20} source={require("@images/new/booking/ic_info.png")} /></TouchableOpacity>}
             titleStyle={{ marginLeft: 50 }}>
 
@@ -362,7 +388,7 @@ class AddBookingScreen extends Component {
                             hospital: this.state.hospital,
                             specialist: this.state.specialist,
                             serviceType: this.state.serviceType,
-                            // onSelected: this.selectService.bind(this)
+                            onSelected: this.selectService.bind(this)
                         })
                     }}>
                         <ScaleImage style={styles.imgIc} height={15} source={require("@images/new/booking/ic_specialist.png")} />
@@ -401,6 +427,7 @@ class AddBookingScreen extends Component {
                     <View style={[styles.mucdichkham, { paddingHorizontal: 20 }]}>
                         <Text style={{ fontSize: 14, color: '#8e8e93' }}>Gợi ý: Chọn những giờ màu xanh sẽ giúp bạn được phục vụ nhanh hơn</Text>
                     </View>
+                    <BookingTimePicker schedules={this.state.schedules} />
                 </View>
                 <Text style={styles.lienlac}>Liên lạc với tôi qua</Text>
 
@@ -494,8 +521,14 @@ class AddBookingScreen extends Component {
                     this.setState({
                         bookingDate: newDate,
                         date: newDate.format("thu, dd tháng MM").replaceAll(" 0", " "),
-                        toggelDateTimePickerVisible: false, allowBooking: true
+                        toggelDateTimePickerVisible: false,
+                        allowBooking: true,
+                        schedule: null,
+                        serviceError: "",
+                        scheduleError: "",
+                        isLoading: true
                     }, () => {
+                        this.reloadSchedule();
                     });
                 }}
                 onCancel={() => {
