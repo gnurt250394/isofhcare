@@ -183,7 +183,8 @@ class AddBookingScreen extends Component {
         let getDefaultService = () => {
             serviceProvider.getAll(this.state.hospital.hospital.id, "", this.state.serviceType.id).then(s => {
                 if (s && s.code == 0 && s.data && s.data.services && s.data.services.length == 1) {
-                    this.setState({ service: s.data.services[0].service });
+                    let service = s.data.service[0];
+                    this.setState({ service: s.data.services[0].service, specialist: service.specialist && service.specialist.length > 0 ? service.specialist[0] : {} });
                 }
             });
         }
@@ -195,14 +196,14 @@ class AddBookingScreen extends Component {
         }
 
     }
-    selectService(service) {
+    selectService(service, specialist) {
         let serviceError = service ? "" : this.state.serviceError;
         if (!service || !this.state.service || service.id != this.state.service.id) {
-            this.setState({ service, schedules: [], schedule: null, allowBooking: true, serviceError }, () => {
+            this.setState({ service, specialist, schedules: [], schedule: null, allowBooking: true, serviceError }, () => {
                 this.reloadSchedule();
             })
         } else {
-            this.setState({ service, allowBooking: true, serviceError }, () => {
+            this.setState({ service, specialist, allowBooking: true, serviceError }, () => {
                 this.reloadSchedule();
             });
         }
@@ -537,7 +538,6 @@ class AddBookingScreen extends Component {
                         }
                         this.props.navigation.navigate("selectService", {
                             hospital: this.state.hospital,
-                            specialist: this.state.specialist,
                             serviceType: this.state.serviceType,
                             onSelected: this.selectService.bind(this)
                         })
@@ -578,17 +578,10 @@ class AddBookingScreen extends Component {
                             <Text style={[styles.errorStyle]}>{this.state.bookingError}</Text> : null
                     }
                     <View style={styles.border}></View>
-                    <TouchableOpacity style={styles.mucdichkham} onPress={() => {
-                        this.props.navigation.navigate("selectService", {
-                            hospital: this.state.hospital,
-                            specialist: this.state.specialist,
-                            serviceType: this.state.serviceType,
-                            // onSelected: this.selectService.bind(this)
-                        })
-                    }}>
+                    <View style={styles.mucdichkham}>
                         <ScaleImage style={styles.imgIc} height={15} source={require("@images/new/booking/ic_specialist.png")} />
                         <Text style={styles.mdk}>Chọn giờ khám</Text>
-                    </TouchableOpacity>
+                    </View>
                     <View style={[styles.mucdichkham, { paddingHorizontal: 20 }]}>
                         <Text style={{ fontSize: 14, color: '#8e8e93' }}>Gợi ý: Chọn những giờ màu xanh sẽ giúp bạn được phục vụ nhanh hơn</Text>
                     </View>
