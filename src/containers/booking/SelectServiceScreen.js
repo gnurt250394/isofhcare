@@ -57,14 +57,17 @@ class SelectServiceScreen extends Component {
                                 let specialists = s.data.services.map(item => item.specialist);
                                 specialists = [].concat.apply([], specialists);
                                 let a = [];
+
                                 specialists.forEach(item => {
-                                    if (!a.find(item2 => item2.id == item.id))
+                                    console.log(a);
+                                    let x = a.find(item2 => item2.id == item.id);
+                                    if (!x)
                                         a.push(item);
                                 });
 
                                 this.setState({
                                     listService: s.data.services,
-                                    specialists: specialists || []
+                                    specialists: a || []
                                 }, () => {
                                     this.onSearch();
                                 });
@@ -126,7 +129,7 @@ class SelectServiceScreen extends Component {
                             listSelected: this.state.listSpecialist,
                             specialists: this.state.specialists,
                             onSelected: items => {
-                                this.setState({ listSelected: items },()=>{
+                                this.setState({ listSelected: items }, () => {
                                     this.onSearch();
                                 })
                             }
