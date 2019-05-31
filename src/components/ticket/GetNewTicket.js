@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React, { Component } from 'react'
 import { Text, View, TextInput, StyleSheet, RefreshControl, TouchableOpacity, ScrollView, Dimensions, Platform } from 'react-native'
 import Modal from '@components/modal';
 import ScaledImage from 'mainam-react-native-scaleimage';
@@ -9,8 +9,12 @@ import hospitalProvider from '@data-access/hospital-provider';
 import constants from '@resources/strings';
 import questionProvider from '@data-access/question-provider';
 import clientUtils from '@utils/client-utils';
+const deviceWidth = Dimensions.get("window").width;
+const deviceHeight = Platform.OS === "ios"
+    ? Dimensions.get("window").height
+    : require("react-native-extra-dimensions-android").get("REAL_WINDOW_HEIGHT");
+class GetNewTicket extends Component {
 
-class GetNewTicket extends PureComponent {
     state = {
         data: [],
         service: null,
@@ -18,9 +22,10 @@ class GetNewTicket extends PureComponent {
         keyword: '',
         loading: true,
         disabled: true,
-        isShowErr:false,
-        isVisible:false
+        isShowErr: false,
+        isVisible: false
     }
+
     componentDidMount() {
         this.getListHospital()
         // this.getRatting()
@@ -88,8 +93,8 @@ class GetNewTicket extends PureComponent {
             return
         }
         this.setState({
-            service: key,
             isVisible: true,
+            service: key,
             index: item.hospital.id,
         }, () => {
             this.props.dispatch({ type: constants.action.action_select_hospital_get_ticket, value: item })
@@ -99,7 +104,7 @@ class GetNewTicket extends PureComponent {
         this.getListHospital()
 
     }
-    onScanQr =  () => {
+    onScanQr = () => {
         this.setState({ isVisible: false }, () => {
             setTimeout(() => {
                 this.props.navigation.navigate("scanQRCode");
@@ -115,8 +120,8 @@ class GetNewTicket extends PureComponent {
             }, 500);
         });
     }
-    onCloseModal = () => this.setState({ isVisible: false, service: 0 })
-    onCloseErr = () => this.setState({ isShowErr: false })
+    onCloseModal = () => { this.setState({ isVisible: false, service: 0 }) }
+    onCloseErr = () => { this.setState({ isShowErr: false }) }
     renderItem = (item, index) => {
         return (
             <View style={[styles.viewItem, index > 0 ? { borderTopWidth: 0 } : { borderTopWidth: 1 }]} key={index}>
@@ -156,11 +161,15 @@ class GetNewTicket extends PureComponent {
             </View>
         )
     }
+    // shouldComponentUpdate() {
+    //     if (this.state.isVisible || this.state.isShowErr) {
+    //         return false
+    //     }
+
+    //     return true
+    // }
     render() {
-        const deviceWidth = Dimensions.get("window").width;
-        const deviceHeight = Platform.OS === "ios"
-            ? Dimensions.get("window").height
-            : require("react-native-extra-dimensions-android").get("REAL_WINDOW_HEIGHT");
+
         return (
             <View style={{ flex: 1 }}>
                 <View style={styles.viewTx}>
@@ -215,9 +224,10 @@ class GetNewTicket extends PureComponent {
                         </ScrollView>
                     )}
                 <Modal
+                    isVisible={this.state.isVisible}
                     onBackdropPress={this.onCloseModal}
-                    transparent={true} isVisible={this.state.isVisible}
-                    onRequestClose ={this.onCloseModal} 
+                    transparent={true}
+                    onRequestClose={this.onCloseModal}
                     deviceWidth={deviceWidth}
                     deviceHeight={deviceHeight}
                 >
@@ -231,10 +241,11 @@ class GetNewTicket extends PureComponent {
                         </View>
                     </View>
                 </Modal>
-                <Modal 
+                <Modal
+                    isVisible={this.state.isShowErr}
                     onBackdropPress={this.onCloseErr}
-                    onRequestClose ={this.onCloseErr} 
-                    transparent={true} isVisible={this.state.isShowErr} >
+                    onRequestClose={this.onCloseErr}
+                    transparent={true}  >
                     <View style={styles.viewModal}>
                         <View style={styles.viewContents}>
                             <Text style={styles.viewNoty}>Thông báo</Text>
@@ -249,8 +260,8 @@ class GetNewTicket extends PureComponent {
     }
 }
 const styles = StyleSheet.create({
-    txGetTicket:{ color: '#fff', fontWeight: 'bold' },
-    txAssignTicket:{ color: '#4A4A4A', fontWeight: 'bold' },
+    txGetTicket: { color: '#fff', fontWeight: 'bold' },
+    txAssignTicket: { color: '#4A4A4A', fontWeight: 'bold' },
     viewTx: { flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', width: '100%', borderTopWidth: 0.5, borderStyle: "solid", borderBottomWidth: 0.5, borderColor: 'rgba(0,0,0,0.26)' },
     viewItem: { padding: 15, borderBottomWidth: 1, borderColor: 'rgba(0,0,0,0.26)', flexDirection: 'row', borderTopWidth: 1 },
     btnService: { justifyContent: 'center', alignItems: 'center', marginRight: 5, borderRadius: 6, marginVertical: 10, paddingVertical: 5, paddingHorizontal: 12, },
@@ -261,16 +272,16 @@ const styles = StyleSheet.create({
     viewBtn: { width: 120, height: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 6, backgroundColor: '#0A9BE1', marginRight: 7 },
     txDialog: { marginBottom: 20, color: '#4a4a4a', fontWeight: 'bold', fontSize: 16 },
     viewBtn2: { width: 120, height: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 6, backgroundColor: 'rgba(0,0,0,0.06)', marginLeft: 7, borderWidth: 1, borderColor: '#979797' },
-    viewImg:{ justifyContent: 'center', alignItems: 'center', marginTop: -10 },
-    viewAvt:{ width: 60, height: 60, borderRadius: 30, borderColor: 'rgba(0,0,0,0.15)', borderWidth: 1 },
-    viewRating:{ width: 60, marginTop: 5 },
-    viewService:{ marginHorizontal: 20, flex: 1 },
-    txHospital:{ marginLeft: 12, marginTop: 20, fontSize: 15, marginBottom: 10, color: '#4a4a4a' },
-    viewContents:{ width: 328, height: 167, backgroundColor: '#fff', borderRadius: 6, alignItems: 'center' },
-    viewNoty:{ marginVertical: 10, fontWeight: 'bold', color: '#4a4a4a' },
-    TxContents:{ marginBottom: 20, color: '#4a4a4a', marginHorizontal: 20, textAlign: 'center', },
-    viewLine:{ width: '100%', height: 1, backgroundColor: '#d8d8d8', marginTop: 20 },
-    btnDone:{ alignItems: 'center', justifyContent: 'center', flex: 1 }
+    viewImg: { justifyContent: 'center', alignItems: 'center', marginTop: -10 },
+    viewAvt: { width: 60, height: 60, borderRadius: 30, borderColor: 'rgba(0,0,0,0.15)', borderWidth: 1 },
+    viewRating: { width: 60, marginTop: 5 },
+    viewService: { marginHorizontal: 20, flex: 1 },
+    txHospital: { marginLeft: 12, marginTop: 20, fontSize: 15, marginBottom: 10, color: '#4a4a4a' },
+    viewContents: { width: 328, height: 167, backgroundColor: '#fff', borderRadius: 6, alignItems: 'center' },
+    viewNoty: { marginVertical: 10, fontWeight: 'bold', color: '#4a4a4a' },
+    TxContents: { marginBottom: 20, color: '#4a4a4a', marginHorizontal: 20, textAlign: 'center', },
+    viewLine: { width: '100%', height: 1, backgroundColor: '#d8d8d8', marginTop: 20 },
+    btnDone: { alignItems: 'center', justifyContent: 'center', flex: 1 }
 })
 function mapStateToProps(state) {
     return {
