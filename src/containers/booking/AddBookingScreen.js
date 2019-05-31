@@ -158,36 +158,59 @@ class AddBookingScreen extends Component {
     selectProfile(profile) {
         this.setState({ profile, allowBooking: true });
     }
-    selectHospital(hospital) {
-        this.setState({ hospital, allowBooking: true });
-    }
+
     selectSpecialist(specialist) {
         this.setState({ specialist, allowBooking: true });
     }
     selectServiceType(serviceType) {
-        this.setState({ serviceType, allowBooking: true });
+        let serviceTypeError = serviceType ? "" : this.state.serviceTypeError;
+        if (!serviceType || !this.state.serviceType || serviceType.id != this.state.serviceType.id) {
+            this.setState({ serviceType, hospital: null, service: null, schedules: [], schedule: null, allowBooking: true, serviceTypeError })
+        } else {
+            this.setState({ serviceType, allowBooking: true, serviceTypeError: "", serviceTypeError });
+        }
+    }
+    selectHospital(hospital) {
+        let hospitalError = hospital ? "" : this.state.hospitalError;
+
+        if (!hospital || !this.state.hospital || hospital.hospital.id != this.state.hospital.hospital.id) {
+            this.setState({ hospital, service: null, schedules: [], schedule: null, allowBooking: true, hospitalError })
+        } else {
+            this.setState({ hospital, allowBooking: true, hospitalError });
+        }
     }
     selectService(service) {
-        this.setState({ service, allowBooking: true, schedule: null, serviceError: "", scheduleError: "", isLoading: true }, () => {
-            this.reloadSchedule();
-        });
+        let serviceError = service ? "" : this.state.serviceError;
+        if (!service || !this.state.service || service.id != this.state.service.id) {
+            this.setState({ service, schedules: [], schedule: null, allowBooking: true, serviceError }, () => {
+                this.reloadSchedule();
+            })
+        } else {
+            this.setState({ service, allowBooking: true, serviceError }, () => {
+                this.reloadSchedule();
+            });
+        }
     }
 
     reloadSchedule() {
-        scheduleProvider.getByDateAndService(this.state.service.id, this.state.bookingDate.format("yyyy-MM-dd")).then(s => {
-            if (s.code == 0 && s.data) {
-                let data = s.data || [];
-                this.setState({ schedules: data, isLoading: false })
-            }
-            else {
-                this.setState({ schedules: [], isLoading: false })
-            }
-        }).catch(e => {
-            this.setState({
-                isLoading: false,
-                schedules: []
-            })
-        });
+        if (this.state.service && this.state.bookingDate)
+            this.setState({ isLoading: true }, () => {
+                scheduleProvider.getByDateAndService(this.state.service.id, this.state.bookingDate.format("yyyy-MM-dd")).then(s => {
+                    if (s.code == 0 && s.data) {
+                        let data = s.data || [];
+                        let scheduleError = data.length > 0 ? "" : this.state.scheduleError;
+                        this.setState({ schedules: data, isLoading: false, scheduleError })
+                    }
+                    else {
+                        this.setState({ schedules: [], isLoading: false })
+                    }
+                }).catch(e => {
+                    this.setState({
+                        isLoading: false,
+                        schedules: []
+                    })
+                });
+            });
     }
 
     addBooking() {
@@ -619,6 +642,8 @@ class AddBookingScreen extends Component {
             <DateTimePicker
                 isVisible={this.state.toggelDateTimePickerVisible}
                 onConfirm={newDate => {
+                    if (newDate && this.state.bookingDate && newDate.ddmmyyyy() == this.state.bookingDate.ddmmyyyy())
+                        return;
                     this.setState({
                         bookingDate: newDate,
                         date: newDate.format("thu, dd tháng MM").replaceAll(" 0", " "),
