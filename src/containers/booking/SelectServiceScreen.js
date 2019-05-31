@@ -37,7 +37,7 @@ class SelectServiceScreen extends Component {
     selectService(service) {
         let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
         if (callback) {
-            callback(service.service);
+            callback(service.service, service.specialist && service.specialist.length > 0 ? service.specialist[0] : {});
             this.props.navigation.pop();
         }
     }
