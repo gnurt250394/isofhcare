@@ -24,6 +24,7 @@ import serviceTypeProvider from '@data-access/service-type-provider';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import BookingTimePicker from '@components/booking/BookingTimePicker';
 import bookingProvider from '@data-access/booking-provider';
+import serviceProvider from '@data-access/service-provider';
 
 import scheduleProvider from '@data-access/schedule-provider';
 class AddBookingScreen extends Component {
@@ -179,12 +180,20 @@ class AddBookingScreen extends Component {
     }
     selectHospital(hospital) {
         let hospitalError = hospital ? "" : this.state.hospitalError;
+        let getDefaultService = () => {
+            serviceProvider.getAll(this.state.hospital.hospital.id, "", this.state.serviceType.id).then(s => {
+                if (s && s.code == 0 && s.data && s.data.services && s.data.services.length == 1) {
+                    this.setState({ service: s.data.services[0].service });
+                }
+            });
+        }
 
         if (!hospital || !this.state.hospital || hospital.hospital.id != this.state.hospital.hospital.id) {
-            this.setState({ hospital, service: null, schedules: [], schedule: null, allowBooking: true, hospitalError })
+            this.setState({ hospital, service: null, schedules: [], schedule: null, allowBooking: true, hospitalError }, getDefaultService)
         } else {
-            this.setState({ hospital, allowBooking: true, hospitalError });
+            this.setState({ hospital, allowBooking: true, hospitalError }, getDefaultService);
         }
+
     }
     selectService(service) {
         let serviceError = service ? "" : this.state.serviceError;
@@ -221,7 +230,7 @@ class AddBookingScreen extends Component {
                     }
                 }).catch(e => {
                     this.setState({
-                        schedule:null,
+                        schedule: null,
                         isLoading: false,
                         schedules: [],
                         scheduleError: "Không có lịch khám trong ngày thoả mãn yêu cầu của bạn, xin vui lòng chọn ngày khác"

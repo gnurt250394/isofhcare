@@ -7,6 +7,7 @@ import constants from '@resources/strings';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import snackbar from '@utils/snackbar-utils';
 import dataCacheProvider from '@data-access/datacache-provider';
+import ImageLoad from 'mainam-react-native-image-loader';
 
 class FilterScreen extends Component {
     constructor(props) {
@@ -54,6 +55,7 @@ class FilterScreen extends Component {
         var listSearch = this.state.listSpecialist.filter(function (item) {
             return s == null || item.name && item.name.trim().toLowerCase().unsignText().indexOf(s.trim().toLowerCase().unsignText()) != -1;
         });
+        console.log(listSearch,'listSearch');
         this.setState({ listSpecialistSearch: listSearch });
     }
     onSelected = (item) => {
@@ -73,8 +75,8 @@ class FilterScreen extends Component {
     renderItem = ({ item }) => {
         return (
             <TouchableOpacity onPress={() => this.onSelected(item)} style={styles.viewBtn}>
-                <ScaleImage width={30} source={require("@images/ic_test.png")} />
-                <Text style={{ fontWeight: 'bold', marginVertical: 10, flex: 1 }}>{item.name}</Text>
+                <ScaleImage width={30} source={ item.linkImages ? {uri:linkImages.absoluteUrl()} : require("@images/new/booking/ic_default.png")} />
+                <Text style={{ fontWeight: 'bold', marginVertical: 10, flex: 1,marginLeft:10 }}>{item.name}</Text>
                 {item.selected ? (
                     <ScaleImage height={20} source={require('@images/new/ic_question_check_specialist.png')}></ScaleImage>
 
