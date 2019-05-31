@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React, { Component } from 'react'
 import { Text, View, TextInput, StyleSheet, RefreshControl, TouchableOpacity, ScrollView, Dimensions, Platform } from 'react-native'
 import Modal from '@components/modal';
 import ScaledImage from 'mainam-react-native-scaleimage';
@@ -9,18 +9,22 @@ import hospitalProvider from '@data-access/hospital-provider';
 import constants from '@resources/strings';
 import questionProvider from '@data-access/question-provider';
 import clientUtils from '@utils/client-utils';
+import ActionSheet from 'react-native-actionsheet'
+const deviceWidth = Dimensions.get("window").width;
+const deviceHeight = Platform.OS === "ios"
+    ? Dimensions.get("window").height
+    : require("react-native-extra-dimensions-android").get("REAL_WINDOW_HEIGHT");
+class GetNewTicket extends Component {
 
-class GetNewTicket extends PureComponent {
     state = {
         data: [],
         service: null,
         index: '',
         keyword: '',
         loading: true,
-        disabled: true,
-        isShowErr:false,
-        isVisible:false
+        disabled: true
     }
+
     componentDidMount() {
         this.getListHospital()
         // this.getRatting()
@@ -77,29 +81,22 @@ class GetNewTicket extends PureComponent {
         })
     }
     onPressService = (item, key, index) => {
-        if (item.hospital.defaultBookHospital && key == 1) {
-            this.setState({
-                isShowErr: true
-            })
-            return
-        }
         if (!item.hospital.defaultBookHospital && key == 3 || !item.hospital.defaultBookHospital) {
 
             return
         }
         this.setState({
-            service: key,
             isVisible: true,
+            service: key,
             index: item.hospital.id,
         }, () => {
-            this.props.dispatch({ type: constants.action.action_select_hospital_get_ticket, value: item })
         });
     }
     search = () => {
         this.getListHospital()
 
     }
-    onScanQr =  () => {
+    onScanQr = () => {
         this.setState({ isVisible: false }, () => {
             setTimeout(() => {
                 this.props.navigation.navigate("scanQRCode");
@@ -115,8 +112,7 @@ class GetNewTicket extends PureComponent {
             }, 500);
         });
     }
-    onCloseModal = () => this.setState({ isVisible: false, service: 0 })
-    onCloseErr = () => this.setState({ isShowErr: false })
+
     renderItem = (item, index) => {
         return (
             <View style={[styles.viewItem, index > 0 ? { borderTopWidth: 0 } : { borderTopWidth: 1 }]} key={index}>
@@ -142,9 +138,9 @@ class GetNewTicket extends PureComponent {
                     </View>
                     <Text style={{ color: '#00000050', marginTop: 5 }}>{item.hospital.address}</Text>
                     {item.hospital.defaultBookHospital ? <View style={{ flexDirection: 'row' }}>
-                        <TouchableOpacity onPress={this.onPressService.bind(this, item, 1, index)} style={[styles.btnService, { backgroundColor: '#0A9BE1' }]}><Text style={[styles.txService, { color: '#fff' }]}>Khám DV</Text></TouchableOpacity>
-                        <TouchableOpacity onPress={this.onPressService.bind(this, item, 2, index)} style={[styles.btnService, { width: 62 }, item.hospital.defaultBookHospital ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, { color: '#fff' }]}>BHYT</Text></TouchableOpacity>
-                        <TouchableOpacity onPress={this.onPressService.bind(this, item, 3, index)} style={[styles.btnService, { backgroundColor: '#0A9BE1' }]}><Text style={[styles.txService, { color: '#fff' }]}>BHYT CA</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={() => { this.actionSheetErr.show(); }} style={[styles.btnService, { backgroundColor: '#0A9BE1' }]}><Text style={[styles.txService, { color: '#fff' }]}>Khám DV</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={() => { this.actionSheetGetTicket.show(); }} style={[styles.btnService, { width: 62 }, item.hospital.defaultBookHospital ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, { color: '#fff' }]}>BHYT</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={() => { this.actionSheetGetTicket.show(); }} style={[styles.btnService, { backgroundColor: '#0A9BE1' }]}><Text style={[styles.txService, { color: '#fff' }]}>BHYT CA</Text></TouchableOpacity>
                     </View> :
                         <View style={{ flexDirection: 'row' }}>
                             <TouchableOpacity disabled={true} style={[styles.btnService, this.state.service && this.state.service == 1 && this.state.index == item.hospital.id ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, { color: '#6B6B6C' }]}>Khám DV</Text></TouchableOpacity>
@@ -156,11 +152,15 @@ class GetNewTicket extends PureComponent {
             </View>
         )
     }
+    // shouldComponentUpdate() {
+    //     if (this.state.isVisible || this.state.isShowErr) {
+    //         return false
+    //     }
+
+    //     return true
+    // }
     render() {
-        const deviceWidth = Dimensions.get("window").width;
-        const deviceHeight = Platform.OS === "ios"
-            ? Dimensions.get("window").height
-            : require("react-native-extra-dimensions-android").get("REAL_WINDOW_HEIGHT");
+
         return (
             <View style={{ flex: 1 }}>
                 <View style={styles.viewTx}>
@@ -183,74 +183,67 @@ class GetNewTicket extends PureComponent {
                         })}
                     </View>
 
-                ) : (
-
-
-                        <ScrollView refreshControl={
-                            <RefreshControl
-                                onRefresh={this.onRefesh}
-                                refreshing={this.state.loading}
-                            />
+                ) : (<ScrollView refreshControl={
+                    <RefreshControl
+                        onRefresh={this.onRefesh}
+                        refreshing={this.state.loading}
+                    />
+                }
+                    showsVerticalScrollIndicator={false}>
+                    {
+                        (this.state.data2 && this.state.data2.length > 0) &&
+                        <View>
+                            <Text style={styles.txHospital}>Bệnh viện đã triển khai</Text>
+                            {this.state.data2.map((item, index) => {
+                                return this.renderItem(item, index)
+                            })}
+                        </View>
+                    }
+                    {
+                        (this.state.data3 && this.state.data3.length > 0) &&
+                        <View>
+                            <Text style={styles.txHospital}>Bệnh viện sắp triển khai</Text>
+                            {this.state.data3.map((item, index) => {
+                                return this.renderItem(item, index)
+                            })}
+                        </View>
+                    }
+                </ScrollView>)}
+                <ActionSheet
+                    title={"Lấy số khám"}
+                    ref={o => this.actionSheetGetTicket = o}
+                    options={["Lấy số cho tôi", "Lấy số hộ", "Hủy"]}
+                    cancelButtonIndex={2}
+                    destructiveButtonIndex={2}
+                    onPress={(index) => {
+                        switch (index) {
+                            case 0:
+                                this.props.navigation.navigate("scanQRCode");
+                                break;
+                            case 1:
+                                this.props.navigation.navigate("login", {
+                                    nextScreen: { screen: "scanQRCode", param: {} }
+                                });
                         }
-                            showsVerticalScrollIndicator={false}
-                        >
-                            {
-                                (this.state.data2 && this.state.data2.length > 0) &&
-                                <View>
-                                    <Text style={styles.txHospital}>Bệnh viện đã triển khai</Text>
-                                    {this.state.data2.map((item, index) => {
-                                        return this.renderItem(item, index)
-                                    })}
-                                </View>
-                            }
-                            {
-                                (this.state.data3 && this.state.data3.length > 0) &&
-                                <View>
-                                    <Text style={styles.txHospital}>Bệnh viện sắp triển khai</Text>
-                                    {this.state.data3.map((item, index) => {
-                                        return this.renderItem(item, index)
-                                    })}
-                                </View>
-                            }
-                        </ScrollView>
-                    )}
-                <Modal
-                    onBackdropPress={this.onCloseModal}
-                    transparent={true} isVisible={this.state.isVisible}
-                    onRequestClose ={this.onCloseModal} 
-                    deviceWidth={deviceWidth}
-                    deviceHeight={deviceHeight}
-                >
-                    <View style={styles.viewModal}>
-                        <View style={styles.viewDialog}>
-                            <Text style={styles.txDialog}>Lấy số khám</Text>
-                            <View style={styles.viewBtnModal}>
-                                <TouchableOpacity style={styles.viewBtn} onPress={this.onScanQr} ><Text style={styles.txGetTicket} >Lấy số cho tôi</Text></TouchableOpacity>
-                                <TouchableOpacity style={styles.viewBtn2} onPress={this.onAssignTicket} ><Text style={styles.txAssignTicket}>Lấy số hộ</Text></TouchableOpacity>
-                            </View>
-                        </View>
-                    </View>
-                </Modal>
-                <Modal 
-                    onBackdropPress={this.onCloseErr}
-                    onRequestClose ={this.onCloseErr} 
-                    transparent={true} isVisible={this.state.isShowErr} >
-                    <View style={styles.viewModal}>
-                        <View style={styles.viewContents}>
-                            <Text style={styles.viewNoty}>Thông báo</Text>
-                            <Text style={styles.TxContents}>Đối tượng dịch vụ tại bệnh viện E không cần có số khám</Text>
-                            <View style={styles.viewLine}></View>
-                            <TouchableOpacity style={styles.btnDone} onPress={this.onCloseErr}><Text style={{ color: '#02c39a' }}>OK</Text></TouchableOpacity>
-                        </View>
-                    </View>
-                </Modal>
+                    }}
+                />
+                <ActionSheet
+                    title={"Thông báo"}
+                    message={"Đối tượng dịch vụ tại bệnh viện E không cần có số khám"}
+                    ref={o => this.actionSheetErr = o}
+                    options={["OK"]}
+                    cancelButtonIndex={0}
+                    destructiveButtonIndex={0}
+                    onPress={(index) => {
+                    }}
+                />
             </View>
         )
     }
 }
 const styles = StyleSheet.create({
-    txGetTicket:{ color: '#fff', fontWeight: 'bold' },
-    txAssignTicket:{ color: '#4A4A4A', fontWeight: 'bold' },
+    txGetTicket: { color: '#fff', fontWeight: 'bold' },
+    txAssignTicket: { color: '#4A4A4A', fontWeight: 'bold' },
     viewTx: { flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', width: '100%', borderTopWidth: 0.5, borderStyle: "solid", borderBottomWidth: 0.5, borderColor: 'rgba(0,0,0,0.26)' },
     viewItem: { padding: 15, borderBottomWidth: 1, borderColor: 'rgba(0,0,0,0.26)', flexDirection: 'row', borderTopWidth: 1 },
     btnService: { justifyContent: 'center', alignItems: 'center', marginRight: 5, borderRadius: 6, marginVertical: 10, paddingVertical: 5, paddingHorizontal: 12, },
@@ -261,16 +254,16 @@ const styles = StyleSheet.create({
     viewBtn: { width: 120, height: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 6, backgroundColor: '#0A9BE1', marginRight: 7 },
     txDialog: { marginBottom: 20, color: '#4a4a4a', fontWeight: 'bold', fontSize: 16 },
     viewBtn2: { width: 120, height: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 6, backgroundColor: 'rgba(0,0,0,0.06)', marginLeft: 7, borderWidth: 1, borderColor: '#979797' },
-    viewImg:{ justifyContent: 'center', alignItems: 'center', marginTop: -10 },
-    viewAvt:{ width: 60, height: 60, borderRadius: 30, borderColor: 'rgba(0,0,0,0.15)', borderWidth: 1 },
-    viewRating:{ width: 60, marginTop: 5 },
-    viewService:{ marginHorizontal: 20, flex: 1 },
-    txHospital:{ marginLeft: 12, marginTop: 20, fontSize: 15, marginBottom: 10, color: '#4a4a4a' },
-    viewContents:{ width: 328, height: 167, backgroundColor: '#fff', borderRadius: 6, alignItems: 'center' },
-    viewNoty:{ marginVertical: 10, fontWeight: 'bold', color: '#4a4a4a' },
-    TxContents:{ marginBottom: 20, color: '#4a4a4a', marginHorizontal: 20, textAlign: 'center', },
-    viewLine:{ width: '100%', height: 1, backgroundColor: '#d8d8d8', marginTop: 20 },
-    btnDone:{ alignItems: 'center', justifyContent: 'center', flex: 1 }
+    viewImg: { justifyContent: 'center', alignItems: 'center', marginTop: -10 },
+    viewAvt: { width: 60, height: 60, borderRadius: 30, borderColor: 'rgba(0,0,0,0.15)', borderWidth: 1 },
+    viewRating: { width: 60, marginTop: 5 },
+    viewService: { marginHorizontal: 20, flex: 1 },
+    txHospital: { marginLeft: 12, marginTop: 20, fontSize: 15, marginBottom: 10, color: '#4a4a4a' },
+    viewContents: { width: 328, height: 167, backgroundColor: '#fff', borderRadius: 6, alignItems: 'center' },
+    viewNoty: { marginVertical: 10, fontWeight: 'bold', color: '#4a4a4a' },
+    TxContents: { marginBottom: 20, color: '#4a4a4a', marginHorizontal: 20, textAlign: 'center', },
+    viewLine: { width: '100%', height: 1, backgroundColor: '#d8d8d8', marginTop: 20 },
+    btnDone: { alignItems: 'center', justifyContent: 'center', flex: 1 }
 })
 function mapStateToProps(state) {
     return {
