@@ -32,7 +32,19 @@ class Home extends Component {
       ads0: [],
       features: [
         {
-          icon: require("@images/new/home/ic_booking.png"),
+          icon: require("@images/new/home/ic_ticket_new.png"),
+          text: "Lấy số",
+          onPress: () => {
+            if (this.props.userApp.isLogin)
+              this.props.navigation.navigate("selectHealthFacilitiesScreen");
+            else
+              this.props.navigation.navigate("login", {
+                nextScreen: { screen: "selectHealthFacilitiesScreen", param: {} }
+              });
+          }
+        },
+        {
+          icon: require("@images/new/home/ic_booking_new.png"),
           text: "Đặt khám",
           onPress: () => {
             if (this.props.userApp.isLogin)
@@ -44,27 +56,15 @@ class Home extends Component {
           }
         },
         {
-          icon: require("@images/new/home/ic_ticket.png"),
-          text: "Lấy số nhanh",
-          onPress: () => {
-            if (this.props.userApp.isLogin)
-              this.props.navigation.navigate("selectHealthFacilitiesScreen");
-            else
-              this.props.navigation.navigate("login", {
-                nextScreen: { screen: "selectHealthFacilitiesScreen", param: {} }
-              });
-          }
-        },
-        {
-          icon: require("@images/new/home/ic_question.png"),
-          text: "Hỏi đáp",
+          icon: require("@images/new/home/ic_question_new.png"),
+          text: "Tư vấn",
           onPress: () => {
             this.props.navigation.navigate("listQuestion");
           }
         },
         {
-          icon: require("@images/new/home/ic_ehealth.png"),
-          text: "Y bạ điện tử",
+          icon: require("@images/new/home/ic_ehealth_new.png"),
+          text: "Y bạ",
           onPress: () => {
             if (this.props.userApp.isLogin)
               this.props.navigation.navigate("ehealth");
@@ -107,7 +107,7 @@ class Home extends Component {
   renderAds() {
     return (<View>
       <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-        <Text style={{ padding: 12, paddingLeft: 20, paddingBottom: 5, color: 'rgba(74,74,74,0.6)', fontWeight: '500', flex: 1 }}>Tin tức</Text>
+        <Text style={{ padding: 12, paddingLeft: 20, paddingBottom: 5, color: 'rgba(74,74,74,0.6)', fontWeight: '500', flex: 1 }}>Ưu đãi</Text>
         <ScaledImage source={require("@images/new/ic_more.png")} width={20} style={{ marginTop: 10, marginRight: 20 }} />
       </View>
       <FlatList
@@ -228,12 +228,12 @@ class Home extends Component {
   getItemWidth() {
     const width = DEVICE_WIDTH - 40;
     if (width >= 320)
-      return 100;
+      return 80;
     if (width > 300)
-      return 140;
+      return 120;
     if (width > 250)
-      return 100;
-    return width - 30;
+      return 80;
+    return width - 50;
   }
 
   render() {
@@ -244,14 +244,14 @@ class Home extends Component {
       <ActivityPanel
         hideStatusbar={true}
         hideActionbar={true}
-        style={[{ flex: 1 }, this.props.style]}
+        style={[{ flex: 1}, this.props.style]}
         hideBackButton={true}
       >
         <View style={{ flex: 1, position: 'relative' }}>
-          <ScaledImage source={require("@images/new/home/bg_home.png")} width={DEVICE_WIDTH} style={{ position: 'absolute', top: 0, right: 0, left: 0 }} />
-          <View style={{ height: 75, flexDirection: 'row', alignItems: 'center', marginRight: 10 }}>
+          <ScaledImage source={require("@images/new/home/bg_home_news.png")} width={DEVICE_WIDTH} style={{ position: 'absolute', top: 0, right: 0, left: 0 }} />
+          <View style={{ height: 75, flexDirection: 'row', alignItems: 'center', paddingHorizontal:10}}>
             <View style={{ flex: 1, alignItems: 'center', marginLeft: 45 }}>
-              <ScaledImage source={require("@images/logotext.png")} width={116} />
+              <ScaledImage source={require("@images/new/isofhcare.png")} width={116} />
             </View>
             <NotificationBadge />
           </View>
@@ -267,11 +267,11 @@ class Home extends Component {
             }}
           >
             <View style={{ padding: 21 }}>
-              <Card style={{ borderRadius: 6 }}>
+              <Card style={{ borderRadius: 6 ,marginTop:130}}>
 
                 {this.props.userApp.isLogin &&
-                  <View style={{ alignItems: 'center', flexDirection: 'row', borderBottomColor: '#f6d8ae', borderBottomWidth: 1, paddingVertical: 10, marginHorizontal: 20 }}>
-                    <ImageLoad
+                  <View style={{ alignItems: 'center', flexDirection: 'row', borderBottomColor: 'rgba(151, 151, 151, 0.29)', borderBottomWidth: 1, paddingVertical: 10, marginHorizontal: 20,justifyContent:'center' }}>
+              {/*   <ImageLoad
                       resizeMode="cover"
                       imageStyle={{ borderRadius: 20, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
                       borderRadius={20}
@@ -295,15 +295,15 @@ class Home extends Component {
                           />
                         );
                       }}
-                    />
-                    <Text style={{ marginLeft: 5, fontSize: 18, fontWeight: 'bold', color: "#7c817f" }} >Xin chào, <Text style={{ color: '#f5c462' }}>{((name) => {
+                    />  */}
+                    <Text style={{ marginLeft: 5, fontSize: 18, fontWeight: 'bold', color: "#7c817f" }} >Xin chào, <Text style={{ color: 'rgb(255,138,21)' }}>{((name) => {
                       if (!name) return "";
                       let x = name.trim().split(" ");
                       name = (x[x.length - 1]).toLowerCase();
                       if (name[0])
                         return name.charAt(0).toUpperCase() + name.slice(1);
                       return name;
-                    }).call(this, this.props.userApp.currentUser.name)}</Text></Text>
+                    }).call(this, this.props.userApp.currentUser.name) + '!'}</Text></Text>
                   </View>
                 }
 
