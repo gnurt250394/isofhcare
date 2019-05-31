@@ -32,7 +32,7 @@ class Home extends Component {
       ads0: [],
       features: [
         {
-          icon: require("@images/new/home/ic_ticket_new.png"),
+          icon: require("@images/new/home/ic_ticket_news.png"),
           text: "Lấy số",
           onPress: () => {
             if (this.props.userApp.isLogin)
@@ -44,7 +44,7 @@ class Home extends Component {
           }
         },
         {
-          icon: require("@images/new/home/ic_booking_new.png"),
+          icon: require("@images/new/home/ic_booking_news.png"),
           text: "Đặt khám",
           onPress: () => {
             if (this.props.userApp.isLogin)
@@ -56,14 +56,14 @@ class Home extends Component {
           }
         },
         {
-          icon: require("@images/new/home/ic_question_new.png"),
+          icon: require("@images/new/home/ic_question_news.png"),
           text: "Tư vấn",
           onPress: () => {
             this.props.navigation.navigate("listQuestion");
           }
         },
         {
-          icon: require("@images/new/home/ic_ehealth_new.png"),
+          icon: require("@images/new/home/ic_ehealth_news.png"),
           text: "Y bạ",
           onPress: () => {
             if (this.props.userApp.isLogin)
@@ -248,7 +248,7 @@ class Home extends Component {
         hideBackButton={true}
       >
         <View style={{ flex: 1, position: 'relative' }}>
-          <ScaledImage source={require("@images/new/home/bg_home_news.png")} width={DEVICE_WIDTH} style={{ position: 'absolute', top: 0, right: 0, left: 0 }} />
+          <ScaledImage source={require("@images/new/home/bg_home_new.png")} width={DEVICE_WIDTH} style={{ position: 'absolute', top: 72, right: 0, left: 0 }} />
           <View style={{ height: 75, flexDirection: 'row', alignItems: 'center', paddingHorizontal:10}}>
             <View style={{ flex: 1, alignItems: 'center', marginLeft: 45 }}>
               <ScaledImage source={require("@images/new/isofhcare.png")} width={116} />
