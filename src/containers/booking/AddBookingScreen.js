@@ -29,7 +29,7 @@ class AddBookingScreen extends Component {
         let minDate = new Date();
         minDate.setDate(minDate.getDate() + 1);
 
-        let bookingDate = minDate;
+        let bookingDate =  minDate;
         let date = minDate.format("thu, dd tháng MM").replaceAll(" 0", " ");
 
         this.state = {
@@ -51,7 +51,7 @@ class AddBookingScreen extends Component {
     }
     componentDidMount() {
         dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_SPECIALIST, (s, e) => {
-console.log(s,'specialist');
+            console.log(s, 'specialist');
             if (s) {
                 this.setState({ specialist: s })
             } else {
@@ -183,10 +183,16 @@ console.log(s,'specialist');
             this.setState({ profileError: "Hồ sơ không được bỏ trống" })
             error = true;
         }
-        if (this.state.specialist) {
+        if (this.state.serviceType) {
+            this.setState({ serviceTypeError: "" })
+        } else {
+            this.setState({ serviceTypeError: "Yêu cầu không được bỏ trống" })
+            error = true;
+        }
+        if (this.state.service) {
             this.setState({ serviceError: "" })
         } else {
-            this.setState({ serviceError: "Yêu cầu không được bỏ trống" })
+            this.setState({ serviceError: "Dịch vụ không được bỏ trống" })
             error = true;
         }
         if (this.state.bookingDate) {
@@ -321,8 +327,8 @@ console.log(s,'specialist');
                         <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
                     </TouchableOpacity>
                     {
-                        this.state.serviceError ?
-                            <Text style={[styles.errorStyle]}>{this.state.serviceError}</Text> : null
+                        this.state.serviceTypeError ?
+                            <Text style={[styles.errorStyle]}>{this.state.serviceTypeError}</Text> : null
                     }
                     <View style={styles.border}></View>
                     <TouchableOpacity style={styles.mucdichkham} onPress={() => {
@@ -393,27 +399,8 @@ console.log(s,'specialist');
                         <Text style={styles.mdk}>Chọn giờ khám</Text>
                     </TouchableOpacity>
                     <View style={[styles.mucdichkham, { paddingHorizontal: 20 }]}>
-                        <Text style={{fontSize: 14, color: '#8e8e93' }}>Gợi ý: Chọn những giờ màu xanh sẽ giúp bạn được phục vụ nhanh hơn</Text>
+                        <Text style={{ fontSize: 14, color: '#8e8e93' }}>Gợi ý: Chọn những giờ màu xanh sẽ giúp bạn được phục vụ nhanh hơn</Text>
                     </View>
-
-                    {
-                        this.state.serviceError ?
-                            <Text style={[styles.errorStyle]}>{this.state.serviceError}</Text> : null
-                    }
-
-                    {/*  <TouchableOpacity style={styles.mucdichkham} onPress={() => {
-                        connectionUtils.isConnected().then(s => {
-                            this.props.navigation.navigate("selectSpecialist", { onSelected: this.selectSpecialist.bind(this) });
-                        }).catch(e => {
-                            snackbar.show("Không có kết nối mạng", "danger");
-                        });
-                    }}>
-                        <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_specialist.png")} />
-                        <Text style={styles.mdk}>Chuyên khoa</Text>
-                        <Text numberOfLines={1} style={styles.ktq}>{this.state.specialist ? this.state.specialist.name : "Chọn chuyên khoa"}</Text>
-                        <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
-                </TouchableOpacity> */}
-
                 </View>
                 <Text style={styles.lienlac}>Liên lạc với tôi qua</Text>
 
