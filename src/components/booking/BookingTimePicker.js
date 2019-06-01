@@ -108,7 +108,7 @@ class SelectTimeScreen extends Component {
 
     componentWillReceiveProps(props) {
         if (this.state.schedules != props.schedules) {
-            this.setState({ schedules: props.schedules }, () => {
+            this.setState({ schedules: props.schedules, schedule: null }, () => {
                 let listTime = [];
                 if (props.schedules) {
                     let data = props.schedules || [];
@@ -252,23 +252,21 @@ class SelectTimeScreen extends Component {
 
     render() {
         if (this.state.listTime && this.state.listTime.length > 0)
-            return <View style={styles.chonGioKham}>
-                <View style={{ position: 'relative', marginTop: 20, height: 100, paddingTop: 40 }}>
-                    {
-                        this.state.listTime.map((item, index) =>
-                            this.renderTime(item, index))
-                    }
-                    {this.state.schedule &&
-                        <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', left: this.state.schedule.marginLeft - 1, top: 10 }}>
-                            <ScaleImage height={30} source={this.getIcon(this.state.schedule)} />
-                            <Text style={{ fontSize: 11, marginLeft: 2, fontWeight: 'bold' }}>{this.state.schedule.label}</Text>
-                        </View>
-                    }
-                    {
-                        this.state.listTime.map((item, index) =>
-                            this.renderLabel(item, index))
-                    }
-                </View>
+            return <View style={{ position: 'relative', marginTop: 20, height: 100, paddingTop: 40, marginLeft: 20 }}>
+                {
+                    this.state.listTime.map((item, index) =>
+                        this.renderTime(item, index))
+                }
+                {this.state.schedule &&
+                    <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', left: this.state.schedule.marginLeft - 1, top: 10 }}>
+                        <ScaleImage height={30} source={this.getIcon(this.state.schedule)} />
+                        <Text style={{ fontSize: 11, marginLeft: 2, fontWeight: 'bold' }}>{this.state.schedule.label}</Text>
+                    </View>
+                }
+                {
+                    this.state.listTime.map((item, index) =>
+                        this.renderLabel(item, index))
+                }
             </View>
         else {
             return (
@@ -380,7 +378,7 @@ const styles = StyleSheet.create({
     chonGioKham: {
         flex: 1,
         backgroundColor: '#fff',
-        padding: 20
+        justifyContent: 'center'
     },
     button: {
         borderRadius: 6,
