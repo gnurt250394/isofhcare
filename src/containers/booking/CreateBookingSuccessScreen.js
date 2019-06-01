@@ -56,7 +56,7 @@ class CreateBookingSuccessScreen extends Component {
                             </View>
                             <View style={styles.row}>
                                 <Text style={styles.label}>Thời gian:</Text>
-                                <Text style={styles.text}>{bookingTime.format("HH:mm") + " " + (bookingTime.format("HH") < 12 ? "sáng" : "chiều") + " - " + bookingTime.format("thu, dd/MM/yyyy")}</Text>
+                                <Text style={styles.text}>{bookingTime.format("HH:mm") + " " + (bookingTime.format("HH") < 12 ? "AM" : "PM") + " - " + bookingTime.format("thu, dd/MM/yyyy")}</Text>
                             </View>
                             <View style={styles.row}>
                                 <Text style={styles.label}>Hình thức thanh toán:</Text>
