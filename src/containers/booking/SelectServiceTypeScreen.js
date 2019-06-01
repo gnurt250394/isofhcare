@@ -6,6 +6,8 @@ import serviceTypeProvider from '@data-access/service-type-provider';
 import constants from '@resources/strings';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import snackbar from '@utils/snackbar-utils';
+import dataCacheProvider from '@data-access/datacache-provider';
+import stringUtils from 'mainam-react-native-string-utils';
 
 class SelectServiceTypeScreen extends Component {
     constructor(props) {
@@ -38,6 +40,13 @@ class SelectServiceTypeScreen extends Component {
                     refreshing: false
                 }, () => {
                     if (s) {
+                        try {
+                            let _default = s.find(item => item.status == 1);
+                            dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_SERVICE_TYPE, _default);
+                        } catch (error) {
+
+                        }
+
                         this.setState({
                             listServiceType: s
                         }, () => {
@@ -66,7 +75,7 @@ class SelectServiceTypeScreen extends Component {
     onSearch() {
         var s = this.state.searchValue;
         var listSearch = this.state.listServiceType.filter(function (item) {
-            return item.deleted == 0 && (item == null || item.name && item.name.toLowerCase().indexOf(s.toLowerCase()) != -1);
+            return item.deleted == 0 && (item == null || item.name.trim().toLowerCase().unsignText().indexOf(s.trim().toLowerCase().unsignText()) != -1);
         });
         this.setState({ listServiceTypeSearch: listSearch });
     }

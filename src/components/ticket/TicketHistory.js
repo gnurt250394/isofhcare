@@ -27,7 +27,6 @@ class TicketHistory extends Component {
         if (obj.length < 7)
             throw "";
         let info = {};
-        console.log(obj);
         info.qrCode = data;
         info.id = obj[0];
         info.bod = obj[2];
@@ -39,7 +38,7 @@ class TicketHistory extends Component {
         bytearr = this.toByteArray(obj[4]);
         info.address = this.fromUTF8Array(bytearr) + "";
 
-        console.log(info);
+
         return info;
     }
     fromUTF8Array(data) { // array of bytes
@@ -138,7 +137,7 @@ class TicketHistory extends Component {
                         </View>
                         {numberHospital.number ?
                             <TouchableOpacity style={{ borderRadius: 12, backgroundColor: '#0A9BE1', paddingVertical: 3, paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center' }}>
-                                <Text style={{ color: '#fff', fontSize: 14 }}>Số khám: {numberHospital.number}</Text>
+                                <Text style={{ color: '#fff', fontSize: 14 }}>Số tiếp đón: {numberHospital.number}</Text>
                             </TouchableOpacity> : null
                         }
                     </View>

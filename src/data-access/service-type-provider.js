@@ -20,8 +20,9 @@ module.exports = {
             else {
                 client.requestApi("get", constants.api.serviceType.get_all, {}, (s, e) => {
                     if (s && s.code == 0 && s.data && s.data.serviceType) {
-                        datacacheProvider.save("", constants.key.storage.DATA_SERVICE_TYPE, s.data.serviceType);
-                        resolve(s.data.serviceType);
+                        let data = s.data.serviceType.filter(item => !item.deleted);
+                        datacacheProvider.save("", constants.key.storage.DATA_SERVICE_TYPE, data);
+                        resolve(data);
                     }
                     reject(e);
                 });

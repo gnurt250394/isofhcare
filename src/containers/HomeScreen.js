@@ -23,7 +23,6 @@ import ActivityPanel from "@components/ActivityPanel";
 import ScaledImage from "../../node_modules/mainam-react-native-scaleimage";
 import snackbar from "@utils/snackbar-utils";
 import { IndicatorViewPager } from "mainam-react-native-viewpager";
-import UserInactivity from "react-native-user-inactivity";
 import firebase from 'react-native-firebase';
 class HomeScreen extends Component {
   constructor(props) {

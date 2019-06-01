@@ -19,6 +19,7 @@ import LocationSwitch from 'react-native-location-switch';
 class SelectHospitalScreen extends Component {
     constructor(props) {
         super(props);
+        let serviceType = this.props.navigation.state.params.serviceType;
 
         this.state = {
             data: [],
@@ -29,6 +30,7 @@ class SelectHospitalScreen extends Component {
             loadMore: false,
             finish: false,
             loading: false,
+            serviceType
         }
     }
     onRefresh() {
@@ -168,19 +170,19 @@ class SelectHospitalScreen extends Component {
             });
     }
     componentDidMount() {
-        locationProvider.getCurrentLocationHasSave().then(s => {
-            if (s && s.latitude && s.longitude) {
-                s.latitudeDelta = 0.1;
-                s.longitudeDelta = 0.1;
-                this.setState({
-                    region: s,
-                }, () => {
-                    this.onRefresh();
-                });
-            }
-        }).catch(e => {
+        // locationProvider.getCurrentLocationHasSave().then(s => {
+        //     if (s && s.latitude && s.longitude) {
+        //         s.latitudeDelta = 0.1;
+        //         s.longitudeDelta = 0.1;
+        //         this.setState({
+        //             region: s,
+        //         }, () => {
+        //             this.onRefresh();
+        //         });
+        //     }
+        // }).catch(e => {
             this.onRefresh();
-        });
+        // });
     }
     onLoadMore() {
         if (!this.state.finish && !this.state.loading)
@@ -206,10 +208,10 @@ class SelectHospitalScreen extends Component {
         }, () => {
             let promise = null;
             if (this.state.region) {
-                promise = hospitalProvider.getByLocation(page, size, this.state.region.latitude, this.state.region.longitude, stringQuyery);
+                promise = hospitalProvider.getByLocation(page, size, this.state.region.latitude, this.state.region.longitude, stringQuyery, this.state.serviceType.id);
             }
             else {
-                promise = hospitalProvider.getBySearch(page, size, stringQuyery);
+                promise = hospitalProvider.getByLocation(page, size, 190, 190, stringQuyery, this.state.serviceType.id);
             };
             promise.then(s => {
                 this.setState({

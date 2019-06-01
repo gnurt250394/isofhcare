@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { View, FlatList, TouchableOpacity, Text, TextInput } from 'react-native'
+import { View, FlatList, TouchableOpacity, Text, TextInput, StyleSheet } from 'react-native'
 import { connect } from 'react-redux';
 import ActivityPanel from '@components/ActivityPanel'
 import serviceProvider from '@data-access/service-provider';
@@ -11,13 +11,12 @@ class SelectServiceScreen extends Component {
     constructor(props) {
         super(props);
         let hospital = this.props.navigation.state.params.hospital;
-        let specialist = this.props.navigation.state.params.specialist;
-        // let serviceType = this.props.navigation.state.params.serviceType;
+        let serviceType = this.props.navigation.state.params.serviceType;
         if (!hospital) {
             this.props.navigation.pop();
             snackbar.show("Vui lòng chọn địa điểm khám", "danger");
         }
-        if (!specialist) {
+        if (!serviceType) {
             this.props.navigation.pop();
             snackbar.show("Vui lòng chọn yêu cầu", "danger");
         }
@@ -27,8 +26,9 @@ class SelectServiceScreen extends Component {
             searchValue: "",
             refreshing: false,
             hospital: hospital || { hospital: {} },
-            specialist,
-            // serviceType
+            serviceType,
+            listSpecialist: [],
+            specialists: []
         }
     }
     componentDidMount() {
@@ -37,15 +37,15 @@ class SelectServiceScreen extends Component {
     selectService(service) {
         let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
         if (callback) {
-            callback(service.service);
+            callback(service.service, service.specialist && service.specialist.length > 0 ? service.specialist[0] : {});
             this.props.navigation.pop();
         }
     }
 
 
     onRefresh = () => {
-        let serviceType = ''
-        let specialist = this.state.specialist ? this.state.specialist.id : ''
+        let serviceType = this.state.serviceType ? this.state.serviceType.id : ''
+        let specialist = "";//this.state.specialist ? this.state.specialist.id : ''
         this.setState({ refreshing: true }, () => {
             serviceProvider.getAll(this.state.hospital.hospital.id, specialist, serviceType).then(s => {
                 this.setState({
@@ -54,8 +54,20 @@ class SelectServiceScreen extends Component {
                     if (s) {
                         switch (s.code) {
                             case 0:
+                                let specialists = s.data.services.map(item => item.specialist);
+                                specialists = [].concat.apply([], specialists);
+                                let a = [];
+
+                                specialists.forEach(item => {
+                                    console.log(a);
+                                    let x = a.find(item2 => item2.id == item.id);
+                                    if (!x)
+                                        a.push(item);
+                                });
+
                                 this.setState({
-                                    listService: s.data.services
+                                    listService: s.data.services,
+                                    specialists: a || []
                                 }, () => {
                                     this.onSearch();
                                 });
@@ -82,7 +94,16 @@ class SelectServiceScreen extends Component {
     }
     onSearch() {
         var s = this.state.searchValue;
-        var listSearch = this.state.listService.filter(function (item) {
+        var listSearch = this.state.listService.filter(item => {
+            let contain = true;
+            // console.log(this.state.specialists);
+            if (this.state.specialists && this.state.specialists.length && this.state.listSelected && this.state.listSelected.length) {
+                if (!item.specialist || item.specialist.length == 0)
+                    return false;
+                contain = item.specialist.find(item2 => this.state.listSelected.includes(item2.id));
+            }
+            if (!contain)
+                return false;
             return s == null || item.service.name && item.service.name.trim().toLowerCase().unsignText().indexOf(s.trim().toLowerCase().unsignText()) != -1;
         });
         this.setState({ listServiceSearch: listSearch });
@@ -99,9 +120,25 @@ class SelectServiceScreen extends Component {
         return (
             <ActivityPanel
                 backButton={<TouchableOpacity style={{ paddingLeft: 20 }} onPress={() => this.props.navigation.pop()}><Text>Hủy</Text></TouchableOpacity>}
-                titleStyle={{ marginRight: 0 }} title={"Chọn dịch vụ"}
-                isLoading={this.state.isLoading} menuButton={this.renderSearchButton()} showFullScreen={true}
+                title={"Dịch vụ"}
+                isLoading={this.state.isLoading}
+                menuButton={<View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    {this.renderSearchButton()}
+                    <TouchableOpacity style={styles.menu} onPress={() =>
+                        this.props.navigation.navigate('filter', {
+                            listSelected: this.state.listSpecialist,
+                            specialists: this.state.specialists,
+                            onSelected: items => {
+                                this.setState({ listSelected: items }, () => {
+                                    this.onSearch();
+                                })
+                            }
+                        })
+                    }><ScaleImage style={styles.img} height={20} source={require("@images/new/booking/ic_filter.png")} /></TouchableOpacity></View>}
+                titleStyle={{ marginLeft: 80 }}
+                showFullScreen={true}
             >
+
                 {
                     this.state.showSearch ?
                         <View style={{
@@ -122,7 +159,6 @@ class SelectServiceScreen extends Component {
                         : null
 
                 }
-
                 <FlatList
                     style={{ flex: 1, backgroundColor: '#FFF' }}
                     refreshing={this.state.refreshing}
@@ -142,8 +178,14 @@ class SelectServiceScreen extends Component {
                     renderItem={({ item }) =>
                         <TouchableOpacity onPress={this.selectService.bind(this, item)}>
                             <View style={{ marginBottom: 2, backgroundColor: '#FFF', padding: 20, flexDirection: 'column', borderBottomColor: '#00000011', borderBottomWidth: 0.7 }}>
-                                <Text style={{ fontWeight: 'bold' }}>
-                                    {item.service.name}
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <Text style={{ fontWeight: 'bold', flex: 1 }}>
+                                        {item.service.name}
+                                    </Text>
+                                    <Text>{item.service.price.formatPrice() + 'đ'}</Text>
+                                </View>
+                                <Text numberOfLines={2}>
+                                    {item.service.describe}
                                 </Text>
                             </View>
                         </TouchableOpacity>
@@ -155,6 +197,13 @@ class SelectServiceScreen extends Component {
         )
     }
 }
+
+const styles = StyleSheet.create({
+    menu: {
+        padding: 5,
+        paddingRight: 15
+    },
+});
 function mapStateToProps(state) {
     return {
         userApp: state.userApp,

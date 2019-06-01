@@ -52,6 +52,7 @@ import SelectHospitalByLocationScreen from "@containers/booking/SelectHospitalBy
 import SelectTimeScreen from "@containers/booking/SelectTimeScreen";
 import SelectServiceScreen from "@containers/booking/SelectServiceScreen";
 import SelectServiceTypeScreen from "@containers/booking/SelectServiceTypeScreen";
+import FilterScreen from "@containers/booking/FilterScreen";
 import SelectSpecialistScreen from "@containers/booking/SelectSpecialistScreen";
 import ConfirmBookingScreen from "@containers/booking/ConfirmBookingScreen";
 import CreateBookingSuccessScreen from "@containers/booking/CreateBookingSuccessScreen";
@@ -134,6 +135,7 @@ const RootNavigator = createStackNavigator(
     paymentBookingError: { screen: PaymentBookingErrorScreen },
     detailsHistory: { screen: DetailsHistoryScreen },
     paymentVNPay: { screen: PaymentWithVNPayScreen },
+    filter :{screen : FilterScreen},
     //---------------------------------
     createProfile: { screen: CreateProfileScreen },
     selectProfile: { screen: SelectProfileScreen },
@@ -152,21 +154,21 @@ const RootNavigator = createStackNavigator(
   },
   {
     headerMode: "none",
-    cardStyle: {
-      backgroundColor: 'transparent', opacity: 1,
-    },
-    transitionConfig: () => ({
-      containerStyle: {
-        backgroundColor: 'transparent',
-      },
-    }),
+    // cardStyle: {
+    //   backgroundColor: 'transparent', opacity: 1,
+    // },
+    // transitionConfig: () => ({
+    //   containerStyle: {
+    //     backgroundColor: 'transparent',
+    //   },
+    // }),
     header: null,
     gesturesEnabled: false,
     navigationOptions: {
       header: null,
       gesturesEnabled: false
     },
-    mode: Platform.OS == "ios" ? "modal" : "card"
+    // mode: Platform.OS == "ios" ? "modal" : "card"
   }
 )
 

@@ -12,13 +12,13 @@ class CreateBookingSuccessScreen extends Component {
         super(props)
     }
     state = {
-        isVisible:false
+        isVisible: false
     }
     onQrClick = () => {
         this.setState({
-          isVisible:true,
+            isVisible: true,
         })
-          }
+    }
     render() {
         let booking = this.props.navigation.state.params.booking;
         if (!booking || !booking.profile || !booking.hospital || !booking.hospital.hospital || !booking.book) {
@@ -56,7 +56,7 @@ class CreateBookingSuccessScreen extends Component {
                             </View>
                             <View style={styles.row}>
                                 <Text style={styles.label}>Thời gian:</Text>
-                                <Text style={styles.text}>{bookingTime.format("HH:mm tt - thu, dd/MM/yyyy")}</Text>
+                                <Text style={styles.text}>{bookingTime.format("HH:mm") + " " + (bookingTime.format("HH") < 12 ? "sáng" : "chiều") + " - " + bookingTime.format("thu, dd/MM/yyyy")}</Text>
                             </View>
                             <View style={styles.row}>
                                 <Text style={styles.label}>Hình thức thanh toán:</Text>
@@ -64,44 +64,44 @@ class CreateBookingSuccessScreen extends Component {
                             </View>
                         </View>
                         <View style={styles.view2}>
-                        <View style={styles.col}>
-                            <Text style={styles.col1}>Mã code:</Text>
-                            <TouchableOpacity onPress={this.onQrClick} style={{ alignItems: 'center', marginTop: 10 }}>
-                                <QRCode
-                                    style={{ alignSelf: 'center', backgroundColor: '#000' }}
-                                    value={booking.book.codeBooking}
-                                    size={100}
-                                    fgColor='white' />
-                            </TouchableOpacity>
-                            <Text style={{textAlign:'center',color:'#4a4a4a',marginVertical:5}}>Mã đặt khám: {booking.book.codeBooking}</Text>
+                            <View style={styles.col}>
+                                <Text style={styles.col1}>Mã code:</Text>
+                                <TouchableOpacity onPress={this.onQrClick} style={{ alignItems: 'center', marginTop: 10 }}>
+                                    <QRCode
+                                        style={{ alignSelf: 'center', backgroundColor: '#000' }}
+                                        value={booking.book.codeBooking}
+                                        size={100}
+                                        fgColor='white' />
+                                </TouchableOpacity>
+                                <Text style={{ textAlign: 'center', color: '#4a4a4a', marginVertical: 5 }}>Mã đặt khám: {booking.book.codeBooking}</Text>
 
+                            </View>
                         </View>
-                    </View>
                         <View style={styles.view1}>
                             <Text style={styles.text2}>Lịch đặt khám của bạn đã được gửi đi. Vui lòng đến trước hẹn 15 phút để thực hiện các thủ tục khác.</Text>
                         </View>
-                     
+
                     </ScrollView>
                     <TouchableOpacity style={styles.btn}><Text style={styles.btntext} onPress={() => {
                         this.props.navigation.pop();
                     }}>Về trang chủ</Text></TouchableOpacity>
                 </View>
                 <Modal
-                isVisible={this.state.isVisible}
-                onBackdropPress={() => this.setState({ isVisible: false })}
-                backdropOpacity={0.5}
-                animationInTiming={500}
-                animationOutTiming={500}
-                style={{flex:1,alignItems: 'center',justifyContent:'center'}}
-                backdropTransitionInTiming={1000}
-                backdropTransitionOutTiming={1000}
-               >
-               <QRCode
-               value={booking.book.codeBooking}
-               size={250}
-              
-               fgColor='white' />
-            </Modal>
+                    isVisible={this.state.isVisible}
+                    onBackdropPress={() => this.setState({ isVisible: false })}
+                    backdropOpacity={0.5}
+                    animationInTiming={500}
+                    animationOutTiming={500}
+                    style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+                    backdropTransitionInTiming={1000}
+                    backdropTransitionOutTiming={1000}
+                >
+                    <QRCode
+                        value={booking.book.codeBooking}
+                        size={250}
+
+                        fgColor='white' />
+                </Modal>
             </ActivityPanel>
         );
     }
