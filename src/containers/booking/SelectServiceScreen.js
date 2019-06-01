@@ -125,7 +125,7 @@ class SelectServiceScreen extends Component {
                 menuButton={<View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     {this.renderSearchButton()}
                     <TouchableOpacity style={styles.menu} onPress={() =>
-                        this.props.navigation.navigate('filter', {
+                        this.props.navigation.navigate('filterSpecialist', {
                             listSelected: this.state.listSpecialist,
                             specialists: this.state.specialists,
                             onSelected: items => {
