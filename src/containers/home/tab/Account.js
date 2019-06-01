@@ -58,7 +58,10 @@ class Account extends Component {
                       .then(s => {
                         this.showLoading(false);
                         if (s.code == 0) {
-                          this.props.dispatch(redux.userLogin(s.data.user));
+                          var user = s.data.user;
+                          user.bookingNumberHospital = s.data.bookingNumberHospital;
+                          user.bookingStatus = s.data.bookingStatus;
+                          this.props.dispatch(redux.userLogin(user));
                         } else {
                           snackbar.show(
                             "Cập nhật ảnh đại diện không thành công",
@@ -185,40 +188,40 @@ class Account extends Component {
   }
   render() {
     return (
-      <ActivityPanel hideActionbar ={true} >
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={{
-          flex: 1,
-          paddingTop: 0,
-          paddingHorizontal: 20,
-          paddingTop: 20
-        }}
-      >
-        {this.props.userApp.isLogin
-          ? this.renderCurrentUserInfo()
-          : this.renderViewUserNotLogin()}
+      <ActivityPanel hideActionbar={true} >
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={{
+            flex: 1,
+            paddingTop: 0,
+            paddingHorizontal: 20,
+            paddingTop: 20
+          }}
+        >
+          {this.props.userApp.isLogin
+            ? this.renderCurrentUserInfo()
+            : this.renderViewUserNotLogin()}
 
-        {this.props.userApp.isLogin ? (
-          <View>
-            <TouchableOpacity
-              style={[styles.itemMenu, { marginTop: 40 }]}
-              onPress={() => {
-                this.props.navigation.navigate("emptyScreen", {
-                  title: "Kích hoạt ví"
-                });
-              }}
-            >
-              <Text style={[styles.itemText, { fontWeight: "bold" }]}>
-                Kích hoạt ví IsofhCare
+          {this.props.userApp.isLogin ? (
+            <View>
+              <TouchableOpacity
+                style={[styles.itemMenu, { marginTop: 40 }]}
+                onPress={() => {
+                  this.props.navigation.navigate("emptyScreen", {
+                    title: "Kích hoạt ví"
+                  });
+                }}
+              >
+                <Text style={[styles.itemText, { fontWeight: "bold" }]}>
+                  Kích hoạt ví IsofhCare
               </Text>
-              <ScaledImage
-                source={require("@images/new/ic_menu_wallet.png")}
-                width={24}
-                height={24}
-              />
-            </TouchableOpacity>
-            {/* <TouchableOpacity
+                <ScaledImage
+                  source={require("@images/new/ic_menu_wallet.png")}
+                  width={24}
+                  height={24}
+                />
+              </TouchableOpacity>
+              {/* <TouchableOpacity
               style={[styles.itemMenu]}
               onPress={() => {
                 this.props.navigation.navigate("ehealth");
@@ -231,69 +234,69 @@ class Account extends Component {
                 height={24}
               />
             </TouchableOpacity> */}
-            <TouchableOpacity
-              style={[styles.itemMenu]}
-              onPress={() => {
-                this.props.navigation.navigate("PatientHistoryScreen", {
-                  title: "Lịch khám"
-                });
-              }}
-            >
-              <Text style={styles.itemText}>Lịch khám</Text>
-              <ScaledImage
-                source={require("@images/new/ic_menu_list_booking.png")}
-                width={24}
-                height={24}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.itemMenu,
-                this.state.showSetting
-                  ? { backgroundColor: "rgb(230,249,245)" }
-                  : {}
-              ]}
-              onPress={() => {
-                this.setState({ showSetting: !this.state.showSetting });
-              }}
-            >
-              <Text
+              <TouchableOpacity
+                style={[styles.itemMenu]}
+                onPress={() => {
+                  this.props.navigation.navigate("PatientHistoryScreen", {
+                    title: "Lịch khám"
+                  });
+                }}
+              >
+                <Text style={styles.itemText}>Lịch khám</Text>
+                <ScaledImage
+                  source={require("@images/new/ic_menu_list_booking.png")}
+                  width={24}
+                  height={24}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
                 style={[
-                  styles.itemText,
+                  styles.itemMenu,
                   this.state.showSetting
-                    ? { color: "#000", fontWeight: "bold" }
+                    ? { backgroundColor: "rgb(230,249,245)" }
                     : {}
                 ]}
+                onPress={() => {
+                  this.setState({ showSetting: !this.state.showSetting });
+                }}
               >
-                Cài đặt
+                <Text
+                  style={[
+                    styles.itemText,
+                    this.state.showSetting
+                      ? { color: "#000", fontWeight: "bold" }
+                      : {}
+                  ]}
+                >
+                  Cài đặt
               </Text>
-              <ScaledImage
-                source={require("@images/new/ic_menu_setting.png")}
-                width={24}
-                height={24}
-              />
-            </TouchableOpacity>
-          </View>
-        ) : null}
-        {this.state.showSetting && (
-          <View>
-            <TouchableOpacity
-              style={[styles.itemMenu, { paddingLeft: 40 }]}
-              onPress={() => {
-                this.props.navigation.navigate("changePass");
-              }}
-            >
-              <Text style={styles.itemText}>Đổi mật khẩu</Text>
-              <ScaledImage
-                source={require("@images/new/ic_menu_change_password.png")}
-                width={24}
-                height={24}
-              />
-            </TouchableOpacity>
-            {
-              /* login with finger*/
-            }
-            {/* <TouchableOpacity
+                <ScaledImage
+                  source={require("@images/new/ic_menu_setting.png")}
+                  width={24}
+                  height={24}
+                />
+              </TouchableOpacity>
+            </View>
+          ) : null}
+          {this.state.showSetting && (
+            <View>
+              <TouchableOpacity
+                style={[styles.itemMenu, { paddingLeft: 40 }]}
+                onPress={() => {
+                  this.props.navigation.navigate("changePass");
+                }}
+              >
+                <Text style={styles.itemText}>Đổi mật khẩu</Text>
+                <ScaledImage
+                  source={require("@images/new/ic_menu_change_password.png")}
+                  width={24}
+                  height={24}
+                />
+              </TouchableOpacity>
+              {
+                /* login with finger*/
+              }
+              {/* <TouchableOpacity
               style={[styles.itemMenu, { paddingLeft: 40 }]}
               onPress={this.onFingerClick}
             >
@@ -316,89 +319,89 @@ class Account extends Component {
                   style={styles.popup}
                 />
               </Modal> */}
-          </View>
-        )}
-        {/* {
+            </View>
+          )}
+          {/* {
           this.state.showSetting && <TouchableOpacity style={[styles.itemMenu, { paddingLeft: 40 }]}>
             <Text style={styles.itemText}>Đăng nhập vân tay</Text>
             <ScaledImage source={require("@images/new/ic_menu_fingerprint.png")} width={24} height={24} />
           </TouchableOpacity>
         } */}
-        <TouchableOpacity
-          style={[styles.itemMenu]}
-          onPress={() => {
-            this.props.navigation.navigate("about");
-          }}
-        >
-          <Text style={styles.itemText}>Về iSofH</Text>
-          <ScaledImage
-            source={require("@images/new/ic_menu_aboutus.png")}
-            width={24}
-            height={24}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.itemMenu]}
-          onPress={() => {
-            Linking.openURL(
-              "mailto:support@isofhcare.vn?subject=Hỗ trợ sử dụng app ISofhCare&body="
-            );
-          }}
-        >
-          <Text style={styles.itemText}>Hỗ trợ</Text>
-          <ScaledImage
-            source={require("@images/new/ic_menu_support.png")}
-            width={24}
-            height={24}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.itemMenu]}
-          onPress={() => {
-            Linking.openURL(
-              "mailto:support@isofhcare.vn?subject=Báo lỗi quá trình sử dụng app ISofhCare&body="
-            );
-          }}
-        >
-          <Text style={styles.itemText}>Báo lỗi</Text>
-          <ScaledImage
-            source={require("@images/new/ic_menu_feedback.png")}
-            width={24}
-            height={24}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.itemMenu]}
-          onPress={() => {
-            this.props.navigation.navigate("terms");
-          }}
-        >
-          <Text style={styles.itemText}>Điều khoản sử dụng</Text>
-          <ScaledImage
-            source={require("@images/new/ic_menu_terms.png")}
-            width={24}
-            height={24}
-          />
-        </TouchableOpacity>
-        {this.props.userApp.isLogin && (
           <TouchableOpacity
             style={[styles.itemMenu]}
             onPress={() => {
-              this.props.dispatch(redux.userLogout());
-              if (this.props.onLogout) this.props.onLogout();
+              this.props.navigation.navigate("about");
             }}
           >
-            <Text style={styles.itemText}>Đăng xuất</Text>
+            <Text style={styles.itemText}>Về iSofH</Text>
             <ScaledImage
-              source={require("@images/new/ic_menu_logout.png")}
+              source={require("@images/new/ic_menu_aboutus.png")}
               width={24}
               height={24}
             />
           </TouchableOpacity>
-        )}
-        <View style={{ height: 100 }} />
-        <ImagePicker ref={ref => (this.imagePicker = ref)} />
-      </ScrollView>
+          <TouchableOpacity
+            style={[styles.itemMenu]}
+            onPress={() => {
+              Linking.openURL(
+                "mailto:support@isofhcare.vn?subject=Hỗ trợ sử dụng app ISofhCare&body="
+              );
+            }}
+          >
+            <Text style={styles.itemText}>Hỗ trợ</Text>
+            <ScaledImage
+              source={require("@images/new/ic_menu_support.png")}
+              width={24}
+              height={24}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.itemMenu]}
+            onPress={() => {
+              Linking.openURL(
+                "mailto:support@isofhcare.vn?subject=Báo lỗi quá trình sử dụng app ISofhCare&body="
+              );
+            }}
+          >
+            <Text style={styles.itemText}>Báo lỗi</Text>
+            <ScaledImage
+              source={require("@images/new/ic_menu_feedback.png")}
+              width={24}
+              height={24}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.itemMenu]}
+            onPress={() => {
+              this.props.navigation.navigate("terms");
+            }}
+          >
+            <Text style={styles.itemText}>Điều khoản sử dụng</Text>
+            <ScaledImage
+              source={require("@images/new/ic_menu_terms.png")}
+              width={24}
+              height={24}
+            />
+          </TouchableOpacity>
+          {this.props.userApp.isLogin && (
+            <TouchableOpacity
+              style={[styles.itemMenu]}
+              onPress={() => {
+                this.props.dispatch(redux.userLogout());
+                if (this.props.onLogout) this.props.onLogout();
+              }}
+            >
+              <Text style={styles.itemText}>Đăng xuất</Text>
+              <ScaledImage
+                source={require("@images/new/ic_menu_logout.png")}
+                width={24}
+                height={24}
+              />
+            </TouchableOpacity>
+          )}
+          <View style={{ height: 100 }} />
+          <ImagePicker ref={ref => (this.imagePicker = ref)} />
+        </ScrollView>
       </ActivityPanel>
     );
   }
