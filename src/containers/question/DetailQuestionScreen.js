@@ -193,7 +193,7 @@ class DetailQuestionScreen extends Component {
                                     starSize={20}
                                     maxStars={5}
                                     rating={this.state.ratedoctor}
-                                    starStyle={{ margin: 0 }}
+                                    starStyle={{ marginLeft: 5 }}
                                     fullStarColor={"#fbbd04"}
                                     emptyStarColor={"#fbbd04"}
                                 />

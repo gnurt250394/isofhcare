@@ -64,7 +64,7 @@ class ItemQuestion extends Component {
                                             starSize={20}
                                             maxStars={5}
                                             rating={item.post.review}
-                                            starStyle={{ margin: 0 }}
+                                            starStyle={{ marginLeft: 5 }}
                                             fullStarColor={"#fbbd04"}
                                             emptyStarColor={"#fbbd04"}
                                         />
