@@ -17,7 +17,7 @@ const DEVICE_WIDTH = Dimensions.get("window").width;
 import Carousel, { Pagination } from "react-native-snap-carousel";
 import advertiseProvider from "@data-access/advertise-provider";
 import snackbar from "@utils/snackbar-utils";
-import { Card } from "native-base";
+import { Card, Toast } from "native-base";
 import NotificationBadge from "@components/notification/NotificationBadge";
 import redux from "@redux-store";
 import ImageLoad from "mainam-react-native-image-loader";
@@ -31,24 +31,31 @@ class Home extends Component {
       refreshing: false,
       ads0: [],
       features: [
-        // {
-        //   icon: require("@images/new/home/ic_ticket_news.png"),
-        //   text: "Lấy số",
-        //   onPress: () => {
-        //     if (this.props.userApp.isLogin)
-        //       this.props.navigation.navigate("selectHealthFacilitiesScreen");
-        //     else
-        //       this.props.navigation.navigate("login", {
-        //         nextScreen: { screen: "selectHealthFacilitiesScreen", param: {} }
-        //       });
-        //   }
-        // },
+        {
+          icon: require("@images/new/home/ic_ticket_news.png"),
+          text: "Lấy số",
+          onPress: () => {
+            if (this.props.userApp.isLogin)
+              if(this.props.userApp.currentUser.bookingNumberHospital)
+              this.props.navigation.navigate("selectHealthFacilitiesScreen");
+              else
+              snackbar.show("Tính năng đang phát triển", "");
+              else
+              this.props.navigation.navigate("login", {
+                nextScreen: { screen: "selectHealthFacilitiesScreen", param: {} }
+              });
+          }
+        },
         {
           icon: require("@images/new/home/ic_booking_news.png"),
           text: "Đặt khám",
           onPress: () => {
             if (this.props.userApp.isLogin)
-              this.props.navigation.navigate("addBooking");
+              if (this.props.userApp.currentUser.bookingStatus)
+                this.props.navigation.navigate("addBooking");
+              else
+              snackbar.show("Tính năng đang phát triển", "");
+
             else
               this.props.navigation.navigate("login", {
                 nextScreen: { screen: "addBooking", param: {} }
@@ -249,7 +256,7 @@ class Home extends Component {
       >
         <View style={{ flex: 1, position: 'relative' }}>
           <ScaledImage source={require("@images/new/home/bg_home_new.png")} width={DEVICE_WIDTH} style={{ position: 'absolute', top: 72, right: 0, left: 0 }} />
-          <View style={{ height: 75, flexDirection: 'row', alignItems: 'center', paddingHorizontal:10,backgroundColor:'#fff',borderBottomColor:'#7c817f',borderBottomWidth:0.5}}>
+          <View style={{ height: 75, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10, backgroundColor: '#fff', borderBottomColor: '#7c817f', borderBottomWidth: 0.5 }}>
             <View style={{ flex: 1, alignItems: 'center', marginLeft: 45 }}>
               <ScaledImage source={require("@images/new/isofhcare.png")} width={116} />
             </View>
