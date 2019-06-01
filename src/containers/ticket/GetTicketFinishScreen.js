@@ -41,11 +41,11 @@ class GetTicketFinishScreen extends Component {
                 <View style={styles.container} pointerEvent='none'>
                     <View style={styles.viewDialog}>
                         <View style={{ backgroundColor: '#FFF', width: width, alignItems: 'center', borderTopLeftRadius: 7, borderTopRightRadius: 7 }}>
-                            <Text style={{ color: 'rgb(39,174,96)', fontWeight: '600', marginVertical: 20, marginBottom: 15, fontSize: 16 }}>Lấy số khám thành công!</Text>
+                            <Text style={{ color: 'rgb(39,174,96)', fontWeight: '600', marginVertical: 20, marginBottom: 15, fontSize: 16 }}>Lấy số tiếp đón thành công!</Text>
                         </View>
                         <ScaledImage source={require("@images/new/ticket/split.png")} width={width} />
                         <View style={{ backgroundColor: '#FFF', width: width, alignItems: 'center', marginTop: -2 }}>
-                            <Text style={{ textAlign: 'center', marginBottom: 20, paddingHorizontal: 10 }}>Số khám của bạn tại {hospital.name} ngày {numberHospital.createdDate.toDateObject('-').format("dd/MM/yyyy")} là:</Text>
+                            <Text style={{ textAlign: 'center', marginBottom: 20, paddingHorizontal: 10 }}>Số tiếp đón của bạn tại {hospital.name} ngày {numberHospital.createdDate.toDateObject('-').format("dd/MM/yyyy")} là:</Text>
                         </View>
                         <View style={{ position: "relative" }}>
                             <ScaledImage source={require("@images/new/ticket/body.png")} width={width} />

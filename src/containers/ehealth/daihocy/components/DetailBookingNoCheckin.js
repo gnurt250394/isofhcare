@@ -89,7 +89,7 @@ class DetailBookingNoCheckin extends Component {
                             booking.booking && booking.booking.sequenceNo ?
                                 <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
                                     <Text style={{ fontWeight: 'bold', marginRight: 10 }}>
-                                        Số khám:
+                                        Số tiếp đón:
                             </Text>
                                     <Text>
                                         {booking.booking.sequenceNo}

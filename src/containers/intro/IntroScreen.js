@@ -28,7 +28,7 @@ const slides = [
     {
         key: 'slide4',
         title: 'Đặt khám nhanh chóng',
-        text: 'Chọn bác sĩ, giờ khám, lấy số khám tại nhà nhanh chóng mà không cần vất vả tới xếp hàng, chờ đợi',
+        text: 'Chọn bác sĩ, giờ khám, lấy số tiếp đón tại nhà nhanh chóng mà không cần vất vả tới xếp hàng, chờ đợi',
         image: require('@images/intro/slide4.png'),
     },
 ];

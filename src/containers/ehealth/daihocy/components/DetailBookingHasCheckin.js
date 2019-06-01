@@ -331,7 +331,7 @@ class DetailBookingHasCheckin extends Component {
 
                                         {item.SequenceNoInt ?
                                             <View style={{ marginTop: 10, marginLeft: 17, flexDirection: 'row' }}>
-                                                <Text style={{ fontWeight: 'bold', marginRight: 10, minWidth: 100 }}>Số khám: </Text>
+                                                <Text style={{ fontWeight: 'bold', marginRight: 10, minWidth: 100 }}>Số tiếp đón: </Text>
                                                 <Text>{item.SequenceNoInt} </Text>
                                             </View> : null}
                                     </View>
