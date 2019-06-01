@@ -78,15 +78,13 @@ class ResetPasswordScreen extends Component {
     return (
       <ActivityPanel
         style={{ flex: 1 }}
-        touchToDismiss={true}
         title="Thiết lập mật khẩu"
         titleStyle={{ textAlign: 'left', marginLeft: 20 }}
-        touchToDismiss={true}
         isLoading={this.state.isLoading}
       >
         <ScrollView
           showsVerticalScrollIndicator={false}
-          style={{ flex: 1 }} keyboardShouldPersistTaps="always">
+          style={{ flex: 1 }} keyboardShouldPersistTaps="handled">
           <KeyboardAvoidingView behavior="padding" style={styles.form}>
             <View style={{ flex: 1, padding: 20 }}>
               <ScaleImage source={require("@images/new/isofhcare.png")} width={200} style={{ marginTop: 30, alignSelf: 'center' }} />

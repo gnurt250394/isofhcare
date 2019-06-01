@@ -1,9 +1,9 @@
-
 import userProvider from '@data-access/user-provider';
 import constants from '@resources/strings';
 import client from '@utils/client-utils';
 import reduxBookingDHY from '@dhy/redux'
 import reduxEhealthDHY from '@ehealth/daihocy/redux'
+import { connect } from "react-redux";
 
 const defaultState = {
     userApp:
@@ -13,6 +13,9 @@ const defaultState = {
         },
         isLogin: false,
         loginToken: ""
+    },
+    bookingTicket: {
+
     }
 }
 const reducer = (state = defaultState, action) => {
@@ -56,6 +59,9 @@ const reducer = (state = defaultState, action) => {
             return newState;
         case constants.action.action_show_popup_notice_new_version:
             newState.showPopupNewVersion = true;
+            return newState;
+        case constants.action.action_select_hospital_get_ticket:
+            newState.bookingTicket.hospital = action.value;
             return newState;
         default:
             reduxBookingDHY.apply(newState, action);

@@ -38,7 +38,7 @@ class NotificationScreen extends Component {
     }
     render() {
         return (
-            <ActivityPanel style={{ flex: 1 }} title="Thông báo" isLoading={this.state.isLoading} touchToDismiss={false} showFullScreen={true}>
+            <ActivityPanel style={{ flex: 1 }} title="Thông báo" isLoading={this.state.isLoading} showFullScreen={true}>
                 <View style={{ flex: 1 }}>
                     {
                         this.state.messaging && (this.state.messaging.type == 3) ?

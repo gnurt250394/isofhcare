@@ -7,6 +7,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  AppState,
   DeviceEventEmitter
 } from "react-native";
 import { connect } from "react-redux";
@@ -22,9 +23,7 @@ import ActivityPanel from "@components/ActivityPanel";
 import ScaledImage from "../../node_modules/mainam-react-native-scaleimage";
 import snackbar from "@utils/snackbar-utils";
 import { IndicatorViewPager } from "mainam-react-native-viewpager";
-import UserInactivity from "react-native-user-inactivity";
-
-
+import firebase from 'react-native-firebase';
 class HomeScreen extends Component {
   constructor(props) {
     super(props);
@@ -33,6 +32,7 @@ class HomeScreen extends Component {
       active: true,
       text: ""
     };
+
   }
   componentWillMount() {
     this.props.dispatch({
@@ -42,6 +42,7 @@ class HomeScreen extends Component {
   }
   componentDidMount() {
     DeviceEventEmitter.removeAllListeners("hardwareBackPress");
+    AppState.addEventListener('change', this._handleAppStateChange);
     DeviceEventEmitter.addListener(
       "hardwareBackPress",
       this.handleHardwareBack.bind(this)
@@ -50,9 +51,24 @@ class HomeScreen extends Component {
   }
 
   componentWillUnmount() {
+    AppState.removeEventListener('change', this._handleAppStateChange);
     DeviceEventEmitter.removeAllListeners("hardwareBackPress");
   }
+  _handleAppStateChange = (nextAppState) => {
+    if (
+      nextAppState === 'active'
+    ) {
+      if (this.props.userApp.isLogin) {
+        this.props.dispatch(redux.getUnreadNotificationCount());
+        console.log('active');
+      }
+      else {
+        firebase.notifications().setBadge(0);
+      }
+    }
 
+    this.setState({ appState: nextAppState });
+  };
   handleHardwareBack = () => {
     this.props.navigation.pop();
     return true;
@@ -170,9 +186,10 @@ class HomeScreen extends Component {
                 onPress={this.swipe.bind(this, 0)}
               >
                 <ScaledImage
+               
                   source={
                     this.state.tabIndex == 0
-                      ? require("@images/new/ic_home_home1.png")
+                      ? require("@images/new/ic_home_home2.png")
                       : require("@images/new/ic_home_home0.png")
                   }
                   width={20}
@@ -210,7 +227,7 @@ class HomeScreen extends Component {
                 <ScaledImage
                   source={
                     this.state.tabIndex == 1
-                      ? require("@images/new/ic_home_account1.png")
+                      ? require("@images/new/ic_home_account2.png")
                       : require("@images/new/ic_home_account0.png")
                   }
                   height={20}
@@ -242,7 +259,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     flex: 1,
-    backgroundColor: "#02c39a11"
+    backgroundColor: "#fff"
   },
   tab: {
     alignItems: "center",
@@ -252,7 +269,7 @@ const styles = StyleSheet.create({
   },
   tab_label_selected: {
     marginTop: 5,
-    fontWeight: "500",
+    fontWeight: "200",
     color: "rgb(2,195,154)",
     fontSize: 15
   },

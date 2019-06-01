@@ -79,7 +79,12 @@ class EnterPasswordScreen extends Component {
           this.setState({ isLoading: false });
           switch (s.code) {
             case 0:
+            case 9:
               var user = s.data.user;
+              user.bookingNumberHospital = s.data.bookingNumberHospital;
+              user.bookingStatus = s.data.bookingStatus;
+              if (s.data.profile && s.data.profile.uid)
+                user.uid = s.data.profile.uid;
               this.props.dispatch(redux.userLogin(user));
               if (this.nextScreen) {
                 this.props.navigation.replace(
@@ -88,16 +93,6 @@ class EnterPasswordScreen extends Component {
                 );
               } else this.props.navigation.navigate("home", { showDraw: false });
               return;
-            case 9:
-            var user = s.data.user;
-            this.props.dispatch(redux.userLogin(user));
-            if (this.nextScreen) {
-              this.props.navigation.replace(
-                this.nextScreen.screen,
-                this.nextScreen.param
-              );
-            } else this.props.navigation.navigate("home", { showDraw: false });
-            return;
             case 2:
               snackbar.show(
                 constants.msg.user.username_or_email_existed,
@@ -108,10 +103,10 @@ class EnterPasswordScreen extends Component {
             case 1:
               snackbar.show(constants.msg.user.account_blocked, "danger");
               return;
-              case 12:
+            case 12:
               snackbar.show(constants.msg.user.account_blocked, "danger");
               return;
-              case 13: 
+            case 13:
               snackbar.show(constants.msg.user.this_account_not_active, "danger");
               return;
             case 500:
@@ -133,12 +128,13 @@ class EnterPasswordScreen extends Component {
         style={{ flex: 1 }}
         title="Đăng ký"
         titleStyle={{ textAlign: 'left', marginLeft: 20 }}
-        touchToDismiss={true}
         showFullScreen={true}
       >
         <ScrollView
           showsVerticalScrollIndicator={false}
-          style={{ flex: 1 }} keyboardShouldPersistTaps="always">
+          style={{ flex: 1 }}
+          keyboardShouldPersistTaps="handled"
+        >
           <KeyboardAvoidingView behavior="padding" style={styles.form}>
             <View style={{ flex: 1, padding: 20 }}>
               <ScaleImage source={require("@images/new/isofhcare.png")} width={200} style={{ marginTop: 50, alignSelf: 'center' }} />

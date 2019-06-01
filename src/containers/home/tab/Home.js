@@ -17,10 +17,11 @@ const DEVICE_WIDTH = Dimensions.get("window").width;
 import Carousel, { Pagination } from "react-native-snap-carousel";
 import advertiseProvider from "@data-access/advertise-provider";
 import snackbar from "@utils/snackbar-utils";
-import { Card } from "native-base";
+import { Card, Toast } from "native-base";
 import NotificationBadge from "@components/notification/NotificationBadge";
 import redux from "@redux-store";
 import ImageLoad from "mainam-react-native-image-loader";
+import * as Animatable from 'react-native-animatable';
 
 class Home extends Component {
   constructor(props) {
@@ -28,9 +29,62 @@ class Home extends Component {
     this.state = {
       ads: [],
       refreshing: false,
-      ads0: []
+      ads0: [],
+      features: [
+        {
+          icon: require("@images/new/home/ic_ticket_news.png"),
+          text: "Lấy số",
+          onPress: () => {
+            if (this.props.userApp.isLogin)
+              if(this.props.userApp.currentUser.bookingNumberHospital)
+              this.props.navigation.navigate("selectHealthFacilitiesScreen");
+              else
+              snackbar.show("Tính năng đang phát triển", "");
+              else
+              this.props.navigation.navigate("login", {
+                nextScreen: { screen: "selectHealthFacilitiesScreen", param: {} }
+              });
+          }
+        },
+        {
+          icon: require("@images/new/home/ic_booking_news.png"),
+          text: "Đặt khám",
+          onPress: () => {
+            if (this.props.userApp.isLogin)
+              if (this.props.userApp.currentUser.bookingStatus)
+                this.props.navigation.navigate("addBooking");
+              else
+              snackbar.show("Tính năng đang phát triển", "");
+
+            else
+              this.props.navigation.navigate("login", {
+                nextScreen: { screen: "addBooking", param: {} }
+              });
+          }
+        },
+        {
+          icon: require("@images/new/home/ic_question_news.png"),
+          text: "Tư vấn",
+          onPress: () => {
+            this.props.navigation.navigate("listQuestion");
+          }
+        },
+        {
+          icon: require("@images/new/home/ic_ehealth_news.png"),
+          text: "Y bạ",
+          onPress: () => {
+            if (this.props.userApp.isLogin)
+              this.props.navigation.navigate("ehealth");
+            else
+              this.props.navigation.navigate("login", {
+                nextScreen: { screen: 'ehealth' }
+              });
+          }
+        }
+      ]
     };
   }
+
   getTopAds(reload) {
     advertiseProvider.getTop(100, (s, e) => {
       if (s) {
@@ -60,17 +114,17 @@ class Home extends Component {
   renderAds() {
     return (<View>
       <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-        <Text style={{ padding: 12, paddingLeft: 20, paddingBottom: 5, color: 'rgba(74,74,74,0.6)', fontWeight: '500', flex: 1 }}>Tin tức</Text>
-        <ScaledImage source={require("@images/new/ic_more.png")} width={20} style={{ marginTop: 10, marginRight: 10 }} />
+        <Text style={{ padding: 12, paddingLeft: 20, paddingBottom: 5, color: 'rgba(74,74,74,0.6)', fontWeight: '500', flex: 1 }}>Ưu đãi</Text>
+        <ScaledImage source={require("@images/new/ic_more.png")} width={20} style={{ marginTop: 10, marginRight: 20 }} />
       </View>
       <FlatList
-        style={{ paddingHorizontal: 10 }}
+        style={{ paddingHorizontal: 20 }}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
         extraData={this.state}
         data={this.state.ads}
-        ListFooterComponent={<View style={{ width: 15 }}></View>}
+        ListFooterComponent={<View style={{ width: 35 }}></View>}
         renderItem={({ item, index }) => {
           if (!item || !item.advertise || !item.advertise.images)
             return null;
@@ -177,6 +231,18 @@ class Home extends Component {
       });
     })
   }
+
+  getItemWidth() {
+    const width = DEVICE_WIDTH - 40;
+    if (width >= 320)
+      return 70;
+    if (width > 300)
+      return 110;
+    if (width > 250)
+      return 70;
+    return width - 50;
+  }
+
   render() {
     const icSupport = require("@images/new/user.png");
     const source = this.props.userApp.isLogin ? (this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar.absoluteUrl() } : icSupport) : icSupport;
@@ -184,145 +250,106 @@ class Home extends Component {
     return (
       <ActivityPanel
         hideStatusbar={true}
+        hideActionbar={true}
         style={[{ flex: 1 }, this.props.style]}
-        // titleStyle={{ marginRight: 60 }}
-        // imageStyle={{ marginRight: 20 }}
         hideBackButton={true}
-        // backButton={<TouchableOpacity style={{ paddingLeft: 15 }} onPress={() => {
-        //   if (this.props.userApp.isLogin) {
-        //     if (this.props.userInfoClick)
-        //       this.props.userInfoClick();
-        //   } else {
-        //     this.props.navigation.navigate("login");
-        //   }
-        // }}>
-        //   <ImageLoad
-        //     resizeMode="cover"
-        //     imageStyle={{ borderRadius: 15 }}
-        //     borderRadius={15}
-        //     customImagePlaceholderDefaultStyle={{
-        //       width: 30,
-        //       height: 30,
-        //       alignSelf: "center"
-        //     }}
-        //     placeholderSource={icSupport}
-        //     style={{ width: 30, height: 30, alignSelf: "center" }}
-        //     resizeMode="cover"
-        //     loadingStyle={{ size: "small", color: "gray" }}
-        //     source={source}
-        //     defaultImage={() => {
-        //       return (
-        //         <ScaledImage
-        //           resizeMode="cover"
-        //           source={icSupport}
-        //           width={30}
-        //           style={{ width: 30, height: 30, alignSelf: "center" }}
-        //         />
-        //       );
-        //     }}
-        //   />
-        // </TouchableOpacity>}
-        // image={}
-        titleView={<View>
-          <ScaledImage source={require("@images/logotext.png")} width={116} />
-        </View>}
-        titleViewStyle={{ marginLeft: 10 }}
-        menuButton={<NotificationBadge />}
       >
-        <ScrollView
-          refreshControl={<RefreshControl
-            refreshing={this.state.refreshing}
-            onRefresh={this.onRefresh.bind(this)}
-          />}
-          showsVerticalScrollIndicator={false}
-          style={{
-            flex: 1,
-            paddingTop: 0
-          }}
-        >
-          <View style={{ position: 'relative' }}>
-            <Carousel
-              enableSnap={true}
-              data={this.state.ads0}
-              loop={true}
-              autoplayInterval={3000}
-              autoplay={true}
-              onSnapToItem={index => {
-                this.setState({ activeSlide: index });
-              }}
-              renderItem={({ item, index }) => {
-                return (
-                  <TouchableOpacity
-                    onPress={() => {
-                      if (item.advertise && item.advertise.value) {
-                        Linking.openURL(item.advertise.value);
-                      } else {
-                        snackbar.show("Url không tồn tại", "danger");
-                      }
-                    }}
-                  >
-                    <ScaledImage
-                      uri={item.advertise.images.absoluteUrl()}
-                      width={DEVICE_WIDTH}
-                    />
-                  </TouchableOpacity>
-                );
-              }}
-              sliderWidth={DEVICE_WIDTH}
-              itemWidth={DEVICE_WIDTH}
-            />
-            {/* {
-              this.pagination()
-            } */}
+        <View style={{ flex: 1, position: 'relative' }}>
+          <ScaledImage source={require("@images/new/home/bg_home_new.png")} width={DEVICE_WIDTH} style={{ position: 'absolute', top: 72, right: 0, left: 0 }} />
+          <View style={{ height: 75, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10, backgroundColor: '#fff', borderBottomColor: '#7c817f', borderBottomWidth: 0.5 }}>
+            <View style={{ flex: 1, alignItems: 'center', marginLeft: 45 }}>
+              <ScaledImage source={require("@images/new/isofhcare.png")} width={116} />
+            </View>
+            <NotificationBadge />
           </View>
-          <View style={{ flexDirection: "row", padding: 10, marginTop: 20 }}>
-            <TouchableOpacity
-              style={{ flex: 1, marginLeft: 5, alignItems: 'center' }}
-              onPress={() => {
-                if (this.props.userApp.isLogin)
-                  this.props.navigation.navigate("addBooking");
-                else
-                  this.props.navigation.navigate("login", {
-                    nextScreen: { screen: "addBooking", param: {} }
-                  });
-              }}
-            >
-              <View style={{ position: 'relative', padding: 5 }}><ScaledImage style={[styles.icon]} source={require("@images/new/ic_booking.png")} height={48} />
-              </View>
-              <Text style={[styles.label]}>Đặt khám</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{ flex: 1, marginLeft: 5, alignItems: 'center' }}
-              onPress={() => {
-                this.props.navigation.navigate("listQuestion");
-              }}
-            >
-              <View style={{ position: 'relative', padding: 5 }}><ScaledImage style={[styles.icon]} source={require("@images/new/ic_question.png")} height={48} />
-              </View>
-              <Text style={[styles.label]}>Hỏi đáp</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{ flex: 1, marginLeft: 5, alignItems: 'center' }}
-              onPress={() => {
-                if (this.props.userApp.isLogin)
-                  this.props.navigation.navigate("ehealth");
-                else
-                  this.props.navigation.navigate("login", {
-                    nextScreen: { screen: 'ehealth' }
-                  });
-              }}
-            >
-              <View style={{ position: 'relative', padding: 5 }}>
-                <ScaledImage style={[styles.icon]} source={require("@images/new/ic_ehealth.png")} height={48} />
-              </View>
-              <Text style={[styles.label]}>Y bạ điện tử</Text>
-            </TouchableOpacity>
-          </View>
-          {
-            this.renderAds()
-          }
-          <View style={{ height: 30 }} />
-        </ScrollView>
+          <ScrollView
+            refreshControl={<RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this.onRefresh.bind(this)}
+            />}
+            showsVerticalScrollIndicator={false}
+            style={{
+              flex: 1,
+              paddingTop: 0
+            }}
+          >
+            <View style={{ padding: 21 }}>
+              <Card style={{ borderRadius: 6, marginTop: 130 }}>
+
+                {this.props.userApp.isLogin &&
+                  <View style={{ alignItems: 'center', flexDirection: 'row', borderBottomColor: 'rgba(151, 151, 151, 0.29)', borderBottomWidth: 1, paddingVertical: 10, marginHorizontal: 20, justifyContent: 'center' }}>
+                    {/*   <ImageLoad
+                      resizeMode="cover"
+                      imageStyle={{ borderRadius: 20, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
+                      borderRadius={20}
+                      customImagePlaceholderDefaultStyle={{
+                        width: 40,
+                        height: 40,
+                        alignSelf: "center"
+                      }}
+                      placeholderSource={icSupport}
+                      style={{ width: 40, height: 40, alignSelf: "center" }}
+                      resizeMode="cover"
+                      loadingStyle={{ size: "small", color: "gray" }}
+                      source={source}
+                      defaultImage={() => {
+                        return (
+                          <ScaledImage
+                            resizeMode="cover"
+                            source={icSupport}
+                            width={40}
+                            style={{ width: 40, height: 40, alignSelf: "center" }}
+                          />
+                        );
+                      }}
+                    />  */}
+                    <Text style={{ marginLeft: 5, fontSize: 18, fontWeight: 'bold', color: "#4a4a4a" }} >Xin chào, <Text style={{ color: 'rgb(255,138,21)' }}>{((name) => {
+                      if (!name) return "";
+                      let x = name.trim().split(" ");
+                      name = (x[x.length - 1]).toLowerCase();
+                      if (name[0])
+                        return name.charAt(0).toUpperCase() + name.slice(1);
+                      return name;
+                    }).call(this, this.props.userApp.currentUser.name) + '!'}</Text></Text>
+                  </View>
+                }
+
+                <View style={{
+                  flexDirection: "row", padding: 10, marginVertical: 20, flexWrap: 'wrap',
+                  justifyContent: 'center'
+                }}>
+                  {
+                    (this.state.features || []).map((item, position) => {
+                      return (
+                        <Animatable.View key={position} delay={100} animation={"swing"} direction="alternate">
+                          {
+                            item.empty ? <View style={{ flex: 1, marginLeft: 5, alignItems: 'center', height: 100, width: this.getItemWidth() }}
+                            ></View> :
+                              <TouchableOpacity
+                                style={{ flex: 1, marginLeft: 5, alignItems: 'center', width: this.getItemWidth() }}
+                                onPress={item.onPress}
+                              >
+                                <View style={{ position: 'relative', padding: 5 }}>
+                                  <ScaledImage style={[styles.icon]} source={item.icon} height={48} />
+                                </View>
+                                <Text style={[styles.label]}>{item.text}</Text>
+                              </TouchableOpacity>
+
+                          }
+                        </Animatable.View>);
+                    })
+                  }
+                </View>
+              </Card>
+            </View>
+            {
+              this.renderAds()
+            }
+            <View style={{ height: 30 }} />
+          </ScrollView>
+        </View>
+
+
       </ActivityPanel>
     );
   }
@@ -332,7 +359,7 @@ const styles = StyleSheet.create({
   icon: {
   },
   label: {
-    marginTop: 10, color: '#4A4A4A', fontSize: 15, fontWeight: '600', lineHeight: 23
+    marginTop: 2, color: '#4A4A4A', fontSize: 15, fontWeight: '600', lineHeight: 20
   },
   subLabel: {
     color: '#9B9B9B', fontSize: 12, textAlign: 'center', marginTop: 5

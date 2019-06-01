@@ -78,14 +78,7 @@ class PaymentWithVNPayScreen extends Component {
     render() {
         return (
             <ActivityPanel title="VNPay"
-                isLoading={this.state.isLoading}
-                containerStyle={{
-                    backgroundColor: "#FFF"
-                }} actionbarStyle={{
-                    backgroundColor: '#ffffff',
-                    borderBottomWidth: 1,
-                    borderBottomColor: 'rgba(0, 0, 0, 0.06)'
-                }}>
+                isLoading={this.state.isLoading}>
                 <WebView
                     style={{ flex: 1 }}
                     automaticallyAdjustContentInsets={true}

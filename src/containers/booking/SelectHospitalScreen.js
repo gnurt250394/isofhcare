@@ -19,6 +19,7 @@ import LocationSwitch from 'react-native-location-switch';
 class SelectHospitalScreen extends Component {
     constructor(props) {
         super(props);
+        let serviceType = this.props.navigation.state.params.serviceType;
 
         this.state = {
             data: [],
@@ -29,6 +30,7 @@ class SelectHospitalScreen extends Component {
             loadMore: false,
             finish: false,
             loading: false,
+            serviceType
         }
     }
     onRefresh() {
@@ -75,10 +77,10 @@ class SelectHospitalScreen extends Component {
                 android: {
                     detail: 'coarse', // or 'fine'
                     rationale: {
-                        title: "We need to access your location",
-                        message: "We use your location to show where you are on the map",
-                        buttonPositive: "OK",
-                        buttonNegative: "Cancel"
+                        title: "Quyền truy cập vị trí",
+                        message: "iSofHCare cần quyền truy cập vào vị trí của bạn",
+                        buttonPositive: "Đồng ý",
+                        buttonNegative: "Hủy"
                     }
                 }
             }).then(granted => {
@@ -90,7 +92,7 @@ class SelectHospitalScreen extends Component {
                         }, () => {
                             this.onRefresh();
                         });
-                    }).catch(() => {
+                    }).catch((e) => {
                         locationProvider.getCurrentLocationHasSave().then(s => {
                             if (s && s.latitude && s.longitude) {
                                 s.latitudeDelta = 0.1;
@@ -113,14 +115,32 @@ class SelectHospitalScreen extends Component {
         }
 
         if (Platform.OS == 'android') {
-            LocationSwitch.enableLocationService(1000, true,
-                () => {
-                    getLocation();
-                },
-                () => {
-                    snackbar.show("VBật định vị để tìm kiếm cơ sở y tế gần bạn", "danger");
-                },
-            );
+            RNLocation.requestPermission({
+                ios: 'whenInUse', // or 'always'
+                android: {
+                    detail: 'coarse', // or 'fine'
+                    rationale: {
+                        title: "Quyền truy cập vị trí",
+                        message: "iSofHCare cần quyền truy cập vào vị trí của bạn",
+                        buttonPositive: "Đồng ý",
+                        buttonNegative: "Hủy"
+                    }
+                }
+            }).then(granted => {
+                if (granted) {
+
+                    LocationSwitch.enableLocationService(1000, true,
+                        () => {
+                            getLocation();
+                        },
+                        () => {
+                            snackbar.show("Bật vị trí trên thiết bị để tìm kiếm địa điểm gần bạn", "danger");
+                        },
+                    );
+                } else {
+                    snackbar.show("iSofHCare cần quyền truy cập vào vị trí của bạn", "danger");
+                }
+            })
         }
         else
             LocationSwitch.isLocationEnabled(() => {
@@ -128,7 +148,7 @@ class SelectHospitalScreen extends Component {
             }, () => {
                 Alert.alert(
                     '',
-                    'Bật định vị để tìm kiếm cơ sở y tế gần bạn',
+                    'Bật vị trí trên thiết bị để tìm kiếm địa điểm gần bạn',
                     [
                         {
                             text: 'Huỷ',
@@ -150,19 +170,19 @@ class SelectHospitalScreen extends Component {
             });
     }
     componentDidMount() {
-        locationProvider.getCurrentLocationHasSave().then(s => {
-            if (s && s.latitude && s.longitude) {
-                s.latitudeDelta = 0.1;
-                s.longitudeDelta = 0.1;
-                this.setState({
-                    region: s,
-                }, () => {
-                    this.onRefresh();
-                });
-            }
-        }).catch(e => {
+        // locationProvider.getCurrentLocationHasSave().then(s => {
+        //     if (s && s.latitude && s.longitude) {
+        //         s.latitudeDelta = 0.1;
+        //         s.longitudeDelta = 0.1;
+        //         this.setState({
+        //             region: s,
+        //         }, () => {
+        //             this.onRefresh();
+        //         });
+        //     }
+        // }).catch(e => {
             this.onRefresh();
-        });
+        // });
     }
     onLoadMore() {
         if (!this.state.finish && !this.state.loading)
@@ -188,10 +208,10 @@ class SelectHospitalScreen extends Component {
         }, () => {
             let promise = null;
             if (this.state.region) {
-                promise = hospitalProvider.getByLocation(page, size, this.state.region.latitude, this.state.region.longitude, stringQuyery);
+                promise = hospitalProvider.getByLocation(page, size, this.state.region.latitude, this.state.region.longitude, stringQuyery, this.state.serviceType.id);
             }
             else {
-                promise = hospitalProvider.getBySearch(page, size, stringQuyery);
+                promise = hospitalProvider.getByLocation(page, size, 190, 190, stringQuyery, this.state.serviceType.id);
             };
             promise.then(s => {
                 this.setState({
@@ -252,15 +272,7 @@ class SelectHospitalScreen extends Component {
                 isLoading={this.state.isLoading}
                 style={styles.AcPanel} title="Địa điểm"
                 backButton={<TouchableOpacity style={{ paddingLeft: 20 }} onPress={() => this.props.navigation.pop()}><Text>Hủy</Text></TouchableOpacity>}
-                titleStyle={{ marginLeft: 10 }}
-                containerStyle={{
-                    backgroundColor: "rgb(246, 249, 251)"
-                }}
-                actionbarStyle={{
-                    backgroundColor: '#ffffff',
-                    borderBottomWidth: 1,
-                    borderBottomColor: 'rgba(0, 0, 0, 0.06)'
-                }}>
+                titleStyle={{ marginLeft: 10 }}>
                 <DialogBox ref={dialogbox => { this.dialogbox = dialogbox }} />
 
 

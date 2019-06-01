@@ -62,15 +62,18 @@ class ListQuestionScreen extends Component {
                 menuButton={this.props.userApp.isLogin ? this.menuCreate() : null}
                 isLoading={this.state.isLoading}
                 actionbarStyle={[this.props.userApp.isLogin ? {
-                    backgroundColor: '#02C39A'
-                } : {}]}
+                    backgroundColor: '#02C39A',
+                    borderBottomWidth: 0
+                } : {
+                        borderBottomWidth: 0
+                    }]}
                 titleStyle={[this.props.userApp.isLogin ? { marginRight: 0 } : {}]}
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#02C39A"
             >
                 {
                     this.props.userApp.isLogin ?
-                        <View style={{ flex: 1, position: 'relative' }} keyboardShouldPersistTaps="always">
+                        <View style={{ flex: 1, position: 'relative' }} keyboardShouldPersistTaps="handled">
                             <View style={{ backgroundColor: '#02C39A', height: 130, position: 'absolute', top: 0, left: 0, right: 0 }}></View>
                             <View style={{ height: 50, flexDirection: "row" }}>
                                 <TouchableOpacity style={{ flex: 1 }} onPress={this.swipe.bind(this, 0)}>

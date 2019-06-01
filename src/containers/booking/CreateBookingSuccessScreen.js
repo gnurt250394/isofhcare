@@ -5,13 +5,20 @@ import { connect } from 'react-redux';
 import dateUtils from 'mainam-react-native-date-utils';
 import ScaleImage from "mainam-react-native-scaleimage";
 import QRCode from 'react-native-qrcode';
+import Modal from "@components/modal";
 
 class CreateBookingSuccessScreen extends Component {
     constructor(props) {
         super(props)
     }
-
-
+    state = {
+        isVisible: false
+    }
+    onQrClick = () => {
+        this.setState({
+            isVisible: true,
+        })
+    }
     render() {
         let booking = this.props.navigation.state.params.booking;
         if (!booking || !booking.profile || !booking.hospital || !booking.hospital.hospital || !booking.book) {
@@ -24,8 +31,10 @@ class CreateBookingSuccessScreen extends Component {
         return (
             <ActivityPanel
                 hideBackButton={true}
-                style={styles.AcPanel} title="Đặt lịch khám"
+                title="Đặt lịch khám"
                 titleStyle={{ color: '#FFF', marginRight: 31 }}
+                iosBarStyle={'light-content'}
+                statusbarBackgroundColor="#02C39A"
                 containerStyle={{
                     backgroundColor: "#02C39A"
                 }}
@@ -47,37 +56,52 @@ class CreateBookingSuccessScreen extends Component {
                             </View>
                             <View style={styles.row}>
                                 <Text style={styles.label}>Thời gian:</Text>
-                                <Text style={styles.text}>{bookingTime.format("HH:mm tt - thu, dd/MM/yyyy")}</Text>
-                            </View>
-                            <View style={styles.row}>
-                                <Text style={styles.label}>Số khám:</Text>
-                                <Text style={styles.text}>{booking.book.sequenceNo}</Text>
+                                <Text style={styles.text}>{bookingTime.format("HH:mm") + " " + (bookingTime.format("HH") < 12 ? "AM" : "PM") + " - " + bookingTime.format("thu, dd/MM/yyyy")}</Text>
                             </View>
                             <View style={styles.row}>
                                 <Text style={styles.label}>Hình thức thanh toán:</Text>
                                 <Text style={styles.text}>{booking.payment == 2 ? "Thanh toán tại viện" : "VNPay"}</Text>
                             </View>
                         </View>
-                        <View style={styles.view1}>
-                            <Text style={styles.text2}>Lịch đặt khám của bạn đã được gửi đi. Vui lòng đến trước hẹn 15 phút để thực hiện các thủ tục khác.</Text>
-                        </View>
                         <View style={styles.view2}>
                             <View style={styles.col}>
                                 <Text style={styles.col1}>Mã code:</Text>
-                                <View style={{ alignItems: 'center', marginTop: 10 }}>
+                                <TouchableOpacity onPress={this.onQrClick} style={{ alignItems: 'center', marginTop: 10 }}>
                                     <QRCode
                                         style={{ alignSelf: 'center', backgroundColor: '#000' }}
                                         value={booking.book.codeBooking}
                                         size={100}
                                         fgColor='white' />
-                                </View>
+                                </TouchableOpacity>
+                                <Text style={{ textAlign: 'center', color: '#4a4a4a', marginVertical: 5 }}>Mã đặt khám: {booking.book.codeBooking}</Text>
+
                             </View>
                         </View>
+                        <View style={styles.view1}>
+                            <Text style={styles.text2}>Lịch đặt khám của bạn đã được gửi đi. Vui lòng đến trước hẹn 15 phút để thực hiện các thủ tục khác.</Text>
+                        </View>
+
                     </ScrollView>
                     <TouchableOpacity style={styles.btn}><Text style={styles.btntext} onPress={() => {
                         this.props.navigation.pop();
                     }}>Về trang chủ</Text></TouchableOpacity>
                 </View>
+                <Modal
+                    isVisible={this.state.isVisible}
+                    onBackdropPress={() => this.setState({ isVisible: false })}
+                    backdropOpacity={0.5}
+                    animationInTiming={500}
+                    animationOutTiming={500}
+                    style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+                    backdropTransitionInTiming={1000}
+                    backdropTransitionOutTiming={1000}
+                >
+                    <QRCode
+                        value={booking.book.codeBooking}
+                        size={250}
+
+                        fgColor='white' />
+                </Modal>
             </ActivityPanel>
         );
     }
@@ -127,7 +151,7 @@ const styles = StyleSheet.create({
     row: {
         marginTop: 10,
         flexDirection: 'row',
-        alignItems: 'center',
+        alignItems: 'flex-start',
     },
     label: {
         opacity: 0.8,

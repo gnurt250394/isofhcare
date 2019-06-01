@@ -3,7 +3,7 @@ import { Text, TouchableOpacity, TextInput, FlatList, Keyboard } from 'react-nat
 import ScaleImage from 'mainam-react-native-scaleimage';
 import dhyCommand from '@dhy/strings'
 import { connect } from 'react-redux';
-import Modal from "react-native-modal";
+import Modal from "@components/modal";
 import stylemodal from "@styles/modal-style";
 import locationProvider from '@dhy/data-access/location-provider';
 import snackbar from '@utils/snackbar-utils';

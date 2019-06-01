@@ -106,23 +106,7 @@ class SelectProfileScreen extends Component {
     render() {
         return (
             <ActivityPanel
-                style={styles.AcPanel}
                 title="Tất cả hồ sơ"
-                // titleStyle={{ marginRight: -10 }}
-
-                containerStyle={{
-                    backgroundColor: "#f7f9fb"
-                }}
-                actionbarStyle={{
-                    backgroundColor: '#ffffff',
-                    borderBottomWidth: 1,
-                    borderBottomColor: 'rgba(0, 0, 0, 0.06)'
-                }}
-            // menuButton={
-            //     <View style ={{width:15,marginLeft: 10
-            //     }}>
-            //     </View>
-            //   }
             >
 
                 <FlatList

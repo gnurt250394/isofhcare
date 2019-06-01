@@ -4,7 +4,7 @@ import { View, TextInput, Text, FlatList, TouchableOpacity, ScrollView, Image, D
 import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import facilityProvider from '@data-access/facility-provider';
-import Modal from "react-native-modal";
+import Modal from "@components/modal";
 import stylemodal from "@styles/modal-style";
 import imageProvider from '@data-access/image-provider';
 import ImagePicker from 'mainam-react-native-select-image';
@@ -298,7 +298,7 @@ class AddNewDrugStoreScreen extends Component {
                     <ScrollView
                         showsVerticalScrollIndicator={false}
                         style={{ padding: 10, flex: 1 }}
-                        keyboardShouldPersistTaps="always">
+                        keyboardShouldPersistTaps="handled">
                         <View style={styles.row}>
                             <TextInput
                                 onChangeText={(s) => this.setState({ name: s })}

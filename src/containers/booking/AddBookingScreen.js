@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Keyboard, Image, TouchableHighlight, FlatList, Dimensions } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Keyboard, Image, KeyboardAvoidingView, Platform, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
 import ScaleImage from "mainam-react-native-scaleimage";
 import ImagePicker from 'mainam-react-native-select-image';
@@ -9,7 +9,7 @@ import connectionUtils from '@utils/connection-utils';
 import clientUtils from '@utils/client-utils';
 const DEVICE_HEIGHT = Dimensions.get('window').height;
 import DateTimePicker from 'mainam-react-native-date-picker';
-
+import KeyboardSpacer from "react-native-keyboard-spacer";
 import snackbar from '@utils/snackbar-utils';
 import dateUtils from "mainam-react-native-date-utils";
 import stringUtils from "mainam-react-native-string-utils";
@@ -21,22 +21,21 @@ import dataCacheProvider from '@data-access/datacache-provider';
 import constants from '@resources/strings';
 import medicalRecordProvider from '@data-access/medical-record-provider';
 import serviceTypeProvider from '@data-access/service-type-provider';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import BookingTimePicker from '@components/booking/BookingTimePicker';
+import bookingProvider from '@data-access/booking-provider';
+import serviceProvider from '@data-access/service-provider';
 
+import scheduleProvider from '@data-access/schedule-provider';
 class AddBookingScreen extends Component {
     constructor(props) {
         super(props);
-        let minDate = new Date();
-        minDate.setDate(minDate.getDate() + 1);
-
-        let bookingDate = minDate;
-        let date = minDate.format("thu, dd tháng MM").replaceAll(" 0", " ");
 
         this.state = {
             colorButton: 'red',
             imageUris: [],
             allowBooking: false,
-            bookingDate,
-            date
+            contact: 2
         }
     }
     _changeColor = () => {
@@ -48,6 +47,41 @@ class AddBookingScreen extends Component {
         this.setState({ imageUris });
     }
     componentDidMount() {
+        dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_SERVICE_TYPE, (s, e) => {
+            if (s) {
+                this.setState({ serviceType: s }, () => {
+                    serviceTypeProvider.getAll().then(s => {
+                        if (s) {
+                            let _default = s.find(item => item.status == 1);
+                            this.setState({ serviceType: _default });
+                            dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_SERVICE_TYPE, _default);
+                        }
+                    });
+                })
+            } else {
+                serviceTypeProvider.getAll().then(s => {
+                    if (s) {
+                        let _default = s.find(item => item.status == 1);
+                        this.setState({ serviceType: _default });
+                        dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_SERVICE_TYPE, _default);
+                    }
+                });
+            }
+        });
+
+        // dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_SPECIALIST, (s, e) => {
+        //     console.log(s, 'specialist');
+        //     if (s) {
+        //         this.setState({ specialist: s })
+        //     } else {
+        //         specialistProvider.getAll().then(s => {
+        //             if (s) {
+        //                 let specialist = s[0]
+        //                 this.setState({ specialist: specialist })
+        //             }
+        //         });
+        //     }
+        // })
         dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, (s, e) => {
             if (s) {
                 this.setState({ profile: s })
@@ -72,13 +106,7 @@ class AddBookingScreen extends Component {
             }
         });
 
-        specialistProvider.getAll().then(s => {
-            if (s) {
-                let specialist = s[0]
-                console.log(specialist,'specialistspecialist')
-                this.setState({ specialist: specialist })
-            }
-        });
+
     }
     selectImage() {
         if (this.state.imageUris && this.state.imageUris.length >= 5) {
@@ -146,12 +174,81 @@ class AddBookingScreen extends Component {
     selectProfile(profile) {
         this.setState({ profile, allowBooking: true });
     }
-    selectHospital(hospital) {
-        this.setState({ hospital, allowBooking: true });
-    }
+
     selectSpecialist(specialist) {
         this.setState({ specialist, allowBooking: true });
     }
+    selectServiceType(serviceType) {
+        let serviceTypeError = serviceType ? "" : this.state.serviceTypeError;
+        if (!serviceType || !this.state.serviceType || serviceType.id != this.state.serviceType.id) {
+            this.setState({ serviceType, hospital: null, service: null, schedules: [], schedule: null, allowBooking: true, serviceTypeError })
+        } else {
+            this.setState({ serviceType, allowBooking: true, serviceTypeError: "", serviceTypeError });
+        }
+    }
+    selectHospital(hospital) {
+        let hospitalError = hospital ? "" : this.state.hospitalError;
+        let getDefaultService = () => {
+            serviceProvider.getAll(this.state.hospital.hospital.id, "", this.state.serviceType.id).then(s => {
+                if (s && s.code == 0 && s.data && s.data.services && s.data.services.length == 1) {
+                    let service = s.data.services[0];
+                    this.setState({ service: s.data.services[0].service, specialist: service.specialist && service.specialist.length > 0 ? service.specialist[0] : {} });
+                }
+            });
+        }
+
+        if (!hospital || !this.state.hospital || hospital.hospital.id != this.state.hospital.hospital.id) {
+            this.setState({ hospital, service: null, schedules: [], schedule: null, allowBooking: true, hospitalError }, getDefaultService)
+        } else {
+            this.setState({ hospital, allowBooking: true, hospitalError }, getDefaultService);
+        }
+
+    }
+    selectService(service, specialist) {
+        let serviceError = service ? "" : this.state.serviceError;
+        if (!service || !this.state.service || service.id != this.state.service.id) {
+            this.setState({ service, specialist, schedules: [], schedule: null, allowBooking: true, serviceError }, () => {
+                this.reloadSchedule();
+            })
+        } else {
+            this.setState({ service, specialist, allowBooking: true, serviceError }, () => {
+                this.reloadSchedule();
+            });
+        }
+    }
+
+    reloadSchedule() {
+        if (this.state.service && this.state.bookingDate && this.state.hospital) {
+            this.setState({ isLoading: true }, () => {
+                scheduleProvider.getByDateAndService(this.state.service.id, this.state.bookingDate.format("yyyy-MM-dd")).then(s => {
+                    if (s.code == 0 && s.data) {
+                        let data = s.data || [];
+                        let scheduleError = data.length > 0 ? "" : this.state.scheduleError;
+                        this.setState({
+                            schedule: null,
+                            schedules: data, isLoading: false, scheduleError,
+                            scheduleError: data && data.length != 0 ? "" : "Không có lịch khám trong ngày thoả mãn yêu cầu của bạn, xin vui lòng chọn ngày khác"
+                        })
+                    }
+                    else {
+                        this.setState({
+                            schedule: null,
+                            schedules: [], isLoading: false,
+                            scheduleError: "Không có lịch khám trong ngày thoả mãn yêu cầu của bạn, xin vui lòng chọn ngày khác"
+                        })
+                    }
+                }).catch(e => {
+                    this.setState({
+                        schedule: null,
+                        isLoading: false,
+                        schedules: [],
+                        scheduleError: "Không có lịch khám trong ngày thoả mãn yêu cầu của bạn, xin vui lòng chọn ngày khác"
+                    })
+                });
+            });
+        }
+    }
+
     addBooking() {
         Keyboard.dismiss();
         if (!this.state.allowBooking)
@@ -171,10 +268,16 @@ class AddBookingScreen extends Component {
             this.setState({ profileError: "Hồ sơ không được bỏ trống" })
             error = true;
         }
-        if (this.state.specialist) {
+        if (this.state.serviceType) {
+            this.setState({ serviceTypeError: "" })
+        } else {
+            this.setState({ serviceTypeError: "Yêu cầu không được bỏ trống" })
+            error = true;
+        }
+        if (this.state.service) {
             this.setState({ serviceError: "" })
         } else {
-            this.setState({ serviceError: "Yêu cầu không được bỏ trống" })
+            this.setState({ serviceError: "Dịch vụ không được bỏ trống" })
             error = true;
         }
         if (this.state.bookingDate) {
@@ -190,12 +293,17 @@ class AddBookingScreen extends Component {
             error = true;
         }
 
-        // if (this.state.specialist) {
-        //     this.setState({ specialistError: "" })
-        // } else {
-        //     this.setState({ specialistError: "Chuyên khoa không được bỏ trống" })
-        //     error = true;
-        // }
+        if (this.state.schedules && this.state.schedules.length) {
+            if (this.state.schedule) {
+                this.setState({ scheduleError: "" })
+            } else {
+                this.setState({ scheduleError: "Giờ khám không được bỏ trống" })
+                error = true;
+            }
+        } else {
+            this.setState({ scheduleError: "Không có lịch khám trong ngày thoả mãn yêu cầu của bạn, xin vui lòng chọn ngày khác" })
+            error = true;
+        }
 
         let validForm = this.form.isValid();
         if (!error && validForm) {
@@ -217,16 +325,107 @@ class AddBookingScreen extends Component {
             });
             let reason = this.state.reason ? this.state.reason : ''
             let img = images ? images : ''
-            this.props.navigation.navigate("selectTime", {
-                profile: this.state.profile,
-                hospital: this.state.hospital,
-                specialist: this.state.specialist,
-                serviceType: this.state.serviceType ? this.state.serviceType : '',
-                bookingDate: this.state.bookingDate,
-                reason:reason,
-                img,
-                contact: this.state.contact
-            });
+
+
+
+
+
+
+
+            connectionUtils.isConnected().then(s => {
+                this.setState({ isLoading: true }, () => {
+                    console.log(this.state.schedule.time);
+                    bookingProvider.create(
+                        this.state.hospital.hospital.id,
+                        this.state.schedule.schedule.id,
+                        this.state.profile.medicalRecords.id,
+                        this.state.specialist.id,
+                        this.state.service.id,
+                        this.state.schedule.time.format("yyyy-MM-dd HH:mm:ss"),
+                        reason,
+                        img,
+                        this.state.contact
+                    ).then(s => {
+                        this.setState({ isLoading: false }, () => {
+                            if (s) {
+                                switch (s.code) {
+                                    case 0:
+                                        dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, this.state.profile);
+
+                                        this.props.navigation.navigate("confirmBooking", {
+                                            serviceType: this.state.serviceType,
+                                            service: this.state.service,
+                                            profile: this.state.profile,
+                                            hospital: this.state.hospital,
+                                            specialist: this.state.specialist,
+                                            bookingDate: this.state.bookingDate,
+                                            schedule: this.state.schedule,
+                                            reason: reason,
+                                            images: img,
+                                            contact: this.state.contact,
+                                            booking: s.data
+                                        });
+                                        break;
+                                    case 1:
+                                        this.setState({ isLoading: false }, () => {
+                                            snackbar.show("Đặt khám phải cùng ngày giờ với lịch làm việc", "danger");
+                                        });
+                                        break;
+                                    case 2:
+                                        this.setState({ isLoading: false }, () => {
+                                            snackbar.show("Đã kín lịch trong khung giờ này", "danger");
+                                        });
+                                        break;
+                                    case 401:
+                                        this.setState({ isLoading: false }, () => {
+                                            snackbar.show("Vui lòng đăng nhập để thực hiện", "danger");
+                                            this.props.navigation.navigate("login"
+                                                // , {
+                                                //     nextScreen: {
+                                                //         screen: "confirmBooking", params: this.props.navigation.state.params
+                                                //     }
+                                                // }
+                                            );
+                                        });
+                                        break;
+                                    default:
+                                        this.setState({ isLoading: false }, () => {
+                                            snackbar.show("Đặt khám không thành công", "danger");
+                                        });
+                                        break;
+                                }
+                            }
+                        });
+                    }).catch(e => {
+                        this.setState({ isLoading: false }, () => {
+                        });
+                    })
+                });
+            }).catch(e => {
+                snackbar.show("Không có kết nối mạng", "danger");
+            })
+
+
+
+
+
+            // this.props.navigation.navigate("selectTime", {
+            //     profile: this.state.profile,
+            //     hospital: this.state.hospital,
+            //     specialist: this.state.specialist,
+            //     serviceType: this.state.serviceType ? this.state.serviceType : '',
+            //     bookingDate: this.state.bookingDate,
+            //     reason: reason,
+            //     img,
+            //     contact: this.state.contact
+            // });
+        }
+    }
+    onTimePickerChange(schedule) {
+        if (schedule)
+            this.setState({ schedule, scheduleError: "" });
+        else {
+            this.setState({ schedule });
         }
     }
     render() {
@@ -236,70 +435,69 @@ class AddBookingScreen extends Component {
         minDate.setDate(minDate.getDate() + 1);
         // minDate.setDate(minDate.getDate());
 
-        return (<ActivityPanel style={{ flex: 1, backgroundColor: '#f7f9fb' }} title="Đặt Khám"
+        return (<ActivityPanel title="Đặt Khám"
+            isLoading={this.state.isLoading}
             menuButton={<TouchableOpacity style={styles.menu} onPress={() => snackbar.show("Chức năng đang phát triển")}><ScaleImage style={styles.img} height={20} source={require("@images/new/booking/ic_info.png")} /></TouchableOpacity>}
-            titleStyle={{ marginLeft: 50 }}
-            containerStyle={{
-                backgroundColor: "#f7f9fb"
-            }}>
+            titleStyle={{ marginLeft: 50 }}>
 
-            <ScrollView keyboardShouldPersistTaps='handled' style={styles.container}>
-
-                <TouchableOpacity style={styles.name} onPress={() => {
-                    connectionUtils.isConnected().then(s => {
-                        this.props.navigation.navigate("selectProfile", {
-                            onSelected: this.selectProfile.bind(this),
-                            profile: this.state.profile
+            <KeyboardAwareScrollView>
+                <View style={styles.article}>
+                    <TouchableOpacity style={styles.name} onPress={() => {
+                        connectionUtils.isConnected().then(s => {
+                            this.props.navigation.navigate("selectProfile", {
+                                onSelected: this.selectProfile.bind(this),
+                                profile: this.state.profile
+                            });
+                        }).catch(e => {
+                            snackbar.show("Không có kết nối mạng", "danger");
                         });
-                    }).catch(e => {
-                        snackbar.show("Không có kết nối mạng", "danger");
-                    });
-                }}>
-                    <View style={{
-                        flexDirection: 'row', alignItems: 'center', padding: 10, paddingBottom: this.state.profileError ? 0 : 10
                     }}>
-                        {this.state.profile ?
-                            <View style={{ flexDirection: 'row', height: 38, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                <ImageLoad
-                                    resizeMode="cover"
-                                    imageStyle={{ borderRadius: 20, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
-                                    borderRadius={20}
-                                    customImagePlaceholderDefaultStyle={[styles.avatar, { width: 40, height: 40 }]}
-                                    placeholderSource={require("@images/new/user.png")}
-                                    resizeMode="cover"
-                                    loadingStyle={{ size: 'small', color: 'gray' }}
-                                    source={source}
-                                    style={{
-                                        alignSelf: 'center',
-                                        borderRadius: 20,
-                                        width: 40,
-                                        height: 40
-                                    }}
-                                    defaultImage={() => {
-                                        return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={40} height={40} />
-                                    }}
-                                />
-                                <Text style={styles.txtname}>{this.state.profile.medicalRecords.name}</Text>
-                            </View> :
-                            <View style={{ flexDirection: 'row', height: 38, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                <View style={{ justifyContent: 'center', alignItems: 'center', width: 38, height: 38, borderRadius: 19, borderColor: 'rgba(151, 151, 151, 0.29)', borderWidth: 0.5 }}>
-                                    <ScaleImage source={require("@images/new/profile/ic_profile.png")} width={20} />
+                        <View style={{
+                            flexDirection: 'row', alignItems: 'center', padding: 10, paddingBottom: this.state.profileError ? 0 : 10
+                        }}>
+                            {this.state.profile ?
+                                <View style={{ flexDirection: 'row', height: 38, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                    <ImageLoad
+                                        resizeMode="cover"
+                                        imageStyle={{ borderRadius: 20, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
+                                        borderRadius={20}
+                                        customImagePlaceholderDefaultStyle={[styles.avatar, { width: 40, height: 40 }]}
+                                        placeholderSource={require("@images/new/user.png")}
+                                        resizeMode="cover"
+                                        loadingStyle={{ size: 'small', color: 'gray' }}
+                                        source={source}
+                                        style={{
+                                            alignSelf: 'center',
+                                            borderRadius: 20,
+                                            width: 40,
+                                            height: 40
+                                        }}
+                                        defaultImage={() => {
+                                            return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={40} height={40} />
+                                        }}
+                                    />
+                                    <Text style={styles.txtname}>{this.state.profile.medicalRecords.name}</Text>
+                                </View> :
+                                <View style={{ flexDirection: 'row', height: 38, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                    <View style={{ justifyContent: 'center', alignItems: 'center', width: 38, height: 38, borderRadius: 19, borderColor: 'rgba(151, 151, 151, 0.29)', borderWidth: 0.5 }}>
+                                        <ScaleImage source={require("@images/new/profile/ic_profile.png")} width={20} />
+                                    </View>
+                                    <Text style={styles.txtname}>Chọn hồ sơ</Text>
                                 </View>
-                                <Text style={styles.txtname}>Chọn hồ sơ</Text>
-                            </View>
-                        }
+                            }
 
-                        <ScaleImage style={styles.img} height={10} source={require("@images/new/booking/ic_next.png")} />
-                    </View>
-                    {
-                        this.state.profileError ?
-                            <Text style={[styles.errorStyle]}>{this.state.profileError}</Text> : null
-                    }
-                </TouchableOpacity>
+                            <ScaleImage style={styles.img} height={10} source={require("@images/new/booking/ic_next.png")} />
+                        </View>
+                        {
+                            this.state.profileError ?
+                                <Text style={[styles.errorStyle]}>{this.state.profileError}</Text> : null
+                        }
+                    </TouchableOpacity>
+                </View>
                 <View style={styles.article}>
                     <TouchableOpacity style={styles.mucdichkham} onPress={() => {
                         connectionUtils.isConnected().then(s => {
-                            this.props.navigation.navigate("selectSpecialist", { onSelected: this.selectSpecialist.bind(this) });
+                            this.props.navigation.navigate("selectServiceType", { onSelected: this.selectServiceType.bind(this) });
                         }).catch(e => {
                             snackbar.show("Không có kết nối mạng", "danger");
                         });
@@ -307,33 +505,22 @@ class AddBookingScreen extends Component {
                     >
                         <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_serviceType.png")} />
                         <Text style={styles.mdk}>Yêu cầu</Text>
-                        <Text numberOfLines={1} style={styles.ktq}>{this.state.specialist ? this.state.specialist.name : "Chọn chuyên khoa"}</Text>
+                        <Text numberOfLines={1} style={styles.ktq}>{this.state.serviceType ? this.state.serviceType.name : "Chọn yêu cầu"}</Text>
                         <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
                     </TouchableOpacity>
                     {
-                        this.state.serviceError ?
-                            <Text style={[styles.errorStyle]}>{this.state.serviceError}</Text> : null
-                    }
-                    <View style={styles.border}></View>
-                    <TouchableOpacity style={styles.mucdichkham} onPress={() => this.setState({ toggelDateTimePickerVisible: true })}>
-                        <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_bookingDate.png")} />
-                        <Text style={styles.mdk}>Ngày khám</Text>
-                        <Text style={styles.ktq}>{this.state.date ? this.state.date : "Chọn ngày khám"}</Text>
-                        <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
-                    </TouchableOpacity>
-                    {
-                        this.state.bookingError ?
-                            <Text style={[styles.errorStyle]}>{this.state.bookingError}</Text> : null
+                        this.state.serviceTypeError ?
+                            <Text style={[styles.errorStyle]}>{this.state.serviceTypeError}</Text> : null
                     }
                     <View style={styles.border}></View>
                     <TouchableOpacity style={styles.mucdichkham} onPress={() => {
-                        if (!this.state.specialist) {
+                        if (!this.state.serviceType) {
                             snackbar.show("Vui lòng chọn yêu cầu khám", "danger");
                             return;
                         }
                         connectionUtils.isConnected().then(s => {
                             this.props.navigation.navigate("selectHospital", {
-                                specialist: this.state.specialist,
+                                serviceType: this.state.serviceType,
                                 hospital: this.state.hospital,
                                 onSelected: this.selectHospital.bind(this)
                             })
@@ -352,19 +539,65 @@ class AddBookingScreen extends Component {
                             <Text style={[styles.errorStyle]}>{this.state.hospitalError}</Text> : null
                     }
                     <View style={styles.border}></View>
-                  {/*  <TouchableOpacity style={styles.mucdichkham} onPress={() => {
-                        connectionUtils.isConnected().then(s => {
-                            this.props.navigation.navigate("selectSpecialist", { onSelected: this.selectSpecialist.bind(this) });
-                        }).catch(e => {
-                            snackbar.show("Không có kết nối mạng", "danger");
-                        });
+                    <TouchableOpacity style={styles.mucdichkham} onPress={() => {
+                        if (!this.state.hospital) {
+                            snackbar.show("Vui lòng chọn địa điểm khám", "danger");
+                            return;
+                        }
+                        this.props.navigation.navigate("selectService", {
+                            hospital: this.state.hospital,
+                            serviceType: this.state.serviceType,
+                            onSelected: this.selectService.bind(this)
+                        })
                     }}>
-                        <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_specialist.png")} />
-                        <Text style={styles.mdk}>Chuyên khoa</Text>
-                        <Text numberOfLines={1} style={styles.ktq}>{this.state.specialist ? this.state.specialist.name : "Chọn chuyên khoa"}</Text>
+                        <ScaleImage style={styles.imgIc} height={15} source={require("@images/new/booking/ic_specialist.png")} />
+                        <Text style={styles.mdk}>Dịch vụ</Text>
+
+                        {this.state.service ?
+                            <View style={{ flex: 1 }}>
+                                <Text numberOfLines={1} style={styles.ktq}>{this.state.service.name}</Text>
+                                <Text numberOfLines={1} style={styles.ktq}>{this.state.service.price.formatPrice() + 'đ'}</Text>
+                            </View> :
+                            <Text numberOfLines={1} style={styles.ktq}>Chọn dịch vụ</Text>
+                        }
+
                         <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
-                </TouchableOpacity> */}
-                   
+                    </TouchableOpacity>
+                    {
+                        this.state.serviceError ?
+                            <Text style={[styles.errorStyle]}>{this.state.serviceError}</Text> : null
+                    }
+                </View>
+                <View style={styles.article}>
+                    <TouchableOpacity style={styles.mucdichkham} onPress={() => {
+                        if (!this.state.service) {
+                            snackbar.show("Vui lòng chọn dịch vụ", "danger");
+                            return;
+                        }
+                        this.setState({ toggelDateTimePickerVisible: true })
+                    }}>
+                        <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_bookingDate.png")} />
+                        <Text style={styles.mdk}>Ngày khám</Text>
+                        <Text style={styles.ktq}>{this.state.date ? this.state.date : "Chọn ngày khám"}</Text>
+                        <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
+                    </TouchableOpacity>
+                    {
+                        this.state.bookingError ?
+                            <Text style={[styles.errorStyle]}>{this.state.bookingError}</Text> : null
+                    }
+                    <View style={styles.border}></View>
+                    <View style={styles.mucdichkham}>
+                        <ScaleImage style={styles.imgIc} height={15} source={require("@images/new/booking/ic_specialist.png")} />
+                        <Text style={styles.mdk}>Chọn giờ khám</Text>
+                    </View>
+                    <View style={[styles.mucdichkham, { paddingHorizontal: 20 }]}>
+                        <Text style={{ fontSize: 14, color: '#8e8e93' }}>Gợi ý: Chọn những giờ màu xanh sẽ giúp bạn được phục vụ nhanh hơn</Text>
+                    </View>
+                    <BookingTimePicker schedules={this.state.schedules} onChange={this.onTimePickerChange.bind(this)} />
+                    {
+                        this.state.scheduleError ?
+                            <Text style={[styles.errorStyle]}>{this.state.scheduleError}</Text> : null
+                    }
                 </View>
                 <Text style={styles.lienlac}>Liên lạc với tôi qua</Text>
 
@@ -445,7 +678,8 @@ class AddBookingScreen extends Component {
                     }
                 </View>
                 <Text style={styles.des}>Mô tả triệu chứng sẽ giúp bạn được phục vụ tốt hơn</Text>
-            </ScrollView>
+            </KeyboardAwareScrollView>
+
             <View style={styles.btn}>
                 <TouchableOpacity onPress={this.addBooking.bind(this)} style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]}><Text style={styles.datkham}>Đặt khám</Text></TouchableOpacity>
             </View>
@@ -454,11 +688,19 @@ class AddBookingScreen extends Component {
             <DateTimePicker
                 isVisible={this.state.toggelDateTimePickerVisible}
                 onConfirm={newDate => {
+                    if (newDate && this.state.bookingDate && newDate.ddmmyyyy() == this.state.bookingDate.ddmmyyyy())
+                        return;
                     this.setState({
                         bookingDate: newDate,
                         date: newDate.format("thu, dd tháng MM").replaceAll(" 0", " "),
-                        toggelDateTimePickerVisible: false, allowBooking: true
+                        toggelDateTimePickerVisible: false,
+                        allowBooking: true,
+                        schedule: null,
+                        serviceError: "",
+                        scheduleError: "",
+                        isLoading: true
                     }, () => {
+                        this.reloadSchedule();
                     });
                 }}
                 onCancel={() => {
@@ -469,8 +711,8 @@ class AddBookingScreen extends Component {
                 confirmTextIOS={"Xác nhận"}
                 date={this.state.bookingDate || minDate}
             />
-        </ActivityPanel>
-        );
+
+        </ActivityPanel>);
     }
 }
 
@@ -485,13 +727,6 @@ const styles = StyleSheet.create({
         paddingTop: 20,
         borderTopWidth: 1,
         borderTopColor: "rgba(0, 0, 0, 0.06)"
-    },
-    name: {
-        backgroundColor: "#ffffff",
-        borderStyle: "solid",
-        borderWidth: 1,
-        borderColor: "rgba(0, 0, 0, 0.06)",
-        minHeight: 18
     },
     imgName: {
         marginLeft: 5,
@@ -512,10 +747,10 @@ const styles = StyleSheet.create({
 
     },
     article: {
-        marginTop: 25,
+        marginTop: 12,
         backgroundColor: "#ffffff",
         borderStyle: "solid",
-        borderWidth: 1,
+        borderWidth: 0.5,
         borderColor: "rgba(0, 0, 0, 0.06)",
 
     },
@@ -526,7 +761,7 @@ const styles = StyleSheet.create({
     },
     mdk: {
         marginLeft: 12,
-        fontSize: 14,
+        fontSize: 15,
         fontWeight: "normal",
         fontStyle: "normal",
         letterSpacing: 0,
@@ -535,7 +770,7 @@ const styles = StyleSheet.create({
     },
     ktq: {
         flex: 1,
-        fontSize: 12,
+        fontSize: 14,
         fontWeight: "normal",
         fontStyle: "normal",
         letterSpacing: 0,
@@ -689,7 +924,8 @@ const styles = StyleSheet.create({
     errorStyle: {
         color: 'red',
         marginTop: 10,
-        marginLeft: 25
+        marginLeft: 25,
+        marginRight: 25
     }
 });
 

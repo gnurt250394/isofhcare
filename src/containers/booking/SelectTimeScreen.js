@@ -25,7 +25,7 @@ class SelectTimeScreen extends Component {
         let reason = this.props.navigation.state.params.reason;
         let contact = this.props.navigation.state.params.contact;
         let images = this.props.navigation.state.params.images;
-console.log(specialist,'s');
+        console.log(specialist, 's');
         this.state = {
             serviceType,
             hospital,
@@ -399,18 +399,10 @@ console.log(specialist,'s');
     }
 
     render() {
-        return (<ActivityPanel isLoading={this.state.isLoading} style={{ flex: 1, backgroundColor: '#f7f9fb' }} title="Thời gian"
-            titleStyle={{ marginLeft: 0 }}
-            containerStyle={{
-                backgroundColor: "#f7f9fb"
-            }} actionbarStyle={{
-                backgroundColor: '#ffffff',
-                borderBottomWidth: 1,
-                borderBottomColor: 'rgba(0, 0, 0, 0.06)'
-            }}>
+        return (<ActivityPanel isLoading={this.state.isLoading} style={{ flex: 1, backgroundColor: '#f7f9fb' }} title="Thời gian">
 
             <View style={styles.container}>
-                <ScrollView>
+                <ScrollView keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
                     <View style={styles.article}>
                         <TouchableOpacity style={styles.mucdichkham} onPress={() => {
                             this.props.navigation.navigate("selectService", {
@@ -439,7 +431,7 @@ console.log(specialist,'s');
                                     <ScaleImage source={require("@images/new/booking/ic_bookingDate.png")} width={20} />
                                     <Text style={styles.txtchongiokham}>Chọn giờ khám</Text>
                                 </View>
-                                <Text style={{ marginTop: 20, fontSize: 14, color:'#8e8e93' }}>Gợi ý: Chọn những giờ màu xanh sẽ giúp bạn được phục vụ nhanh hơn</Text>
+                                <Text style={{ marginTop: 20, fontSize: 14, color: '#8e8e93' }}>Gợi ý: Chọn những giờ màu xanh sẽ giúp bạn được phục vụ nhanh hơn</Text>
 
                                 <View style={{ position: 'relative', marginTop: 20, height: 100, paddingTop: 40 }}>
                                     {
