@@ -210,7 +210,7 @@ class GetNewTicket extends Component {
                     }
                 </ScrollView>)}
                 <ActionSheet
-                    title={"Lấy số khám"}
+                    title={"Lấy số tiếp đón"}
                     ref={o => this.actionSheetGetTicket = o}
                     options={["Lấy số cho tôi", "Lấy số hộ", "Hủy"]}
                     cancelButtonIndex={2}
@@ -229,7 +229,7 @@ class GetNewTicket extends Component {
                 />
                 <ActionSheet
                     title={"Thông báo"}
-                    message={"Đối tượng dịch vụ tại bệnh viện E không cần có số khám"}
+                    message={"Đối tượng dịch vụ tại bệnh viện E không cần có số tiếp đón"}
                     ref={o => this.actionSheetErr = o}
                     options={["OK"]}
                     cancelButtonIndex={0}

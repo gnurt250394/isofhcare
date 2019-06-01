@@ -185,7 +185,7 @@ class ScanQRCodeScreen extends Component {
                     this.setState({
                         isLoading: false,
                         showError: true, dialog: {
-                            title: "SỐ KHÁM ĐÃ VƯỢT ĐỊNH MỨC", content: "Bạn đã lấy quá nhiều số khám trong ngày. Hãy quay lại vào ngày mai.", button: "Xem lịch sử lấy số", onPress: () => {
+                            title: "SỐ TIẾP ĐÓN ĐÃ VƯỢT ĐỊNH MỨC", content: "Bạn đã lấy quá nhiều số tiếp đón trong ngày. Hãy quay lại vào ngày mai.", button: "Xem lịch sử lấy số", onPress: () => {
                                 this.setState({ showError: false }, () => {
                                     setTimeout(() => {
                                         this.props.navigation.navigate("selectHealthFacilitiesScreen", {
@@ -316,7 +316,7 @@ class ScanQRCodeScreen extends Component {
                                     }, 400);
                                 })
                             }}
-                            ><Text style={{ color: '#1ca2e3', fontSize: 15 }} >{"Lấy số khám dịch vụ"}</Text>
+                            ><Text style={{ color: '#1ca2e3', fontSize: 15 }} >{"Lấy số tiếp đón dịch vụ"}</Text>
                             </TouchableOpacity>
                             <View style={{ height: 1, backgroundColor: "#e5e5e5", width: 300, maxWidth: deviceWidth }} />
                             <TouchableOpacity style={[styles.viewBtnModal, { padding: 15 }]} onPress={() => {
