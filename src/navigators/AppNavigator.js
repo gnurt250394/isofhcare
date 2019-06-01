@@ -52,7 +52,7 @@ import SelectHospitalByLocationScreen from "@containers/booking/SelectHospitalBy
 import SelectTimeScreen from "@containers/booking/SelectTimeScreen";
 import SelectServiceScreen from "@containers/booking/SelectServiceScreen";
 import SelectServiceTypeScreen from "@containers/booking/SelectServiceTypeScreen";
-import FilterScreen from "@containers/booking/FilterScreen";
+import FilterSpecialistScreen from "@containers/booking/FilterSpecialistScreen";
 import SelectSpecialistScreen from "@containers/booking/SelectSpecialistScreen";
 import ConfirmBookingScreen from "@containers/booking/ConfirmBookingScreen";
 import CreateBookingSuccessScreen from "@containers/booking/CreateBookingSuccessScreen";
@@ -135,7 +135,7 @@ const RootNavigator = createStackNavigator(
     paymentBookingError: { screen: PaymentBookingErrorScreen },
     detailsHistory: { screen: DetailsHistoryScreen },
     paymentVNPay: { screen: PaymentWithVNPayScreen },
-    filter :{screen : FilterScreen},
+    filterSpecialist :{screen : FilterSpecialistScreen},
     //---------------------------------
     createProfile: { screen: CreateProfileScreen },
     selectProfile: { screen: SelectProfileScreen },
