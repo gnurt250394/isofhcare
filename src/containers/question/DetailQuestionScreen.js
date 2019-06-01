@@ -18,6 +18,7 @@ import DialogBox from 'react-native-dialogbox';
 import StarRating from 'react-native-star-rating';
 import Dash from 'mainam-react-native-dash-view';
 import connectionUtils from '@utils/connection-utils';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 const disease = [{
     value: 1,
     text: "Tim mạch"
@@ -216,9 +217,57 @@ class DetailQuestionScreen extends Component {
             </View>
         </View>
     }
-
+    renderFormSendWithoutDiagnosticIos (){
+        return (
+            <KeyboardAwareScrollView>
+            <View style={{ marginTop: 20 }}>
+            <Text style={{ color: 'rgb(155,155,155)' }}>Bạn còn {(num => { let x = 3 - num; if (x < 0) return 0; return x }).call(this, this.state.post.post.numberCommentUser)} lượt hỏi</Text>
+            <View style={{
+                marginTop: 5,
+                flexDirection: 'row', borderRadius: 6, borderColor: "#cacaca", borderWidth: 1
+            }}>
+                <Form ref={ref => this.form = ref} style={{ flex: 1, marginTop: 10 }}>
+                    <TextField placeholder={"Viết trả lời"}
+                        inputStyle={[{ maxHeight: 200, textAlignVertical: 'top', paddingLeft: 10, paddingBottom: 5, paddingRight: 10 }]}
+                        errorStyle={[styles.errorStyle, { marginLeft: 10, marginBottom: 10 }]}
+                        onChangeText={(s) => this.setState({ content: s })}
+                        value={this.state.content}
+                        multiline={true}
+                        hideError={true}
+                        validate={{
+                            rules: {
+                                required: true,
+                                maxlength: 2000
+                            },
+                            messages:
+                            {
+                                required: "Câu trả lời bắt buộc phải nhập",
+                                maxlength: "Không cho phép nhập quá 2000 ký tự"
+                            }
+                        }}
+                        onValidate={(valid, messages) => {
+                            if (valid) {
+                                this.setState({ contentError: "" });
+                            }
+                            else {
+                                this.setState({ contentError: messages });
+                            }
+                        }}
+                    />
+                </Form>
+                <TouchableOpacity style={{ padding: 20 }} onPress={this.userSend.bind(this)}>
+                    <ScaleImage width={22} source={this.state.content && this.state.content.trim().length > 0 ? require("@images/new/send2.png") : require("@images/new/send.png")} />
+                </TouchableOpacity>
+            </View>
+            <Text style={[styles.errorStyle]}>{this.state.contentError}</Text>
+        </View>
+        </KeyboardAwareScrollView>
+        );
+    }
     renderFormSendWithoutDiagnostic() {
-        return (<View style={{ marginTop: 20 }}>
+        return (
+            
+            <View style={{ marginTop: 20 }}>
             <Text style={{ color: 'rgb(155,155,155)' }}>Bạn còn {(num => { let x = 3 - num; if (x < 0) return 0; return x }).call(this, this.state.post.post.numberCommentUser)} lượt hỏi</Text>
             <View style={{
                 marginTop: 5,
@@ -301,8 +350,7 @@ class DetailQuestionScreen extends Component {
                         </View>
                     }
                     {
-                        this.state.writeQuestion &&
-                        this.renderFormSendWithoutDiagnostic()
+                      Platform.OS === 'ios' ?  this.state.writeQuestion && this.renderFormSendWithoutDiagnostic() : this.state.writeQuestion && this.renderFormSendWithoutDiagnosticIos()
                     }
                 </View>);
         }
@@ -562,7 +610,7 @@ class DetailQuestionScreen extends Component {
                         <DialogBox ref={dialogbox => { this.dialogbox = dialogbox }} />
                     </View>
                 }
-            </ActivityPanel >
+            </ActivityPanel>
         );
     }
 }
