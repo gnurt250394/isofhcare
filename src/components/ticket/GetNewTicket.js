@@ -204,7 +204,7 @@ class GetNewTicket extends PureComponent {
                 >
                     <View style={styles.viewModal}>
                         <View style={styles.viewDialog}>
-                            <Text style={styles.txDialog}>Lấy số khám</Text>
+                            <Text style={styles.txDialog}>Lấy số tiếp đón</Text>
                             <View style={styles.viewBtnModal}>
                                 <TouchableOpacity style={styles.viewBtn} onPress={() => {
                                     this.setState({ isVisible: false }, () => {
@@ -232,7 +232,7 @@ class GetNewTicket extends PureComponent {
                     <View style={styles.viewModal}>
                         <View style={styles.viewContents}>
                             <Text style={styles.viewNoty}>Thông báo</Text>
-                            <Text style={styles.TxContents}>Đối tượng dịch vụ tại bệnh viện E không cần có số khám</Text>
+                            <Text style={styles.TxContents}>Đối tượng dịch vụ tại bệnh viện E không cần có số tiếp đón</Text>
                             <View style={styles.viewLine}></View>
                             <TouchableOpacity style={styles.btnDone} onPress={this.onCloseErr}><Text style={{ color: '#02c39a' }}>OK</Text></TouchableOpacity>
                         </View>

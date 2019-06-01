@@ -138,7 +138,7 @@ class TicketHistory extends Component {
                         </View>
                         {numberHospital.number ?
                             <TouchableOpacity style={{ borderRadius: 12, backgroundColor: '#0A9BE1', paddingVertical: 3, paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center' }}>
-                                <Text style={{ color: '#fff', fontSize: 14 }}>Số khám: {numberHospital.number}</Text>
+                                <Text style={{ color: '#fff', fontSize: 14 }}>Số tiếp đón: {numberHospital.number}</Text>
                             </TouchableOpacity> : null
                         }
                     </View>
