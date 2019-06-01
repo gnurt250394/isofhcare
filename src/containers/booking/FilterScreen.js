@@ -73,9 +73,24 @@ class FilterScreen extends Component {
     }
 
     renderItem = ({ item }) => {
+        const source = item.linkImages ? { uri: item.linkImages.absoluteUrl() } : require("@images/new/booking/ic_default.png");
         return (
             <TouchableOpacity onPress={() => this.onSelected(item)} style={styles.viewBtn}>
-                <ScaleImage width={30} source={ item.linkImages ? {uri:linkImages.absoluteUrl()} : require("@images/new/booking/ic_default.png")} />
+            <ImageLoad
+                    resizeMode="cover"
+                    style={{ width: 30, height: 30 }}
+                    loadingStyle={{ size: 'small', color: 'gray' }}
+                    customImagePlaceholderDefaultStyle={{
+                        width: 30,
+                        height: 30,
+                        alignSelf: "center"
+                    }}
+                    placeholderSource={require("@images/new/booking/ic_default.png")}
+                    source={source}
+                    defaultImage={() => {
+                        return <ScaleImage resizeMode='cover' source={require("@images/new/booking/ic_default.png")} width={30} height={30} />
+                    }}
+                />
                 <Text style={{ fontWeight: 'bold', marginVertical: 10, flex: 1,marginLeft:10 }}>{item.name}</Text>
                 {item.selected ? (
                     <ScaleImage height={20} source={require('@images/new/ic_question_check_specialist.png')}></ScaleImage>
