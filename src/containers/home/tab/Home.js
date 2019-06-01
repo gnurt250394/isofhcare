@@ -228,11 +228,11 @@ class Home extends Component {
   getItemWidth() {
     const width = DEVICE_WIDTH - 40;
     if (width >= 320)
-      return 80;
+      return 70;
     if (width > 300)
-      return 120;
+      return 110;
     if (width > 250)
-      return 80;
+      return 70;
     return width - 50;
   }
 
@@ -249,7 +249,7 @@ class Home extends Component {
       >
         <View style={{ flex: 1, position: 'relative' }}>
           <ScaledImage source={require("@images/new/home/bg_home_new.png")} width={DEVICE_WIDTH} style={{ position: 'absolute', top: 72, right: 0, left: 0 }} />
-          <View style={{ height: 75, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10 }}>
+          <View style={{ height: 75, flexDirection: 'row', alignItems: 'center', paddingHorizontal:10,backgroundColor:'#fff',borderBottomColor:'#7c817f',borderBottomWidth:0.5}}>
             <View style={{ flex: 1, alignItems: 'center', marginLeft: 45 }}>
               <ScaledImage source={require("@images/new/isofhcare.png")} width={116} />
             </View>
@@ -296,7 +296,7 @@ class Home extends Component {
                         );
                       }}
                     />  */}
-                    <Text style={{ marginLeft: 5, fontSize: 18, fontWeight: 'bold', color: "#7c817f" }} >Xin chào, <Text style={{ color: 'rgb(255,138,21)' }}>{((name) => {
+                    <Text style={{ marginLeft: 5, fontSize: 18, fontWeight: 'bold', color: "#4a4a4a" }} >Xin chào, <Text style={{ color: 'rgb(255,138,21)' }}>{((name) => {
                       if (!name) return "";
                       let x = name.trim().split(" ");
                       name = (x[x.length - 1]).toLowerCase();
@@ -352,7 +352,7 @@ const styles = StyleSheet.create({
   icon: {
   },
   label: {
-    marginTop: 10, color: '#4A4A4A', fontSize: 15, fontWeight: '600', lineHeight: 23
+    marginTop: 2, color: '#4A4A4A', fontSize: 15, fontWeight: '600', lineHeight: 20
   },
   subLabel: {
     color: '#9B9B9B', fontSize: 12, textAlign: 'center', marginTop: 5

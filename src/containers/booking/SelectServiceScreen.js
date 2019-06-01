@@ -134,7 +134,7 @@ class SelectServiceScreen extends Component {
                                 })
                             }
                         })
-                    }><ScaleImage style={styles.img} height={20} source={require("@images/new/booking/ic_filter.png")} /></TouchableOpacity></View>}
+                    }><ScaleImage style={styles.img} height={20} source={ this.state.listSelected && this.state.listSelected.length > 0 ? require("@images/new/booking/ic_filter1.png") : require("@images/new/booking/ic_filter.png")} /></TouchableOpacity></View>}
                 titleStyle={{ marginLeft: 80 }}
                 showFullScreen={true}
             >
@@ -179,12 +179,12 @@ class SelectServiceScreen extends Component {
                         <TouchableOpacity onPress={this.selectService.bind(this, item)}>
                             <View style={{ marginBottom: 2, backgroundColor: '#FFF', padding: 20, flexDirection: 'column', borderBottomColor: '#00000011', borderBottomWidth: 0.7 }}>
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <Text style={{ fontWeight: 'bold', flex: 1 }}>
+                                    <Text style={{ fontWeight: 'bold', flex: 1 ,maxWidth:250}}>
                                         {item.service.name}
                                     </Text>
                                     <Text>{item.service.price.formatPrice() + 'đ'}</Text>
                                 </View>
-                                <Text numberOfLines={2}>
+                                <Text  numberOfLines={2}>
                                     {item.service.describe}
                                 </Text>
                             </View>
