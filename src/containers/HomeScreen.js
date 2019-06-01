@@ -187,9 +187,10 @@ class HomeScreen extends Component {
                 onPress={this.swipe.bind(this, 0)}
               >
                 <ScaledImage
+               
                   source={
                     this.state.tabIndex == 0
-                      ? require("@images/new/ic_home_home1.png")
+                      ? require("@images/new/ic_home_home2.png")
                       : require("@images/new/ic_home_home0.png")
                   }
                   width={20}
@@ -227,7 +228,7 @@ class HomeScreen extends Component {
                 <ScaledImage
                   source={
                     this.state.tabIndex == 1
-                      ? require("@images/new/ic_home_account1.png")
+                      ? require("@images/new/ic_home_account2.png")
                       : require("@images/new/ic_home_account0.png")
                   }
                   height={20}
@@ -259,7 +260,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     flex: 1,
-    backgroundColor: "#02c39a11"
+    backgroundColor: "#fff"
   },
   tab: {
     alignItems: "center",
@@ -269,7 +270,7 @@ const styles = StyleSheet.create({
   },
   tab_label_selected: {
     marginTop: 5,
-    fontWeight: "500",
+    fontWeight: "200",
     color: "rgb(2,195,154)",
     fontSize: 15
   },
