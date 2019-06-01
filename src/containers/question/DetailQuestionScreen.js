@@ -18,6 +18,7 @@ import DialogBox from 'react-native-dialogbox';
 import StarRating from 'react-native-star-rating';
 import Dash from 'mainam-react-native-dash-view';
 import connectionUtils from '@utils/connection-utils';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 const disease = [{
     value: 1,
     text: "Tim mạch"
@@ -216,9 +217,11 @@ class DetailQuestionScreen extends Component {
             </View>
         </View>
     }
-
+    
     renderFormSendWithoutDiagnostic() {
-        return (<View style={{ marginTop: 20 }}>
+        return (
+            
+            <View style={{ marginTop: 20 }}>
             <Text style={{ color: 'rgb(155,155,155)' }}>Bạn còn {(num => { let x = 3 - num; if (x < 0) return 0; return x }).call(this, this.state.post.post.numberCommentUser)} lượt hỏi</Text>
             <View style={{
                 marginTop: 5,
@@ -253,11 +256,13 @@ class DetailQuestionScreen extends Component {
                         }}
                     />
                 </Form>
+                
                 <TouchableOpacity style={{ padding: 20 }} onPress={this.userSend.bind(this)}>
                     <ScaleImage width={22} source={this.state.content && this.state.content.trim().length > 0 ? require("@images/new/send2.png") : require("@images/new/send.png")} />
                 </TouchableOpacity>
             </View>
             <Text style={[styles.errorStyle]}>{this.state.contentError}</Text>
+         
         </View>
         );
     }
@@ -301,8 +306,7 @@ class DetailQuestionScreen extends Component {
                         </View>
                     }
                     {
-                        this.state.writeQuestion &&
-                        this.renderFormSendWithoutDiagnostic()
+                     this.state.writeQuestion && this.renderFormSendWithoutDiagnostic()
                     }
                 </View>);
         }
@@ -501,7 +505,7 @@ class DetailQuestionScreen extends Component {
             <ActivityPanel style={{ flex: 1 }} title="Tư vấn online" showFullScreen={true} isLoading={this.state.isLoading}>
                 {
                     post.post &&
-                    <View style={{ flex: 1 }}>
+                    <KeyboardAwareScrollView style={{ flex: 1 }}>
                         <View style={{ padding: 20, flex: 1 }}>
                             <ScrollView
                                 refreshControl={<RefreshControl
@@ -560,9 +564,9 @@ class DetailQuestionScreen extends Component {
                             <KeyboardSpacer />
                         }
                         <DialogBox ref={dialogbox => { this.dialogbox = dialogbox }} />
-                    </View>
+                    </KeyboardAwareScrollView>
                 }
-            </ActivityPanel >
+            </ActivityPanel>
         );
     }
 }
