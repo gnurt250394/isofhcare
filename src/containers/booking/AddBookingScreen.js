@@ -183,7 +183,7 @@ class AddBookingScreen extends Component {
         let getDefaultService = () => {
             serviceProvider.getAll(this.state.hospital.hospital.id, "", this.state.serviceType.id).then(s => {
                 if (s && s.code == 0 && s.data && s.data.services && s.data.services.length == 1) {
-                    let service = s.data.service[0];
+                    let service = s.data.services[0];
                     this.setState({ service: s.data.services[0].service, specialist: service.specialist && service.specialist.length > 0 ? service.specialist[0] : {} });
                 }
             });
