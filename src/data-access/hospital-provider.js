@@ -43,9 +43,9 @@ module.exports = {
             });
         })
     },
-    getByLocation(page, size, lat, lon, stringQuyery, serviceType) {
+    getByLocation(page, size, lat, lon, stringQuyery, serviceTypeId) {
         return new Promise((resolve, reject) => {
-            client.requestApi("get", `${constants.api.hospital.get_by_location}?page=${page}&size=${size}&serviceType=${serviceType}&lat=${lat}&lon=${lon}&stringQuyery=${stringQuyery}`, {}, (s, e) => {
+            client.requestApi("get", `${constants.api.hospital.get_by_location}?page=${page}&size=${size}&serviceTypeId=${serviceTypeId}&lat=${lat}&lon=${lon}&stringQuyery=${stringQuyery}`, {}, (s, e) => {
                 if (s)
                     resolve(s);
                 else
