@@ -49,12 +49,20 @@ class AddBookingScreen extends Component {
     componentDidMount() {
         dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_SERVICE_TYPE, (s, e) => {
             if (s) {
-                this.setState({ serviceType: s })
+                this.setState({ serviceType: s }, () => {
+                    serviceTypeProvider.getAll().then(s => {
+                        if (s) {
+                            let _default = s.find(item => item.status == 1);
+                            this.setState({ serviceType: _default });
+                            dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_SERVICE_TYPE, _default);
+                        }
+                    });
+                })
             } else {
                 serviceTypeProvider.getAll().then(s => {
                     if (s) {
                         let _default = s.find(item => item.status == 1);
-                        this.setState({ listServiceType: _default });
+                        this.setState({ serviceType: _default });
                         dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_SERVICE_TYPE, _default);
                     }
                 });
