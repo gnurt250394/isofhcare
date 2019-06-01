@@ -31,18 +31,18 @@ class Home extends Component {
       refreshing: false,
       ads0: [],
       features: [
-        {
-          icon: require("@images/new/home/ic_ticket_news.png"),
-          text: "Lấy số",
-          onPress: () => {
-            if (this.props.userApp.isLogin)
-              this.props.navigation.navigate("selectHealthFacilitiesScreen");
-            else
-              this.props.navigation.navigate("login", {
-                nextScreen: { screen: "selectHealthFacilitiesScreen", param: {} }
-              });
-          }
-        },
+        // {
+        //   icon: require("@images/new/home/ic_ticket_news.png"),
+        //   text: "Lấy số",
+        //   onPress: () => {
+        //     if (this.props.userApp.isLogin)
+        //       this.props.navigation.navigate("selectHealthFacilitiesScreen");
+        //     else
+        //       this.props.navigation.navigate("login", {
+        //         nextScreen: { screen: "selectHealthFacilitiesScreen", param: {} }
+        //       });
+        //   }
+        // },
         {
           icon: require("@images/new/home/ic_booking_news.png"),
           text: "Đặt khám",
@@ -244,12 +244,12 @@ class Home extends Component {
       <ActivityPanel
         hideStatusbar={true}
         hideActionbar={true}
-        style={[{ flex: 1}, this.props.style]}
+        style={[{ flex: 1 }, this.props.style]}
         hideBackButton={true}
       >
         <View style={{ flex: 1, position: 'relative' }}>
           <ScaledImage source={require("@images/new/home/bg_home_new.png")} width={DEVICE_WIDTH} style={{ position: 'absolute', top: 72, right: 0, left: 0 }} />
-          <View style={{ height: 75, flexDirection: 'row', alignItems: 'center', paddingHorizontal:10}}>
+          <View style={{ height: 75, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10 }}>
             <View style={{ flex: 1, alignItems: 'center', marginLeft: 45 }}>
               <ScaledImage source={require("@images/new/isofhcare.png")} width={116} />
             </View>
@@ -267,11 +267,11 @@ class Home extends Component {
             }}
           >
             <View style={{ padding: 21 }}>
-              <Card style={{ borderRadius: 6 ,marginTop:130}}>
+              <Card style={{ borderRadius: 6, marginTop: 130 }}>
 
                 {this.props.userApp.isLogin &&
-                  <View style={{ alignItems: 'center', flexDirection: 'row', borderBottomColor: 'rgba(151, 151, 151, 0.29)', borderBottomWidth: 1, paddingVertical: 10, marginHorizontal: 20,justifyContent:'center' }}>
-              {/*   <ImageLoad
+                  <View style={{ alignItems: 'center', flexDirection: 'row', borderBottomColor: 'rgba(151, 151, 151, 0.29)', borderBottomWidth: 1, paddingVertical: 10, marginHorizontal: 20, justifyContent: 'center' }}>
+                    {/*   <ImageLoad
                       resizeMode="cover"
                       imageStyle={{ borderRadius: 20, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
                       borderRadius={20}
