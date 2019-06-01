@@ -9,7 +9,7 @@ import snackbar from '@utils/snackbar-utils';
 import dataCacheProvider from '@data-access/datacache-provider';
 import ImageLoad from 'mainam-react-native-image-loader';
 
-class FilterScreen extends Component {
+class FilterSpecialistScreen extends Component {
     constructor(props) {
         super(props);
         let listSelected = ((this.props.navigation.state || {}).params || {}).listSelected;
@@ -151,4 +151,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps)(FilterScreen);
+export default connect(mapStateToProps)(FilterSpecialistScreen);
