@@ -9,7 +9,7 @@ import snackbar from '@utils/snackbar-utils';
 import questionProvider from '@data-access/question-provider';
 import constants from '@resources/strings';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
-import Modal from "@components/modal";
+import Modal from "react-native-modal";
 import stylemodal from "@styles/modal-style";
 import specialistProvider from '@data-access/specialist-provider';
 import connectionUtils from '@utils/connection-utils';
