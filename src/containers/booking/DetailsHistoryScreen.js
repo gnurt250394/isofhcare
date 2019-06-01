@@ -339,6 +339,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10
   },
   txInfoService: {
+    maxWidth: 200,
     marginRight: 12,
     color: "#8F8E93"
   },
