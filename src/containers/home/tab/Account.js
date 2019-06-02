@@ -59,8 +59,10 @@ class Account extends Component {
                         this.showLoading(false);
                         if (s.code == 0) {
                           var user = s.data.user;
-                          user.bookingNumberHospital = s.data.bookingNumberHospital;
-                          user.bookingStatus = s.data.bookingStatus;
+                          let current = this.props.userApp.currentUser;
+                          debugger;
+                          user.bookingNumberHospital = current.bookingNumberHospital;
+                          user.bookingStatus = current.bookingStatus;
                           this.props.dispatch(redux.userLogin(user));
                         } else {
                           snackbar.show(
