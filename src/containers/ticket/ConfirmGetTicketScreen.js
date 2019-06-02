@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Clipboard } from 'react-native';
+import { Platform, View, Text, StyleSheet, TouchableOpacity, ScrollView, Clipboard, Linking } from 'react-native';
 import ActivityPanel from '@components/ActivityPanel';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import snackbar from '@utils/snackbar-utils';
@@ -28,8 +28,8 @@ class ConfirmGetTicketScreen extends Component {
         title="Xác nhận thông tin"
         containerStyle={{
           backgroundColor: "#fff"
-      }}
-        
+        }}
+
       >
         <ScrollView>
           <View style={{ width: '100%', paddingHorizontal: 20, marginTop: 10 }}>
@@ -80,19 +80,23 @@ class ConfirmGetTicketScreen extends Component {
           </View>
         </ScrollView>
         <TouchableOpacity style={[styles.button]} onPress={() => {
-          SendSMS.send({
-            body: this.state.code,
-            recipients: ['8300'],
-            successTypes: ['sent', 'queued'],
-            allowAndroidSendWithoutReadPermission: true
-          }, (completed, cancelled, error) => {
-            if (completed) {
-              this.props.navigation.navigate("selectHealthFacilitiesScreen", {
-                selectTab: 1,
-                requestTime: new Date()
-              });
-            }
-          });
+          if (Platform.OS == 'android') {
+            Linking.openURL("sms:8300?body=" + this.state.code)
+          }
+          else
+            SendSMS.send({
+              body: this.state.code,
+              recipients: ['8300'],
+              successTypes: ['sent', 'queued'],
+              allowAndroidSendWithoutReadPermission: true
+            }, (completed, cancelled, error) => {
+              if (completed) {
+                this.props.navigation.navigate("selectHealthFacilitiesScreen", {
+                  selectTab: 1,
+                  requestTime: new Date()
+                });
+              }
+            });
         }}><Text style={{
           color: "#ffffff", fontSize: 16, fontWeight: '600'
         }}>Gửi tin nhắn lấy số</Text></TouchableOpacity >
