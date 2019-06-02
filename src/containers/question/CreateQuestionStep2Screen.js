@@ -36,12 +36,10 @@ class CreateQuestionStep2Screen extends Component {
         this.state = post;
     }
     componentDidMount() {
-
         dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_INFO, (s, e) => {
-            console.log(s,'asdasds');
             this.setState({
-               specialist_item:s[0].specialist_item
-               ,disease:s[0].disease,otherContent:s[0].otherContent,imageUris:s[0].imageUris
+                specialist: s[0].specialist
+                , disease: s[0].disease, otherContent: s[0].otherContent, imageUris: s[0].imageUris
             })
         })
         dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_POSTS, (s, e) => {
@@ -57,7 +55,7 @@ class CreateQuestionStep2Screen extends Component {
                 });
                 this.setState({
                     disease: s.post.diseaseHistory || 0,
-                    // specialist_item: s.specialist ? { specialist: s.specialist } : null,
+                    // specialist: s.specialist ? { specialist: s.specialist } : null,
                     // otherContent: s.post.otherContent,
                     // imageUris: images
                 })
@@ -65,8 +63,8 @@ class CreateQuestionStep2Screen extends Component {
         })
     }
     onClickBack = () => {
-    
-        let data = [{specialist_item:this.state.specialist_item,disease:this.state.disease,otherContent:this.state.otherContent,imageUris:this.state.imageUris}]
+
+        let data = [{ specialist: this.state.specialist, disease: this.state.disease, otherContent: this.state.otherContent, imageUris: this.state.imageUris }]
         dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_INFO, data);
         this.props.navigation.pop()
     }
@@ -179,7 +177,7 @@ class CreateQuestionStep2Screen extends Component {
                         images += ",";
                     images += item.url;
                 });
-                questionProvider.create(this.state.content, this.state.gender, this.state.age, this.state.specialist_item ? this.state.specialist_item.specialist.id : "0", this.state.disease, this.state.otherContent, images).then(s => {
+                questionProvider.create(this.state.content, this.state.gender, this.state.age, this.state.specialist ? this.state.specialist.id : "0", this.state.disease, this.state.otherContent, images).then(s => {
                     this.setState({ isLoading: false });
                     if (s && s.code == 0) {
                         dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_POSTS, s.data);
@@ -207,10 +205,7 @@ class CreateQuestionStep2Screen extends Component {
     }
 
     selectSpecialist(specialize) {
-        this.state.specialist_item = specialize;
-        this.setState({
-            toggleModalSpecialize: false
-        })
+        this.setState({ specialist: specialize })
     }
     selectDisease(value) {
         if ((this.state.disease & value) == value) {
@@ -282,11 +277,11 @@ class CreateQuestionStep2Screen extends Component {
             });
         }
     }
-   
+
     render() {
         return (
             <ActivityPanel
-            backButtonClick={this.onClickBack}
+                backButtonClick={this.onClickBack}
 
                 style={{ flex: 1 }}
                 title={"Thông tin bổ sung"}
@@ -295,7 +290,7 @@ class CreateQuestionStep2Screen extends Component {
                 actionbarStyle={{
                     backgroundColor: '#02C39A',
                     borderBottomWidth: 0
-                }}                
+                }}
                 titleStyle={{
                     color: '#FFF'
                 }}
@@ -315,10 +310,14 @@ class CreateQuestionStep2Screen extends Component {
                             <Card style={{ padding: 22 }}>
                                 <View style={{ backgroundColor: '#02C39A', width: 20, height: 4, borderRadius: 2, alignSelf: 'center' }}></View>
                                 <Text style={[styles.label, { marginTop: 15 }]}>Chuyên khoa đang hỏi</Text>
-                                <TouchableOpacity onPress={() => { this.toggleModalSpecialize() }} style={[styles.textinput, { flexDirection: 'row', alignItems: 'center', marginTop: 6 }]}>
+                                <TouchableOpacity onPress={() => {
+                                    this.props.navigation.navigate("selectSpecialist", {
+                                        onSelected: this.selectSpecialist.bind(this)
+                                    });
+                                }} style={[styles.textinput, { flexDirection: 'row', alignItems: 'center', marginTop: 6 }]}>
                                     <Text style={{ padding: 10, flex: 1, color: "#4A4A4A", fontWeight: '600' }}>
                                         {
-                                            this.state.specialist_item ? this.state.specialist_item.specialist.name : "Chọn chuyên khoa"
+                                            this.state.specialist && this.state.specialist.name ? this.state.specialist.name : "Chọn chuyên khoa"
                                         }
                                     </Text>
                                     <ScaleImage source={require("@images/icdropdown.png")} height={8} style={{ marginRight: 5 }} />
