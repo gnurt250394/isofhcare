@@ -36,7 +36,7 @@ class Home extends Component {
           text: "Lấy số",
           onPress: () => {
             if (this.props.userApp.isLogin)
-              if(this.props.userApp.currentUser.bookingNumberHospital)
+              if(this.props.userApp.currentUser.bookingNumberHospital == true )
               this.props.navigation.navigate("selectHealthFacilitiesScreen");
               else
               snackbar.show("Tính năng đang phát triển", "");
@@ -51,7 +51,7 @@ class Home extends Component {
           text: "Đặt khám",
           onPress: () => {
             if (this.props.userApp.isLogin)
-              if (this.props.userApp.currentUser.bookingStatus)
+              if (this.props.userApp.currentUser.bookingStatus != false || this.props.userApp.currentUser.bookingStatus == undefined )
                 this.props.navigation.navigate("addBooking");
               else
               snackbar.show("Tính năng đang phát triển", "");
