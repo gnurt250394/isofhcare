@@ -47,7 +47,8 @@ class SelectTimeScreen extends Component {
         var yourDate = new Date(yourDateString);
         try {
             console.log(yourDateString, yourDate, yourDate.getTimezoneOffset());
-            yourDate.setMinutes(yourDate.getMinutes() + yourDate.getTimezoneOffset());
+            // yourDate.setMinutes(yourDate.getMinutes() + yourDate.getTimezoneOffset());
+            yourDate.setMinutes(yourDate.getMinutes());
             console.log(yourDate);
         } catch (error) {
             console.log(error);
@@ -228,6 +229,7 @@ class SelectTimeScreen extends Component {
         if (error)
             return;
         connectionUtils.isConnected().then(s => {
+            console.log(this.state.schedule.time,this.state.schedule.time.format("yyyy-MM-dd HH:mm:ss"));
             this.setState({ isLoading: true }, () => {
                 console.log(this.state.schedule.time);
                 bookingProvider.create(

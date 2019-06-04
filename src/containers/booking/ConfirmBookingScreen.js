@@ -132,10 +132,11 @@ class ConfirmBookingScreen extends Component {
                         let data = s.data;
                         let vnp_TxnRef = data.id;
                         let payment_order = s.payment_order;
-                        let html = convert.xml2json(xml, {compact: true, spaces: 4})
-                        console.log(html);
+                        let html = convert.xml2json(payment_order.data, {compact: true, spaces: 4})
+                        let orderJSON = JSON.parse(html);
+                        console.log(orderJSON);
 
-                        let session = "";
+                        let session = orderJSON.shops.shop.session._text;
 
                         payment_order.orderInfo = payment_order.data;
                         payoo.initialize(payment_order.shop_id, payment_order.check_sum_key).then(() => {
@@ -143,7 +144,6 @@ class ConfirmBookingScreen extends Component {
                                 try {
                                     let obj = JSON.parse(x);
                                     obj["vnp_TxnRef"]=vnp_TxnRef;
-                                    obj["status"]=vnp_TxnRef;
                                     obj["session"]=session;
                                     obj["status"]=1;
                                     obj["order_no"]=obj.orderId;
@@ -160,9 +160,7 @@ class ConfirmBookingScreen extends Component {
                                 } catch (error) {
                                     
                                 }
-                                console.log("=============================================================",x,"=============================================");
                             }).catch(y => {
-                                console.log("=============================================================",y,"=============================================");
                             });
                         })
                     } else
