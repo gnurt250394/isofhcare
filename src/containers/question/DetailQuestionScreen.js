@@ -187,7 +187,7 @@ class DetailQuestionScreen extends Component {
                     <View style={{ marginLeft: 10 }}>
                         <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 5 }}>{item.user.name}</Text>
                         {item.user && item.user.id != this.props.userApp.currentUser.id ?
-                            <View style={{ width: 100 }}>
+                            <View style={{ width:120  }}>
                                 <StarRating
                                     disabled={true}
                                     starSize={20}
@@ -315,7 +315,7 @@ class DetailQuestionScreen extends Component {
             (this.state.post.post.status == 3
                 && (this.state.userCommentCount >= 3 ||
                     this.isFinish())))
-            return (<View style={{ flexDirection: 'row', padding: 20, borderTopColor: '#cacaca', borderTopWidth: 0.5 }}>
+            return (<View style={{ flexDirection: 'row', padding: 20, borderTopColor: '#cacaca', borderTopWidth: 0.5}}>
                 <Text style={{ flex: 1,fontWeight:'bold' }}>Đánh giá</Text>
                 <StarRating
                     disabled={this.state.post.post.status == 6 ? true : false}
