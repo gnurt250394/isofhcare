@@ -35,16 +35,15 @@ class Home extends Component {
           icon: require("@images/new/home/ic_ticket_news.png"),
           text: "Lấy số",
           onPress: () => {
-            snackbar.show("Tính năng đang phát triển", "");
-            // if (this.props.userApp.isLogin)
-            //   if(this.props.userApp.currentUser.bookingNumberHospital)
-            //   this.props.navigation.navigate("selectHealthFacilitiesScreen");
-            //   else
-            //   snackbar.show("Tính năng đang phát triển", "");
-            //   else
-            //   this.props.navigation.navigate("login", {
-            //     nextScreen: { screen: "selectHealthFacilitiesScreen", param: {} }
-            //   });
+            if (this.props.userApp.isLogin)
+              if(this.props.userApp.currentUser.bookingNumberHospital == true )
+              this.props.navigation.navigate("selectHealthFacilitiesScreen");
+              else
+              snackbar.show("Tính năng đang phát triển", "");
+              else
+              this.props.navigation.navigate("login", {
+                nextScreen: { screen: "selectHealthFacilitiesScreen", param: {} }
+              });
           }
         },
         {
@@ -52,7 +51,7 @@ class Home extends Component {
           text: "Đặt khám",
           onPress: () => {
             if (this.props.userApp.isLogin)
-              if (this.props.userApp.currentUser.bookingStatus)
+              if (this.props.userApp.currentUser.bookingStatus != false || this.props.userApp.currentUser.bookingStatus == undefined )
                 this.props.navigation.navigate("addBooking");
               else
                 snackbar.show("Tính năng đang phát triển", "");
