@@ -138,9 +138,17 @@ class GetNewTicket extends Component {
                     </View>
                     <Text style={{ color: '#00000050', marginTop: 5 }}>{item.hospital.address}</Text>
                     {item.hospital.defaultBookHospital ? <View style={{ flexDirection: 'row' }}>
-                        <TouchableOpacity onPress={() => { this.actionSheetErr.show(); }} style={[styles.btnService, { backgroundColor: '#0A9BE1' }]}><Text style={[styles.txService, { color: '#fff' }]}>Khám DV</Text></TouchableOpacity>
-                        <TouchableOpacity onPress={() => { this.actionSheetGetTicket.show(); }} style={[styles.btnService, { width: 62 }, item.hospital.defaultBookHospital ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, { color: '#fff' }]}>BHYT</Text></TouchableOpacity>
-                        <TouchableOpacity onPress={() => { this.actionSheetGetTicket.show(); }} style={[styles.btnService, { backgroundColor: '#0A9BE1' }]}><Text style={[styles.txService, { color: '#fff' }]}>BHYT CA</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={() => {
+                            this.props.dispatch({ type: constants.action.action_select_hospital_get_ticket, value: item });
+                            this.actionSheetErr.show();
+                        }} style={[styles.btnService, { backgroundColor: '#0A9BE1' }]}><Text style={[styles.txService, { color: '#fff' }]}>Khám DV</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={() => {
+                            this.props.dispatch({ type: constants.action.action_select_hospital_get_ticket, value: item });
+                            this.actionSheetGetTicket.show();
+                        }} style={[styles.btnService, { width: 62 }, item.hospital.defaultBookHospital ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, { color: '#fff' }]}>BHYT</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={() => {
+                            this.actionSheetGetTicket.show();
+                        }} style={[styles.btnService, { backgroundColor: '#0A9BE1' }]}><Text style={[styles.txService, { color: '#fff' }]}>BHYT CA</Text></TouchableOpacity>
                     </View> :
                         <View style={{ flexDirection: 'row' }}>
                             <TouchableOpacity disabled={true} style={[styles.btnService, this.state.service && this.state.service == 1 && this.state.index == item.hospital.id ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, { color: '#6B6B6C' }]}>Khám DV</Text></TouchableOpacity>
