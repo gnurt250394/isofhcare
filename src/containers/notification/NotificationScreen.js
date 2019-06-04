@@ -115,6 +115,9 @@ class NotificationScreen extends Component {
         notificationProvider.setRead(item.notification.id).then(s => {
           firebase.notifications().setBadge(this.props.userApp.unReadNotificationCount > 0 ? this.props.userApp.unReadNotificationCount - 1 : 0);
           this.props.dispatch(redux.getUnreadNotificationCount());
+          this.setState({ isLoading: false });
+        }).catch(e=>{
+          this.setState({ isLoading: false });
         });
         item.notification.watched = 1;
         this.setState({ data: [...this.state.data] });
