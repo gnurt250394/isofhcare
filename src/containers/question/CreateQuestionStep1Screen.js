@@ -11,14 +11,12 @@ import {
 import { Card } from 'native-base';
 import ActivityPanel from "@components/ActivityPanel";
 import { connect } from "react-redux";
-import ImagePicker from "mainam-react-native-select-image";
-import imageProvider from "@data-access/image-provider";
 import constants from "@resources/strings";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import Form from "mainam-react-native-form-validate/Form";
 import TextField from "mainam-react-native-form-validate/TextField";
 import dataCacheProvider from '@data-access/datacache-provider';
-import Field from "../../../node_modules/mainam-react-native-form-validate/Field";
+import Field from "mainam-react-native-form-validate/Field";
 
 const padding = Platform.select({
   ios: 7,
@@ -68,7 +66,10 @@ class CreateQuestionStep1Screen extends Component {
       }
     });
   }
+componentWillUnmount(){
+  dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_INFO, '');
 
+}
   render() {
     return (
       <ActivityPanel
@@ -79,12 +80,20 @@ class CreateQuestionStep1Screen extends Component {
         iosBarStyle={'light-content'}
         statusbarBackgroundColor="#02C39A"
         actionbarStyle={{
-          backgroundColor: '#02C39A'
+          backgroundColor: '#02C39A',
+          borderBottomWidth: 0
+        }}
+        titleStyle={{
+          color: '#FFF'
         }}
       >
         <ScrollView
           showsVerticalScrollIndicator={false}
-          style={{ flex: 1, position: 'relative' }} keyboardShouldPersistTaps="always">
+          bounces={false}
+          style={{ flex: 1, position: 'relative' }}
+          keyboardShouldPersistTaps="handled"
+        // keyboardDismissMode='on-drag' 
+        >
           <View style={{ backgroundColor: '#02C39A', height: 130, position: 'absolute', top: 0, left: 0, right: 0 }}></View>
           <View style={{ margin: 22, marginTop: 10 }}>
             <Card style={{ padding: 22 }}>
@@ -142,7 +151,7 @@ class CreateQuestionStep1Screen extends Component {
                       }}
                       value={this.state.age}
                       style={{ marginTop: 6 }}
-                      inputStyle={[styles.textinput, { width: 100,  paddingTop: 10, paddingLeft: 17, paddingRight: 17, paddingBottom: Platform.OS == 'ios' ? 8 : 8, fontWeight: '600' }]}
+                      inputStyle={[styles.textinput, { width: 100, paddingTop: 10, paddingLeft: 17, paddingRight: 17, paddingBottom: Platform.OS == 'ios' ? 8 : 8, fontWeight: '600' }]}
                       onChangeText={s => {
                         this.setState({ age: s });
                       }}
@@ -215,7 +224,6 @@ class CreateQuestionStep1Screen extends Component {
             </Card>
           </View>
         </ScrollView>
-        <ImagePicker ref={ref => (this.imagePicker = ref)} />
         {Platform.OS == "ios" && <KeyboardSpacer />}
       </ActivityPanel >
     );

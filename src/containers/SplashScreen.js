@@ -15,6 +15,7 @@ const resetAction = (route) => {
 		actions: [NavigationActions.navigate({ routeName: route })],
 	})
 };
+
 import dataCache from '@data-access/datacache-provider';
 class SplashScreen extends Component {
 	constructor(props) {
@@ -23,6 +24,7 @@ class SplashScreen extends Component {
 	}
 	componentDidMount() {
 		console.disableYellowBox = true;
+		console.reportErrorsAsExceptions = false;
 		// this.Actions.navigate('home')
 		// setTimeout(() => {
 		// 	this.Actions.dispatch(StackActions.reset({
@@ -53,7 +55,7 @@ class SplashScreen extends Component {
 
 	render() {
 		return (
-			<ActivityPanel style={{ flex: 1 }} touchToDismiss={true} hideActionbar={true} hideStatusbar={true} showFullScreen={true}>
+			<ActivityPanel style={{ flex: 1 }}  hideActionbar={true} hideStatusbar={true} showFullScreen={true}>
 				<View style={{ position: 'relative', flex: 1 }}>
 					<View style={[{ justifyContent: 'center', alignItems: 'center', flex: 1 }]}>
 						<MyScaleImage animation="rubberBand" delay={500} duration={3000} source={require("@images/logo.png")} width={120} />
@@ -69,7 +71,7 @@ class SplashScreen extends Component {
 					</View>
 
 				</View>
-			</ActivityPanel >
+			</ActivityPanel>
 		);
 	}
 }

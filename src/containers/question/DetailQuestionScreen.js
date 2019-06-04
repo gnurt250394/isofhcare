@@ -18,6 +18,7 @@ import DialogBox from 'react-native-dialogbox';
 import StarRating from 'react-native-star-rating';
 import Dash from 'mainam-react-native-dash-view';
 import connectionUtils from '@utils/connection-utils';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 const disease = [{
     value: 1,
     text: "Tim mạch"
@@ -152,12 +153,12 @@ class DetailQuestionScreen extends Component {
             snackbar.show("Không có kết nối mạng", "danger");
         })
     }
-    onNavigateDetails =(item)=>{
-        // item.user && item.user.id != this.props.userApp.currentUser.id ? this.props.navigation.navigate('detailsDoctorScreen',{
-        //     id : this.state.post.assignee.id
-        // }) : this.props.navigation.navigate('detailsProfile',{
-        //     id : item.user.id
-        // }) 
+    onNavigateDetails = (item) => {
+        item.user && item.user.id != this.props.userApp.currentUser.id ? this.props.navigation.navigate('detailsDoctorScreen', {
+            id: this.state.post.assignee.id
+        }) : this.props.navigation.navigate('detailsProfile', {
+            id: item.user.id
+        })
     }
     showAllComment() {
         this.setState({ loadingComment: true })
@@ -183,7 +184,7 @@ class DetailQuestionScreen extends Component {
         return <View key={key}>
             {item.user &&
                 <TouchableOpacity onPress={() => this.onNavigateDetails(item)} style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Image source={source} style={{ width: 50, height: 50, borderRadius: 25, borderWidth: 0.5, borderColor:'rgba(151, 151, 151, 0.29)' }} resizeMode="cover" />
+                    <Image source={source} style={{ width: 50, height: 50, borderRadius: 25, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }} resizeMode="cover" />
                     <View style={{ marginLeft: 10 }}>
                         <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 5 }}>{item.user.name}</Text>
                         {item.user && item.user.id != this.props.userApp.currentUser.id ?
@@ -193,7 +194,7 @@ class DetailQuestionScreen extends Component {
                                     starSize={20}
                                     maxStars={5}
                                     rating={this.state.ratedoctor}
-                                    starStyle={{ margin: 0 }}
+                                    starStyle={{ marginLeft: 5 }}
                                     fullStarColor={"#fbbd04"}
                                     emptyStarColor={"#fbbd04"}
                                 />
@@ -216,9 +217,11 @@ class DetailQuestionScreen extends Component {
             </View>
         </View>
     }
-
+    
     renderFormSendWithoutDiagnostic() {
-        return (<View style={{ marginTop: 20 }}>
+        return (
+            
+            <View style={{ marginTop: 20 }}>
             <Text style={{ color: 'rgb(155,155,155)' }}>Bạn còn {(num => { let x = 3 - num; if (x < 0) return 0; return x }).call(this, this.state.post.post.numberCommentUser)} lượt hỏi</Text>
             <View style={{
                 marginTop: 5,
@@ -253,11 +256,13 @@ class DetailQuestionScreen extends Component {
                         }}
                     />
                 </Form>
+                
                 <TouchableOpacity style={{ padding: 20 }} onPress={this.userSend.bind(this)}>
                     <ScaleImage width={22} source={this.state.content && this.state.content.trim().length > 0 ? require("@images/new/send2.png") : require("@images/new/send.png")} />
                 </TouchableOpacity>
             </View>
             <Text style={[styles.errorStyle]}>{this.state.contentError}</Text>
+         
         </View>
         );
     }
@@ -301,8 +306,7 @@ class DetailQuestionScreen extends Component {
                         </View>
                     }
                     {
-                        this.state.writeQuestion &&
-                        this.renderFormSendWithoutDiagnostic()
+                     this.state.writeQuestion && this.renderFormSendWithoutDiagnostic()
                     }
                 </View>);
         }
@@ -315,14 +319,14 @@ class DetailQuestionScreen extends Component {
             (this.state.post.post.status == 3
                 && (this.state.userCommentCount >= 3 ||
                     this.isFinish())))
-            return (<View style={{ flexDirection: 'row', padding: 20, borderTopColor: '#cacaca', borderTopWidth: 2 }}>
-                <Text style={{ flex: 1 }}>Đánh giá</Text>
+            return (<View style={{ flexDirection: 'row', padding: 20, borderTopColor: '#cacaca', borderTopWidth: 0.5 }}>
+                <Text style={{ flex: 1,fontWeight:'bold' }}>Đánh giá</Text>
                 <StarRating
                     disabled={this.state.post.post.status == 6 ? true : false}
                     starSize={30}
                     maxStars={5}
                     rating={this.state.star}
-                    starStyle={{ margin: 0 }}
+                    starStyle={{ marginLeft:5 }}
                     fullStarColor={"#fbbd04"}
                     emptyStarColor={"#fbbd04"}
                     selectedStar={(rating) => this.onStarRatingPress(rating)}
@@ -501,7 +505,7 @@ class DetailQuestionScreen extends Component {
             <ActivityPanel style={{ flex: 1 }} title="Tư vấn online" showFullScreen={true} isLoading={this.state.isLoading}>
                 {
                     post.post &&
-                    <View style={{ flex: 1 }}>
+                    <KeyboardAwareScrollView style={{ flex: 1 }}>
                         <View style={{ padding: 20, flex: 1 }}>
                             <ScrollView
                                 refreshControl={<RefreshControl
@@ -509,7 +513,10 @@ class DetailQuestionScreen extends Component {
                                     onRefresh={this.onRefresh.bind(this)}
                                 />}
                                 showsVerticalScrollIndicator={false}
-                                ref={(ref) => { this.scrollView = ref }}>
+                                ref={(ref) => { this.scrollView = ref }}
+                                keyboardShouldPersistTaps="handled"
+                                keyboardDismissMode='on-drag'
+                            >
                                 <View style={{ flexDirection: "row", alignItems: 'center' }}>
                                     <View style={{ flex: 1 }} ><Text style={{ fontSize: 18, fontWeight: 'bold' }}>{post.author ? post.author.name : ""}</Text></View>
                                     <View><Text style={{ color: '#00000038' }}>{this.getTime(post.post.createdDate)}</Text></View>
@@ -557,9 +564,9 @@ class DetailQuestionScreen extends Component {
                             <KeyboardSpacer />
                         }
                         <DialogBox ref={dialogbox => { this.dialogbox = dialogbox }} />
-                    </View>
+                    </KeyboardAwareScrollView>
                 }
-            </ActivityPanel >
+            </ActivityPanel>
         );
     }
 }

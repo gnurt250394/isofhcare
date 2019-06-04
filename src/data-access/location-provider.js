@@ -106,12 +106,16 @@ module.exports = {
     saveCurrentLocation(latitude, longitude) {
         datacacheProvider.save("", constants.key.storage.CURRENT_LOCATION, { latitude, longitude });
     },
-    getCurrentLocationHasSave(callback) {
-        if (callback)
+    getCurrentLocationHasSave() {
+        return new Promise((resolve, reject) => {
             datacacheProvider.read("", constants.key.storage.CURRENT_LOCATION, (s, e) => {
                 if (s) {
-                    callback(s, e);
+                    resolve(s);
                 }
+                else
+                    reject(e);
             });
+
+        })
     }
 }

@@ -74,10 +74,13 @@ class ActivityPanel extends Component {
         return (
             <Activity
                 {...this.props}
+                containerStyle={[{
+                    backgroundColor: "#f7f9fb"
+                }, this.props.containerStyle]}
                 actionbar={this.props.actionbar ? this.props.actionbar : this.getActionbar.bind(this)}
                 loadingView={this.getLoadingView()}
                 paddingTop={this.state.paddingTop}
-                // translucent={true}
+            // translucent={true}
             >
                 {/* {this.props.children} */}
             </Activity>

@@ -218,7 +218,7 @@ class AddBookingScreen extends Component {
         console.log(this.state.profile)
         console.log("00000000000000000000000000000000000000000000000000")
         return (
-            <ActivityPanel style={{ flex: 1, }} hideActionbar={!this.props.userApp.isLogin} title="Đặt lịch khám" isLoading={this.state.isLoading} touchToDismiss={true} showFullScreen={true} >
+            <ActivityPanel style={{ flex: 1, }} hideActionbar={!this.props.userApp.isLogin} title="Đặt lịch khám" isLoading={this.state.isLoading} showFullScreen={true} >
                 {/* {
                     !this.props.userApp.isLogin ?
                         <RequiredLogin directScreen={() => { Actions.popTo('viewScheduleDoctor') }} /> 
@@ -258,6 +258,7 @@ class AddBookingScreen extends Component {
                         </View>
                     </View>
                     <ScrollView
+                        keyboardShouldPersistTaps='handled'
                         showsVerticalScrollIndicator={false}
                         style={{ flex: 1, padding: 10, flexDirection: 'column', paddingBottom: 20 }} keyboardShouldPersistTaps='always'>
                         {

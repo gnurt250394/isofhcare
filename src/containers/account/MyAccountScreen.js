@@ -115,7 +115,7 @@ class MyAccountScreen extends Component {
                 {/* <View style={{ position: 'relative', flex: 1 }}>
                     <ScaleImage source={bgImage} width={DEVICE_WIDTH} zIndex={0} />
                     <ScaleImage source={require("@images/rectangle.png")} zIndex={1} width={100} style={{ bottom: 0, left: 80, position: 'absolute' }} /> */}
-                {/* <ScrollView style={styles.container} zIndex={2}>
+                {/* <ScrollView keyboardShouldPersistTaps='handled' style={styles.container} zIndex={2}>
                         <View style={styles.header}>
                             <TouchableOpacity style={styles.boxAvatar} onPress={this.selectAvatar}>
                                 <ScaleImage source={icSupport} width={100} style={styles.avatar} />
@@ -167,7 +167,9 @@ class MyAccountScreen extends Component {
                     </ScrollView > */}
                 <ScrollView
                     showsVerticalScrollIndicator={false}
-                    style={styles.container} zIndex={2}>
+                    style={styles.container} zIndex={2}
+                    keyboardShouldPersistTaps="handled"
+                >
                     <View style={styles.container2}>
                         <View>
                             <Animated.View style={[styles.flipCard, frontAnimatedStyle]}>

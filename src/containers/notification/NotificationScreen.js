@@ -13,6 +13,7 @@ import ScaleImage from "mainam-react-native-scaleimage";
 import notificationProvider from "@data-access/notification-provider";
 import dateUtils from "mainam-react-native-date-utils";
 import questionProvider from "@data-access/question-provider";
+import ticketProvider from "@data-access/ticket-provider";
 import snackbar from "@utils/snackbar-utils";
 import DialogBox from "react-native-dialogbox";
 import constants from "@resources/strings";
@@ -20,6 +21,7 @@ import firebase from 'react-native-firebase';
 import redux from '@redux-store'
 import ImageLoad from 'mainam-react-native-image-loader';
 
+import clientUtils from '@utils/client-utils';
 
 class NotificationScreen extends Component {
   constructor(props) {
@@ -43,6 +45,7 @@ class NotificationScreen extends Component {
       );
   }
   componentDidMount() {
+    this.props.dispatch(redux.getUnreadNotificationCount());
     this.onRefresh();
   }
   onLoad() {
@@ -106,28 +109,81 @@ class NotificationScreen extends Component {
   }
 
   viewNotification(item) {
-    var data = JSON.parse(item.notification.value);
-    this.openQuestion(data.id);
-    notificationProvider.setRead(item.notification.id).then(s => {
-      firebase.notifications().setBadge(this.props.userApp.unReadNotificationCount > 0 ? this.props.userApp.unReadNotificationCount - 1 : 0);
-      this.props.dispatch(redux.getUnreadNotificationCount());
-    });
-    item.notification.watched = 1;
-    this.setState({ data: [...this.state.data] });
-  }
-  openQuestion(id) {
-    questionProvider
-      .detail(id)
-      .then(s => {
-        if (s && s.data) {
-          this.props.navigation.navigate("detailQuestion", { post: s.data });
-        } else {
-          snackbar.show("Lỗi, bài viết không tồn tại", "danger");
+    try {
+      this.setState({ isLoading: true }, () => {
+        var data = JSON.parse(item.notification.value);
+        notificationProvider.setRead(item.notification.id).then(s => {
+          firebase.notifications().setBadge(this.props.userApp.unReadNotificationCount > 0 ? this.props.userApp.unReadNotificationCount - 1 : 0);
+          this.props.dispatch(redux.getUnreadNotificationCount());
+          this.setState({ isLoading: false });
+        }).catch(e=>{
+          this.setState({ isLoading: false });
+        });
+        item.notification.watched = 1;
+        this.setState({ data: [...this.state.data] });
+        switch (data.type) {
+          case 1:
+            this.openQuestion(data.id);
+            break;
+          case 2:
+            this.openQuestion(data.id);
+            break;
+          case 4:
+            this.openBooking(data.id);
+            break;
+          case 5:
+            this.openTicket(data.id);
+            break;
+          default:
+            this.setState({ isLoading: false });
         }
       })
-      .catch(e => {
-        snackbar.show("Lỗi, vui lòng thử lại", "danger");
+    } catch (error) {
+      this.setState({ isLoading: false });
+    }
+  }
+  openTicket(id) {
+    this.setState({ isLoading: true }, () => {
+      ticketProvider.detail(id).then(s => {
+        this.setState({ isLoading: false }, () => {
+          switch (s.code) {
+            case 0:
+              if (s.data && s.data.numberHospital) {
+                this.props.navigation.navigate("getTicketFinish", s.data);
+              }
+          }
+        });
+      }).catch(e => {
+        this.setState({ isLoading: false }, () => {
+
+        });
       });
+    });
+
+  }
+  openQuestion(id) {
+    this.setState({ isLoading: true }, () => {
+      questionProvider.detail(id).then(s => {
+        this.setState({ isLoading: true }, () => {
+          if (s && s.data) {
+            this.props.navigation.navigate("detailQuestion", { post: s.data });
+          } else {
+            snackbar.show("Lỗi, bài viết không tồn tại", "danger");
+          }
+        });
+      }).catch(e => {
+        this.setState({ isLoading: true }, () => {
+          snackbar.show("Lỗi, vui lòng thử lại", "danger");
+        });
+      });
+    });
+  }
+  openBooking(id) {
+    this.setState({ isLoading: false }, () => {
+      this.props.navigation.navigate("detailsHistory", {
+        id
+      });
+    });
   }
 
   menuCreate() {
@@ -174,11 +230,31 @@ class NotificationScreen extends Component {
         >
           <ScaleImage source={require("@images/new/ic_remove.png")} width={20} />
         </TouchableOpacity>
-      </View>
+      </View >
     );
   }
   isToday(item) {
     return item.notification.createdDate.toDateObject('-').ddmmyyyy() == (new Date()).ddmmyyyy();
+  }
+  getNotificationType(item) {
+    try {
+      if (item.notification) {
+        let value = JSON.parse(item.notification.value);
+        switch (value.type) {
+          case 2:
+            return "Tư vấn - đặt câu hỏi";
+          case 4:
+            return "Đặt khám";
+          case 5:
+            return "Lấy số nhanh";
+        }
+
+      }
+
+    } catch (error) {
+
+    }
+    return "Thông báo";
   }
 
   renderItem(item, index) {
@@ -222,7 +298,7 @@ class NotificationScreen extends Component {
           >
             <ImageLoad
               resizeMode="cover"
-              imageStyle={{ borderRadius: 25 }}
+              imageStyle={{ borderRadius: 25, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
               borderRadius={25}
               customImagePlaceholderDefaultStyle={[styles.avatar, { width: 50, height: 50 }]}
               placeholderSource={require("@images/new/user.png")}
@@ -235,10 +311,9 @@ class NotificationScreen extends Component {
               }}
             />
             <View style={{ paddingTop: 4, marginLeft: 19, flex: 1 }}>
-              <Text style={[{ fontSize: 14, fontWeight: 'bold' }, item.notification.watched == 1 ? styles.title_watch : styles.title]}>Tư vấn - đặt câu hỏi</Text>
+              <Text style={[{ fontSize: 14, fontWeight: 'bold' }, item.notification.watched == 1 ? styles.title_watch : styles.title]}>{this.getNotificationType(item)}</Text>
               <Text
                 style={item.notification.watched == 1 ? styles.title_watch : styles.title}
-                numberOfLines={2}
                 ellipsizeMode="tail">
                 {item.notification.title.trim()}
               </Text>

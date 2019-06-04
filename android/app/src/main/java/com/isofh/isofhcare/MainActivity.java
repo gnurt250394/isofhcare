@@ -3,7 +3,8 @@ package com.isofh.isofhcare;
 import com.facebook.react.ReactActivity;
  import android.content.Intent; // <--- import
     import android.content.res.Configuration; // <--- import
-
+    import org.pweitz.reactnative.locationswitch.LocationSwitch;
+    import com.tkporter.sendsms.SendSMSPackage;
 public class MainActivity extends ReactActivity {
 
     /**
@@ -19,5 +20,7 @@ public class MainActivity extends ReactActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         MainApplication.getCallbackManager().onActivityResult(requestCode, resultCode, data);
+        LocationSwitch.getInstance().onActivityResult(requestCode, resultCode);
+        SendSMSPackage.getInstance().onActivityResult(requestCode, resultCode, data);
     }
 }

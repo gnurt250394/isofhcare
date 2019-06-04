@@ -126,7 +126,7 @@ class BookingResultScreen extends Component {
     render() {
         let result = this.props.navigation.getParam("result");
         return (
-            <ActivityPanel style={{ flex: 1, }} title="Kết quả" isLoading={this.state.isLoading} touchToDismiss={false} showFullScreen={true}>
+            <ActivityPanel style={{ flex: 1, }} title="Kết quả" isLoading={this.state.isLoading} showFullScreen={true}>
                 <ScrollView
                     showsVerticalScrollIndicator={false}
                     style={{ padding: 10 }}>

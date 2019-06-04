@@ -3,6 +3,9 @@ import { View, TouchableOpacity, Text } from 'react-native';
 import { connect } from 'react-redux';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import snackbar from '@utils/snackbar-utils';
+import constants from '@resources/strings';
+import redux from '@redux-store'
+import firebase from 'react-native-firebase';
 
 class NotificationBadge extends Component {
     constructor(props) {
@@ -23,10 +26,10 @@ class NotificationBadge extends Component {
                     }
                 }}
             >
-                <ScaleImage source={require("@images/new/bell.png")} width={20} />
+                <ScaleImage source={require("@images/new/bell_news.png")} width={22} />
                 {
                     this.props.userApp.isLogin && (this.props.userApp.unReadNotificationCount || 0) ?
-                        <Text numberOfLines={1} style={{ overflow: 'hidden', position: 'absolute', right: 10, top: 4, backgroundColor: 'red', borderRadius: 6, color: '#FFF', fontSize: 10, paddingHorizontal: 3, textAlign: 'center' }}>{(this.props.userApp.unReadNotificationCount || 0) > 99 ? "99+" : this.props.userApp.unReadNotificationCount}</Text>
+                        <Text numberOfLines={1} style={{ overflow: 'hidden', position: 'absolute', right: 11, top: 12, backgroundColor: '#ff8f1f', borderRadius: 6, color: '#FFF', fontSize: 10, paddingHorizontal: 3, textAlign: 'center' }}>{(this.props.userApp.unReadNotificationCount || 0) > 99 ? "99+" : this.props.userApp.unReadNotificationCount}</Text>
                         : null
                 }
             </TouchableOpacity>

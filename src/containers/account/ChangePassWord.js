@@ -19,6 +19,9 @@ class ProfileScreen extends Component {
             isLoading: false
         }
     }
+    componentDidMount ()  {
+
+    }
 
     change() {
         Keyboard.dismiss();
@@ -57,11 +60,12 @@ class ProfileScreen extends Component {
             <ActivityPanel
                 style={{ flex: 1 }} title="Đổi mật khẩu"
                 titleStyle={{ textAlign: 'left', marginLeft: 20 }}
-                touchToDismiss={true}
                 showFullScreen={true} isLoading={this.state.isLoading}>
                 <ScrollView
                     showsVerticalScrollIndicator={false}
-                    style={{ flex: 1 }} keyboardShouldPersistTaps="always">
+                    style={{ flex: 1 }} 
+                    keyboardShouldPersistTaps="handled"
+                    >
                     <KeyboardAvoidingView behavior="padding" style={styles.form}>
                         <ScaleImage source={require("@images/new/isofhcare.png")} width={200} style={{ marginTop: 50, alignSelf: 'center' }} />
                         <View style={{ flex: 1, padding: 30 }}>

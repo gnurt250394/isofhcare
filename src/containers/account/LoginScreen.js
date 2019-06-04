@@ -103,6 +103,10 @@ class LoginScreen extends Component {
 				switch (s.code) {
 					case 0:
 						var user = s.data.user;
+						user.bookingNumberHospital = s.data.bookingNumberHospital;
+                        user.bookingStatus = s.data.bookingStatus;
+						if (s.data.profile && s.data.profile.uid)
+							user.uid = s.data.profile.uid;
 						snackbar.show(constants.msg.user.login_success, "success");
 						this.props.dispatch(redux.userLogin(user));
 						if (this.nextScreen) {
@@ -175,7 +179,9 @@ class LoginScreen extends Component {
 			>
 				<ScrollView
 					showsVerticalScrollIndicator={false}
-					style={{ flex: 1 }} keyboardShouldPersistTaps="always">
+					style={{ flex: 1 }}
+					keyboardShouldPersistTaps="handled"
+				>
 					<KeyboardAvoidingView behavior="padding">
 						<View style={{ flex: 1 }}>
 							<View style={{ margin: 22 }}>

@@ -35,7 +35,7 @@ class DetailBookingNoCheckin extends Component {
     }
     render() {
         let booking = this.props.booking;
-        console.log(booking);
+        console.log(booking,'dasad');
         return (
             <View style={{ padding: 10, flex: 1 }}>
                 <View style={{ flexDirection: 'row' }}>
@@ -89,7 +89,7 @@ class DetailBookingNoCheckin extends Component {
                             booking.booking && booking.booking.sequenceNo ?
                                 <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
                                     <Text style={{ fontWeight: 'bold', marginRight: 10 }}>
-                                        Số khám:
+                                        Số tiếp đón:
                             </Text>
                                     <Text>
                                         {booking.booking.sequenceNo}
