@@ -80,7 +80,6 @@
 		B24DBF4C20D76DE90098E296 /* libRNCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B24DBF4B20D76DCD0098E296 /* libRNCamera.a */; };
 		BFF6CF04CF684E3DA33907C1 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 654ECD7C7D6F44DFBBBE8B64 /* FontAwesome.ttf */; };
 		CFAAC23102EF4B6981772E95 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 13AEE3EA33DA490EAC2E76BE /* MaterialIcons.ttf */; };
-		D1A127251EC94B3CB4ABDFA5 /* libRNReactNativeLocationSwitch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A055CC9C2171403392FBE79D /* libRNReactNativeLocationSwitch.a */; };
 		D5A48EC5F69E4BAA84B12B90 /* libRNPhotoView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5988393358F04E1091F14092 /* libRNPhotoView.a */; };
 		DCD9A661C5D64839A5D81531 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BFD44C3F27014116854D0894 /* Zocial.ttf */; };
 		E07215313F5549D9AEBE46BD /* slidingPanel-tvOS.app in Frameworks */ = {isa = PBXBuildFile; fileRef = CBE99AB0CCAC437FBB1626B2 /* slidingPanel-tvOS.app */; };
@@ -450,6 +449,13 @@
 			remoteGlobalIDString = 4107012F1ACB723B00C6AA39;
 			remoteInfo = RNCamera;
 		};
+		D65F1F4F22A66A9E006EDFDB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 535A829B7E454AD59C5E5888 /* RNReactNativeLocationSwitch.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNReactNativeLocationSwitch;
+		};
 		FA0325F4212E5D0C003268FA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 7E9C18D87F5E40CFA4AA60A4 /* RNGooglePlaces.xcodeproj */;
@@ -477,13 +483,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RNLocation;
-		};
-		FA9954912292987500C762E6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9587C3AC1D714EA4A722A364 /* RNReactNativeLocationSwitch.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 134814201AA4EA6300B7C361;
-			remoteInfo = RNReactNativeLocationSwitch;
 		};
 		FACF3CDD22117891001C14FB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -545,6 +544,7 @@
 		3E72252139704C53943BA947 /* libc++.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		41432D5DBC86498C8F9537DB /* RNGoogleSignin.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNGoogleSignin.xcodeproj; path = "../node_modules/react-native-google-signin/ios/RNGoogleSignin.xcodeproj"; sourceTree = "<group>"; };
 		523C2A71A68745E49752E186 /* libRNAccountKit.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNAccountKit.a; sourceTree = "<group>"; };
+		535A829B7E454AD59C5E5888 /* RNReactNativeLocationSwitch.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNReactNativeLocationSwitch.xcodeproj; path = "../node_modules/react-native-location-switch/ios/RNReactNativeLocationSwitch.xcodeproj"; sourceTree = "<group>"; };
 		5988393358F04E1091F14092 /* libRNPhotoView.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNPhotoView.a; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		5EF70384890E42079EEF5EA1 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/native-base/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
@@ -567,7 +567,6 @@
 		88F8C595FF944265805E2216 /* Roboto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto.ttf; path = "../node_modules/native-base/Fonts/Roboto.ttf"; sourceTree = "<group>"; };
 		8B7455775E494EFBA86E9BD5 /* slidingPanelTests.xctest */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = slidingPanelTests.xctest; sourceTree = "<group>"; };
 		94798CE8149C4557AC458707 /* libz.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
-		9587C3AC1D714EA4A722A364 /* RNReactNativeLocationSwitch.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNReactNativeLocationSwitch.xcodeproj; path = "../node_modules/react-native-location-switch/ios/RNReactNativeLocationSwitch.xcodeproj"; sourceTree = "<group>"; };
 		9ABAC36E2B3740E1B9DEFEF9 /* libRNGoogleSignin.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNGoogleSignin.a; sourceTree = "<group>"; };
 		9D2E5AB9C72A405C8A0E46EB /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/native-base/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		A055CC9C2171403392FBE79D /* libRNReactNativeLocationSwitch.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNReactNativeLocationSwitch.a; sourceTree = "<group>"; };
@@ -653,7 +652,6 @@
 				46EBBF0F9A944D0C81C1B3EC /* slidingPanel.app in Frameworks */,
 				D5A48EC5F69E4BAA84B12B90 /* libRNPhotoView.a in Frameworks */,
 				AB0127FAE3D449368C677EF7 /* libRNAccountKit.a in Frameworks */,
-				D1A127251EC94B3CB4ABDFA5 /* libRNReactNativeLocationSwitch.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -863,7 +861,7 @@
 				7E9C18D87F5E40CFA4AA60A4 /* RNGooglePlaces.xcodeproj */,
 				C284589C4D624FEBBCEA1382 /* RNPhotoView.xcodeproj */,
 				F40DBE379BA44D75B40801E1 /* RNAccountKit.xcodeproj */,
-				9587C3AC1D714EA4A722A364 /* RNReactNativeLocationSwitch.xcodeproj */,
+				535A829B7E454AD59C5E5888 /* RNReactNativeLocationSwitch.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1011,6 +1009,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		D65F1F1522A66A9E006EDFDB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D65F1F5022A66A9E006EDFDB /* libRNReactNativeLocationSwitch.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		DBEC5561ECBF090DD9A54B2A /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -1088,14 +1094,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		FA99548E2292987400C762E6 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				FA9954922292987500C762E6 /* libRNReactNativeLocationSwitch.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		FACF3CD722117891001C14FB /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -1144,6 +1142,7 @@
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				3CB4D8D60E451A680CCEC51E /* [CP] Copy Pods Resources */,
+				AB12483FCFEA75B681FFD8C1 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1232,6 +1231,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -1344,8 +1344,8 @@
 					ProjectRef = C284589C4D624FEBBCEA1382 /* RNPhotoView.xcodeproj */;
 				},
 				{
-					ProductGroup = FA99548E2292987400C762E6 /* Products */;
-					ProjectRef = 9587C3AC1D714EA4A722A364 /* RNReactNativeLocationSwitch.xcodeproj */;
+					ProductGroup = D65F1F1522A66A9E006EDFDB /* Products */;
+					ProjectRef = 535A829B7E454AD59C5E5888 /* RNReactNativeLocationSwitch.xcodeproj */;
 				},
 				{
 					ProductGroup = FA344ED122360EFA00E2E8E3 /* Products */;
@@ -1706,6 +1706,13 @@
 			remoteRef = B24DBF4A20D76DCD0098E296 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		D65F1F5022A66A9E006EDFDB /* libRNReactNativeLocationSwitch.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNReactNativeLocationSwitch.a;
+			remoteRef = D65F1F4F22A66A9E006EDFDB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		FA0325F5212E5D0C003268FA /* libRNGooglePlaces.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1732,13 +1739,6 @@
 			fileType = archive.ar;
 			path = libRNLocation.a;
 			remoteRef = FA58DB4D2293A0260008AD80 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		FA9954922292987500C762E6 /* libRNReactNativeLocationSwitch.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRNReactNativeLocationSwitch.a;
-			remoteRef = FA9954912292987500C762E6 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		FACF3CDE22117891001C14FB /* libBVLinearGradient.a */ = {
@@ -1939,6 +1939,25 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-APP/Pods-APP-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		AB12483FCFEA75B681FFD8C1 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-APP/Pods-APP-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -2025,6 +2044,7 @@
 					"$(SRCROOT)..\node_modules\neact-native-photo-viewios/**",
 					"$(SRCROOT)..\node_modules\neact-native-facebook-account-kitios/**",
 					"$(SRCROOT)/../node_modules/react-native-location-switch/ios",
+					"$(SRCROOT)/../node_modules/react-native-location-switch/ios",
 				);
 				INFOPLIST_FILE = APPTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -2062,6 +2082,7 @@
 					"$(SRCROOT)/../node_modules/mainam-react-native-sliding-up-down/ios/slidingPanel/**",
 					"$(SRCROOT)..\node_modules\neact-native-photo-viewios/**",
 					"$(SRCROOT)..\node_modules\neact-native-facebook-account-kitios/**",
+					"$(SRCROOT)/../node_modules/react-native-location-switch/ios",
 					"$(SRCROOT)/../node_modules/react-native-location-switch/ios",
 				);
 				INFOPLIST_FILE = APPTests/Info.plist;
@@ -2117,6 +2138,7 @@
 					"eact-native-photo-viewios/**",
 					"$(SRCROOT)..\node_modules\neact-native-facebook-account-kitios/**",
 					"$(SRCROOT)/../node_modules/react-native-location-switch/ios",
+					"$(SRCROOT)/../node_modules/react-native-location-switch/ios",
 				);
 				INFOPLIST_FILE = APP/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -2169,6 +2191,7 @@
 					"eact-native-photo-viewios/**",
 					"$(SRCROOT)..\node_modules\neact-native-facebook-account-kitios/**",
 					"$(SRCROOT)/../node_modules/react-native-location-switch/ios",
+					"$(SRCROOT)/../node_modules/react-native-location-switch/ios",
 				);
 				INFOPLIST_FILE = APP/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -2211,6 +2234,7 @@
 					"$(SRCROOT)/../node_modules/mainam-react-native-sliding-up-down/ios/slidingPanel/**",
 					"$(SRCROOT)..\node_modules\neact-native-photo-viewios/**",
 					"$(SRCROOT)..\node_modules\neact-native-facebook-account-kitios/**",
+					"$(SRCROOT)/../node_modules/react-native-location-switch/ios",
 					"$(SRCROOT)/../node_modules/react-native-location-switch/ios",
 				);
 				INFOPLIST_FILE = "APP-tvOS/Info.plist";
@@ -2257,6 +2281,7 @@
 					"$(SRCROOT)..\node_modules\neact-native-photo-viewios/**",
 					"$(SRCROOT)..\node_modules\neact-native-facebook-account-kitios/**",
 					"$(SRCROOT)/../node_modules/react-native-location-switch/ios",
+					"$(SRCROOT)/../node_modules/react-native-location-switch/ios",
 				);
 				INFOPLIST_FILE = "APP-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2301,6 +2326,7 @@
 					"$(SRCROOT)..\node_modules\neact-native-photo-viewios/**",
 					"$(SRCROOT)..\node_modules\neact-native-facebook-account-kitios/**",
 					"$(SRCROOT)/../node_modules/react-native-location-switch/ios",
+					"$(SRCROOT)/../node_modules/react-native-location-switch/ios",
 				);
 				INFOPLIST_FILE = "APP-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -2344,6 +2370,7 @@
 					"$(SRCROOT)/../node_modules/mainam-react-native-sliding-up-down/ios/slidingPanel/**",
 					"$(SRCROOT)..\node_modules\neact-native-photo-viewios/**",
 					"$(SRCROOT)..\node_modules\neact-native-facebook-account-kitios/**",
+					"$(SRCROOT)/../node_modules/react-native-location-switch/ios",
 					"$(SRCROOT)/../node_modules/react-native-location-switch/ios",
 				);
 				INFOPLIST_FILE = "APP-tvOSTests/Info.plist";
