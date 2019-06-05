@@ -74,6 +74,8 @@ import ConfirmGetTicketScreen from "@containers/ticket/ConfirmGetTicketScreen";
 import ScanQRCodeScreen from "@containers/ticket/ScanQRCodeScreen";
 import GetTicketFinishScreen from "@containers/ticket/GetTicketFinishScreen";
 //---------------------------------
+//........................eHealth................
+import HealthFacilitiesScreen from '@containers/ehealth/HealthFacilitiesScreen'
 const RootNavigator = createStackNavigator(
   {
     // createProfileTicketScreen : {screen:CreateProfileTicketScreen},
@@ -150,6 +152,9 @@ const RootNavigator = createStackNavigator(
     getTicketFinish: { screen: GetTicketFinishScreen },
     confirmGetTicket: { screen: ConfirmGetTicketScreen },
     //----------------------------------------
+    //----------------ehealth-----------------
+    healthFacilities :{screen:HealthFacilitiesScreen},
+
     emptyScreen: { screen: EmptyScreen }
   },
   {
