@@ -12,14 +12,14 @@ import dateUtils from 'mainam-react-native-date-utils';
 import profileProvider from '@data-access/profile-provider';
 import snackbar from '@utils/snackbar-utils';
 import ImageLoad from 'mainam-react-native-image-loader';
-class LoginScreen extends PureComponent {
+class ListProfileScreen extends PureComponent {
     constructor(props) {
         super(props)
         this.state = {
             refreshing: false,
             data: [],
             loading: false,
-            bookings: [],
+            bookings: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             hospitals: [],
             loadFirstTime: true
         }
@@ -72,85 +72,6 @@ class LoginScreen extends PureComponent {
         })
     }
 
-    // componentWillReceiveProps(nextProps) {
-    //     try {
-    //         let s = nextProps.navigation.getParam('reloadTime', undefined);
-    //         if (s != this.state.reloadTime) {
-    //             this.setState({
-    //                 reloadTime: s
-    //             }, () => {
-    //                 this.onRefresh();
-    //             })
-    //         }
-    //     } catch (error) {
-
-    //     }
-    // }
-    // getListBookings(hospitals) {
-    //     let data = [];
-    //     if (hospitals != null && hospitals.length > 0) {
-    //         hospitals.forEach(item => {
-    //             if (item != null) {
-    //                 if (item.patientHistories && item.hospital) {
-    //                     if (item.patientHistories.patientHistory && item.patientHistories.patientHistory.length > 0) {
-    //                         item.patientHistories.patientHistory.forEach(item2 => {
-    //                             if (item2) {
-    //                                 item2.hospitalId = item.hospital.id;
-    //                                 item2.hospitalName = item.hospital.name;
-    //                                 data.push(item2)
-    //                             }
-    //                         })
-    //                     }
-    //                     if (item.patientHistories.bookingNotInHis && item.patientHistories.bookingNotInHis.length > 0) {
-    //                         item.patientHistories.bookingNotInHis.forEach(item2 => {
-    //                             if (item2) {
-    //                                 item2.hospitalId = item.hospital.id;
-    //                                 item2.hospitalName = item.hospital.name;
-    //                                 data.push(item2)
-    //                             }
-    //                         })
-    //                     }
-    //                 }
-    //             }
-    //         });
-    //     }
-    //     return data;
-    // }
-    // selectHospital(hospital) {
-    //     let bookings = [];
-    //     if (hospital)
-    //         bookings = this.getListBookings([hospital]);
-    //     else
-    //         bookings = this.getListBookings(this.state.hospitals);
-    //     this.setState({ currentHospital: hospital, bookings });
-    // }
-    // onLoad() {
-    //     this.setState({
-    //         loading: true,
-    //         refreshing: true
-    //     }, () => {
-    //         bookingProvider.getListBooking(this.props.userApp.currentUser.id, (s, e) => {
-    //             this.setState({ loadFirstTime: false });
-
-    //             this.setState({
-    //                 loading: false,
-    //                 refreshing: false
-    //             }, () => {
-    //                 if (s && s.code == 0 && s.data && s.data.hospitals) {
-    //                     let hospitals = s.data.hospitals;
-    //                     let currentHospital = null;
-    //                     // if (hospitals.length != 1)
-    //                     hospitals.splice(0, 0, null);
-    //                     // else
-    //                     //     currentHospital = hospitals[0];
-    //                     let bookings = this.getListBookings(hospitals);
-    //                     this.setState({ hospitals, bookings, currentHospital });
-    //                 }
-    //             });
-    //         });
-    //     });
-    // }
-
     openBookingInHis(booking) {
         // this.setState({ isLoading: true }, () => {
         bookingProvider.detailPatientHistory(booking.patientHistory.patientHistoryId, booking.hospital ? booking.hospital.id : "");
@@ -164,132 +85,81 @@ class LoginScreen extends PureComponent {
         this.props.navigation.navigate("ehealthDHY", { booking })
     }
 
-    renderItemBookingInHis(item, index) {
-        if (item && item.patientHistory && item.patientHistory.resultDetail) {
-            let bookingDetail = JSON.parse(item.patientHistory.resultDetail);
-            if (bookingDetail.Profile) {
-                let booking = bookingDetail.Profile;
-                return <View style={styles.item_ehealth} key={index}>
-                    <TouchableOpacity style={{ position: 'relative', marginLeft: 15, right: 35 }} onPress={this.openBookingInHis.bind(this, item)}>
-                        <View style={styles.item_ehealth2}>
-                            <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{booking.PatientName}</Text>
-                            {/* <Text style={{ marginTop: 13 }}>Bệnh viện: <Text style={{ fontWeight: 'bold' }}>{booking.hospitalName}</Text></Text> */}
-                            <Text style={{ marginTop: 13 }}>Bệnh viện: <Text style={{ fontWeight: 'bold' }}>{item.hospital ? item.hospital.name : ""}</Text></Text>
-                            <Text style={{ marginTop: 8 }}>Mã hồ sơ: <Text style={{ fontWeight: 'bold' }}>{booking.PatientDocument}</Text></Text>
-                            <Text style={{ marginTop: 8 }}>Thời gian: <Text style={{ fontWeight: 'bold' }}>{booking.TimeGoIn.toDateObject().format("dd/MM/yyyy hh:mm tt")}</Text></Text>
-                        </View>
-                        <ScaledImage source={require("@images/ehealth/square1.png")} width={20} style={{ marginRight: 8, position: 'absolute', top: '50%', marginTop: -10, left: 31 }} />
-                    </TouchableOpacity>
-                    <Dash style={styles.dash} dashColor="#00977c" />
-                    <View style={styles.item_cycle} />
-                </View>
-            }
-        }
-        return null;
-    }
-    renderItemBookingNotInHis(booking, index) {
-        if (booking) {
-            return <View style={{ position: 'relative', left: 20, right: 30 }} key={index}>
-                <TouchableOpacity style={{ position: 'relative', marginLeft: 15, right: 35 }} onPress={this.openBooking.bind(this, booking, booking.hospitalId)}>
-                    <View style={{
-                        backgroundColor: '#f8fcf4',
-                        borderStyle: 'solid',
-                        borderWidth: 1,
-                        borderColor: 'rgba(155, 155, 155, 0.47)',
-                        borderRadius: 6,
-                        marginTop: 10,
-                        marginLeft: 45,
-                        padding: 12
-                    }}>
-                        <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{booking.profile.name}</Text>
-                        <Text style={{ marginTop: 13 }}>Bệnh viện: <Text style={{ fontWeight: 'bold' }}>{booking.hospitalName}</Text></Text>
-                        {/* <Text style={{ marginTop: 8 }}>Mã hồ sơ: <Text style={{ fontWeight: 'bold' }}>{booking.PatientHistoryId}</Text></Text> */}
-                        <Text style={{ marginTop: 8 }}>Thời gian: <Text style={{ fontWeight: 'bold' }}>{booking.booking.bookingTime.toDateObject("-").format("dd/MM/yyyy hh:mm tt")}</Text></Text>
-                    </View>
-                    <ScaledImage source={require("@images/ehealth/square1.png")} width={20} style={{ marginRight: 8, position: 'absolute', top: '50%', marginTop: -10, left: 31 }} />
-                </TouchableOpacity>
-                <Dash style={{ width: 2, flexDirection: 'column', position: 'absolute', top: 0, left: 10, bottom: 0 }} dashColor="#00977c" />
-                <View style={{ width: 10, height: 10, backgroundColor: '#9b9b9b', borderRadius: 5, position: 'absolute', left: 6, top: '50%', marginTop: -5 }} />
-            </View>
-        }
-        return null;
-    }
-    renderItemHospital(item, index) {
-        const source = item.hospital && item.hospital.logo ? { uri: item.hospital.logo.absoluteUrl() } : require("@images/logo.png");
+    renderItemProfile(item, index) {
+        const source = require("@images/new/user.png");
 
-        return <TouchableOpacity key={index}
-            onPress={() => {
-                if (!this.state.refreshing) {
-                    this.setState({ hospitalId: item.hospital.id, refreshing: true }, () => {
-                        this.props.dispatch({ type: constants2.action.action_select_hospital, value: item.id });
-                        this.getListBooking(item.hospital.id);
-                    });
-                } else {
-                    snackbar.show("Dữ liệu đang được tải, vui lòng chờ");
-                }
-            }}
-            style={this.state.hospitalId == item.hospital.id ? styles.hospital_selected : styles.hospital}>
-            <ImageLoad
-                resizeMode="contain"
-                customImagePlaceholderDefaultStyle={[{ width: 45, height: 45 }]}
-                placeholderSource={require("@images/new/user.png")}
-                style={[styles.avatar, { marginTop: 10 }]}
-                resizeMode="contain"
-                loadingStyle={{ size: 'small', color: 'gray' }}
-                source={source}
-                defaultImage={() => {
-                    return <ScaleImage resizeMode='cover' source={require("@images/logo.png")} width={50} height={50} />
-                }}
-            />
-            <View style={{ flex: 1, alignContent: 'flex-end', justifyContent: 'flex-end' }}>
-                <Text numberOfLines={2} style={styles.hospital_text}>
-                    {item.hospital.name}
-                </Text>
+        return <View style={{}}>
+            <View style={{ flexDirection: 'row' }}>
+                <View style={{ justifyContent: 'center', padding: 10 }}>
+                    <ImageLoad
+                        resizeMode="cover"
+                        imageStyle={{ borderRadius: 30, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
+                        borderRadius={30}
+                        customImagePlaceholderDefaultStyle={[styles.avatar, { width: 60, height: 60 }]}
+                        placeholderSource={require("@images/new/user.png")}
+                        resizeMode="cover"
+                        loadingStyle={{ size: 'small', color: 'gray' }}
+                        source={source}
+                        style={{
+                            alignSelf: 'center',
+                            borderRadius: 30,
+                            width: 60,
+                            height: 60
+                        }}
+                        defaultImage={() => {
+                            return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={40} height={40} />
+                        }}
+                    />
+                    <Text style={{ color: '#758289' }}>1000000</Text>
+                </View>
+
+                <View style={{ flex: 1, borderRightColor: '#c8d1d6', borderRightWidth: 1, paddingVertical: 10 }}>
+                    <View style={{ marginHorizontal: 10, position: 'relative', paddingHorizontal: 30 }}>
+                        <View style={{ position: 'absolute', left: 9, top: 0, bottom: 0, width: 2, backgroundColor: '#91a3ad' }}></View>
+                        <View style={{ width: 20, height: 20, borderWidth: 1.5, borderColor: '#91a3ad', borderRadius: 10, justifyContent: 'center', alignItems: 'center', position: 'absolute', left: 0, top: 0, backgroundColor: '#FFF' }}>
+                            <View style={{ width: 8, height: 8, backgroundColor: '#7eac39', borderRadius: 4 }}></View>
+                        </View>
+                        <View style={{ width: 20, height: 20, borderWidth: 1.5, borderColor: '#91a3ad', borderRadius: 10, justifyContent: 'center', alignItems: 'center', position: 'absolute', left: 0, bottom: 0, backgroundColor: '#FFF' }}>
+                            <View style={{ width: 8, height: 8, backgroundColor: '#c84242', borderRadius: 4 }}></View>
+                        </View>
+                        <Text style={{ fontWeight: 'bold', color: '#63737a' }}>MAI NGỌC NAM</Text>
+                        <Text style={{ marginTop: 10 }}>BỆNH VIỆN E</Text>
+                    </View>
+                    <View style={{ flexDirection: 'row', marginLeft: 10, marginTop: 10, alignItems: 'center' }}>
+                        <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={20} />
+                        <Text style={{ marginLeft: 5, color: '#33799e' }}>Gần nhất: 19/8/2019</Text>
+                    </View>
+                </View>
+                <View style={{ paddingHorizontal: 20, justifyContent: 'center', alignItems: 'center' }}>
+                    <Text style={{ color: 'red', fontSize: 30 }}>03</Text>
+                    <Text>lần</Text>
+                </View>
             </View>
-        </TouchableOpacity>
+            <View style={{ height: 1, backgroundColor: '#00000050' }} />
+        </View>
     }
     render() {
         return (
-            <ActivityPanel style={{ flex: 1 }} title="Y BẠ ĐIỆN TỬ" showFullScreen={true} isLoading={this.state.isLoading}>
-                <ScrollView keyboardShouldPersistTaps='handled' style={{ flex: 1 }}
-                    refreshControl={<RefreshControl
-                        refreshing={this.state.refreshing}
-                        onRefresh={this.onRefresh.bind(this)}
-                    />}>
-                    {
-                        (this.state.hospitals && this.state.hospitals.length > 0) &&
-                        <View>
-                            <Text style={[styles.text1, {
-                                marginLeft: 20, marginBottom: 10
-                            }]}>Cơ sở y tế đã khám</Text>
-                            <FlatList
-                                horizontal={true}
-                                showsHorizontalScrollIndicator={false}
-                                keyExtractor={(item, index) => index.toString()}
-                                extraData={this.state}
-                                data={this.state.hospitals}
-                                ListFooterComponent={() => <View style={{ height: 10 }}></View>}
-                                renderItem={({ item, index }) => this.renderItemHospital(item, index)}
-                            />
-                        </View>
-                    }
-                    <View style={styles.style1}>
-                        <ScaledImage source={require("@images/ehealth/ichistory.png")} width={20} style={{ marginRight: 8 }} />
-                        <Text style={styles.text1}>Lịch sử</Text>
-                    </View>
-                    {
-                        (!this.state.bookings || this.state.bookings.length == 0) ?
-                            <View style={{ alignItems: 'center', marginTop: 50 }}>
-                                <Text style={{ fontStyle: 'italic' }}>Không thấy lịch sử khám nào</Text>
-                            </View> :
-                            this.state.bookings.map((item, index) => {
-                                if (!item.booking)
-                                    return this.renderItemBookingInHis(item, index)
-                                return this.renderItemBookingNotInHis(item, index)
-                            })
-                    }
-                    <View style={{ height: 50 }} />
-                </ScrollView>
+            <ActivityPanel style={{ flex: 1 }} title="HỒ SƠ Y BẠ GIA ĐÌNH"
+                iosBarStyle={'light-content'}
+                statusbarBackgroundColor="#22b060"
+                actionbarStyle={{
+                    backgroundColor: '#22b060',
+                    borderBottomWidth: 0
+                }}
+                titleStyle={{
+                    color: '#FFF'
+                }}
+
+                showFullScreen={true} isLoading={this.state.isLoading}>
+                <FlatList
+                    showsVerticalScrollIndicator={false}
+                    keyExtractor={(item, index) => index.toString()}
+                    extraData={this.state}
+                    data={this.state.bookings}
+                    ListFooterComponent={() => <View style={{ height: 10 }}></View>}
+                    renderItem={({ item, index }) => this.renderItemProfile.call(this, item, index)}
+                />
             </ActivityPanel >
         );
     }
@@ -358,4 +228,4 @@ function mapStateToProps(state) {
         userApp: state.userApp
     };
 }
-export default connect(mapStateToProps)(LoginScreen);
+export default connect(mapStateToProps)(ListProfileScreen);
