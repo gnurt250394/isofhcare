@@ -193,7 +193,7 @@ class SelectTimeScreen extends Component {
         }
         margin += 7;
         if (index == 0 || index == this.state.listTime.length - 1 || item.left || item.right)
-            return (<Text style={{ fontSize: 9, position: 'absolute', left: item.marginLeft + margin, top: 50 }}>{label}</Text>)
+            return (<Text  key={index}  style={{ fontSize: 9, position: 'absolute', left: item.marginLeft + margin, top: 50 }}>{label}</Text>)
         return null;
     }
     renderIgnoreTime(item, index) {
@@ -227,7 +227,7 @@ class SelectTimeScreen extends Component {
         </View>
     }
     renderTime(item, index) {
-        return <TouchableOpacity onPress={() => {
+        return <TouchableOpacity key={index} onPress={() => {
             if (item.type == 0) {
                 snackbar.show("Đã kín lịch trong khung giờ này", "danger");
                 return;
