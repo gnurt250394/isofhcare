@@ -76,8 +76,12 @@ import GetTicketFinishScreen from "@containers/ticket/GetTicketFinishScreen";
 //---------------------------------
 //........................eHealth................
 import HealthFacilitiesScreen from '@containers/ehealth/HealthFacilitiesScreen'
+import DemoModalScreen from '@containers/ehealth/DemoModalScreen'
+
+
 const RootNavigator = createStackNavigator(
   {
+
     // createProfileTicketScreen : {screen:CreateProfileTicketScreen},
     // selectLocationScreen : {screen:SelectLocationScreen},
     // testVNPay: { screen: TestVNPayScreen },
@@ -154,7 +158,9 @@ const RootNavigator = createStackNavigator(
     //----------------------------------------
     //----------------ehealth-----------------
     healthFacilities :{screen:HealthFacilitiesScreen},
+    DemoModalScreen :{screen:DemoModalScreen},
 
+    
     emptyScreen: { screen: EmptyScreen }
   },
   {
