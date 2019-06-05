@@ -87,7 +87,7 @@ class ConfirmBookingScreen extends Component {
                 return "";
             case 3:
                 return "PAYOO";
-                case 4:
+            case 4:
                 return "PAYOO_BILL";
         }
     }
@@ -97,8 +97,8 @@ class ConfirmBookingScreen extends Component {
                 return constants.key.payment_return_url.vnpay;
             case 2:
                 return "";
-                case 3:
-                        case 4:
+            case 3:
+            case 4:
                 return constants.key.payment_return_url.payoo;
         }
     }
@@ -111,7 +111,7 @@ class ConfirmBookingScreen extends Component {
         }
     }
 
-    
+
     getPaymentLink(booking) {
         booking.hospital = this.state.hospital;
         booking.profile = this.state.profile;
@@ -133,94 +133,92 @@ class ConfirmBookingScreen extends Component {
             ).then(s => {
                 this.setState({ isLoading: false }, () => {
                     let data = s.data;
-                    switch(this.state.paymentMethod)
-                    {
+                    switch (this.state.paymentMethod) {
                         case 4:
 
-                            booking.online_transactions  = data.online_transactions;
-                            booking.valid_time =data.valid_time;
-                                this.props.navigation.navigate("home", {
-                                    navigate: {
-                                        screen: "createBookingSuccess",
-                                        params: {
-                                            booking
-                                        }
+                            booking.online_transactions = data.online_transactions;
+                            booking.valid_time = data.valid_time;
+                            this.props.navigation.navigate("home", {
+                                navigate: {
+                                    screen: "createBookingSuccess",
+                                    params: {
+                                        booking
                                     }
-                                });
+                                }
+                            });
                             break;
                         case 3:
-                                let vnp_TxnRef = data.id;
-                                let payment_order = s.payment_order;
-                                let html = convert.xml2json(payment_order.data, {compact: true, spaces: 4})
-                                let orderJSON = JSON.parse(html);
-                                console.log(orderJSON);
-        
-                                let session = orderJSON.shops.shop.session._text;
-        
-                                payment_order.orderInfo = payment_order.data;
-                                payoo.initialize(payment_order.shop_id, payment_order.check_sum_key).then(() => {
-                                    payoo.pay(payment_order, {}).then(x => {
-                                        try {
-                                            let obj = JSON.parse(x);
-                                            obj["vnp_TxnRef"]=vnp_TxnRef;
-                                            obj["session"]=session;
-                                            obj["status"]=1;
-                                            obj["order_no"]=obj.orderId;
-                                            console.log(obj);
-                                            walletProvider.onlineTransactionPaid(obj["vnp_TxnRef"], this.getPaymentMethod(), obj);
-                                            this.props.navigation.navigate("home", {
-                                                navigate: {
-                                                    screen: "createBookingSuccess",
-                                                    params: {
-                                                        booking
-                                                    }
-                                                }
-                                            });
-                                        } catch (error) {
-                                            
+                            
+                            let vnp_TxnRef = data.online_transactions[0].id;
+                            let payment_order = s.payment_order;
+                            let html = convert.xml2json(payment_order.data, { compact: true, spaces: 4 })
+                            let orderJSON = JSON.parse(html);
+                            console.log(orderJSON);
+
+                            let session = orderJSON.shops.shop.session._text;
+
+                            payment_order.orderInfo = payment_order.data;
+                            payoo.initialize(payment_order.shop_id, payment_order.check_sum_key).then(() => {
+                                payoo.pay(payment_order, {}).then(x => {
+                                    let obj = JSON.parse(x);
+                                    obj["vnp_TxnRef"] = vnp_TxnRef;
+                                    obj["session"] = session;
+                                    obj["status"] = 1;
+                                    obj["order_no"] = obj.orderId;
+                                    console.log(obj);
+                                    walletProvider.onlineTransactionPaid(obj["vnp_TxnRef"], this.getPaymentMethod(), obj);
+                                    this.props.navigation.navigate("home", {
+                                        navigate: {
+                                            screen: "createBookingSuccess",
+                                            params: {
+                                                booking
+                                            }
                                         }
-                                    }).catch(y => {
                                     });
-                                })
-                                break;
-                            case 1:
-                                        this.props.navigation.navigate("paymentVNPay", {
-                                            urlPayment: s.payment_url,
-                                            onSuccess: url => {
-                                                let obj = {};
-                                                let arr = url.split('?');
-                                                if (arr.length == 2) {
-                                                    arr = arr[1].split("&");
-                                                    arr.forEach(item => {
-                                                        let arr2 = item.split("=");
-                                                        if (arr2.length == 2) {
-                                                            obj[arr2[0]] = arr2[1];
-                                                        }
-                                                    })
+                                }).catch(y => {
+                                    booking.transactionCode = data.online_transactions[0].id;
+                                    this.props.navigation.navigate("paymentBookingError", { booking })
+                                });
+                            })
+                            break;
+                        case 1:
+                            this.props.navigation.navigate("paymentVNPay", {
+                                urlPayment: s.payment_url,
+                                onSuccess: url => {
+                                    let obj = {};
+                                    let arr = url.split('?');
+                                    if (arr.length == 2) {
+                                        arr = arr[1].split("&");
+                                        arr.forEach(item => {
+                                            let arr2 = item.split("=");
+                                            if (arr2.length == 2) {
+                                                obj[arr2[0]] = arr2[1];
+                                            }
+                                        })
+                                    }
+                                    walletProvider.onlineTransactionPaid(obj["vnp_TxnRef"], this.getPaymentMethod(), obj);
+                                    if (obj["vnp_TransactionNo"] == 0) {
+                                        booking.transactionCode = obj["vnp_TxnRef"];
+                                        this.props.navigation.navigate("paymentBookingError", { booking })
+                                    }
+                                    else {
+                                        this.props.navigation.navigate("home", {
+                                            navigate: {
+                                                screen: "createBookingSuccess",
+                                                params: {
+                                                    booking
                                                 }
-                                                walletProvider.onlineTransactionPaid(obj["vnp_TxnRef"], this.getPaymentMethod(), obj);
-                                                if (obj["vnp_TransactionNo"] == 0) {
-                                                    booking.transactionCode = obj["vnp_TxnRef"];
-                                                    this.props.navigation.navigate("paymentBookingError", { booking })
-                                                }
-                                                else {
-                                                    this.props.navigation.navigate("home", {
-                                                        navigate: {
-                                                            screen: "createBookingSuccess",
-                                                            params: {
-                                                                booking
-                                                            }
-                                                        }
-                                                    });
-                                                }
-                                            },
-                                            onError: url => {
-                                                this.props.navigation.navigate("paymentBookingError", { booking })
                                             }
                                         });
-                                    break;
+                                    }
+                                },
+                                onError: url => {
+                                    this.props.navigation.navigate("paymentBookingError", { booking })
+                                }
+                            });
+                            break;
                     }
-                        
+
                 })
             }).catch(e => {
                 this.setState({ isLoading: false }, () => {
