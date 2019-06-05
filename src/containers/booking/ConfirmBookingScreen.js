@@ -161,12 +161,7 @@ class ConfirmBookingScreen extends Component {
                             payoo.initialize(payment_order.shop_id, payment_order.check_sum_key).then(() => {
                                 payoo.pay(payment_order, {}).then(x => {
                                     let obj = JSON.parse(x);
-                                    obj["vnp_TxnRef"] = vnp_TxnRef;
-                                    obj["session"] = session;
-                                    obj["status"] = 1;
-                                    obj["order_no"] = obj.orderId;
-                                    console.log(obj);
-                                    walletProvider.onlineTransactionPaid(obj["vnp_TxnRef"], this.getPaymentMethod(), obj);
+                                    walletProvider.onlineTransactionPaid(vnp_TxnRef, this.getPaymentMethod(), obj);
                                     this.props.navigation.navigate("home", {
                                         navigate: {
                                             screen: "createBookingSuccess",
