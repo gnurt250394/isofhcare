@@ -21,6 +21,7 @@
     "mainam-react-native-form-validate": "^3.0.5",
     "mainam-react-native-image-loader": "^1.0.6",
     "mainam-react-native-image-progress": "^1.0.2",
+    "mainam-react-native-payoo": "^1.0.2",
     "mainam-react-native-permission": "^1.0.1",
     "mainam-react-native-photo-viewer": "^1.1.0",
     "mainam-react-native-qrcode-scanner": "^1.0.1",
@@ -74,6 +75,8 @@
     "redux-thunk": "^2.2.0",
     "rn-fetch-blob": "^0.10.11",
     "rn-tooltip": "^1.1.2",
+    "stream": "0.0.2",
+    "xml-js": "^1.6.11",
     "yarn": "^1.9.4"
   },
   "devDependencies": {

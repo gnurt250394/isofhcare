@@ -9,6 +9,9 @@ import bookingProvider from '@data-access/booking-provider';
 import walletProvider from '@data-access/wallet-provider';
 import snackbar from '@utils/snackbar-utils';
 import connectionUtils from '@utils/connection-utils';
+import payoo from 'mainam-react-native-payoo';
+import constants from '@resources/strings';
+var convert = require('xml-js');
 
 class ConfirmBookingScreen extends Component {
     constructor(props) {
@@ -44,8 +47,8 @@ class ConfirmBookingScreen extends Component {
             booking
         }
     }
-    componentDidMount(){
-     console.log(this.state.hospital,'sssssssss');
+    componentDidMount() {
+        console.log(this.state.hospital, 'sssssssss');
     }
     confirmPayment(booking, bookingId) {
         booking.hospital = this.state.hospital;
@@ -76,47 +79,66 @@ class ConfirmBookingScreen extends Component {
             });
         })
     }
+    getPaymentMethod() {
+        switch (this.state.paymentMethod) {
+            case 1:
+                return "VNPAY";
+            case 2:
+                return "";
+            case 3:
+                return "PAYOO";
+                case 4:
+                return "PAYOO_BILL";
+        }
+    }
+    getPaymentReturnUrl() {
+        switch (this.state.paymentMethod) {
+            case 1:
+                return constants.key.payment_return_url.vnpay;
+            case 2:
+                return "";
+                case 3:
+                        case 4:
+                return constants.key.payment_return_url.payoo;
+        }
+    }
+    getPaymentMethodUi() {
+        switch (this.state.paymentMethod) {
+            case 3:
+                return "SDK";
+            default:
+                return "";
+        }
+    }
+
+    
     getPaymentLink(booking) {
         booking.hospital = this.state.hospital;
         booking.profile = this.state.profile;
         booking.payment = this.state.paymentMethod;
-        // this.props.navigation.navigate("paymentBookingError", { booking })
-        // return;
-
         this.setState({ isLoading: true }, () => {
-            let memo = `THANH TOÁN VNPAY - Đặt khám - ${this.state.service.id} - ${this.state.service.name} - ${this.state.hospital.hospital.name} - ${this.state.schedule.time.format("yyyy-MM-dd HH:mm:ss")} - ${this.state.profile.medicalRecords.name}`;
+            let memo = `THANH TOÁN ${this.getPaymentMethod()} - Đặt khám - ${this.state.service.id} - ${this.state.service.name} - ${this.state.hospital.hospital.name} - ${this.state.schedule.time.format("yyyy-MM-dd HH:mm:ss")} - ${this.state.profile.medicalRecords.name}`;
             walletProvider.createOnlinePayment(
                 this.props.userApp.currentUser.id,
-                "VNPAY",
+                this.getPaymentMethod(),
                 this.state.hospital.hospital.id,
                 booking.book.id,
-                "http://localhost:8888/order/vnpay_return",
+                this.getPaymentReturnUrl(),
                 this.state.service.price,
                 memo,
                 booking.book.hash,
-                booking.jwtData
+                booking.jwtData,
+                this.getPaymentMethodUi(),
+                booking.book.expireDatePayoo
             ).then(s => {
                 this.setState({ isLoading: false }, () => {
-                    this.props.navigation.navigate("paymentVNPay", {
-                        urlPayment: s.payment_url,
-                        onSuccess: url => {
-                            let obj = {};
-                            let arr = url.split('?');
-                            if (arr.length == 2) {
-                                arr = arr[1].split("&");
-                                arr.forEach(item => {
-                                    let arr2 = item.split("=");
-                                    if (arr2.length == 2) {
-                                        obj[arr2[0]] = arr2[1];
-                                    }
-                                })
-                            }
-                            walletProvider.onlineTransactionPaid(obj["vnp_TxnRef"], "VNPAY", obj);
-                            if (obj["vnp_TransactionNo"] == 0) {
-                                booking.transactionCode = obj["vnp_TxnRef"];
-                                this.props.navigation.navigate("paymentBookingError", { booking })
-                            }
-                            else {
+                    let data = s.data;
+                    switch(this.state.paymentMethod)
+                    {
+                        case 4:
+
+                            booking.online_transactions  = data.online_transactions;
+                            booking.valid_time =data.valid_time;
                                 this.props.navigation.navigate("home", {
                                     navigate: {
                                         screen: "createBookingSuccess",
@@ -125,12 +147,80 @@ class ConfirmBookingScreen extends Component {
                                         }
                                     }
                                 });
-                            }
-                        },
-                        onError: url => {
-                            this.props.navigation.navigate("paymentBookingError", { booking })
-                        }
-                    })
+                            break;
+                        case 3:
+                                let vnp_TxnRef = data.id;
+                                let payment_order = s.payment_order;
+                                let html = convert.xml2json(payment_order.data, {compact: true, spaces: 4})
+                                let orderJSON = JSON.parse(html);
+                                console.log(orderJSON);
+        
+                                let session = orderJSON.shops.shop.session._text;
+        
+                                payment_order.orderInfo = payment_order.data;
+                                payoo.initialize(payment_order.shop_id, payment_order.check_sum_key).then(() => {
+                                    payoo.pay(payment_order, {}).then(x => {
+                                        try {
+                                            let obj = JSON.parse(x);
+                                            obj["vnp_TxnRef"]=vnp_TxnRef;
+                                            obj["session"]=session;
+                                            obj["status"]=1;
+                                            obj["order_no"]=obj.orderId;
+                                            console.log(obj);
+                                            walletProvider.onlineTransactionPaid(obj["vnp_TxnRef"], this.getPaymentMethod(), obj);
+                                            this.props.navigation.navigate("home", {
+                                                navigate: {
+                                                    screen: "createBookingSuccess",
+                                                    params: {
+                                                        booking
+                                                    }
+                                                }
+                                            });
+                                        } catch (error) {
+                                            
+                                        }
+                                    }).catch(y => {
+                                    });
+                                })
+                                break;
+                            case 1:
+                                        this.props.navigation.navigate("paymentVNPay", {
+                                            urlPayment: s.payment_url,
+                                            onSuccess: url => {
+                                                let obj = {};
+                                                let arr = url.split('?');
+                                                if (arr.length == 2) {
+                                                    arr = arr[1].split("&");
+                                                    arr.forEach(item => {
+                                                        let arr2 = item.split("=");
+                                                        if (arr2.length == 2) {
+                                                            obj[arr2[0]] = arr2[1];
+                                                        }
+                                                    })
+                                                }
+                                                walletProvider.onlineTransactionPaid(obj["vnp_TxnRef"], this.getPaymentMethod(), obj);
+                                                if (obj["vnp_TransactionNo"] == 0) {
+                                                    booking.transactionCode = obj["vnp_TxnRef"];
+                                                    this.props.navigation.navigate("paymentBookingError", { booking })
+                                                }
+                                                else {
+                                                    this.props.navigation.navigate("home", {
+                                                        navigate: {
+                                                            screen: "createBookingSuccess",
+                                                            params: {
+                                                                booking
+                                                            }
+                                                        }
+                                                    });
+                                                }
+                                            },
+                                            onError: url => {
+                                                this.props.navigation.navigate("paymentBookingError", { booking })
+                                            }
+                                        });
+                                    break;
+                    }
+                        
                 })
             }).catch(e => {
                 this.setState({ isLoading: false }, () => {
@@ -239,6 +329,22 @@ class ConfirmBookingScreen extends Component {
                             }
                         </View>
                         <Text style={styles.ckeckthanhtoan}>VNPAY</Text>
+                    </TouchableOpacity> */}
+                    {/* <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 3 })}>
+                        <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
+                            {this.state.paymentMethod == 3 &&
+                                <View style={{ backgroundColor: 'rgb(2,195,154)', width: 10, height: 10, borderRadius: 5 }}></View>
+                            }
+                        </View>
+                        <Text style={styles.ckeckthanhtoan}>PAYOO</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 4 })}>
+                        <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
+                            {this.state.paymentMethod == 4 &&
+                                <View style={{ backgroundColor: 'rgb(2,195,154)', width: 10, height: 10, borderRadius: 5 }}></View>
+                            }
+                        </View>
+                        <Text style={styles.ckeckthanhtoan}>PAYOO - Cửa hàng tiện ích</Text>
                     </TouchableOpacity> */}
                     <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 2 })}>
                         <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>

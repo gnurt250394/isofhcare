@@ -69,6 +69,7 @@ target 'APP' do
   pod 'react-native-location', :path => '../node_modules/react-native-location'
 
   pod 'react-native-sms', :path => '../node_modules/react-native-sms'
+  pod 'Payoo', :path => '../node_modules/mainam-react-native-payoo'
 
 end
 

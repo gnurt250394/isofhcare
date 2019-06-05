@@ -30,7 +30,10 @@ allprojects {
         maven {
             url 'https://maven.google.com'
         }
-        maven { url "https://jitpack.io" }
+        maven { url "https://jitpack.io" }        
+        flatDir {
+            dirs 'libs'
+        }
     }
     subprojects {
         project.configurations.all {
