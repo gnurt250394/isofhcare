@@ -21,7 +21,9 @@ class CreateBookingSuccessScreen extends Component {
             return "Thanh toán tại viện";
             case 3:
                 return "PAYOO";
-        }
+                case 4:
+                        return "PAYOO - Cửa hàng tiện ích";
+                }
         return "";
     }
 
@@ -70,6 +72,18 @@ class CreateBookingSuccessScreen extends Component {
                                 <Text style={styles.label}>Hình thức thanh toán:</Text>
                                 <Text style={styles.text}>{this.getPaymentMethod(booking)}</Text>
                             </View>
+                            {
+                                booking.payment==4 && <View>
+                                                                <View style={styles.row}>
+                                <Text style={styles.label}>Mã thanh toán:</Text>
+                                <Text style={styles.text}>{booking.online_transactions && booking.online_transactions.length ?booking.online_transactions[0].bill_ref_code:""}</Text>
+                            </View>
+                            <View style={styles.row}>
+                                <Text style={styles.label}>Hạn thanh toán:</Text>
+                                <Text style={styles.text}>{new Date(booking.valid_time).format("dd/MM/yyyy")}</Text>
+                            </View>
+                                </View>
+                            }
                         </View>
                         <View style={styles.view1}>
                             <Text style={styles.text2}>Lịch đặt khám của bạn đã được gửi đi. Vui lòng đến trước hẹn 15 phút để thực hiện các thủ tục khác.</Text>
