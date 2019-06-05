@@ -19,6 +19,21 @@ class CreateBookingSuccessScreen extends Component {
             isVisible: true,
         })
     }
+
+    getPaymentMethod(booking)
+    {
+        switch(booking.payment)
+        {
+            case 1: 
+            return "VNPAY";
+            case 2: 
+            return "Thanh toán tại viện";
+            case 3:
+                return "PAYOO";
+        }
+        return "";
+    }
+
     render() {
         let booking = this.props.navigation.state.params.booking;
         if (!booking || !booking.profile || !booking.hospital || !booking.hospital.hospital || !booking.book) {
@@ -60,7 +75,7 @@ class CreateBookingSuccessScreen extends Component {
                             </View>
                             <View style={styles.row}>
                                 <Text style={styles.label}>Hình thức thanh toán:</Text>
-                                <Text style={styles.text}>{booking.payment == 2 ? "Thanh toán tại viện" : "VNPay"}</Text>
+                                <Text style={styles.text}>{this.getPaymentMethod(booking)}</Text>
                             </View>
                         </View>
                         <View style={styles.view2}>

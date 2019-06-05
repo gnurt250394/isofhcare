@@ -7,30 +7,34 @@ xmlns:tools="http://schemas.android.com/tools"
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>  
+
+    <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
     <permission
         android:name="com.isofh.appisofhcaretest.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
-<uses-permission android:name="android.permission.USE_FINGERPRINT" />
+
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
 
     <uses-permission android:name="com.isofh.appisofhcaretest.permission.C2D_MESSAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
     <application
         android:name=".MainApplication"
-        tools:replace="android:allowBackup"
         android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_config"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:launchMode="singleTop"
-        android:fullBackupContent="@xml/backup_config" 
-        android:theme="@style/AppTheme">
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:replace="android:allowBackup,android:supportsRtl">
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
@@ -47,16 +51,33 @@ xmlns:tools="http://schemas.android.com/tools"
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
+        <activity
+            android:name="vn.payoo.paymentsdk.ui.PayooPaymentSdkActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="payment_isofhcare_return"
+                    android:scheme="payoo" />
+            </intent-filter>
+        </activity>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
-    <meta-data
-        android:name="com.facebook.accountkit.ApplicationName"
-        android:value="@string/app_name" />
-    <meta-data
-        android:name="com.facebook.accountkit.ClientToken"
-        android:value="@string/ak_client_token" />
+        <meta-data
+            android:name="com.facebook.accountkit.ApplicationName"
+            android:value="@string/app_name" />
+        <meta-data
+            android:name="com.facebook.accountkit.ClientToken"
+            android:value="@string/ak_client_token" />
+
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true">
@@ -89,6 +110,7 @@ xmlns:tools="http://schemas.android.com/tools"
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
                 <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
@@ -111,14 +133,14 @@ xmlns:tools="http://schemas.android.com/tools"
             android:authorities="com.isofh.appisofhcaretest.provider"
             android:exported="false"
             android:grantUriPermissions="true">
-                <meta-data
-                tools:replace="android:resource"
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/filepaths" />
-            </provider>
             <meta-data
-      android:name="com.google.android.geo.API_KEY"
-      android:value="AIzaSyD8XCYd_t7JG7PO3d6m6wpWVXEJrPIevu0"/>
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths"
+                tools:replace="android:resource" />
+        </provider>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyD8XCYd_t7JG7PO3d6m6wpWVXEJrPIevu0" />
     </application>
 
 </manifest>

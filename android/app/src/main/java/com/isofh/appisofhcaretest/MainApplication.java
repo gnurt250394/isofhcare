@@ -8,6 +8,7 @@ import com.facebook.CallbackManager;
 import com.facebook.react.ReactApplication;
 import com.tkporter.sendsms.SendSMSPackage;
 import ca.jaysoo.extradimensions.ExtraDimensionsPackage;
+import com.mainam.payoo.PayooPackage;
 import org.pweitz.reactnative.locationswitch.LocationSwitchPackage;
 import com.github.reactnativecommunity.location.RNLocationPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -56,6 +57,7 @@ private static CallbackManager mCallbackManager = CallbackManager.Factory.create
         new MainReactPackage(),
             SendSMSPackage.getInstance(),
             new ExtraDimensionsPackage(),
+            new PayooPackage(),
             new LocationSwitchPackage(),
             new RNLocationPackage(),
             new VectorIconsPackage(),
