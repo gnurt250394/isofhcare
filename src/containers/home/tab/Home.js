@@ -74,10 +74,10 @@ class Home extends Component {
           text: "Y bạ",
           onPress: () => {
             if (this.props.userApp.isLogin)
-              this.props.navigation.navigate("ehealth");
+              this.props.navigation.navigate("healthFacilities");
             else
               this.props.navigation.navigate("login", {
-                nextScreen: { screen: 'ehealth' }
+                nextScreen: { screen: 'healthFacilities' }
               });
           }
         }
