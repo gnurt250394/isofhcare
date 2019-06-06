@@ -131,6 +131,122 @@ class ConfirmBookingScreen extends Component {
                 this.getPaymentMethodUi(),
                 booking.book.expireDatePayoo
             ).then(s => {
+                let data = s.data;
+                let paymentId = data.id;
+                this.setState({ isLoading: false, paymentId }, () => {
+                    switch (this.state.paymentMethod) {
+                        case 4:
+
+                            booking.online_transactions = data.online_transactions;
+                            booking.valid_time = data.valid_time;
+                            this.props.navigation.navigate("home", {
+                                navigate: {
+                                    screen: "createBookingSuccess",
+                                    params: {
+                                        booking
+                                    }
+                                }
+                            });
+                            break;
+                        case 3:
+
+                            let vnp_TxnRef = data.online_transactions[0].id;
+                            let payment_order = s.payment_order;
+                            let html = convert.xml2json(payment_order.data, { compact: true, spaces: 4 })
+                            let orderJSON = JSON.parse(html);
+                            console.log(orderJSON);
+
+                            payment_order.orderInfo = payment_order.data;
+                            payoo.initialize(payment_order.shop_id, payment_order.check_sum_key).then(() => {
+                                payoo.pay(payment_order, {}).then(x => {
+                                    let obj = JSON.parse(x);
+                                    walletProvider.onlineTransactionPaid(vnp_TxnRef, this.getPaymentMethod(), obj);
+                                    this.props.navigation.navigate("home", {
+                                        navigate: {
+                                            screen: "createBookingSuccess",
+                                            params: {
+                                                booking
+                                            }
+                                        }
+                                    });
+                                }).catch(y => {
+                                    booking.transactionCode = data.online_transactions[0].id;
+                                    this.props.navigation.navigate("paymentBookingError", { booking })
+                                });
+                            })
+                            break;
+                        case 1:
+                            this.props.navigation.navigate("paymentVNPay", {
+                                urlPayment: s.payment_url,
+                                onSuccess: url => {
+                                    let obj = {};
+                                    let arr = url.split('?');
+                                    if (arr.length == 2) {
+                                        arr = arr[1].split("&");
+                                        arr.forEach(item => {
+                                            let arr2 = item.split("=");
+                                            if (arr2.length == 2) {
+                                                obj[arr2[0]] = arr2[1];
+                                            }
+                                        })
+                                    }
+                                    walletProvider.onlineTransactionPaid(obj["vnp_TxnRef"], this.getPaymentMethod(), obj);
+                                    if (obj["vnp_TransactionNo"] == 0) {
+                                        booking.transactionCode = obj["vnp_TxnRef"];
+                                        this.props.navigation.navigate("paymentBookingError", { booking })
+                                    }
+                                    else {
+                                        this.props.navigation.navigate("home", {
+                                            navigate: {
+                                                screen: "createBookingSuccess",
+                                                params: {
+                                                    booking
+                                                }
+                                            }
+                                        });
+                                    }
+                                },
+                                onError: url => {
+                                    this.props.navigation.navigate("paymentBookingError", { booking })
+                                }
+                            });
+                            break;
+                    }
+
+                })
+            }).catch(e => {
+                this.setState({ isLoading: false }, () => {
+                    if (e && e.response && e.response.data) {
+                        let response = e.response.data;
+                        switch (response.type) {
+                            case "ValidationError":
+                                let message = response.message;
+                                for (let key in message) {
+                                    switch (key) {
+                                        case "id":
+                                            snackbar.show("Tài khoản của bạn chưa thể thanh toán trả trước. Vui lòng liên hệ Admin để được giải quyết", "danger");
+                                            return;
+                                        case "order_ref_id":
+                                            this.retry(this.state.paymentId);
+                                            return;
+                                        case "vendor_id":
+                                            snackbar.show("Vender không tồn tại trong hệ thống", "danger");
+                                            return;
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                    snackbar.show("Tạo thanh toán không thành công", "danger");
+                    // this.props.navigation.navigate("paymentBookingError", { booking })
+                })
+            });
+        })
+    }
+
+    retry(paymentId) {
+        this.setState({ isLoading: true }, () => {
+            walletProvider.retry(paymentId, this.getPaymentReturnUrl(), this.getPaymentMethodUi(), this.getPaymentMethod()).then(s => {
                 this.setState({ isLoading: false }, () => {
                     let data = s.data;
                     switch (this.state.paymentMethod) {
@@ -148,7 +264,7 @@ class ConfirmBookingScreen extends Component {
                             });
                             break;
                         case 3:
-                            
+
                             let vnp_TxnRef = data.online_transactions[0].id;
                             let payment_order = s.payment_order;
                             let html = convert.xml2json(payment_order.data, { compact: true, spaces: 4 })
@@ -244,6 +360,7 @@ class ConfirmBookingScreen extends Component {
             });
         })
     }
+
     createBooking() {
         connectionUtils.isConnected().then(s => {
             this.setState({ isLoading: true }, () => {
