@@ -13,6 +13,7 @@ import ActivityPanel from "@components/ActivityPanel";
 import dateUtils from "mainam-react-native-date-utils";
 import ScaledImage from "mainam-react-native-scaleimage";
 import LinearGradient from 'react-native-linear-gradient'
+import profileProvider from '@data-access/profile-provider';
 
 class DemoModalScreen extends Component {
     constructor(props) {
@@ -31,7 +32,16 @@ class DemoModalScreen extends Component {
             isShow:true
         })
     }
-   
+   componentDidMount (){
+       this.onGetList()
+   }
+   onGetList = () => {
+    profileProvider.getProfileFamily().then(res => {
+        console.log(res);
+    }).catch(err => {
+        console.log(err);
+    })
+   }
     _renderItem =({item}) => {
        <View style={{flex:1}}><Text>{item.name}</Text></View>
     }
@@ -40,7 +50,7 @@ class DemoModalScreen extends Component {
         return (
             <ActivityPanel
                 iosBarStyle={'dark-content'}
-                backButton={<TouchableOpacity style={{ marginLeft: 2.5, padding: 5 }}><ScaledImage height={30} width={25} source={require('@images/new/ehealth/ic_back_write.png')}></ScaledImage></TouchableOpacity>}
+                backButton={<TouchableOpacity onPress = {()=> this.props.navigation.pop()} style={{ marginLeft: 2.5, padding: 5 }}><ScaledImage height={30} width={25} source={require('@images/new/ehealth/ic_back_write.png')}></ScaledImage></TouchableOpacity>}
                 statusbarBackgroundColor="#27AE60"
                 titleStyle={{ color: '#fff' }}
                 actionbarStyle={{ backgroundColor: '#27AE60' }}
@@ -64,6 +74,7 @@ class DemoModalScreen extends Component {
                                           renderItem={this._renderItem}
                                           style={[styles.contentStyle, { width: 200,height:300 }]}
                                           keyExtractor={(item,index) => index.toString()}
+                                          
                                     />
                                     :
                                     null}
