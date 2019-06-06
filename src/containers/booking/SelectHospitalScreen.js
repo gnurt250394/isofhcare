@@ -170,19 +170,19 @@ class SelectHospitalScreen extends Component {
             });
     }
     componentDidMount() {
-        // locationProvider.getCurrentLocationHasSave().then(s => {
-        //     if (s && s.latitude && s.longitude) {
-        //         s.latitudeDelta = 0.1;
-        //         s.longitudeDelta = 0.1;
-        //         this.setState({
-        //             region: s,
-        //         }, () => {
-        //             this.onRefresh();
-        //         });
-        //     }
-        // }).catch(e => {
+        locationProvider.getCurrentLocationHasSave().then(s => {
+            if (s && s.latitude && s.longitude) {
+                s.latitudeDelta = 0.1;
+                s.longitudeDelta = 0.1;
+                this.setState({
+                    region: s,
+                }, () => {
+                    this.onRefresh();
+                });
+            }
+        }).catch(e => {
             this.onRefresh();
-        // });
+        });
     }
     onLoadMore() {
         if (!this.state.finish && !this.state.loading)
