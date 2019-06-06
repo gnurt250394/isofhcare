@@ -336,7 +336,8 @@ module.exports = {
     },
     profile: {
       get_by_user: isofhcare_service + "profile/get-by-user",
-      get_details_user: isofhcare_service + '/user/get-detail'
+      get_details_user: isofhcare_service + '/user/get-detail',
+      get_profile_family : isofhcare_service +'booking/get-group-patient-history'
     },
     serviceType: {
       get_all: isofhcare_service + "service-type/get-all"

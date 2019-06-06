@@ -23,18 +23,30 @@ class HealthFacilitiesScreen extends Component {
         this.state = {
             listHospital: [],
             isLongPress: false,
-            index:''
+            index:'',
+            refreshing:false
         }
     }
     componentDidMount() {
-        this.onGetHospital()
+        this.onRefresh()
     }
     onGetHospital = () => {
         hospitalProvider.getHistoryHospital2().then(res => {
-            this.setState({
-                listHospital:res.data
-            })
+            if(res.code == 0) {
+                this.setState({
+                    listHospital:res.data,
+                    refreshing:false
+                })
+            }else{
+                this.setState({
+                    refreshing:false
+                })
+            }
+          
         }).catch(err => {
+            this.setState({
+                refreshing:false
+            })
         })
     }
     onLongPress = (index) => {
@@ -45,11 +57,17 @@ class HealthFacilitiesScreen extends Component {
         this.props.navigation.navigate('DemoModalScreen')
 
     }
+    onRefresh = () => {
+        this.setState({
+            refreshing:true
+        },() => {
+            this.onGetHospital()
+        })
+    }
     onPress = () => {
         this.props.navigation.navigate('DemoModalScreen')
     }
     renderItem = ({ item ,index}) => {
-        console.log(item);
         return (
             <TouchableOpacity style ={{marginTop:10}} onPress = {this.onPress} onLongPress={() => this.onLongPress(index)}>
                 {
@@ -99,8 +117,14 @@ class HealthFacilitiesScreen extends Component {
                             data={this.state.listHospital}
                             extraData={this.state}
                             renderItem={this.renderItem}
+                            refreshing={this.state.refreshing}
+                            onRefresh= {this.onRefresh}
                             keyExtractor={(item, index) => index.toString()}
-
+                            ListHeaderComponent={() => !this.state.refreshing && (!this.state.listHospital || this.state.listHospital.length == 0) ?
+                                <View style={{ alignItems: 'center', marginTop: 50 }}>
+                                    <Text style={{ fontStyle: 'italic' }}>Hiện tại chưa có thông tin</Text>
+                                </View> : null
+                            }
                         > </FlatList></View>
                 </View>
 
