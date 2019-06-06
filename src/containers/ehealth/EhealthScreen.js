@@ -16,6 +16,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import dateUtils from 'mainam-react-native-date-utils';
 import hospitalProvider from '@data-access/hospital-provider';
 import ImageLoad from 'mainam-react-native-image-loader';
+import { Card } from "native-base";
 
 class EhealthScreen extends Component {
     constructor(props) {
@@ -68,30 +69,35 @@ class EhealthScreen extends Component {
         this.props.navigation.navigate('DemoModalScreen')
     }
     renderItem = ({ item, index }) => {
+        const source = item.hospital && item.hospital.avatar ? { uri: item.hospital.avatar.absoluteUrl() } : require("@images/new/user.png");
+
         return (
             <TouchableOpacity style={{ marginTop: 10 }} onPress={this.onPress} onLongPress={() => this.onLongPress(index)}>
-                {
-                    this.state.isLongPress && this.state.index == index ? (
-                        <LinearGradient
-                            colors={['#FF913D', '#FF682F', '#FF6137',]}
-                            locations={[0, 0.7, 1]}
-                            style={styles.viewItem} >
-                            <View style={{ justifyContent: 'center', alignItems: 'center' }}><ScaledImage height={60} width={60} style={{ borderRadius: 30, borderWidth: 0.5, borderColor: '#27AE60', }} uri={item.hospital.avatar.absoluteUrl()}></ScaledImage></View>
-                            <View style={{ paddingHorizontal: 15, }}>
-                                <Text style={{ fontWeight: 'bold', color: '#fff' }}>{item.hospital.name}</Text>
-                                <Text style={{ color: '#fff' }}>Lần gần nhất: {item.hospital.timeGoIn.toDateObject('-').format('dd-MM-yyyy')}</Text>
-                            </View>
-                        </LinearGradient>
-                    ) : (
-                            <View style={[styles.viewItem, { borderWidth: 1, borderColor: '#D5D9DB' }]}>
-                                <View style={{ justifyContent: 'center', alignItems: 'center' }}><ScaledImage height={60} width={60} style={{ borderRadius: 30, borderWidth: 0.5, borderColor: '#27AE60', }} uri={item.hospital.avatar.absoluteUrl()}></ScaledImage></View>
-                                <View style={{ paddingHorizontal: 15, }}>
-                                    <Text style={{ fontWeight: 'bold', color: '#5A5956' }}>{item.hospital.name}</Text>
-                                    <Text style={{ color: '#5A5956' }}>Lần gần nhất: {item.hospital.timeGoIn.toDateObject('-').format('dd-MM-yyyy')}</Text>
-                                </View>
-                            </View>
-                        )
-                }
+                <Card style={[styles.viewItem, { borderWidth: 1, borderColor: '#D5D9DB' }]}>
+                    <ImageLoad
+                        resizeMode="cover"
+                        imageStyle={{ borderRadius: 40, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
+                        borderRadius={40}
+                        customImagePlaceholderDefaultStyle={[styles.avatar, { width: 80, height: 80 }]}
+                        placeholderSource={require("@images/new/user.png")}
+                        resizeMode="cover"
+                        loadingStyle={{ size: 'small', color: 'gray' }}
+                        source={source}
+                        style={{
+                            alignSelf: 'center',
+                            borderRadius: 40,
+                            width: 80,
+                            height: 80
+                        }}
+                        defaultImage={() => {
+                            return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={80} height={80} />
+                        }}
+                    />
+                    <View style={{ padding: 15, }}>
+                        <Text style={{ fontWeight: 'bold', color: '#5A5956', fontSize: 15 }}>{item.hospital.name}</Text>
+                        <Text style={{ color: '#5A5956', marginTop: 5 }}>Lần gần nhất: {item.hospital.timeGoIn.toDateObject('-').format('dd-MM-yyyy')}</Text>
+                    </View>
+                </Card>
             </TouchableOpacity>
         )
     }
@@ -102,7 +108,7 @@ class EhealthScreen extends Component {
         return (
             <ActivityPanel
                 iosBarStyle={'dark-content'}
-                icBack = {require('@images/new/left_arrow_white.png')}
+                icBack={require('@images/new/left_arrow_white.png')}
                 titleStyle={{ color: '#fff' }}
                 actionbarStyle={{ backgroundColor: '#27AE60' }}
                 title="Y BẠ ĐIỆN TỬ"
