@@ -332,7 +332,7 @@ class Home extends Component {
                                 <View style={{ position: 'relative', padding: 5 }}>
                                   <ScaledImage style={[styles.icon]} source={item.icon} height={48} />
                                 </View>
-                                <Text style={[styles.label]}>{item.text}</Text>
+                                <Text  allowFontScaling={false} style={[styles.label]}>{item.text}</Text>
                               </TouchableOpacity>
 
                           }
@@ -359,7 +359,7 @@ const styles = StyleSheet.create({
   icon: {
   },
   label: {
-    marginTop: 2, color: '#4A4A4A', fontSize: 15, fontWeight: '600', lineHeight: 20
+    marginTop: 2, color: '#4A4A4A', fontSize: 15, fontWeight: '600', lineHeight: 20,
   },
   subLabel: {
     color: '#9B9B9B', fontSize: 12, textAlign: 'center', marginTop: 5
