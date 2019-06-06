@@ -1,4 +1,4 @@
-#!usrbinenv bash
+#!/usr/bin/env bash
 #
 # Removes the latest version of CocoaPods  which may have lack of backward compatibilities
 # Installs version 1.5.3 which has no compatibility issues
