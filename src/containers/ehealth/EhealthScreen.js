@@ -73,11 +73,22 @@ class EhealthScreen extends Component {
         const source = item.hospital && item.hospital.avatar ? { uri: item.hospital.avatar.absoluteUrl() } : require("@images/new/user.png");
 
         return (
-            <TouchableOpacity style={{ marginTop: 10, padding: 5 }} onPress={this.onPress}>
-                <Card style={{ flexDirection: 'row' }}>
+            <TouchableOpacity style={{ marginTop: 10, }} onPress={this.onPress}>
+                <Card style={{ flexDirection: 'row', paddingVertical: 20, paddingHorizontal: 10, borderRadius: 5 }}>
                     <ImageLoad
                         resizeMode="cover"
-                        imageStyle={{ borderRadius: 40, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
+                        imageStyle={{
+                            borderRadius: 40, shadowColor: "rgba(0, 0, 0, 0.5)",
+                            shadowOffset: {
+                                width: 0,
+                                height: 2
+                            },
+                            shadowRadius: 4,
+                            shadowOpacity: 1,
+                            borderStyle: "solid",
+                            borderWidth: 1,
+                            borderColor: "#27ae60"
+                        }}
                         borderRadius={40}
                         customImagePlaceholderDefaultStyle={[styles.avatar, { width: 80, height: 80 }]}
                         placeholderSource={require("@images/new/user.png")}
@@ -96,7 +107,7 @@ class EhealthScreen extends Component {
                     />
                     <View style={{ padding: 15, }}>
                         <Text style={{ fontWeight: 'bold', color: '#5A5956', fontSize: 15 }}>{item.hospital.name}</Text>
-                        <Text style={{ color: '#5A5956', marginTop: 5 }}>Lần gần nhất: {item.hospital.timeGoIn.toDateObject('-').format('dd-MM-yyyy')}</Text>
+                        <Text style={{ color: '#5A5956', marginTop: 5 }}>Lần gần nhất: {item.hospital.timeGoIn.toDateObject('-').format('dd/MM/yyyy')}</Text>
                     </View>
                 </Card>
             </TouchableOpacity>
@@ -118,13 +129,14 @@ class EhealthScreen extends Component {
                     backgroundColor: '#22b060',
                     borderBottomWidth: 0
                 }}
+
                 titleStyle={{
                     color: '#FFF'
                 }}
                 style={styles.container}
             >
                 <View style={{
-                    paddingHorizontal: 10, flex: 1
+                    paddingHorizontal: 10, flex: 1, backgroundColor: '#f0f5f9'
                 }} >
                     <Text style={styles.txHeader}>Các cơ sở y tế đã khám</Text>
                     <View style={{ flex: 1 }}>
@@ -154,7 +166,8 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     txHeader: {
-        marginVertical: 15
+        marginTop: 10,
+        fontSize: 18
     },
     viewItem: { flexDirection: 'row', justifyContent: 'flex-start', paddingVertical: 10, paddingHorizontal: 10, borderRadius: 5 },
 
