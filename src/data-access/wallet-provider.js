@@ -3,7 +3,7 @@ import string from 'mainam-react-native-string-utils';
 import constants from '@resources/strings';
 import datacacheProvider from '@data-access/datacache-provider';
 module.exports = {
-    createOnlinePayment(userId, payment_method_type, vendor_id, order_ref_id, return_url, amount, memo, secure_hash, order_ref, payment_method_ui, bill_valid_time, order_valid_time, created_at) {
+    createOnlinePayment(userId, payment_method_type, vendor_id, order_ref_id, return_url, amount, memo, secure_hash, order_ref, payment_method_ui, bill_valid_time, order_valid_time, created_at, time_zone) {
         return new Promise((resolve, reject) => {
             let url = constants.api.wallet.createOnlinePayment;
             url = url.replace("{id}", userId);
@@ -19,7 +19,8 @@ module.exports = {
                 payment_method_ui,
                 bill_valid_time,
                 order_valid_time,
-                created_at
+                created_at,
+                time_zone
             }, { Authorization: "Bearer " + client.auth }, (s, e) => {
                 if (s) {
                     resolve(s);
