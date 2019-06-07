@@ -75,19 +75,15 @@ import ScanQRCodeScreen from "@containers/ticket/ScanQRCodeScreen";
 import GetTicketFinishScreen from "@containers/ticket/GetTicketFinishScreen";
 //---------------------------------
 //........................eHealth................
-import HealthFacilitiesScreen from '@containers/ehealth/HealthFacilitiesScreen'
-import DemoModalScreen from '@containers/ehealth/DemoModalScreen'
 
 
 const RootNavigator = createStackNavigator(
   {
-
     // createProfileTicketScreen : {screen:CreateProfileTicketScreen},
     // selectLocationScreen : {screen:SelectLocationScreen},
     // testVNPay: { screen: TestVNPayScreen },
     // scanQRCode: { screen: ScanQRCodeScreen },
     splash: { screen: SplashScreen },
-    ehealth: { screen: EHealthNavigator },
     addBookingBVDHY: { screen: BookingDHYNavigation },
     groupChat: { screen: GroupChatScreen },
     groupChatFacility: { screen: GroupChatScreen },
@@ -157,10 +153,8 @@ const RootNavigator = createStackNavigator(
     confirmGetTicket: { screen: ConfirmGetTicketScreen },
     //----------------------------------------
     //----------------ehealth-----------------
-    healthFacilities :{screen:HealthFacilitiesScreen},
-    DemoModalScreen :{screen:DemoModalScreen},
-
-    
+    ehealth: { screen: EHealthNavigator },
+   
     emptyScreen: { screen: EmptyScreen }
   },
   {
