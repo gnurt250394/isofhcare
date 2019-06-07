@@ -77,10 +77,8 @@ import GetTicketFinishScreen from "@containers/ticket/GetTicketFinishScreen";
 //........................eHealth................
 
 
-
 const RootNavigator = createStackNavigator(
   {
-
     // createProfileTicketScreen : {screen:CreateProfileTicketScreen},
     // selectLocationScreen : {screen:SelectLocationScreen},
     // testVNPay: { screen: TestVNPayScreen },
