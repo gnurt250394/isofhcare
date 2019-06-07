@@ -5,7 +5,8 @@ import {
     FlatList,
     TouchableOpacity,
     ActivityIndicator,
-    StyleSheet
+    StyleSheet,
+    TouchableWithoutFeedback
 } from "react-native";
 import clientUtils from '@utils/client-utils';
 import bookingProvider from "@data-access/booking-provider";
@@ -66,14 +67,14 @@ class EhealthScreen extends Component {
         })
     }
     onPress = () => {
-        this.props.navigation.navigate('DemoModalScreen')
+        this.props.navigation.navigate('listProfile')
     }
     renderItem = ({ item, index }) => {
         const source = item.hospital && item.hospital.avatar ? { uri: item.hospital.avatar.absoluteUrl() } : require("@images/new/user.png");
 
         return (
-            <TouchableOpacity style={{ marginTop: 10 }} onPress={this.onPress} onLongPress={() => this.onLongPress(index)}>
-                <Card style={[styles.viewItem, { borderWidth: 1, borderColor: '#D5D9DB' }]}>
+            <TouchableOpacity style={{ marginTop: 10, padding: 5 }} onPress={this.onPress}>
+                <Card style={{ flexDirection: 'row' }}>
                     <ImageLoad
                         resizeMode="cover"
                         imageStyle={{ borderRadius: 40, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}

@@ -1,10 +1,11 @@
 import { StackRouter, createStackNavigator, StackNavigator } from 'react-navigation';
 import { Platform } from 'react-native';
 import EhealthScreen from '@containers/ehealth/EhealthScreen';
-import { EhealthDHYNavigation } from '@ehealth/daihocy/navigator';
+import ListProfileScreen from '@containers/ehealth/ListProfileScreen';
+
 const EHealthNavigator = createStackNavigator({
     ehealth: { screen: EhealthScreen },
-    ehealthDHY: { screen: EhealthDHYNavigation }
+    listProfile: { screen: ListProfileScreen }
 }, {
         headerMode: 'none',
         header: null,

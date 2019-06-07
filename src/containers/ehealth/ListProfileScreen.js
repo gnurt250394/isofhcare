@@ -141,6 +141,7 @@ class ListProfileScreen extends PureComponent {
     render() {
         return (
             <ActivityPanel style={{ flex: 1 }} title="HỒ SƠ Y BẠ GIA ĐÌNH"
+                icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#22b060"
                 actionbarStyle={{
