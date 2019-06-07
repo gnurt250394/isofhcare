@@ -20,19 +20,17 @@ class CreateBookingSuccessScreen extends Component {
         })
     }
 
-    getPaymentMethod(booking)
-    {
-        switch(booking.payment)
-        {
-            case 1: 
-            return "VNPAY";
-            case 2: 
-            return "Thanh toán tại viện";
+    getPaymentMethod(booking) {
+        switch (booking.payment) {
+            case 1:
+                return "VNPAY";
+            case 2:
+                return "Thanh toán tại viện";
             case 3:
                 return "PAYOO";
-                case 4:
-                        return "PAYOO - Cửa hàng tiện ích";
-                }
+            case 4:
+                return "PAYOO - Cửa hàng tiện ích";
+        }
         return "";
     }
 
@@ -80,15 +78,15 @@ class CreateBookingSuccessScreen extends Component {
                                 <Text style={styles.text}>{this.getPaymentMethod(booking)}</Text>
                             </View>
                             {
-                                booking.payment==4 && <View>
-                                                                <View style={styles.row}>
-                                <Text style={styles.label}>Mã thanh toán:</Text>
-                                <Text style={styles.text}>{booking.online_transactions && booking.online_transactions.length ?booking.online_transactions[0].bill_ref_code:""}</Text>
-                            </View>
-                            <View style={styles.row}>
-                                <Text style={styles.label}>Hạn thanh toán:</Text>
-                                <Text style={styles.text}>{new Date(booking.valid_time).format("dd/MM/yyyy")}</Text>
-                            </View>
+                                booking.payment == 4 && <View>
+                                    <View style={styles.row}>
+                                        <Text style={styles.label}>Mã thanh toán:</Text>
+                                        <Text style={styles.text}>{booking.online_transactions && booking.online_transactions.length ? booking.online_transactions[0].bill_ref_code : ""}</Text>
+                                    </View>
+                                    <View style={styles.row}>
+                                        <Text style={styles.label}>Hạn thanh toán:</Text>
+                                        <Text style={styles.text}>{booking.book.expireDatePayoo.toDateObject('-').format("dd/MM/yyyy")}</Text>
+                                    </View>
                                 </View>
                             }
                         </View>
