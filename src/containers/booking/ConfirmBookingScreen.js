@@ -243,7 +243,7 @@ class ConfirmBookingScreen extends Component {
                                 if (message == "order_existed") {
                                     this.retry(this.state.paymentId);
                                 }
-                                break;
+                                return;
                         }
                     }
                     snackbar.show("Tạo thanh toán không thành công", "danger");
@@ -254,6 +254,7 @@ class ConfirmBookingScreen extends Component {
     }
 
     retry(paymentId) {
+        let booking =this.state.booking;
         this.setState({ isLoading: true }, () => {
             walletProvider.retry(paymentId, this.getPaymentReturnUrl(), this.getPaymentMethodUi(), this.getPaymentMethod()).then(s => {
                 this.setState({ isLoading: false }, () => {
@@ -278,13 +279,11 @@ class ConfirmBookingScreen extends Component {
                             break;
                         case 3:
 
-                            let vnp_TxnRef = data.online_transactions[0].id;
+                            let vnp_TxnRef = data.id;
                             let payment_order = s.payment_order;
                             let html = convert.xml2json(payment_order.data, { compact: true, spaces: 4 })
                             let orderJSON = JSON.parse(html);
                             console.log(orderJSON);
-
-                            let session = orderJSON.shops.shop.session._text;
 
                             payment_order.orderInfo = payment_order.data;
                             payoo.initialize(payment_order.shop_id, payment_order.check_sum_key).then(() => {
@@ -345,6 +344,7 @@ class ConfirmBookingScreen extends Component {
 
                 })
             }).catch(e => {
+                debugger;
                 this.setState({ isLoading: false }, () => {
                     if (e && e.response && e.response.data) {
                         let response = e.response.data;
