@@ -12,12 +12,14 @@ import dateUtils from 'mainam-react-native-date-utils';
 import profileProvider from '@data-access/profile-provider';
 import snackbar from '@utils/snackbar-utils';
 import ImageLoad from 'mainam-react-native-image-loader';
+import ehealthProvider from '@data-access/ehealth-provider';
+
 class ListProfileScreen extends PureComponent {
     constructor(props) {
         super(props)
         this.state = {
             refreshing: false,
-            data: [],
+            listData: [],
             loading: false,
             bookings: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             hospitals: [],
@@ -25,68 +27,20 @@ class ListProfileScreen extends PureComponent {
         }
     }
     componentDidMount() {
-        this.onRefresh();
+        this.getPatient();
     }
-    getListBooking(hospitalId) {
-        if (this.state.profile && this.state.profile.profile) {
-            bookingProvider.getListBooking(this.state.profile.profile.id, hospitalId).then(s => {
-                if (s.code == 0) {
-                    let data = [...s.data.bookingNotInHis, ...s.data.patientHistorys];
-                    this.setState({
-                        bookings: data,
-                        refreshing: false
-                    })
-                }
-            }).catch(e => {
+    getPatient = () =>{
+        ehealthProvider.getGroupPatient().then(res => {
+            if(res.code == 0){
                 this.setState({
-                    refreshing: false
+                    listData:res.data
                 })
-            });
-        } else {
-            this.setState({
-                refreshing: false
-            })
-        }
-    }
-
-    onRefresh() {
-        this.setState({ refreshing: true }, () => {
-            hospitalProvider.getByProfile().then(s => {
-                if (s.code == 0) {
-                    this.setState({ hospitals: (s.data || []) }, () => {
-                        profileProvider.getByUserPromise(this.props.userApp.currentUser.id).then(s => {
-                            this.setState({ profile: s }, () => {
-                                this.getListBooking(this.state.hospitalId);
-                            })
-                        }).catch(e => {
-                            this.setState({ refreshing: false });
-                        })
-                    });
-                }
-                else {
-                    this.setState({ refreshing: false });
-                }
-            }).catch(e => {
-                this.setState({ refreshing: false });
-            });
+            }
         })
     }
-
-    openBookingInHis(booking) {
-        // this.setState({ isLoading: true }, () => {
-        bookingProvider.detailPatientHistory(booking.patientHistory.patientHistoryId, booking.hospital ? booking.hospital.id : "");
-        booking.patientHistory.hasCheckin = true;
-        this.props.navigation.navigate("ehealthDHY", { booking: booking.patientHistory, hospital: booking.hospital })
-    }
-    openBooking(booking, hospitalId) {
-        this.props.dispatch({ type: constants2.action.action_select_hospital, value: hospitalId });
-        booking.hasCheckin = false;
-        booking.hospitalId = hospitalId;
-        this.props.navigation.navigate("ehealthDHY", { booking })
-    }
-
+   
     renderItemProfile(item, index) {
-        const source = require("@images/new/user.png");
+        const source =this.props.userApp.currentUser.avatar ? {uri:this.props.userApp.currentUser.avatar.absoluteUrl()} : require("@images/new/user.png");
 
         return <TouchableOpacity style={{}} onPress={() => { this.props.navigation.navigate("viewInMonth") }}>
             <View style={{ flexDirection: 'row' }}>
@@ -110,7 +64,7 @@ class ListProfileScreen extends PureComponent {
                             return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={40} height={40} />
                         }}
                     />
-                    <Text style={{ color: '#758289' }}>1000000</Text>
+                    <Text style={{ color: '#758289' }}>{item.patientHistoryId}</Text>
                 </View>
 
                 <View style={{ flex: 1, borderRightColor: '#c8d1d6', borderRightWidth: 1, paddingVertical: 10 }}>
@@ -122,16 +76,16 @@ class ListProfileScreen extends PureComponent {
                         <View style={{ width: 20, height: 20, borderWidth: 1.5, borderColor: '#91a3ad', borderRadius: 10, justifyContent: 'center', alignItems: 'center', position: 'absolute', left: 0, bottom: 0, backgroundColor: '#FFF' }}>
                             <View style={{ width: 8, height: 8, backgroundColor: '#c84242', borderRadius: 4 }}></View>
                         </View>
-                        <Text style={{ fontWeight: 'bold', color: '#63737a' }}>MAI NGỌC NAM</Text>
-                        <Text style={{ marginTop: 10 }}>BỆNH VIỆN E</Text>
+                        <Text style={{ fontWeight: 'bold', color: '#63737a' }}>{item.patientName}</Text>
+                        <Text style={{ marginTop: 10 }}>{item.hospitalEntity.name}</Text>
                     </View>
                     <View style={{ flexDirection: 'row', marginLeft: 10, marginTop: 10, alignItems: 'center' }}>
                         <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={20} />
-                        <Text style={{ marginLeft: 5, color: '#33799e' }}>Gần nhất: 19/8/2019</Text>
+                        <Text style={{ marginLeft: 5, color: '#33799e' }}>Gần nhất: {item.latestTime.toDateObject('-').format('dd/MM/yyyy')}</Text>
                     </View>
                 </View>
                 <View style={{ paddingHorizontal: 20, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={{ color: 'red', fontSize: 30 }}>03</Text>
+                    <Text style={{ color: 'red', fontSize: 30 }}>{item.countTime}</Text>
                     <Text>lần</Text>
                 </View>
             </View>
@@ -157,7 +111,7 @@ class ListProfileScreen extends PureComponent {
                     showsVerticalScrollIndicator={false}
                     keyExtractor={(item, index) => index.toString()}
                     extraData={this.state}
-                    data={this.state.bookings}
+                    data={this.state.listData}
                     ListFooterComponent={() => <View style={{ height: 10 }}></View>}
                     renderItem={({ item, index }) => this.renderItemProfile.call(this, item, index)}
                 />

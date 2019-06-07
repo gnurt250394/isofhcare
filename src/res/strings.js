@@ -361,6 +361,9 @@ module.exports = {
       get_ticket: isofhcare_service + "information-user-hospital/create",
       get_history_ticket: isofhcare_service + "number-hospital/get-by-author",
       get_detail: isofhcare_service + "number-hospital/get-detail"
+    },
+    ehealth:{
+      get_group_patient: isofhcare_service + 'booking/get-group-patient-history'
     }
   }
 };
