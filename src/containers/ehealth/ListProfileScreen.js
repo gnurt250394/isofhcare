@@ -42,7 +42,7 @@ class ListProfileScreen extends PureComponent {
     renderItemProfile(item, index) {
         const source =this.props.userApp.currentUser.avatar ? {uri:this.props.userApp.currentUser.avatar.absoluteUrl()} : require("@images/new/user.png");
 
-        return <TouchableOpacity style={{}} onPress={() => { this.props.navigation.navigate("viewInMonth") }}>
+        return <TouchableOpacity style={{}} onPress={() => { this.props.navigation.navigate("resultExamination") }}>
             <View style={{ flexDirection: 'row' }}>
                 <View style={{ justifyContent: 'center', padding: 10 }}>
                     <ImageLoad
@@ -80,8 +80,8 @@ class ListProfileScreen extends PureComponent {
                         <Text style={{ marginTop: 10 }}>{item.hospitalEntity.name}</Text>
                     </View>
                     <View style={{ flexDirection: 'row', marginLeft: 10, marginTop: 10, alignItems: 'center' }}>
-                        <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={20} />
-                        <Text style={{ marginLeft: 5, color: '#33799e' }}>Gần nhất: {item.latestTime.toDateObject('-').format('dd/MM/yyyy')}</Text>
+                        <ScaleImage resizeMode='cover' source={require("@images/new/ehealth/ic_time.png")} width={20} tintColor ={'#8fa1aa'} />
+                        <Text style={{ marginLeft: 5, color: '#33799e' }}>Gần nhất: {item.latestTime ? item.latestTime.toDateObject('-').format('dd/MM/yyyy'):''}</Text>
                     </View>
                 </View>
                 <View style={{ paddingHorizontal: 20, justifyContent: 'center', alignItems: 'center' }}>

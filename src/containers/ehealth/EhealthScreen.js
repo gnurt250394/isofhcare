@@ -107,7 +107,7 @@ class EhealthScreen extends Component {
                     />
                     <View style={{ padding: 15, }}>
                         <Text style={{ fontWeight: 'bold', color: '#5A5956', fontSize: 15 }}>{item.hospital.name}</Text>
-                        <Text style={{ color: '#5A5956', marginTop: 5 }}>Lần gần nhất: {item.hospital.timeGoIn.toDateObject('-').format('dd/MM/yyyy')}</Text>
+                        <Text style={{ color: '#5A5956', marginTop: 5 }}>Lần gần nhất: {item.hospital.timeGoIn ? item.hospital.timeGoIn.toDateObject('-').format('dd/MM/yyyy') : ''}</Text>
                     </View>
                 </Card>
             </TouchableOpacity>
