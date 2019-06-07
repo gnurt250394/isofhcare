@@ -203,14 +203,14 @@ class ListProfileScreen extends PureComponent {
                     color: '#FFF'
                 }}
                 isLoading={this.state.isLoading}>
-                <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1, backgroundColor: '#000' }}>
-                    <View style={{ justifyContent: 'center', flex: 1 }}>
-                        <Calendar style={{ marginBottom: 3, backgroundColor: "#FFF" }}
+                <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
+                    <View style={{ justifyContent: 'center', flex: 1, alignItems: 'center' }}>
+                        <Calendar style={{ marginBottom: 3, backgroundColor: "#FFF", width: '100%' }}
                             // markedDates={this.state.listSchedule}
                             current={'2012-03-01'}
                             onDayPress={(day) => { console.log('selected day', day) }}
                             onDayLongPress={(day) => { console.log('selected day', day) }}
-                            monthFormat={'yyyy MM'}
+                            monthFormat={'MMMM - yyyy'}
                             onMonthChange={(month) => { console.log('month changed', month) }}
                             // hideArrows={true}
                             hideExtraDays={true}
