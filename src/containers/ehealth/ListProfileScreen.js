@@ -27,22 +27,13 @@ class ListProfileScreen extends PureComponent {
         }
     }
     componentDidMount() {
-        this.getPatient();
+        this.onRefresh();
     }
-    getPatient = () =>{
-        ehealthProvider.getGroupPatient().then(res => {
-            if(res.code == 0){
-                this.setState({
-                    listData:res.data
-                })
-            }
-        })
-    }
-   
-    renderItemProfile(item, index) {
-        const source =this.props.userApp.currentUser.avatar ? {uri:this.props.userApp.currentUser.avatar.absoluteUrl()} : require("@images/new/user.png");
 
-        return <TouchableOpacity style={{}} onPress={() => { this.props.navigation.navigate("resultExamination") }}>
+    renderItemProfile(item, index) {
+        const source = this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar.absoluteUrl() } : require("@images/new/user.png");
+
+        return <TouchableOpacity style={{}} onPress={() => { this.props.navigation.navigate("viewInMonth") }}>
             <View style={{ flexDirection: 'row' }}>
                 <View style={{ justifyContent: 'center', padding: 10 }}>
                     <ImageLoad
@@ -80,8 +71,8 @@ class ListProfileScreen extends PureComponent {
                         <Text style={{ marginTop: 10 }}>{item.hospitalEntity.name}</Text>
                     </View>
                     <View style={{ flexDirection: 'row', marginLeft: 10, marginTop: 10, alignItems: 'center' }}>
-                        <ScaleImage resizeMode='cover' source={require("@images/new/ehealth/ic_time.png")} width={20} tintColor ={'#8fa1aa'} />
-                        <Text style={{ marginLeft: 5, color: '#33799e' }}>Gần nhất: {item.latestTime ? item.latestTime.toDateObject('-').format('dd/MM/yyyy'):''}</Text>
+                        <ScaleImage resizeMode='cover' source={require("@images/new/ehealth/ic_time.png")} width={20} tintColor={'#8fa1aa'} />
+                        <Text style={{ marginLeft: 5, color: '#33799e' }}>Gần nhất: {item.latestTime ? item.latestTime.toDateObject('-').format('dd/MM/yyyy') : ''}</Text>
                     </View>
                 </View>
                 <View style={{ paddingHorizontal: 20, justifyContent: 'center', alignItems: 'center' }}>
@@ -92,6 +83,37 @@ class ListProfileScreen extends PureComponent {
             <View style={{ height: 1, backgroundColor: '#00000050' }} />
         </TouchableOpacity>
     }
+    onRefresh() {
+        if (!this.state.loading)
+            this.setState(
+                { refreshing: true, loading: true },
+                () => {
+                    this.onLoad();
+                }
+            );
+    }
+    onLoad() {
+        ehealthProvider.getGroupPatient().then(res => {
+            this.setState({
+                loading: false,
+                refreshing: false,
+                loadMore: false
+            });
+            if (res.code == 0) {
+                this.setState({
+                    listData: res.data,
+                    finish: true
+                })
+            }
+        }).catch(e => {
+            this.setState({
+                loading: false,
+                refreshing: false,
+                loadMore: false
+            });
+        });
+    }
+
     render() {
         return (
             <ActivityPanel style={{ flex: 1 }} title="HỒ SƠ Y BẠ GIA ĐÌNH"
@@ -109,6 +131,9 @@ class ListProfileScreen extends PureComponent {
                 showFullScreen={true} isLoading={this.state.isLoading}>
                 <FlatList
                     showsVerticalScrollIndicator={false}
+                    onRefresh={this.onRefresh.bind(this)}
+                    refreshing={this.state.refreshing}
+                    onEndReachedThreshold={1}
                     keyExtractor={(item, index) => index.toString()}
                     extraData={this.state}
                     data={this.state.listData}

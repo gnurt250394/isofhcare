@@ -203,69 +203,71 @@ class ListProfileScreen extends PureComponent {
                     color: '#FFF'
                 }}
                 isLoading={this.state.isLoading}>
-                <ScrollView showsVerticalScrollIndicator={false} style={{ justifyContent: 'center' }}>
-                    <Calendar style={{ marginBottom: 3, backgroundColor: "#FFF" }}
-                        // markedDates={this.state.listSchedule}
-                        current={'2012-03-01'}
-                        onDayPress={(day) => { console.log('selected day', day) }}
-                        onDayLongPress={(day) => { console.log('selected day', day) }}
-                        monthFormat={'yyyy MM'}
-                        onMonthChange={(month) => { console.log('month changed', month) }}
-                        // hideArrows={true}
-                        hideExtraDays={true}
-                        // onDayPress={(day) => { this.onDayPress(day) }}
-                        // monthFormat={'MMMM - yyyy'}
-                        // onMonthChange={(month) => { this.onMonthChange(month, true) }}
-                        firstDay={1}
-                        // hideExtraDays={true}
-                        markingType={'multi-dot'}
-                        markedDates={{
-                            '2012-05-16': { selected: true, marked: true, selectedColor: 'blue' },
-                            '2012-05-17': { marked: true },
-                            '2012-05-18': { marked: true, dotColor: 'red', activeOpacity: 0 },
-                            '2012-05-19': { disabled: true, disableTouchEvent: true }
-                        }}
-                    />
-                    <TouchableOpacity style={styles.viewBtn}>
-                        <Text style={{ color: '#fff' }}>KẾT QUẢ KHÁM</Text>
-                    </TouchableOpacity>
-                    <Card style={styles.cardView}>
-                        <View style={{ flexDirection: 'row', marginVertical: 10 }}>
-                            <View style={styles.viewLine}></View>
-                            <Text style={{ marginLeft: 5, color: '#9caac4', fontSize: 18 }}>Bạn cần làm gì</Text>
-                        </View>
-                        <Text style={{ color: '#bdc6d8', fontSize: 15 }}>Suggestion</Text>
-                        <View style={styles.viewBTnSuggest}>
-                            <TouchableOpacity style={[styles.btnReExamination, { backgroundColor: '#4CD565', }]}>
-                                <Text style={{ color: '#fff' }}>Lịch tái khám</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={[styles.btnReExamination, { backgroundColor: '#00B1FF', }]}>
-                                <Text style={{ color: '#fff' }}>Khám lại</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={[styles.btnReExamination, { backgroundColor: '#2E66E7', }]}>
-                                <Text style={{ color: '#fff' }}>Chia sẻ y bạ</Text>
-                            </TouchableOpacity>
-                        </View>
-                        <View>
-                            <Text style={styles.txLabel}>Ghi chú</Text>
-                            <TextInput multiline={true} underlineColorAndroid={'#fff'} style={[styles.txContent, { height: 41 }]} placeholder={'Nhập ghi chú'}></TextInput>
-                        </View>
-                        <View>
-                            <Text style={styles.txLabel}>Thời gian</Text>
-                            <TouchableOpacity><Text style={styles.txContent}>06:00 AM</Text></TouchableOpacity>
-                        </View>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <View >
-                                <Text style={styles.txLabel}>Nhắc uống thuốc</Text>
-                                <TouchableOpacity><Text style={styles.txContent}>08:30</Text></TouchableOpacity>
-                            </View>
-                            <Switch onValueChange={this.onSetAlarm} trackColor={{
-                                true: "yellow",
-                                false: "purple",
+                <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1, backgroundColor: '#000' }}>
+                    <View style={{ justifyContent: 'center', flex: 1 }}>
+                        <Calendar style={{ marginBottom: 3, backgroundColor: "#FFF" }}
+                            // markedDates={this.state.listSchedule}
+                            current={'2012-03-01'}
+                            onDayPress={(day) => { console.log('selected day', day) }}
+                            onDayLongPress={(day) => { console.log('selected day', day) }}
+                            monthFormat={'yyyy MM'}
+                            onMonthChange={(month) => { console.log('month changed', month) }}
+                            // hideArrows={true}
+                            hideExtraDays={true}
+                            // onDayPress={(day) => { this.onDayPress(day) }}
+                            // monthFormat={'MMMM - yyyy'}
+                            // onMonthChange={(month) => { this.onMonthChange(month, true) }}
+                            firstDay={1}
+                            // hideExtraDays={true}
+                            markingType={'multi-dot'}
+                            markedDates={{
+                                '2012-05-16': { selected: true, marked: true, selectedColor: 'blue' },
+                                '2012-05-17': { marked: true },
+                                '2012-05-18': { marked: true, dotColor: 'red', activeOpacity: 0 },
+                                '2012-05-19': { disabled: true, disableTouchEvent: true }
                             }}
-                                value={this.state.switchValue} ></Switch>
-                        </View>
-                    </Card>
+                        />
+                        <TouchableOpacity style={styles.viewBtn}>
+                            <Text style={{ color: '#fff' }}>KẾT QUẢ KHÁM</Text>
+                        </TouchableOpacity>
+                        <Card style={styles.cardView}>
+                            <View style={{ flexDirection: 'row', marginVertical: 10 }}>
+                                <View style={styles.viewLine}></View>
+                                <Text style={{ marginLeft: 5, color: '#9caac4', fontSize: 18 }}>Bạn cần làm gì</Text>
+                            </View>
+                            <Text style={{ color: '#bdc6d8', fontSize: 15 }}>Suggestion</Text>
+                            <View style={styles.viewBTnSuggest}>
+                                <TouchableOpacity style={[styles.btnReExamination, { backgroundColor: '#4CD565', }]}>
+                                    <Text style={{ color: '#fff' }}>Lịch tái khám</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={[styles.btnReExamination, { backgroundColor: '#00B1FF', }]}>
+                                    <Text style={{ color: '#fff' }}>Khám lại</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={[styles.btnReExamination, { backgroundColor: '#2E66E7', }]}>
+                                    <Text style={{ color: '#fff' }}>Chia sẻ y bạ</Text>
+                                </TouchableOpacity>
+                            </View>
+                            <View>
+                                <Text style={styles.txLabel}>Ghi chú</Text>
+                                <TextInput multiline={true} underlineColorAndroid={'#fff'} style={[styles.txContent, { height: 41 }]} placeholder={'Nhập ghi chú'}></TextInput>
+                            </View>
+                            <View>
+                                <Text style={styles.txLabel}>Thời gian</Text>
+                                <TouchableOpacity><Text style={styles.txContent}>06:00 AM</Text></TouchableOpacity>
+                            </View>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <View >
+                                    <Text style={styles.txLabel}>Nhắc uống thuốc</Text>
+                                    <TouchableOpacity><Text style={styles.txContent}>08:30</Text></TouchableOpacity>
+                                </View>
+                                <Switch onValueChange={this.onSetAlarm} trackColor={{
+                                    true: "yellow",
+                                    false: "purple",
+                                }}
+                                    value={this.state.switchValue} ></Switch>
+                            </View>
+                        </Card>
+                    </View>
                 </ScrollView>
             </ActivityPanel >
         );
