@@ -102,7 +102,8 @@ class HomeScreen extends Component {
   render() {
     const { active } = this.state;
     return (
-      <ActivityPanel isLoading={this.state.isLoading} hideActionbar={true}>
+      <ActivityPanel isLoading={this.state.isLoading} hideActionbar={true} translucent={true}
+       >
         <View style={[{ flex: 1 }, this.props.style]}>
           {/* <UserInactivity
           timeForInactivity={2000}
