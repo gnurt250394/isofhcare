@@ -242,8 +242,13 @@ class ConfirmBookingScreen extends Component {
                                 message = response.message;
                                 if (message == "order_existed") {
                                     this.retry(this.state.paymentId);
+                                    return;
+                                } else {
+                                    if (message) {
+                                        snackbar.show(message, "danger");
+                                        return;
+                                    }
                                 }
-                                return;
                         }
                     }
                     snackbar.show("Tạo thanh toán không thành công", "danger");
@@ -254,7 +259,7 @@ class ConfirmBookingScreen extends Component {
     }
 
     retry(paymentId) {
-        let booking =this.state.booking;
+        let booking = this.state.booking;
         this.setState({ isLoading: true }, () => {
             walletProvider.retry(paymentId, this.getPaymentReturnUrl(), this.getPaymentMethodUi(), this.getPaymentMethod()).then(s => {
                 this.setState({ isLoading: false }, () => {
