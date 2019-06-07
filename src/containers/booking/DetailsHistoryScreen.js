@@ -76,6 +76,8 @@ class DetailsHistoryScreen extends Component {
         return <Text style={styles.paymentHospital}>Thanh toán tại viện</Text>;
       case 4:
         return <Text style={styles.paymentHospital}>Thanh toán Payoo</Text>;
+      case 5:
+        return <Text style={styles.paymentHospital}>Payoo - Cửa hàng tiện ích</Text>;
 
     }
   };
