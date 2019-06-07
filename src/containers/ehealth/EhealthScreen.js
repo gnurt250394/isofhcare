@@ -119,11 +119,12 @@ class EhealthScreen extends Component {
     render() {
         return (
             <ActivityPanel
-                iosBarStyle={'dark-content'}
                 icBack={require('@images/new/left_arrow_white.png')}
                 titleStyle={{ color: '#fff' }}
                 actionbarStyle={{ backgroundColor: '#27AE60' }}
                 title="Y BẠ ĐIỆN TỬ"
+                
+                iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#22b060"
                 actionbarStyle={{
                     backgroundColor: '#22b060',

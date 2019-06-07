@@ -1,6 +1,6 @@
 import React, { Component, PropTypes, PureComponent } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, Text, ScrollView, FlatList, TouchableOpacity, StyleSheet, RefreshControl, TouchableHighlight } from 'react-native';
+import { View, Text, ScrollView, FlatList, TouchableOpacity, StyleSheet, RefreshControl, TouchableHighlight, TextInput, Switch } from 'react-native';
 import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import Dash from 'mainam-react-native-dash-view';
@@ -13,6 +13,7 @@ import profileProvider from '@data-access/profile-provider';
 import snackbar from '@utils/snackbar-utils';
 import ImageLoad from 'mainam-react-native-image-loader';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
+import { Card } from 'native-base';
 
 LocaleConfig.locales['en'] = {
     monthNames: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
@@ -202,28 +203,70 @@ class ListProfileScreen extends PureComponent {
                     color: '#FFF'
                 }}
                 isLoading={this.state.isLoading}>
-                <Calendar style={{ marginBottom: 3, backgroundColor: "#FFF" }}
-                    // markedDates={this.state.listSchedule}
-                    current={'2012-03-01'}
-                    onDayPress={(day) => { console.log('selected day', day) }}
-                    onDayLongPress={(day) => { console.log('selected day', day) }}
-                    monthFormat={'yyyy MM'}
-                    onMonthChange={(month) => { console.log('month changed', month) }}
-                    // hideArrows={true}
-                    hideExtraDays={true}
-                    // onDayPress={(day) => { this.onDayPress(day) }}
-                    // monthFormat={'MMMM - yyyy'}
-                    // onMonthChange={(month) => { this.onMonthChange(month, true) }}
-                    firstDay={1}
-                    // hideExtraDays={true}
-                    markingType={'multi-dot'}
-                    markedDates={{
-                        '2012-05-16': {selected: true, marked: true, selectedColor: 'blue'},
-                        '2012-05-17': {marked: true},
-                        '2012-05-18': {marked: true, dotColor: 'red', activeOpacity: 0},
-                        '2012-05-19': {disabled: true, disableTouchEvent: true}
-                      }}
-                />
+                <ScrollView showsVerticalScrollIndicator={false} style={{ justifyContent: 'center' }}>
+                    <Calendar style={{ marginBottom: 3, backgroundColor: "#FFF" }}
+                        // markedDates={this.state.listSchedule}
+                        current={'2012-03-01'}
+                        onDayPress={(day) => { console.log('selected day', day) }}
+                        onDayLongPress={(day) => { console.log('selected day', day) }}
+                        monthFormat={'yyyy MM'}
+                        onMonthChange={(month) => { console.log('month changed', month) }}
+                        // hideArrows={true}
+                        hideExtraDays={true}
+                        // onDayPress={(day) => { this.onDayPress(day) }}
+                        // monthFormat={'MMMM - yyyy'}
+                        // onMonthChange={(month) => { this.onMonthChange(month, true) }}
+                        firstDay={1}
+                        // hideExtraDays={true}
+                        markingType={'multi-dot'}
+                        markedDates={{
+                            '2012-05-16': { selected: true, marked: true, selectedColor: 'blue' },
+                            '2012-05-17': { marked: true },
+                            '2012-05-18': { marked: true, dotColor: 'red', activeOpacity: 0 },
+                            '2012-05-19': { disabled: true, disableTouchEvent: true }
+                        }}
+                    />
+                    <TouchableOpacity style={styles.viewBtn}>
+                        <Text style={{ color: '#fff' }}>KẾT QUẢ KHÁM</Text>
+                    </TouchableOpacity>
+                    <Card style={styles.cardView}>
+                        <View style={{ flexDirection: 'row', marginVertical: 10 }}>
+                            <View style={styles.viewLine}></View>
+                            <Text style={{ marginLeft: 5, color: '#9caac4', fontSize: 18 }}>Bạn cần làm gì</Text>
+                        </View>
+                        <Text style={{ color: '#bdc6d8', fontSize: 15 }}>Suggestion</Text>
+                        <View style={styles.viewBTnSuggest}>
+                            <TouchableOpacity style={[styles.btnReExamination, { backgroundColor: '#4CD565', }]}>
+                                <Text style={{ color: '#fff' }}>Lịch tái khám</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={[styles.btnReExamination, { backgroundColor: '#00B1FF', }]}>
+                                <Text style={{ color: '#fff' }}>Khám lại</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={[styles.btnReExamination, { backgroundColor: '#2E66E7', }]}>
+                                <Text style={{ color: '#fff' }}>Chia sẻ y bạ</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View>
+                            <Text style={styles.txLabel}>Ghi chú</Text>
+                            <TextInput multiline={true} underlineColorAndroid={'#fff'} style={[styles.txContent, { height: 41 }]} placeholder={'Nhập ghi chú'}></TextInput>
+                        </View>
+                        <View>
+                            <Text style={styles.txLabel}>Thời gian</Text>
+                            <TouchableOpacity><Text style={styles.txContent}>06:00 AM</Text></TouchableOpacity>
+                        </View>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <View >
+                                <Text style={styles.txLabel}>Nhắc uống thuốc</Text>
+                                <TouchableOpacity><Text style={styles.txContent}>08:30</Text></TouchableOpacity>
+                            </View>
+                            <Switch onValueChange={this.onSetAlarm} trackColor={{
+                                true: "yellow",
+                                false: "purple",
+                            }}
+                                value={this.state.switchValue} ></Switch>
+                        </View>
+                    </Card>
+                </ScrollView>
             </ActivityPanel >
         );
     }
@@ -284,6 +327,40 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         width: 45,
         height: 45
+    },
+    viewBtn: {
+        width: '70%',
+        height: 41,
+        borderRadius: 5,
+        marginVertical: 20,
+        backgroundColor: '#27AE60',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    cardView: {
+        width: 327,
+        borderRadius: 5,
+        height: 365,
+        paddingHorizontal: 20,
+    },
+    viewLine: {
+        backgroundColor: '#4CD565',
+        height: '100%',
+        width: 1
+    },
+    viewBTnSuggest: {
+        flexDirection: 'row'
+    },
+    btnReExamination: {
+        padding: 2, borderRadius: 3, marginRight: 5, marginVertical: 10, paddingHorizontal: 5
+    },
+    txLabel: {
+        color: '#9caac4',
+        fontSize: 15
+    },
+    txContent: {
+        color: '#554a4c',
+        marginTop: 5, marginBottom: 25,
     }
 });
 
