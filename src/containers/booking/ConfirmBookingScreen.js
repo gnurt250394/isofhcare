@@ -131,7 +131,8 @@ class ConfirmBookingScreen extends Component {
                 this.getPaymentMethodUi(),
                 booking.book.expireDatePayoo,
                 booking.timeInitBooking,
-                booking.book.createdDate
+                booking.book.createdDate,
+                booking.timeZone
             ).then(s => {
                 let data = s.data;
                 let paymentId = data.id;
