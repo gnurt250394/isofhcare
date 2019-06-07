@@ -3,7 +3,7 @@ import string from 'mainam-react-native-string-utils';
 import constants from '@resources/strings';
 import datacacheProvider from '@data-access/datacache-provider';
 module.exports = {
-    createOnlinePayment(userId, payment_method_type, vendor_id, order_ref_id, return_url, amount, memo, secure_hash, order_ref, payment_method_ui,bill_valid_time ) {
+    createOnlinePayment(userId, payment_method_type, vendor_id, order_ref_id, return_url, amount, memo, secure_hash, order_ref, payment_method_ui, bill_valid_time, order_valid_time, created_at) {
         return new Promise((resolve, reject) => {
             let url = constants.api.wallet.createOnlinePayment;
             url = url.replace("{id}", userId);
@@ -17,7 +17,9 @@ module.exports = {
                 secure_hash,
                 order_ref,
                 payment_method_ui,
-                bill_valid_time
+                bill_valid_time,
+                order_valid_time,
+                created_at
             }, { Authorization: "Bearer " + client.auth }, (s, e) => {
                 if (s) {
                     resolve(s);
@@ -33,6 +35,22 @@ module.exports = {
             client.requestApiWithHeader("post", url, {
                 payment_method_type,
                 transaction_data
+            }, { Authorization: "Bearer " + client.auth }, (s, e) => {
+                if (s) {
+                    resolve(s);
+                }
+                reject(e);
+            });
+        });
+    },
+    retry(paymentId, return_url, payment_method_ui, payment_method_type) {
+        return new Promise((resolve, reject) => {
+            let url = constants.api.wallet.retry;
+            url = url.replace("{transactionId}", paymentId);
+            client.requestApiWithHeader("post", url, {
+                return_url,
+                payment_method_ui,
+                payment_method_type
             }, { Authorization: "Bearer " + client.auth }, (s, e) => {
                 if (s) {
                     resolve(s);

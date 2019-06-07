@@ -355,7 +355,8 @@ module.exports = {
     },
     wallet: {
       createOnlinePayment: wallet_services + "customers/{id}/online-payments",
-      onlineTransactionPaid: wallet_services + "online-transactions/{transactionId}/paid"
+      onlineTransactionPaid: wallet_services + "online-transactions/{transactionId}/paid",
+      retry: wallet_services + "online-transactions/{transactionId}/retry"
     },
     ticket: {
       get_ticket: isofhcare_service + "information-user-hospital/create",
