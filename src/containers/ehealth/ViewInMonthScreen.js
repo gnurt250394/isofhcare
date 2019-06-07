@@ -12,6 +12,16 @@ import dateUtils from 'mainam-react-native-date-utils';
 import profileProvider from '@data-access/profile-provider';
 import snackbar from '@utils/snackbar-utils';
 import ImageLoad from 'mainam-react-native-image-loader';
+import { Calendar, LocaleConfig } from 'react-native-calendars';
+
+LocaleConfig.locales['en'] = {
+    monthNames: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
+    monthNamesShort: ['Th 1', 'Th 2', 'Th 3', 'Th 4', 'Th 5', 'Th 6', 'Th 7', 'Th 8', 'Th 9', 'Th 10', 'Th 11', 'Th 12'],
+    dayNames: ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'],
+    dayNamesShort: ['CN', 'T.2', 'T.3', 'T.4', 'T.5', 'T.6', 'T.7']
+};
+
+LocaleConfig.defaultLocale = 'en';
 class ListProfileScreen extends PureComponent {
     constructor(props) {
         super(props)
@@ -21,7 +31,8 @@ class ListProfileScreen extends PureComponent {
             loading: false,
             bookings: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             hospitals: [],
-            loadFirstTime: true
+            loadFirstTime: true,
+            currentDate: new Date(),
         }
     }
     componentDidMount() {
@@ -88,7 +99,7 @@ class ListProfileScreen extends PureComponent {
     renderItemProfile(item, index) {
         const source = require("@images/new/user.png");
 
-        return <TouchableOpacity style={{}} onPress={() => { this.props.navigation.navigate("viewInMonth") }}>
+        return <TouchableOpacity style={{}}>
             <View style={{ flexDirection: 'row' }}>
                 <View style={{ justifyContent: 'center', padding: 10 }}>
                     <ImageLoad
@@ -138,9 +149,48 @@ class ListProfileScreen extends PureComponent {
             <View style={{ height: 1, backgroundColor: '#00000050' }} />
         </TouchableOpacity>
     }
+
+
+    onDayPress(day) {
+        try {
+            // day.timestamp = new Date(day.timestamp.toDateObject().format("MM/dd/yyyy")).getTime();
+            // if (!this.props.booking.specialist2) {
+            //     snackbar.show(dhyCommand.msg.booking.please_select_service_first);
+            //     return;
+            // }
+
+            // var schedule = this.getScheduleOnDay(day);
+            // if (!schedule || schedule.disabled) {
+            //     snackbar.show(dhyCommand.msg.booking.not_found_schedule_of_doctor_in_this_day);
+            //     return;
+            // }
+
+            // this.props.dispatch({
+            //     type: dhyCommand.action.action_select_booking_date
+            //     , value: day
+            // });
+
+            // var newListScheduleText = JSON.parse(this.state.listScheduleText);
+
+            // var key = day.year + "-" + (day.month < 10 ? "0" : "") + day.month + "-" + (day.day < 10 ? "0" : "") + day.day;
+            // if (newListScheduleText[key])
+            //     newListScheduleText[key].selected = true;
+            // this.setState({
+            //     listSchedule: newListScheduleText
+            // })
+            // this.props.dispatch({
+            //     type: dhyCommand.action.action_select_schedule, value: newListScheduleText[key]
+            // });
+
+            // this.loadListBooking(day);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     render() {
         return (
-            <ActivityPanel style={{ flex: 1 }} title="HỒ SƠ Y BẠ GIA ĐÌNH"
+            <ActivityPanel style={{ flex: 1 }} title="Y BẠ ĐIỆN TỬ"
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#22b060"
@@ -151,15 +201,28 @@ class ListProfileScreen extends PureComponent {
                 titleStyle={{
                     color: '#FFF'
                 }}
-
-                showFullScreen={true} isLoading={this.state.isLoading}>
-                <FlatList
-                    showsVerticalScrollIndicator={false}
-                    keyExtractor={(item, index) => index.toString()}
-                    extraData={this.state}
-                    data={this.state.bookings}
-                    ListFooterComponent={() => <View style={{ height: 10 }}></View>}
-                    renderItem={({ item, index }) => this.renderItemProfile.call(this, item, index)}
+                isLoading={this.state.isLoading}>
+                <Calendar style={{ marginBottom: 3, backgroundColor: "#FFF" }}
+                    // markedDates={this.state.listSchedule}
+                    current={'2012-03-01'}
+                    onDayPress={(day) => { console.log('selected day', day) }}
+                    onDayLongPress={(day) => { console.log('selected day', day) }}
+                    monthFormat={'yyyy MM'}
+                    onMonthChange={(month) => { console.log('month changed', month) }}
+                    // hideArrows={true}
+                    hideExtraDays={true}
+                    // onDayPress={(day) => { this.onDayPress(day) }}
+                    // monthFormat={'MMMM - yyyy'}
+                    // onMonthChange={(month) => { this.onMonthChange(month, true) }}
+                    firstDay={1}
+                    // hideExtraDays={true}
+                    markingType={'multi-dot'}
+                    markedDates={{
+                        '2012-05-16': {selected: true, marked: true, selectedColor: 'blue'},
+                        '2012-05-17': {marked: true},
+                        '2012-05-18': {marked: true, dotColor: 'red', activeOpacity: 0},
+                        '2012-05-19': {disabled: true, disableTouchEvent: true}
+                      }}
                 />
             </ActivityPanel >
         );
