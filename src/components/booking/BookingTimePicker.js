@@ -30,7 +30,7 @@ class SelectTimeScreen extends Component {
         var yourDate = new Date(yourDateString);
         try {
             // console.log(yourDateString, yourDate, yourDate.getTimezoneOffset());
-            // yourDate.setMinutes(yourDate.getMinutes() + yourDate.getTimezoneOffset());
+            yourDate.setMinutes(yourDate.getMinutes() + yourDate.getTimezoneOffset());
             console.log(yourDate);
         } catch (error) {
             console.log(error);

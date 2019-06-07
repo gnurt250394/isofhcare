@@ -129,7 +129,9 @@ class ConfirmBookingScreen extends Component {
                 booking.book.hash,
                 booking.jwtData,
                 this.getPaymentMethodUi(),
-                booking.book.expireDatePayoo
+                booking.book.expireDatePayoo,
+                booking.timeInitBooking,
+                booking.book.createdDate
             ).then(s => {
                 let data = s.data;
                 let paymentId = data.id;
@@ -218,9 +220,10 @@ class ConfirmBookingScreen extends Component {
                 this.setState({ isLoading: false }, () => {
                     if (e && e.response && e.response.data) {
                         let response = e.response.data;
+                        let message = "";
                         switch (response.type) {
                             case "ValidationError":
-                                let message = response.message;
+                                message = response.message;
                                 for (let key in message) {
                                     switch (key) {
                                         case "id":
@@ -233,6 +236,12 @@ class ConfirmBookingScreen extends Component {
                                             snackbar.show("Vender không tồn tại trong hệ thống", "danger");
                                             return;
                                     }
+                                }
+                                break;
+                            case "BadRequestError":
+                                message = response.message;
+                                if (message == "order_existed") {
+                                    this.retry(this.state.paymentId);
                                 }
                                 break;
                         }
@@ -249,6 +258,10 @@ class ConfirmBookingScreen extends Component {
             walletProvider.retry(paymentId, this.getPaymentReturnUrl(), this.getPaymentMethodUi(), this.getPaymentMethod()).then(s => {
                 this.setState({ isLoading: false }, () => {
                     let data = s.data;
+                    if (!data) {
+                        snackbar.show("Tạo thanh toán không thành công", "danger");
+                        return;
+                    }
                     switch (this.state.paymentMethod) {
                         case 4:
 
