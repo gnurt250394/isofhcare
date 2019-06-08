@@ -1,6 +1,6 @@
 import React, { Component, PropTypes, PureComponent } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, Text, ScrollView, FlatList, TouchableOpacity, StyleSheet, RefreshControl, TouchableHighlight, TextInput, Switch } from 'react-native';
+import { View, Text, ScrollView, FlatList, TouchableOpacity, StyleSheet, RefreshControl, TouchableHighlight, TextInput, Switch, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import Dash from 'mainam-react-native-dash-view';
@@ -15,6 +15,7 @@ import ImageLoad from 'mainam-react-native-image-loader';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import { Card } from 'native-base';
 
+const DEVICE_WIDTH = Dimensions.get('window').width;
 LocaleConfig.locales['en'] = {
     monthNames: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
     monthNamesShort: ['Th 1', 'Th 2', 'Th 3', 'Th 4', 'Th 5', 'Th 6', 'Th 7', 'Th 8', 'Th 9', 'Th 10', 'Th 11', 'Th 12'],
@@ -228,7 +229,7 @@ class ListProfileScreen extends PureComponent {
                             }}
                         />
                         <TouchableOpacity style={styles.viewBtn}>
-                            <Text style={{ color: '#fff' }}>KẾT QUẢ KHÁM</Text>
+                            <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>KẾT QUẢ KHÁM</Text>
                         </TouchableOpacity>
                         <Card style={styles.cardView}>
                             <View style={{ flexDirection: 'row', marginVertical: 10 }}>
@@ -331,8 +332,9 @@ const styles = StyleSheet.create({
         height: 45
     },
     viewBtn: {
-        width: '70%',
-        height: 41,
+        width: 252,
+        maxWidth: DEVICE_WIDTH - 80,
+        height: 50,
         borderRadius: 5,
         marginVertical: 20,
         backgroundColor: '#27AE60',
@@ -340,7 +342,8 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     cardView: {
-        width: 327,
+        width: 350,
+        maxWidth: DEVICE_WIDTH - 50,
         borderRadius: 5,
         height: 365,
         paddingHorizontal: 20,
