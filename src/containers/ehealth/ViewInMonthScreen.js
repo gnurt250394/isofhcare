@@ -231,17 +231,24 @@ class ListProfileScreen extends PureComponent {
         // this.setState({
         //     isVisible: true
         // })
-        let note = this.state.note
-        let suggestions = this.state.suggestions
-        let time = this.state.dob ?  this.state.dob.format('HH:mm:ss') : ''
-        let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss'):''
-        let isMedicineTime = this.state.isMedicineTime ? 1: 0
-        let id = this.props.userApp.currentUser.id
-        ehealthProvider.updateDataUSer(note,suggestions,time,medicineTime,isMedicineTime,id).then(res => {
-            console.log(res);
-        }).catch(err =>{
-            console.log(err);
-        })
+        // let note = this.state.note
+        // let suggestions = this.state.suggestions
+        // let time = this.state.dob ?  this.state.dob.format('HH:mm:ss') : ''
+        // let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss'):''
+        // let isMedicineTime = this.state.isMedicineTime ? 1: 0
+        // let id = this.props.userApp.currentUser.id
+        // ehealthProvider.updateDataUSer(note,suggestions,time,medicineTime,isMedicineTime,id).then(res => {
+        //     console.log(res);
+        // }).catch(err =>{
+        //     console.log(err);
+        // })
+       let hospitalId = this.props.navigation.state.params.hospitalId
+       let patientHistoryId = this.props.navigation.state.params.patientHistoryId
+       ehealthProvider.detailPatientHistory(patientHistoryId,hospitalId).then(res=>{
+           console.log(res);
+       }).catch(err =>{
+           console.log(err);
+       })
     }
     renderTextContent = (status) => {
         switch (status) {
@@ -308,19 +315,13 @@ class ListProfileScreen extends PureComponent {
                                 <View style={styles.viewLine}></View>
                                 <TextInput  multiline={true} onChangeText={s => {
                                     this.setState({ suggestion: s })
-                                }} value={this.state.note} underlineColorAndroid={'#fff'}  style={{ marginLeft: 5, color: '#9caac4', fontSize: 15, }} placeholder={'Bạn cần làm gì?'}></TextInput>
+                                }} value={this.state.suggestion} underlineColorAndroid={'#fff'}  style={{ marginLeft: 5, color: '#9caac4',height:41 }} placeholder={'Bạn cần làm gì?'}></TextInput>
                             </View>
                             <Text style={{ color: '#bdc6d8', fontSize: 15 }}>Suggestion</Text>
                             <View style={styles.viewBTnSuggest}>
                                 <TouchableOpacity style={[styles.btnReExamination, { backgroundColor: '#4CD565', }]}>
                                     <Text style={{ color: '#fff', padding: 2 }}>Lịch tái khám</Text>
                                 </TouchableOpacity>
-
-                                // <TouchableOpacity style={[styles.btnReExamination, { backgroundColor: '#00B1FF', }]}>
-                                //     <Text style={{ color: '#fff', padding: 2 }}>Khám lại</Text>
-                                // </TouchableOpacity>
-                                
-
                                 <TouchableOpacity style={[styles.btnReExamination, { backgroundColor: '#2E66E7', }]}>
                                     <Text style={{ color: '#fff', padding: 2 }}>Chia sẻ y bạ</Text>
                                 </TouchableOpacity>
@@ -350,6 +351,7 @@ class ListProfileScreen extends PureComponent {
                             </View>
                         </Card>
                     </View>
+                    <View style={{height:50}}></View>
                 </ScrollView>
                 <DateTimePicker
                     mode={'time'}
@@ -456,7 +458,7 @@ const styles = StyleSheet.create({
         width: 350,
         maxWidth: DEVICE_WIDTH - 50,
         borderRadius: 5,
-        height: 365,
+       
         padding: 25,
     },
     viewLine: {

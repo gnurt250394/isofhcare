@@ -24,6 +24,23 @@ module.exports = {
                     reject(e);
             });
         });
-    }
+    },
+    detailPatientHistory(patientHistoryId, hospitalId ) {
+        return new Promise((resolve, reject) => {
+          client.requestApi(
+            "get",
+            constants.api.booking.get_detail_patient_historyid +
+            "/" +
+            patientHistoryId +
+            "?hospitalId=" +
+            hospitalId ,
+            {},
+            (s, e) => {
+              if (s) resolve(s);
+              else reject(e);
+            }
+          );
+        });
+      },
 
 }
