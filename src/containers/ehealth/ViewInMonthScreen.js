@@ -239,15 +239,16 @@ class ListProfileScreen extends PureComponent {
                             <Text style={{ color: '#bdc6d8', fontSize: 15 }}>Suggestion</Text>
                             <View style={styles.viewBTnSuggest}>
                                 <TouchableOpacity style={[styles.btnReExamination, { backgroundColor: '#4CD565', }]}>
-                                    <Text style={{ color: '#fff' }}>Lịch tái khám</Text>
+                                    <Text style={{ color: '#fff', padding: 2 }}>Lịch tái khám</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={[styles.btnReExamination, { backgroundColor: '#00B1FF', }]}>
-                                    <Text style={{ color: '#fff' }}>Khám lại</Text>
+                                    <Text style={{ color: '#fff', padding: 2 }}>Khám lại</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={[styles.btnReExamination, { backgroundColor: '#2E66E7', }]}>
-                                    <Text style={{ color: '#fff' }}>Chia sẻ y bạ</Text>
+                                    <Text style={{ color: '#fff', padding: 2 }}>Chia sẻ y bạ</Text>
                                 </TouchableOpacity>
                             </View>
+                            <View style={{ height: 1, backgroundColor: '#97979710', marginVertical: 10 }} />
                             <View>
                                 <Text style={styles.txLabel}>Ghi chú</Text>
                                 <TextInput multiline={true} underlineColorAndroid={'#fff'} style={[styles.txContent, { height: 41 }]} placeholder={'Nhập ghi chú'}></TextInput>
@@ -346,7 +347,7 @@ const styles = StyleSheet.create({
         maxWidth: DEVICE_WIDTH - 50,
         borderRadius: 5,
         height: 365,
-        paddingHorizontal: 20,
+        padding: 25,
     },
     viewLine: {
         backgroundColor: '#4CD565',
