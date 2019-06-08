@@ -88,6 +88,7 @@
 		E504019A736C4E52B5CA4464 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 94798CE8149C4557AC458707 /* libz.tbd */; };
 		E829ED23B13342C4906334F4 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD5F71DCE6BD49A78D01066B /* Foundation.ttf */; };
 		F99F0C6BA8394BCFBAFB6958 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0AB466C43D0F4AA39D0AE581 /* SimpleLineIcons.ttf */; };
+		FA11ABD922AB4F87009D68A0 /* libPayoo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FA11ABA322AB4F71009D68A0 /* libPayoo.a */; };
 		FA344ED622360F1900E2E8E3 /* libRNShare.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FA344ED522360EFA00E2E8E3 /* libRNShare.a */; };
 		FACF3D2D22117918001C14FB /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FACF3CDE22117891001C14FB /* libBVLinearGradient.a */; };
 /* End PBXBuildFile section */
@@ -457,6 +458,13 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RNGooglePlaces;
 		};
+		FA11ABA222AB4F71009D68A0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FA11AB9A22AB4F71009D68A0 /* Payoo.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = Payoo;
+		};
 		FA344ECE22360E9E00E2E8E3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F40DBE379BA44D75B40801E1 /* RNAccountKit.xcodeproj */;
@@ -599,6 +607,7 @@
 		E804FAC943AA4930A2AE54E9 /* AddressBook.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		EBC3324BCEB75276C181FD32 /* libPods-APP.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-APP.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F40DBE379BA44D75B40801E1 /* RNAccountKit.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNAccountKit.xcodeproj; path = "../node_modules/react-native-facebook-account-kit/ios/RNAccountKit.xcodeproj"; sourceTree = "<group>"; };
+		FA11AB9A22AB4F71009D68A0 /* Payoo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Payoo.xcodeproj; path = "../node_modules/mainam-react-native-payoo/ios/Payoo.xcodeproj"; sourceTree = "<group>"; };
 		FA344ED022360EFA00E2E8E3 /* RNShare.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNShare.xcodeproj; path = "../node_modules/react-native-share/ios/RNShare.xcodeproj"; sourceTree = "<group>"; };
 		FA58DB142293A0250008AD80 /* RNLocation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNLocation.xcodeproj; path = "../node_modules/react-native-location/ios/RNLocation.xcodeproj"; sourceTree = "<group>"; };
 		FACF3CD622117891001C14FB /* BVLinearGradient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BVLinearGradient.xcodeproj; path = "../node_modules/react-native-linear-gradient/BVLinearGradient.xcodeproj"; sourceTree = "<group>"; };
@@ -619,6 +628,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA11ABD922AB4F87009D68A0 /* libPayoo.a in Frameworks */,
 				FA344ED622360F1900E2E8E3 /* libRNShare.a in Frameworks */,
 				FACF3D2D22117918001C14FB /* libBVLinearGradient.a in Frameworks */,
 				B24DBF4C20D76DE90098E296 /* libRNCamera.a in Frameworks */,
@@ -836,6 +846,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				FA11AB9A22AB4F71009D68A0 /* Payoo.xcodeproj */,
 				FA58DB142293A0250008AD80 /* RNLocation.xcodeproj */,
 				FA344ED022360EFA00E2E8E3 /* RNShare.xcodeproj */,
 				FACF3CD622117891001C14FB /* BVLinearGradient.xcodeproj */,
@@ -1064,6 +1075,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		FA11AB9B22AB4F71009D68A0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FA11ABA322AB4F71009D68A0 /* libPayoo.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		FA344ECB22360E9E00E2E8E3 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -1246,6 +1265,10 @@
 				{
 					ProductGroup = FACF3CD722117891001C14FB /* Products */;
 					ProjectRef = FACF3CD622117891001C14FB /* BVLinearGradient.xcodeproj */;
+				},
+				{
+					ProductGroup = FA11AB9B22AB4F71009D68A0 /* Products */;
+					ProjectRef = FA11AB9A22AB4F71009D68A0 /* Payoo.xcodeproj */;
 				},
 				{
 					ProductGroup = 00C302A81ABCB8CE00DB3ED1 /* Products */;
@@ -1711,6 +1734,13 @@
 			fileType = archive.ar;
 			path = libRNGooglePlaces.a;
 			remoteRef = FA0325F4212E5D0C003268FA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		FA11ABA322AB4F71009D68A0 /* libPayoo.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libPayoo.a;
+			remoteRef = FA11ABA222AB4F71009D68A0 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		FA344ECF22360E9E00E2E8E3 /* libRNAccountKit.a */ = {
