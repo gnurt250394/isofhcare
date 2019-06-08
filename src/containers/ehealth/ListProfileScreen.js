@@ -29,11 +29,12 @@ class ListProfileScreen extends PureComponent {
     componentDidMount() {
         this.onRefresh();
     }
-
+    onPress = (item) => {
+        this.props.navigation.navigate("viewInMonth", { lastDate: item.latestTime.toString() })
+    }
     renderItemProfile(item, index) {
         const source = this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar.absoluteUrl() } : require("@images/new/user.png");
-
-        return <TouchableOpacity style={{}} onPress={() => { this.props.navigation.navigate("viewInMonth") }}>
+        return <TouchableOpacity style={{}} onPress={() => this.onPress(item)}>
             <View style={{ flexDirection: 'row' }}>
                 <View style={{ justifyContent: 'center', padding: 10 }}>
                     <ImageLoad

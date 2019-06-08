@@ -16,6 +16,11 @@ import { Calendar, LocaleConfig } from 'react-native-calendars';
 import { Card } from 'native-base';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
+
+import DateTimePicker from "mainam-react-native-date-picker";
+import TextField from "mainam-react-native-form-validate/TextField";
+import ehealthProvider from '@data-access/ehealth-provider'
+import Modal from '@components/modal';
 LocaleConfig.locales['en'] = {
     monthNames: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
     monthNamesShort: ['Th 1', 'Th 2', 'Th 3', 'Th 4', 'Th 5', 'Th 6', 'Th 7', 'Th 8', 'Th 9', 'Th 10', 'Th 11', 'Th 12'],
@@ -35,10 +40,17 @@ class ListProfileScreen extends PureComponent {
             hospitals: [],
             loadFirstTime: true,
             currentDate: new Date(),
+            toggelDateTimePickerVisible: false,
+            lastDate: this.props.navigation.state.params && this.props.navigation.state.params.lastDate ? this.props.navigation.state.params.lastDate : '',
+            suggestions:'',
         }
     }
     componentDidMount() {
         this.onRefresh();
+    }
+    setDate(newDate) {
+        this.setState({ dob: newDate, date: newDate.format("dd/MM/yyyy") }, () => {
+        });
     }
     getListBooking(hospitalId) {
         if (this.state.profile && this.state.profile.profile) {
@@ -154,43 +166,107 @@ class ListProfileScreen extends PureComponent {
 
 
     onDayPress(day) {
-        try {
-            // day.timestamp = new Date(day.timestamp.toDateObject().format("MM/dd/yyyy")).getTime();
-            // if (!this.props.booking.specialist2) {
-            //     snackbar.show(dhyCommand.msg.booking.please_select_service_first);
-            //     return;
-            // }
+        this.setState({
+            dateSelected: { [day.dateString]: { selected: true, selectedColor: '#466A8F' } }
 
-            // var schedule = this.getScheduleOnDay(day);
-            // if (!schedule || schedule.disabled) {
-            //     snackbar.show(dhyCommand.msg.booking.not_found_schedule_of_doctor_in_this_day);
-            //     return;
-            // }
+        }, () => {
+            console.log(this.state.dateSelected, 'dateSelected');
+            // try {
+            //     day.timestamp = new Date(day.timestamp.toDateObject().format("MM/dd/yyyy")).getTime();
+            //     if (!this.props.booking.specialist2) {
+            //         snackbar.show(dhyCommand.msg.booking.please_select_service_first);
+            //         return;
+            //     }
 
-            // this.props.dispatch({
-            //     type: dhyCommand.action.action_select_booking_date
-            //     , value: day
-            // });
+            //     var schedule = this.getScheduleOnDay(day);
+            //     if (!schedule || schedule.disabled) {
+            //         snackbar.show(dhyCommand.msg.booking.not_found_schedule_of_doctor_in_this_day);
+            //         return;
+            //     }
 
-            // var newListScheduleText = JSON.parse(this.state.listScheduleText);
+            //     this.props.dispatch({
+            //         type: dhyCommand.action.action_select_booking_date
+            //         , value: day
+            //     });
 
-            // var key = day.year + "-" + (day.month < 10 ? "0" : "") + day.month + "-" + (day.day < 10 ? "0" : "") + day.day;
-            // if (newListScheduleText[key])
-            //     newListScheduleText[key].selected = true;
-            // this.setState({
-            //     listSchedule: newListScheduleText
-            // })
-            // this.props.dispatch({
-            //     type: dhyCommand.action.action_select_schedule, value: newListScheduleText[key]
-            // });
+            //     var newListScheduleText = JSON.parse(this.state.listScheduleText);
 
-            // this.loadListBooking(day);
-        } catch (error) {
-            console.log(error)
+            //     var key = day.year + "-" + (day.month < 10 ? "0" : "") + day.month + "-" + (day.day < 10 ? "0" : "") + day.day;
+            //     if (newListScheduleText[key])
+            //         newListScheduleText[key].selected = true;
+            //     this.setState({
+            //         listSchedule: newListScheduleText
+            //     })
+            //     this.props.dispatch({
+            //         type: dhyCommand.action.action_select_schedule, value: newListScheduleText[key]
+            //     });
+
+            //     this.loadListBooking(day);
+        })
+
+    }
+    onPressTime = () => {
+        this.setState({ toggelDateTimePickerVisible: true, isTimeAlarm: false })
+    }
+    onPressTimeAlarm = () => {
+        this.setState({ toggelDateTimePickerVisible: true, isTimeAlarm: true })
+
+    }
+    onConfirm = (newDate) => {
+        !this.state.isTimeAlarm ? this.setState(
+            {
+                dob: newDate,
+                date: newDate.format("HH:mm"),
+                toggelDateTimePickerVisible: false
+            },
+        ) : this.setState(
+            {
+                dobAlarm: newDate,
+                timeAlarm: newDate.format("HH:mm"),
+                toggelDateTimePickerVisible: false
+            },
+        );
+    }
+    onClickResult = () => {
+        // this.setState({
+        //     isVisible: true
+        // })
+        let note = this.state.note
+        let suggestions = this.state.suggestions
+        let time = this.state.dob ?  this.state.dob.format('HH:mm:ss') : ''
+        let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss'):''
+        let isMedicineTime = this.state.isMedicineTime ? 1: 0
+        let id = this.props.userApp.currentUser.id
+        ehealthProvider.updateDataUSer(note,suggestions,time,medicineTime,isMedicineTime,id).then(res => {
+            console.log(res);
+        }).catch(err =>{
+            console.log(err);
+        })
+    }
+    renderTextContent = (status) => {
+        switch (status) {
+            case 1: return (
+                <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>{constants.msg.ehealth.not_result_of_this_date}</Text>
+            )
+            case 2: return (
+                <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>{constants.msg.ehealth.re_examination_in_date}</Text>
+            )
+            case 3: return (
+                <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>{constants.msg.ehealth.examination_in_date}</Text>
+            )
+            case 4: return (
+                <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>{constants.msg.ehealth.not_re_examination}</Text>
+            )
+            case 5: return (
+                <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>{constants.msg.ehealth.not_examination}</Text>
+            )
+            default: return (
+                <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>{constants.msg.ehealth.not_examination}</Text>
+            )
         }
     }
-
     render() {
+        console.log(this.state.lastDate ? this.state.lastDate.toDateObject('-').format('yyyy-MM-dd') : '');
         return (
             <ActivityPanel style={{ flex: 1 }} title="Y BẠ ĐIỆN TỬ"
                 icBack={require('@images/new/left_arrow_white.png')}
@@ -208,42 +284,43 @@ class ListProfileScreen extends PureComponent {
                     <View style={{ justifyContent: 'center', flex: 1, alignItems: 'center' }}>
                         <Calendar style={{ marginBottom: 3, backgroundColor: "#FFF", width: '100%' }}
                             // markedDates={this.state.listSchedule}
-                            current={'2012-03-01'}
-                            onDayPress={(day) => { console.log('selected day', day) }}
+                            current={this.state.lastDate ? this.state.lastDate.toDateObject('-').format('yyyy-MM-dd') : ''}
+                            // onDayPress={(day) => { console.log('selected day', day) }}
                             onDayLongPress={(day) => { console.log('selected day', day) }}
                             monthFormat={'MMMM - yyyy'}
                             onMonthChange={(month) => { console.log('month changed', month) }}
                             // hideArrows={true}
                             hideExtraDays={true}
-                            // onDayPress={(day) => { this.onDayPress(day) }}
+
+                            onDayPress={(day) => { this.onDayPress(day) }}
                             // monthFormat={'MMMM - yyyy'}
                             // onMonthChange={(month) => { this.onMonthChange(month, true) }}
                             firstDay={1}
                             // hideExtraDays={true}
                             markingType={'multi-dot'}
-                            markedDates={{
-                                '2012-05-16': { selected: true, marked: true, selectedColor: 'blue' },
-                                '2012-05-17': { marked: true },
-                                '2012-05-18': { marked: true, dotColor: 'red', activeOpacity: 0 },
-                                '2012-05-19': { disabled: true, disableTouchEvent: true }
-                            }}
+                            markedDates={this.state.dateSelected ? this.state.dateSelected : { [this.state.lastDate ? this.state.lastDate.toDateObject('-').format('yyyy-MM-dd') : '']: { selected: true, selectedColor: '#466A8F' } }}
                         />
-                        <TouchableOpacity style={styles.viewBtn}>
+                        <TouchableOpacity  onPress={this.onClickResult} style={styles.viewBtn}>
                             <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>KẾT QUẢ KHÁM</Text>
                         </TouchableOpacity>
                         <Card style={styles.cardView}>
                             <View style={{ flexDirection: 'row', marginVertical: 10 }}>
                                 <View style={styles.viewLine}></View>
-                                <Text style={{ marginLeft: 5, color: '#9caac4', fontSize: 18 }}>Bạn cần làm gì</Text>
+                                <TextInput  multiline={true} onChangeText={s => {
+                                    this.setState({ suggestion: s })
+                                }} value={this.state.note} underlineColorAndroid={'#fff'}  style={{ marginLeft: 5, color: '#9caac4', fontSize: 15, }} placeholder={'Bạn cần làm gì?'}></TextInput>
                             </View>
                             <Text style={{ color: '#bdc6d8', fontSize: 15 }}>Suggestion</Text>
                             <View style={styles.viewBTnSuggest}>
                                 <TouchableOpacity style={[styles.btnReExamination, { backgroundColor: '#4CD565', }]}>
                                     <Text style={{ color: '#fff', padding: 2 }}>Lịch tái khám</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={[styles.btnReExamination, { backgroundColor: '#00B1FF', }]}>
-                                    <Text style={{ color: '#fff', padding: 2 }}>Khám lại</Text>
-                                </TouchableOpacity>
+
+                                // <TouchableOpacity style={[styles.btnReExamination, { backgroundColor: '#00B1FF', }]}>
+                                //     <Text style={{ color: '#fff', padding: 2 }}>Khám lại</Text>
+                                // </TouchableOpacity>
+                                
+
                                 <TouchableOpacity style={[styles.btnReExamination, { backgroundColor: '#2E66E7', }]}>
                                     <Text style={{ color: '#fff', padding: 2 }}>Chia sẻ y bạ</Text>
                                 </TouchableOpacity>
@@ -251,16 +328,19 @@ class ListProfileScreen extends PureComponent {
                             <View style={{ height: 1, backgroundColor: '#97979710', marginVertical: 10 }} />
                             <View>
                                 <Text style={styles.txLabel}>Ghi chú</Text>
-                                <TextInput multiline={true} underlineColorAndroid={'#fff'} style={[styles.txContent, { height: 41 }]} placeholder={'Nhập ghi chú'}></TextInput>
+                                <TextInput multiline={true} onChangeText={s => {
+                                    this.setState({ note: s })
+                                }} value={this.state.note} underlineColorAndroid={'#fff'} style={[styles.txContent, { height: 41 }]} placeholder={'Nhập ghi chú'}></TextInput>
                             </View>
                             <View>
                                 <Text style={styles.txLabel}>Thời gian</Text>
-                                <TouchableOpacity><Text style={styles.txContent}>06:00 AM</Text></TouchableOpacity>
+                                <TouchableOpacity onPress={this.onPressTime}><Text style={styles.txContent}>{this.state.date ? this.state.date : 'Chọn giờ'}</Text>
+                                </TouchableOpacity>
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <View >
                                     <Text style={styles.txLabel}>Nhắc uống thuốc</Text>
-                                    <TouchableOpacity><Text style={styles.txContent}>08:30</Text></TouchableOpacity>
+                                    <TouchableOpacity onPress={this.onPressTimeAlarm}><Text style={styles.txContent}><Text style={styles.txContent}>{this.state.timeAlarm ? this.state.timeAlarm : 'Chọn giờ'}</Text></Text></TouchableOpacity>
                                 </View>
                                 <Switch onValueChange={this.onSetAlarm} trackColor={{
                                     true: "yellow",
@@ -271,7 +351,36 @@ class ListProfileScreen extends PureComponent {
                         </Card>
                     </View>
                 </ScrollView>
-            </ActivityPanel >
+                <DateTimePicker
+                    mode={'time'}
+                    isVisible={this.state.toggelDateTimePickerVisible}
+                    onConfirm={newDate => this.onConfirm(newDate)}
+                    onCancel={() => {
+                        this.setState({ toggelDateTimePickerVisible: false });
+                    }}
+                    date={new Date()}
+                    maximumDate={new Date()}
+                    cancelTextIOS={"Hủy bỏ"}
+                    confirmTextIOS={"Xác nhận"}
+                    date={this.state.dob || new Date()}
+                />
+                <Modal
+                    isVisible={this.state.isVisible}
+                    onBackdropPress={() => this.setState({ isVisible: false })}
+                    backdropOpacity={0.5}
+                    animationInTiming={500}
+                    animationOutTiming={500}
+                    style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+                    backdropTransitionInTiming={1000}
+                    backdropTransitionOutTiming={1000}
+                >
+                    <View style={{ backgroundColor: '#fff', marginHorizontal: 20, marginVertical: 60, borderRadius: 5 }}>
+                        <Text style={{ fontSize: 22, color: '#27AE60', textAlign: 'center', marginTop: 10, marginHorizontal: 20 }}>Thông báo</Text>
+                        {this.renderTextContent(1)}
+                        <TouchableOpacity onPress={() => this.setState({ isVisible: false })} style={{ justifyContent: 'center', alignItems: 'center', height: 41, backgroundColor: '#878787', borderBottomLeftRadius: 5, borderBottomRightRadius: 5 }}><Text style={{ color: '#fff' }}>OK, XONG</Text></TouchableOpacity>
+                    </View>
+                </Modal>
+            </ActivityPanel>
         );
     }
 }
@@ -355,7 +464,9 @@ const styles = StyleSheet.create({
         width: 1
     },
     viewBTnSuggest: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     btnReExamination: {
         padding: 2, borderRadius: 3, marginRight: 5, marginVertical: 10, paddingHorizontal: 5

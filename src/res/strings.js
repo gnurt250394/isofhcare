@@ -227,7 +227,14 @@ module.exports = {
     },
     ehealth: {
       not_found_result_of_this_booking: "Chưa có kết quả",
-      canot_view_detail_this_booking: "Không thể xem kết quả đặt khám này"
+      canot_view_detail_this_booking: "Không thể xem kết quả đặt khám này",
+      not_result_of_this_date:'Không có kết quả khám nào. Bạn không đi khám ở ngày này!',
+      re_examination_in_date:'Bạn có lịch tái khám vào ngày',
+      examination_in_date:'Bạn có lịch khám lại vào ngày',
+      not_re_examination:'Bạn không có lịch tái khám nào!',
+      not_examination:'Bạn không có lịch khám lại nào!'
+
+
     },
     question: {
       confirm_delete_post: "Bạn có muốn xoá bài viết này",
@@ -363,7 +370,8 @@ module.exports = {
       get_detail: isofhcare_service + "number-hospital/get-detail"
     },
     ehealth:{
-      get_group_patient: isofhcare_service + 'booking/get-group-patient-history'
+      get_group_patient: isofhcare_service + 'booking/get-group-patient-history',
+      update_data_user: isofhcare_service + 'patient-history-booking/update-data-note'
     }
   }
 };

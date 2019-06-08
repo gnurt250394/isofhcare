@@ -12,5 +12,18 @@ module.exports = {
             });
         });
     },
-   
+    updateDataUSer(note,suggestions,time,medicineTime,isMedicineTime,id) {
+        var body = {
+            "note":  note, "suggestions":suggestions, "time": time, "medicineTime": medicineTime, "isMedicineTime": isMedicineTime
+        }
+        return new Promise((resolve, reject) => {
+            client.requestApi("put", `${constants.api.ehealth.update_data_user}/${id}`,body, (s, e) => {
+                if (s)
+                    resolve(s);
+                else
+                    reject(e);
+            });
+        });
+    }
+
 }
