@@ -18,6 +18,7 @@ import dateUtils from 'mainam-react-native-date-utils';
 import hospitalProvider from '@data-access/hospital-provider';
 import ImageLoad from 'mainam-react-native-image-loader';
 import { Card } from "native-base";
+import constants from '@resources/strings';
 
 class EhealthScreen extends Component {
     constructor(props) {
@@ -51,14 +52,6 @@ class EhealthScreen extends Component {
             })
         })
     }
-    onLongPress = (index) => {
-        this.setState({
-            isLongPress: true,
-            index: index
-        })
-        this.props.navigation.navigate('DemoModalScreen')
-
-    }
     onRefresh = () => {
         this.setState({
             refreshing: true
@@ -66,14 +59,15 @@ class EhealthScreen extends Component {
             this.onGetHospital()
         })
     }
-    onPress = () => {
+    onPress = (item) => {
+        this.props.dispatch({ type: constants.action.action_select_hospital_ehealth, value: item })
         this.props.navigation.navigate('listProfile')
     }
     renderItem = ({ item, index }) => {
         const source = item.hospital && item.hospital.avatar ? { uri: item.hospital.avatar.absoluteUrl() } : require("@images/new/user.png");
 
         return (
-            <TouchableOpacity style={{ marginTop: 10, }} onPress={this.onPress}>
+            <TouchableOpacity style={{ marginTop: 10, }} onPress={this.onPress.bind(this, item)}>
                 <Card style={{ flexDirection: 'row', paddingVertical: 20, paddingHorizontal: 10, borderRadius: 5 }}>
                     <ImageLoad
                         resizeMode="cover"
@@ -123,7 +117,7 @@ class EhealthScreen extends Component {
                 titleStyle={{ color: '#fff' }}
                 actionbarStyle={{ backgroundColor: '#27AE60' }}
                 title="Y BẠ ĐIỆN TỬ"
-                
+
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#22b060"
                 actionbarStyle={{

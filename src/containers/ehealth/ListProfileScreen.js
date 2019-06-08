@@ -21,10 +21,9 @@ class ListProfileScreen extends PureComponent {
             refreshing: false,
             listData: [],
             loading: false,
-            bookings: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             hospitals: [],
             loadFirstTime: true
-        }
+        };
     }
     componentDidMount() {
         this.onRefresh();
@@ -94,18 +93,19 @@ class ListProfileScreen extends PureComponent {
             );
     }
     onLoad() {
-        ehealthProvider.getGroupPatient().then(res => {
+        ehealthProvider.getGroupPatient(this.props.ehealth.hospital.hospital.id).then(res => {
             this.setState({
                 loading: false,
                 refreshing: false,
                 loadMore: false
+            }, () => {
+                if (res.code == 0) {
+                    this.setState({
+                        listData: res.data,
+                        finish: true
+                    })
+                }
             });
-            if (res.code == 0) {
-                this.setState({
-                    listData: res.data,
-                    finish: true
-                })
-            }
         }).catch(e => {
             this.setState({
                 loading: false,
@@ -114,7 +114,6 @@ class ListProfileScreen extends PureComponent {
             });
         });
     }
-
     render() {
         return (
             <ActivityPanel style={{ flex: 1 }} title="HỒ SƠ Y BẠ GIA ĐÌNH"
@@ -206,7 +205,8 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
-        userApp: state.userApp
+        userApp: state.userApp,
+        ehealth: state.ehealth
     };
 }
 export default connect(mapStateToProps)(ListProfileScreen);

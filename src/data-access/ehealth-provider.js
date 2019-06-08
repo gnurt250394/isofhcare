@@ -2,9 +2,9 @@ import client from '@utils/client-utils';
 import constants from '@resources/strings';
 
 module.exports = {
-    getGroupPatient() {
+    getGroupPatient(hospitalId) {
         return new Promise((resolve, reject) => {
-            client.requestApi("get", `${constants.api.ehealth.get_group_patient}`, {}, (s, e) => {
+            client.requestApi("get", `${constants.api.ehealth.get_group_patient}?hospitalId=${hospitalId}`, {}, (s, e) => {
                 if (s)
                     resolve(s);
                 else

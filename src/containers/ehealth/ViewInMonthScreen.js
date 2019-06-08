@@ -452,6 +452,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     cardView: {
+        marginTop: 20,
         width: 350,
         maxWidth: DEVICE_WIDTH - 50,
         borderRadius: 5,
