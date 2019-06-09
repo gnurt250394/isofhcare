@@ -25,7 +25,11 @@ module.exports = {
             });
         });
     },
-    detailPatientHistory(patientHistoryId, hospitalId ) {
+    detailPatientHistory(patientHistoryId, hospitalId,appointmentDate,reCheckDate ) {
+        var body =  {
+            'appointmentDate':appointmentDate,
+            'reCheckDate': reCheckDate
+        }
         return new Promise((resolve, reject) => {
           client.requestApi(
             "get",
@@ -33,8 +37,8 @@ module.exports = {
             "/" +
             patientHistoryId +
             "?hospitalId=" +
-            hospitalId ,
-            {},
+            hospitalId,
+            body,
             (s, e) => {
               if (s) resolve(s);
               else reject(e);

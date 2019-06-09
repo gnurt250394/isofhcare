@@ -230,7 +230,7 @@ module.exports = {
       not_found_result_of_this_booking: "Chưa có kết quả",
       canot_view_detail_this_booking: "Không thể xem kết quả đặt khám này",
       not_result_of_this_date: 'Không có kết quả khám nào. Bạn không đi khám ở ngày này!',
-      re_examination_in_date: 'Bạn có lịch tái khám vào ngày',
+      re_examination_in_date: 'Bạn có lịch tái khám vào ngày ',
       examination_in_date: 'Bạn có lịch khám lại vào ngày',
       not_re_examination: 'Bạn không có lịch tái khám nào!',
       not_examination: 'Bạn không có lịch khám lại nào!'

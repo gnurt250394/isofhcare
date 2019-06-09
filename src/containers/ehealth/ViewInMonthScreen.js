@@ -42,7 +42,7 @@ class ListProfileScreen extends PureComponent {
             currentDate: new Date(),
             toggelDateTimePickerVisible: false,
             lastDate: this.props.navigation.state.params && this.props.navigation.state.params.lastDate ? this.props.navigation.state.params.lastDate : '',
-            suggestions:'',
+            suggestions: '',
         }
     }
     componentDidMount() {
@@ -52,6 +52,7 @@ class ListProfileScreen extends PureComponent {
         this.setState({ dob: newDate, date: newDate.format("dd/MM/yyyy") }, () => {
         });
     }
+
     getListBooking(hospitalId) {
         if (this.state.profile && this.state.profile.profile) {
             bookingProvider.getListBooking(this.state.profile.profile.id, hospitalId).then(s => {
@@ -167,10 +168,12 @@ class ListProfileScreen extends PureComponent {
 
     onDayPress(day) {
         this.setState({
-            dateSelected: { [day.dateString]: { selected: true, selectedColor: '#466A8F' } }
+            dateSelected: { [day.dateString]: { selected: true, selectedColor: '#27AE60' } }
 
         }, () => {
-            console.log(this.state.dateSelected, 'dateSelected');
+            this.setState({
+                dateString: day.dateString
+            })
             // try {
             //     day.timestamp = new Date(day.timestamp.toDateObject().format("MM/dd/yyyy")).getTime();
             //     if (!this.props.booking.specialist2) {
@@ -242,21 +245,46 @@ class ListProfileScreen extends PureComponent {
         // }).catch(err =>{
         //     console.log(err);
         // })
-       let hospitalId = this.props.navigation.state.params.hospitalId
-       let patientHistoryId = this.props.navigation.state.params.patientHistoryId
-       ehealthProvider.detailPatientHistory(patientHistoryId,hospitalId).then(res=>{
-           console.log(res);
-       }).catch(err =>{
-           console.log(err);
-       })
+        let appointmentDate = this.state.dateString ? this.state.dateString : this.state.lastDate
+        let reCheckDate = ""
+        let hospitalId = this.props.navigation.state.params.hospitalId
+        let patientHistoryId = this.props.navigation.state.params.patientHistoryId
+        ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId, appointmentDate, reCheckDate).then(res => {
+            if (res.data.appointmentDate == null) {
+                this.setState({
+                    isVisible: true,
+                    status: 1,
+                })
+                return
+            }
+            if (res.data.reCheckDate == null) {
+                this.setState({
+                    isVisible: true,
+                    status: 5,
+                })
+                return
+            }
+            if (res.data.appointmentDate && res.data.reCheckDate == null) {
+                this.props.navigation.navigate('viewInDay')
+                return
+            } if (res.data.appointmentDate == null && res.data.reCheckDate) {
+                this.setState({
+                    status: 2,
+                    reCheckDate: res.data.reCheckDate
+                })
+                return
+            }
+        }).catch(err => {
+            console.log(err);
+        })
     }
-    renderTextContent = (status) => {
-        switch (status) {
+    renderTextContent = () => {
+        switch (this.state.status) {
             case 1: return (
                 <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>{constants.msg.ehealth.not_result_of_this_date}</Text>
             )
             case 2: return (
-                <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>{constants.msg.ehealth.re_examination_in_date}</Text>
+                <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>{constants.msg.ehealth.re_examination_in_date + this.state.reCheckDate.toDateObject('-').format('dd/MM/yyyy') + '!'}</Text>
             )
             case 3: return (
                 <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>{constants.msg.ehealth.examination_in_date}</Text>
@@ -305,17 +333,17 @@ class ListProfileScreen extends PureComponent {
                             firstDay={1}
                             // hideExtraDays={true}
                             markingType={'multi-dot'}
-                            markedDates={this.state.dateSelected ? this.state.dateSelected : { [this.state.lastDate ? this.state.lastDate.toDateObject('-').format('yyyy-MM-dd') : '']: { selected: true, selectedColor: '#466A8F' } }}
+                            markedDates={this.state.dateSelected ? this.state.dateSelected : { [this.state.lastDate ? this.state.lastDate.toDateObject('-').format('yyyy-MM-dd') : '']: { selected: true, selectedColor: '#27AE60' } }}
                         />
-                        <TouchableOpacity  onPress={this.onClickResult} style={styles.viewBtn}>
+                        <TouchableOpacity onPress={this.onClickResult} style={styles.viewBtn}>
                             <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>KẾT QUẢ KHÁM</Text>
                         </TouchableOpacity>
                         <Card style={styles.cardView}>
                             <View style={{ flexDirection: 'row', marginVertical: 10 }}>
                                 <View style={styles.viewLine}></View>
-                                <TextInput  multiline={true} onChangeText={s => {
+                                <TextInput multiline={true} onChangeText={s => {
                                     this.setState({ suggestion: s })
-                                }} value={this.state.suggestion} underlineColorAndroid={'#fff'}  style={{ marginLeft: 5, color: '#9caac4',height:41 }} placeholder={'Bạn cần làm gì?'}></TextInput>
+                                }} value={this.state.suggestion} underlineColorAndroid={'#fff'} style={{ marginLeft: 5, color: '#9caac4', height: 41, width: 200, fontSize: 18 }} placeholder={'Bạn cần làm gì?'}></TextInput>
                             </View>
                             <Text style={{ color: '#bdc6d8', fontSize: 15 }}>Suggestion</Text>
                             <View style={styles.viewBTnSuggest}>
@@ -351,7 +379,7 @@ class ListProfileScreen extends PureComponent {
                             </View>
                         </Card>
                     </View>
-                    <View style={{height:50}}></View>
+                    <View style={{ height: 50 }}></View>
                 </ScrollView>
                 <DateTimePicker
                     mode={'time'}
@@ -458,7 +486,7 @@ const styles = StyleSheet.create({
         width: 350,
         maxWidth: DEVICE_WIDTH - 50,
         borderRadius: 5,
-       
+
         padding: 25,
     },
     viewLine: {
