@@ -9,6 +9,7 @@ import hospitalProvider from '@data-access/hospital-provider';
 import constants from '@resources/strings';
 import constants2 from '@ehealth/daihocy/resources/strings';
 import dateUtils from 'mainam-react-native-date-utils';
+import stringUtils from 'mainam-react-native-string-utils';
 import profileProvider from '@data-access/profile-provider';
 import snackbar from '@utils/snackbar-utils';
 import ImageLoad from 'mainam-react-native-image-loader';
@@ -33,10 +34,32 @@ class ViewInDateScreen extends Component {
     constructor(props) {
         super(props)
         this.state = {
-
+            dayInMonth: [],
+            dayNames: ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7']
         }
     }
+    componentDidMount() {
+        this.renderDayInMonth(new Date())
+    }
+    renderDayInMonth(day) {
+        let month = day.format("MM");
+        let year = day.format("yyyy");
+        let obj = [];
+        for (var i = 1; i <= 31; i++) {
+            try {
+                var date = new Date(month + "/" + i + "/" + year);
+                var time = date.getTime();
+                if (!isNaN(time)) {
+                    obj.push(date);
+                }
+            } catch (e) {
+
+            }
+        }
+        this.setState({ dayInMonth: obj });
+    }
     render() {
+
         return (
             <ActivityPanel style={{ flex: 1 }} title="Y BẠ ĐIỆN TỬ"
                 icBack={require('@images/new/left_arrow_white.png')}
@@ -52,21 +75,37 @@ class ViewInDateScreen extends Component {
                 isLoading={this.state.isLoading}>
                 <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
                     <View style={{ justifyContent: 'center', flex: 1, alignItems: 'center' }}>
-                        <Agenda style={{ marginBottom: 3, backgroundColor: "#FFF", width: '100%' }}
-                            monthFormat={'MMMM - yyyy'}
-                            onMonthChange={(month) => { console.log('month changed', month) }}
-                            refreshing={false}
-                            // Add a custom RefreshControl component, used to provide pull-to-refresh functionality for the ScrollView.
-                            refreshControl={null}
-                            refreshing={false}
-                            // Add a custom RefreshControl component, used to provide pull-to-refresh functionality for the ScrollView.
-                            refreshControl={null}
-                            onRefresh={() => console.log('refreshing...')}
-                            renderItem={(item, firstItemInDay) => { return (<View />); }}
-                            loadItemsForMonth={(month) => { console.log('trigger items loading') }}
-                            // callback that fires when the calendar is opened or closed
-                            onCalendarToggled={(calendarOpened) => { console.log(calendarOpened) }}
-                            displayLoadingIndicator={false}
+                        <FlatList
+                            showsHorizontalScrollIndicator={false}
+                            horizontal={true}
+                            extraData={this.state}
+                            keyExtractor={(item, index) => index}
+                            style={{ flex: 1, marginLeft: 10 }}
+                            data={this.state.dayInMonth}
+                            renderItem={({ item }) =>
+                                <TouchableOpacity onPress={() => {
+                                    // this.click(item);
+                                }} style={{ justifyContent: 'center', alignItems: 'center', margin: 10 }}>
+                                    <Text style={{ color: '#bbbbbb' }}>{this.state.dayNames[item.getDay()]}</Text>
+                                    <View style={{
+                                        width: 40, height: 40, borderRadius: 20,
+                                        backgroundColor: '#27ae60',
+                                        justifyContent: 'center', alignItems: 'center',
+                                        shadowColor: 'rgba(46, 231, 58, 0.35)',
+                                        shadowOffset: {
+                                            width: 0,
+                                            height: 4
+                                        },
+                                        shadowRadius: 10,
+                                        shadowOpacity: 1,
+                                        elevation: 3, margin: 5,
+                                        marginTop: 10,
+                                    }}>
+                                        < Text style={{
+                                            fontSize: 20, color: '#2e2e39',
+                                        }}>{item.format("dd").toNumber()}</Text>
+                                    </View>
+                                </TouchableOpacity>}
                         />
                     </View>
                     <View style={{ height: 50 }}></View>
