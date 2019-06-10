@@ -49,7 +49,8 @@ class ViewInDateScreen extends Component {
 
     renderDayInMonth(month, year, _dateSelected) {
         let dateSelected = null;
-        index = -1;
+        let index = -1;
+        let patientHistoryId = "";
         let obj = [];
         let patient = this.props.ehealth.patient;
         let obj2 = {};
@@ -62,11 +63,13 @@ class ViewInDateScreen extends Component {
                 var date = new Date(month + "/" + i + "/" + year);
                 var time = date.getTime();
                 if (!isNaN(time)) {
+                    let patientHistory = obj2[date.ddmmyyyy()];
+                    date.patientHistory = patientHistory;
                     if (!dateSelected && _dateSelected.format("yyyy-MM-dd") == date.format("yyyy-MM-dd")) {
                         dateSelected = date;
                         index = i - 1;
+                        patientHistoryId = patientHistory.patientHistoryId;
                     }
-                    date.patientHistory = obj2[date.ddmmyyyy()];
                     obj.push(date);
                 }
             } catch (e) {
@@ -86,6 +89,8 @@ class ViewInDateScreen extends Component {
                     }
                 }, 200);
             }
+            if (patientHistoryId)
+                this.getDetailPatientHistory(patientHistoryId)
         });
     }
     getDetailPatientHistory(patientHistoryId) {
@@ -97,6 +102,7 @@ class ViewInDateScreen extends Component {
                             if (s.data && s.data.data && s.data.data.result) {
                                 try {
                                     let result = JSON.parse(s.data.data.result);
+                                    console.log(result);
                                     let hasResult = false;
                                     if (result.ListDiagnostic && result.ListDiagnostic.length) {
                                         hasResult = true;
@@ -167,6 +173,28 @@ class ViewInDateScreen extends Component {
             this.getDetailPatientHistory(item.patientHistory.patientHistoryId)
         })
     }
+    renderCheckupResult() {
+        if (this.state.result && this.state.result.ListResultCheckup && this.state.result.ListResultCheckup.length) {
+            let item = this.state.result.ListResultCheckup[this.state.result.ListResultCheckup.length - 1];
+            let note = item.Diagnostic;
+            if (note)
+                note = item.DiseaseDiagnostic;
+            if (note)
+                note = item.First_Diagnostic;
+            if (note)
+                note = item.First_Diagnostic;
+            if (note)
+                return <View style={styles.card}>
+                    <View style={{ width: 10, height: 10, backgroundColor: '#ff4355', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
+                    <View style={{ flex: 1, padding: 15 }}>
+                        <Text style={{ fontSize: 18 }}>Kết quả khám</Text>
+                        <Text style={{ paddingTop: 5, color: '#ff4355' }}>{note}</Text>
+                    </View>
+                    <View style={{ width: 5, height: '100%', backgroundColor: '#ff4355', borderRadius: 2.5 }}></View>
+                </View>
+        }
+        return null;
+    }
     render() {
 
         return (
@@ -228,14 +256,9 @@ class ViewInDateScreen extends Component {
                         this.state.hasResult && <ScrollView style={{ flex: 1, width: DEVICE_WIDTH, padding: 10 }}
                             showsVerticalScrollIndicator={false}
                         >
-                            <View style={styles.card}>
-                                <View style={{ width: 10, height: 10, backgroundColor: '#ff4355', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
-                                <View style={{ flex: 1, padding: 15 }}>
-                                    <Text style={{ fontSize: 18 }}>Kết quả khám</Text>
-                                    <Text style={{ paddingTop: 5, color: '#ff4355' }}>Kết quả khám</Text>
-                                </View>
-                                <View style={{ width: 5, height: '100%', backgroundColor: '#ff4355', borderRadius: 2.5 }}></View>
-                            </View>
+                            {
+                                this.renderCheckupResult()
+                            }
                             <View style={styles.card}>
                                 <View style={{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
                                 <View style={{ flex: 1, padding: 15 }}>

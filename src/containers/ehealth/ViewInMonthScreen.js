@@ -109,7 +109,7 @@ class ListProfileScreen extends Component {
             data: { foo: "bar" },
         };
     }
-   
+
     groupHistory(histories, focusDay) {
         let obj = {};
         histories.forEach(item => {
@@ -156,7 +156,7 @@ class ListProfileScreen extends Component {
             })
             this.alarmNotifData.fire_date = medicineTime.format('dd/MM/yyyy HH:mm:ss')
             res.data.data.isMedicineTime ? ReactNativeAN.scheduleAlarm(this.alarmNotifData)
-            : ReactNativeAN.deleteAlarm('12345')
+                : ReactNativeAN.deleteAlarm('12345')
 
 
         }).catch(err => {
