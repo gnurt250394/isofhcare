@@ -245,8 +245,10 @@ class ListProfileScreen extends PureComponent {
         // }).catch(err =>{
         //     console.log(err);
         // })
-        let appointmentDate = this.state.dateString ? this.state.dateString : this.state.lastDate
-        let reCheckDate = ""
+        // let appointmentDate = this.state.dateString ? this.state.dateString : this.state.lastDate
+        // let reCheckDate = ""
+       let lastDate =  this.state.lastDate.toDateObject('-').format('dd/MM/yyyy')
+       let dateSelected = this.state.dateSelected.toDateObject('-').format('dd/MM/yyyy')
         let hospitalId = this.props.navigation.state.params.hospitalId
         let patientHistoryId = this.props.navigation.state.params.patientHistoryId
         ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId, appointmentDate, reCheckDate).then(res => {
@@ -264,7 +266,8 @@ class ListProfileScreen extends PureComponent {
                 })
                 return
             }
-            if (res.data.appointmentDate && res.data.reCheckDate == null) {
+            
+            if (!dateSelected && res.data.appointmentDate.toDateObject('-').format('dd/MM/yyyy') == lastDate || dateSelected && res.data.appointmentDate.toDateObject('-').format('dd/MM/yyyy') == dateSelected  ) {
                 this.props.navigation.navigate('viewInDay')
                 return
             } if (res.data.appointmentDate == null && res.data.reCheckDate) {
