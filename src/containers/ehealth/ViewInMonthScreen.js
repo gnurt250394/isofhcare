@@ -270,7 +270,9 @@ class ListProfileScreen extends Component {
         }
     }
     viewResult() {
-        this.props.navigation.navigate("viewInDay");
+        this.props.navigation.navigate("viewInDay", {
+            dateSelected: this.state.dateSelected
+        });
     }
     render() {
         return (

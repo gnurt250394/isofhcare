@@ -39,25 +39,51 @@ class ViewInDateScreen extends Component {
         }
     }
     componentDidMount() {
-        this.renderDayInMonth(new Date())
+        let _dateSelected = this.props.navigation.state.params.dateSelected;
+        let date = new Date(_dateSelected);
+        let month = date.format("MM");
+        let year = date.format("yyyy");
+        this.renderDayInMonth(month, year, date)
     }
-    renderDayInMonth(day) {
-        let month = day.format("MM");
-        let year = day.format("yyyy");
+
+    renderDayInMonth(month, year, _dateSelected) {
+        let dateSelected = null;
+        index = -1;
         let obj = [];
         for (var i = 1; i <= 31; i++) {
             try {
                 var date = new Date(month + "/" + i + "/" + year);
                 var time = date.getTime();
                 if (!isNaN(time)) {
+                    if (!dateSelected && _dateSelected.format("yyyy-MM-dd") == date.format("yyyy-MM-dd")) {
+                        dateSelected = date;
+                        index = i - 1;
+                    }
                     obj.push(date);
                 }
             } catch (e) {
 
             }
         }
-        this.setState({ dayInMonth: obj });
+        this.setState({
+            dayInMonth: obj,
+            dateSelected,
+            index
+        }, () => {
+            if (index != -1 && this.flListDate) {
+                setTimeout(() => {
+                    try {
+                        this.flListDate.scrollTo({ x: index * 70, y: 0, animated: true });
+                    } catch (error) {
+
+                    }
+                }, 200);
+            }
+        });
     }
+    getItemLayout = (data, index) => (
+        { length: data.length, offset: 70 * index, index }
+    )
     render() {
 
         return (
@@ -75,47 +101,63 @@ class ViewInDateScreen extends Component {
                 isLoading={this.state.isLoading}>
                 <View style={{ justifyContent: 'center', flex: 1, alignItems: 'center' }}>
                     <View style={{ height: 100 }}>
-                        <FlatList
-                            showsHorizontalScrollIndicator={false}
-                            horizontal={true}
-                            extraData={this.state}
-                            keyExtractor={(item, index) => index}
-                            data={this.state.dayInMonth}
-                            renderItem={({ item }) =>
-                                <TouchableOpacity onPress={() => {
-                                    // this.click(item);
-                                }} style={{ justifyContent: 'center', alignItems: 'center', margin: 10 }}>
+                        <ScrollView ref={ref => this.flListDate = ref} horizontal={true} showsHorizontalScrollIndicator={false}>
+                            {this.state.dayInMonth.map((item, index) => {
+                                return <TouchableOpacity key={index} onPress={() => {
+                                    this.setState({ dateSelected: item }, () => { })
+                                }} style={{ justifyContent: 'center', alignItems: 'center', width: 70 }}>
                                     <Text style={{ color: '#bbbbbb' }}>{this.state.dayNames[item.getDay()]}</Text>
-                                    <View style={{
-                                        width: 40, height: 40, borderRadius: 20,
-                                        backgroundColor: '#27ae60',
-                                        justifyContent: 'center', alignItems: 'center',
-                                        shadowColor: 'rgba(46, 231, 58, 0.35)',
-                                        shadowOffset: {
-                                            width: 0,
-                                            height: 4
-                                        },
-                                        shadowRadius: 10,
-                                        shadowOpacity: 1,
-                                        elevation: 3, margin: 5,
-                                        marginTop: 10,
-                                    }}>
-                                        < Text style={{
-                                            fontSize: 18,
-                                            color: '#2e2e39',
-                                            color: '#FFF',
-                                        }}>{item.format("dd").toNumber()}</Text>
-                                    </View>
-                                </TouchableOpacity>}
-                        />
+                                    {item == this.state.dateSelected ?
+                                        <View style={{
+                                            width: 40, height: 40, borderRadius: 20,
+                                            backgroundColor: '#27ae60',
+                                            justifyContent: 'center', alignItems: 'center',
+                                            shadowColor: 'rgba(46, 231, 58, 0.35)',
+                                            shadowOffset: {
+                                                width: 0,
+                                                height: 4
+                                            },
+                                            shadowRadius: 10,
+                                            shadowOpacity: 1,
+                                            elevation: 3, margin: 5,
+                                            marginTop: 10,
+                                        }}>
+                                            < Text style={{
+                                                fontSize: 18,
+                                                color: '#FFF',
+                                            }}>{item.format("dd").toNumber()}</Text>
+                                        </View> :
+                                        <View style={{
+                                            width: 40, height: 40, borderRadius: 20,
+                                            justifyContent: 'center', alignItems: 'center',
+                                            margin: 5,
+                                            marginTop: 10,
+                                        }}>
+                                            < Text style={{
+                                                fontSize: 18,
+                                                color: '#2e2e39',
+                                            }}>{item.format("dd").toNumber()}</Text>
+                                        </View>
+                                    }
+                                </TouchableOpacity>
+                            })}
+                        </ScrollView>
                     </View>
                     <ScrollView style={{ flex: 1, width: DEVICE_WIDTH, padding: 10 }}
                         showsVerticalScrollIndicator={false}
                     >
                         <View style={styles.card}>
-                            <View style={{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
+                            <View style={{ width: 10, height: 10, backgroundColor: '#ff4355', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
                             <View style={{ flex: 1, padding: 15 }}>
                                 <Text style={{ fontSize: 18 }}>Kết quả khám</Text>
+                                <Text style={{ paddingTop: 5, color: '#ff4355' }}>Kết quả khám</Text>
+                            </View>
+                            <View style={{ width: 5, height: '100%', backgroundColor: '#ff4355', borderRadius: 2.5 }}></View>
+                        </View>
+                        <View style={styles.card}>
+                            <View style={{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
+                            <View style={{ flex: 1, padding: 15 }}>
+                                <Text style={{ fontSize: 18 }}>Kết quả xét nghiệm</Text>
                                 <Text style={{ paddingTop: 5, color: '#2e66e7' }}>Kết quả khám</Text>
                             </View>
                             <View style={{ width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 }}></View>
@@ -123,34 +165,26 @@ class ViewInDateScreen extends Component {
                         <View style={styles.card}>
                             <View style={{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
                             <View style={{ flex: 1, padding: 15 }}>
-                                <Text style={{ fontSize: 18 }}>Kết quả khám</Text>
+                                <Text style={{ fontSize: 18 }}>Kết quả chẩn đoán hình ảnh</Text>
                                 <Text style={{ paddingTop: 5, color: '#2e66e7' }}>Kết quả khám</Text>
                             </View>
                             <View style={{ width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 }}></View>
                         </View>
                         <View style={styles.card}>
-                            <View style={{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
+                            <View style={{ width: 10, height: 10, backgroundColor: '#fbaa21', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
                             <View style={{ flex: 1, padding: 15 }}>
-                                <Text style={{ fontSize: 18 }}>Kết quả khám</Text>
-                                <Text style={{ paddingTop: 5, color: '#2e66e7' }}>Kết quả khám</Text>
+                                <Text style={{ fontSize: 18 }}>Thuốc</Text>
+                                <Text style={{ paddingTop: 5, color: '#fbaa21' }}>Kết quả khám</Text>
                             </View>
-                            <View style={{ width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 }}></View>
+                            <View style={{ width: 5, height: '100%', backgroundColor: '#fbaa21', borderRadius: 2.5 }}></View>
                         </View>
                         <View style={styles.card}>
-                            <View style={{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
+                            <View style={{ width: 10, height: 10, backgroundColor: '#ff4355', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
                             <View style={{ flex: 1, padding: 15 }}>
-                                <Text style={{ fontSize: 18 }}>Kết quả khám</Text>
-                                <Text style={{ paddingTop: 5, color: '#2e66e7' }}>Kết quả khám</Text>
+                                <Text style={{ fontSize: 18 }}>Tiền</Text>
+                                <Text style={{ paddingTop: 5, color: '#ff4355' }}>Kết quả khám</Text>
                             </View>
-                            <View style={{ width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 }}></View>
-                        </View>
-                        <View style={styles.card}>
-                            <View style={{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
-                            <View style={{ flex: 1, padding: 15 }}>
-                                <Text style={{ fontSize: 18 }}>Kết quả khám</Text>
-                                <Text style={{ paddingTop: 5, color: '#2e66e7' }}>Kết quả khám</Text>
-                            </View>
-                            <View style={{ width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 }}></View>
+                            <View style={{ width: 5, height: '100%', backgroundColor: '#ff4355', borderRadius: 2.5 }}></View>
                         </View>
                         <View style={{ height: 50 }}></View>
                     </ScrollView>
