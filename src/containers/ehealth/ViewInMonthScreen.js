@@ -221,6 +221,9 @@ class ListProfileScreen extends Component {
             )
         }
     }
+    viewResult() {
+        this.props.navigation.navigate("viewInDay");
+    }
     render() {
         return (
             <ActivityPanel style={{ flex: 1 }} title="Y BẠ ĐIỆN TỬ"
@@ -252,7 +255,7 @@ class ListProfileScreen extends Component {
                             firstDay={1}
                             markedDates={this.state.histories}
                         />
-                        <TouchableOpacity onPress={this.onClickResult} style={styles.viewBtn}>
+                        <TouchableOpacity onPress={this.viewResult.bind(this)} style={styles.viewBtn}>
                             <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>KẾT QUẢ KHÁM</Text>
                         </TouchableOpacity>
                         <Card style={styles.cardView}>
