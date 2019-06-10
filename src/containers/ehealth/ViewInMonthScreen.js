@@ -50,7 +50,7 @@ class ListProfileScreen extends PureComponent {
             patient: patient,
             latestTime,
             histories,
-            switchValue: false
+            switchValue: false,
             dateSelected: latestTime.format("yyyy-MM-dd")
         }
     }
@@ -132,7 +132,7 @@ class ListProfileScreen extends PureComponent {
         let time = newDate ? newDate.format('HH:mm:ss') : '00:00:00'
         let medicineTime = newDate ? newDate.format('HH:mm:ss') : '00:00:00'
         let isMedicineTime = this.state.isMedicineTime ? 1 : 0
-        let item = this.props.navigation.state.params.item
+        let item = this.props.navigation.state.params.patient
         let id = item.history[0].id
         ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
         }).catch(err => {
@@ -148,14 +148,12 @@ class ListProfileScreen extends PureComponent {
             let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : '00:00:00'
             let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : '00:00:00'
             let isMedicineTime = 0
-            let item = this.props.navigation.state.params.item
+            let item = this.props.navigation.state.params.patient
             let id = item.history[0].id
             ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
                 this.setState({
                     switchValue: false
                 })
-            }).catch(err => {
-                console.log(err);
             })
         } else {
             let note = this.state.note
@@ -163,7 +161,7 @@ class ListProfileScreen extends PureComponent {
             let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : '00:00:00'
             let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : '00:00:00'
             let isMedicineTime = 1
-            let item = this.props.navigation.state.params.item
+            let item = this.props.navigation.state.params.patient
             let id = item.history[0].id
             ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
                 this.setState({
@@ -180,7 +178,7 @@ class ListProfileScreen extends PureComponent {
         let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : '00:00:00'
         let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : '00:00:00'
         let isMedicineTime = this.state.isMedicineTime ? 1 : 0
-        let item = this.props.navigation.state.params.item
+        let item = this.props.navigation.state.params.patient
         let id = item.history[0].id
         ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
 
