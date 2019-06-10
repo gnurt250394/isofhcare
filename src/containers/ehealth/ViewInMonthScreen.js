@@ -51,6 +51,7 @@ class ListProfileScreen extends PureComponent {
             latestTime,
             histories,
             switchValue: false
+            dateSelected: latestTime.format("yyyy-MM-dd")
         }
     }
     groupHistory(histories, focusDay) {
@@ -80,26 +81,29 @@ class ListProfileScreen extends PureComponent {
     onGetDetails() {
         //    let lastDate =  this.state.lastDate ? this.state.lastDate.toDateObject('-').format('dd/MM/yyyy') : null
         //    let dateSelected =  this.state.dateString ? this.state.dateString.toDateObject('-').format('dd/MM/yyyy') : null
-            // ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId,).then(res => {
-            // console.log(res,'ẻeess');
-            // }).catch(err => {
-            //     console.log(err);
-            // })
+        // ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId,).then(res => {
+        // console.log(res,'ẻeess');
+        // }).catch(err => {
+        //     console.log(err);
+        // })
     }
     setDate(newDate) {
         this.setState({ dob: newDate, date: newDate.format("dd/MM/yyyy") }, () => {
         });
     }
     onDayPress(day) {
-        this.setState({
-            dateSelected: { [day.dateString]: { selected: true, selectedColor: '#27AE60' } }
-
-        }, () => {
+        debugger;
+        if (this.state.histories[day.dateString]) {
+            this.state.histories[day.dateString].selected = true;
+            if (this.state.dateSelected && this.state.histories[this.state.dateSelected]) {
+                this.state.histories[this.state.dateSelected].selected = false;
+            }
             this.setState({
-                dateString: day.dateString
+                dateSelected: day.dateString,
+                histories: JSON.parse(JSON.stringify(this.state.histories))
+            }, () => {
             })
-        })
-
+        }
     }
     onPressTime = () => {
         this.setState({ toggelDateTimePickerVisible: true, isTimeAlarm: false })
@@ -109,7 +113,7 @@ class ListProfileScreen extends PureComponent {
 
     }
     onConfirm = (newDate) => {
-        
+
         !this.state.isTimeAlarm ? this.setState(
             {
                 dob: newDate,
@@ -134,26 +138,26 @@ class ListProfileScreen extends PureComponent {
         }).catch(err => {
             console.log(err);
         })
-       
+
     }
-  
+
     onSetAlarm = () => {
-        if(this.state.switchValue){
-        let note = this.state.note
-        let suggestions = this.state.suggestions
-        let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : '00:00:00'
-        let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : '00:00:00'
-        let isMedicineTime = 0
-        let item = this.props.navigation.state.params.item
-        let id = item.history[0].id
-        ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
-            this.setState({
-                switchValue: false
+        if (this.state.switchValue) {
+            let note = this.state.note
+            let suggestions = this.state.suggestions
+            let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : '00:00:00'
+            let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : '00:00:00'
+            let isMedicineTime = 0
+            let item = this.props.navigation.state.params.item
+            let id = item.history[0].id
+            ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
+                this.setState({
+                    switchValue: false
+                })
+            }).catch(err => {
+                console.log(err);
             })
-        }).catch(err => {
-            console.log(err);
-        })
-        }else{
+        } else {
             let note = this.state.note
             let suggestions = this.state.suggestions
             let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : '00:00:00'
@@ -179,7 +183,7 @@ class ListProfileScreen extends PureComponent {
         let item = this.props.navigation.state.params.item
         let id = item.history[0].id
         ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
-          
+
         }).catch(err => {
             console.log(err);
         })
@@ -243,7 +247,7 @@ class ListProfileScreen extends PureComponent {
                         <Card style={styles.cardView}>
                             <View style={{ flexDirection: 'row', marginVertical: 10 }}>
                                 <View style={styles.viewLine}></View>
-                                <TextInput onBlur = {this.onBlur} multiline={true} onChangeText={s => {
+                                <TextInput onBlur={this.onBlur} multiline={true} onChangeText={s => {
                                     this.setState({ suggestions: s })
                                 }} value={this.state.suggestions} underlineColorAndroid={'#fff'} style={{ marginLeft: 5, color: '#9caac4', height: 41, width: 200, fontSize: 18 }} placeholder={'Bạn cần làm gì?'}></TextInput>
                             </View>
@@ -259,7 +263,7 @@ class ListProfileScreen extends PureComponent {
                             <View style={{ height: 1, backgroundColor: '#97979710', marginVertical: 10 }} />
                             <View>
                                 <Text style={styles.txLabel}>Ghi chú</Text>
-                                <TextInput onBlur = {this.onBlur} multiline={true} onChangeText={s => {
+                                <TextInput onBlur={this.onBlur} multiline={true} onChangeText={s => {
                                     this.setState({ note: s })
                                 }} value={this.state.note} underlineColorAndroid={'#fff'} style={[styles.txContent, { height: 41 }]} placeholder={'Nhập ghi chú'}></TextInput>
                             </View>
