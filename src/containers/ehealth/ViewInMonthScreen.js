@@ -247,11 +247,11 @@ class ListProfileScreen extends PureComponent {
         // })
         // let appointmentDate = this.state.dateString ? this.state.dateString : this.state.lastDate
         // let reCheckDate = ""
-       let lastDate =  this.state.lastDate.toDateObject('-').format('dd/MM/yyyy')
-       let dateSelected = this.state.dateSelected.toDateObject('-').format('dd/MM/yyyy')
+       let lastDate =  this.state.lastDate ? this.state.lastDate.toDateObject('-').format('dd/MM/yyyy') : null
+       let dateSelected =  this.state.dateString ? this.state.dateString.toDateObject('-').format('dd/MM/yyyy') : null
         let hospitalId = this.props.navigation.state.params.hospitalId
         let patientHistoryId = this.props.navigation.state.params.patientHistoryId
-        ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId, appointmentDate, reCheckDate).then(res => {
+        ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId,).then(res => {
             if (res.data.appointmentDate == null) {
                 this.setState({
                     isVisible: true,
