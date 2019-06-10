@@ -12,7 +12,6 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
     <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
     <permission
         android:name="com.isofh.appisofhcaredev.permission.C2D_MESSAGE"
@@ -100,7 +99,16 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
-
+  <service android:name="com.emekalites.react.alarm.notification.ANService" android:enabled="true"/>
+        <receiver android:name="com.emekalites.react.alarm.notification.ANAlarmReceiver" android:enabled="true"/>
+        <receiver android:name="com.emekalites.react.alarm.notification.ANBootReceiver" android:enabled="true" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.emekalites.react.alarm.notification.ANDismissReceiver" android:exported="false"/>
         <receiver android:name="io.invertase.firebase.notifications.RNFirebaseNotificationReceiver" />
         <receiver
             android:name="io.invertase.firebase.notifications.RNFirebaseNotificationsRebootReceiver"

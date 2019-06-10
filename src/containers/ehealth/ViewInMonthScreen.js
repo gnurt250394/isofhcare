@@ -14,6 +14,7 @@ import snackbar from '@utils/snackbar-utils';
 import ImageLoad from 'mainam-react-native-image-loader';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import { Card } from 'native-base';
+import ReactNativeAN from 'react-native-alarm-notification';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 
@@ -29,6 +30,26 @@ LocaleConfig.locales['en'] = {
 };
 
 LocaleConfig.defaultLocale = 'en';
+const fireDate = '10-06-2019 15:52:00';			  // set exact date time | Format: dd-MM-yyyy HH:mm:ss
+const alarmNotifData = {
+    id: "12345",                                  // Required
+    title: "My Notification Title",               // Required
+    message: "My Notification Message",           // Required
+    channel: "8888",                     // Required. Same id as specified in MainApplication's onCreate method
+    ticker: "My Notification Ticker",
+    auto_cancel: true,                            // default: true
+    vibrate: true,
+    vibration: 100,                               // default: 100, no vibration if vibrate: false
+    small_icon: "ic_launcher",                    // Required
+    large_icon: "ic_launcher",
+    play_sound: true,
+    sound_name: null,                             // Plays custom notification ringtone if sound_name: null
+    color: "red",
+    schedule_once: true,                          // Works with ReactNativeAN.scheduleAlarm so alarm fires once
+    tag: 'some_tag',
+    fire_date: fireDate,                          // Date for firing alarm, Required for ReactNativeAN.scheduleAlarm.
+  	data: { foo: "bar" },
+};
 class ListProfileScreen extends Component {
     constructor(props) {
         super(props)
@@ -88,7 +109,7 @@ class ListProfileScreen extends Component {
             let time = (new Date().format("dd/MM/yyyy") + " " + res.data.data.time).toDateObject('/')
             this.setState({
                 note: res.data.data.note,
-                isMedicineTime: res.data.data.isMedicineTime,
+                isMedicineTime: res.data.data.isMedicineTime ? true : false,
                 timeAlarm: res.data.data.medicineTime,
                 suggestions: res.data.data.suggestions,
                 date: res.data.data.time,
@@ -194,6 +215,7 @@ class ListProfileScreen extends Component {
             this.setState({
                 switchValue: true
             }, () => {
+                ReactNativeAN.scheduleAlarm(alarmNotifData);
                 let note = this.state.note
                 let suggestions = this.state.suggestions
                 let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : ''
