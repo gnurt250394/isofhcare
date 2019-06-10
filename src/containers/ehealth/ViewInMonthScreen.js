@@ -78,19 +78,23 @@ class ListProfileScreen extends Component {
     componentDidMount() {
         this.onGetDetails()
     }
-    onGetDetails() {
-        console.log(this.state.patient, 'parten');
+    onGetDetails = () => {
         let lastDate = this.state.lastDate ? this.state.lastDate.toDateObject('-').format('dd/MM/yyyy') : null
         let dateSelected = this.state.dateString ? this.state.dateString.toDateObject('-').format('dd/MM/yyyy') : null
         let patientHistoryId = this.state.patient.patientHistoryId
         let hospitalId = this.state.patient.hospitalEntity.id
-
         ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId).then(res => {
+            let medicineTime = (new Date().format("dd/MM/yyyy") + " " + res.data.data.medicineTime).toDateObject('/')
+            let time = (new Date().format("dd/MM/yyyy") + " " + res.data.data.time).toDateObject('/')
             this.setState({
                 note: res.data.data.note,
                 isMedicineTime: res.data.data.isMedicineTime,
                 timeAlarm: res.data.data.medicineTime,
+                suggestions: res.data.data.suggestions,
                 date: res.data.data.time,
+                dob: time,
+                dobAlarm: medicineTime,
+                appointmentDate: res.data.data.appointmentDate
             })
         }).catch(err => {
             console.log(err);
@@ -101,6 +105,7 @@ class ListProfileScreen extends Component {
         });
     }
     onDayPress(day) {
+        
         if (this.state.histories[day.dateString]) {
             let histories = JSON.parse(JSON.stringify(this.state.histories));
             if (this.state.dateSelected && histories[this.state.dateSelected]) {
@@ -111,7 +116,13 @@ class ListProfileScreen extends Component {
                 dateSelected: day.dateString,
                 histories: histories
             }, () => {
+                console.log(day.dateString,histories);
             });
+        } else {
+            this.setState({
+                status: 1,
+                isVisible: true
+            })
         }
     }
     onPressTime = () => {
@@ -127,25 +138,39 @@ class ListProfileScreen extends Component {
                 dob: newDate,
                 date: newDate.format("HH:mm"),
                 toggelDateTimePickerVisible: false
-            },
+            }, () => {
+                let note = this.state.note
+                let suggestions = this.state.suggestions
+                let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : ''
+                let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : ''
+                let isMedicineTime = this.state.isMedicineTime ? 1 : 0
+                let item = this.props.navigation.state.params.patient
+                let id = item.history[0].id
+                ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
+                }).catch(err => {
+                    console.log(err);
+                })
+            }
         ) : this.setState(
             {
                 dobAlarm: newDate,
                 timeAlarm: newDate.format("HH:mm"),
                 toggelDateTimePickerVisible: false
-            },
+            }, () => {
+                let note = this.state.note
+                let suggestions = this.state.suggestions
+                let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : ''
+                let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : ''
+                let isMedicineTime = this.state.isMedicineTime ? 1 : 0
+                let item = this.props.navigation.state.params.patient
+                let id = item.history[0].id
+                ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
+                }).catch(err => {
+                    console.log(err);
+                })
+            }
         );
-        let note = this.state.note
-        let suggestions = this.state.suggestions
-        let time = newDate ? newDate.format('HH:mm:ss') : ''
-        let medicineTime = newDate ? newDate.format('HH:mm:ss') : ''
-        let isMedicineTime = this.state.isMedicineTime ? 1 : 0
-        let item = this.props.navigation.state.params.patient
-        let id = item.history[0].id
-        ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
-        }).catch(err => {
-            console.log(err);
-        })
+
 
     }
 
@@ -156,8 +181,8 @@ class ListProfileScreen extends Component {
             }, () => {
                 let note = this.state.note
                 let suggestions = this.state.suggestions
-                let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : '00:00:00'
-                let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : '00:00:00'
+                let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : ''
+                let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : ''
                 let isMedicineTime = 0
                 let item = this.props.navigation.state.params.patient
                 let id = item.history[0].id
@@ -171,8 +196,8 @@ class ListProfileScreen extends Component {
             }, () => {
                 let note = this.state.note
                 let suggestions = this.state.suggestions
-                let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : '00:00:00'
-                let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : '00:00:00'
+                let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : ''
+                let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : ''
                 let isMedicineTime = 1
                 let item = this.props.navigation.state.params.patient
                 let id = item.history[0].id
@@ -188,11 +213,12 @@ class ListProfileScreen extends Component {
     onBlur = () => {
         let note = this.state.note
         let suggestions = this.state.suggestions
-        let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : '00:00:00'
-        let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : '00:00:00'
+        let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : ''
+        let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : ''
         let isMedicineTime = this.state.isMedicineTime ? 1 : 0
         let item = this.props.navigation.state.params.patient
         let id = item.history[0].id
+        console.log(this.state.dobAlarm, this.state.dob, 'timetimetime');
         ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
 
         }).catch(err => {
@@ -227,16 +253,7 @@ class ListProfileScreen extends Component {
     render() {
         return (
             <ActivityPanel style={{ flex: 1 }} title="Y BẠ ĐIỆN TỬ"
-                icBack={require('@images/new/left_arrow_white.png')}
-                iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#22b060"
-                actionbarStyle={{
-                    backgroundColor: '#22b060',
-                    borderBottomWidth: 0
-                }}
-                titleStyle={{
-                    color: '#FFF'
-                }}
+                iosBarStyle={'dark-content'}
                 isLoading={this.state.isLoading}>
                 <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
                     <View style={{ justifyContent: 'center', flex: 1, alignItems: 'center' }}>
@@ -263,7 +280,7 @@ class ListProfileScreen extends Component {
                                 <View style={styles.viewLine}></View>
                                 <TextInput onBlur={this.onBlur} multiline={true} onChangeText={s => {
                                     this.setState({ suggestions: s })
-                                }} value={this.state.suggestions} underlineColorAndroid={'#fff'} style={{ marginLeft: 5, color: '#9caac4', height: 41, width: 200, fontSize: 18 }} placeholder={'Bạn cần làm gì?'}></TextInput>
+                                }} value={this.state.suggestions} underlineColorAndroid={'#fff'} style={{ marginLeft: 5, color: '#9caac4', width: 200, fontSize: 18 }} placeholder={'Bạn cần làm gì?'}></TextInput>
                             </View>
                             <Text style={{ color: '#bdc6d8', fontSize: 15 }}>Suggestion</Text>
                             <View style={styles.viewBTnSuggest}>
@@ -283,13 +300,13 @@ class ListProfileScreen extends Component {
                             </View>
                             <View>
                                 <Text style={styles.txLabel}>Thời gian</Text>
-                                <TouchableOpacity onPress={this.onPressTime}><Text style={styles.txContent}>{this.state.date ? this.state.date : 'Chọn giờ'}</Text>
+                                <TouchableOpacity onPress={this.onPressTime}><Text style={styles.txContent}>{this.state.date ? (new Date().format("dd/MM/yyyy") + " " + this.state.date).toDateObject('/').format('HH:mm') : 'Chọn giờ'}</Text>
                                 </TouchableOpacity>
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <View >
                                     <Text style={styles.txLabel}>Nhắc uống thuốc</Text>
-                                    <TouchableOpacity onPress={this.onPressTimeAlarm}><Text style={styles.txContent}><Text style={styles.txContent}>{this.state.timeAlarm ? this.state.timeAlarm : 'Chọn giờ'}</Text></Text></TouchableOpacity>
+                                    <TouchableOpacity onPress={this.onPressTimeAlarm}><Text style={styles.txContent}><Text style={styles.txContent}>{this.state.timeAlarm ? (new Date().format("dd/MM/yyyy") + " " + this.state.timeAlarm).toDateObject('/').format('HH:mm') : 'Chọn giờ'}</Text></Text></TouchableOpacity>
                                 </View>
                                 <Switch onValueChange={this.onSetAlarm} trackColor={{
                                     true: "yellow",
