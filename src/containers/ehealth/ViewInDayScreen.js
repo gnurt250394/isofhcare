@@ -73,14 +73,13 @@ class ViewInDateScreen extends Component {
                     color: '#FFF'
                 }}
                 isLoading={this.state.isLoading}>
-                <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
-                    <View style={{ justifyContent: 'center', flex: 1, alignItems: 'center' }}>
+                <View style={{ justifyContent: 'center', flex: 1, alignItems: 'center' }}>
+                    <View style={{ height: 100 }}>
                         <FlatList
                             showsHorizontalScrollIndicator={false}
                             horizontal={true}
                             extraData={this.state}
                             keyExtractor={(item, index) => index}
-                            style={{ flex: 1, marginLeft: 10 }}
                             data={this.state.dayInMonth}
                             renderItem={({ item }) =>
                                 <TouchableOpacity onPress={() => {
@@ -102,20 +101,87 @@ class ViewInDateScreen extends Component {
                                         marginTop: 10,
                                     }}>
                                         < Text style={{
-                                            fontSize: 20, color: '#2e2e39',
+                                            fontSize: 18,
+                                            color: '#2e2e39',
+                                            color: '#FFF',
                                         }}>{item.format("dd").toNumber()}</Text>
                                     </View>
                                 </TouchableOpacity>}
                         />
                     </View>
-                    <View style={{ height: 50 }}></View>
-                </ScrollView>
+                    <ScrollView style={{ flex: 1, width: DEVICE_WIDTH, padding: 10 }}
+                        showsVerticalScrollIndicator={false}
+                    >
+                        <View style={styles.card}>
+                            <View style={{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
+                            <View style={{ flex: 1, padding: 15 }}>
+                                <Text style={{ fontSize: 18 }}>Kết quả khám</Text>
+                                <Text style={{ paddingTop: 5, color: '#2e66e7' }}>Kết quả khám</Text>
+                            </View>
+                            <View style={{ width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 }}></View>
+                        </View>
+                        <View style={styles.card}>
+                            <View style={{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
+                            <View style={{ flex: 1, padding: 15 }}>
+                                <Text style={{ fontSize: 18 }}>Kết quả khám</Text>
+                                <Text style={{ paddingTop: 5, color: '#2e66e7' }}>Kết quả khám</Text>
+                            </View>
+                            <View style={{ width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 }}></View>
+                        </View>
+                        <View style={styles.card}>
+                            <View style={{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
+                            <View style={{ flex: 1, padding: 15 }}>
+                                <Text style={{ fontSize: 18 }}>Kết quả khám</Text>
+                                <Text style={{ paddingTop: 5, color: '#2e66e7' }}>Kết quả khám</Text>
+                            </View>
+                            <View style={{ width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 }}></View>
+                        </View>
+                        <View style={styles.card}>
+                            <View style={{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
+                            <View style={{ flex: 1, padding: 15 }}>
+                                <Text style={{ fontSize: 18 }}>Kết quả khám</Text>
+                                <Text style={{ paddingTop: 5, color: '#2e66e7' }}>Kết quả khám</Text>
+                            </View>
+                            <View style={{ width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 }}></View>
+                        </View>
+                        <View style={styles.card}>
+                            <View style={{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
+                            <View style={{ flex: 1, padding: 15 }}>
+                                <Text style={{ fontSize: 18 }}>Kết quả khám</Text>
+                                <Text style={{ paddingTop: 5, color: '#2e66e7' }}>Kết quả khám</Text>
+                            </View>
+                            <View style={{ width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 }}></View>
+                        </View>
+                        <View style={{ height: 50 }}></View>
+                    </ScrollView>
+                    <TouchableOpacity style={{
+                        width: 252,
+                        backgroundColor: '#27ae60',
+                        borderRadius: 5,
+                        height: 48,
+                        marginVertical: 20,
+                        padding: 10, alignItems: 'center'
+                    }}>
+                        <Text style={{ fontWeight: 'bold', color: '#FFF', fontSize: 17 }}>ĐẦY ĐỦ KẾT QUẢ</Text>
+                    </TouchableOpacity>
+                </View>
             </ActivityPanel>
         );
     }
 }
 
 const styles = StyleSheet.create({
+    card: {
+        borderRadius: 5,
+        backgroundColor: "#ffffff",
+        shadowColor: "rgba(0, 0, 0, 0.05)",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowRadius: 10,
+        shadowOpacity: 1, marginTop: 10, padding: 10, flexDirection: 'row', shadowOpacity: 1, borderRadius: 8
+    },
     style1: {
         flexDirection: 'row', alignItems: 'center', marginTop: 10, marginLeft: 20
     },
