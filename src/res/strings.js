@@ -54,7 +54,8 @@ module.exports = {
     action_show_popup_notice_new_version:
       "ACTION_SHOW_POPUP_NOTICE_NEW_VERSION",
     action_set_my_facility: "ACTION_SET_MY_FACILITY",
-    action_select_hospital_get_ticket: "ACTION_SELECT_HOSPITAL_GET_TICKET"
+    action_select_hospital_get_ticket: "ACTION_SELECT_HOSPITAL_GET_TICKET",
+    action_select_hospital_ehealth: "ACTION_SELECT_HOSPITAL_EHEALTH"
   },
   colors: {
     breakline: "#c0c0c0",
@@ -69,8 +70,8 @@ module.exports = {
   key: {
     payment_return_url:
     {
-      vnpay:"vnpay://payment_isofhcare_return",
-      payoo:"payoo://payment_isofhcare_return"
+      vnpay: "vnpay://payment_isofhcare_return",
+      payoo: "payoo://payment_isofhcare_return"
     },
     storage: {
       android_version: "ANDROID_VERSION",
@@ -95,8 +96,8 @@ module.exports = {
       INTRO_FINISHED: "INTRO_FINISHED",
       LASTEST_POSTS: "LASTEST_POSTS",
       LASTEST_PROFILE: "LASTEST_PROFILE",
-      LASTEST_SPECIALIST:"LASTEST_SPECIALIST",
-      LASTEST_SERVICE_TYPE:"LASTEST_SERVICE_TYPE",
+      LASTEST_SPECIALIST: "LASTEST_SPECIALIST",
+      LASTEST_SERVICE_TYPE: "LASTEST_SERVICE_TYPE",
       KEY_FINGER: 'KEY_FINGER',
       KEY_REFRESH_TOKEN: 'KEY_REFRESH_TOKEN',
       LOCATION: "LOCATION",
@@ -227,7 +228,14 @@ module.exports = {
     },
     ehealth: {
       not_found_result_of_this_booking: "Chưa có kết quả",
-      canot_view_detail_this_booking: "Không thể xem kết quả đặt khám này"
+      canot_view_detail_this_booking: "Không thể xem kết quả đặt khám này",
+      not_result_of_this_date: 'Không có kết quả khám nào. Bạn không đi khám ở ngày này!',
+      re_examination_in_date: 'Bạn có lịch tái khám vào ngày ',
+      examination_in_date: 'Bạn có lịch khám lại vào ngày',
+      not_re_examination: 'Bạn không có lịch tái khám nào!',
+      not_examination: 'Bạn không có lịch khám lại nào!'
+
+
     },
     question: {
       confirm_delete_post: "Bạn có muốn xoá bài viết này",
@@ -337,7 +345,7 @@ module.exports = {
     profile: {
       get_by_user: isofhcare_service + "profile/get-by-user",
       get_details_user: isofhcare_service + '/user/get-detail',
-      get_profile_family : isofhcare_service +'booking/get-group-patient-history'
+      get_profile_family: isofhcare_service + 'booking/get-group-patient-history'
     },
     serviceType: {
       get_all: isofhcare_service + "service-type/get-all"
@@ -362,6 +370,10 @@ module.exports = {
       get_ticket: isofhcare_service + "information-user-hospital/create",
       get_history_ticket: isofhcare_service + "number-hospital/get-by-author",
       get_detail: isofhcare_service + "number-hospital/get-detail"
+    },
+    ehealth: {
+      get_group_patient: isofhcare_service + 'booking/get-group-patient-history',
+      update_data_user: isofhcare_service + 'patient-history-booking/update-data-note'
     }
   }
 };
