@@ -49,7 +49,8 @@ class ListProfileScreen extends PureComponent {
             suggestions: '',
             patient: patient,
             latestTime,
-            histories
+            histories,
+            switchValue: false
         }
     }
     groupHistory(histories, focusDay) {
@@ -74,126 +75,21 @@ class ListProfileScreen extends PureComponent {
         return obj;
     }
     componentDidMount() {
-        this.onRefresh();
+        this.onGetDetails()
+    }
+    onGetDetails() {
+        //    let lastDate =  this.state.lastDate ? this.state.lastDate.toDateObject('-').format('dd/MM/yyyy') : null
+        //    let dateSelected =  this.state.dateString ? this.state.dateString.toDateObject('-').format('dd/MM/yyyy') : null
+            // ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId,).then(res => {
+            // console.log(res,'ẻeess');
+            // }).catch(err => {
+            //     console.log(err);
+            // })
     }
     setDate(newDate) {
         this.setState({ dob: newDate, date: newDate.format("dd/MM/yyyy") }, () => {
         });
     }
-
-    getListBooking(hospitalId) {
-        if (this.state.profile && this.state.profile.profile) {
-            bookingProvider.getListBooking(this.state.profile.profile.id, hospitalId).then(s => {
-                if (s.code == 0) {
-                    let data = [...s.data.bookingNotInHis, ...s.data.patientHistorys];
-                    this.setState({
-                        bookings: data,
-                        refreshing: false
-                    })
-                }
-            }).catch(e => {
-                this.setState({
-                    refreshing: false
-                })
-            });
-        } else {
-            this.setState({
-                refreshing: false
-            })
-        }
-    }
-
-    onRefresh() {
-        this.setState({ refreshing: true }, () => {
-            hospitalProvider.getByProfile().then(s => {
-                if (s.code == 0) {
-                    this.setState({ hospitals: (s.data || []) }, () => {
-                        profileProvider.getByUserPromise(this.props.userApp.currentUser.id).then(s => {
-                            this.setState({ profile: s }, () => {
-                                this.getListBooking(this.state.hospitalId);
-                            })
-                        }).catch(e => {
-                            this.setState({ refreshing: false });
-                        })
-                    });
-                }
-                else {
-                    this.setState({ refreshing: false });
-                }
-            }).catch(e => {
-                this.setState({ refreshing: false });
-            });
-        })
-    }
-
-    openBookingInHis(booking) {
-        // this.setState({ isLoading: true }, () => {
-        bookingProvider.detailPatientHistory(booking.patientHistory.patientHistoryId, booking.hospital ? booking.hospital.id : "");
-        booking.patientHistory.hasCheckin = true;
-        this.props.navigation.navigate("ehealthDHY", { booking: booking.patientHistory, hospital: booking.hospital })
-    }
-    openBooking(booking, hospitalId) {
-        this.props.dispatch({ type: constants2.action.action_select_hospital, value: hospitalId });
-        booking.hasCheckin = false;
-        booking.hospitalId = hospitalId;
-        this.props.navigation.navigate("ehealthDHY", { booking })
-    }
-
-    renderItemProfile(item, index) {
-        const source = require("@images/new/user.png");
-
-        return <TouchableOpacity style={{}}>
-            <View style={{ flexDirection: 'row' }}>
-                <View style={{ justifyContent: 'center', padding: 10 }}>
-                    <ImageLoad
-                        resizeMode="cover"
-                        imageStyle={{ borderRadius: 30, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
-                        borderRadius={30}
-                        customImagePlaceholderDefaultStyle={[styles.avatar, { width: 60, height: 60 }]}
-                        placeholderSource={require("@images/new/user.png")}
-                        resizeMode="cover"
-                        loadingStyle={{ size: 'small', color: 'gray' }}
-                        source={source}
-                        style={{
-                            alignSelf: 'center',
-                            borderRadius: 30,
-                            width: 60,
-                            height: 60
-                        }}
-                        defaultImage={() => {
-                            return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={40} height={40} />
-                        }}
-                    />
-                    <Text style={{ color: '#758289' }}>1000000</Text>
-                </View>
-
-                <View style={{ flex: 1, borderRightColor: '#c8d1d6', borderRightWidth: 1, paddingVertical: 10 }}>
-                    <View style={{ marginHorizontal: 10, position: 'relative', paddingHorizontal: 30 }}>
-                        <View style={{ position: 'absolute', left: 9, top: 0, bottom: 0, width: 2, backgroundColor: '#91a3ad' }}></View>
-                        <View style={{ width: 20, height: 20, borderWidth: 1.5, borderColor: '#91a3ad', borderRadius: 10, justifyContent: 'center', alignItems: 'center', position: 'absolute', left: 0, top: 0, backgroundColor: '#FFF' }}>
-                            <View style={{ width: 8, height: 8, backgroundColor: '#7eac39', borderRadius: 4 }}></View>
-                        </View>
-                        <View style={{ width: 20, height: 20, borderWidth: 1.5, borderColor: '#91a3ad', borderRadius: 10, justifyContent: 'center', alignItems: 'center', position: 'absolute', left: 0, bottom: 0, backgroundColor: '#FFF' }}>
-                            <View style={{ width: 8, height: 8, backgroundColor: '#c84242', borderRadius: 4 }}></View>
-                        </View>
-                        <Text style={{ fontWeight: 'bold', color: '#63737a' }}>MAI NGỌC NAM</Text>
-                        <Text style={{ marginTop: 10 }}>BỆNH VIỆN E</Text>
-                    </View>
-                    <View style={{ flexDirection: 'row', marginLeft: 10, marginTop: 10, alignItems: 'center' }}>
-                        <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={20} />
-                        <Text style={{ marginLeft: 5, color: '#33799e' }}>Gần nhất: 19/8/2019</Text>
-                    </View>
-                </View>
-                <View style={{ paddingHorizontal: 20, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={{ color: 'red', fontSize: 30 }}>03</Text>
-                    <Text>lần</Text>
-                </View>
-            </View>
-            <View style={{ height: 1, backgroundColor: '#00000050' }} />
-        </TouchableOpacity>
-    }
-
-
     onDayPress(day) {
         this.setState({
             dateSelected: { [day.dateString]: { selected: true, selectedColor: '#27AE60' } }
@@ -202,37 +98,6 @@ class ListProfileScreen extends PureComponent {
             this.setState({
                 dateString: day.dateString
             })
-            // try {
-            //     day.timestamp = new Date(day.timestamp.toDateObject().format("MM/dd/yyyy")).getTime();
-            //     if (!this.props.booking.specialist2) {
-            //         snackbar.show(dhyCommand.msg.booking.please_select_service_first);
-            //         return;
-            //     }
-
-            //     var schedule = this.getScheduleOnDay(day);
-            //     if (!schedule || schedule.disabled) {
-            //         snackbar.show(dhyCommand.msg.booking.not_found_schedule_of_doctor_in_this_day);
-            //         return;
-            //     }
-
-            //     this.props.dispatch({
-            //         type: dhyCommand.action.action_select_booking_date
-            //         , value: day
-            //     });
-
-            //     var newListScheduleText = JSON.parse(this.state.listScheduleText);
-
-            //     var key = day.year + "-" + (day.month < 10 ? "0" : "") + day.month + "-" + (day.day < 10 ? "0" : "") + day.day;
-            //     if (newListScheduleText[key])
-            //         newListScheduleText[key].selected = true;
-            //     this.setState({
-            //         listSchedule: newListScheduleText
-            //     })
-            //     this.props.dispatch({
-            //         type: dhyCommand.action.action_select_schedule, value: newListScheduleText[key]
-            //     });
-
-            //     this.loadListBooking(day);
         })
 
     }
@@ -244,6 +109,7 @@ class ListProfileScreen extends PureComponent {
 
     }
     onConfirm = (newDate) => {
+        
         !this.state.isTimeAlarm ? this.setState(
             {
                 dob: newDate,
@@ -257,54 +123,63 @@ class ListProfileScreen extends PureComponent {
                 toggelDateTimePickerVisible: false
             },
         );
+        let note = this.state.note
+        let suggestions = this.state.suggestions
+        let time = newDate ? newDate.format('HH:mm:ss') : '00:00:00'
+        let medicineTime = newDate ? newDate.format('HH:mm:ss') : '00:00:00'
+        let isMedicineTime = this.state.isMedicineTime ? 1 : 0
+        let item = this.props.navigation.state.params.item
+        let id = item.history[0].id
+        ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
+        }).catch(err => {
+            console.log(err);
+        })
+       
     }
-    onClickResult = () => {
-        // this.setState({
-        //     isVisible: true
-        // })
-        // let note = this.state.note
-        // let suggestions = this.state.suggestions
-        // let time = this.state.dob ?  this.state.dob.format('HH:mm:ss') : ''
-        // let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss'):''
-        // let isMedicineTime = this.state.isMedicineTime ? 1: 0
-        // let id = this.props.userApp.currentUser.id
-        // ehealthProvider.updateDataUSer(note,suggestions,time,medicineTime,isMedicineTime,id).then(res => {
-        //     console.log(res);
-        // }).catch(err =>{
-        //     console.log(err);
-        // })
-        // let appointmentDate = this.state.dateString ? this.state.dateString : this.state.lastDate
-        // let reCheckDate = ""
-        let lastDate = this.state.lastDate ? this.state.lastDate.toDateObject('-').format('dd/MM/yyyy') : null
-        let dateSelected = this.state.dateString ? this.state.dateString.toDateObject('-').format('dd/MM/yyyy') : null
-        let hospitalId = this.props.navigation.state.params.hospitalId
-        let patientHistoryId = this.props.navigation.state.params.patientHistoryId
-        ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId).then(res => {
-            if (res.data.appointmentDate == null) {
+  
+    onSetAlarm = () => {
+        if(this.state.switchValue){
+        let note = this.state.note
+        let suggestions = this.state.suggestions
+        let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : '00:00:00'
+        let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : '00:00:00'
+        let isMedicineTime = 0
+        let item = this.props.navigation.state.params.item
+        let id = item.history[0].id
+        ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
+            this.setState({
+                switchValue: false
+            })
+        }).catch(err => {
+            console.log(err);
+        })
+        }else{
+            let note = this.state.note
+            let suggestions = this.state.suggestions
+            let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : '00:00:00'
+            let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : '00:00:00'
+            let isMedicineTime = 1
+            let item = this.props.navigation.state.params.item
+            let id = item.history[0].id
+            ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
                 this.setState({
-                    isVisible: true,
-                    status: 1,
+                    switchValue: true
                 })
-                return
-            }
-            if (res.data.reCheckDate == null) {
-                this.setState({
-                    isVisible: true,
-                    status: 5,
-                })
-                return
-            }
-
-            if (!dateSelected && res.data.appointmentDate.toDateObject('-').format('dd/MM/yyyy') == lastDate || dateSelected && res.data.appointmentDate.toDateObject('-').format('dd/MM/yyyy') == dateSelected) {
-                this.props.navigation.navigate('viewInDay')
-                return
-            } if (res.data.appointmentDate == null && res.data.reCheckDate) {
-                this.setState({
-                    status: 2,
-                    reCheckDate: res.data.reCheckDate
-                })
-                return
-            }
+            }).catch(err => {
+                console.log(err);
+            })
+        }
+    }
+    onBlur = () => {
+        let note = this.state.note
+        let suggestions = this.state.suggestions
+        let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : '00:00:00'
+        let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : '00:00:00'
+        let isMedicineTime = this.state.isMedicineTime ? 1 : 0
+        let item = this.props.navigation.state.params.item
+        let id = item.history[0].id
+        ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
+          
         }).catch(err => {
             console.log(err);
         })
@@ -332,7 +207,6 @@ class ListProfileScreen extends PureComponent {
         }
     }
     render() {
-        console.log(this.state.lastDate ? this.state.lastDate.toDateObject('-').format('yyyy-MM-dd') : '');
         return (
             <ActivityPanel style={{ flex: 1 }} title="Y BẠ ĐIỆN TỬ"
                 icBack={require('@images/new/left_arrow_white.png')}
@@ -369,9 +243,9 @@ class ListProfileScreen extends PureComponent {
                         <Card style={styles.cardView}>
                             <View style={{ flexDirection: 'row', marginVertical: 10 }}>
                                 <View style={styles.viewLine}></View>
-                                <TextInput multiline={true} onChangeText={s => {
-                                    this.setState({ suggestion: s })
-                                }} value={this.state.suggestion} underlineColorAndroid={'#fff'} style={{ marginLeft: 5, color: '#9caac4', height: 41, width: 200, fontSize: 18 }} placeholder={'Bạn cần làm gì?'}></TextInput>
+                                <TextInput onBlur = {this.onBlur} multiline={true} onChangeText={s => {
+                                    this.setState({ suggestions: s })
+                                }} value={this.state.suggestions} underlineColorAndroid={'#fff'} style={{ marginLeft: 5, color: '#9caac4', height: 41, width: 200, fontSize: 18 }} placeholder={'Bạn cần làm gì?'}></TextInput>
                             </View>
                             <Text style={{ color: '#bdc6d8', fontSize: 15 }}>Suggestion</Text>
                             <View style={styles.viewBTnSuggest}>
@@ -385,7 +259,7 @@ class ListProfileScreen extends PureComponent {
                             <View style={{ height: 1, backgroundColor: '#97979710', marginVertical: 10 }} />
                             <View>
                                 <Text style={styles.txLabel}>Ghi chú</Text>
-                                <TextInput multiline={true} onChangeText={s => {
+                                <TextInput onBlur = {this.onBlur} multiline={true} onChangeText={s => {
                                     this.setState({ note: s })
                                 }} value={this.state.note} underlineColorAndroid={'#fff'} style={[styles.txContent, { height: 41 }]} placeholder={'Nhập ghi chú'}></TextInput>
                             </View>

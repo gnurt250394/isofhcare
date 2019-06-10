@@ -79,7 +79,6 @@ class EhealthScreen extends Component {
                             },
                             shadowRadius: 4,
                             shadowOpacity: 1,
-                            borderStyle: "solid",
                             borderWidth: 1,
                             borderColor: "#27ae60"
                         }}

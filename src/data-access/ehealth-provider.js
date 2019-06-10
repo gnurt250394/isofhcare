@@ -12,12 +12,12 @@ module.exports = {
             });
         });
     },
-    updateDataUSer(note,suggestions,time,medicineTime,isMedicineTime,id) {
+    updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id) {
         var body = {
-            "note":  note, "suggestions":suggestions, "time": time, "medicineTime": medicineTime, "isMedicineTime": isMedicineTime
+            "note": note , "suggestions": suggestions , "time": time , "medicineTime": medicineTime , "isMedicineTime": isMedicineTime ? isMedicineTime: 0
         }
         return new Promise((resolve, reject) => {
-            client.requestApi("put", `${constants.api.ehealth.update_data_user}/${id}`,body, (s, e) => {
+            client.requestApi("put", `${constants.api.ehealth.update_data_user}/${id}`, body, (s, e) => {
                 if (s)
                     resolve(s);
                 else
@@ -25,26 +25,23 @@ module.exports = {
             });
         });
     },
-    detailPatientHistory(patientHistoryId, hospitalId,appointmentDate,reCheckDate ) {
-        var body =  {
-            'appointmentDate':appointmentDate,
-            'reCheckDate': reCheckDate
-        }
+    detailPatientHistory(patientHistoryId, hospitalId) {
+
         return new Promise((resolve, reject) => {
-          client.requestApi(
-            "get",
-            constants.api.booking.get_detail_patient_historyid +
-            "/" +
-            patientHistoryId +
-            "?hospitalId=" +
-            hospitalId,
-            body,
-            (s, e) => {
-              if (s) resolve(s);
-              else reject(e);
-            }
-          );
+            client.requestApi(
+                "get",
+                constants.api.booking.get_detail_patient_historyid +
+                "/" +
+                patientHistoryId +
+                "?hospitalId=" +
+                hospitalId,
+                {},
+                (s, e) => {
+                    if (s) resolve(s);
+                    else reject(e);
+                }
+            );
         });
-      },
+    },
 
 }
