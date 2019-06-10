@@ -231,10 +231,14 @@ class Home extends Component {
 
   getItemWidth() {
     const width = DEVICE_WIDTH - 40;
-    if (width >= 320)
-      return 75;
-    if (width > 300)
-      return 110;
+    if (width >= 320){
+     Platform.OS == 'ios' ?  70 :  75;
+    }
+     
+    if (width > 300){
+      Platform.OS == 'ios' ? 100: 110;
+    }
+      
     if (width > 250)
       return 70;
     return width - 50;
