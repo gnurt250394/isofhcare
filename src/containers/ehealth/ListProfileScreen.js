@@ -29,7 +29,8 @@ class ListProfileScreen extends PureComponent {
         this.onRefresh();
     }
     onPress = (item) => {
-        this.props.navigation.navigate("viewInMonth", { patient: item })
+        this.props.dispatch({ type: constants.action.action_select_patient_group_ehealth, value: item })
+        this.props.navigation.navigate('viewInMonth');
     }
     renderItemProfile(item, index) {
         const source = this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar.absoluteUrl() } : require("@images/new/user.png");

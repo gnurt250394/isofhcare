@@ -14,7 +14,7 @@ import snackbar from '@utils/snackbar-utils';
 import ImageLoad from 'mainam-react-native-image-loader';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import { Card } from 'native-base';
-import ReactNativeAN from 'react-native-alarm-notification';
+// import ReactNativeAN from 'react-native-alarm-notification';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 
@@ -30,15 +30,48 @@ LocaleConfig.locales['en'] = {
 };
 
 LocaleConfig.defaultLocale = 'en';
-
+const fireDate = '10-06-2019 15:52:00';			  // set exact date time | Format: dd-MM-yyyy HH:mm:ss
+const alarmNotifData = {
+    id: "12345",                                  // Required
+    title: "My Notification Title",               // Required
+    message: "My Notification Message",           // Required
+    channel: "8888",                     // Required. Same id as specified in MainApplication's onCreate method
+    ticker: "My Notification Ticker",
+    auto_cancel: true,                            // default: true
+    vibrate: true,
+    vibration: 100,                               // default: 100, no vibration if vibrate: false
+    small_icon: "ic_launcher",                    // Required
+    large_icon: "ic_launcher",
+    play_sound: true,
+    sound_name: null,                             // Plays custom notification ringtone if sound_name: null
+    color: "red",
+    schedule_once: true,                          // Works with ReactNativeAN.scheduleAlarm so alarm fires once
+    tag: 'some_tag',
+    fire_date: fireDate,                          // Date for firing alarm, Required for ReactNativeAN.scheduleAlarm.
+    data: { foo: "bar" },
+};
 class ListProfileScreen extends Component {
 
     constructor(props) {
         super(props)
-        let patient = this.props.navigation.state.params.patient;
+        let patient = this.props.ehealth.patient;
+        patient.history = (patient.history || []).sort((a, b) => {
+            return a.timeGoIn.toDateObject("-") - b.timeGoIn.toDateObject("-")
+        });
 
         let latestTime = patient.latestTime ? patient.latestTime.toDateObject("-") : new Date()
         let histories = this.groupHistory(patient.history, latestTime);
+        let dateSelected = "";
+        if (latestTime) {
+            dateSelected = latestTime.format("yyyy-MM-dd");
+            if (!histories[dateSelected]) {
+                if (patient.history) {
+                    dateSelected = patient.history[patient.history.length - 1].timeGoIn.toDateObject("-").format("yyyy-MM-dd")
+                    histories[dateSelected].selected = true;
+                } else
+                    dateSelected = "";
+            }
+        }
         this.state = {
             refreshing: false,
             data: [],
@@ -54,7 +87,7 @@ class ListProfileScreen extends Component {
             latestTime,
             histories,
             switchValue: false,
-            dateSelected: latestTime.format("yyyy-MM-dd")
+            dateSelected
         }
         this.alarmNotifData = {
             id: "12345",                                  // Required
@@ -104,9 +137,11 @@ class ListProfileScreen extends Component {
     onGetDetails = () => {
         let lastDate = this.state.lastDate ? this.state.lastDate.toDateObject('-').format('dd/MM/yyyy') : null
         let dateSelected = this.state.dateString ? this.state.dateString.toDateObject('-').format('dd/MM/yyyy') : null
+        debugger;
         let patientHistoryId = this.state.patient.patientHistoryId
         let hospitalId = this.state.patient.hospitalEntity.id
         ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId).then(res => {
+            debugger;
             let medicineTime = (new Date().format("dd/MM/yyyy") + " " + res.data.data.medicineTime).toDateObject('/')
             let time = (new Date().format("dd/MM/yyyy") + " " + res.data.data.time).toDateObject('/')
             this.setState({
@@ -501,7 +536,8 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
-        userApp: state.userApp
+        userApp: state.userApp,
+        ehealth: state.ehealth
     };
 }
 export default connect(mapStateToProps)(ListProfileScreen);

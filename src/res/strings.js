@@ -51,11 +51,11 @@ module.exports = {
     action_user_login: "ACTION_USER_LOGIN",
     action_user_logout: "ACTION_USER_LOGOUT",
     action_change_notification_count: "ACTION_CHANGE_NOTIFICATION_COUNT",
-    action_show_popup_notice_new_version:
-      "ACTION_SHOW_POPUP_NOTICE_NEW_VERSION",
+    action_show_popup_notice_new_version: "ACTION_SHOW_POPUP_NOTICE_NEW_VERSION",
     action_set_my_facility: "ACTION_SET_MY_FACILITY",
     action_select_hospital_get_ticket: "ACTION_SELECT_HOSPITAL_GET_TICKET",
-    action_select_hospital_ehealth: "ACTION_SELECT_HOSPITAL_EHEALTH"
+    action_select_hospital_ehealth: "ACTION_SELECT_HOSPITAL_EHEALTH",
+    action_select_patient_group_ehealth: "ACTION_SELECT_PATIENT_GROUP_EHEALTH"
   },
   colors: {
     breakline: "#c0c0c0",
