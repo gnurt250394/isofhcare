@@ -156,6 +156,7 @@ class ViewInDateScreen extends Component {
                     </ScrollView>
                     <TouchableOpacity style={{
                         width: 252,
+                        maxWidth: DEVICE_WIDTH,
                         backgroundColor: '#27ae60',
                         borderRadius: 5,
                         height: 48,

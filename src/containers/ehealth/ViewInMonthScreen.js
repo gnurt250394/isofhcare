@@ -105,7 +105,7 @@ class ListProfileScreen extends Component {
         });
     }
     onDayPress(day) {
-        
+
         if (this.state.histories[day.dateString]) {
             let histories = JSON.parse(JSON.stringify(this.state.histories));
             if (this.state.dateSelected && histories[this.state.dateSelected]) {
@@ -116,7 +116,7 @@ class ListProfileScreen extends Component {
                 dateSelected: day.dateString,
                 histories: histories
             }, () => {
-                console.log(day.dateString,histories);
+                console.log(day.dateString, histories);
             });
         } else {
             this.setState({
@@ -253,8 +253,19 @@ class ListProfileScreen extends Component {
     render() {
         return (
             <ActivityPanel style={{ flex: 1 }} title="Y BẠ ĐIỆN TỬ"
+                icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'dark-content'}
-                isLoading={this.state.isLoading}>
+                isLoading={this.state.isLoading}
+                iosBarStyle={'light-content'}
+                statusbarBackgroundColor="#22b060"
+                actionbarStyle={{
+                    backgroundColor: '#22b060',
+                    borderBottomWidth: 0
+                }}
+                titleStyle={{
+                    color: '#FFF'
+                }}
+            >
                 <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
                     <View style={{ justifyContent: 'center', flex: 1, alignItems: 'center' }}>
                         <Calendar style={{ marginBottom: 3, backgroundColor: "#FFF", width: '100%' }}
