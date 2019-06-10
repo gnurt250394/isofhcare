@@ -79,13 +79,22 @@ class ListProfileScreen extends Component {
         this.onGetDetails()
     }
     onGetDetails() {
-        //    let lastDate =  this.state.lastDate ? this.state.lastDate.toDateObject('-').format('dd/MM/yyyy') : null
-        //    let dateSelected =  this.state.dateString ? this.state.dateString.toDateObject('-').format('dd/MM/yyyy') : null
-        // ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId,).then(res => {
-        // console.log(res,'ẻeess');
-        // }).catch(err => {
-        //     console.log(err);
-        // })
+        console.log(this.state.patient, 'parten');
+        let lastDate = this.state.lastDate ? this.state.lastDate.toDateObject('-').format('dd/MM/yyyy') : null
+        let dateSelected = this.state.dateString ? this.state.dateString.toDateObject('-').format('dd/MM/yyyy') : null
+        let patientHistoryId = this.state.patient.patientHistoryId
+        let hospitalId = this.state.patient.hospitalEntity.id
+
+        ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId).then(res => {
+            this.setState({
+                note: res.data.data.note,
+                isMedicineTime: res.data.data.isMedicineTime,
+                timeAlarm: res.data.data.medicineTime,
+                date: res.data.data.time,
+            })
+        }).catch(err => {
+            console.log(err);
+        })
     }
     setDate(newDate) {
         this.setState({ dob: newDate, date: newDate.format("dd/MM/yyyy") }, () => {
@@ -128,8 +137,8 @@ class ListProfileScreen extends Component {
         );
         let note = this.state.note
         let suggestions = this.state.suggestions
-        let time = newDate ? newDate.format('HH:mm:ss') : '00:00:00'
-        let medicineTime = newDate ? newDate.format('HH:mm:ss') : '00:00:00'
+        let time = newDate ? newDate.format('HH:mm:ss') : ''
+        let medicineTime = newDate ? newDate.format('HH:mm:ss') : ''
         let isMedicineTime = this.state.isMedicineTime ? 1 : 0
         let item = this.props.navigation.state.params.patient
         let id = item.history[0].id
@@ -142,33 +151,38 @@ class ListProfileScreen extends Component {
 
     onSetAlarm = () => {
         if (this.state.switchValue) {
-            let note = this.state.note
-            let suggestions = this.state.suggestions
-            let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : '00:00:00'
-            let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : '00:00:00'
-            let isMedicineTime = 0
-            let item = this.props.navigation.state.params.patient
-            let id = item.history[0].id
-            ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
-                this.setState({
-                    switchValue: false
+            this.setState({
+                switchValue: false
+            }, () => {
+                let note = this.state.note
+                let suggestions = this.state.suggestions
+                let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : '00:00:00'
+                let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : '00:00:00'
+                let isMedicineTime = 0
+                let item = this.props.navigation.state.params.patient
+                let id = item.history[0].id
+                ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
                 })
             })
+
         } else {
-            let note = this.state.note
-            let suggestions = this.state.suggestions
-            let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : '00:00:00'
-            let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : '00:00:00'
-            let isMedicineTime = 1
-            let item = this.props.navigation.state.params.patient
-            let id = item.history[0].id
-            ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
-                this.setState({
-                    switchValue: true
+            this.setState({
+                switchValue: true
+            }, () => {
+                let note = this.state.note
+                let suggestions = this.state.suggestions
+                let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : '00:00:00'
+                let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : '00:00:00'
+                let isMedicineTime = 1
+                let item = this.props.navigation.state.params.patient
+                let id = item.history[0].id
+                ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
+
+                }).catch(err => {
+                    console.log(err);
                 })
-            }).catch(err => {
-                console.log(err);
             })
+
         }
     }
     onBlur = () => {
