@@ -29,7 +29,7 @@ LocaleConfig.locales['en'] = {
 };
 
 LocaleConfig.defaultLocale = 'en';
-class ListProfileScreen extends PureComponent {
+class ListProfileScreen extends Component {
     constructor(props) {
         super(props)
         let patient = this.props.navigation.state.params.patient;
@@ -92,17 +92,17 @@ class ListProfileScreen extends PureComponent {
         });
     }
     onDayPress(day) {
-        debugger;
         if (this.state.histories[day.dateString]) {
-            this.state.histories[day.dateString].selected = true;
-            if (this.state.dateSelected && this.state.histories[this.state.dateSelected]) {
-                this.state.histories[this.state.dateSelected].selected = false;
+            let histories = JSON.parse(JSON.stringify(this.state.histories));
+            if (this.state.dateSelected && histories[this.state.dateSelected]) {
+                delete histories[this.state.dateSelected].selected;
             }
+            histories[day.dateString].selected = true;
             this.setState({
                 dateSelected: day.dateString,
-                histories: JSON.parse(JSON.stringify(this.state.histories))
+                histories: histories
             }, () => {
-            })
+            });
         }
     }
     onPressTime = () => {
@@ -110,7 +110,6 @@ class ListProfileScreen extends PureComponent {
     }
     onPressTimeAlarm = () => {
         this.setState({ toggelDateTimePickerVisible: true, isTimeAlarm: true })
-
     }
     onConfirm = (newDate) => {
 
