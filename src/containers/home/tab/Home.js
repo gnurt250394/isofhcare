@@ -36,11 +36,8 @@ class Home extends Component {
           text: "Lấy số",
           onPress: () => {
             if (this.props.userApp.isLogin)
-              if(this.props.userApp.currentUser.bookingNumberHospital == true )
               this.props.navigation.navigate("selectHealthFacilitiesScreen");
-              else
-              snackbar.show("Tính năng đang phát triển", "");
-              else
+            else  
               this.props.navigation.navigate("login", {
                 nextScreen: { screen: "selectHealthFacilitiesScreen", param: {} }
               });
