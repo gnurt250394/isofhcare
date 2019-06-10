@@ -32,18 +32,46 @@ LocaleConfig.defaultLocale = 'en';
 class ListProfileScreen extends PureComponent {
     constructor(props) {
         super(props)
+        let patient = this.props.navigation.state.params.patient;
+
+        let latestTime = patient.latestTime ? patient.latestTime.toDateObject("-") : new Date()
+        let histories = this.groupHistory(patient.history, latestTime);
         this.state = {
             refreshing: false,
             data: [],
             loading: false,
-            bookings: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+            bookings: [],
             hospitals: [],
             loadFirstTime: true,
             currentDate: new Date(),
             toggelDateTimePickerVisible: false,
             lastDate: this.props.navigation.state.params && this.props.navigation.state.params.lastDate ? this.props.navigation.state.params.lastDate : '',
             suggestions: '',
+            patient: patient,
+            latestTime,
+            histories
         }
+    }
+    groupHistory(histories, focusDay) {
+        let obj = {};
+        histories.forEach(item => {
+            if (item.timeGoIn) {
+                let tgi = item.timeGoIn.toDateObject("-").format("yyyy-MM-dd");
+                if (!obj[tgi]) {
+                    obj[tgi] = {
+                        history: item,
+                        marked: true,
+                        color: 'green',
+                        selectedColor: 'blue'
+                    }
+                }
+            }
+        });
+        let focus = obj[focusDay.format("yyyy-MM-dd")];
+        if (focus) {
+            focus.selected = true;
+        }
+        return obj;
     }
     componentDidMount() {
         this.onRefresh();
@@ -247,11 +275,11 @@ class ListProfileScreen extends PureComponent {
         // })
         // let appointmentDate = this.state.dateString ? this.state.dateString : this.state.lastDate
         // let reCheckDate = ""
-       let lastDate =  this.state.lastDate ? this.state.lastDate.toDateObject('-').format('dd/MM/yyyy') : null
-       let dateSelected =  this.state.dateString ? this.state.dateString.toDateObject('-').format('dd/MM/yyyy') : null
+        let lastDate = this.state.lastDate ? this.state.lastDate.toDateObject('-').format('dd/MM/yyyy') : null
+        let dateSelected = this.state.dateString ? this.state.dateString.toDateObject('-').format('dd/MM/yyyy') : null
         let hospitalId = this.props.navigation.state.params.hospitalId
         let patientHistoryId = this.props.navigation.state.params.patientHistoryId
-        ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId,).then(res => {
+        ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId).then(res => {
             if (res.data.appointmentDate == null) {
                 this.setState({
                     isVisible: true,
@@ -266,8 +294,8 @@ class ListProfileScreen extends PureComponent {
                 })
                 return
             }
-            
-            if (!dateSelected && res.data.appointmentDate.toDateObject('-').format('dd/MM/yyyy') == lastDate || dateSelected && res.data.appointmentDate.toDateObject('-').format('dd/MM/yyyy') == dateSelected  ) {
+
+            if (!dateSelected && res.data.appointmentDate.toDateObject('-').format('dd/MM/yyyy') == lastDate || dateSelected && res.data.appointmentDate.toDateObject('-').format('dd/MM/yyyy') == dateSelected) {
                 this.props.navigation.navigate('viewInDay')
                 return
             } if (res.data.appointmentDate == null && res.data.reCheckDate) {
@@ -322,21 +350,18 @@ class ListProfileScreen extends PureComponent {
                     <View style={{ justifyContent: 'center', flex: 1, alignItems: 'center' }}>
                         <Calendar style={{ marginBottom: 3, backgroundColor: "#FFF", width: '100%' }}
                             // markedDates={this.state.listSchedule}
-                            current={this.state.lastDate ? this.state.lastDate.toDateObject('-').format('yyyy-MM-dd') : ''}
+                            current={this.state.latestTime.format("yyyy-MM-dd")}
                             // onDayPress={(day) => { console.log('selected day', day) }}
                             onDayLongPress={(day) => { console.log('selected day', day) }}
                             monthFormat={'MMMM - yyyy'}
                             onMonthChange={(month) => { console.log('month changed', month) }}
-                            // hideArrows={true}
+                            hideArrows={true}
                             hideExtraDays={true}
-
                             onDayPress={(day) => { this.onDayPress(day) }}
                             // monthFormat={'MMMM - yyyy'}
                             // onMonthChange={(month) => { this.onMonthChange(month, true) }}
                             firstDay={1}
-                            // hideExtraDays={true}
-                            markingType={'multi-dot'}
-                            markedDates={this.state.dateSelected ? this.state.dateSelected : { [this.state.lastDate ? this.state.lastDate.toDateObject('-').format('yyyy-MM-dd') : '']: { selected: true, selectedColor: '#27AE60' } }}
+                            markedDates={this.state.histories}
                         />
                         <TouchableOpacity onPress={this.onClickResult} style={styles.viewBtn}>
                             <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>KẾT QUẢ KHÁM</Text>
