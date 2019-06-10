@@ -30,27 +30,9 @@ LocaleConfig.locales['en'] = {
 };
 
 LocaleConfig.defaultLocale = 'en';
-const fireDate = '10-06-2019 15:52:00';			  // set exact date time | Format: dd-MM-yyyy HH:mm:ss
-const alarmNotifData = {
-    id: "12345",                                  // Required
-    title: "My Notification Title",               // Required
-    message: "My Notification Message",           // Required
-    channel: "8888",                     // Required. Same id as specified in MainApplication's onCreate method
-    ticker: "My Notification Ticker",
-    auto_cancel: true,                            // default: true
-    vibrate: true,
-    vibration: 100,                               // default: 100, no vibration if vibrate: false
-    small_icon: "ic_launcher",                    // Required
-    large_icon: "ic_launcher",
-    play_sound: true,
-    sound_name: null,                             // Plays custom notification ringtone if sound_name: null
-    color: "red",
-    schedule_once: true,                          // Works with ReactNativeAN.scheduleAlarm so alarm fires once
-    tag: 'some_tag',
-    fire_date: fireDate,                          // Date for firing alarm, Required for ReactNativeAN.scheduleAlarm.
-  	data: { foo: "bar" },
-};
+
 class ListProfileScreen extends Component {
+
     constructor(props) {
         super(props)
         let patient = this.props.navigation.state.params.patient;
@@ -74,7 +56,27 @@ class ListProfileScreen extends Component {
             switchValue: false,
             dateSelected: latestTime.format("yyyy-MM-dd")
         }
+        this.alarmNotifData = {
+            id: "12345",                                  // Required
+            title: "Isofh Care ",               // Required
+            message: "Đã đến giờ uống thuốc",           // Required
+            channel: "isofh-care-channel",                     // Required. Same id as specified in MainApplication's onCreate method
+            ticker: "My Notification Ticker",
+            auto_cancel: false,                            // default: true
+            vibrate: true,
+            vibration: 500,                               // default: 100, no vibration if vibrate: false
+            small_icon: "ic_launcher",                    // Required
+            large_icon: "ic_launcher",
+            play_sound: true,
+            sound_name: null,                             // Plays custom notification ringtone if sound_name: null
+            color: "red",
+            schedule_once: false,                          // Works with ReactNativeAN.scheduleAlarm so alarm fires once
+            tag: 'some_tag',
+            fire_date: '',                          // Date for firing alarm, Required for ReactNativeAN.scheduleAlarm.
+            data: { foo: "bar" },
+        };
     }
+   
     groupHistory(histories, focusDay) {
         let obj = {};
         histories.forEach(item => {
@@ -109,7 +111,7 @@ class ListProfileScreen extends Component {
             let time = (new Date().format("dd/MM/yyyy") + " " + res.data.data.time).toDateObject('/')
             this.setState({
                 note: res.data.data.note,
-                isMedicineTime: res.data.data.isMedicineTime ? true : false,
+                switchValue: res.data.data.isMedicineTime ? true : false,
                 timeAlarm: res.data.data.medicineTime,
                 suggestions: res.data.data.suggestions,
                 date: res.data.data.time,
@@ -117,6 +119,11 @@ class ListProfileScreen extends Component {
                 dobAlarm: medicineTime,
                 appointmentDate: res.data.data.appointmentDate
             })
+            this.alarmNotifData.fire_date = medicineTime.format('dd/MM/yyyy HH:mm:ss')
+            res.data.data.isMedicineTime ? ReactNativeAN.scheduleAlarm(this.alarmNotifData)
+            : ReactNativeAN.deleteAlarm('12345')
+
+
         }).catch(err => {
             console.log(err);
         })
@@ -194,8 +201,14 @@ class ListProfileScreen extends Component {
 
 
     }
+    onSetDate = () => {
+        let fireDate = (new Date().format("dd/MM/yyyy") + " " + this.state.dobAlarm).toDateObject('/')
 
+        console.log(fireDate);
+
+    }
     onSetAlarm = () => {
+
         if (this.state.switchValue) {
             this.setState({
                 switchValue: false
@@ -208,6 +221,8 @@ class ListProfileScreen extends Component {
                 let item = this.props.navigation.state.params.patient
                 let id = item.history[0].id
                 ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
+                    ReactNativeAN.deleteAlarm('12345')
+
                 })
             })
 
@@ -215,7 +230,6 @@ class ListProfileScreen extends Component {
             this.setState({
                 switchValue: true
             }, () => {
-                ReactNativeAN.scheduleAlarm(alarmNotifData);
                 let note = this.state.note
                 let suggestions = this.state.suggestions
                 let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : ''
@@ -224,7 +238,8 @@ class ListProfileScreen extends Component {
                 let item = this.props.navigation.state.params.patient
                 let id = item.history[0].id
                 ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
-
+                    this.alarmNotifData.fire_date = this.state.dobAlarm.format('dd/MM/yyyy HH:mm:ss')
+                    ReactNativeAN.scheduleAlarm(this.alarmNotifData)
                 }).catch(err => {
                     console.log(err);
                 })
