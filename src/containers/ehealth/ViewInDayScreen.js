@@ -99,57 +99,72 @@ class ViewInDateScreen extends Component {
                 this.setState({ isLoading: false }, () => {
                     switch (s.code) {
                         case 0:
-                            if (s.data && s.data.data && s.data.data.result) {
-                                try {
-                                    let result = JSON.parse(s.data.data.result);
-                                    console.log(result);
-                                    let hasResult = false;
-                                    if (result.ListDiagnostic && result.ListDiagnostic.length) {
-                                        hasResult = true;
-                                    }
-                                    if (result.ListMedicine && result.ListMedicine.length) {
-                                        hasResult = true;
-                                    }
-                                    if (result.ListResulGiaiPhau && result.ListResulGiaiPhau.length) {
-                                        hasResult = true;
-                                    }
+                            let resultDetail = null;
+                            let result = null;
+                            if (s.data && s.data.data) {
+                                if (s.data.data.resultDetail) {
+                                    try {
+                                        resultDetail = JSON.parse(s.data.data.resultDetail);
+                                    } catch (error) {
 
-                                    if (result.ListResulHoaSinh && result.ListResulHoaSinh.length) {
-                                        hasResult = true;
                                     }
-
-                                    if (result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) {
-                                        hasResult = true;
-                                    }
-
-                                    if (result.ListResulOther && result.ListResulOther.length) {
-                                        hasResult = true;
-                                    }
-
-                                    if (result.ListResulViSinh && result.ListResulViSinh.length) {
-                                        hasResult = true;
-                                    }
-
-                                    if (result.ListResulViSinh && result.ListResulViSinh.length) {
-                                        hasResult = true;
-                                    }
-
-                                    if (result.ListResultCheckup && result.ListResultCheckup.length) {
-                                        hasResult = true;
-                                    }
-                                    this.setState({ hasResult, result }, () => {
-                                        if (!this.state.hasResult) {
-                                            snackbar.show("Không tìm thấy kết quả", "danger");
+                                }
+                                if (s.data.data.result) {
+                                    try {
+                                        result = JSON.parse(s.data.data.result);
+                                        console.log(result);
+                                        let hasResult = false;
+                                        if (result.ListDiagnostic && result.ListDiagnostic.length) {
+                                            hasResult = true;
                                         }
-                                    })
-                                } catch (error) {
-                                    this.setState({ hasResult: false, result: {} }, () => {
-                                        if (!this.state.hasResult) {
-                                            snackbar.show("Không tìm thấy kết quả", "danger");
+                                        if (result.ListMedicine && result.ListMedicine.length) {
+                                            hasResult = true;
                                         }
-                                    })
+                                        if (result.ListResulGiaiPhau && result.ListResulGiaiPhau.length) {
+                                            hasResult = true;
+                                        }
+
+                                        if (result.ListResulHoaSinh && result.ListResulHoaSinh.length) {
+                                            hasResult = true;
+                                        }
+
+                                        if (result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) {
+                                            hasResult = true;
+                                        }
+
+                                        if (result.ListResulOther && result.ListResulOther.length) {
+                                            hasResult = true;
+                                        }
+
+                                        if (result.ListResulViSinh && result.ListResulViSinh.length) {
+                                            hasResult = true;
+                                        }
+
+                                        if (result.ListResulViSinh && result.ListResulViSinh.length) {
+                                            hasResult = true;
+                                        }
+
+                                        if (result.ListResultCheckup && result.ListResultCheckup.length) {
+                                            hasResult = true;
+                                        }
+                                        this.setState({ hasResult, result }, () => {
+                                            if (!this.state.hasResult) {
+                                                snackbar.show("Không tìm thấy kết quả", "danger");
+                                            }
+                                        })
+                                    } catch (error) {
+                                        this.setState({ hasResult: false, result: {} }, () => {
+                                            if (!this.state.hasResult) {
+                                                snackbar.show("Không tìm thấy kết quả", "danger");
+                                            }
+                                        })
+                                    }
                                 }
                             }
+                            this.setState({
+                                result,
+                                resultDetail
+                            })
                             break;
                     }
                 })
@@ -211,6 +226,28 @@ class ViewInDateScreen extends Component {
                     </View>
                     <View style={{ width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 }}></View>
                 </View>
+        }
+        return null;
+    }
+
+    renderMoney() {
+        if (this.state.resultDetail) {
+            let money = 0;
+            if (this.state.resultDetail.ListInvoice && this.state.resultDetail.ListInvoice.length > 0) {
+                money = this.state.resultDetail.ListInvoice.reduce((a, b) => a + b.Amount, 0) -
+                    (this.state.resultDetail.ListPayment && this.state.resultDetail.ListPayment.length > 0 ? this.state.resultDetail.ListPayment.reduce((a, b) => a + b.Amount, 0) : 0);
+            }
+            else {
+                money = this.state.resultDetail.ListService.reduce((a, b) => a + b.PriceService, 0);
+            }
+            return <View style={styles.card}>
+                <View style={{ width: 10, height: 10, backgroundColor: '#ff4355', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
+                <View style={{ flex: 1, padding: 15 }}>
+                    <Text style={{ fontSize: 18 }}>Tiền</Text>
+                    <Text style={{ paddingTop: 5, color: '#ff4355', flex: 1, fontWeight: 'bold' }}>{money.formatPrice() + " đ"}</Text>
+                </View>
+                <View style={{ width: 5, height: '100%', backgroundColor: '#ff4355', borderRadius: 2.5 }}></View>
+            </View>
         }
         return null;
     }
@@ -380,17 +417,13 @@ class ViewInDateScreen extends Component {
                             {
                                 this.renderMedicine()
                             }
+                            {
+                                this.renderMoney()
+                            }
+
+                            <View style={{ height: 50 }}></View>
 
 
-                            {/*  <View style={styles.card}>
-                                <View style={{ width: 10, height: 10, backgroundColor: '#ff4355', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
-                                <View style={{ flex: 1, padding: 15 }}>
-                                    <Text style={{ fontSize: 18 }}>Tiền</Text>
-                                    <Text style={{ paddingTop: 5, color: '#ff4355' }}>Kết quả khám</Text>
-                                </View>
-                                <View style={{ width: 5, height: '100%', backgroundColor: '#ff4355', borderRadius: 2.5 }}></View>
-                            </View>
-                            <View style={{ height: 50 }}></View> */}
                         </ScrollView>
                     }
                     {this.state.hasResult &&
