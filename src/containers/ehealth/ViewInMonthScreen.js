@@ -15,6 +15,7 @@ import ImageLoad from 'mainam-react-native-image-loader';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import { Card } from 'native-base';
 import ReactNativeAN from 'react-native-alarm-notification';
+import ActionSheet from 'react-native-actionsheet'
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 
@@ -289,6 +290,9 @@ class ListProfileScreen extends Component {
             })
         }
     }
+    onShareEhealth = () => {
+        this.actionSheetGetTicket.show();
+    }
     renderTextContent = () => {
         switch (this.state.status) {
             case 1: return (
@@ -364,7 +368,7 @@ class ListProfileScreen extends Component {
                                 <TouchableOpacity onPress = {this.onPressAppointment} style={[styles.btnReExamination, { backgroundColor: '#4CD565', }]}>
                                     <Text style={{ color: '#fff', padding: 2 }}>Lịch tái khám</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={[styles.btnReExamination, { backgroundColor: '#2E66E7', }]}>
+                                <TouchableOpacity onPress = {this.onShareEhealth} style={[styles.btnReExamination, { backgroundColor: '#2E66E7', }]}>
                                     <Text style={{ color: '#fff', padding: 2 }}>Chia sẻ y bạ</Text>
                                 </TouchableOpacity>
                             </View>
@@ -424,6 +428,23 @@ class ListProfileScreen extends Component {
                         <TouchableOpacity onPress={() => this.setState({ isVisible: false })} style={{ justifyContent: 'center', alignItems: 'center', height: 41, backgroundColor: '#878787', borderBottomLeftRadius: 5, borderBottomRightRadius: 5 }}><Text style={{ color: '#fff' }}>OK, XONG</Text></TouchableOpacity>
                     </View>
                 </Modal>
+                <ActionSheet
+                    ref={o => this.actionSheetGetTicket = o}
+                    options={["Gửi PDF tới Email", "Hồ sơ trên ISOFHCARE", "Hủy"]}
+                    cancelButtonIndex={2}
+                    destructiveButtonIndex={2}
+                    onPress={(index) => {
+                        switch (index) {
+                            case 0:
+                                this.props.navigation.navigate("scanQRCode");
+                                break;
+                            case 1:
+                                this.props.navigation.navigate("login", {
+                                    nextScreen: { screen: "scanQRCode", param: {} }
+                                });
+                        }
+                    }}
+                />
             </ActivityPanel>
         );
     }
