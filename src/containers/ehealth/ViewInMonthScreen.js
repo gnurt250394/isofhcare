@@ -31,8 +31,8 @@ LocaleConfig.locales['en'] = {
 };
 
 LocaleConfig.defaultLocale = 'en';
-let fireDate
-let  alarmNotifData = {
+var fireDate
+var  alarmNotifData = {
     id: "12345",                                  // Required
     title: "Isofh Care ",               // Required
     message: "Đã đến giờ uống thuốc",           // Required
@@ -123,9 +123,8 @@ class ListProfileScreen extends Component {
         let patientHistoryId = this.state.patient.patientHistoryId
         let hospitalId = this.state.patient.hospitalEntity.id
         ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId).then(res => {
-            console.log(res,'ádsd');
-            let medicineTime = (new Date().format("dd/MM/yyyy") + " " + res.data.data.medicineTime).toDateObject('/')
-            let time = (new Date().format("dd/MM/yyyy") + " " + res.data.data.time).toDateObject('/')
+            let medicineTime =  res.data.data.medicineTime ?  (new Date().format("dd/MM/yyyy") + " " + res.data.data.medicineTime).toDateObject('/') :''
+            let time = res.data.data.time ?  (new Date().format("dd/MM/yyyy") + " " + res.data.data.time).toDateObject('/') :''
             this.setState({
                 note: res.data.data.note,
                 switchValue: res.data.data.isMedicineTime ? true : false,
@@ -139,7 +138,7 @@ class ListProfileScreen extends Component {
             let date = new Date().getDate()
             let month = new Date().getMonth() + 1
             let year = new Date().getFullYear()
-            let fire_date = `${date}-${month}-${year} ${medicineTime.format('HH:mm:ss')}`
+            let fire_date = medicineTime ?  `${date}-${month}-${year} ${medicineTime.format('HH:mm:ss')}` : ''
             alarmNotifData.fire_date = fire_date
             res.data.data.isMedicineTime ? ReactNativeAN.scheduleAlarm(alarmNotifData)
                 : ReactNativeAN.deleteAlarm('12345')
