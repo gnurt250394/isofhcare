@@ -285,7 +285,6 @@ class ListProfileScreen extends Component {
         let isMedicineTime = this.state.isMedicineTime ? 1 : 0
         let item = this.props.ehealth.patient
         let id = item.history.length && item.history[0].id
-        console.log(this.state.dobAlarm, this.state.dob, 'timetimetime');
         ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
 
         }).catch(err => {
