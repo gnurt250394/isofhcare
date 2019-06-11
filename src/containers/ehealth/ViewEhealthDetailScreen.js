@@ -17,6 +17,7 @@ import { Calendar, LocaleConfig, Agenda } from 'react-native-calendars';
 import { Card } from 'native-base';
 import ProfileInfomation from '@components/ehealth/ProfileInfomation';
 import CheckupResult from '@components/ehealth/CheckupResult';
+import MedicalTestResult from '@components/ehealth/MedicalTestResult';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 
@@ -52,6 +53,7 @@ class ViewEhealthDetailScreen extends Component {
                     <ProfileInfomation resultDetail={this.state.resultDetail} />
                     <View style={{ height: 1, backgroundColor: '#27ae60', }} />
                     <CheckupResult result={this.state.result} />
+                    <MedicalTestResult result={this.state.result} />
                 </ScrollView>
             </ActivityPanel>
         );
