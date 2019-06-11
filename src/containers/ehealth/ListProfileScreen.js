@@ -53,7 +53,7 @@ class ListProfileScreen extends PureComponent {
                             height: 60
                         }}
                         defaultImage={() => {
-                            return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={40} height={40} />
+                            return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={60} height={60} />
                         }}
                     />
                     <Text style={{ color: '#758289' }}>{item.patientHistoryId}</Text>

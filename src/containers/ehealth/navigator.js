@@ -4,12 +4,14 @@ import EhealthScreen from '@containers/ehealth/EhealthScreen';
 import ListProfileScreen from '@containers/ehealth/ListProfileScreen';
 import ViewInMonthScreen from '@containers/ehealth/ViewInMonthScreen';
 import ViewInDayScreen from '@containers/ehealth/ViewInDayScreen';
+import ViewEhealthDetailScreen from '@containers/ehealth/ViewEhealthDetailScreen';
 
 const EHealthNavigator = createStackNavigator({
     ehealth: { screen: EhealthScreen },
     listProfile: { screen: ListProfileScreen },
     viewInMonth: { screen: ViewInMonthScreen },
     viewInDay: { screen: ViewInDayScreen },
+    viewDetail: { screen: ViewEhealthDetailScreen },
 }, {
         headerMode: 'none',
         header: null,

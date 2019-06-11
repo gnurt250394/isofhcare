@@ -435,6 +435,8 @@ class ViewInDateScreen extends Component {
                             height: 48,
                             marginVertical: 20,
                             padding: 10, alignItems: 'center'
+                        }} onPress={() => {
+                            this.props.navigation.navigate("viewDetail", { result: this.state.result, resultDetail: this.state.resultDetail })
                         }}>
                             <Text style={{ fontWeight: 'bold', color: '#FFF', fontSize: 17 }}>ĐẦY ĐỦ KẾT QUẢ</Text>
                         </TouchableOpacity>
