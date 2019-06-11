@@ -233,13 +233,13 @@ class ViewInDateScreen extends Component {
     renderMoney() {
         if (this.state.resultDetail) {
             let money = 0;
-            if (this.state.resultDetail.ListInvoice && this.state.resultDetail.ListInvoice.length > 0) {
-                money = this.state.resultDetail.ListInvoice.reduce((a, b) => a + b.Amount, 0) -
-                    (this.state.resultDetail.ListPayment && this.state.resultDetail.ListPayment.length > 0 ? this.state.resultDetail.ListPayment.reduce((a, b) => a + b.Amount, 0) : 0);
-            }
-            else {
+            // if (this.state.resultDetail.ListInvoice && this.state.resultDetail.ListInvoice.length > 0) {
+            //     money = this.state.resultDetail.ListInvoice.reduce((a, b) => a + b.Amount, 0) -
+            //         (this.state.resultDetail.ListPayment && this.state.resultDetail.ListPayment.length > 0 ? this.state.resultDetail.ListPayment.reduce((a, b) => a + b.Amount, 0) : 0);
+            // }
+            // else {
                 money = this.state.resultDetail.ListService.reduce((a, b) => a + b.PriceService, 0);
-            }
+            // }
             return <View style={styles.card}>
                 <View style={{ width: 10, height: 10, backgroundColor: '#ff4355', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
                 <View style={{ flex: 1, padding: 15 }}>
