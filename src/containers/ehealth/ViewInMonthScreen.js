@@ -14,7 +14,7 @@ import snackbar from '@utils/snackbar-utils';
 import ImageLoad from 'mainam-react-native-image-loader';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import { Card } from 'native-base';
-// import ReactNativeAN from 'react-native-alarm-notification';
+import ReactNativeAN from 'react-native-alarm-notification';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 
@@ -30,26 +30,7 @@ LocaleConfig.locales['en'] = {
 };
 
 LocaleConfig.defaultLocale = 'en';
-const fireDate = '10-06-2019 15:52:00';			  // set exact date time | Format: dd-MM-yyyy HH:mm:ss
-const alarmNotifData = {
-    id: "12345",                                  // Required
-    title: "My Notification Title",               // Required
-    message: "My Notification Message",           // Required
-    channel: "8888",                     // Required. Same id as specified in MainApplication's onCreate method
-    ticker: "My Notification Ticker",
-    auto_cancel: true,                            // default: true
-    vibrate: true,
-    vibration: 100,                               // default: 100, no vibration if vibrate: false
-    small_icon: "ic_launcher",                    // Required
-    large_icon: "ic_launcher",
-    play_sound: true,
-    sound_name: null,                             // Plays custom notification ringtone if sound_name: null
-    color: "red",
-    schedule_once: true,                          // Works with ReactNativeAN.scheduleAlarm so alarm fires once
-    tag: 'some_tag',
-    fire_date: fireDate,                          // Date for firing alarm, Required for ReactNativeAN.scheduleAlarm.
-    data: { foo: "bar" },
-};
+
 class ListProfileScreen extends Component {
 
     constructor(props) {
@@ -207,7 +188,7 @@ class ListProfileScreen extends Component {
                 let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : ''
                 let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : ''
                 let isMedicineTime = this.state.isMedicineTime ? 1 : 0
-                let item = this.props.navigation.state.params.patient
+                let item =  this.props.ehealth.patient
                 let id = item.history[0].id
                 ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
                 }).catch(err => {
@@ -225,7 +206,7 @@ class ListProfileScreen extends Component {
                 let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : ''
                 let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : ''
                 let isMedicineTime = this.state.isMedicineTime ? 1 : 0
-                let item = this.props.navigation.state.params.patient
+                let item = this.props.ehealth.patient
                 let id = item.history[0].id
                 ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
                 }).catch(err => {
@@ -253,7 +234,7 @@ class ListProfileScreen extends Component {
                 let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : ''
                 let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : ''
                 let isMedicineTime = 0
-                let item = this.props.navigation.state.params.patient
+                let item = this.props.ehealth.patient
                 let id = item.history[0].id
                 ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
                     ReactNativeAN.deleteAlarm('12345')
@@ -270,7 +251,7 @@ class ListProfileScreen extends Component {
                 let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : ''
                 let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : ''
                 let isMedicineTime = 1
-                let item = this.props.navigation.state.params.patient
+                let item = this.props.ehealth.patient
                 let id = item.history[0].id
                 ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
                     this.alarmNotifData.fire_date = this.state.dobAlarm.format('dd/MM/yyyy HH:mm:ss')
@@ -288,7 +269,7 @@ class ListProfileScreen extends Component {
         let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : ''
         let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : ''
         let isMedicineTime = this.state.isMedicineTime ? 1 : 0
-        let item = this.props.navigation.state.params.patient
+        let item = this.props.ehealth.patient
         let id = item.history[0].id
         console.log(this.state.dobAlarm, this.state.dob, 'timetimetime');
         ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
