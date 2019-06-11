@@ -111,7 +111,7 @@ class CheckupResult extends Component {
                                     </View>
                                 </View> : null
                         }
-                        {
+                        {/* {
                             (item.ListMedicine && item.ListMedicine.length > 0) || (item.ListExternalMedicine && item.ListExternalMedicine.length > 0)
                                 ?
                                 <View style={{flex: 1}}>
@@ -122,7 +122,7 @@ class CheckupResult extends Component {
                                         {this.renderMedicine(item.ListMedicine.length, item.ListExternalMedicine)}
                                     </Table>
                                 </View> : null
-                        }
+                        } */}
                     </View>
                 </View>
                 <View style={{ height: 50 }}></View>
