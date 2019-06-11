@@ -68,19 +68,19 @@ class EhealthScreen extends Component {
 
         return (
             <TouchableOpacity style={{ marginTop: 10, }} onPress={this.onPress.bind(this, item)}>
-                <Card style={{ flexDirection: 'row', paddingVertical: 20, paddingHorizontal: 10, borderRadius: 5 }}>
+                <View style={{
+                    flexDirection: 'row', paddingVertical: 20, paddingHorizontal: 10,
+
+                    borderRadius: 3,
+                    backgroundColor: "#ffffff",
+                    borderStyle: "solid",
+                    borderWidth: 1,
+                    borderColor: "#d5d9db"
+                }}>
                     <ImageLoad
                         resizeMode="cover"
                         imageStyle={{
-                            borderRadius: 40, shadowColor: "rgba(0, 0, 0, 0.5)",
-                            shadowOffset: {
-                                width: 0,
-                                height: 2
-                            },
-                            shadowRadius: 4,
-                            shadowOpacity: 1,
-                            borderWidth: 1,
-                            borderColor: "#27ae60"
+                            borderRadius: 40, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)',
                         }}
                         borderRadius={40}
                         customImagePlaceholderDefaultStyle={[styles.avatar, { width: 80, height: 80 }]}
@@ -102,7 +102,7 @@ class EhealthScreen extends Component {
                         <Text style={{ fontWeight: 'bold', color: '#5A5956', fontSize: 15 }}>{item.hospital.name}</Text>
                         <Text style={{ color: '#5A5956', marginTop: 5 }}>Lần gần nhất: {item.hospital.timeGoIn ? item.hospital.timeGoIn.toDateObject('-').format('dd/MM/yyyy') : ''}</Text>
                     </View>
-                </Card>
+                </View>
             </TouchableOpacity>
         )
     }
@@ -132,7 +132,7 @@ class EhealthScreen extends Component {
                 <View style={{
                     paddingHorizontal: 10, flex: 1, backgroundColor: '#f0f5f9'
                 }} >
-                    <Text style={styles.txHeader}>Các cơ sở y tế đã khám</Text>
+                    <Text style={styles.txHeader}>Các Cơ Sở Y Tế đã khám</Text>
                     <View style={{ flex: 1 }}>
                         <FlatList
                             data={this.state.listHospital}

@@ -69,7 +69,9 @@ const reducer = (state = defaultState, action) => {
         case constants.action.action_select_hospital_ehealth:
             newState.ehealth.hospital = action.value;
             return newState;
-
+        case constants.action.action_select_patient_group_ehealth:
+            newState.ehealth.patient = action.value;
+            return newState;
 
         default:
             reduxBookingDHY.apply(newState, action);

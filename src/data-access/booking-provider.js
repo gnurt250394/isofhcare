@@ -32,7 +32,7 @@ module.exports = {
       }
     });
   },
-  detailPatientHistory(patientHistoryId, source) {
+  detailPatientHistory(patientHistoryId, hospitalId) {
     return new Promise((resolve, reject) => {
       client.requestApi(
         "get",
@@ -40,7 +40,7 @@ module.exports = {
         "/" +
         patientHistoryId +
         "?hospitalId=" +
-        source,
+        hospitalId,
         {},
         (s, e) => {
           if (s) resolve(s);
