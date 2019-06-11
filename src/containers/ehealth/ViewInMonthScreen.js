@@ -297,6 +297,19 @@ class ListProfileScreen extends Component {
             console.log(err);
         })
     }
+    onPressAppointment = () => {
+        if(this.state.appointmentDate){
+            this.setState({
+                status:2,
+                isVisible:true
+            })
+        }else{
+            this.setState({
+                status:4,
+                isVisible:true
+            })
+        }
+    }
     renderTextContent = () => {
         switch (this.state.status) {
             case 1: return (
@@ -369,7 +382,7 @@ class ListProfileScreen extends Component {
                             </View>
                             <Text style={{ color: '#bdc6d8', fontSize: 15 }}>Suggestion</Text>
                             <View style={styles.viewBTnSuggest}>
-                                <TouchableOpacity style={[styles.btnReExamination, { backgroundColor: '#4CD565', }]}>
+                                <TouchableOpacity onPress = {this.onPressAppointment} style={[styles.btnReExamination, { backgroundColor: '#4CD565', }]}>
                                     <Text style={{ color: '#fff', padding: 2 }}>Lịch tái khám</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={[styles.btnReExamination, { backgroundColor: '#2E66E7', }]}>
