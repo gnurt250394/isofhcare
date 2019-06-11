@@ -37,8 +37,10 @@ class MedicalTestResult extends Component {
                 hasResult = true;
             }
         }
-        if (!hasResult)
+        if (!hasResult) {
+            this.state = {}
             return null;
+        }
 
         let result = [];
         if (result1.ListResulViSinh && result1.ListResulViSinh.length > 0) {
@@ -184,6 +186,9 @@ class MedicalTestResult extends Component {
         ))
     }
     render() {
+        if (!this.state.currentGroup)
+            return null;
+
         const tableHead = this.state.currentGroup && this.state.currentGroup.type == 'Vi Sinh' ? ['TÊN XÉT NGHIỆM', 'KẾT QUẢ'] : ['TÊN XÉT NGHIỆM', 'KẾT QUẢ', 'GIÁ TRỊ BÌNH THƯỜNG', 'ĐƠN VỊ'];
 
         return (<View>
