@@ -28,7 +28,6 @@ class DiagnosticResult extends Component {
 
     render() {
         let { result } = this.props;
-        debugger;
         if (!result || !result.ListDiagnostic || !result.ListDiagnostic.length)
             return null;
         let resultDiagnostic = result.ListDiagnostic || [];

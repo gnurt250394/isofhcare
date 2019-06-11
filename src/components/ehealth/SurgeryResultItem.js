@@ -27,97 +27,105 @@ class CheckupResult extends Component {
 
     render() {
         let { item } = this.props;
-        return <View style={{ flex: 1 }} key={this.props.key}>
+        return <View style={{ flex: 1, marginTop: 20 }} key={this.props.key}>
             <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
                 <Text style={{ flex: 1, fontWeight: 'bold', fontSize: 15, color: constants.colors.primary_bold }}>{item.ServiceName}</Text>
                 {/* <TouchableOpacity onPress={() => this.exportPdf()}>
                         <Text style={{ borderColor: '#065cb4', borderWidth: 2, paddingLeft: 12, paddingRight: 12, paddingTop: 8, paddingBottom: 8, borderRadius: 20, color: "#065cb4", fontWeight: 'bold' }}>Xuất PDF</Text>
                     </TouchableOpacity> */}
             </View>
-            <View style={styles.slide}>
+            <View style={{
+                backgroundColor: "#ffffff",
+                shadowColor: "rgba(0, 0, 0, 0.05)",
+                shadowOffset: {
+                    width: 0,
+                    height: 2
+                },
+                shadowRadius: 10,
+                shadowOpacity: 1,
+                elevation: 3,
+                borderRadius: 5,
+                padding: 10
+            }}>
+                {
+                    item.BiopsyLocation ?
+                        <View>
 
-                <View>
-                    {
-                        item.BiopsyLocation ?
-                            <View>
-                                <View style={styles.breakline} />
-                                <Text style={styles.diagnosticLabel}>Vị trí sinh thiết</Text>
-                                <View style={{ flexDirection: 'row' }}>
-                                    <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
-                                    <Text style={{ marginLeft: 10 }}>{item.BiopsyLocation}</Text>
+                            <Text style={styles.diagnosticLabel}>Vị trí sinh thiết</Text>
+                            <View style={{ flexDirection: 'row' }}>
+                                <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
+                                <Text style={{ marginLeft: 10 }}>{item.BiopsyLocation}</Text>
+                            </View>
+                        </View> : null
+                }
+
+                {
+                    item.Microsome ?
+                        <View>
+
+                            <Text style={styles.diagnosticLabel}>Vị thể</Text>
+                            <View style={{ flexDirection: 'row' }}>
+                                <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
+                                <Text style={{ marginLeft: 10 }}>{item.Microsome}</Text>
+                            </View>
+                        </View> : null
+                }
+
+                {
+                    item.Macrosome ?
+                        <View>
+
+                            <Text style={styles.diagnosticLabel}>Đại thể</Text>
+                            <View style={{ flexDirection: 'row' }}>
+                                <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
+                                <Text style={{ marginLeft: 10 }}>{item.Macrosome}</Text>
+                            </View>
+                        </View> : null
+                }
+
+                {
+                    (item.Result || item.Discussion) ?
+                        <View>
+
+                            <Text style={styles.diagnosticLabel}>Kết quả</Text>
+                            <View style={{ flexDirection: 'row' }}>
+                                <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
+                                <Text style={{ marginLeft: 10 }}>{item.Result} {item.Discussion} </Text>
+                            </View>
+                        </View> : null
+                }
+
+                {
+                    item.ReportTemplate == "Tebaoamdao" || item.ReportTemplate == "Thinprep"
+                        && (item.ServiceMedicTestLine && item.ServiceMedicTestLine.length > 0) ?
+                        item.ServiceMedicTestLine.map((item, i) => {
+                            return (<View key={i}>
+                                <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                                    {
+                                        item.IsVerified ?
+                                            <ScaleImage source={require("@ehealth/daihocy/resources/images/check.png")} width={12} style={{ marginTop: 4, marginRight: 7 }} />
+                                            :
+                                            <ScaleImage source={require("@ehealth/daihocy/resources/images/uncheck.png")} width={12} style={{ marginTop: 4, marginRight: 7 }} />
+                                    }
+                                    <Text style={styles.diagnosticLabel1}>{item.NameLine}</Text>
                                 </View>
-                            </View> : null
-                    }
+                                {item.Result2 ? <Text style={{ marginLeft: 10 }}>{item.Result2}</Text> : null}
+                            </View>)
+                        })
+                        : <View></View>
+                }
 
-                    {
-                        item.Microsome ?
-                            <View>
-                                <View style={styles.breakline} />
-                                <Text style={styles.diagnosticLabel}>Vị thể</Text>
-                                <View style={{ flexDirection: 'row' }}>
-                                    <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
-                                    <Text style={{ marginLeft: 10 }}>{item.Microsome}</Text>
-                                </View>
-                            </View> : null
-                    }
+                {
+                    item.Conclusion ?
+                        <View>
 
-                    {
-                        item.Macrosome ?
-                            <View>
-                                <View style={styles.breakline} />
-                                <Text style={styles.diagnosticLabel}>Đại thể</Text>
-                                <View style={{ flexDirection: 'row' }}>
-                                    <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
-                                    <Text style={{ marginLeft: 10 }}>{item.Macrosome}</Text>
-                                </View>
-                            </View> : null
-                    }
-
-                    {
-                        (item.Result || item.Discussion) ?
-                            <View>
-                                <View style={styles.breakline} />
-                                <Text style={styles.diagnosticLabel}>Kết quả</Text>
-                                <View style={{ flexDirection: 'row' }}>
-                                    <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
-                                    <Text style={{ marginLeft: 10 }}>{item.Result} {item.Discussion} </Text>
-                                </View>
-                            </View> : null
-                    }
-
-                    {
-                        item.ReportTemplate == "Tebaoamdao" || item.ReportTemplate == "Thinprep"
-                            && (item.ServiceMedicTestLine && item.ServiceMedicTestLine.length > 0) ?
-                            item.ServiceMedicTestLine.map((item, i) => {
-                                return (<View key={i}>
-                                    <View style={styles.breakline} />
-                                    <View style={{ flexDirection: 'row' }}>
-                                        {
-                                            item.IsVerified ?
-                                                <ScaleImage source={require("@ehealth/daihocy/resources/images/check.png")} width={12} style={{ marginTop: 4, marginRight: 7 }} />
-                                                :
-                                                <ScaleImage source={require("@ehealth/daihocy/resources/images/uncheck.png")} width={12} style={{ marginTop: 4, marginRight: 7 }} />
-                                        }
-                                        <Text style={styles.diagnosticLabel}>{item.NameLine}</Text>
-                                    </View>
-                                    {item.Result2 ? <Text style={{ marginLeft: 10 }}>{item.Result2}</Text> : null}
-                                </View>)
-                            })
-                            : <View></View>
-                    }
-
-                    {
-                        item.Conclusion ?
-                            <View>
-                                <View style={styles.breakline} />
-                                <Text style={styles.diagnosticLabel}>Kết luận</Text>
-                                <View style={{ flexDirection: 'row' }}>
-                                    <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
-                                    <Text style={{ marginLeft: 10 }}>{item.Conclusion}</Text>
-                                </View>
-                            </View> : null
-                    }
-                </View>
+                            <Text style={styles.diagnosticLabel}>Kết luận</Text>
+                            <View style={{ flexDirection: 'row' }}>
+                                <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
+                                <Text style={{ marginLeft: 10 }}>{item.Conclusion}</Text>
+                            </View>
+                        </View> : null
+                }
             </View>
         </View>
     }
@@ -130,16 +138,17 @@ function mapStateToProps(state) {
     };
 }
 const styles = StyleSheet.create({
+    diagnosticLabel1:
+    {
+        color: constants.colors.primary_bold,
+        fontWeight: 'bold', marginBottom: 5
+    },
     diagnosticLabel:
     {
         color: constants.colors.primary_bold,
-        fontWeight: 'bold', marginBottom: 10
+        fontWeight: 'bold', marginBottom: 5, marginTop: 15
     },
     breakline: {
-        height: 1,
-        marginTop: 10,
-        marginBottom: 10,
-        backgroundColor: constants.colors.breakline
     }
 })
 export default connect(mapStateToProps)(CheckupResult);

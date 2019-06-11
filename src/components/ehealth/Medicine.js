@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     slide: {
         flex: 1,
     },
-    table: { marginTop: 30, marginBottom: 50 },
+    table: { marginTop: 30 },
     head: { height: 40, backgroundColor: '#f1f8ff' },
     textHead: { textAlign: 'center', fontWeight: 'bold' },
     text: { padding: 4, textAlign: 'center' },

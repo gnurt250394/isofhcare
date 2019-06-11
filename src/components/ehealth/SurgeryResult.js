@@ -28,27 +28,21 @@ class SurgeryResult extends Component {
 
     render() {
         let { result } = this.props;
-        debugger;
         if (!result || !result.ListResulGiaiPhau || !result.ListResulGiaiPhau.length)
             return null;
         let resultSurgery = result.ListResulGiaiPhau || [];
-        return (<View>
-            <View style={{ flexDirection: 'row', position: 'relative', flex: 1, padding: 10 }}>
-                <View style={{ flex: 1, marginLeft: 16.5 }}>
-                    <View style={[styles.item, { marginTop: 0 }]}>
-                        <View style={styles.round1}>
-                            <View style={styles.round2} />
-                        </View>
-                        <View style={[styles.itemlabel, { marginTop: 0 }]}>
-                            <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>KẾT QUẢ GIẢI PHẪU</Text>
-                        </View>
-                    </View>
-                    {
-                        resultSurgery.map((item, index) => <SurgeryResultItem item={item} key={index} />)
-                    }
-
+        return (<View style={{ flex: 1, padding: 10 }}>
+            <View style={[styles.item, { marginTop: 0 }]}>
+                <View style={styles.round1}>
+                    <View style={styles.round2} />
+                </View>
+                <View style={[styles.itemlabel, { marginTop: 0 }]}>
+                    <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>KẾT QUẢ GIẢI PHẪU</Text>
                 </View>
             </View>
+            {
+                resultSurgery.map((item, index) => <SurgeryResultItem item={item} key={index} />)
+            }
         </View>)
     }
 }
