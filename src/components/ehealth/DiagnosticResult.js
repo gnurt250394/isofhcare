@@ -25,29 +25,23 @@ class DiagnosticResult extends Component {
         }
     }
 
-
     render() {
         let { result } = this.props;
         if (!result || !result.ListDiagnostic || !result.ListDiagnostic.length)
             return null;
         let resultDiagnostic = result.ListDiagnostic || [];
-        return (<View>
-            <View style={{ flexDirection: 'row', position: 'relative', flex: 1, padding: 10 }}>
-                <View style={{ flex: 1, marginLeft: 16.5 }}>
-                    <View style={[styles.item, { marginTop: 0 }]}>
-                        <View style={styles.round1}>
-                            <View style={styles.round2} />
-                        </View>
-                        <View style={[styles.itemlabel, { marginTop: 0 }]}>
-                            <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>KẾT QUẢ CHẨN ĐOÁN HÌNH ẢNH</Text>
-                        </View>
-                    </View>
-                    {
-                        resultDiagnostic.map((item, index) => <DiagnosticResultItem item={item} key={index} />)
-                    }
-
+        return (<View style={{ flex: 1, padding: 10 }}>
+            <View style={[styles.item, { marginTop: 0 }]}>
+                <View style={styles.round1}>
+                    <View style={styles.round2} />
+                </View>
+                <View style={[styles.itemlabel, { marginTop: 0 }]}>
+                    <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>KẾT QUẢ CHẨN ĐOÁN HÌNH ẢNH</Text>
                 </View>
             </View>
+            {
+                resultDiagnostic.map((item, index) => <DiagnosticResultItem item={item} key={index} />)
+            }
         </View>)
     }
 }
