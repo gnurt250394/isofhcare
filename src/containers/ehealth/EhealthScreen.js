@@ -18,6 +18,7 @@ import dateUtils from 'mainam-react-native-date-utils';
 import hospitalProvider from '@data-access/hospital-provider';
 import ImageLoad from 'mainam-react-native-image-loader';
 import { Card } from "native-base";
+import constants from '@resources/strings';
 
 class EhealthScreen extends Component {
     constructor(props) {
@@ -51,14 +52,6 @@ class EhealthScreen extends Component {
             })
         })
     }
-    onLongPress = (index) => {
-        this.setState({
-            isLongPress: true,
-            index: index
-        })
-        this.props.navigation.navigate('DemoModalScreen')
-
-    }
     onRefresh = () => {
         this.setState({
             refreshing: true
@@ -66,28 +59,28 @@ class EhealthScreen extends Component {
             this.onGetHospital()
         })
     }
-    onPress = () => {
+    onPress = (item) => {
+        this.props.dispatch({ type: constants.action.action_select_hospital_ehealth, value: item })
         this.props.navigation.navigate('listProfile')
     }
     renderItem = ({ item, index }) => {
         const source = item.hospital && item.hospital.avatar ? { uri: item.hospital.avatar.absoluteUrl() } : require("@images/new/user.png");
 
         return (
-            <TouchableOpacity style={{ marginTop: 10, }} onPress={this.onPress}>
-                <Card style={{ flexDirection: 'row', paddingVertical: 20, paddingHorizontal: 10, borderRadius: 5 }}>
+            <TouchableOpacity style={{ marginTop: 10, }} onPress={this.onPress.bind(this, item)}>
+                <View style={{
+                    flexDirection: 'row', paddingVertical: 20, paddingHorizontal: 10,
+
+                    borderRadius: 3,
+                    backgroundColor: "#ffffff",
+                    borderStyle: "solid",
+                    borderWidth: 1,
+                    borderColor: "#d5d9db"
+                }}>
                     <ImageLoad
                         resizeMode="cover"
                         imageStyle={{
-                            borderRadius: 40, shadowColor: "rgba(0, 0, 0, 0.5)",
-                            shadowOffset: {
-                                width: 0,
-                                height: 2
-                            },
-                            shadowRadius: 4,
-                            shadowOpacity: 1,
-                            borderStyle: "solid",
-                            borderWidth: 1,
-                            borderColor: "#27ae60"
+                            borderRadius: 40, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)',
                         }}
                         borderRadius={40}
                         customImagePlaceholderDefaultStyle={[styles.avatar, { width: 80, height: 80 }]}
@@ -107,9 +100,9 @@ class EhealthScreen extends Component {
                     />
                     <View style={{ padding: 15, }}>
                         <Text style={{ fontWeight: 'bold', color: '#5A5956', fontSize: 15 }}>{item.hospital.name}</Text>
-                        <Text style={{ color: '#5A5956', marginTop: 5 }}>Lần gần nhất: {item.hospital.timeGoIn.toDateObject('-').format('dd/MM/yyyy')}</Text>
+                        <Text style={{ color: '#5A5956', marginTop: 5 }}>Lần gần nhất: {item.hospital.timeGoIn ? item.hospital.timeGoIn.toDateObject('-').format('dd/MM/yyyy') : ''}</Text>
                     </View>
-                </Card>
+                </View>
             </TouchableOpacity>
         )
     }
@@ -119,11 +112,12 @@ class EhealthScreen extends Component {
     render() {
         return (
             <ActivityPanel
-                iosBarStyle={'dark-content'}
                 icBack={require('@images/new/left_arrow_white.png')}
                 titleStyle={{ color: '#fff' }}
                 actionbarStyle={{ backgroundColor: '#27AE60' }}
                 title="Y BẠ ĐIỆN TỬ"
+
+                iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#22b060"
                 actionbarStyle={{
                     backgroundColor: '#22b060',
@@ -138,7 +132,7 @@ class EhealthScreen extends Component {
                 <View style={{
                     paddingHorizontal: 10, flex: 1, backgroundColor: '#f0f5f9'
                 }} >
-                    <Text style={styles.txHeader}>Các cơ sở y tế đã khám</Text>
+                    <Text style={styles.txHeader}>Các Cơ Sở Y Tế đã khám</Text>
                     <View style={{ flex: 1 }}>
                         <FlatList
                             data={this.state.listHospital}
