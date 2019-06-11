@@ -16,6 +16,7 @@ import ImageLoad from 'mainam-react-native-image-loader';
 import ScaledImage from "mainam-react-native-scaleimage";
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
 import resultUtils from '@ehealth/daihocy/utils/result-utils';
+import ActionSheet from 'react-native-actionsheet'
 
 
 class MedicalTestResult extends Component {
@@ -190,49 +191,48 @@ class MedicalTestResult extends Component {
             return null;
 
         const tableHead = this.state.currentGroup && this.state.currentGroup.type == 'Vi Sinh' ? ['TÊN XÉT NGHIỆM', 'KẾT QUẢ'] : ['TÊN XÉT NGHIỆM', 'KẾT QUẢ', 'GIÁ TRỊ BÌNH THƯỜNG', 'ĐƠN VỊ'];
+        let actions = this.state.medicalTestResult.map(item => item.type);
+        actions.push("Hủy");
+        debugger;
 
-        return (<View>
-            <View style={{ flexDirection: 'row', position: 'relative', flex: 1, padding: 10 }}>
-                <View style={{ flex: 1, marginLeft: 16.5 }}>
-                    <View style={[styles.item, { marginTop: 0 }]}>
-                        <View style={styles.round1}>
-                            <View style={styles.round2} />
-                        </View>
-                        <View style={[styles.itemlabel, { marginTop: 0 }]}>
-                            <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>KẾT QUẢ XÉT NGHIỆM</Text>
-                        </View>
-                    </View>
-                    <FlatList
-                        extraData={this.state}
-                        keyExtractor={(item, index) => index}
-                        style={{ flex: 1, backgroundColor: '#ebf7f3' }}
-                        numColumns={3}
-                        data={this.state.medicalTestResult}
-                        renderItem={({ item }) =>
-                            <TouchableOpacity onPress={() => { this.viewGroup(item) }}>
-                                <View style={{ width: DEVICE_WIDTH / 3.5, flexDirection: 'row', marginLeft: 10, alignItems: 'center' }}>
-                                    {
-                                        this.state.currentGroup == item ?
-                                            <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_radio1.png")} width={15} />
-                                            :
-                                            <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_radio0.png")} width={15} />
-                                    }
-                                    <Text style={[{ fontWeight: 'bold', padding: 5 }, this.state.currentGroup == item ? styles.groupSelected : null]}>{item.type}</Text>
-                                </View>
-                            </TouchableOpacity>}
-                    />
-                    {
-                        this.state.currentGroup ?
-                            <View>
-                                <Table>
-                                    <Row data={tableHead} style={styles.head} textStyle={styles.text} />
-                                    {this.renderData()}
-                                </Table>
-                            </View> : null
-                    }
-                    <View style={{ marginTop: 30 }} />
+
+        return (<View style={{ flex: 1, padding: 10 }}>
+            <View style={[styles.item, { marginTop: 0 }]}>
+                <View style={styles.round1}>
+                    <View style={styles.round2} />
+                </View>
+                <View style={[styles.itemlabel, { marginTop: 0 }]}>
+                    <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>KẾT QUẢ XÉT NGHIỆM</Text>
                 </View>
             </View>
+            {
+                this.state.currentGroup && <View style={{ alignItems: 'flex-end', marginVertical: 10 }}><TouchableOpacity onPress={() => {
+                    this.actionSheetChooseType.show();
+                }} style={{ flexDirection: 'row', alignItems:'center' }}>
+                    <Text style={{marginRight: 10}}>{this.state.currentGroup.type}</Text>
+                    <ScaleImage source={require("@images/new/down.png")} width={10}/>
+                </TouchableOpacity></View>
+            }
+            {
+                this.state.currentGroup ?
+                    <View>
+                        <Table>
+                            <Row data={tableHead} style={styles.head} textStyle={styles.text} />
+                            {this.renderData()}
+                        </Table>
+                    </View> : null
+            }
+            <ActionSheet
+                ref={o => this.actionSheetChooseType = o}
+                options={actions}
+                cancelButtonIndex={actions.length - 1}
+                destructiveButtonIndex={actions.length - 1}
+                onPress={(index) => {
+                    if (index <= this.state.medicalTestResult.length - 1) {
+                        this.setState({ currentGroup: this.state.medicalTestResult[index] });
+                    }
+                }}
+            />
         </View>)
     }
 }
@@ -270,11 +270,5 @@ const styles = StyleSheet.create({
     groupSelected: {
         color: constants.colors.primary_bold
     },
-    breakline: {
-        height: 1,
-        marginTop: 10,
-        marginBottom: 10,
-        backgroundColor: constants.colors.breakline
-    }
 })
 export default connect(mapStateToProps)(MedicalTestResult);
