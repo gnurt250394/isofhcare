@@ -20,6 +20,7 @@ import CheckupResult from '@components/ehealth/CheckupResult';
 import SurgeryResult from '@components/ehealth/SurgeryResult';
 import MedicalTestResult from '@components/ehealth/MedicalTestResult';
 import DiagnosticResult from '@components/ehealth/DiagnosticResult';
+import Medicine from '@components/ehealth/Medicine';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 
@@ -58,6 +59,7 @@ class ViewEhealthDetailScreen extends Component {
                     <MedicalTestResult result={this.state.result} />
                     <DiagnosticResult result={this.state.result} />
                     <SurgeryResult result={this.state.result} />
+                    <Medicine result={this.state.result} />
                 </ScrollView>
             </ActivityPanel>
         );
