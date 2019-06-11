@@ -14,7 +14,6 @@ import constants from '@resources/strings';
 const DEVICE_WIDTH = Dimensions.get('window').width;
 import ImageLoad from 'mainam-react-native-image-loader';
 import ScaledImage from "mainam-react-native-scaleimage";
-import MedicalTestResultItem from '@components/ehealth/MedicalTestResultItem';
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
 import resultUtils from '@ehealth/daihocy/utils/result-utils';
 
