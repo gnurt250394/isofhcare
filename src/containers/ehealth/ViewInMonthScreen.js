@@ -32,7 +32,7 @@ LocaleConfig.locales['en'] = {
 
 LocaleConfig.defaultLocale = 'en';
 let fireDate
-const  alarmNotifData = {
+let  alarmNotifData = {
     id: "12345",                                  // Required
     title: "Isofh Care ",               // Required
     message: "Đã đến giờ uống thuốc",           // Required
@@ -57,7 +57,7 @@ class ListProfileScreen extends Component {
         super(props)
         let patient = this.props.ehealth.patient;
         patient.history = (patient.history || []).sort((a, b) => {
-            return a.timeGoIn.toDateObject("-") - b.timeGoIn.toDateObject("-")
+            a.timeGoIn && b.timeGoIn ?   a.timeGoIn.toDateObject("-") - b.timeGoIn.toDateObject("-") : ''
         });
 
         let latestTime = patient.latestTime ? patient.latestTime.toDateObject("-") : new Date()
@@ -66,8 +66,8 @@ class ListProfileScreen extends Component {
         if (latestTime) {
             dateSelected = latestTime.format("yyyy-MM-dd");
             if (!histories[dateSelected]) {
-                if (patient.history) {
-                    dateSelected = patient.history[patient.history.length - 1].timeGoIn.toDateObject("-").format("yyyy-MM-dd")
+                if (patient.history && patient.history.length && patient.history[patient.history.length - 1].timeGoIn) {
+                    dateSelected = patient.history[patient.history.length - 1].timeGoIn.toDateObject("-").format("yyyy-MM-dd") 
                     histories[dateSelected].selected = true;
                 } else
                     dateSelected = "";
@@ -139,7 +139,7 @@ class ListProfileScreen extends Component {
             let date = new Date().getDate()
             let month = new Date().getMonth() + 1
             let year = new Date().getFullYear()
-            let fire_date = `${date}-${month}-${year} ${res.data.data.medicineTime}`
+            let fire_date = `${date}-${month}-${year} ${medicineTime.format('HH:mm:ss')}`
             fireDate = fire_date
             res.data.data.isMedicineTime ? ReactNativeAN.scheduleAlarm(alarmNotifData)
                 : ReactNativeAN.deleteAlarm('12345')
@@ -262,9 +262,11 @@ class ListProfileScreen extends Component {
                     let date = new Date().getDate()
                     let month = new Date().getMonth() + 1
                     let year = new Date().getFullYear()
-                    let fire_date = `${date}-${month}-${year} ${this.state.timeAlarm}`
+                    let fire_date = `${date}-${month}-${year} ${this.state.dobAlarm.format('HH:mm:ss')}`
                     console.log(fire_date);
-                    fireDate = fire_date
+                   alarmNotifData.fire_date = fire_date
+                   console.log(alarmNotifData);
+                   
                     ReactNativeAN.scheduleAlarm(alarmNotifData)
                 }).catch(err => {
                     console.log(err);

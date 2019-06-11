@@ -132,7 +132,7 @@ class EhealthScreen extends Component {
                 <View style={{
                     paddingHorizontal: 10, flex: 1, backgroundColor: '#f0f5f9'
                 }} >
-                    <Text style={styles.txHeader}>Các cơ sở y tế đã khám</Text>
+                    <Text style={styles.txHeader}>Các Cơ Sở Y Tế đã khám</Text>
                     <View style={{ flex: 1 }}>
                         <FlatList
                             data={this.state.listHospital}
