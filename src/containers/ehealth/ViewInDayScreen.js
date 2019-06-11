@@ -186,7 +186,7 @@ class ViewInDateScreen extends Component {
                     <View style={{ width: 10, height: 10, backgroundColor: '#ff4355', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
                     <View style={{ flex: 1, padding: 15 }}>
                         <Text style={{ fontSize: 18 }}>Kết quả khám</Text>
-                        <Text style={{ paddingTop: 5, color: '#ff4355' }}>{note}</Text>
+                        <Text style={{ paddingTop: 5, color: '#ff4355', flex: 1 }}>{note}</Text>
                     </View>
                     <View style={{ width: 5, height: '100%', backgroundColor: '#ff4355', borderRadius: 2.5 }}></View>
                 </View>
@@ -207,7 +207,7 @@ class ViewInDateScreen extends Component {
                     <View style={{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
                     <View style={{ flex: 1, padding: 15 }}>
                         <Text style={{ fontSize: 18 }}>Kết quả chẩn đoán hình ảnh</Text>
-                        <Text style={{ paddingTop: 5, color: '#2e66e7' }}>{note}</Text>
+                        <Text style={{ paddingTop: 5, color: '#2e66e7', flex: 1 }}>{note}</Text>
                     </View>
                     <View style={{ width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 }}></View>
                 </View>
@@ -215,7 +215,32 @@ class ViewInDateScreen extends Component {
         return null;
     }
     renderSurgeryResult() {
-
+        if (this.state.result && this.state.result.ListResulGiaiPhau && this.state.result.ListResulGiaiPhau.length) {
+            let item = this.state.result.ListResulGiaiPhau[this.state.result.ListResulGiaiPhau.length - 1];
+            let note = item.Conclusion;
+            if (!note)
+                note = item.Discussion;
+            if (!note)
+                note = item.Result;
+            if (!note)
+                note = item.SummaryResult;
+            if (!note)
+                note = item.Macrosome;
+            if (!note)
+                note = item.BiopsyLocation;
+            if (!note)
+                note = item.ReportTemplate;
+            if (note)
+                return <View style={styles.card}>
+                    <View style={{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
+                    <View style={{ flex: 1, padding: 15 }}>
+                        <Text style={{ fontSize: 18 }}>Kết quả giải phẫu</Text>
+                        <Text style={{ paddingTop: 5, color: '#2e66e7', flex: 1 }}>{note}</Text>
+                    </View>
+                    <View style={{ width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 }}></View>
+                </View>
+        }
+        return null;
     }
     renderMedicalTest() {
         if (this.state.result && this.state.result.ListResultCheckup && this.state.result.ListResultCheckup.length) {
@@ -314,6 +339,9 @@ class ViewInDateScreen extends Component {
                             </View> */}
                             {
                                 this.renderDiagnosticResult()
+                            }
+                            {
+                                this.renderSurgeryResult()
                             }
                             {/* 
                             <View style={styles.card}>
