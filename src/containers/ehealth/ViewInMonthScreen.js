@@ -59,7 +59,6 @@ class ListProfileScreen extends Component {
         patient.history = (patient.history || []).sort((a, b) => {
             a.timeGoIn && b.timeGoIn ?   a.timeGoIn.toDateObject("-") - b.timeGoIn.toDateObject("-") : ''
         });
-
         let latestTime = patient.latestTime ? patient.latestTime.toDateObject("-") : new Date()
         let histories = this.groupHistory(patient.history, latestTime);
         let dateSelected = "";
@@ -230,6 +229,7 @@ class ListProfileScreen extends Component {
     }
     onSetAlarm = () => {
 
+      if(this.state.dobAlarm){
         if (this.state.switchValue) {
             this.setState({
                 switchValue: false
@@ -274,6 +274,9 @@ class ListProfileScreen extends Component {
             })
 
         }
+      }else{
+          alert('Bạn chưa chọn giờ uống thuốc')
+      }
     }
     onBlur = () => {
         let note = this.state.note
