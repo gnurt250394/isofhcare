@@ -242,6 +242,40 @@ class ViewInDateScreen extends Component {
         }
         return null;
     }
+
+    renderMedicine() {
+        if (this.state.result) {
+            let item = null;
+            if (this.state.result.ListMedicine && this.state.result.ListMedicine.length) {
+                item = this.state.result.ListMedicine[this.state.result.ListMedicine.length - 1];
+            }
+            if (!item) {
+                if (this.state.result.ListResultCheckup && this.state.result.ListResultCheckup.length) {
+                    let item2 = this.state.result.ListResultCheckup[this.state.result.ListResultCheckup.length - 1];
+                    if (item2.ListMedicine && item2.ListMedicine.length)
+                        item = item2.ListMedicine[item2.ListMedicine.length - 1];
+                    if (!item)
+                        if (item2.ListExternalMedicine && item2.ListExternalMedicine.length)
+                            item = item2.ListExternalMedicine[item2.ListExternalMedicine.length - 1];
+
+                }
+            }
+            if (!item)
+                return null;
+
+            let note = item.ServiceName + " " + item.Measure + ", " + item.Quantity + " " + item.Unit;
+            if (note)
+                return <View style={styles.card}>
+                    <View style={{ width: 10, height: 10, backgroundColor: '#fbaa21', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
+                    <View style={{ flex: 1, padding: 15 }}>
+                        <Text style={{ fontSize: 18 }}>Thuốc</Text>
+                        <Text style={{ paddingTop: 5, color: '#fbaa21', flex: 1 }}>{note}</Text>
+                    </View>
+                    <View style={{ width: 5, height: '100%', backgroundColor: '#fbaa21', borderRadius: 2.5 }}></View>
+                </View>
+        }
+        return null;
+    }
     renderMedicalTest() {
         if (this.state.result && this.state.result.ListResultCheckup && this.state.result.ListResultCheckup.length) {
             let item = this.state.result.ListResultCheckup[this.state.result.ListResultCheckup.length - 1];
@@ -343,16 +377,12 @@ class ViewInDateScreen extends Component {
                             {
                                 this.renderSurgeryResult()
                             }
-                            {/* 
-                            <View style={styles.card}>
-                                <View style={{ width: 10, height: 10, backgroundColor: '#fbaa21', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
-                                <View style={{ flex: 1, padding: 15 }}>
-                                    <Text style={{ fontSize: 18 }}>Thuốc</Text>
-                                    <Text style={{ paddingTop: 5, color: '#fbaa21' }}>Kết quả khám</Text>
-                                </View>
-                                <View style={{ width: 5, height: '100%', backgroundColor: '#fbaa21', borderRadius: 2.5 }}></View>
-                            </View>
-                            <View style={styles.card}>
+                            {
+                                this.renderMedicine()
+                            }
+
+
+                            {/*  <View style={styles.card}>
                                 <View style={{ width: 10, height: 10, backgroundColor: '#ff4355', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
                                 <View style={{ flex: 1, padding: 15 }}>
                                     <Text style={{ fontSize: 18 }}>Tiền</Text>
