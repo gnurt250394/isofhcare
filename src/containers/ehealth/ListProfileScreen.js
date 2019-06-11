@@ -68,9 +68,9 @@ class ListProfileScreen extends PureComponent {
                         <View style={{ width: 20, height: 20, borderWidth: 1.5, borderColor: '#91a3ad', borderRadius: 10, justifyContent: 'center', alignItems: 'center', position: 'absolute', left: 0, bottom: 0, backgroundColor: '#FFF' }}>
                             <View style={{ width: 8, height: 8, backgroundColor: '#c84242', borderRadius: 4 }}></View>
                         </View>
-                        <Text style={{ fontWeight: 'bold', color: '#63737a' }}>{item.patientName}</Text>
+                        <Text style={{color: '#63737a',fontSize:15 }}>{item.patientName}</Text>
                         {Platform.OS == 'ios' ? <View style={{height:10}}></View> : <View/>}
-                        <Text style={{ marginTop: 10,color:'#51626a' }}>{item.hospitalEntity.name}</Text>
+                        <Text style={{ marginTop: 10,color:'#51626a',fontSize:15 }}>{item.hospitalEntity.name}</Text>
                     </View>
                     <View style={{ flexDirection: 'row', marginLeft: 10, marginTop: 10, alignItems: 'center' }}>
                         <ScaleImage resizeMode='cover' source={require("@images/new/ehealth/ic_time.png")} width={20} tintColor={'#8fa1aa'} />
