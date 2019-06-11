@@ -31,11 +31,11 @@ class CheckupResult extends Component {
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 style={{ padding: 10 }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 30 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
                     <Text style={{ flex: 1, fontWeight: 'bold', fontSize: 15, color: constants.colors.primary_bold }}>{item.ServiceName}</Text>
-                    <TouchableOpacity onPress={() => this.exportPdf()}>
+                    {/* <TouchableOpacity onPress={() => this.exportPdf()}>
                         <Text style={{ borderColor: '#065cb4', borderWidth: 2, paddingLeft: 12, paddingRight: 12, paddingTop: 8, paddingBottom: 8, borderRadius: 20, color: "#065cb4", fontWeight: 'bold' }}>Xuất PDF</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
                 <View style={styles.slide}>
 
@@ -114,7 +114,7 @@ class CheckupResult extends Component {
                         {
                             (item.ListMedicine && item.ListMedicine.length > 0) || (item.ListExternalMedicine && item.ListExternalMedicine.length > 0)
                                 ?
-                                <View>
+                                <View style={{flex: 1}}>
                                     <Text style={[styles.diagnosticLabel, { marginBottom: 0, marginTop: 10 }]}>Đơn thuốc</Text>
                                     <Table style={[styles.table, { marginTop: 10 }]} borderStyle={{ borderWidth: 0.5, borderColor: '#c8e1ff' }}>
                                         <Row data={tableHead} style={styles.head} textStyle={styles.textHead} flexArr={[1, 3, 1, 1]} />
@@ -288,7 +288,6 @@ class CheckupResult extends Component {
     }
     render() {
         let { item } = this.props;
-        debugger;
         return <View style={{ flex: 1 }} key={this.props.key}>
             {
                 this.renderItemCheckup(item)
@@ -309,6 +308,24 @@ const styles = StyleSheet.create({
     round3: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#c74444' },
     itemlabel: { marginLeft: 5, flex: 1, marginTop: 2 },
     itemcontent: { color: '#0076ff' },
-    item: { marginTop: 10, flexDirection: 'row' }
+    item: { marginTop: 10, flexDirection: 'row' },
+    slide: {
+        flex: 1,
+    },
+    table: { marginTop: 30, marginBottom: 50 },
+    head: { height: 40, backgroundColor: '#f1f8ff' },
+    textHead: { textAlign: 'center', fontWeight: 'bold' },
+    text: { padding: 4, textAlign: 'center' },
+    diagnosticLabel:
+    {
+        color: constants.colors.primary_bold,
+        fontWeight: 'bold', marginBottom: 10
+    },
+    breakline: {
+        height: 1,
+        marginTop: 10,
+        marginBottom: 10,
+        backgroundColor: constants.colors.breakline
+    }
 })
 export default connect(mapStateToProps)(CheckupResult);
