@@ -241,7 +241,7 @@ class ViewInDateScreen extends Component {
             //         (this.state.resultDetail.ListPayment && this.state.resultDetail.ListPayment.length > 0 ? this.state.resultDetail.ListPayment.reduce((a, b) => a + b.Amount, 0) : 0);
             // }
             // else {
-                money = this.state.resultDetail.ListService.reduce((a, b) => a + b.PriceService, 0);
+            money = this.state.resultDetail.ListService.reduce((a, b) => a + b.PriceService, 0);
             // }
             return <View style={styles.card}>
                 <View style={{ width: 10, height: 10, backgroundColor: '#ff4355', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
@@ -318,23 +318,42 @@ class ViewInDateScreen extends Component {
     }
     renderMedicalTest() {
         if (this.state.result && this.state.result.ListResultCheckup && this.state.result.ListResultCheckup.length) {
-            let item = this.state.result.ListResultCheckup[this.state.result.ListResultCheckup.length - 1];
-            let note = item.Diagnostic;
-            if (note)
-                note = item.DiseaseDiagnostic;
-            if (note)
-                note = item.First_Diagnostic;
-            if (note)
-                note = item.First_Diagnostic;
-            if (note)
+            let arr = [];
+            if (this.state.result.ListResulHoaSinh && this.state.result.ListResulHoaSinh.length)
+                arr = this.state.result.ListResulHoaSinh;
+            if (!arr.length)
+                if (this.state.result.ListResulHuyetHoc && this.state.result.ListResulHuyetHoc.length)
+                    arr = this.state.result.ListResulHuyetHoc;
+            if (!arr.length)
+                if (this.state.result.ListResulViSinh && this.state.result.ListResulViSinh.length)
+                    arr = this.state.result.ListResulViSinh;
+            if (!arr.length)
+                if (this.state.result.ListResulOther && this.state.result.ListResulOther.length)
+                    arr = this.state.result.ListResulOther;
+            if (!arr.length)
+                return null;
+            arr = arr[arr.length - 1];
+            let note;
+            if (arr.ListMedical && arr.ListMedical.length) {
+                let item = arr.ListMedical[arr.ListMedical.length - 1]
+                if (item.ServiceMedicTestLine && item.ServiceMedicTestLine.length) {
+                    item = item.ServiceMedicTestLine[item.ServiceMedicTestLine.length - 1];
+                    note = item.NameLine + ": " + item.Result;
+                }
+                else
+                    note = item.ServiceName + ": " + item.Result;
+            } else {
+                return null;
+            }
 
+            if (note)
                 return <View style={styles.card}>
-                    <View style={{ width: 10, height: 10, backgroundColor: '#ff4355', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
+                    <View style={{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
                     <View style={{ flex: 1, padding: 15 }}>
-                        <Text style={{ fontSize: 18 }}>Kết quả khám</Text>
-                        <Text style={{ paddingTop: 5, color: '#ff4355' }}>{note}</Text>
+                        <Text style={{ fontSize: 18 }}>Kết quả xét nghiệm</Text>
+                        <Text style={{ paddingTop: 5, color: '#2e66e7' }}>{note}</Text>
                     </View>
-                    <View style={{ width: 5, height: '100%', backgroundColor: '#ff4355', borderRadius: 2.5 }}></View>
+                    <View style={{ width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 }}></View>
                 </View>
         }
         return null;
@@ -403,14 +422,9 @@ class ViewInDateScreen extends Component {
                             {
                                 this.renderCheckupResult()
                             }
-                            {/* <View style={styles.card}>
-                                <View style={{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
-                                <View style={{ flex: 1, padding: 15 }}>
-                                    <Text style={{ fontSize: 18 }}>Kết quả xét nghiệm</Text>
-                                    <Text style={{ paddingTop: 5, color: '#2e66e7' }}>Kết quả khám</Text>
-                                </View>
-                                <View style={{ width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 }}></View>
-                            </View> */}
+                            {
+                                this.renderMedicalTest()
+                            }
                             {
                                 this.renderDiagnosticResult()
                             }
