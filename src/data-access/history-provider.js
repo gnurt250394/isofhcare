@@ -28,7 +28,7 @@ module.exports = {
                                     results[i].dataId = dataId + "";
                                     results[i].type = type;
                                     results[i].data = data;
-                                    results[i].userId = userId;
+                                    results[i].userId = userId + "";
                                     return;
                                 }
                             }
@@ -40,10 +40,11 @@ module.exports = {
                             type: type,
                             name: name,
                             timeSearch: new Date().getTime(),
-                            userId: userId,
+                            userId: userId + "",
                             data: data
                         });
                     } catch (error) {
+                        console.log(error);
                     }
 
                 });

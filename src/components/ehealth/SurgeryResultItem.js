@@ -1,20 +1,8 @@
 import React, { Component, PropTypes } from 'react';
-import ActivityPanel from '@components/ActivityPanel';
 import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Keyboard, Image, TouchableHighlight, FlatList, Dimensions, TouchableWithoutFeedback } from 'react-native';
 import { connect } from 'react-redux';
 import ScaleImage from "mainam-react-native-scaleimage";
-import connectionUtils from '@utils/connection-utils';
-import clientUtils from '@utils/client-utils';
-import scheduleProvider from '@data-access/schedule-provider';
-import snackbar from '@utils/snackbar-utils';
-import dateUtils from "mainam-react-native-date-utils";
-import bookingProvider from '@data-access/booking-provider';
-import dataCacheProvider from '@data-access/datacache-provider';
 import constants from '@resources/strings';
-const DEVICE_WIDTH = Dimensions.get('window').width;
-import ImageLoad from 'mainam-react-native-image-loader';
-import ScaledImage from "mainam-react-native-scaleimage";
-import { Table, Row } from 'react-native-table-component';
 import ExportPDF from '@ehealth/daihocy/components/ExportPDF';
 
 class CheckupResult extends Component {
@@ -23,6 +11,15 @@ class CheckupResult extends Component {
         this.state = {
             listTime: []
         }
+    }
+    renderItem(text) {
+        // if (!text) {
+        //     while (text.indexOf('\n') != -1) {
+        //         text = text.replace("\n", "");
+        //     }
+        //     text = text.trim();
+        // }
+        return <Text style={{ marginLeft: 10, marginBottom: 10 }}>{text}</Text>
     }
 
     render() {
@@ -54,7 +51,7 @@ class CheckupResult extends Component {
                             <Text style={styles.diagnosticLabel}>Vị trí sinh thiết</Text>
                             <View style={{ flexDirection: 'row' }}>
                                 <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
-                                <Text style={{ marginLeft: 10 }}>{item.BiopsyLocation}</Text>
+                                {this.renderItem(item.BiopsyLocation)}
                             </View>
                         </View> : null
                 }
@@ -66,7 +63,7 @@ class CheckupResult extends Component {
                             <Text style={styles.diagnosticLabel}>Vị thể</Text>
                             <View style={{ flexDirection: 'row' }}>
                                 <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
-                                <Text style={{ marginLeft: 10 }}>{item.Microsome}</Text>
+                                {this.renderItem(item.Microsome)}
                             </View>
                         </View> : null
                 }
@@ -78,7 +75,7 @@ class CheckupResult extends Component {
                             <Text style={styles.diagnosticLabel}>Đại thể</Text>
                             <View style={{ flexDirection: 'row' }}>
                                 <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
-                                <Text style={{ marginLeft: 10 }}>{item.Macrosome}</Text>
+                                {this.renderItem(item.Macrosome)}
                             </View>
                         </View> : null
                 }
@@ -90,7 +87,7 @@ class CheckupResult extends Component {
                             <Text style={styles.diagnosticLabel}>Kết quả</Text>
                             <View style={{ flexDirection: 'row' }}>
                                 <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
-                                <Text style={{ marginLeft: 10 }}>{item.Result} {item.Discussion} </Text>
+                                {this.renderItem(item.Result + item.Discussion)}
                             </View>
                         </View> : null
                 }
@@ -109,7 +106,9 @@ class CheckupResult extends Component {
                                     }
                                     <Text style={styles.diagnosticLabel1}>{item.NameLine}</Text>
                                 </View>
-                                {item.Result2 ? <Text style={{ marginLeft: 10 }}>{item.Result2}</Text> : null}
+                                {item.Result2 ?
+                                    this.renderItem(item.Result2)
+                                    : null}
                             </View>)
                         })
                         : <View></View>
@@ -122,7 +121,9 @@ class CheckupResult extends Component {
                             <Text style={styles.diagnosticLabel}>Kết luận</Text>
                             <View style={{ flexDirection: 'row' }}>
                                 <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
-                                <Text style={{ marginLeft: 10 }}>{item.Conclusion}</Text>
+                                {
+                                    this.renderItem(item.Conclusion)
+                                }
                             </View>
                         </View> : null
                 }
@@ -146,7 +147,7 @@ const styles = StyleSheet.create({
     diagnosticLabel:
     {
         color: constants.colors.primary_bold,
-        fontWeight: 'bold', marginBottom: 5, marginTop: 15
+        fontWeight: 'bold', marginBottom: 5
     },
     breakline: {
     }

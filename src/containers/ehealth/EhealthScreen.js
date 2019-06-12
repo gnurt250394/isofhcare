@@ -80,7 +80,7 @@ class EhealthScreen extends Component {
                     <ImageLoad
                         resizeMode="cover"
                         imageStyle={{
-                            borderRadius: 40, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)',
+                            borderRadius: 40, borderWidth: 0.5, borderColor: '#27AE60',
                         }}
                         borderRadius={40}
                         customImagePlaceholderDefaultStyle={[styles.avatar, { width: 80, height: 80 }]}

@@ -42,6 +42,7 @@ module.exports = {
   later: "Để sau",
   input_code: "Nhập mã xác thực",
   dob: "Ngày sinh",
+  filenamePDF: "ket_qua",
   hospital: {
     BENH_VIEN_DAI_HOC_Y: 1
   },
@@ -72,6 +73,9 @@ module.exports = {
     {
       vnpay: "vnpay://payment_isofhcare_return",
       payoo: "payoo://payment_isofhcare_return"
+    },
+    history: {
+      user_ehealth: 'USER-EHEALTH'
     },
     storage: {
       android_version: "ANDROID_VERSION",
@@ -373,7 +377,8 @@ module.exports = {
     },
     ehealth: {
       get_group_patient: isofhcare_service + 'booking/get-group-patient-history',
-      update_data_user: isofhcare_service + 'patient-history-booking/update-data-note'
+      update_data_user: isofhcare_service + 'patient-history-booking/update-data-note',
+      search_profile_user: isofhcare_service + 'user/search'
     }
   }
 };

@@ -66,24 +66,20 @@ class Medicine extends Component {
             medinine = medinine.constants(result.ListMedicine);
         }
         if (medinine && medinine.length)
-            return (<View>
-                <View style={{ flexDirection: 'row', position: 'relative', flex: 1, padding: 10 }}>
-                    <View style={{ flex: 1, marginLeft: 16.5 }}>
-                        <View style={[styles.item, { marginTop: 0 }]}>
-                            <View style={styles.round1}>
-                                <View style={styles.round2} />
-                            </View>
-                            <View style={[styles.itemlabel, { marginTop: 0 }]}>
-                                <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>THUỐC</Text>
-                            </View>
-                        </View>
+            return ((<View style={{ flex: 1, padding: 10 }}>
+                <View style={[styles.item, { marginTop: 0 }]}>
+                    <View style={styles.round1}>
+                        <View style={styles.round2} />
+                    </View>
+                    <View style={[styles.itemlabel, { marginTop: 0 }]}>
+                        <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>THUỐC</Text>
                     </View>
                 </View>
                 <Table style={[styles.table, { marginTop: 10 }]} borderStyle={{ borderWidth: 0.5, borderColor: '#c8e1ff' }}>
                     <Row data={tableHead} style={styles.head} textStyle={styles.textHead} flexArr={[1, 3, 1, 1]} />
                     {this.renderMedicine(medinine)}
                 </Table>
-            </View>)
+            </View>))
         else
             return null;
     }

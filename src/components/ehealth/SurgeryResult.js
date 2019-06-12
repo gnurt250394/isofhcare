@@ -1,19 +1,6 @@
 import React, { Component, PropTypes } from 'react';
-import ActivityPanel from '@components/ActivityPanel';
 import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Keyboard, Image, TouchableHighlight, FlatList, Dimensions, TouchableWithoutFeedback } from 'react-native';
 import { connect } from 'react-redux';
-import ScaleImage from "mainam-react-native-scaleimage";
-import connectionUtils from '@utils/connection-utils';
-import clientUtils from '@utils/client-utils';
-import scheduleProvider from '@data-access/schedule-provider';
-import snackbar from '@utils/snackbar-utils';
-import dateUtils from "mainam-react-native-date-utils";
-import bookingProvider from '@data-access/booking-provider';
-import dataCacheProvider from '@data-access/datacache-provider';
-import constants from '@resources/strings';
-const DEVICE_WIDTH = Dimensions.get('window').width;
-import ImageLoad from 'mainam-react-native-image-loader';
-import ScaledImage from "mainam-react-native-scaleimage";
 import SurgeryResultItem from '@components/ehealth/SurgeryResultItem';
 
 

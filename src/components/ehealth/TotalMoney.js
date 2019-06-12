@@ -1,21 +1,8 @@
 import React, { Component, PropTypes } from 'react';
-import ActivityPanel from '@components/ActivityPanel';
 import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Keyboard, Image, TouchableHighlight, FlatList, Dimensions, TouchableWithoutFeedback } from 'react-native';
 import { connect } from 'react-redux';
-import ScaleImage from "mainam-react-native-scaleimage";
-import connectionUtils from '@utils/connection-utils';
-import clientUtils from '@utils/client-utils';
-import scheduleProvider from '@data-access/schedule-provider';
-import snackbar from '@utils/snackbar-utils';
-import dateUtils from "mainam-react-native-date-utils";
-import bookingProvider from '@data-access/booking-provider';
-import dataCacheProvider from '@data-access/datacache-provider';
 import constants from '@resources/strings';
 import stringUtils from 'mainam-react-native-string-utils';
-const DEVICE_WIDTH = Dimensions.get('window').width;
-import ImageLoad from 'mainam-react-native-image-loader';
-import ScaledImage from "mainam-react-native-scaleimage";
-import CheckupResultItem from '@components/ehealth/CheckupResultItem';
 import { Table, Row } from 'react-native-table-component';
 
 
@@ -34,42 +21,38 @@ class TotalMoney extends Component {
         }
         return null;
     }
-    renderServiceItem(index, item) {        
-        var data = [index + 1, item.Name, 1, item.PriceService.formatPrice()+" đ"]
+    renderServiceItem(index, item) {
+        var data = [index + 1, item.Name, 1, item.PriceService.formatPrice() + " đ"]
         return (<Row data={data} key={index} textStyle={styles.text} flexArr={[1, 3, 1, 2]} />);
     }
 
 
     render() {
         const tableHead = ['STT', 'Tên', 'Số lượng', 'Tiền'];
-        let { result, resultDetail } = this.props;
+        let { resultDetail } = this.props;
         if (!resultDetail || !resultDetail.ListService || !resultDetail.ListService.length)
             return null;
 
-        return (<View style={{padding: 10}}>
-            <View style={{ flexDirection: 'row', position: 'relative', flex: 1, padding: 10 }}>
-                <View style={{ flex: 1, marginLeft: 16.5 }}>
-                    <View style={[styles.item, { marginTop: 0 }]}>
-                        <View style={styles.round1}>
-                            <View style={styles.round2} />
-                        </View>
-                        <View style={[styles.itemlabel, { marginTop: 0 }]}>
-                            <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>TIỀN</Text>
-                        </View>
-                    </View>
+        return ((<View style={{ flex: 1, padding: 10 }}>
+            <View style={[styles.item, { marginTop: 0 }]}>
+                <View style={styles.round1}>
+                    <View style={styles.round2} />
+                </View>
+                <View style={[styles.itemlabel, { marginTop: 0 }]}>
+                    <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>TIỀN</Text>
                 </View>
             </View>
             <Table style={[styles.table, { marginTop: 10 }]} borderStyle={{ borderWidth: 0.5, borderColor: '#c8e1ff' }}>
                 <Row data={tableHead} style={styles.head} textStyle={styles.textHead} flexArr={[1, 3, 1, 2]} />
                 {this.renderService(resultDetail.ListService)}
             </Table>
-            <View style={{alignItems:'flex-end', marginTop: 10}}>
-                <Text style={{fontSize: 18, borderBottomWidth: 1, borderBottomColor: '#979797', paddingBottom: 5, color:'#333333', fontWeight: 'bold'}}>Tổng:      <Text style={{color:'red', fontWeight:'bold', fontSize: 18}}>
+            <View style={{ alignItems: 'flex-end', marginTop: 10 }}>
+                <Text style={{ fontSize: 18, borderBottomWidth: 1, borderBottomColor: '#979797', paddingBottom: 5, color: '#333333', fontWeight: 'bold' }}>Tổng:      <Text style={{ color: 'red', fontWeight: 'bold', fontSize: 18 }}>
                     {
-                        resultDetail.ListService.reduce((a, b) => a + b.PriceService, 0).formatPrice()+" đ"
+                        resultDetail.ListService.reduce((a, b) => a + b.PriceService, 0).formatPrice() + " đ"
                     }</Text></Text>
             </View>
-        </View>)
+        </View>))
     }
 }
 
