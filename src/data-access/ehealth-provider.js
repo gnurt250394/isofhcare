@@ -43,5 +43,21 @@ module.exports = {
             );
         });
     },
+  
+    search(page, size, queryString) {
+        let active = 1
+        let specialistId = -1
+        let type = 2
+        let roleId = -1
+        let style = -1
+        return new Promise((resolve, reject) => {
+            client.requestApi("get", `${constants.api.ehealth.search_profile_user}?page=${page}&size=${size}&queryString=${queryString}&active=${active}&specialistId=${specialistId}&type=${type}&roleId=${roleId}&style=${style}`, {}, (s, e) => {
+                if (s) {
+                    resolve(s);
+                }
+                reject(e);
+            });
+        });
+    }
 
 }
