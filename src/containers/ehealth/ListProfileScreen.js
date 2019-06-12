@@ -131,7 +131,6 @@ class ListProfileScreen extends PureComponent {
                 titleStyle={{
                     color: '#FFF'
                 }}
-
                 showFullScreen={true} isLoading={this.state.isLoading}>
                 <FlatList
                     showsVerticalScrollIndicator={false}
