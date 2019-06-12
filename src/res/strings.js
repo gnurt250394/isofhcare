@@ -42,6 +42,7 @@ module.exports = {
   later: "Để sau",
   input_code: "Nhập mã xác thực",
   dob: "Ngày sinh",
+  filenamePDF: "ket_qua",
   hospital: {
     BENH_VIEN_DAI_HOC_Y: 1
   },

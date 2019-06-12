@@ -9,48 +9,32 @@ import resultUtils from '@ehealth/utils/result-utils';
 
 class ExportPDF extends Component {
     renderResult(result, hospital) {
-        if (result.profile.IsContract) {
+        if (result.Profile.IsContract) {
 
         }
 
-        var resultSurgery = result.data.ListResulGiaiPhau;
-        var resultCheckup = result.data.ListResultCheckup;
-        var resultDiagnostic = result.data.ListDiagnostic;
-        // var resultKhac = result.data.ListResulOther;
+        var resultSurgery = result.ListResulGiaiPhau;
+        var resultCheckup = result.ListResultCheckup;
+        var resultDiagnostic = result.ListDiagnostic;
 
         var resultMedicalTest;
-        if ((result.data.ListResulViSinh && result.data.ListResulViSinh.length > 0)
-            || (result.data.ListResulHoaSinh && result.data.ListResulHoaSinh.length > 0)
-            || (result.data.ListResulHuyetHoc && result.data.ListResulHuyetHoc.length > 0)
-            || (result.data.ListResulOther && result.data.ListResulOther.length > 0)
+        if ((result.ListResulViSinh && result.ListResulViSinh.length > 0)
+            || (result.ListResulHoaSinh && result.ListResulHoaSinh.length > 0)
+            || (result.ListResulHuyetHoc && result.ListResulHuyetHoc.length > 0)
+            || (result.ListResulOther && result.ListResulOther.length > 0)
         )
             resultMedicalTest = {
-                resultViSinh: result.data.ListResulViSinh,
-                resultHoaSinh: result.data.ListResulHoaSinh,
-                resultHuyetHoc: result.data.ListResulHuyetHoc,
-                resultKhac: result.data.ListResulOther
+                resultViSinh: result.ListResulViSinh,
+                resultHoaSinh: result.ListResulHoaSinh,
+                resultHuyetHoc: result.ListResulHuyetHoc,
+                resultKhac: result.ListResulOther
             }
-        var profile = result.profile;
+        var profile = result.Profile;
         var div = "";
-
-        if (resultSurgery && resultSurgery.length > 0) {
-            for (var i = 0; i < resultSurgery.length; i++) {
-                var item = resultSurgery[i];
-                div += this.renderResultSurgery(result, profile, item, hospital);
-                div += "<style>.pagebreak { page-break-before: always; }</style><div class='pagebreak'></div>";
-            }
-        }
         if (resultCheckup && resultCheckup.length > 0) {
             for (var i = 0; i < resultCheckup.length; i++) {
                 var item = resultCheckup[i];
                 div += this.renderResultCheckup(result, profile, item, hospital);
-                div += "<style>.pagebreak { page-break-before: always; }</style><div class='pagebreak'></div>";
-            }
-        }
-        if (resultDiagnostic && resultDiagnostic.length > 0) {
-            for (var i = 0; i < resultDiagnostic.length; i++) {
-                var item = resultDiagnostic[i];
-                div += this.renderResultDiagnostic(result, profile, item, hospital);
                 div += "<style>.pagebreak { page-break-before: always; }</style><div class='pagebreak'></div>";
             }
         }
@@ -59,12 +43,25 @@ class ExportPDF extends Component {
                 div += "<style>.pagebreak { page-break-before: always; }</style><div class='pagebreak'></div>";
             div += this.renderResultMedicalTest(result, profile, resultMedicalTest, hospital);
         }
-
+        if (resultDiagnostic && resultDiagnostic.length > 0) {
+            for (var i = 0; i < resultDiagnostic.length; i++) {
+                var item = resultDiagnostic[i];
+                div += this.renderResultDiagnostic(result, profile, item, hospital);
+                div += "<style>.pagebreak { page-break-before: always; }</style><div class='pagebreak'></div>";
+            }
+        }
+        if (resultSurgery && resultSurgery.length > 0) {
+            for (var i = 0; i < resultSurgery.length; i++) {
+                var item = resultSurgery[i];
+                div += this.renderResultSurgery(result, profile, item, hospital);
+                div += "<style>.pagebreak { page-break-before: always; }</style><div class='pagebreak'></div>";
+            }
+        }
         return div;
     }
 
     renderHeader(booking, hospital) {
-        var date = booking.profile.TimeGoIn.toDateObject().format("dd/MM/yyyy");
+        var date = booking.Profile.TimeGoIn.toDateObject().format("dd/MM/yyyy");
         var div = "<div style='height:50px'> </div>";
         div += "<div style='width: 100%;'><strong >" + hospital.name + "</strong><strong style='float: right'>Ngày " + date + "</strong></div>";
         return div;
@@ -327,7 +324,7 @@ class ExportPDF extends Component {
         div += "<div class=\"content-filter-yba\"> <p> <span>Họ và tên : </span> <span class=\"ten-nb\">" + profile.PatientName + "</span> <br />"
         div += "<br /> </p> <p class=\"yc-kt\">" + (item.ServiceName == "Đơn thuốc" ? "" : item.ServiceName) + "</p>";
 
-        if (booking.profile.IsContract) {
+        if (booking.Profile.IsContract) {
 
             if (item.Anamnesis) {
                 div += "<p> <strong>Tiền sử bệnh</strong> </p>";
@@ -762,7 +759,7 @@ class ExportPDF extends Component {
                 }, 500);
         var html = "";
         var result = option.result;
-        var profile = result.profile;
+        var profile = result.Profile;
         var filename = option.fileName;
         var hospital = result.hospital || {}
         if (!filename)
@@ -824,10 +821,16 @@ class ExportPDF extends Component {
                             finish();
                         }, 500);
                     try {
-                        Share.open({
+                        Share.shareSingle({
                             title: constants.share,
                             url: "file://" + filePath.filePath,
+                            social: Share.Social.EMAIL
                         });
+
+                        // Share.open({
+                        //     title: constants.share,
+                        //     url: "file://" + filePath.filePath,
+                        // });
                     } catch (error) {
                         console.log(error);
                     }

@@ -1,17 +1,10 @@
 import React, { Component, PropTypes, PureComponent } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, Text, ScrollView, FlatList, TouchableOpacity, StyleSheet, RefreshControl, TouchableHighlight, TextInput, Switch, Dimensions } from 'react-native';
+import { View, Text, ScrollView, FlatList, TouchableOpacity, StyleSheet, TextInput, Switch, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
-import ScaledImage from 'mainam-react-native-scaleimage';
-import Dash from 'mainam-react-native-dash-view';
-import bookingProvider from '@data-access/booking-provider';
-import hospitalProvider from '@data-access/hospital-provider';
 import constants from '@resources/strings';
-import constants2 from '@ehealth/daihocy/resources/strings';
 import dateUtils from 'mainam-react-native-date-utils';
-import profileProvider from '@data-access/profile-provider';
 import snackbar from '@utils/snackbar-utils';
-import ImageLoad from 'mainam-react-native-image-loader';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import { Card } from 'native-base';
 import ReactNativeAN from 'react-native-alarm-notification';
@@ -23,6 +16,7 @@ import DateTimePicker from "mainam-react-native-date-picker";
 import TextField from "mainam-react-native-form-validate/TextField";
 import ehealthProvider from '@data-access/ehealth-provider'
 import Modal from '@components/modal';
+import ExportPDF from '@components/ehealth/ExportPDF';
 LocaleConfig.locales['en'] = {
     monthNames: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
     monthNamesShort: ['Th 1', 'Th 2', 'Th 3', 'Th 4', 'Th 5', 'Th 6', 'Th 7', 'Th 8', 'Th 9', 'Th 10', 'Th 11', 'Th 12'],
@@ -32,7 +26,7 @@ LocaleConfig.locales['en'] = {
 
 LocaleConfig.defaultLocale = 'en';
 var fireDate
-var  alarmNotifData = {
+var alarmNotifData = {
     id: "12345",                                  // Required
     title: "Isofh Care ",               // Required
     message: "Đã đến giờ uống thuốc",           // Required
@@ -57,7 +51,7 @@ class ListProfileScreen extends Component {
         super(props)
         let patient = this.props.ehealth.patient;
         patient.history = (patient.history || []).sort((a, b) => {
-            a.timeGoIn && b.timeGoIn ?   a.timeGoIn.toDateObject("-") - b.timeGoIn.toDateObject("-") : ''
+            a.timeGoIn && b.timeGoIn ? a.timeGoIn.toDateObject("-") - b.timeGoIn.toDateObject("-") : ''
         });
         let latestTime = patient.latestTime ? patient.latestTime.toDateObject("-") : new Date()
         let histories = this.groupHistory(patient.history, latestTime);
@@ -66,7 +60,7 @@ class ListProfileScreen extends Component {
             dateSelected = latestTime.format("yyyy-MM-dd");
             if (!histories[dateSelected]) {
                 if (patient.history && patient.history.length && patient.history[patient.history.length - 1].timeGoIn) {
-                    dateSelected = patient.history[patient.history.length - 1].timeGoIn.toDateObject("-").format("yyyy-MM-dd") 
+                    dateSelected = patient.history[patient.history.length - 1].timeGoIn.toDateObject("-").format("yyyy-MM-dd")
                     histories[dateSelected].selected = true;
                 } else
                     dateSelected = "";
@@ -88,11 +82,11 @@ class ListProfileScreen extends Component {
             histories,
             switchValue: false,
             dateSelected,
-           
+
         }
-       
+
     }
-  
+
     groupHistory(histories, focusDay) {
         let obj = {};
         histories.forEach(item => {
@@ -123,8 +117,10 @@ class ListProfileScreen extends Component {
         let patientHistoryId = this.state.patient.patientHistoryId
         let hospitalId = this.state.patient.hospitalEntity.id
         ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId).then(res => {
-            let medicineTime =  res.data.data.medicineTime ?  (new Date().format("dd/MM/yyyy") + " " + res.data.data.medicineTime).toDateObject('/') :''
-            let time = res.data.data.time ?  (new Date().format("dd/MM/yyyy") + " " + res.data.data.time).toDateObject('/') :''
+            let medicineTime = res.data.data.medicineTime ? (new Date().format("dd/MM/yyyy") + " " + res.data.data.medicineTime).toDateObject('/') : ''
+            let time = res.data.data.time ? (new Date().format("dd/MM/yyyy") + " " + res.data.data.time).toDateObject('/') : ''
+
+
             this.setState({
                 note: res.data.data.note,
                 switchValue: res.data.data.isMedicineTime ? true : false,
@@ -133,12 +129,12 @@ class ListProfileScreen extends Component {
                 date: res.data.data.time,
                 dob: time,
                 dobAlarm: medicineTime,
-                appointmentDate: res.data.data.appointmentDate
+                appointmentDate: res.data.data.appointmentDate,
             })
             let date = new Date().getDate()
             let month = new Date().getMonth() + 1
             let year = new Date().getFullYear()
-            let fire_date = medicineTime ?  `${date}-${month}-${year} ${medicineTime.format('HH:mm:ss')}` : ''
+            let fire_date = medicineTime ? `${date}-${month}-${year} ${medicineTime.format('HH:mm:ss')}` : ''
             alarmNotifData.fire_date = fire_date
             res.data.data.isMedicineTime ? ReactNativeAN.scheduleAlarm(alarmNotifData)
                 : ReactNativeAN.deleteAlarm('12345')
@@ -160,17 +156,16 @@ class ListProfileScreen extends Component {
                 delete histories[this.state.dateSelected].selected;
             }
             histories[day.dateString].selected = true;
-           
+
             this.setState({
                 dateSelected: day.dateString,
-                histories: histories,
-                dayDateString:day.dateString
+                histories: histories
             }, () => {
                 let patientHistoryId = histories[day.dateString].history.patientHistoryId
                 let hospitalId = this.state.patient.hospitalEntity.id
                 ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId).then(res => {
-                    let medicineTime =  res.data.data.medicineTime ?  (new Date().format("dd/MM/yyyy") + " " + res.data.data.medicineTime).toDateObject('/') :''
-                    let time = res.data.data.time ?  (new Date().format("dd/MM/yyyy") + " " + res.data.data.time).toDateObject('/') :''
+                    let medicineTime = res.data.data.medicineTime ? (new Date().format("dd/MM/yyyy") + " " + res.data.data.medicineTime).toDateObject('/') : ''
+                    let time = res.data.data.time ? (new Date().format("dd/MM/yyyy") + " " + res.data.data.time).toDateObject('/') : ''
                     this.setState({
                         note: res.data.data.note,
                         switchValue: res.data.data.isMedicineTime ? true : false,
@@ -184,7 +179,7 @@ class ListProfileScreen extends Component {
                     let date = new Date().getDate()
                     let month = new Date().getMonth() + 1
                     let year = new Date().getFullYear()
-                    let fire_date = medicineTime ?  `${date}-${month}-${year} ${medicineTime.format('HH:mm:ss')}` : ''
+                    let fire_date = medicineTime ? `${date}-${month}-${year} ${medicineTime.format('HH:mm:ss')}` : ''
                     alarmNotifData.fire_date = fire_date
                     res.data.data.isMedicineTime ? ReactNativeAN.scheduleAlarm(alarmNotifData)
                         : ReactNativeAN.deleteAlarm('12345')
@@ -218,8 +213,8 @@ class ListProfileScreen extends Component {
                 let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : ''
                 let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : ''
                 let isMedicineTime = this.state.isMedicineTime ? 1 : 0
-                let histories = JSON.parse(JSON.stringify(this.state.histories));
-                let id = this.state.dayDateString ?  histories[this.state.dayDateString].history.id : histories[this.state.latestTime.format("yyyy-MM-dd")].history.id
+                let item = this.props.ehealth.patient
+                let id = item.history.length && item.history[0].id
                 ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
                 }).catch(err => {
                     console.log(err);
@@ -236,10 +231,9 @@ class ListProfileScreen extends Component {
                 let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : ''
                 let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : ''
                 let isMedicineTime = this.state.isMedicineTime ? 1 : 0
-                let histories = JSON.parse(JSON.stringify(this.state.histories));
-                let id = this.state.dayDateString ?  histories[this.state.dayDateString].history.id : histories[this.state.latestTime.format("yyyy-MM-dd")].history.id
+                let item = this.props.ehealth.patient
+                let id = item.history.length && item.history[0].id
                 ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
-                    
                 }).catch(err => {
                     console.log(err);
                 })
@@ -256,53 +250,53 @@ class ListProfileScreen extends Component {
     }
     onSetAlarm = () => {
 
-      if(this.state.dobAlarm){
-        if (this.state.switchValue) {
-            this.setState({
-                switchValue: false
-            }, () => {
-                let note = this.state.note
-                let suggestions = this.state.suggestions
-                let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : ''
-                let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : ''
-                let isMedicineTime = 0
-                let histories = JSON.parse(JSON.stringify(this.state.histories));
-                let id = this.state.dayDateString ?  histories[this.state.dayDateString].history.id : histories[this.state.latestTime.format("yyyy-MM-dd")].history.id
-                ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
-                    ReactNativeAN.deleteAlarm('12345')
+        if (this.state.dobAlarm) {
+            if (this.state.switchValue) {
+                this.setState({
+                    switchValue: false
+                }, () => {
+                    let note = this.state.note
+                    let suggestions = this.state.suggestions
+                    let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : ''
+                    let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : ''
+                    let isMedicineTime = 0
+                    let item = this.props.ehealth.patient
+                    let id = item.history.length && item.history[0].id
+                    ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
+                        ReactNativeAN.deleteAlarm('12345')
 
+                    })
                 })
-            })
 
+            } else {
+                this.setState({
+                    switchValue: true
+                }, () => {
+                    let note = this.state.note
+                    let suggestions = this.state.suggestions
+                    let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : ''
+                    let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : ''
+                    let isMedicineTime = 1
+                    let item = this.props.ehealth.patient
+                    let id = item.history.length && item.history[0].id
+                    ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
+                        let date = new Date().getDate()
+                        let month = new Date().getMonth() + 1
+                        let year = new Date().getFullYear()
+                        let fire_date = `${date}-${month}-${year} ${this.state.dobAlarm.format('HH:mm:ss')}`
+                        alarmNotifData.fire_date = fire_date
+                        console.log(alarmNotifData);
+
+                        ReactNativeAN.scheduleAlarm(alarmNotifData)
+                    }).catch(err => {
+                        console.log(err);
+                    })
+                })
+
+            }
         } else {
-            this.setState({
-                switchValue: true
-            }, () => {
-                let note = this.state.note
-                let suggestions = this.state.suggestions
-                let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : ''
-                let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : ''
-                let isMedicineTime = 1
-                let histories = JSON.parse(JSON.stringify(this.state.histories));
-                let id = this.state.dayDateString ?  histories[this.state.dayDateString].history.id : histories[this.state.latestTime.format("yyyy-MM-dd")].history.id
-                ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
-                    let date = new Date().getDate()
-                    let month = new Date().getMonth() + 1
-                    let year = new Date().getFullYear()
-                    let fire_date = `${date}-${month}-${year} ${this.state.dobAlarm.format('HH:mm:ss')}`
-                   alarmNotifData.fire_date = fire_date
-                   console.log(alarmNotifData);
-                   
-                    ReactNativeAN.scheduleAlarm(alarmNotifData)
-                }).catch(err => {
-                    console.log(err);
-                })
-            })
-
+            alert('Bạn chưa chọn giờ uống thuốc')
         }
-      }else{
-          alert('Bạn chưa chọn giờ uống thuốc')
-      }
     }
     onBlur = () => {
         let note = this.state.note
@@ -310,8 +304,8 @@ class ListProfileScreen extends Component {
         let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : ''
         let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : ''
         let isMedicineTime = this.state.isMedicineTime ? 1 : 0
-        let histories = JSON.parse(JSON.stringify(this.state.histories));
-        let id = this.state.dayDateString ?  histories[this.state.dayDateString].history.id : histories[this.state.latestTime.format("yyyy-MM-dd")].history.id
+        let item = this.props.ehealth.patient
+        let id = item.history.length && item.history[0].id
         ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
 
         }).catch(err => {
@@ -319,15 +313,15 @@ class ListProfileScreen extends Component {
         })
     }
     onPressAppointment = () => {
-        if(this.state.appointmentDate){
+        if (this.state.appointmentDate) {
             this.setState({
-                status:2,
-                isVisible:true
+                status: 2,
+                isVisible: true
             })
-        }else{
+        } else {
             this.setState({
-                status:4,
-                isVisible:true
+                status: 4,
+                isVisible: true
             })
         }
     }
@@ -359,6 +353,58 @@ class ListProfileScreen extends Component {
     viewResult() {
         this.props.navigation.navigate("viewInDay", {
             dateSelected: this.state.dateSelected
+        });
+    }
+    exportPdf() {
+        this.setState({
+            isLoading: true
+        }, () => {
+            try {
+                let patientHistoryId = this.state.histories[this.state.dateSelected].history.patientHistoryId
+                let hospitalId = this.state.patient.hospitalEntity.id
+                ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId).then(s => {
+                    let resultDetail = null;
+                    let result = null;
+                    if (s.data && s.data.data) {
+                        if (s.data.data.resultDetail) {
+                            try {
+                                resultDetail = JSON.parse(s.data.data.resultDetail);
+                            } catch (error) {
+
+                            }
+                        }
+                        if (s.data.data.result) {
+                            try {
+                                result = JSON.parse(s.data.data.result);
+                            } catch (error) {
+
+                            }
+                        }
+                        if (result && resultDetail) {
+                            result.hospital = this.props.ehealth.hospital.hospital;
+                            this.exportPdfCom.getWrappedInstance().exportPdf({
+                                type: "all",
+                                result: result,
+                                fileName: constants.filenamePDF + patientHistoryId
+                            }, () => {
+                                this.setState({ isLoading: false });
+                            });
+                        }
+                        else{
+                            this.setState({ isLoading: false });
+                        }
+                    }
+                    else {
+                        this.setState({ isLoading: false });
+                    }
+                }).catch(err => {
+                    this.setState({ isLoading: false });
+                })
+
+            } catch (error) {
+
+            }
+
         });
     }
     render() {
@@ -406,10 +452,10 @@ class ListProfileScreen extends Component {
                             </View>
                             <Text style={{ color: '#bdc6d8', fontSize: 15 }}>Suggestion</Text>
                             <View style={styles.viewBTnSuggest}>
-                                <TouchableOpacity onPress = {this.onPressAppointment} style={[styles.btnReExamination, { backgroundColor: '#4CD565', }]}>
+                                <TouchableOpacity onPress={this.onPressAppointment} style={[styles.btnReExamination, { backgroundColor: '#4CD565', }]}>
                                     <Text style={{ color: '#fff', padding: 2 }}>Lịch tái khám</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress = {this.onShareEhealth} style={[styles.btnReExamination, { backgroundColor: '#2E66E7', }]}>
+                                <TouchableOpacity onPress={this.onShareEhealth} style={[styles.btnReExamination, { backgroundColor: '#2E66E7', }]}>
                                     <Text style={{ color: '#fff', padding: 2 }}>Chia sẻ y bạ</Text>
                                 </TouchableOpacity>
                             </View>
@@ -477,13 +523,14 @@ class ListProfileScreen extends Component {
                     onPress={(index) => {
                         switch (index) {
                             case 0:
-                                snackbar.show("Tính năng đang phát triển");
+                                this.exportPdf();
                                 break;
                             case 1:
                                 snackbar.show("Tính năng đang phát triển");
                         }
                     }}
                 />
+                <ExportPDF ref={(element) => this.exportPdfCom = element} />
             </ActivityPanel>
         );
     }
