@@ -390,7 +390,7 @@ class ListProfileScreen extends Component {
                                 <Text style={styles.txLabel}>Ghi chú</Text>
                                 <TextInput onBlur={this.onBlur} multiline={true} onChangeText={s => {
                                     this.setState({ note: s })
-                                }} value={this.state.note} underlineColorAndroid={'#fff'} style={[styles.txContent, { height: 41 }]} placeholder={'Nhập ghi chú'}></TextInput>
+                                }} value={this.state.note} underlineColorAndroid={'#fff'} style={[styles.txContent,]} placeholder={'Nhập ghi chú'}></TextInput>
                             </View>
                             <View>
                                 <Text style={styles.txLabel}>Thời gian</Text>
