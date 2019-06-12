@@ -159,7 +159,8 @@ class ListProfileScreen extends Component {
 
             this.setState({
                 dateSelected: day.dateString,
-                histories: histories
+                histories: histories,
+                dayDateString:day.dateString
             }, () => {
                 let patientHistoryId = histories[day.dateString].history.patientHistoryId
                 let hospitalId = this.state.patient.hospitalEntity.id
@@ -213,8 +214,8 @@ class ListProfileScreen extends Component {
                 let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : ''
                 let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : ''
                 let isMedicineTime = this.state.isMedicineTime ? 1 : 0
-                let item = this.props.ehealth.patient
-                let id = item.history.length && item.history[0].id
+                let histories = JSON.parse(JSON.stringify(this.state.histories));
+                let id = this.state.dayDateString ?  histories[this.state.dayDateString].history.id : histories[this.state.latestTime.format("yyyy-MM-dd")].history.id
                 ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
                 }).catch(err => {
                     console.log(err);
@@ -231,8 +232,9 @@ class ListProfileScreen extends Component {
                 let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : ''
                 let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : ''
                 let isMedicineTime = this.state.isMedicineTime ? 1 : 0
-                let item = this.props.ehealth.patient
-                let id = item.history.length && item.history[0].id
+                let histories = JSON.parse(JSON.stringify(this.state.histories));
+                let id = this.state.dayDateString ?  histories[this.state.dayDateString].history.id : histories[this.state.latestTime.format("yyyy-MM-dd")].history.id
+                console.log(id,'id');
                 ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
                 }).catch(err => {
                     console.log(err);
@@ -260,8 +262,8 @@ class ListProfileScreen extends Component {
                     let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : ''
                     let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : ''
                     let isMedicineTime = 0
-                    let item = this.props.ehealth.patient
-                    let id = item.history.length && item.history[0].id
+                    let histories = JSON.parse(JSON.stringify(this.state.histories));
+        let id = this.state.dayDateString ?  histories[this.state.dayDateString].history.id : histories[this.state.latestTime.format("yyyy-MM-dd")].history.id
                     ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
                         ReactNativeAN.deleteAlarm('12345')
 
@@ -277,8 +279,8 @@ class ListProfileScreen extends Component {
                     let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : ''
                     let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : ''
                     let isMedicineTime = 1
-                    let item = this.props.ehealth.patient
-                    let id = item.history.length && item.history[0].id
+                    let histories = JSON.parse(JSON.stringify(this.state.histories));
+                    let id = this.state.dayDateString ?  histories[this.state.dayDateString].history.id : histories[this.state.latestTime.format("yyyy-MM-dd")].history.id
                     ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
                         let date = new Date().getDate()
                         let month = new Date().getMonth() + 1
@@ -304,8 +306,8 @@ class ListProfileScreen extends Component {
         let time = this.state.dob ? this.state.dob.format('HH:mm:ss') : ''
         let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : ''
         let isMedicineTime = this.state.isMedicineTime ? 1 : 0
-        let item = this.props.ehealth.patient
-        let id = item.history.length && item.history[0].id
+        let histories = JSON.parse(JSON.stringify(this.state.histories));
+        let id = this.state.dayDateString ?  histories[this.state.dayDateString].history.id : histories[this.state.latestTime.format("yyyy-MM-dd")].history.id
         ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
 
         }).catch(err => {
