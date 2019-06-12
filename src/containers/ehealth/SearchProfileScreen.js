@@ -11,6 +11,8 @@ import stringUtils from 'mainam-react-native-string-utils';
 import ImageLoad from 'mainam-react-native-image-loader';
 import ehealthProvider from '@data-access/ehealth-provider';
 import historyProvider from '@data-access/history-provider';
+import realmModel from '@models/realm-models';
+
 class SearchProfileScreen extends Component {
     constructor(props) {
         super(props);
@@ -19,7 +21,7 @@ class SearchProfileScreen extends Component {
             listServiceSearch: [],
             searchValue: "",
             refreshing: false,
-            
+
         }
     }
     componentDidMount() {
@@ -35,19 +37,26 @@ class SearchProfileScreen extends Component {
     onRefresh = () => {
         let userId = this.props.userApp.currentUser.id
         let type = constants.key.history.user_ehealth
-        historyProvider.getListHistory(userId,type,this.getListHistoryCallback.bind(this));
+        const { USER_EHEALTH_HISTORY } = realmModel;
+
+        historyProvider.getListHistory(userId, USER_EHEALTH_HISTORY, this.getListHistoryCallback.bind(this));
 
     }
     getListHistoryCallback(data) {
         try {
-            console.log(data);
+            //     console.log(data);
+            //   for(let i = 0; i< data.length;i++){
+            //       console.log(data[i],'dataaaaaaa');
+            //   }
+            let arr = data.map(item => JSON.parse(item.data));
+            console.log(arr);
             this.setState({
-                history: data ? data : []
-            });
+                listProfileSearch: arr
+            })
         } catch (error) {
-            console.log(error);
+            console.log(error, 'error');
             this.setState({
-                history: []
+                listProfileSearch: []
             });
         }
     }
@@ -69,22 +78,22 @@ class SearchProfileScreen extends Component {
         let page = 1
         let size = 10
         let queryString = this.state.searchValue ? this.state.searchValue : ''
-            ehealthProvider.search(page,size,queryString).then(s => {
-                this.setState({
-                    refreshing: false
-                }, () => {
-                    if (s.code == 0) {
-                        this.setState({
-                            listProfileSearch: s.data.data
-                        })
-                    }
-                })
-            }).catch(e => {
-                this.setState({
-                    listProfileSearch: [],
-                    refreshing: false
-                })
+        ehealthProvider.search(page, size, queryString).then(s => {
+            this.setState({
+                refreshing: false
+            }, () => {
+                if (s.code == 0) {
+                    this.setState({
+                        listProfileSearch: s.data.data
+                    })
+                }
             })
+        }).catch(e => {
+            this.setState({
+                listProfileSearch: [],
+                refreshing: false
+            })
+        })
     }
     selectProfile = (item) => {
         console.log(this.props);
@@ -93,9 +102,9 @@ class SearchProfileScreen extends Component {
         let name = ''
         let dataId = item.user.id
         let data = item
-        console.log('run');
-        historyProvider.addHistory(userId,type,name,dataId,JSON.stringify(data))
-        console.log('finish');
+        const { USER_EHEALTH_HISTORY } = realmModel;
+        historyProvider.addHistory(userId, USER_EHEALTH_HISTORY, name, dataId, JSON.stringify(data))
+        this.props.navigation.pop()
     }
     renderSearchButton() {
         return (
@@ -104,7 +113,7 @@ class SearchProfileScreen extends Component {
             </TouchableOpacity>
         );
     }
-   
+
     render() {
         const icSupport = require("@images/new/user.png");
         return (
@@ -132,8 +141,9 @@ class SearchProfileScreen extends Component {
                         </View>
                         : null
 
-                }
 
+                }
+                <Text style={{fontSize:15,color:'#000',marginLeft:15,marginVertical:10}}>Tìm kiếm gần đây</Text>
                 <FlatList
                     style={{ flex: 1, backgroundColor: '#FFF' }}
                     refreshing={this.state.refreshing}
@@ -145,15 +155,15 @@ class SearchProfileScreen extends Component {
                             (!this.state.listProfileSearch || this.state.listProfileSearch.length == 0) ?
                             <View style={{ width: '100%', marginTop: 50, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center' }}>
                                 <ScaleImage source={require("@images/empty_result.png")} width={120} />
-                                <Text>Không tìm thấy loại dịch vụ nào phù hợp <Text style={{ fontWeight: 'bold', color: constants.colors.actionbar_title_color }}>{this.state.searchValue}</Text></Text>
+                                <Text>Không có hồ sơ chia sẻ gần đây <Text style={{ fontWeight: 'bold', color: constants.colors.actionbar_title_color }}>{this.state.searchValue}</Text></Text>
                             </View> : null
                     }
                     ListFooterComponent={() => <View style={{ height: 10 }} />}
                     data={this.state.listProfileSearch}
                     renderItem={({ item }) =>
-                        <TouchableOpacity onPress={ () => this.selectProfile(item)}>
+                        <TouchableOpacity onPress={() => this.selectProfile(item)}>
                             <View style={{ marginBottom: 2, backgroundColor: '#FFF', padding: 20, flexDirection: 'column', borderBottomColor: '#00000011', borderBottomWidth: 0.7 }}>
-                                <View style={{ flexDirection: 'row',alignItems:'center' }}>
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                     <ImageLoad
                                         resizeMode="cover"
                                         imageStyle={{ borderRadius: 15, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
@@ -167,7 +177,7 @@ class SearchProfileScreen extends Component {
                                         style={{ width: 30, height: 30 }}
                                         resizeMode="cover"
                                         loadingStyle={{ size: "small", color: "gray" }}
-                                        source={ item.user.avatar
+                                        source={item.user.avatar
                                             ? { uri: item.user.avatar.absoluteUrl() }
                                             : icSupport}
                                         defaultImage={() => {
@@ -181,7 +191,7 @@ class SearchProfileScreen extends Component {
                                             );
                                         }}
                                     />
-                                    <Text style={{ fontWeight: '200',fontSize:15,marginLeft:10 }}>
+                                    <Text style={{ fontWeight: '200', fontSize: 15, marginLeft: 10 }}>
                                         {item.user.name}
                                     </Text>
                                 </View>

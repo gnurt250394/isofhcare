@@ -36,9 +36,9 @@ class ProfileInfomation extends Component {
         const source = this.props.userApp.currentUser.avatar
             ? { uri: this.props.userApp.currentUser.avatar.absoluteUrl() }
             : icSupport;
-        return <View style={{ flexDirection: 'row', position: 'relative', flex: 1, padding: 10 }}>
-            <View style={{ width: 2, top: 0, bottom: 0, left: 30, backgroundColor: '#8fa1aa' }}></View>
-            <View style={{ flex: 1, marginLeft: 16.5 }}>
+        return <View style={{ flexDirection: 'row', position: 'relative', flex: 1, padding: 8 }}>
+            <View style={{ width: 2, top: 0, bottom: 0, left: 14, backgroundColor: '#8fa1aa' }}></View>
+            <View style={{ flex: 1, marginLeft: 0 }}>
                 <View style={[styles.item, { marginTop: 0 }]}>
                     <View style={styles.round1}>
                         <View style={styles.round2} />

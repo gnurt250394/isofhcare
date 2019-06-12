@@ -60,7 +60,6 @@ class Account extends Component {
                         if (s.code == 0) {
                           var user = s.data.user;
                           let current = this.props.userApp.currentUser;
-                          debugger;
                           user.bookingNumberHospital = current.bookingNumberHospital;
                           user.bookingStatus = current.bookingStatus;
                           this.props.dispatch(redux.userLogin(user));
