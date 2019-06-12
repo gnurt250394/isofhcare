@@ -73,8 +73,8 @@ class ListProfileScreen extends PureComponent {
                         <Text style={{ marginTop: 10,color:'#51626a',fontSize:15 }}>{item.hospitalEntity.name}</Text>
                     </View>
                     <View style={{ flexDirection: 'row', marginLeft: 10, marginTop: 10, alignItems: 'center' }}>
-                        <ScaleImage resizeMode='cover' source={require("@images/new/ehealth/ic_times.png")} width={26} tintColor={'#8fa1aa'} />
-                        <Text style={{ marginLeft: 5, color: '#045684' }}>Gần nhất: {item.latestTime ? item.latestTime.toDateObject('-').format('dd/MM/yyyy') : ''}</Text>
+                        <ScaleImage resizeMode='cover' source={require("@images/new/ehealth/ic_timer.png")} width={20} tintColor={'#8fa1aa'} />
+                        <Text style={{ marginLeft: 10, color: '#045684' }}>Gần nhất: {item.latestTime ? item.latestTime.toDateObject('-').format('dd/MM/yyyy') : ''}</Text>
                     </View>
                 </View>
                 <View style={{ paddingHorizontal: 20, justifyContent: 'center', alignItems: 'center' }}>
