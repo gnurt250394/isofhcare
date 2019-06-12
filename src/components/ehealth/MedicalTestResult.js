@@ -33,6 +33,33 @@ class MedicalTestResult extends Component {
         }
 
         let result = [];
+        if (result1.ListResulHoaSinh && result1.ListResulHoaSinh.length > 0) {
+            var item = {
+                type: 'Hóa Sinh',
+                value: {
+                    ListMedical: [],
+                    GroupId: ""
+                }
+            }
+            result.push(item);
+            result1.ListResulHoaSinh.forEach(function (entry) {
+                item.value.ListMedical.push.apply(item.value.ListMedical, entry.ListMedical);
+            });
+        }
+                
+        if (result1.ListResulHuyetHoc && result1.ListResulHuyetHoc.length > 0) {
+            var item = {
+                type: 'Huyết Học',
+                value: {
+                    ListMedical: [],
+                    GroupId: ""
+                }
+            }
+            result.push(item);
+            result1.ListResulHuyetHoc.forEach(function (entry) {
+                item.value.ListMedical.push.apply(item.value.ListMedical, entry.ListMedical);
+            });
+        }
         if (result1.ListResulViSinh && result1.ListResulViSinh.length > 0) {
             var item = {
                 type: 'Vi Sinh',
@@ -47,32 +74,7 @@ class MedicalTestResult extends Component {
                 item.value.ListMedical.push.apply(item.value.ListMedical, entry.ListMedical);
             });
         }
-        if (result1.ListResulHoaSinh && result1.ListResulHoaSinh.length > 0) {
-            var item = {
-                type: 'Hóa Sinh',
-                value: {
-                    ListMedical: [],
-                    GroupId: ""
-                }
-            }
-            result.push(item);
-            result1.ListResulHoaSinh.forEach(function (entry) {
-                item.value.ListMedical.push.apply(item.value.ListMedical, entry.ListMedical);
-            });
-        }
-        if (result1.ListResulHuyetHoc && result1.ListResulHuyetHoc.length > 0) {
-            var item = {
-                type: 'Huyết Học',
-                value: {
-                    ListMedical: [],
-                    GroupId: ""
-                }
-            }
-            result.push(item);
-            result1.ListResulHuyetHoc.forEach(function (entry) {
-                item.value.ListMedical.push.apply(item.value.ListMedical, entry.ListMedical);
-            });
-        }
+
         if (result1.ListResulOther && result1.ListResulOther.length > 0) {
             var item = {
                 type: 'Xét Nghiệm Khác',

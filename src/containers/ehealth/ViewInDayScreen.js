@@ -1,35 +1,16 @@
 import React, { Component, PropTypes, PureComponent } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, Text, ScrollView, FlatList, TouchableOpacity, StyleSheet, RefreshControl, TouchableHighlight, TextInput, Switch, Dimensions } from 'react-native';
+import { View, Text, ScrollView, FlatList, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
-import ScaledImage from 'mainam-react-native-scaleimage';
-import Dash from 'mainam-react-native-dash-view';
 import bookingProvider from '@data-access/booking-provider';
-import hospitalProvider from '@data-access/hospital-provider';
-import constants from '@resources/strings';
-import constants2 from '@ehealth/daihocy/resources/strings';
 import dateUtils from 'mainam-react-native-date-utils';
 import stringUtils from 'mainam-react-native-string-utils';
-import profileProvider from '@data-access/profile-provider';
 import snackbar from '@utils/snackbar-utils';
-import ImageLoad from 'mainam-react-native-image-loader';
-import { Calendar, LocaleConfig, Agenda } from 'react-native-calendars';
-import { Card } from 'native-base';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 
-import DateTimePicker from "mainam-react-native-date-picker";
-import TextField from "mainam-react-native-form-validate/TextField";
-import ehealthProvider from '@data-access/ehealth-provider'
 import Modal from '@components/modal';
-LocaleConfig.locales['en'] = {
-    monthNames: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
-    monthNamesShort: ['Th 1', 'Th 2', 'Th 3', 'Th 4', 'Th 5', 'Th 6', 'Th 7', 'Th 8', 'Th 9', 'Th 10', 'Th 11', 'Th 12'],
-    dayNames: ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'],
-    dayNamesShort: ['CN', 'T.2', 'T.3', 'T.4', 'T.5', 'T.6', 'T.7']
-};
 
-LocaleConfig.defaultLocale = 'en';
 class ViewInDateScreen extends Component {
     constructor(props) {
         super(props)
@@ -183,7 +164,7 @@ class ViewInDateScreen extends Component {
         if (!item.patientHistory) {
             // snackbar.show("Không có kết quả vào ngày này", "danger");
             this.setState({
-                isVisible:true
+                isVisible: true
             })
             return;
         };
@@ -460,21 +441,21 @@ class ViewInDateScreen extends Component {
                     }
                 </View>
                 <Modal
-                isVisible={this.state.isVisible}
-                onBackdropPress={() => this.setState({ isVisible: false })}
-                backdropOpacity={0.5}
-                animationInTiming={500}
-                animationOutTiming={500}
-                style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
-                backdropTransitionInTiming={1000}
-                backdropTransitionOutTiming={1000}
-            >
-                <View style={{ backgroundColor: '#fff', marginHorizontal: 20, marginVertical: 60, borderRadius: 5 }}>
-                    <Text style={{ fontSize: 22, color: '#27AE60', textAlign: 'center', marginTop: 10, marginHorizontal: 20 }}>Thông báo</Text>
-                    <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>Không có kết quả khám nào. Bạn không đi khám ở ngày này!</Text>
-                    <TouchableOpacity onPress={() => this.setState({ isVisible: false })} style={{ justifyContent: 'center', alignItems: 'center', height: 41, backgroundColor: '#878787', borderBottomLeftRadius: 5, borderBottomRightRadius: 5 }}><Text style={{ color: '#fff' }}>OK, XONG</Text></TouchableOpacity>
-                </View>
-            </Modal>
+                    isVisible={this.state.isVisible}
+                    onBackdropPress={() => this.setState({ isVisible: false })}
+                    backdropOpacity={0.5}
+                    animationInTiming={500}
+                    animationOutTiming={500}
+                    style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+                    backdropTransitionInTiming={1000}
+                    backdropTransitionOutTiming={1000}
+                >
+                    <View style={{ backgroundColor: '#fff', marginHorizontal: 20, marginVertical: 60, borderRadius: 5 }}>
+                        <Text style={{ fontSize: 22, color: '#27AE60', textAlign: 'center', marginTop: 10, marginHorizontal: 20 }}>Thông báo</Text>
+                        <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>Không có kết quả khám nào. Bạn không đi khám ở ngày này!</Text>
+                        <TouchableOpacity onPress={() => this.setState({ isVisible: false })} style={{ justifyContent: 'center', alignItems: 'center', height: 41, backgroundColor: '#878787', borderBottomLeftRadius: 5, borderBottomRightRadius: 5 }}><Text style={{ color: '#fff' }}>OK, XONG</Text></TouchableOpacity>
+                    </View>
+                </Modal>
             </ActivityPanel>
         );
     }
