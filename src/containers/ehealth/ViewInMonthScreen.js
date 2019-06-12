@@ -187,8 +187,6 @@ class ListProfileScreen extends Component {
                     alarmNotifData.fire_date = fire_date
                     res.data.data.isMedicineTime ? ReactNativeAN.scheduleAlarm(alarmNotifData)
                         : ReactNativeAN.deleteAlarm('12345')
-        
-        
                 }).catch(err => {
                     console.log(err);
                 })

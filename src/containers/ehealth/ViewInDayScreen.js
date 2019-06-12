@@ -181,7 +181,10 @@ class ViewInDateScreen extends Component {
     )
     dayPress(item) {
         if (!item.patientHistory) {
-            snackbar.show("Không có kết quả vào ngày này", "danger");
+            // snackbar.show("Không có kết quả vào ngày này", "danger");
+            this.setState({
+                isVisible:true
+            })
             return;
         };
         this.setState({ dateSelected: item }, () => {
@@ -442,6 +445,22 @@ class ViewInDateScreen extends Component {
                         </TouchableOpacity>
                     }
                 </View>
+                <Modal
+                isVisible={this.state.isVisible}
+                onBackdropPress={() => this.setState({ isVisible: false })}
+                backdropOpacity={0.5}
+                animationInTiming={500}
+                animationOutTiming={500}
+                style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+                backdropTransitionInTiming={1000}
+                backdropTransitionOutTiming={1000}
+            >
+                <View style={{ backgroundColor: '#fff', marginHorizontal: 20, marginVertical: 60, borderRadius: 5 }}>
+                    <Text style={{ fontSize: 22, color: '#27AE60', textAlign: 'center', marginTop: 10, marginHorizontal: 20 }}>Thông báo</Text>
+                    <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>Không có kết quả khám nào. Bạn không đi khám ở ngày này!</Text>
+                    <TouchableOpacity onPress={() => this.setState({ isVisible: false })} style={{ justifyContent: 'center', alignItems: 'center', height: 41, backgroundColor: '#878787', borderBottomLeftRadius: 5, borderBottomRightRadius: 5 }}><Text style={{ color: '#fff' }}>OK, XONG</Text></TouchableOpacity>
+                </View>
+            </Modal>
             </ActivityPanel>
         );
     }
