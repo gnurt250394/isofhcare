@@ -160,10 +160,38 @@ class ListProfileScreen extends Component {
                 delete histories[this.state.dateSelected].selected;
             }
             histories[day.dateString].selected = true;
+           
             this.setState({
                 dateSelected: day.dateString,
                 histories: histories
             }, () => {
+                let patientHistoryId = histories[day.dateString].history.patientHistoryId
+                let hospitalId = this.state.patient.hospitalEntity.id
+                ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId).then(res => {
+                    let medicineTime =  res.data.data.medicineTime ?  (new Date().format("dd/MM/yyyy") + " " + res.data.data.medicineTime).toDateObject('/') :''
+                    let time = res.data.data.time ?  (new Date().format("dd/MM/yyyy") + " " + res.data.data.time).toDateObject('/') :''
+                    this.setState({
+                        note: res.data.data.note,
+                        switchValue: res.data.data.isMedicineTime ? true : false,
+                        timeAlarm: res.data.data.medicineTime,
+                        suggestions: res.data.data.suggestions,
+                        date: res.data.data.time,
+                        dob: time,
+                        dobAlarm: medicineTime,
+                        appointmentDate: res.data.data.appointmentDate
+                    })
+                    let date = new Date().getDate()
+                    let month = new Date().getMonth() + 1
+                    let year = new Date().getFullYear()
+                    let fire_date = medicineTime ?  `${date}-${month}-${year} ${medicineTime.format('HH:mm:ss')}` : ''
+                    alarmNotifData.fire_date = fire_date
+                    res.data.data.isMedicineTime ? ReactNativeAN.scheduleAlarm(alarmNotifData)
+                        : ReactNativeAN.deleteAlarm('12345')
+        
+        
+                }).catch(err => {
+                    console.log(err);
+                })
             });
         } else {
             this.setState({
