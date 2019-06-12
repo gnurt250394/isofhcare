@@ -31,23 +31,18 @@ class CheckupResult extends Component {
         if (!result || !result.ListResultCheckup || !result.ListResultCheckup.length)
             return null;
         let resultCheckup = result.ListResultCheckup || [];
-        return (<View>
-            <View style={{ flexDirection: 'row', position: 'relative', flex: 1, padding: 10 }}>
-                <View style={{ flex: 1, marginLeft: 16.5 }}>
-                    <View style={[styles.item, { marginTop: 0 }]}>
-                        <View style={styles.round1}>
-                            <View style={styles.round2} />
-                        </View>
-                        <View style={[styles.itemlabel, { marginTop: 0 }]}>
-                            <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>KẾT QUẢ KHÁM</Text>
-                        </View>
-                    </View>
-                    {
-                        resultCheckup.map((item, index) => <CheckupResultItem item={item} key={index} />)
-                    }
-
+        return (<View style={{ flex: 1, padding: 10 }}>
+            <View style={[styles.item, { marginTop: 0 }]}>
+                <View style={styles.round1}>
+                    <View style={styles.round2} />
+                </View>
+                <View style={[styles.itemlabel, { marginTop: 0 }]}>
+                    <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>KẾT QUẢ KHÁM</Text>
                 </View>
             </View>
+            {
+                        resultCheckup.map((item, index) => <CheckupResultItem item={item} key={index} />)
+                    }
         </View>)
     }
 }
