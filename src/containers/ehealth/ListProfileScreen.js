@@ -60,17 +60,22 @@ class ListProfileScreen extends PureComponent {
                 </View>
 
                 <View style={{ flex: 1, borderRightColor: '#c8d1d6', borderRightWidth: 1, paddingVertical: 10 }}>
-                    <View style={{ marginHorizontal: 10, position: 'relative', paddingHorizontal: 30 }}>
+                    <View style={{ marginHorizontal: 10, position: 'relative' }}>
                         <View style={{ position: 'absolute', left: 9, top: 0, bottom: 0, width: 2, backgroundColor: '#91a3ad', }}></View>
-                        <View style={{ width: 20, height: 20, borderWidth: 1.5, borderColor: '#91a3ad', borderRadius: 10, justifyContent: 'center', alignItems: 'center', position: 'absolute', left: 0, top: 0, backgroundColor: '#FFF' }}>
-                            <View style={{ width: 8, height: 8, backgroundColor: '#7eac39', borderRadius: 4 }}></View>
+                        <View style={{ flexDirection: 'row', height: 30 }}>
+                            <View style={{ width: 20, height: 20, borderWidth: 1.5, borderColor: '#91a3ad', borderRadius: 10, justifyContent: 'center', alignItems: 'center', left: 0, bottom: 0, backgroundColor: '#FFF' }}>
+                                <View style={{ width: 8, height: 8, backgroundColor: '#7eac39', borderRadius: 4 }}></View>
+                            </View>
+                            <Text style={{ marginLeft: 10, color: '#63737a', fontSize: 15 }}>{item.patientName}</Text>
                         </View>
-                        <View style={{ width: 20, height: 20, borderWidth: 1.5, borderColor: '#91a3ad', borderRadius: 10, justifyContent: 'center', alignItems: 'center', position: 'absolute', left: 0, bottom: 0, backgroundColor: '#FFF' }}>
-                            <View style={{ width: 8, height: 8, backgroundColor: '#c84242', borderRadius: 4 }}></View>
+                    </View>
+                    <View style={{ marginHorizontal: 10, marginTop: -2 }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+                            <View style={{ marginTop: 2, width: 20, height: 20, borderWidth: 1.5, borderColor: '#91a3ad', borderRadius: 10, justifyContent: 'center', alignItems: 'center', left: 0, bottom: 0, backgroundColor: '#FFF' }}>
+                                <View style={{ width: 8, height: 8, backgroundColor: '#c84242', borderRadius: 4 }}></View>
+                            </View>
+                            <Text style={{ flex: 1, marginLeft: 10, color: '#51626a', fontSize: 15 }}>{item.hospitalEntity.name}</Text>
                         </View>
-                        <Text style={{color: '#63737a',fontSize:15 }}>{item.patientName}</Text>
-                        {Platform.OS == 'ios' ? <View style={{height:10}}></View> : <View/>}
-                        <Text style={{ marginTop: 10,color:'#51626a',fontSize:15 }}>{item.hospitalEntity.name}</Text>
                     </View>
                     <View style={{ flexDirection: 'row', marginLeft: 10, marginTop: 10, alignItems: 'center' }}>
                         <ScaleImage resizeMode='cover' source={require("@images/new/ehealth/ic_timer.png")} width={20} tintColor={'#8fa1aa'} />
@@ -83,7 +88,7 @@ class ListProfileScreen extends PureComponent {
                 </View>
             </View>
             <View style={{ height: 1, backgroundColor: '#00000050' }} />
-        </TouchableOpacity>
+        </TouchableOpacity >
     }
     onRefresh() {
         if (!this.state.loading)
@@ -118,9 +123,9 @@ class ListProfileScreen extends PureComponent {
     }
     render() {
         return (
-            <ActivityPanel style={{ flex: 1 }} 
-            // title="HỒ SƠ Y BẠ GIA ĐÌNH"
-            title = {<Text>HỒ SƠ Y BẠ GIA ĐÌNH{'\n'}<Text style={{fontSize:12,fontWeight:'normal'}}>Tổng: {this.state.listData ? this.state.listData.length : 0} thành viên</Text></Text>}
+            <ActivityPanel style={{ flex: 1 }}
+                // title="HỒ SƠ Y BẠ GIA ĐÌNH"
+                title={<Text>HỒ SƠ Y BẠ GIA ĐÌNH{'\n'}<Text style={{ fontSize: 12, fontWeight: 'normal' }}>Tổng: {this.state.listData ? this.state.listData.length : 0} thành viên</Text></Text>}
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#22b060"
