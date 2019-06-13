@@ -20,8 +20,10 @@ const EHealthNavigator = createStackNavigator({
 }, {
         headerMode: 'none',
         header: null,
+        gesturesEnabled: false,
         navigationOptions: {
-            header: null
+            header: null,
+            gesturesEnabled: false
         },
         mode: Platform.OS == 'ios' ? 'modal' : 'card'
     });
