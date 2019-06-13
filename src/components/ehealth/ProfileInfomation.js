@@ -76,7 +76,7 @@ class ProfileInfomation extends Component {
                             <View style={styles.round1}>
                                 <View style={styles.round3} />
                             </View>
-                            <Text style={styles.itemlabel}>Nơi khám: <Text style={styles.itemcontent}>{serviceCheckup.Location}</Text></Text>
+                            <Text style={styles.itemlabel}>Nơi khám: <Text style={styles.itemcontent}>{serviceCheckup.RoomName} - {serviceCheckup.Location}</Text></Text>
                         </View>
                         <View style={styles.item}>
                             <View style={styles.round1}>
