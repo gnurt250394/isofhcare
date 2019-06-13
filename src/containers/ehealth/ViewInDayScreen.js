@@ -93,66 +93,35 @@ class ViewInDateScreen extends Component {
                                 if (s.data.data.result) {
                                     try {
                                         result = JSON.parse(s.data.data.result);
-                                        console.log(result);
-                                        let hasResult = false;
-                                        if (result.ListDiagnostic && result.ListDiagnostic.length) {
-                                            hasResult = true;
+                                        if (!result ||
+                                            (
+                                                !(result.ListDiagnostic && result.ListDiagnostic.length) &&
+                                                !(result.ListMedicine && result.ListMedicine.length) &&
+                                                !(result.ListResulGiaiPhau && result.ListResulGiaiPhau.length) &&
+                                                !(result.ListResulHoaSinh && result.ListResulHoaSinh.length) &&
+                                                !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
+                                                !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
+                                                !(result.ListResulViSinh && result.ListResulViSinh.length)
+                                            )
+                                        ) {
+                                            this.setState({
+                                                hasResult: false,
+                                                isVisible: true,
+                                                messageError: "Bạn chưa có kết quả khám ở ngày này!"
+                                            })
+                                        } else {
+                                            this.setState({
+                                                hasResult: true,
+                                                result,
+                                                resultDetail
+                                            });
                                         }
-                                        if (result.ListMedicine && result.ListMedicine.length) {
-                                            hasResult = true;
-                                        }
-                                        if (result.ListResulGiaiPhau && result.ListResulGiaiPhau.length) {
-                                            hasResult = true;
-                                        }
-
-                                        if (result.ListResulHoaSinh && result.ListResulHoaSinh.length) {
-                                            hasResult = true;
-                                        }
-
-                                        if (result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) {
-                                            hasResult = true;
-                                        }
-
-                                        if (result.ListResulOther && result.ListResulOther.length) {
-                                            hasResult = true;
-                                        }
-
-                                        if (result.ListResulViSinh && result.ListResulViSinh.length) {
-                                            hasResult = true;
-                                        }
-
-                                        if (result.ListResulViSinh && result.ListResulViSinh.length) {
-                                            hasResult = true;
-                                        }
-
-                                        if (result.ListResultCheckup && result.ListResultCheckup.length) {
-                                            hasResult = true;
-                                        }
-                                        this.setState({ hasResult, result }, () => {
-                                            if (!this.state.hasResult) {
-                                                this.setState({
-                                                    isVisible: true,
-                                                    messageError: "Bạn chưa có kết quả khám ở ngày này!"
-                                                })
-                                                return;
-                                            }
-                                        })
                                     } catch (error) {
-                                        this.setState({ hasResult: false, result: {} }, () => {
-                                            if (!this.state.hasResult) {
-                                                this.setState({
-                                                    isVisible: true,
-                                                    messageError: "Bạn chưa có kết quả khám ở ngày này!"
-                                                })
-                                            }
-                                        })
+                                        this.setState({ hasResult: false, result: {}, isVisible: true, messageError: "Bạn chưa có kết quả khám ở ngày này!" });
                                     }
                                 }
                             }
-                            this.setState({
-                                result,
-                                resultDetail
-                            })
+
                             break;
                     }
                 })
