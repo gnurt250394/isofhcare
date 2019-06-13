@@ -536,9 +536,8 @@ class ListProfileScreen extends Component {
                 }).catch(err => {
                     this.setState({ isLoading: false });
                 })
-
             } catch (error) {
-
+                this.setState({ isLoading: false });
             }
 
         });
