@@ -201,7 +201,7 @@ class ListProfileScreen extends Component {
             // let year = new Date().getFullYear()
             // let fire_date = medicineTime ? `${date}-${month}-${year} ${medicineTime.format('HH:mm:ss')}` : ''
             medicineTime && medicineTime.setMinutes(medicineTime.getMinutes());
-            res.data.data.isMedicineTime && this.onAlarm(medicineTime.getTime(),patientHistoryId,hospitalId)
+            res.data.data.isMedicineTime && this.onAlarm(medicineTime.getTime(), patientHistoryId, hospitalId)
 
         }).catch(err => {
             console.log(err);
@@ -289,7 +289,7 @@ class ListProfileScreen extends Component {
                 dobAlarm: newDate,
                 timeAlarm: newDate.format("HH:mm"),
                 toggelDateTimePickerVisible: false,
-                switchValue:false
+                switchValue: false
             }, () => {
                 let note = this.state.note
                 let suggestions = this.state.suggestions
@@ -342,13 +342,13 @@ class ListProfileScreen extends Component {
                     let id = this.state.dayDateString ? histories[this.state.dayDateString].history.id : histories[this.state.latestTime.format("yyyy-MM-dd")].history.id
                     let patientHistoryId = this.state.dayDateString ? histories[this.state.dayDateString].history.patientHistoryId : histories[this.state.latestTime.format("yyyy-MM-dd")].history.patientHistoryId
                     let hospitalId = this.state.patient.hospitalEntity.id
-                     console.log(patientHistoryId,hospitalId)
+                    console.log(patientHistoryId, hospitalId)
                     ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
                         let time = this.state.dobAlarm.format('HH')
                         let minutes = this.state.dobAlarm.format('mm')
                         let dataAlarm = this.state.dobAlarm
                         dataAlarm.setMinutes(dataAlarm.getMinutes())
-                        this.onAlarm(this.state.dobAlarm.getTime(),patientHistoryId,hospitalId)
+                        this.onAlarm(this.state.dobAlarm.getTime(), patientHistoryId, hospitalId)
                     }).catch(err => {
                         console.log(err);
                     })
@@ -443,20 +443,18 @@ class ListProfileScreen extends Component {
                                 !(result.ListResulViSinh && result.ListResulViSinh.length)
                             )
                         ) {
-                            this.setState({
-                                isLoading: false,
-                                status: 6,
-                                isVisible: true
-                            });
-                            return;
+                            throw "";
                         }
                         else {
-                            this.props.navigation.navigate("viewInDay", {
-                                dateSelected: this.state.dateSelected
+                            this.setState({
+                                isLoading: false
+                            }, () => {
+                                this.props.navigation.navigate("viewInDay", {
+                                    dateSelected: this.state.dateSelected
+                                });
                             });
                         }
                     }
-                    throw "";
                 }).catch(err => {
                     this.setState({
                         isLoading: false,
@@ -464,7 +462,6 @@ class ListProfileScreen extends Component {
                         isVisible: true
                     });
                 })
-
             } catch (error) {
                 this.setState({
                     isLoading: false,
@@ -500,6 +497,25 @@ class ListProfileScreen extends Component {
 
                             }
                         }
+                        if (!result ||
+                            (
+                                !(result.ListDiagnostic && result.ListDiagnostic.length) &&
+                                !(result.ListMedicine && result.ListMedicine.length) &&
+                                !(result.ListResulGiaiPhau && result.ListResulGiaiPhau.length) &&
+                                !(result.ListResulHoaSinh && result.ListResulHoaSinh.length) &&
+                                !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
+                                !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
+                                !(result.ListResulViSinh && result.ListResulViSinh.length)
+                            )
+                        ) {
+                            this.setState({
+                                isLoading: false,
+                                status: 6,
+                                isVisible: true
+                            });
+                            return;
+                        }
+
                         if (result && resultDetail) {
                             result.hospital = this.props.ehealth.hospital.hospital;
                             this.exportPdfCom.getWrappedInstance().exportPdf({
@@ -568,7 +584,7 @@ class ListProfileScreen extends Component {
                                 <View style={styles.viewLine}></View>
                                 <TextInput onBlur={this.onBlur} multiline={true} onChangeText={s => {
                                     this.setState({ suggestions: s })
-                                }} value={this.state.suggestions} underlineColorAndroid={'#fff'} style={{ marginLeft: 5, color: '#9caac4', fontSize: 12,width:'95%' }} placeholder={'Bạn cần làm gì?'}></TextInput>
+                                }} value={this.state.suggestions} underlineColorAndroid={'#fff'} style={{ marginLeft: 5, color: '#9caac4', fontSize: 12, width: '95%' }} placeholder={'Bạn cần làm gì?'}></TextInput>
                             </View>
                             <Text style={{ color: '#bdc6d8', fontSize: 15 }}>Suggestion</Text>
                             <View style={styles.viewBTnSuggest}>

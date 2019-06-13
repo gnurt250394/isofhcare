@@ -113,7 +113,7 @@ class ViewInDateScreen extends Component {
                                             hasResult = true;
                                         }
 
-                                        if (result.ListResulOther && result.ListResulOther.length) {
+                                        if (result.ListResulHuyetHoc && result.ListResulOther.length) {
                                             hasResult = true;
                                         }
 
