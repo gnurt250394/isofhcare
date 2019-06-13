@@ -655,16 +655,18 @@ class ListProfileScreen extends Component {
                 </Modal>
                 <ActionSheet
                     ref={o => this.actionSheetGetTicket = o}
-                    options={["Khác", "Hồ sơ trên ISOFHCARE", "Hủy"]}
+                    options={["Hồ sơ trên ISOFHCARE", "Khác", "Hủy"]}
                     cancelButtonIndex={2}
                     destructiveButtonIndex={2}
                     onPress={(index) => {
                         switch (index) {
                             case 0:
-                                this.exportPdf();
+                                snackbar.show("Tính năng đang phát triển");
+
                                 break;
                             case 1:
-                                snackbar.show("Tính năng đang phát triển");
+                                this.exportPdf();
+
                         }
                     }}
                 />
