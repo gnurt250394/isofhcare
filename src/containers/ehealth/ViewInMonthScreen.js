@@ -58,10 +58,12 @@ class ListProfileScreen extends Component {
         let dateSelected = "";
         if (latestTime) {
             dateSelected = latestTime.format("yyyy-MM-dd");
+            histories[dateSelected].selectedColor = '#27ae60';
             if (!histories[dateSelected]) {
                 if (patient.history && patient.history.length && patient.history[patient.history.length - 1].timeGoIn) {
                     dateSelected = patient.history[patient.history.length - 1].timeGoIn.toDateObject("-").format("yyyy-MM-dd")
                     histories[dateSelected].selected = true;
+
                 } else
                     dateSelected = "";
             }
@@ -156,37 +158,39 @@ class ListProfileScreen extends Component {
                 delete histories[this.state.dateSelected].selected;
             }
             histories[day.dateString].selected = true;
+            histories[day.dateString].selectedColor = '#27ae60'
+            let patientHistoryId = histories[day.dateString].history.patientHistoryId
+            let hospitalId = this.state.patient.hospitalEntity.id
+            ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId).then(res => {
+                let medicineTime = res.data.data.medicineTime ? (new Date().format("dd/MM/yyyy") + " " + res.data.data.medicineTime).toDateObject('/') : ''
+                let time = res.data.data.time ? (new Date().format("dd/MM/yyyy") + " " + res.data.data.time).toDateObject('/') : ''
+                this.setState({
+                    note: res.data.data.note,
+                    switchValue: res.data.data.isMedicineTime ? true : false,
+                    timeAlarm: res.data.data.medicineTime,
+                    suggestions: res.data.data.suggestions,
+                    date: res.data.data.time,
+                    dob: time,
+                    dobAlarm: medicineTime,
+                    appointmentDate: res.data.data.appointmentDate
+                })
+                let date = new Date().getDate()
+                let month = new Date().getMonth() + 1
+                let year = new Date().getFullYear()
+                let fire_date = medicineTime ? `${date}-${month}-${year} ${medicineTime.format('HH:mm:ss')}` : ''
+                alarmNotifData.fire_date = fire_date
+                res.data.data.isMedicineTime ? ReactNativeAN.scheduleAlarm(alarmNotifData)
+                    : ReactNativeAN.deleteAlarm('12345')
+            }).catch(err => {
+                console.log(err);
+            })
 
             this.setState({
                 dateSelected: day.dateString,
                 histories: histories,
-                dayDateString:day.dateString
+                dayDateString: day.dateString
             }, () => {
-                let patientHistoryId = histories[day.dateString].history.patientHistoryId
-                let hospitalId = this.state.patient.hospitalEntity.id
-                ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId).then(res => {
-                    let medicineTime = res.data.data.medicineTime ? (new Date().format("dd/MM/yyyy") + " " + res.data.data.medicineTime).toDateObject('/') : ''
-                    let time = res.data.data.time ? (new Date().format("dd/MM/yyyy") + " " + res.data.data.time).toDateObject('/') : ''
-                    this.setState({
-                        note: res.data.data.note,
-                        switchValue: res.data.data.isMedicineTime ? true : false,
-                        timeAlarm: res.data.data.medicineTime,
-                        suggestions: res.data.data.suggestions,
-                        date: res.data.data.time,
-                        dob: time,
-                        dobAlarm: medicineTime,
-                        appointmentDate: res.data.data.appointmentDate
-                    })
-                    let date = new Date().getDate()
-                    let month = new Date().getMonth() + 1
-                    let year = new Date().getFullYear()
-                    let fire_date = medicineTime ? `${date}-${month}-${year} ${medicineTime.format('HH:mm:ss')}` : ''
-                    alarmNotifData.fire_date = fire_date
-                    res.data.data.isMedicineTime ? ReactNativeAN.scheduleAlarm(alarmNotifData)
-                        : ReactNativeAN.deleteAlarm('12345')
-                }).catch(err => {
-                    console.log(err);
-                })
+
             });
         } else {
             this.setState({
@@ -215,7 +219,7 @@ class ListProfileScreen extends Component {
                 let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : ''
                 let isMedicineTime = this.state.isMedicineTime ? 1 : 0
                 let histories = JSON.parse(JSON.stringify(this.state.histories));
-                let id = this.state.dayDateString ?  histories[this.state.dayDateString].history.id : histories[this.state.latestTime.format("yyyy-MM-dd")].history.id
+                let id = this.state.dayDateString ? histories[this.state.dayDateString].history.id : histories[this.state.latestTime.format("yyyy-MM-dd")].history.id
                 ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
                 }).catch(err => {
                     console.log(err);
@@ -233,8 +237,8 @@ class ListProfileScreen extends Component {
                 let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : ''
                 let isMedicineTime = this.state.isMedicineTime ? 1 : 0
                 let histories = JSON.parse(JSON.stringify(this.state.histories));
-                let id = this.state.dayDateString ?  histories[this.state.dayDateString].history.id : histories[this.state.latestTime.format("yyyy-MM-dd")].history.id
-                console.log(id,'id');
+                let id = this.state.dayDateString ? histories[this.state.dayDateString].history.id : histories[this.state.latestTime.format("yyyy-MM-dd")].history.id
+                console.log(id, 'id');
                 ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
                 }).catch(err => {
                     console.log(err);
@@ -263,7 +267,7 @@ class ListProfileScreen extends Component {
                     let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : ''
                     let isMedicineTime = 0
                     let histories = JSON.parse(JSON.stringify(this.state.histories));
-        let id = this.state.dayDateString ?  histories[this.state.dayDateString].history.id : histories[this.state.latestTime.format("yyyy-MM-dd")].history.id
+                    let id = this.state.dayDateString ? histories[this.state.dayDateString].history.id : histories[this.state.latestTime.format("yyyy-MM-dd")].history.id
                     ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
                         ReactNativeAN.deleteAlarm('12345')
 
@@ -280,11 +284,7 @@ class ListProfileScreen extends Component {
                     let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : ''
                     let isMedicineTime = 1
                     let histories = JSON.parse(JSON.stringify(this.state.histories));
-                    let id = this.state.dayDateString ?  histories[this.state.dayDateString].history.id : histories[this.state.latestTime.format("yyyy-MM-dd")].history.id
                     ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
-                        let date = new Date().getDate()
-                        let month = new Date().getMonth() + 1
-                        let year = new Date().getFullYear()
                         let fire_date = `${date}-${month}-${year} ${this.state.dobAlarm.format('HH:mm:ss')}`
                         alarmNotifData.fire_date = fire_date
                         console.log(alarmNotifData);
@@ -307,7 +307,7 @@ class ListProfileScreen extends Component {
         let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : ''
         let isMedicineTime = this.state.isMedicineTime ? 1 : 0
         let histories = JSON.parse(JSON.stringify(this.state.histories));
-        let id = this.state.dayDateString ?  histories[this.state.dayDateString].history.id : histories[this.state.latestTime.format("yyyy-MM-dd")].history.id
+        let id = this.state.dayDateString ? histories[this.state.dayDateString].history.id : histories[this.state.latestTime.format("yyyy-MM-dd")].history.id
         ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
 
         }).catch(err => {
@@ -392,7 +392,7 @@ class ListProfileScreen extends Component {
                                 this.setState({ isLoading: false });
                             });
                         }
-                        else{
+                        else {
                             this.setState({ isLoading: false });
                         }
                     }
@@ -450,7 +450,7 @@ class ListProfileScreen extends Component {
                                 <View style={styles.viewLine}></View>
                                 <TextInput onBlur={this.onBlur} multiline={true} onChangeText={s => {
                                     this.setState({ suggestions: s })
-                                }} value={this.state.suggestions} underlineColorAndroid={'#fff'} style={{ marginLeft: 5, color: '#9caac4', width: 200, fontSize: 18 }} placeholder={'Bạn cần làm gì?'}></TextInput>
+                                }} value={this.state.suggestions} underlineColorAndroid={'#fff'} style={{ marginLeft: 5, color: '#9caac4', fontSize: 18 }} placeholder={'Bạn cần làm gì?'}></TextInput>
                             </View>
                             <Text style={{ color: '#bdc6d8', fontSize: 15 }}>Suggestion</Text>
                             <View style={styles.viewBTnSuggest}>
@@ -496,7 +496,6 @@ class ListProfileScreen extends Component {
                         this.setState({ toggelDateTimePickerVisible: false });
                     }}
                     date={new Date()}
-                    maximumDate={new Date()}
                     cancelTextIOS={"Hủy bỏ"}
                     confirmTextIOS={"Xác nhận"}
                     date={this.state.dob || new Date()}
