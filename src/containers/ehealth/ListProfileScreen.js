@@ -87,7 +87,7 @@ class ListProfileScreen extends PureComponent {
                     <Text>lần</Text>
                 </View>
             </View>
-            <View style={{ height: 1, backgroundColor: '#00000050' }} />
+            <View style={{ height: 0.5, backgroundColor: '#00000050' }} />
         </TouchableOpacity >
     }
     onRefresh() {
