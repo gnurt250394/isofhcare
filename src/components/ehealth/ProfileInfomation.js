@@ -55,7 +55,7 @@ class ProfileInfomation extends Component {
                     <View style={styles.round1}>
                         <View style={styles.round2} />
                     </View>
-                    <Text style={styles.itemlabel}>Mã: <Text style={styles.itemcontent}>{this.props.ehealth.patient.patientHistoryId}</Text></Text>
+                    <Text style={styles.itemlabel}>Mã: <Text style={styles.itemcontent}>{resultDetail.Profile.Value}</Text></Text>
                 </View>
                 {
                     serviceCheckup &&
