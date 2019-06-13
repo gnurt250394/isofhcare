@@ -130,13 +130,20 @@ class ViewInDateScreen extends Component {
                                         }
                                         this.setState({ hasResult, result }, () => {
                                             if (!this.state.hasResult) {
-                                                snackbar.show("Không tìm thấy kết quả", "danger");
+                                                this.setState({
+                                                    isVisible: true,
+                                                    messageError: "Bạn chưa có kết quả khám ở ngày này!"
+                                                })
+                                                return;
                                             }
                                         })
                                     } catch (error) {
                                         this.setState({ hasResult: false, result: {} }, () => {
                                             if (!this.state.hasResult) {
-                                                snackbar.show("Không tìm thấy kết quả", "danger");
+                                                this.setState({
+                                                    isVisible: true,
+                                                    messageError: "Bạn chưa có kết quả khám ở ngày này!"
+                                                })
                                             }
                                         })
                                     }
@@ -164,7 +171,8 @@ class ViewInDateScreen extends Component {
         if (!item.patientHistory) {
             // snackbar.show("Không có kết quả vào ngày này", "danger");
             this.setState({
-                isVisible: true
+                isVisible: true,
+                messageError: "Không có kết quả khám nào. Bạn không đi khám ở ngày này!"
             })
             return;
         };
@@ -452,7 +460,7 @@ class ViewInDateScreen extends Component {
                 >
                     <View style={{ backgroundColor: '#fff', marginHorizontal: 20, marginVertical: 60, borderRadius: 5 }}>
                         <Text style={{ fontSize: 22, color: '#27AE60', textAlign: 'center', marginTop: 10, marginHorizontal: 20 }}>Thông báo</Text>
-                        <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>Không có kết quả khám nào. Bạn không đi khám ở ngày này!</Text>
+                        <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>{this.state.messageError}</Text>
                         <TouchableOpacity onPress={() => this.setState({ isVisible: false })} style={{ justifyContent: 'center', alignItems: 'center', height: 41, backgroundColor: '#878787', borderBottomLeftRadius: 5, borderBottomRightRadius: 5 }}><Text style={{ color: '#fff' }}>OK, XONG</Text></TouchableOpacity>
                     </View>
                 </Modal>
