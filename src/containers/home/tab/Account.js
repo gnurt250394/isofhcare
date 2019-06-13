@@ -189,7 +189,7 @@ class Account extends Component {
   }
   render() {
     return (
-      <ActivityPanel hideActionbar={true} >
+      <ActivityPanel hideActionbar={true} hideStatusbar={true} >
         <ScrollView
           showsVerticalScrollIndicator={false}
           style={{
