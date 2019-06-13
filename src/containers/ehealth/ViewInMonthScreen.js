@@ -406,14 +406,73 @@ class ListProfileScreen extends Component {
             case 5: return (
                 <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>{constants.msg.ehealth.not_examination}</Text>
             )
+            case 6: return (
+                <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>{"Bạn chưa có kết quả khám ở ngày này!"}</Text>
+            )
             default: return (
                 <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>{constants.msg.ehealth.not_examination}</Text>
             )
         }
     }
     viewResult() {
-        this.props.navigation.navigate("viewInDay", {
-            dateSelected: this.state.dateSelected
+        this.setState({
+            isLoading: true
+        }, () => {
+            try {
+                let patientHistoryId = this.state.histories[this.state.dateSelected].history.patientHistoryId
+                let hospitalId = this.state.patient.hospitalEntity.id
+                ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId).then(s => {
+                    let resultDetail = null;
+                    let result = null;
+                    if (s.data && s.data.data) {
+                        if (s.data.data.result) {
+                            try {
+                                result = JSON.parse(s.data.data.result);
+                            } catch (error) {
+
+                            }
+                        }
+                        if (!result ||
+                            (
+                                !(result.ListDiagnostic && result.ListDiagnostic.length) &&
+                                !(result.ListMedicine && result.ListMedicine.length) &&
+                                !(result.ListResulGiaiPhau && result.ListResulGiaiPhau.length) &&
+                                !(result.ListResulHoaSinh && result.ListResulHoaSinh.length) &&
+                                !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
+                                !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
+                                !(result.ListResulViSinh && result.ListResulViSinh.length)
+                            )
+                        ) {
+                            this.setState({
+                                isLoading: false,
+                                status: 6,
+                                isVisible: true
+                            });
+                            return;
+                        }
+                        else {
+                            this.props.navigation.navigate("viewInDay", {
+                                dateSelected: this.state.dateSelected
+                            });
+                        }
+                    }
+                    throw "";
+                }).catch(err => {
+                    this.setState({
+                        isLoading: false,
+                        status: 6,
+                        isVisible: true
+                    });
+                })
+
+            } catch (error) {
+                this.setState({
+                    isLoading: false,
+                    status: 6,
+                    isVisible: true
+                });
+            }
+
         });
     }
     exportPdf() {
