@@ -56,7 +56,7 @@ class ListProfileScreen extends PureComponent {
                             return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={60} height={60} />
                         }}
                     />
-                    <Text style={{ color: '#758289' }}>{item.patientValue}</Text>
+                    <Text style={{ color: '#758289',maxWidth:100}}>{item.patientValue}</Text>
                 </View>
 
                 <View style={{ flex: 1, borderRightColor: '#c8d1d6', borderRightWidth: 1, paddingVertical: 10 }}>

@@ -1,6 +1,6 @@
 import React, { Component, PropTypes, PureComponent } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, Text, ScrollView, FlatList, TouchableOpacity, StyleSheet, TextInput, Switch, Dimensions } from 'react-native';
+import { View, Text, ScrollView, FlatList, TouchableOpacity, StyleSheet, TextInput, Switch, Dimensions, Platform } from 'react-native';
 import { connect } from 'react-redux';
 import constants from '@resources/strings';
 import dateUtils from 'mainam-react-native-date-utils';
@@ -9,14 +9,15 @@ import { Calendar, LocaleConfig } from 'react-native-calendars';
 import { Card } from 'native-base';
 import ReactNativeAN from 'react-native-alarm-notification';
 import ActionSheet from 'react-native-actionsheet'
-
-const DEVICE_WIDTH = Dimensions.get('window').width;
-
+import { Notification, NotificationOpen } from 'react-native-firebase';
 import DateTimePicker from "mainam-react-native-date-picker";
 import TextField from "mainam-react-native-form-validate/TextField";
 import ehealthProvider from '@data-access/ehealth-provider'
 import Modal from '@components/modal';
 import ExportPDF from '@components/ehealth/ExportPDF';
+import firebase from 'react-native-firebase';
+
+const DEVICE_WIDTH = Dimensions.get('window').width;
 LocaleConfig.locales['en'] = {
     monthNames: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
     monthNamesShort: ['Th 1', 'Th 2', 'Th 3', 'Th 4', 'Th 5', 'Th 6', 'Th 7', 'Th 8', 'Th 9', 'Th 10', 'Th 11', 'Th 12'],
@@ -45,6 +46,7 @@ var alarmNotifData = {
     fire_date: fireDate,                          // Date for firing alarm, Required for ReactNativeAN.scheduleAlarm.
     data: { foo: "bar" },
 }
+
 class ListProfileScreen extends Component {
 
     constructor(props) {
@@ -88,7 +90,6 @@ class ListProfileScreen extends Component {
         }
 
     }
-
     groupHistory(histories, focusDay) {
         let obj = {};
         histories.forEach(item => {
@@ -110,8 +111,72 @@ class ListProfileScreen extends Component {
         }
         return obj;
     }
+
     componentDidMount() {
+        // firebase.messaging().hasPermission()
+        //     .then(enabled => {
+        //         if (!enabled) {
+        //             firebase.messaging().requestPermission()
+        //                 .then(() => {
+        //                     // User has authorised  
+        //                 })
+        //                 .catch(error => {
+        //                     // User has rejected permissions  
+        //                 });
+        //         }
+        //     });
+        // this.notificationListener = firebase.notifications().onNotification(this.onNotification.bind(this));
         this.onGetDetails()
+
+    }
+    // onNotification() {
+    //     if (!this.props.userApp.isLogin)
+    //         return;
+    //     console.log(notification);
+    //     if (!notification || notification.show_in_foreground)
+    //         return;
+    //     let body = "";
+    //     let title = "";
+    //     if (Platform.OS == 'ios') {
+    //         body = notification.title;
+    //         title = "iSofhCare";
+    //     } else {
+    //         title = notification.title;
+    //         body = "";
+    //     }
+    //     console.log(object)
+    //     firebase.notifications().displayNotification(notification)
+
+    // }
+    onAlarm = (fire_date, patientHistoryId, hospitalId) => {
+        const notification = new firebase.notifications.Notification().setNotificationId('alarm_id')
+            .setBody('Đã đến giờ uống thuốc')
+            .setTitle('Isofh-Care')
+            .android.setChannelId("isofh-care-channel")
+            .android.setSmallIcon("ic_launcher")
+            .setSound("default")
+            .setData({
+                id: 6,
+                type: -1,
+                patientHistoryId: patientHistoryId,
+                hospitalId: hospitalId
+            });
+
+        firebase.notifications().scheduleNotification(notification, {
+            fireDate: fire_date,
+            id: "alarm_notification",
+            push_type: 'alarm',
+            large_icon: 'ic_launcher',
+            repeat_interval: "day",
+            vibrate: 500,
+            title: 'Hello',
+            sub_text: 'sub text',
+            priority: "high",
+            show_in_foreground: true,
+            wake_screen: true,
+            extra1: { a: 1 },
+            extra2: 1
+        })
     }
     onGetDetails = () => {
         let lastDate = this.state.lastDate ? this.state.lastDate.toDateObject('-').format('dd/MM/yyyy') : null
@@ -121,8 +186,6 @@ class ListProfileScreen extends Component {
         ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId).then(res => {
             let medicineTime = res.data.data.medicineTime ? (new Date().format("dd/MM/yyyy") + " " + res.data.data.medicineTime).toDateObject('/') : ''
             let time = res.data.data.time ? (new Date().format("dd/MM/yyyy") + " " + res.data.data.time).toDateObject('/') : ''
-
-
             this.setState({
                 note: res.data.data.note,
                 switchValue: res.data.data.isMedicineTime ? true : false,
@@ -133,14 +196,12 @@ class ListProfileScreen extends Component {
                 dobAlarm: medicineTime,
                 appointmentDate: res.data.data.appointmentDate,
             })
-            let date = new Date().getDate()
-            let month = new Date().getMonth() + 1
-            let year = new Date().getFullYear()
-            let fire_date = medicineTime ? `${date}-${month}-${year} ${medicineTime.format('HH:mm:ss')}` : ''
-            alarmNotifData.fire_date = fire_date
-            res.data.data.isMedicineTime ? ReactNativeAN.scheduleAlarm(alarmNotifData)
-                : ReactNativeAN.deleteAlarm('12345')
-
+            // let date = new Date().getDate()
+            // let month = new Date().getMonth() + 1
+            // let year = new Date().getFullYear()
+            // let fire_date = medicineTime ? `${date}-${month}-${year} ${medicineTime.format('HH:mm:ss')}` : ''
+            medicineTime && medicineTime.setMinutes(medicineTime.getMinutes());
+            res.data.data.isMedicineTime && this.onAlarm(medicineTime.getTime(),patientHistoryId,hospitalId)
 
         }).catch(err => {
             console.log(err);
@@ -150,6 +211,8 @@ class ListProfileScreen extends Component {
         this.setState({ dob: newDate, date: newDate.format("dd/MM/yyyy") }, () => {
         });
     }
+
+
     onDayPress(day) {
 
         if (this.state.histories[day.dateString]) {
@@ -174,13 +237,10 @@ class ListProfileScreen extends Component {
                     dobAlarm: medicineTime,
                     appointmentDate: res.data.data.appointmentDate
                 })
-                let date = new Date().getDate()
-                let month = new Date().getMonth() + 1
-                let year = new Date().getFullYear()
-                let fire_date = medicineTime ? `${date}-${month}-${year} ${medicineTime.format('HH:mm:ss')}` : ''
-                alarmNotifData.fire_date = fire_date
-                res.data.data.isMedicineTime ? ReactNativeAN.scheduleAlarm(alarmNotifData)
-                    : ReactNativeAN.deleteAlarm('12345')
+
+                medicineTime && medicineTime.setMinutes(medicineTime.getMinutes())
+                res.data.data.isMedicineTime &&
+                    this.onAlarm(this.state.dobAlarm.getTime(), patientHistoryId, hospitalId)
             }).catch(err => {
                 console.log(err);
             })
@@ -206,7 +266,6 @@ class ListProfileScreen extends Component {
         this.setState({ toggelDateTimePickerVisible: true, isTimeAlarm: true })
     }
     onConfirm = (newDate) => {
-
         !this.state.isTimeAlarm ? this.setState(
             {
                 dob: newDate,
@@ -229,7 +288,8 @@ class ListProfileScreen extends Component {
             {
                 dobAlarm: newDate,
                 timeAlarm: newDate.format("HH:mm"),
-                toggelDateTimePickerVisible: false
+                toggelDateTimePickerVisible: false,
+                switchValue:false
             }, () => {
                 let note = this.state.note
                 let suggestions = this.state.suggestions
@@ -238,7 +298,6 @@ class ListProfileScreen extends Component {
                 let isMedicineTime = this.state.isMedicineTime ? 1 : 0
                 let histories = JSON.parse(JSON.stringify(this.state.histories));
                 let id = this.state.dayDateString ? histories[this.state.dayDateString].history.id : histories[this.state.latestTime.format("yyyy-MM-dd")].history.id
-                console.log(id, 'id');
                 ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
                 }).catch(err => {
                     console.log(err);
@@ -250,9 +309,6 @@ class ListProfileScreen extends Component {
     }
     onSetDate = () => {
         let fireDate = (new Date().format("dd/MM/yyyy") + " " + this.state.dobAlarm).toDateObject('/')
-
-        console.log(fireDate);
-
     }
     onSetAlarm = () => {
 
@@ -269,7 +325,6 @@ class ListProfileScreen extends Component {
                     let histories = JSON.parse(JSON.stringify(this.state.histories));
                     let id = this.state.dayDateString ? histories[this.state.dayDateString].history.id : histories[this.state.latestTime.format("yyyy-MM-dd")].history.id
                     ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
-                        ReactNativeAN.deleteAlarm('12345')
 
                     })
                 })
@@ -284,12 +339,16 @@ class ListProfileScreen extends Component {
                     let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : ''
                     let isMedicineTime = 1
                     let histories = JSON.parse(JSON.stringify(this.state.histories));
+                    let id = this.state.dayDateString ? histories[this.state.dayDateString].history.id : histories[this.state.latestTime.format("yyyy-MM-dd")].history.id
+                    let patientHistoryId = this.state.dayDateString ? histories[this.state.dayDateString].history.patientHistoryId : histories[this.state.latestTime.format("yyyy-MM-dd")].history.patientHistoryId
+                    let hospitalId = this.state.patient.hospitalEntity.id
+                     console.log(patientHistoryId,hospitalId)
                     ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
-                        let fire_date = `${date}-${month}-${year} ${this.state.dobAlarm.format('HH:mm:ss')}`
-                        alarmNotifData.fire_date = fire_date
-                        console.log(alarmNotifData);
-
-                        ReactNativeAN.scheduleAlarm(alarmNotifData)
+                        let time = this.state.dobAlarm.format('HH')
+                        let minutes = this.state.dobAlarm.format('mm')
+                        let dataAlarm = this.state.dobAlarm
+                        dataAlarm.setMinutes(dataAlarm.getMinutes())
+                        this.onAlarm(this.state.dobAlarm.getTime(),patientHistoryId,hospitalId)
                     }).catch(err => {
                         console.log(err);
                     })
@@ -446,11 +505,11 @@ class ListProfileScreen extends Component {
                             <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>KẾT QUẢ KHÁM</Text>
                         </TouchableOpacity>
                         <Card style={styles.cardView}>
-                            <View style={{ flexDirection: 'row', marginVertical: 10 }}>
+                            <View style={{ flexDirection: 'row', marginVertical: 10, }}>
                                 <View style={styles.viewLine}></View>
                                 <TextInput onBlur={this.onBlur} multiline={true} onChangeText={s => {
                                     this.setState({ suggestions: s })
-                                }} value={this.state.suggestions} underlineColorAndroid={'#fff'} style={{ marginLeft: 5, color: '#9caac4', fontSize: 18 }} placeholder={'Bạn cần làm gì?'}></TextInput>
+                                }} value={this.state.suggestions} underlineColorAndroid={'#fff'} style={{ marginLeft: 5, color: '#9caac4', fontSize: 12,width:'95%' }} placeholder={'Bạn cần làm gì?'}></TextInput>
                             </View>
                             <Text style={{ color: '#bdc6d8', fontSize: 15 }}>Suggestion</Text>
                             <View style={styles.viewBTnSuggest}>
