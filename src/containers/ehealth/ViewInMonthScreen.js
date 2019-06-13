@@ -588,7 +588,7 @@ class ListProfileScreen extends Component {
                                 <View style={styles.viewLine}></View>
                                 <TextInput onBlur={this.onBlur} multiline={true} onChangeText={s => {
                                     this.setState({ suggestions: s })
-                                }} value={this.state.suggestions} underlineColorAndroid={'#fff'} style={{ marginLeft: 5, color: '#9caac4', fontSize: 15, width: '95%' }} placeholder={'Bạn cần làm gì?'}></TextInput>
+                                }} value={this.state.suggestions} underlineColorAndroid={'#fff'} style={{ marginLeft: 5, color: '#9caac4', fontSize: 18, width: '95%' }} placeholder={'Bạn cần làm gì?'}></TextInput>
                             </View>
                             <Text style={{ color: '#bdc6d8', fontSize: 15 }}>Suggestion</Text>
                             <View style={styles.viewBTnSuggest}>
