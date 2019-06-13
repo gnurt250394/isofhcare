@@ -1,6 +1,6 @@
 import React, { Component, PropTypes, PureComponent } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, Text, ScrollView, FlatList, TouchableOpacity, StyleSheet, RefreshControl, TouchableHighlight } from 'react-native';
+import { View, Text, ScrollView, FlatList, TouchableOpacity, StyleSheet, RefreshControl, Platform } from 'react-native';
 import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import Dash from 'mainam-react-native-dash-view';
@@ -12,83 +12,29 @@ import dateUtils from 'mainam-react-native-date-utils';
 import profileProvider from '@data-access/profile-provider';
 import snackbar from '@utils/snackbar-utils';
 import ImageLoad from 'mainam-react-native-image-loader';
+import ehealthProvider from '@data-access/ehealth-provider';
+
 class ListProfileScreen extends PureComponent {
     constructor(props) {
         super(props)
         this.state = {
             refreshing: false,
-            data: [],
+            listData: [],
             loading: false,
-            bookings: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             hospitals: [],
             loadFirstTime: true
-        }
+        };
     }
     componentDidMount() {
         this.onRefresh();
     }
-    getListBooking(hospitalId) {
-        if (this.state.profile && this.state.profile.profile) {
-            bookingProvider.getListBooking(this.state.profile.profile.id, hospitalId).then(s => {
-                if (s.code == 0) {
-                    let data = [...s.data.bookingNotInHis, ...s.data.patientHistorys];
-                    this.setState({
-                        bookings: data,
-                        refreshing: false
-                    })
-                }
-            }).catch(e => {
-                this.setState({
-                    refreshing: false
-                })
-            });
-        } else {
-            this.setState({
-                refreshing: false
-            })
-        }
+    onPress = (item) => {
+        this.props.dispatch({ type: constants.action.action_select_patient_group_ehealth, value: item })
+        this.props.navigation.navigate('viewInMonth');
     }
-
-    onRefresh() {
-        this.setState({ refreshing: true }, () => {
-            hospitalProvider.getByProfile().then(s => {
-                if (s.code == 0) {
-                    this.setState({ hospitals: (s.data || []) }, () => {
-                        profileProvider.getByUserPromise(this.props.userApp.currentUser.id).then(s => {
-                            this.setState({ profile: s }, () => {
-                                this.getListBooking(this.state.hospitalId);
-                            })
-                        }).catch(e => {
-                            this.setState({ refreshing: false });
-                        })
-                    });
-                }
-                else {
-                    this.setState({ refreshing: false });
-                }
-            }).catch(e => {
-                this.setState({ refreshing: false });
-            });
-        })
-    }
-
-    openBookingInHis(booking) {
-        // this.setState({ isLoading: true }, () => {
-        bookingProvider.detailPatientHistory(booking.patientHistory.patientHistoryId, booking.hospital ? booking.hospital.id : "");
-        booking.patientHistory.hasCheckin = true;
-        this.props.navigation.navigate("ehealthDHY", { booking: booking.patientHistory, hospital: booking.hospital })
-    }
-    openBooking(booking, hospitalId) {
-        this.props.dispatch({ type: constants2.action.action_select_hospital, value: hospitalId });
-        booking.hasCheckin = false;
-        booking.hospitalId = hospitalId;
-        this.props.navigation.navigate("ehealthDHY", { booking })
-    }
-
     renderItemProfile(item, index) {
-        const source = require("@images/new/user.png");
-
-        return <TouchableOpacity style={{}} onPress={() => { this.props.navigation.navigate("viewInMonth") }}>
+        const source = this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar.absoluteUrl() } : require("@images/new/user.png");
+        return <TouchableOpacity style={{}} onPress={() => this.onPress(item)}>
             <View style={{ flexDirection: 'row' }}>
                 <View style={{ justifyContent: 'center', padding: 10 }}>
                     <ImageLoad
@@ -107,40 +53,79 @@ class ListProfileScreen extends PureComponent {
                             height: 60
                         }}
                         defaultImage={() => {
-                            return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={40} height={40} />
+                            return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={60} height={60} />
                         }}
                     />
-                    <Text style={{ color: '#758289' }}>1000000</Text>
+                    <Text style={{ color: '#758289' }}>{item.patientValue}</Text>
                 </View>
 
                 <View style={{ flex: 1, borderRightColor: '#c8d1d6', borderRightWidth: 1, paddingVertical: 10 }}>
-                    <View style={{ marginHorizontal: 10, position: 'relative', paddingHorizontal: 30 }}>
-                        <View style={{ position: 'absolute', left: 9, top: 0, bottom: 0, width: 2, backgroundColor: '#91a3ad' }}></View>
-                        <View style={{ width: 20, height: 20, borderWidth: 1.5, borderColor: '#91a3ad', borderRadius: 10, justifyContent: 'center', alignItems: 'center', position: 'absolute', left: 0, top: 0, backgroundColor: '#FFF' }}>
-                            <View style={{ width: 8, height: 8, backgroundColor: '#7eac39', borderRadius: 4 }}></View>
+                    <View style={{ marginHorizontal: 10, position: 'relative' }}>
+                        <View style={{ position: 'absolute', left: 9, top: 0, bottom: 0, width: 2, backgroundColor: '#91a3ad', }}></View>
+                        <View style={{ flexDirection: 'row', height: 30 }}>
+                            <View style={{ width: 20, height: 20, borderWidth: 1.5, borderColor: '#91a3ad', borderRadius: 10, justifyContent: 'center', alignItems: 'center', left: 0, bottom: 0, backgroundColor: '#FFF' }}>
+                                <View style={{ width: 8, height: 8, backgroundColor: '#7eac39', borderRadius: 4 }}></View>
+                            </View>
+                            <Text style={{ marginLeft: 10, color: '#63737a', fontSize: 15 }}>{item.patientName}</Text>
                         </View>
-                        <View style={{ width: 20, height: 20, borderWidth: 1.5, borderColor: '#91a3ad', borderRadius: 10, justifyContent: 'center', alignItems: 'center', position: 'absolute', left: 0, bottom: 0, backgroundColor: '#FFF' }}>
-                            <View style={{ width: 8, height: 8, backgroundColor: '#c84242', borderRadius: 4 }}></View>
+                    </View>
+                    <View style={{ marginHorizontal: 10, marginTop: -2 }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+                            <View style={{ marginTop: 2, width: 20, height: 20, borderWidth: 1.5, borderColor: '#91a3ad', borderRadius: 10, justifyContent: 'center', alignItems: 'center', left: 0, bottom: 0, backgroundColor: '#FFF' }}>
+                                <View style={{ width: 8, height: 8, backgroundColor: '#c84242', borderRadius: 4 }}></View>
+                            </View>
+                            <Text style={{ flex: 1, marginLeft: 10, color: '#51626a', fontSize: 15 }}>{item.hospitalEntity.name}</Text>
                         </View>
-                        <Text style={{ fontWeight: 'bold', color: '#63737a' }}>MAI NGỌC NAM</Text>
-                        <Text style={{ marginTop: 10 }}>BỆNH VIỆN E</Text>
                     </View>
                     <View style={{ flexDirection: 'row', marginLeft: 10, marginTop: 10, alignItems: 'center' }}>
-                        <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={20} />
-                        <Text style={{ marginLeft: 5, color: '#33799e' }}>Gần nhất: 19/8/2019</Text>
+                        <ScaleImage resizeMode='cover' source={require("@images/new/ehealth/ic_timer.png")} width={20} tintColor={'#8fa1aa'} />
+                        <Text style={{ marginLeft: 10, color: '#045684' }}>Gần nhất: {item.latestTime ? item.latestTime.toDateObject('-').format('dd/MM/yyyy') : ''}</Text>
                     </View>
                 </View>
                 <View style={{ paddingHorizontal: 20, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={{ color: 'red', fontSize: 30 }}>03</Text>
+                    <Text style={{ color: '#f36819', fontSize: 30 }}>{item.countTime}</Text>
                     <Text>lần</Text>
                 </View>
             </View>
             <View style={{ height: 1, backgroundColor: '#00000050' }} />
-        </TouchableOpacity>
+        </TouchableOpacity >
+    }
+    onRefresh() {
+        if (!this.state.loading)
+            this.setState(
+                { refreshing: true, loading: true },
+                () => {
+                    this.onLoad();
+                }
+            );
+    }
+    onLoad() {
+        ehealthProvider.getGroupPatient(this.props.ehealth.hospital.hospital.id).then(res => {
+            this.setState({
+                loading: false,
+                refreshing: false,
+                loadMore: false
+            }, () => {
+                if (res.code == 0) {
+                    this.setState({
+                        listData: res.data,
+                        finish: true
+                    })
+                }
+            });
+        }).catch(e => {
+            this.setState({
+                loading: false,
+                refreshing: false,
+                loadMore: false
+            });
+        });
     }
     render() {
         return (
-            <ActivityPanel style={{ flex: 1 }} title="HỒ SƠ Y BẠ GIA ĐÌNH"
+            <ActivityPanel style={{ flex: 1 }}
+                // title="HỒ SƠ Y BẠ GIA ĐÌNH"
+                title={<Text>HỒ SƠ Y BẠ GIA ĐÌNH{'\n'}<Text style={{ fontSize: 12, fontWeight: 'normal' }}>Tổng: {this.state.listData ? this.state.listData.length : 0} thành viên</Text></Text>}
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#22b060"
@@ -151,13 +136,15 @@ class ListProfileScreen extends PureComponent {
                 titleStyle={{
                     color: '#FFF'
                 }}
-
                 showFullScreen={true} isLoading={this.state.isLoading}>
                 <FlatList
                     showsVerticalScrollIndicator={false}
+                    onRefresh={this.onRefresh.bind(this)}
+                    refreshing={this.state.refreshing}
+                    onEndReachedThreshold={1}
                     keyExtractor={(item, index) => index.toString()}
                     extraData={this.state}
-                    data={this.state.bookings}
+                    data={this.state.listData}
                     ListFooterComponent={() => <View style={{ height: 10 }}></View>}
                     renderItem={({ item, index }) => this.renderItemProfile.call(this, item, index)}
                 />
@@ -226,7 +213,8 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
-        userApp: state.userApp
+        userApp: state.userApp,
+        ehealth: state.ehealth
     };
 }
 export default connect(mapStateToProps)(ListProfileScreen);
