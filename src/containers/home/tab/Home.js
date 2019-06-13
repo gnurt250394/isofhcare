@@ -249,7 +249,6 @@ class Home extends Component {
 
     return (
       <ActivityPanel
-        hideStatusbar={true}
         hideActionbar={true}
         style={[{ flex: 1 }, this.props.style]}
         hideBackButton={true}

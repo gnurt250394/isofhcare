@@ -184,7 +184,8 @@ class ListProfileScreen extends Component {
         let patientHistoryId = this.state.patient.patientHistoryId
         let hospitalId = this.state.patient.hospitalEntity.id
         ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId).then(res => {
-            let medicineTime = res.data.data.medicineTime ? (new Date().format("dd/MM/yyyy") + " " + res.data.data.medicineTime).toDateObject('/') : ''
+            let medicineTime = res.data.data.medicineTime ? (new Date().format("yyyy/MM/dd") + " " + res.data.data.medicineTime).toDateObject('/') : ''
+            console.log(medicineTime,'medicineTime')
             let time = res.data.data.time ? (new Date().format("dd/MM/yyyy") + " " + res.data.data.time).toDateObject('/') : ''
             this.setState({
                 note: res.data.data.note,
@@ -239,8 +240,10 @@ class ListProfileScreen extends Component {
                 })
 
                 medicineTime && medicineTime.setMinutes(medicineTime.getMinutes())
+                let dataAlarm = this.state.dobAlarm
+                dataAlarm.setMinutes(dataAlarm.getMinutes());
                 res.data.data.isMedicineTime &&
-                    this.onAlarm(this.state.dobAlarm.getTime(), patientHistoryId, hospitalId)
+                    this.onAlarm(dataAlarm.getTime(), patientHistoryId, hospitalId)
             }).catch(err => {
                 console.log(err);
             })
@@ -266,6 +269,8 @@ class ListProfileScreen extends Component {
         this.setState({ toggelDateTimePickerVisible: true, isTimeAlarm: true })
     }
     onConfirm = (newDate) => {
+        console.log(newDate,'newDate')
+
         !this.state.isTimeAlarm ? this.setState(
             {
                 dob: newDate,
@@ -342,13 +347,12 @@ class ListProfileScreen extends Component {
                     let id = this.state.dayDateString ? histories[this.state.dayDateString].history.id : histories[this.state.latestTime.format("yyyy-MM-dd")].history.id
                     let patientHistoryId = this.state.dayDateString ? histories[this.state.dayDateString].history.patientHistoryId : histories[this.state.latestTime.format("yyyy-MM-dd")].history.patientHistoryId
                     let hospitalId = this.state.patient.hospitalEntity.id
-                    console.log(patientHistoryId, hospitalId)
                     ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
                         let time = this.state.dobAlarm.format('HH')
                         let minutes = this.state.dobAlarm.format('mm')
                         let dataAlarm = this.state.dobAlarm
-                        dataAlarm.setMinutes(dataAlarm.getMinutes())
-                        this.onAlarm(this.state.dobAlarm.getTime(), patientHistoryId, hospitalId)
+                        dataAlarm.setMinutes(dataAlarm.getMinutes());
+                        this.onAlarm(dataAlarm.getTime(), patientHistoryId, hospitalId)
                     }).catch(err => {
                         console.log(err);
                     })
@@ -356,7 +360,7 @@ class ListProfileScreen extends Component {
 
             }
         } else {
-            alert('Bạn chưa chọn giờ uống thuốc')
+            snackbar.show('Bạn chưa chọn giờ uống thuốc', 'danger');
         }
     }
     onBlur = () => {
@@ -583,7 +587,7 @@ class ListProfileScreen extends Component {
                                 <View style={styles.viewLine}></View>
                                 <TextInput onBlur={this.onBlur} multiline={true} onChangeText={s => {
                                     this.setState({ suggestions: s })
-                                }} value={this.state.suggestions} underlineColorAndroid={'#fff'} style={{ marginLeft: 5, color: '#9caac4', fontSize: 12, width: '95%' }} placeholder={'Bạn cần làm gì?'}></TextInput>
+                                }} value={this.state.suggestions} underlineColorAndroid={'#fff'} style={{ marginLeft: 5, color: '#9caac4', fontSize: 15, width: '95%' }} placeholder={'Bạn cần làm gì?'}></TextInput>
                             </View>
                             <Text style={{ color: '#bdc6d8', fontSize: 15 }}>Suggestion</Text>
                             <View style={styles.viewBTnSuggest}>
