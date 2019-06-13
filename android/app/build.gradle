@@ -153,6 +153,9 @@ android {
 }
 
 dependencies {
+    compile project(':appcenter-crashes')
+    compile project(':appcenter-analytics')
+    compile project(':appcenter')
     compile project(':react-native-sms')
     compile project(':react-native-extra-dimensions-android')
     compile(name: 'payoo-payment-sdk-release-2.2.0', ext: 'aar') { transitive = true }
