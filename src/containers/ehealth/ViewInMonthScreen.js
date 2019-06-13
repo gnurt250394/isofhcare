@@ -149,6 +149,7 @@ class ListProfileScreen extends Component {
 
     // }
     onAlarm = (fire_date, patientHistoryId, hospitalId) => {
+        console.log(fire_date,'fire_date')
         const notification = new firebase.notifications.Notification().setNotificationId('alarm_id')
             .setBody('Đã đến giờ uống thuốc')
             .setTitle('Isofh-Care')
@@ -186,7 +187,7 @@ class ListProfileScreen extends Component {
         ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId).then(res => {
             let medicineTime = res.data.data.medicineTime ? (new Date().format("yyyy/MM/dd") + " " + res.data.data.medicineTime).toDateObject('/') : ''
             console.log(medicineTime,'medicineTime')
-            let time = res.data.data.time ? (new Date().format("dd/MM/yyyy") + " " + res.data.data.time).toDateObject('/') : ''
+            let time = res.data.data.time ? (new Date().format("yyyy/MM/dd") + " " + res.data.data.time).toDateObject('/') : ''
             this.setState({
                 note: res.data.data.note,
                 switchValue: res.data.data.isMedicineTime ? true : false,
@@ -226,8 +227,8 @@ class ListProfileScreen extends Component {
             let patientHistoryId = histories[day.dateString].history.patientHistoryId
             let hospitalId = this.state.patient.hospitalEntity.id
             ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId).then(res => {
-                let medicineTime = res.data.data.medicineTime ? (new Date().format("dd/MM/yyyy") + " " + res.data.data.medicineTime).toDateObject('/') : ''
-                let time = res.data.data.time ? (new Date().format("dd/MM/yyyy") + " " + res.data.data.time).toDateObject('/') : ''
+                let medicineTime = res.data.data.medicineTime ? (new Date().format("yyyy/MM/dd") + " " + res.data.data.medicineTime).toDateObject('/') : ''
+                let time = res.data.data.time ? (new Date().format("yyyy/MM/dd") + " " + res.data.data.time).toDateObject('/') : ''
                 this.setState({
                     note: res.data.data.note,
                     switchValue: res.data.data.isMedicineTime ? true : false,
