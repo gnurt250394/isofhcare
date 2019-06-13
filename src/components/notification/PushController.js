@@ -80,7 +80,7 @@ class PushController extends Component {
         this.notificationInitialListener = firebase.notifications().getInitialNotification().then(this.getInitialNotification.bind(this));
     }
     onNotification(notification) {
-        debugger
+        
         if (!this.props.userApp.isLogin)
             return;
         console.log(notification);
