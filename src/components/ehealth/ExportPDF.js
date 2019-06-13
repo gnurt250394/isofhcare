@@ -821,16 +821,16 @@ class ExportPDF extends Component {
                             finish();
                         }, 500);
                     try {
-                        Share.shareSingle({
-                            title: constants.share,
-                            url: "file://" + filePath.filePath,
-                            social: Share.Social.EMAIL
-                        });
-
-                        // Share.open({
+                        // Share.shareSingle({
                         //     title: constants.share,
                         //     url: "file://" + filePath.filePath,
+                        //     social: Share.Social.EMAIL
                         // });
+
+                        Share.open({
+                            title: constants.share,
+                            url: "file://" + filePath.filePath,
+                        });
                     } catch (error) {
                         console.log(error);
                     }
