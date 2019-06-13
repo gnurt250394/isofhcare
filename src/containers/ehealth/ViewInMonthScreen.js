@@ -149,7 +149,10 @@ class ListProfileScreen extends Component {
 
     // }
     onAlarm = (fire_date, patientHistoryId, hospitalId) => {
-        console.log(fire_date,'fire_date')
+        debugger;
+        if (fire_date < new Date().getTime())
+            return;
+        console.log('runnnnnn')
         const notification = new firebase.notifications.Notification().setNotificationId('alarm_id')
             .setBody('Đã đến giờ uống thuốc')
             .setTitle('Isofh-Care')
@@ -178,6 +181,7 @@ class ListProfileScreen extends Component {
             extra1: { a: 1 },
             extra2: 1
         })
+
     }
     onGetDetails = () => {
         let lastDate = this.state.lastDate ? this.state.lastDate.toDateObject('-').format('dd/MM/yyyy') : null
@@ -186,7 +190,7 @@ class ListProfileScreen extends Component {
         let hospitalId = this.state.patient.hospitalEntity.id
         ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId).then(res => {
             let medicineTime = res.data.data.medicineTime ? (new Date().format("yyyy/MM/dd") + " " + res.data.data.medicineTime).toDateObject('/') : ''
-            console.log(medicineTime,'medicineTime')
+            console.log(medicineTime, 'medicineTime')
             let time = res.data.data.time ? (new Date().format("yyyy/MM/dd") + " " + res.data.data.time).toDateObject('/') : ''
             this.setState({
                 note: res.data.data.note,
@@ -270,7 +274,8 @@ class ListProfileScreen extends Component {
         this.setState({ toggelDateTimePickerVisible: true, isTimeAlarm: true })
     }
     onConfirm = (newDate) => {
-        console.log(newDate,'newDate')
+        debugger;
+        console.log(newDate, 'newDate')
 
         !this.state.isTimeAlarm ? this.setState(
             {
