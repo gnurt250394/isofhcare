@@ -518,7 +518,7 @@ class ListProfileScreen extends Component {
                 </Modal>
                 <ActionSheet
                     ref={o => this.actionSheetGetTicket = o}
-                    options={["Gửi PDF tới Email", "Hồ sơ trên ISOFHCARE", "Hủy"]}
+                    options={["Khác", "Hồ sơ trên ISOFHCARE", "Hủy"]}
                     cancelButtonIndex={2}
                     destructiveButtonIndex={2}
                     onPress={(index) => {
