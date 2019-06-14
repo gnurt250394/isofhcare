@@ -21,7 +21,7 @@ class SearchProfileScreen extends Component {
             listServiceSearch: [],
             searchValue: "",
             refreshing: false,
-
+            dataPatient:this.props.navigation.state.params && this.props.navigation.state.params.dataPatient ? this.props.navigation.state.params.dataPatient : ''
         }
     }
     componentDidMount() {
@@ -102,9 +102,25 @@ class SearchProfileScreen extends Component {
         let name = ''
         let dataId = item.user.id
         let data = item
+        let hospitalId = this.state.dataPatient.hospitalId
+        let patientHistoryId = this.state.dataPatient.patientHistoryId
         const { USER_EHEALTH_HISTORY } = realmModel;
+
         historyProvider.addHistory(userId, USER_EHEALTH_HISTORY, name, dataId, JSON.stringify(data))
-        this.props.navigation.pop()
+        console.log("đâsd",patientHistoryId,hospitalId)
+        ehealthProvider.shareWithProfile(dataId,hospitalId,patientHistoryId).then(res => {
+            console.log(res,'res')
+            if(res.code == 0 && res.data.status == 1){
+                snackbar.show('Chia sẻ thành công','success')
+                this.props.navigation.pop()
+            }else{
+                snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại','danger')
+            }
+            
+        }).catch(err => {
+            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại','danger')
+            console.log(err)
+        })
     }
     renderSearchButton() {
         return (
@@ -113,9 +129,50 @@ class SearchProfileScreen extends Component {
             </TouchableOpacity>
         );
     }
-
-    render() {
+    renderItem = ({ item }) => {
         const icSupport = require("@images/new/user.png");
+        return (
+            <TouchableOpacity onPress={() => this.selectProfile(item)}>
+                <View style={{ marginBottom: 2, backgroundColor: '#FFF', padding: 20, flexDirection: 'column', borderBottomColor: '#A5A5A5', borderBottomWidth: 0.7 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <ImageLoad
+                                resizeMode="cover"
+                                imageStyle={{ borderRadius: 15, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
+                                borderRadius={20}
+                                customImagePlaceholderDefaultStyle={{
+                                    width: 30,
+                                    height: 30,
+                                    alignSelf: "center"
+                                }}
+                                placeholderSource={icSupport}
+                                style={{ width: 30, height: 30 }}
+                                resizeMode="cover"
+                                loadingStyle={{ size: "small", color: "gray" }}
+                                source={item.user.avatar
+                                    ? { uri: item.user.avatar.absoluteUrl() }
+                                    : icSupport}
+                                defaultImage={() => {
+                                    return (
+                                        <ScaledImage
+                                            resizeMode="cover"
+                                            source={icSupport}
+                                            width={30}
+                                            style={{ width: 30, height: 30 }}
+                                        />
+                                    );
+                                }}
+                            />
+                            <Text style={{ fontWeight: '200', fontSize: 15, marginLeft: 10 }}>
+                                {item.user.name}
+                            </Text>
+                        </View>
+                        <ScaleImage height={15} source={require('@images/new/booking/ic_next.png')}></ScaleImage>
+                    </View>
+                </View>
+            </TouchableOpacity>)
+    }
+    render() {
         return (
             <ActivityPanel
                 backButton={<TouchableOpacity style={{ paddingLeft: 20 }} onPress={() => this.props.navigation.pop()}><Text>Hủy</Text></TouchableOpacity>}
@@ -140,10 +197,8 @@ class SearchProfileScreen extends Component {
                             </TouchableOpacity>
                         </View>
                         : null
-
-
                 }
-                <Text style={{fontSize:15,color:'#000',marginLeft:15,marginVertical:10}}>Tìm kiếm gần đây</Text>
+                <View style={{ paddingLeft: 20, paddingVertical: 10, marginTop: 10, backgroundColor: '#fff', borderColor: '#A5A5A5', borderBottomWidth: 0.7 }}><Text style={{ fontSize: 15, color: '#000', }}>Tìm kiếm gần đây</Text></View>
                 <FlatList
                     style={{ flex: 1, backgroundColor: '#FFF' }}
                     refreshing={this.state.refreshing}
@@ -160,47 +215,8 @@ class SearchProfileScreen extends Component {
                     }
                     ListFooterComponent={() => <View style={{ height: 10 }} />}
                     data={this.state.listProfileSearch}
-                    renderItem={({ item }) =>
-                        <TouchableOpacity onPress={() => this.selectProfile(item)}>
-                            <View style={{ marginBottom: 2, backgroundColor: '#FFF', padding: 20, flexDirection: 'column', borderBottomColor: '#00000011', borderBottomWidth: 0.7 }}>
-                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <ImageLoad
-                                        resizeMode="cover"
-                                        imageStyle={{ borderRadius: 15, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
-                                        borderRadius={20}
-                                        customImagePlaceholderDefaultStyle={{
-                                            width: 30,
-                                            height: 30,
-                                            alignSelf: "center"
-                                        }}
-                                        placeholderSource={icSupport}
-                                        style={{ width: 30, height: 30 }}
-                                        resizeMode="cover"
-                                        loadingStyle={{ size: "small", color: "gray" }}
-                                        source={item.user.avatar
-                                            ? { uri: item.user.avatar.absoluteUrl() }
-                                            : icSupport}
-                                        defaultImage={() => {
-                                            return (
-                                                <ScaledImage
-                                                    resizeMode="cover"
-                                                    source={icSupport}
-                                                    width={30}
-                                                    style={{ width: 30, height: 30 }}
-                                                />
-                                            );
-                                        }}
-                                    />
-                                    <Text style={{ fontWeight: '200', fontSize: 15, marginLeft: 10 }}>
-                                        {item.user.name}
-                                    </Text>
-                                </View>
-                            </View>
-                        </TouchableOpacity>
-                    }
+                    renderItem={this.renderItem}
                 />
-
-
             </ActivityPanel>
         )
     }
@@ -208,7 +224,8 @@ class SearchProfileScreen extends Component {
 function mapStateToProps(state) {
     return {
         userApp: state.userApp,
-        booking: state.dhyBooking
+        ehealth: state.ehealth
+
     };
 }
 

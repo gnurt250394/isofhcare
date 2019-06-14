@@ -33,10 +33,42 @@ class ViewEhealthDetailScreen extends Component {
         console.log(result);
         this.state = {
             result,
-            resultDetail
+            resultDetail,
+            detailsHospital:''
         }
     }
-    componentDidMount() {
+  
+    renderDetails = () =>{
+        let user = this.props.navigation.state.params && this.props.navigation.state.params.user ? this.props.navigation.state.params.user : ''
+        if(user){
+            return(
+                <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
+                <ProfileInfomation hospitalName ={this.props.navigation.state.params.hospitalName} avatar = {user.avatar} patientName = {user.ower_name} resultDetail={this.state.resultDetail} />
+                <View style={{ height: 1, backgroundColor: '#27ae60', }} />
+                <CheckupResult result={this.state.result} />
+                <MedicalTestResult result={this.state.result} />
+                <DiagnosticResult result={this.state.result} />
+                <SurgeryResult result={this.state.result} />
+                <Medicine result={this.state.result} />
+                <TotalMoney result={this.state.result} resultDetail={this.state.resultDetail} />
+                <View style={{height: 50}}/>
+                </ScrollView>
+            )
+        }else{
+            return(
+                <ScrollView ref={ref => this.flListDate = ref} showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
+                <ProfileInfomation resultDetail={this.state.resultDetail} />
+                <View style={{ height: 1, backgroundColor: '#27ae60', }} />
+                <CheckupResult result={this.state.result} />
+                <MedicalTestResult result={this.state.result} />
+                <DiagnosticResult result={this.state.result} />
+                <SurgeryResult result={this.state.result} />
+                <Medicine result={this.state.result} />
+                <TotalMoney result={this.state.result} resultDetail={this.state.resultDetail} />
+                <View style={{height: 50}}/>
+                </ScrollView>
+            )
+        }
     }
     render() {
 
@@ -53,17 +85,7 @@ class ViewEhealthDetailScreen extends Component {
                     color: '#FFF'
                 }}
                 isLoading={this.state.isLoading}>
-                <ScrollView ref={ref => this.flListDate = ref} showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
-                    <ProfileInfomation resultDetail={this.state.resultDetail} />
-                    <View style={{ height: 1, backgroundColor: '#27ae60', }} />
-                    <CheckupResult result={this.state.result} />
-                    <MedicalTestResult result={this.state.result} />
-                    <DiagnosticResult result={this.state.result} />
-                    <SurgeryResult result={this.state.result} />
-                    <Medicine result={this.state.result} />
-                    <TotalMoney result={this.state.result} resultDetail={this.state.resultDetail} />
-                    <View style={{height: 50}}/>
-                </ScrollView>
+               {this.renderDetails()}
             </ActivityPanel>
         );
     }

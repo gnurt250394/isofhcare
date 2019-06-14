@@ -34,7 +34,7 @@ class ProfileInfomation extends Component {
         console.log(this.props.ehealth);
         const icSupport = require("@images/new/user.png");
         const source = this.props.userApp.currentUser.avatar
-            ? { uri: this.props.userApp.currentUser.avatar.absoluteUrl() }
+            ? { uri: this.props.avatar ? this.props.avatar.absoluteUrl() : this.props.userApp.currentUser.avatar.absoluteUrl() }
             : icSupport;
         return <View style={{ flexDirection: 'row', position: 'relative', flex: 1, padding: 8 }}>
             <View style={{ width: 1.5, top: 10, bottom: 10, left: 17.5, backgroundColor: '#8fa1aa', position: 'absolute' }}></View>
@@ -43,13 +43,13 @@ class ProfileInfomation extends Component {
                     <View style={styles.round1}>
                         <View style={styles.round2} />
                     </View>
-                    <Text style={[styles.itemlabel, { fontWeight: 'bold', fontSize: 18, marginTop: 0 }]}>{this.props.ehealth.patient.patientName}</Text>
+                    <Text style={[styles.itemlabel, { fontWeight: 'bold', fontSize: 18, marginTop: 0 }]}>{this.props.patientName ?this.props.patientName: this.props.ehealth.patient.patientName}</Text>
                 </View>
                 <View style={styles.item}>
                     <View style={styles.round1}>
                         <View style={styles.round3} />
                     </View>
-                    <Text style={styles.itemlabel}>{this.props.ehealth.hospital.hospital.name}</Text>
+                   <Text style={styles.itemlabel}>{this.props.hospitalName ? this.props.hospitalName : this.props.ehealth.hospital.hospital.name}</Text>
                 </View>
                 <View style={styles.item}>
                     <View style={styles.round1}>
