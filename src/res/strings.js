@@ -1,5 +1,4 @@
-let isofhcare_service = 'isofhcare/';
-let isofhcare_resources = 'isofhcare-resources/';
+let isofhcare_service = 'isofhcare-dev/';
 // let wallet_services = 'wallet-services-test/'; //test
 let wallet_services = 'wallet-services-dev/'; //dev
 
@@ -264,7 +263,7 @@ module.exports = {
       getListZone: isofhcare_service + "profile/get-zone-by-district"
     },
     upload: {
-      image: isofhcare_resources + "image/upload"
+      image: isofhcare_service + "upload/image"
     },
     user: {
       login: isofhcare_service + "user/login",
