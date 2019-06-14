@@ -63,5 +63,25 @@ module.exports = {
                 }
             })
         })
-    }
+    },
+    getHistoryHospital2 () {
+        return new Promise((resolve, reject) => {
+            client.requestApi("get", constants.api.hospital.get_hospital_by_profile, {}, (s, e) => {
+                if (s)
+                    resolve(s);
+                reject(e);
+            });
+        });
+    },
+    getHistoryHospital(token) {
+        return new Promise((resolve, reject) => {
+            let url = constants.api.hospital.get_hospital_by_profile
+            client.requestApiWithHeader("get", url, {}, { Authorization: token }, (s, e) => {
+                if (s) {
+                    resolve(s);
+                }
+                reject(e);
+            });
+        });
+    },
 }

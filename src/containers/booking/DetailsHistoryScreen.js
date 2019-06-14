@@ -73,7 +73,12 @@ class DetailsHistoryScreen extends Component {
       case 2:
         return <Text style={styles.paymentHospital}>VNPAY</Text>;
       case 3:
-        return <Text style={styles.paymentHospital}>Thanh toán tại viện</Text>;
+        return <Text style={styles.paymentHospital}>Thanh toán sau tại CSYT</Text>;
+      case 4:
+        return <Text style={styles.paymentHospital}>Thanh toán Payoo</Text>;
+      case 5:
+        return <Text style={styles.paymentHospital}>Payoo - Cửa hàng tiện ích</Text>;
+
     }
   };
   status = () => {

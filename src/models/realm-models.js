@@ -36,6 +36,7 @@ module.exports = {
     DRUG_HISTORY: 1,
     FACILITY_HISTORY: 2,
     LOCATION_HISTORY: 3,
+    USER_EHEALTH_HISTORY: 5,
     schemaVersion: 4,
     SearchHistory,
     DataString,

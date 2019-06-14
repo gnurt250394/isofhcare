@@ -4,6 +4,12 @@ const server_url = "https://api.produce.isofhcare.com"; //release
 // const server_url = "http://34.95.91.81"; //stable
 import axios from 'axios';
 
+// const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofh-care-dev/"; //dev
+// const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofh-care-dev/"; //test
+// const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofh-care-stable/"; //stable
+const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofhcare-storage/"; //release
+
+
 const httpClient = axios.create();
 httpClient.defaults.timeout = 50000;
 
@@ -24,7 +30,7 @@ String.prototype.absoluteUrl =
       _this2.endsWith(".png") ||
       _this2.endsWith(".gif")
     ) {
-      let image = server_url + "/isofhcare-resources" + _this + "";
+      let image = resource_url + encodeURIComponent(_this + "")+"?alt=media";
       // console.log(image);
       return image;
     }

@@ -80,6 +80,7 @@ class PushController extends Component {
         this.notificationInitialListener = firebase.notifications().getInitialNotification().then(this.getInitialNotification.bind(this));
     }
     onNotification(notification) {
+        
         if (!this.props.userApp.isLogin)
             return;
         console.log(notification);
@@ -99,15 +100,29 @@ class PushController extends Component {
                 title = notification.title;
                 body = "";
             }
-            const fbNotification = new firebase.notifications.Notification()
-                .setNotificationId(StringUtils.guid())
-                .setBody(body)
-                .setTitle(title)
-                .android.setChannelId("isofh-care-channel")
-                .android.setSmallIcon("ic_launcher")
-                .android.setPriority(2)
-                .setSound("default")
-                .setData(notification.data);
+
+            let fbNotification = null;
+            if (type == -1) {
+                fbNotification = new firebase.notifications.Notification()
+                    .setNotificationId(StringUtils.guid())
+                    .setBody("Đã đến giờ uống thuốc")
+                    .setTitle("Isofh Care")
+                    .android.setChannelId("isofh-care-channel")
+                    .android.setSmallIcon("ic_launcher")
+                    .android.setPriority(2)
+                    .setSound("default")
+                    .setData(notification.data);
+            } else {
+                fbNotification = new firebase.notifications.Notification()
+                    .setNotificationId(StringUtils.guid())
+                    .setBody(body)
+                    .setTitle(title)
+                    .android.setChannelId("isofh-care-channel")
+                    .android.setSmallIcon("ic_launcher")
+                    .android.setPriority(2)
+                    .setSound("default")
+                    .setData(notification.data);
+            }
             firebase.notifications().displayNotification(fbNotification)
             console.log(fbNotification, 'fbNotification')
         }
@@ -138,6 +153,8 @@ class PushController extends Component {
                         break;
                     case 5:
                         this.openTicket(id);
+                        break;
+                    case -1:
                         break;
 
                 }
