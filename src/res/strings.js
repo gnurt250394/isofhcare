@@ -1,4 +1,4 @@
-let isofhcare_service = 'isofhcare-dev/';
+let isofhcare_service = 'isofhcare/';
 // let wallet_services = 'wallet-services-test/'; //test
 // let wallet_services = 'wallet-services-dev/'; //dev
 let wallet_services = 'wallet-services/'; //stable
