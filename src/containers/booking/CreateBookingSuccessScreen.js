@@ -25,7 +25,7 @@ class CreateBookingSuccessScreen extends Component {
             case 1:
                 return "VNPAY";
             case 2:
-                return "Thanh toán tại viện";
+                return "Thanh toán sau tại CSYT";
             case 3:
                 return "PAYOO";
             case 4:
