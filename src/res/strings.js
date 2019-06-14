@@ -344,7 +344,8 @@ module.exports = {
       get_hospital_by_service_type: isofhcare_service + "hospital/get-hospital-by-service-type",
       get_hospital_by_search: isofhcare_service + "hospital/search",
       get_by_location: isofhcare_service + "hospital/get-hospital-by-locate",
-      get_default_hospital: isofhcare_service + 'hospital/get-default-hospital'
+      get_default_hospital: isofhcare_service + 'hospital/get-default-hospital',
+      get_details_hospital: isofhcare_service + 'hospital/get-detail'
     },
     profile: {
       get_by_user: isofhcare_service + "profile/get-by-user",
@@ -377,7 +378,8 @@ module.exports = {
     ehealth: {
       get_group_patient: isofhcare_service + 'booking/get-group-patient-history',
       update_data_user: isofhcare_service + 'patient-history-booking/update-data-note',
-      search_profile_user: isofhcare_service + 'user/search'
+      search_profile_user: isofhcare_service + 'user/search',
+      share_with_profile: isofhcare_service + 'booking/share-user'
     }
   }
 };

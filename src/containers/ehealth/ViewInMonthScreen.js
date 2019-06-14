@@ -85,6 +85,7 @@ class ListProfileScreen extends Component {
             latestTime,
             histories,
             switchValue: false,
+            dataPatient:'',
             dateSelected,
 
         }
@@ -199,6 +200,7 @@ class ListProfileScreen extends Component {
                 suggestions: res.data.data.suggestions,
                 date: res.data.data.time,
                 dob: time,
+                dataPatient:res.data.data,
                 dobAlarm: medicineTime,
                 appointmentDate: res.data.data.appointmentDate,
             })
@@ -241,6 +243,7 @@ class ListProfileScreen extends Component {
                     date: res.data.data.time,
                     dob: time,
                     dobAlarm: medicineTime,
+                    dataPatient: res.data.data,
                     appointmentDate: res.data.data.appointmentDate
                 })
 
@@ -274,7 +277,6 @@ class ListProfileScreen extends Component {
         this.setState({ toggelDateTimePickerVisible: true, isTimeAlarm: true })
     }
     onConfirm = (newDate) => {
-        debugger;
         console.log(newDate, 'newDate')
 
         !this.state.isTimeAlarm ? this.setState(
@@ -638,10 +640,9 @@ class ListProfileScreen extends Component {
                     onCancel={() => {
                         this.setState({ toggelDateTimePickerVisible: false });
                     }}
-                    date={new Date()}
                     cancelTextIOS={"Hủy bỏ"}
                     confirmTextIOS={"Xác nhận"}
-                    date={this.state.dob || new Date()}
+                    date={this.state.isTimeAlarm ? this.state.dobAlarm : this.state.dob || new Date()}
                 />
                 <Modal
                     isVisible={this.state.isVisible}
@@ -667,8 +668,7 @@ class ListProfileScreen extends Component {
                     onPress={(index) => {
                         switch (index) {
                             case 0:
-                                snackbar.show("Tính năng đang phát triển");
-
+                                this.props.navigation.navigate('searchProfile',{dataPatient:this.state.dataPatient})
                                 break;
                             case 1:
                                 this.exportPdf();
