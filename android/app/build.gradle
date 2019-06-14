@@ -101,8 +101,8 @@ android {
         applicationId "com.isofh.isofhcare"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 34
-        versionName "4.0"
+        versionCode 35
+        versionName "4.1"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -155,6 +155,8 @@ android {
 dependencies {
     compile project(':react-native-sms')
     compile project(':react-native-extra-dimensions-android')
+    compile(name: 'payoo-payment-sdk-release-2.2.0', ext: 'aar') { transitive = true }
+    compile project(':mainam-react-native-payoo')
     compile project(':react-native-location-switch')
     compile project(':react-native-location')
     compile project(':react-native-vector-icons')

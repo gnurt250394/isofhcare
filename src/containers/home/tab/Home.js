@@ -35,16 +35,12 @@ class Home extends Component {
           icon: require("@images/new/home/ic_ticket_news.png"),
           text: "Lấy số",
           onPress: () => {
-            snackbar.show("Tính năng đang phát triển", "");
-            // if (this.props.userApp.isLogin)
-            //   if(this.props.userApp.currentUser.bookingNumberHospital)
-            //   this.props.navigation.navigate("selectHealthFacilitiesScreen");
-            //   else
-            //   snackbar.show("Tính năng đang phát triển", "");
-            //   else
-            //   this.props.navigation.navigate("login", {
-            //     nextScreen: { screen: "selectHealthFacilitiesScreen", param: {} }
-            //   });
+            if (this.props.userApp.isLogin)
+              this.props.navigation.navigate("selectHealthFacilitiesScreen");
+            else  
+              this.props.navigation.navigate("login", {
+                nextScreen: { screen: "selectHealthFacilitiesScreen", param: {} }
+              });
           }
         },
         {
@@ -52,7 +48,7 @@ class Home extends Component {
           text: "Đặt khám",
           onPress: () => {
             if (this.props.userApp.isLogin)
-              if (this.props.userApp.currentUser.bookingStatus)
+              if (this.props.userApp.currentUser.bookingStatus != false || this.props.userApp.currentUser.bookingStatus == undefined )
                 this.props.navigation.navigate("addBooking");
               else
                 snackbar.show("Tính năng đang phát triển", "");
@@ -235,10 +231,14 @@ class Home extends Component {
 
   getItemWidth() {
     const width = DEVICE_WIDTH - 40;
-    if (width >= 320)
-      return 70;
-    if (width > 300)
-      return 110;
+    if (width >= 320){
+     Platform.OS == 'ios' ?  70 :  75;
+    }
+     
+    if (width > 300){
+      Platform.OS == 'ios' ? 100: 110;
+    }
+      
     if (width > 250)
       return 70;
     return width - 50;
@@ -333,7 +333,7 @@ class Home extends Component {
                                 <View style={{ position: 'relative', padding: 5 }}>
                                   <ScaledImage style={[styles.icon]} source={item.icon} height={48} />
                                 </View>
-                                <Text style={[styles.label]}>{item.text}</Text>
+                                <Text  allowFontScaling={false} style={[styles.label]}>{item.text}</Text>
                               </TouchableOpacity>
 
                           }
@@ -360,7 +360,7 @@ const styles = StyleSheet.create({
   icon: {
   },
   label: {
-    marginTop: 2, color: '#4A4A4A', fontSize: 15, fontWeight: '600', lineHeight: 20
+    marginTop: 2, color: '#4A4A4A', fontSize: 15, fontWeight: '600', lineHeight: 20,
   },
   subLabel: {
     color: '#9B9B9B', fontSize: 12, textAlign: 'center', marginTop: 5
