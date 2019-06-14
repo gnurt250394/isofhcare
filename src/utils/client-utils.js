@@ -30,7 +30,7 @@ String.prototype.absoluteUrl =
       _this2.endsWith(".png") ||
       _this2.endsWith(".gif")
     ) {
-      let image = resource_url + encodeURIComponent(_this + "");
+      let image = resource_url + encodeURIComponent(_this + "")+"?alt=media";
       // console.log(image);
       return image;
     }
