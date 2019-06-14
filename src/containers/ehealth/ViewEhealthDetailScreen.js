@@ -43,7 +43,7 @@ class ViewEhealthDetailScreen extends Component {
         if(user){
             return(
                 <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
-                <ProfileInfomation hospitalName ={this.props.navigation.state.params.hospitalName} avatar = {user.avatar} patientName = {user.name} resultDetail={this.state.resultDetail} />
+                <ProfileInfomation hospitalName ={this.props.navigation.state.params.hospitalName} avatar = {user.avatar} patientName = {user.ower_name} resultDetail={this.state.resultDetail} />
                 <View style={{ height: 1, backgroundColor: '#27ae60', }} />
                 <CheckupResult result={this.state.result} />
                 <MedicalTestResult result={this.state.result} />

@@ -148,6 +148,7 @@ class NotificationScreen extends Component {
     }
   }
   detailsEhealth = (data,user) => {
+    console.log(data,'data')
     this.setState({isLoading:true},() => {
       
     bookingProvider.detailPatientHistory(data.patientHistoryId,data.hospitalId).then(s => {
@@ -168,7 +169,7 @@ class NotificationScreen extends Component {
                           try {
                               result = JSON.parse(s.data.data.result);
                                hospitalProvider.getDetailsById(data.hospitalId).then(res=>{
-                                this.props.navigation.navigate('viewDetail',{result:result,resultDetail:resultDetail,hospitalName:res.data.hospital.name,user:user})
+                                this.props.navigation.navigate('viewDetail',{result:result,resultDetail:resultDetail,hospitalName:res.data.hospital.name,user:data})
                                  })
                                   console.log('chay vao hihi')
                           } catch (error) {
