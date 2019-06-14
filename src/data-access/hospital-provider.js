@@ -64,7 +64,7 @@ module.exports = {
             })
         })
     },
-    getHistoryHospital2 () {
+    getHistoryHospital2() {
         return new Promise((resolve, reject) => {
             client.requestApi("get", constants.api.hospital.get_hospital_by_profile, {}, (s, e) => {
                 if (s)
@@ -84,4 +84,14 @@ module.exports = {
             });
         });
     },
+    getDetailsById(id) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('get', constants.api.hospital.get_details_hospital + '/' + id, {}, (s, e) => {
+                if (s)
+                    resolve(s)
+                else
+                    reject(e)
+            })
+        })
+    }
 }
