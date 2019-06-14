@@ -5,4 +5,6 @@
     <string name="default_notification_channel_id">isofh-care-channel</string>
     <string name="fb_app_id">fb1457683741386685</string>
 <string name="ak_client_token">a9ae7d8852eab508b86896d5cd375999</string>
+    <string name="appCenterAnalytics_whenToEnableAnalytics" moduleConfig="true" translatable="false">ALWAYS_SEND</string>
+    <string name="appCenterCrashes_whenToSendCrashes" moduleConfig="true" translatable="false">ALWAYS_SEND</string>
 </resources>
