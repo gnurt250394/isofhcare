@@ -26,6 +26,7 @@ import imageProvider from "@data-access/image-provider";
 import userProvider from "@data-access/user-provider";
 import FingerprintPopup from "../../account/FingerprintPopup";
 import Modal from "@components/modal";
+import DeviceInfo from 'react-native-device-info';
 
 class Account extends Component {
   constructor(props) {
@@ -400,6 +401,10 @@ class Account extends Component {
               />
             </TouchableOpacity>
           )}
+          <View>
+          <Text>{'Phiên bản' + DeviceInfo.getVersion()}</Text>
+          <Text>{DeviceInfo.getBuildNumber()}</Text>
+          </View>
           <View style={{ height: 100 }} />
           <ImagePicker ref={ref => (this.imagePicker = ref)} />
         </ScrollView>

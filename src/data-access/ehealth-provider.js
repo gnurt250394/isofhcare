@@ -14,7 +14,7 @@ module.exports = {
     },
     updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id) {
         var body = {
-            "note": note , "suggestions": suggestions , "time": time , "medicineTime": medicineTime , "isMedicineTime": isMedicineTime ? isMedicineTime: 0
+            "note": note, "suggestions": suggestions, "time": time, "medicineTime": medicineTime, "isMedicineTime": isMedicineTime ? isMedicineTime : 0
         }
         return new Promise((resolve, reject) => {
             client.requestApi("put", `${constants.api.ehealth.update_data_user}/${id}`, body, (s, e) => {
@@ -43,7 +43,7 @@ module.exports = {
             );
         });
     },
-  
+
     search(page, size, queryString) {
         let active = 1
         let specialistId = -1
@@ -58,6 +58,22 @@ module.exports = {
                 reject(e);
             });
         });
+    },
+    shareWithProfile(recieveUserId,hospitalId,patientHistoryId) {
+        let body = {
+            recieveUserId:recieveUserId,
+            hospitalId:hospitalId,
+            patientHistoryId:patientHistoryId
+        }
+        return new Promise((resolve, reject) => {
+            client.requestApi('post',constants.api.ehealth.share_with_profile, body, (s, e) => {
+                if (s)
+                    resolve(s)
+                else {
+                    reject(e)
+                }
+            })
+        })
     }
 
 }
