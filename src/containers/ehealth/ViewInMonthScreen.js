@@ -60,7 +60,6 @@ class ListProfileScreen extends Component {
         let dateSelected = "";
         if (latestTime) {
             dateSelected = latestTime.format("yyyy-MM-dd");
-            histories[dateSelected].selectedColor = '#27ae60';
             if (!histories[dateSelected]) {
                 if (patient.history && patient.history.length && patient.history[patient.history.length - 1].timeGoIn) {
                     dateSelected = patient.history[patient.history.length - 1].timeGoIn.toDateObject("-").format("yyyy-MM-dd")
@@ -68,6 +67,9 @@ class ListProfileScreen extends Component {
 
                 } else
                     dateSelected = "";
+            }
+            else {
+                histories[dateSelected].selectedColor = '#27ae60';
             }
         }
         this.state = {
@@ -85,7 +87,7 @@ class ListProfileScreen extends Component {
             latestTime,
             histories,
             switchValue: false,
-            dataPatient:'',
+            dataPatient: '',
             dateSelected,
 
         }
@@ -101,7 +103,7 @@ class ListProfileScreen extends Component {
                         history: item,
                         marked: true,
                         color: 'green',
-                        selectedColor: 'blue'
+                        selectedColor: '#27ae60'
                     }
                 }
             }
@@ -150,7 +152,6 @@ class ListProfileScreen extends Component {
 
     // }
     onAlarm = (fire_date, patientHistoryId, hospitalId) => {
-        debugger;
         if (fire_date < new Date().getTime())
             return;
         console.log('runnnnnn')
@@ -200,7 +201,7 @@ class ListProfileScreen extends Component {
                 suggestions: res.data.data.suggestions,
                 date: res.data.data.time,
                 dob: time,
-                dataPatient:res.data.data,
+                dataPatient: res.data.data,
                 dobAlarm: medicineTime,
                 appointmentDate: res.data.data.appointmentDate,
             })
@@ -668,7 +669,7 @@ class ListProfileScreen extends Component {
                     onPress={(index) => {
                         switch (index) {
                             case 0:
-                                this.props.navigation.navigate('searchProfile',{dataPatient:this.state.dataPatient})
+                                this.props.navigation.navigate('searchProfile', { dataPatient: this.state.dataPatient })
                                 break;
                             case 1:
                                 this.exportPdf();
