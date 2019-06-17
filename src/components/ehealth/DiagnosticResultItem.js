@@ -47,7 +47,7 @@ class DiagnosticResultItem extends Component {
                     (item.Result || item.SummaryResult || item.Discussion) ?
                         <View>
 
-                            <Text style={styles.diagnosticLabel}>Mô tả</Text>
+                            <Text style={styles.diagnosticLabel}>{constants.ehealth.describe}</Text>
                             {item.Result ?
                                 <View style={{ flexDirection: 'row' }}>
                                     <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
@@ -75,7 +75,7 @@ class DiagnosticResultItem extends Component {
                     (item.Conclusion) ?
                         <View>
 
-                            <Text style={styles.diagnosticLabel}>Kết luận</Text>
+                            <Text style={styles.diagnosticLabel}>{constants.ehealth.conclude}</Text>
                             {item.Conclusion ?
                                 <View style={{ flexDirection: 'row' }}>
                                     <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />

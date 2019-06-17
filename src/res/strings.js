@@ -212,7 +212,11 @@ module.exports = {
       update_avatar: "Cập nhật ảnh đại diện",
       change_password: "Thay đổi mật khẩu",
       new_password: "Mật khẩu mới",
-      confirm_new_password: "Xác nhận mật khẩu"
+      confirm_new_password: "Xác nhận mật khẩu",
+      user_not_login:'Bạn chưa đăng nhập vui lòng',
+      login:'Đăng nhập',
+      register:'Đăng ký',
+      phone_number_not_found:'Xác minh số điện thoại không thành công'
     },
     facility: {
       please_select_value_for_rating: "Vui lòng chọn giá trị đánh giá",
@@ -238,7 +242,7 @@ module.exports = {
       examination_in_date: 'Bạn có lịch khám lại vào ngày',
       not_re_examination: 'Bạn không có lịch tái khám nào!',
       not_examination: 'Bạn không có lịch khám lại nào!'
-
+      
 
     },
     question: {
@@ -247,7 +251,20 @@ module.exports = {
       please_input_content: "Vui lòng nhập nội dung câu hỏi",
       create_question_success: "Bạn đã gửi câu hỏi thành công",
       create_question_failed: "Gửi câu hỏi không thành công"
+    },
+    booking:{
+      not_result_history_of_this_time:'Không có lịch trong khung giờ này',
+      full_slot_on_this_time:'Đã kín lịch trong khung giờ này'
+    },
+    message:{
+      none_image:'Không có ảnh nào'
     }
+  },
+  ehealth:{
+    checkupResult:'KẾT QUẢ KHÁM',
+    diagnosticResult:'KẾT QUẢ CHẨN ĐOÁN HÌNH ẢNH',
+    describe:'Mô tả',
+    conclude:'kết luận'
   },
   api: {
     notification: {

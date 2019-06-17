@@ -437,7 +437,7 @@ class AddBookingScreen extends Component {
 
         return (<ActivityPanel title="Đặt Khám"
             isLoading={this.state.isLoading}
-            menuButton={<TouchableOpacity style={styles.menu} onPress={() => snackbar.show("Chức năng đang phát triển")}><ScaleImage style={styles.img} height={20} source={require("@images/new/booking/ic_info.png")} /></TouchableOpacity>}
+            menuButton={<TouchableOpacity style={styles.menu} onPress={() => snackbar.show(constants.msg.app.in_development)}><ScaleImage style={styles.img} height={20} source={require("@images/new/booking/ic_info.png")} /></TouchableOpacity>}
             titleStyle={{ marginLeft: 50 }}>
 
             <KeyboardAwareScrollView>

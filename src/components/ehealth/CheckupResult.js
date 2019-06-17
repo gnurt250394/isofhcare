@@ -37,7 +37,7 @@ class CheckupResult extends Component {
                     <View style={styles.round2} />
                 </View>
                 <View style={[styles.itemlabel, { marginTop: 0 }]}>
-                    <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>KẾT QUẢ KHÁM</Text>
+                    <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>{constants.ehealth.checkupResult}</Text>
                 </View>
             </View>
             {
