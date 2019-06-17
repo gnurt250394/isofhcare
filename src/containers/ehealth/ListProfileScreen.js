@@ -69,7 +69,7 @@ class ListProfileScreen extends PureComponent {
                             <Text style={{ marginLeft: 10, color: '#63737a', fontSize: 15 }}>{item.patientName}</Text>
                         </View>
                     </View>
-                    <View style={{ marginTop: -2 }}>
+                    <View style={{ marginTop: -2,paddingRight:4 }}>
                         <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
                             <View style={{ marginTop: 2, width: 20, height: 20, borderWidth: 1.5, borderColor: '#91a3ad', borderRadius: 10, justifyContent: 'center', alignItems: 'center', left: 0, bottom: 0, backgroundColor: '#FFF' }}>
                                 <View style={{ width: 8, height: 8, backgroundColor: '#c84242', borderRadius: 4 }}></View>

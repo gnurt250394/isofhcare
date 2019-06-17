@@ -34,10 +34,10 @@ class ViewEhealthDetailScreen extends Component {
         this.state = {
             result,
             resultDetail,
-            detailsHospital:''
+            detailsHospital:'',
         }
     }
-  
+   
     renderDetails = () =>{
         let user = this.props.navigation.state.params && this.props.navigation.state.params.user ? this.props.navigation.state.params.user : ''
         console.log(this.state.resultDetail,'xvideos')

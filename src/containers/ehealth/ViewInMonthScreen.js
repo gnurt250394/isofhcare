@@ -16,6 +16,7 @@ import ehealthProvider from '@data-access/ehealth-provider'
 import Modal from '@components/modal';
 import ExportPDF from '@components/ehealth/ExportPDF';
 import firebase from 'react-native-firebase';
+import connectionUtils from '@utils/connection-utils';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 LocaleConfig.locales['en'] = {
@@ -429,6 +430,7 @@ class ListProfileScreen extends Component {
         }
     }
     viewResult() {
+        connectionUtils.isConnected().then(s => {
         this.setState({
             isLoading: true
         }, () => {
@@ -492,8 +494,13 @@ class ListProfileScreen extends Component {
             }
 
         });
+    }).catch(e => {
+        snackbar.show(constants.msg.app.not_internet, "danger");
+    })
+
     }
     onShareEhealthWithProfile () {
+        
         //check status 6
         this.setState({
             isLoading: true

@@ -12,7 +12,8 @@ import ImageLoad from 'mainam-react-native-image-loader';
 import ehealthProvider from '@data-access/ehealth-provider';
 import historyProvider from '@data-access/history-provider';
 import realmModel from '@models/realm-models';
-
+import connectionUtils from '@utils/connection-utils';
+import Modal from '@components/modal';
 class SearchProfileScreen extends Component {
     constructor(props) {
         super(props);
@@ -25,7 +26,9 @@ class SearchProfileScreen extends Component {
             size: 10,
             page: 1,
             finish: false,
-            loading: false
+            loading: false,
+            status: ''
+
         }
     }
     componentDidMount() {
@@ -74,14 +77,16 @@ class SearchProfileScreen extends Component {
         this.setState({ searchValue: s });
     }
     onRefreshList = () => {
+        console.log('onRefreshList')
         if (!this.state.loading)
-          this.setState(
-            { refreshing: true, page: 1, finish: false, loading: true },
-            () => {
-              this.onSearch();
-            }
-          );
-      }
+            this.setState(
+                { refreshing: true, page: 1, finish: false, loading: true },
+                () => {
+                    this.onSearch();
+                }
+            );
+    }
+
     onSearch = () => {
         // var s = this.state.searchValue;
         // var listSearch = this.state.listProfile.filter(function (item) {
@@ -96,70 +101,90 @@ class SearchProfileScreen extends Component {
         });
         let queryString = this.state.searchValue ? this.state.searchValue.trim().toLowerCase().unsignText().split(' ').join('') : ''
         console.log(queryString)
-            ehealthProvider.search(page, size, queryString).then(s => {
-                this.setState({
-                    refreshing: false,
-                    loading: false,
-                    loadMore: false
-                }, () => {
-                    if (s) {
-                        switch (s.code) {
-                            case 0:
-                                var list = [];
-                                var finish = false;
-                                if (s.data.data.length == 0) {
-                                    finish = true;
-                                }
-                                if (page != 1) {
-                                    list = this.state.listProfileSearch;
-                                    list.push.apply(list, s.data.data);
-                                } else {
-                                    list = s.data.data;
-                                }
-                                this.setState({
-                                    listProfileSearch: [...list],
-                                    finish: finish
-                                });
-                                break;
-                        }
+        ehealthProvider.search(page, size, queryString).then(s => {
+            this.setState({
+                refreshing: false,
+                loading: false,
+                loadMore: false
+            }, () => {
+                if (s) {
+                    switch (s.code) {
+                        case 0:
+                            var list = [];
+                            var finish = false;
+                            if (s.data.data.length == 0) {
+                                finish = true;
+                            }
+                            if (page != 1) {
+                                list = this.state.listProfileSearch;
+                                list.push.apply(list, s.data.data);
+                            } else {
+                                list = s.data.data;
+                            }
+                            this.setState({
+                                listProfileSearch: [...list],
+                                finish: finish
+                            });
+                            break;
                     }
-                })
-            }).catch(e => {
-                this.setState({
-                    listProfileSearch: [],
-                    loading: false,
-                    refreshing: false,
-                    loadMore: false
-                })
+                }
             })
-     
+        }).catch(e => {
+            this.setState({
+                listProfileSearch: [],
+                loading: false,
+                refreshing: false,
+                loadMore: false
+            })
+        })
+
     }
     selectProfile = (item) => {
         console.log(this.props);
-        let userId = this.props.userApp.currentUser.id
-        let type = constants.key.history.user_ehealth
-        let name = ''
-        let dataId = item.user.id
-        let data = item
-        let hospitalId = this.state.dataPatient.hospitalId
-        let patientHistoryId = this.state.dataPatient.patientHistoryId
-        const { USER_EHEALTH_HISTORY } = realmModel;
+        connectionUtils.isConnected().then(s => {
+            let userId = this.props.userApp.currentUser.id
+            let type = constants.key.history.user_ehealth
+            let name = ''
+            let dataId = item.user.id
+            let data = item
+            let hospitalId = this.state.dataPatient.hospitalId
+            let patientHistoryId = this.state.dataPatient.patientHistoryId
+            const { USER_EHEALTH_HISTORY } = realmModel;
 
-        historyProvider.addHistory(userId, USER_EHEALTH_HISTORY, name, dataId, JSON.stringify(data))
-        console.log("đâsd", patientHistoryId, hospitalId)
-        ehealthProvider.shareWithProfile(dataId, hospitalId, patientHistoryId).then(res => {
-            console.log(res, 'res')
-            if (res.code == 0 && res.data.status == 1) {
-                snackbar.show('Chia sẻ thành công', 'success')
-                this.props.navigation.pop()
-            } else {
-                snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
-            }
+            historyProvider.addHistory(userId, USER_EHEALTH_HISTORY, name, dataId, JSON.stringify(data))
+            ehealthProvider.shareWithProfile(dataId, hospitalId, patientHistoryId).then(res => {
+                if (res.code == 0 && res.data.status == 1) {
+                    this.setState({
+                        status: 1,
+                        isVisible: true
+                    })
+                } else {
+                    this.setState({
+                        status: 2,
+                        isVisible: true
+                    })
+                }
 
-        }).catch(err => {
-            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
-            console.log(err)
+            }).catch(err => {
+                this.setState({
+                    status: 2,
+                    isVisible: true
+                })
+                console.log(err)
+            })
+        }).catch(e => {
+            snackbar.show(constants.msg.app.not_internet, "danger");
         })
+    }
+    renderTextContent = () => {
+        switch (this.state.status) {
+            case 1: return (
+                <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10, fontSize: 18 }}>{'Đã chia sẻ Y bạ thành công!'}</Text>
+            )
+            case 2: return (
+                <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}><ScaleImage height={20} source={require('@images/new/ehealth/ic_warning.png')}></ScaleImage><Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10, fontSize: 18 }}>{'Chưa chia sẻ được!'}</Text></View>
+            )
+        }
     }
     renderSearchButton() {
         return (
@@ -180,7 +205,8 @@ class SearchProfileScreen extends Component {
                 () => {
                     this.onSearch(this.state.page);
                 }
-            );
+            )
+
     }
     renderItem = ({ item }) => {
         const icSupport = require("@images/new/user.png");
@@ -244,7 +270,7 @@ class SearchProfileScreen extends Component {
                         }}>
                             <TextInput autoFocus={true} style={{ flex: 1, color: constants.colors.actionbar_title_color, padding: 10 }} placeholderTextColor='#dddddd' underlineColorAndroid="transparent" placeholder={"Nhập từ khóa tìm kiếm"} onChangeText={(s) => {
                                 this.searchTextChange(s);
-                            }} returnKeyType="search" onSubmitEditing={() => { this.onSearch }} />
+                            }} returnKeyType="search" onSubmitEditing={this.onRefreshList} />
                             <TouchableOpacity onPress={this.onRefreshList}>
                                 <Text style={{ backgroundColor: constants.colors.actionbar_title_color, padding: 7, borderRadius: 20, marginRight: 10, paddingLeft: 15, paddingRight: 15, fontWeight: 'bold', color: '#FFF' }}>{constants.search}</Text>
                             </TouchableOpacity>
@@ -268,11 +294,11 @@ class SearchProfileScreen extends Component {
                             (!this.state.listProfileSearch || this.state.listProfileSearch.length == 0) ?
                             <View style={{ width: '100%', marginTop: 50, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center' }}>
                                 <ScaleImage source={require("@images/empty_result.png")} width={120} />
-                                <Text style={{textAlign:'center'}}>{this.state.searchValue ?  'Không có kết quả nào cho hồ sơ ' : 'Không có hồ sơ chia sẻ gần đây ' }<Text style={{ fontWeight: 'bold', color: constants.colors.actionbar_title_color }}>{this.state.searchValue}</Text></Text>
+                                <Text style={{ textAlign: 'center' }}>{this.state.searchValue ? 'Không có kết quả nào cho hồ sơ ' : 'Không có hồ sơ chia sẻ gần đây '}<Text style={{ fontWeight: 'bold', color: constants.colors.actionbar_title_color }}>{this.state.searchValue}</Text></Text>
                             </View> : null
                     }
-                    onEndReached={this.onLoadMore.bind(this)}
-                    onEndReachedThreshold={1}
+                    onEndReached={this.state.searchValue ? this.onLoadMore.bind(this) : {}}
+                    onEndReachedThreshold={this.state.searchValue ? 1 : -1}
                     ListFooterComponent={() => <View style={{ height: 10 }} />}
                     data={this.state.listProfileSearch}
                     renderItem={this.renderItem}
@@ -286,6 +312,26 @@ class SearchProfileScreen extends Component {
                             />
                         </View> : null
                 }
+                <Modal
+                    isVisible={this.state.isVisible}
+                    onBackdropPress={() => this.setState({ isVisible: false })}
+                    backdropOpacity={0.5}
+                    animationInTiming={500}
+                    animationOutTiming={500}
+                    style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+                    backdropTransitionInTiming={1000}
+                    backdropTransitionOutTiming={1000}
+                >
+                    <View style={{ backgroundColor: '#fff', marginHorizontal: 20, marginVertical: 60, borderRadius: 5 }}>
+                        <Text style={{ fontSize: 22, color: '#27AE60', textAlign: 'center', marginTop: 10, marginHorizontal: 20 }}>Thông báo</Text>
+                        {this.renderTextContent()}
+                        <TouchableOpacity onPress={() => {
+                            this.setState({ isVisible: false })
+                            this.props.navigation.pop()
+                        }}
+                            style={{ justifyContent: 'center', alignItems: 'center', height: 41, backgroundColor: '#878787', borderBottomLeftRadius: 5, borderBottomRightRadius: 5 }}><Text style={{ color: '#fff' }}>OK, XONG</Text></TouchableOpacity>
+                    </View>
+                </Modal>
             </ActivityPanel>
         )
     }
