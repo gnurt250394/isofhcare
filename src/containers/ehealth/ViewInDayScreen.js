@@ -102,7 +102,9 @@ class ViewInDateScreen extends Component {
                                                 !(result.ListResulHoaSinh && result.ListResulHoaSinh.length) &&
                                                 !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
                                                 !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
-                                                !(result.ListResulViSinh && result.ListResulViSinh.length)
+                                                !(result.ListResulViSinh && result.ListResulViSinh.length)&&
+                                                !(result.ListResultCheckup && result.ListResultCheckup.length)
+
                                             )
                                         ) {
                                             this.setState({

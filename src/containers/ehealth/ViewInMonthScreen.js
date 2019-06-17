@@ -437,7 +437,6 @@ class ListProfileScreen extends Component {
                 let hospitalId = this.state.patient.hospitalEntity.id
                 ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId).then(s => {
                     console.log(s,'ssssssss')
-                    debugger
                     let resultDetail = null;
                     let result = null;
                     if (s.data && s.data.data) {
@@ -457,7 +456,9 @@ class ListProfileScreen extends Component {
                                 !(result.ListResulHoaSinh && result.ListResulHoaSinh.length) &&
                                 !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
                                 !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
-                                !(result.ListResulViSinh && result.ListResulViSinh.length)
+                                !(result.ListResulViSinh && result.ListResulViSinh.length)&&
+                                !(result.ListResultCheckup && result.ListResultCheckup.length)
+
                             )
                         ) {
                             console.log('ko kq',result)
@@ -520,7 +521,8 @@ class ListProfileScreen extends Component {
                                 !(result.ListResulHoaSinh && result.ListResulHoaSinh.length) &&
                                 !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
                                 !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
-                                !(result.ListResulViSinh && result.ListResulViSinh.length)
+                                !(result.ListResulViSinh && result.ListResulViSinh.length)&&
+                                !(result.ListResultCheckup && result.ListResultCheckup.length)
                             )
                         ) {
                             throw "";
@@ -585,7 +587,9 @@ class ListProfileScreen extends Component {
                                 !(result.ListResulHoaSinh && result.ListResulHoaSinh.length) &&
                                 !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
                                 !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
-                                !(result.ListResulViSinh && result.ListResulViSinh.length)
+                                !(result.ListResulViSinh && result.ListResulViSinh.length) &&
+                                !(result.ListResultCheckup && result.ListResultCheckup.length)
+                                
                             )
                         ) {
                             this.setState({
