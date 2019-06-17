@@ -22,6 +22,8 @@ import Field from "mainam-react-native-form-validate/Field";
 import TextField from "mainam-react-native-form-validate/TextField";
 import dateUtils from "mainam-react-native-date-utils";
 import profileProvider from "@data-access/profile-provider"
+import constants from "@resources/strings";
+
 class ProfileInfo extends Component {
   constructor() {
     super();
@@ -209,7 +211,7 @@ class ProfileInfo extends Component {
         }
       })
       .catch(e => {
-        snackbar.show("Không có kết nối mạng", "danger");
+        snackbar.show(constants.msg.app.not_internet, "danger");
       });
   }
   onUpdate2(image) {
@@ -264,7 +266,7 @@ class ProfileInfo extends Component {
         )
       })
       .catch(e => {
-        snackbar.show("Không có kết nối mạng", "danger");
+        snackbar.show(constants.msg.app.not_internet, "danger");
       });
   }
   onUpdate = () => {

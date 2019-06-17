@@ -79,7 +79,7 @@ class ListProfileScreen extends PureComponent {
                     </View>
                     <View style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center' }}>
                         <ScaleImage resizeMode='cover' source={require("@images/new/ehealth/ic_timer.png")} width={20} tintColor={'#8fa1aa'} />
-                        <Text style={{ marginLeft: 10, color: '#045684' }}>Gần nhất: {item.latestTime ? item.latestTime.toDateObject('-').format('dd/MM/yyyy') : ''}</Text>
+                        <Text style={{ marginLeft: 10, color: '#045684' }}>{constants.ehealth.lastTime2 + item.latestTime ? item.latestTime.toDateObject('-').format('dd/MM/yyyy') : ''}</Text>
                     </View>
                 </View>
                 <View style={{ paddingHorizontal: 20, justifyContent: 'center', alignItems: 'center' }}>

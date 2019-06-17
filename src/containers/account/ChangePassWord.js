@@ -12,6 +12,7 @@ import userProvider from '@data-access/user-provider';
 import constants from '@resources/strings';
 import FloatingLabel from 'mainam-react-native-floating-label';
 import connectionUtils from '@utils/connection-utils';
+
 class ProfileScreen extends Component {
     constructor(props) {
         super(props)
@@ -51,7 +52,7 @@ class ProfileScreen extends Component {
             })
 
         }).catch(e => {
-            snackbar.show("Không có kết nối mạng", "danger");
+            snackbar.show(constants.msg.app.not_internet, "danger");
         })
     }
 

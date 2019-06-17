@@ -152,6 +152,8 @@ class NotificationScreen extends Component {
     this.setState({isLoading:true},() => {
       
     bookingProvider.detailPatientHistory(data.patientHistoryId,data.hospitalId).then(s => {
+    console.log(s,'ád')
+      console.log(s)
       this.setState({ isLoading: false }, () => {
           switch (s.code) {
               case 0:

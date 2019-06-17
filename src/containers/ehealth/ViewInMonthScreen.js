@@ -225,6 +225,7 @@ class ListProfileScreen extends Component {
     onDayPress(day) {
 
         if (this.state.histories[day.dateString]) {
+            console.log(day.dateString,'sdasd')
             let histories = JSON.parse(JSON.stringify(this.state.histories));
             if (this.state.dateSelected && histories[this.state.dateSelected]) {
                 delete histories[this.state.dateSelected].selected;
@@ -435,6 +436,72 @@ class ListProfileScreen extends Component {
                 let patientHistoryId = this.state.histories[this.state.dateSelected].history.patientHistoryId
                 let hospitalId = this.state.patient.hospitalEntity.id
                 ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId).then(s => {
+                    console.log(s,'ssssssss')
+                    debugger
+                    let resultDetail = null;
+                    let result = null;
+                    if (s.data && s.data.data) {
+                        if (s.data.data.result) {
+                            try {
+                                result = JSON.parse(s.data.data.result);
+                                console.log('co ket qua',result)
+                            } catch (error) {
+                                console.log(error,'errorerror')
+                            }
+                        }
+                        if (!result ||
+                            (
+                                !(result.ListDiagnostic && result.ListDiagnostic.length) &&
+                                !(result.ListMedicine && result.ListMedicine.length) &&
+                                !(result.ListResulGiaiPhau && result.ListResulGiaiPhau.length) &&
+                                !(result.ListResulHoaSinh && result.ListResulHoaSinh.length) &&
+                                !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
+                                !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
+                                !(result.ListResulViSinh && result.ListResulViSinh.length)
+                            )
+                        ) {
+                            console.log('ko kq',result)
+                            throw "";
+                        }
+                        else {
+                            this.setState({
+                                isLoading: false
+                            }, () => {
+                                this.props.navigation.navigate("viewInDay", {
+                                    dateSelected: this.state.dateSelected
+                                });
+                            });
+                        }
+                    }
+                }).catch(err => {
+                    console.log(err,'err')
+                    this.setState({
+                        isLoading: false,
+                        status: 6,
+                        isVisible: true
+                    });
+                })
+            } catch (error) {
+                console.log(error,'error')
+                this.setState({
+                    isLoading: false,
+                    status: 6,
+                    isVisible: true
+                });
+            }
+
+        });
+    }
+    onShareEhealthWithProfile () {
+        //check status 6
+        this.setState({
+            isLoading: true
+        }, () => {
+            try {
+                let patientHistoryId = this.state.histories[this.state.dateSelected].history.patientHistoryId
+                let hospitalId = this.state.patient.hospitalEntity.id
+                console.log(patientHistoryId)
+                ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId).then(s => {
                     let resultDetail = null;
                     let result = null;
                     if (s.data && s.data.data) {
@@ -462,9 +529,8 @@ class ListProfileScreen extends Component {
                             this.setState({
                                 isLoading: false
                             }, () => {
-                                this.props.navigation.navigate("viewInDay", {
-                                    dateSelected: this.state.dateSelected
-                                });
+                                this.props.navigation.navigate('searchProfile', { dataPatient: this.state.dataPatient })
+
                             });
                         }
                     }
@@ -484,6 +550,7 @@ class ListProfileScreen extends Component {
             }
 
         });
+
     }
     exportPdf() {
         this.setState({
@@ -557,7 +624,7 @@ class ListProfileScreen extends Component {
     }
     render() {
         return (
-            <ActivityPanel style={{ flex: 1 }} title="Y BẠ ĐIỆN TỬ"
+            <ActivityPanel style={{ flex: 1 }} title={constants.title.ehealth}
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'dark-content'}
                 isLoading={this.state.isLoading}
@@ -669,7 +736,7 @@ class ListProfileScreen extends Component {
                     onPress={(index) => {
                         switch (index) {
                             case 0:
-                                this.props.navigation.navigate('searchProfile', { dataPatient: this.state.dataPatient })
+                                this.onShareEhealthWithProfile()
                                 break;
                             case 1:
                                 this.exportPdf();

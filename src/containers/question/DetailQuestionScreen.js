@@ -118,7 +118,7 @@ class DetailQuestionScreen extends Component {
                 })
             });
         }).catch(e => {
-            snackbar.show("Không có kết nối mạng", "danger");
+            snackbar.show(constants.msg.app.not_internet, "danger");
         })
     }
     getTime(createdDate) {
@@ -150,7 +150,7 @@ class DetailQuestionScreen extends Component {
                 });
             });
         }).catch(e => {
-            snackbar.show("Không có kết nối mạng", "danger");
+            snackbar.show(constants.msg.app.not_internet, "danger");
         })
     }
     onNavigateDetails = (item) => {
@@ -292,14 +292,14 @@ class DetailQuestionScreen extends Component {
                                     connectionUtils.isConnected().then(s => {
                                         this.setState({ confirmed: true, writeQuestion: true })
                                     }).catch(e => {
-                                        snackbar.show("Không có kết nối mạng", "danger");
+                                        snackbar.show(constants.msg.app.not_internet, "danger");
                                     })
                                 }} style={{ width: 130, borderWidth: 1, borderColor: '#00000044', borderRadius: 6, alignItems: 'center', paddingTop: 5, paddingBottom: 5 }}><Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 5 }}>Không</Text><Text style={{ color: '#cacaca' }}>muốn hỏi thêm</Text></TouchableOpacity>
                                 <TouchableOpacity onPress={() => {
                                     connectionUtils.isConnected().then(s => {
                                         this.setState({ confirmed: true, rating: true })
                                     }).catch(e => {
-                                        snackbar.show("Không có kết nối mạng", "danger");
+                                        snackbar.show(constants.msg.app.not_internet, "danger");
                                     })
                                 }} style={{ width: 130, backgroundColor: 'rgb(2,195,154)', borderRadius: 6, marginLeft: 10, alignItems: 'center', paddingTop: 5, paddingBottom: 5 }}><Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 5, color: '#FFF' }}>Có</Text><Text style={{ color: '#fff' }}>cảm ơn bác sĩ</Text></TouchableOpacity>
                             </View>

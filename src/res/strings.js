@@ -118,7 +118,8 @@ module.exports = {
     app: {
       check_connection: "Vui lòng kiểm tra lại kết nối internet",
       pull_to_reload_app: "Kéo xuống để tải lại danh sách",
-      in_development: "Chức năng đang phát triển"
+      in_development: "Chức năng đang phát triển",
+      not_internet:'Không có kết nối mạng'
     },
     upload: {
       upload_image_error: "Upload ảnh không thành công"
@@ -254,7 +255,10 @@ module.exports = {
     },
     booking:{
       not_result_history_of_this_time:'Không có lịch trong khung giờ này',
-      full_slot_on_this_time:'Đã kín lịch trong khung giờ này'
+      full_slot_on_this_time:'Đã kín lịch trong khung giờ này',
+      booking_must_equal_datetime:'Đặt khám phải cùng ngày giờ với lịch làm việc',
+      booking_must_login:"Vui lòng đăng nhập để thực hiện",
+      booking_err:'Đặt khám không thành công'
     },
     message:{
       none_image:'Không có ảnh nào'
@@ -264,7 +268,18 @@ module.exports = {
     checkupResult:'KẾT QUẢ KHÁM',
     diagnosticResult:'KẾT QUẢ CHẨN ĐOÁN HÌNH ẢNH',
     describe:'Mô tả',
-    conclude:'kết luận'
+    conclude:'kết luận',
+    ehealth_location:'Các Cơ Sở Y Tế đã khám',
+    not_result_ehealth_location:'Hiện tại chưa có thông tin',
+    lastTime:'Lần gần nhất: ',
+    lastTime2:'Gần nhất: '
+  },
+  title:{
+    ehealth:'Y BẠ ĐIỆN TỬ',
+    list_profile_ehealth:'HỒ SƠ Y BẠ GIA ĐÌNH',
+    search_profile:'Chọn hồ sơ',
+    ehealth_details:'CHI TIẾT Y BẠ'
+
   },
   api: {
     notification: {
