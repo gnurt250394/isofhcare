@@ -100,7 +100,7 @@ class EhealthScreen extends Component {
                     />
                     <View style={{ padding: 15, }}>
                         <Text style={{ fontWeight: 'bold', color: '#5A5956', fontSize: 15 }}>{item.hospital.name}</Text>
-                        <Text style={{ color: '#5A5956', marginTop: 5 }}>Lần gần nhất: {item.hospital.timeGoIn ? item.hospital.timeGoIn.toDateObject('-').format('dd/MM/yyyy') : ''}</Text>
+                        <Text style={{ color: '#5A5956', marginTop: 5 }}>{constants.ehealth.lastTime + item.hospital.timeGoIn ? item.hospital.timeGoIn.toDateObject('-').format('dd/MM/yyyy') : ''}</Text>
                     </View>
                 </View>
             </TouchableOpacity>
@@ -115,7 +115,7 @@ class EhealthScreen extends Component {
                 icBack={require('@images/new/left_arrow_white.png')}
                 titleStyle={{ color: '#fff' }}
                 actionbarStyle={{ backgroundColor: '#27AE60' }}
-                title="Y BẠ ĐIỆN TỬ"
+                title={constants.title.ehealth}
 
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#22b060"
@@ -132,7 +132,7 @@ class EhealthScreen extends Component {
                 <View style={{
                     paddingHorizontal: 10, flex: 1, backgroundColor: '#f0f5f9'
                 }} >
-                    <Text style={styles.txHeader}>Các Cơ Sở Y Tế đã khám</Text>
+                    <Text style={styles.txHeader}>{constants.ehealth.ehealth_location}</Text>
                     <View style={{ flex: 1 }}>
                         <FlatList
                             data={this.state.listHospital}
@@ -143,7 +143,7 @@ class EhealthScreen extends Component {
                             keyExtractor={(item, index) => index.toString()}
                             ListHeaderComponent={() => !this.state.refreshing && (!this.state.listHospital || this.state.listHospital.length == 0) ?
                                 <View style={{ alignItems: 'center', marginTop: 50 }}>
-                                    <Text style={{ fontStyle: 'italic' }}>Hiện tại chưa có thông tin</Text>
+                                    <Text style={{ fontStyle: 'italic' }}>{constants.ehealth.not_result_ehealth_location}</Text>
                                 </View> : null
                             }
                         > </FlatList></View>

@@ -36,7 +36,7 @@ class DiagnosticResult extends Component {
                     <View style={styles.round2} />
                 </View>
                 <View style={[styles.itemlabel, { marginTop: 0 }]}>
-                    <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>KẾT QUẢ CHẨN ĐOÁN HÌNH ẢNH</Text>
+                    <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>{constants.ehealth.diagnosticResult}</Text>
                 </View>
             </View>
             {

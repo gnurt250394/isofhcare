@@ -69,7 +69,7 @@ class ResetPasswordScreen extends Component {
       });
 
     }).catch(e => {
-      snackbar.show("Không có kết nối mạng", "danger");
+      snackbar.show(constants.msg.app.not_internet, "danger");
     })
 
   }

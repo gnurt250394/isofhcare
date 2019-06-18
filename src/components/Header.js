@@ -3,13 +3,14 @@ import { View, TouchableOpacity, Text } from 'react-native';
 import { connect } from 'react-redux';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import snackbar from '@utils/snackbar-utils';
+import constants from '@resources/strings';
 
 class Header extends Component {
     constructor(props) {
         super(props)
     }
     inDevelop() {
-        snackbar.show("Chức năng đang phát triển");
+        snackbar.show(constants.msg.app.in_development);
     }
 
     render() {
