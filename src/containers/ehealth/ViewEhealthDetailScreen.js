@@ -28,25 +28,49 @@ const DEVICE_WIDTH = Dimensions.get('window').width;
 class ViewEhealthDetailScreen extends Component {
     constructor(props) {
         super(props)
-        console.log(this.props,'view in ViewEhealthDetailScreen')
-
-        let result = this.props.navigation.state.params.result;
-        let resultDetail = this.props.navigation.state.params.resultDetail;
-        console.log(result);
         this.state = {
-            result,
-            resultDetail,
+            result : '',
+            resultDetail : '',
             detailsHospital:'',
+            hospitalName:'',
+            user:''
         }
     }
-   
+    componentDidMount(){
+        let result = this.props.navigation.state.params.result;
+        let resultDetail = this.props.navigation.state.params.resultDetail;
+        let user = this.props.navigation.state.params.user 
+        let hospitalName = this.props.navigation.state.params.hospitalName
+
+        this.setState({
+            result :result,
+            resultDetail:resultDetail,
+            user:user,
+            hospitalName:hospitalName
+        })
+    }
+    componentWillReceiveProps(nextProps){
+        console.log(nextProps,'nextProps')
+        if(nextProps.navigation.state.params && nextProps.navigation.state.params.result){
+            console.log('chay vao nextprops')
+            let result = nextProps.navigation.state.params.result;
+            let resultDetail = nextProps.navigation.state.params.resultDetail;
+            let user = nextProps.navigation.state.params.user 
+            let hospitalName = nextProps.navigation.state.params.hospitalName
+            this.setState({
+                result :result,
+                resultDetail:resultDetail,
+                user:user,
+                hospitalName:hospitalName
+            })
+        }
+    }
     renderDetails = () =>{
-        let user = this.props.navigation.state.params && this.props.navigation.state.params.user ? this.props.navigation.state.params.user : ''
-        console.log(this.state.resultDetail,'xvideos')
-        if(user){
+        console.log('re-render',this.state.result)
+        if(this.state.user){
             return(
                 <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
-                <ProfileInfomation hospitalName ={this.props.navigation.state.params.hospitalName} avatar = {user.avatar} patientName = {this.state.resultDetail.Profile.PatientName} resultDetail={this.state.resultDetail} />
+                <ProfileInfomation hospitalName ={this.state.hospitalName} avatar = {this.state.user.avatar} patientName = {this.state.resultDetail.Profile.PatientName} resultDetail={this.state.resultDetail} />
                 <View style={{ height: 1, backgroundColor: '#27ae60', }} />
                 <CheckupResult result={this.state.result} />
                 <MedicalTestResult result={this.state.result} />
