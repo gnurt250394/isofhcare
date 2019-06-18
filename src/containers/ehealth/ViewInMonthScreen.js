@@ -52,6 +52,7 @@ class ListProfileScreen extends Component {
 
     constructor(props) {
         super(props)
+        console.log(this.props,'view in month')
         let patient = this.props.ehealth.patient;
         patient.history = (patient.history || []).sort((a, b) => {
             a.timeGoIn && b.timeGoIn ? a.timeGoIn.toDateObject("-") - b.timeGoIn.toDateObject("-") : ''

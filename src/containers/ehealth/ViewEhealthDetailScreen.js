@@ -28,6 +28,8 @@ const DEVICE_WIDTH = Dimensions.get('window').width;
 class ViewEhealthDetailScreen extends Component {
     constructor(props) {
         super(props)
+        console.log(this.props,'view in ViewEhealthDetailScreen')
+
         let result = this.props.navigation.state.params.result;
         let resultDetail = this.props.navigation.state.params.resultDetail;
         console.log(result);
