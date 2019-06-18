@@ -26,7 +26,7 @@ module.exports = {
         });
     },
     detailPatientHistory(patientHistoryId, hospitalId,id) {
-
+        let id2 = id ? `&id=${id}` : ''
         return new Promise((resolve, reject) => {
             client.requestApi(
                 "get",
@@ -34,7 +34,7 @@ module.exports = {
                 "/" +
                 patientHistoryId +
                 "?hospitalId=" +
-                hospitalId + '&id='+id,
+                hospitalId + id2,
                 {},
                 (s, e) => {
                     if (s) resolve(s);
