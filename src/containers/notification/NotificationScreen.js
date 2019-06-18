@@ -172,7 +172,7 @@ class NotificationScreen extends Component {
                     this.setState({
                       isLoading: false
                     })
-                    this.props.navigation.navigate('viewDetail', { result: result, resultDetail: resultDetail, hospitalName: res.data.hospital.name, user: data })
+                    this.props.navigation.navigate('viewDetailEhealth', { result: result, resultDetail: resultDetail, hospitalName: res.data.hospital.name, user: data })
                   })
                 } catch (error) {
                   this.setState({
