@@ -118,7 +118,7 @@ class NotificationScreen extends Component {
           firebase.notifications().setBadge(this.props.userApp.unReadNotificationCount > 0 ? this.props.userApp.unReadNotificationCount - 1 : 0);
           this.props.dispatch(redux.getUnreadNotificationCount());
           this.setState({ isLoading: false });
-        }).catch(e=>{
+        }).catch(e => {
           this.setState({ isLoading: false });
         });
         item.notification.watched = 1;
@@ -136,9 +136,9 @@ class NotificationScreen extends Component {
           case 5:
             this.openTicket(data.id);
             break;
-            case 6:
-              this.detailsEhealth(data,item.user)
-              break
+          case 6:
+            this.detailsEhealth(data, item.user)
+            break
           default:
             this.setState({ isLoading: false });
         }
@@ -147,52 +147,52 @@ class NotificationScreen extends Component {
       this.setState({ isLoading: false });
     }
   }
-  detailsEhealth = (data,user) => {
-    console.log(data,'data')
-    this.setState({isLoading:true},() => {
-      
-    bookingProvider.detailPatientHistory(data.patientHistoryId,data.hospitalId).then(s => {
-    console.log(s,'ád')
-      console.log(s)
-      this.setState({ isLoading: false }, () => {
-          switch (s.code) {
-              case 0:
-                  let resultDetail = null;
-                  let result = null;
-                  if (s.data && s.data.data) {
-                      if (s.data.data.resultDetail) {
-                          try {
-                              resultDetail = JSON.parse(s.data.data.resultDetail);
-                          } catch (error) {
+  detailsEhealth = (data, user) => {
+    this.setState({ isLoading: true }, () => {
+      bookingProvider.detailPatientHistory(data.patientHistoryId, data.hospitalId).then(s => {
+        switch (s.code) {
+          case 0:
+            let resultDetail = null;
+            let result = null;
+            if (s.data && s.data.data) {
+              if (s.data.data.resultDetail) {
+                this.setState({
+                  isLoading: false
+                })
+                try {
+                  resultDetail = JSON.parse(s.data.data.resultDetail);
+                } catch (error) {
 
-                          }
-                      }
-                      if (s.data.data.result) {
-                          try {
-                              result = JSON.parse(s.data.data.result);
-                               hospitalProvider.getDetailsById(data.hospitalId).then(res=>{
-                                //  this.setState({
-                                //   isLoading:false
-                                //  })
-                                this.props.navigation.navigate('viewDetail',{result:result,resultDetail:resultDetail,hospitalName:res.data.hospital.name,user:data})
-                                 })
-                          } catch (error) {
-                            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại','danger')
-                          }
-                      }
-                  }
+                }
+              }
+              if (s.data.data.result) {
+                try {
+                  result = JSON.parse(s.data.data.result);
+                  hospitalProvider.getDetailsById(data.hospitalId).then(res => {
+                    this.setState({
+                      isLoading: false
+                    })
+                    this.props.navigation.navigate('viewDetail', { result: result, resultDetail: resultDetail, hospitalName: res.data.hospital.name, user: data })
+                  })
+                } catch (error) {
+                  this.setState({
+                    isLoading: false
+                  })
+                  console.log(error)
+                  snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                }
+              }
+            }
+            break;
+          default:
+            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+            break
+        }
+      }).catch(e => {
+        this.setState({ isLoading: false }, () => {
 
-                  break;
-                  default:
-                      snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại','danger')
-                  break
-          }
+        })
       })
-  }).catch(e => {
-      this.setState({ isLoading: false }, () => {
-
-      })
-  })
     })
   }
   openTicket(id) {
@@ -300,8 +300,8 @@ class NotificationScreen extends Component {
             return "Đặt khám";
           case 5:
             return "Lấy số nhanh";
-            case 6:
-              return 'Y bạ điện tử'
+          case 6:
+            return 'Y bạ điện tử'
         }
 
       }
