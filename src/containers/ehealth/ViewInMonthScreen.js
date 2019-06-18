@@ -91,6 +91,7 @@ class ListProfileScreen extends Component {
             switchValue: false,
             dataPatient: '',
             dateSelected,
+            isVisible:false
 
         }
 
@@ -511,6 +512,8 @@ class ListProfileScreen extends Component {
             this.setState({
                 isVisible:true,
                 status:nextProps.navigation.state.params.status
+            },() => {
+                nextProps.navigation.state.params.status = null
             })
         }
     }
@@ -750,7 +753,7 @@ class ListProfileScreen extends Component {
                 >
                     <View style={{ backgroundColor: '#fff', marginHorizontal: 20, marginVertical: 60, borderRadius: 5 }}>
                         <Text style={{ fontSize: 22, color: '#27AE60', textAlign: 'center', marginTop: 10, marginHorizontal: 20 }}>Thông báo</Text>
-                        {this.renderTextContent(1)}
+                        {this.renderTextContent()}
                         <TouchableOpacity onPress={() => this.setState({ isVisible: false })} style={{ justifyContent: 'center', alignItems: 'center', height: 41, backgroundColor: '#878787', borderBottomLeftRadius: 5, borderBottomRightRadius: 5 }}><Text style={{ color: '#fff' }}>OK, XONG</Text></TouchableOpacity>
                     </View>
                 </Modal>
