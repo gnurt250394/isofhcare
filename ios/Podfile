@@ -73,6 +73,8 @@ target 'APP' do
 
   pod 'react-native-sms', :path => '../node_modules/react-native-sms'
 
+  pod 'CodePush', :path => '../node_modules/react-native-code-push'
+
 end
 
 # very important to have, unless you removed React dependencies for Libraries
