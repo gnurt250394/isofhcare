@@ -74,6 +74,15 @@
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
+    <key>NSExceptionDomains</key>
+    <dict>
+      <key>codepush.azurewebsites.net</key>
+      <dict><!-- read the ATS Apple Docs for available options --></dict>
+      <key>codepush.blob.core.windows.net</key>
+      <dict><!-- read the ATS Apple Docs for available options --></dict>
+      <key>codepushupdates.azureedge.net</key>
+      <dict><!-- read the ATS Apple Docs for available options --></dict>
+    </dict>
 	</dict>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>This app requires access to apple music.</string>
@@ -140,5 +149,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+  <key>CodePushDeploymentKey</key>
+  <string>xTgmCcJORBDuOF5Ncs5wQLuJV-ukByI_I4k1S</string>
 </dict>
 </plist>

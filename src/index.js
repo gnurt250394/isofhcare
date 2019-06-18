@@ -11,15 +11,22 @@ import { RootNavigator } from "@navigators/AppNavigator";
 import NavigationService from "@navigators/NavigationService";
 
 const store = createStore(AppReducer, applyMiddleware(thunk));
-
-const Kernel = () => (
-  <Provider store={store}>
-    <Root>
-      <RootNavigator ref={navigatorRef => {
-        NavigationService.setTopLevelNavigator(navigatorRef);
-      }} />
-    </Root>
-
-  </Provider>
-)
-export default Kernel
+import codePush from "react-native-code-push";
+let codePushOptions = { updateDialog: true, installMode: codePush.InstallMode.IMMEDIATE };
+class Kernel extends Component
+{
+  render()
+  {
+    return (
+      <Provider store={store}>
+        <Root>
+          <RootNavigator ref={navigatorRef => {
+            NavigationService.setTopLevelNavigator(navigatorRef);
+          }} />
+        </Root>
+    
+      </Provider>
+    )
+  }
+}
+export default codePush(codePushOptions)(Kernel);
