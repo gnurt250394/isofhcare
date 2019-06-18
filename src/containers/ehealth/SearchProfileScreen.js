@@ -151,26 +151,19 @@ class SearchProfileScreen extends Component {
             let hospitalId = this.state.dataPatient.hospitalId
             let patientHistoryId = this.state.dataPatient.patientHistoryId
             const { USER_EHEALTH_HISTORY } = realmModel;
-
+            let lastDate = this.props.navigation.state.params && this.props.navigation.state.params.lastDate ? this.props.navigation.state.params.lastDate : ''
             historyProvider.addHistory(userId, USER_EHEALTH_HISTORY, name, dataId, JSON.stringify(data))
             ehealthProvider.shareWithProfile(dataId, hospitalId, patientHistoryId).then(res => {
                 if (res.code == 0 && res.data.status == 1) {
-                    this.setState({
-                        status: 1,
-                        isVisible: true
-                    })
+                    this.props.navigation.navigate('viewInMonth',{lastDate:lastDate,status:7})
                 } else {
-                    this.setState({
-                        status: 2,
-                        isVisible: true
-                    })
+                    this.props.navigation.navigate('viewInMonth',{lastDate:lastDate,status:8})
+
                 }
 
             }).catch(err => {
-                this.setState({
-                    status: 2,
-                    isVisible: true
-                })
+                this.props.navigation.navigate('viewInMonth',{lastDate:lastDate,status:8})
+
                 console.log(err)
             })
         }).catch(e => {
