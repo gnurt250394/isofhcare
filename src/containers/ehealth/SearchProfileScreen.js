@@ -27,7 +27,8 @@ class SearchProfileScreen extends Component {
             page: 1,
             finish: false,
             loading: false,
-            status: ''
+            status: '',
+            isSearch:false
 
         }
     }
@@ -80,7 +81,7 @@ class SearchProfileScreen extends Component {
         console.log('onRefreshList')
         if (!this.state.loading)
             this.setState(
-                { refreshing: true, page: 1, finish: false, loading: true },
+                { refreshing: true, page: 1, finish: false, loading: true,isSearch:true },
                 () => {
                     this.onSearch();
                 }
@@ -278,7 +279,7 @@ class SearchProfileScreen extends Component {
                         : null
                 }
                 {
-                    !this.state.searchValue ? (
+                    !this.state.searchValue && !this.state.isSearch ? (
                         <View style={{ paddingLeft: 20, paddingVertical: 10, marginTop: 10, backgroundColor: '#fff', borderColor: '#A5A5A5', borderBottomWidth: 0.7 }}><Text style={{ fontSize: 15, color: '#000', }}>Tìm kiếm gần đây</Text></View>
 
                     ) : null
@@ -297,8 +298,8 @@ class SearchProfileScreen extends Component {
                                 <Text style={{ textAlign: 'center' }}>{this.state.searchValue ? 'Không có kết quả nào cho hồ sơ ' : 'Không có hồ sơ chia sẻ gần đây '}<Text style={{ fontWeight: 'bold', color: constants.colors.actionbar_title_color }}>{this.state.searchValue}</Text></Text>
                             </View> : null
                     }
-                    onEndReached={this.state.searchValue ? this.onLoadMore.bind(this) : {}}
-                    onEndReachedThreshold={this.state.searchValue ? 1 : -1}
+                    onEndReached={this.state.isSearch ? this.onLoadMore.bind(this) : {}}
+                    onEndReachedThreshold={this.state.isSearch ? 1 : -1}
                     ListFooterComponent={() => <View style={{ height: 10 }} />}
                     data={this.state.listProfileSearch}
                     renderItem={this.renderItem}
