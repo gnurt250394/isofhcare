@@ -152,6 +152,8 @@ class NotificationScreen extends Component {
     this.setState({isLoading:true},() => {
       
     bookingProvider.detailPatientHistory(data.patientHistoryId,data.hospitalId).then(s => {
+    console.log(s,'ád')
+      console.log(s)
       this.setState({ isLoading: false }, () => {
           switch (s.code) {
               case 0:
@@ -169,9 +171,11 @@ class NotificationScreen extends Component {
                           try {
                               result = JSON.parse(s.data.data.result);
                                hospitalProvider.getDetailsById(data.hospitalId).then(res=>{
+                                //  this.setState({
+                                //   isLoading:false
+                                //  })
                                 this.props.navigation.navigate('viewDetail',{result:result,resultDetail:resultDetail,hospitalName:res.data.hospital.name,user:data})
                                  })
-                                  console.log('chay vao hihi')
                           } catch (error) {
                             snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại','danger')
                           }

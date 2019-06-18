@@ -168,7 +168,7 @@ class AddBookingScreen extends Component {
 
             }
         }).catch(e => {
-            snackbar.show("Không có kết nối mạng", "danger");
+            snackbar.show(constants.msg.app.not_internet, "danger");
         });
     }
     selectProfile(profile) {
@@ -368,17 +368,17 @@ class AddBookingScreen extends Component {
                                         break;
                                     case 1:
                                         this.setState({ isLoading: false }, () => {
-                                            snackbar.show("Đặt khám phải cùng ngày giờ với lịch làm việc", "danger");
+                                            snackbar.show(constants.msg.booking.booking_must_equal_datetime, "danger");
                                         });
                                         break;
                                     case 2:
                                         this.setState({ isLoading: false }, () => {
-                                            snackbar.show("Đã kín lịch trong khung giờ này", "danger");
+                                            snackbar.show(constants.msg.booking.full_slot_on_this_time, "danger");
                                         });
                                         break;
                                     case 401:
                                         this.setState({ isLoading: false }, () => {
-                                            snackbar.show("Vui lòng đăng nhập để thực hiện", "danger");
+                                            snackbar.show(constants.msg.booking.booking_must_login, "danger");
                                             this.props.navigation.navigate("login"
                                                 // , {
                                                 //     nextScreen: {
@@ -390,7 +390,7 @@ class AddBookingScreen extends Component {
                                         break;
                                     default:
                                         this.setState({ isLoading: false }, () => {
-                                            snackbar.show("Đặt khám không thành công", "danger");
+                                            snackbar.show(constants.msg.booking.booking_err, "danger");
                                         });
                                         break;
                                 }
@@ -402,7 +402,7 @@ class AddBookingScreen extends Component {
                     })
                 });
             }).catch(e => {
-                snackbar.show("Không có kết nối mạng", "danger");
+                snackbar.show(constants.msg.app.not_internet, "danger");
             })
 
 
@@ -437,7 +437,7 @@ class AddBookingScreen extends Component {
 
         return (<ActivityPanel title="Đặt Khám"
             isLoading={this.state.isLoading}
-            menuButton={<TouchableOpacity style={styles.menu} onPress={() => snackbar.show("Chức năng đang phát triển")}><ScaleImage style={styles.img} height={20} source={require("@images/new/booking/ic_info.png")} /></TouchableOpacity>}
+            menuButton={<TouchableOpacity style={styles.menu} onPress={() => snackbar.show(constants.msg.app.in_development)}><ScaleImage style={styles.img} height={20} source={require("@images/new/booking/ic_info.png")} /></TouchableOpacity>}
             titleStyle={{ marginLeft: 50 }}>
 
             <KeyboardAwareScrollView>
@@ -449,7 +449,7 @@ class AddBookingScreen extends Component {
                                 profile: this.state.profile
                             });
                         }).catch(e => {
-                            snackbar.show("Không có kết nối mạng", "danger");
+                            snackbar.show(constants.msg.app.not_internet, "danger");
                         });
                     }}>
                         <View style={{
@@ -499,7 +499,7 @@ class AddBookingScreen extends Component {
                         connectionUtils.isConnected().then(s => {
                             this.props.navigation.navigate("selectServiceType", { onSelected: this.selectServiceType.bind(this) });
                         }).catch(e => {
-                            snackbar.show("Không có kết nối mạng", "danger");
+                            snackbar.show(constants.msg.app.not_internet, "danger");
                         });
                     }}
                     >
@@ -525,7 +525,7 @@ class AddBookingScreen extends Component {
                                 onSelected: this.selectHospital.bind(this)
                             })
                         }).catch(e => {
-                            snackbar.show("Không có kết nối mạng", "danger");
+                            snackbar.show(constants.msg.app.not_internet, "danger");
                         });
                     }
                     }>

@@ -402,8 +402,7 @@ class Account extends Component {
             </TouchableOpacity>
           )}
           <View>
-          <Text>{'Phiên bản' + DeviceInfo.getVersion()}</Text>
-          <Text>{DeviceInfo.getBuildNumber()}</Text>
+          <Text style={{marginLeft:10,marginTop:10}}>{'Phiên bản ' + DeviceInfo.getVersion() + '.'+ DeviceInfo.getBuildNumber()}</Text>
           </View>
           <View style={{ height: 100 }} />
           <ImagePicker ref={ref => (this.imagePicker = ref)} />
