@@ -127,6 +127,9 @@ module.exports = {
     chat: {
       cannot_make_chat_with_this_user: "Không thể nhắn tin cho tài khoản này"
     },
+    booking: {
+      booking_note: "Ghi chú và mô tả triệu chứng"
+    },
     user: {
       confirm_email_active_account:
         "Đăng ký thành công, Mã xác thực đã gửi tới email bạn đã đăng ký",
