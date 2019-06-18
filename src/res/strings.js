@@ -127,9 +127,6 @@ module.exports = {
     chat: {
       cannot_make_chat_with_this_user: "Không thể nhắn tin cho tài khoản này"
     },
-    booking: {
-      booking_note: "Ghi chú và mô tả triệu chứng"
-    },
     user: {
       confirm_email_active_account:
         "Đăng ký thành công, Mã xác thực đã gửi tới email bạn đã đăng ký",
@@ -260,7 +257,8 @@ module.exports = {
       full_slot_on_this_time:'Đã kín lịch trong khung giờ này',
       booking_must_equal_datetime:'Đặt khám phải cùng ngày giờ với lịch làm việc',
       booking_must_login:"Vui lòng đăng nhập để thực hiện",
-      booking_err:'Đặt khám không thành công'
+      booking_err:'Đặt khám không thành công',
+      booking_note: "Ghi chú và mô tả triệu chứng"
     },
     message:{
       none_image:'Không có ảnh nào'
