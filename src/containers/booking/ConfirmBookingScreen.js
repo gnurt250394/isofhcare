@@ -148,7 +148,7 @@ class ConfirmBookingScreen extends Component {
                             });
                             break;
                         case 3:
-                            
+
                             let vnp_TxnRef = data.online_transactions[0].id;
                             let payment_order = s.payment_order;
                             let html = convert.xml2json(payment_order.data, { compact: true, spaces: 4 })
@@ -345,7 +345,7 @@ class ConfirmBookingScreen extends Component {
                                 <View style={{ backgroundColor: 'rgb(2,195,154)', width: 10, height: 10, borderRadius: 5 }}></View>
                             }
                         </View>
-                        <Text style={styles.ckeckthanhtoan}>Thanh toán tại bệnh viện</Text>
+                        <Text style={styles.ckeckthanhtoan}>Thanh toán sau tại CSYT</Text>
                     </TouchableOpacity>
 
                 </ScrollView>
