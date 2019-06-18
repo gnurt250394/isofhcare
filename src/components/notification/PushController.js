@@ -171,7 +171,6 @@ class PushController extends Component {
     openDetailsEhealth(data) {
         if (!this.props.userApp.isLogin)
             return;
-        console.log(data, 'dataaaaaaa')
         bookingProvider.detailPatientHistory(data.patientHistoryId, data.hospitalId).then(s => {
             this.setState({ isLoading: false }, () => {
                 switch (s.code) {
@@ -189,12 +188,10 @@ class PushController extends Component {
                             if (s.data.data.result) {
                                 try {
                                     result = JSON.parse(s.data.data.result);
-                                    console.log(result,'result')
                                     hospitalProvider.getDetailsById(data.hospitalId).then(res => {
                                         NavigationService.navigate('viewDetail', { result: result, resultDetail: resultDetail, hospitalName: res.data.hospital.name, user: data })
                                     })
                                 } catch (error) {
-                                    console.log(error,'error')
                                     snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
                                 }
                             }
