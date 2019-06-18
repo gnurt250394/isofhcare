@@ -149,7 +149,7 @@ class NotificationScreen extends Component {
   }
   detailsEhealth = (data, user) => {
     this.setState({ isLoading: true }, () => {
-      bookingProvider.detailPatientHistory(data.patientHistoryId, data.hospitalId).then(s => {
+      bookingProvider.detailPatientHistory(data.patientHistoryId, data.hospitalId,data.id).then(s => {
         switch (s.code) {
           case 0:
             let resultDetail = null;

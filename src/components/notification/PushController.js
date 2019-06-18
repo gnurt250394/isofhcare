@@ -169,7 +169,7 @@ class PushController extends Component {
     openDetailsEhealth(data) {
         if (!this.props.userApp.isLogin)
             return;
-        bookingProvider.detailPatientHistory(data.patientHistoryId, data.hospitalId).then(s => {
+        bookingProvider.detailPatientHistory(data.patientHistoryId, data.hospitalId,data.id).then(s => {
             this.setState({ isLoading: false }, () => {
                 switch (s.code) {
                     case 0:
