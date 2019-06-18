@@ -69,8 +69,8 @@ module.exports = {
   key: {
     payment_return_url:
     {
-      vnpay:"vnpay://payment_isofhcare_return",
-      payoo:"payoo://payment_isofhcare_return"
+      vnpay: "vnpay://payment_isofhcare_return",
+      payoo: "payoo://payment_isofhcare_return"
     },
     storage: {
       android_version: "ANDROID_VERSION",
@@ -95,8 +95,8 @@ module.exports = {
       INTRO_FINISHED: "INTRO_FINISHED",
       LASTEST_POSTS: "LASTEST_POSTS",
       LASTEST_PROFILE: "LASTEST_PROFILE",
-      LASTEST_SPECIALIST:"LASTEST_SPECIALIST",
-      LASTEST_SERVICE_TYPE:"LASTEST_SERVICE_TYPE",
+      LASTEST_SPECIALIST: "LASTEST_SPECIALIST",
+      LASTEST_SERVICE_TYPE: "LASTEST_SERVICE_TYPE",
       KEY_FINGER: 'KEY_FINGER',
       KEY_REFRESH_TOKEN: 'KEY_REFRESH_TOKEN',
       LOCATION: "LOCATION",
@@ -121,6 +121,9 @@ module.exports = {
     error_occur: "Xảy ra lỗi, vui lòng thử lại sau",
     chat: {
       cannot_make_chat_with_this_user: "Không thể nhắn tin cho tài khoản này"
+    },
+    booking: {
+      booking_note: "Ghi chú và mô tả triệu chứng"
     },
     user: {
       confirm_email_active_account:
