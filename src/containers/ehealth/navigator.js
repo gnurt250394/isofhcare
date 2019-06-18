@@ -16,6 +16,7 @@ const EHealthNavigator = createStackNavigator({
     viewDetail: { screen: ViewEhealthDetailScreen },
     searchProfile: { screen: SearchProfileScreen },
 
+
     
 }, {
         headerMode: 'none',

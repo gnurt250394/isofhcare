@@ -6,6 +6,7 @@ import bookingProvider from '@data-access/booking-provider';
 import dateUtils from 'mainam-react-native-date-utils';
 import stringUtils from 'mainam-react-native-string-utils';
 import snackbar from '@utils/snackbar-utils';
+import constants from '@resources/strings';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 
@@ -101,7 +102,9 @@ class ViewInDateScreen extends Component {
                                                 !(result.ListResulHoaSinh && result.ListResulHoaSinh.length) &&
                                                 !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
                                                 !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
-                                                !(result.ListResulViSinh && result.ListResulViSinh.length)
+                                                !(result.ListResulViSinh && result.ListResulViSinh.length)&&
+                                                !(result.ListResultCheckup && result.ListResultCheckup.length)
+
                                             )
                                         ) {
                                             this.setState({
@@ -319,7 +322,7 @@ class ViewInDateScreen extends Component {
     render() {
 
         return (
-            <ActivityPanel style={{ flex: 1 }} title="Y BẠ ĐIỆN TỬ"
+            <ActivityPanel style={{ flex: 1 }} title={constants.title.ehealth}
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#22b060"

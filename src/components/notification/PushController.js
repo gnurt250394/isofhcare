@@ -16,6 +16,8 @@ import constants from '@resources/strings';
 import redux from '@redux-store'
 import NavigationService from "@navigators/NavigationService";
 import ticketProvider from "@data-access/ticket-provider";
+import bookingProvider from '@data-access/booking-provider';
+import hospitalProvider from '@data-access/hospital-provider';
 
 class PushController extends Component {
     setBroadcastListener(listener) {
@@ -80,7 +82,7 @@ class PushController extends Component {
         this.notificationInitialListener = firebase.notifications().getInitialNotification().then(this.getInitialNotification.bind(this));
     }
     onNotification(notification) {
-        
+
         if (!this.props.userApp.isLogin)
             return;
         console.log(notification);
@@ -154,6 +156,9 @@ class PushController extends Component {
                     case 5:
                         this.openTicket(id);
                         break;
+                    case 6:
+                        this.openDetailsEhealth(notificationOpen.notification.data);
+                        break;
                     case -1:
                         break;
 
@@ -163,7 +168,47 @@ class PushController extends Component {
             console.log(error);
         }
     }
+    openDetailsEhealth(data) {
+        if (!this.props.userApp.isLogin)
+            return;
+        bookingProvider.detailPatientHistory(data.patientHistoryId, data.hospitalId).then(s => {
+            this.setState({ isLoading: false }, () => {
+                switch (s.code) {
+                    case 0:
+                        let resultDetail = null;
+                        let result = null;
+                        if (s.data && s.data.data) {
+                            if (s.data.data.resultDetail) {
+                                try {
+                                    resultDetail = JSON.parse(s.data.data.resultDetail);
+                                } catch (error) {
 
+                                }
+                            }
+                            if (s.data.data.result) {
+                                try {
+                                    result = JSON.parse(s.data.data.result);
+                                    hospitalProvider.getDetailsById(data.hospitalId).then(res => {
+                                        NavigationService.navigate('viewDetail', { result: result, resultDetail: resultDetail, hospitalName: res.data.hospital.name, user: data })
+                                    })
+                                } catch (error) {
+                                    snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                                }
+                            }
+                        }
+
+                        break;
+                    default:
+                        snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                        break
+                }
+            })
+        }).catch(e => {
+            this.setState({ isLoading: false }, () => {
+
+            })
+        })
+    }
     openTicket(id) {
         if (!this.props.userApp.isLogin)
             return;
@@ -215,6 +260,9 @@ class PushController extends Component {
                         setTimeout(() => {
                             this.openTicket(id);
                         }, 4000);
+                        break;
+                    case 6:
+                        this.openDetailsEhealth(notificationOpen.notification.data);
                         break;
                 }
             } catch (error) {
