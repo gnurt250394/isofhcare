@@ -20,6 +20,12 @@ class ViewInDateScreen extends Component {
             dayNames: ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'],
             hasResult: false
         }
+        this.viewCheckupResult = this.viewCheckupResult.bind(this);
+        this.viewMedicalTestResult = this.viewMedicalTestResult.bind(this);
+        this.viewDiagnosticResult = this.viewDiagnosticResult.bind(this);
+        this.viewMedicine = this.viewMedicine.bind(this);
+        this.viewMoney = this.viewMoney.bind(this);
+        this.viewSurgeryResult = this.viewSurgeryResult.bind(this);
     }
     componentDidMount() {
         let _dateSelected = this.props.navigation.state.params.dateSelected;
@@ -102,7 +108,7 @@ class ViewInDateScreen extends Component {
                                                 !(result.ListResulHoaSinh && result.ListResulHoaSinh.length) &&
                                                 !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
                                                 !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
-                                                !(result.ListResulViSinh && result.ListResulViSinh.length)&&
+                                                !(result.ListResulViSinh && result.ListResulViSinh.length) &&
                                                 !(result.ListResultCheckup && result.ListResultCheckup.length)
 
                                             )
@@ -152,6 +158,24 @@ class ViewInDateScreen extends Component {
             this.getDetailPatientHistory(item.patientHistory.patientHistoryId)
         })
     }
+    viewCheckupResult() {
+        this.props.navigation.navigate("viewCheckupResult", { result: this.state.result, resultDetail: this.state.resultDetail })
+    }
+    viewMedicalTestResult() {
+        this.props.navigation.navigate("viewMedicalTestResult", { result: this.state.result, resultDetail: this.state.resultDetail })
+    }
+    viewDiagnosticResult() {
+        this.props.navigation.navigate("viewDiagnosticResult", { result: this.state.result, resultDetail: this.state.resultDetail })
+    }
+    viewSurgeryResult() {
+        this.props.navigation.navigate("viewSurgeryResult", { result: this.state.result, resultDetail: this.state.resultDetail })
+    }
+    viewMoney() {
+        this.props.navigation.navigate("viewMoney", { result: this.state.result, resultDetail: this.state.resultDetail })
+    }
+    viewMedicine() {
+        this.props.navigation.navigate("viewMedicine", { result: this.state.result, resultDetail: this.state.resultDetail })
+    }
     renderCheckupResult() {
         if (this.state.result && this.state.result.ListResultCheckup && this.state.result.ListResultCheckup.length) {
             let item = this.state.result.ListResultCheckup[this.state.result.ListResultCheckup.length - 1];
@@ -161,14 +185,14 @@ class ViewInDateScreen extends Component {
             if (!note)
                 note = item.First_Diagnostic;
             if (note)
-                return <View style={styles.card}>
+                return <TouchableOpacity style={styles.card} onPress={this.viewCheckupResult}>
                     <View style={{ width: 10, height: 10, backgroundColor: '#ff4355', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
                     <View style={{ flex: 1, padding: 15 }}>
                         <Text style={{ fontSize: 18 }}>Kết quả khám</Text>
                         <Text style={{ paddingTop: 5, color: '#ff4355', flex: 1 }}>{note}</Text>
                     </View>
                     <View style={{ width: 5, height: '100%', backgroundColor: '#ff4355', borderRadius: 2.5 }}></View>
-                </View>
+                </TouchableOpacity>
         }
         return null;
     }
@@ -182,14 +206,14 @@ class ViewInDateScreen extends Component {
             if (!note)
                 note = item.First_Diagnostic;
             if (note)
-                return <View style={styles.card}>
+                return <TouchableOpacity style={styles.card} onPress={this.viewDiagnosticResult}>
                     <View style={{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
                     <View style={{ flex: 1, padding: 15 }}>
                         <Text style={{ fontSize: 18 }}>Kết quả chẩn đoán hình ảnh</Text>
                         <Text style={{ paddingTop: 5, color: '#2e66e7', flex: 1 }}>{note}</Text>
                     </View>
                     <View style={{ width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 }}></View>
-                </View>
+                </TouchableOpacity>
         }
         return null;
     }
@@ -204,14 +228,14 @@ class ViewInDateScreen extends Component {
             // else {
             money = this.state.resultDetail.ListService.reduce((a, b) => a + b.PriceService, 0);
             // }
-            return <View style={styles.card}>
+            return <TouchableOpacity style={styles.card} onPress={this.viewMoney}>
                 <View style={{ width: 10, height: 10, backgroundColor: '#ff4355', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
                 <View style={{ flex: 1, padding: 15 }}>
                     <Text style={{ fontSize: 18 }}>Tiền</Text>
                     <Text style={{ paddingTop: 5, color: '#ff4355', flex: 1, fontWeight: 'bold' }}>{money.formatPrice() + " đ"}</Text>
                 </View>
                 <View style={{ width: 5, height: '100%', backgroundColor: '#ff4355', borderRadius: 2.5 }}></View>
-            </View>
+            </TouchableOpacity>
         }
         return null;
     }
@@ -232,14 +256,14 @@ class ViewInDateScreen extends Component {
             if (!note)
                 note = item.ReportTemplate;
             if (note)
-                return <View style={styles.card}>
-                    <View style={{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
+                return <TouchableOpacity style={styles.card} onPress={this.viewSurgeryResult}>
+                              <View style={{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
                     <View style={{ flex: 1, padding: 15 }}>
                         <Text style={{ fontSize: 18 }}>Kết quả giải phẫu</Text>
                         <Text style={{ paddingTop: 5, color: '#2e66e7', flex: 1 }}>{note}</Text>
                     </View>
                     <View style={{ width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 }}></View>
-                </View>
+                </TouchableOpacity>
         }
         return null;
     }
@@ -266,14 +290,14 @@ class ViewInDateScreen extends Component {
 
             let note = item.ServiceName + " " + item.Measure + ", " + item.Quantity + " " + item.Unit;
             if (note)
-                return <View style={styles.card}>
-                    <View style={{ width: 10, height: 10, backgroundColor: '#fbaa21', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
+                return <TouchableOpacity style={styles.card} onPress={this.viewMedicine}>
+                              <View style={{ width: 10, height: 10, backgroundColor: '#fbaa21', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
                     <View style={{ flex: 1, padding: 15 }}>
                         <Text style={{ fontSize: 18 }}>Thuốc</Text>
                         <Text style={{ paddingTop: 5, color: '#fbaa21', flex: 1 }}>{note}</Text>
                     </View>
                     <View style={{ width: 5, height: '100%', backgroundColor: '#fbaa21', borderRadius: 2.5 }}></View>
-                </View>
+                </TouchableOpacity>
         }
         return null;
     }
@@ -308,14 +332,14 @@ class ViewInDateScreen extends Component {
             }
 
             if (note)
-                return <View style={styles.card}>
+                return <TouchableOpacity style={styles.card} onPress={this.viewMedicalTestResult}>
                     <View style={{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
                     <View style={{ flex: 1, padding: 15 }}>
                         <Text style={{ fontSize: 18 }}>Kết quả xét nghiệm</Text>
                         <Text style={{ paddingTop: 5, color: '#2e66e7' }}>{note}</Text>
                     </View>
                     <View style={{ width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 }}></View>
-                </View>
+                </TouchableOpacity>
         }
         return null;
     }
