@@ -66,7 +66,7 @@ class SplashScreen extends Component {
 						alignItems: 'center',
 						padding: 10
 					}}>
-						<ScaleImage source={require("@images/copyright.png")} height={15} style={{
+						<ScaleImage source={require("@images/new/copyright.png")} height={20} style={{
 						}} />
 					</View>
 
