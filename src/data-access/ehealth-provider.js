@@ -25,7 +25,7 @@ module.exports = {
             });
         });
     },
-    detailPatientHistory(patientHistoryId, hospitalId) {
+    detailPatientHistory(patientHistoryId, hospitalId,id) {
 
         return new Promise((resolve, reject) => {
             client.requestApi(
@@ -34,7 +34,7 @@ module.exports = {
                 "/" +
                 patientHistoryId +
                 "?hospitalId=" +
-                hospitalId,
+                hospitalId + '&id='+id,
                 {},
                 (s, e) => {
                     if (s) resolve(s);
