@@ -425,6 +425,12 @@ class ListProfileScreen extends Component {
             case 6: return (
                 <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>{"Bạn chưa có kết quả khám ở ngày này!"}</Text>
             )
+            case 7: return (
+                <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10, fontSize: 18 }}>{'Đã chia sẻ Y bạ thành công!'}</Text>
+            )
+            case 8: return (
+                <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}><ScaleImage height={20} source={require('@images/new/ehealth/ic_warning.png')}></ScaleImage><Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10, fontSize: 18 }}>{'Chưa chia sẻ được!'}</Text></View>
+            )
             default: return (
                 <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>{constants.msg.ehealth.not_examination}</Text>
             )
@@ -500,6 +506,14 @@ class ListProfileScreen extends Component {
     })
 
     }
+    componentWillReceiveProps(nextProps){
+        if(nextProps.navigation.state.params && nextProps.navigation.state.params.status){
+            this.setState({
+                isVisible:true,
+                status:nextProps.navigation.state.params.status
+            })
+        }
+    }
     onShareEhealthWithProfile () {
         
         //check status 6
@@ -539,7 +553,7 @@ class ListProfileScreen extends Component {
                             this.setState({
                                 isLoading: false
                             }, () => {
-                                this.props.navigation.navigate('searchProfile', { dataPatient: this.state.dataPatient })
+                                this.props.navigation.navigate('searchProfile', { dataPatient: this.state.dataPatient,lastDate:this.state.lastDate })
 
                             });
                         }
