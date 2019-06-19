@@ -12,11 +12,66 @@ import NavigationService from "@navigators/NavigationService";
 
 const store = createStore(AppReducer, applyMiddleware(thunk));
 import codePush from "react-native-code-push";
-let codePushOptions = { updateDialog: true, installMode: codePush.InstallMode.IMMEDIATE };
-class Kernel extends Component
-{
-  render()
-  {
+// let codePushOptions = { updateDialog: true, installMode: codePush.InstallMode.IMMEDIATE };
+import { Alert } from 'react-native';
+import snackbar from "@utils/snackbar-utils";
+let codePushOptions = { checkFrequency: codePush.CheckFrequency.MANUAL };
+// let codePushOptions = {installMode: codePush.InstallMode.IMMEDIATE };
+class Kernel extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+
+    }
+  }
+
+  componentDidMount() {
+    codePush.checkForUpdate().then(update => {
+      if (update) {
+        if (update.isMandatory) {
+          Alert.alert(
+            'THÔNG BÁO',
+            'Ứng dụng đã có phiên bản mới. Bạn vui lòng cập nhật để có trải nghiệm tốt nhất!',
+            [
+              {
+                text: 'Cập nhật', onPress: () => {
+                  snackbar.show("Ứng dụng đang được cập nhật, vui lòng chờ", "success")
+                  codePush.sync({
+                    // updateDialog: true,
+                    installMode: codePush.InstallMode.IMMEDIATE
+                  });
+                }
+              },
+            ],
+            { cancelable: false },
+          );
+        } else {
+          Alert.alert(
+            'THÔNG BÁO',
+            'Ứng dụng đã có phiên bản mới. Bạn vui lòng cập nhật để có trải nghiệm tốt nhất!',
+            [
+              {
+                text: 'Để sau',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+              },
+              {
+                text: 'Cập nhật', onPress: () => {
+                  snackbar.show("Ứng dụng đang được cập nhật, vui lòng chờ", "success")
+                  codePush.sync({
+                    // updateDialog: true,
+                    installMode: codePush.InstallMode.IMMEDIATE
+                  });
+                }
+              },
+            ],
+            { cancelable: false },
+          );
+        }
+      }
+    })
+  }
+  render() {
     return (
       <Provider store={store}>
         <Root>
@@ -24,9 +79,9 @@ class Kernel extends Component
             NavigationService.setTopLevelNavigator(navigatorRef);
           }} />
         </Root>
-    
       </Provider>
     )
   }
 }
+// export default Kernel;
 export default codePush(codePushOptions)(Kernel);
