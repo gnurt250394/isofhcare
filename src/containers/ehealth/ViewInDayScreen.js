@@ -116,7 +116,7 @@ class ViewInDateScreen extends Component {
                                             this.setState({
                                                 hasResult: false,
                                                 isVisible: true,
-                                                messageError: "Bạn chưa có kết quả khám ở ngày này!"
+                                                messageError: constants.msg.ehealth.not_result_ehealth_in_day
                                             })
                                         } else {
                                             this.setState({
@@ -150,7 +150,7 @@ class ViewInDateScreen extends Component {
             // snackbar.show("Không có kết quả vào ngày này", "danger");
             this.setState({
                 isVisible: true,
-                messageError: "Không có kết quả khám nào. Bạn không đi khám ở ngày này!"
+                messageError: constants.msg.ehealth.not_result_of_this_date
             })
             return;
         };
@@ -188,7 +188,7 @@ class ViewInDateScreen extends Component {
                 return <TouchableOpacity style={styles.card} onPress={this.viewCheckupResult}>
                     <View style={{ width: 10, height: 10, backgroundColor: '#ff4355', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
                     <View style={{ flex: 1, padding: 15 }}>
-                        <Text style={{ fontSize: 18 }}>Kết quả khám</Text>
+                        <Text style={{ fontSize: 18 }}>{constants.ehealth.result_ehealth}</Text>
                         <Text style={{ paddingTop: 5, color: '#ff4355', flex: 1 }}>{note}</Text>
                     </View>
                     <View style={{ width: 5, height: '100%', backgroundColor: '#ff4355', borderRadius: 2.5 }}></View>
@@ -209,7 +209,7 @@ class ViewInDateScreen extends Component {
                 return <TouchableOpacity style={styles.card} onPress={this.viewDiagnosticResult}>
                     <View style={{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
                     <View style={{ flex: 1, padding: 15 }}>
-                        <Text style={{ fontSize: 18 }}>Kết quả chẩn đoán hình ảnh</Text>
+                        <Text style={{ fontSize: 18 }}>{constants.ehealth.image_result}</Text>
                         <Text style={{ paddingTop: 5, color: '#2e66e7', flex: 1 }}>{note}</Text>
                     </View>
                     <View style={{ width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 }}></View>
@@ -231,7 +231,7 @@ class ViewInDateScreen extends Component {
             return <TouchableOpacity style={styles.card} onPress={this.viewMoney}>
                 <View style={{ width: 10, height: 10, backgroundColor: '#ff4355', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
                 <View style={{ flex: 1, padding: 15 }}>
-                    <Text style={{ fontSize: 18 }}>Tiền</Text>
+                    <Text style={{ fontSize: 18 }}>{constants.ehealth.money}</Text>
                     <Text style={{ paddingTop: 5, color: '#ff4355', flex: 1, fontWeight: 'bold' }}>{money.formatPrice() + " đ"}</Text>
                 </View>
                 <View style={{ width: 5, height: '100%', backgroundColor: '#ff4355', borderRadius: 2.5 }}></View>
@@ -259,7 +259,7 @@ class ViewInDateScreen extends Component {
                 return <TouchableOpacity style={styles.card} onPress={this.viewSurgeryResult}>
                               <View style={{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
                     <View style={{ flex: 1, padding: 15 }}>
-                        <Text style={{ fontSize: 18 }}>Kết quả giải phẫu</Text>
+                        <Text style={{ fontSize: 18 }}>{constants.ehealth.surgery_result}</Text>
                         <Text style={{ paddingTop: 5, color: '#2e66e7', flex: 1 }}>{note}</Text>
                     </View>
                     <View style={{ width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 }}></View>
@@ -293,7 +293,7 @@ class ViewInDateScreen extends Component {
                 return <TouchableOpacity style={styles.card} onPress={this.viewMedicine}>
                               <View style={{ width: 10, height: 10, backgroundColor: '#fbaa21', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
                     <View style={{ flex: 1, padding: 15 }}>
-                        <Text style={{ fontSize: 18 }}>Thuốc</Text>
+                        <Text style={{ fontSize: 18 }}>{constants.ehealth.drug}</Text>
                         <Text style={{ paddingTop: 5, color: '#fbaa21', flex: 1 }}>{note}</Text>
                     </View>
                     <View style={{ width: 5, height: '100%', backgroundColor: '#fbaa21', borderRadius: 2.5 }}></View>
@@ -335,7 +335,7 @@ class ViewInDateScreen extends Component {
                 return <TouchableOpacity style={styles.card} onPress={this.viewMedicalTestResult}>
                     <View style={{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
                     <View style={{ flex: 1, padding: 15 }}>
-                        <Text style={{ fontSize: 18 }}>Kết quả xét nghiệm</Text>
+                        <Text style={{ fontSize: 18 }}>{constants.ehealth.test_result}</Text>
                         <Text style={{ paddingTop: 5, color: '#2e66e7' }}>{note}</Text>
                     </View>
                     <View style={{ width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 }}></View>
@@ -440,7 +440,7 @@ class ViewInDateScreen extends Component {
                         }} onPress={() => {
                             this.props.navigation.navigate("viewDetail", { result: this.state.result, resultDetail: this.state.resultDetail })
                         }}>
-                            <Text style={{ fontWeight: 'bold', color: '#FFF', fontSize: 17 }}>ĐẦY ĐỦ KẾT QUẢ</Text>
+                            <Text style={{ fontWeight: 'bold', color: '#FFF', fontSize: 17 }}>{constants.ehealth.full_result}</Text>
                         </TouchableOpacity>
                     }
                 </View>
@@ -455,9 +455,9 @@ class ViewInDateScreen extends Component {
                     backdropTransitionOutTiming={1000}
                 >
                     <View style={{ backgroundColor: '#fff', marginHorizontal: 20, marginVertical: 60, borderRadius: 5 }}>
-                        <Text style={{ fontSize: 22, color: '#27AE60', textAlign: 'center', marginTop: 10, marginHorizontal: 20 }}>Thông báo</Text>
+                        <Text style={{ fontSize: 22, color: '#27AE60', textAlign: 'center', marginTop: 10, marginHorizontal: 20 }}>{constants.ehealth.notifi_text}</Text>
                         <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>{this.state.messageError}</Text>
-                        <TouchableOpacity onPress={() => this.setState({ isVisible: false })} style={{ justifyContent: 'center', alignItems: 'center', height: 41, backgroundColor: '#878787', borderBottomLeftRadius: 5, borderBottomRightRadius: 5 }}><Text style={{ color: '#fff' }}>OK, XONG</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.setState({ isVisible: false })} style={{ justifyContent: 'center', alignItems: 'center', height: 41, backgroundColor: '#878787', borderBottomLeftRadius: 5, borderBottomRightRadius: 5 }}><Text style={{ color: '#fff' }}>{constants.ehealth.modal_confirm}</Text></TouchableOpacity>
                     </View>
                 </Modal>
             </ActivityPanel>

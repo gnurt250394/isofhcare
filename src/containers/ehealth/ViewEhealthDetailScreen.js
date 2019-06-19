@@ -50,9 +50,7 @@ class ViewEhealthDetailScreen extends Component {
         })
     }
     componentWillReceiveProps(nextProps){
-        console.log(nextProps,'nextProps')
         if(nextProps.navigation.state.params && nextProps.navigation.state.params.result){
-            console.log('chay vao nextprops')
             let result = nextProps.navigation.state.params.result;
             let resultDetail = nextProps.navigation.state.params.resultDetail;
             let user = nextProps.navigation.state.params.user 
@@ -66,7 +64,6 @@ class ViewEhealthDetailScreen extends Component {
         }
     }
     renderDetails = () =>{
-        console.log('re-render',this.state.result)
         if(this.state.user){
             return(
                 <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>

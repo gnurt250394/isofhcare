@@ -241,8 +241,10 @@ module.exports = {
       re_examination_in_date: 'Bạn có lịch tái khám vào ngày ',
       examination_in_date: 'Bạn có lịch khám lại vào ngày',
       not_re_examination: 'Bạn không có lịch tái khám nào!',
-      not_examination: 'Bạn không có lịch khám lại nào!'
-      
+      not_examination: 'Bạn không có lịch khám lại nào!',
+      not_result_ehealth_in_day:'Bạn chưa có kết quả khám ở ngày này!',
+      not_select_time_drug:'Bạn chưa chọn giờ uống thuốc',
+
 
     },
     question: {
@@ -272,7 +274,36 @@ module.exports = {
     ehealth_location:'Các Cơ Sở Y Tế đã khám',
     not_result_ehealth_location:'Hiện tại chưa có thông tin',
     lastTime:'Lần gần nhất: ',
-    lastTime2:'Gần nhất: '
+    lastTime2:'Gần nhất: ',
+    time:'lần',
+    total:'Tổng: ',
+    member:' thành viên',
+    cancel:'Hủy',
+    inputKeyword:"Nhập từ khóa tìm kiếm",
+    lastSearch:'Tìm kiếm gần đây',
+    not_result_for_last_search:'Không có hồ sơ chia sẻ gần đây ',
+    not_result_for_keyword:'Không có kết quả nào cho hồ sơ ',
+    result_ehealth:'Kết quả khám',
+    image_result:'Kết quả chẩn đoán hình ảnh',
+    money:'Tiền',
+    surgery_result:'Kết quả giải phẫu',
+    drug:'Thuốc',
+    test_result:'Kết quả xét nghiệm',
+    full_result:'ĐẦY ĐỦ KẾT QUẢ',
+    notifi_text:'Thông báo',
+    modal_confirm:'OK, XONG',
+    suggestion:'Suggestion',
+    re_examination:'Lịch tái khám',
+    share_ehealth:"Chia sẻ y bạ",
+    note:'Ghi chú',
+    clock:'Thời gian',
+    redmine_drug:'Nhắc uống thuốc'
+  },
+  actionSheet:{
+    orther:'Khác',
+    cancel:'Hủy',
+    profile_on_isofhcare:'Hồ sơ trên ISOFHCARE'
+
   },
   title:{
     ehealth:'Y BẠ ĐIỆN TỬ',
