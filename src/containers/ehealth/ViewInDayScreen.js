@@ -203,8 +203,10 @@ class ViewInDateScreen extends Component {
             let note = item.SummaryResult;
             if (!note)
                 note = item.Result;
+            // if (!note)
+            //     note = item.First_Diagnostic;
             if (!note)
-                note = item.First_Diagnostic;
+                note = item.Conclusion;
             if (note)
                 return <TouchableOpacity style={styles.card} onPress={this.viewDiagnosticResult}>
                     <View style={{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
@@ -257,7 +259,7 @@ class ViewInDateScreen extends Component {
                 note = item.ReportTemplate;
             if (note)
                 return <TouchableOpacity style={styles.card} onPress={this.viewSurgeryResult}>
-                              <View style={{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
+                    <View style={{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
                     <View style={{ flex: 1, padding: 15 }}>
                         <Text style={{ fontSize: 18 }}>Kết quả giải phẫu</Text>
                         <Text style={{ paddingTop: 5, color: '#2e66e7', flex: 1 }}>{note}</Text>
@@ -291,7 +293,7 @@ class ViewInDateScreen extends Component {
             let note = item.ServiceName + " " + item.Measure + ", " + item.Quantity + " " + item.Unit;
             if (note)
                 return <TouchableOpacity style={styles.card} onPress={this.viewMedicine}>
-                              <View style={{ width: 10, height: 10, backgroundColor: '#fbaa21', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
+                    <View style={{ width: 10, height: 10, backgroundColor: '#fbaa21', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
                     <View style={{ flex: 1, padding: 15 }}>
                         <Text style={{ fontSize: 18 }}>Thuốc</Text>
                         <Text style={{ paddingTop: 5, color: '#fbaa21', flex: 1 }}>{note}</Text>
