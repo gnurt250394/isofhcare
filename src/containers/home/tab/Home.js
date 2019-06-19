@@ -36,11 +36,11 @@ class Home extends Component {
           text: "Lấy số",
           onPress: () => {
             if (this.props.userApp.isLogin)
-              if(this.props.userApp.currentUser.bookingNumberHospital == true )
-              this.props.navigation.navigate("selectHealthFacilitiesScreen");
+              if (this.props.userApp.currentUser.bookingNumberHospital == true)
+                this.props.navigation.navigate("selectHealthFacilitiesScreen");
               else
-              snackbar.show("Tính năng đang phát triển", "");
-              else
+                snackbar.show("Tính năng đang phát triển", "");
+            else
               this.props.navigation.navigate("login", {
                 nextScreen: { screen: "selectHealthFacilitiesScreen", param: {} }
               });
@@ -51,10 +51,10 @@ class Home extends Component {
           text: "Đặt khám",
           onPress: () => {
             if (this.props.userApp.isLogin)
-              if (this.props.userApp.currentUser.bookingStatus != false || this.props.userApp.currentUser.bookingStatus == undefined )
+              if (this.props.userApp.currentUser.bookingStatus != false || this.props.userApp.currentUser.bookingStatus == undefined)
                 this.props.navigation.navigate("addBooking");
               else
-              snackbar.show("Tính năng đang phát triển", "");
+                snackbar.show("Tính năng đang phát triển", "");
 
             else
               this.props.navigation.navigate("login", {
@@ -234,14 +234,14 @@ class Home extends Component {
 
   getItemWidth() {
     const width = DEVICE_WIDTH - 40;
-    if (width >= 320){
-     Platform.OS == 'ios' ?  70 :  75;
+    if (width >= 320) {
+      Platform.OS == 'ios' ? 70 : 75;
     }
-     
-    if (width > 300){
-      Platform.OS == 'ios' ? 100: 110;
+
+    if (width > 300) {
+      Platform.OS == 'ios' ? 100 : 110;
     }
-      
+
     if (width > 250)
       return 70;
     return width - 50;
