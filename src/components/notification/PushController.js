@@ -82,13 +82,11 @@ class PushController extends Component {
         this.notificationInitialListener = firebase.notifications().getInitialNotification().then(this.getInitialNotification.bind(this));
     }
     onNotification(notification) {
-
         if (!this.props.userApp.isLogin)
             return;
-        console.log(notification);
         if (!notification || notification.show_in_foreground)
             return;
-        if (notification.data && notification.data.id) {
+        if (notification.data && notification.data.id || notification.data && notification.data.notificationId) {
             const type = Number(notification.data.type)
             if (type == 5) {
                 this.openTicket(notification.data.id);
@@ -171,7 +169,7 @@ class PushController extends Component {
     openDetailsEhealth(data) {
         if (!this.props.userApp.isLogin)
             return;
-        bookingProvider.detailPatientHistory(data.patientHistoryId, data.hospitalId).then(s => {
+        bookingProvider.detailPatientHistory(data.patientHistoryId, data.hospitalId,data.id).then(s => {
             this.setState({ isLoading: false }, () => {
                 switch (s.code) {
                     case 0:
@@ -189,7 +187,7 @@ class PushController extends Component {
                                 try {
                                     result = JSON.parse(s.data.data.result);
                                     hospitalProvider.getDetailsById(data.hospitalId).then(res => {
-                                        NavigationService.navigate('viewDetail', { result: result, resultDetail: resultDetail, hospitalName: res.data.hospital.name, user: data })
+                                        NavigationService.navigate('viewDetailEhealth', { result: result, resultDetail: resultDetail, hospitalName: res.data.hospital.name, user: data })
                                     })
                                 } catch (error) {
                                     snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')

@@ -82,7 +82,7 @@ class ListProfileScreen extends PureComponent {
                         <Text style={{ marginLeft: 10, color: '#045684' }}>{constants.ehealth.lastTime2 + item.latestTime ? item.latestTime.toDateObject('-').format('dd/MM/yyyy') : ''}</Text>
                     </View>
                 </View>
-                <View style={{ paddingHorizontal: 20, justifyContent: 'center', alignItems: 'center' }}>
+                <View style={{ paddingHorizontal: 20, justifyContent: 'center', alignItems: 'center',width: 100 }}>
                     <Text style={{ color: '#f36819', fontSize: 30 }}>{item.countTime}</Text>
                     <Text>lần</Text>
                 </View>

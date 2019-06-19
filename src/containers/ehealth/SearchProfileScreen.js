@@ -170,16 +170,6 @@ class SearchProfileScreen extends Component {
             snackbar.show(constants.msg.app.not_internet, "danger");
         })
     }
-    renderTextContent = () => {
-        switch (this.state.status) {
-            case 1: return (
-                <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10, fontSize: 18 }}>{'Đã chia sẻ Y bạ thành công!'}</Text>
-            )
-            case 2: return (
-                <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}><ScaleImage height={20} source={require('@images/new/ehealth/ic_warning.png')}></ScaleImage><Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10, fontSize: 18 }}>{'Chưa chia sẻ được!'}</Text></View>
-            )
-        }
-    }
     renderSearchButton() {
         return (
             <TouchableOpacity onPress={() => this.showSearch()} style={{ padding: 10 }}>
@@ -306,26 +296,7 @@ class SearchProfileScreen extends Component {
                             />
                         </View> : null
                 }
-                <Modal
-                    isVisible={this.state.isVisible}
-                    onBackdropPress={() => this.setState({ isVisible: false })}
-                    backdropOpacity={0.5}
-                    animationInTiming={500}
-                    animationOutTiming={500}
-                    style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
-                    backdropTransitionInTiming={1000}
-                    backdropTransitionOutTiming={1000}
-                >
-                    <View style={{ backgroundColor: '#fff', marginHorizontal: 20, marginVertical: 60, borderRadius: 5 }}>
-                        <Text style={{ fontSize: 22, color: '#27AE60', textAlign: 'center', marginTop: 10, marginHorizontal: 20 }}>Thông báo</Text>
-                        {this.renderTextContent()}
-                        <TouchableOpacity onPress={() => {
-                            this.setState({ isVisible: false })
-                            this.props.navigation.pop()
-                        }}
-                            style={{ justifyContent: 'center', alignItems: 'center', height: 41, backgroundColor: '#878787', borderBottomLeftRadius: 5, borderBottomRightRadius: 5 }}><Text style={{ color: '#fff' }}>OK, XONG</Text></TouchableOpacity>
-                    </View>
-                </Modal>
+            
             </ActivityPanel>
         )
     }

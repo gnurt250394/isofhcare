@@ -74,6 +74,8 @@ import ConfirmGetTicketScreen from "@containers/ticket/ConfirmGetTicketScreen";
 import ScanQRCodeScreen from "@containers/ticket/ScanQRCodeScreen";
 import GetTicketFinishScreen from "@containers/ticket/GetTicketFinishScreen";
 //---------------------------------
+import ViewEhealthDetailScreen from '@containers/ehealth/ViewEhealthDetailScreen';
+
 //........................eHealth................
 
 
@@ -154,6 +156,7 @@ const RootNavigator = createStackNavigator(
     //----------------------------------------
     //----------------ehealth-----------------
     ehealth: { screen: EHealthNavigator },
+    viewDetailEhealth: { screen: ViewEhealthDetailScreen },
    
     emptyScreen: { screen: EmptyScreen }
   },

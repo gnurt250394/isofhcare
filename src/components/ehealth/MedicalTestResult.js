@@ -28,7 +28,7 @@ class MedicalTestResult extends Component {
             }
         }
         if (!hasResult) {
-            this.state = {hasResult: false}
+            this.state = { hasResult: false }
             return null;
         }
 
@@ -46,7 +46,7 @@ class MedicalTestResult extends Component {
                 item.value.ListMedical.push.apply(item.value.ListMedical, entry.ListMedical);
             });
         }
-                
+
         if (result1.ListResulHuyetHoc && result1.ListResulHuyetHoc.length > 0) {
             var item = {
                 type: 'Huyết Học',
@@ -187,20 +187,23 @@ class MedicalTestResult extends Component {
         actions.push("Hủy");
 
         return (<View style={{ flex: 1, padding: 10 }}>
-            <View style={[styles.item, { marginTop: 0 }]}>
-                <View style={styles.round1}>
-                    <View style={styles.round2} />
+            {
+                (this.props.showTitle == true || this.props.showTitle == undefined) &&
+                <View style={[styles.item, { marginTop: 0 }]}>
+                    <View style={styles.round1}>
+                        <View style={styles.round2} />
+                    </View>
+                    <View style={[styles.itemlabel, { marginTop: 0 }]}>
+                        <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>KẾT QUẢ XÉT NGHIỆM</Text>
+                    </View>
                 </View>
-                <View style={[styles.itemlabel, { marginTop: 0 }]}>
-                    <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>KẾT QUẢ XÉT NGHIỆM</Text>
-                </View>
-            </View>
+            }
             {
                 this.state.currentGroup && <View style={{ alignItems: 'flex-end', marginVertical: 10 }}><TouchableOpacity onPress={() => {
                     this.actionSheetChooseType.show();
-                }} style={{ flexDirection: 'row', alignItems:'center' }}>
-                    <Text style={{marginRight: 10}}>{this.state.currentGroup.type}</Text>
-                    <ScaleImage source={require("@images/new/down.png")} width={10}/>
+                }} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Text style={{ marginRight: 10 }}>{this.state.currentGroup.type}</Text>
+                    <ScaleImage source={require("@images/new/down.png")} width={10} />
                 </TouchableOpacity></View>
             }
             {

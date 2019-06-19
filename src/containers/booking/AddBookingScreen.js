@@ -647,7 +647,7 @@ class AddBookingScreen extends Component {
                         }}
                         style={{ flex: 1 }}
                         inputStyle={styles.mtTr}
-                        multiline={true} placeholder="Mô tả triệu chứng"></TextField>
+                        multiline={true} placeholder={constants.msg.booking.booking_note}></TextField>
                     <TouchableOpacity style={styles.imgMT} onPress={this.selectImage.bind(this)}>
                         <ScaleImage height={15} source={require("@images/new/booking/ic_image.png")} />
                     </TouchableOpacity>

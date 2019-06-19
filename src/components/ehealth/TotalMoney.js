@@ -34,14 +34,17 @@ class TotalMoney extends Component {
             return null;
 
         return ((<View style={{ flex: 1, padding: 10 }}>
-            <View style={[styles.item, { marginTop: 0 }]}>
-                <View style={styles.round1}>
-                    <View style={styles.round2} />
+            {
+                (this.props.showTitle == true || this.props.showTitle == undefined) &&
+                <View style={[styles.item, { marginTop: 0 }]}>
+                    <View style={styles.round1}>
+                        <View style={styles.round2} />
+                    </View>
+                    <View style={[styles.itemlabel, { marginTop: 0 }]}>
+                        <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>TIỀN</Text>
+                    </View>
                 </View>
-                <View style={[styles.itemlabel, { marginTop: 0 }]}>
-                    <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>TIỀN</Text>
-                </View>
-            </View>
+            }
             <Table style={[styles.table, { marginTop: 10 }]} borderStyle={{ borderWidth: 0.5, borderColor: '#c8e1ff' }}>
                 <Row data={tableHead} style={styles.head} textStyle={styles.textHead} flexArr={[1, 3, 1, 2]} />
                 {this.renderService(resultDetail.ListService)}
