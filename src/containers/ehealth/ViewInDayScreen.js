@@ -203,8 +203,8 @@ class ViewInDateScreen extends Component {
             let note = item.SummaryResult;
             if (!note)
                 note = item.Result;
-            // if (!note)
-            //     note = item.First_Diagnostic;
+            if (!note)
+                note = item.Discussion;
             if (!note)
                 note = item.Conclusion;
             if (note)
@@ -254,9 +254,9 @@ class ViewInDateScreen extends Component {
             if (!note)
                 note = item.Macrosome;
             if (!note)
-                note = item.BiopsyLocation;
+                note = item.Microsome;
             if (!note)
-                note = item.ReportTemplate;
+                note = item.BiopsyLocation;
             if (note)
                 return <TouchableOpacity style={styles.card} onPress={this.viewSurgeryResult}>
                     <View style={{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>

@@ -81,13 +81,13 @@ class CheckupResult extends Component {
                 }
 
                 {
-                    (item.Result || item.Discussion) ?
+                    (item.Result || item.Discussion || item.SummaryResult) ?
                         <View>
 
                             <Text style={styles.diagnosticLabel}>Kết quả</Text>
                             <View style={{ flexDirection: 'row' }}>
                                 <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
-                                {this.renderItem(item.Result + item.Discussion)}
+                                {this.renderItem(item.Result + item.Discussion + item.SummaryResult)}
                             </View>
                         </View> : null
                 }
