@@ -30,11 +30,11 @@ class Kernel extends Component {
       if (update) {
         if (update.isMandatory) {
           Alert.alert(
-            'Thông báo',
-            'Ứng dụng có bản cập nhật mới',
+            'THÔNG BÁO',
+            'Ứng dụng đã có phiên bản mới. Bạn vui lòng cập nhật để có trải nghiệm tốt nhất!',
             [
               {
-                text: 'Cập nhật ngay', onPress: () => {
+                text: 'Cập nhật', onPress: () => {
                   snackbar.show("Ứng dụng đang được cập nhật, vui lòng chờ", "success")
                   codePush.sync({
                     // updateDialog: true,
@@ -47,8 +47,8 @@ class Kernel extends Component {
           );
         } else {
           Alert.alert(
-            'Thông báo',
-            'Ứng dụng có bản cập nhật mới',
+            'THÔNG BÁO',
+            'Ứng dụng đã có phiên bản mới. Bạn vui lòng cập nhật để có trải nghiệm tốt nhất!',
             [
               {
                 text: 'Để sau',
@@ -56,7 +56,7 @@ class Kernel extends Component {
                 style: 'cancel',
               },
               {
-                text: 'Cập nhật ngay', onPress: () => {
+                text: 'Cập nhật', onPress: () => {
                   snackbar.show("Ứng dụng đang được cập nhật, vui lòng chờ", "success")
                   codePush.sync({
                     // updateDialog: true,
