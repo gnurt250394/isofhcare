@@ -238,7 +238,7 @@ class SearchProfileScreen extends Component {
     render() {
         return (
             <ActivityPanel
-                backButton={<TouchableOpacity style={{ paddingLeft: 20 }} onPress={() => this.props.navigation.pop()}><Text>Hủy</Text></TouchableOpacity>}
+                backButton={<TouchableOpacity style={{ paddingLeft: 20 }} onPress={() => this.props.navigation.pop()}><Text>{constants.ehealth.cancel}</Text></TouchableOpacity>}
                 titleStyle={{ marginRight: 0 }} title={constants.title.search_profile}
                 isLoading={this.state.isLoading} menuButton={this.renderSearchButton()} showFullScreen={true}
             >
@@ -252,18 +252,18 @@ class SearchProfileScreen extends Component {
                             backgroundColor: constants.colors.actionbar_color,
                             flexDirection: 'row'
                         }}>
-                            <TextInput autoFocus={true} style={{ flex: 1, color: constants.colors.actionbar_title_color, padding: 10 }} placeholderTextColor='#dddddd' underlineColorAndroid="transparent" placeholder={"Nhập từ khóa tìm kiếm"} onChangeText={(s) => {
+                            <TextInput autoFocus={true} style={{ flex: 1, color: constants.colors.actionbar_title_color, padding: 10 }} placeholderTextColor='#dddddd' underlineColorAndroid="transparent" placeholder={constants.ehealth.inputKeyword} onChangeText={(s) => {
                                 this.searchTextChange(s);
                             }} returnKeyType="search" onSubmitEditing={this.onRefreshList} />
                             <TouchableOpacity onPress={this.onRefreshList}>
-                                <Text style={{ backgroundColor: constants.colors.actionbar_title_color, padding: 7, borderRadius: 20, marginRight: 10, paddingLeft: 15, paddingRight: 15, fontWeight: 'bold', color: '#FFF' }}>{constants.search}</Text>
+                                <Text style={{ backgroundColor: constants.colors.actionbar_title_color, padding: 7, borderRadius: 20, marginRight: 10, paddingLeft: 15, paddingRight: 15, fontWeight: 'bold', color: '#FFF' }}>{constants.ehealth.search}</Text>
                             </TouchableOpacity>
                         </View>
                         : null
                 }
                 {
                     !this.state.searchValue && !this.state.isSearch ? (
-                        <View style={{ paddingLeft: 20, paddingVertical: 10, marginTop: 10, backgroundColor: '#fff', borderColor: '#A5A5A5', borderBottomWidth: 0.7 }}><Text style={{ fontSize: 15, color: '#000', }}>Tìm kiếm gần đây</Text></View>
+                        <View style={{ paddingLeft: 20, paddingVertical: 10, marginTop: 10, backgroundColor: '#fff', borderColor: '#A5A5A5', borderBottomWidth: 0.7 }}><Text style={{ fontSize: 15, color: '#000', }}>{constants.ehealth.lastSearch}</Text></View>
 
                     ) : null
                 }
@@ -278,7 +278,7 @@ class SearchProfileScreen extends Component {
                             (!this.state.listProfileSearch || this.state.listProfileSearch.length == 0) ?
                             <View style={{ width: '100%', marginTop: 50, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center' }}>
                                 <ScaleImage source={require("@images/empty_result.png")} width={120} />
-                                <Text style={{ textAlign: 'center' }}>{this.state.searchValue ? 'Không có kết quả nào cho hồ sơ ' : 'Không có hồ sơ chia sẻ gần đây '}<Text style={{ fontWeight: 'bold', color: constants.colors.actionbar_title_color }}>{this.state.searchValue}</Text></Text>
+                                <Text style={{ textAlign: 'center' }}>{this.state.searchValue ? constants.ehealth.not_result_for_keyword : constants.ehealth.not_result_for_last_search}<Text style={{ fontWeight: 'bold', color: constants.colors.actionbar_title_color }}>{this.state.searchValue}</Text></Text>
                             </View> : null
                     }
                     onEndReached={this.state.isSearch ? this.onLoadMore.bind(this) : {}}

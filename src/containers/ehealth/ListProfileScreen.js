@@ -84,7 +84,7 @@ class ListProfileScreen extends PureComponent {
                 </View>
                 <View style={{ paddingHorizontal: 20, justifyContent: 'center', alignItems: 'center',width: 85 }}>
                     <Text style={{ color: '#f36819', fontSize: 30 }}>{item.countTime}</Text>
-                    <Text>lần</Text>
+                    <Text>{constants.ehealth.time}</Text>
                 </View>
             </View>
             <View style={{ height: 1, backgroundColor: '#00000050' }} />
@@ -125,7 +125,7 @@ class ListProfileScreen extends PureComponent {
         return (
             <ActivityPanel style={{ flex: 1 }}
                 // title="HỒ SƠ Y BẠ GIA ĐÌNH"
-                title={<Text>HỒ SƠ Y BẠ GIA ĐÌNH{'\n'}<Text style={{ fontSize: 12, fontWeight: 'normal' }}>Tổng: {this.state.listData ? this.state.listData.length : 0} thành viên</Text></Text>}
+                title={<Text>{constants.title.list_profile_ehealth}{'\n'}<Text style={{ fontSize: 12, fontWeight: 'normal' }}>{constants.ehealth.total}{this.state.listData ? this.state.listData.length : 0}{constants.ehealth.member}</Text></Text>}
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#22b060"
