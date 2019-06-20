@@ -44,7 +44,8 @@ class ViewInDateScreen extends Component {
         let obj2 = {};
         patient.history.forEach(item => {
             let key = item.timeGoIn.toDateObject('-').ddmmyyyy();
-            obj2[key] = item;
+            if (!obj2[key])
+                obj2[key] = item;
         });
         for (var i = 1; i <= 31; i++) {
             try {
