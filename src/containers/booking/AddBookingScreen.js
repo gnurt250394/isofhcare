@@ -110,7 +110,7 @@ class AddBookingScreen extends Component {
     }
     selectImage() {
         if (this.state.imageUris && this.state.imageUris.length >= 5) {
-            snackbar.show("Chỉ được chọn tối đa 5 ảnh", "danger");
+            snackbar.show(constants.msg.booking.image_without_five, "danger");
             return;
         }
         connectionUtils.isConnected().then(s => {
@@ -168,7 +168,7 @@ class AddBookingScreen extends Component {
 
             }
         }).catch(e => {
-            snackbar.show("Không có kết nối mạng", "danger");
+            snackbar.show(constants.msg.app.not_internet, "danger");
         });
     }
     selectProfile(profile) {
@@ -227,14 +227,14 @@ class AddBookingScreen extends Component {
                         this.setState({
                             schedule: null,
                             schedules: data, isLoading: false, scheduleError,
-                            scheduleError: data && data.length != 0 ? "" : "Không có lịch khám trong ngày thoả mãn yêu cầu của bạn, xin vui lòng chọn ngày khác"
+                            scheduleError: data && data.length != 0 ? "" : constants.msg.booking.not_booking_macth_require_date
                         })
                     }
                     else {
                         this.setState({
                             schedule: null,
                             schedules: [], isLoading: false,
-                            scheduleError: "Không có lịch khám trong ngày thoả mãn yêu cầu của bạn, xin vui lòng chọn ngày khác"
+                            scheduleError: constants.msg.booking.not_booking_macth_require_date
                         })
                     }
                 }).catch(e => {
@@ -242,7 +242,7 @@ class AddBookingScreen extends Component {
                         schedule: null,
                         isLoading: false,
                         schedules: [],
-                        scheduleError: "Không có lịch khám trong ngày thoả mãn yêu cầu của bạn, xin vui lòng chọn ngày khác"
+                        scheduleError: constants.msg.booking.not_booking_macth_require_date
                     })
                 });
             });
@@ -259,37 +259,37 @@ class AddBookingScreen extends Component {
         if (this.state.contact) {
             this.setState({ contactError: "" })
         } else {
-            this.setState({ contactError: "Liên lạc với tôi không được bỏ trống" })
+            this.setState({ contactError: constants.msg.booking.contact_not_null })
             error = true;
         }
         if (this.state.profile) {
             this.setState({ profileError: "" })
         } else {
-            this.setState({ profileError: "Hồ sơ không được bỏ trống" })
+            this.setState({ profileError: constants.msg.booking.profile_not_null })
             error = true;
         }
         if (this.state.serviceType) {
             this.setState({ serviceTypeError: "" })
         } else {
-            this.setState({ serviceTypeError: "Yêu cầu không được bỏ trống" })
+            this.setState({ serviceTypeError: constants.msg.booking.require_not_null })
             error = true;
         }
         if (this.state.service) {
             this.setState({ serviceError: "" })
         } else {
-            this.setState({ serviceError: "Dịch vụ không được bỏ trống" })
+            this.setState({ serviceError: constants.msg.booking.service_not_null })
             error = true;
         }
         if (this.state.bookingDate) {
             this.setState({ bookingError: "" })
         } else {
-            this.setState({ bookingError: "Ngày khám không được bỏ trống" })
+            this.setState({ bookingError: constants.msg.booking.date_booking_not_null })
             error = true;
         }
         if (this.state.hospital) {
             this.setState({ hospitalError: "" })
         } else {
-            this.setState({ hospitalError: "Địa điểm không được bỏ trống" })
+            this.setState({ hospitalError: constants.msg.booking.location_not_null })
             error = true;
         }
 
@@ -297,11 +297,11 @@ class AddBookingScreen extends Component {
             if (this.state.schedule) {
                 this.setState({ scheduleError: "" })
             } else {
-                this.setState({ scheduleError: "Giờ khám không được bỏ trống" })
+                this.setState({ scheduleError: constants.msg.booking.schedule_not_null })
                 error = true;
             }
         } else {
-            this.setState({ scheduleError: "Không có lịch khám trong ngày thoả mãn yêu cầu của bạn, xin vui lòng chọn ngày khác" })
+            this.setState({ scheduleError: constants.msg.booking.not_booking_macth_require_date })
             error = true;
         }
 
@@ -309,11 +309,11 @@ class AddBookingScreen extends Component {
         if (!error && validForm) {
             for (var i = 0; i < this.state.imageUris.length; i++) {
                 if (this.state.imageUris[i].loading) {
-                    snackbar.show('Một số ảnh đang được tải lên. Vui lòng chờ', 'danger');
+                    snackbar.show(constants.msg.booking.image_loading, 'danger');
                     return;
                 }
                 if (this.state.imageUris[i].error) {
-                    snackbar.show('Ảnh tải lên bị lỗi, vui lòng kiểm tra lại', 'danger');
+                    snackbar.show(constants.msg.booking.image_load_err, 'danger');
                     return;
                 }
             }
@@ -368,17 +368,17 @@ class AddBookingScreen extends Component {
                                         break;
                                     case 1:
                                         this.setState({ isLoading: false }, () => {
-                                            snackbar.show("Đặt khám phải cùng ngày giờ với lịch làm việc", "danger");
+                                            snackbar.show(constants.msg.booking.booking_must_equal_datetime, "danger");
                                         });
                                         break;
                                     case 2:
                                         this.setState({ isLoading: false }, () => {
-                                            snackbar.show("Đã kín lịch trong khung giờ này", "danger");
+                                            snackbar.show(constants.msg.booking.full_slot_on_this_time, "danger");
                                         });
                                         break;
                                     case 401:
                                         this.setState({ isLoading: false }, () => {
-                                            snackbar.show("Vui lòng đăng nhập để thực hiện", "danger");
+                                            snackbar.show(constants.msg.booking.booking_must_login, "danger");
                                             this.props.navigation.navigate("login"
                                                 // , {
                                                 //     nextScreen: {
@@ -390,7 +390,7 @@ class AddBookingScreen extends Component {
                                         break;
                                     default:
                                         this.setState({ isLoading: false }, () => {
-                                            snackbar.show("Đặt khám không thành công", "danger");
+                                            snackbar.show(constants.msg.booking.booking_err, "danger");
                                         });
                                         break;
                                 }
@@ -402,7 +402,7 @@ class AddBookingScreen extends Component {
                     })
                 });
             }).catch(e => {
-                snackbar.show("Không có kết nối mạng", "danger");
+                snackbar.show(constants.msg.app.not_internet, "danger");
             })
 
 
@@ -437,7 +437,7 @@ class AddBookingScreen extends Component {
 
         return (<ActivityPanel title="Đặt Khám"
             isLoading={this.state.isLoading}
-            menuButton={<TouchableOpacity style={styles.menu} onPress={() => snackbar.show("Chức năng đang phát triển")}><ScaleImage style={styles.img} height={20} source={require("@images/new/booking/ic_info.png")} /></TouchableOpacity>}
+            menuButton={<TouchableOpacity style={styles.menu} onPress={() => snackbar.show(constants.msg.app.in_development)}><ScaleImage style={styles.img} height={20} source={require("@images/new/booking/ic_info.png")} /></TouchableOpacity>}
             titleStyle={{ marginLeft: 50 }}>
 
             <KeyboardAwareScrollView>
@@ -449,7 +449,7 @@ class AddBookingScreen extends Component {
                                 profile: this.state.profile
                             });
                         }).catch(e => {
-                            snackbar.show("Không có kết nối mạng", "danger");
+                            snackbar.show(constants.msg.app.not_internet, "danger");
                         });
                     }}>
                         <View style={{
@@ -482,7 +482,7 @@ class AddBookingScreen extends Component {
                                     <View style={{ justifyContent: 'center', alignItems: 'center', width: 38, height: 38, borderRadius: 19, borderColor: 'rgba(151, 151, 151, 0.29)', borderWidth: 0.5 }}>
                                         <ScaleImage source={require("@images/new/profile/ic_profile.png")} width={20} />
                                     </View>
-                                    <Text style={styles.txtname}>Chọn hồ sơ</Text>
+                                    <Text style={styles.txtname}>{constants.booking.select_profile}</Text>
                                 </View>
                             }
 
@@ -499,13 +499,13 @@ class AddBookingScreen extends Component {
                         connectionUtils.isConnected().then(s => {
                             this.props.navigation.navigate("selectServiceType", { onSelected: this.selectServiceType.bind(this) });
                         }).catch(e => {
-                            snackbar.show("Không có kết nối mạng", "danger");
+                            snackbar.show(constants.msg.app.not_internet, "danger");
                         });
                     }}
                     >
                         <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_serviceType.png")} />
-                        <Text style={styles.mdk}>Yêu cầu</Text>
-                        <Text numberOfLines={1} style={styles.ktq}>{this.state.serviceType ? this.state.serviceType.name : "Chọn yêu cầu"}</Text>
+                        <Text style={styles.mdk}>{constants.booking.require}</Text>
+                        <Text numberOfLines={1} style={styles.ktq}>{this.state.serviceType ? this.state.serviceType.name : constants.booking.select_require}</Text>
                         <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
                     </TouchableOpacity>
                     {
@@ -515,7 +515,7 @@ class AddBookingScreen extends Component {
                     <View style={styles.border}></View>
                     <TouchableOpacity style={styles.mucdichkham} onPress={() => {
                         if (!this.state.serviceType) {
-                            snackbar.show("Vui lòng chọn yêu cầu khám", "danger");
+                            snackbar.show(constants.msg.booking.please_select_require, "danger");
                             return;
                         }
                         connectionUtils.isConnected().then(s => {
@@ -525,13 +525,13 @@ class AddBookingScreen extends Component {
                                 onSelected: this.selectHospital.bind(this)
                             })
                         }).catch(e => {
-                            snackbar.show("Không có kết nối mạng", "danger");
+                            snackbar.show(constants.msg.app.not_internet, "danger");
                         });
                     }
                     }>
                         <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_placeholder.png")} />
-                        <Text style={styles.mdk}>Địa điểm</Text>
-                        <Text numberOfLines={1} style={styles.ktq}>{this.state.hospital ? this.state.hospital.hospital.name : "Chọn địa điểm"}</Text>
+                        <Text style={styles.mdk}>{constants.booking.location}</Text>
+                        <Text numberOfLines={1} style={styles.ktq}>{this.state.hospital ? this.state.hospital.hospital.name : constants.booking.select_location}</Text>
                         <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
                     </TouchableOpacity>
                     {
@@ -541,7 +541,7 @@ class AddBookingScreen extends Component {
                     <View style={styles.border}></View>
                     <TouchableOpacity style={styles.mucdichkham} onPress={() => {
                         if (!this.state.hospital) {
-                            snackbar.show("Vui lòng chọn địa điểm khám", "danger");
+                            snackbar.show(constants.msg.booking.please_select_location, "danger");
                             return;
                         }
                         this.props.navigation.navigate("selectService", {
@@ -551,14 +551,14 @@ class AddBookingScreen extends Component {
                         })
                     }}>
                         <ScaleImage style={styles.imgIc} height={15} source={require("@images/new/booking/ic_specialist.png")} />
-                        <Text style={styles.mdk}>Dịch vụ</Text>
+                        <Text style={styles.mdk}>{constants.booking.service}</Text>
 
                         {this.state.service ?
                             <View style={{ flex: 1 }}>
                                 <Text numberOfLines={1} style={styles.ktq}>{this.state.service.name}</Text>
                                 <Text numberOfLines={1} style={styles.ktq}>{this.state.service.price.formatPrice() + 'đ'}</Text>
                             </View> :
-                            <Text numberOfLines={1} style={styles.ktq}>Chọn dịch vụ</Text>
+                            <Text numberOfLines={1} style={styles.ktq}>{constants.msg.booking.select_service}</Text>
                         }
 
                         <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
@@ -571,14 +571,14 @@ class AddBookingScreen extends Component {
                 <View style={styles.article}>
                     <TouchableOpacity style={styles.mucdichkham} onPress={() => {
                         if (!this.state.service) {
-                            snackbar.show("Vui lòng chọn dịch vụ", "danger");
+                            snackbar.show(constants.msg.booking.please_select_service, "danger");
                             return;
                         }
                         this.setState({ toggelDateTimePickerVisible: true })
                     }}>
                         <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_bookingDate.png")} />
-                        <Text style={styles.mdk}>Ngày khám</Text>
-                        <Text style={styles.ktq}>{this.state.date ? this.state.date : "Chọn ngày khám"}</Text>
+                        <Text style={styles.mdk}>{constants.booking.date_booking}</Text>
+                        <Text style={styles.ktq}>{this.state.date ? this.state.date : constants.booking.select_date_booking}</Text>
                         <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
                     </TouchableOpacity>
                     {
@@ -588,10 +588,10 @@ class AddBookingScreen extends Component {
                     <View style={styles.border}></View>
                     <View style={styles.mucdichkham}>
                         <ScaleImage style={styles.imgIc} height={15} source={require("@images/new/booking/ic_specialist.png")} />
-                        <Text style={styles.mdk}>Chọn giờ khám</Text>
+                        <Text style={styles.mdk}>{constants.booking.select_time_booking}</Text>
                     </View>
                     <View style={[styles.mucdichkham, { paddingHorizontal: 20 }]}>
-                        <Text style={{ fontSize: 14, color: '#8e8e93' }}>Gợi ý: Chọn những giờ màu xanh sẽ giúp bạn được phục vụ nhanh hơn</Text>
+                        <Text style={{ fontSize: 14, color: '#8e8e93' }}>{constants.booking.select_time_note}</Text>
                     </View>
                     <BookingTimePicker schedules={this.state.schedules} onChange={this.onTimePickerChange.bind(this)} />
                     {
@@ -599,20 +599,20 @@ class AddBookingScreen extends Component {
                             <Text style={[styles.errorStyle]}>{this.state.scheduleError}</Text> : null
                     }
                 </View>
-                <Text style={styles.lienlac}>Liên lạc với tôi qua</Text>
+                <Text style={styles.lienlac}>{constants.booking.contact_me}</Text>
 
                 <View style={styles.phoneSMS}>
                     <TouchableOpacity onPress={() => {
                         this.setState({ contact: 1, allowBooking: true });
                     }} style={[styles.phone, this.state.contact == 1 ? styles.contact_selected : styles.contact_normal]}>
                         <ScaleImage style={styles.imgPhone} height={18} source={this.state.contact == 1 ? require("@images/new/booking/ic_phone1.png") : require("@images/new/booking/ic_phone0.png")} />
-                        <Text style={[styles.tinnhan, this.state.contact == 1 ? styles.contact_text_selected : styles.contact_text_normal]}>Điện thoại</Text>
+                        <Text style={[styles.tinnhan, this.state.contact == 1 ? styles.contact_text_selected : styles.contact_text_normal]}>{constants.booking.phone}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => {
                         this.setState({ contact: 2, allowBooking: true });
                     }} style={[styles.sms, this.state.contact == 2 ? styles.contact_selected : styles.contact_normal]}>
                         <ScaleImage style={styles.imgPhone} height={18} source={this.state.contact == 2 ? require("@images/new/booking/ic_send_sms1.png") : require("@images/new/booking/ic_send_sms0.png")} />
-                        <Text style={[styles.tinnhan, this.state.contact == 2 ? styles.contact_text_selected : styles.contact_text_normal]}>SMS</Text>
+                        <Text style={[styles.tinnhan, this.state.contact == 2 ? styles.contact_text_selected : styles.contact_text_normal]}>{constants.booking.sms}</Text>
                     </TouchableOpacity>
                 </View>
                 {
@@ -630,7 +630,7 @@ class AddBookingScreen extends Component {
                             },
                             messages: {
                                 // required: "Mô tả triệu chứng không được bỏ trống",
-                                maxlength: "Không cho phép nhập quá 500 kí tự"
+                                maxlength: constants.msg.app.text_without_500
                             }
                         }}
 
@@ -647,7 +647,7 @@ class AddBookingScreen extends Component {
                         }}
                         style={{ flex: 1 }}
                         inputStyle={styles.mtTr}
-                        multiline={true} placeholder="Mô tả triệu chứng"></TextField>
+                        multiline={true} placeholder={constants.msg.booking.booking_note}></TextField>
                     <TouchableOpacity style={styles.imgMT} onPress={this.selectImage.bind(this)}>
                         <ScaleImage height={15} source={require("@images/new/booking/ic_image.png")} />
                     </TouchableOpacity>
@@ -677,7 +677,7 @@ class AddBookingScreen extends Component {
                         </View>)
                     }
                 </View>
-                <Text style={styles.des}>Mô tả triệu chứng sẽ giúp bạn được phục vụ tốt hơn</Text>
+                <Text style={styles.des}>{constants.booking.simptom_note}</Text>
             </KeyboardAwareScrollView>
 
             <View style={styles.btn}>
@@ -707,8 +707,8 @@ class AddBookingScreen extends Component {
                     this.setState({ toggelDateTimePickerVisible: false })
                 }}
                 minimumDate={minDate}
-                cancelTextIOS={"Hủy bỏ"}
-                confirmTextIOS={"Xác nhận"}
+                cancelTextIOS={constants.actionSheet.cancel2}
+                confirmTextIOS={constants.actionSheet.confirm}
                 date={this.state.bookingDate || minDate}
             />
 

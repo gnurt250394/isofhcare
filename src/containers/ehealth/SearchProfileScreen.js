@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { View, FlatList, TouchableOpacity, Text, TextInput } from 'react-native'
+import { View, FlatList, TouchableOpacity, Text, TextInput, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux';
 import ActivityPanel from '@components/ActivityPanel'
 import serviceTypeProvider from '@data-access/service-type-provider';
@@ -12,7 +12,8 @@ import ImageLoad from 'mainam-react-native-image-loader';
 import ehealthProvider from '@data-access/ehealth-provider';
 import historyProvider from '@data-access/history-provider';
 import realmModel from '@models/realm-models';
-
+import connectionUtils from '@utils/connection-utils';
+import Modal from '@components/modal';
 class SearchProfileScreen extends Component {
     constructor(props) {
         super(props);
@@ -21,7 +22,14 @@ class SearchProfileScreen extends Component {
             listServiceSearch: [],
             searchValue: "",
             refreshing: false,
-            dataPatient:this.props.navigation.state.params && this.props.navigation.state.params.dataPatient ? this.props.navigation.state.params.dataPatient : ''
+            dataPatient: this.props.navigation.state.params && this.props.navigation.state.params.dataPatient ? this.props.navigation.state.params.dataPatient : '',
+            size: 10,
+            page: 1,
+            finish: false,
+            loading: false,
+            status: '',
+            isSearch:false
+
         }
     }
     componentDidMount() {
@@ -69,57 +77,97 @@ class SearchProfileScreen extends Component {
     searchTextChange(s) {
         this.setState({ searchValue: s });
     }
+    onRefreshList = () => {
+        console.log('onRefreshList')
+        if (!this.state.loading)
+            this.setState(
+                { refreshing: true, page: 1, finish: false, loading: true,isSearch:true },
+                () => {
+                    this.onSearch();
+                }
+            );
+    }
+
     onSearch = () => {
         // var s = this.state.searchValue;
         // var listSearch = this.state.listProfile.filter(function (item) {
         //     return item.deleted == 0 && (item == null || item.name.trim().toLowerCase().unsignText().indexOf(s.trim().toLowerCase().unsignText()) != -1);
         // });
         // this.setState({ listProfileSearch: listSearch });
-        let page = 1
-        let size = 10
-        let queryString = this.state.searchValue ? this.state.searchValue : ''
+        const { page, size } = this.state;
+        this.setState({
+            loading: true,
+            refreshing: page == 1,
+            loadMore: page != 1
+        });
+        let queryString = this.state.searchValue ? this.state.searchValue.trim().toLowerCase().unsignText().split(' ').join('') : ''
+        console.log(queryString)
         ehealthProvider.search(page, size, queryString).then(s => {
             this.setState({
-                refreshing: false
+                refreshing: false,
+                loading: false,
+                loadMore: false
             }, () => {
-                if (s.code == 0) {
-                    this.setState({
-                        listProfileSearch: s.data.data
-                    })
+                if (s) {
+                    switch (s.code) {
+                        case 0:
+                            var list = [];
+                            var finish = false;
+                            if (s.data.data.length == 0) {
+                                finish = true;
+                            }
+                            if (page != 1) {
+                                list = this.state.listProfileSearch;
+                                list.push.apply(list, s.data.data);
+                            } else {
+                                list = s.data.data;
+                            }
+                            this.setState({
+                                listProfileSearch: [...list],
+                                finish: finish
+                            });
+                            break;
+                    }
                 }
             })
         }).catch(e => {
             this.setState({
                 listProfileSearch: [],
-                refreshing: false
+                loading: false,
+                refreshing: false,
+                loadMore: false
             })
         })
+
     }
     selectProfile = (item) => {
         console.log(this.props);
-        let userId = this.props.userApp.currentUser.id
-        let type = constants.key.history.user_ehealth
-        let name = ''
-        let dataId = item.user.id
-        let data = item
-        let hospitalId = this.state.dataPatient.hospitalId
-        let patientHistoryId = this.state.dataPatient.patientHistoryId
-        const { USER_EHEALTH_HISTORY } = realmModel;
+        connectionUtils.isConnected().then(s => {
+            let userId = this.props.userApp.currentUser.id
+            let type = constants.key.history.user_ehealth
+            let name = ''
+            let dataId = item.user.id
+            let data = item
+            let hospitalId = this.state.dataPatient.hospitalId
+            let patientHistoryId = this.state.dataPatient.patientHistoryId
+            const { USER_EHEALTH_HISTORY } = realmModel;
+            let lastDate = this.props.navigation.state.params && this.props.navigation.state.params.lastDate ? this.props.navigation.state.params.lastDate : ''
+            historyProvider.addHistory(userId, USER_EHEALTH_HISTORY, name, dataId, JSON.stringify(data))
+            ehealthProvider.shareWithProfile(dataId, hospitalId, patientHistoryId).then(res => {
+                if (res.code == 0 && res.data.status == 1) {
+                    this.props.navigation.navigate('viewInMonth',{lastDate:lastDate,status:7})
+                } else {
+                    this.props.navigation.navigate('viewInMonth',{lastDate:lastDate,status:8})
 
-        historyProvider.addHistory(userId, USER_EHEALTH_HISTORY, name, dataId, JSON.stringify(data))
-        console.log("đâsd",patientHistoryId,hospitalId)
-        ehealthProvider.shareWithProfile(dataId,hospitalId,patientHistoryId).then(res => {
-            console.log(res,'res')
-            if(res.code == 0 && res.data.status == 1){
-                snackbar.show('Chia sẻ thành công','success')
-                this.props.navigation.pop()
-            }else{
-                snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại','danger')
-            }
-            
-        }).catch(err => {
-            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại','danger')
-            console.log(err)
+                }
+
+            }).catch(err => {
+                this.props.navigation.navigate('viewInMonth',{lastDate:lastDate,status:8})
+
+                console.log(err)
+            })
+        }).catch(e => {
+            snackbar.show(constants.msg.app.not_internet, "danger");
         })
     }
     renderSearchButton() {
@@ -128,6 +176,21 @@ class SearchProfileScreen extends Component {
                 <ScaleImage source={require("@images/ictimkiem.png")} width={20} />
             </TouchableOpacity>
         );
+    }
+    onLoadMore() {
+        if (!this.state.finish && !this.state.loading)
+            this.setState(
+                {
+                    loadMore: true,
+                    refreshing: false,
+                    loading: true,
+                    page: this.state.page + 1
+                },
+                () => {
+                    this.onSearch(this.state.page);
+                }
+            )
+
     }
     renderItem = ({ item }) => {
         const icSupport = require("@images/new/user.png");
@@ -175,8 +238,8 @@ class SearchProfileScreen extends Component {
     render() {
         return (
             <ActivityPanel
-                backButton={<TouchableOpacity style={{ paddingLeft: 20 }} onPress={() => this.props.navigation.pop()}><Text>Hủy</Text></TouchableOpacity>}
-                titleStyle={{ marginRight: 0 }} title={"Chọn hồ sơ"}
+                backButton={<TouchableOpacity style={{ paddingLeft: 20 }} onPress={() => this.props.navigation.pop()}><Text>{constants.ehealth.cancel}</Text></TouchableOpacity>}
+                titleStyle={{ marginRight: 0 }} title={constants.title.search_profile}
                 isLoading={this.state.isLoading} menuButton={this.renderSearchButton()} showFullScreen={true}
             >
                 {
@@ -189,16 +252,21 @@ class SearchProfileScreen extends Component {
                             backgroundColor: constants.colors.actionbar_color,
                             flexDirection: 'row'
                         }}>
-                            <TextInput autoFocus={true} style={{ flex: 1, color: constants.colors.actionbar_title_color, padding: 10 }} placeholderTextColor='#dddddd' underlineColorAndroid="transparent" placeholder={"Nhập từ khóa tìm kiếm"} onChangeText={(s) => {
+                            <TextInput autoFocus={true} style={{ flex: 1, color: constants.colors.actionbar_title_color, padding: 10 }} placeholderTextColor='#dddddd' underlineColorAndroid="transparent" placeholder={constants.ehealth.inputKeyword} onChangeText={(s) => {
                                 this.searchTextChange(s);
-                            }} returnKeyType="search" onSubmitEditing={() => { this.onSearch }} />
-                            <TouchableOpacity onPress={this.onSearch}>
-                                <Text style={{ backgroundColor: constants.colors.actionbar_title_color, padding: 7, borderRadius: 20, marginRight: 10, paddingLeft: 15, paddingRight: 15, fontWeight: 'bold', color: '#FFF' }}>{constants.search}</Text>
+                            }} returnKeyType="search" onSubmitEditing={this.onRefreshList} />
+                            <TouchableOpacity onPress={this.onRefreshList}>
+                                <Text style={{ backgroundColor: constants.colors.actionbar_title_color, padding: 7, borderRadius: 20, marginRight: 10, paddingLeft: 15, paddingRight: 15, fontWeight: 'bold', color: '#FFF' }}>{constants.ehealth.search}</Text>
                             </TouchableOpacity>
                         </View>
                         : null
                 }
-                <View style={{ paddingLeft: 20, paddingVertical: 10, marginTop: 10, backgroundColor: '#fff', borderColor: '#A5A5A5', borderBottomWidth: 0.7 }}><Text style={{ fontSize: 15, color: '#000', }}>Tìm kiếm gần đây</Text></View>
+                {
+                    !this.state.searchValue && !this.state.isSearch ? (
+                        <View style={{ paddingLeft: 20, paddingVertical: 10, marginTop: 10, backgroundColor: '#fff', borderColor: '#A5A5A5', borderBottomWidth: 0.7 }}><Text style={{ fontSize: 15, color: '#000', }}>{constants.ehealth.lastSearch}</Text></View>
+
+                    ) : null
+                }
                 <FlatList
                     style={{ flex: 1, backgroundColor: '#FFF' }}
                     refreshing={this.state.refreshing}
@@ -210,13 +278,25 @@ class SearchProfileScreen extends Component {
                             (!this.state.listProfileSearch || this.state.listProfileSearch.length == 0) ?
                             <View style={{ width: '100%', marginTop: 50, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center' }}>
                                 <ScaleImage source={require("@images/empty_result.png")} width={120} />
-                                <Text>Không có hồ sơ chia sẻ gần đây <Text style={{ fontWeight: 'bold', color: constants.colors.actionbar_title_color }}>{this.state.searchValue}</Text></Text>
+                                <Text style={{ textAlign: 'center' }}>{this.state.searchValue ? constants.ehealth.not_result_for_keyword : constants.ehealth.not_result_for_last_search}<Text style={{ fontWeight: 'bold', color: constants.colors.actionbar_title_color }}>{this.state.searchValue}</Text></Text>
                             </View> : null
                     }
+                    onEndReached={this.state.isSearch ? this.onLoadMore.bind(this) : {}}
+                    onEndReachedThreshold={this.state.isSearch ? 1 : -1}
                     ListFooterComponent={() => <View style={{ height: 10 }} />}
                     data={this.state.listProfileSearch}
                     renderItem={this.renderItem}
                 />
+                {
+                    this.state.loadMore ?
+                        <View style={{ alignItems: 'center', padding: 10, position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+                            <ActivityIndicator
+                                size={'small'}
+                                color={'gray'}
+                            />
+                        </View> : null
+                }
+            
             </ActivityPanel>
         )
     }

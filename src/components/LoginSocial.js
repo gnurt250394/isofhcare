@@ -58,7 +58,7 @@ class LoginSocial extends Component {
     loginSocial(socialType, socialId, name, avatar, email) {
         let createAccount = () => RNAccountKit.loginWithPhone().then(async (token) => {
             if (!token) {
-                snackbar.show("Xác minh số điện thoại không thành công", "danger");
+                snackbar.show(constants.msg.user.phone_number_not_found, "danger");
             } else {
                 let account = await RNAccountKit.getCurrentAccount();
                 if (account && account.phoneNumber) {
@@ -76,7 +76,7 @@ class LoginSocial extends Component {
                         nextScreen: this.nextScreen
                     });
                 } else {
-                    snackbar.show("Xác minh số điện thoại không thành công", "danger");
+                    snackbar.show(constants.msg.user.phone_number_not_found, "danger");
                 }
             }
         });

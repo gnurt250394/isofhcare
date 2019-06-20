@@ -150,7 +150,7 @@ class createProfile extends Component {
         }
       })
       .catch(e => {
-        snackbar.show("Không có kết nối mạng", "danger");
+        snackbar.show(constants.msg.app.not_internet, "danger");
       });
   }
   onUpdate2(image) {
@@ -178,7 +178,7 @@ class createProfile extends Component {
                   this.setState({
                     isLoading: false
                   });
-                  this.state.isDataNull ? snackbar.show("Bạn đã tạo hồ sơ thành công", "success") : snackbar.show("Bạn đã thêm người thân thành công", "success");
+                  this.state.isDataNull ? snackbar.show(constants.msg.booking.create_profile_success, "success") : snackbar.show(constants.msg.booking.create_relatives_success, "success");
 
 
                   NavigationService.navigate('selectProfile', { loading: true });
@@ -186,7 +186,7 @@ class createProfile extends Component {
                   this.setState({
                     isLoading: false
                   });
-                  this.state.isDataNull ? snackbar.show("Hồ sơ đã tồn tại trong hệ thống", 'danger') : snackbar.show("Hồ sơ đã tồn tại trong hệ thống", 'danger')
+                  this.state.isDataNull ? snackbar.show(constants.msg.booking.profile_arealy_exist, 'danger') : snackbar.show(constants.msg.booking.profile_arealy_exist, 'danger')
                 } else {
                   this.setState({
                     isLoading: false
@@ -197,13 +197,13 @@ class createProfile extends Component {
                 this.setState({
                   isLoading: false
                 });
-                snackbar.show("Có lỗi, xin vui lòng thử lại", "danger");
+                snackbar.show(constants.msg.app.err_try_again, "danger");
               });
           }
         )
       })
       .catch(e => {
-        snackbar.show("Không có kết nối mạng", "danger");
+        snackbar.show(constants.msg.app.not_internet, "danger");
       });
   }
   onUpdate = () => {
@@ -247,18 +247,18 @@ class createProfile extends Component {
 
     return (
       <ActivityPanel
-        title={this.state.isDataNull ? "Thêm hồ sơ" : "Thêm người thân"}
+        title={this.state.isDataNull ? constants.booking.add_profile : constants.booking.add_relatives}
         titleStyle={{ marginRight: 0 }}
         isLoading={this.state.isLoading}
         backButton={
           <TouchableOpacity style={styles.btnCancel} onPress={() => this.props.navigation.pop()}>
-            <Text style={styles.btnhuy}>Huỷ</Text>
+            <Text style={styles.btnhuy}>{constants.actionSheet.cancel}</Text>
           </TouchableOpacity>
         }
 
         menuButton={
           <TouchableOpacity onPress={this.onUpdate}>
-            <Text style={styles.btnmenu}>Lưu</Text>
+            <Text style={styles.btnmenu}>{constants.actionSheet.save}</Text>
           </TouchableOpacity>
         }
 
@@ -304,7 +304,7 @@ class createProfile extends Component {
           <View style={styles.container}>
             <Form ref={ref => (this.form = ref)} style={[{ flex: 1 }]}>
               <Field style={[styles.mucdichkham, { flex: 1 }, , Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
-                <Text style={styles.mdk}>Họ và Tên</Text>
+                <Text style={styles.mdk}>{constants.fullname}</Text>
                 <TextField
                   hideError={true}
                   onValidate={(valid, messages) => {
@@ -321,11 +321,11 @@ class createProfile extends Component {
                       maxlength: 255
                     },
                     messages: {
-                      required: "Họ và tên không được bỏ trống",
-                      maxlength: "Không cho phép nhập quá 255 kí tự"
+                      required: constants.msg.user.fullname_not_null,
+                      maxlength:constants.msg.user.text_without_255,
                     }
                   }}
-                  placeholder={"Nhập họ tên"}
+                  placeholder={constants.msg.user.input_name}
                   multiline={true}
                   inputStyle={[
                     styles.ktq,
@@ -349,10 +349,10 @@ class createProfile extends Component {
                 ]}
                 onPress={this.onShowGender}
               >
-                <Text style={styles.mdk}>Giới tính</Text>
+                <Text style={styles.mdk}>{constants.gender}</Text>
                 <Text style={styles.ktq}>
                   {!this.state.txGender
-                    ? "Chọn giới tính"
+                    ? constants.select_gender
                     : this.state.txGender}
                 </Text>
                 <ScaleImage
@@ -366,7 +366,7 @@ class createProfile extends Component {
 
                 style={[styles.mucdichkham, { justifyContent: 'center', alignItems: 'flex-end', flex: 1, paddingVertical: 12, borderTopWidth: 0, }]}
               >
-                <Text style={styles.mdk}>Ngày sinh</Text>
+                <Text style={styles.mdk}>{constants.dob}</Text>
 
                 <TextField
                   // value={this.state.date || ""}
@@ -383,7 +383,7 @@ class createProfile extends Component {
                     onBlur,
                     isError
                   ) => (
-                      <Text style={styles.ktq}>{value ? (value) : ('Chọn ngày sinh')}</Text>
+                      <Text style={styles.ktq}>{value ? (value) : (constants.select_dob)}</Text>
                     )}
                   // onChangeText={s => {
                   //   this.setState({ date: s });
@@ -396,7 +396,7 @@ class createProfile extends Component {
                       this.setState({ nameError: "" });
                     } else {
                       messages ?
-                        (this.setState({ valid: 'Không cho phép chọn lớn hơn 150 tuổi', isMin: false })) : (this.setState({ isMin: true }));
+                        (this.setState({ valid: constants.msg.app.dob_must_lesser_150, isMin: false })) : (this.setState({ isMin: true }));
                     }
                   }}
                   validate={{
@@ -453,9 +453,9 @@ class createProfile extends Component {
                       maxlength: 255,
                     },
                     messages: {
-                      required: "Email không được bỏ trống",
-                      email: "Email không hợp lệ",
-                      maxlength: "Không cho phép nhập quá 255 kí tự"
+                      required:constants.msg.user.email_not_null,
+                      email: constants.msg.user.email_does_not_exits,
+                      maxlength: constants.msg.user
 
                     }
                   }}
@@ -473,10 +473,10 @@ class createProfile extends Component {
                   autoCorrect={false}
                 />
               </Field>
-              <Text style={[styles.errorStyle]}>{this.state.isMin ? (' Vui lòng nhập email với người trên 15 tuổi.') : (this.state.emailError)}</Text>
+              <Text style={[styles.errorStyle]}>{this.state.isMin ? (constants.msg.user.email_apply_with_people_15_old) : (this.state.emailError)}</Text>
             </Form>
             <Text style={styles.textbot}>
-              Vui lòng nhập email với người trên 15 tuổi
+             {constants.msg.user.email_apply_with_people_15_old}
           </Text>
           </View>
 
@@ -502,13 +502,13 @@ class createProfile extends Component {
           date={new Date()}
           minimumDate={minDate}
           maximumDate={new Date()}
-          cancelTextIOS={"Hủy bỏ"}
-          confirmTextIOS={"Xác nhận"}
+          cancelTextIOS={constants.actionSheet.cancel2}
+          confirmTextIOS={constants.actionSheet.confirm}
           date={this.state.dob || new Date()}
         />
         <ActionSheet
           ref={o => this.actionSheetGender = o}
-          options={['Nam', 'Nữ', 'Hủy']}
+          options={[constants.actionSheet.male,constants.actionSheet.female,constants.actionSheet.cancel]}
           cancelButtonIndex={2}
           // destructiveButtonIndex={1}
           onPress={this.onSetGender}

@@ -31,14 +31,17 @@ class DiagnosticResult extends Component {
             return null;
         let resultDiagnostic = result.ListDiagnostic || [];
         return (<View style={{ flex: 1, padding: 10 }}>
-            <View style={[styles.item, { marginTop: 0 }]}>
-                <View style={styles.round1}>
-                    <View style={styles.round2} />
+            {
+                (this.props.showTitle == true || this.props.showTitle == undefined) &&
+                <View style={[styles.item, { marginTop: 0 }]}>
+                    <View style={styles.round1}>
+                        <View style={styles.round2} />
+                    </View>
+                    <View style={[styles.itemlabel, { marginTop: 0 }]}>
+                        <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>{constants.ehealth.diagnosticResult}</Text>
+                    </View>
                 </View>
-                <View style={[styles.itemlabel, { marginTop: 0 }]}>
-                    <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>KẾT QUẢ CHẨN ĐOÁN HÌNH ẢNH</Text>
-                </View>
-            </View>
+            }
             {
                 resultDiagnostic.map((item, index) => <DiagnosticResultItem item={item} key={index} />)
             }

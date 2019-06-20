@@ -137,7 +137,7 @@ class CreateQuestionStep2Screen extends Component {
 
             }
         }).catch(e => {
-            snackbar.show("Không có kết nối mạng", "danger");
+            snackbar.show(constants.msg.app.not_internet, "danger");
         });
     }
     createQuestion() {
@@ -193,7 +193,7 @@ class CreateQuestionStep2Screen extends Component {
                 });
             });
         }).catch(e => {
-            snackbar.show("Không có kết nối mạng", "danger");
+            snackbar.show(constants.msg.app.not_internet, "danger");
         })
     }
 

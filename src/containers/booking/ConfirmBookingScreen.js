@@ -69,12 +69,12 @@ class ConfirmBookingScreen extends Component {
                         break;
                     case 5:
                         this.setState({ isLoading: false }, () => {
-                            snackbar.show("Phiên đặt khám của bạn đã hết hạn. Vui lòng thực hiện lại", "danger");
+                            snackbar.show(constants.msg.booking.booking_expired, "danger");
                         });
                 }
             }).catch(e => {
                 this.setState({ isLoading: false }, () => {
-                    snackbar.show("Xác nhận đặt khám không thành công", "danger");
+                    snackbar.show(constants.msg.booking.booking_err2, "danger");
                 });
             });
         })
@@ -390,7 +390,7 @@ class ConfirmBookingScreen extends Component {
                 }
             });
         }).catch(e => {
-            snackbar.show("Không có kết nối mạng", "danger");
+            snackbar.show(constants.msg.app.not_internet, "danger");
         })
     }
 
@@ -428,7 +428,7 @@ class ConfirmBookingScreen extends Component {
 
                             <View style={styles.view2}>
                                 <ScaleImage style={[styles.ic_Location, { marginRight: 22 }]} width={17} source={require("@images/new/booking/ic_note.png")} />
-                                <Text style={styles.text5}>Lý do: {this.state.reason}</Text>
+                                <Text style={styles.text5}>Ghi chú: {this.state.reason}</Text>
                             </View>
                             <View style={styles.view2}>
                                 <ScaleImage style={[styles.ic_Location]} width={20} source={require("@images/new/booking/ic_coin.png")} />
@@ -481,7 +481,7 @@ class ConfirmBookingScreen extends Component {
                                 <View style={{ backgroundColor: 'rgb(2,195,154)', width: 10, height: 10, borderRadius: 5 }}></View>
                             }
                         </View>
-                        <Text style={styles.ckeckthanhtoan}>Thanh toán tại bệnh viện</Text>
+                        <Text style={styles.ckeckthanhtoan}>Thanh toán sau tại CSYT</Text>
                     </TouchableOpacity>
 
                 </ScrollView>

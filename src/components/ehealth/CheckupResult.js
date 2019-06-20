@@ -32,17 +32,20 @@ class CheckupResult extends Component {
             return null;
         let resultCheckup = result.ListResultCheckup || [];
         return (<View style={{ flex: 1, padding: 10 }}>
-            <View style={[styles.item, { marginTop: 0 }]}>
-                <View style={styles.round1}>
-                    <View style={styles.round2} />
-                </View>
-                <View style={[styles.itemlabel, { marginTop: 0 }]}>
-                    <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>KẾT QUẢ KHÁM</Text>
-                </View>
-            </View>
             {
-                        resultCheckup.map((item, index) => <CheckupResultItem item={item} key={index} />)
-                    }
+                (this.props.showTitle == true || this.props.showTitle == undefined) &&
+                <View style={[styles.item, { marginTop: 0 }]}>
+                    <View style={styles.round1}>
+                        <View style={styles.round2} />
+                    </View>
+                    <View style={[styles.itemlabel, { marginTop: 0 }]}>
+                        <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>{constants.ehealth.checkupResult}</Text>
+                    </View>
+                </View>
+            }
+            {
+                resultCheckup.map((item, index) => <CheckupResultItem item={item} key={index} />)
+            }
         </View>)
     }
 }

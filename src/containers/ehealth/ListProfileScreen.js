@@ -62,14 +62,14 @@ class ListProfileScreen extends PureComponent {
                 <View style={{ flex: 1, borderRightColor: '#c8d1d6', borderRightWidth: 1, paddingVertical: 10 }}>
                     <View style={{  position: 'relative' }}>
                         <View style={{ position: 'absolute', left: 9, top: 0, bottom: 0, width: 2, backgroundColor: '#91a3ad', }}></View>
-                        <View style={{ flexDirection: 'row', height: 30 }}>
+                        <View style={{ flexDirection: 'row', height: 40 }}>
                             <View style={{ width: 20, height: 20, borderWidth: 1.5, borderColor: '#91a3ad', borderRadius: 10, justifyContent: 'center', alignItems: 'center', left: 0, bottom: 0, backgroundColor: '#FFF' }}>
                                 <View style={{ width: 8, height: 8, backgroundColor: '#7eac39', borderRadius: 4 }}></View>
                             </View>
-                            <Text style={{ marginLeft: 10, color: '#63737a', fontSize: 15 }}>{item.patientName}</Text>
+                            <Text style={[{ marginLeft: 10, color: '#63737a', fontSize: 15 },Platform.OS == 'ios' ? {width:165}:{}]}>{item.patientName}</Text>
                         </View>
                     </View>
-                    <View style={{ marginTop: -2 }}>
+                    <View style={{ marginTop: -2,paddingRight:4 }}>
                         <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
                             <View style={{ marginTop: 2, width: 20, height: 20, borderWidth: 1.5, borderColor: '#91a3ad', borderRadius: 10, justifyContent: 'center', alignItems: 'center', left: 0, bottom: 0, backgroundColor: '#FFF' }}>
                                 <View style={{ width: 8, height: 8, backgroundColor: '#c84242', borderRadius: 4 }}></View>
@@ -82,12 +82,12 @@ class ListProfileScreen extends PureComponent {
                         <Text style={{ marginLeft: 10, color: '#045684' }}>Gần nhất: {item.latestTime ? item.latestTime.toDateObject('-').format('dd/MM/yyyy') : ''}</Text>
                     </View>
                 </View>
-                <View style={{ paddingHorizontal: 20, justifyContent: 'center', alignItems: 'center' }}>
+                <View style={{ paddingHorizontal: 20, justifyContent: 'center', alignItems: 'center',width: 85 }}>
                     <Text style={{ color: '#f36819', fontSize: 30 }}>{item.countTime}</Text>
-                    <Text>lần</Text>
+                    <Text>{constants.ehealth.time}</Text>
                 </View>
             </View>
-            <View style={{ height: 0.5, backgroundColor: '#00000050' }} />
+            <View style={{ height: 1, backgroundColor: '#00000050' }} />
         </TouchableOpacity >
     }
     onRefresh() {
@@ -125,7 +125,7 @@ class ListProfileScreen extends PureComponent {
         return (
             <ActivityPanel style={{ flex: 1 }}
                 // title="HỒ SƠ Y BẠ GIA ĐÌNH"
-                title={<Text>HỒ SƠ Y BẠ GIA ĐÌNH{'\n'}<Text style={{ fontSize: 12, fontWeight: 'normal' }}>Tổng: {this.state.listData ? this.state.listData.length : 0} thành viên</Text></Text>}
+                title={<Text>{constants.title.list_profile_ehealth}{'\n'}<Text style={{ fontSize: 12, fontWeight: 'normal' }}>{constants.ehealth.total}{this.state.listData ? this.state.listData.length : 0}{constants.ehealth.member}</Text></Text>}
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#22b060"

@@ -38,7 +38,7 @@ class TopSearch extends Component {
                             this.state.data.map((item, index) => {
                                 return <TouchableOpacity
                                     key={index}
-                                    // onPress={() => snackbar.show("Chức năng đang phát triển")}
+                                    // onPress={() => snackbar.show(constants.msg.app.in_development)}
                                     onPress={this.onItemClick.bind(this, item)}
                                     style={{ margin: 3, padding: 4, paddingLeft: 12, paddingRight: 12, borderRadius: 16, backgroundColor: 'rgb(0,151,124)' }}>
                                     <Text style={{ color: '#FFF', fontWeight: 'bold', maxWidth: 80, fontSize: 13 }} numberOfLines={1} ellipsizeMode='tail'>

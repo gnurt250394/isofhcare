@@ -6,6 +6,7 @@ import bookingProvider from '@data-access/booking-provider';
 import dateUtils from 'mainam-react-native-date-utils';
 import stringUtils from 'mainam-react-native-string-utils';
 import snackbar from '@utils/snackbar-utils';
+import constants from '@resources/strings';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 
@@ -19,6 +20,12 @@ class ViewInDateScreen extends Component {
             dayNames: ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'],
             hasResult: false
         }
+        this.viewCheckupResult = this.viewCheckupResult.bind(this);
+        this.viewMedicalTestResult = this.viewMedicalTestResult.bind(this);
+        this.viewDiagnosticResult = this.viewDiagnosticResult.bind(this);
+        this.viewMedicine = this.viewMedicine.bind(this);
+        this.viewMoney = this.viewMoney.bind(this);
+        this.viewSurgeryResult = this.viewSurgeryResult.bind(this);
     }
     componentDidMount() {
         let _dateSelected = this.props.navigation.state.params.dateSelected;
@@ -37,7 +44,8 @@ class ViewInDateScreen extends Component {
         let obj2 = {};
         patient.history.forEach(item => {
             let key = item.timeGoIn.toDateObject('-').ddmmyyyy();
-            obj2[key] = item;
+            if (!obj2[key])
+                obj2[key] = item;
         });
         for (var i = 1; i <= 31; i++) {
             try {
@@ -101,13 +109,15 @@ class ViewInDateScreen extends Component {
                                                 !(result.ListResulHoaSinh && result.ListResulHoaSinh.length) &&
                                                 !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
                                                 !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
-                                                !(result.ListResulViSinh && result.ListResulViSinh.length)
+                                                !(result.ListResulViSinh && result.ListResulViSinh.length) &&
+                                                !(result.ListResultCheckup && result.ListResultCheckup.length)
+
                                             )
                                         ) {
                                             this.setState({
                                                 hasResult: false,
                                                 isVisible: true,
-                                                messageError: "Bạn chưa có kết quả khám ở ngày này!"
+                                                messageError: constants.msg.ehealth.not_result_ehealth_in_day
                                             })
                                         } else {
                                             this.setState({
@@ -141,13 +151,31 @@ class ViewInDateScreen extends Component {
             // snackbar.show("Không có kết quả vào ngày này", "danger");
             this.setState({
                 isVisible: true,
-                messageError: "Không có kết quả khám nào. Bạn không đi khám ở ngày này!"
+                messageError: constants.msg.ehealth.not_result_of_this_date
             })
             return;
         };
         this.setState({ dateSelected: item }, () => {
             this.getDetailPatientHistory(item.patientHistory.patientHistoryId)
         })
+    }
+    viewCheckupResult() {
+        this.props.navigation.navigate("viewCheckupResult", { result: this.state.result, resultDetail: this.state.resultDetail })
+    }
+    viewMedicalTestResult() {
+        this.props.navigation.navigate("viewMedicalTestResult", { result: this.state.result, resultDetail: this.state.resultDetail })
+    }
+    viewDiagnosticResult() {
+        this.props.navigation.navigate("viewDiagnosticResult", { result: this.state.result, resultDetail: this.state.resultDetail })
+    }
+    viewSurgeryResult() {
+        this.props.navigation.navigate("viewSurgeryResult", { result: this.state.result, resultDetail: this.state.resultDetail })
+    }
+    viewMoney() {
+        this.props.navigation.navigate("viewMoney", { result: this.state.result, resultDetail: this.state.resultDetail })
+    }
+    viewMedicine() {
+        this.props.navigation.navigate("viewMedicine", { result: this.state.result, resultDetail: this.state.resultDetail })
     }
     renderCheckupResult() {
         if (this.state.result && this.state.result.ListResultCheckup && this.state.result.ListResultCheckup.length) {
@@ -158,14 +186,14 @@ class ViewInDateScreen extends Component {
             if (!note)
                 note = item.First_Diagnostic;
             if (note)
-                return <View style={styles.card}>
+                return <TouchableOpacity style={styles.card} onPress={this.viewCheckupResult}>
                     <View style={{ width: 10, height: 10, backgroundColor: '#ff4355', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
                     <View style={{ flex: 1, padding: 15 }}>
-                        <Text style={{ fontSize: 18 }}>Kết quả khám</Text>
+                        <Text style={{ fontSize: 18 }}>{constants.ehealth.result_ehealth}</Text>
                         <Text style={{ paddingTop: 5, color: '#ff4355', flex: 1 }}>{note}</Text>
                     </View>
                     <View style={{ width: 5, height: '100%', backgroundColor: '#ff4355', borderRadius: 2.5 }}></View>
-                </View>
+                </TouchableOpacity>
         }
         return null;
     }
@@ -177,16 +205,18 @@ class ViewInDateScreen extends Component {
             if (!note)
                 note = item.Result;
             if (!note)
-                note = item.First_Diagnostic;
+                note = item.Discussion;
+            if (!note)
+                note = item.Conclusion;
             if (note)
-                return <View style={styles.card}>
+                return <TouchableOpacity style={styles.card} onPress={this.viewDiagnosticResult}>
                     <View style={{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
                     <View style={{ flex: 1, padding: 15 }}>
-                        <Text style={{ fontSize: 18 }}>Kết quả chẩn đoán hình ảnh</Text>
+                        <Text style={{ fontSize: 18 }}>{constants.ehealth.image_result}</Text>
                         <Text style={{ paddingTop: 5, color: '#2e66e7', flex: 1 }}>{note}</Text>
                     </View>
                     <View style={{ width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 }}></View>
-                </View>
+                </TouchableOpacity>
         }
         return null;
     }
@@ -201,14 +231,14 @@ class ViewInDateScreen extends Component {
             // else {
             money = this.state.resultDetail.ListService.reduce((a, b) => a + b.PriceService, 0);
             // }
-            return <View style={styles.card}>
+            return <TouchableOpacity style={styles.card} onPress={this.viewMoney}>
                 <View style={{ width: 10, height: 10, backgroundColor: '#ff4355', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
                 <View style={{ flex: 1, padding: 15 }}>
-                    <Text style={{ fontSize: 18 }}>Tiền</Text>
+                    <Text style={{ fontSize: 18 }}>{constants.ehealth.money}</Text>
                     <Text style={{ paddingTop: 5, color: '#ff4355', flex: 1, fontWeight: 'bold' }}>{money.formatPrice() + " đ"}</Text>
                 </View>
                 <View style={{ width: 5, height: '100%', backgroundColor: '#ff4355', borderRadius: 2.5 }}></View>
-            </View>
+            </TouchableOpacity>
         }
         return null;
     }
@@ -225,18 +255,18 @@ class ViewInDateScreen extends Component {
             if (!note)
                 note = item.Macrosome;
             if (!note)
-                note = item.BiopsyLocation;
+                note = item.Microsome;
             if (!note)
-                note = item.ReportTemplate;
+                note = item.BiopsyLocation;
             if (note)
-                return <View style={styles.card}>
+                return <TouchableOpacity style={styles.card} onPress={this.viewSurgeryResult}>
                     <View style={{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
                     <View style={{ flex: 1, padding: 15 }}>
-                        <Text style={{ fontSize: 18 }}>Kết quả giải phẫu</Text>
+                        <Text style={{ fontSize: 18 }}>{constants.ehealth.surgery_result}</Text>
                         <Text style={{ paddingTop: 5, color: '#2e66e7', flex: 1 }}>{note}</Text>
                     </View>
                     <View style={{ width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 }}></View>
-                </View>
+                </TouchableOpacity>
         }
         return null;
     }
@@ -263,14 +293,14 @@ class ViewInDateScreen extends Component {
 
             let note = item.ServiceName + " " + item.Measure + ", " + item.Quantity + " " + item.Unit;
             if (note)
-                return <View style={styles.card}>
+                return <TouchableOpacity style={styles.card} onPress={this.viewMedicine}>
                     <View style={{ width: 10, height: 10, backgroundColor: '#fbaa21', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
                     <View style={{ flex: 1, padding: 15 }}>
-                        <Text style={{ fontSize: 18 }}>Thuốc</Text>
+                        <Text style={{ fontSize: 18 }}>{constants.ehealth.drug}</Text>
                         <Text style={{ paddingTop: 5, color: '#fbaa21', flex: 1 }}>{note}</Text>
                     </View>
                     <View style={{ width: 5, height: '100%', backgroundColor: '#fbaa21', borderRadius: 2.5 }}></View>
-                </View>
+                </TouchableOpacity>
         }
         return null;
     }
@@ -305,21 +335,21 @@ class ViewInDateScreen extends Component {
             }
 
             if (note)
-                return <View style={styles.card}>
+                return <TouchableOpacity style={styles.card} onPress={this.viewMedicalTestResult}>
                     <View style={{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
                     <View style={{ flex: 1, padding: 15 }}>
-                        <Text style={{ fontSize: 18 }}>Kết quả xét nghiệm</Text>
+                        <Text style={{ fontSize: 18 }}>{constants.ehealth.test_result}</Text>
                         <Text style={{ paddingTop: 5, color: '#2e66e7' }}>{note}</Text>
                     </View>
                     <View style={{ width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 }}></View>
-                </View>
+                </TouchableOpacity>
         }
         return null;
     }
     render() {
 
         return (
-            <ActivityPanel style={{ flex: 1 }} title="Y BẠ ĐIỆN TỬ"
+            <ActivityPanel style={{ flex: 1 }} title={constants.title.ehealth}
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#22b060"
@@ -413,7 +443,7 @@ class ViewInDateScreen extends Component {
                         }} onPress={() => {
                             this.props.navigation.navigate("viewDetail", { result: this.state.result, resultDetail: this.state.resultDetail })
                         }}>
-                            <Text style={{ fontWeight: 'bold', color: '#FFF', fontSize: 17 }}>ĐẦY ĐỦ KẾT QUẢ</Text>
+                            <Text style={{ fontWeight: 'bold', color: '#FFF', fontSize: 17 }}>{constants.ehealth.full_result}</Text>
                         </TouchableOpacity>
                     }
                 </View>
@@ -428,9 +458,9 @@ class ViewInDateScreen extends Component {
                     backdropTransitionOutTiming={1000}
                 >
                     <View style={{ backgroundColor: '#fff', marginHorizontal: 20, marginVertical: 60, borderRadius: 5 }}>
-                        <Text style={{ fontSize: 22, color: '#27AE60', textAlign: 'center', marginTop: 10, marginHorizontal: 20 }}>Thông báo</Text>
+                        <Text style={{ fontSize: 22, color: '#27AE60', textAlign: 'center', marginTop: 10, marginHorizontal: 20 }}>{constants.ehealth.notifi_text}</Text>
                         <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>{this.state.messageError}</Text>
-                        <TouchableOpacity onPress={() => this.setState({ isVisible: false })} style={{ justifyContent: 'center', alignItems: 'center', height: 41, backgroundColor: '#878787', borderBottomLeftRadius: 5, borderBottomRightRadius: 5 }}><Text style={{ color: '#fff' }}>OK, XONG</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.setState({ isVisible: false })} style={{ justifyContent: 'center', alignItems: 'center', height: 41, backgroundColor: '#878787', borderBottomLeftRadius: 5, borderBottomRightRadius: 5 }}><Text style={{ color: '#fff' }}>{constants.ehealth.modal_confirm}</Text></TouchableOpacity>
                     </View>
                 </Modal>
             </ActivityPanel>

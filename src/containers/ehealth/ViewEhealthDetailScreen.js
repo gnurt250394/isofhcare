@@ -28,22 +28,46 @@ const DEVICE_WIDTH = Dimensions.get('window').width;
 class ViewEhealthDetailScreen extends Component {
     constructor(props) {
         super(props)
-        let result = this.props.navigation.state.params.result;
-        let resultDetail = this.props.navigation.state.params.resultDetail;
-        console.log(result);
         this.state = {
-            result,
-            resultDetail,
-            detailsHospital:''
+            result : '',
+            resultDetail : '',
+            detailsHospital:'',
+            hospitalName:'',
+            user:''
         }
     }
-  
+    componentDidMount(){
+        let result = this.props.navigation.state.params.result;
+        let resultDetail = this.props.navigation.state.params.resultDetail;
+        let user = this.props.navigation.state.params.user 
+        let hospitalName = this.props.navigation.state.params.hospitalName
+
+        this.setState({
+            result :result,
+            resultDetail:resultDetail,
+            user:user,
+            hospitalName:hospitalName
+        })
+    }
+    componentWillReceiveProps(nextProps){
+        if(nextProps.navigation.state.params && nextProps.navigation.state.params.result){
+            let result = nextProps.navigation.state.params.result;
+            let resultDetail = nextProps.navigation.state.params.resultDetail;
+            let user = nextProps.navigation.state.params.user 
+            let hospitalName = nextProps.navigation.state.params.hospitalName
+            this.setState({
+                result :result,
+                resultDetail:resultDetail,
+                user:user,
+                hospitalName:hospitalName
+            })
+        }
+    }
     renderDetails = () =>{
-        let user = this.props.navigation.state.params && this.props.navigation.state.params.user ? this.props.navigation.state.params.user : ''
-        if(user){
+        if(this.state.user){
             return(
                 <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
-                <ProfileInfomation hospitalName ={this.props.navigation.state.params.hospitalName} avatar = {user.avatar} patientName = {user.ower_name} resultDetail={this.state.resultDetail} />
+                <ProfileInfomation hospitalName ={this.state.hospitalName} avatar = {this.state.user.avatar} patientName = {this.state.resultDetail.Profile.PatientName} resultDetail={this.state.resultDetail} />
                 <View style={{ height: 1, backgroundColor: '#27ae60', }} />
                 <CheckupResult result={this.state.result} />
                 <MedicalTestResult result={this.state.result} />
@@ -73,7 +97,7 @@ class ViewEhealthDetailScreen extends Component {
     render() {
 
         return (
-            <ActivityPanel style={{ flex: 1 }} title="CHI TIẾT Y BẠ"
+            <ActivityPanel style={{ flex: 1 }} title={constants.title.ehealth_details}
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#22b060"
