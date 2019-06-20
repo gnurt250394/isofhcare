@@ -45,6 +45,7 @@ module.exports = {
   filenamePDF: "ket_qua",
   gender:'Giới tính',
   select_gender:'Chọn giới tính',
+  none_data:'Không có dữ liệu',
   hospital: {
     BENH_VIEN_DAI_HOC_Y: 1
   },
@@ -330,6 +331,12 @@ module.exports = {
     go_home:'Về trang chủ',
     add_profile:'Thêm hồ sơ',
     add_relatives:'Thêm người thân',
+    payment_error:'Thanh toán không thành công!',
+    payment_error_message:'Chúng tôi gặp khó khăn trong quá trình kết nối với đối tác. Vui lòng gọi tới số hotline 0923678905 nếu như bạn đã bị trừ tiền.',
+    payment_code:'Mã giao dịch:',
+    service:'Dịch vụ:',
+    payment_price:'Số tiền thanh toán:',
+    change_payment_method:'Đổi phương thức thanh toán',
     status:{
       not_select_payment:'Chưa chọn hình thức',
       payment_isofh:'Ví Isofh',
@@ -346,7 +353,8 @@ module.exports = {
       confirm:'Đã xác nhận',
       have_profile:'Đã có hồ sơ',
       rejected:'Đã hủy (không phục vụ)'
-    }
+    },
+    
   },
   ehealth:{
     checkupResult:'KẾT QUẢ KHÁM',
@@ -397,8 +405,10 @@ module.exports = {
     list_profile_ehealth:'HỒ SƠ Y BẠ GIA ĐÌNH',
     search_profile:'Chọn hồ sơ',
     ehealth_details:'CHI TIẾT Y BẠ',
-    create_booking_success:'Đặt lịch khám'
-
+    create_booking_success:'Đặt lịch khám',
+    patient_history_screen:'Lịch sử đặt lịch',
+    booking:"Đặt khám",
+    location_near:'Địa điểm gần bạn'
   },
   api: {
     notification: {
