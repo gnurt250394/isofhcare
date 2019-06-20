@@ -229,7 +229,7 @@ class DetailsHistoryScreen extends Component {
               </View>
             </View>
             <View style={styles.viewSymptom}>
-              <Text><Text style={{ fontWeight: 'bold' }}>Triệu chứng: </Text> {this.state.booking.content}</Text>
+              <Text><Text style={{ fontWeight: 'bold' }}>Ghi chú: </Text> {this.state.booking.content}</Text>
               <View>
                 {this.renderImages()}
                 {/* <ScaledImage
