@@ -382,7 +382,6 @@ class ListProfileScreen extends Component {
         let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : ''
         let isMedicineTime = this.state.isMedicineTime ? 1 : 0
         let histories = JSON.parse(JSON.stringify(this.state.histories));
-        console.log()
         let id = this.state.dateSelected ? histories[this.state.dateSelected].history.id : histories[this.state.latestTime.format("yyyy-MM-dd")].history.id
         ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
 
@@ -444,6 +443,7 @@ class ListProfileScreen extends Component {
         }, () => {
             try {
                 let patientHistoryId = this.state.histories[this.state.dateSelected].history.patientHistoryId
+                
                 let hospitalId = this.state.patient.hospitalEntity.id
                 ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId).then(s => {
                     console.log(s,'ssssssss')
@@ -518,71 +518,13 @@ class ListProfileScreen extends Component {
         }
     }
     onShareEhealthWithProfile () {
-        
-        //check status 6
-        this.setState({
-            isLoading: true
-        }, () => {
-            try {
-                let patientHistoryId = this.state.histories[this.state.dateSelected].history.patientHistoryId
-                let hospitalId = this.state.patient.hospitalEntity.id
-                console.log(patientHistoryId)
-                ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId).then(s => {
-                    let resultDetail = null;
-                    let result = null;
-                    if (s.data && s.data.data) {
-                        if (s.data.data.result) {
-                            try {
-                                result = JSON.parse(s.data.data.result);
-                            } catch (error) {
-
-                            }
-                        }
-                        if (!result ||
-                            (
-                                !(result.ListDiagnostic && result.ListDiagnostic.length) &&
-                                !(result.ListMedicine && result.ListMedicine.length) &&
-                                !(result.ListResulGiaiPhau && result.ListResulGiaiPhau.length) &&
-                                !(result.ListResulHoaSinh && result.ListResulHoaSinh.length) &&
-                                !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
-                                !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
-                                !(result.ListResulViSinh && result.ListResulViSinh.length)&&
-                                !(result.ListResultCheckup && result.ListResultCheckup.length)
-                            )
-                        ) {
-                            throw "";
-                        }
-                        else {
-                            this.setState({
-                                isLoading: false
-                            }, () => {
-                                this.props.navigation.navigate('searchProfile', { dataPatient: this.state.dataPatient,lastDate:this.state.lastDate })
-
-                            });
-                        }
-                    }
-                }).catch(err => {
-                    this.setState({
-                        isLoading: false,
-                        status: 6,
-                        isVisible: true
-                    });
-                })
-            } catch (error) {
-                this.setState({
-                    isLoading: false,
-                    status: 6,
-                    isVisible: true
-                });
-            }
-
-        });
-
+        this.props.navigation.navigate('searchProfile', { dataPatient: this.state.dataPatient,lastDate:this.state.lastDate })
     }
     exportPdf() {
         this.setState({
             isLoading: true
         }, () => {
+           
             try {
                 let patientHistoryId = this.state.histories[this.state.dateSelected].history.patientHistoryId
                 let hospitalId = this.state.patient.hospitalEntity.id
@@ -604,28 +546,28 @@ class ListProfileScreen extends Component {
 
                             }
                         }
-                        if (!result ||
-                            (
-                                !(result.ListDiagnostic && result.ListDiagnostic.length) &&
-                                !(result.ListMedicine && result.ListMedicine.length) &&
-                                !(result.ListResulGiaiPhau && result.ListResulGiaiPhau.length) &&
-                                !(result.ListResulHoaSinh && result.ListResulHoaSinh.length) &&
-                                !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
-                                !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
-                                !(result.ListResulViSinh && result.ListResulViSinh.length) &&
-                                !(result.ListResultCheckup && result.ListResultCheckup.length)
+                        // if (!result ||
+                        //     (
+                        //         !(result.ListDiagnostic && result.ListDiagnostic.length) &&
+                        //         !(result.ListMedicine && result.ListMedicine.length) &&
+                        //         !(result.ListResulGiaiPhau && result.ListResulGiaiPhau.length) &&
+                        //         !(result.ListResulHoaSinh && result.ListResulHoaSinh.length) &&
+                        //         !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
+                        //         !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
+                        //         !(result.ListResulViSinh && result.ListResulViSinh.length) &&
+                        //         !(result.ListResultCheckup && result.ListResultCheckup.length)
                                 
-                            )
-                        ) {
-                            this.setState({
-                                isLoading: false,
-                                status: 6,
-                                isVisible: true
-                            });
-                            return;
-                        }
+                        //     )
+                        // ) {
+                        //     this.setState({
+                        //         isLoading: false,
+                        //         status: 6,
+                        //         isVisible: true
+                        //     });
+                        //     return;
+                        // }
 
-                        if (result && resultDetail) {
+                        // if (result && resultDetail) {
                             result.hospital = this.props.ehealth.hospital.hospital;
                             this.exportPdfCom.getWrappedInstance().exportPdf({
                                 type: "all",
@@ -634,10 +576,10 @@ class ListProfileScreen extends Component {
                             }, () => {
                                 this.setState({ isLoading: false });
                             });
-                        }
-                        else {
+                        // }
+                        // else {
                             this.setState({ isLoading: false });
-                        }
+                        // }
                     }
                     else {
                         this.setState({ isLoading: false });
