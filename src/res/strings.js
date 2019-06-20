@@ -41,7 +41,11 @@ module.exports = {
   later: "Để sau",
   input_code: "Nhập mã xác thực",
   dob: "Ngày sinh",
+  select_dob:'Chọn ngày sinh',
   filenamePDF: "ket_qua",
+  gender:'Giới tính',
+  select_gender:'Chọn giới tính',
+  none_data:'Không có dữ liệu',
   hospital: {
     BENH_VIEN_DAI_HOC_Y: 1
   },
@@ -118,7 +122,10 @@ module.exports = {
       check_connection: "Vui lòng kiểm tra lại kết nối internet",
       pull_to_reload_app: "Kéo xuống để tải lại danh sách",
       in_development: "Chức năng đang phát triển",
-      not_internet:'Không có kết nối mạng'
+      not_internet:'Không có kết nối mạng',
+      text_without_500:'Không cho phép nhập quá 500 kí tự',
+      err_try_again:'Có lỗi, xin vui lòng thử lại',
+      dob_must_lesser_150:'Không cho phép chọn lớn hơn 150 tuổi'
     },
     upload: {
       upload_image_error: "Upload ảnh không thành công"
@@ -216,7 +223,13 @@ module.exports = {
       user_not_login:'Bạn chưa đăng nhập vui lòng',
       login:'Đăng nhập',
       register:'Đăng ký',
-      phone_number_not_found:'Xác minh số điện thoại không thành công'
+      phone_number_not_found:'Xác minh số điện thoại không thành công',
+      fullname_not_null:'Họ và tên không được bỏ trống',
+      text_without_255:'Không cho phép nhập quá 255 kí tự',
+      input_name:"Nhập họ tên",
+      email_not_null:'Email không được bỏ trống',
+      email_does_not_exits:'Email không hợp lệ',
+      email_apply_with_people_15_old:'Vui lòng nhập email với người trên 15 tuổi'
     },
     facility: {
       please_select_value_for_rating: "Vui lòng chọn giá trị đánh giá",
@@ -241,8 +254,10 @@ module.exports = {
       re_examination_in_date: 'Bạn có lịch tái khám vào ngày ',
       examination_in_date: 'Bạn có lịch khám lại vào ngày',
       not_re_examination: 'Bạn không có lịch tái khám nào!',
-      not_examination: 'Bạn không có lịch khám lại nào!'
-      
+      not_examination: 'Bạn không có lịch khám lại nào!',
+      not_result_ehealth_in_day:'Bạn chưa có kết quả khám ở ngày này!',
+      not_select_time_drug:'Bạn chưa chọn giờ uống thuốc',
+
 
     },
     question: {
@@ -258,11 +273,88 @@ module.exports = {
       booking_must_equal_datetime:'Đặt khám phải cùng ngày giờ với lịch làm việc',
       booking_must_login:"Vui lòng đăng nhập để thực hiện",
       booking_err:'Đặt khám không thành công',
-      booking_note: "Ghi chú và mô tả triệu chứng"
+      booking_note: "Ghi chú và mô tả triệu chứng",
+      image_without_five:'Chỉ được chọn tối đa 5 ảnh',
+      not_booking_macth_require_date:'Không có lịch khám trong ngày thoả mãn yêu cầu của bạn, xin vui lòng chọn ngày khác',
+      contact_not_null:"Liên lạc với tôi không được bỏ trống",
+      profile_not_null:"Hồ sơ không được bỏ trống",
+      require_not_null:"Yêu cầu không được bỏ trống",
+      service_not_null:'Dịch vụ không được bỏ trống',
+      date_booking_not_null:"Ngày khám không được bỏ trống",
+      location_not_null:"Địa điểm không được bỏ trống",
+      schedule_not_null :"Giờ khám không được bỏ trống",
+      image_loading:'Một số ảnh đang được tải lên. Vui lòng chờ',
+      image_load_err:'Ảnh tải lên bị lỗi, vui lòng kiểm tra lại',
+      please_select_require:"Vui lòng chọn yêu cầu khám",
+      please_select_location:"Vui lòng chọn địa điểm khám",
+      please_select_service:'Vui lòng chọn dịch vụ',
+      booking_expired:'Phiên đặt khám của bạn đã hết hạn. Vui lòng thực hiện lại',
+      booking_err2:'Xác nhận đặt khám không thành công',
+      create_profile_success:'Bạn đã tạo hồ sơ thành công',
+      create_relatives_success:'Bạn đã thêm người thân thành công',
+      profile_arealy_exist:"Hồ sơ đã tồn tại trong hệ thống",
+      cannot_show_details_booking:'Không thể xem chi tiết đặt khám này',
+      
     },
     message:{
       none_image:'Không có ảnh nào'
     }
+  },
+  booking:{
+    select_profile:'Chọn hồ sơ',
+    require:'Yêu cầu',
+    select_require:"Chọn yêu cầu",
+    location:'Địa điểm',
+    select_location:'Chọn địa điểm',
+    service:'Dịch vụ',
+    select_service:'Chọn dịch vụ',
+    date_booking:'Ngày khám',
+    select_date_booking:"Chọn ngày khám",
+    select_time_booking:'Chọn giờ khám',
+    select_time_note:'Gợi ý: Chọn những giờ màu xanh sẽ giúp bạn được phục vụ nhanh hơn',
+    contact_me:'Liên lạc với tôi qua',
+    phone:'Điện thoại',
+    sms:'SMS',
+    simptom_note:'Mô tả triệu chứng sẽ giúp bạn được phục vụ tốt hơn',
+    payment_csyt:'Thanh toán sau tại CSYT',
+    payment_payoo:"PAYOO - Cửa hàng tiện ích",
+    booking_success:'Đặt khám thành công!',
+    name:'Họ tên:',
+    location_booking:'Địa chỉ đặt khám:',
+    time:'Thời gian:',
+    payment_method:'Hình thức thanh toán:',
+    code_payment:'Mã thanh toán:',
+    payment_duration:'Hạn thanh toán:',
+    code:'Mã code:',
+    code_booking:'Mã đặt khám:',
+    booking_send:'Lịch đặt khám của bạn đã được gửi đi. Vui lòng đến trước hẹn 15 phút để thực hiện các thủ tục khác.',
+    go_home:'Về trang chủ',
+    add_profile:'Thêm hồ sơ',
+    add_relatives:'Thêm người thân',
+    payment_error:'Thanh toán không thành công!',
+    payment_error_message:'Chúng tôi gặp khó khăn trong quá trình kết nối với đối tác. Vui lòng gọi tới số hotline 0923678905 nếu như bạn đã bị trừ tiền.',
+    payment_code:'Mã giao dịch:',
+    service:'Dịch vụ:',
+    payment_price:'Số tiền thanh toán:',
+    change_payment_method:'Đổi phương thức thanh toán',
+    status:{
+      not_select_payment:'Chưa chọn hình thức',
+      payment_isofh:'Ví Isofh',
+      payment_VNPAY:'VNPAY',
+      payment_CSYT:'Thanh toán sau tại CSYT',
+      payment_payoo:'Thanh toán Payoo',
+      payment_payoo2:'Payoo - Cửa hàng tiện ích',
+      pending:'Chờ phục vụ',
+      cancel:'Đã huỷ (không đến)',
+      payment_failer:'Thanh toán thất bại',
+      paymented:'Đã thanh toán',
+      payment_last:'Thanh toán sau',
+      payment_pending:'Chờ thanh toán',
+      confirm:'Đã xác nhận',
+      have_profile:'Đã có hồ sơ',
+      rejected:'Đã hủy (không phục vụ)'
+    },
+    
   },
   ehealth:{
     checkupResult:'KẾT QUẢ KHÁM',
@@ -272,14 +364,51 @@ module.exports = {
     ehealth_location:'Các Cơ Sở Y Tế đã khám',
     not_result_ehealth_location:'Hiện tại chưa có thông tin',
     lastTime:'Lần gần nhất: ',
-    lastTime2:'Gần nhất: '
+    lastTime2:'Gần nhất: ',
+    time:'lần',
+    total:'Tổng: ',
+    member:' thành viên',
+    cancel:'Hủy',
+    inputKeyword:"Nhập từ khóa tìm kiếm",
+    lastSearch:'Tìm kiếm gần đây',
+    not_result_for_last_search:'Không có hồ sơ chia sẻ gần đây ',
+    not_result_for_keyword:'Không có kết quả nào cho hồ sơ ',
+    result_ehealth:'Kết quả khám',
+    image_result:'Kết quả chẩn đoán hình ảnh',
+    money:'Tiền',
+    surgery_result:'Kết quả giải phẫu',
+    drug:'Thuốc',
+    test_result:'Kết quả xét nghiệm',
+    full_result:'ĐẦY ĐỦ KẾT QUẢ',
+    notifi_text:'Thông báo',
+    modal_confirm:'OK, XONG',
+    suggestion:'Suggestion',
+    re_examination:'Lịch tái khám',
+    share_ehealth:"Chia sẻ y bạ",
+    note:'Ghi chú',
+    clock:'Thời gian',
+    redmine_drug:'Nhắc uống thuốc'
+  },
+  actionSheet:{
+    orther:'Khác',
+    cancel:'Hủy',
+    profile_on_isofhcare:'Hồ sơ trên ISOFHCARE',
+    cancel2:'Hủy bỏ',
+    confirm:'Xác nhận',
+    save:'Lưu',
+    male:'Nam',
+    female:'Nữ'
+
   },
   title:{
     ehealth:'Y BẠ ĐIỆN TỬ',
     list_profile_ehealth:'HỒ SƠ Y BẠ GIA ĐÌNH',
     search_profile:'Chọn hồ sơ',
-    ehealth_details:'CHI TIẾT Y BẠ'
-
+    ehealth_details:'CHI TIẾT Y BẠ',
+    create_booking_success:'Đặt lịch khám',
+    patient_history_screen:'Lịch sử đặt lịch',
+    booking:"Đặt khám",
+    location_near:'Địa điểm gần bạn'
   },
   api: {
     notification: {

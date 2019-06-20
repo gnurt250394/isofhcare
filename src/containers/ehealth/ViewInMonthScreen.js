@@ -372,7 +372,7 @@ class ListProfileScreen extends Component {
 
             }
         } else {
-            snackbar.show('Bạn chưa chọn giờ uống thuốc', 'danger');
+            snackbar.show(constants.msg.ehealth.not_select_time_drug, 'danger');
         }
     }
     onBlur = () => {
@@ -446,16 +446,13 @@ class ListProfileScreen extends Component {
                 
                 let hospitalId = this.state.patient.hospitalEntity.id
                 ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId).then(s => {
-                    console.log(s,'ssssssss')
                     let resultDetail = null;
                     let result = null;
                     if (s.data && s.data.data) {
                         if (s.data.data.result) {
                             try {
                                 result = JSON.parse(s.data.data.result);
-                                console.log('co ket qua',result)
                             } catch (error) {
-                                console.log(error,'errorerror')
                             }
                         }
                         if (!result ||
@@ -471,7 +468,6 @@ class ListProfileScreen extends Component {
 
                             )
                         ) {
-                            console.log('ko kq',result)
                             throw "";
                         }
                         else {
@@ -485,7 +481,6 @@ class ListProfileScreen extends Component {
                         }
                     }
                 }).catch(err => {
-                    console.log(err,'err')
                     this.setState({
                         isLoading: false,
                         status: 6,
@@ -493,7 +488,6 @@ class ListProfileScreen extends Component {
                     });
                 })
             } catch (error) {
-                console.log(error,'error')
                 this.setState({
                     isLoading: false,
                     status: 6,
@@ -636,30 +630,30 @@ class ListProfileScreen extends Component {
                                     this.setState({ suggestions: s })
                                 }} value={this.state.suggestions} underlineColorAndroid={'#fff'} style={{ marginLeft: 5, color: '#9caac4', fontSize: 18, width: '95%' }} placeholder={'Bạn cần làm gì?'}></TextInput>
                             </View>
-                            <Text style={{ color: '#bdc6d8', fontSize: 15 }}>Suggestion</Text>
+                            <Text style={{ color: '#bdc6d8', fontSize: 15 }}>{constants.ehealth.suggestion}</Text>
                             <View style={styles.viewBTnSuggest}>
                                 <TouchableOpacity onPress={this.onPressAppointment} style={[styles.btnReExamination, { backgroundColor: '#4CD565', }]}>
-                                    <Text style={{ color: '#fff', padding: 2 }}>Lịch tái khám</Text>
+                                    <Text style={{ color: '#fff', padding: 2 }}>{constants.ehealth.re_examination}</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={this.onShareEhealth} style={[styles.btnReExamination, { backgroundColor: '#2E66E7', }]}>
-                                    <Text style={{ color: '#fff', padding: 2 }}>Chia sẻ y bạ</Text>
+                                    <Text style={{ color: '#fff', padding: 2 }}>{constants.ehealth.share_ehealth}</Text>
                                 </TouchableOpacity>
                             </View>
                             <View style={{ height: 1, backgroundColor: '#97979710', marginVertical: 10 }} />
                             <View>
-                                <Text style={styles.txLabel}>Ghi chú</Text>
+                                <Text style={styles.txLabel}>{constants.ehealth.note}</Text>
                                 <TextInput onBlur={this.onBlur} multiline={true} onChangeText={s => {
                                     this.setState({ note: s })
                                 }} value={this.state.note} underlineColorAndroid={'#fff'} style={[styles.txContent,]} placeholder={'Nhập ghi chú'}></TextInput>
                             </View>
                             <View>
-                                <Text style={styles.txLabel}>Thời gian</Text>
+                                <Text style={styles.txLabel}>{constants.ehealth.clock}</Text>
                                 <TouchableOpacity onPress={this.onPressTime}><Text style={styles.txContent}>{this.state.date ? (new Date().format("dd/MM/yyyy") + " " + this.state.date).toDateObject('/').format('HH:mm') : 'Chọn giờ'}</Text>
                                 </TouchableOpacity>
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <View >
-                                    <Text style={styles.txLabel}>Nhắc uống thuốc</Text>
+                                    <Text style={styles.txLabel}>{constants.ehealth.redmine_durg}</Text>
                                     <TouchableOpacity onPress={this.onPressTimeAlarm}><Text style={styles.txContent}><Text style={styles.txContent}>{this.state.timeAlarm ? (new Date().format("dd/MM/yyyy") + " " + this.state.timeAlarm).toDateObject('/').format('HH:mm') : 'Chọn giờ'}</Text></Text></TouchableOpacity>
                                 </View>
                                 <Switch onValueChange={this.onSetAlarm} trackColor={{
@@ -694,14 +688,14 @@ class ListProfileScreen extends Component {
                     backdropTransitionOutTiming={1000}
                 >
                     <View style={{ backgroundColor: '#fff', marginHorizontal: 20, marginVertical: 60, borderRadius: 5 }}>
-                        <Text style={{ fontSize: 22, color: '#27AE60', textAlign: 'center', marginTop: 10, marginHorizontal: 20 }}>Thông báo</Text>
+                        <Text style={{ fontSize: 22, color: '#27AE60', textAlign: 'center', marginTop: 10, marginHorizontal: 20 }}>{constants.ehealth.notifi_text}</Text>
                         {this.renderTextContent()}
                         <TouchableOpacity onPress={() => this.setState({ isVisible: false })} style={{ justifyContent: 'center', alignItems: 'center', height: 41, backgroundColor: '#878787', borderBottomLeftRadius: 5, borderBottomRightRadius: 5 }}><Text style={{ color: '#fff' }}>OK, XONG</Text></TouchableOpacity>
                     </View>
                 </Modal>
                 <ActionSheet
                     ref={o => this.actionSheetGetTicket = o}
-                    options={["Hồ sơ trên ISOFHCARE", "Khác", "Hủy"]}
+                    options={[constants.actionSheet.profile_on_isofhcare, constants.actionSheet.orther, constants.actionSheet.cancel]}
                     cancelButtonIndex={2}
                     destructiveButtonIndex={2}
                     onPress={(index) => {

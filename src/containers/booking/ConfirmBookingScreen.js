@@ -69,12 +69,12 @@ class ConfirmBookingScreen extends Component {
                         break;
                     case 5:
                         this.setState({ isLoading: false }, () => {
-                            snackbar.show("Phiên đặt khám của bạn đã hết hạn. Vui lòng thực hiện lại", "danger");
+                            snackbar.show(constants.msg.booking.booking_expired, "danger");
                         });
                 }
             }).catch(e => {
                 this.setState({ isLoading: false }, () => {
-                    snackbar.show("Xác nhận đặt khám không thành công", "danger");
+                    snackbar.show(constants.msg.booking.booking_err2, "danger");
                 });
             });
         })
