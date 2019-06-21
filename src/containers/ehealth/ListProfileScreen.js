@@ -2,7 +2,7 @@ import React, { Component, PropTypes, PureComponent } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
 import { View, Text, ScrollView, FlatList, TouchableOpacity, StyleSheet, RefreshControl, Platform } from 'react-native';
 import { connect } from 'react-redux';
-import ScaledImage from 'mainam-react-native-scaleimage';
+import ScaleImage from 'mainam-react-native-scaleimage';
 import Dash from 'mainam-react-native-dash-view';
 import bookingProvider from '@data-access/booking-provider';
 import hospitalProvider from '@data-access/hospital-provider';
