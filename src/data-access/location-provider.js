@@ -104,12 +104,10 @@ module.exports = {
                 .catch(error => callback(null, error));  // error is a Javascript Error object
     },
     saveCurrentLocation(latitude, longitude) {
-        debugger;
         datacacheProvider.save("", constants.key.storage.CURRENT_LOCATION, { latitude, longitude }, true);
     },
     getCurrentLocationHasSave() {
         return new Promise((resolve, reject) => {
-            debugger;
             datacacheProvider.readPromise("", constants.key.storage.CURRENT_LOCATION, true).then(s => {
                 resolve(s);
             }).catch(e => {

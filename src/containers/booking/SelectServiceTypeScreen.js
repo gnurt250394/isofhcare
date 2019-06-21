@@ -90,8 +90,8 @@ class SelectServiceTypeScreen extends Component {
     render() {
         return (
             <ActivityPanel
-                backButton={<TouchableOpacity style={{ paddingLeft: 20 }} onPress={() => this.props.navigation.pop()}><Text>Hủy</Text></TouchableOpacity>}
-                titleStyle={{ marginRight: 0 }} title={"Chọn loại dịch vụ"}
+                backButton={<TouchableOpacity style={{ paddingLeft: 20 }} onPress={() => this.props.navigation.pop()}><Text>{constants.actionSheet.cancel}</Text></TouchableOpacity>}
+                titleStyle={{ marginRight: 0 }} title={constants.title.select_service_type}
                 isLoading={this.state.isLoading} menuButton={this.renderSearchButton()} showFullScreen={true}
             >
                 {
@@ -104,7 +104,7 @@ class SelectServiceTypeScreen extends Component {
                             backgroundColor: constants.colors.actionbar_color,
                             flexDirection: 'row'
                         }}>
-                            <TextInput autoFocus={true} style={{ flex: 1, color: constants.colors.actionbar_title_color, padding: 10 }} placeholderTextColor='#dddddd' underlineColorAndroid="transparent" placeholder={"Nhập từ khóa tìm kiếm"} onChangeText={(s) => {
+                            <TextInput autoFocus={true} style={{ flex: 1, color: constants.colors.actionbar_title_color, padding: 10 }} placeholderTextColor='#dddddd' underlineColorAndroid="transparent" placeholder={constants.ehealth.inputKeyword} onChangeText={(s) => {
                                 this.searchTextChange(s);
                             }} returnKeyType="search" onSubmitEditing={() => { this.onSearch() }} />
                             <TouchableOpacity onPress={() => this.onSearch()}>
@@ -126,7 +126,7 @@ class SelectServiceTypeScreen extends Component {
                             (!this.state.listServiceTypeSearch || this.state.listServiceTypeSearch.length == 0) ?
                             <View style={{ width: '100%', marginTop: 50, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center' }}>
                                 <ScaleImage source={require("@images/empty_result.png")} width={120} />
-                                <Text>Không tìm thấy loại dịch vụ nào phù hợp <Text style={{ fontWeight: 'bold', color: constants.colors.actionbar_title_color }}>{this.state.searchValue}</Text></Text>
+                                <Text>{constants.none_service_type_match}<Text style={{ fontWeight: 'bold', color: constants.colors.actionbar_title_color }}>{this.state.searchValue}</Text></Text>
                             </View> : null
                     }
                     ListFooterComponent={() => <View style={{ height: 10 }} />}
@@ -149,8 +149,7 @@ class SelectServiceTypeScreen extends Component {
 }
 function mapStateToProps(state) {
     return {
-        userApp: state.userApp,
-        booking: state.dhyBooking
+        userApp: state.userApp
     };
 }
 
