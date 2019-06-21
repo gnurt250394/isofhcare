@@ -102,8 +102,8 @@ android {
         applicationId "com.isofh.isofhcare"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 35
-        versionName "4.1"
+        versionCode 61
+        versionName "4.3"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -219,7 +219,6 @@ dependencies {
     implementation 'com.facebook.fresco:animated-gif:1.3.0'
     implementation project(':react-native-html-to-pdf')
     implementation 'com.android.support:multidex:1.0.3'
-    compile project(':react-native-alarm-notification')  // <--- add project
 
 }
 

@@ -126,7 +126,7 @@ class EnterPasswordScreen extends Component {
     return (
       <ActivityPanel
         style={{ flex: 1 }}
-        title="Đăng ký"
+        title={constants.register}
         titleStyle={{ textAlign: 'left', marginLeft: 20 }}
         showFullScreen={true}
       >
@@ -155,8 +155,8 @@ class EnterPasswordScreen extends Component {
                       minlength: 8
                     },
                     messages: {
-                      required: "Mật khẩu không được bỏ trống",
-                      minlength: "Mật khẩu dài ít nhất 8 ký tự"
+                      required: constants.password_not_null,
+                      minlength: constants.password_length_8
                     }
                   }}
                   placeholder={constants.input_password}
@@ -164,7 +164,7 @@ class EnterPasswordScreen extends Component {
                 />
                 <TextField
                   getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-                    placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Xác nhận mật khẩu"}
+                    placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.confirm_new_password}
                     secureTextEntry={true}
                     onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
                   onChangeText={s => {
@@ -177,8 +177,8 @@ class EnterPasswordScreen extends Component {
                       equalTo: this.state.password
                     },
                     messages: {
-                      required: "Xác nhận mật khẩu không được bỏ trống",
-                      equalTo: "Mật khẩu và xác nhận mật khẩu không giống nhau"
+                      required: constants.confirm_password_not_null,
+                      equalTo: constants.new_password_not_match
                     }
                   }}
                   placeholder={constants.input_password}
@@ -189,7 +189,7 @@ class EnterPasswordScreen extends Component {
           </KeyboardAvoidingView>
         </ScrollView>
         <TouchableOpacity style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center', marginBottom: 20 }} onPress={this.register.bind(this)}>
-          <Text style={{ color: '#FFF', fontSize: 17 }}>{"HOÀN THÀNH"}</Text>
+          <Text style={{ color: '#FFF', fontSize: 17 }}>{constants.finish}</Text>
         </TouchableOpacity>
       </ActivityPanel>
 

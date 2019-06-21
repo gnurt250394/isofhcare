@@ -7,7 +7,6 @@ import dateUtils from 'mainam-react-native-date-utils';
 import snackbar from '@utils/snackbar-utils';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import { Card } from 'native-base';
-import ReactNativeAN from 'react-native-alarm-notification';
 import ActionSheet from 'react-native-actionsheet'
 import { Notification, NotificationOpen } from 'react-native-firebase';
 import DateTimePicker from "mainam-react-native-date-picker";
@@ -28,25 +27,6 @@ LocaleConfig.locales['en'] = {
 
 LocaleConfig.defaultLocale = 'en';
 var fireDate
-var alarmNotifData = {
-    id: "12345",                                  // Required
-    title: "Isofh Care ",               // Required
-    message: "Đã đến giờ uống thuốc",           // Required
-    channel: "isofh-care-channel",                     // Required. Same id as specified in MainApplication's onCreate method
-    ticker: "My Notification Ticker",
-    auto_cancel: false,                            // default: true
-    vibrate: true,
-    vibration: 500,                               // default: 100, no vibration if vibrate: false
-    small_icon: "ic_launcher",                    // Required
-    large_icon: "ic_launcher",
-    play_sound: true,
-    sound_name: null,                             // Plays custom notification ringtone if sound_name: null
-    color: "red",
-    schedule_once: false,                          // Works with ReactNativeAN.scheduleAlarm so alarm fires once
-    tag: 'some_tag',
-    fire_date: fireDate,                          // Date for firing alarm, Required for ReactNativeAN.scheduleAlarm.
-    data: { foo: "bar" },
-}
 
 class ListProfileScreen extends Component {
 

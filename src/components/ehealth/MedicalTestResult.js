@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import ScaleImage from "mainam-react-native-scaleimage";
 import constants from '@resources/strings';
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
-import resultUtils from '@ehealth/daihocy/utils/result-utils';
+import resultUtils from '@ehealth/utils/result-utils';
 import ActionSheet from 'react-native-actionsheet'
 
 

@@ -15,7 +15,6 @@ const DEVICE_WIDTH = Dimensions.get('window').width;
 import ImageLoad from 'mainam-react-native-image-loader';
 import ScaledImage from "mainam-react-native-scaleimage";
 import { Table, Row } from 'react-native-table-component';
-import ExportPDF from '@ehealth/daihocy/components/ExportPDF';
 
 class CheckupResult extends Component {
     constructor(props) {
@@ -77,14 +76,14 @@ class CheckupResult extends Component {
                 {
                     value ?
                         <View style={{ flexDirection: 'row' }}>
-                            <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
+                            <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
                             <Text style={{ marginLeft: 10, marginBottom: 10 }}>{value}</Text>
                         </View> : null
                 }
                 {
                     value2 ?
                         <View style={{ flexDirection: 'row' }}>
-                            <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
+                            <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
                             <Text style={{ marginLeft: 10, marginBottom: 10 }}>{value2}</Text>
                         </View> : null
                 }
@@ -120,9 +119,9 @@ class CheckupResult extends Component {
                 style={{ padding: 10 }} key={index}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 30 }}>
                     <Text style={{ flex: 1, fontWeight: 'bold', fontSize: 15, color: constants.colors.primary_bold }}>{item.ServiceName}</Text>
-                    <TouchableOpacity onPress={() => this.exportPdf()}>
+                    {/* <TouchableOpacity onPress={() => this.exportPdf()}>
                         <Text style={{ borderColor: '#065cb4', borderWidth: 2, paddingLeft: 12, paddingRight: 12, paddingTop: 8, paddingBottom: 8, borderRadius: 20, color: "#065cb4", fontWeight: 'bold' }}>Xuất PDF</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
                 <View style={styles.slide}>
 
