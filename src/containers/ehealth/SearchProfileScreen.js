@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { View, FlatList, TouchableOpacity, Text, TextInput, ActivityIndicator } from 'react-native'
+import { View, FlatList, TouchableOpacity, Text, TextInput, ActivityIndicator,StyleSheet } from 'react-native'
 import { connect } from 'react-redux';
 import ActivityPanel from '@components/ActivityPanel'
 import serviceTypeProvider from '@data-access/service-type-provider';
@@ -244,15 +244,8 @@ class SearchProfileScreen extends Component {
             >
                 {
                     this.state.showSearch ?
-                        <View style={{
-                            justifyContent: 'space-between',
-                            elevation: 5,
-                            height: 55,
-                            justifyContent: 'center', alignItems: 'center',
-                            backgroundColor: constants.colors.actionbar_color,
-                            flexDirection: 'row'
-                        }}>
-                            <TextInput autoFocus={true} style={{ flex: 1, color: constants.colors.actionbar_title_color, padding: 10 }} placeholderTextColor='#dddddd' underlineColorAndroid="transparent" placeholder={constants.ehealth.inputKeyword} onChangeText={(s) => {
+                        <View style={styles.viewSearch}>
+                            <TextInput autoFocus={true} style={styles.textInput} placeholderTextColor='#dddddd' underlineColorAndroid="transparent" placeholder={constants.ehealth.inputKeyword} onChangeText={(s) => {
                                 this.searchTextChange(s);
                             }} returnKeyType="search" onSubmitEditing={this.onRefreshList} />
                             <TouchableOpacity onPress={this.onRefreshList}>
@@ -301,6 +294,19 @@ class SearchProfileScreen extends Component {
         )
     }
 }
+const styles = StyleSheet.create({
+   viewSearch:{
+    justifyContent: 'space-between',
+    elevation: 5,
+    height: 55,
+    justifyContent: 'center', alignItems: 'center',
+    backgroundColor: constants.colors.actionbar_color,
+    flexDirection: 'row'
+},  
+    textInput:{ flex: 1, color: constants.colors.actionbar_title_color, padding: 10 },
+    
+
+})
 function mapStateToProps(state) {
     return {
         userApp: state.userApp,
