@@ -3,7 +3,6 @@ import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Keyboa
 import { connect } from 'react-redux';
 import ScaleImage from "mainam-react-native-scaleimage";
 import constants from '@resources/strings';
-import ExportPDF from '@ehealth/daihocy/components/ExportPDF';
 
 class CheckupResult extends Component {
     constructor(props) {
@@ -50,7 +49,7 @@ class CheckupResult extends Component {
 
                             <Text style={styles.diagnosticLabel}>Vị trí sinh thiết</Text>
                             <View style={{ flexDirection: 'row' }}>
-                                <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
+                                <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
                                 {this.renderItem(item.BiopsyLocation)}
                             </View>
                         </View> : null
@@ -62,7 +61,7 @@ class CheckupResult extends Component {
 
                             <Text style={styles.diagnosticLabel}>Vị thể</Text>
                             <View style={{ flexDirection: 'row' }}>
-                                <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
+                                <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
                                 {this.renderItem(item.Microsome)}
                             </View>
                         </View> : null
@@ -74,7 +73,7 @@ class CheckupResult extends Component {
 
                             <Text style={styles.diagnosticLabel}>Đại thể</Text>
                             <View style={{ flexDirection: 'row' }}>
-                                <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
+                                <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
                                 {this.renderItem(item.Macrosome)}
                             </View>
                         </View> : null
@@ -86,7 +85,7 @@ class CheckupResult extends Component {
 
                             <Text style={styles.diagnosticLabel}>Kết quả</Text>
                             <View style={{ flexDirection: 'row' }}>
-                                <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
+                                <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
                                 {this.renderItem(item.Result + item.Discussion)}
                             </View>
                         </View> : null
@@ -100,9 +99,9 @@ class CheckupResult extends Component {
                                 <View style={{ flexDirection: 'row', marginTop: 10 }}>
                                     {
                                         item.IsVerified ?
-                                            <ScaleImage source={require("@ehealth/daihocy/resources/images/check.png")} width={12} style={{ marginTop: 4, marginRight: 7 }} />
+                                            <ScaleImage source={require("@images/new/ehealth/check.png")} width={12} style={{ marginTop: 4, marginRight: 7 }} />
                                             :
-                                            <ScaleImage source={require("@ehealth/daihocy/resources/images/uncheck.png")} width={12} style={{ marginTop: 4, marginRight: 7 }} />
+                                            <ScaleImage source={require("@images/new/ehealth/uncheck.png")} width={12} style={{ marginTop: 4, marginRight: 7 }} />
                                     }
                                     <Text style={styles.diagnosticLabel1}>{item.NameLine}</Text>
                                 </View>
@@ -120,7 +119,7 @@ class CheckupResult extends Component {
 
                             <Text style={styles.diagnosticLabel}>Kết luận</Text>
                             <View style={{ flexDirection: 'row' }}>
-                                <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
+                                <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
                                 {
                                     this.renderItem(item.Conclusion)
                                 }

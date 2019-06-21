@@ -206,8 +206,7 @@ const styles = StyleSheet.create({
 });
 function mapStateToProps(state) {
     return {
-        userApp: state.userApp,
-        booking: state.dhyBooking
+        userApp: state.userApp
     };
 }
 

@@ -149,8 +149,7 @@ class SelectServiceTypeScreen extends Component {
 }
 function mapStateToProps(state) {
     return {
-        userApp: state.userApp,
-        booking: state.dhyBooking
+        userApp: state.userApp
     };
 }
 

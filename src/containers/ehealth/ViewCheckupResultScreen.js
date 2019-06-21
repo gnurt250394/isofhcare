@@ -7,7 +7,6 @@ import Dash from 'mainam-react-native-dash-view';
 import bookingProvider from '@data-access/booking-provider';
 import hospitalProvider from '@data-access/hospital-provider';
 import constants from '@resources/strings';
-import constants2 from '@ehealth/daihocy/resources/strings';
 import dateUtils from 'mainam-react-native-date-utils';
 import stringUtils from 'mainam-react-native-string-utils';
 import profileProvider from '@data-access/profile-provider';

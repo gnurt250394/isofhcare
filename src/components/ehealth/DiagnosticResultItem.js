@@ -3,7 +3,6 @@ import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Keyboa
 import { connect } from 'react-redux';
 import ScaleImage from "mainam-react-native-scaleimage";
 import constants from '@resources/strings';
-import ExportPDF from '@ehealth/daihocy/components/ExportPDF';
 
 class DiagnosticResultItem extends Component {
     constructor(props) {
@@ -50,21 +49,21 @@ class DiagnosticResultItem extends Component {
                             <Text style={styles.diagnosticLabel}>{constants.ehealth.describe}</Text>
                             {item.Result ?
                                 <View style={{ flexDirection: 'row' }}>
-                                    <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
+                                    <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
                                     {
                                         this.renderItem(item.Result)
                                     }
                                 </View> : null}
                             {item.SummaryResult ?
                                 <View style={{ flexDirection: 'row' }}>
-                                    <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
+                                    <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
                                     {
                                         this.renderItem(item.SummaryResult)
                                     }
                                 </View> : null}
                             {item.Discussion ?
                                 <View style={{ flexDirection: 'row' }}>
-                                    <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
+                                    <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
                                     {
                                         this.renderItem(item.Discussion)
                                     }
@@ -78,7 +77,7 @@ class DiagnosticResultItem extends Component {
                             <Text style={styles.diagnosticLabel}>{constants.ehealth.conclude}</Text>
                             {item.Conclusion ?
                                 <View style={{ flexDirection: 'row' }}>
-                                    <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
+                                    <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
                                     <Text style={{ marginLeft: 10 }}>{item.Conclusion}</Text>
                                 </View> : null}
                         </View> : null}
