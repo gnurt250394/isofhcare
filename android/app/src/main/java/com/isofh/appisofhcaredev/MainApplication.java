@@ -10,7 +10,6 @@ import com.microsoft.codepush.react.CodePush;
 import com.microsoft.appcenter.reactnative.crashes.AppCenterReactNativeCrashesPackage;
 import com.microsoft.appcenter.reactnative.analytics.AppCenterReactNativeAnalyticsPackage;
 import com.microsoft.appcenter.reactnative.appcenter.AppCenterReactNativePackage;
-import com.emekalites.react.alarm.notification.ANPackage;
 import com.tkporter.sendsms.SendSMSPackage;
 import ca.jaysoo.extradimensions.ExtraDimensionsPackage;
 import com.mainam.payoo.PayooPackage;
@@ -70,7 +69,6 @@ private static CallbackManager mCallbackManager = CallbackManager.Factory.create
             new AppCenterReactNativeCrashesPackage(MainApplication.this, getResources().getString(R.string.appCenterCrashes_whenToSendCrashes)),
             new AppCenterReactNativeAnalyticsPackage(MainApplication.this, getResources().getString(R.string.appCenterAnalytics_whenToEnableAnalytics)),
             new AppCenterReactNativePackage(MainApplication.this),
-            new ANPackage(),
             SendSMSPackage.getInstance(),
             new ExtraDimensionsPackage(),
             new PayooPackage(),
