@@ -9,6 +9,8 @@ import ScaleImage from "mainam-react-native-scaleimage";
 import medicalRecordProvider from '@data-access/medical-record-provider';
 import ImageLoad from 'mainam-react-native-image-loader';
 import clientUtils from '@utils/client-utils';
+import constants from '@resources/strings';
+
 class SelectProfileScreen extends Component {
     constructor(props) {
         super(props);
@@ -106,7 +108,7 @@ class SelectProfileScreen extends Component {
     render() {
         return (
             <ActivityPanel
-                title="Tất cả hồ sơ"
+                title={constants.title.select_profile}
             >
 
                 <FlatList
@@ -123,7 +125,7 @@ class SelectProfileScreen extends Component {
                             (!this.state.data || this.state.data.length == 0) ? (
                                 <View style={{ alignItems: "center", marginTop: 50 }}>
                                     <Text style={{ fontStyle: "italic" }}>
-                                        Hiện tại chưa có thông tin
+                                        {constants.none_info}
                 </Text>
                                 </View>
                             ) : null
@@ -169,7 +171,7 @@ class SelectProfileScreen extends Component {
                                     isDataNull: !this.state.data || this.state.data.length == 0 ? true : false,
                                     onCreate: this.onRefresh.bind(this)
                                 })}>
-                            {!this.state.data || this.state.data.length == 0 ? (<Text style={styles.btntext}>Thêm hồ sơ</Text>) : (<Text style={styles.btntext}>Thêm người thân</Text>)}
+                            {!this.state.data || this.state.data.length == 0 ? (<Text style={styles.btntext}>{constants.booking.add_profile}</Text>) : (<Text style={styles.btntext}>{constants.booking.add_relatives}</Text>)}
 
                         </TouchableOpacity>
                     ) : null}

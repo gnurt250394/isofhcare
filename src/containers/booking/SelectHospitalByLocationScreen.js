@@ -120,6 +120,7 @@ class SelectHospitalScreenLocation extends Component {
         if (item.zone && item.zone.name)
             address += ", " + item.zone.name;
         if (item.district && item.district.name)
+        
             address += ", " + item.district.name;
         if (item.province && item.province.countryCode)
             address += ", " + item.province.countryCode;

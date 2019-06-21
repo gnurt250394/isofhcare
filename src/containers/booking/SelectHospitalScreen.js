@@ -11,11 +11,12 @@ import hospitalProvider from '@data-access/hospital-provider';
 import ImageLoad from 'mainam-react-native-image-loader';
 import snackbar from '@utils/snackbar-utils';
 import DialogBox from 'react-native-dialogbox';
-import constants from '@dhy/strings';
 import locationProvider from '@data-access/location-provider';
 import RNLocation from 'react-native-location';
 import clientUtils from '@utils/client-utils';
 import LocationSwitch from 'react-native-location-switch';
+import constants from '@resources/strings';
+
 class SelectHospitalScreen extends Component {
     constructor(props) {
         super(props);
@@ -77,10 +78,10 @@ class SelectHospitalScreen extends Component {
                 android: {
                     detail: 'coarse', // or 'fine'
                     rationale: {
-                        title: "Quyền truy cập vị trí",
-                        message: "iSofHCare cần quyền truy cập vào vị trí của bạn",
-                        buttonPositive: "Đồng ý",
-                        buttonNegative: "Hủy"
+                        title: constants.booking.location_premmission,
+                        message: constants.booking.location_premission_content,
+                        buttonPositive: constants.actionSheet.accept,
+                        buttonNegative:  constants.actionSheet.cancel
                     }
                 }
             }).then(granted => {
@@ -120,10 +121,10 @@ class SelectHospitalScreen extends Component {
                 android: {
                     detail: 'coarse', // or 'fine'
                     rationale: {
-                        title: "Quyền truy cập vị trí",
-                        message: "iSofHCare cần quyền truy cập vào vị trí của bạn",
-                        buttonPositive: "Đồng ý",
-                        buttonNegative: "Hủy"
+                        title: constants.booking.location_premmission,
+                        message: constants.booking.location_premission_content,
+                        buttonPositive: constants.actionSheet.accept,
+                        buttonNegative: constants.actionSheet.cancel
                     }
                 }
             }).then(granted => {
@@ -134,11 +135,11 @@ class SelectHospitalScreen extends Component {
                             getLocation();
                         },
                         () => {
-                            snackbar.show("Bật vị trí trên thiết bị để tìm kiếm địa điểm gần bạn", "danger");
+                            snackbar.show(constants.booking.location_open, "danger");
                         },
                     );
                 } else {
-                    snackbar.show("iSofHCare cần quyền truy cập vào vị trí của bạn", "danger");
+                    snackbar.show( constants.booking.location_premission_content, "danger");
                 }
             })
         }
@@ -148,14 +149,14 @@ class SelectHospitalScreen extends Component {
             }, () => {
                 Alert.alert(
                     '',
-                    'Bật vị trí trên thiết bị để tìm kiếm địa điểm gần bạn',
+                    constants.booking.location_open,
                     [
                         {
-                            text: 'Huỷ',
+                            text:  constants.actionSheet.cancel,
                             onPress: () => console.log('Cancel Pressed'),
                         },
                         {
-                            text: 'Đồng ý',
+                            text: constants.actionSheet.accept,
                             onPress: () => {
                                 LocationSwitch.enableLocationService(1000, true, () => {
                                     getLocation();
@@ -270,7 +271,7 @@ class SelectHospitalScreen extends Component {
         return (
             <ActivityPanel
                 isLoading={this.state.isLoading}
-                style={styles.AcPanel} title="Địa điểm"
+                style={styles.AcPanel} title={constants.title.location}
                 backButton={<TouchableOpacity style={{ paddingLeft: 20 }} onPress={() => this.props.navigation.pop()}><Text>Hủy</Text></TouchableOpacity>}
                 titleStyle={{ marginLeft: 10 }}>
                 <DialogBox ref={dialogbox => { this.dialogbox = dialogbox }} />
@@ -279,7 +280,7 @@ class SelectHospitalScreen extends Component {
                 <View style={styles.container}>
                     <TouchableOpacity style={styles.search} onPress={this.getLocation.bind(this)}>
                         <ScaleImage style={styles.aa} width={18} source={require("@images/new/hospital/ic_placeholder.png")} />
-                        <Text style={styles.tkdiachi}>Tìm kiếm gần tôi</Text>
+                        <Text style={styles.tkdiachi}>{constants.booking.location_around}</Text>
                     </TouchableOpacity>
                     <View style={[styles.search, {
                         borderBottomWidth: 1,
@@ -293,7 +294,7 @@ class SelectHospitalScreen extends Component {
                             }}
                             onSubmitEditing={this.search.bind(this)}
                             returnKeyType='search'
-                            style={styles.tkdiachi1} placeholder={"Tìm kiếm…"} underlineColorAndroid={"transparent"} />
+                            style={styles.tkdiachi1} placeholder={constants.search + '…'} underlineColorAndroid={"transparent"} />
                     </View>
                     <View style={{ height: 1, backgroundColor: 'rgba(0, 0, 0, 0.06)', marginTop: 27 }}></View>
                     <FlatList
@@ -310,7 +311,7 @@ class SelectHospitalScreen extends Component {
                                 (!this.state.data || this.state.data.length == 0) ? (
                                     <View style={{ alignItems: "center", marginTop: 50 }}>
                                         <Text style={{ fontStyle: "italic" }}>
-                                            Không có dữ liệu</Text>
+                                            {constants.none_data}</Text>
                                     </View>
                                 ) : null
                         }
