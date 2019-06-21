@@ -15,7 +15,7 @@ import constants from '@dhy/strings';
 import locationProvider from '@data-access/location-provider';
 import RNLocation from 'react-native-location';
 import clientUtils from '@utils/client-utils';
-import LocationSwitch from 'react-native-location-switch';
+import LocationSwitch from 'mainam-react-native-location-switch';
 class SelectHospitalScreen extends Component {
     constructor(props) {
         super(props);

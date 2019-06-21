@@ -16,7 +16,7 @@ project(':react-native-extra-dimensions-android').projectDir = new File(rootProj
 include ':mainam-react-native-payoo'
 project(':mainam-react-native-payoo').projectDir = new File(rootProject.projectDir, '../node_modules/mainam-react-native-payoo/android')
 include ':react-native-location-switch'
-project(':react-native-location-switch').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-location-switch/android')
+project(':react-native-location-switch').projectDir = new File(rootProject.projectDir, '../node_modules/mainam-react-native-location-switch/android')
 include ':react-native-location'
 project(':react-native-location').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-location/android')
 include ':react-native-vector-icons'
