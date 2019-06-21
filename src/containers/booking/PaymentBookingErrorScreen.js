@@ -4,6 +4,8 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-nati
 import { connect } from 'react-redux';
 import ScaleImage from "mainam-react-native-scaleimage";
 import stringUtils from 'mainam-react-native-string-utils';
+import constants from '@resources/strings';
+
 class PaymentBookingErrorScreen extends Component {
     constructor(props) {
         super(props)
@@ -18,7 +20,7 @@ class PaymentBookingErrorScreen extends Component {
         return (
             <ActivityPanel
                 // hideBackButton={true}
-                style={styles.AcPanel} title="Đặt khám"
+                style={styles.AcPanel} title={constants.title.booking}
                 titleStyle={{ color: '#FFF' }}
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#02C39A"
@@ -32,29 +34,29 @@ class PaymentBookingErrorScreen extends Component {
                 <View style={styles.container}>
                     <ScrollView>
                         <ScaleImage style={styles.image1} height={68} source={require("@images/new/ic_failed.png")} />
-                        <Text style={styles.text1}>Thanh toán không thành công!</Text>
-                        <Text style={styles.text6}>Chúng tôi gặp khó khăn trong quá trình kết nối với đối tác. Vui lòng gọi tới số hotline 0923678905 nếu như bạn đã bị trừ tiền.</Text>
+                        <Text style={styles.text1}>{constants.booking.payment_error}</Text>
+                        <Text style={styles.text6}>{constants.booking.payment_error_message}</Text>
 
                         <View style={styles.view2}>
                             {
                                 booking.transactionCode &&
                                 <View style={styles.colt}>
-                                    <Text style={styles.col1}>Mã giao dịch:</Text>
+                                    <Text style={styles.col1}>{constants.booking.payment_code}</Text>
                                     <Text style={styles.col2}>{booking.transactionCode}</Text>
                                 </View>
                             }
                             <View style={styles.colb}>
-                                <Text style={styles.col1}>Dịch vụ:</Text>
+                                <Text style={styles.col1}>{constants.booking.service}</Text>
                                 <Text style={styles.col2}>{booking.service.name}</Text>
                             </View>
                             <View style={styles.colb}>
-                                <Text style={styles.col1}>Số tiền thanh toán:</Text>
+                                <Text style={styles.col1}>{constants.booking.payment_price}</Text>
                                 <Text style={styles.col2}>{booking.service.price.formatPrice()} đ</Text>
                             </View>
                         </View>
 
                     </ScrollView>
-                    <TouchableOpacity style={styles.button}><Text style={styles.btntext} onPress={() => { this.props.navigation.pop() }}>Đổi phương thức thanh toán</Text></TouchableOpacity>
+                    <TouchableOpacity style={styles.button}><Text style={styles.btntext} onPress={() => { this.props.navigation.pop() }}>{constants.booking.change_payment_method}</Text></TouchableOpacity>
                 </View>
             </ActivityPanel >
         );

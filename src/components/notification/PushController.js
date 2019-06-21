@@ -16,6 +16,8 @@ import constants from '@resources/strings';
 import redux from '@redux-store'
 import NavigationService from "@navigators/NavigationService";
 import ticketProvider from "@data-access/ticket-provider";
+import bookingProvider from '@data-access/booking-provider';
+import hospitalProvider from '@data-access/hospital-provider';
 
 class PushController extends Component {
     setBroadcastListener(listener) {
@@ -82,10 +84,9 @@ class PushController extends Component {
     onNotification(notification) {
         if (!this.props.userApp.isLogin)
             return;
-        console.log(notification);
         if (!notification || notification.show_in_foreground)
             return;
-        if (notification.data && notification.data.id) {
+        if (notification.data && notification.data.id || notification.data && notification.data.notificationId) {
             const type = Number(notification.data.type)
             if (type == 5) {
                 this.openTicket(notification.data.id);
@@ -99,15 +100,29 @@ class PushController extends Component {
                 title = notification.title;
                 body = "";
             }
-            const fbNotification = new firebase.notifications.Notification()
-                .setNotificationId(StringUtils.guid())
-                .setBody(body)
-                .setTitle(title)
-                .android.setChannelId("isofh-care-channel")
-                .android.setSmallIcon("ic_launcher")
-                .android.setPriority(2)
-                .setSound("default")
-                .setData(notification.data);
+
+            let fbNotification = null;
+            if (type == -1) {
+                fbNotification = new firebase.notifications.Notification()
+                    .setNotificationId(StringUtils.guid())
+                    .setBody("Đã đến giờ uống thuốc")
+                    .setTitle("Isofh Care")
+                    .android.setChannelId("isofh-care-channel")
+                    .android.setSmallIcon("ic_launcher")
+                    .android.setPriority(2)
+                    .setSound("default")
+                    .setData(notification.data);
+            } else {
+                fbNotification = new firebase.notifications.Notification()
+                    .setNotificationId(StringUtils.guid())
+                    .setBody(body)
+                    .setTitle(title)
+                    .android.setChannelId("isofh-care-channel")
+                    .android.setSmallIcon("ic_launcher")
+                    .android.setPriority(2)
+                    .setSound("default")
+                    .setData(notification.data);
+            }
             firebase.notifications().displayNotification(fbNotification)
             console.log(fbNotification, 'fbNotification')
         }
@@ -139,6 +154,11 @@ class PushController extends Component {
                     case 5:
                         this.openTicket(id);
                         break;
+                    case 6:
+                        this.openDetailsEhealth(notificationOpen.notification.data);
+                        break;
+                    case -1:
+                        break;
 
                 }
             }
@@ -146,7 +166,47 @@ class PushController extends Component {
             console.log(error);
         }
     }
+    openDetailsEhealth(data) {
+        if (!this.props.userApp.isLogin)
+            return;
+        bookingProvider.detailPatientHistory(data.patientHistoryId, data.hospitalId,data.id).then(s => {
+            this.setState({ isLoading: false }, () => {
+                switch (s.code) {
+                    case 0:
+                        let resultDetail = null;
+                        let result = null;
+                        if (s.data && s.data.data) {
+                            if (s.data.data.resultDetail) {
+                                try {
+                                    resultDetail = JSON.parse(s.data.data.resultDetail);
+                                } catch (error) {
 
+                                }
+                            }
+                            if (s.data.data.result) {
+                                try {
+                                    result = JSON.parse(s.data.data.result);
+                                    hospitalProvider.getDetailsById(data.hospitalId).then(res => {
+                                        NavigationService.navigate('viewDetailEhealth', { result: result, resultDetail: resultDetail, hospitalName: res.data.hospital.name, user: data })
+                                    })
+                                } catch (error) {
+                                    snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                                }
+                            }
+                        }
+
+                        break;
+                    default:
+                        snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                        break
+                }
+            })
+        }).catch(e => {
+            this.setState({ isLoading: false }, () => {
+
+            })
+        })
+    }
     openTicket(id) {
         if (!this.props.userApp.isLogin)
             return;
@@ -198,6 +258,9 @@ class PushController extends Component {
                         setTimeout(() => {
                             this.openTicket(id);
                         }, 4000);
+                        break;
+                    case 6:
+                        this.openDetailsEhealth(notificationOpen.notification.data);
                         break;
                 }
             } catch (error) {

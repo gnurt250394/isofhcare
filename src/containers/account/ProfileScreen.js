@@ -15,6 +15,7 @@ const icCamera = require("@images/photoCamera.png")
 const icEdit = require("@images/edit1.png")
 import redux from '@redux-store';
 import snackbar from '@utils/snackbar-utils';
+import constants from '@resources/strings';
 
 class ProfileScreen extends Component {
     constructor(props) {
@@ -85,7 +86,7 @@ class ProfileScreen extends Component {
     }
 
     onChange() {
-        snackbar.show("Chức năng đang phát triển");
+        snackbar.show(constants.msg.app.in_development);
         return;
         if (this.state.editMode) {
             if (!this.state.name || this.state.name.trim()) {

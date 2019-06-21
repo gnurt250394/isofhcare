@@ -29,7 +29,7 @@ class SelectTimeScreen extends Component {
     getTime(yourDateString) {
         var yourDate = new Date(yourDateString);
         try {
-            console.log(yourDateString, yourDate, yourDate.getTimezoneOffset());
+            // console.log(yourDateString, yourDate, yourDate.getTimezoneOffset());
             yourDate.setMinutes(yourDate.getMinutes() + yourDate.getTimezoneOffset());
             console.log(yourDate);
         } catch (error) {
@@ -199,7 +199,7 @@ class SelectTimeScreen extends Component {
     renderIgnoreTime(item, index) {
         return <TouchableOpacity
             onPress={() => {
-                snackbar.show("Không có lịch trong khung giờ này", "danger");
+                snackbar.show(constants.msg.booking.not_result_history_of_this_time, "danger");
                 return;
             }}
             style={{
@@ -229,7 +229,7 @@ class SelectTimeScreen extends Component {
     renderTime(item, index) {
         return <TouchableOpacity key={index} onPress={() => {
             if (item.type == 0) {
-                snackbar.show("Đã kín lịch trong khung giờ này", "danger");
+                snackbar.show(constants.msg.booking.full_slot_on_this_time, "danger");
                 return;
             }
             this.setState({ schedule: item, index }, () => {

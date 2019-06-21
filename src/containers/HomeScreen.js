@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   Dimensions,
   AppState,
-  DeviceEventEmitter
+  DeviceEventEmitter,
+  Alert
 } from "react-native";
 import { connect } from "react-redux";
 import userProvider from "@data-access/user-provider";
@@ -24,6 +25,8 @@ import ScaledImage from "../../node_modules/mainam-react-native-scaleimage";
 import snackbar from "@utils/snackbar-utils";
 import { IndicatorViewPager } from "mainam-react-native-viewpager";
 import firebase from 'react-native-firebase';
+import codePush from "react-native-code-push";
+
 class HomeScreen extends Component {
   constructor(props) {
     super(props);
@@ -46,8 +49,7 @@ class HomeScreen extends Component {
     DeviceEventEmitter.addListener(
       "hardwareBackPress",
       this.handleHardwareBack.bind(this)
-    );
-    console.log(this.props)
+    );    
   }
 
   componentWillUnmount() {
@@ -102,7 +104,9 @@ class HomeScreen extends Component {
   render() {
     const { active } = this.state;
     return (
-      <ActivityPanel isLoading={this.state.isLoading} hideActionbar={true}>
+      <ActivityPanel isLoading={this.state.isLoading}
+        hideActionbar={true}
+      >
         <View style={[{ flex: 1 }, this.props.style]}>
           {/* <UserInactivity
           timeForInactivity={2000}
@@ -186,7 +190,7 @@ class HomeScreen extends Component {
                 onPress={this.swipe.bind(this, 0)}
               >
                 <ScaledImage
-               
+
                   source={
                     this.state.tabIndex == 0
                       ? require("@images/new/ic_home_home2.png")

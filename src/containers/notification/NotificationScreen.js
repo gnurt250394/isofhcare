@@ -20,6 +20,8 @@ import constants from "@resources/strings";
 import firebase from 'react-native-firebase';
 import redux from '@redux-store'
 import ImageLoad from 'mainam-react-native-image-loader';
+import bookingProvider from '@data-access/booking-provider';
+import hospitalProvider from '@data-access/hospital-provider';
 
 import clientUtils from '@utils/client-utils';
 
@@ -116,7 +118,7 @@ class NotificationScreen extends Component {
           firebase.notifications().setBadge(this.props.userApp.unReadNotificationCount > 0 ? this.props.userApp.unReadNotificationCount - 1 : 0);
           this.props.dispatch(redux.getUnreadNotificationCount());
           this.setState({ isLoading: false });
-        }).catch(e=>{
+        }).catch(e => {
           this.setState({ isLoading: false });
         });
         item.notification.watched = 1;
@@ -134,6 +136,9 @@ class NotificationScreen extends Component {
           case 5:
             this.openTicket(data.id);
             break;
+          case 6:
+            this.detailsEhealth(data, item.user)
+            break
           default:
             this.setState({ isLoading: false });
         }
@@ -141,6 +146,54 @@ class NotificationScreen extends Component {
     } catch (error) {
       this.setState({ isLoading: false });
     }
+  }
+  detailsEhealth = (data, user) => {
+    this.setState({ isLoading: true }, () => {
+      bookingProvider.detailPatientHistory(data.patientHistoryId, data.hospitalId,data.id).then(s => {
+        switch (s.code) {
+          case 0:
+            let resultDetail = null;
+            let result = null;
+            if (s.data && s.data.data) {
+              if (s.data.data.resultDetail) {
+                this.setState({
+                  isLoading: false
+                })
+                try {
+                  resultDetail = JSON.parse(s.data.data.resultDetail);
+                } catch (error) {
+
+                }
+              }
+              if (s.data.data.result) {
+                try {
+                  result = JSON.parse(s.data.data.result);
+                  hospitalProvider.getDetailsById(data.hospitalId).then(res => {
+                    this.setState({
+                      isLoading: false
+                    })
+                    this.props.navigation.navigate('viewDetailEhealth', { result: result, resultDetail: resultDetail, hospitalName: res.data.hospital.name, user: data })
+                  })
+                } catch (error) {
+                  this.setState({
+                    isLoading: false
+                  })
+                  console.log(error)
+                  snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                }
+              }
+            }
+            break;
+          default:
+            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+            break
+        }
+      }).catch(e => {
+        this.setState({ isLoading: false }, () => {
+
+        })
+      })
+    })
   }
   openTicket(id) {
     this.setState({ isLoading: true }, () => {
@@ -247,6 +300,8 @@ class NotificationScreen extends Component {
             return "Đặt khám";
           case 5:
             return "Lấy số nhanh";
+          case 6:
+            return 'Y bạ điện tử'
         }
 
       }
@@ -393,7 +448,9 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
   return {
-    userApp: state.userApp
+    userApp: state.userApp,
+    ehealth: state.ehealth
+
   };
 }
 export default connect(mapStateToProps)(NotificationScreen);

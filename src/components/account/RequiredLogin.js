@@ -29,16 +29,16 @@ class RequiredLogin extends Component {
                         <View style={{ flexDirection: 'row', backgroundColor: constants.colors.primaryColor, padding: 10, alignItems: 'center' }}>
                             <ScaleImage source={require("@images/ic_account_logo.png")} width={60} />
                             <View style={{ flex: 1, marginLeft: 10 }}>
-                                <Text style={{ color: constants.colors.white }}>Bạn chưa đăng nhập vui lòng</Text>
+                                <Text style={{ color: constants.colors.white }}>{constants.msg.user.user_not_login}</Text>
                                 <View style={{ flexDirection: 'row' }}>
                                     <TouchableOpacity onPress={() => { this.login() }}>
-                                        <Text style={{ fontWeight: 'bold', color: constants.colors.white }}>Đăng nhập</Text>
+                                        <Text style={{ fontWeight: 'bold', color: constants.colors.white }}>{constants.msg.user.login}</Text>
                                     </TouchableOpacity>
                                     <Text style={{
                                         marginLeft: 5, marginRight: 5, color: constants.colors.white
                                     }} > /</Text>
                                     <TouchableOpacity onPress={() => { this.register() }}>
-                                        <Text style={{ fontWeight: 'bold', color: constants.colors.white }}>Đăng ký</Text>
+                                        <Text style={{ fontWeight: 'bold', color: constants.colors.white }}>{constants.msg.user.register}</Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>

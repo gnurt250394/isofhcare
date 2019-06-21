@@ -36,8 +36,11 @@ class Home extends Component {
           text: "Lấy số",
           onPress: () => {
             if (this.props.userApp.isLogin)
+              if(this.props.userApp.currentUser.bookingNumberHospital == true )
               this.props.navigation.navigate("selectHealthFacilitiesScreen");
-            else  
+              else
+              snackbar.show("Tính năng đang phát triển", "");
+              else
               this.props.navigation.navigate("login", {
                 nextScreen: { screen: "selectHealthFacilitiesScreen", param: {} }
               });
@@ -51,7 +54,7 @@ class Home extends Component {
               if (this.props.userApp.currentUser.bookingStatus != false || this.props.userApp.currentUser.bookingStatus == undefined )
                 this.props.navigation.navigate("addBooking");
               else
-                snackbar.show("Tính năng đang phát triển", "");
+              snackbar.show("Tính năng đang phát triển", "");
 
             else
               this.props.navigation.navigate("login", {
@@ -232,11 +235,11 @@ class Home extends Component {
   getItemWidth() {
     const width = DEVICE_WIDTH - 40;
     if (width >= 320){
-     Platform.OS == 'ios' ?  70 :  75;
+    return Platform.OS == 'ios' ?  70 :  75;
     }
      
     if (width > 300){
-      Platform.OS == 'ios' ? 100: 110;
+      return  Platform.OS == 'ios' ? 100: 110;
     }
       
     if (width > 250)
@@ -250,7 +253,6 @@ class Home extends Component {
 
     return (
       <ActivityPanel
-        hideStatusbar={true}
         hideActionbar={true}
         style={[{ flex: 1 }, this.props.style]}
         hideBackButton={true}
@@ -333,7 +335,7 @@ class Home extends Component {
                                 <View style={{ position: 'relative', padding: 5 }}>
                                   <ScaledImage style={[styles.icon]} source={item.icon} height={48} />
                                 </View>
-                                <Text  allowFontScaling={false} style={[styles.label]}>{item.text}</Text>
+                                <Text style={[styles.label]}>{item.text}</Text>
                               </TouchableOpacity>
 
                           }
@@ -360,7 +362,7 @@ const styles = StyleSheet.create({
   icon: {
   },
   label: {
-    marginTop: 2, color: '#4A4A4A', fontSize: 15, fontWeight: '600', lineHeight: 20,
+    marginTop: 2, color: '#4A4A4A', fontSize: 15, fontWeight: '600', lineHeight: 20
   },
   subLabel: {
     color: '#9B9B9B', fontSize: 12, textAlign: 'center', marginTop: 5

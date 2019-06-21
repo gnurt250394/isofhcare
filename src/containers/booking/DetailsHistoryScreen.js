@@ -19,6 +19,7 @@ import ImageLoad from 'mainam-react-native-image-loader';
 import snackbar from '@utils/snackbar-utils';
 import Modal from "@components/modal";
 import stylemodal from "@styles/modal-style";
+import constants from "@resources/strings";
 
 class DetailsHistoryScreen extends Component {
   constructor(props) {
@@ -53,12 +54,12 @@ class DetailsHistoryScreen extends Component {
             isLoading: false
           })
         } else {
-          snackbar.show("Không thể xem chi tiết đặt khám này", "danger");
+          snackbar.show(constants.msg.booking.cannot_show_details_booking, "danger");
           this.props.navigation.pop();
           return;
         }
       }).catch(err => {
-        snackbar.show("Không thể xem chi tiết đặt khám này", "danger");
+        snackbar.show(constants.msg.booking.cannot_show_details_booking, "danger");
         this.props.navigation.pop();
         return;
       });
@@ -67,13 +68,18 @@ class DetailsHistoryScreen extends Component {
   renderStatus = () => {
     switch (Number(this.state.booking.statusPay)) {
       case 0:
-        return <Text style={styles.paymentHospital}>Chưa chọn hình thức</Text>;
+        return <Text style={styles.paymentHospital}>{constants.booking.status.not_select_payment}</Text>;
       case 1:
-        return <Text style={styles.paymentHospital}>Ví Isofh</Text>;
+        return <Text style={styles.paymentHospital}>{constants.booking.status.payment_isofh}</Text>;
       case 2:
-        return <Text style={styles.paymentHospital}>VNPAY</Text>;
+        return <Text style={styles.paymentHospital}>{constants.booking.status.payment_VNPAY}</Text>;
       case 3:
-        return <Text style={styles.paymentHospital}>Thanh toán tại viện</Text>;
+        return <Text style={styles.paymentHospital}>{constants.booking.status.payment_CSYT}</Text>;
+      case 4:
+        return <Text style={styles.paymentHospital}>{constants.booking.status.payment_payoo}</Text>;
+      case 5:
+        return <Text style={styles.paymentHospital}>{constants.booking.status.payment_payoo2}</Text>;
+
     }
   };
   status = () => {
@@ -81,25 +87,25 @@ class DetailsHistoryScreen extends Component {
       case 0:
         return (
           <View style={styles.statusTx}>
-            <Text style={styles.txStatus}>Chờ phục vụ</Text>
+            <Text style={styles.txStatus}>{constants.booking.status.pending}</Text>
           </View>
         );
       case 1:
-        return <Text style={styles.txStatus}>Đã huỷ (không đến)</Text>;
+        return <Text style={styles.txStatus}>{constants.booking.status.cancel}</Text>;
       case 2:
-        return <Text style={styles.txStatus}>Thanh toán thất bại</Text>;
+        return <Text style={styles.txStatus}>{constants.booking.status.payment_failer}</Text>;
       case 3:
-        return <Text style={styles.txStatus}>Đã thanh toán</Text>;
+        return <Text style={styles.txStatus}>{constants.booking.status.paymented}</Text>;
       case 4:
-        return <Text style={styles.txStatus}>Thanh toán sau</Text>;
+        return <Text style={styles.txStatus}>{constants.booking.status.payment_last}</Text>;
       case 5:
-        return <Text style={styles.txStatus}>Chờ thanh toán</Text>;
+        return <Text style={styles.txStatus}>{constants.booking.status.payment_pending}</Text>;
       case 6:
-        return <Text style={styles.txStatus}>Đã xác nhận</Text>;
+        return <Text style={styles.txStatus}>{constants.booking.status.confirm}</Text>;
       case 7:
-        return <Text style={styles.txStatus}>Đã có hồ sơ</Text>;
+        return <Text style={styles.txStatus}>{constants.booking.status.have_profile}</Text>;
       case 8:
-        return <Text style={styles.txStatus}>Đã huỷ (không phục vụ)</Text>;
+        return <Text style={styles.txStatus}>{constants.booking.status.rejected}</Text>;
       default:
         <Text style={styles.txStatus} />;
     }
@@ -224,7 +230,7 @@ class DetailsHistoryScreen extends Component {
               </View>
             </View>
             <View style={styles.viewSymptom}>
-              <Text><Text style={{ fontWeight: 'bold' }}>Triệu chứng: </Text> {this.state.booking.content}</Text>
+              <Text><Text style={{ fontWeight: 'bold' }}>Ghi chú: </Text> {this.state.booking.content}</Text>
               <View>
                 {this.renderImages()}
                 {/* <ScaledImage

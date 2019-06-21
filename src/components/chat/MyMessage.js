@@ -13,6 +13,8 @@ import snackbar from '@utils/snackbar-utils';
 import DateMessage from '@components/chat/DateMessage';
 import ImageLoad from 'mainam-react-native-image-loader';
 import { connect } from 'react-redux';
+import constants from '@resources/strings';
+
 class MyMessage extends React.Component {
     constructor(props) {
         super(props);
@@ -24,7 +26,7 @@ class MyMessage extends React.Component {
     photoViewer(uri) {
         try {
             if (!uri) {
-                snackbar.show("Không có ảnh nào");
+                snackbar.show(constants.msg.message.none_image);
                 return;
             }
             this.props.navigation.navigate("photoViewer", { urls: [uri], index: 0 });
