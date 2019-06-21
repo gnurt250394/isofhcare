@@ -350,7 +350,6 @@ class ConfirmBookingScreen extends Component {
 
                 })
             }).catch(e => {
-                debugger;
                 this.setState({ isLoading: false }, () => {
                     if (e && e.response && e.response.data) {
                         let response = e.response.data;

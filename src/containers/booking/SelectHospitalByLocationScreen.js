@@ -11,7 +11,7 @@ import { Card } from 'native-base';
 import hospitalProvider from '@data-access/hospital-provider';
 import ImageLoad from 'mainam-react-native-image-loader';
 import snackbar from '@utils/snackbar-utils';
-import constants from '@dhy/strings';
+import constants from '@resources/strings'
 
 
 import clientUtils from '@utils/client-utils';
@@ -120,6 +120,7 @@ class SelectHospitalScreenLocation extends Component {
         if (item.zone && item.zone.name)
             address += ", " + item.zone.name;
         if (item.district && item.district.name)
+        
             address += ", " + item.district.name;
         if (item.province && item.province.countryCode)
             address += ", " + item.province.countryCode;
