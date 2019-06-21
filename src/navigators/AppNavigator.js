@@ -35,7 +35,6 @@ import GroupChatScreen from "@containers/chat/GroupChatScreen";
 import ChatScreen from "@containers/chat/ChatScreen";
 import ProfileScreen from "@containers/account/ProfileScreen";
 import { EHealthNavigator } from "@ehealth/navigator";
-import { BookingDHYNavigation } from "@dhy/navigator";
 import NotificationScreen from "@containers/notification/NotificationScreen";
 import ListQuestionScreen from "@containers/question/ListQuestionScreen";
 import CreateQuestionStep1Screen from "@containers/question/CreateQuestionStep1Screen";
@@ -86,7 +85,6 @@ const RootNavigator = createStackNavigator(
     // testVNPay: { screen: TestVNPayScreen },
     // scanQRCode: { screen: ScanQRCodeScreen },
     splash: { screen: SplashScreen },
-    addBookingBVDHY: { screen: BookingDHYNavigation },
     groupChat: { screen: GroupChatScreen },
     groupChatFacility: { screen: GroupChatScreen },
     chat: { screen: ChatScreen },

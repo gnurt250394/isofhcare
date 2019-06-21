@@ -6,7 +6,7 @@ import serviceProvider from '@data-access/service-provider';
 import constants from '@resources/strings';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import snackbar from '@utils/snackbar-utils';
-import locationProvider from '@dhy/data-access/location-provider';
+import locationProvider from '@data-access/location-provider';
 
 class SelectLocationScreen extends Component {
     constructor(props) {
@@ -136,8 +136,7 @@ class SelectLocationScreen extends Component {
 }
 function mapStateToProps(state) {
     return {
-        userApp: state.userApp,
-        booking: state.dhyBooking
+        userApp: state.userApp
     };
 }
 

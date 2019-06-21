@@ -1,9 +1,6 @@
 import userProvider from '@data-access/user-provider';
 import constants from '@resources/strings';
 import client from '@utils/client-utils';
-import reduxBookingDHY from '@dhy/redux'
-import reduxEhealthDHY from '@ehealth/daihocy/redux'
-import { connect } from "react-redux";
 
 const defaultState = {
     userApp:
@@ -72,13 +69,8 @@ const reducer = (state = defaultState, action) => {
         case constants.action.action_select_patient_group_ehealth:
             newState.ehealth.patient = action.value;
             return newState;
-
-        default:
-            reduxBookingDHY.apply(newState, action);
-            reduxEhealthDHY.apply(newState, action);
-            return newState;
     }
-    return state;
+    return newState;
 }
 
 export default reducer;

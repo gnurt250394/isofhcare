@@ -7,7 +7,6 @@ import Dash from 'mainam-react-native-dash-view';
 import bookingProvider from '@data-access/booking-provider';
 import hospitalProvider from '@data-access/hospital-provider';
 import constants from '@resources/strings';
-import constants2 from '@ehealth/daihocy/resources/strings';
 import dateUtils from 'mainam-react-native-date-utils';
 import profileProvider from '@data-access/profile-provider';
 import snackbar from '@utils/snackbar-utils';
@@ -36,7 +35,7 @@ class ListProfileScreen extends PureComponent {
         const source = this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar.absoluteUrl() } : require("@images/new/user.png");
         return <TouchableOpacity style={{}} onPress={() => this.onPress(item)}>
             <View style={{ flexDirection: 'row' }}>
-                <View style={{ justifyContent: 'center', width: 100, alignItems:'center' }}>
+                <View style={{ justifyContent: 'center', width: 100, alignItems: 'center' }}>
                     <ImageLoad
                         resizeMode="cover"
                         imageStyle={{ borderRadius: 30, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
@@ -56,11 +55,11 @@ class ListProfileScreen extends PureComponent {
                             return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={60} height={60} />
                         }}
                     />
-                    <Text style={{ color: '#758289'}}>{item.patientValue}</Text>
+                    <Text style={{ color: '#758289' }}>{item.patientValue}</Text>
                 </View>
 
                 <View style={{ flex: 1, borderRightColor: '#c8d1d6', borderRightWidth: 1, paddingVertical: 10 }}>
-                    <View style={{  position: 'relative' }}>
+                    <View style={{ position: 'relative' }}>
                         <View style={{ position: 'absolute', left: 9, top: 0, bottom: 0, width: 2, backgroundColor: '#91a3ad', }}></View>
                         <View style={{ flexDirection: 'row', height: 40 }}>
                             <View style={{ width: 20, height: 20, borderWidth: 1.5, borderColor: '#91a3ad', borderRadius: 10, justifyContent: 'center', alignItems: 'center', left: 0, bottom: 0, backgroundColor: '#FFF' }}>
@@ -69,7 +68,7 @@ class ListProfileScreen extends PureComponent {
                             <Text style={[{ marginLeft: 10, color: '#63737a', fontSize: 15 },Platform.OS == 'ios' ? {width:165}:{}]}>{item.patientName}</Text>
                         </View>
                     </View>
-                    <View style={{ marginTop: -2,paddingRight:4 }}>
+                    <View style={{ marginTop: -2, paddingRight: 4 }}>
                         <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
                             <View style={{ marginTop: 2, width: 20, height: 20, borderWidth: 1.5, borderColor: '#91a3ad', borderRadius: 10, justifyContent: 'center', alignItems: 'center', left: 0, bottom: 0, backgroundColor: '#FFF' }}>
                                 <View style={{ width: 8, height: 8, backgroundColor: '#c84242', borderRadius: 4 }}></View>
@@ -148,7 +147,7 @@ class ListProfileScreen extends PureComponent {
                     ListFooterComponent={() => <View style={{ height: 10 }}></View>}
                     renderItem={({ item, index }) => this.renderItemProfile.call(this, item, index)}
                 />
-            </ActivityPanel >
+            </ActivityPanel>
         );
     }
 }

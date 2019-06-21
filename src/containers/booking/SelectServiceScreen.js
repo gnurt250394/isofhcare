@@ -120,7 +120,7 @@ class SelectServiceScreen extends Component {
         return (
             <ActivityPanel
                 backButton={<TouchableOpacity style={{ paddingLeft: 20 }} onPress={() => this.props.navigation.pop()}><Text>Hủy</Text></TouchableOpacity>}
-                title={"Dịch vụ"}
+                title={constants.title.service}
                 isLoading={this.state.isLoading}
                 menuButton={<View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     {this.renderSearchButton()}
@@ -149,7 +149,7 @@ class SelectServiceScreen extends Component {
                             backgroundColor: constants.colors.actionbar_color,
                             flexDirection: 'row'
                         }}>
-                            <TextInput autoFocus={true} style={{ flex: 1, color: constants.colors.actionbar_title_color, padding: 10 }} placeholderTextColor='#dddddd' underlineColorAndroid="transparent" placeholder={"Nhập từ khóa tìm kiếm"} onChangeText={(s) => {
+                            <TextInput autoFocus={true} style={{ flex: 1, color: constants.colors.actionbar_title_color, padding: 10 }} placeholderTextColor='#dddddd' underlineColorAndroid="transparent" placeholder={constants.ehealth.inputKeyword} onChangeText={(s) => {
                                 this.searchTextChange(s);
                             }} returnKeyType="search" onSubmitEditing={() => { this.onSearch() }} />
                             <TouchableOpacity onPress={() => this.onSearch()}>
@@ -170,7 +170,7 @@ class SelectServiceScreen extends Component {
                             (!this.state.listServiceSearch || this.state.listServiceSearch.length == 0) ?
                             <View style={{ width: '100%', marginTop: 50, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center' }}>
                                 <ScaleImage source={require("@images/empty_result.png")} width={120} />
-                                <Text>Không tìm thấy dịch vụ nào phù hợp <Text style={{ fontWeight: 'bold', color: constants.colors.actionbar_title_color }}>{this.state.searchValue}</Text></Text>
+                                <Text>{constants.none_service}<Text style={{ fontWeight: 'bold', color: constants.colors.actionbar_title_color }}>{this.state.searchValue}</Text></Text>
                             </View> : null
                     }
                     ListFooterComponent={() => <View style={{ height: 10 }} />}
@@ -206,8 +206,7 @@ const styles = StyleSheet.create({
 });
 function mapStateToProps(state) {
     return {
-        userApp: state.userApp,
-        booking: state.dhyBooking
+        userApp: state.userApp
     };
 }
 

@@ -25,7 +25,7 @@ export default class CheckPassword extends Component {
     return (
       <View style={styles.container}>
         <View style={[styles.contentContainer]}>
-        <Text style = {{marginVertical:10,fontSize:20,fontWeight:'bold'}}>Nhập mật khẩu</Text>
+        <Text style = {{marginVertical:10,fontSize:20,fontWeight:'bold'}}>{constants.enter_password}</Text>
           <Form style ={{width:'60%',}} ref={ref => (this.form = ref)}>
             <Field clearWhenFocus={true}>
               <TextField
@@ -59,7 +59,7 @@ export default class CheckPassword extends Component {
                     required: true
                   },
                   messages: {
-                    required: "Mật khẩu không được bỏ trống"
+                    required: constants.password_not_null
                   }
                 }}
                 inputStyle={styles.input}
