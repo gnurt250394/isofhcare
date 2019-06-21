@@ -59,7 +59,7 @@ class ProfileScreen extends Component {
     render() {
         return (
             <ActivityPanel
-                style={{ flex: 1 }} title="Đổi mật khẩu"
+                style={{ flex: 1 }} title={constants.title.change_password}
                 titleStyle={{ textAlign: 'left', marginLeft: 20 }}
                 showFullScreen={true} isLoading={this.state.isLoading}>
                 <ScrollView
@@ -73,7 +73,7 @@ class ProfileScreen extends Component {
                             <Form ref={ref => (this.form = ref)} style={{ marginTop: 10 }}>
                                 <TextField
                                     getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-                                        placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Nhập mật khẩu cũ"}
+                                        placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.enter_old_password}
                                         secureTextEntry={true}
                                         onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
                                     onChangeText={s => {
@@ -86,8 +86,8 @@ class ProfileScreen extends Component {
                                             minlength: 8
                                         },
                                         messages: {
-                                            required: "Mật khẩu cũ không được bỏ trống",
-                                            minlength: "Mật khẩu dài ít nhất 8 ký tự"
+                                            required: constants.old_password_not_null,
+                                            minlength: constants.password_length_8
                                         }
                                     }}
                                     placeholder={constants.input_password}
@@ -108,8 +108,8 @@ class ProfileScreen extends Component {
                                             minlength: 8
                                         },
                                         messages: {
-                                            required: "Mật khẩu mới không được bỏ trống",
-                                            minlength: "Mật khẩu dài ít nhất 8 ký tự"
+                                            required: constants.new_password_not_null,
+                                            minlength: constants.password_length_8
                                         }
                                     }}
                                     placeholder={constants.input_password}
@@ -131,9 +131,9 @@ class ProfileScreen extends Component {
                                             minlength: 8
                                         },
                                         messages: {
-                                            required: "Xác nhận mật khẩu mới không được bỏ trống",
-                                            minlength: "Xác nhận mật khẩu dài ít nhất 8 kí tự",
-                                            equalTo: 'Mật khẩu và xác nhận mật khẩu không giống nhau'
+                                            required: constants.confirm_new_password_not_null,
+                                            minlength: constants.confirm_password_length_8,
+                                            equalTo: constants.new_password_not_match
                                         }
                                     }}
                                     placeholder={constants.input_password}
@@ -144,7 +144,7 @@ class ProfileScreen extends Component {
                     </KeyboardAvoidingView>
                 </ScrollView>
                 <TouchableOpacity onPress={this.change.bind(this)} style={{ backgroundColor: 'rgb(2,195,154)', marginBottom: 30, alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center' }}>
-                    <Text style={{ color: '#FFF', fontSize: 17 }}>{"CẬP NHẬT"}</Text>
+                    <Text style={{ color: '#FFF', fontSize: 17 }}>{constants.update_to_up_case}</Text>
                 </TouchableOpacity>
             </ActivityPanel>
         )

@@ -19,6 +19,7 @@ module.exports = {
   input_password: "Mật khẩu",
   password: "Mật khẩu",
   forgot_password: "QUÊN MẬT KHẨU",
+  finish:"HOÀN THÀNH",
   ehealth: "Y bạ điện tử",
   booking: "Đặt lịch",
   home: "Trang chủ",
@@ -35,6 +36,16 @@ module.exports = {
   send: "Gửi",
   change_password: "Thay đổi mật khẩu",
   change_email: "Thay đổi email",
+  enter_old_password:'Nhập mật khẩu cũ',
+  enter_password:'Nhập mật khẩu',
+  password_not_null:'Mật khẩu không được bỏ trống',
+  old_password_not_null:'Mật khẩu cũ không được bỏ trống',
+  new_password_not_null:'"Mật khẩu mới không được bỏ trống"',
+  confirm_new_password_not_null:"Xác nhận mật khẩu mới không được bỏ trống",
+  confirm_password_not_null:'Xác nhận mật khẩu không được bỏ trống',
+  password_length_8:'Mật khẩu dài ít nhất 8 ký tự',
+  confirm_password_length_8:"Xác nhận mật khẩu dài ít nhất 8 kí tự",
+  new_password_not_match:'Mật khẩu và xác nhận mật khẩu không giống nhau',
   search: "Tìm kiếm",
   share: "Chia sẻ",
   update: "Cập nhật",
@@ -49,6 +60,7 @@ module.exports = {
   none_info:'Hiện tại chưa có thông tin',
   none_service:'Không tìm thấy dịch vụ nào phù hợp',
   none_service_type_match:'Không tìm thấy loại dịch vụ nào phù hợp ',
+  update_to_up_case:"CẬP NHẬT",
   hospital: {
     BENH_VIEN_DAI_HOC_Y: 1
   },
@@ -420,6 +432,7 @@ module.exports = {
     select_service_type:"Chọn loại dịch vụ",
     location:'Địa điểm',
     service: 'Dịch vụ',
+    change_password:'Đổi mật khẩu'
 
   },
   api: {
