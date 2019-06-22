@@ -16,6 +16,8 @@ import RNLocation from 'react-native-location';
 import clientUtils from '@utils/client-utils';
 import LocationSwitch from 'mainam-react-native-location-switch';
 import constants from '@resources/strings';
+import GetLocation from 'react-native-get-location'
+
 class SelectHospitalScreen extends Component {
     constructor(props) {
         super(props);
@@ -71,6 +73,20 @@ class SelectHospitalScreen extends Component {
     }
 
     getLocation() {
+        GetLocation.getCurrentPosition({
+            enableHighAccuracy: true,
+            timeout: 15000,
+        })
+        .then(location => {
+            debugger;
+            console.log(location);
+        })
+        .catch(error => {
+            debugger;
+            const { code, message } = error;
+            console.warn(code, message);
+        })
+        return;
         let getLocation = () => {
             RNLocation.requestPermission({
                 ios: 'whenInUse', // or 'always'
