@@ -73,20 +73,6 @@ class SelectHospitalScreen extends Component {
     }
 
     getLocation() {
-        GetLocation.getCurrentPosition({
-            enableHighAccuracy: true,
-            timeout: 15000,
-        })
-        .then(location => {
-            debugger;
-            console.log(location);
-        })
-        .catch(error => {
-            debugger;
-            const { code, message } = error;
-            console.warn(code, message);
-        })
-        return;
         let getLocation = () => {
             RNLocation.requestPermission({
                 ios: 'whenInUse', // or 'always'
@@ -96,7 +82,7 @@ class SelectHospitalScreen extends Component {
                         title: constants.booking.location_premmission,
                         message: constants.booking.location_premission_content,
                         buttonPositive: constants.actionSheet.accept,
-                        buttonNegative:  constants.actionSheet.cancel
+                        buttonNegative: constants.actionSheet.cancel
                     }
                 }
             }).then(granted => {
@@ -131,32 +117,23 @@ class SelectHospitalScreen extends Component {
         }
 
         if (Platform.OS == 'android') {
-            RNLocation.requestPermission({
-                ios: 'whenInUse', // or 'always'
-                android: {
-                    detail: 'coarse', // or 'fine'
-                    rationale: {
-                        title: constants.booking.location_premmission,
-                        message: constants.booking.location_premission_content,
-                        buttonPositive: constants.actionSheet.accept,
-                        buttonNegative: constants.actionSheet.cancel
-                    }
-                }
-            }).then(granted => {
-                if (granted) {
-
-                    LocationSwitch.enableLocationService(1000, true,
-                        () => {
-                            getLocation();
-                        },
-                        () => {
-                            snackbar.show(constants.booking.location_open, "danger");
-                        },
-                    );
-                } else {
-                    snackbar.show( constants.booking.location_premission_content, "danger");
-                }
-            })
+            if (Platform.OS == 'android') {
+                GetLocation.getCurrentPosition({
+                    enableHighAccuracy: true,
+                    timeout: 15000,
+                })
+                    .then(region => {
+                        locationProvider.saveCurrentLocation(region.latitude, region.longitude);
+                        this.setState({
+                            region
+                        }, () => {
+                            this.onRefresh();
+                        });
+                    })
+                    .catch(error => {
+                        this.onRefresh();
+                    });
+            }
         }
         else
             LocationSwitch.isLocationEnabled(() => {
@@ -167,7 +144,7 @@ class SelectHospitalScreen extends Component {
                     constants.booking.location_open,
                     [
                         {
-                            text:  constants.actionSheet.cancel,
+                            text: constants.actionSheet.cancel,
                             onPress: () => console.log('Cancel Pressed'),
                         },
                         {
