@@ -41,40 +41,26 @@ class ViewCheckupResultScreen extends Component {
 
     renderDetails = () => {
         return (
-            <ScrollView ref={ref => this.flListDate = ref} showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
+            <ScrollView ref={ref => this.flListDate = ref} showsVerticalScrollIndicator={false} style={styles.container}>
                 <ProfileInfomation2 title="KẾT QUẢ CHẨN ĐOÁN HÌNH ẢNH" resultDetail={this.state.resultDetail} />
                 <DiagnosticResult showTitle={false} result={this.state.result} />
-                <TouchableOpacity style={{
-                    alignSelf: 'center',
-                    width: 252,
-                    maxWidth: DEVICE_WIDTH,
-                    backgroundColor: '#27ae60',
-                    borderRadius: 5,
-                    height: 48,
-                    marginVertical: 20,
-                    padding: 10, alignItems: 'center'
-                }} onPress={() => {
+                <TouchableOpacity style={styles.btnFinish} onPress={() => {
                     this.props.navigation.pop();
-                }}><Text style={{ fontWeight: 'bold', color: '#FFF', fontSize: 17 }}>XEM XONG</Text>
+                }}><Text style={styles.txFinish}>XEM XONG</Text>
                 </TouchableOpacity>
-                <View style={{ height: 50 }} />
+                <View style={styles.viewFooter} />
             </ScrollView>
         )
     }
     render() {
 
         return (
-            <ActivityPanel style={{ flex: 1 }} title={constants.title.ehealth_details}
+            <ActivityPanel style={styles.container} title={constants.title.ehealth_details}
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#22b060"
-                actionbarStyle={{
-                    backgroundColor: '#22b060',
-                    borderBottomWidth: 0
-                }}
-                titleStyle={{
-                    color: '#FFF'
-                }}
+                actionbarStyle={styles.actionbarStyle}
+                titleStyle={styles.titleStyle}
                 isLoading={this.state.isLoading}>
                 {this.renderDetails()}
             </ActivityPanel>
@@ -83,6 +69,30 @@ class ViewCheckupResultScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+    container:{
+        flex:1
+    },
+    btnFinish:{
+        alignSelf: 'center',
+        width: 252,
+        maxWidth: DEVICE_WIDTH,
+        backgroundColor: '#27ae60',
+        borderRadius: 5,
+        height: 48,
+        marginVertical: 20,
+        padding: 10, alignItems: 'center'
+    },
+    txFinish:{ fontWeight: 'bold', color: '#FFF', fontSize: 17 },
+    viewFooter:{ fontWeight: 'bold', color: '#FFF', fontSize: 17 },
+    actionbarStyle:{
+        backgroundColor: '#22b060',
+        borderBottomWidth: 0
+    },
+    titleStyle:{
+        color: '#FFF'
+    },
+
+
 });
 
 function mapStateToProps(state) {

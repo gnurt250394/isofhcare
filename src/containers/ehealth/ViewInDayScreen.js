@@ -187,12 +187,12 @@ class ViewInDateScreen extends Component {
                 note = item.First_Diagnostic;
             if (note)
                 return <TouchableOpacity style={styles.card} onPress={this.viewCheckupResult}>
-                    <View style={{ width: 10, height: 10, backgroundColor: '#ff4355', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
-                    <View style={{ flex: 1, padding: 15 }}>
-                        <Text style={{ fontSize: 18 }}>{constants.ehealth.result_ehealth}</Text>
-                        <Text style={{ paddingTop: 5, color: '#ff4355', flex: 1 }}>{note}</Text>
+                    <View style={styles.viewCheckupResult}></View>
+                    <View style={styles.viewNote}>
+                        <Text style={styles.txResultEhealth}>{constants.ehealth.result_ehealth}</Text>
+                        <Text style={styles.txNote}>{note}</Text>
                     </View>
-                    <View style={{ width: 5, height: '100%', backgroundColor: '#ff4355', borderRadius: 2.5 }}></View>
+                    <View style={styles.viewMaker}></View>
                 </TouchableOpacity>
         }
         return null;
@@ -210,12 +210,12 @@ class ViewInDateScreen extends Component {
                 note = item.Conclusion;
             if (note)
                 return <TouchableOpacity style={styles.card} onPress={this.viewDiagnosticResult}>
-                    <View style={{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
-                    <View style={{ flex: 1, padding: 15 }}>
-                        <Text style={{ fontSize: 18 }}>{constants.ehealth.image_result}</Text>
-                        <Text style={{ paddingTop: 5, color: '#2e66e7', flex: 1 }}>{note}</Text>
+                    <View style={styles.viewDiagnosticResult}></View>
+                    <View style={styles.viewTx}>
+                        <Text style={styles.txResultEhealth}>{constants.ehealth.image_result}</Text>
+                        <Text style={styles.txNoteBlue}>{note}</Text>
                     </View>
-                    <View style={{ width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 }}></View>
+                    <View style={styles.viewMakerBlue}></View>
                 </TouchableOpacity>
         }
         return null;
@@ -232,12 +232,12 @@ class ViewInDateScreen extends Component {
             money = this.state.resultDetail.ListService.reduce((a, b) => a + b.PriceService, 0);
             // }
             return <TouchableOpacity style={styles.card} onPress={this.viewMoney}>
-                <View style={{ width: 10, height: 10, backgroundColor: '#ff4355', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
-                <View style={{ flex: 1, padding: 15 }}>
-                    <Text style={{ fontSize: 18 }}>{constants.ehealth.money}</Text>
-                    <Text style={{ paddingTop: 5, color: '#ff4355', flex: 1, fontWeight: 'bold' }}>{money.formatPrice() + " đ"}</Text>
+                <View style={styles.viewMoney}></View>
+                <View style={styles.viewTxMoney}>
+                    <Text style={styles.txResultEhealth}>{constants.ehealth.money}</Text>
+                    <Text style={styles.txMoney}>{money.formatPrice() + " đ"}</Text>
                 </View>
-                <View style={{ width: 5, height: '100%', backgroundColor: '#ff4355', borderRadius: 2.5 }}></View>
+                <View style={styles.makerMoney}></View>
             </TouchableOpacity>
         }
         return null;
@@ -260,12 +260,12 @@ class ViewInDateScreen extends Component {
                 note = item.BiopsyLocation;
             if (note)
                 return <TouchableOpacity style={styles.card} onPress={this.viewSurgeryResult}>
-                    <View style={{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
-                    <View style={{ flex: 1, padding: 15 }}>
-                        <Text style={{ fontSize: 18 }}>{constants.ehealth.surgery_result}</Text>
-                        <Text style={{ paddingTop: 5, color: '#2e66e7', flex: 1 }}>{note}</Text>
+                    <View style={styles.viewSurgeryResult}></View>
+                    <View style={styles.viewTxSurgery}>
+                        <Text style={styles.txResultEhealth}>{constants.ehealth.surgery_result}</Text>
+                        <Text style={styles.txSurgery}>{note}</Text>
                     </View>
-                    <View style={{ width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 }}></View>
+                    <View style={styles.footerSurgery}></View>
                 </TouchableOpacity>
         }
         return null;
@@ -294,12 +294,12 @@ class ViewInDateScreen extends Component {
             let note = item.ServiceName + " " + item.Measure + ", " + item.Quantity + " " + item.Unit;
             if (note)
                 return <TouchableOpacity style={styles.card} onPress={this.viewMedicine}>
-                    <View style={{ width: 10, height: 10, backgroundColor: '#fbaa21', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
-                    <View style={{ flex: 1, padding: 15 }}>
-                        <Text style={{ fontSize: 18 }}>{constants.ehealth.drug}</Text>
-                        <Text style={{ paddingTop: 5, color: '#fbaa21', flex: 1 }}>{note}</Text>
+                    <View style={styles.viewMedicine}></View>
+                    <View style={styles.viewDrug}>
+                        <Text style={styles.txResultEhealth}>{constants.ehealth.drug}</Text>
+                        <Text style={styles.txMedicine}>{note}</Text>
                     </View>
-                    <View style={{ width: 5, height: '100%', backgroundColor: '#fbaa21', borderRadius: 2.5 }}></View>
+                    <View style={styles.footerMedicine}></View>
                 </TouchableOpacity>
         }
         return null;
@@ -336,12 +336,12 @@ class ViewInDateScreen extends Component {
 
             if (note)
                 return <TouchableOpacity style={styles.card} onPress={this.viewMedicalTestResult}>
-                    <View style={{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
-                    <View style={{ flex: 1, padding: 15 }}>
-                        <Text style={{ fontSize: 18 }}>{constants.ehealth.test_result}</Text>
-                        <Text style={{ paddingTop: 5, color: '#2e66e7' }}>{note}</Text>
+                    <View style={styles.viewMedical}></View>
+                    <View style={styles.viewTxMedical}>
+                        <Text style={styles.txResultEhealth}>{constants.ehealth.test_result}</Text>
+                        <Text style={styles.txMedical}>{note}</Text>
                     </View>
-                    <View style={{ width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 }}></View>
+                    <View style={styles.footerMedical}></View>
                 </TouchableOpacity>
         }
         return null;
@@ -353,50 +353,21 @@ class ViewInDateScreen extends Component {
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#22b060"
-                actionbarStyle={{
-                    backgroundColor: '#22b060',
-                    borderBottomWidth: 0
-                }}
-                titleStyle={{
-                    color: '#FFF'
-                }}
+                actionbarStyle={styles.actionbarStyle}
+                titleStyle={styles.titleStyle}
                 isLoading={this.state.isLoading}>
-                <View style={{ flex: 1, alignItems: 'center' }}>
+                <View style={styles.container}>
                     <View style={{ height: 100 }}>
                         <ScrollView ref={ref => this.flListDate = ref} horizontal={true} showsHorizontalScrollIndicator={false}>
                             {this.state.dayInMonth.map((item, index) => {
-                                return <TouchableOpacity key={index} onPress={this.dayPress.bind(this, item)} style={{ justifyContent: 'center', alignItems: 'center', width: 70 }}>
+                                return <TouchableOpacity key={index} onPress={this.dayPress.bind(this, item)} style={styles}>
                                     <Text style={{ color: '#bbbbbb' }}>{this.state.dayNames[item.getDay()]}</Text>
                                     {item == this.state.dateSelected ?
-                                        <View style={{
-                                            width: 40, height: 40, borderRadius: 20,
-                                            backgroundColor: '#27ae60',
-                                            justifyContent: 'center', alignItems: 'center',
-                                            shadowColor: 'rgba(46, 231, 58, 0.35)',
-                                            shadowOffset: {
-                                                width: 0,
-                                                height: 4
-                                            },
-                                            shadowRadius: 10,
-                                            shadowOpacity: 1,
-                                            elevation: 3, margin: 5,
-                                            marginTop: 10,
-                                        }}>
-                                            < Text style={{
-                                                fontSize: 18,
-                                                color: '#FFF',
-                                            }}>{item.format("dd").toNumber()}</Text>
+                                        <View style={styles.viewDateSelected}>
+                                            <Text style={styles.txDay}>{item.format("dd").toNumber()}</Text>
                                         </View> :
-                                        <View style={{
-                                            width: 40, height: 40, borderRadius: 20,
-                                            justifyContent: 'center', alignItems: 'center',
-                                            margin: 5,
-                                            marginTop: 10,
-                                        }}>
-                                            < Text style={{
-                                                fontSize: 18,
-                                                color: '#2e2e39',
-                                            }}>{item.format("dd").toNumber()}</Text>
+                                        <View style={styles.txDay}>
+                                            <Text style={styles.txDayNotSelect}>{item.format("dd").toNumber()}</Text>
                                         </View>
                                     }
                                 </TouchableOpacity>
@@ -404,7 +375,7 @@ class ViewInDateScreen extends Component {
                         </ScrollView>
                     </View>
                     {
-                        this.state.hasResult && <ScrollView style={{ flex: 1, width: DEVICE_WIDTH, padding: 10 }}
+                        this.state.hasResult && <ScrollView style={styles.renderData}
                             showsVerticalScrollIndicator={false}
                         >
                             {
@@ -432,18 +403,10 @@ class ViewInDateScreen extends Component {
                         </ScrollView>
                     }
                     {this.state.hasResult &&
-                        <TouchableOpacity style={{
-                            width: 252,
-                            maxWidth: DEVICE_WIDTH,
-                            backgroundColor: '#27ae60',
-                            borderRadius: 5,
-                            height: 48,
-                            marginVertical: 20,
-                            padding: 10, alignItems: 'center'
-                        }} onPress={() => {
+                        <TouchableOpacity style={styles.btnInfo} onPress={() => {
                             this.props.navigation.navigate("viewDetail", { result: this.state.result, resultDetail: this.state.resultDetail })
                         }}>
-                            <Text style={{ fontWeight: 'bold', color: '#FFF', fontSize: 17 }}>{constants.ehealth.full_result}</Text>
+                            <Text style={}>{constants.ehealth.full_result}</Text>
                         </TouchableOpacity>
                     }
                 </View>
@@ -453,14 +416,14 @@ class ViewInDateScreen extends Component {
                     backdropOpacity={0.5}
                     animationInTiming={500}
                     animationOutTiming={500}
-                    style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+                    style={styles.viewModal}
                     backdropTransitionInTiming={1000}
                     backdropTransitionOutTiming={1000}
                 >
-                    <View style={{ backgroundColor: '#fff', marginHorizontal: 20, marginVertical: 60, borderRadius: 5 }}>
-                        <Text style={{ fontSize: 22, color: '#27AE60', textAlign: 'center', marginTop: 10, marginHorizontal: 20 }}>{constants.ehealth.notifi_text}</Text>
-                        <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>{this.state.messageError}</Text>
-                        <TouchableOpacity onPress={() => this.setState({ isVisible: false })} style={{ justifyContent: 'center', alignItems: 'center', height: 41, backgroundColor: '#878787', borderBottomLeftRadius: 5, borderBottomRightRadius: 5 }}><Text style={{ color: '#fff' }}>{constants.ehealth.modal_confirm}</Text></TouchableOpacity>
+                    <View style={styles.viewPopup}>
+                        <Text style={styles.txNotifi}>{constants.ehealth.notifi_text}</Text>
+                        <Text style={styles.txErr}>{this.state.messageError}</Text>
+                        <TouchableOpacity onPress={() => this.setState({ isVisible: false })} style={styles.btnConfirm}><Text style={{ color: '#fff' }}>{constants.ehealth.modal_confirm}</Text></TouchableOpacity>
                     </View>
                 </Modal>
             </ActivityPanel>
@@ -573,8 +536,87 @@ const styles = StyleSheet.create({
     txContent: {
         color: '#554a4c',
         marginTop: 5, marginBottom: 25,
-    }
-});
+    },
+    viewCheckupResult:{ width: 10, height: 10, backgroundColor: '#ff4355', borderRadius: 5, marginTop: 22, marginLeft: 10 },
+    viewNote:{ flex: 1, padding: 15 },
+    txResultEhealth:{ fontSize: 18 },
+    txNote:{ paddingTop: 5, color: '#ff4355', flex: 1 },
+    viewMaker:{ width: 5, height: '100%', backgroundColor: '#ff4355', borderRadius: 2.5 },
+    viewDiagnosticResult:{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 },
+    viewTx:{ flex: 1, padding: 15 },
+    txNoteBlue:{ paddingTop: 5, color: '#2e66e7', flex: 1 },
+    viewMakerBlue:{ width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 },
+    viewMoney:{ width: 10, height: 10, backgroundColor: '#ff4355', borderRadius: 5, marginTop: 22, marginLeft: 10 },
+    viewTxMoney:{ flex: 1, padding: 15 },
+    txMoney:{ paddingTop: 5, color: '#ff4355', flex: 1, fontWeight: 'bold' },
+    makerMoney:{ width: 5, height: '100%', backgroundColor: '#ff4355', borderRadius: 2.5 },
+    viewSurgeryResult:{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 },
+    viewTxSurgery:{ flex: 1, padding: 15 },
+    txSurgery:{ paddingTop: 5, color: '#2e66e7', flex: 1 },
+    footerSurgery:{ width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 },
+    viewMedicine:{ width: 10, height: 10, backgroundColor: '#fbaa21', borderRadius: 5, marginTop: 22, marginLeft: 10 },
+    viewDrug:{ flex: 1, padding: 15 },
+    txMedicine:{ paddingTop: 5, color: '#fbaa21', flex: 1 },
+    footerMedicine:{ width: 5, height: '100%', backgroundColor: '#fbaa21', borderRadius: 2.5 },
+    viewMedical:{ width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 },
+    viewTxMedical:{ flex: 1, padding: 15 },
+    txMedical:{ paddingTop: 5, color: '#2e66e7' },
+    footerMedical:{ width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 },
+    actionbarStyle:{
+        backgroundColor: '#22b060',
+        borderBottomWidth: 0
+    },
+    titleStyle:{
+        color: '#FFF'
+    },
+    container:{ flex: 1, alignItems: 'center' },
+    viewDateSelected:{
+        width: 40, height: 40, borderRadius: 20,
+        backgroundColor: '#27ae60',
+        justifyContent: 'center', alignItems: 'center',
+        shadowColor: 'rgba(46, 231, 58, 0.35)',
+        shadowOffset: {
+            width: 0,
+            height: 4
+        },
+        shadowRadius: 10,
+        shadowOpacity: 1,
+        elevation: 3, margin: 5,
+        marginTop: 10,
+    },
+    txDate:{
+        fontSize: 18,
+        color: '#FFF',
+    },
+    txDay:{
+        width: 40, height: 40, borderRadius: 20,
+        justifyContent: 'center', alignItems: 'center',
+        margin: 5,
+        marginTop: 10,
+    },
+    txDayNotSelect:{
+        fontSize: 18,
+        color: '#2e2e39',
+    },
+    renderData:{ flex: 1, width: DEVICE_WIDTH, padding: 10 },
+    btnInfo:{
+        width: 252,
+        maxWidth: DEVICE_WIDTH,
+        backgroundColor: '#27ae60',
+        borderRadius: 5,
+        height: 48,
+        marginVertical: 20,
+        padding: 10, alignItems: 'center'
+    },
+    txBtnInfo:{ fontWeight: 'bold', color: '#FFF', fontSize: 17 },
+    viewModal:{ flex: 1, alignItems: 'center', justifyContent: 'center' },
+    viewPopup:{ backgroundColor: '#fff', marginHorizontal: 20, marginVertical: 60, borderRadius: 5 },
+    txNotifi:{ fontSize: 22, color: '#27AE60', textAlign: 'center', marginTop: 10, marginHorizontal: 20 },
+    txErr:{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 },
+    btnConfirm:{ justifyContent: 'center', alignItems: 'center', height: 41, backgroundColor: '#878787', borderBottomLeftRadius: 5, borderBottomRightRadius: 5 },
+
+
+}); 
 
 function mapStateToProps(state) {
     return {
