@@ -18,52 +18,40 @@ class DiagnosticResultItem extends Component {
         //     }
         //     text = text.trim();
         // }
-        return <Text style={{ marginLeft: 10, marginBottom: 10 }}>{text}</Text>
+        return <Text style={styles.txItem}>{text}</Text>
     }
     render() {
         let { item } = this.props;
-        return <View style={{ flex: 1, marginTop: 20 }} key={this.props.key}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
-                <Text style={{ flex: 1, fontWeight: 'bold', fontSize: 15, color: constants.colors.primary_bold }}>{item.ServiceName}</Text>
+        return <View style={styles.container} key={this.props.key}>
+            <View style={styles.viewService}>
+                <Text style={styles.txSerivceName}>{item.ServiceName}</Text>
                 {/* <TouchableOpacity onPress={() => this.exportPdf()}>
                     <Text style={{ borderColor: '#065cb4', borderWidth: 2, paddingLeft: 12, paddingRight: 12, paddingTop: 8, paddingBottom: 8, borderRadius: 20, color: "#065cb4", fontWeight: 'bold' }}>Xuất PDF</Text>
                 </TouchableOpacity> */}
             </View>
-            <View style={{
-                backgroundColor: "#ffffff",
-                shadowColor: "rgba(0, 0, 0, 0.05)",
-                shadowOffset: {
-                    width: 0,
-                    height: 2
-                },
-                shadowRadius: 10,
-                shadowOpacity: 1,
-                elevation: 3,
-                borderRadius: 5,
-                padding: 10
-            }}>
+            <View style={styles.viewItem}>
                 {
                     (item.Result || item.SummaryResult || item.Discussion) ?
                         <View>
 
                             <Text style={styles.diagnosticLabel}>{constants.ehealth.describe}</Text>
                             {item.Result ?
-                                <View style={{ flexDirection: 'row' }}>
-                                    <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
+                                <View style={styles.viewList}>
+                                    <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={styles.imgList} />
                                     {
                                         this.renderItem(item.Result)
                                     }
                                 </View> : null}
                             {item.SummaryResult ?
-                                <View style={{ flexDirection: 'row' }}>
-                                    <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
+                                <View style={styles.viewList}>
+                                    <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={styles.imgList} />
                                     {
                                         this.renderItem(item.SummaryResult)
                                     }
                                 </View> : null}
                             {item.Discussion ?
-                                <View style={{ flexDirection: 'row' }}>
-                                    <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
+                                <View style={styles.viewList}>
+                                    <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={styles.imgList} />
                                     {
                                         this.renderItem(item.Discussion)
                                     }
@@ -76,9 +64,9 @@ class DiagnosticResultItem extends Component {
 
                             <Text style={styles.diagnosticLabel}>{constants.ehealth.conclude}</Text>
                             {item.Conclusion ?
-                                <View style={{ flexDirection: 'row' }}>
-                                    <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
-                                    <Text style={{ marginLeft: 10 }}>{item.Conclusion}</Text>
+                                <View style={styles.viewList}>
+                                    <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={styles.imgList} />
+                                    <Text style={styles.txConclusion}>{item.Conclusion}</Text>
                                 </View> : null}
                         </View> : null}
             </View>
@@ -93,6 +81,7 @@ function mapStateToProps(state) {
     };
 }
 const styles = StyleSheet.create({
+    container:{ flex: 1, marginTop: 20 },
     diagnosticLabel1:
     {
         color: constants.colors.primary_bold,
@@ -104,6 +93,26 @@ const styles = StyleSheet.create({
         fontWeight: 'bold', marginBottom: 5
     },
     breakline: {
-    }
+    },
+    txItem:{ marginLeft: 10, marginBottom: 10 },
+    viewService:{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
+    txSerivceName:{ flex: 1, fontWeight: 'bold', fontSize: 15, color: constants.colors.primary_bold },
+    viewItem:{
+        backgroundColor: "#ffffff",
+        shadowColor: "rgba(0, 0, 0, 0.05)",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowRadius: 10,
+        shadowOpacity: 1,
+        elevation: 3,
+        borderRadius: 5,
+        padding: 10
+    },
+    viewList:{ flexDirection: 'row' },
+    imgList:{ marginTop: 7 },
+    txConclusion:{ marginLeft: 10 }
+
 })
 export default connect(mapStateToProps)(DiagnosticResultItem);

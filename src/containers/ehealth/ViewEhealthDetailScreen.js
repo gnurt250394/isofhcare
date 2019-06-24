@@ -65,30 +65,30 @@ class ViewEhealthDetailScreen extends Component {
     renderDetails = () =>{
         if(this.state.user){
             return(
-                <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
+                <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
                 <ProfileInfomation hospitalName ={this.state.hospitalName} avatar = {this.state.user.avatar} patientName = {this.state.resultDetail.Profile.PatientName} resultDetail={this.state.resultDetail} />
-                <View style={{ height: 1, backgroundColor: '#27ae60', }} />
+                <View style={styles.viewRenderDetails} />
                 <CheckupResult result={this.state.result} />
                 <MedicalTestResult result={this.state.result} />
                 <DiagnosticResult result={this.state.result} />
                 <SurgeryResult result={this.state.result} />
                 <Medicine result={this.state.result} />
                 <TotalMoney result={this.state.result} resultDetail={this.state.resultDetail} />
-                <View style={{height: 50}}/>
+                <View style={styles.viewBottomDetails}/>
                 </ScrollView>
             )
         }else{
             return(
-                <ScrollView ref={ref => this.flListDate = ref} showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
+                <ScrollView ref={ref => this.flListDate = ref} showsVerticalScrollIndicator={false} style={styles.container}>
                 <ProfileInfomation resultDetail={this.state.resultDetail} />
-                <View style={{ height: 1, backgroundColor: '#27ae60', }} />
+                <View style={styles.viewRenderDetails} />
                 <CheckupResult result={this.state.result} />
                 <MedicalTestResult result={this.state.result} />
                 <DiagnosticResult result={this.state.result} />
                 <SurgeryResult result={this.state.result} />
                 <Medicine result={this.state.result} />
                 <TotalMoney result={this.state.result} resultDetail={this.state.resultDetail} />
-                <View style={{height: 50}}/>
+                <View style={styles.viewBottomDetails}/>
                 </ScrollView>
             )
         }
@@ -96,17 +96,12 @@ class ViewEhealthDetailScreen extends Component {
     render() {
 
         return (
-            <ActivityPanel style={{ flex: 1 }} title={constants.title.ehealth_details}
+            <ActivityPanel style={styles.container} title={constants.title.ehealth_details}
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#22b060"
-                actionbarStyle={{
-                    backgroundColor: '#22b060',
-                    borderBottomWidth: 0
-                }}
-                titleStyle={{
-                    color: '#FFF'
-                }}
+                actionbarStyle={styles.actionbarStyle}
+                titleStyle={styles.titleStyle}
                 isLoading={this.state.isLoading}>
                {this.renderDetails()}
             </ActivityPanel>
@@ -115,12 +110,22 @@ class ViewEhealthDetailScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+    container:{ flex: 1 },
     round1: { width: 20, height: 20, backgroundColor: '#FFF', borderColor: '#8fa1aa', borderWidth: 1.5, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
     round2: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#7daa3c' },
     round3: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#c74444' },
     itemlabel: { marginLeft: 5, flex: 1, marginTop: 2 },
     itemcontent: { color: '#0076ff' },
-    item: { marginTop: 10, flexDirection: 'row' }
+    item: { marginTop: 10, flexDirection: 'row' },
+    viewRenderDetails:{ height: 1, backgroundColor: '#27ae60', },
+    viewBottomDetails:{height: 50},
+    actionbarStyle:{
+        backgroundColor: '#22b060',
+        borderBottomWidth: 0
+    },
+    titleStyle:{
+        color: '#FFF'
+    },
 });
 
 function mapStateToProps(state) {

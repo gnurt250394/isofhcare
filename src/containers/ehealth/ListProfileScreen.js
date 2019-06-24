@@ -73,7 +73,7 @@ class ListProfileScreen extends PureComponent {
                     </View>
                     <View style={styles.viewTime}>
                         <ScaleImage resizeMode='cover' source={require("@images/new/ehealth/ic_timer.png")} width={20} tintColor={'#8fa1aa'} />
-                        <Text style={styles.txLastTime}>Gần nhất: {item.latestTime ? item.latestTime.toDateObject('-').format('dd/MM/yyyy') : ''}</Text>
+                        <Text style={styles.txLastTime}>{constants.ehealth.lastTime2}{item.latestTime ? item.latestTime.toDateObject('-').format('dd/MM/yyyy') : ''}</Text>
                     </View>
                 </View>
                 <View style={styles.txCountTime}>
@@ -82,7 +82,7 @@ class ListProfileScreen extends PureComponent {
                 </View>
             </View>
             <View style={styles.borderBottom} />
-        </TouchableOpacity >
+        </TouchableOpacity>
     }
     onRefresh() {
         if (!this.state.loading)
@@ -117,16 +117,14 @@ class ListProfileScreen extends PureComponent {
     }
     render() {
         return (
-            <ActivityPanel style={{ flex: 1 }}
+            <ActivityPanel style={styles.container}
                 // title="HỒ SƠ Y BẠ GIA ĐÌNH"
                 title={<Text>{constants.title.list_profile_ehealth}{'\n'}<Text style={{ fontSize: 12, fontWeight: 'normal' }}>{constants.ehealth.total}{this.state.listData ? this.state.listData.length : 0}{constants.ehealth.member}</Text></Text>}
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#22b060"
                 actionbarStyle={styles.actionbarStyle}
-                titleStyle={{
-                    color: '#FFF'
-                }}
+                titleStyle={styles.titleStyle}
                 showFullScreen={true} isLoading={this.state.isLoading}>
                 <FlatList
                     showsVerticalScrollIndicator={false}
@@ -136,7 +134,7 @@ class ListProfileScreen extends PureComponent {
                     keyExtractor={(item, index) => index.toString()}
                     extraData={this.state}
                     data={this.state.listData}
-                    ListFooterComponent={() => <View style={{ height: 10 }}></View>}
+                    ListFooterComponent={() => <View style={styles.viewFooter}></View>}
                     renderItem={({ item, index }) => this.renderItemProfile.call(this, item, index)}
                 />
             </ActivityPanel>
@@ -148,6 +146,11 @@ const styles = StyleSheet.create({
     style1: {
         flexDirection: 'row', alignItems: 'center', marginTop: 10, marginLeft: 20
     },
+    titleStyle:{
+        color: '#FFF'
+    },
+    viewFooter:{ height: 10 },
+    container:{ flex: 1 },
     text1: {
         fontSize: 16,
         fontWeight: "bold",

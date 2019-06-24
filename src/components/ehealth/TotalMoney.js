@@ -33,7 +33,7 @@ class TotalMoney extends Component {
         if (!resultDetail || !resultDetail.ListService || !resultDetail.ListService.length)
             return null;
 
-        return ((<View style={{ flex: 1, padding: 10 }}>
+        return ((<View style={styles.container}>
             {
                 (this.props.showTitle == true || this.props.showTitle == undefined) &&
                 <View style={[styles.item, { marginTop: 0 }]}>
@@ -41,16 +41,16 @@ class TotalMoney extends Component {
                         <View style={styles.round2} />
                     </View>
                     <View style={[styles.itemlabel, { marginTop: 0 }]}>
-                        <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>TIỀN</Text>
+                        <Text style={styles.txMoney}>TIỀN</Text>
                     </View>
                 </View>
             }
-            <Table style={[styles.table, { marginTop: 10 }]} borderStyle={{ borderWidth: 0.5, borderColor: '#c8e1ff' }}>
+            <Table style={[styles.table, { marginTop: 10 }]} borderStyle={styles.borderStyle}>
                 <Row data={tableHead} style={styles.head} textStyle={styles.textHead} flexArr={[1, 3, 1, 2]} />
                 {this.renderService(resultDetail.ListService)}
             </Table>
-            <View style={{ alignItems: 'flex-end', marginTop: 10 }}>
-                <Text style={{ fontSize: 18, borderBottomWidth: 1, borderBottomColor: '#979797', paddingBottom: 5, color: '#333333', fontWeight: 'bold' }}>Tổng:      <Text style={{ color: 'red', fontWeight: 'bold', fontSize: 18 }}>
+            <View style={styles.viewListService}>
+                <Text style={styles.txTotal}>Tổng:      <Text style={styles.valueTotal}>
                     {
                         resultDetail.ListService.reduce((a, b) => a + b.PriceService, 0).formatPrice() + " đ"
                     }</Text></Text>
@@ -89,6 +89,12 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 10,
         backgroundColor: constants.colors.breakline
-    }
+    },
+    container:{ flex: 1, padding: 10 },
+    txMoney:{ fontWeight: 'bold', fontSize: 18 },
+    borderStyle:{ borderWidth: 0.5, borderColor: '#c8e1ff' },
+    viewListService:{ alignItems: 'flex-end', marginTop: 10 },
+    txTotal:{ fontSize: 18, borderBottomWidth: 1, borderBottomColor: '#979797', paddingBottom: 5, color: '#333333', fontWeight: 'bold' },
+    valueTotal:{ color: 'red', fontWeight: 'bold', fontSize: 18 },
 })
 export default connect(mapStateToProps)(TotalMoney);

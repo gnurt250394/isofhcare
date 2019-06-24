@@ -42,11 +42,11 @@ class ViewCheckupResultScreen extends Component {
     renderDetails = () => {
         return (
             <ScrollView ref={ref => this.flListDate = ref} showsVerticalScrollIndicator={false} style={styles.container}>
-                <ProfileInfomation2 title="KẾT QUẢ CHẨN ĐOÁN HÌNH ẢNH" resultDetail={this.state.resultDetail} />
+                <ProfileInfomation2 title={constants.title.result_ehealth_image} resultDetail={this.state.resultDetail} />
                 <DiagnosticResult showTitle={false} result={this.state.result} />
                 <TouchableOpacity style={styles.btnFinish} onPress={() => {
                     this.props.navigation.pop();
-                }}><Text style={styles.txFinish}>XEM XONG</Text>
+                }}><Text style={styles.txFinish}>{constants.title.result_ehealth}</Text>
                 </TouchableOpacity>
                 <View style={styles.viewFooter} />
             </ScrollView>

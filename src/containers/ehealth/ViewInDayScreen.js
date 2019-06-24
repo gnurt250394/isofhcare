@@ -349,24 +349,24 @@ class ViewInDateScreen extends Component {
     render() {
 
         return (
-            <ActivityPanel style={{ flex: 1 }} title={constants.title.ehealth}
+            <ActivityPanel style={styles.container} title={constants.title.ehealth}
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#22b060"
                 actionbarStyle={styles.actionbarStyle}
                 titleStyle={styles.titleStyle}
                 isLoading={this.state.isLoading}>
-                <View style={styles.container}>
-                    <View style={{ height: 100 }}>
+                <View style={styles.container2}>
+                    <View style={styles.viewSpaceTop}>
                         <ScrollView ref={ref => this.flListDate = ref} horizontal={true} showsHorizontalScrollIndicator={false}>
                             {this.state.dayInMonth.map((item, index) => {
-                                return <TouchableOpacity key={index} onPress={this.dayPress.bind(this, item)} style={styles}>
-                                    <Text style={{ color: '#bbbbbb' }}>{this.state.dayNames[item.getDay()]}</Text>
+                                return <TouchableOpacity key={index} onPress={this.dayPress.bind(this, item)} style={styles.btnDate}>
+                                    <Text style={styles.txDateColor}>{this.state.dayNames[item.getDay()]}</Text>
                                     {item == this.state.dateSelected ?
                                         <View style={styles.viewDateSelected}>
                                             <Text style={styles.txDay}>{item.format("dd").toNumber()}</Text>
                                         </View> :
-                                        <View style={styles.txDay}>
+                                        <View style={styles.viewTxDay}>
                                             <Text style={styles.txDayNotSelect}>{item.format("dd").toNumber()}</Text>
                                         </View>
                                     }
@@ -397,7 +397,7 @@ class ViewInDateScreen extends Component {
                                 this.renderMoney()
                             }
 
-                            <View style={{ height: 50 }}></View>
+                            <View style={styles.viewSpaceBottom}></View>
 
 
                         </ScrollView>
@@ -432,6 +432,11 @@ class ViewInDateScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+    container:{
+        flex: 1 
+    },
+    viewSpaceTop:{ height: 100 },
+    txDateColor:{ color: '#bbbbbb' },
     card: {
         borderRadius: 5,
         backgroundColor: "#ffffff",
@@ -569,11 +574,14 @@ const styles = StyleSheet.create({
     titleStyle:{
         color: '#FFF'
     },
-    container:{ flex: 1, alignItems: 'center' },
+    container2:{ flex: 1, alignItems: 'center' },
     viewDateSelected:{
-        width: 40, height: 40, borderRadius: 20,
+        width: 40, 
+        height: 40,
+        borderRadius: 20,
         backgroundColor: '#27ae60',
-        justifyContent: 'center', alignItems: 'center',
+        justifyContent: 'center',
+         alignItems: 'center',
         shadowColor: 'rgba(46, 231, 58, 0.35)',
         shadowOffset: {
             width: 0,
@@ -581,14 +589,16 @@ const styles = StyleSheet.create({
         },
         shadowRadius: 10,
         shadowOpacity: 1,
-        elevation: 3, margin: 5,
+        elevation: 3, 
+        margin: 5,
         marginTop: 10,
     },
     txDate:{
         fontSize: 18,
         color: '#FFF',
     },
-    txDay:{
+    btnDate:{ justifyContent: 'center', alignItems: 'center', width: 70 },
+    viewTxDay:{
         width: 40, height: 40, borderRadius: 20,
         justifyContent: 'center', alignItems: 'center',
         margin: 5,
@@ -614,7 +624,7 @@ const styles = StyleSheet.create({
     txNotifi:{ fontSize: 22, color: '#27AE60', textAlign: 'center', marginTop: 10, marginHorizontal: 20 },
     txErr:{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 },
     btnConfirm:{ justifyContent: 'center', alignItems: 'center', height: 41, backgroundColor: '#878787', borderBottomLeftRadius: 5, borderBottomRightRadius: 5 },
-
+    viewSpaceBottom:{ height: 50 }
 
 }); 
 
