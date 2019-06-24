@@ -113,23 +113,23 @@ class Home extends Component {
   }
   renderAds() {
     return (<View>
-      <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-        <Text style={{ padding: 12, paddingLeft: 20, paddingBottom: 5, color: 'rgba(74,74,74,0.6)', fontWeight: '500', flex: 1 }}>Ưu đãi</Text>
-        <ScaledImage source={require("@images/new/ic_more.png")} width={20} style={{ marginTop: 10, marginRight: 20 }} />
+      <View style={styles.viewAds}>
+        <Text style={styles.txAds}>Ưu đãi</Text>
+        <ScaledImage source={require("@images/new/ic_more.png")} width={20} style={styles.imgMore} />
       </View>
       <FlatList
-        style={{ paddingHorizontal: 20 }}
+        style={styles.listAds}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
         extraData={this.state}
         data={this.state.ads}
-        ListFooterComponent={<View style={{ width: 35 }}></View>}
+        ListFooterComponent={<View style={styles.viewFooter}></View>}
         renderItem={({ item, index }) => {
           if (!item || !item.advertise || !item.advertise.images)
             return null;
           return (
-            <Card style={{ width: DEVICE_WIDTH - 60, borderRadius: 6, marginRight: 10 }}>
+            <Card style={styles.cardView}>
               <TouchableOpacity
                 onPress={() => {
                   if (item.advertise && item.advertise.value) {
@@ -143,7 +143,7 @@ class Home extends Component {
                   uri={item.advertise.images.absoluteUrl()}
                   width={DEVICE_WIDTH - 60}
                 />
-                <Text numberOfLines={1} ellipsizeMode='tail' style={{ color: '#000', margin: 13 }}>{item.advertise ? item.advertise.title : ""}</Text>
+                <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensAds}>{item.advertise ? item.advertise.title : ""}</Text>
               </TouchableOpacity>
             </Card>
           );
@@ -155,34 +155,19 @@ class Home extends Component {
     const { ads0, activeSlide } = this.state;
     let length = ads0.length;
     return (
-      <View style={{ position: 'absolute', bottom: 0, width: DEVICE_WIDTH }}>
+      <View style={styles.viewPagination}>
         <Pagination
           dotsLength={length}
           activeDotIndex={activeSlide || 0}
-          dotContainerStyle={{ width: 10, margin: 0, padding: 0, height: 10 }}
-          dotStyle={{
-            width: 10,
-            height: 10,
-            borderRadius: 5,
-            marginHorizontal: 10,
-            backgroundColor: "#02c39a",
-            paddingHorizontal: 0,
-            margin: 0,
-            padding: 0
-          }}
+          dotContainerStyle={styles.dotContainer}
+          dotStyle={styles.dotStyle}
           inactiveDotStyle={
-            {
-              // Define styles for inactive dots here
-              backgroundColor: "#d8d8d8"
-            }
+           styles.inactiveDotStyle
           }
           inactiveDotOpacity={0.4}
           inactiveDotScale={0.6}
           containerStyle={
-            {
-              paddingVertical: 10,
-              paddingHorizontal: 0
-            }
+             styles.containerPagination
           }
         />
       </View>
@@ -257,10 +242,10 @@ class Home extends Component {
         style={[{ flex: 1 }, this.props.style]}
         hideBackButton={true}
       >
-        <View style={{ flex: 1, position: 'relative' }}>
-          <ScaledImage source={require("@images/new/home/bg_home_new.png")} width={DEVICE_WIDTH} style={{ position: 'absolute', top: 72, right: 0, left: 0 }} />
-          <View style={{ height: 75, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10, backgroundColor: '#fff', borderBottomColor: '#7c817f', borderBottomWidth: 0.5 }}>
-            <View style={{ flex: 1, alignItems: 'center', marginLeft: 45 }}>
+        <View style={styles.viewRender}>
+          <ScaledImage source={require("@images/new/home/bg_home_new.png")} width={DEVICE_WIDTH} style={styles.scaledImgRender} />
+          <View style={styles.viewLogo}>
+            <View style={styles.banner}>
               <ScaledImage source={require("@images/new/isofhcare.png")} width={116} />
             </View>
             <NotificationBadge />
@@ -271,16 +256,13 @@ class Home extends Component {
               onRefresh={this.onRefresh.bind(this)}
             />}
             showsVerticalScrollIndicator={false}
-            style={{
-              flex: 1,
-              paddingTop: 0
-            }}
+            style={styles.scrollViewRender}
           >
-            <View style={{ padding: 21 }}>
-              <Card style={{ borderRadius: 6, marginTop: 130 }}>
+            <View style={styles.viewCard}>
+              <Card style={styles.cardRender}>
 
                 {this.props.userApp.isLogin &&
-                  <View style={{ alignItems: 'center', flexDirection: 'row', borderBottomColor: 'rgba(151, 151, 151, 0.29)', borderBottomWidth: 1, paddingVertical: 10, marginHorizontal: 20, justifyContent: 'center' }}>
+                  <View style={styles.viewLogin}>
                     {/*   <ImageLoad
                       resizeMode="cover"
                       imageStyle={{ borderRadius: 20, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
@@ -306,7 +288,7 @@ class Home extends Component {
                         );
                       }}
                     />  */}
-                    <Text style={{ marginLeft: 5, fontSize: 18, fontWeight: 'bold', color: "#4a4a4a" }} >Xin chào, <Text style={{ color: 'rgb(255,138,21)' }}>{((name) => {
+                    <Text style={styles.txHello} >Xin chào, <Text style={styles.txName}>{((name) => {
                       if (!name) return "";
                       let x = name.trim().split(" ");
                       name = (x[x.length - 1]).toLowerCase();
@@ -317,10 +299,7 @@ class Home extends Component {
                   </View>
                 }
 
-                <View style={{
-                  flexDirection: "row", padding: 10, marginVertical: 20, flexWrap: 'wrap',
-                  justifyContent: 'center'
-                }}>
+                <View style={styles.viewFeatures}>
                   {
                     (this.state.features || []).map((item, position) => {
                       return (
@@ -366,7 +345,52 @@ const styles = StyleSheet.create({
   },
   subLabel: {
     color: '#9B9B9B', fontSize: 12, textAlign: 'center', marginTop: 5
-  }
+  },
+  viewAds:{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' },
+  txAds:{ padding: 12, paddingLeft: 20, paddingBottom: 5, color: 'rgba(74,74,74,0.6)', fontWeight: '500', flex: 1 },
+  imgMore:{ marginTop: 10, marginRight: 20 },
+  listAds:{ paddingHorizontal: 20 },
+  viewFooter:{ width: 35 },
+  cardView:{ width: DEVICE_WIDTH - 60, borderRadius: 6, marginRight: 10 },
+  txContensAds:{ color: '#000', margin: 13 },
+  viewPagination:{ position: 'absolute', bottom: 0, width: DEVICE_WIDTH },
+  dotContainer:{ width: 10, margin: 0, padding: 0, height: 10 },
+  dotStyle:{
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginHorizontal: 10,
+    backgroundColor: "#02c39a",
+    paddingHorizontal: 0,
+    margin: 0,
+    padding: 0
+  },
+  inactiveDotStyle: {
+    // Define styles for inactive dots here
+    backgroundColor: "#d8d8d8"
+  },
+  containerPagination:{
+    paddingVertical: 10,
+    paddingHorizontal: 0
+  },
+  viewRender:{ flex: 1, position: 'relative' },
+  scaledImgRender:{ position: 'absolute', top: 72, right: 0, left: 0 },
+  viewLogo:{ height: 75, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10, backgroundColor: '#fff', borderBottomColor: '#7c817f', borderBottomWidth: 0.5 },
+  banner:{ flex: 1, alignItems: 'center', marginLeft: 45 },
+  scrollViewRender:{
+    flex: 1,
+    paddingTop: 0
+  },
+  viewCard:{ padding: 21 },
+  cardRender:{ borderRadius: 6, marginTop: 130 },
+  viewLogin:{ alignItems: 'center', flexDirection: 'row', borderBottomColor: 'rgba(151, 151, 151, 0.29)', borderBottomWidth: 1, paddingVertical: 10, marginHorizontal: 20, justifyContent: 'center' },
+  txHello:{ marginLeft: 5, fontSize: 18, fontWeight: 'bold', color: "#4a4a4a" },
+  txName:{ color: 'rgb(255,138,21)' },
+  viewFeatures:{
+    flexDirection: "row", padding: 10, marginVertical: 20, flexWrap: 'wrap',
+    justifyContent: 'center'
+  },
+  
 });
 
 function mapStateToProps(state) {
