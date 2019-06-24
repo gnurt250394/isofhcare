@@ -97,10 +97,10 @@ class Account extends Component {
       : icSupport;
     return (
       <View
-        style={{ flexDirection: "row", alignItems: "center", marginTop: 30 }}
+        style={styles.viewCurrentUser}
       >
-        <View style={{ flex: 1 }}>
-          <Text style={{ color: "#000000", fontSize: 20 }}>
+        <View style={styles.viewInfo}>
+          <Text style={styles.txUserName}>
             {this.props.userApp.currentUser.name}
           </Text>
           <TouchableOpacity
@@ -108,26 +108,22 @@ class Account extends Component {
               this.props.navigation.navigate('detailsProfile')
             }}
           >
-            <Text style={{ color: "#008D6F", marginTop: 10 }}>
+            <Text style={styles.txViewProfile}>
               Xem hồ sơ cá nhân
             </Text>
           </TouchableOpacity>
         </View>
         <TouchableOpacity
-          style={{ position: "relative" }}
+          style={styles.btnImage}
           onPress={this.selectImage.bind(this)}
         >
           <ImageLoad
             resizeMode="cover"
-            imageStyle={{ borderRadius: 35, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
+            imageStyle={styles.imageStyle}
             borderRadius={35}
-            customImagePlaceholderDefaultStyle={{
-              width: 70,
-              height: 70,
-              alignSelf: "center"
-            }}
+            customImagePlaceholderDefaultStyle={styles.customImagePlace}
             placeholderSource={icSupport}
-            style={{ width: 70, height: 70, alignSelf: "center" }}
+            style={styles.styleImgLoad}
             resizeMode="cover"
             loadingStyle={{ size: "small", color: "gray" }}
             source={source}
@@ -137,7 +133,7 @@ class Account extends Component {
                   resizeMode="cover"
                   source={icSupport}
                   width={70}
-                  style={{ width: 70, height: 70, alignSelf: "center" }}
+                  style={styles.styleImgLoad}
                 />
               );
             }}
@@ -145,7 +141,7 @@ class Account extends Component {
           <ScaledImage
             source={require("@images/new/ic_account_add.png")}
             width={20}
-            style={{ position: "absolute", bottom: 0, right: 0 }}
+            style={styles.scaledImage}
           />
         </TouchableOpacity>
       </View>
@@ -153,8 +149,8 @@ class Account extends Component {
   }
   renderViewUserNotLogin() {
     return (
-      <View style={{ alignItems: "center", marginTop: 30 }}>
-        <View style={{ marginBottom: 30 }}>
+      <View style={styles.viewUserNotLogin}>
+        <View style={styles.viewScaledImg}>
           <ScaledImage
             source={require("@images/logotext.png")}
             width={116}
@@ -165,22 +161,10 @@ class Account extends Component {
           onPress={() => {
             this.props.navigation.navigate("login");
           }}
-          style={{
-            padding: 18,
-            backgroundColor: "#02C39A",
-            borderRadius: 5,
-            width: 270,
-            marginBottom: 20,
-            marginTop: 20
-          }}
+          style={styles.btnLogin}
         >
           <Text
-            style={{
-              color: "#FFF",
-              fontWeight: "bold",
-              textAlign: "center",
-              fontSize: 17
-            }}
+            style={styles.txLogin}
           >
             Đăng nhập/ Đăng Ký
           </Text>
@@ -193,12 +177,7 @@ class Account extends Component {
       <ActivityPanel hideActionbar={true} hideStatusbar={true} >
         <ScrollView
           showsVerticalScrollIndicator={false}
-          style={{
-            flex: 1,
-            paddingTop: 0,
-            paddingHorizontal: 20,
-            paddingTop: 20
-          }}
+          style={styles.styleScrollView}
         >
           {this.props.userApp.isLogin
             ? this.renderCurrentUserInfo()
@@ -402,9 +381,9 @@ class Account extends Component {
             </TouchableOpacity>
           )}
           <View>
-          <Text style={{marginLeft:10,marginTop:10}}>{'Phiên bản ' + DeviceInfo.getVersion() + '.'+ DeviceInfo.getBuildNumber()}</Text>
+          <Text style={styles.txVersion}>{'Phiên bản ' + DeviceInfo.getVersion() + '.'+ DeviceInfo.getBuildNumber()}</Text>
           </View>
-          <View style={{ height: 100 }} />
+          <View style={styles.viewSpaceBottom} />
           <ImagePicker ref={ref => (this.imagePicker = ref)} />
         </ScrollView>
       </ActivityPanel>
@@ -453,7 +432,46 @@ const styles = StyleSheet.create({
   itemText: {
     flex: 1,
     fontWeight: "400"
-  }
+  },
+  viewCurrentUser:{ flexDirection: "row", alignItems: "center", marginTop: 30 },
+  txUserName:{ color: "#000000", fontSize: 20 },
+  viewInfo:{ flex: 1 },
+  txViewProfile:{ color: "#008D6F", marginTop: 10 },
+  btnImage:{ position: "relative" },
+  imageStyle:{ borderRadius: 35, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' },
+  customImagePlace:{
+    width: 70,
+    height: 70,
+    alignSelf: "center"
+  },
+  styleImgLoad:{ width: 70, height: 70, alignSelf: "center" },
+  scaledImage:{ position: "absolute", bottom: 0, right: 0 },
+  viewUserNotLogin:{ alignItems: "center", marginTop: 30 },
+  viewScaledImg:{ marginBottom: 30 },
+  btnLogin:{
+    padding: 18,
+    backgroundColor: "#02C39A",
+    borderRadius: 5,
+    width: 270,
+    marginBottom: 20,
+    marginTop: 20
+  },
+  txLogin:{
+    color: "#FFF",
+    fontWeight: "bold",
+    textAlign: "center",
+    fontSize: 17
+  },
+  styleScrollView:{
+    flex: 1,
+    paddingTop: 0,
+    paddingHorizontal: 20,
+    paddingTop: 20
+  },
+  txVersion:{marginLeft:10,marginTop:10},
+  viewSpaceBottom:{ height: 100 }
+
+
 });
 
 function mapStateToProps(state) {

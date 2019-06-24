@@ -388,31 +388,31 @@ class ListProfileScreen extends Component {
     renderTextContent = () => {
         switch (this.state.status) {
             case 1: return (
-                <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>{constants.msg.ehealth.not_result_of_this_date}</Text>
+                <Text style={styles.txPopUp}>{constants.msg.ehealth.not_result_of_this_date}</Text>
             )
             case 2: return (
-                <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>{constants.msg.ehealth.re_examination_in_date + this.state.reCheckDate.toDateObject('-').format('dd/MM/yyyy') + '!'}</Text>
+                <Text style={styles.txPopUp}>{constants.msg.ehealth.re_examination_in_date + this.state.reCheckDate.toDateObject('-').format('dd/MM/yyyy') + '!'}</Text>
             )
             case 3: return (
-                <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>{constants.msg.ehealth.examination_in_date}</Text>
+                <Text style={styles.txPopUp}>{constants.msg.ehealth.examination_in_date}</Text>
             )
             case 4: return (
-                <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>{constants.msg.ehealth.not_re_examination}</Text>
+                <Text style={styles.txPopUp}>{constants.msg.ehealth.not_re_examination}</Text>
             )
             case 5: return (
-                <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>{constants.msg.ehealth.not_examination}</Text>
+                <Text style={styles.txPopUp}>{constants.msg.ehealth.not_examination}</Text>
             )
             case 6: return (
-                <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>{"Bạn chưa có kết quả khám ở ngày này!"}</Text>
+                <Text style={styles.txPopUp}>{"Bạn chưa có kết quả khám ở ngày này!"}</Text>
             )
             case 7: return (
-                <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10, fontSize: 18 }}>{'Đã chia sẻ Y bạ thành công!'}</Text>
+                <Text style={styles.txShareFinish}>{'Đã chia sẻ Y bạ thành công!'}</Text>
             )
             case 8: return (
-                <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}><ScaleImage height={20} source={require('@images/new/ehealth/ic_warning.png')}></ScaleImage><Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10, fontSize: 18 }}>{'Chưa chia sẻ được!'}</Text></View>
+                <View style={styles.viewShareErr}><ScaleImage height={20} source={require('@images/new/ehealth/ic_warning.png')}></ScaleImage><Text style={styles.txShareErr}>{'Chưa chia sẻ được!'}</Text></View>
             )
             default: return (
-                <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>{constants.msg.ehealth.not_examination}</Text>
+                <Text style={styles.txPopUp}>{constants.msg.ehealth.not_examination}</Text>
             )
         }
     }
@@ -481,6 +481,7 @@ class ListProfileScreen extends Component {
     })
 
     }
+    onCloseModal =() => this.setState({ isVisible: false })
     componentWillReceiveProps(nextProps){
         if(nextProps.navigation.state.params && nextProps.navigation.state.params.status){
             this.setState({
@@ -575,17 +576,14 @@ class ListProfileScreen extends Component {
                 isLoading={this.state.isLoading}
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#22b060"
-                actionbarStyle={{
-                    backgroundColor: '#22b060',
-                    borderBottomWidth: 0
-                }}
+                actionbarStyle={styles.actionbarStyle}
                 titleStyle={{
                     color: '#FFF'
                 }}
             >
                 <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
-                    <View style={{ justifyContent: 'center', flex: 1, alignItems: 'center' }}>
-                        <Calendar style={{ marginBottom: 3, backgroundColor: "#FFF", width: '100%' }}
+                    <View style={styles.viewCalendar}>
+                        <Calendar style={styles.calendarStyle}
                             // markedDates={this.state.listSchedule}
                             current={this.state.latestTime.format("yyyy-MM-dd")}
                             // onDayPress={(day) => { console.log('selected day', day) }}
@@ -601,25 +599,25 @@ class ListProfileScreen extends Component {
                             markedDates={this.state.histories}
                         />
                         <TouchableOpacity onPress={this.viewResult.bind(this)} style={styles.viewBtn}>
-                            <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>{constants.ehealth.checkupResult}</Text>
+                            <Text style={styles.txCheckResult}>{constants.ehealth.checkupResult}</Text>
                         </TouchableOpacity>
                         <Card style={styles.cardView}>
-                            <View style={{ flexDirection: 'row', marginVertical: 10, }}>
+                            <View style={styles.viewSuggest}>
                                 <View style={styles.viewLine}></View>
                                 <TextInput onBlur={this.onBlur} multiline={true} onChangeText={s => {
                                     this.setState({ suggestions: s })
-                                }} value={this.state.suggestions} underlineColorAndroid={'#fff'} style={{ marginLeft: 5, color: '#9caac4', fontSize: 18, width: '95%' }} placeholder={'Bạn cần làm gì?'}></TextInput>
+                                }} value={this.state.suggestions} underlineColorAndroid={'#fff'} style={styles.inputSuggest} placeholder={'Bạn cần làm gì?'}></TextInput>
                             </View>
-                            <Text style={{ color: '#bdc6d8', fontSize: 15 }}>{constants.ehealth.suggestion}</Text>
+                            <Text style={styles.txSuggest}>{constants.ehealth.suggestion}</Text>
                             <View style={styles.viewBTnSuggest}>
                                 <TouchableOpacity onPress={this.onPressAppointment} style={[styles.btnReExamination, { backgroundColor: '#4CD565', }]}>
-                                    <Text style={{ color: '#fff', padding: 2 }}>{constants.ehealth.re_examination}</Text>
+                                    <Text style={styles.txReExamination}>{constants.ehealth.re_examination}</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={this.onShareEhealth} style={[styles.btnReExamination, { backgroundColor: '#2E66E7', }]}>
-                                    <Text style={{ color: '#fff', padding: 2 }}>{constants.ehealth.share_ehealth}</Text>
+                                    <Text style={styles.txReExamination}>{constants.ehealth.share_ehealth}</Text>
                                 </TouchableOpacity>
                             </View>
-                            <View style={{ height: 1, backgroundColor: '#97979710', marginVertical: 10 }} />
+                            <View style={styles.viewBorder} />
                             <View>
                                 <Text style={styles.txLabel}>{constants.ehealth.note}</Text>
                                 <TextInput onBlur={this.onBlur} multiline={true} onChangeText={s => {
@@ -631,7 +629,7 @@ class ListProfileScreen extends Component {
                                 <TouchableOpacity onPress={this.onPressTime}><Text style={styles.txContent}>{this.state.date ? (new Date().format("dd/MM/yyyy") + " " + this.state.date).toDateObject('/').format('HH:mm') : 'Chọn giờ'}</Text>
                                 </TouchableOpacity>
                             </View>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <View style={styles.viewAlarm}>
                                 <View >
                                     <Text style={styles.txLabel}>{constants.ehealth.redmine_durg}</Text>
                                     <TouchableOpacity onPress={this.onPressTimeAlarm}><Text style={styles.txContent}><Text style={styles.txContent}>{this.state.timeAlarm ? (new Date().format("dd/MM/yyyy") + " " + this.state.timeAlarm).toDateObject('/').format('HH:mm') : 'Chọn giờ'}</Text></Text></TouchableOpacity>
@@ -644,7 +642,7 @@ class ListProfileScreen extends Component {
                             </View>
                         </Card>
                     </View>
-                    <View style={{ height: 50 }}></View>
+                    <View style={styles.viewSpaceBottom}></View>
                 </ScrollView>
                 <DateTimePicker
                     mode={'time'}
@@ -659,18 +657,18 @@ class ListProfileScreen extends Component {
                 />
                 <Modal
                     isVisible={this.state.isVisible}
-                    onBackdropPress={() => this.setState({ isVisible: false })}
+                    onBackdropPress={this.onCloseModal}
                     backdropOpacity={0.5}
                     animationInTiming={500}
                     animationOutTiming={500}
-                    style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+                    style={styles.viewModal}
                     backdropTransitionInTiming={1000}
                     backdropTransitionOutTiming={1000}
                 >
-                    <View style={{ backgroundColor: '#fff', marginHorizontal: 20, marginVertical: 60, borderRadius: 5 }}>
-                        <Text style={{ fontSize: 22, color: '#27AE60', textAlign: 'center', marginTop: 10, marginHorizontal: 20 }}>{constants.ehealth.notifi_text}</Text>
+                    <View style={styles.viewPopup}>
+                        <Text style={styles.txNotifi}>{constants.ehealth.notifi_text}</Text>
                         {this.renderTextContent()}
-                        <TouchableOpacity onPress={() => this.setState({ isVisible: false })} style={{ justifyContent: 'center', alignItems: 'center', height: 41, backgroundColor: '#878787', borderBottomLeftRadius: 5, borderBottomRightRadius: 5 }}><Text style={{ color: '#fff' }}>OK, XONG</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={this.onCloseModal} style={styles.btnDone}><Text style={styles.txDone}>OK, XONG</Text></TouchableOpacity>
                     </View>
                 </Modal>
                 <ActionSheet
@@ -789,7 +787,31 @@ const styles = StyleSheet.create({
     txContent: {
         color: '#554a4c',
         marginTop: 5, marginBottom: 25,
-    }
+    },
+    txPopUp:{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 },
+    txShareFinish:{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10, fontSize: 18 },
+    viewShareErr:{ flexDirection: 'row', alignItems: 'center', padding: 10 },
+    txShareErr:{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10, fontSize: 18 },
+    actionbarStyle:{
+        backgroundColor: '#22b060',
+        borderBottomWidth: 0
+    },
+    viewCalendar:{ justifyContent: 'center', flex: 1, alignItems: 'center' },
+    calendarStyle:{ marginBottom: 3, backgroundColor: "#FFF", width: '100%' },
+    txCheckResult:{ color: '#fff', fontWeight: 'bold', fontSize: 16 },
+    viewSuggest:{ flexDirection: 'row', marginVertical: 10, },
+    inputSuggest:{ marginLeft: 5, color: '#9caac4', fontSize: 18, width: '95%' },
+    txSuggest:{ color: '#bdc6d8', fontSize: 15 },   
+    txReExamination:{ color: '#fff', padding: 2 },
+    viewBorder:{ height: 1, backgroundColor: '#97979710', marginVertical: 10 },
+    viewAlarm:{ flexDirection: 'row', justifyContent: 'space-between' },
+    viewSpaceBottom:{ height: 50 },
+    viewModal:{ flex: 1, alignItems: 'center', justifyContent: 'center' },
+    viewPopup:{ backgroundColor: '#fff', marginHorizontal: 20, marginVertical: 60, borderRadius: 5 },
+    txNotifi:{ fontSize: 22, color: '#27AE60', textAlign: 'center', marginTop: 10, marginHorizontal: 20 },
+    btnDone:{ justifyContent: 'center', alignItems: 'center', height: 41, backgroundColor: '#878787', borderBottomLeftRadius: 5, borderBottomRightRadius: 5 },
+    txDone:{ color: '#fff' },
+
 });
 
 function mapStateToProps(state) {
