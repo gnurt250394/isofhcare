@@ -41,5 +41,16 @@ module.exports = {
             if (callback)
                 callback(s, e);
         });
+    },
+    getListDrug(){
+        return new Promise((resolve, reject) => {
+            client.requestApi('get',constants.api.home.get_list_drug,{},(s,e) => {
+                if(s)
+                resolve(s)
+                else
+                reject(e)
+            })
+        });
+      
     }
 }

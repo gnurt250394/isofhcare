@@ -569,6 +569,9 @@ module.exports = {
       update_data_user: isofhcare_service + 'patient-history-booking/update-data-note',
       search_profile_user: isofhcare_service + 'user/search',
       share_with_profile: isofhcare_service + 'booking/share-user'
+    },
+    home:{
+      get_list_drug: isofhcare_service + '/medicine/list-medicine-top'
     }
   }
 };
