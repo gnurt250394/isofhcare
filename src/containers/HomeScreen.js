@@ -25,7 +25,6 @@ import ScaledImage from "../../node_modules/mainam-react-native-scaleimage";
 import snackbar from "@utils/snackbar-utils";
 import { IndicatorViewPager } from "mainam-react-native-viewpager";
 import firebase from 'react-native-firebase';
-import codePush from "react-native-code-push";
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -49,7 +48,7 @@ class HomeScreen extends Component {
     DeviceEventEmitter.addListener(
       "hardwareBackPress",
       this.handleHardwareBack.bind(this)
-    );    
+    );
   }
 
   componentWillUnmount() {
@@ -104,7 +103,9 @@ class HomeScreen extends Component {
   render() {
     const { active } = this.state;
     return (
-      <ActivityPanel isLoading={this.state.isLoading}
+      <ActivityPanel
+        statusbarBackgroundColor="#4BBA7B"
+        isLoading={this.state.isLoading}
         hideActionbar={true}
       >
         <View style={[{ flex: 1 }, this.props.style]}>
