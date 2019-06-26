@@ -34,6 +34,7 @@ import SymptomScreen from "@containers/symptom/SymptomScreen";
 import GroupChatScreen from "@containers/chat/GroupChatScreen";
 import ChatScreen from "@containers/chat/ChatScreen";
 import ProfileScreen from "@containers/account/ProfileScreen";
+// import ProfileScreen from "@containers/profile/ProfileScreen";
 import { EHealthNavigator } from "@ehealth/navigator";
 import NotificationScreen from "@containers/notification/NotificationScreen";
 import ListQuestionScreen from "@containers/question/ListQuestionScreen";
@@ -74,7 +75,6 @@ import ScanQRCodeScreen from "@containers/ticket/ScanQRCodeScreen";
 import GetTicketFinishScreen from "@containers/ticket/GetTicketFinishScreen";
 //---------------------------------
 import ViewEhealthDetailScreen from '@containers/ehealth/ViewEhealthDetailScreen';
-
 //........................eHealth................
 
 
@@ -84,6 +84,8 @@ const RootNavigator = createStackNavigator(
     // selectLocationScreen : {screen:SelectLocationScreen},
     // testVNPay: { screen: TestVNPayScreen },
     // scanQRCode: { screen: ScanQRCodeScreen },
+    //=---------------Profile-----------------
+    // profile: { screen: ProfileScreen },
     splash: { screen: SplashScreen },
     groupChat: { screen: GroupChatScreen },
     groupChatFacility: { screen: GroupChatScreen },
@@ -137,7 +139,7 @@ const RootNavigator = createStackNavigator(
     paymentBookingError: { screen: PaymentBookingErrorScreen },
     detailsHistory: { screen: DetailsHistoryScreen },
     paymentVNPay: { screen: PaymentWithVNPayScreen },
-    filterSpecialist :{screen : FilterSpecialistScreen},
+    filterSpecialist: { screen: FilterSpecialistScreen },
     //---------------------------------
     createProfile: { screen: CreateProfileScreen },
     selectProfile: { screen: SelectProfileScreen },
@@ -155,9 +157,11 @@ const RootNavigator = createStackNavigator(
     //----------------ehealth-----------------
     ehealth: { screen: EHealthNavigator },
     viewDetailEhealth: { screen: ViewEhealthDetailScreen },
-   
-    emptyScreen: { screen: EmptyScreen }
+
+    emptyScreen: { screen: EmptyScreen },
+
   },
+
   {
     headerMode: "none",
     // cardStyle: {
