@@ -23,7 +23,7 @@ import redux from "@redux-store";
 import ImageLoad from "mainam-react-native-image-loader";
 import * as Animatable from 'react-native-animatable';
 
-import ActionBar from '@components/home/ActionBar';
+import Actionbar from '@components/home/Actionbar';
 import SlideBanner from '@components/home/SlideBanner';
 import TopHospital from '@components/hospital/TopHospital';
 import HospitalNearYou from '@components/hospital/HospitalNearYou';
@@ -44,7 +44,7 @@ class Home extends Component {
   render() {
     return (
       <View>
-        <ActionBar />
+        <Actionbar />
         <SlideBanner />
         <TopHospital />
         <HospitalNearYou />

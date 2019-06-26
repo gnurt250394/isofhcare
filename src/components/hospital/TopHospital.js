@@ -12,7 +12,7 @@ class TopHospital extends Component {
         return (
             <View>
                 
-            </View >
+            </View>
         );
     }
 }
