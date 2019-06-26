@@ -7,7 +7,7 @@ import { Card } from 'native-base';
 import drugProvider from '@data-access/drug-provider'
 import StarRating from 'react-native-star-rating';
 import DrugItem from './DrugItem'
-
+import HeaderLine from '@components/home/HeaderLine'
 
 class TopDrug extends Component {
   constructor(props) {
@@ -42,24 +42,15 @@ class TopDrug extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.viewTitle}><Text style={{color:'#000'}}>{'Sản phẩm thuốc bán chạy'.toUpperCase()}</Text><Text style={{color:'#4BBA7B'}}>Xem tất cả>></Text></View>
-
+        {/* <View style={styles.viewTitle}><View>       */}
+        <HeaderLine title = {'SẢN PHẨM THUỐC BÁN CHẠY'} isShowViewAll={true}/>
+        {/* <Text style={{color:'#000',fontWeight:'600'}}>{'Sản phẩm thuốc bán chạy'.toUpperCase()}</Text>
+        </View><Text style={{color:'#4BBA7B'}}>Xem tất cả>></Text></View> */}
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} >
           <View style={{ width: 190 * this.state.dataDrug.length / 2, flexWrap: 'wrap', flexDirection: 'row' }}>
             {this.state.dataDrug && this.state.dataDrug.map((item, index) => this.renderItem(item, index))}
           </View>
         </ScrollView>
-        {/*         
-        <FlatList
-          style={styles.flatList}
-          data={this.state.dataDrug}
-          extraData={this.state}
-          renderItem={this.renderItem}
-          keyExtractor={(item, index) => index.toString()}          
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-        >
-        </FlatList> */}
 
       </View>
     );
@@ -71,6 +62,7 @@ const styles = StyleSheet.create({
   viewTitle: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems:'center',
     padding: 10,
   },
   flatList: {

@@ -571,7 +571,8 @@ module.exports = {
       share_with_profile: isofhcare_service + 'booking/share-user'
     },
     home:{
-      get_list_drug: isofhcare_service + '/medicine/list-medicine-top'
+      get_list_drug: isofhcare_service + '/medicine/list-medicine-top',
+      get_list_news: isofhcare_service + 'news/list-news-top'
     }
   }
 };

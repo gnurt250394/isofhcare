@@ -1,22 +1,54 @@
 import React, { Component, PropTypes } from 'react';
-import { View, StyleSheet, } from 'react-native';
+import { View, StyleSheet, FlatList, Text } from 'react-native';
+import homeProvider from '@data-access/home-provider'
+import NewsItem from './NewsItem'
+import HeaderLine from '@components/home/HeaderLine'
 
 class TopNews extends Component {
     constructor(props) {
         super(props)
+        this.state = {
+            dataNews: []
+        }
+    }
+    renderItem = ({item}) => {
+        return (
+            <NewsItem item = {item} />
+        )
     }
 
-   
-
+    componentDidMount() {
+        this.getData()
+    }
+    getData = () => {
+        homeProvider.getNews().then(res => {
+            if(res.code == 0 ){
+                this.setState({
+                    dataNews:res.data.news
+                })
+            }
+        }).catch(err => {
+            console.log(err);
+        })
+    }
     render() {
         return (
             <View>
-                
-            </View >
+                {/* <View style={styles.viewTitle}><View> */}
+                    <HeaderLine isShowViewAll={true} title = {'TIN TỨC'} />
+                    {/* <Text style={{ color: '#000', fontWeight: '600' }}>{'Sản phẩm thuốc bán chạy'.toUpperCase()}</Text>
+                </View><Text style={{ color: '#4BBA7B' }}>Xem tất cả>></Text></View> */}
+                <FlatList
+                    data={this.state.dataNews}
+                    extraData={this.state}
+                    renderItem={this.renderItem}
+
+                ></FlatList>
+            </View>
         );
     }
 }
 const styles = StyleSheet.create({
-   
+
 });
 export default TopNews;
