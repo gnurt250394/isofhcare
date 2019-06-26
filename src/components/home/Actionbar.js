@@ -34,7 +34,7 @@ class ActionBar extends Component {
 }
 const styles = StyleSheet.create({
     containner: {
-        backgroundColor: '#359A60',
+        backgroundColor: '#4BBA7B',
         alignItems: 'center',
         height: 60,
         flexDirection: 'row',

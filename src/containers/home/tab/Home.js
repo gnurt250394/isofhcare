@@ -43,14 +43,16 @@ class Home extends Component {
 
   render() {
     return (
-      <View>
-        <Actionbar />
-        <SlideBanner />
-        <TopHospital />
-        <HospitalNearYou />
-        <TopDrug />
-        <TopNews />
-      </View>
+      <ScrollView style={{ flex: 1 }}>
+        <View>
+          <Actionbar />
+          <SlideBanner />
+          <TopHospital />
+          <HospitalNearYou />
+          <TopDrug />
+          <TopNews />
+        </View>
+      </ScrollView>
     );
   }
 }

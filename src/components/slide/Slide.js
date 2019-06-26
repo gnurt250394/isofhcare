@@ -36,11 +36,11 @@ class Slide extends Component {
         })
     }
     renderIndicator(array) {
-        return <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+        return <View style={[{ flexDirection: 'row', justifyContent: 'center' }, this.props.indicatorStyle]}>
             {
                 array.map((item, index) => {
                     return (
-                        <View key={index} style={{ margin: 2, width: 6, height: 6, backgroundColor: '#000', borderRadius: 3.5, backgroundColor: this.state.position == index ? 'rgb(74,144,226)' : "#00000060" }}></View>
+                        <View key={index} style={[{ margin: 2, width: 6, height: 6, backgroundColor: '#000', borderRadius: 3.5, backgroundColor: this.state.position == index ? 'rgb(74,144,226)' : "#00000060" }, this.state.position == index ? this.props.indicatorItemActive : this.props.indicatorItem]}></View>
                     )
                 })
             }
