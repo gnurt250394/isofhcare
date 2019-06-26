@@ -27,6 +27,12 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
+				<string>payoo://payment_isofhcare_return</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
 				<string>fb457683741386685</string>
 			</array>
 		</dict>
@@ -74,15 +80,15 @@
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
-    <key>NSExceptionDomains</key>
-    <dict>
-      <key>codepush.azurewebsites.net</key>
-      <dict><!-- read the ATS Apple Docs for available options --></dict>
-      <key>codepush.blob.core.windows.net</key>
-      <dict><!-- read the ATS Apple Docs for available options --></dict>
-      <key>codepushupdates.azureedge.net</key>
-      <dict><!-- read the ATS Apple Docs for available options --></dict>
-    </dict>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>codepush.azurewebsites.net</key>
+			<dict/>
+			<key>codepush.blob.core.windows.net</key>
+			<dict/>
+			<key>codepushupdates.azureedge.net</key>
+			<dict/>
+		</dict>
 	</dict>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>This app requires access to apple music.</string>
@@ -149,7 +155,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-  <key>CodePushDeploymentKey</key>
-  <string>xTgmCcJORBDuOF5Ncs5wQLuJV-ukByI_I4k1S</string>
+	<key>CodePushDeploymentKey</key>
+	<string>xTgmCcJORBDuOF5Ncs5wQLuJV-ukByI_I4k1S</string>
 </dict>
 </plist>

@@ -39,7 +39,11 @@
   NSURL *jsCodeLocation;
 
   // jsCodeLocation = [NSURL URLWithString:@"http://192.168.100.115:8081/index.ios.bundle"];
-  jsCodeLocation = [CodePush bundleURL];
+  #ifdef DEBUG
+    jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
+  #else
+    jsCodeLocation = [CodePush bundleURL];
+  #endif
 
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"APP"
@@ -74,7 +78,7 @@
                          openURL:url
                sourceApplication:sourceApplication
                       annotation:annotation
-      ];
+      ] || [Payoo application:application open:url ];
 }
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
