@@ -131,7 +131,7 @@ class SlideBanner extends Component {
                         backgroundColor: '#FFF',
                         borderRadius: 4,
                     }}
-                    autoPlay={true} inteval={5000} 
+                    autoPlay={true} inteval={5000}
                     dataArray={this.state.ads} renderItemPager={(item, index) => {
                         return <View style={{ width: width, height: height }} >
                             <Image source={{ uri: (item.images ? item.images.absoluteUrl() : "") }} style={{ width: width, height: height }} resizeMode="stretch" />
@@ -140,14 +140,16 @@ class SlideBanner extends Component {
                 <View style={styles.actions}>
                     {
                         this.actions.map((item, index) => {
-                            return <TouchableOpacity key={index} style={{ marginHorizontal: 2 }} onPress={item.onPress}>
-                                <Card style={[styles.action_item, { width: itemWidth }]}>
-                                    <View style={styles.view_image_action}>
-                                        <ScaledImage source={item.icon} height={30} width={30} />
-                                    </View>
-                                    <Text style={styles.action_text} numberOfLines={2}>{(item.text || "").toUpperCase()}</Text>
+                            return <View key={index} style={{ marginHorizontal: 2 }}>
+                                <Card style={[{ width: itemWidth }]}>
+                                    <TouchableOpacity onPress={item.onPress} style={styles.action_item}>
+                                        <View style={styles.view_image_action}>
+                                            <ScaledImage source={item.icon} height={30} width={30} />
+                                        </View>
+                                        <Text style={styles.action_text} numberOfLines={2}>{(item.text || "").toUpperCase()}</Text>
+                                    </TouchableOpacity>
                                 </Card>
-                            </TouchableOpacity>
+                            </View>
                         })
                     }
                 </View>
