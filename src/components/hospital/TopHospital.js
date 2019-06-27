@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { View, StyleSheet, ScrollView, Text } from 'react-native';
+import { View, StyleSheet, ScrollView, Text, FlatList } from 'react-native';
 import hospitalProvider from '@data-access/hospital-provider'
 import HeaderLine from '@components/home/HeaderLine'
 import HospitalItem from './HospitalItem'
@@ -26,24 +26,30 @@ class TopHospital extends Component {
             console.log(err)
         })
     }
-    renderItem = ( item, index ) => {
+    renderItem = (item, index) => {
         return (
-            <HospitalItem  widthImg = {180} widthCard={170} index={index} item={item}></HospitalItem>
+            <HospitalItem widthImg={180} widthCard={170} index={index} item={item}></HospitalItem>
 
         )
     }
     onShowInfo = () => {
         NavigationService.navigate('hospital')
     }
-    
+
     render() {
         return (
             <View>
                 <HeaderLine onPress={this.onShowInfo} isShowViewAll={true} title={'PHÒNG KHÁM, BỆNH VIỆN HÀNG ĐẦU'} />
-
-                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} >
-                    {this.state.listData && this.state.listData.map((item, index) => this.renderItem(item, index))}
-                </ScrollView>
+                <FlatList
+                    showsHorizontalScrollIndicator={false}
+                    horizontal={true}
+                    keyExtractor={(item, index) => index.toString()}
+                    extraData={this.state}
+                    data={this.state.listData}
+                    renderItem={({ item, index }) => {
+                        return this.renderItem(item, index)
+                    }}
+                />
             </View>
         );
     }

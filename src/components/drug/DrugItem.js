@@ -68,15 +68,15 @@ const styles = StyleSheet.create({
     padding: 5,
     justifyContent: 'center',
     alignItems: 'center',
-    height: 200,
+    position: 'relative'
   },
   viewDetails: {
     borderRadius: 4,
     marginHorizontal: 5,
     padding: 5,
-    position: 'relative',
-    bottom: 30,
-    width: 170
+    position: 'absolute',
+    left: 8, right: 8,
+    bottom: 0
   },
   viewContents: {
     flexDirection: 'row',
@@ -121,7 +121,8 @@ const styles = StyleSheet.create({
   },
   view_image: {
     width: 180, height: 120,
-    borderRadius: 2
+    borderRadius: 2,
+    marginBottom: 70,
   }
 });
 export default DrugItem;

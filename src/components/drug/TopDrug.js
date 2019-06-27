@@ -44,7 +44,7 @@ class TopDrug extends Component {
         {/* <Text style={{color:'#000',fontWeight:'600'}}>{'Sản phẩm thuốc bán chạy'.toUpperCase()}</Text>
         </View><Text style={{color:'#4BBA7B'}}>Xem tất cả>></Text></View> */}
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          <View style={{ width: 190 * Math.round(this.state.dataDrug.length / 2), flexWrap: 'wrap', flexDirection: 'row', marginTop: 10 }}>
+          <View style={{ width: 190 * Math.round(this.state.dataDrug.length / 2), flexWrap: 'wrap', flexDirection: 'row' }}>
             {this.state.dataDrug && this.state.dataDrug.slice(0, 20).map((item, index) => this.renderItem(item, index))}
           </View>
         </ScrollView>

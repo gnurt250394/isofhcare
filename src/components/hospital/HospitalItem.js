@@ -14,36 +14,40 @@ class HospitalItem extends Component {
 
   }
 
-componentDidMount(){
+  componentDidMount() {
     console.log('renderrrrrrrrr');
-}
+  }
 
   render() {
-    const item = this.props.item
-    const index= this.props.index
+    const item = this.props.item;
+    const index = this.props.index;
+    let imageWidth = this.props.widthImg;
+    let imageHeight = imageWidth / 1.5;
     return (
-      <View key = {index} style={styles.viewItem}>
-        <Image
-          resizeMode="cover"
-          //   source={require('@images/new/home/banner_drug_test.png')}
-          source={{ uri: item.imageHome ? item.imageHome.absoluteUrl() : ''}}
+      <View key={index} style={styles.viewItem}>
+        <View style={{ width: imageWidth, height: imageHeight, borderRadius: 2, borderColor: '#CAC', borderWidth: 0.5, marginBottom: 50 }}>
+          <Image
+            resizeMode="cover"
+            //   source={require('@images/new/home/banner_drug_test.png')}
+            source={{ uri: item.imageHome ? item.imageHome.absoluteUrl() : '' }}
 
-          style={[styles.customImg, { width:this.props.widthImg, height: 100 }]}
-        />
-        <Card style={[styles.viewDetails,{width:this.props.widthCard}]}>
-        <Text style={styles.nameHospital}>{item.name}</Text>
-        <View style={styles.viewStar}>
-        <StarRating
-            disabled={true}
-            starSize={12}
-            maxStars={5}
-            rating={item.rankHospital}
-            starStyle={{ margin: 2 }}
-            fullStarColor={"#fbbd04"}
-            emptyStarColor={"#fbbd04"}
+            style={[styles.customImg, { width: imageWidth, height: imageHeight }]}
           />
-          <Text style={{fontSize:12,color:'#000'}}>Xem thêm</Text>
         </View>
+        <Card style={[styles.viewDetails]}>
+          <Text style={styles.nameHospital} numberOfLines={2}>{item.name}</Text>
+          <View style={styles.viewStar}>
+            <StarRating
+              disabled={true}
+              starSize={12}
+              maxStars={5}
+              rating={item.rankHospital}
+              starStyle={{ margin: 2 }}
+              fullStarColor={"#fbbd04"}
+              emptyStarColor={"#fbbd04"}
+            />
+            <Text style={{ fontSize: 12, color: '#000' }}>Xem thêm</Text>
+          </View>
         </Card>
       </View>
     );
@@ -52,34 +56,35 @@ componentDidMount(){
 const styles = StyleSheet.create({
   container: {
   },
-  viewStar:{
-flexDirection:'row',
-alignItems:'center',
-justifyContent:'space-between'
+  viewStar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
   },
   customImg: {
     borderRadius: 4
   },
-  nameHospital:{
-    fontSize:15,
-    fontWeight:'600',
-    color:'#4BBA7B'
+  nameHospital: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#4BBA7B',
+    minHeight: 40
 
   },
 
   imgStyle: { borderRadius: 4, backgroundColor: '#fff', },
   viewItem: {
     padding: 5,
-    justifyContent: 'center',
     alignItems: 'center',
-    height: 200,
+    position: 'relative'
   },
   viewDetails: {
     borderRadius: 4,
     marginHorizontal: 5,
     padding: 5,
-    position: 'relative',
-    bottom: 30,
+    position: 'absolute',
+    bottom: 0,
+    left: 8, right: 8
   },
   viewContents: {
     flexDirection: 'row',
@@ -118,6 +123,6 @@ justifyContent:'space-between'
   },
   underLine: {
 
-  },
+  }
 });
 export default HospitalItem;
