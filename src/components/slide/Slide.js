@@ -26,19 +26,18 @@ class Slide extends Component {
         </IndicatorViewPager >
     }
     componentWillReceiveProps(props) {
-        if (JSON.stringify(props.dataArray) != JSON.stringify(this.state.dataArray)) {
-            this.setState({ array: props.dataArray || [] })
-        }
-        if (props.autoPlay != this.props.autoPlay || props.inteval != this.props.inteval) {
-            if (this.myInteval) {
-                try {
-                    clearInterval(this.myInteval);
-                } catch (error) {
+        if (props.autoPlay != this.props.autoPlay || props.inteval != this.props.inteval || props.dataArray != this.state.dataArray) {
+            this.setState({ array: props.dataArray || [] }, () => {
+                if (this.myInteval) {
+                    try {
+                        clearInterval(this.myInteval);
+                    } catch (error) {
 
+                    }
                 }
-            }
-            if (props.autoPlay && props.dataArray && props.dataArray.length > 1)
-                this.myInteval = setInterval(() => { this.nextPosition() }, props.inteval ? props.inteval : 2000);
+                if (props.autoPlay && props.dataArray && props.dataArray.length > 1)
+                    this.myInteval = setInterval(this.nextPosition, props.inteval ? props.inteval : 2000);
+            })
         }
     }
 
@@ -62,7 +61,7 @@ class Slide extends Component {
             }
         </View >
     }
-    nextPosition() {
+    nextPosition = () => {
         try {
             if (this.state.array && this.state.array.length > 1) {
                 let position = this.state.position;
@@ -83,7 +82,7 @@ class Slide extends Component {
     }
     componentDidMount() {
         if (this.props.autoPlay && this.state.array && this.state.array.length > 1)
-            this.myInteval = setInterval(() => { this.nextPosition() }, this.props.inteval ? this.props.inteval : 2000);
+            this.myInteval = setInterval(this.nextPosition, this.props.inteval ? this.props.inteval : 2000);
     }
     componentWillUnmount() {
         if (this.myInteval) {
