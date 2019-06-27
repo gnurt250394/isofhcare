@@ -8,6 +8,7 @@ import drugProvider from '@data-access/drug-provider'
 import StarRating from 'react-native-star-rating';
 import DrugItem from './DrugItem'
 import HeaderLine from '@components/home/HeaderLine'
+import NavigationService from "@navigators/NavigationService";
 
 class TopDrug extends Component {
   constructor(props) {
@@ -33,14 +34,17 @@ class TopDrug extends Component {
   }
   renderItem = (item, index) => {
     return (
-      <DrugItem item={item} index={index} key={index} />
+      <DrugItem widthImg={180} item={item} index={index} key={index} />
     )
+  }
+  showAllDrug = () => {
+    NavigationService.navigate('drug')
   }
   render() {
     return (
       <View style={styles.container}>
         {/* <View style={styles.viewTitle}><View>       */}
-        <HeaderLine title={'SẢN PHẨM THUỐC BÁN CHẠY'} isShowViewAll={true} />
+        <HeaderLine onPress={this.showAllDrug} title={'SẢN PHẨM THUỐC BÁN CHẠY'} isShowViewAll={true} />
         {/* <Text style={{color:'#000',fontWeight:'600'}}>{'Sản phẩm thuốc bán chạy'.toUpperCase()}</Text>
         </View><Text style={{color:'#4BBA7B'}}>Xem tất cả>></Text></View> */}
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>

@@ -21,13 +21,15 @@ class DrugItem extends Component {
   render() {
     const item = this.props.item
     const index = this.props.index
+    let imageWidth = this.props.widthImg;
+    let imageHeight = imageWidth / 1.5;
     return (
       <View key={index} style={styles.viewItem}>
-        <View style={styles.view_image}>
+        <View style={[styles.view_image,{width:imageWidth,height:imageHeight}]}>
           <Image
             resizeMode="cover"
             source={{ uri: item.image.absoluteUrl() }}
-            style={[styles.customImg, { width: 180, height: 120 }]}
+            style={[styles.customImg, { width:imageWidth, height: imageHeight }]}
           />
         </View>
         <Card style={styles.viewDetails}>
