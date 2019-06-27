@@ -133,7 +133,9 @@ class SlideBanner extends Component {
                         this.actions.map((item, index) => {
                             return <TouchableOpacity key={index} style={{ marginHorizontal: 2 }} onPress={item.onPress}>
                                 <Card style={[styles.action_item, { width: itemWidth }]}>
-                                    <ScaledImage source={item.icon} height={40} width={40} />
+                                    <View style={styles.view_image_action}>
+                                    <ScaledImage source={item.icon} height={30} width={30} />
+                                    </View>
                                     <Text style={styles.action_text} numberOfLines={2}>{(item.text || "").toUpperCase()}</Text>
                                 </Card>
                             </TouchableOpacity>
@@ -164,6 +166,11 @@ const styles = StyleSheet.create({
         padding: 2, borderRadius: 5,
         alignItems: 'center',
         paddingVertical: 10,
+    },
+    view_image_action:{
+        width: 35, height: 30,
+        justifyContent: 'center', 
+        alignItems: 'center',
     },
     action_text: { fontWeight: 'bold', fontSize: 9, marginTop: 5, textAlign: "center" }
 });
