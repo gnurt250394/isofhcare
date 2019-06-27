@@ -124,6 +124,7 @@ module.exports = {
       KEY_REFRESH_TOKEN: 'KEY_REFRESH_TOKEN',
       LOCATION: "LOCATION",
       LASTEST_INFO: "LASTEST_INFO",
+      LIST_BANNER: "LIST_BANNER",
 
     }
   },
@@ -524,7 +525,8 @@ module.exports = {
     },
     advertise: {
       create: isofhcare_service + "advertise/create",
-      search: isofhcare_service + "advertise/search"
+      search: isofhcare_service + "advertise/search",
+      get_list_banner:isofhcare_service + "advertise/list-banner",
     },
     hospital: {
       get_all: isofhcare_service + "hospital/get-all",

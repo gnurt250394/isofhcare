@@ -11,20 +11,29 @@ class SlideBanner extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            ads: [
-                "https://www.googleapis.com/storage/v1/b/isofh-care-dev/o/images%2fimg2@3x_9dd7cd71_775f_4d45_8f63_1cf8b5d8cf71.png?alt=media",
-                "https://www.googleapis.com/storage/v1/b/isofh-care-dev/o/images%2fimg2@3x_9dd7cd71_775f_4d45_8f63_1cf8b5d8cf71.png?alt=media",
-                "https://www.googleapis.com/storage/v1/b/isofh-care-dev/o/images%2fimg2@3x_9dd7cd71_775f_4d45_8f63_1cf8b5d8cf71.png?alt=media",
-                "https://www.googleapis.com/storage/v1/b/isofh-care-dev/o/images%2fimg2@3x_9dd7cd71_775f_4d45_8f63_1cf8b5d8cf71.png?alt=media",
-                "https://www.googleapis.com/storage/v1/b/isofh-care-dev/o/images%2fimg2@3x_9dd7cd71_775f_4d45_8f63_1cf8b5d8cf71.png?alt=media",
-                "https://www.googleapis.com/storage/v1/b/isofh-care-dev/o/images%2fimg2@3x_9dd7cd71_775f_4d45_8f63_1cf8b5d8cf71.png?alt=media",
-                "https://www.googleapis.com/storage/v1/b/isofh-care-dev/o/images%2fimg2@3x_9dd7cd71_775f_4d45_8f63_1cf8b5d8cf71.png?alt=media",
-                "https://www.googleapis.com/storage/v1/b/isofh-care-dev/o/images%2fimg2@3x_9dd7cd71_775f_4d45_8f63_1cf8b5d8cf71.png?alt=media",
-            ]
+            ads: []
         }
     }
+    getListBanner(reload) {
+        if (reload)
+            return;
+        advertiseProvider.getListBanner().then(s => {
+            if (s.length == 0) {
+                if (!reload)
+                    this.getListBanner(true);
+            }
+            this.setState({
+                ads: s
+            });
+        }).catch(e => {
+            if (!reload)
+                this.getListBanner(true);
+        });
+    }
+    componentWillMount() {
+        this.getListBanner();
+    }
     componentDidMount() {
-
     }
 
     actions = [{
@@ -125,7 +134,7 @@ class SlideBanner extends Component {
                     // autoPlay={true} inteval={2000} 
                     dataArray={this.state.ads} renderItemPager={(item, index) => {
                         return <View style={{ width: width, height: height }} >
-                            <Image source={{ uri: item }} style={{ width: width, height: height }} resizeMode="cover" />
+                            <Image source={{ uri: (item.images ? item.images.absoluteUrl() : "") }} style={{ width: width, height: height }} resizeMode="contain" />
                         </View>
                     }} />
                 <View style={styles.actions}>
@@ -134,7 +143,7 @@ class SlideBanner extends Component {
                             return <TouchableOpacity key={index} style={{ marginHorizontal: 2 }} onPress={item.onPress}>
                                 <Card style={[styles.action_item, { width: itemWidth }]}>
                                     <View style={styles.view_image_action}>
-                                    <ScaledImage source={item.icon} height={30} width={30} />
+                                        <ScaledImage source={item.icon} height={30} width={30} />
                                     </View>
                                     <Text style={styles.action_text} numberOfLines={2}>{(item.text || "").toUpperCase()}</Text>
                                 </Card>
@@ -167,9 +176,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingVertical: 10,
     },
-    view_image_action:{
+    view_image_action: {
         width: 35, height: 30,
-        justifyContent: 'center', 
+        justifyContent: 'center',
         alignItems: 'center',
     },
     action_text: { fontWeight: 'bold', fontSize: 9, marginTop: 5, textAlign: "center" }
