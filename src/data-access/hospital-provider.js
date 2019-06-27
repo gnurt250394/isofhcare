@@ -111,7 +111,7 @@ module.exports = {
             }
             else {
                 client.requestApi("get", constants.api.home.get_list_hospital_top_rate, {}, (s, e) => {
-                    if (s && s.data.code == 0 && s.data && s.data.hospitals ) {
+                    if (s && s.code == 0 && s.data && s.data.hospitals ) {
                         datacacheProvider.save("", constants.key.storage.DATA_TOP_HOSPITAL, s.data.hospitals);
                         resolve(s.data.hospitals);
                     }

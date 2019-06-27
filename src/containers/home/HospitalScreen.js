@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text,FlatList,StyleSheet } from 'react-native';
 import hospitalProvider from '@data-access/hospital-provider'
-import HospitalItem from '@components/hospital/HospitalItem'
+import HospitalItemFull from '@components/hospital/HospitalItemFull'
 import HeaderLine from '@components/home/HeaderLine'
 import Actionbar from '@components/home/Actionbar';
 
@@ -26,7 +26,7 @@ getList = () => {
 }
 renderItem = ( item) => {
     return (
-        <HospitalItem widthImg = {150} widthCard={140}  index={item.index} item={item.item}></HospitalItem>
+        <HospitalItemFull index={item.index} item={item.item}></HospitalItemFull>
     )
 }
   render() {
@@ -34,15 +34,9 @@ renderItem = ( item) => {
       <View>
     <Actionbar />
         <HeaderLine onPress={this.onShowInfo} isShowViewAll={false} title={'PHÒNG KHÁM, BỆNH VIỆN HÀNG ĐẦU'} />
-        <FlatList
-        data = {this.state.listData}
-        keyExtractor = {(item,index) => index.toString()}
-        extraData = {this.state}
-        numColumns= {2}
-        renderItem = {this.renderItem}
-        >
+       <View style={{alignItems:'center'}}>
 
-        </FlatList>
+       </View>
       </View>
     );
   }

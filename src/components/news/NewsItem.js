@@ -54,6 +54,7 @@ class NewsItem extends Component {
 }
 const styles = StyleSheet.create({
     viewItem: {
+        marginTop: 20,
         flexDirection: 'row',
         paddingHorizontal: 10,
         justifyContent: 'space-around',
