@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default class HeaderLine extends Component {
   constructor(props) {
@@ -13,8 +13,8 @@ export default class HeaderLine extends Component {
       <View style={styles.viewTitle}><View>
         <View style={styles.viewLine}>
         </View>
-        <Text style={{ color: '#000', fontWeight: '600',fontSize:14 }}>{this.props.title}</Text>
-      </View>{this.props.isShowViewAll ? <Text style={{ color: '#4BBA7B',fontSize:12 }}>Xem tất cả>></Text> : null}</View>
+        <Text style={styles.txTitle}>{this.props.title}</Text>
+      </View>{this.props.isShowViewAll ? <TouchableOpacity onPress = {this.props.onPress} style={{padding:5}}><Text style={{ color: '#4BBA7B', fontSize: 12 }}>Xem tất cả>></Text></TouchableOpacity> : null}</View>
     );
   }
 }
@@ -27,8 +27,10 @@ const styles = StyleSheet.create({
   viewTitle: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems:'center',
+    alignItems: 'center',
     padding: 10,
     marginHorizontal: 10,
   },
+  txTitle:{ color: '#000', fontWeight: '600', fontSize: 14 },
+
 })

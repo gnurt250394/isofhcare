@@ -125,7 +125,8 @@ module.exports = {
       LOCATION: "LOCATION",
       LASTEST_INFO: "LASTEST_INFO",
       LIST_BANNER: "LIST_BANNER",
-
+      DATA_TOP_NEWS:'DATA_TOP_NEWS',
+      DATA_TOP_HOSPITAL:'DATA_TOP_HOSPITAL'
     }
   },
   msg: {
@@ -574,7 +575,8 @@ module.exports = {
     },
     home:{
       get_list_drug: isofhcare_service + '/medicine/list-medicine-top',
-      get_list_news: isofhcare_service + 'news/list-news-top'
+      get_list_news: isofhcare_service + 'news/list-news-top',
+      get_list_hospital_top_rate:isofhcare_service + 'hospital/list-hospital-top-rate'
     }
   }
 };

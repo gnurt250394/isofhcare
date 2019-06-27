@@ -1,22 +1,54 @@
 import React, { Component, PropTypes } from 'react';
-import { View, StyleSheet, } from 'react-native';
+import { View, StyleSheet, ScrollView, Text } from 'react-native';
+import hospitalProvider from '@data-access/hospital-provider'
+import HeaderLine from '@components/home/HeaderLine'
+import HospitalItem from './HospitalItem'
+import NavigationService from "@navigators/NavigationService";
 
 class TopHospital extends Component {
     constructor(props) {
         super(props)
+        this.state = {
+            listData: []
+        }
     }
 
-   
+    componentDidMount() {
+        this.getList()
+    }
+    getList = () => {
+        hospitalProvider.getListTopRateHospital().then(res => {
+            console.log(res.slice(0, 10), 'resssss')
+            this.setState({
+                listData: res.slice(0, 10)
+            })
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+    renderItem = ( item, index ) => {
+        return (
+            <HospitalItem  widthImg = {180} widthCard={170} index={index} item={item}></HospitalItem>
 
+        )
+    }
+    onShowInfo = () => {
+        NavigationService.navigate('hospital')
+    }
+    
     render() {
         return (
             <View>
-                
+                <HeaderLine onPress={this.onShowInfo} isShowViewAll={true} title={'PHÒNG KHÁM, BỆNH VIỆN HÀNG ĐẦU'} />
+
+                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} >
+                    {this.state.listData && this.state.listData.map((item, index) => this.renderItem(item, index))}
+                </ScrollView>
             </View>
         );
     }
 }
 const styles = StyleSheet.create({
-   
+
 });
 export default TopHospital;

@@ -22,11 +22,10 @@ class TopNews extends Component {
     }
     getData = () => {
         homeProvider.getNews().then(res => {
-            if(res.code == 0 ){
                 this.setState({
-                    dataNews:res.data.news
+                    dataNews:res
                 })
-            }
+     
         }).catch(err => {
             console.log(err);
         })
@@ -42,7 +41,7 @@ class TopNews extends Component {
                     data={this.state.dataNews}
                     extraData={this.state}
                     renderItem={this.renderItem}
-
+                    keyExtractor = {(item,index) => index.toString()}
                 ></FlatList>
             </View>
         );

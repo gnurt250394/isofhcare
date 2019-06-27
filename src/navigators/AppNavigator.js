@@ -62,7 +62,7 @@ import GetTicketFinishScreen from "@containers/ticket/GetTicketFinishScreen";
 //---------------------------------
 import ViewEhealthDetailScreen from '@containers/ehealth/ViewEhealthDetailScreen';
 //........................eHealth................
-
+import HospitalScreen from '@containers/home/HospitalScreen'
 
 const RootNavigator = createStackNavigator(
   {
@@ -131,7 +131,7 @@ const RootNavigator = createStackNavigator(
     viewDetailEhealth: { screen: ViewEhealthDetailScreen },
 
     emptyScreen: { screen: EmptyScreen },
-
+    hospital:{screen:HospitalScreen}
   },
 
   {

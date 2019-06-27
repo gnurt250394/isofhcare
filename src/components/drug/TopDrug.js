@@ -22,19 +22,16 @@ class TopDrug extends Component {
   }
   getListData = () => {
     drugProvider.getListDrug().then(res => {
-      if (res.code == 0) {
-        this.setState(
-          {
-            dataDrug: res.data.medicines
-          }
-        )
-      }
+      this.setState(
+        {
+          dataDrug: res
+        }
+      )
     }).catch(err => {
       console.log(err)
     })
   }
   renderItem = (item, index) => {
-    console.log(item, index, 'item,index)')
     return (
       <DrugItem item={item} index={index} />
     )
@@ -43,12 +40,12 @@ class TopDrug extends Component {
     return (
       <View style={styles.container}>
         {/* <View style={styles.viewTitle}><View>       */}
-        <HeaderLine title = {'SẢN PHẨM THUỐC BÁN CHẠY'} isShowViewAll={true}/>
+        <HeaderLine title={'SẢN PHẨM THUỐC BÁN CHẠY'} isShowViewAll={true} />
         {/* <Text style={{color:'#000',fontWeight:'600'}}>{'Sản phẩm thuốc bán chạy'.toUpperCase()}</Text>
         </View><Text style={{color:'#4BBA7B'}}>Xem tất cả>></Text></View> */}
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} >
           <View style={{ width: 190 * this.state.dataDrug.length / 2, flexWrap: 'wrap', flexDirection: 'row' }}>
-            {this.state.dataDrug && this.state.dataDrug.map((item, index) => this.renderItem(item, index))}
+            {this.state.dataDrug && this.state.dataDrug.slice(0,20).map((item, index) => this.renderItem(item, index))}
           </View>
         </ScrollView>
 
@@ -62,7 +59,7 @@ const styles = StyleSheet.create({
   viewTitle: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems:'center',
+    alignItems: 'center',
     padding: 10,
   },
   flatList: {

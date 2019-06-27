@@ -1,5 +1,6 @@
 import client from '@utils/client-utils';
 import constants from '@resources/strings';
+import datacacheProvider from '@data-access/datacache-provider';
 
 module.exports = {
     getAll() {
@@ -93,5 +94,30 @@ module.exports = {
                     reject(e)
             })
         })
+    },
+    getListTopRateHospital(requestApi) {
+        return new Promise((resolve, reject) => {
+            if (!requestApi) {
+                datacacheProvider.readPromise("", constants.key.storage.DATA_TOP_HOSPITAL).then(s => {
+                    this.getListTopRateHospital(true);
+                    resolve(s);
+                }).catch(e => {
+                    this.getListTopRateHospital(true).then(s => {
+                        resolve(s);
+                    }).catch(e => {
+                        resolve([]);
+                    })
+                });
+            }
+            else {
+                client.requestApi("get", constants.api.home.get_list_hospital_top_rate, {}, (s, e) => {
+                    if (s && s.data.code == 0 && s.data && s.data.hospitals ) {
+                        datacacheProvider.save("", constants.key.storage.DATA_TOP_HOSPITAL, s.data.hospitals);
+                        resolve(s.data.hospitals);
+                    }
+                    resolve([]);
+                });
+            }
+        });
     }
 }
