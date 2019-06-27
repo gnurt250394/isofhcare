@@ -25,6 +25,22 @@ class Slide extends Component {
             }
         </IndicatorViewPager >
     }
+    componentWillReceiveProps(props) {
+        if (JSON.stringify(props.dataArray) != JSON.stringify(this.state.dataArray)) {
+            this.setState({ array: props.dataArray || [] })
+        }
+        if (props.autoPlay != this.props.autoPlay || props.inteval != this.props.inteval) {
+            if (this.myInteval) {
+                try {
+                    clearInterval(this.myInteval);
+                } catch (error) {
+
+                }
+            }
+            if (props.autoPlay && props.dataArray && props.dataArray.length > 1)
+                this.myInteval = setInterval(() => { this.nextPosition() }, props.inteval ? props.inteval : 2000);
+        }
+    }
 
     onPageScroll(e) {
         var position = e.position;

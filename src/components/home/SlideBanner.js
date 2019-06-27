@@ -134,7 +134,7 @@ class SlideBanner extends Component {
                     // autoPlay={true} inteval={2000} 
                     dataArray={this.state.ads} renderItemPager={(item, index) => {
                         return <View style={{ width: width, height: height }} >
-                            <Image source={{ uri: (item.images ? item.images.absoluteUrl() : "") }} style={{ width: width, height: height }} resizeMode="contain" />
+                            <Image source={{ uri: (item.images ? item.images.absoluteUrl() : "") }} style={{ width: width, height: height }} resizeMode="stretch" />
                         </View>
                     }} />
                 <View style={styles.actions}>
