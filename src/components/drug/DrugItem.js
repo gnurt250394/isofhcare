@@ -21,13 +21,15 @@ class DrugItem extends Component {
     const index = this.props.index
     return (
       <View key={index} style={styles.viewItem}>
-        <Image
-          resizeMode="cover"
-          //   source={require('@images/new/home/banner_drug_test.png')}
-          source={{ uri: item.image.absoluteUrl() }}
+        <View style={styles.view_image}>
+          <Image
+            resizeMode="cover"
+            //   source={require('@images/new/home/banner_drug_test.png')}
+            source={{ uri: item.image.absoluteUrl() }}
 
-          style={[styles.customImg, { width: 180, height: 100 }]}
-        />
+            style={[styles.customImg, { width: 180, height: 100 }]}
+          />
+        </View>
         <Card style={styles.viewDetails}>
           <View style={styles.viewContents}><Text style={styles.txName}>{item.name}</Text><Text style={styles.underLine}><Text style={styles.txPriceOld}>{item.priceOld}đ</Text></Text></View>
           <View style={styles.viewContents}><StarRating
@@ -43,13 +45,13 @@ class DrugItem extends Component {
             <TouchableOpacity style={styles.btnStore}>
               <ScaledImage height={14} source={require('@images/new/home/ic_store.png')}></ScaledImage>
               <Text style={styles.txStore}>Đặt hàng ngay</Text>
-              <ScaledImage height={4} style={{marginLeft:2}} source={require('@images/new/home/ic_next2.png')}></ScaledImage>
+              <ScaledImage height={4} style={{ marginLeft: 2 }} source={require('@images/new/home/ic_next2.png')}></ScaledImage>
             </TouchableOpacity>
             {
               item.isPropose ?
                 <ScaledImage height={15} source={require('@images/new/home/ic_hearth.png')}></ScaledImage> : null
-            }        
-            </View>
+            }
+          </View>
         </Card>
       </View>
     );
@@ -116,5 +118,6 @@ const styles = StyleSheet.create({
   underLine: {
 
   },
+  view_image: { width: 180, height: 100 }
 });
 export default DrugItem;
