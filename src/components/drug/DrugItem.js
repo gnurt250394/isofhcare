@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 import { Card } from 'native-base';
 import drugProvider from '@data-access/drug-provider'
 import StarRating from 'react-native-star-rating';
+import stringUtils from "mainam-react-native-string-utils";
+
 const DEVICE_WIDTH = Dimensions.get('window').width;
 const DEVICE_HEIGHT = Dimensions.get('window').height;
 class DrugItem extends Component {
@@ -29,25 +31,26 @@ class DrugItem extends Component {
           />
         </View>
         <Card style={styles.viewDetails}>
-          <View style={styles.viewContents}><Text style={styles.txName}>{item.name}</Text><Text style={styles.underLine}><Text style={styles.txPriceOld}>{item.priceOld}đ</Text></Text></View>
-          <View style={styles.viewContents}><StarRating
+          <View style={[styles.viewContents,{justifyContent:'space-between'}]}><Text  style={styles.txName}>{item.name && item.name.length > 30 ? item.name.substring(0,29) + "..."
+                        : item.name}</Text><Text style={styles.underLine}><Text style={styles.txPriceOld}>{item.priceOld.formatPrice()}đ</Text></Text></View>
+          <View style={[styles.viewContents,{justifyContent:'space-between'}]}><StarRating
             disabled={true}
             starSize={12}
             maxStars={5}
             rating={item.rate}
-            starStyle={{ margin: 2 }}
+            starStyle={{ margin: 1 }}
             fullStarColor={"#fbbd04"}
             emptyStarColor={"#fbbd04"}
-          /><Text style={styles.txPriceNew}>{item.priceNew}đ</Text></View>
+          /><Text style={styles.txPriceNew}>{item.priceNew.formatPrice()}đ</Text></View>
           <View style={styles.viewContents}>
             <TouchableOpacity style={styles.btnStore}>
               <ScaledImage height={14} source={require('@images/new/home/ic_store.png')}></ScaledImage>
               <Text style={styles.txStore}>Đặt hàng ngay</Text>
-              <ScaledImage height={4} style={{ marginLeft: 2 }} source={require('@images/new/home/ic_next2.png')}></ScaledImage>
+              <ScaledImage height={4} style={{ marginLeft: 5,marginTop:5 }} source={require('@images/new/home/ic_next2.png')}></ScaledImage>
             </TouchableOpacity>
             {
               item.isPropose ?
-                <ScaledImage height={15} source={require('@images/new/home/ic_hearth.png')}></ScaledImage> : null
+                <ScaledImage style={{marginHorizontal:12}} height={15} source={require('@images/new/home/ic_hearth.png')}></ScaledImage> : null
             }
           </View>
         </Card>
@@ -81,12 +84,11 @@ const styles = StyleSheet.create({
   viewContents: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between'
   },
   btnStore: {
     flexDirection: 'row',
     backgroundColor: '#4BBA7B',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     alignItems: 'center',
     height: 31,
     borderRadius: 4,
@@ -100,7 +102,7 @@ const styles = StyleSheet.create({
   },
   txName: {
     flex: 1,
-    fontSize: 16,
+    fontSize: 14,
     color: '#4BBA7B',
     fontWeight: '500',
   },
@@ -110,7 +112,7 @@ const styles = StyleSheet.create({
     color: '#FF0000'
   },
   txPriceOld: {
-    fontSize: 13,
+    fontSize: 11,
     color: '#929292',
     textDecorationLine: 'line-through',
     textDecorationStyle: 'solid',

@@ -18,7 +18,6 @@ class TopHospital extends Component {
     }
     getList = () => {
         hospitalProvider.getListTopRateHospital().then(res => {
-            console.log(res.slice(0, 10), 'resssss')
             this.setState({
                 listData: res.slice(0, 10)
             })

@@ -32,7 +32,7 @@ class NewsItem extends Component {
                             starSize={12}
                             maxStars={5}
                             rating={item.rate}
-                            starStyle={{ margin: 0 }}
+                            starStyle={{ margin: 1 }}
                             fullStarColor={"#fbbd04"}
                             emptyStarColor={"#fbbd04"}
                         />
@@ -54,12 +54,12 @@ class NewsItem extends Component {
 }
 const styles = StyleSheet.create({
     viewItem: {
-        marginTop: 20,
         flexDirection: 'row',
         paddingHorizontal: 10,
         justifyContent: 'space-around',
+        marginBottom: 20,
     },
-    txTitle: { fontWeight: '600', color: '#4BBA7B', fontSize: 18 },
+    txTitle: { fontWeight: '600', color: '#4BBA7B', fontSize: 15 },
     contents: { width: '50%', paddingLeft: 5, top: -5 },
     viewImg: { position: 'relative', marginRight: 11, },
     viewStar: { position: 'absolute', top: 5, right: 5 },
