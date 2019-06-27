@@ -25,6 +25,9 @@ export default class DrugScreen extends Component {
     }
     getWidth = () => {
         let width = Dimensions.get("window").width;
+        if(width < 375){
+            return width - 10
+        }
         return width / 2 - 10;
     }
     renderItem = (item) => {
@@ -42,7 +45,7 @@ export default class DrugScreen extends Component {
                         data={this.state.listData}
                         keyExtractor={(item, index) => index.toString()}
                         extraData={this.state}
-                        numColumns={2}
+                        numColumns={Dimensions.get("window").width < 375 ? 1 : 2}
                         renderItem={this.renderItem}
                         showsVerticalScrollIndicator={false}
                     >
