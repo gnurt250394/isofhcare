@@ -44,7 +44,7 @@ class TopDrug extends Component {
     return (
       <View style={styles.container}>
         {/* <View style={styles.viewTitle}><View>       */}
-        <HeaderLine onPress={this.showAllDrug} title={'SẢN PHẨM THUỐC BÁN CHẠY'} isShowViewAll={true} />
+        <HeaderLine onPress={this.showAllDrug} title={Dimensions.get("window").width < 375 ? 'SẢN PHẨM\nTHUỐC BÁN CHẠY' : 'SẢN PHẨM THUỐC BÁN CHẠY'} isShowViewAll={true} />
         {/* <Text style={{color:'#000',fontWeight:'600'}}>{'Sản phẩm thuốc bán chạy'.toUpperCase()}</Text>
         </View><Text style={{color:'#4BBA7B'}}>Xem tất cả>></Text></View> */}
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>

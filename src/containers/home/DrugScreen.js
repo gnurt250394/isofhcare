@@ -26,7 +26,7 @@ export default class DrugScreen extends Component {
     getWidth = () => {
         let width = Dimensions.get("window").width;
         if(width < 375){
-            return width - 10
+            return width - 50
         }
         return width / 2 - 10;
     }

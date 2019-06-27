@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { View, StyleSheet, ScrollView, Text, FlatList } from 'react-native';
+import { View, StyleSheet, ScrollView, Text, FlatList,Dimensions } from 'react-native';
 import hospitalProvider from '@data-access/hospital-provider'
 import HeaderLine from '@components/home/HeaderLine'
 import HospitalItem from './HospitalItem'
@@ -38,7 +38,7 @@ class TopHospital extends Component {
     render() {
         return (
             <View>
-                <HeaderLine onPress={this.onShowInfo} isShowViewAll={true} title={'PHÒNG KHÁM, BỆNH VIỆN HÀNG ĐẦU'} />
+                <HeaderLine onPress={this.onShowInfo} isShowViewAll={true} title={Dimensions.get("window").width < 375 ? 'PHÒNG KHÁM,\nBỆNH VIỆN HÀNG ĐẦU':'PHÒNG KHÁM, BỆNH VIỆN HÀNG ĐẦU'} />
                 <FlatList
                     showsHorizontalScrollIndicator={false}
                     horizontal={true}

@@ -20,8 +20,8 @@ class NewsItem extends Component {
     render() {
         const item = this.props.item;
         let imageWidth = this.getWidthImage();
-        let imageHeight = imageWidth / 1.5;
-
+        let imageHeight = Dimensions.get("window").width < 375 ?  imageWidth / 1.5 + 10 : imageWidth / 1.5
+        
         return (
             <View style={styles.viewItem}>
                 <View style={[styles.viewImg]}>
