@@ -24,10 +24,8 @@ class DrugItem extends Component {
         <View style={styles.view_image}>
           <Image
             resizeMode="cover"
-            //   source={require('@images/new/home/banner_drug_test.png')}
             source={{ uri: item.image.absoluteUrl() }}
-
-            style={[styles.customImg, { width: 180, height: 100 }]}
+            style={[styles.customImg, { width: 180, height: 120 }]}
           />
         </View>
         <Card style={styles.viewDetails}>
@@ -92,7 +90,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 31,
     borderRadius: 4,
-    padding: 5
+    padding: 5,
+    marginTop: 5,
   },
   txStore: {
     color: '#fff',
@@ -100,16 +99,18 @@ const styles = StyleSheet.create({
     marginLeft: 5
   },
   txName: {
-    fontSize: 18,
+    flex: 1,
+    fontSize: 16,
     color: '#4BBA7B',
     fontWeight: '500',
   },
   txPriceNew: {
-    fontSize: 15,
+    fontSize: 13,
     fontWeight: '500',
     color: '#FF0000'
   },
   txPriceOld: {
+    fontSize: 13,
     color: '#929292',
     textDecorationLine: 'line-through',
     textDecorationStyle: 'solid',
@@ -118,6 +119,9 @@ const styles = StyleSheet.create({
   underLine: {
 
   },
-  view_image: { width: 180, height: 100 }
+  view_image: {
+    width: 180, height: 120,
+    borderRadius: 2
+  }
 });
 export default DrugItem;
