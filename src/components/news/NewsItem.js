@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { View, StyleSheet, Image, Text } from 'react-native';
+import { View, StyleSheet, Image, Text, Dimensions } from 'react-native';
 import StarRating from 'react-native-star-rating';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import ImageLoad from 'mainam-react-native-image-loader';
@@ -8,15 +8,24 @@ class NewsItem extends Component {
         super(props)
     }
 
+    getWidthImage() {
+        let devicewidth = Dimensions.get("window").width;
+        let width = (devicewidth / 2);
+        if (width > 180)
+            width = 180;
+        return width;
+    }
 
 
     render() {
-        const item = this.props.item
+        const item = this.props.item;
+        let imageWidth = this.getWidthImage();
+        let imageHeight = imageWidth / 1.5;
 
         return (
             <View style={styles.viewItem}>
-                <View style={styles.viewImg}>
-                    <Image resizeMode={'cover'} source={{ uri: item.image ? item.image.absoluteUrl() : '' }} style={{ width: '100%', height: 90 }}></Image>
+                <View style={[styles.viewImg]}>
+                    <Image resizeMode={'cover'} source={{ uri: item.image ? item.image.absoluteUrl() : '' }} style={{ width: imageWidth, height: imageHeight }}></Image>
                     <View style={styles.viewStar}>
                         <StarRating
                             disabled={true}
@@ -48,11 +57,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         paddingHorizontal: 10,
         justifyContent: 'space-around',
-        height: 90
     },
     txTitle: { fontWeight: '600', color: '#4BBA7B', fontSize: 18 },
     contents: { width: '50%', paddingLeft: 5, top: -5 },
-    viewImg: { width: '50%', alignItems: "center", justifyContent: 'center' },
+    viewImg: { position: 'relative', marginRight: 11, },
     viewStar: { position: 'absolute', top: 5, right: 5 },
     txInfo: { color: '#4BBA7B', textAlign: 'right', bottom: -5, right: 0, position: 'absolute', fontSize: 12 }
 });

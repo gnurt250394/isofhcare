@@ -34,7 +34,7 @@ class TopNews extends Component {
         return (
             <View>
                 {/* <View style={styles.viewTitle}><View> */}
-                    <HeaderLine isShowViewAll={true} title = {'TIN TỨC'} />
+                    <HeaderLine title = {'TIN TỨC'} />
                     {/* <Text style={{ color: '#000', fontWeight: '600' }}>{'Sản phẩm thuốc bán chạy'.toUpperCase()}</Text>
                 </View><Text style={{ color: '#4BBA7B' }}>Xem tất cả>></Text></View> */}
                 <FlatList
