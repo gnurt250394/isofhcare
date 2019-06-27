@@ -51,6 +51,7 @@ class Home extends Component {
           <HospitalNearYou />
           <TopDrug />
           <TopNews />
+          <View style={{width:'100%',height:50}}></View>
         </View>
       </ScrollView>
     );
