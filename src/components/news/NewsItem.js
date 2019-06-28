@@ -23,7 +23,9 @@ class NewsItem extends Component {
         let imageHeight = Dimensions.get("window").width < 375 ? imageWidth / 1.5 + 10 : imageWidth / 1.5
 
         return (
-            <View style={styles.viewItem}>
+            <View style={[styles.viewItem, Dimensions.get('window').width < 375 ? {
+                paddingVertical: 10,
+            } : {}]}>
                 <View style={[styles.viewImg]}>
                     <Image resizeMode={'cover'} source={{ uri: item.image ? item.image.absoluteUrl() : '' }} style={{ width: imageWidth, height: imageHeight }}></Image>
                     <View style={styles.viewStar}>
@@ -58,6 +60,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         justifyContent: 'space-around',
         marginBottom: 20,
+
     },
     txTitle: { fontWeight: '600', color: '#4BBA7B', fontSize: 15 },
     contents: { width: '50%', paddingLeft: 5, top: -5 },

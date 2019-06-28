@@ -22,6 +22,7 @@ import redux from '@redux-store'
 import ImageLoad from 'mainam-react-native-image-loader';
 import bookingProvider from '@data-access/booking-provider';
 import hospitalProvider from '@data-access/hospital-provider';
+import NavigationService from "@navigators/NavigationService";
 
 import clientUtils from '@utils/client-utils';
 
@@ -172,7 +173,7 @@ class NotificationScreen extends Component {
                     this.setState({
                       isLoading: false
                     })
-                    this.props.navigation.navigate('viewDetailEhealth', { result: result, resultDetail: resultDetail, hospitalName: res.data.hospital.name, user: data })
+                    NavigationService.navigate('viewDetailEhealth', { result: result, resultDetail: resultDetail, hospitalName: res.data.hospital.name, user: data })
                   })
                 } catch (error) {
                   this.setState({
@@ -202,7 +203,7 @@ class NotificationScreen extends Component {
           switch (s.code) {
             case 0:
               if (s.data && s.data.numberHospital) {
-                this.props.navigation.navigate("getTicketFinish", s.data);
+                NavigationService.navigate("getTicketFinish", s.data);
               }
           }
         });
@@ -219,7 +220,7 @@ class NotificationScreen extends Component {
       questionProvider.detail(id).then(s => {
         this.setState({ isLoading: true }, () => {
           if (s && s.data) {
-            this.props.navigation.navigate("detailQuestion", { post: s.data });
+            NavigationService.navigate("detailQuestion", { post: s.data });
           } else {
             snackbar.show("Lỗi, bài viết không tồn tại", "danger");
           }
@@ -233,7 +234,7 @@ class NotificationScreen extends Component {
   }
   openBooking(id) {
     this.setState({ isLoading: false }, () => {
-      this.props.navigation.navigate("detailsHistory", {
+      NavigationService.navigate("detailsHistory", {
         id
       });
     });
