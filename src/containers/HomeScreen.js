@@ -28,6 +28,8 @@ import { IndicatorViewPager } from "mainam-react-native-viewpager";
 import firebase from 'react-native-firebase';
 import ScaledImage from 'mainam-react-native-scaleimage'
 import NotificationScreen from '@containers/notification/NotificationScreen'
+import NavigationService from "@navigators/NavigationService";
+
 const width = Dimensions.get("window").width
 class HomeScreen extends Component {
   constructor(props) {
@@ -302,6 +304,13 @@ class HomeScreen extends Component {
     );
   }
   swipe(targetIndex) {
+    console.log(this.props);
+    if(targetIndex == 2 && !this.props.userApp.isLogin){
+      NavigationService.navigate("login", {
+        nextScreen: { screen: "notification", param: {} }
+    });
+    return
+    }
     // this.viewPager && this.viewPager.setPage(targetIndex)
     this.viewPager && this.viewPager.setPage(targetIndex);
 
