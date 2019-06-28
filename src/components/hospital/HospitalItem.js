@@ -28,7 +28,7 @@ class HospitalItem extends Component {
         <View style={[{
           width: imageWidth, height: imageHeight,
           borderRadius: 4, marginBottom: 50
-        },item.imageHome ? {} : { borderColor: 'rgba(151, 151, 151, 0.29)', borderWidth: 1,}]}>
+        },item.imageHome ? {} : { borderColor: 'rgba(151, 151, 151, 0.29)', borderWidth: 0.5,}]}>
           <Image
             resizeMode="cover"
             //   source={require('@images/new/home/banner_drug_test.png')}
