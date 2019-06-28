@@ -20,7 +20,6 @@ import Account from "@containers/home/tab/Account";
 import Videos from "@containers/home/tab/Videos";
 import Notification from "@containers/home/tab/Notification";
 import Community from "@containers/home/tab/Community";
-const { width, height } = Dimensions.get("window");
 import PushController from "@components/notification/PushController";
 import NotificationBadge from "@components/notification/NotificationBadge";
 import ActivityPanel from "@components/ActivityPanel";
@@ -29,6 +28,7 @@ import { IndicatorViewPager } from "mainam-react-native-viewpager";
 import firebase from 'react-native-firebase';
 import ScaledImage from 'mainam-react-native-scaleimage'
 import NotificationScreen from '@containers/notification/NotificationScreen'
+const width = Dimensions.get("window").width
 class HomeScreen extends Component {
   constructor(props) {
     super(props);
@@ -220,7 +220,7 @@ class HomeScreen extends Component {
               >
                 <ScaledImage
                   source={require("@images/new/home/ic_home.png")}
-                  height={30}
+                  height={width <375 ? 20 : 30}
                   style={this.state.tabIndex == 0 ? { tintColor: '#000' } : {}}
 
                 />
@@ -249,7 +249,7 @@ class HomeScreen extends Component {
                   source={require("@images/new/home/ic_community.png")}
                   style={this.state.tabIndex == 1 ? { tintColor: '#000' } : {}}
 
-                  height={30}
+                  height={width <375 ? 20 : 30}
                 />
               </TouchableOpacity>
               <TouchableOpacity
@@ -262,7 +262,7 @@ class HomeScreen extends Component {
                   source={require("@images/new/home/ic_videos.png")}
                   style={this.state.tabIndex == 2 ? { tintColor: '#000' } : {}}
 
-                  height={30}
+                  height={width <375 ? 20 : 30}
                 />
               </TouchableOpacity>
               <TouchableOpacity
@@ -275,14 +275,14 @@ class HomeScreen extends Component {
                   source={require("@images/new/home/ic_account.png")}
                   style={this.state.tabIndex == 3 ? { tintColor: '#000' } : {}}
 
-                  height={30}
+                  height={width <375 ? 20 : 30}
                 />
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.tab_selected,{ padding: 10, paddingRight: 15, position: 'relative' }]}
                 onPress={this.swipe.bind(this, 4)}
               >
-                <ScaledImage source={require("@images/new/home/ic_bell.png")} width={30}  style={this.state.tabIndex == 4 ? { tintColor: '#000' } : {}}/>
+                <ScaledImage source={require("@images/new/home/ic_bell.png")} width={width <375 ? 20 : 30}  style={this.state.tabIndex == 4 ? { tintColor: '#000' } : {}}/>
                 {
                     this.props.userApp.isLogin && (this.props.userApp.unReadNotificationCount || 0) ?
                     <Text numberOfLines={1} style={{ overflow: 'hidden', position: 'absolute', right:35, top: 12, backgroundColor: 'red', borderRadius: 6, color: '#FFF', fontSize: 12, paddingHorizontal: 3, textAlign: 'center' }}>{(this.props.userApp.unReadNotificationCount || 0) > 99 ? "99+" : this.props.userApp.unReadNotificationCount}</Text>
