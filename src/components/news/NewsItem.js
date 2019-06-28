@@ -63,6 +63,6 @@ const styles = StyleSheet.create({
     contents: { width: '50%', paddingLeft: 5, top: -5 },
     viewImg: { position: 'relative', marginRight: 11, },
     viewStar: { position: 'absolute', top: 5, right: 5 },
-    txInfo: { color: '#4BBA7B', textAlign: 'right', bottom: -5, right: 0, position: 'absolute', fontSize: 12 }
+    txInfo: { color: '#4BBA7B', textAlign: 'right', bottom: -5, right: 10, position: 'absolute', fontSize: 12 }
 });
 export default NewsItem;
