@@ -28,6 +28,7 @@ import snackbar from "@utils/snackbar-utils";
 import { IndicatorViewPager } from "mainam-react-native-viewpager";
 import firebase from 'react-native-firebase';
 import ScaledImage from 'mainam-react-native-scaleimage'
+import NotificationScreen from '@containers/notification/NotificationScreen'
 class HomeScreen extends Component {
   constructor(props) {
     super(props);
@@ -145,6 +146,9 @@ class HomeScreen extends Component {
             </View>
             <View style={{ flex: 1 }}>
               <Videos
+              onProcess = {() => {
+                this.viewPager.setPage(0);
+              }}
               // onLogout={() => {
               //   this.viewPager.setPage(0);
               // }}
@@ -164,7 +168,7 @@ class HomeScreen extends Component {
               />
             </View>
             <View style={{ flex: 1 }}>
-              <Notification
+              <NotificationScreen
               // onLogout={() => {
               //   this.viewPager.setPage(0);
               // }}

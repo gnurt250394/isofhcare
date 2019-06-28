@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 
 export default class Community extends Component {
   constructor(props) {
@@ -10,9 +10,23 @@ export default class Community extends Component {
 
   render() {
     return (
-      <View>
-        <Text> Community </Text>
+      <View style={styles.container}>
+        <Text style={styles.text}> Chức năng đang phát triển </Text>
       </View>
     );
   }
 }
+const styles = StyleSheet.create({
+    container:{
+        flexGrow: 1,
+        alignItems:'center',
+        justifyContent: 'center',
+    },
+    text:{
+        fontSize:20,
+        fontWeight: 'bold',
+        color:'#4BBA7B',
+        fontStyle: 'italic',
+
+    }
+})
