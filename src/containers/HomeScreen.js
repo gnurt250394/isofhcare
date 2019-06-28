@@ -244,7 +244,7 @@ class HomeScreen extends Component {
                   this.state.tabIndex == 1 ? styles.tab_selected : styles.tab
                 ]}
                 onPress={() => {
-                  snackbar.show('Tính năng đang phát triến');
+                  snackbar.show('Tính năng đang phát triển');
                 }}
               >
                 <ScaledImage
@@ -259,7 +259,7 @@ class HomeScreen extends Component {
                   this.state.tabIndex == 2 ? styles.tab_selected : styles.tab
                 ]}
                 onPress={() => {
-                  snackbar.show('Tính năng đang phát triến');
+                  snackbar.show('Tính năng đang phát triển');
                 }}
               >
                 <ScaledImage

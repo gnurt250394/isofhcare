@@ -25,7 +25,10 @@ class HospitalItem extends Component {
     let imageHeight = imageWidth / 1.5;
     return (
       <View key={index} style={styles.viewItem}>
-        <View style={{ width: imageWidth, height: imageHeight, borderRadius: 4, borderColor: 'rgba(151, 151, 151, 0.29)', borderWidth: 0.5, marginBottom: 50 }}>
+        <View style={[{
+          width: imageWidth, height: imageHeight,
+          borderRadius: 4, marginBottom: 50
+        },item.imageHome ? {} : { borderColor: 'rgba(151, 151, 151, 0.29)', borderWidth: 1,}]}>
           <Image
             resizeMode="cover"
             //   source={require('@images/new/home/banner_drug_test.png')}
@@ -62,7 +65,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   customImg: {
-    borderRadius: 4
+    borderRadius: 4, borderColor: 'rgba(151, 151, 151, 0.29)', borderWidth: 1,
   },
   nameHospital: {
     fontSize: 14,
