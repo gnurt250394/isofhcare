@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   customImg: {
-    borderRadius: 4, borderColor: 'rgba(151, 151, 151, 0.29)', borderWidth: 1,
+    borderRadius: 4, borderColor: 'rgba(151, 151, 151, 0.29)', borderWidth: 0.5,
   },
   nameHospital: {
     fontSize: 14,

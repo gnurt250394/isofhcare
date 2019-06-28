@@ -285,13 +285,13 @@ class HomeScreen extends Component {
                 />
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.tab_selected, { padding: 10, paddingRight: 15, position: 'relative' }]}
+                style={[styles.tab_selected, {position: 'relative' }]}
                 onPress={this.swipe.bind(this, 2)}
               >
                 <ScaledImage source={require("@images/new/home/ic_bell.png")} width={width < 375 ? 20 : 30} style={this.state.tabIndex == 2 ? { tintColor: '#000' } : {}} />
                 {
                   this.props.userApp.isLogin && (this.props.userApp.unReadNotificationCount || 0) ?
-                    <Text numberOfLines={1} style={{ overflow: 'hidden', position: 'absolute', right: 35, top: 12, backgroundColor: 'red', borderRadius: 6, color: '#FFF', fontSize: 12, paddingHorizontal: 3, textAlign: 'center' }}>{(this.props.userApp.unReadNotificationCount || 0) > 99 ? "99+" : this.props.userApp.unReadNotificationCount}</Text>
+                    <Text numberOfLines={1} style={{ overflow: 'hidden', position: 'absolute', right: 25, top: 12, backgroundColor: 'red', borderRadius: 6, color: '#FFF', fontSize: 12, paddingHorizontal: 3, textAlign: 'center' }}>{(this.props.userApp.unReadNotificationCount || 0) > 99 ? "99+" : this.props.userApp.unReadNotificationCount}</Text>
                     : null
                 }
 
@@ -300,7 +300,7 @@ class HomeScreen extends Component {
           </View>
           <PushController />
         </View>
-      </ActivityPanel >
+      </ActivityPanel>
     );
   }
   swipe(targetIndex) {
