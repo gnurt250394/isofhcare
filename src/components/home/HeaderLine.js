@@ -10,11 +10,15 @@ export default class HeaderLine extends Component {
 
   render() {
     return (
-      <View style={styles.viewTitle}><View>
-        <View style={styles.viewLine}>
+      <View style={styles.viewTitle}>
+        <View>
+          <View style={styles.viewLine}>
+          </View>
+          <Text style={styles.txTitle}>{this.props.title}</Text>
         </View>
-        <Text style={styles.txTitle}>{this.props.title}</Text>
-      </View>{this.props.isShowViewAll ? <TouchableOpacity onPress = {this.props.onPress} style={{padding:5}}><Text style={{ color: '#4BBA7B', fontSize: 12 }}>Xem tất cả>></Text></TouchableOpacity> : null}</View>
+        {this.props.isShowViewAll ? 
+        <TouchableOpacity onPress={this.props.onPress} style={{ padding: 5 }}><Text style={styles.txShowAll}>Xem tất cả>></Text></TouchableOpacity> 
+        : null}</View>
     );
   }
 }
@@ -29,8 +33,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 10,
+
     marginHorizontal: 10,
   },
-  txTitle:{ color: '#000', fontWeight: '600', fontSize: 14 },
-
+  txTitle: { color: '#000', fontWeight: '600', fontSize: 14 },
+  txShowAll:{ textAlign:'center',color: '#4BBA7B', fontSize: 12,marginTop: 2, }
 })

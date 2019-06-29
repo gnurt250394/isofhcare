@@ -23,8 +23,8 @@ class NewsItem extends Component {
         let imageHeight = Dimensions.get("window").width < 375 ? imageWidth / 1.5 + 10 : imageWidth / 1.5
 
         return (
-            <View style={[styles.viewItem, Dimensions.get('window').width < 375 ? {
-                paddingVertical: 10,
+            <View style={[styles.viewItem, Dimensions.get('window').width <= 375 ? {
+                paddingVertical: 5,
             } : {}]}>
                 <View style={[styles.viewImg]}>
                     <Image resizeMode={'cover'} source={{ uri: item.image ? item.image.absoluteUrl() : '' }} style={{ width: imageWidth, height: imageHeight }}></Image>
