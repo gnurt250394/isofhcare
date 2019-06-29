@@ -43,7 +43,7 @@ class Home extends Component {
 
   render() {
     return (
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView bounces={false} style={{ flex: 1 }}>
         <View>
           <Actionbar />
           <SlideBanner />
