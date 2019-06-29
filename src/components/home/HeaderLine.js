@@ -37,5 +37,5 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   txTitle: { color: '#000', fontWeight: '600', fontSize: 14 },
-  txShowAll:{ textAlign:'center',color: '#4BBA7B', fontSize: 12,marginTop: 2, }
+  txShowAll:{color: '#4BBA7B', fontSize: 12,marginTop: 2, }
 })
