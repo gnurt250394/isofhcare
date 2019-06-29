@@ -46,7 +46,7 @@ class NewsItem extends Component {
                     <Text style={{ color: '#000' }}>{item.content && item.title && item.content.length > 51
                         ? item.content.substring(0, 50) + "....."
                         : item.content}</Text>
-                    <Text style={[styles.txInfo, Dimensions.get("window").width < 375 ? { right: 20 } : {}]}>Xem thêm>></Text>
+                    <Text style={[styles.txInfo, Dimensions.get("window").width <= 375 ? { right: 20 } : {}]}>Xem thêm>></Text>
 
                 </View>
 
