@@ -99,11 +99,15 @@ class SelectProfileScreen extends Component {
             );
     }
     selectPofile(profile) {
+       this.setState({
+           disable:true
+       },() => {
         let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
         if (callback) {
             callback(profile);
         }
         this.props.navigation.pop();
+       })
     }
     render() {
         return (
@@ -134,7 +138,7 @@ class SelectProfileScreen extends Component {
                     renderItem={({ item, index }) => {
                         const source = item.medicalRecords && item.medicalRecords.avatar ? { uri: item.medicalRecords.avatar.absoluteUrl() } : require("@images/new/user.png");
 
-                        return (<TouchableOpacity style={styles.bn} onPress={this.selectPofile.bind(this, item)}>
+                        return (<TouchableOpacity style={styles.bn} disabled = {this.state.disable} onPress={this.selectPofile.bind(this, item)}>
                             <ImageLoad
                                 resizeMode="cover"
                                 imageStyle={{ borderRadius: 20, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
