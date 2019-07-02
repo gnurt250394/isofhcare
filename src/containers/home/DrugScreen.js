@@ -41,7 +41,7 @@ export default class DrugScreen extends Component {
         return (
             <SafeAreaView style={styles.container}>
                 <Actionbar />
-                <StatusBar barStyle = {Platform.OS == 'ios'?'dark-content':'light-content'}></StatusBar>
+                <StatusBar barStyle = {Platform.OS == 'ios'?'dark-content':'light-content'} backgroundColor={'#4BBA7B'}></StatusBar>
 
                 <HeaderLine onPress={this.onShowInfo} isShowViewAll={false} title={'SẢN PHẨM THUỐC BÁN CHẠY'} />
                 <View style={styles.viewFlatList}>

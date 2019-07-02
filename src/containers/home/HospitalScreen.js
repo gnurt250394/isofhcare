@@ -38,7 +38,7 @@ export default class HospitalScreen extends Component {
         return (
             <SafeAreaView style={styles.container}
             >
-            <StatusBar barStyle = {Platform.OS == 'ios'?'dark-content':'light-content'}></StatusBar>
+            <StatusBar barStyle = {Platform.OS == 'ios'?'dark-content':'light-content'} backgroundColor={'#4BBA7B'}></StatusBar>
                 <Actionbar />
                 <HeaderLine onPress={this.onShowInfo} isShowViewAll={false} title={'PHÒNG KHÁM, BỆNH VIỆN HÀNG ĐẦU'} />
                 <View style={styles.viewFlatList}>
