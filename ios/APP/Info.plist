@@ -25,12 +25,8 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>payoo://payment_isofhcare_return</string>
-			</array>
-		</dict>
-		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>fb457683741386685</string>
@@ -49,18 +45,18 @@
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
-			<key>CFBundleURLIconFile</key>
-			<string></string>
 			<key>CFBundleURLName</key>
 			<string>com.isofh.appisofhcaredev</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.isofh.appisofhcaredev</string>
+				<string>payoo</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>10</string>
+	<key>CodePushDeploymentKey</key>
+	<string>xTgmCcJORBDuOF5Ncs5wQLuJV-ukByI_I4k1S</string>
 	<key>FacebookAppID</key>
 	<string>457683741386685</string>
 	<key>FacebookDisplayName</key>
@@ -155,7 +151,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>CodePushDeploymentKey</key>
-	<string>xTgmCcJORBDuOF5Ncs5wQLuJV-ukByI_I4k1S</string>
 </dict>
 </plist>

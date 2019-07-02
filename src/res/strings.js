@@ -1,6 +1,6 @@
-let isofhcare_service = 'isofhcare-dev/';
-// let wallet_services = 'wallet-services-test/'; //test
-let wallet_services = 'wallet-services-dev/'; //dev
+let isofhcare_service = 'isofhcare/';
+let wallet_services = 'wallet-services-test/'; //test
+// let wallet_services = 'wallet-services-dev/'; //dev
 
 module.exports = {
   fbApplicationId: "457683741386685",
@@ -90,7 +90,7 @@ module.exports = {
     payment_return_url:
     {
       vnpay: "vnpay://payment_isofhcare_return",
-      payoo: "payoo://payment_isofhcare_return"
+      payoo: "payoo://paymentisofhcarereturn"
     },
     history: {
       user_ehealth: 'USER-EHEALTH'
