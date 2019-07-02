@@ -51,8 +51,14 @@ class NotificationScreen extends Component {
     this.props.dispatch(redux.getUnreadNotificationCount());
     this.onRefresh();
   }
+  componentWillReceiveProps(nextProps){
+    if(nextProps.refreshNotification){
+      this.onRefresh()
+    }
+  }
   onLoad() {
     const { page, size } = this.state;
+    // this.props.refreshNotification = false
     this.setState({
       loading: true,
       refreshing: page == 1,

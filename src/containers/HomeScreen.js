@@ -37,7 +37,8 @@ class HomeScreen extends Component {
     this.state = {
       tabIndex: 0,
       active: true,
-      text: ""
+      text: "",
+      refreshNotification: 1
     };
 
   }
@@ -171,6 +172,7 @@ class HomeScreen extends Component {
             </View>
             <View style={{ flex: 1 }}>
               <NotificationScreen
+                refreshNotification={this.state.refreshNotification}
               // onLogout={() => {
               //   this.viewPager.setPage(0);
               // }}
@@ -285,7 +287,7 @@ class HomeScreen extends Component {
                 />
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.tab_selected, {position: 'relative' }]}
+                style={[styles.tab_selected, { position: 'relative' }]}
                 onPress={this.swipe.bind(this, 2)}
               >
                 <ScaledImage source={require("@images/new/home/ic_bell.png")} width={width < 375 ? 20 : 30} style={this.state.tabIndex == 2 ? { tintColor: '#000' } : {}} />
@@ -305,12 +307,15 @@ class HomeScreen extends Component {
   }
   swipe(targetIndex) {
     console.log(this.props);
-    if(targetIndex == 2 && !this.props.userApp.isLogin){
+    targetIndex == 2 && !this.props.userApp.isLogin ?
       NavigationService.navigate("login", {
         nextScreen: { screen: "notification", param: {} }
-    });
-    return
-    }
+      }) : this.setState({
+        refreshNotification: this.state.refreshNotification+1
+      })
+
+
+
     // this.viewPager && this.viewPager.setPage(targetIndex)
     this.viewPager && this.viewPager.setPage(targetIndex);
 
@@ -354,7 +359,7 @@ const styles = StyleSheet.create({
     height: null,
     resizeMode: "cover"
   },
-  countNotificaiton:{ overflow: 'hidden', position: 'absolute', right: 25, top: 12, backgroundColor: 'red', borderRadius: 6, color: '#FFF', fontSize: 12, paddingHorizontal: 3, textAlign: 'center' },
+  countNotificaiton: { overflow: 'hidden', position: 'absolute', right: 25, top: 12, backgroundColor: 'red', borderRadius: 6, color: '#FFF', fontSize: 12, paddingHorizontal: 3, textAlign: 'center' },
 });
 
 function mapStateToProps(state) {
