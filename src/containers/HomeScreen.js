@@ -291,7 +291,7 @@ class HomeScreen extends Component {
                 <ScaledImage source={require("@images/new/home/ic_bell.png")} width={width < 375 ? 20 : 30} style={this.state.tabIndex == 2 ? { tintColor: '#000' } : {}} />
                 {
                   this.props.userApp.isLogin && (this.props.userApp.unReadNotificationCount || 0) ?
-                    <Text numberOfLines={1} style={{ overflow: 'hidden', position: 'absolute', right: 25, top: 12, backgroundColor: 'red', borderRadius: 6, color: '#FFF', fontSize: 12, paddingHorizontal: 3, textAlign: 'center' }}>{(this.props.userApp.unReadNotificationCount || 0) > 99 ? "99+" : this.props.userApp.unReadNotificationCount}</Text>
+                    <Text numberOfLines={1} style={styles.countNotificaiton}>{(this.props.userApp.unReadNotificationCount || 0) > 99 ? "99+" : this.props.userApp.unReadNotificationCount}</Text>
                     : null
                 }
 
@@ -353,7 +353,8 @@ const styles = StyleSheet.create({
     width: null,
     height: null,
     resizeMode: "cover"
-  }
+  },
+  countNotificaiton:{ overflow: 'hidden', position: 'absolute', right: 25, top: 12, backgroundColor: 'red', borderRadius: 6, color: '#FFF', fontSize: 12, paddingHorizontal: 3, textAlign: 'center' },
 });
 
 function mapStateToProps(state) {

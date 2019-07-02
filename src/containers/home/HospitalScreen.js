@@ -36,11 +36,11 @@ export default class HospitalScreen extends Component {
     }
     render() {
         return (
-            <View style={{ flex: 1,backgroundColor:'#fff' }}
+            <View style={styles.container}
             >
                 <Actionbar />
                 <HeaderLine onPress={this.onShowInfo} isShowViewAll={false} title={'PHÒNG KHÁM, BỆNH VIỆN HÀNG ĐẦU'} />
-                <View style={{ alignItems: 'center', width: '100%',flex:1 }}>
+                <View style={styles.viewFlatList}>
                     <FlatList
                         style={{ flex: 1 }}
                         data={this.state.listData}
@@ -59,9 +59,9 @@ export default class HospitalScreen extends Component {
 
                     </FlatList>
                 </View>
-            <View style={{height:50,alignItems:'flex-end',backgroundColor:'#fff',justifyContent:'center'}}>
+            <View style={styles.viewBtn}>
                 <TouchableOpacity onPress = {() => NavigationService.pop()} style = {styles.btnBack}>
-                    <Text style={{color:'#fff',textAlign:'center'}}>Trở lại</Text>
+                    <Text style={styles.txBtn}>Trở lại</Text>
                 </TouchableOpacity>
             </View>
             </View>
@@ -77,5 +77,9 @@ const styles = StyleSheet.create({
         backgroundColor:"#4BBA7B",
         marginRight: 10,
         borderRadius: 5,
-    }
+    },
+    container:{ flex: 1,backgroundColor:'#fff',width:'100%' },
+    viewFlatList:{ alignItems: 'center', width: '100%',flex:1 },
+    viewBtn:{height:50,alignItems:'flex-end',backgroundColor:'#fff',justifyContent:'center'},
+    txBtn:{color:'#fff',textAlign:'center'}
 })
