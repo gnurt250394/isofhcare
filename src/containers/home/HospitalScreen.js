@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, StyleSheet, Dimensions,TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Dimensions,TouchableOpacity,SafeAreaView } from 'react-native';
 import hospitalProvider from '@data-access/hospital-provider'
 import HospitalItem from '@components/hospital/HospitalItem'
 import HeaderLine from '@components/home/HeaderLine'
@@ -36,7 +36,7 @@ export default class HospitalScreen extends Component {
     }
     render() {
         return (
-            <View style={styles.container}
+            <SafeAreaView style={styles.container}
             >
                 <Actionbar />
                 <HeaderLine onPress={this.onShowInfo} isShowViewAll={false} title={'PHÒNG KHÁM, BỆNH VIỆN HÀNG ĐẦU'} />
@@ -64,7 +64,7 @@ export default class HospitalScreen extends Component {
                     <Text style={styles.txBtn}>Trở lại</Text>
                 </TouchableOpacity>
             </View>
-            </View>
+            </SafeAreaView>
         );
     }
 }
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
         marginRight: 10,
         borderRadius: 5,
     },
-    container:{ flex: 1,backgroundColor:'#fff',width:'100%' },
+    container:{ flex: 1,backgroundColor:'#fff', },
     viewFlatList:{ alignItems: 'center', width: '100%',flex:1 },
     viewBtn:{height:50,alignItems:'flex-end',backgroundColor:'#fff',justifyContent:'center'},
     txBtn:{color:'#fff',textAlign:'center'}

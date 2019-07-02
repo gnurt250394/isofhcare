@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, StyleSheet, Dimensions,TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Dimensions,TouchableOpacity,SafeAreaView } from 'react-native';
 import drugProvider from '@data-access/drug-provider'
 import DrugItem from '@components/drug/DrugItem'
 import HeaderLine from '@components/home/HeaderLine'
@@ -39,7 +39,7 @@ export default class DrugScreen extends Component {
     }
     render() {
         return (
-            <View style={styles.container}>
+            <SafeAreaView style={styles.container}>
                 <Actionbar />
                 <HeaderLine onPress={this.onShowInfo} isShowViewAll={false} title={'SẢN PHẨM THUỐC BÁN CHẠY'} />
                 <View style={styles.viewFlatList}>
@@ -60,7 +60,7 @@ export default class DrugScreen extends Component {
                         <Text style={styles.txBtn}>Trở lại</Text>
                     </TouchableOpacity>
                 </View>
-            </View>
+            </SafeAreaView>
         );
     }
 }
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
         marginRight: 10,
         borderRadius: 5,
     },
-    container:{ flex: 1, backgroundColor: '#fff',width:'100%' },
+    container:{ flex: 1, backgroundColor: '#fff'},
     viewFlatList:{ alignItems: 'center', width: '100%', flex: 1 },
     viewBtn:{ height: 50, alignItems: 'flex-end', backgroundColor: '#fff', justifyContent: 'center' },
     txBtn:{ color: '#fff', textAlign: 'center' }
