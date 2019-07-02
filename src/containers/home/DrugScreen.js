@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, StyleSheet, Dimensions,TouchableOpacity,SafeAreaView } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Dimensions,TouchableOpacity,SafeAreaView,StatusBar,Platform } from 'react-native';
 import drugProvider from '@data-access/drug-provider'
 import DrugItem from '@components/drug/DrugItem'
 import HeaderLine from '@components/home/HeaderLine'
@@ -41,6 +41,8 @@ export default class DrugScreen extends Component {
         return (
             <SafeAreaView style={styles.container}>
                 <Actionbar />
+                <StatusBar barStyle = {Platform.OS == 'ios'?'dark-content':'light-content'}></StatusBar>
+
                 <HeaderLine onPress={this.onShowInfo} isShowViewAll={false} title={'SẢN PHẨM THUỐC BÁN CHẠY'} />
                 <View style={styles.viewFlatList}>
                     <FlatList

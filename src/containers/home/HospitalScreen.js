@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, StyleSheet, Dimensions,TouchableOpacity,SafeAreaView } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Dimensions,TouchableOpacity,SafeAreaView,StatusBar,Platform } from 'react-native';
 import hospitalProvider from '@data-access/hospital-provider'
 import HospitalItem from '@components/hospital/HospitalItem'
 import HeaderLine from '@components/home/HeaderLine'
@@ -38,6 +38,7 @@ export default class HospitalScreen extends Component {
         return (
             <SafeAreaView style={styles.container}
             >
+            <StatusBar barStyle = {Platform.OS == 'ios'?'dark-content':'light-content'}></StatusBar>
                 <Actionbar />
                 <HeaderLine onPress={this.onShowInfo} isShowViewAll={false} title={'PHÒNG KHÁM, BỆNH VIỆN HÀNG ĐẦU'} />
                 <View style={styles.viewFlatList}>
