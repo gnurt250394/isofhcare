@@ -169,16 +169,19 @@ class ConfirmBookingScreen extends Component {
                             }
                             payooSDK.initialize(payment_order.shop_id, payment_order.check_sum_key).then(() => {
                                 payooSDK.pay(payment_order, {}).then(x => {
-                                    let obj = JSON.parse(x);
-                                    walletProvider.onlineTransactionPaid(vnp_TxnRef, this.getPaymentMethod(), obj);
-                                    this.props.navigation.navigate("home", {
-                                        navigate: {
-                                            screen: "createBookingSuccess",
-                                            params: {
-                                                booking
-                                            }
-                                        }
-                                    });
+                                    alert(x);
+                                    // alert(JSON.stringify(x));
+                                    // return;
+                                    // let obj = JSON.parse(x);
+                                    // walletProvider.onlineTransactionPaid(vnp_TxnRef, this.getPaymentMethod(), obj);
+                                    // this.props.navigation.navigate("home", {
+                                    //     navigate: {
+                                    //         screen: "createBookingSuccess",
+                                    //         params: {
+                                    //             booking
+                                    //         }
+                                    //     }
+                                    // });
                                 }).catch(y => {
                                     booking.transactionCode = data.online_transactions[0].id;
                                     this.props.navigation.navigate("paymentBookingError", { booking })

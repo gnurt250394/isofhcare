@@ -67,26 +67,26 @@
 - (BOOL) application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
   return [Payoo application:app open:url options:options];
 }
-//
-//- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
-//  sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
-//  BOOL handled = [[FBSDKApplicationDelegate sharedInstance] application:application
-//                                                                openURL:url
-//                                                      sourceApplication:sourceApplication
-//                                                             annotation:annotation
-//                  ];
-//
-//  return [[FBSDKApplicationDelegate sharedInstance] application:application
-//                                                        openURL:url
-//                                              sourceApplication:sourceApplication
-//                                                     annotation:annotation
-//          ]
-//  || [RNGoogleSignin application:application
-//                         openURL:url
-//               sourceApplication:sourceApplication
-//                      annotation:annotation
-//      ];
-//}
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+  BOOL handled = [[FBSDKApplicationDelegate sharedInstance] application:application
+                                                                openURL:url
+                                                      sourceApplication:sourceApplication
+                                                             annotation:annotation
+                  ];
+
+  return [[FBSDKApplicationDelegate sharedInstance] application:application
+                                                        openURL:url
+                                              sourceApplication:sourceApplication
+                                                     annotation:annotation
+          ]
+  || [RNGoogleSignin application:application
+                         openURL:url
+               sourceApplication:sourceApplication
+                      annotation:annotation
+      ];
+}
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
   [[RNFirebaseNotifications instance] didReceiveLocalNotification:notification];

@@ -90,7 +90,7 @@ module.exports = {
     payment_return_url:
     {
       vnpay: "vnpay://payment_isofhcare_return",
-      payoo: "payoo://paymentisofhcarereturn"
+      payoo: "payoo://payment_isofhcare_return"
     },
     history: {
       user_ehealth: 'USER-EHEALTH'
