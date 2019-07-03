@@ -57,7 +57,7 @@ class Home extends Component {
       <ScrollView refreshControl={<RefreshControl
         refreshing={this.state.refreshing}
         onRefresh={this.onRefresh}
-      />} bounces={false} style={{ flex: 1 }}>
+      />} style={{ flex: 1 }}>
         <View>
           <Actionbar />
           <SlideBanner countReset = {this.state.countReset}/>
