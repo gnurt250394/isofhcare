@@ -13,25 +13,35 @@ class TotalMoney extends Component {
             listTime: []
         }
     }
-    renderService(list) {
+    renderService(list, showMoney) {
         if (list) {
             return list.map((data, i) => (
-                this.renderServiceItem(i, data)
+                this.renderServiceItem(i, data, showMoney)
             ))
         }
         return null;
     }
-    renderServiceItem(index, item) {
-        var data = [index + 1, item.Name, 1, item.PriceService.formatPrice() + " đ"]
-        return (<Row data={data} key={index} textStyle={styles.text} flexArr={[1, 3, 1, 2]} />);
+    renderServiceItem(index, item, showMoney) {
+        if (!showMoney) {
+            var data = [index + 1, item.Name, 1];
+            return (<Row data={data} key={index} textStyle={styles.text} flexArr={[1, 3, 1]} />);
+        }
+        else {
+            var data = [index + 1, item.Name, 1, item.PriceService.formatPrice() + " đ"]
+            return (<Row data={data} key={index} textStyle={styles.text} flexArr={[1, 3, 1, 2]} />);
+        }
     }
 
 
     render() {
-        const tableHead = ['STT', 'Tên', 'Số lượng', 'Tiền'];
         let { resultDetail } = this.props;
         if (!resultDetail || !resultDetail.ListService || !resultDetail.ListService.length)
             return null;
+        let sum = resultDetail.ListService.reduce((a, b) => a + (b.PriceService || 0), 0);
+        let tableHead = ['STT', 'Tên', 'Số lượng', 'Tiền'];
+        if (!sum)
+            tableHead = ['STT', 'Tên', 'Số lượng'];
+
 
         return ((<View style={{ flex: 1, padding: 10 }}>
             {
@@ -47,12 +57,12 @@ class TotalMoney extends Component {
             }
             <Table style={[styles.table, { marginTop: 10 }]} borderStyle={{ borderWidth: 0.5, borderColor: '#c8e1ff' }}>
                 <Row data={tableHead} style={styles.head} textStyle={styles.textHead} flexArr={[1, 3, 1, 2]} />
-                {this.renderService(resultDetail.ListService)}
+                {this.renderService(resultDetail.ListService, sum)}
             </Table>
             <View style={{ alignItems: 'flex-end', marginTop: 10 }}>
                 <Text style={{ fontSize: 18, borderBottomWidth: 1, borderBottomColor: '#979797', paddingBottom: 5, color: '#333333', fontWeight: 'bold' }}>Tổng:      <Text style={{ color: 'red', fontWeight: 'bold', fontSize: 18 }}>
                     {
-                        resultDetail.ListService.reduce((a, b) => a + b.PriceService, 0).formatPrice() + " đ"
+                        sum.formatPrice() + " đ"
                     }</Text></Text>
             </View>
         </View>))
