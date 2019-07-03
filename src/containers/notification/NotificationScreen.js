@@ -408,6 +408,7 @@ class NotificationScreen extends Component {
         showFullScreen={true}
         menuButton={this.menuCreate()}
         isLoading={this.state.isLoading}
+        hideBackButton = {true}
 
       >
         <FlatList
