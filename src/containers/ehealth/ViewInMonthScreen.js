@@ -633,7 +633,7 @@ class ListProfileScreen extends Component {
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <View >
-                                    <Text style={styles.txLabel}>{constants.ehealth.redmine_durg}</Text>
+                                    <Text style={styles.txLabel}>{constants.ehealth.redmine_drug}</Text>
                                     <TouchableOpacity onPress={this.onPressTimeAlarm}><Text style={styles.txContent}><Text style={styles.txContent}>{this.state.timeAlarm ? (new Date().format("dd/MM/yyyy") + " " + this.state.timeAlarm).toDateObject('/').format('HH:mm') : 'Chọn giờ'}</Text></Text></TouchableOpacity>
                                 </View>
                                 <Switch onValueChange={this.onSetAlarm} trackColor={{
