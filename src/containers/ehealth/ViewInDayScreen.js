@@ -229,7 +229,9 @@ class ViewInDateScreen extends Component {
             //         (this.state.resultDetail.ListPayment && this.state.resultDetail.ListPayment.length > 0 ? this.state.resultDetail.ListPayment.reduce((a, b) => a + b.Amount, 0) : 0);
             // }
             // else {
-            money = this.state.resultDetail.ListService.reduce((a, b) => a + b.PriceService, 0);
+            money = this.state.resultDetail.ListService.reduce((a, b) => a + (b.PriceService || 0), 0);
+            if (!money)
+                return null;
             // }
             return <TouchableOpacity style={styles.card} onPress={this.viewMoney}>
                 <View style={{ width: 10, height: 10, backgroundColor: '#ff4355', borderRadius: 5, marginTop: 22, marginLeft: 10 }}></View>
@@ -469,6 +471,11 @@ class ViewInDateScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1
+    },
+    viewSpaceTop: { height: 100 },
+    txDateColor: { color: '#bbbbbb' },
     card: {
         borderRadius: 5,
         backgroundColor: "#ffffff",
@@ -573,7 +580,91 @@ const styles = StyleSheet.create({
     txContent: {
         color: '#554a4c',
         marginTop: 5, marginBottom: 25,
-    }
+    },
+    viewCheckupResult: { width: 10, height: 10, backgroundColor: '#ff4355', borderRadius: 5, marginTop: 22, marginLeft: 10 },
+    viewNote: { flex: 1, padding: 15 },
+    txResultEhealth: { fontSize: 18 },
+    txNote: { paddingTop: 5, color: '#ff4355', flex: 1 },
+    viewMaker: { width: 5, height: '100%', backgroundColor: '#ff4355', borderRadius: 2.5 },
+    viewDiagnosticResult: { width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 },
+    viewTx: { flex: 1, padding: 15 },
+    txNoteBlue: { paddingTop: 5, color: '#2e66e7', flex: 1 },
+    viewMakerBlue: { width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 },
+    viewMoney: { width: 10, height: 10, backgroundColor: '#ff4355', borderRadius: 5, marginTop: 22, marginLeft: 10 },
+    viewTxMoney: { flex: 1, padding: 15 },
+    txMoney: { paddingTop: 5, color: '#ff4355', flex: 1, fontWeight: 'bold' },
+    makerMoney: { width: 5, height: '100%', backgroundColor: '#ff4355', borderRadius: 2.5 },
+    viewSurgeryResult: { width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 },
+    viewTxSurgery: { flex: 1, padding: 15 },
+    txSurgery: { paddingTop: 5, color: '#2e66e7', flex: 1 },
+    footerSurgery: { width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 },
+    viewMedicine: { width: 10, height: 10, backgroundColor: '#fbaa21', borderRadius: 5, marginTop: 22, marginLeft: 10 },
+    viewDrug: { flex: 1, padding: 15 },
+    txMedicine: { paddingTop: 5, color: '#fbaa21', flex: 1 },
+    footerMedicine: { width: 5, height: '100%', backgroundColor: '#fbaa21', borderRadius: 2.5 },
+    viewMedical: { width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 },
+    viewTxMedical: { flex: 1, padding: 15 },
+    txMedical: { paddingTop: 5, color: '#2e66e7' },
+    footerMedical: { width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 },
+    actionbarStyle: {
+        backgroundColor: '#22b060',
+        borderBottomWidth: 0
+    },
+    titleStyle: {
+        color: '#FFF'
+    },
+    container2: { flex: 1, alignItems: 'center' },
+    viewDateSelected: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        backgroundColor: '#27ae60',
+        justifyContent: 'center',
+        alignItems: 'center',
+        shadowColor: 'rgba(46, 231, 58, 0.35)',
+        shadowOffset: {
+            width: 0,
+            height: 4
+        },
+        shadowRadius: 10,
+        shadowOpacity: 1,
+        elevation: 3,
+        margin: 5,
+        marginTop: 10,
+    },
+    txDate: {
+        fontSize: 18,
+        color: '#FFF',
+    },
+    btnDate: { justifyContent: 'center', alignItems: 'center', width: 70 },
+    viewTxDay: {
+        width: 40, height: 40, borderRadius: 20,
+        justifyContent: 'center', alignItems: 'center',
+        margin: 5,
+        marginTop: 10,
+    },
+    txDayNotSelect: {
+        fontSize: 18,
+        color: '#2e2e39',
+    },
+    renderData: { flex: 1, width: DEVICE_WIDTH, padding: 10 },
+    btnInfo: {
+        width: 252,
+        maxWidth: DEVICE_WIDTH,
+        backgroundColor: '#27ae60',
+        borderRadius: 5,
+        height: 48,
+        marginVertical: 20,
+        padding: 10, alignItems: 'center'
+    },
+    txBtnInfo: { fontWeight: 'bold', color: '#FFF', fontSize: 17 },
+    viewModal: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+    viewPopup: { backgroundColor: '#fff', marginHorizontal: 20, marginVertical: 60, borderRadius: 5 },
+    txNotifi: { fontSize: 22, color: '#27AE60', textAlign: 'center', marginTop: 10, marginHorizontal: 20 },
+    txErr: { textAlign: 'center', marginVertical: 20, marginHorizontal: 10 },
+    btnConfirm: { justifyContent: 'center', alignItems: 'center', height: 41, backgroundColor: '#878787', borderBottomLeftRadius: 5, borderBottomRightRadius: 5 },
+    viewSpaceBottom: { height: 50 }
+
 });
 
 function mapStateToProps(state) {
