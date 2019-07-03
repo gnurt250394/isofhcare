@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, FlatList, StyleSheet, Dimensions, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator, StyleSheet, Dimensions, ScrollView } from 'react-native';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import ImageLoad from 'mainam-react-native-image-loader';
 import { connect } from 'react-redux';
@@ -40,11 +40,11 @@ class TopDrug extends Component {
   showAllDrug = () => {
     NavigationService.navigate('drug')
   }
-  componentWillReceiveProps(nextProps){
-    if(nextProps.countReset){
-        this.getListData()
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.countReset) {
+      this.getListData()
     }
-}
+  }
   render() {
     return (
       <View style={styles.container}>
@@ -52,11 +52,12 @@ class TopDrug extends Component {
         <HeaderLine onPress={this.showAllDrug} title={Dimensions.get("window").width < 375 ? 'SẢN PHẨM\nTHUỐC BÁN CHẠY' : 'SẢN PHẨM THUỐC BÁN CHẠY'} isShowViewAll={true} />
         {/* <Text style={{color:'#000',fontWeight:'600'}}>{'Sản phẩm thuốc bán chạy'.toUpperCase()}</Text>
         </View><Text style={{color:'#4BBA7B'}}>Xem tất cả>></Text></View> */}
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+        {this.state.dataDrug ? (<ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
           <View style={{ width: 190 * Math.round(this.state.dataDrug.length / 2), flexWrap: 'wrap', flexDirection: 'row' }}>
             {this.state.dataDrug && this.state.dataDrug.slice(0, 20).map((item, index) => this.renderItem(item, index))}
           </View>
-        </ScrollView>
+        </ScrollView>) : (<ActivityIndicator></ActivityIndicator>)}
+
 
       </View>
     );

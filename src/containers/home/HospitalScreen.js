@@ -10,18 +10,30 @@ export default class HospitalScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            listData: []
+            listData: [],
+            refreshing:false
         }
     }
     componentDidMount() {
-        this.getList()
+        this.onRefresh()
+    }
+    onRefresh = () => {
+        this.setState({
+            refreshing : true
+        },() => {
+            this.getList()
+        })
     }
     getList = () => {
         hospitalProvider.getListTopRateHospital().then(res => {
             this.setState({
-                listData: res
+                listData: res,
+                refreshing:false
             })
         }).catch(err => {
+            this.setState({
+                refreshing:false
+            })
             console.log(err)
         })
     }
@@ -48,6 +60,8 @@ export default class HospitalScreen extends Component {
                         keyExtractor={(item, index) => index.toString()}
                         extraData={this.state}
                         numColumns={2}
+                        onRefresh = {this.onRefresh}
+                        refreshing = {this.state.refreshing}
                         renderItem={this.renderItem}
                         // ListFooterComponent={() =>
                         //     <View style={{ height: 200 }}>

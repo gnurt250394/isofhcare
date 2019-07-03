@@ -10,18 +10,30 @@ export default class DrugScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            listData: []
+            listData: [],
+            refreshing:false
         }
     }
     componentDidMount() {
-        this.getList()
+        this.onRefresh()
+    }
+    onRefresh = () => {
+        this.setState({
+            refreshing:true
+        },() => {
+            this.getList()
+        })
     }
     getList = () => {
         drugProvider.getListDrug().then(res => {
             this.setState({
-                listData: res
+                listData: res,
+                refreshing:false
             })
         }).catch(err => {
+            this.setState({
+            refreshing:false
+            })
             console.log(err)
         })
     }
@@ -50,6 +62,8 @@ export default class DrugScreen extends Component {
                         data={this.state.listData}
                         keyExtractor={(item, index) => index.toString()}
                         extraData={this.state}
+                        onRefresh = {this.onRefresh}
+                        refreshing = {this.state.refreshing}
                         numColumns={Dimensions.get("window").width < 375 ? 1 : 2}
                         renderItem={this.renderItem}
                         showsVerticalScrollIndicator={false}

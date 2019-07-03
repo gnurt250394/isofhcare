@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { View, StyleSheet, Image, Text, Dimensions } from 'react-native';
+import { View, StyleSheet, Image, Text, Dimensions, } from 'react-native';
 import StarRating from 'react-native-star-rating';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import ImageLoad from 'mainam-react-native-image-loader';
