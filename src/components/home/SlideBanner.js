@@ -33,6 +33,11 @@ class SlideBanner extends Component {
     componentWillMount() {
         this.getListBanner();
     }
+    componentWillReceiveProps(nextProps){
+        if(nextProps.countReset){
+            this.getListBanner()
+        }
+    }
     componentDidMount() {
     }
 

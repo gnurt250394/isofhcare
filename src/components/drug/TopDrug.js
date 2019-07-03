@@ -40,6 +40,11 @@ class TopDrug extends Component {
   showAllDrug = () => {
     NavigationService.navigate('drug')
   }
+  componentWillReceiveProps(nextProps){
+    if(nextProps.countReset){
+        this.getListData()
+    }
+}
   render() {
     return (
       <View style={styles.container}>

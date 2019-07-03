@@ -34,7 +34,11 @@ class TopHospital extends Component {
     onShowInfo = () => {
         NavigationService.navigate('hospital')
     }
-
+    componentWillReceiveProps(nextProps){
+        if(nextProps.countReset){
+            this.getList()
+        }
+    }
     render() {
         return (
             <View>

@@ -34,24 +34,38 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      refreshing:false,
+      countReset:0,
     }
   }
 
 
   componentWillMount() {
   }
+  onRefresh = () => {
+    this.setState({
+      refreshing:true,
+      countReset:this.state.countReset+1,
 
+    })
+    setTimeout(() => this.setState({
+      refreshing:false
+  }),500)
+  }
   render() {
     return (
-      <ScrollView bounces={false} style={{ flex: 1 }}>
+      <ScrollView refreshControl={<RefreshControl
+        refreshing={this.state.refreshing}
+        onRefresh={this.onRefresh}
+      />} bounces={false} style={{ flex: 1 }}>
         <View>
           <Actionbar />
-          <SlideBanner />
-          <TopHospital />
-          <HospitalNearYou />
-          <TopDrug />
-          <TopNews />
-          <View style={{width:'100%',height:50}}></View>
+          <SlideBanner countReset = {this.state.countReset}/>
+          <TopHospital countReset = {this.state.countReset}/>
+          <HospitalNearYou/>
+          <TopDrug countReset = {this.state.countReset}/>
+          <TopNews countReset = {this.state.countReset}/>
+          <View style={{ width: '100%', height: 50 }}></View>
         </View>
       </ScrollView>
     );

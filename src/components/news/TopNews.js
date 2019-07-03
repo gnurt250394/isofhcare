@@ -30,6 +30,11 @@ class TopNews extends Component {
             console.log(err);
         })
     }
+    componentWillReceiveProps(nextProps){
+        if(nextProps.countReset){
+            this.getData()
+        }
+    }
     render() {
         return (
             <View style={{flex:1}}>
