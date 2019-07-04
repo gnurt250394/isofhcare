@@ -10,8 +10,6 @@ import constants from '@resources/strings';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 
-import Modal from '@components/modal';
-
 class ViewInDateScreen extends Component {
     constructor(props) {
         super(props)
@@ -115,10 +113,9 @@ class ViewInDateScreen extends Component {
                                             )
                                         ) {
                                             this.setState({
-                                                hasResult: false,
-                                                isVisible: true,
-                                                messageError: constants.msg.ehealth.not_result_ehealth_in_day
+                                                hasResult: false
                                             })
+                                            snackbar.show(constants.msg.ehealth.not_result_ehealth_in_day, "danger");
                                         } else {
                                             this.setState({
                                                 hasResult: true,
@@ -127,7 +124,9 @@ class ViewInDateScreen extends Component {
                                             });
                                         }
                                     } catch (error) {
-                                        this.setState({ hasResult: false, result: {}, isVisible: true, messageError: "Bạn chưa có kết quả khám ở ngày này!" });
+                                        this.setState({ hasResult: false, result: {} });
+                                        snackbar.show(constants.msg.ehealth.not_result_ehealth_in_day, "danger");
+
                                     }
                                 }
                             }
@@ -148,11 +147,7 @@ class ViewInDateScreen extends Component {
     )
     dayPress(item) {
         if (!item.patientHistory) {
-            // snackbar.show("Không có kết quả vào ngày này", "danger");
-            this.setState({
-                isVisible: true,
-                messageError: constants.msg.ehealth.not_result_of_this_date
-            })
+            snackbar.show(constants.msg.ehealth.not_result_of_this_date, "danger");
             return;
         };
         this.setState({ dateSelected: item }, () => {
@@ -316,7 +311,7 @@ class ViewInDateScreen extends Component {
                     arr = this.state.result.ListResulHuyetHoc;
             if (!arr.length)
                 if (this.state.result.ListResulViSinh && this.state.result.ListResulViSinh.length)
-                    arr = this.state.result.ListResulViSinh;
+                    arr = this.state.result.ListResulblnh;
             if (!arr.length)
                 if (this.state.result.ListResulOther && this.state.result.ListResulOther.length)
                     arr = this.state.result.ListResulOther;
@@ -449,22 +444,7 @@ class ViewInDateScreen extends Component {
                         </TouchableOpacity>
                     }
                 </View>
-                <Modal
-                    isVisible={this.state.isVisible}
-                    onBackdropPress={() => this.setState({ isVisible: false })}
-                    backdropOpacity={0.5}
-                    animationInTiming={500}
-                    animationOutTiming={500}
-                    style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
-                    backdropTransitionInTiming={1000}
-                    backdropTransitionOutTiming={1000}
-                >
-                    <View style={{ backgroundColor: '#fff', marginHorizontal: 20, marginVertical: 60, borderRadius: 5 }}>
-                        <Text style={{ fontSize: 22, color: '#27AE60', textAlign: 'center', marginTop: 10, marginHorizontal: 20 }}>{constants.ehealth.notifi_text}</Text>
-                        <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>{this.state.messageError}</Text>
-                        <TouchableOpacity onPress={() => this.setState({ isVisible: false })} style={{ justifyContent: 'center', alignItems: 'center', height: 41, backgroundColor: '#878787', borderBottomLeftRadius: 5, borderBottomRightRadius: 5 }}><Text style={{ color: '#fff' }}>{constants.ehealth.modal_confirm}</Text></TouchableOpacity>
-                    </View>
-                </Modal>
+
             </ActivityPanel>
         );
     }
