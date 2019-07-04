@@ -6,7 +6,7 @@ import {
     TouchableOpacity,
     ActivityIndicator,
     StyleSheet,
-    TouchableWithoutFeedback
+    Dimensions
 } from "react-native";
 import clientUtils from '@utils/client-utils';
 import bookingProvider from "@data-access/booking-provider";
@@ -61,7 +61,9 @@ class EhealthScreen extends Component {
     }
     onPress = (item) => {
         this.props.dispatch({ type: constants.action.action_select_hospital_ehealth, value: item })
-        this.props.navigation.navigate('listProfile')
+        Dimensions.get('window').width < 375 ? 
+        this.props.navigation.navigate('listProfileSmall')
+        : this.props.navigation.navigate('listProfile')
     }
     renderItem = ({ item, index }) => {
         const source = item.hospital && item.hospital.avatar ? { uri: item.hospital.avatar.absoluteUrl() } : require("@images/new/user.png");
