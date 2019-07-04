@@ -2,7 +2,7 @@ import React from 'react';
 import { createDrawerNavigator, DrawerItems } from 'react-navigation';
 import { Image } from "react-native";
 import HomeScreen from "@containers/HomeScreen";
-import CustomDrawer from './CustomDrawer'
+import CustomDrawer from '@components/navigators/CustomDrawer'
 import ScaledImage from 'mainam-react-native-scaleimage';
 
 const DrawerNav = createDrawerNavigator({

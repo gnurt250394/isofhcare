@@ -33,44 +33,42 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      refreshing:false,
-      countReset:0,
+      refreshing: false,
+      countReset: 0,
     }
-  }
-
-
-  componentWillMount() {
-    console.log(this.props,'sssssss');
   }
   onRefresh = () => {
     this.setState({
-      refreshing:true,
-      countReset:this.state.countReset+1,
+      refreshing: true,
+      countReset: this.state.countReset + 1,
 
     })
     setTimeout(() => this.setState({
-      refreshing:false
-  }),500)
+      refreshing: false
+    }), 200)
   }
   openDrawer = () => {
     this.props.navigation.openDrawer()
   }
   render() {
     return (
-      <ScrollView refreshControl={<RefreshControl
-        refreshing={this.state.refreshing}
-        onRefresh={this.onRefresh}
-      />} style={{ flex: 1 }}>
-        <View>
-          <Actionbar openDrawer = {this.openDrawer}/>
-          <SlideBanner countReset = {this.state.countReset}/>
-          <TopHospital countReset = {this.state.countReset}/>
-          <HospitalNearYou/>
-          <TopDrug countReset = {this.state.countReset}/>
-          <TopNews countReset = {this.state.countReset}/>
-          <View style={{ width: '100%', height: 50 }}></View>
-        </View>
-      </ScrollView>
+      <View style={{ flex: 1 }}>
+        <Actionbar openDrawer={this.openDrawer} />
+        <ScrollView 
+          refreshControl={<RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this.onRefresh}
+          />}>
+          <View>
+            <SlideBanner countReset={this.state.countReset} />
+            <TopHospital countReset={this.state.countReset} />
+            <HospitalNearYou />
+            <TopDrug countReset={this.state.countReset} />
+            <TopNews countReset={this.state.countReset} />
+            <View style={{ width: '100%', height: 50 }}></View>
+          </View>
+        </ScrollView>
+      </View>
     );
   }
 }
