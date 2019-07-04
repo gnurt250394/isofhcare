@@ -27,68 +27,61 @@ const DEVICE_WIDTH = Dimensions.get('window').width;
 class ViewEhealthDetailScreen extends Component {
     constructor(props) {
         super(props)
-        this.state = {
-            result : '',
-            resultDetail : '',
-            detailsHospital:'',
-            hospitalName:'',
-            user:''
-        }
-    }
-    componentDidMount(){
         let result = this.props.navigation.state.params.result;
         let resultDetail = this.props.navigation.state.params.resultDetail;
-        let user = this.props.navigation.state.params.user 
+        let user = this.props.navigation.state.params.user
         let hospitalName = this.props.navigation.state.params.hospitalName
 
-        this.setState({
-            result :result,
-            resultDetail:resultDetail,
-            user:user,
-            hospitalName:hospitalName
-        })
+        this.state = {
+            result: result,
+            resultDetail: resultDetail,
+            user: user,
+            hospitalName: hospitalName,
+            detailsHospital: ""
+        }
     }
-    componentWillReceiveProps(nextProps){
-        if(nextProps.navigation.state.params && nextProps.navigation.state.params.result){
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.navigation.state.params && nextProps.navigation.state.params.result) {
             let result = nextProps.navigation.state.params.result;
             let resultDetail = nextProps.navigation.state.params.resultDetail;
-            let user = nextProps.navigation.state.params.user 
+            let user = nextProps.navigation.state.params.user
             let hospitalName = nextProps.navigation.state.params.hospitalName
             this.setState({
-                result :result,
-                resultDetail:resultDetail,
-                user:user,
-                hospitalName:hospitalName
+                result: result,
+                resultDetail: resultDetail,
+                user: user,
+                hospitalName: hospitalName
             })
         }
     }
-    renderDetails = () =>{
-        if(this.state.user){
-            return(
-                <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
-                <ProfileInfomation hospitalName ={this.state.hospitalName} avatar = {this.state.user.avatar} patientName = {this.state.resultDetail.Profile.PatientName} resultDetail={this.state.resultDetail} />
-                <View style={styles.viewRenderDetails} />
-                <CheckupResult result={this.state.result} />
-                <MedicalTestResult result={this.state.result} />
-                <DiagnosticResult result={this.state.result} />
-                <SurgeryResult result={this.state.result} />
-                <Medicine result={this.state.result} />
-                <TotalMoney result={this.state.result} resultDetail={this.state.resultDetail} />
-                <View style={styles.viewBottomDetails}/>
+    renderDetails = () => {
+        if (this.state.user) {
+            return (
+                <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
+                    <ProfileInfomation hospitalName={this.state.hospitalName} avatar={this.state.user.avatar} patientName={this.state.resultDetail.Profile.PatientName} resultDetail={this.state.resultDetail} />
+                    <View style={{ height: 1, backgroundColor: '#27ae60', }} />
+                    <CheckupResult result={this.state.result} />
+                    <MedicalTestResult result={this.state.result} />
+                    <DiagnosticResult result={this.state.result} />
+                    <SurgeryResult result={this.state.result} />
+                    <Medicine result={this.state.result} />
+                    <TotalMoney result={this.state.result} resultDetail={this.state.resultDetail} />
+                    <View style={{ height: 50 }} />
                 </ScrollView>
             )
-        }else{
-            return(
-                <ScrollView ref={ref => this.flListDate = ref} showsVerticalScrollIndicator={false} style={styles.container}>
-                <ProfileInfomation resultDetail={this.state.resultDetail} />
-                <View style={styles.viewRenderDetails} />
-                <CheckupResult result={this.state.result} />
-                <MedicalTestResult result={this.state.result} />
-                <DiagnosticResult result={this.state.result} />
-                <SurgeryResult result={this.state.result} />
-                <Medicine result={this.state.result} />
-                <TotalMoney result={this.state.result} resultDetail={this.state.resultDetail} />
-                <View style={styles.viewBottomDetails}/>
+        } else {
+            return (
+                <ScrollView ref={ref => this.flListDate = ref} showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
+                    <ProfileInfomation resultDetail={this.state.resultDetail} />
+                    <View style={{ height: 1, backgroundColor: '#27ae60', }} />
+                    <CheckupResult result={this.state.result} />
+                    <MedicalTestResult result={this.state.result} />
+                    <DiagnosticResult result={this.state.result} />
+                    <SurgeryResult result={this.state.result} />
+                    <Medicine result={this.state.result} />
+                    <TotalMoney result={this.state.result} resultDetail={this.state.resultDetail} />
+                    <View style={{ height: 50 }} />
                 </ScrollView>
             )
         }
@@ -103,7 +96,7 @@ class ViewEhealthDetailScreen extends Component {
                 actionbarStyle={styles.actionbarStyle}
                 titleStyle={styles.titleStyle}
                 isLoading={this.state.isLoading}>
-               {this.renderDetails()}
+                {this.renderDetails()}
             </ActivityPanel>
         );
     }
