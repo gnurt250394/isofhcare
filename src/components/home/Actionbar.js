@@ -12,7 +12,7 @@ class ActionBar extends Component {
     render() {
         return (
             <View style={styles.containner}>
-                <TouchableOpacity style={styles.button_menu}>
+                <TouchableOpacity onPress = {this.props.openDrawer} style={styles.button_menu}>
                     <ScaledImage source={require("@images/new/home/ic_menu.png")} width={30} />
                 </TouchableOpacity>
                 <View style={styles.search_panel}>

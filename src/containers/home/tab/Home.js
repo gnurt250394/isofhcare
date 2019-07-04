@@ -29,7 +29,6 @@ import TopHospital from '@components/hospital/TopHospital';
 import HospitalNearYou from '@components/hospital/HospitalNearYou';
 import TopDrug from '@components/drug/TopDrug';
 import TopNews from '@components/news/TopNews';
-
 class Home extends Component {
   constructor(props) {
     super(props);
@@ -41,6 +40,7 @@ class Home extends Component {
 
 
   componentWillMount() {
+    console.log(this.props,'sssssss');
   }
   onRefresh = () => {
     this.setState({
@@ -52,6 +52,9 @@ class Home extends Component {
       refreshing:false
   }),500)
   }
+  openDrawer = () => {
+    this.props.navigation.openDrawer()
+  }
   render() {
     return (
       <ScrollView refreshControl={<RefreshControl
@@ -59,7 +62,7 @@ class Home extends Component {
         onRefresh={this.onRefresh}
       />} style={{ flex: 1 }}>
         <View>
-          <Actionbar />
+          <Actionbar openDrawer = {this.openDrawer}/>
           <SlideBanner countReset = {this.state.countReset}/>
           <TopHospital countReset = {this.state.countReset}/>
           <HospitalNearYou/>

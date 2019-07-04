@@ -2,13 +2,13 @@ import {
   StackRouter,
   createStackNavigator,
 } from "react-navigation";
+import React from 'react';
 import { Platform } from "react-native";
 import LoginScreen from "@containers/account/LoginScreen";
 import RegisterScreen from "@containers/account/RegisterScreen";
 import EnterPasswordScreen from "@containers/account/EnterPasswordScreen";
 import ForgotPasswordScreen from "@containers/account/ForgotPasswordScreen";
 import SplashScreen from "@containers/SplashScreen";
-import HomeScreen from "@containers/HomeScreen";
 import PhotoViewerScreen from "@containers/image/PhotoViewerScreen";
 import IntroScreen from "@containers/intro/IntroScreen";
 import AboutScreen from "@containers/utility/AboutScreen";
@@ -64,6 +64,7 @@ import ViewEhealthDetailScreen from '@containers/ehealth/ViewEhealthDetailScreen
 //........................eHealth................
 import HospitalScreen from '@containers/home/HospitalScreen'
 import DrugScreen from '@containers/home/DrugScreen'
+import DrawerNav from './DrawerNav'
 const RootNavigator = createStackNavigator(
   {
     // createProfileTicketScreen : {screen:CreateProfileTicketScreen},
@@ -77,7 +78,11 @@ const RootNavigator = createStackNavigator(
     groupChatFacility: { screen: GroupChatScreen },
     chat: { screen: ChatScreen },
     intro: { screen: IntroScreen },
-    home: { screen: HomeScreen },
+    home: {
+      screen: DrawerNav, navigationOptions: ({ navigation }) => ({
+        header: null
+      })
+    },
     login: { screen: LoginScreen },
     forgotPassword: { screen: ForgotPasswordScreen },
     enterPassword: { screen: EnterPasswordScreen },
@@ -131,8 +136,8 @@ const RootNavigator = createStackNavigator(
     viewDetailEhealth: { screen: ViewEhealthDetailScreen },
 
     emptyScreen: { screen: EmptyScreen },
-    hospital:{screen:HospitalScreen},
-    drug:{screen:DrugScreen}
+    hospital: { screen: HospitalScreen },
+    drug: { screen: DrugScreen }
   },
 
   {
