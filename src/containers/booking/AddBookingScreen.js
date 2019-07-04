@@ -558,7 +558,7 @@ class AddBookingScreen extends Component {
                                 <Text numberOfLines={1} style={styles.ktq}>{this.state.service.name}</Text>
                                 <Text numberOfLines={1} style={styles.ktq}>{this.state.service.price.formatPrice() + 'đ'}</Text>
                             </View> :
-                            <Text numberOfLines={1} style={styles.ktq}>{constants.msg.booking.select_service}</Text>
+                            <Text numberOfLines={1} style={styles.ktq}>{constants.booking.select_service}</Text>
                         }
 
                         <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />

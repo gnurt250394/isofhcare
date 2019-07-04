@@ -743,9 +743,7 @@ class ExportPDF extends Component {
         }
         div += " </div>"
         div += " </div>"
-        console.log("DATAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-        console.log(div)
-        console.log("DATAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+      
         return div;
     }
 

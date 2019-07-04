@@ -406,7 +406,8 @@ module.exports = {
     share_ehealth: "Chia sẻ y bạ",
     note: 'Ghi chú',
     clock: 'Thời gian',
-    redmine_drug: 'Nhắc uống thuốc'
+    redmine_drug: 'Nhắc uống thuốc',
+    view_finish:'XEM XONG'
   },
   actionSheet: {
     orther: 'Khác',
@@ -433,8 +434,9 @@ module.exports = {
     select_service_type:"Chọn loại dịch vụ",
     location:'Địa điểm',
     service: 'Dịch vụ',
-    change_password:'Đổi mật khẩu'
-
+    change_password:'Đổi mật khẩu',
+    result_ehealth:"KẾT QUẢ KHÁM",
+    result_ehealth_image:"KẾT QUẢ CHẨN ĐOÁN HÌNH ẢNH"
   },
   api: {
     notification: {
@@ -567,7 +569,7 @@ module.exports = {
       get_group_patient: isofhcare_service + 'booking/get-group-patient-history',
       update_data_user: isofhcare_service + 'patient-history-booking/update-data-note',
       search_profile_user: isofhcare_service + 'user/search',
-      share_with_profile: isofhcare_service + 'booking/share-user'
+      share_with_profile: isofhcare_service + 'booking/share-user',
     }
   }
 };
