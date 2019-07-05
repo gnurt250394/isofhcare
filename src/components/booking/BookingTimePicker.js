@@ -17,8 +17,101 @@ const DEVICE_WIDTH = Dimensions.get('window').width;
 class SelectTimeScreen extends Component {
     constructor(props) {
         super(props);
+        let date = new Date(new Date().format("MM/dd/yyyy"));
+        let date1= new Date(date.setMinutes(date.getMinutes() + (8 * 60)));
+        listTime = [];
+        listTime.push({
+            type: 3,
+            time: date1,
+            label: "08:00"
+        })
+        date1= new Date(date.setMinutes(date.getMinutes() + 30));
+        listTime.push({
+            type: 3,
+            time: date1,
+            label: "08:30"
+        })
+        date1= new Date(date.setMinutes(date.getMinutes() + 30));
+        listTime.push({
+            type: 3,
+            time: date1,
+            label: "09:00"
+        })
+        date1= new Date(date.setMinutes(date.getMinutes() + 30));
+        listTime.push({
+            type: 3,
+            time: date1,
+            label: "09:30"
+        })
+        date1= new Date(date.setMinutes(date.getMinutes() + 30));
+        listTime.push({
+            type: 3,
+            time: date1,
+            label: "10:00"
+        })
+        date1= new Date(date.setMinutes(date.getMinutes() + 30));
+        listTime.push({
+            type: 3,
+            time: date1,
+            label: "10:30"
+        })
+        date1= new Date(date.setMinutes(date.getMinutes() + 30));
+        listTime.push({
+            type: 3,
+            time: date1,
+            label: "11:00"
+        })
+        date1= new Date(date.setMinutes(date.getMinutes() + 30));
+        listTime.push({
+            type: 3,
+            time: date1,
+            label: "11:30"
+        })
+        date1= new Date(date.setMinutes(date.getMinutes() + 120));
+        listTime.push({
+            type: 3,
+            time: date1,
+            label: "13:30"
+        })
+        date1= new Date(date.setMinutes(date.getMinutes() + 30));
+        listTime.push({
+            type: 3,
+            time: date1,
+            label: "14:00"
+        })
+        date1= new Date(date.setMinutes(date.getMinutes() + 30));
+        listTime.push({
+            type: 3,
+            time: date1,
+            label: "14:30"
+        })
+        date1= new Date(date.setMinutes(date.getMinutes() + 30));
+        listTime.push({
+            type: 3,
+            time: date1,
+            label: "15:00"
+        })
+        date1= new Date(date.setMinutes(date.getMinutes() + 30));
+        listTime.push({
+            type: 3,
+            time: date1,
+            label: "15:30"
+        })
+        date1= new Date(date.setMinutes(date.getMinutes() + 30));
+        listTime.push({
+            type: 3,
+            time: date1,
+            label: "16:00"
+        })
+        date1= new Date(date.setMinutes(date.getMinutes() + 30));
+        listTime.push({
+            type: 3,
+            time: date1,
+            label: "16:30"
+        })
+
         this.state = {
-            listTime: []
+            listTime
         }
     }
     getLable(time) {
@@ -36,6 +129,9 @@ class SelectTimeScreen extends Component {
             console.log(error);
         }
         return yourDate;
+    }
+    componentDidMount() {
+        this.analyseTime(this.state.listTime);
     }
     analyseTime(listTime) {
         let numberIgnore = 0;
@@ -107,71 +203,71 @@ class SelectTimeScreen extends Component {
     }
 
     componentWillReceiveProps(props) {
-        if (this.state.schedules != props.schedules) {
-            this.setState({ schedules: props.schedules, schedule: null }, () => {
-                let listTime = [];
-                if (props.schedules) {
-                    let data = props.schedules || [];
-                    data.forEach((item, index) => {
-                        for (var key in item) {
-                            try {
-                                let time = this.getTime(key);
-                                label = time.format("HH") + "h" + time.format("mm");
-                                let schedule = {
-                                    label,
-                                    time,
-                                    key: key,
-                                    percent: 100
-                                }
-                                let schedules = ((item[key] || {}).detailSchedules || []);
-                                schedules.forEach((item2, index2) => {
-                                    let detailSchedule = item2.detailSchedule;
-                                    if (item2.numberCase && detailSchedule) {
-                                        let percent = ((item2.numberSlot || 0) * 100) / (item2.numberCase || 1);
-                                        if (percent <= schedule.percent) {
-                                            schedule.percent = percent;
-                                            schedule.schedule = detailSchedule;
-                                            schedule.doctor = item2.doctorVendor;
-                                            schedule.numberSlot = item2.numberSlot || 0;
-                                            schedule.numberCase = item2.numberCase || 1;
+        // if (this.state.schedules != props.schedules) {
+        //     this.setState({ schedules: props.schedules, schedule: null }, () => {
+        //         let listTime = [];
+        //         if (props.schedules) {
+        //             let data = props.schedules || [];
+        //             data.forEach((item, index) => {
+        //                 for (var key in item) {
+        //                     try {
+        //                         let time = this.getTime(key);
+        //                         label = time.format("HH") + "h" + time.format("mm");
+        //                         let schedule = {
+        //                             label,
+        //                             time,
+        //                             key: key,
+        //                             percent: 100
+        //                         }
+        //                         let schedules = ((item[key] || {}).detailSchedules || []);
+        //                         schedules.forEach((item2, index2) => {
+        //                             let detailSchedule = item2.detailSchedule;
+        //                             if (item2.numberCase && detailSchedule) {
+        //                                 let percent = ((item2.numberSlot || 0) * 100) / (item2.numberCase || 1);
+        //                                 if (percent <= schedule.percent) {
+        //                                     schedule.percent = percent;
+        //                                     schedule.schedule = detailSchedule;
+        //                                     schedule.doctor = item2.doctorVendor;
+        //                                     schedule.numberSlot = item2.numberSlot || 0;
+        //                                     schedule.numberCase = item2.numberCase || 1;
 
-                                            let available = 100 - percent;
-                                            if (available == 0)
-                                                schedule.type = 0;
-                                            else
-                                                if (available < 30)
-                                                    schedule.type = 1;
-                                                else
-                                                    if (available < 70)
-                                                        schedule.type = 2;
-                                                    else
-                                                        schedule.type = 3;
-                                        }
-                                    }
-                                });
-                                if (schedule.schedule) {
-                                    listTime.push(schedule);
-                                }
-                            } catch (error) {
+        //                                     let available = 100 - percent;
+        //                                     if (available == 0)
+        //                                         schedule.type = 0;
+        //                                     else
+        //                                         if (available < 30)
+        //                                             schedule.type = 1;
+        //                                         else
+        //                                             if (available < 70)
+        //                                                 schedule.type = 2;
+        //                                             else
+        //                                                 schedule.type = 3;
+        //                                 }
+        //                             }
+        //                         });
+        //                         if (schedule.schedule) {
+        //                             listTime.push(schedule);
+        //                         }
+        //                     } catch (error) {
 
-                            }
-                        }
-                    });
-                }
-                console.log(listTime);
+        //                     }
+        //                 }
+        //             });
+        //         }
+        //         console.log(listTime);
 
-                this.setState({
-                    isLoading: false,
-                    listTime: listTime.sort((a, b) => {
-                        return a.time - b.time
-                    })
-                }, () => {
-                    this.analyseTime(this.state.listTime);
-                    if (this.props.onChange)
-                        this.props.onChange(null);
-                });
-            });
-        }
+        //         this.setState({
+        //             isLoading: false,
+        //             listTime: listTime.sort((a, b) => {
+        //                 return a.time - b.time
+        //             })
+        //         }, () => {
+        //             this.analyseTime(this.state.listTime);
+        //             if (this.props.onChange)
+        //                 this.props.onChange(null);
+        //         });
+        //     });
+        // }
     }
 
     getIcon(item) {
@@ -193,7 +289,7 @@ class SelectTimeScreen extends Component {
         }
         margin += 7;
         if (index == 0 || index == this.state.listTime.length - 1 || item.left || item.right)
-            return (<Text  key={index}  style={{ fontSize: 9, position: 'absolute', left: item.marginLeft + margin, top: 50 }}>{label}</Text>)
+            return (<Text key={index} style={{ fontSize: 9, position: 'absolute', left: item.marginLeft + margin, top: 50 }}>{label}</Text>)
         return null;
     }
     renderIgnoreTime(item, index) {
@@ -238,7 +334,6 @@ class SelectTimeScreen extends Component {
             })
         }}
             style={[{ flexDirection: 'row', position: 'absolute', paddingVertical: 20, left: item.marginLeft + 7, alignItems: 'center', marginTop: 20 }, item.right ? { width: this.state.itemWidth + this.state.widthIgnore + 1 } : {}]}>
-
             <View style={[{ width: this.state.itemWidth + 1, height: 5, backgroundColor: this.getColor(item), marginLeft: 0, borderTopLeftRadius: 2.5, borderBottomLeftRadius: 2.5 }, index == this.state.listTime.length - 1 ? { borderTopRightRadius: 2.5, borderBottomRightRadius: 2.5 } : {}]}>
             </View>
             {
@@ -249,10 +344,70 @@ class SelectTimeScreen extends Component {
             }
         </TouchableOpacity>
     }
+    // componentDidMount() {
+
+    //     // let listTime = [];
+    //     //     data.forEach((item, index) => {
+    //     //         for (var key in item) {
+    //     //             try {
+    //     //                 let time = this.getTime(key);
+    //     //                 label = time.format("HH") + "h" + time.format("mm");
+    //     //                 let schedule = {
+    //     //                     label,
+    //     //                     time,
+    //     //                     key: key,
+    //     //                     percent: 100
+    //     //                 }
+    //     //                 let schedules = ((item[key] || {}).detailSchedules || []);
+    //     //                 schedules.forEach((item2, index2) => {
+    //     //                     let detailSchedule = item2.detailSchedule;
+    //     //                     if (item2.numberCase && detailSchedule) {
+    //     //                         let percent = ((item2.numberSlot || 0) * 100) / (item2.numberCase || 1);
+    //     //                         if (percent <= schedule.percent) {
+    //     //                             schedule.percent = percent;
+    //     //                             schedule.schedule = detailSchedule;
+    //     //                             schedule.doctor = item2.doctorVendor;
+    //     //                             schedule.numberSlot = item2.numberSlot || 0;
+    //     //                             schedule.numberCase = item2.numberCase || 1;
+
+    //     //                             let available = 100 - percent;
+    //     //                             if (available == 0)
+    //     //                                 schedule.type = 0;
+    //     //                             else
+    //     //                                 if (available < 30)
+    //     //                                     schedule.type = 1;
+    //     //                                 else
+    //     //                                     if (available < 70)
+    //     //                                         schedule.type = 2;
+    //     //                                     else
+    //     //                                         schedule.type = 3;
+    //     //                         }
+    //     //                     }
+    //     //                 });
+    //     //                 if (schedule.schedule) {
+    //     //                     listTime.push(schedule);
+    //     //                 }
+    //     //             } catch (error) {
+
+    //     //             }
+    //     //         }
+    //     //     });
+    //     // console.log(listTime);
+    //     debugger;
+
+    //     this.setState({
+    //         listTime: [{
+
+    //         }]
+    //     });
+    // }
 
     render() {
         if (this.state.listTime && this.state.listTime.length > 0)
-            return <View style={{ position: 'relative', marginTop: 20, height: 100, paddingTop: 40, marginLeft: 20 }}>
+            return <View style={{
+                position: 'relative',
+                marginTop: 20, height: 100, paddingTop: 40, marginLeft: 20
+            }}>
                 {
                     this.state.listTime.map((item, index) =>
                         this.renderTime(item, index))
