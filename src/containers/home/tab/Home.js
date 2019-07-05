@@ -52,9 +52,12 @@ class Home extends Component {
   }
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <View>
         <Actionbar openDrawer={this.openDrawer} />
+        <View style={{height:150,backgroundColor:'#4BBA7B'  }}></View>
+
         <ScrollView 
+          style={{top:-150,}}
           refreshControl={<RefreshControl
             refreshing={this.state.refreshing}
             onRefresh={this.onRefresh}

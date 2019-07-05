@@ -65,6 +65,7 @@ class TopDrug extends Component {
 }
 const styles = StyleSheet.create({
   container: {
+    backgroundColor:'#fff'
   },
   viewTitle: {
     flexDirection: 'row',

@@ -166,6 +166,7 @@ const styles = StyleSheet.create({
     containner:
     {
         position: "relative",
+        backgroundColor:'#fff'
     },
     actions:
     {

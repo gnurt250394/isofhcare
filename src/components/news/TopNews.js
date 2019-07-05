@@ -37,7 +37,7 @@ class TopNews extends Component {
     }
     render() {
         return (
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1,backgroundColor:'#fff' }}>
                 {/* <View style={styles.viewTitle}><View> */}
                 <HeaderLine title={'TIN TỨC'} />
                 {/* <Text style={{ color: '#000', fontWeight: '600' }}>{'Sản phẩm thuốc bán chạy'.toUpperCase()}</Text>
