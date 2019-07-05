@@ -49,6 +49,7 @@ class DetailsHistoryScreen extends Component {
             address: s.data.hospital.address,
             booking: s.data.booking || {},
             service: s.data.service || {},
+            services: s.data.services || [],
             hospital: s.data.hospital || {},
             medicalRecords: s.data.medicalRecords || {},
             isLoading: false
@@ -192,7 +193,16 @@ class DetailsHistoryScreen extends Component {
                 source={require("@images/ic_service.png")}
               />
               <Text style={styles.txService}>Dịch vụ khám</Text>
-              <Text style={styles.txInfoService}>{this.state.service.name}</Text>
+              <View>
+                {
+                  this.state.services.map((item, index) => {
+                    return <View>
+                      <Text numberOfLines={1} key={index} style={[styles.txInfoService, { alignSelf: 'flex-end', fontWeight: 'bold' }]}>{item.name}</Text>
+                      <Text key={index} style={[styles.txInfoService, { alignSelf: 'flex-end', marginBottom: 5 }]}>({item.price.formatPrice()}đ)</Text>
+                    </View>
+                  })
+                }
+              </View>
             </View>
             <View style={{ backgroundColor: '#EDECED', height: 1, marginLeft: 12 }}></View>
             <View style={styles.viewLocation}>
@@ -220,7 +230,7 @@ class DetailsHistoryScreen extends Component {
               <Text style={styles.txDate}>Ngày khám</Text>
               <View style={styles.viewDateTime}>
                 <Text style={styles.txTime}>
-                  {this.state.booking.bookingTime.toDateObject("-").format("HH:mm")}
+                  {this.state.booking.bookingTime.toDateObject("-").format("hh:mm")}
                   {this.checkAm()}
                 </Text>
                 <Text style={styles.txDateInfo}>
@@ -246,9 +256,9 @@ class DetailsHistoryScreen extends Component {
                 width={20}
                 height={20}
               />
-              <Text style={styles.txLabelPrice}>Giá dịch vụ</Text>
+              <Text style={styles.txLabelPrice}>Tổng tiền dịch vụ</Text>
               <Text style={styles.txPrice}>
-                {Number(this.state.service.price).formatPrice() + 'đ'}
+                {this.state.services.reduce((start, item) => start + parseInt(item.price), 0).formatPrice() + 'đ'}
               </Text>
             </View>
             <View style={{ backgroundColor: '#EDECED', height: 1, marginLeft: 12 }}></View>

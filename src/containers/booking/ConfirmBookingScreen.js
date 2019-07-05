@@ -17,7 +17,6 @@ class ConfirmBookingScreen extends Component {
     constructor(props) {
         super(props);
         let serviceType = this.props.navigation.state.params.serviceType;
-        debugger;
         let service = this.props.navigation.state.params.service;
         let hospital = this.props.navigation.state.params.hospital;
         let profile = this.props.navigation.state.params.profile;

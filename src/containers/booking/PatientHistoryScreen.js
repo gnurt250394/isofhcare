@@ -158,10 +158,10 @@ class PatientHistoryScreen extends Component {
   }
   onClickItem = (item) => {
     this.props.navigation.navigate("detailsHistory", {
-      id: item.item.booking.id
+      id: item.booking.id
     });
   };
-  renderItem = item => {
+  renderItem = ({ item }) => {
     return (
       <TouchableOpacity style={styles.listBtn} onPress={() => this.onClickItem(item)}>
         <View style={{ flexDirection: "row" }}>
@@ -175,13 +175,13 @@ class PatientHistoryScreen extends Component {
               <Text
                 style={{ fontSize: 40, fontWeight: "bold", color: "#C6C6C9", textAlign: 'center' }}
               >
-                {item.item.booking.bookingTime
-                  ? item.item.booking.bookingTime.toDateObject("-").format("dd")
+                {item.booking.bookingTime
+                  ? item.booking.bookingTime.toDateObject("-").format("dd")
                   : ""}
               </Text>
               <Text style={{ fontWeight: "bold", color: 'rgb(74,74,74)', marginTop: -5 }}>
-                {item.item.booking.bookingTime
-                  ? item.item.booking.bookingTime
+                {item.booking.bookingTime
+                  ? item.booking.bookingTime
                     .toDateObject("-")
                     .format("MM/yyyy")
                   : ""}
@@ -189,8 +189,8 @@ class PatientHistoryScreen extends Component {
             </View>
 
             <Text style={{ marginTop: 10 }}>
-              {item.item.booking.bookingTime
-                ? item.item.booking.bookingTime
+              {item.booking.bookingTime
+                ? item.booking.bookingTime
                   .toDateObject("-")
                   .format("HH:mm")
                 : ""}
@@ -204,12 +204,15 @@ class PatientHistoryScreen extends Component {
               padding: 10
             }}
           >
-            <Text style={{ fontWeight: "bold", color: 'rgb(74,74,74)' }}>{item.item.service.name ? item.item.service.name : ''}</Text>
+            {
+              item.services && item.services.length ?
+                item.services.map((item, index) => <Text key={index} style={{ fontWeight: "bold", color: 'rgb(74,74,74)' }}>{item.name ? item.name : ''}</Text>) : null
+            }
             <View style={{ marginVertical: 10 }}>
-              <Text style={{ color: 'rgb(142,142,147)' }}>{item.item.medicalRecords.name ? item.item.medicalRecords.name : ''}</Text>
-              <Text style={{ color: 'rgb(142,142,147)' }}>{item.item.hospital.name ? item.item.hospital.name : item.item.hospital.name}</Text>
+              <Text style={{ color: 'rgb(142,142,147)' }}>{item.medicalRecords.name ? item.medicalRecords.name : ''}</Text>
+              <Text style={{ color: 'rgb(142,142,147)' }}>{item.hospital ? item.hospital.name : ""}</Text>
             </View>
-            {item.item.booking.status || item.item.booking.status == 0 ? this.renderStatus(item.item.booking.status) : null}
+            {item.booking.status || item.booking.status == 0 ? this.renderStatus(item.booking.status) : null}
           </View>
         </View>
       </TouchableOpacity>
