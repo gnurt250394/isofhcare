@@ -542,7 +542,7 @@ class AddBookingScreen extends Component {
                     }
                     <View style={styles.border}></View>
 
-                    <TouchableOpacity style={[styles.mucdichkham, {alignItems: 'flex-start'}]} onPress={() => {
+                    <TouchableOpacity style={[styles.mucdichkham, { alignItems: 'flex-start' }]} onPress={() => {
                         if (!this.state.hospital) {
                             snackbar.show(constants.msg.booking.please_select_location, "danger");
                             return;
@@ -576,7 +576,7 @@ class AddBookingScreen extends Component {
                     }
                     <View style={styles.border}></View>
                     <TouchableOpacity style={styles.mucdichkham} onPress={() => {
-                        if (!this.state.service) {
+                        if (!this.state.listServicesSelected || this.state.listServicesSelected.length == 0) {
                             snackbar.show(constants.msg.booking.please_select_service, "danger");
                             return;
                         }
@@ -599,7 +599,7 @@ class AddBookingScreen extends Component {
                     <View style={[styles.mucdichkham, { paddingHorizontal: 20 }]}>
                         <Text style={{ fontSize: 14, color: '#8e8e93' }}>{constants.booking.select_time_note}</Text>
                     </View>
-                    <BookingTimePicker schedules={this.state.schedules} onChange={this.onTimePickerChange.bind(this)} />
+                    <BookingTimePicker  onChange={this.onTimePickerChange.bind(this)} />
                     {
                         this.state.scheduleError ?
                             <Text style={[styles.errorStyle]}>{this.state.scheduleError}</Text> : null
@@ -685,10 +685,7 @@ class AddBookingScreen extends Component {
                         allowBooking: true,
                         schedule: null,
                         serviceError: "",
-                        scheduleError: "",
-                        isLoading: true
-                    }, () => {
-                        this.reloadSchedule();
+                        scheduleError: ""
                     });
                 }}
                 onCancel={() => {
