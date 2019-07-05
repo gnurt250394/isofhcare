@@ -306,7 +306,6 @@ class HomeScreen extends Component {
     );
   }
   swipe(targetIndex) {
-    console.log(this.props);
     targetIndex == 2 && !this.props.userApp.isLogin ?
       NavigationService.navigate("login", {
         nextScreen: { screen: "notification", param: {} }
@@ -317,7 +316,7 @@ class HomeScreen extends Component {
 
 
     // this.viewPager && this.viewPager.setPage(targetIndex)
-    this.viewPager && this.viewPager.setPage(targetIndex);
+    this.viewPager && targetIndex == 2 && !this.props.userApp.isLogin ? this.viewPager && this.viewPager.setPage(0) : this.viewPager && this.viewPager.setPage(targetIndex);
 
   }
 }
