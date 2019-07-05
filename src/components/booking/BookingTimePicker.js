@@ -23,25 +23,25 @@ class SelectTimeScreen extends Component {
         listTime.push({
             type: 3,
             time: date1,
-            label: "8:00"
+            label: "08:00"
         })
         date1= new Date(date.setMinutes(date.getMinutes() + 30));
         listTime.push({
             type: 3,
             time: date1,
-            label: "8:30"
+            label: "08:30"
         })
         date1= new Date(date.setMinutes(date.getMinutes() + 30));
         listTime.push({
             type: 3,
             time: date1,
-            label: "9:00"
+            label: "09:00"
         })
         date1= new Date(date.setMinutes(date.getMinutes() + 30));
         listTime.push({
             type: 3,
             time: date1,
-            label: "9:30"
+            label: "09:30"
         })
         date1= new Date(date.setMinutes(date.getMinutes() + 30));
         listTime.push({
@@ -134,7 +134,6 @@ class SelectTimeScreen extends Component {
         this.analyseTime(this.state.listTime);
     }
     analyseTime(listTime) {
-        debugger;
         let numberIgnore = 0;
         let itemWidth = 30;
         let widthIgnore = 30;
@@ -145,7 +144,6 @@ class SelectTimeScreen extends Component {
                 continue;
             let nex = listTime[i + 1];
             let item = listTime[i];
-            debugger;
             if (nex.time - item.time > 30 * 60 * 1000) {
                 nex.left = 1;
                 item.right = 1;

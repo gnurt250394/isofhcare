@@ -37,6 +37,7 @@ class CreateBookingSuccessScreen extends Component {
 
     render() {
         let booking = this.props.navigation.state.params.booking;
+        let service = this.props.navigation.state.params.service || [];
         if (!booking || !booking.profile || !booking.hospital || !booking.hospital.hospital || !booking.book) {
             this.props.navigation.pop();
             return null;
@@ -73,10 +74,28 @@ class CreateBookingSuccessScreen extends Component {
                                 <Text style={styles.text}>{bookingTime.format("HH:mm") + " " + (bookingTime.format("HH") < 12 ? "AM" : "PM") + " - " + bookingTime.format("thu, dd/MM/yyyy")}</Text>
                             </View>
                             <View style={styles.row}>
+                                <Text style={styles.label}>{"Dịch vụ"}</Text>
+                                <View style={{ flex: 1 }}>
+                                    {service.map((item, index) => {
+                                        return <View key={index} style={{ flex: 1 }}>
+                                            <Text style={[styles.text]}>{item.service.name}</Text>
+                                            <Text style={[styles.text, { marginBottom: 5 }]}>({parseInt(item.service.price).formatPrice()}đ)</Text>
+                                        </View>
+                                    })}
+                                </View>
+                            </View>
+                            <View style={styles.row}>
                                 <Text style={styles.label}>{constants.booking.payment_method}</Text>
                                 <Text style={styles.text}>{this.getPaymentMethod(booking)}</Text>
                             </View>
-                            {
+                            <View style={styles.row}>
+                                <Text style={styles.label}>{"Tổng tiền"}</Text>
+                                <Text style={[styles.text, { color: "#d0021b" }]}>{service.reduce((start, item) => {
+                                    return start + parseInt(item.service.price)
+                                }, 0).formatPrice()}đ</Text>
+                            </View>
+
+                            {/* {
                                 booking.payment == 4 && <View>
                                     <View style={styles.row}>
                                         <Text style={styles.label}>{constants.booking.code_payment}</Text>
@@ -87,7 +106,7 @@ class CreateBookingSuccessScreen extends Component {
                                         <Text style={styles.text}>{booking.book.expireDatePayoo.toDateObject('-').format("dd/MM/yyyy")}</Text>
                                     </View>
                                 </View>
-                            }
+                            } */}
                         </View>
                         <View style={styles.view2}>
                             <View style={styles.col}>

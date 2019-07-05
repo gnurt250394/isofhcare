@@ -181,7 +181,7 @@ class AddBookingScreen extends Component {
     selectServiceType(serviceType) {
         let serviceTypeError = serviceType ? "" : this.state.serviceTypeError;
         if (!serviceType || !this.state.serviceType || serviceType.id != this.state.serviceType.id) {
-            this.setState({ serviceType, hospital: null, service: null, schedules: [], schedule: null, allowBooking: true, serviceTypeError })
+            this.setState({ serviceType, service: null, schedules: [], allowBooking: true, serviceTypeError })
         } else {
             this.setState({ serviceType, allowBooking: true, serviceTypeError: "", serviceTypeError });
         }
@@ -221,7 +221,6 @@ class AddBookingScreen extends Component {
 
     selectService(services) {
         this.setState({ listServicesSelected: services });
-        debugger;
         // let serviceError = service ? "" : this.state.serviceError;
         // if (!service || !this.state.service || service.id != this.state.service.id) {
         //     this.setState({ service, specialist, schedules: [], schedule: null, allowBooking: true, serviceError }, () => {
@@ -291,7 +290,7 @@ class AddBookingScreen extends Component {
             this.setState({ serviceTypeError: constants.msg.booking.require_not_null })
             error = true;
         }
-        if (this.state.service) {
+        if (this.state.listServicesSelected && this.state.listServicesSelected.length) {
             this.setState({ serviceError: "" })
         } else {
             this.setState({ serviceError: constants.msg.booking.service_not_null })
@@ -310,15 +309,10 @@ class AddBookingScreen extends Component {
             error = true;
         }
 
-        if (this.state.schedules && this.state.schedules.length) {
-            if (this.state.schedule) {
-                this.setState({ scheduleError: "" })
-            } else {
-                this.setState({ scheduleError: constants.msg.booking.schedule_not_null })
-                error = true;
-            }
+        if (this.state.schedule) {
+            this.setState({ scheduleError: "" })
         } else {
-            this.setState({ scheduleError: constants.msg.booking.not_booking_macth_require_date })
+            this.setState({ scheduleError: constants.msg.booking.schedule_not_null })
             error = true;
         }
 
@@ -345,36 +339,30 @@ class AddBookingScreen extends Component {
 
 
 
-
-
-
-
             connectionUtils.isConnected().then(s => {
                 this.setState({ isLoading: true }, () => {
                     console.log(this.state.schedule.time);
+                    let serviceIds = this.state.listServicesSelected.map(item => item.service.id).join(",");
+                    let bookingDate = this.state.bookingDate.format("yyyy-MM-dd") + " " + this.state.schedule.label + ":00";
                     bookingProvider.create(
                         this.state.hospital.hospital.id,
-                        this.state.schedule.schedule.id,
                         this.state.profile.medicalRecords.id,
-                        this.state.specialist.id,
-                        this.state.service.id,
-                        this.state.schedule.time.format("yyyy-MM-dd HH:mm:ss"),
+                        this.state.serviceType.id,
+                        serviceIds,
+                        bookingDate,
                         reason,
-                        img,
-                        this.state.contact
+                        img
                     ).then(s => {
                         this.setState({ isLoading: false }, () => {
                             if (s) {
                                 switch (s.code) {
                                     case 0:
                                         dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, this.state.profile);
-
                                         this.props.navigation.navigate("confirmBooking", {
                                             serviceType: this.state.serviceType,
-                                            service: this.state.service,
+                                            service: this.state.listServicesSelected,
                                             profile: this.state.profile,
                                             hospital: this.state.hospital,
-                                            specialist: this.state.specialist,
                                             bookingDate: this.state.bookingDate,
                                             schedule: this.state.schedule,
                                             reason: reason,
@@ -560,7 +548,7 @@ class AddBookingScreen extends Component {
                         {this.state.listServicesSelected && this.state.listServicesSelected.length ?
                             <View style={{ flex: 1 }}>
                                 {
-                                    this.state.listServicesSelected.map((item, index) => <Text style={{ marginHorizontal: 10, marginBottom: 5 }} numberOfLines={1} key={index}>{item.service.name}ẻ634563456456ertyrtyhdfghdfghdfghdfghdfg</Text>)
+                                    this.state.listServicesSelected.map((item, index) => <Text style={{ marginHorizontal: 10, marginBottom: 5, alignSelf: 'flex-end' }} numberOfLines={1} key={index}>{item.service.name}</Text>)
                                 }
                                 {/* <Text numberOfLines={1} style={styles.ktq}>{this.state.service.name}</Text> */}
                                 {/* <Text numberOfLines={1} style={styles.ktq}>{this.state.service.price.formatPrice() + 'đ'}</Text> */}
@@ -599,7 +587,7 @@ class AddBookingScreen extends Component {
                     <View style={[styles.mucdichkham, { paddingHorizontal: 20 }]}>
                         <Text style={{ fontSize: 14, color: '#8e8e93' }}>{constants.booking.select_time_note}</Text>
                     </View>
-                    <BookingTimePicker  onChange={this.onTimePickerChange.bind(this)} />
+                    <BookingTimePicker onChange={this.onTimePickerChange.bind(this)} />
                     {
                         this.state.scheduleError ?
                             <Text style={[styles.errorStyle]}>{this.state.scheduleError}</Text> : null
