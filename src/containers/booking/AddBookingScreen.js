@@ -186,35 +186,52 @@ class AddBookingScreen extends Component {
             this.setState({ serviceType, allowBooking: true, serviceTypeError: "", serviceTypeError });
         }
     }
-    selectHospital(hospital) {
-        let hospitalError = hospital ? "" : this.state.hospitalError;
-        let getDefaultService = () => {
-            serviceProvider.getAll(this.state.hospital.hospital.id, "", this.state.serviceType.id).then(s => {
-                if (s && s.code == 0 && s.data && s.data.services && s.data.services.length == 1) {
-                    let service = s.data.services[0];
-                    this.setState({ service: s.data.services[0].service, specialist: service.specialist && service.specialist.length > 0 ? service.specialist[0] : {} });
+    selectHospital = () => {
+        if (!this.state.serviceType) {
+            snackbar.show(constants.msg.booking.please_select_require, "danger");
+            return;
+        }
+        connectionUtils.isConnected().then(s => {
+            this.props.navigation.navigate("selectHospital", {
+                serviceType: this.state.serviceType,
+                hospital: this.state.hospital,
+                onSelected: (hospital) => {
+                    let hospitalError = hospital ? "" : this.state.hospitalError;
+                    let getDefaultService = () => {
+                        serviceProvider.getAll(this.state.hospital.hospital.id, "", this.state.serviceType.id).then(s => {
+                            if (s && s.code == 0 && s.data && s.data.services && s.data.services.length == 1) {
+                                let service = s.data.services[0];
+                                this.setState({ service: s.data.services[0].service, specialist: service.specialist && service.specialist.length > 0 ? service.specialist[0] : {} });
+                            }
+                        });
+                    }
+
+                    if (!hospital || !this.state.hospital || hospital.hospital.id != this.state.hospital.hospital.id) {
+                        this.setState({ hospital, service: null, schedules: [], schedule: null, allowBooking: true, hospitalError }, getDefaultService)
+                    } else {
+                        this.setState({ hospital, allowBooking: true, hospitalError }, getDefaultService);
+                    }
+
                 }
-            });
-        }
-
-        if (!hospital || !this.state.hospital || hospital.hospital.id != this.state.hospital.hospital.id) {
-            this.setState({ hospital, service: null, schedules: [], schedule: null, allowBooking: true, hospitalError }, getDefaultService)
-        } else {
-            this.setState({ hospital, allowBooking: true, hospitalError }, getDefaultService);
-        }
-
-    }
-    selectService(service, specialist) {
-        let serviceError = service ? "" : this.state.serviceError;
-        if (!service || !this.state.service || service.id != this.state.service.id) {
-            this.setState({ service, specialist, schedules: [], schedule: null, allowBooking: true, serviceError }, () => {
-                this.reloadSchedule();
             })
-        } else {
-            this.setState({ service, specialist, allowBooking: true, serviceError }, () => {
-                this.reloadSchedule();
-            });
-        }
+        }).catch(e => {
+            snackbar.show(constants.msg.app.not_internet, "danger");
+        });
+    }
+
+    selectService(services) {
+        this.setState({ listServicesSelected: services });
+        debugger;
+        // let serviceError = service ? "" : this.state.serviceError;
+        // if (!service || !this.state.service || service.id != this.state.service.id) {
+        //     this.setState({ service, specialist, schedules: [], schedule: null, allowBooking: true, serviceError }, () => {
+        //         this.reloadSchedule();
+        //     })
+        // } else {
+        //     this.setState({ service, specialist, allowBooking: true, serviceError }, () => {
+        //         this.reloadSchedule();
+        //     });
+        // }
     }
 
     reloadSchedule() {
@@ -495,6 +512,17 @@ class AddBookingScreen extends Component {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.article}>
+                    <TouchableOpacity style={styles.mucdichkham} onPress={this.selectHospital}>
+                        <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_placeholder.png")} />
+                        <Text style={styles.mdk}>{constants.booking.location}</Text>
+                        <Text numberOfLines={1} style={styles.ktq}>{this.state.hospital ? this.state.hospital.hospital.name : constants.booking.select_location}</Text>
+                        <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
+                    </TouchableOpacity>
+                    {
+                        this.state.hospitalError ?
+                            <Text style={[styles.errorStyle]}>{this.state.hospitalError}</Text> : null
+                    }
+                    <View style={styles.border}></View>
                     <TouchableOpacity style={styles.mucdichkham} onPress={() => {
                         connectionUtils.isConnected().then(s => {
                             this.props.navigation.navigate("selectServiceType", { onSelected: this.selectServiceType.bind(this) });
@@ -513,32 +541,7 @@ class AddBookingScreen extends Component {
                             <Text style={[styles.errorStyle]}>{this.state.serviceTypeError}</Text> : null
                     }
                     <View style={styles.border}></View>
-                    <TouchableOpacity style={styles.mucdichkham} onPress={() => {
-                        if (!this.state.serviceType) {
-                            snackbar.show(constants.msg.booking.please_select_require, "danger");
-                            return;
-                        }
-                        connectionUtils.isConnected().then(s => {
-                            this.props.navigation.navigate("selectHospital", {
-                                serviceType: this.state.serviceType,
-                                hospital: this.state.hospital,
-                                onSelected: this.selectHospital.bind(this)
-                            })
-                        }).catch(e => {
-                            snackbar.show(constants.msg.app.not_internet, "danger");
-                        });
-                    }
-                    }>
-                        <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_placeholder.png")} />
-                        <Text style={styles.mdk}>{constants.booking.location}</Text>
-                        <Text numberOfLines={1} style={styles.ktq}>{this.state.hospital ? this.state.hospital.hospital.name : constants.booking.select_location}</Text>
-                        <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
-                    </TouchableOpacity>
-                    {
-                        this.state.hospitalError ?
-                            <Text style={[styles.errorStyle]}>{this.state.hospitalError}</Text> : null
-                    }
-                    <View style={styles.border}></View>
+
                     <TouchableOpacity style={styles.mucdichkham} onPress={() => {
                         if (!this.state.hospital) {
                             snackbar.show(constants.msg.booking.please_select_location, "danger");
@@ -547,6 +550,7 @@ class AddBookingScreen extends Component {
                         this.props.navigation.navigate("selectService", {
                             hospital: this.state.hospital,
                             serviceType: this.state.serviceType,
+                            listServicesSelected: this.state.listServicesSelected,
                             onSelected: this.selectService.bind(this)
                         })
                     }}>
@@ -567,8 +571,7 @@ class AddBookingScreen extends Component {
                         this.state.serviceError ?
                             <Text style={[styles.errorStyle]}>{this.state.serviceError}</Text> : null
                     }
-                </View>
-                <View style={styles.article}>
+                    <View style={styles.border}></View>
                     <TouchableOpacity style={styles.mucdichkham} onPress={() => {
                         if (!this.state.service) {
                             snackbar.show(constants.msg.booking.please_select_service, "danger");
@@ -599,59 +602,41 @@ class AddBookingScreen extends Component {
                             <Text style={[styles.errorStyle]}>{this.state.scheduleError}</Text> : null
                     }
                 </View>
-                <Text style={styles.lienlac}>{constants.booking.contact_me}</Text>
+                <View style={styles.article}>
+                    <Form
+                        ref={ref => (this.form = ref)} style={styles.mota}>
+                        <TextField
+                            hideError={true}
+                            validate={{
+                                rules: {
+                                    // required: true,
+                                    maxlength: 500
+                                },
+                                messages: {
+                                    // required: "Mô tả triệu chứng không được bỏ trống",
+                                    maxlength: constants.msg.app.text_without_500
+                                }
+                            }}
 
-                <View style={styles.phoneSMS}>
-                    <TouchableOpacity onPress={() => {
-                        this.setState({ contact: 1, allowBooking: true });
-                    }} style={[styles.phone, this.state.contact == 1 ? styles.contact_selected : styles.contact_normal]}>
-                        <ScaleImage style={styles.imgPhone} height={18} source={this.state.contact == 1 ? require("@images/new/booking/ic_phone1.png") : require("@images/new/booking/ic_phone0.png")} />
-                        <Text style={[styles.tinnhan, this.state.contact == 1 ? styles.contact_text_selected : styles.contact_text_normal]}>{constants.booking.phone}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => {
-                        this.setState({ contact: 2, allowBooking: true });
-                    }} style={[styles.sms, this.state.contact == 2 ? styles.contact_selected : styles.contact_normal]}>
-                        <ScaleImage style={styles.imgPhone} height={18} source={this.state.contact == 2 ? require("@images/new/booking/ic_send_sms1.png") : require("@images/new/booking/ic_send_sms0.png")} />
-                        <Text style={[styles.tinnhan, this.state.contact == 2 ? styles.contact_text_selected : styles.contact_text_normal]}>{constants.booking.sms}</Text>
-                    </TouchableOpacity>
+                            onValidate={(valid, messages) => {
+                                if (valid) {
+                                    this.setState({ symptonError: "" });
+                                }
+                                else {
+                                    this.setState({ symptonError: messages });
+                                }
+                            }}
+                            onChangeText={s => {
+                                this.setState({ reason: s, allowBooking: true })
+                            }}
+                            style={{ flex: 1 }}
+                            inputStyle={styles.mtTr}
+                            multiline={true} placeholder={constants.msg.booking.booking_note}></TextField>
+                        <TouchableOpacity style={styles.imgMT} onPress={this.selectImage.bind(this)}>
+                            <ScaleImage height={15} source={require("@images/new/booking/ic_image.png")} />
+                        </TouchableOpacity>
+                    </Form>
                 </View>
-                {
-                    this.state.contactError ?
-                        <Text style={[styles.errorStyle]}>{this.state.contactError}</Text> : null
-                }
-                <Form
-                    ref={ref => (this.form = ref)} style={styles.mota}>
-                    <TextField
-                        hideError={true}
-                        validate={{
-                            rules: {
-                                // required: true,
-                                maxlength: 500
-                            },
-                            messages: {
-                                // required: "Mô tả triệu chứng không được bỏ trống",
-                                maxlength: constants.msg.app.text_without_500
-                            }
-                        }}
-
-                        onValidate={(valid, messages) => {
-                            if (valid) {
-                                this.setState({ symptonError: "" });
-                            }
-                            else {
-                                this.setState({ symptonError: messages });
-                            }
-                        }}
-                        onChangeText={s => {
-                            this.setState({ reason: s, allowBooking: true })
-                        }}
-                        style={{ flex: 1 }}
-                        inputStyle={styles.mtTr}
-                        multiline={true} placeholder={constants.msg.booking.booking_note}></TextField>
-                    <TouchableOpacity style={styles.imgMT} onPress={this.selectImage.bind(this)}>
-                        <ScaleImage height={15} source={require("@images/new/booking/ic_image.png")} />
-                    </TouchableOpacity>
-                </Form>
                 <Text style={[styles.errorStyle]}>{this.state.symptonError}</Text>
 
                 <View style={styles.list_image}>
@@ -863,11 +848,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         padding: 15,
         backgroundColor: "#ffffff",
-        borderStyle: "solid",
-        borderWidth: 1,
         borderColor: "rgba(0, 0, 0, 0.06)",
         alignItems: 'center',
-        marginTop: 20,
     },
     mtTr: {
         flex: 1,
