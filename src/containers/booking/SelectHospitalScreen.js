@@ -117,23 +117,21 @@ class SelectHospitalScreen extends Component {
         }
 
         if (Platform.OS == 'android') {
-            if (Platform.OS == 'android') {
-                GetLocation.getCurrentPosition({
-                    enableHighAccuracy: true,
-                    timeout: 15000,
-                })
-                    .then(region => {
-                        locationProvider.saveCurrentLocation(region.latitude, region.longitude);
-                        this.setState({
-                            region
-                        }, () => {
-                            this.onRefresh();
-                        });
-                    })
-                    .catch(error => {
+            GetLocation.getCurrentPosition({
+                enableHighAccuracy: false,
+                timeout: 15000,
+            })
+                .then(region => {
+                    locationProvider.saveCurrentLocation(region.latitude, region.longitude);
+                    this.setState({
+                        region
+                    }, () => {
                         this.onRefresh();
                     });
-            }
+                })
+                .catch(error => {
+                    this.onRefresh();
+                });
         }
         else
             LocationSwitch.isLocationEnabled(() => {
@@ -201,10 +199,10 @@ class SelectHospitalScreen extends Component {
         }, () => {
             let promise = null;
             if (this.state.region) {
-                promise = hospitalProvider.getByLocation(page, size, this.state.region.latitude, this.state.region.longitude, stringQuyery, this.state.serviceType.id);
+                promise = hospitalProvider.getByLocation(page, size, this.state.region.latitude, this.state.region.longitude, stringQuyery, -1);
             }
             else {
-                promise = hospitalProvider.getByLocation(page, size, 190, 190, stringQuyery, this.state.serviceType.id);
+                promise = hospitalProvider.getByLocation(page, size, 190, 190, stringQuyery, -1);
             };
             promise.then(s => {
                 this.setState({

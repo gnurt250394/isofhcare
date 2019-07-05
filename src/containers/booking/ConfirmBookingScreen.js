@@ -17,10 +17,10 @@ class ConfirmBookingScreen extends Component {
     constructor(props) {
         super(props);
         let serviceType = this.props.navigation.state.params.serviceType;
+        debugger;
         let service = this.props.navigation.state.params.service;
         let hospital = this.props.navigation.state.params.hospital;
         let profile = this.props.navigation.state.params.profile;
-        let specialist = this.props.navigation.state.params.specialist;
         let bookingDate = this.props.navigation.state.params.bookingDate;
         let schedule = this.props.navigation.state.params.schedule;
         let reason = this.props.navigation.state.params.reason;
@@ -37,12 +37,11 @@ class ConfirmBookingScreen extends Component {
             service,
             hospital,
             profile,
-            specialist,
             bookingDate,
             schedule,
             reason,
             images,
-            paymentMethod: 1,
+            paymentMethod: 2,
             contact,
             booking
         }
@@ -62,7 +61,8 @@ class ConfirmBookingScreen extends Component {
                             navigate: {
                                 screen: "createBookingSuccess",
                                 params: {
-                                    booking
+                                    booking,
+                                    service: this.state.service
                                 }
                             }
                         });
@@ -400,7 +400,7 @@ class ConfirmBookingScreen extends Component {
                 <ScrollView keyboardShouldPersistTaps='handled' style={styles.container}>
                     <View style={styles.viewDetails}>
                         <View style={{ paddingHorizontal: 20, marginTop: 20, flexDirection: 'row', alignItems: 'center' }}>
-                            <Text style={{ fontWeight: 'bold', color: 'rgb(2,195,154)', marginRight: 10 }}>DỊCH VỤ {(this.state.service.name || "").toUpperCase()}</Text>
+                            <Text style={{ fontWeight: 'bold', color: 'rgb(2,195,154)', marginRight: 10 }}>YÊU CẦU KHÁM {(this.state.serviceType.name || "").toUpperCase()}</Text>
                             <ScaleImage width={20} source={require("@images/new/booking/ic_tick.png")} />
                         </View>
                         <View style={styles.view11} >
@@ -412,10 +412,10 @@ class ConfirmBookingScreen extends Component {
                                 </View>
                             </View>
 
-                            <View style={styles.view2}>
+                            {/* <View style={styles.view2}>
                                 <ScaleImage style={styles.ic_Location} width={20} source={require("@images/new/booking/ic_doctor.png")} />
                                 <Text style={[styles.text5]}>Bác sĩ khám: <Text>{this.state.schedule.doctor.name}</Text></Text>
-                            </View>
+                            </View> */}
 
                             <View style={[styles.view2, { alignItems: 'flex-start' }]}>
                                 <ScaleImage style={styles.ic_Location} width={20} source={require("@images/new/booking/ic_bookingDate2.png")} />
@@ -425,13 +425,35 @@ class ConfirmBookingScreen extends Component {
                                 </View>
                             </View>
 
-                            <View style={styles.view2}>
-                                <ScaleImage style={[styles.ic_Location, { marginRight: 22 }]} width={17} source={require("@images/new/booking/ic_note.png")} />
-                                <Text style={styles.text5}>Ghi chú: {this.state.reason}</Text>
-                            </View>
-                            <View style={styles.view2}>
+                            {(this.state.reason && this.state.reason.trim()) ?
+                                <View style={[styles.view2, { alignItems: 'flex-start' }]}>
+                                    <ScaleImage style={[styles.ic_Location, { marginRight: 22 }]} width={17} source={require("@images/new/booking/ic_note.png")} />
+                                    <View>
+                                        <Text style={styles.text5}>Triệu chứng:</Text>
+                                        <Text style={[styles.text5, { fontWeight: 'bold' }]}>{this.state.reason}</Text>
+                                    </View>
+                                </View> : null
+                            }
+                            <View style={[styles.view2, { alignItems: 'flex-start' }]}>
                                 <ScaleImage style={[styles.ic_Location]} width={20} source={require("@images/new/booking/ic_coin.png")} />
-                                <Text style={styles.text5}>Giá dịch vụ: {parseFloat(this.state.service.price).formatPrice()}đ</Text>
+                                <View>
+                                    <Text style={styles.text5}>Dịch vụ: </Text>
+                                    {
+                                        this.state.service.map((item, index) => <View key={index} style={{ flexDirection: 'row', marginTop: 5 }}>
+                                            <Text style={{ flex: 1, fontWeight: 'bold', marginLeft: 20, color: '#000' }} numberOfLines={1}>{index + 1}. {item.service.name}</Text>
+                                            <Text style={{ color: '#ccc' }}>({parseInt(item.service.price).formatPrice()}đ)</Text>
+                                        </View>
+                                        )
+                                    }
+                                </View>
+                            </View>
+                            <View style={[styles.view2, { alignItems: 'flex-start' }]}>
+                                <ScaleImage style={[styles.ic_Location]} width={20} source={require("@images/new/booking/ic_coin.png")} />
+                                <View style={{ flexDirection: 'row' }}>
+                                    <Text style={[styles.text5]}>Tổng tiền: <Text style={{ fontWeight: 'bold', marginLeft: 20, color: '#d0021b' }} numberOfLines={1}>{this.state.service.reduce((start, item) => {
+                                        return start + parseInt(item.service.price)
+                                    }, 0).formatPrice()}đ</Text></Text>
+                                </View>
                             </View>
 
 
@@ -450,7 +472,7 @@ class ConfirmBookingScreen extends Component {
                     {/* <View>
                         <Text style={styles.sodu}>Số dư hiện tại: 350.000đ</Text>
                     </View> */}
-                    <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 1 })}>
+                    {/* <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 1 })}>
                         <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
                             {this.state.paymentMethod == 1 &&
                                 <View style={{ backgroundColor: 'rgb(2,195,154)', width: 10, height: 10, borderRadius: 5 }}></View>
@@ -473,7 +495,7 @@ class ConfirmBookingScreen extends Component {
                             }
                         </View>
                         <Text style={styles.ckeckthanhtoan}>PAYOO - Cửa hàng tiện ích</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                     <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 2 })}>
                         <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
                             {this.state.paymentMethod == 2 &&
