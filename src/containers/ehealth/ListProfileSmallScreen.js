@@ -98,12 +98,12 @@ class ListProfileSmallScreen extends PureComponent {
                             <View style={{ marginTop: 2, width: 20, height: 20, borderWidth: 1.5, borderColor: '#91a3ad', borderRadius: 10, justifyContent: 'center', alignItems: 'center', left: 0, bottom: 0, backgroundColor: '#FFF' }}>
                                 <View style={{ width: 8, height: 8, backgroundColor: '#c84242', borderRadius: 4 }}></View>
                             </View>
-                            <Text style={[{ flex: 1, marginLeft: 10, color: '#51626a', fontSize: 15 }, Dimensions.get('window').width < 375 ? { fontSize: 12 } : {}]}>{item.hospitalEntity.name}</Text>
+                            <Text style={[{ flex: 1, marginLeft: 10, color: '#51626a', fontSize: 13 }, Dimensions.get('window').width < 375 ? { fontSize: 12 } : {}]}>{item.hospitalEntity.name}</Text>
                         </View>
                     </View>
                     <View style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center' }}>
                         <ScaleImage resizeMode='cover' source={require("@images/new/ehealth/ic_timer.png")} width={20} tintColor={'#8fa1aa'} />
-                        <Text style={[{ marginLeft: 10, color: '#045684' },Dimensions.get('window').width < 375 ? { fontSize: 10 } : {}]}>Gần nhất: {item.latestTime ? item.latestTime.toDateObject('-').format('dd/MM/yyyy') : ''}</Text>
+                        <Text style={[{ marginLeft: 10, color: '#045684' },Dimensions.get('window').width < 375 ? { fontSize: 10 } : {}]}>Gần nhất: {'\n'}{item.latestTime ? item.latestTime.toDateObject('-').format('dd/MM/yyyy') : ''}</Text>
                     </View>
                 </View>
                 <View style={{ paddingHorizontal: 20, justifyContent: 'center', alignItems: 'center', width: 85 }}>
