@@ -542,7 +542,7 @@ class AddBookingScreen extends Component {
                     }
                     <View style={styles.border}></View>
 
-                    <TouchableOpacity style={styles.mucdichkham} onPress={() => {
+                    <TouchableOpacity style={[styles.mucdichkham, {alignItems: 'flex-start'}]} onPress={() => {
                         if (!this.state.hospital) {
                             snackbar.show(constants.msg.booking.please_select_location, "danger");
                             return;
@@ -556,11 +556,14 @@ class AddBookingScreen extends Component {
                     }}>
                         <ScaleImage style={styles.imgIc} height={15} source={require("@images/new/booking/ic_specialist.png")} />
                         <Text style={styles.mdk}>{constants.booking.service}</Text>
-
-                        {this.state.service ?
+                        {/* <Text>{JSON.stringify(this.state.listServicesSelected)}</Text> */}
+                        {this.state.listServicesSelected && this.state.listServicesSelected.length ?
                             <View style={{ flex: 1 }}>
-                                <Text numberOfLines={1} style={styles.ktq}>{this.state.service.name}</Text>
-                                <Text numberOfLines={1} style={styles.ktq}>{this.state.service.price.formatPrice() + 'đ'}</Text>
+                                {
+                                    this.state.listServicesSelected.map((item, index) => <Text style={{ marginHorizontal: 10, marginBottom: 5 }} numberOfLines={1} key={index}>{item.service.name}ẻ634563456456ertyrtyhdfghdfghdfghdfghdfg</Text>)
+                                }
+                                {/* <Text numberOfLines={1} style={styles.ktq}>{this.state.service.name}</Text> */}
+                                {/* <Text numberOfLines={1} style={styles.ktq}>{this.state.service.price.formatPrice() + 'đ'}</Text> */}
                             </View> :
                             <Text numberOfLines={1} style={styles.ktq}>{constants.booking.select_service}</Text>
                         }
