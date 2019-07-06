@@ -77,6 +77,7 @@ class EnterPasswordScreen extends Component {
         )
         .then(s => {
           this.setState({ isLoading: false });
+          console.log(s.code,'đâsdasdasdasd');
           switch (s.code) {
             case 0:
             case 9:
@@ -159,12 +160,11 @@ class EnterPasswordScreen extends Component {
                       minlength: constants.password_length_8
                     }
                   }}
-                  placeholder={constants.input_password}
                   autoCapitalize={"none"}
                 />
                 <TextField
                   getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-                    placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.confirm_new_password}
+                    placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} 
                     secureTextEntry={true}
                     onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
                   onChangeText={s => {
@@ -181,7 +181,7 @@ class EnterPasswordScreen extends Component {
                       equalTo: constants.new_password_not_match
                     }
                   }}
-                  placeholder={constants.input_password}
+                  placeholder={'Xác nhận mật khẩu'}
                   autoCapitalize={"none"}
                 />
               </Form>
