@@ -272,5 +272,10 @@ const styles = StyleSheet.create({
     groupSelected: {
         color: constants.colors.primary_bold
     },
+    cellStyle:{ backgroundColor: '#DFF5F2' },
+    tableWrappe:{ flexDirection: 'row' },
+    viewCurrentGroup:{ alignItems: 'flex-end', marginVertical: 10 },
+    btnCurrentGroup:{ flexDirection: 'row', alignItems: 'center' },
+    txCurrent:{ marginRight: 10 }
 })
 export default connect(mapStateToProps)(MedicalTestResult);
