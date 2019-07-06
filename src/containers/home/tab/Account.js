@@ -185,7 +185,7 @@ class Account extends Component {
 
           {this.props.userApp.isLogin ? (
             <View>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={[styles.itemMenu, { marginTop: 40 }]}
                 onPress={() => {
                   this.props.navigation.navigate("emptyScreen", {
@@ -201,7 +201,7 @@ class Account extends Component {
                   width={24}
                   height={24}
                 />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               {/* <TouchableOpacity
               style={[styles.itemMenu]}
               onPress={() => {
@@ -216,7 +216,7 @@ class Account extends Component {
               />
             </TouchableOpacity> */}
               <TouchableOpacity
-                style={[styles.itemMenu]}
+                style={[styles.itemMenu, { marginTop: 40 }]}
                 onPress={() => {
                   this.props.navigation.navigate("PatientHistoryScreen", {
                     title: "Lịch khám"
