@@ -433,27 +433,31 @@ class ConfirmBookingScreen extends Component {
                                     </View>
                                 </View> : null
                             }
-                            <View style={[styles.view2, { alignItems: 'flex-start' }]}>
-                                <ScaleImage style={[styles.ic_Location]} width={20} source={require("@images/new/booking/ic_coin.png")} />
-                                <View>
-                                    <Text style={styles.text5}>Dịch vụ: </Text>
-                                    {
-                                        this.state.service.map((item, index) => <View key={index} style={{ flexDirection: 'row', marginTop: 5 }}>
-                                            <Text style={{ flex: 1, fontWeight: 'bold', marginLeft: 20, color: '#000' }} numberOfLines={1}>{index + 1}. {item.service.name}</Text>
-                                            <Text style={{ color: '#ccc' }}>({parseInt(item.service.price).formatPrice()}đ)</Text>
-                                        </View>
-                                        )
-                                    }
-                                </View>
-                            </View>
-                            <View style={[styles.view2, { alignItems: 'flex-start' }]}>
-                                <ScaleImage style={[styles.ic_Location]} width={20} source={require("@images/new/booking/ic_coin.png")} />
-                                <View style={{ flexDirection: 'row' }}>
-                                    <Text style={[styles.text5]}>Tổng tiền: <Text style={{ fontWeight: 'bold', marginLeft: 20, color: '#d0021b' }} numberOfLines={1}>{this.state.service.reduce((start, item) => {
-                                        return start + parseInt(item.service.price)
-                                    }, 0).formatPrice()}đ</Text></Text>
-                                </View>
-                            </View>
+                            {this.state.service && this.state.service.length ?
+                                <View style={[styles.view2, { alignItems: 'flex-start' }]}>
+                                    <ScaleImage style={[styles.ic_Location]} width={20} source={require("@images/new/booking/ic_coin.png")} />
+                                    <View>
+                                        <Text style={styles.text5}>Dịch vụ: </Text>
+                                        {
+                                            this.state.service.map((item, index) => <View key={index} style={{ flexDirection: 'row', marginTop: 5 }}>
+                                                <Text style={{ flex: 1, fontWeight: 'bold', marginLeft: 20, color: '#000' }} numberOfLines={1}>{index + 1}. {item.service.name}</Text>
+                                                <Text style={{ color: '#ccc' }}>({parseInt(item.service.price).formatPrice()}đ)</Text>
+                                            </View>
+                                            )
+                                        }
+                                    </View>
+                                </View> : null
+                            }
+                            {this.state.service && this.state.service.length ?
+                                <View style={[styles.view2, { alignItems: 'flex-start' }]}>
+                                    <ScaleImage style={[styles.ic_Location]} width={20} source={require("@images/new/booking/ic_coin.png")} />
+                                    <View style={{ flexDirection: 'row' }}>
+                                        <Text style={[styles.text5]}>Tổng tiền: <Text style={{ fontWeight: 'bold', marginLeft: 20, color: '#d0021b' }} numberOfLines={1}>{this.state.service.reduce((start, item) => {
+                                            return start + parseInt(item.service.price)
+                                        }, 0).formatPrice()}đ</Text></Text>
+                                    </View>
+                                </View> : null
+                            }
 
 
                         </View>

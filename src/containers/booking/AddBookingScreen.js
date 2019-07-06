@@ -35,7 +35,8 @@ class AddBookingScreen extends Component {
             colorButton: 'red',
             imageUris: [],
             allowBooking: false,
-            contact: 2
+            contact: 2,
+            listServicesSelected: []
         }
     }
     _changeColor = () => {
@@ -192,9 +193,9 @@ class AddBookingScreen extends Component {
                 hospital: this.state.hospital,
                 onSelected: (hospital) => {
                     let hospitalError = hospital ? "" : this.state.hospitalError;
-                    
+
                     if (!hospital || !this.state.hospital || hospital.hospital.id != this.state.hospital.hospital.id) {
-                        this.setState({ hospital, service: null, schedules: [], schedule: null, allowBooking: true, hospitalError })
+                        this.setState({ hospital, service: null, schedules: [], allowBooking: true, hospitalError })
                     } else {
                         this.setState({ hospital, allowBooking: true, hospitalError });
                     }
@@ -208,48 +209,6 @@ class AddBookingScreen extends Component {
 
     selectService(services) {
         this.setState({ listServicesSelected: services });
-        // let serviceError = service ? "" : this.state.serviceError;
-        // if (!service || !this.state.service || service.id != this.state.service.id) {
-        //     this.setState({ service, specialist, schedules: [], schedule: null, allowBooking: true, serviceError }, () => {
-        //         this.reloadSchedule();
-        //     })
-        // } else {
-        //     this.setState({ service, specialist, allowBooking: true, serviceError }, () => {
-        //         this.reloadSchedule();
-        //     });
-        // }
-    }
-
-    reloadSchedule() {
-        if (this.state.service && this.state.bookingDate && this.state.hospital) {
-            this.setState({ isLoading: true }, () => {
-                scheduleProvider.getByDateAndService(this.state.service.id, this.state.bookingDate.format("yyyy-MM-dd")).then(s => {
-                    if (s.code == 0 && s.data) {
-                        let data = s.data || [];
-                        let scheduleError = data.length > 0 ? "" : this.state.scheduleError;
-                        this.setState({
-                            schedule: null,
-                            schedules: data, isLoading: false, scheduleError,
-                            scheduleError: data && data.length != 0 ? "" : constants.msg.booking.not_booking_macth_require_date
-                        })
-                    }
-                    else {
-                        this.setState({
-                            schedule: null,
-                            schedules: [], isLoading: false,
-                            scheduleError: constants.msg.booking.not_booking_macth_require_date
-                        })
-                    }
-                }).catch(e => {
-                    this.setState({
-                        schedule: null,
-                        isLoading: false,
-                        schedules: [],
-                        scheduleError: constants.msg.booking.not_booking_macth_require_date
-                    })
-                });
-            });
-        }
     }
 
     addBooking() {
@@ -499,8 +458,15 @@ class AddBookingScreen extends Component {
                     }
                     <View style={styles.border}></View>
                     <TouchableOpacity style={styles.mucdichkham} onPress={() => {
+                        if (!this.state.hospital) {
+                            snackbar.show(constants.msg.booking.please_select_location, "danger");
+                            return;
+                        }
                         connectionUtils.isConnected().then(s => {
-                            this.props.navigation.navigate("selectServiceType", { onSelected: this.selectServiceType.bind(this) });
+                            this.props.navigation.navigate("selectServiceType", {
+                                hospital: this.state.hospital,
+                                onSelected: this.selectServiceType.bind(this)
+                            });
                         }).catch(e => {
                             snackbar.show(constants.msg.app.not_internet, "danger");
                         });
@@ -553,7 +519,7 @@ class AddBookingScreen extends Component {
                     <TouchableOpacity style={styles.mucdichkham} onPress={() => {
                         this.setState({ toggelDateTimePickerVisible: true })
                     }}>
-                        <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_bookingDate.png")} />
+                        <ScaleImage style={styles.imgIc} height={18} source={require("@images/new/booking/ic_bookingDate.png")} />
                         <Text style={styles.mdk}>{constants.booking.date_booking}</Text>
                         <Text style={styles.ktq}>{this.state.date ? this.state.date : constants.booking.select_date_booking}</Text>
                         <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
@@ -564,12 +530,12 @@ class AddBookingScreen extends Component {
                     }
                     <View style={styles.border}></View>
                     <View style={styles.mucdichkham}>
-                        <ScaleImage style={styles.imgIc} height={15} source={require("@images/new/booking/ic_specialist.png")} />
+                        <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_bookingTime.png")} />
                         <Text style={styles.mdk}>{constants.booking.select_time_booking}</Text>
                     </View>
-                    <View style={[styles.mucdichkham, { paddingHorizontal: 20 }]}>
+                    {/* <View style={[styles.mucdichkham, { paddingHorizontal: 20 }]}>
                         <Text style={{ fontSize: 14, color: '#8e8e93' }}>{constants.booking.select_time_note}</Text>
-                    </View>
+                    </View> */}
                     <BookingTimePicker onChange={this.onTimePickerChange.bind(this)} />
                     {
                         this.state.scheduleError ?
@@ -654,7 +620,6 @@ class AddBookingScreen extends Component {
                         date: newDate.format("thu, dd tháng MM").replaceAll(" 0", " "),
                         toggelDateTimePickerVisible: false,
                         allowBooking: true,
-                        schedule: null,
                         serviceError: "",
                         scheduleError: ""
                     });

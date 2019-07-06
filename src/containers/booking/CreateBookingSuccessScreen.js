@@ -73,27 +73,32 @@ class CreateBookingSuccessScreen extends Component {
                                 <Text style={styles.label}>{constants.booking.time}</Text>
                                 <Text style={styles.text}>{bookingTime.format("HH:mm") + " " + (bookingTime.format("HH") < 12 ? "AM" : "PM") + " - " + bookingTime.format("thu, dd/MM/yyyy")}</Text>
                             </View>
-                            <View style={styles.row}>
-                                <Text style={styles.label}>{"Dịch vụ"}</Text>
-                                <View style={{ flex: 1, marginLeft: 10 }}>
-                                    {service.map((item, index) => {
-                                        return <View key={index} style={{ flex: 1 }}>
-                                            <Text numberOfLines={1} style={[styles.text, { flex: 1 }]}>{item.service.name}</Text>
-                                            <Text style={[styles.text, { marginBottom: 5 }]}>({parseInt(item.service.price).formatPrice()}đ)</Text>
-                                        </View>
-                                    })}
-                                </View>
-                            </View>
+                            {service && service.length ?
+                                <View style={styles.row}>
+                                    <Text style={styles.label}>{"Dịch vụ"}</Text>
+                                    <View style={{ flex: 1, marginLeft: 10 }}>
+                                        {service.map((item, index) => {
+                                            return <View key={index} style={{ flex: 1 }}>
+                                                <Text numberOfLines={1} style={[styles.text, { flex: 1 }]}>{item.service.name}</Text>
+                                                <Text style={[styles.text, { marginBottom: 5 }]}>({parseInt(item.service.price).formatPrice()}đ)</Text>
+                                            </View>
+                                        })}
+                                    </View>
+                                </View> : null
+                            }
                             <View style={styles.row}>
                                 <Text style={styles.label}>{constants.booking.payment_method}</Text>
                                 <Text style={styles.text}>{this.getPaymentMethod(booking)}</Text>
                             </View>
-                            <View style={styles.row}>
-                                <Text style={styles.label}>{"Tổng tiền"}</Text>
-                                <Text style={[styles.text, { color: "#d0021b" }]}>{service.reduce((start, item) => {
-                                    return start + parseInt(item.service.price)
-                                }, 0).formatPrice()}đ</Text>
-                            </View>
+                            {
+                                service && service.length ?
+                                    <View style={styles.row}>
+                                        <Text style={styles.label}>{"Tổng tiền"}</Text>
+                                        <Text style={[styles.text, { color: "#d0021b" }]}>{service.reduce((start, item) => {
+                                            return start + parseInt(item.service.price)
+                                        }, 0).formatPrice()}đ</Text>
+                                    </View> : null
+                            }
 
                             {/* {
                                 booking.payment == 4 && <View>

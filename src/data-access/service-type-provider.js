@@ -3,14 +3,14 @@ import string from 'mainam-react-native-string-utils';
 import constants from '@resources/strings';
 import datacacheProvider from '@data-access/datacache-provider';
 module.exports = {
-    getAll(requestApi) {
+    getAll(requestApi, hospitalId) {
         return new Promise((resolve, reject) => {
             if (!requestApi) {
-                datacacheProvider.readPromise("", constants.key.storage.DATA_SERVICE_TYPE).then(s => {
-                    this.getAll(true);
+                datacacheProvider.readPromise(hospitalId, constants.key.storage.DATA_SERVICE_TYPE).then(s => {
+                    this.getAll(true, hospitalId);
                     resolve(s);
                 }).catch(e => {
-                    this.getAll(true).then(s => {
+                    this.getAll(true, hospitalId).then(s => {
                         resolve(s);
                     }).catch(e => {
                         reject(e);
@@ -18,10 +18,10 @@ module.exports = {
                 });
             }
             else {
-                client.requestApi("get", constants.api.serviceType.get_all, {}, (s, e) => {
+                client.requestApi("get", constants.api.serviceType.get_all + "?hospitalId=" + hospitalId, {}, (s, e) => {
                     if (s && s.code == 0 && s.data && s.data.serviceType) {
                         let data = s.data.serviceType.filter(item => !item.deleted);
-                        datacacheProvider.save("", constants.key.storage.DATA_SERVICE_TYPE, data);
+                        datacacheProvider.save(hospitalId, constants.key.storage.DATA_SERVICE_TYPE, data);
                         resolve(data);
                     }
                     reject(e);

@@ -157,7 +157,6 @@ class createProfile extends Component {
     if (!this.form.isValid()) {
       return;
     }
-
     connectionUtils
       .isConnected()
       .then(s => {

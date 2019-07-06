@@ -204,10 +204,8 @@ class PatientHistoryScreen extends Component {
               padding: 10
             }}
           >
-            {
-              item.services && item.services.length ?
-                item.services.map((item, index) => <Text key={index} style={{ fontWeight: "bold", color: 'rgb(74,74,74)' }}>{item.name ? item.name : ''}</Text>) : null
-            }
+            <Text style={{ fontWeight: "bold", color: 'rgb(74,74,74)' }}>{item.serviceType ? item.serviceType.name : ''}</Text>
+           
             <View style={{ marginVertical: 10 }}>
               <Text style={{ color: 'rgb(142,142,147)' }}>{item.medicalRecords.name ? item.medicalRecords.name : ''}</Text>
               <Text style={{ color: 'rgb(142,142,147)' }}>{item.hospital ? item.hospital.name : ""}</Text>

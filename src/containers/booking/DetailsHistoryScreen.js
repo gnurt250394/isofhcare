@@ -186,26 +186,28 @@ class DetailsHistoryScreen extends Component {
               />
               <Text style={styles.txName}>{this.state.medicalRecords.name}</Text>
             </View>
-            <View style={styles.viewService}>
-              <ScaledImage
-                height={20}
-                width={20}
-                source={require("@images/ic_service.png")}
-              />
-              <Text style={styles.txService}>Dịch vụ khám</Text>
-              <View>
-                {
-                  this.state.services.map((item, index) => {
-                    return <View>
-                      <Text numberOfLines={1} key={index} style={[styles.txInfoService, { alignSelf: 'flex-end', fontWeight: 'bold' }]}>{item.name}</Text>
-                      <Text key={index} style={[styles.txInfoService, { alignSelf: 'flex-end', marginBottom: 5 }]}>({item.price.formatPrice()}đ)</Text>
-                    </View>
-                  })
-                }
-              </View>
-            </View>
+            {this.state.services && this.state.services.length ?
+              <View style={[styles.viewService, { alignItems: 'flex-start' }]}>
+                <ScaledImage
+                  height={20}
+                  width={20}
+                  source={require("@images/ic_service.png")}
+                />
+                <Text style={styles.txService}>Dịch vụ khám</Text>
+                <View>
+                  {
+                    this.state.services.map((item, index) => {
+                      return <View>
+                        <Text numberOfLines={1} key={index} style={[styles.txInfoService, { alignSelf: 'flex-end', fontWeight: 'bold' }]}>{item.name}</Text>
+                        <Text key={index} style={[styles.txInfoService, { alignSelf: 'flex-end', marginBottom: 5 }]}>({item.price.formatPrice()}đ)</Text>
+                      </View>
+                    })
+                  }
+                </View>
+              </View> : null
+            }
             <View style={{ backgroundColor: '#EDECED', height: 1, marginLeft: 12 }}></View>
-            <View style={styles.viewLocation}>
+            <View style={[styles.viewLocation, { alignItems: 'flex-start' }]}>
               <ScaledImage
                 height={20}
                 width={20}
@@ -250,18 +252,24 @@ class DetailsHistoryScreen extends Component {
                 /> */}
               </View>
             </View>
-            <View style={styles.viewPrice}>
-              <ScaledImage
-                source={require("@images/ic_price.png")}
-                width={20}
-                height={20}
-              />
-              <Text style={styles.txLabelPrice}>Tổng tiền dịch vụ</Text>
-              <Text style={styles.txPrice}>
-                {this.state.services.reduce((start, item) => start + parseInt(item.price), 0).formatPrice() + 'đ'}
-              </Text>
-            </View>
-            <View style={{ backgroundColor: '#EDECED', height: 1, marginLeft: 12 }}></View>
+            {
+              this.state.services && this.state.services.length ?
+                <React.Fragment>
+                  <View style={styles.viewPrice}>
+                    <ScaledImage
+                      source={require("@images/ic_price.png")}
+                      width={20}
+                      height={20}
+                    />
+                    <Text style={styles.txLabelPrice}>Tổng tiền dịch vụ</Text>
+                    <Text style={styles.txPrice}>
+                      {this.state.services.reduce((start, item) => start + parseInt(item.price), 0).formatPrice() + 'đ'}
+                    </Text>
+                  </View>
+                  <View style={{ backgroundColor: '#EDECED', height: 1, marginLeft: 12 }}></View>
+                </React.Fragment>
+                : null
+            }
             <View style={styles.viewPayment}>
               <ScaledImage
                 height={19}
