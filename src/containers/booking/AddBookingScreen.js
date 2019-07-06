@@ -187,29 +187,16 @@ class AddBookingScreen extends Component {
         }
     }
     selectHospital = () => {
-        if (!this.state.serviceType) {
-            snackbar.show(constants.msg.booking.please_select_require, "danger");
-            return;
-        }
         connectionUtils.isConnected().then(s => {
             this.props.navigation.navigate("selectHospital", {
-                serviceType: this.state.serviceType,
                 hospital: this.state.hospital,
                 onSelected: (hospital) => {
                     let hospitalError = hospital ? "" : this.state.hospitalError;
-                    let getDefaultService = () => {
-                        serviceProvider.getAll(this.state.hospital.hospital.id, "", this.state.serviceType.id).then(s => {
-                            if (s && s.code == 0 && s.data && s.data.services && s.data.services.length == 1) {
-                                let service = s.data.services[0];
-                                this.setState({ service: s.data.services[0].service, specialist: service.specialist && service.specialist.length > 0 ? service.specialist[0] : {} });
-                            }
-                        });
-                    }
-
+                    
                     if (!hospital || !this.state.hospital || hospital.hospital.id != this.state.hospital.hospital.id) {
-                        this.setState({ hospital, service: null, schedules: [], schedule: null, allowBooking: true, hospitalError }, getDefaultService)
+                        this.setState({ hospital, service: null, schedules: [], schedule: null, allowBooking: true, hospitalError })
                     } else {
-                        this.setState({ hospital, allowBooking: true, hospitalError }, getDefaultService);
+                        this.setState({ hospital, allowBooking: true, hospitalError });
                     }
 
                 }
@@ -290,12 +277,12 @@ class AddBookingScreen extends Component {
             this.setState({ serviceTypeError: constants.msg.booking.require_not_null })
             error = true;
         }
-        if (this.state.listServicesSelected && this.state.listServicesSelected.length) {
-            this.setState({ serviceError: "" })
-        } else {
-            this.setState({ serviceError: constants.msg.booking.service_not_null })
-            error = true;
-        }
+        // if (this.state.listServicesSelected && this.state.listServicesSelected.length) {
+        //     this.setState({ serviceError: "" })
+        // } else {
+        //     this.setState({ serviceError: constants.msg.booking.service_not_null })
+        //     error = true;
+        // }
         if (this.state.bookingDate) {
             this.setState({ bookingError: "" })
         } else {
@@ -558,16 +545,12 @@ class AddBookingScreen extends Component {
 
                         <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
                     </TouchableOpacity>
-                    {
+                    {/* {
                         this.state.serviceError ?
                             <Text style={[styles.errorStyle]}>{this.state.serviceError}</Text> : null
-                    }
+                    } */}
                     <View style={styles.border}></View>
                     <TouchableOpacity style={styles.mucdichkham} onPress={() => {
-                        if (!this.state.listServicesSelected || this.state.listServicesSelected.length == 0) {
-                            snackbar.show(constants.msg.booking.please_select_service, "danger");
-                            return;
-                        }
                         this.setState({ toggelDateTimePickerVisible: true })
                     }}>
                         <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_bookingDate.png")} />
