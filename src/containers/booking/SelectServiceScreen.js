@@ -182,7 +182,7 @@ class SelectServiceScreen extends Component {
                         <TouchableOpacity onPress={this.onPressItem1.bind(this, item)}>
                             <View style={[{ marginBottom: 2, padding: 20, flexDirection: 'column', borderBottomColor: '#00000011', borderBottomWidth: 0.7 }, item.checked ? { backgroundColor: 'rgba(240, 243, 189, 0.2)' } : { backgroundColor: '#FFF' }]}>
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <Text style={{ fontWeight: 'bold', flex: 1, maxWidth: 250 }}>
+                                    <Text style={{ fontWeight: 'bold', flex: 1}}>
                                         {item.service.name}
                                     </Text>
                                     {item.checked &&

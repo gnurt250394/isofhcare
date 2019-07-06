@@ -18,97 +18,97 @@ class SelectTimeScreen extends Component {
     constructor(props) {
         super(props);
         let date = new Date(new Date().format("MM/dd/yyyy"));
-        let date1= new Date(date.setMinutes(date.getMinutes() + (8 * 60)));
+        let date1 = new Date(date.setMinutes(date.getMinutes() + (8 * 60)));
         listTime = [];
         listTime.push({
             type: 3,
             time: date1,
             label: "08:00"
         })
-        date1= new Date(date.setMinutes(date.getMinutes() + 30));
+        date1 = new Date(date.setMinutes(date.getMinutes() + 30));
         listTime.push({
             type: 3,
             time: date1,
             label: "08:30"
         })
-        date1= new Date(date.setMinutes(date.getMinutes() + 30));
+        date1 = new Date(date.setMinutes(date.getMinutes() + 30));
         listTime.push({
             type: 3,
             time: date1,
             label: "09:00"
         })
-        date1= new Date(date.setMinutes(date.getMinutes() + 30));
+        date1 = new Date(date.setMinutes(date.getMinutes() + 30));
         listTime.push({
             type: 3,
             time: date1,
             label: "09:30"
         })
-        date1= new Date(date.setMinutes(date.getMinutes() + 30));
+        date1 = new Date(date.setMinutes(date.getMinutes() + 30));
         listTime.push({
             type: 3,
             time: date1,
             label: "10:00"
         })
-        date1= new Date(date.setMinutes(date.getMinutes() + 30));
+        date1 = new Date(date.setMinutes(date.getMinutes() + 30));
         listTime.push({
             type: 3,
             time: date1,
             label: "10:30"
         })
-        date1= new Date(date.setMinutes(date.getMinutes() + 30));
+        date1 = new Date(date.setMinutes(date.getMinutes() + 30));
         listTime.push({
             type: 3,
             time: date1,
             label: "11:00"
         })
-        date1= new Date(date.setMinutes(date.getMinutes() + 30));
-        listTime.push({
-            type: 3,
-            time: date1,
-            label: "11:30"
-        })
-        date1= new Date(date.setMinutes(date.getMinutes() + 120));
+        // date1= new Date(date.setMinutes(date.getMinutes() + 30));
+        // listTime.push({
+        //     type: 3,
+        //     time: date1,
+        //     label: "11:30"
+        // })
+        date1 = new Date(date.setMinutes(date.getMinutes() + 150));
         listTime.push({
             type: 3,
             time: date1,
             label: "13:30"
         })
-        date1= new Date(date.setMinutes(date.getMinutes() + 30));
+        date1 = new Date(date.setMinutes(date.getMinutes() + 30));
         listTime.push({
             type: 3,
             time: date1,
             label: "14:00"
         })
-        date1= new Date(date.setMinutes(date.getMinutes() + 30));
+        date1 = new Date(date.setMinutes(date.getMinutes() + 30));
         listTime.push({
             type: 3,
             time: date1,
             label: "14:30"
         })
-        date1= new Date(date.setMinutes(date.getMinutes() + 30));
+        date1 = new Date(date.setMinutes(date.getMinutes() + 30));
         listTime.push({
             type: 3,
             time: date1,
             label: "15:00"
         })
-        date1= new Date(date.setMinutes(date.getMinutes() + 30));
+        date1 = new Date(date.setMinutes(date.getMinutes() + 30));
         listTime.push({
             type: 3,
             time: date1,
             label: "15:30"
         })
-        date1= new Date(date.setMinutes(date.getMinutes() + 30));
+        date1 = new Date(date.setMinutes(date.getMinutes() + 30));
         listTime.push({
             type: 3,
             time: date1,
             label: "16:00"
         })
-        date1= new Date(date.setMinutes(date.getMinutes() + 30));
-        listTime.push({
-            type: 3,
-            time: date1,
-            label: "16:30"
-        })
+        // date1 = new Date(date.setMinutes(date.getMinutes() + 30));
+        // listTime.push({
+        //     type: 3,
+        //     time: date1,
+        //     label: "16:30"
+        // })
 
         this.state = {
             listTime
