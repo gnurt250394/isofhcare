@@ -75,10 +75,10 @@ class CreateBookingSuccessScreen extends Component {
                             </View>
                             <View style={styles.row}>
                                 <Text style={styles.label}>{"Dịch vụ"}</Text>
-                                <View style={{ flex: 1 }}>
+                                <View style={{ flex: 1, marginLeft: 10 }}>
                                     {service.map((item, index) => {
                                         return <View key={index} style={{ flex: 1 }}>
-                                            <Text style={[styles.text]}>{item.service.name}</Text>
+                                            <Text numberOfLines={1} style={[styles.text, { flex: 1 }]}>{item.service.name}</Text>
                                             <Text style={[styles.text, { marginBottom: 5 }]}>({parseInt(item.service.price).formatPrice()}đ)</Text>
                                         </View>
                                     })}
