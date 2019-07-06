@@ -175,14 +175,10 @@ class AddBookingScreen extends Component {
     selectProfile(profile) {
         this.setState({ profile, allowBooking: true });
     }
-
-    selectSpecialist(specialist) {
-        this.setState({ specialist, allowBooking: true });
-    }
     selectServiceType(serviceType) {
         let serviceTypeError = serviceType ? "" : this.state.serviceTypeError;
         if (!serviceType || !this.state.serviceType || serviceType.id != this.state.serviceType.id) {
-            this.setState({ serviceType, service: null, schedules: [], allowBooking: true, serviceTypeError })
+            this.setState({ serviceType, listServicesSelected: [], allowBooking: true, serviceTypeError })
         } else {
             this.setState({ serviceType, allowBooking: true, serviceTypeError: "", serviceTypeError });
         }
@@ -195,7 +191,7 @@ class AddBookingScreen extends Component {
                     let hospitalError = hospital ? "" : this.state.hospitalError;
 
                     if (!hospital || !this.state.hospital || hospital.hospital.id != this.state.hospital.hospital.id) {
-                        this.setState({ hospital, service: null, schedules: [], allowBooking: true, hospitalError })
+                        this.setState({ hospital, listServicesSelected: [], serviceType: null, schedules: [], allowBooking: true, hospitalError })
                     } else {
                         this.setState({ hospital, allowBooking: true, hospitalError });
                     }
@@ -823,7 +819,9 @@ const styles = StyleSheet.create({
             height: 4
         },
         shadowRadius: 10,
-        shadowOpacity: 1
+        shadowOpacity: 1,
+        width: 250,
+        maxWidth: DEVICE_HEIGHT
     },
     datkham: {
         fontSize: 16,
@@ -832,8 +830,7 @@ const styles = StyleSheet.create({
         letterSpacing: 0,
         color: "#ffffff",
         padding: 15,
-        paddingLeft: 100,
-        paddingRight: 100
+        textAlign: 'center'
     },
     imgPhone: {
         marginRight: 10

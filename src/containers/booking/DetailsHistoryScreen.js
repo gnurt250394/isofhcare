@@ -193,7 +193,7 @@ class DetailsHistoryScreen extends Component {
                   width={20}
                   source={require("@images/ic_service.png")}
                 />
-                <Text style={styles.txService}>Dịch vụ khám</Text>
+                <Text style={styles.txService}>Dịch vụ</Text>
                 <View>
                   {
                     this.state.services.map((item, index) => {

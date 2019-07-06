@@ -60,13 +60,11 @@ class TotalMoney extends Component {
                 {this.renderService(resultDetail.ListService, sum)}
             </Table>
             {
-                sum &&
-                <View style={styles.viewListService}>
-                    <Text style={styles.txTotal}>Tổng:      <Text style={styles.valueTotal}>
-                        {
-                            sum.formatPrice() + " đ"
-                        }</Text></Text>
-                </View>
+                sum ?
+                    <View style={styles.viewListService}>
+                        <Text style={styles.txTotal}>Tổng:<Text style={styles.valueTotal}>{sum.formatPrice()}đ</Text>
+                        </Text>
+                    </View> : null
             }
         </View>))
     }
