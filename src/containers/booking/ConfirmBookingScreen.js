@@ -420,7 +420,7 @@ class ConfirmBookingScreen extends Component {
                                 <ScaleImage style={styles.ic_Location} width={20} source={require("@images/new/booking/ic_bookingDate2.png")} />
                                 <View>
                                     <Text style={[styles.text5, {}]}>Thời gian</Text>
-                                    <Text style={[styles.text5, { marginTop: 10 }]}><Text style={{ color: 'rgb(106,1,54)', fontWeight: 'bold' }}>{this.state.schedule.label} {this.state.schedule.time.format("HH") < 12 ? "sáng" : "chiều"} - {this.state.bookingDate.format("thu")}</Text> ngày {this.state.bookingDate.format("dd/MM/yyyy")} </Text>
+                                    <Text style={[styles.text5, { marginTop: 10 }]}><Text style={{ color: 'rgb(106,1,54)', fontWeight: 'bold' }}>{this.state.schedule.label2} {this.state.schedule.time.format("HH") < 12 ? "AM" : "PM"} - {this.state.bookingDate.format("thu")}</Text> ngày {this.state.bookingDate.format("dd/MM/yyyy")} </Text>
                                 </View>
                             </View>
 
@@ -507,7 +507,7 @@ class ConfirmBookingScreen extends Component {
                         </View>
                         <Text style={styles.ckeckthanhtoan}>Thanh toán sau tại CSYT</Text>
                     </TouchableOpacity>
-
+                    <View style={{ height: 50 }} />
                 </ScrollView>
                 <TouchableOpacity style={styles.btn} onPress={this.createBooking.bind(this)}>
                     <Text style={styles.btntext}>Xác Nhận</Text>
