@@ -77,13 +77,16 @@ class EnterPasswordScreen extends Component {
         )
         .then(s => {
           this.setState({ isLoading: false });
-          console.log(s.code,'đâsdasdasdasd');
           switch (s.code) {
             case 0:
             case 9:
+              debugger;
               var user = s.data.user;
               user.bookingNumberHospital = s.data.bookingNumberHospital;
               user.bookingStatus = s.data.bookingStatus;
+              if (s.data.profile && s.data.profile.uid)
+                user.uid = s.data.profile.uid;
+              this.props.dispatch(redux.userLogin(user));
               if (this.nextScreen) {
                 this.props.navigation.replace(
                   this.nextScreen.screen,
