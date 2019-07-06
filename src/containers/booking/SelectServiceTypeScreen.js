@@ -77,6 +77,10 @@ class SelectServiceTypeScreen extends Component {
         var listSearch = this.state.listServiceType.filter(function (item) {
             return item.deleted == 0 && (item == null || item.name.trim().toLowerCase().unsignText().indexOf(s.trim().toLowerCase().unsignText()) != -1);
         });
+        listSearch.sort(function(a,b){
+            // console.log(a,b,'ádasdasdas');
+            return new Date(a.createdDate) - new Date(b.createdDate);
+          });
         this.setState({ listServiceTypeSearch: listSearch });
     }
     renderSearchButton() {
