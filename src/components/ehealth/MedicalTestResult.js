@@ -114,7 +114,7 @@ class MedicalTestResult extends Component {
     renderMedicalTestLine(item, index) {
         return (
             <View key={index}>
-                <Cell data={item.ServiceName} textStyle={[styles.textValue, { fontWeight: 'bold' }]} style={styles.cellStyle}></Cell>
+                <Cell data={item.ServiceName} textStyle={[styles.textValue, { fontWeight: 'bold' }]} style={{ backgroundColor: '#DFF5F2' }}></Cell>
                 {
                     item.ServiceMedicTestLine.map((item2, i) => {
                         var range = resultUtils.getRangeMedicalTest(item2);
@@ -124,12 +124,12 @@ class MedicalTestResult extends Component {
 
                         return (
                             this.state.currentGroup.type == 'Vi Sinh' ?
-                                <TableWrapper style={styles.tableWrapper} key={i}>
+                                <TableWrapper style={{ flexDirection: 'row' }} key={i}>
                                     <Cell data={item2.NameLine.trim()} textStyle={[styles.textValue]}></Cell>
                                     <Cell data={resultUtils.getResult(item2)} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
                                 </TableWrapper>
                                 :
-                                <TableWrapper style={styles.tableWrappe} key={i}>
+                                <TableWrapper style={{ flexDirection: 'row' }} key={i}>
                                     <Cell data={item2.NameLine.trim()} textStyle={[styles.textValue]}></Cell>
                                     <Cell data={resultUtils.getResult(item2)} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
                                     <Cell data={range} textStyle={[styles.textValue]}></Cell>
@@ -153,12 +153,12 @@ class MedicalTestResult extends Component {
 
             var data =
                 this.state.currentGroup.type == 'Vi Sinh' ?
-                    <TableWrapper style={styles.tableWrappe} key={index}>
+                    <TableWrapper style={{ flexDirection: 'row' }} key={index}>
                         <Cell data={item.ServiceName.trim()} textStyle={[styles.textValue]}></Cell>
                         <Cell data={resultUtils.getResult(item.ServiceMedicTestLine[0])} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
                     </TableWrapper>
                     :
-                    <TableWrapper style={styles.tableWrappe} key={index}>
+                    <TableWrapper style={{ flexDirection: 'row' }} key={index}>
                         <Cell data={item.ServiceName.trim()} textStyle={[styles.textValue]}></Cell>
                         <Cell data={resultUtils.getResult(item.ServiceMedicTestLine[0])} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
                         <Cell data={irange} textStyle={[styles.textValue]}></Cell>
@@ -169,12 +169,12 @@ class MedicalTestResult extends Component {
         var range = resultUtils.getRangeMedicalTest(item);
         var isHighlight = resultUtils.showHighlight(item);
         var data = this.state.currentGroup.type == 'Vi Sinh' ?
-            <TableWrapper style={styles.tableWrappe} key={index}>
+            <TableWrapper style={{ flexDirection: 'row' }} key={index}>
                 <Cell data={item.ServiceName.trim()} textStyle={[styles.textValue, { fontWeight: 'bold' }]}></Cell>
                 <Cell data={resultUtils.getResult(item)} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
             </TableWrapper>
             :
-            <TableWrapper style={styles.tableWrappe} key={index}>
+            <TableWrapper style={{ flexDirection: 'row' }} key={index}>
                 <Cell data={item.ServiceName.trim()} textStyle={[styles.textValue, { fontWeight: 'bold' }]}></Cell>
                 <Cell data={resultUtils.getResult(item)} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
                 <Cell data={range} textStyle={[styles.textValue]}></Cell>
@@ -208,10 +208,10 @@ class MedicalTestResult extends Component {
                 </View>
             }
             {
-                this.state.currentGroup && <View style={styles.viewCurrentGroup}><TouchableOpacity onPress={() => {
+                this.state.currentGroup && <View style={{ alignItems: 'flex-end', marginVertical: 10 }}><TouchableOpacity onPress={() => {
                     this.actionSheetChooseType.show();
-                }} style={styles.btnCurrentGroup}>
-                    <Text style={styles.txCurrent}>{this.state.currentGroup.type}</Text>
+                }} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Text style={{ marginRight: 10 }}>{this.state.currentGroup.type}</Text>
                     <ScaleImage source={require("@images/new/down.png")} width={10} />
                 </TouchableOpacity></View>
             }
@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
         color: constants.colors.primary_bold
     },
     cellStyle:{ backgroundColor: '#DFF5F2' },
-    tableWrapper:{ flexDirection: 'row' },
+    tableWrappe:{ flexDirection: 'row' },
     viewCurrentGroup:{ alignItems: 'flex-end', marginVertical: 10 },
     btnCurrentGroup:{ flexDirection: 'row', alignItems: 'center' },
     txCurrent:{ marginRight: 10 }
