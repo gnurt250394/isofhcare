@@ -30,7 +30,6 @@ class ConfirmBookingScreen extends Component {
             snackbar.show("Không tồn tại đặt khám", "danger");
             this.props.navigation.pop();
         }
-
         this.state = {
             serviceType,
             service,
@@ -397,6 +396,10 @@ class ConfirmBookingScreen extends Component {
             <ActivityPanel style={styles.AcPanel} title="Xác nhận lịch khám"
                 isLoading={this.state.isLoading}>
                 <ScrollView keyboardShouldPersistTaps='handled' style={styles.container}>
+                <View style={{ paddingHorizontal: 20, marginVertical:20}}>
+                    <Text style={{fontWeight:'bold',color:'#000'}}>{'HỒ SƠ: '+this.state.profile.medicalRecords.name.toUpperCase()}</Text>
+                    <Text style={{color:'gray'}}>SĐT: {this.props.userApp.currentUser.phone}</Text>
+                </View>
                     <View style={styles.viewDetails}>
                         <View style={{ paddingHorizontal: 20, marginTop: 20, flexDirection: 'row', alignItems: 'center' }}>
                             <Text style={{ fontWeight: 'bold', color: 'rgb(2,195,154)', marginRight: 10 }}>{(this.state.serviceType.name || "").toUpperCase()}</Text>

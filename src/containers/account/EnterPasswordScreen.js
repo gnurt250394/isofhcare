@@ -84,9 +84,6 @@ class EnterPasswordScreen extends Component {
               var user = s.data.user;
               user.bookingNumberHospital = s.data.bookingNumberHospital;
               user.bookingStatus = s.data.bookingStatus;
-              if (s.data.profile && s.data.profile.uid)
-                user.uid = s.data.profile.uid;
-              this.props.dispatch(redux.userLogin(user));
               if (this.nextScreen) {
                 this.props.navigation.replace(
                   this.nextScreen.screen,
@@ -164,7 +161,8 @@ class EnterPasswordScreen extends Component {
                 />
                 <TextField
                   getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-                    placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} 
+                    placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={'Xác nhận mật khẩu'}
+
                     secureTextEntry={true}
                     onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
                   onChangeText={s => {
@@ -181,7 +179,6 @@ class EnterPasswordScreen extends Component {
                       equalTo: constants.new_password_not_match
                     }
                   }}
-                  placeholder={'Xác nhận mật khẩu'}
                   autoCapitalize={"none"}
                 />
               </Form>
