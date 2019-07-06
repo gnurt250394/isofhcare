@@ -103,20 +103,20 @@ class ViewEhealthDetailScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-    container:{ flex: 1 },
+    container: { flex: 1 },
     round1: { width: 20, height: 20, backgroundColor: '#FFF', borderColor: '#8fa1aa', borderWidth: 1.5, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
     round2: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#7daa3c' },
     round3: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#c74444' },
     itemlabel: { marginLeft: 5, flex: 1, marginTop: 2 },
     itemcontent: { color: '#0076ff' },
     item: { marginTop: 10, flexDirection: 'row' },
-    viewRenderDetails:{ height: 1, backgroundColor: '#27ae60', },
-    viewBottomDetails:{height: 50},
-    actionbarStyle:{
+    viewRenderDetails: { height: 1, backgroundColor: '#27ae60', },
+    viewBottomDetails: { height: 50 },
+    actionbarStyle: {
         backgroundColor: '#22b060',
         borderBottomWidth: 0
     },
-    titleStyle:{
+    titleStyle: {
         color: '#FFF'
     },
 });
