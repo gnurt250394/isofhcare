@@ -121,8 +121,9 @@ class NotificationScreen extends Component {
         }).catch(e => {
           this.setState({ isLoading: false });
         });
+
         item.notification.watched = 1;
-        this.setState({ data: [...this.state.data] });
+        this.setState({ data: [...this.state.data]});
         switch (data.type) {
           case 1:
             this.openQuestion(data.id);
@@ -149,7 +150,7 @@ class NotificationScreen extends Component {
   }
   detailsEhealth = (data, user) => {
     this.setState({ isLoading: true }, () => {
-      bookingProvider.detailPatientHistory(data.patientHistoryId, data.hospitalId,data.id).then(s => {
+      bookingProvider.detailPatientHistory(data.patientHistoryId, data.hospitalId, data.id).then(s => {
         switch (s.code) {
           case 0:
             let resultDetail = null;
@@ -217,7 +218,7 @@ class NotificationScreen extends Component {
   openQuestion(id) {
     this.setState({ isLoading: true }, () => {
       questionProvider.detail(id).then(s => {
-        this.setState({ isLoading: true }, () => {
+        this.setState({ isLoading: false }, () => {
           if (s && s.data) {
             this.props.navigation.navigate("detailQuestion", { post: s.data });
           } else {
