@@ -36,6 +36,10 @@ class Home extends Component {
       refreshing: false,
       countReset: 0,
     }
+
+  }
+  componentDidMount(){
+
   }
   onRefresh = () => {
     this.setState({
@@ -50,19 +54,29 @@ class Home extends Component {
   openDrawer = () => {
     this.props.navigation.openDrawer()
   }
+  goToTop = () => {
+    this.scroll.scrollTo({x: 0, y:504, animated: true});
+
+ }
+  handleScroll = (event) => {
+    console.log(event,'event');
+
+  }
   render() {
     return (
       <View>
         <Actionbar openDrawer={this.openDrawer} />
         <View style={{height:150,backgroundColor:'#4BBA7B'  }}></View>
-
         <ScrollView 
-          style={{top:-150,}}
+          style={{top:-150}}
+          onScroll={this.handleScroll}
+          ref={(c) => {this.scroll = c}}
           refreshControl={<RefreshControl
             refreshing={this.state.refreshing}
             onRefresh={this.onRefresh}
           />}>
           <View>
+          <TouchableOpacity onPress = {this.goToTop}><Text>sadasdasdad</Text></TouchableOpacity>
             <SlideBanner countReset={this.state.countReset} />
             <TopHospital countReset={this.state.countReset} />
             <HospitalNearYou />
@@ -70,8 +84,10 @@ class Home extends Component {
             <TopNews countReset={this.state.countReset} />
             <View style={{ width: '100%', height: 50 }}></View>
           </View>
+
         </ScrollView>
       </View>
+
     );
   }
 }
