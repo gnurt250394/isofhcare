@@ -245,7 +245,7 @@ class SearchProfileScreen extends Component {
                                 this.searchTextChange(s);
                             }} returnKeyType="search" onSubmitEditing={this.onRefreshList} />
                             <TouchableOpacity onPress={this.onRefreshList}>
-                                <Text style={styles.txSearch}>{constants.ehealth.search}</Text>
+                                <Text style={styles.txSearch}>{constants.search}</Text>
                             </TouchableOpacity>
                         </View>
                         : null
