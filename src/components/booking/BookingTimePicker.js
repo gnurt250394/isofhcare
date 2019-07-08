@@ -23,43 +23,50 @@ class SelectTimeScreen extends Component {
         listTime.push({
             type: 3,
             time: date1,
-            label: "08:00"
+            label: "08:00",
+            label2: "08:00"       
         })
         date1 = new Date(date.setMinutes(date.getMinutes() + 30));
         listTime.push({
             type: 3,
             time: date1,
-            label: "08:30"
+            label: "08:30",
+            label2: "08:30"
         })
         date1 = new Date(date.setMinutes(date.getMinutes() + 30));
         listTime.push({
             type: 3,
             time: date1,
-            label: "09:00"
+            label: "09:00",
+            label2: "09:00"
         })
         date1 = new Date(date.setMinutes(date.getMinutes() + 30));
         listTime.push({
             type: 3,
             time: date1,
-            label: "09:30"
+            label: "09:30",
+            label2: "09:30"
         })
         date1 = new Date(date.setMinutes(date.getMinutes() + 30));
         listTime.push({
             type: 3,
             time: date1,
-            label: "10:00"
+            label: "10:00",
+            label2: "10:00"
         })
         date1 = new Date(date.setMinutes(date.getMinutes() + 30));
         listTime.push({
             type: 3,
             time: date1,
-            label: "10:30"
+            label: "10:30",
+            label2: "10:30"
         })
         date1 = new Date(date.setMinutes(date.getMinutes() + 30));
         listTime.push({
             type: 3,
             time: date1,
-            label: "11:00"
+            label: "11:00",
+            label2: "11:00"
         })
         // date1= new Date(date.setMinutes(date.getMinutes() + 30));
         // listTime.push({
