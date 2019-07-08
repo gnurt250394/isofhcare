@@ -328,7 +328,6 @@ module.exports = {
     select_date_booking: "Chọn ngày khám",
     select_time_booking: 'Chọn giờ khám',
     select_time_note: 'Gợi ý: Chọn những giờ màu xanh sẽ giúp bạn được phục vụ nhanh hơn',
-    contact_me: 'Liên lạc với tôi qua',
     phone: 'Điện thoại',
     sms: 'SMS',
     simptom_note: 'Mô tả triệu chứng sẽ giúp bạn được phục vụ tốt hơn',
@@ -349,8 +348,8 @@ module.exports = {
     add_relatives: 'Thêm người thân',
     payment_error: 'Thanh toán không thành công!',
     payment_error_message: 'Chúng tôi gặp khó khăn trong quá trình kết nối với đối tác. Vui lòng gọi tới số hotline 0923678905 nếu như bạn đã bị trừ tiền.',
-    payment_code: 'Mã giao dịch:',
-    service: 'Dịch vụ:',
+    payment_code: 'Mã giao dịch',
+    service: 'Dịch vụ khám',
     payment_price: 'Số tiền thanh toán:',
     change_payment_method: 'Đổi phương thức thanh toán',
     location_premmission:'Quyền truy cập vị trí',
@@ -407,7 +406,8 @@ module.exports = {
     share_ehealth: "Chia sẻ y bạ",
     note: 'Ghi chú',
     clock: 'Thời gian',
-    redmine_drug: 'Nhắc uống thuốc'
+    redmine_drug: 'Nhắc uống thuốc',
+    view_finish:'XEM XONG'
   },
   actionSheet: {
     orther: 'Khác',
@@ -434,8 +434,9 @@ module.exports = {
     select_service_type:"Chọn loại dịch vụ",
     location:'Địa điểm',
     service: 'Dịch vụ',
-    change_password:'Đổi mật khẩu'
-
+    change_password:'Đổi mật khẩu',
+    result_ehealth:"KẾT QUẢ KHÁM",
+    result_ehealth_image:"KẾT QUẢ CHẨN ĐOÁN HÌNH ẢNH"
   },
   api: {
     notification: {
@@ -568,7 +569,7 @@ module.exports = {
       get_group_patient: isofhcare_service + 'booking/get-group-patient-history',
       update_data_user: isofhcare_service + 'patient-history-booking/update-data-note',
       search_profile_user: isofhcare_service + 'user/search',
-      share_with_profile: isofhcare_service + 'booking/share-user'
+      share_with_profile: isofhcare_service + 'booking/share-user',
     }
   }
 };
