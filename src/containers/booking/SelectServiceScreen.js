@@ -90,6 +90,11 @@ class SelectServiceScreen extends Component {
             item.checked = this.listServicesSelected.find(item2 => item2.service.id == item.service.id);
             return item;
         })
+        listSearch.sort(function(a,b){
+            // console.log(a,b,'ádasdasdas');
+            return new Date(a.createdDate) - new Date(b.createdDate);
+          });
+
         this.setState({ listServiceSearch: listSearch });
     }
     renderSearchButton() {
