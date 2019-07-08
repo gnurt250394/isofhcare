@@ -55,8 +55,11 @@ class SelectServiceScreen extends Component {
                     if (s) {
                         switch (s.code) {
                             case 0:
+                                 let listService = s.data.data.sort(function(a,b){
+                                        return new Date(a.service.createdDate) - new Date(b.service.createdDate);
+                                      });
                                 this.setState({
-                                    listService: s.data.data
+                                    listService: listService
                                 }, () => {
                                     this.onSearch();
                                 });
@@ -90,10 +93,6 @@ class SelectServiceScreen extends Component {
             item.checked = this.listServicesSelected.find(item2 => item2.service.id == item.service.id);
             return item;
         })
-        listSearch.sort(function(a,b){
-            // console.log(a,b,'ádasdasdas');
-            return new Date(a.createdDate) - new Date(b.createdDate);
-          });
 
         this.setState({ listServiceSearch: listSearch });
     }
@@ -131,7 +130,7 @@ class SelectServiceScreen extends Component {
             this.props.navigation.pop();
         }
     }
-
+ 
     render() {
         return (
             <ActivityPanel
