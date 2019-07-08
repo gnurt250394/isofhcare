@@ -224,7 +224,7 @@ class ViewInDateScreen extends Component {
             //         (this.state.resultDetail.ListPayment && this.state.resultDetail.ListPayment.length > 0 ? this.state.resultDetail.ListPayment.reduce((a, b) => a + b.Amount, 0) : 0);
             // }
             // else {
-            money = this.state.resultDetail.ListService.reduce((a, b) => a + (b.PriceService || 0), 0);
+            // money = this.state.resultDetail.ListService.reduce((a, b) => a + (b.PriceService || 0), 0);
             if (!money)
                 return null;
             // }

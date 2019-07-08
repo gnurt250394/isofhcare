@@ -37,7 +37,7 @@ class TotalMoney extends Component {
         let { resultDetail } = this.props;
         if (!resultDetail || !resultDetail.ListService || !resultDetail.ListService.length)
             return null;
-        let sum = resultDetail.ListService.reduce((a, b) => a + (b.PriceService || 0), 0);
+        let sum = 0; //resultDetail.ListService.reduce((a, b) => a + (b.PriceService || 0), 0);
         let tableHead = ['STT', 'Tên', 'Số lượng', 'Tiền'];
         if (!sum)
             tableHead = ['STT', 'Tên', 'Số lượng'];
@@ -51,7 +51,7 @@ class TotalMoney extends Component {
                         <View style={styles.round2} />
                     </View>
                     <View style={[styles.itemlabel, { marginTop: 0 }]}>
-                        <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>{sum ? "TIỀN" : "CÁC DỊCH VỤ KHÁM"}</Text>
+                        <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>{sum ? "TIỀN" : "DỊCH VỤ"}</Text>
                     </View>
                 </View>
             }
