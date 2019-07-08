@@ -51,7 +51,7 @@ class TotalMoney extends Component {
                         <View style={styles.round2} />
                     </View>
                     <View style={[styles.itemlabel, { marginTop: 0 }]}>
-                        <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>TIỀN</Text>
+                        <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>{sum ? "TIỀN" : "CÁC DỊCH VỤ KHÁM"}</Text>
                     </View>
                 </View>
             }
