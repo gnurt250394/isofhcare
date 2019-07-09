@@ -18,7 +18,7 @@ class SurgeryResult extends Component {
         if (!result || !result.ListResulGiaiPhau || !result.ListResulGiaiPhau.length)
             return null;
         let resultSurgery = result.ListResulGiaiPhau || [];
-        return (<View style={{ flex: 1, padding: 10 }}>
+        return (<View style={styles.container}>
             {
                 (this.props.showTitle == true || this.props.showTitle == undefined) &&
                 <View style={[styles.item, { marginTop: 0 }]}>
@@ -26,7 +26,7 @@ class SurgeryResult extends Component {
                         <View style={styles.round2} />
                     </View>
                     <View style={[styles.itemlabel, { marginTop: 0 }]}>
-                        <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>KẾT QUẢ GIẢI PHẪU</Text>
+                        <Text style={styles.txResult}>KẾT QUẢ GIẢI PHẪU</Text>
                     </View>
                 </View>
             }
@@ -49,6 +49,8 @@ const styles = StyleSheet.create({
     round3: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#c74444' },
     itemlabel: { marginLeft: 5, flex: 1, marginTop: 2 },
     itemcontent: { color: '#0076ff' },
-    item: { marginTop: 10, flexDirection: 'row' }
+    item: { marginTop: 10, flexDirection: 'row' },
+    container:{ flex: 1, padding: 10 },
+    txResult:{ fontWeight: 'bold', fontSize: 18 }
 })
 export default connect(mapStateToProps)(SurgeryResult);

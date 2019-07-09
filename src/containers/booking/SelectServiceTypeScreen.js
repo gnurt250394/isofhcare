@@ -13,12 +13,14 @@ class SelectServiceTypeScreen extends Component {
     constructor(props) {
         super(props);
         let serviceType = this.props.navigation.state.params.serviceType;
+        let hospital = this.props.navigation.state.params.hospital;
         this.state = {
             listService: [],
             listServiceSearch: [],
             searchValue: "",
             refreshing: false,
-            serviceType
+            serviceType,
+            hospital
         }
     }
     componentDidMount() {
@@ -35,18 +37,11 @@ class SelectServiceTypeScreen extends Component {
 
     onRefresh = () => {
         this.setState({ refreshing: true }, () => {
-            serviceTypeProvider.getAll().then(s => {
+            serviceTypeProvider.getAll(false, this.state.hospital.hospital.id).then(s => {
                 this.setState({
                     refreshing: false
                 }, () => {
                     if (s) {
-                        try {
-                            let _default = s.find(item => item.status == 1);
-                            dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_SERVICE_TYPE, _default);
-                        } catch (error) {
-
-                        }
-
                         this.setState({
                             listServiceType: s
                         }, () => {
@@ -77,6 +72,10 @@ class SelectServiceTypeScreen extends Component {
         var listSearch = this.state.listServiceType.filter(function (item) {
             return item.deleted == 0 && (item == null || item.name.trim().toLowerCase().unsignText().indexOf(s.trim().toLowerCase().unsignText()) != -1);
         });
+        listSearch.sort(function(a,b){
+            // console.log(a,b,'ádasdasdas');
+            return new Date(a.createdDate) - new Date(b.createdDate);
+          });
         this.setState({ listServiceTypeSearch: listSearch });
     }
     renderSearchButton() {

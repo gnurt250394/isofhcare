@@ -12,6 +12,7 @@ class SelectServiceScreen extends Component {
         super(props);
         let hospital = this.props.navigation.state.params.hospital;
         let serviceType = this.props.navigation.state.params.serviceType;
+        this.listServicesSelected = this.props.navigation.state.params.listServicesSelected || [];
         if (!hospital) {
             this.props.navigation.pop();
             snackbar.show("Vui lòng chọn địa điểm khám", "danger");
@@ -54,20 +55,11 @@ class SelectServiceScreen extends Component {
                     if (s) {
                         switch (s.code) {
                             case 0:
-                                let specialists = s.data.services.map(item => item.specialist);
-                                specialists = [].concat.apply([], specialists);
-                                let a = [];
-
-                                specialists.forEach(item => {
-                                    console.log(a);
-                                    let x = a.find(item2 => item2.id == item.id);
-                                    if (!x)
-                                        a.push(item);
-                                });
-
+                                 let listService = s.data.data.sort(function(a,b){
+                                        return new Date(a.service.createdDate) - new Date(b.service.createdDate);
+                                      });
                                 this.setState({
-                                    listService: s.data.services,
-                                    specialists: a || []
+                                    listService: listService
                                 }, () => {
                                     this.onSearch();
                                 });
@@ -95,17 +87,13 @@ class SelectServiceScreen extends Component {
     onSearch() {
         var s = this.state.searchValue;
         var listSearch = this.state.listService.filter(item => {
-            let contain = true;
-            // console.log(this.state.specialists);
-            if (this.state.specialists && this.state.specialists.length && this.state.listSelected && this.state.listSelected.length) {
-                if (!item.specialist || item.specialist.length == 0)
-                    return false;
-                contain = item.specialist.find(item2 => this.state.listSelected.includes(item2.id));
-            }
-            if (!contain)
-                return false;
             return s == null || item.service.name && item.service.name.trim().toLowerCase().unsignText().indexOf(s.trim().toLowerCase().unsignText()) != -1;
         });
+        listSearch = listSearch.map(item => {
+            item.checked = this.listServicesSelected.find(item2 => item2.service.id == item.service.id);
+            return item;
+        })
+
         this.setState({ listServiceSearch: listSearch });
     }
     renderSearchButton() {
@@ -115,7 +103,34 @@ class SelectServiceScreen extends Component {
             </TouchableOpacity>
         );
     }
+    onPressItem1(item) {
+        let x = this.listServicesSelected.find(item2 => item2.service.id == item.service.id);
+        if (x) {
+            item.checked = false;
+            let index = this.listServicesSelected.indexOf(x);
+            this.listServicesSelected.splice(index, 1);
+        } else {
+            item.checked = true;
+            this.listServicesSelected.push(item);
+        }
 
+
+        // debugger;
+        // item.checked = !item.checked
+        this.setState({
+            listServiceSearch: [...this.state.listServiceSearch]
+        })
+        // this.selectService.bind(this, item)
+    }
+    ok = () => {
+        // let listChecked = this.state.listServiceSearch.filter(item => item.checked);
+        let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
+        if (callback) {
+            callback(this.listServicesSelected);
+            this.props.navigation.pop();
+        }
+    }
+ 
     render() {
         return (
             <ActivityPanel
@@ -124,18 +139,8 @@ class SelectServiceScreen extends Component {
                 isLoading={this.state.isLoading}
                 menuButton={<View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     {this.renderSearchButton()}
-                    <TouchableOpacity style={styles.menu} onPress={() =>
-                        this.props.navigation.navigate('filterSpecialist', {
-                            listSelected: this.state.listSpecialist,
-                            specialists: this.state.specialists,
-                            onSelected: items => {
-                                this.setState({ listSelected: items }, () => {
-                                    this.onSearch();
-                                })
-                            }
-                        })
-                    }><ScaleImage style={styles.img} height={20} source={ this.state.listSelected && this.state.listSelected.length > 0 ? require("@images/new/booking/ic_filter1.png") : require("@images/new/booking/ic_filter.png")} /></TouchableOpacity></View>}
-                titleStyle={{ marginLeft: 80 }}
+                </View>}
+                titleStyle={{ marginLeft: 50 }}
                 showFullScreen={true}
             >
 
@@ -157,8 +162,10 @@ class SelectServiceScreen extends Component {
                             </TouchableOpacity>
                         </View>
                         : null
-
                 }
+                <View style={{ borderBottomColor: '#ccc', borderBottomWidth: 1, backgroundColor: '#FFF' }}>
+                    <TouchableOpacity style={{ alignSelf: 'flex-end', paddingVertical: 15, marginRight: 20, flexDirection: 'row' }} onPress={this.ok}><ScaleImage source={require("@images/new/ic_question_check_specialist.png")} width={20} /><Text style={{ color: "#02c39a", fontWeight: 'bold', marginLeft: 10 }}>Xong</Text></TouchableOpacity>
+                </View>
                 <FlatList
                     style={{ flex: 1, backgroundColor: '#FFF' }}
                     refreshing={this.state.refreshing}
@@ -176,17 +183,20 @@ class SelectServiceScreen extends Component {
                     ListFooterComponent={() => <View style={{ height: 10 }} />}
                     data={this.state.listServiceSearch}
                     renderItem={({ item }) =>
-                        <TouchableOpacity onPress={this.selectService.bind(this, item)}>
-                            <View style={{ marginBottom: 2, backgroundColor: '#FFF', padding: 20, flexDirection: 'column', borderBottomColor: '#00000011', borderBottomWidth: 0.7 }}>
+                        <TouchableOpacity onPress={this.onPressItem1.bind(this, item)}>
+                            <View style={[{ marginBottom: 2, padding: 20, flexDirection: 'column', borderBottomColor: '#00000011', borderBottomWidth: 0.7 }, item.checked ? { backgroundColor: 'rgba(240, 243, 189, 0.2)' } : { backgroundColor: '#FFF' }]}>
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <Text style={{ fontWeight: 'bold', flex: 1 ,maxWidth:250}}>
+                                    <Text style={{ fontWeight: 'bold', flex: 1}}>
                                         {item.service.name}
                                     </Text>
-                                    <Text>{item.service.price.formatPrice() + 'đ'}</Text>
+                                    {item.checked &&
+                                        <ScaleImage source={require("@images/new/ic_verified.png")} width={20} />
+                                    }
+                                    {/* <Text>{item.service.price.formatPrice() + 'đ'}</Text> */}
                                 </View>
-                                <Text  numberOfLines={2}>
+                                {/* <Text numberOfLines={2}>
                                     {item.service.describe}
-                                </Text>
+                                </Text> */}
                             </View>
                         </TouchableOpacity>
                     }

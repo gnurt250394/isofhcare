@@ -16,6 +16,8 @@ import RNLocation from 'react-native-location';
 import clientUtils from '@utils/client-utils';
 import LocationSwitch from 'mainam-react-native-location-switch';
 import constants from '@resources/strings';
+import GetLocation from 'react-native-get-location'
+
 class SelectHospitalScreen extends Component {
     constructor(props) {
         super(props);
@@ -80,7 +82,7 @@ class SelectHospitalScreen extends Component {
                         title: constants.booking.location_premmission,
                         message: constants.booking.location_premission_content,
                         buttonPositive: constants.actionSheet.accept,
-                        buttonNegative:  constants.actionSheet.cancel
+                        buttonNegative: constants.actionSheet.cancel
                     }
                 }
             }).then(granted => {
@@ -115,32 +117,21 @@ class SelectHospitalScreen extends Component {
         }
 
         if (Platform.OS == 'android') {
-            RNLocation.requestPermission({
-                ios: 'whenInUse', // or 'always'
-                android: {
-                    detail: 'coarse', // or 'fine'
-                    rationale: {
-                        title: constants.booking.location_premmission,
-                        message: constants.booking.location_premission_content,
-                        buttonPositive: constants.actionSheet.accept,
-                        buttonNegative: constants.actionSheet.cancel
-                    }
-                }
-            }).then(granted => {
-                if (granted) {
-
-                    LocationSwitch.enableLocationService(1000, true,
-                        () => {
-                            getLocation();
-                        },
-                        () => {
-                            snackbar.show(constants.booking.location_open, "danger");
-                        },
-                    );
-                } else {
-                    snackbar.show( constants.booking.location_premission_content, "danger");
-                }
+            GetLocation.getCurrentPosition({
+                enableHighAccuracy: false,
+                timeout: 15000,
             })
+                .then(region => {
+                    locationProvider.saveCurrentLocation(region.latitude, region.longitude);
+                    this.setState({
+                        region
+                    }, () => {
+                        this.onRefresh();
+                    });
+                })
+                .catch(error => {
+                    this.onRefresh();
+                });
         }
         else
             LocationSwitch.isLocationEnabled(() => {
@@ -151,7 +142,7 @@ class SelectHospitalScreen extends Component {
                     constants.booking.location_open,
                     [
                         {
-                            text:  constants.actionSheet.cancel,
+                            text: constants.actionSheet.cancel,
                             onPress: () => console.log('Cancel Pressed'),
                         },
                         {
@@ -208,10 +199,10 @@ class SelectHospitalScreen extends Component {
         }, () => {
             let promise = null;
             if (this.state.region) {
-                promise = hospitalProvider.getByLocation(page, size, this.state.region.latitude, this.state.region.longitude, stringQuyery, this.state.serviceType.id);
+                promise = hospitalProvider.getByLocation(page, size, this.state.region.latitude, this.state.region.longitude, stringQuyery, -1);
             }
             else {
-                promise = hospitalProvider.getByLocation(page, size, 190, 190, stringQuyery, this.state.serviceType.id);
+                promise = hospitalProvider.getByLocation(page, size, 190, 190, stringQuyery, -1);
             };
             promise.then(s => {
                 this.setState({

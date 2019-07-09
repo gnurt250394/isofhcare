@@ -66,7 +66,7 @@ class Medicine extends Component {
             medinine = medinine.constants(result.ListMedicine);
         }
         if (medinine && medinine.length)
-            return ((<View style={{ flex: 1, padding: 10 }}>
+            return ((<View style={styles.viewMedinine}>
                 {
                     (this.props.showTitle == true || this.props.showTitle == undefined) &&
                     <View style={[styles.item, { marginTop: 0 }]}>
@@ -74,11 +74,11 @@ class Medicine extends Component {
                             <View style={styles.round2} />
                         </View>
                         <View style={[styles.itemlabel, { marginTop: 0 }]}>
-                            <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>THUỐC</Text>
+                            <Text style={styles.txDrug}>THUỐC</Text>
                         </View>
                     </View>
                 }
-                <Table style={[styles.table, { marginTop: 10 }]} borderStyle={{ borderWidth: 0.5, borderColor: '#c8e1ff' }}>
+                <Table style={[styles.table, { marginTop: 10 }]} borderStyle={styles.borderStyle}>
                     <Row data={tableHead} style={styles.head} textStyle={styles.textHead} flexArr={[1, 3, 1, 1]} />
                     {this.renderMedicine(medinine)}
                 </Table>
@@ -118,6 +118,10 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 10,
         backgroundColor: constants.colors.breakline
-    }
+    },
+    viewMedinine:{ flex: 1, padding: 10 },
+    txDrug:{ fontWeight: 'bold', fontSize: 18 },
+    borderStyle:{ borderWidth: 0.5, borderColor: '#c8e1ff' },
+    
 })
 export default connect(mapStateToProps)(Medicine);

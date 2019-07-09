@@ -31,7 +31,7 @@ class CheckupResult extends Component {
         if (!result || !result.ListResultCheckup || !result.ListResultCheckup.length)
             return null;
         let resultCheckup = result.ListResultCheckup || [];
-        return (<View style={{ flex: 1, padding: 10 }}>
+        return (<View style={styles.container}>
             {
                 (this.props.showTitle == true || this.props.showTitle == undefined) &&
                 <View style={[styles.item, { marginTop: 0 }]}>
@@ -39,7 +39,7 @@ class CheckupResult extends Component {
                         <View style={styles.round2} />
                     </View>
                     <View style={[styles.itemlabel, { marginTop: 0 }]}>
-                        <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>{constants.ehealth.checkupResult}</Text>
+                        <Text style={styles.txCheckUp}>{constants.ehealth.checkupResult}</Text>
                     </View>
                 </View>
             }
@@ -62,6 +62,8 @@ const styles = StyleSheet.create({
     round3: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#c74444' },
     itemlabel: { marginLeft: 5, flex: 1, marginTop: 2 },
     itemcontent: { color: '#0076ff' },
-    item: { marginTop: 10, flexDirection: 'row' }
+    item: { marginTop: 10, flexDirection: 'row' },
+    container:{ flex: 1, padding: 10 },
+    txCheckUp:{ fontWeight: 'bold', fontSize: 18 },
 })
 export default connect(mapStateToProps)(CheckupResult);

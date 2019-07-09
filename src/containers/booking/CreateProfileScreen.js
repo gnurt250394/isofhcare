@@ -157,7 +157,6 @@ class createProfile extends Component {
     if (!this.form.isValid()) {
       return;
     }
-
     connectionUtils
       .isConnected()
       .then(s => {
@@ -455,7 +454,7 @@ class createProfile extends Component {
                     messages: {
                       required:constants.msg.user.email_not_null,
                       email: constants.msg.user.email_does_not_exits,
-                      maxlength: constants.msg.user
+                      maxlength: constants.msg.user.text_without_255
 
                     }
                   }}

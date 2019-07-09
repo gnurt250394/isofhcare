@@ -11,6 +11,10 @@ import ActionSheet from 'react-native-actionsheet'
 class MedicalTestResult extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+        }
+    }
+    componentDidMount() {
         let result1 = this.props.result;
         let hasResult = false;
         if (result1) {
@@ -28,6 +32,7 @@ class MedicalTestResult extends Component {
             }
         }
         if (!hasResult) {
+
             this.state = { hasResult: false }
             return null;
         }
@@ -89,14 +94,18 @@ class MedicalTestResult extends Component {
             });
         }
 
-        this.state = {
+        this.setState({
             hasResult: true,
             listTime: [],
             medicalTestResult: result,
             currentGroup: result[0]
+        })
+    }
+    componentWillReceiveProps(nextProps) {
+        if (this.props.result != nextProps.result) {
+            this.componentDidMount();
         }
     }
-
     viewGroup(item) {
         this.setState({
             currentGroup: item
@@ -263,5 +272,10 @@ const styles = StyleSheet.create({
     groupSelected: {
         color: constants.colors.primary_bold
     },
+    cellStyle:{ backgroundColor: '#DFF5F2' },
+    tableWrappe:{ flexDirection: 'row' },
+    viewCurrentGroup:{ alignItems: 'flex-end', marginVertical: 10 },
+    btnCurrentGroup:{ flexDirection: 'row', alignItems: 'center' },
+    txCurrent:{ marginRight: 10 }
 })
 export default connect(mapStateToProps)(MedicalTestResult);
