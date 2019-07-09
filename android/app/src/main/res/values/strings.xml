@@ -7,5 +7,5 @@
 <string name="ak_client_token">a9ae7d8852eab508b86896d5cd375999</string>
     <string name="appCenterAnalytics_whenToEnableAnalytics" moduleConfig="true" translatable="false">ALWAYS_SEND</string>
     <string name="appCenterCrashes_whenToSendCrashes" moduleConfig="true" translatable="false">ALWAYS_SEND</string>
-	<string moduleConfig="true" name="reactNativeCodePush_androidDeploymentKey">PZAzj1WJiNyz_epi9Krf_AuAH6HaS1LnDy0YE</string>
+	<string moduleConfig="true" name="reactNativeCodePush_androidDeploymentKey">5S8rqWsMcayu6BhOTK0khto_0HIHSkD4wK--r</string>
 </resources>
