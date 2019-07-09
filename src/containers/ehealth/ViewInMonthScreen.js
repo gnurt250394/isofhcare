@@ -620,7 +620,7 @@ class ListProfileScreen extends Component {
                     }}
                     cancelTextIOS={"Hủy bỏ"}
                     confirmTextIOS={"Xác nhận"}
-                    date={this.state.isTimeAlarm ? this.state.dobAlarm : this.state.dob || new Date()}
+                    date={(this.state.isTimeAlarm ? this.state.dobAlarm : this.state.dob) || new Date()}
                 />
                 <ActionSheet
                     ref={o => this.actionSheetGetTicket = o}
