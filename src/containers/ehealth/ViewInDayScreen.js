@@ -302,7 +302,13 @@ class ViewInDateScreen extends Component {
         return null;
     }
     renderMedicalTest() {
-        if (this.state.result && this.state.result.ListResultCheckup && this.state.result.ListResultCheckup.length) {
+        
+        if (this.state.result 
+            && ((this.state.result.ListResulHoaSinh && this.state.result.ListResulHoaSinh.length)
+            || (this.state.result.ListResulHuyetHoc && this.state.result.ListResulHuyetHoc.length)
+            || (this.state.result.ListResulViSinh && this.state.result.ListResulViSinh.length)
+            || (this.state.result.ListResulOther && this.state.result.ListResulOther.length))
+        ) {
             let arr = [];
             if (this.state.result.ListResulHoaSinh && this.state.result.ListResulHoaSinh.length)
                 arr = this.state.result.ListResulHoaSinh;
