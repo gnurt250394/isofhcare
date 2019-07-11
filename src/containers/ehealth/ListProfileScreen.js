@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
     viewBettwen: { flexDirection: 'row', height: 40 },
     viewCircle: { width: 20, height: 20, borderWidth: 1.5, borderColor: '#91a3ad', borderRadius: 10, justifyContent: 'center', alignItems: 'center', left: 0, bottom: 0, backgroundColor: '#FFF' },
     viewSquarBlue: { width: 8, height: 8, backgroundColor: '#7eac39', borderRadius: 4 },
-    txPatientName: { marginLeft: 10, color: '#63737a', fontSize: 15 },
+    txPatientName: { marginLeft: 10, color: '#63737a', fontSize: 15,marginRight:20 },
     viewHospitalName: { marginTop: -2, paddingRight: 4 },
     viewTxHospital: { flexDirection: 'row', alignItems: 'flex-start' },
     viewBorderCircleRed: { marginTop: 2, width: 20, height: 20, borderWidth: 1.5, borderColor: '#91a3ad', borderRadius: 10, justifyContent: 'center', alignItems: 'center', left: 0, bottom: 0, backgroundColor: '#FFF' },
