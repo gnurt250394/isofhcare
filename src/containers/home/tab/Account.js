@@ -264,7 +264,7 @@ class Account extends Component {
               <TouchableOpacity
                 style={[styles.itemMenu, { paddingLeft: 40 }]}
                 onPress={() => {
-                  this.props.navigation.navigate("changePass");
+                  this.props.navigation.navigate("changePassword");
                 }}
               >
                 <Text style={styles.itemText}>Đổi mật khẩu</Text>

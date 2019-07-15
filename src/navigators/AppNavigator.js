@@ -41,7 +41,7 @@ import CreateQuestionStep1Screen from "@containers/question/CreateQuestionStep1S
 import CreateQuestionStep2Screen from "@containers/question/CreateQuestionStep2Screen";
 import DetailQuestionScreen from "@containers/question/DetailQuestionScreen";
 import PaymentWithVNPayScreen from "@containers/payment/PaymentWithVNPayScreen";
-import ChangePass from "@containers/account/ChangePassWord";
+import ChangePasswordScreen from "@containers/account/ChangePasswordScreen";
 import FingerScreen from "@containers/account/FingerScreen";
 import FingerSettingScreen from "@containers/account/FingerSettingScreen";
 //=========BOOKING NAVIGATION
@@ -121,7 +121,7 @@ const RootNavigator = createStackNavigator(
     createQuestionStep1: { screen: CreateQuestionStep1Screen },
     createQuestionStep2: { screen: CreateQuestionStep2Screen },
     detailQuestion: { screen: DetailQuestionScreen },
-    changePass: { screen: ChangePass },
+    changePassword: { screen: ChangePasswordScreen },
     FingerScreen: { screen: FingerScreen },
     FingerSettingScreen: { screen: FingerSettingScreen },
     //---------------booking navigation
