@@ -12,8 +12,9 @@ import userProvider from '@data-access/user-provider';
 import constants from '@resources/strings';
 import FloatingLabel from 'mainam-react-native-floating-label';
 import connectionUtils from '@utils/connection-utils';
+import ScaleImage from 'mainam-react-native-scaleimage';
 
-class ProfileScreen extends Component {
+class ChangePasswordScreen extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -187,4 +188,4 @@ function mapStateToProps(state) {
         navigation: state.navigation
     };
 }
-export default connect(mapStateToProps)(ProfileScreen);
+export default connect(mapStateToProps)(ChangePasswordScreen);
