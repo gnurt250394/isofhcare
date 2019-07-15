@@ -230,11 +230,11 @@ class Home extends Component {
     const source = this.props.userApp.isLogin ? (this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar.absoluteUrl() } : icSupport) : icSupport;
 
     return (
-      <ActivityPanel
-        hideActionbar={true}
-        style={[{ flex: 1 }, this.props.style]}
-        hideBackButton={true}
-      >
+      // <ActivityPanel
+      //   hideActionbar={true}
+      //   style={[{ flex: 1 }, this.props.style]}
+      //   hideBackButton={true}
+      // >
         <View style={styles.viewRender}>
           <ScaledImage source={require("@images/new/home/bg_home_new.png")} width={DEVICE_WIDTH} style={styles.scaledImgRender} />
           <View style={styles.viewLogo}>
@@ -323,9 +323,7 @@ class Home extends Component {
             <View style={{ height: 30 }} />
           </ScrollView>
         </View>
-
-
-      </ActivityPanel>
+      // </ActivityPanel>
     );
   }
 }
