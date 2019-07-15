@@ -536,7 +536,8 @@ module.exports = {
       get_hospital_by_search: isofhcare_service + "hospital/search",
       get_by_location: isofhcare_service + "hospital/get-hospital-by-locate",
       get_default_hospital: isofhcare_service + 'hospital/get-default-hospital',
-      get_details_hospital: isofhcare_service + 'hospital/get-detail'
+      get_details_hospital: isofhcare_service + 'hospital/get-detail',
+      get_hospital_by_location: isofhcare_service + 'hospital/list-hospital-top-location'
     },
     profile: {
       get_by_user: isofhcare_service + "profile/get-by-user",

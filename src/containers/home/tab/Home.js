@@ -59,7 +59,6 @@ class Home extends Component {
 
  }
   handleScroll = (event) => {
-    console.log(event,'event');
 
   }
   render() {
@@ -76,10 +75,9 @@ class Home extends Component {
             onRefresh={this.onRefresh}
           />}>
           <View>
-          <TouchableOpacity onPress = {this.goToTop}><Text>sadasdasdad</Text></TouchableOpacity>
             <SlideBanner countReset={this.state.countReset} />
             <TopHospital countReset={this.state.countReset} />
-            <HospitalNearYou />
+            <HospitalNearYou countReset={this.state.countReset} />
             <TopDrug countReset={this.state.countReset} />
             <TopNews countReset={this.state.countReset} />
             <View style={{ width: '100%', height: 50 }}></View>

@@ -65,6 +65,7 @@ import ViewEhealthDetailScreen from '@containers/ehealth/ViewEhealthDetailScreen
 import HospitalScreen from '@containers/home/HospitalScreen'
 import DrugScreen from '@containers/home/DrugScreen'
 import DrawerNav from './DrawerNav'
+import HospitalByLocationScreen from '@containers/home/HospitalByLocationScreen'
 const RootNavigator = createStackNavigator(
   {
     // createProfileTicketScreen : {screen:CreateProfileTicketScreen},
@@ -137,7 +138,8 @@ const RootNavigator = createStackNavigator(
 
     emptyScreen: { screen: EmptyScreen },
     hospital: { screen: HospitalScreen },
-    drug: { screen: DrugScreen }
+    drug: { screen: DrugScreen },
+    hospitalByLocation:{screen:HospitalByLocationScreen}
   },
 
   {

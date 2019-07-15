@@ -28,7 +28,7 @@ class HospitalItem extends Component {
         <View style={[{
           width: imageWidth, height: imageHeight,
           borderRadius: 4, marginBottom: 50
-        },item.imageHome ? {} : { borderColor: 'rgba(151, 151, 151, 0.29)', borderWidth: 0.5,}]}>
+        }, item.imageHome ? {} : { borderColor: 'rgba(151, 151, 151, 0.29)', borderWidth: 0.5, }]}>
           <Image
             resizeMode="cover"
             //   source={require('@images/new/home/banner_drug_test.png')}
@@ -36,9 +36,13 @@ class HospitalItem extends Component {
 
             style={[styles.customImg, { width: imageWidth, height: imageHeight }]}
           />
+          {this.props.isHopitalNear ? (
+            parseFloat(item.distance) < 1 ? <View style ={{position: 'absolute',top:0,left:0,padding:5,backgroundColor:'rgba(0, 0, 0, 0.5)',borderRadius:5}}><Text style={{color:'#fff',fontWeight:'700'}}>{(parseFloat(item.distance).toFixed(2) * 1000)+' m'}</Text></View> : <View style ={{position: 'absolute',top:0,left:0,padding:5,backgroundColor:'rgba(0, 0, 0, 0.5)',borderRadius:5}}><Text style={{color:'#fff',fontWeight:'700'}}>{parseFloat(item.distance).toFixed(1) + ' km'}</Text></View> )
+           : (null)}
         </View>
         <Card style={[styles.viewDetails]}>
           <Text style={styles.nameHospital} numberOfLines={2}>{item.name}</Text>
+      
           <View style={styles.viewStar}>
             <StarRating
               disabled={true}

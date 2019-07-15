@@ -1,6 +1,10 @@
-import React, { Component, PropTypes } from 'react';
-import { View, StyleSheet, Dimensions, TouchableOpacity, Text, ImageBackground, Platform, ActivityIndicator, FlatList } from 'react-native';
+import React, { Component } from 'react';
+import { View, Text, FlatList, StyleSheet, Dimensions,TouchableOpacity,SafeAreaView,StatusBar,Platform } from 'react-native';
+import hospitalProvider from '@data-access/hospital-provider'
+import HospitalItem from '@components/hospital/HospitalItem'
 import HeaderLine from '@components/home/HeaderLine'
+import Actionbar from '@components/home/Actionbar';
+import NavigationService from "@navigators/NavigationService";
 import ScaledImage from 'mainam-react-native-scaleimage';
 import locationProvider from '@data-access/location-provider';
 import RNLocation from 'react-native-location';
@@ -8,12 +12,7 @@ import clientUtils from '@utils/client-utils';
 import LocationSwitch from 'mainam-react-native-location-switch';
 import constants from '@resources/strings';
 import GetLocation from 'react-native-get-location'
-import hospitalProvider from '@data-access/hospital-provider';
-import HospitalItem from './HospitalItem'
-import NavigationService from "@navigators/NavigationService";
-
-
-class HospitalNearYou extends Component {
+export default class HospitalByLocationScreen extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -25,12 +24,13 @@ class HospitalNearYou extends Component {
             loadMore: false,
             finish: false,
             loading: false,
+            disable:false
         }
     }
     onRefresh() {
         if (!this.state.loading)
             this.setState(
-                { refreshing: true, page: 1, finish: false, loading: true,  },
+                { refreshing: true, page: 1, finish: false, loading: true,disable:true },
                 () => {
                     this.onLoad();
                 }
@@ -43,38 +43,40 @@ class HospitalNearYou extends Component {
             refreshing: page == 1,
             loadMore: page != 1
         }, () => {
-            if (this.state.region) {
-                hospitalProvider.getHospitalNear(this.state.region.latitude, this.state.region.longitude).then(s => {
-                    this.setState({
-                        loading: false,
-                        refreshing: false,
-                        loadMore: false,
-                    }, () => {
-                        switch (s.code) {
-                            case 500:
-                                // alert(JSON.stringify(s));
-                                snackbar.show(constants.msg.error_occur, "danger");
-                                break;
-                            case 0:
-                                var list = [];
-                                var finish = false;
-                                list = s.data.hospitals.slice(0, 10);
-                                this.setState({
-                                    data: [...list],
-                                    finish: finish
-                                });
-                                break;
-                        }
-                    });
-                }).catch(e => {
-                    this.setState({
-                        loading: false,
-                        refreshing: false,
-                        loadMore: false,
+         if(this.state.region){
+            hospitalProvider.getHospitalNear(this.state.region.latitude, this.state.region.longitude).then(s => {
+                this.setState({
+                    loading: false,
+                    refreshing: false,
+                    loadMore: false,
+                    disable:false
+                }, () => {
+                    switch (s.code) {
+                        case 500:
+                            // alert(JSON.stringify(s));
+                            snackbar.show(constants.msg.error_occur, "danger");
+                            break;
+                        case 0:
+                            var list = [];
+                            var finish = false;
+                            list = s.data.hospitals
+                            this.setState({
+                                data: [...list],
+                                finish: finish
+                            });
+                            break;
+                    }
+                });
+            }).catch(e => {
+                this.setState({
+                    loading: false,
+                    refreshing: false,
+                    loadMore: false,
+                    disable:false
 
-                    });
-                })
-            }
+                });
+            })
+         }
         });
     }
     getCurrentLocation(callAgain) {
@@ -137,7 +139,8 @@ class HospitalNearYou extends Component {
                                 }, () => {
                                     this.onRefresh();
                                 });
-                            } else {
+                            }else{
+                               
                             }
                         }).catch(e => {
                             if (!callAgain) {
@@ -198,22 +201,7 @@ class HospitalNearYou extends Component {
     }
     componentWillReceiveProps(nextProps) {
         if (nextProps.countReset) {
-            locationProvider.getCurrentLocationHasSave().then(s => {
-                if (s && s.latitude && s.longitude) {
-                    s.latitudeDelta = 0.1;
-                    s.longitudeDelta = 0.1;
-                    this.setState({
-                        region: s,
-                    }, () => {
-                        this.onRefresh();
-                    });
-                } else {
-
-                }
-            }).catch(e => {
-                console.log(e, 'errr')
-                this.getLocation()
-            });
+            this.onRefresh()
         }
     }
     onShowInfo = () => {
@@ -229,12 +217,12 @@ class HospitalNearYou extends Component {
                 }, () => {
                     this.onRefresh();
                 });
-            } else {
-
+            }else{
+               
             }
         }).catch(e => {
-            console.log(e, 'errr')
-
+            console.log(e,'errr')
+            this.getLocation()
         });
     }
     renderItem = (item, index) => {
@@ -243,52 +231,57 @@ class HospitalNearYou extends Component {
 
         )
     }
-
+    
     render() {
-        console.log(this.state.data, 'dataaaaaa');
         return (
-            <View style={{ backgroundColor: '#fff' }}>
-                <HeaderLine onPress={this.onShowInfo} isShowViewAll={true} title={Dimensions.get("window").width <= 375 ? 'PHÒNG KHÁM,\nBỆNH VIỆN GẦN BẠN' : 'PHÒNG KHÁM, BỆNH VIỆN GẦN BẠN'} />
-
-                {
-                    this.state.region ? (
-
-                        this.state.data ? (
-                            <FlatList
-                                showsHorizontalScrollIndicator={false}
-                                horizontal={true}
-                                keyExtractor={(item, index) => index.toString()}
-                                extraData={this.state}
-                                data={this.state.data}
-                                renderItem={({ item, index }) =>
+            <SafeAreaView style={styles.container}
+            >
+            <StatusBar barStyle = {Platform.OS == 'ios'?'dark-content':'light-content'} backgroundColor={'#4BBA7B'}></StatusBar>
+                <Actionbar />
+                <HeaderLine onPress={this.onShowInfo} isShowViewAll={false} title={'PHÒNG KHÁM, BỆNH VIỆN GẦN BẠN'} />
+                <View style={styles.viewFlatList}>
+                    <FlatList
+                        style={{ flex: 1 }}
+                        data={this.state.data}
+                        keyExtractor={(item, index) => index.toString()}
+                        extraData={this.state}
+                        numColumns={2}
+                        onRefresh = {this.getLocation}
+                        refreshing = {this.state.refreshing}
+                        renderItem={({ item, index }) =>
                                     this.renderItem(item, index)
-                                }
-                            />
-                        ) : (<ActivityIndicator></ActivityIndicator>)
+                                }                        // ListFooterComponent={() =>
+                        //     <View style={{ height: 200 }}>
 
-                    ) : (<View style={styles.viewNotLocation}>
-                        <ImageBackground style={styles.imgNotLocation} source={require('@images/new/home/ic_img_location.png')}>
-                            <View style={styles.viewBtn}>
-                                <Text style={styles.txOpenLocation}>Vui lòng bật vị trí để sử dụng tính năng này</Text>
-                                <TouchableOpacity  onPress={this.getLocation} style={styles.btnOpenLocation}><ScaledImage height={20} source={require('@images/new/home/ic_location.png')}></ScaledImage><Text style={{ color: '#fff', marginLeft: 5 }}>Bật ngay</Text></TouchableOpacity>
-                            </View>
-                        </ImageBackground>
-                    </View>)
-                }
+                        //     </View>
+                        // }
+                        showsVerticalScrollIndicator={false}
 
+                    >
 
-
+                    </FlatList>
+                </View>
+            <View style={styles.viewBtn}>
+                <TouchableOpacity onPress = {() => NavigationService.pop()} style = {styles.btnBack}>
+                    <Text style={styles.txBtn}>Trở lại</Text>
+                </TouchableOpacity>
             </View>
+            </SafeAreaView>
         );
     }
 }
 const styles = StyleSheet.create({
-    viewNotLocation: {
-        backgroundColor: '#fff', paddingHorizontal: 8
+    btnBack:{
+        width:115,
+        height:30,
+        justifyContent: 'center',
+        alignItems:'center',
+        backgroundColor:"#4BBA7B",
+        marginRight: 10,
+        borderRadius: 5,
     },
-    imgNotLocation: { width: "100%", height: 164, justifyContent: 'flex-end' },
-    viewBtn: { backgroundColor: 'rgba(0, 0, 0, 0.5)', marginHorizontal: 20, paddingVertical: 10, marginBottom: 5, borderRadius: 5, justifyContent: 'center', alignItems: 'center' },
-    btnOpenLocation: { justifyContent: 'center', alignItems: 'center', flexDirection: 'row', borderRadius: 5, backgroundColor: '#4BBA7B', padding: 5, width: 100, marginTop: 10 },
-    txOpenLocation: { color: '#fff', fontStyle: 'italic' }
-});
-export default HospitalNearYou;
+    container:{ flex: 1,backgroundColor:'#fff', },
+    viewFlatList:{ alignItems: 'center', width: '100%',flex:1 },
+    viewBtn:{height:50,alignItems:'flex-end',backgroundColor:'#fff',justifyContent:'center'},
+    txBtn:{color:'#fff',textAlign:'center'}
+})
