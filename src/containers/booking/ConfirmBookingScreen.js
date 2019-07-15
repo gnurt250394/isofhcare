@@ -114,15 +114,24 @@ class ConfirmBookingScreen extends Component {
         booking.hospital = this.state.hospital;
         booking.profile = this.state.profile;
         booking.payment = this.state.paymentMethod;
+        let price = 0;
+        let serviceText = "";
+        if (this.state.service && this.state.service.length) {
+            price = this.state.service.reduce((total, item) => {
+                return total + parseInt((item && item.service && item.service.price ? item.service.price : 0));
+            }, 0);
+            serviceText = this.state.service.map(item => (item && item.service ? item.service.id + " - " + item.service.name : "")).join(', ');
+        }
+
         this.setState({ isLoading: true }, () => {
-            let memo = `THANH TOÁN ${this.getPaymentMethod()} - Đặt khám - ${this.state.service.id} - ${this.state.service.name} - ${this.state.hospital.hospital.name} - ${this.state.schedule.time.format("yyyy-MM-dd HH:mm:ss")} - ${this.state.profile.medicalRecords.name}`;
+            let memo = `THANH TOÁN ${this.getPaymentMethod()} - Đặt khám - ${serviceText} - ${this.state.hospital.hospital.name} - ${this.state.schedule.time.format("yyyy-MM-dd HH:mm:ss")} - ${this.state.profile.medicalRecords.name}`;
             walletProvider.createOnlinePayment(
                 this.props.userApp.currentUser.id,
                 this.getPaymentMethod(),
                 this.state.hospital.hospital.id,
                 booking.book.id,
                 this.getPaymentReturnUrl(),
-                this.state.service.price,
+                price,
                 memo,
                 booking.book.hash,
                 booking.jwtData,
@@ -396,10 +405,10 @@ class ConfirmBookingScreen extends Component {
             <ActivityPanel style={styles.AcPanel} title="Xác nhận lịch khám"
                 isLoading={this.state.isLoading}>
                 <ScrollView keyboardShouldPersistTaps='handled' style={styles.container}>
-                <View style={{ paddingHorizontal: 20, marginVertical:20}}>
-                    <Text style={{fontWeight:'bold',color:'#000'}}>{'HỒ SƠ: '+this.state.profile.medicalRecords.name.toUpperCase()}</Text>
-                    <Text style={{color:'gray'}}>SĐT: {this.props.userApp.currentUser.phone}</Text>
-                </View>
+                    <View style={{ paddingHorizontal: 20, marginVertical: 20 }}>
+                        <Text style={{ fontWeight: 'bold', color: '#000' }}>{'HỒ SƠ: ' + this.state.profile.medicalRecords.name.toUpperCase()}</Text>
+                        <Text style={{ color: 'gray' }}>SĐT: {this.props.userApp.currentUser.phone}</Text>
+                    </View>
                     <View style={styles.viewDetails}>
                         <View style={{ paddingHorizontal: 20, marginTop: 20, flexDirection: 'row', alignItems: 'center' }}>
                             <Text style={{ fontWeight: 'bold', color: 'rgb(2,195,154)', marginRight: 10 }}>{(this.state.serviceType.name || "").toUpperCase()}</Text>
@@ -478,7 +487,7 @@ class ConfirmBookingScreen extends Component {
                     {/* <View>
                         <Text style={styles.sodu}>Số dư hiện tại: 350.000đ</Text>
                     </View> */}
-                    {/* <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 1 })}>
+                    <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 1 })}>
                         <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
                             {this.state.paymentMethod == 1 &&
                                 <View style={{ backgroundColor: 'rgb(2,195,154)', width: 10, height: 10, borderRadius: 5 }}></View>
@@ -501,7 +510,7 @@ class ConfirmBookingScreen extends Component {
                             }
                         </View>
                         <Text style={styles.ckeckthanhtoan}>PAYOO - Cửa hàng tiện ích</Text>
-                    </TouchableOpacity> */}
+                    </TouchableOpacity>
                     <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 2 })}>
                         <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
                             {this.state.paymentMethod == 2 &&
