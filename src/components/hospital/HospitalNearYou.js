@@ -275,9 +275,6 @@ class HospitalNearYou extends Component {
                         </ImageBackground>
                     </View>)
                 }
-
-
-
             </View>
         );
     }

@@ -37,7 +37,7 @@ class HospitalItem extends Component {
             style={[styles.customImg, { width: imageWidth, height: imageHeight }]}
           />
           {this.props.isHopitalNear ? (
-            parseFloat(item.distance) < 1 ? <View style ={{position: 'absolute',top:0,left:0,padding:5,backgroundColor:'rgba(0, 0, 0, 0.5)',borderRadius:5}}><Text style={{color:'#fff',fontWeight:'700'}}>{(parseFloat(item.distance).toFixed(2) * 1000)+' m'}</Text></View> : <View style ={{position: 'absolute',top:0,left:0,padding:5,backgroundColor:'rgba(0, 0, 0, 0.5)',borderRadius:5}}><Text style={{color:'#fff',fontWeight:'700'}}>{parseFloat(item.distance).toFixed(1) + ' km'}</Text></View> )
+            parseFloat(item.distance) < 1 ? <View style ={styles.viewDistance}><Text style={{color:'#fff',fontSize:12}}>{(parseFloat(item.distance).toFixed(2) * 1000)+' m'}</Text></View> : <View style ={styles.viewDistance}><Text style={{color:'#fff',fontSize:12}}>{parseFloat(item.distance).toFixed(1) + 'km'}</Text></View> )
            : (null)}
         </View>
         <Card style={[styles.viewDetails]}>
@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between'
   },
+  viewDistance:{position: 'absolute',top:10,right:10,backgroundColor:'rgba(0, 0, 0, 0.5)',borderRadius:2,paddingHorizontal:2},
   customImg: {
     borderRadius: 4, borderColor: 'rgba(151, 151, 151, 0.29)', borderWidth: 0.5,
   },
