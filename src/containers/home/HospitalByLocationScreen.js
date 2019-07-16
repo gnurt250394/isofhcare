@@ -225,9 +225,13 @@ export default class HospitalByLocationScreen extends Component {
             this.getLocation()
         });
     }
+    getWidth = () => {
+        let width = Dimensions.get("window").width;
+        return width / 2 - 10;
+    }
     renderItem = (item, index) => {
         return (
-            <HospitalItem isHopitalNear={true} widthImg={180} widthCard={170} index={index} item={item}></HospitalItem>
+            <HospitalItem isHopitalNear={true} widthImg={this.getWidth()} index={item.index} item={item}></HospitalItem>
 
         )
     }

@@ -37,12 +37,11 @@ class HospitalItem extends Component {
             style={[styles.customImg, { width: imageWidth, height: imageHeight }]}
           />
           {this.props.isHopitalNear ? (
-            parseFloat(item.distance) < 1 ? <View style ={styles.viewDistance}><Text style={{color:'#fff',fontSize:12}}>{(parseFloat(item.distance).toFixed(2) * 1000)+' m'}</Text></View> : <View style ={styles.viewDistance}><Text style={{color:'#fff',fontSize:12}}>{parseFloat(item.distance).toFixed(1) + 'km'}</Text></View> )
+            parseFloat(item.distance) < 1 ? <View style ={styles.viewDistance}><Text style={{color:'#fff',fontSize:12}}>{(parseFloat(item.distance).toFixed(2) * 1000)+'m'}</Text></View> : <View style ={styles.viewDistance}><Text style={{color:'#fff',fontSize:12}}>{parseFloat(item.distance).toFixed(1) + 'km'}</Text></View> )
            : (null)}
         </View>
         <Card style={[styles.viewDetails]}>
           <Text style={styles.nameHospital} numberOfLines={2}>{item.name}</Text>
-      
           <View style={styles.viewStar}>
             <StarRating
               disabled={true}
