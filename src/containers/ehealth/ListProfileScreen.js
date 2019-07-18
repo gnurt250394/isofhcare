@@ -35,8 +35,9 @@ class ListProfileScreen extends PureComponent {
     renderItemProfile = ({ item, index }) => {
         const source = this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar.absoluteUrl() } : require("@images/new/user.png");
         return (
-            <Card>
-                <TouchableOpacity style={styles.viewItem} onPress={() => this.onPress(item)}>
+            <Card style={{ flexDirection: 'row' }}>
+                <TouchableOpacity style={[styles.viewItem]} onPress={() => this.onPress(item)}>
+
                     <View style={styles.viewImage}>
                         <ImageLoad
                             resizeMode="cover"
@@ -63,10 +64,10 @@ class ListProfileScreen extends PureComponent {
                             <Text style={styles.txLastTime}>{constants.ehealth.lastTime2}{item.latestTime ? item.latestTime.toDateObject('-').format('dd/MM/yyyy') : ''}</Text>
                         </View>
                     </View>
-                    <View style={styles.txCountTime}>
-                        <Text style={styles.txCount}>{item.countTime}</Text>
-                        <Text>{constants.ehealth.time}</Text>
-                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.txCountTime}>
+                    <Text style={styles.txCount}>{item.countTime}</Text>
+                    <Text>{constants.ehealth.time}</Text>
                 </TouchableOpacity>
             </Card>
         )
@@ -106,7 +107,7 @@ class ListProfileScreen extends PureComponent {
         return (
             <ActivityPanel style={{ flex: 1 }}
                 // title="HỒ SƠ Y BẠ GIA ĐÌNH"
-                title={<Text style={{  }}>{constants.title.list_profile_ehealth}{'\n'}<Text style={{ fontSize: 12, fontWeight: 'normal' }}>{constants.ehealth.total}{this.state.listData ? this.state.listData.length : 0}{constants.ehealth.member}</Text></Text>}
+                title={<Text style={{}}>{constants.title.list_profile_ehealth}{'\n'}<Text style={{ fontSize: 12, fontWeight: 'normal' }}>{constants.ehealth.total}{this.state.listData ? this.state.listData.length : 0}{constants.ehealth.member}</Text></Text>}
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#22b060"
@@ -197,6 +198,7 @@ const styles = StyleSheet.create({
     },
     viewItem: {
         flexDirection: 'row',
+        flex: 1
     },
     viewImage: { justifyContent: 'center', width: 100, alignItems: 'center', paddingVertical: 5 },
     imageStyle: { borderRadius: 30, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' },
