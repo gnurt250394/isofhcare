@@ -25,6 +25,8 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>fb457683741386685</string>
@@ -43,13 +45,11 @@
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
-			<key>CFBundleURLIconFile</key>
-			<string></string>
 			<key>CFBundleURLName</key>
 			<string>com.isofh.appisofhcaredev</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.isofh.appisofhcaredev</string>
+				<string>payoo</string>
 			</array>
 		</dict>
 	</array>
@@ -74,15 +74,15 @@
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
-    <key>NSExceptionDomains</key>
-    <dict>
-      <key>codepush.azurewebsites.net</key>
-      <dict><!-- read the ATS Apple Docs for available options --></dict>
-      <key>codepush.blob.core.windows.net</key>
-      <dict><!-- read the ATS Apple Docs for available options --></dict>
-      <key>codepushupdates.azureedge.net</key>
-      <dict><!-- read the ATS Apple Docs for available options --></dict>
-    </dict>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>codepush.azurewebsites.net</key>
+			<dict/>
+			<key>codepush.blob.core.windows.net</key>
+			<dict/>
+			<key>codepushupdates.azureedge.net</key>
+			<dict/>
+		</dict>
 	</dict>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>This app requires access to apple music.</string>
