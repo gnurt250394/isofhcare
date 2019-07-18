@@ -94,7 +94,10 @@
 		F99F0C6BA8394BCFBAFB6958 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0AB466C43D0F4AA39D0AE581 /* SimpleLineIcons.ttf */; };
 		FA0893FF22BC97CA00960175 /* libRNReactNativeLocationSwitch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FA0893FE22BC97AC00960175 /* libRNReactNativeLocationSwitch.a */; };
 		FA11ABD922AB4F87009D68A0 /* libPayoo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FA11ABA322AB4F71009D68A0 /* libPayoo.a */; };
+		FA2A531B22C08F070058483B /* PayooSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FA2A531822C08F020058483B /* PayooSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		FA2A531C22C08F6C0058483B /* PayooSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA2A531822C08F020058483B /* PayooSDK.framework */; };
 		FA344ED622360F1900E2E8E3 /* libRNShare.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FA344ED522360EFA00E2E8E3 /* libRNShare.a */; };
+		FA531BCC22C0B2DC004DDFB5 /* PayooModule.m in Sources */ = {isa = PBXBuildFile; fileRef = FA531B8C22C0B2DC004DDFB5 /* PayooModule.m */; };
 		FAAE3C8022BDEBAA0065D977 /* libRNReactNativeLocationSwitch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FAAE3C7F22BDEB8E0065D977 /* libRNReactNativeLocationSwitch.a */; };
 		FACF3D2D22117918001C14FB /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FACF3CDE22117891001C14FB /* libBVLinearGradient.a */; };
 /* End PBXBuildFile section */
@@ -557,6 +560,20 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		FA2A531722C08EE80058483B /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				FA2A531B22C08F070058483B /* PayooSDK.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 		00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTActionSheet.xcodeproj; path = "../node_modules/react-native/Libraries/ActionSheetIOS/RCTActionSheet.xcodeproj"; sourceTree = "<group>"; };
@@ -570,6 +587,7 @@
 		01ABE27B010D42589DAA12D6 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/native-base/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		0AB466C43D0F4AA39D0AE581 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		0BA4690D45408FC6ECCF61B1 /* Pods-APP.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-APP.release.xcconfig"; path = "Pods/Target Support Files/Pods-APP/Pods-APP.release.xcconfig"; sourceTree = "<group>"; };
+		0C50A9E322CA021A005858C2 /* PayooModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PayooModule.h; path = APP/PayooModule.h; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
 		13AEE3EA33DA490EAC2E76BE /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
@@ -659,6 +677,7 @@
 		FA0893F922BC97AB00960175 /* RNReactNativeLocationSwitch.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNReactNativeLocationSwitch.xcodeproj; path = "../node_modules/mainam-react-native-location-switch/ios/RNReactNativeLocationSwitch.xcodeproj"; sourceTree = "<group>"; };
 		FA11AB9A22AB4F71009D68A0 /* Payoo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Payoo.xcodeproj; path = "../node_modules/mainam-react-native-payoo/ios/Payoo.xcodeproj"; sourceTree = "<group>"; };
 		FA344ED022360EFA00E2E8E3 /* RNShare.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNShare.xcodeproj; path = "../node_modules/react-native-share/ios/RNShare.xcodeproj"; sourceTree = "<group>"; };
+		FA531B8C22C0B2DC004DDFB5 /* PayooModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PayooModule.m; path = APP/PayooModule.m; sourceTree = "<group>"; };
 		FA58DB142293A0250008AD80 /* RNLocation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNLocation.xcodeproj; path = "../node_modules/react-native-location/ios/RNLocation.xcodeproj"; sourceTree = "<group>"; };
 		FAAE3C7A22BDEB8E0065D977 /* RNReactNativeLocationSwitch.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNReactNativeLocationSwitch.xcodeproj; path = "../node_modules/mainam-react-native-location-switch/ios/RNReactNativeLocationSwitch.xcodeproj"; sourceTree = "<group>"; };
 		FACF3CD622117891001C14FB /* BVLinearGradient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BVLinearGradient.xcodeproj; path = "../node_modules/react-native-linear-gradient/BVLinearGradient.xcodeproj"; sourceTree = "<group>"; };
@@ -679,8 +698,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA2A531C22C08F6C0058483B /* PayooSDK.framework in Frameworks */,
 				FAAE3C8022BDEBAA0065D977 /* libRNReactNativeLocationSwitch.a in Frameworks */,
-				FA11ABD922AB4F87009D68A0 /* libPayoo.a in Frameworks */,
 				FA344ED622360F1900E2E8E3 /* libRNShare.a in Frameworks */,
 				FACF3D2D22117918001C14FB /* libBVLinearGradient.a in Frameworks */,
 				B24DBF4C20D76DE90098E296 /* libRNCamera.a in Frameworks */,
@@ -831,6 +850,8 @@
 		13B07FAE1A68108700A75B9A /* APP */ = {
 			isa = PBXGroup;
 			children = (
+				0C50A9E322CA021A005858C2 /* PayooModule.h */,
+				FA531B8C22C0B2DC004DDFB5 /* PayooModule.m */,
 				B245ABCF208D70550000BF5D /* APP.entitlements */,
 				B245A9A3208D0C410000BF5D /* GoogleService-Info.plist */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
@@ -902,7 +923,6 @@
 			isa = PBXGroup;
 			children = (
 				FAAE3C7A22BDEB8E0065D977 /* RNReactNativeLocationSwitch.xcodeproj */,
-				FA11AB9A22AB4F71009D68A0 /* Payoo.xcodeproj */,
 				FA58DB142293A0250008AD80 /* RNLocation.xcodeproj */,
 				FA344ED022360EFA00E2E8E3 /* RNShare.xcodeproj */,
 				FACF3CD622117891001C14FB /* BVLinearGradient.xcodeproj */,
@@ -950,6 +970,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				FA2A531822C08F020058483B /* PayooSDK.framework */,
 				13B07FAE1A68108700A75B9A /* APP */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* APPTests */,
@@ -1267,6 +1288,7 @@
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				3CB4D8D60E451A680CCEC51E /* [CP] Copy Pods Resources */,
+				FA2A531722C08EE80058483B /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1330,6 +1352,7 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = BY2N2SG836;
+						LastSwiftMigration = 1020;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.Push = {
@@ -1382,10 +1405,6 @@
 				{
 					ProductGroup = FACF3CD722117891001C14FB /* Products */;
 					ProjectRef = FACF3CD622117891001C14FB /* BVLinearGradient.xcodeproj */;
-				},
-				{
-					ProductGroup = FA11AB9B22AB4F71009D68A0 /* Products */;
-					ProjectRef = FA11AB9A22AB4F71009D68A0 /* Payoo.xcodeproj */;
 				},
 				{
 					ProductGroup = 00C302A81ABCB8CE00DB3ED1 /* Products */;
@@ -2028,7 +2047,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
 		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2143,6 +2162,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA531BCC22C0B2DC004DDFB5 /* PayooModule.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
@@ -2291,7 +2311,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = FB08E72CAE4D5E4E3C0999B4 /* Pods-APP.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = APP/APP.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -2339,6 +2361,9 @@
 				PRODUCT_NAME = APP;
 				PROVISIONING_PROFILE = "0f5fbbc4-4172-466c-97bb-95964499866b";
 				PROVISIONING_PROFILE_SPECIFIER = "isofhcare for user development develop branch";
+				SWIFT_OBJC_BRIDGING_HEADER = "APP-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -2348,7 +2373,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0BA4690D45408FC6ECCF61B1 /* Pods-APP.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = APP/APP.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
@@ -2395,6 +2422,8 @@
 				PRODUCT_NAME = APP;
 				PROVISIONING_PROFILE = "a85727cc-7f0e-4e39-81ab-abf948e917c6";
 				PROVISIONING_PROFILE_SPECIFIER = "isofhcare for use distribution develop branch";
+				SWIFT_OBJC_BRIDGING_HEADER = "APP-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};

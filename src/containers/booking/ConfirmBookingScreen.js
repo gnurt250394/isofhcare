@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Platform } from 'react-native';
 import { connect } from 'react-redux';
 import dateUtils from 'mainam-react-native-date-utils';
 import stringUtils from 'mainam-react-native-string-utils';
@@ -10,8 +10,10 @@ import walletProvider from '@data-access/wallet-provider';
 import snackbar from '@utils/snackbar-utils';
 import connectionUtils from '@utils/connection-utils';
 import payoo from 'mainam-react-native-payoo';
+import { NativeModules } from 'react-native';
 import constants from '@resources/strings';
 var convert = require('xml-js');
+var PayooModule = NativeModules.PayooModule;
 
 class ConfirmBookingScreen extends Component {
     constructor(props) {
@@ -158,18 +160,26 @@ class ConfirmBookingScreen extends Component {
                             console.log(orderJSON);
 
                             payment_order.orderInfo = payment_order.data;
-                            payoo.initialize(payment_order.shop_id, payment_order.check_sum_key).then(() => {
-                                payoo.pay(payment_order, {}).then(x => {
-                                    let obj = JSON.parse(x);
-                                    walletProvider.onlineTransactionPaid(vnp_TxnRef, this.getPaymentMethod(), obj);
-                                    this.props.navigation.navigate("home", {
-                                        navigate: {
-                                            screen: "createBookingSuccess",
-                                            params: {
-                                                booking
-                                            }
-                                        }
-                                    });
+                            payment_order.cashAmount = parseInt(this.state.service.price);
+                            let payooSDK = payoo;
+                            if (Platform.OS == 'ios') {
+                                payooSDK = PayooModule;
+                            }
+                            payooSDK.initialize(payment_order.shop_id, payment_order.check_sum_key).then(() => {
+                                payooSDK.pay(payment_order, {}).then(x => {
+                                    alert(x);
+                                    // alert(JSON.stringify(x));
+                                    // return;
+                                    // let obj = JSON.parse(x);
+                                    // walletProvider.onlineTransactionPaid(vnp_TxnRef, this.getPaymentMethod(), obj);
+                                    // this.props.navigation.navigate("home", {
+                                    //     navigate: {
+                                    //         screen: "createBookingSuccess",
+                                    //         params: {
+                                    //             booking
+                                    //         }
+                                    //     }
+                                    // });
                                 }).catch(y => {
                                     booking.transactionCode = data.online_transactions[0].id;
                                     this.props.navigation.navigate("paymentBookingError", { booking })
@@ -290,8 +300,15 @@ class ConfirmBookingScreen extends Component {
                             console.log(orderJSON);
 
                             payment_order.orderInfo = payment_order.data;
-                            payoo.initialize(payment_order.shop_id, payment_order.check_sum_key).then(() => {
-                                payoo.pay(payment_order, {}).then(x => {
+                            payment_order.cashAmount = parseInt(this.state.service.price);
+
+                            let payooSDK = payoo;
+                            if (Platform.OS == 'ios') {
+                                payooSDK = PayooModule;
+                            }
+
+                            payooSDK.initialize(payment_order.shop_id, payment_order.check_sum_key).then(() => {
+                                payooSDK.pay(payment_order, {}).then(x => {
                                     let obj = JSON.parse(x);
                                     walletProvider.onlineTransactionPaid(vnp_TxnRef, this.getPaymentMethod(), obj);
                                     this.props.navigation.navigate("home", {
