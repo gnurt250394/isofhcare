@@ -72,6 +72,8 @@ RCT_REMAP_METHOD(pay,
       [dic setValue:data.data.orderXml forKey:@"orderXml"];
       [dic setValue:data.data.paymentCode forKey:@"paymentCode"];
       [dic setValue:data.data.authToken forKey:@"authToken"];
+      [dic setValue:[NSNumber numberWithDouble:data.data.totalAmount] forKey:@"totalAmount"];
+      [dic setValue:[NSNumber numberWithDouble:data.data.paymentFee] forKey:@"paymentFee"];
       NSError *writeError = nil;
       NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:&writeError];
 //      chạy den day la loi a hay den dau
