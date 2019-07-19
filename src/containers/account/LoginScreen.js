@@ -34,7 +34,8 @@ class LoginScreen extends Component {
 		this.state = {
 			press: false,
 			email: "",
-			password: ""
+			password: "",
+			secureTextEntry: true,
 		};
 		this.nextScreen = this.props.navigation.getParam("nextScreen", null);
 
@@ -104,7 +105,7 @@ class LoginScreen extends Component {
 					case 0:
 						var user = s.data.user;
 						user.bookingNumberHospital = s.data.bookingNumberHospital;
-                        user.bookingStatus = s.data.bookingStatus;
+						user.bookingStatus = s.data.bookingStatus;
 						if (s.data.profile && s.data.profile.uid)
 							user.uid = s.data.profile.uid;
 						snackbar.show(constants.msg.user.login_success, "success");
@@ -167,7 +168,11 @@ class LoginScreen extends Component {
 				verify();
 			});
 	}
-
+	onShowPass = () => {
+		this.setState({
+			secureTextEntry: !this.state.secureTextEntry
+		})
+	}
 	render() {
 		return (
 			<ActivityPanel
@@ -207,24 +212,31 @@ class LoginScreen extends Component {
 												placeholder={constants.input_password}
 												autoCapitalize={"none"}
 											/>
-											<TextField
-												getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-													placeholderStyle={{ fontSize: 16, fontWeight: '200' }}
-													value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.password} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} secureTextEntry={true} />}
-												onChangeText={s => this.setState({ password: s })}
-												errorStyle={styles.errorStyle}
-												validate={{
-													rules: {
-														required: true,
-													},
-													messages: {
-														required: "Mật khẩu không được bỏ trống"
-													}
-												}}
-												inputStyle={styles.input}
-												placeholder={constants.input_password}
-												autoCapitalize={"none"}
-											/>
+											<View style={styles.inputPass}>
+												<TextField
+													getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
+														placeholderStyle={{ fontSize: 16, fontWeight: '200' }}
+														value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.password} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} secureTextEntry={this.state.secureTextEntry} />}
+													onChangeText={s => this.setState({ password: s })}
+													errorStyle={styles.errorStyle}
+													validate={{
+														rules: {
+															required: true,
+														},
+														messages: {
+															required: "Mật khẩu không được bỏ trống"
+														}
+													}}
+													inputStyle={styles.input}
+													placeholder={constants.input_password}
+													autoCapitalize={"none"}
+												>
+
+												</TextField>
+												{
+													this.state.password ? (this.state.secureTextEntry ? (<TouchableOpacity style={{ position: 'absolute', right: 3,top:40, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowPass}><ScaleImage resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 3,top:40, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowPass}><ScaleImage height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : null
+												}
+											</View>
 										</Field>
 										<View style={{ flexDirection: 'row', marginTop: 15 }}>
 											<TouchableOpacity
@@ -289,6 +301,11 @@ const styles = StyleSheet.create({
 		height: 25,
 		tintColor: "rgba(0,0,0,0.2)"
 	},
+	inputPass: {
+		position: 'relative',
+		alignSelf: 'stretch',
+		justifyContent: 'center'
+	},
 	input: {
 		maxWidth: 300,
 		paddingRight: 30,
@@ -311,7 +328,10 @@ const styles = StyleSheet.create({
 		fontWeight: "600",
 		height: 45,
 		marginLeft: 0,
-		fontSize: 20
+		alignSelf: 'stretch',
+		fontSize: 20,
+		paddingRight: 45,
+
 	},
 	labelStyle: { paddingTop: 10, color: '#53657B', fontSize: 16 }
 });
