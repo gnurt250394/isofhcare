@@ -94,10 +94,12 @@ class ChangePasswordScreen extends Component {
                                         getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
                                             placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.enter_old_password}
                                             secureTextEntry={this.state.secureTextOldEntry}
+                                            allowFontScaling = {false}
                                             onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
                                         onChangeText={s => {
                                             this.setState({ passwordOld: s });
                                         }}
+                                        allowFontScaling = {false}
                                         errorStyle={styles.errorStyle}
                                         validate={{
                                             rules: {
@@ -122,10 +124,12 @@ class ChangePasswordScreen extends Component {
                                         getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
                                             placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Nhập mật khẩu mới"}
                                             secureTextEntry={this.state.secureTextNewEntry}
+                                            allowFontScaling = {false}
                                             onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
                                         onChangeText={s => {
                                             this.setState({ passwordNew: s });
                                         }}
+                                        allowFontScaling = {false}
                                         errorStyle={styles.errorStyle}
                                         validate={{
                                             rules: {
@@ -149,11 +153,13 @@ class ChangePasswordScreen extends Component {
                                     getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
                                         placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Xác nhận mật khẩu mới"}
                                         secureTextEntry={this.state.secureTextNew2Entry}
+                                        allowFontScaling = {false}
                                         onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
                                     onChangeText={s => {
                                         this.setState({ confirm_password: s });
                                     }}
                                     errorStyle={styles.errorStyle}
+                                    allowFontScaling = {false}
                                     validate={{
                                         rules: {
                                             required: true,

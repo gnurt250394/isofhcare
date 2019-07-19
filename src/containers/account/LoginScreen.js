@@ -255,7 +255,7 @@ class LoginScreen extends Component {
 													</Text>
 											</TouchableOpacity>
 											<TouchableOpacity
-												onPress={this.register.bind(this)}
+												onPress={this.login.bind(this)}
 												style={{ alignItems: "center", justifyContent: 'flex-end', flex: 1, flexDirection: 'row' }}
 											>
 												<Text
@@ -265,16 +265,17 @@ class LoginScreen extends Component {
 														fontWeight: 'bold',
 														marginRight: 5
 													}}
-												>Đăng ký</Text><ScaleImage source={require("@images/new/right_arrow.png")} height={10} />
+												>Đăng nhập</Text><ScaleImage source={require("@images/new/right_arrow.png")} height={10} />
 											</TouchableOpacity>
 										</View>
 									</Form>
 								</Card>
 							</View>
 							<SocialNetwork />
-							<TouchableOpacity style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center' }} onPress={this.login.bind(this)}>
-								<Text style={{ color: '#FFF', fontSize: 17 }}>{"ĐĂNG NHẬP"}</Text>
-							</TouchableOpacity>
+							<Text style = {{color:'#000',textAlign:'center',marginVertical:20}}>Nếu chưa có tài khoản có thể đăng ký <Text onPress={this.register.bind(this)} style = {{color:'#1EA3EA'}}>tại đây</Text></Text>
+							{/* <TouchableOpacity onPress={this.register.bind(this)} style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center' }} >
+								<Text style={{ color: '#FFF', fontSize: 17 }}>{"ĐĂNG KÝ"}</Text>
+							</TouchableOpacity> */}
 						</View>
 					</KeyboardAvoidingView>
 
