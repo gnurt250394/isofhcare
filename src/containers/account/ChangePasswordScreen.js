@@ -113,7 +113,7 @@ class ChangePasswordScreen extends Component {
                                         autoCapitalize={"none"}
                                     />
                                     {
-                                        this.state.passwordOld ? (this.state.secureTextOldEntry ? (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 30, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowOldPass}><ScaleImage resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 30, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowOldPass}><ScaleImage height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : null
+                                        this.state.passwordOld ? (this.state.secureTextOldEntry ? (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 30, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowOldPass}><ScaleImage style={{tintColor : '#7B7C7D'}}  resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 30, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowOldPass}><ScaleImage style={{tintColor : '#7B7C7D'}}  height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : null
                                     }
                                 </View>
                                 <View style={styles.inputPass}>
@@ -141,7 +141,7 @@ class ChangePasswordScreen extends Component {
                                         autoCapitalize={"none"}
                                     />
                                     {
-                                        this.state.passwordNew ? (this.state.secureTextNewEntry ? (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 30, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowNewPass}><ScaleImage resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 30, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowNewPass}><ScaleImage height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : null
+                                        this.state.passwordNew ? (this.state.secureTextNewEntry ? (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 30, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowNewPass}><ScaleImage style={{tintColor : '#7B7C7D'}}  resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 30, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowNewPass}><ScaleImage style={{tintColor : '#7B7C7D'}}  height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : null
                                     }
                                 </View>
                                 <View style={styles.inputPass}>
@@ -170,7 +170,7 @@ class ChangePasswordScreen extends Component {
                                     autoCapitalize={"none"}
                                 />
                                 {
-                                    this.state.confirm_password ? (this.state.secureTextNew2Entry ? (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 30, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowNewPass2}><ScaleImage resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 30, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowNewPass2}><ScaleImage height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : null
+                                    this.state.confirm_password ? (this.state.secureTextNew2Entry ? (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 30, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowNewPass2}><ScaleImage style={{tintColor : '#7B7C7D'}}  resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 30, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowNewPass2}><ScaleImage style={{tintColor : '#7B7C7D'}}  height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : null
                                 }
                                 </View>
                             </Form>

@@ -32,6 +32,8 @@ class ResetPasswordScreen extends Component {
   constructor(props) {
     super(props);
     let user = this.props.navigation.getParam("user", null);
+    user.secureTextEntry = true
+    user.secureTextEntry2 = true
 
     this.state = user || {};
   }
@@ -73,7 +75,16 @@ class ResetPasswordScreen extends Component {
     })
 
   }
-
+  onShowPass = () => {
+    this.setState({
+      secureTextEntry: !this.state.secureTextEntry
+    })
+  }
+  onShowPass2 = () => {
+    this.setState({
+      secureTextEntry2: !this.state.secureTextEntry2
+    })
+  }
   render() {
     return (
       <ActivityPanel
@@ -89,53 +100,63 @@ class ResetPasswordScreen extends Component {
             <View style={{ flex: 1, padding: 20 }}>
               <ScaleImage source={require("@images/new/isofhcare.png")} width={200} style={{ marginTop: 30, alignSelf: 'center' }} />
               <Form ref={ref => (this.form = ref)}>
-                <TextField
-                  getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-                    placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Mật khẩu"}
-                    secureTextEntry={true}
-                    onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
-                  onChangeText={s => {
-                    this.setState({ password: s });
-                  }}
-                  errorStyle={styles.errorStyle}
-                  validate={{
-                    rules: {
-                      required: true,
-                      maxlength: 255,
-                      minlength: 8
-                    },
-                    messages: {
-                      required: "Mật khẩu không được bỏ trống",
-                      maxlength: "Không được nhập quá 255 kí tự",
-                      minlength: "Mật khẩu dài ít nhất 8 ký tự"
-                    }
-                  }}
-                  inputStyle={styles.input}
-                  autoCapitalize={"none"}
-                />
-                <TextField
-                  getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-                    placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.msg.user.confirm_new_password}
-                    secureTextEntry={true}
-                    onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
-                  onChangeText={s => {
-                    this.setState({ confirm_password: s });
-                  }}
-                  errorStyle={styles.errorStyle}
-                  validate={{
-                    rules: {
-                      required: true,
-                      equalTo: this.state.password
-                    },
-                    messages: {
-                      required: "Xác nhận mật khẩu không được bỏ trống",
-                      equalTo: "Mật khẩu và xác nhận mật khẩu không giống nhau"
-                    }
-                  }}
-                  inputStyle={styles.input}
-                  autoCapitalize={"none"}
-                />
+                <View style={styles.inputPass}>
+                  <TextField
+                    getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
+                      placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Mật khẩu"}
+                      secureTextEntry={this.state.secureTextEntry}
+                      onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
+                    onChangeText={s => {
+                      this.setState({ password: s });
+                    }}
+                    errorStyle={styles.errorStyle}
+                    validate={{
+                      rules: {
+                        required: true,
+                        maxlength: 255,
+                        minlength: 8
+                      },
+                      messages: {
+                        required: "Mật khẩu không được bỏ trống",
+                        maxlength: "Không được nhập quá 255 kí tự",
+                        minlength: "Mật khẩu dài ít nhất 8 ký tự"
+                      }
+                    }}
+                    inputStyle={styles.input}
+                    autoCapitalize={"none"}
+                  />
+                  {
+                    this.state.password ? (this.state.secureTextEntry ? (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 30, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 30, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : null
+                  }
+                </View>
+                <View style={styles.inputPass}>
 
+                  <TextField
+                    getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
+                      placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.msg.user.confirm_new_password}
+                      secureTextEntry={this.state.secureTextEntry2}
+                      onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
+                    onChangeText={s => {
+                      this.setState({ confirm_password: s });
+                    }}
+                    errorStyle={styles.errorStyle}
+                    validate={{
+                      rules: {
+                        required: true,
+                        equalTo: this.state.password
+                      },
+                      messages: {
+                        required: "Xác nhận mật khẩu không được bỏ trống",
+                        equalTo: "Mật khẩu và xác nhận mật khẩu không giống nhau"
+                      }
+                    }}
+                    inputStyle={styles.input}
+                    autoCapitalize={"none"}
+                  />
+                </View>
+                {
+                  this.state.confirm_password ? (this.state.secureTextEntry2 ? (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 30, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowPass2}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 30, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowPass2}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : null
+                }
               </Form>
             </View>
           </KeyboardAvoidingView>
@@ -174,6 +195,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(155,155,155,0.7)"
   },
+  inputPass: {
+    position: 'relative',
+    alignSelf: 'stretch',
+    justifyContent: 'center'
+  },
   errorStyle: {
     color: "red",
     marginTop: 10
@@ -183,6 +209,8 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     height: 45,
     marginLeft: 0,
+    alignSelf: 'stretch',
+    paddingRight: 45,
     fontSize: 20
   },
   labelStyle: { paddingTop: 10, color: '#53657B', fontSize: 16 }
