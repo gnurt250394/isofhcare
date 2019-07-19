@@ -212,7 +212,7 @@ class LoginScreen extends Component {
 												placeholder={constants.input_password}
 												autoCapitalize={"none"}
 											/>
-											<View style={styles.inputPass}>
+											<Field style={styles.inputPass}>
 												<TextField
 													getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
 														placeholderStyle={{ fontSize: 16, fontWeight: '200' }}
@@ -234,9 +234,9 @@ class LoginScreen extends Component {
 
 												</TextField>
 												{
-													this.state.password ? (this.state.secureTextEntry ? (<TouchableOpacity style={{ position: 'absolute', right: 3,top:40, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 3,top:40, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : null
+													this.state.password ? (this.state.secureTextEntry ? (<TouchableOpacity style={{ position: 'absolute', right: 3,top:40, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 3,top:40, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
 												}
-											</View>
+											</Field>
 										</Field>
 										<View style={{ flexDirection: 'row', marginTop: 15 }}>
 											<TouchableOpacity
