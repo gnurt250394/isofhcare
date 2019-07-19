@@ -19,8 +19,8 @@ import ConfirmCodeScreen from "@containers/account/ConfirmCodeScreen";
 import ResetPasswordScreen from "@containers/account/ResetPasswordScreen";
 import GroupChatScreen from "@containers/chat/GroupChatScreen";
 import ChatScreen from "@containers/chat/ChatScreen";
-import ProfileScreen from "@containers/account/ProfileScreen";
-// import ProfileScreen from "@containers/profile/ProfileScreen";
+// import ProfileScreen from "@containers/account/ProfileScreen";
+import ProfileScreen from "@containers/profile/ProfileScreen";
 import { EHealthNavigator } from "@ehealth/navigator";
 import NotificationScreen from "@containers/notification/NotificationScreen";
 import ListQuestionScreen from "@containers/question/ListQuestionScreen";
@@ -48,6 +48,9 @@ import DetailsHistoryScreen from "@containers/booking/DetailsHistoryScreen"
 import SelectProfileScreen from "@containers/booking/SelectProfileScreen";
 import CreateProfileScreen from "@containers/booking/CreateProfileScreen";
 import ProfileInfo from '@containers/account/ProfileInfo'
+import MenuProfile from '@containers/profile/MenuProfile'
+import ListProfileScreen from '@containers/profile/ListProfileScreen'
+
 //---------------------------
 import PatientHistoryScreen from "@containers/booking/PatientHistoryScreen";
 //.....details doctor.......
@@ -75,6 +78,7 @@ const RootNavigator = createStackNavigator(
     //=---------------Profile-----------------
     // profile: { screen: ProfileScreen },
     splash: { screen: SplashScreen },
+    listProfile:{screen:ListProfileScreen},
     groupChat: { screen: GroupChatScreen },
     groupChatFacility: { screen: GroupChatScreen },
     chat: { screen: ChatScreen },

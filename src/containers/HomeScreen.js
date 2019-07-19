@@ -29,6 +29,7 @@ import firebase from 'react-native-firebase';
 import ScaledImage from 'mainam-react-native-scaleimage'
 import NotificationScreen from '@containers/notification/NotificationScreen'
 import NavigationService from "@navigators/NavigationService";
+import MenuProfile from '@containers/profile/MenuProfile'
 
 const width = Dimensions.get("window").width
 class HomeScreen extends Component {
@@ -161,7 +162,7 @@ class HomeScreen extends Component {
               />
             </View> */}
             <View style={{ flex: 1 }}>
-              <Account
+              <MenuProfile
                 onLogout={() => {
                   this.viewPager.setPage(0);
                 }}

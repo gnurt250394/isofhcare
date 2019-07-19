@@ -27,12 +27,15 @@ export default class ProfileScreen extends Component {
             case 2: return (<Transaction></Transaction>)
         }
     }
+    componentDidMount(){
+        alert(this.props.navigation.state.params.id)
+    }
     render() {
         return (
             <ActivityPanel
                 icBack={require('@images/new/left_arrow_white.png')}
                 titleStyle={styles.txTitle}
-                title={'PROFILE CỦA TÔI'}
+                title={'PROFILE'}
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#359A60"
                 actionbarStyle={styles.actionbarStyle}
@@ -96,20 +99,19 @@ export default class ProfileScreen extends Component {
                         <Text style={styles.txName}>Nguyễn Thị Ngọc Anh</Text>
 
                     </View>
-                    <View style={styles.viewBtnFeature}>
-                        <TouchableOpacity onPress={() => this.onSelectFeature(1)} style={[styles.btnFeature, { marginLeft: 0 }, this.state.value == 1 ? { backgroundColor: '#4BBA7B' } : { backgroundColor: '#fff' }]}>
-                            <ScaledImage height={20} style={this.state.value == 1 ? { tintColor: '#fff' } : { tintColor: '#4BBA7B' }} source={require('@images/new/profile/ic_account.png')}></ScaledImage>
-                            <Text style={[styles.txFeature, this.state.value == 1 ? { color: '#FFF' } : {}]} >Thông tin cá nhân</Text>
+                        <TouchableOpacity onPress={() => this.onSelectFeature(1)} style={styles.btnFeature}>
+                            <ScaledImage height={20} style={{ tintColor: '#fff' }} source={require('@images/new/profile/ic_account.png')}></ScaledImage>
+                            <Text style={[styles.txFeature, this.state.value == 1 ? {} : {}]} >Thông tin cá nhân</Text>
+                            <View style={{width:1}}></View>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => this.onSelectFeature(2)} style={[styles.btnFeature, this.state.value == 2 ? { backgroundColor: '#4BBA7B' } : { backgroundColor: '#fff' }]}>
+                        {/* <TouchableOpacity onPress={() => this.onSelectFeature(2)} style={[styles.btnFeature, this.state.value == 2 ? { backgroundColor: '#4BBA7B' } : { backgroundColor: '#fff' }]}>
                             <ScaledImage height={20} style={this.state.value == 2 ? { tintColor: '#fff' } : { tintColor: '#4BBA7B' }} source={require('@images/new/profile/ic_deal_write.png')}></ScaledImage>
                             <Text style={[styles.txFeature, this.state.value == 2 ? { color: '#FFF' } : {}]}>Giao dịch</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => this.onSelectFeature(3)} style={[styles.btnFeature, this.state.value == 3 ? { backgroundColor: '#4BBA7B' } : { backgroundColor: '#fff' }]}>
                             <ScaledImage height={20} style={this.state.value == 3 ? { tintColor: '#fff' } : { tintColor: '#4BBA7B' }} source={require('@images/new/profile/ic_account.png')}></ScaledImage>
                             <Text style={[styles.txFeature, this.state.value == 3 ? { color: '#FFF' } : {}]}>Y bạ điện tử</Text>
-                        </TouchableOpacity>
-                    </View>
+                        </TouchableOpacity> */}
                     {this.renderContent()}
                 </ScrollView>
             </ActivityPanel>
@@ -124,7 +126,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     scaledImage: { position: "absolute", top: 5, right: 5 },
-    btnFeature: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderRadius: 5, borderWidth: 1, borderColor: '#4BBA7B', marginLeft: 2, paddingHorizontal: 5, paddingVertical: 10 },
+    btnFeature: { flexDirection: 'row', alignItems: 'center',backgroundColor: '#4BBA7B', justifyContent: 'space-around', borderRadius: 5, borderColor: '#4BBA7B', paddingHorizontal: 2, paddingVertical: 10,marginHorizontal:10 },
     imageStyle: { borderRadius: 60, borderWidth: 2, borderColor: '#Fff' },
     customImagePlace: {
         width: 120,
@@ -160,16 +162,9 @@ const styles = StyleSheet.create({
         fontWeight: '600',
 
     },
-    viewBtnFeature: {
-        flexDirection: 'row',
-        paddingHorizontal: 10,
-        justifyContent: 'center',
-        width: '100%',
-        marginTop: 10
-    },
+
     txFeature: {
         textAlign: 'center',
-        marginLeft: 5,
-        maxWidth: 60,
+        color: '#FFF' 
     }
 })
