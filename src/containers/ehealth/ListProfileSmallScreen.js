@@ -12,6 +12,7 @@ import profileProvider from '@data-access/profile-provider';
 import snackbar from '@utils/snackbar-utils';
 import ImageLoad from 'mainam-react-native-image-loader';
 import ehealthProvider from '@data-access/ehealth-provider';
+import { Card } from 'native-base';
 
 class ListProfileSmallScreen extends PureComponent {
     constructor(props) {
@@ -31,88 +32,44 @@ class ListProfileSmallScreen extends PureComponent {
         this.props.dispatch({ type: constants.action.action_select_patient_group_ehealth, value: item })
         this.props.navigation.navigate('viewInMonth');
     }
-    renderItemProfile(item, index) {
+    renderItemProfile = ({ item, index }) => {
         const source = this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar.absoluteUrl() } : require("@images/new/user.png");
-        return <TouchableOpacity style={{}} onPress={() => this.onPress(item)}>
-            <View style={{ flexDirection: 'row' }}>
-                {
-                    Dimensions.get('window').width < 375 ?
-                        (<View style={{ justifyContent: 'center', width: 90, alignItems: 'center' }}>
-                            <ImageLoad
-                                resizeMode="cover"
-                                imageStyle={{ borderRadius: 25, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
-                                borderRadius={25}
-                                customImagePlaceholderDefaultStyle={[styles.avatar, { width: 50, height: 50 }]}
-                                placeholderSource={require("@images/new/user.png")}
-                                resizeMode="cover"
-                                loadingStyle={{ size: 'small', color: 'gray' }}
-                                source={source}
-                                style={{
-                                    alignSelf: 'center',
-                                    borderRadius: 25,
-                                    width: 50,
-                                    height: 50
-                                }}
-                                defaultImage={() => {
-                                    return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={50} height={50} />
-                                }}
-                            />
-                            <Text style={{ color: '#758289', fontSize: 12, marginTop: 5 }}>{item.patientValue}</Text>
-                        </View>) : (<View style={{ justifyContent: 'center', width: 100, alignItems: 'center' }}>
-                            <ImageLoad
-                                resizeMode="cover"
-                                imageStyle={{ borderRadius: 30, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
-                                borderRadius={30}
-                                customImagePlaceholderDefaultStyle={[styles.avatar, { width: 60, height: 60 }]}
-                                placeholderSource={require("@images/new/user.png")}
-                                resizeMode="cover"
-                                loadingStyle={{ size: 'small', color: 'gray' }}
-                                source={source}
-                                style={{
-                                    alignSelf: 'center',
-                                    borderRadius: 30,
-                                    width: 60,
-                                    height: 60
-                                }}
-                                defaultImage={() => {
-                                    return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={60} height={60} />
-                                }}
-                            />
-                            <Text style={{ color: '#758289' }}>{item.patientValue}</Text>
-                        </View>)
-                }
+        return (
+            <Card>
+                <TouchableOpacity style={styles.viewItem} onPress={() => this.onPress(item)}>
+                    <View style={styles.viewImage}>
+                        <ImageLoad
+                            resizeMode="cover"
+                            imageStyle={styles.imageStyle}
+                            borderRadius={20}
+                            customImagePlaceholderDefaultStyle={[styles.avatar, { width: 40, height: 40 }]}
+                            placeholderSource={require("@images/new/user.png")}
+                            resizeMode="cover"
+                            loadingStyle={{ size: 'small', color: 'gray' }}
+                            source={source}
+                            style={styles.imgLoad}
+                            defaultImage={() => {
+                                return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={40} height={40} />
+                            }}
+                        />
+                        <Text style={{ color: '#758289', fontSize: 10, marginTop: 10, fontWeight: 'bold' }}>{item.patientValue}</Text>
+                    </View>
 
-
-                <View style={{ flex: 1, borderRightColor: '#c8d1d6', borderRightWidth: 1, paddingVertical: 10 }}>
-                    <View style={{ marginTop: -2, paddingRight: 4 }}>
-                        <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
-                            <View style={{ position: 'absolute', left: 8, top: 0, bottom: 0, width: 2, backgroundColor: '#91a3ad', }}></View>
-                            <View style={{ width: 18, height: 18, borderWidth: 1.5, borderColor: '#91a3ad', borderRadius: 9, justifyContent: 'center', alignItems: 'center', left: 0, bottom: 0, backgroundColor: '#FFF' }}>
-                                <View style={{ width: 8, height: 8, backgroundColor: '#7eac39', borderRadius: 4 }}></View>
-                            </View>
-                            <Text numberOfLines={2} style={[{ marginLeft: 10, minHeight: 30, color: '#63737a', fontSize: 13, marginRight: 20 }]}>{item.patientName}</Text>
+                    <View style={styles.viewListItem}>
+                        <Text style={[styles.txPatientName]}>{item.patientName}</Text>
+                        <Text style={styles.txHospitalEntityName}>{item.hospitalEntity.name}</Text>
+                        <View style={styles.viewTime}>
+                            <ScaleImage resizeMode='cover' source={require("@images/new/ehealth/ic_timer.png")} width={15} tintColor={'#8fa1aa'} />
+                            <Text style={styles.txLastTime}>{constants.ehealth.lastTime2}{item.latestTime ? item.latestTime.toDateObject('-').format('dd/MM/yyyy') : ''}</Text>
                         </View>
                     </View>
-                    <View style={{ marginTop: -2, paddingRight: 4 }}>
-                        <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
-                            <View style={{ marginTop: 2, width: 18, height: 18, borderWidth: 1.5, borderColor: '#91a3ad', borderRadius: 9, justifyContent: 'center', alignItems: 'center', left: 0, bottom: 0, backgroundColor: '#FFF' }}>
-                                <View style={{ width: 8, height: 8, backgroundColor: '#c84242', borderRadius: 4 }}></View>
-                            </View>
-                            <Text style={[{ flex: 1, marginLeft: 10, color: '#51626a', fontSize: 13, marginTop: 3 }]}>{item.hospitalEntity.name}</Text>
-                        </View>
+                    <View style={styles.txCountTime}>
+                        <Text style={styles.txCount}>{item.countTime}</Text>
+                        <Text>{constants.ehealth.time}</Text>
                     </View>
-                    <View style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center' }}>
-                        <ScaleImage resizeMode='cover' source={require("@images/new/ehealth/ic_timer.png")} width={20} tintColor={'#8fa1aa'} />
-                        <Text style={[{ marginLeft: 10, color: '#045684', fontSize: 13 }]}>Gần nhất: {item.latestTime ? item.latestTime.toDateObject('-').format('dd/MM/yyyy') : ''}</Text>
-                    </View>
-                </View>
-                <View style={{ justifyContent: 'center', alignItems: 'center', width: 60 }}>
-                    <Text style={[{ color: '#f36819', fontSize: 25 },]}>{item.countTime}</Text>
-                    <Text style={{ fontSize: 10 }}>{constants.ehealth.time}</Text>
-                </View>
-            </View>
-            <View style={{ height: 1, backgroundColor: '#00000050' }} />
-        </TouchableOpacity >
+                </TouchableOpacity>
+            </Card>
+        )
     }
     onRefresh() {
         if (!this.state.loading)
@@ -149,7 +106,7 @@ class ListProfileSmallScreen extends PureComponent {
         return (
             <ActivityPanel style={{ flex: 1 }}
                 // title="HỒ SƠ Y BẠ GIA ĐÌNH"
-                title={<Text>{constants.title.list_profile_ehealth}{'\n'}<Text style={{ fontSize: 12, fontWeight: 'normal' }}>{constants.ehealth.total}{this.state.listData ? this.state.listData.length : 0}{constants.ehealth.member}</Text></Text>}
+                title={<Text style={{fontSize: 16}}>{constants.title.list_profile_ehealth}{'\n'}<Text style={{ fontSize: 12, fontWeight: 'normal' }}>{constants.ehealth.total}{this.state.listData ? this.state.listData.length : 0}{constants.ehealth.member}</Text></Text>}
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#22b060"
@@ -170,7 +127,7 @@ class ListProfileSmallScreen extends PureComponent {
                     extraData={this.state}
                     data={this.state.listData}
                     ListFooterComponent={() => <View style={{ height: 10 }}></View>}
-                    renderItem={({ item, index }) => this.renderItemProfile.call(this, item, index)}
+                    renderItem={this.renderItemProfile}
                 />
             </ActivityPanel>
         );
@@ -181,6 +138,11 @@ const styles = StyleSheet.create({
     style1: {
         flexDirection: 'row', alignItems: 'center', marginTop: 10, marginLeft: 20
     },
+    titleStyle: {
+        color: '#FFF'
+    },
+    viewFooter: { height: 10 },
+    container: { flex: 1 },
     text1: {
         fontSize: 16,
         fontWeight: "bold",
@@ -232,6 +194,38 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         width: 45,
         height: 45
+    },
+    viewItem: {
+        flexDirection: 'row'
+    },
+    viewImage: { justifyContent: 'center', width: 90, alignItems: 'center' },
+    imageStyle: { borderRadius: 20, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' },
+    imgLoad: {
+        alignSelf: 'center',
+        borderRadius: 20,
+        width: 40,
+        height: 40
+    },
+    viewListItem: { flex: 1, borderRightColor: '#c8d1d6', borderRightWidth: 1, paddingVertical: 10, paddingRight: 5 },
+    viewPatienName: { position: 'relative' },
+    viewLineHeight: { position: 'absolute', left: 9, top: 0, bottom: 0, width: 2, backgroundColor: '#91a3ad', },
+    viewBettwen: { flexDirection: 'row', height: 40 },
+    viewCircle: { width: 20, height: 20, borderWidth: 1.5, borderColor: '#91a3ad', borderRadius: 10, justifyContent: 'center', alignItems: 'center', left: 0, bottom: 0, backgroundColor: '#FFF' },
+    viewSquarBlue: { width: 8, height: 8, backgroundColor: '#7eac39', borderRadius: 4 },
+    txPatientName: { color: '#63737a', fontSize: 14 },
+    viewHospitalName: { marginTop: -2, paddingRight: 4 },
+    viewTxHospital: { flexDirection: 'row', alignItems: 'flex-start' },
+    viewBorderCircleRed: { marginTop: 2, width: 20, height: 20, borderWidth: 1.5, borderColor: '#91a3ad', borderRadius: 10, justifyContent: 'center', alignItems: 'center', left: 0, bottom: 0, backgroundColor: '#FFF' },
+    viewCircleRed: { width: 8, height: 8, backgroundColor: '#c84242', borderRadius: 4 },
+    txHospitalEntityName: { flex: 1, color: '#51626a', fontSize: 13, marginTop: 10 },
+    viewTime: { flexDirection: 'row', marginTop: 10, alignItems: 'center', flex: 1 },
+    txLastTime: { marginLeft: 5, color: '#045684', flex: 1, fontSize: 12 },
+    txCountTime: { justifyContent: 'center', alignItems: 'center', width: 60 },
+    txCount: { color: '#f36819', fontSize: 22 },
+    borderBottom: { height: 1, backgroundColor: '#00000050' },
+    actionbarStyle: {
+        backgroundColor: '#22b060',
+        borderBottomWidth: 0
     }
 });
 
