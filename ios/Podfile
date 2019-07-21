@@ -75,7 +75,7 @@ target 'APP' do
   pod 'react-native-sms', :path => '../node_modules/react-native-sms'
 
   pod 'CodePush', :path => '../node_modules/react-native-code-push'
-
+  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
 end
 
 # very important to have, unless you removed React dependencies for Libraries
