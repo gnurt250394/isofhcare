@@ -76,10 +76,10 @@ class ListProfileScreen extends PureComponent {
                         <Text style={styles.txLastTime}>{constants.ehealth.lastTime2}{item.latestTime ? item.latestTime.toDateObject('-').format('dd/MM/yyyy') : ''}</Text>
                     </View>
                 </View>
-                <View style={styles.txCountTime}>
+                <TouchableOpacity onPress = {() => this.props.navigation.navigate('historyTime')} style={styles.txCountTime}>
                     <Text style={styles.txCount}>{item.countTime}</Text>
                     <Text>{constants.ehealth.time}</Text>
-                </View>
+                </TouchableOpacity>
             </View>
             <View style={styles.borderBottom} />
         </TouchableOpacity>
