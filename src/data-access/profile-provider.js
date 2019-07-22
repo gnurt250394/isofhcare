@@ -26,6 +26,7 @@ module.exports = {
                     }
                 }
                 else {
+
                     if (callback)
                         callback(undefined, e);
                 }
@@ -60,5 +61,25 @@ module.exports = {
             reject(e)
         })
     })
-    }
+    },
+    getListProfile(){
+        return new Promise((resolve, reject) => {
+            client.requestApi('get',constants.api.profile.get_list_profile,{},(s,e) => {
+                if(s)
+                resolve(s)
+                else
+                reject(e)
+            })
+        })
+    },
+    deleteFamilyProfile(id){
+        return new Promise ((resolve,reject) => {
+            client.requestApi('delete',`${constants.api.profile.delete_family_profile}/${id}`,{},(s,e) => {
+                if(s)
+                resolve(s)
+                else
+                reject(e)
+            })
+        })
+    },
 }

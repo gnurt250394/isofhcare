@@ -1,16 +1,20 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, RefreshControl } from 'react-native';
 import ActivityPanel from "@components/ActivityPanel";
 import ScaledImage from 'mainam-react-native-scaleimage';
 import ImageLoad from "mainam-react-native-image-loader";
 import ProfileInfo from "@components/profile/ProfileInfo"
 import Transaction from "@components/profile/Transaction"
+import profileProvider from '@data-access/profile-provider'
+import dateUtils from 'mainam-react-native-date-utils';
 
 export default class ProfileScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            value: 1
+            value: 1,
+            refresh: false,
+            isLoading: false
         };
     }
     onSelectFeature = (value) => {
@@ -19,7 +23,6 @@ export default class ProfileScreen extends Component {
         })
     }
     renderContent = () => {
-        console.log('renderrrrr');
         switch (this.state.value) {
             case 1: return (
                 <ProfileInfo></ProfileInfo>
@@ -27,8 +30,10 @@ export default class ProfileScreen extends Component {
             case 2: return (<Transaction></Transaction>)
         }
     }
-    componentDidMount(){
-        alert(this.props.navigation.state.params.id)
+    componentDidMount() {
+        this.props.navigation.state.params.data && this.setState({
+            data: this.props.navigation.state.params.data
+        })
     }
     render() {
         return (
@@ -40,8 +45,10 @@ export default class ProfileScreen extends Component {
                 statusbarBackgroundColor="#359A60"
                 actionbarStyle={styles.actionbarStyle}
                 style={styles.container}
+                menuButton = {<ScaledImage height={20} source={require('@images/new/profile/ic_edit.png')}></ScaledImage>}
+
             >
-                <ScrollView style={{ flex: 1 }}>
+                <ScrollView style={{ flex: 1 }} >
                     <View style={styles.viewBaner}>
                         <ImageLoad
                             // imageStyle={styles.imgBaner}
@@ -96,15 +103,13 @@ export default class ProfileScreen extends Component {
                                 />
                             </TouchableOpacity>
                         </View>
-                        <Text style={styles.txName}>Nguyễn Thị Ngọc Anh</Text>
-
                     </View>
-                        <TouchableOpacity onPress={() => this.onSelectFeature(1)} style={styles.btnFeature}>
-                            <ScaledImage height={20} style={{ tintColor: '#fff' }} source={require('@images/new/profile/ic_account.png')}></ScaledImage>
-                            <Text style={[styles.txFeature, this.state.value == 1 ? {} : {}]} >Thông tin cá nhân</Text>
-                            <View style={{width:1}}></View>
-                        </TouchableOpacity>
-                        {/* <TouchableOpacity onPress={() => this.onSelectFeature(2)} style={[styles.btnFeature, this.state.value == 2 ? { backgroundColor: '#4BBA7B' } : { backgroundColor: '#fff' }]}>
+                    <View style={styles.btnFeature}>
+                        <ScaledImage height={20} style={{ tintColor: '#fff' }} source={require('@images/new/profile/ic_account.png')}></ScaledImage>
+                        <Text style={[styles.txFeature, this.state.value == 1 ? {} : {}]} >Thông tin cá nhân</Text>
+                        <View style={{ width: 1 }}></View>
+                    </View>
+                    {/* <TouchableOpacity onPress={() => this.onSelectFeature(2)} style={[styles.btnFeature, this.state.value == 2 ? { backgroundColor: '#4BBA7B' } : { backgroundColor: '#fff' }]}>
                             <ScaledImage height={20} style={this.state.value == 2 ? { tintColor: '#fff' } : { tintColor: '#4BBA7B' }} source={require('@images/new/profile/ic_deal_write.png')}></ScaledImage>
                             <Text style={[styles.txFeature, this.state.value == 2 ? { color: '#FFF' } : {}]}>Giao dịch</Text>
                         </TouchableOpacity>
@@ -112,7 +117,34 @@ export default class ProfileScreen extends Component {
                             <ScaledImage height={20} style={this.state.value == 3 ? { tintColor: '#fff' } : { tintColor: '#4BBA7B' }} source={require('@images/new/profile/ic_account.png')}></ScaledImage>
                             <Text style={[styles.txFeature, this.state.value == 3 ? { color: '#FFF' } : {}]}>Y bạ điện tử</Text>
                         </TouchableOpacity> */}
-                    {this.renderContent()}
+                    <View style={styles.containerInfo}>
+                        <View style={styles.viewItem}>
+                            <Text><Text style={styles.txLabel}>Họ và tên: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.name}</Text></Text>
+                        </View>
+                        <View style={styles.viewItem}>
+                            <Text><Text style={styles.txLabel}>Ngày sinh: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.dob ? this.state.data.dob.toDateObject('-').format('dd/MM/yyyy') : ('')}</Text></Text>
+                        </View>
+                        <View style={styles.viewItem}>
+                            <Text><Text style={styles.txLabel}>ID: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.profileNoID ?this.state.data.profileNoID : '' }</Text></Text>
+                        </View>
+                        <View style={styles.viewItem}>
+                            <Text><Text style={styles.txLabel}>Giới tính: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.gender ? (this.state.data.gender == 1 ? 'Nam' : 'Nữ') :'' }</Text></Text>
+                        </View>
+                        <View style={[styles.viewItem, {}]}>
+                            <Text><Text style={styles.txLabel}>Chiều cao: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.height ? this.state.data.height : ''}</Text></Text>
+                            <Text style={[styles.txLabel]}>Cân nặng: <Text style={{ color: '#000' }}>{this.state.data && this.state.data.weight ? this.state.data.weight : ''}</Text></Text>
+                            <View style={{width:20}}></View>
+                        </View>
+                        <View style={styles.viewItem}>
+                            <Text><Text style={styles.txLabel}>Chỉ số BMI: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.bmi ? this.state.data.bmi : ''}</Text></Text>
+                        </View>
+                        <View style={styles.viewItem}>
+                            <Text><Text style={styles.txLabel}>Số điện thoại: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.phone ? this.state.data.phone : ''}</Text></Text>
+                        </View>
+                        <View style={styles.viewItem}>
+                            <Text><Text style={styles.txLabel}>Địa chỉ: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.address ? this.state.data.address:''}</Text></Text>
+                        </View>
+                    </View>
                 </ScrollView>
             </ActivityPanel>
         );
@@ -126,7 +158,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     scaledImage: { position: "absolute", top: 5, right: 5 },
-    btnFeature: { flexDirection: 'row', alignItems: 'center',backgroundColor: '#4BBA7B', justifyContent: 'space-around', borderRadius: 5, borderColor: '#4BBA7B', paddingHorizontal: 2, paddingVertical: 10,marginHorizontal:10 },
+    btnFeature: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#4BBA7B', justifyContent: 'space-around', borderRadius: 5, borderColor: '#4BBA7B', paddingHorizontal: 2, paddingVertical: 10, marginHorizontal: 10,marginTop:30 },
     imageStyle: { borderRadius: 60, borderWidth: 2, borderColor: '#Fff' },
     customImagePlace: {
         width: 120,
@@ -142,6 +174,22 @@ const styles = StyleSheet.create({
     actionbarStyle: {
         backgroundColor: '#22b060',
         borderBottomWidth: 0
+    },
+    containerInfo: {
+        padding: 10,
+        flex: 1,
+    },
+    viewItem: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginVertical: 10,
+    },
+    txLabel: {
+        color: '#4BBA7B'
+    },
+    txContent: {
+        marginLeft: 5,
+        color: '#000'
     },
     imgBaner: {
         width: '100%',
@@ -165,6 +213,6 @@ const styles = StyleSheet.create({
 
     txFeature: {
         textAlign: 'center',
-        color: '#FFF' 
+        color: '#FFF'
     }
 })
