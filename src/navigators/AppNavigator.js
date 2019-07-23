@@ -46,9 +46,9 @@ import PaymentBookingErrorScreen from "@containers/booking/PaymentBookingErrorSc
 import DetailsHistoryScreen from "@containers/booking/DetailsHistoryScreen"
 //=========PROFILE NAVIGATION
 import SelectProfileScreen from "@containers/booking/SelectProfileScreen";
-import CreateProfileScreen from "@containers/booking/CreateProfileScreen";
+// import CreateProfileScreen from "@containers/booking/CreateProfileScreen";
 import ProfileInfo from '@containers/account/ProfileInfo'
-// import CreateProfileScreen from "@containers/profile/CreateProfileScreen";
+import CreateProfileScreen from "@containers/profile/CreateProfileScreen";
 import MenuProfile from '@containers/profile/MenuProfile'
 import ListProfileScreen from '@containers/profile/ListProfileScreen'
 
@@ -78,9 +78,9 @@ const RootNavigator = createStackNavigator(
     // scanQRCode: { screen: ScanQRCodeScreen },
     //=---------------Profile-----------------
     // profile: { screen: ProfileScreen },
-    // createProfile: { screen: CreateProfileScreen },
     splash: { screen: SplashScreen },
     listProfile:{screen:ListProfileScreen},
+    createProfile: { screen: CreateProfileScreen },
     groupChat: { screen: GroupChatScreen },
     groupChatFacility: { screen: GroupChatScreen },
     chat: { screen: ChatScreen },

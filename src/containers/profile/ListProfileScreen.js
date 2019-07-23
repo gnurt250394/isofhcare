@@ -21,38 +21,37 @@ class ListProfileScreen extends Component {
             isVisible: false,
         };
     }
-    onRefresh() {
-        if (!this.state.refreshing)
+    onRefresh = () => {
+        this.setState({
+            refreshing: true,
+        }, () => {
             this.onLoad();
+        })
     }
     componentDidMount() {
         this.onRefresh();
     }
 
     onLoad = () => {
-        this.setState({
-            refreshing: true,
-        }, () => {
-            profileProvider.getListProfile().then(s => {
-                this.setState({
-                    refreshing: false,
-                }, () => {
-                    switch (s.code) {
-                        case 0:
-                            if (s.data && s.data.profiles) {
-                                this.setState({
-                                    data: s.data.profiles,
-                                });
-                            }
-                            break;
-                    }
-                });
-            }).catch(e => {
-                this.setState({
-                    refreshing: false,
-                });
-            })
-        });
+        profileProvider.getListProfile().then(s => {
+            this.setState({
+                refreshing: false,
+            }, () => {
+                switch (s.code) {
+                    case 0:
+                        if (s.data && s.data.profiles) {
+                            this.setState({
+                                data: s.data.profiles,
+                            });
+                        }
+                        break;
+                }
+            });
+        }).catch(e => {
+            this.setState({
+                refreshing: false,
+            });
+        })
     }
     onClickItem = (item) => {
         this.props.navigation.navigate('profile', { data: item })
@@ -70,6 +69,7 @@ class ListProfileScreen extends Component {
                 this.setState({
                     isVisible: false
                 })
+                this.onRefresh()
             }).catch(err => {
                 this.setState({
                     isVisible: false
@@ -81,14 +81,18 @@ class ListProfileScreen extends Component {
             isVisible: false
         })
     }
+    componentWillReceiveProps(nextProps){
+        if(nextProps.navigation.state.params && nextProps.navigation.state.params.reset){
+            this.onRefresh()
+        }
+    }
     renderItem = (item, index) => {
-        console.log(item, 'tiêmmeasd')
         return (
             <TouchableOpacity onPress={() => this.onClickItem(item)} style={{ paddingHorizontal: 10, marginVertical: 10 }}>
                 <Card style={styles.cardView}>
                     <View>
                         <Text style={styles.txName}>{item.name}</Text>
-                        <Text style={styles.txLabel}>ID: <Text style={styles.txId}>{item.id}</Text></Text>
+                        <Text style={styles.txLabel}>ID: <Text style={styles.txId}>{item.profileNoID}</Text></Text>
                     </View>
                     {item.type !== 'ORIGINAL' ? (<TouchableOpacity onPress={() => this.onDeleteItem(item.id)}>
                         <ScaledImage height={20} source={require('@images/new/profile/ic_clear.png')}></ScaledImage>
@@ -129,7 +133,7 @@ class ListProfileScreen extends Component {
                                 </View>
                             ) : null
                     }
-                    ListFooterComponent={() => <TouchableOpacity style={styles.btn}><Text style={styles.txBtn}>Thêm thành viên</Text></TouchableOpacity>
+                    ListFooterComponent={() => <TouchableOpacity onPress={() => this.props.navigation.navigate('createProfile',{screen:'listProfile'})} style={styles.btn}><Text style={styles.txBtn}>Thêm thành viên</Text></TouchableOpacity>
                     }
                 ></FlatList>
                 <Modal
@@ -172,7 +176,7 @@ const styles = StyleSheet.create({
     },
     txNotifi: { fontSize: 18, color: '#000', textAlign: 'center', marginHorizontal: 40 },
 
-    viewPopup: { backgroundColor: '#fff', marginHorizontal: 20,paddingVertical:40, borderRadius: 5 },
+    viewPopup: { backgroundColor: '#fff', marginHorizontal: 20, paddingVertical: 40, borderRadius: 5 },
     viewModal: { flex: 1, alignItems: 'center', justifyContent: 'center' },
     txBtn: { color: '#fff' },
     cardView: {
@@ -184,10 +188,10 @@ const styles = StyleSheet.create({
     txName: { color: '#4BBA7B', fontWeight: '500', fontSize: 15, maxWidth: 200 },
     txDelelte: { color: '#C4C4C4', fontSize: 10 },
     txLabel: { color: '#4BBA7B' },
-    btnDone: { justifyContent: 'center', alignItems: 'center', height: 30, width: 78, backgroundColor: '#359A60',borderRadius:5, },
-    btnReject: { justifyContent: 'center', alignItems: 'center', height: 30, width: 78,marginLeft:10,borderRadius:5, backgroundColor: '#FFB800', },
-    viewBtn : { flexDirection: 'row', justifyContent: 'center', alignItems: 'center',marginTop:20},
-    txDone:{ color: '#fff' },
+    btnDone: { justifyContent: 'center', alignItems: 'center', height: 30, width: 78, backgroundColor: '#359A60', borderRadius: 5, },
+    btnReject: { justifyContent: 'center', alignItems: 'center', height: 30, width: 78, marginLeft: 10, borderRadius: 5, backgroundColor: '#FFB800', },
+    viewBtn: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20 },
+    txDone: { color: '#fff' },
 
 })
 function mapStateToProps(state) {

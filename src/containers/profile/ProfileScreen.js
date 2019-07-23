@@ -45,7 +45,7 @@ export default class ProfileScreen extends Component {
                 statusbarBackgroundColor="#359A60"
                 actionbarStyle={styles.actionbarStyle}
                 style={styles.container}
-                menuButton = {<ScaledImage height={20} source={require('@images/new/profile/ic_edit.png')}></ScaledImage>}
+                menuButton = {<TouchableOpacity><ScaledImage style={{tintColor:'#fff',marginRight:10}} height={20} source={require('@images/new/profile/ic_edit.png')}></ScaledImage></TouchableOpacity>}
 
             >
                 <ScrollView style={{ flex: 1 }} >
@@ -145,6 +145,7 @@ export default class ProfileScreen extends Component {
                             <Text><Text style={styles.txLabel}>Địa chỉ: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.address ? this.state.data.address:''}</Text></Text>
                         </View>
                     </View>
+                    <TouchableOpacity onPress = {() => this.props.navigation.navigate('createProfile')} style={styles.btn}><Text style={styles.txBtn}>Thêm thành viên</Text></TouchableOpacity>
                 </ScrollView>
             </ActivityPanel>
         );
@@ -174,6 +175,9 @@ const styles = StyleSheet.create({
     actionbarStyle: {
         backgroundColor: '#22b060',
         borderBottomWidth: 0
+    },
+    btn: {
+        paddingHorizontal: 10, paddingVertical: 5, backgroundColor: '#359A60', borderRadius: 5, justifyContent: 'center', alignItems: 'center', alignSelf: 'flex-start', marginHorizontal: 10, marginLeft: 12, marginBottom: 20, marginTop: 10
     },
     containerInfo: {
         padding: 10,
@@ -214,5 +218,7 @@ const styles = StyleSheet.create({
     txFeature: {
         textAlign: 'center',
         color: '#FFF'
-    }
+    },
+    txBtn: { color: '#fff' },
+
 })

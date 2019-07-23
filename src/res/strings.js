@@ -544,7 +544,9 @@ module.exports = {
       get_details_user: isofhcare_service + '/user/get-detail',
       get_profile_family: isofhcare_service + 'booking/get-group-patient-history',
       get_list_profile:isofhcare_service + 'profile/get-list-profile',
-      delete_family_profile: isofhcare_service + 'profile/delete'
+      delete_family_profile: isofhcare_service + 'profile/delete',
+      create_profile : isofhcare_service + 'profile/create-family-profile',
+      update_profile: isofhcare_service + 'profile/update-profile'
     },
     serviceType: {
       get_all: isofhcare_service + "service-type/get-all"

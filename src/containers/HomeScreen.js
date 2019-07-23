@@ -307,10 +307,20 @@ class HomeScreen extends Component {
     );
   }
   swipe(targetIndex) {
-    targetIndex == 2 && !this.props.userApp.isLogin ?
-      NavigationService.navigate("login", {
+     if(targetIndex == 2 && !this.props.userApp.isLogin)
+      {NavigationService.navigate("login", {
         nextScreen: { screen: "notification", param: {} }
-      }) : this.setState({
+      }) 
+      return  
+    }
+    if(targetIndex == 1 && !this.props.userApp.isLogin)
+      {NavigationService.navigate("login")
+      // , {
+      //   nextScreen: { screen: "notification", param: {} }
+      // }) 
+      return  
+    }
+      this.setState({
         refreshNotification: this.state.refreshNotification+1
       })
 

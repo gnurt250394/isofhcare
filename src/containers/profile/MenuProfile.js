@@ -33,18 +33,18 @@ class MenuProfile extends React.Component {
           <ScaledImage height={15} source={require('@images/new/profile/ic_family.png')} />
           <Text style={styles.txDrawer}>Thành viên gia đình</Text>
         </TouchableOpacity>
-        <View style={styles.viewDrawer}>
+        <TouchableOpacity onPress = {() => NavigationService.navigate('PatientHistoryScreen')} style={styles.viewDrawer}>
           <ScaledImage height={20} source={require('@images/new/profile/ic_calendar.png')} />
           <Text style={styles.txDrawer}>Lịch khám</Text>
-        </View>
+        </TouchableOpacity>
         <View style={styles.viewDrawer}>
           <ScaledImage height={20} source={require('@images/new/profile/ic_history.png')} />
           <Text style={styles.txDrawer}>Lịch sử giao dịch</Text>
         </View>
-        <View style={styles.viewDrawer}>
+        <TouchableOpacity onPress = {() => NavigationService.navigate("ehealth")} style={styles.viewDrawer}>
           <ScaledImage height={20} source={require('@images/new/profile/ic_ehealth_small.png')} />
           <Text style={styles.txDrawer}>Y bạ điện tử</Text>
-        </View>
+        </TouchableOpacity>
         <View style={styles.viewDrawer}>
           <ScaledImage height={20} source={require('@images/new/profile/ic_drug.png')} />
           <Text style={styles.txDrawer}>Thuốc đã đặt mua</Text>

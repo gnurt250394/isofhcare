@@ -82,4 +82,27 @@ module.exports = {
             })
         })
     },
+    createProfile (data){
+        let body = {
+           profile: data
+        }
+        return new Promise ((resolve,reject) => {
+            client.requestApi('post',`${constants.api.profile.create_profile}`,body,(s,e) => {
+                if(s)
+                resolve(s)
+                else
+                reject(e)
+            })
+        })
+    },
+    updateProfile(data){
+        return new Promise((resolve,reject) => {
+            client.requestApi('put',`${constants.api.profile.update_profile}`,data,(s,e) => {
+                if(s)
+                resolve(s)
+                else
+                reject(e)
+            })
+        })
+    }
 }
