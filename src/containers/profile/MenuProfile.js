@@ -49,10 +49,10 @@ class MenuProfile extends React.Component {
           <ScaledImage height={20} source={require('@images/new/profile/ic_drug.png')} />
           <Text style={styles.txDrawer}>Thuốc đã đặt mua</Text>
         </View>
-        <View style={styles.viewDrawer}>
+        <TouchableOpacity onPress = {() => NavigationService.navigate('setting')} style={styles.viewDrawer}>
           <ScaledImage height={20} source={require('@images/new/profile/ic_settings.png')} />
           <Text style={styles.txDrawer}>Cài đặt</Text>
-        </View>
+        </TouchableOpacity>
         <View style={{ alignItems: 'flex-end', flex: 1 }}>
           <ScaledImage style={{ right: -20 }} height={200} source={require('@images/new/home/ic_logo_lager.png')}></ScaledImage>
         </View>

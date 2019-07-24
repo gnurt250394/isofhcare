@@ -52,8 +52,7 @@ import CreateProfileScreen from "@containers/profile/CreateProfileScreen";
 import MenuProfile from '@containers/profile/MenuProfile'
 import ListProfileScreen from '@containers/profile/ListProfileScreen'
 import EditProfileScreen from '@containers/profile/EditProfileScreen'
-
-
+import SettingScreen from '@containers/profile/SettingScreen'
 //---------------------------
 import PatientHistoryScreen from "@containers/booking/PatientHistoryScreen";
 //.....details doctor.......
@@ -81,6 +80,7 @@ const RootNavigator = createStackNavigator(
     //=---------------Profile-----------------
     // profile: { screen: ProfileScreen },
     splash: { screen: SplashScreen },
+    setting:{screen:SettingScreen},
     listProfile:{screen:ListProfileScreen},
     createProfile: { screen: CreateProfileScreen },
     editProfile:{screen:EditProfileScreen},

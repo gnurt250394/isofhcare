@@ -12,6 +12,7 @@ import userProvider from '@data-access/user-provider';
 import constants from '@resources/strings';
 import FloatingLabel from 'mainam-react-native-floating-label';
 import connectionUtils from '@utils/connection-utils';
+import ScaledImage from 'mainam-react-native-scaleimage';
 
 class ProfileScreen extends Component {
     constructor(props) {
@@ -68,7 +69,7 @@ class ProfileScreen extends Component {
                     keyboardShouldPersistTaps="handled"
                     >
                     <KeyboardAvoidingView behavior="padding" style={styles.form}>
-                        <ScaleImage source={require("@images/new/isofhcare.png")} width={200} style={{ marginTop: 50, alignSelf: 'center' }} />
+                        <ScaledImage source={require("@images/new/isofhcare.png")} width={200} style={{ marginTop: 50, alignSelf: 'center' }} />
                         <View style={{ flex: 1, padding: 30 }}>
                             <Form ref={ref => (this.form = ref)} style={{ marginTop: 10 }}>
                                 <TextField
