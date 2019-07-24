@@ -73,7 +73,7 @@ export default class DrugScreen extends Component {
                 </View>
                 <View style={styles.viewBtn}>
                     <TouchableOpacity onPress={() => NavigationService.pop()} style={styles.btnBack}>
-                        <Text style={styles.txBtn}>Trở lại</Text>
+                        <Text allowFontScaling = {false} style={styles.txBtn}>Trở lại</Text>
                     </TouchableOpacity>
                 </View>
             </SafeAreaView>

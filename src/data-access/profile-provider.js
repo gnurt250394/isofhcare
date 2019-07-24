@@ -95,9 +95,29 @@ module.exports = {
             })
         })
     },
-    updateProfile(data){
+    updateProfile(id,data){
         return new Promise((resolve,reject) => {
-            client.requestApi('put',`${constants.api.profile.update_profile}`,data,(s,e) => {
+            client.requestApi('put',`${constants.api.profile.update_profile}/${id}`,data,(s,e) => {
+                if(s)
+                resolve(s)
+                else
+                reject(e)
+            })
+        })
+    },
+    updateAvatar(id,data){
+        return new Promise((resolve,reject) => {
+            client.requestApi('put',`${constants.api.profile.update_avatar}/${id}`,data,(s,e) => {
+                if(s)
+                resolve(s)
+                else
+                reject(e)
+            })
+        })
+    },
+    updateCover(id,data){
+        return new Promise((resolve,reject) => {
+            client.requestApi('put',`${constants.api.profile.update_cover}/${id}`,data,(s,e) => {
                 if(s)
                 resolve(s)
                 else

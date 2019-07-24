@@ -23,7 +23,7 @@ import KeyboardSpacer from "react-native-keyboard-spacer";
 import ActionSheet from 'react-native-actionsheet'
 import profileProvider from '@data-access/profile-provider'
 
-class CreateProfileScreen extends Component {
+class EditProfileScreen extends Component {
     constructor() {
         super();
         this.state = {
@@ -42,10 +42,32 @@ class CreateProfileScreen extends Component {
             valid: '',
             isDataNull: '',
             status: 2,
-            reset:1
+            reset: 1,
+            bmi: '',
+            height:'',
+            weight:''
         };
     }
-    
+    componentDidMount() {
+        console.log(this.props)
+        let data = this.props.navigation.state.params.data
+        console.log(data, 'data props')
+        this.setState({
+            name: data.name ? data.name : '',
+            date: data && data.dob ? data.dob.toDateObject('-').format('dd/MM/yyyy') : (''),
+            txGender: data.gender == 1 ? 'Nam' : 'Nữ',
+            valueGender: data.gender,
+            dobOld: data.dob ? data.dob : '',
+            height: data.height ? data.height.toString() : '',
+            weight: data.weight ? data.weight.toString() : '',
+            address: data.address ? data.address : '',
+            type: data.type ? data.type : '',
+            profileNo: data.profileNo ? data.profileNo : '',
+            id: data.id,
+            phone: data.phone,
+
+        })
+    }
     onChangeText = type => text => {
         this.setState({ [type]: text });
     };
@@ -102,23 +124,30 @@ class CreateProfileScreen extends Component {
                     () => {
                         let name = this.state.name
                         let dob = this.state.dob
+                        let dobOld = this.state.dobOld
+                        let profileNo = this.state.profileNo
                         let gender = this.state.gender
                         let height = this.state.height
                         let weight = this.state.weight
-                        let phone = this.state.phone
                         let address = this.state.address
+                        let type = this.state.type
+                        let id = this.state.id
+                        let phone = this.state.phone
                         let data = {
                             "name": name,
-                            "dob": this.state.dob ? this.state.dob.format('yyyy-MM-dd') + ' 00:00:00' : null,
+                            "dob": dob ? dob.toDateObject().format('yyyy-MM-dd') + ' 00:00:00' : dobOld,
+                            "profileNo": profileNo,
                             "gender": gender ? gender : null,
                             "height": height ? height : null,
                             "weight": weight ? weight : null,
                             "phone": phone,
-                            "address": address ? address : null
+                            "address": address ? address : null,
+                            "type": type
                         }
-                        profileProvider.createProfile(data).then(res => {
-                            console.log(res)
-                            this.props.navigation.navigate('listProfile',{reset : this.state.reset + 1})
+                        profileProvider.updateProfile(id, data).then(res => {
+                            if(res.code == 0 ){
+                                this.props.navigation.navigate('profile', { data:res.data.profile})
+                            }
                         }).catch(err => {
                             console.log(err);
                         })
@@ -128,7 +157,7 @@ class CreateProfileScreen extends Component {
                 snackbar.show(constants.msg.app.not_internet, "danger");
             });
     }
-   
+
     render() {
         let maxDate = new Date();
         maxDate = new Date(
@@ -148,10 +177,10 @@ class CreateProfileScreen extends Component {
             : icSupport;
 
         return (
-            <View style = {{flex:1,backgroundColor:'#fff'}}>
+            <View style={{ flex: 1, backgroundColor: '#fff' }}>
                 <ScrollView keyboardShouldPersistTaps='handled' style={{ flex: 1, paddingVertical: 5 }}>
                     <View style={styles.container}>
-                    <Text style = {styles.txTitle}>THÊM THÀNH VIÊN MỚI</Text>
+                        <Text style={styles.txTitle}>SỬA THÔNG TIN</Text>
                         <Form ref={ref => (this.form = ref)} style={[{ flex: 1 }]}>
                             <Field style={[styles.mucdichkham, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
                                 <Text style={styles.mdk}>{constants.fullname}</Text>
@@ -190,11 +219,7 @@ class CreateProfileScreen extends Component {
                                 />
                             </Field>
                             <Text style={[styles.errorStyle]}>{this.state.nameError}</Text>
-
-
-
                             <Field
-
                                 style={[styles.mucdichkham, { flexDirection: 'row' }]}
                             >
                                 <Field style={{ width: '60%' }}>
@@ -223,14 +248,6 @@ class CreateProfileScreen extends Component {
                                         value={this.state.date}
                                         errorStyle={styles.errorStyle}
                                         hideError={true}
-                                        onValidate={(valid, messages) => {
-                                            if (valid) {
-                                                this.setState({ nameError: "" });
-                                            } else {
-                                                messages ?
-                                                    (this.setState({ valid: constants.msg.app.dob_must_lesser_150, isMin: false })) : (this.setState({ isMin: true }));
-                                            }
-                                        }}
                                         validate={{
                                             rules: {
                                                 max: maxDate,
@@ -288,11 +305,8 @@ class CreateProfileScreen extends Component {
                                         }}
                                         validate={{
                                             rules: {
-                                                maxlength: 255
+                                                number:true
                                             },
-                                            messages: {
-                                                maxlength: constants.msg.user.text_without_255,
-                                            }
                                         }}
                                         placeholder={'Chiều cao'}
                                         multiline={true}
@@ -322,12 +336,9 @@ class CreateProfileScreen extends Component {
                                         }}
                                         validate={{
                                             rules: {
-                                                minlength: 1,
-                                                maxlength: 255
+                                                number:true
                                             },
-                                            messages: {
-                                                maxlength: constants.msg.user.text_without_255,
-                                            }
+                                           
                                         }}
                                         placeholder={'Cân nặng'}
                                         multiline={true}
@@ -344,44 +355,44 @@ class CreateProfileScreen extends Component {
                                     />
                                 </Field>
                             </Field>
-                            <Text style={[styles.errorStyle]}>{this.state.height}</Text>
-                            <Field style={[styles.mucdichkham, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
-                                <Text style={styles.mdk}>{'Số điện thoại'}</Text>
-                                <TextField
-                                    hideError={true}
-                                    onValidate={(valid, messages) => {
-                                        if (valid) {
-                                            this.setState({ phoneError: "" });
-                                        } else {
-                                            this.setState({ phoneError: messages });
-                                        }
-                                    }}
-                                    validate={{
-                                        rules: {
-                                            required: true,
-                                            phone: true
-                                        },
-                                        messages: {
-                                            required: "Số điện thoại không được bỏ trống",
-                                            phone: "SĐT không hợp lệ"
-                                        }
-                                    }}
-                                    placeholder={'Số điện thoại'}
-                                    multiline={true}
-                                    inputStyle={[
-                                        styles.ktq,
-                                    ]}
-                                    errorStyle={styles.errorStyle}
-                                    onChangeText={this.onChangeText("phone")}
-                                    value={this.state.phone}
-                                    autoCapitalize={"none"}
-                                    returnKeyType={"next"}
-                                    // underlineColorAndroid="transparent"
-                                    autoCorrect={false}
-                                />
-                            </Field>
-                            <Text style={[styles.errorStyle]}>{this.state.phoneError}</Text>
-                            <Field style={[styles.mucdichkham, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
+                            {this.state.type == "FAMILY" ? (<Field style={[styles.mucdichkham, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
+                                <Field style={{marginTop:10}}><Text style={styles.mdk}>{'Số điện thoại'}</Text>
+                                    <TextField
+                                        hideError={true}
+                                        onValidate={(valid, messages) => {
+                                            if (valid) {
+                                                this.setState({ phoneError: "" });
+                                            } else {
+                                                this.setState({ phoneError: messages });
+                                            }
+                                        }}
+                                        validate={{
+                                            rules: {
+                                                required: true,
+                                                phone: true
+                                            },
+                                            messages: {
+                                                required: "Số điện thoại không được bỏ trống",
+                                                phone: "SĐT không hợp lệ"
+                                            }
+                                        }}
+                                        placeholder={'Số điện thoại'}
+                                        multiline={true}
+                                        inputStyle={[
+                                            styles.ktq,
+                                        ]}
+                                        errorStyle={styles.errorStyle}
+                                        onChangeText={this.onChangeText("phone")}
+                                        value={this.state.phone}
+                                        autoCapitalize={"none"}
+                                        returnKeyType={"next"}
+                                        // underlineColorAndroid="transparent"
+                                        autoCorrect={false}
+                                    />
+                                </Field>
+                                <Text style={[styles.errorStyle]}>{this.state.phoneError}</Text></Field>) : (<Field></Field>)}
+
+                            <Field style={[styles.mucdichkham,this.state.type == "FAMILY" ?{}: { marginTop: 10 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
                                 <Text style={styles.mdk}>{'Địa chỉ'}</Text>
                                 <TextField
                                     hideError={true}
@@ -487,7 +498,7 @@ const styles = StyleSheet.create({
         // borderRadius:5,
 
     },
-    txTitle:{fontSize:16,color:'#4BBA7B', textAlign:'center',fontWeight:'600',marginTop:40,marginBottom:10},
+    txTitle: { fontSize: 16, color: '#4BBA7B', textAlign: 'center', fontWeight: '600', marginTop: 40, marginBottom: 10 },
     mdk: {
         marginLeft: 12,
         flex: 1,
@@ -613,14 +624,14 @@ const styles = StyleSheet.create({
         height: 45,
     },
     labelStyle: { color: '#53657B', fontSize: 16, marginBottom: 10, marginLeft: 50 },
-    btnDone: { justifyContent: 'center', alignItems: 'center', height: 30, width: 78, backgroundColor: '#359A60',borderRadius:5, },
-    btnReject: { justifyContent: 'center', alignItems: 'center', height: 30, width: 78,marginLeft:10,borderRadius:5, backgroundColor: '#FFB800', },
-    viewBtn : { flexDirection: 'row', justifyContent: 'center', alignItems: 'center',marginTop:20},
-    txDone:{ color: '#fff' },
+    btnDone: { justifyContent: 'center', alignItems: 'center', height: 30, width: 78, backgroundColor: '#359A60', borderRadius: 5, },
+    btnReject: { justifyContent: 'center', alignItems: 'center', height: 30, width: 78, marginLeft: 10, borderRadius: 5, backgroundColor: '#FFB800', },
+    viewBtn: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20 },
+    txDone: { color: '#fff' },
 });
 function mapStateToProps(state) {
     return {
         userApp: state.userApp
     };
 }
-export default connect(mapStateToProps)(CreateProfileScreen);
+export default connect(mapStateToProps)(EditProfileScreen);

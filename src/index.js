@@ -17,6 +17,9 @@ import { Alert } from 'react-native';
 import snackbar from "@utils/snackbar-utils";
 let codePushOptions = { checkFrequency: codePush.CheckFrequency.MANUAL };
 // let codePushOptions = {installMode: codePush.InstallMode.IMMEDIATE };
+import { Text,TextInput } from 'react-native';
+Text.defaultProps.allowFontScaling=false
+TextInput.defaultProps.allowFontScaling=false
 class Kernel extends Component {
   constructor(props) {
     super(props);
@@ -24,7 +27,7 @@ class Kernel extends Component {
 
     }
   }
-
+  
   componentDidMount() {
     codePush.checkForUpdate().then(update => {
       if (update) {
