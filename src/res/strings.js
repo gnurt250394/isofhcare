@@ -548,7 +548,7 @@ module.exports = {
       create_profile : isofhcare_service + 'profile/create-family-profile',
       update_profile: isofhcare_service + 'profile/update-profile',
       update_cover : isofhcare_service + 'user/update-cover',
-      update_avatar : isofhcare_service |+ 'user/update-avatar'
+      update_avatar : isofhcare_service + 'user/update-avatar'
     },
     serviceType: {
       get_all: isofhcare_service + "service-type/get-all"

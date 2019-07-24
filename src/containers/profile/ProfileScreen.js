@@ -10,6 +10,8 @@ import dateUtils from 'mainam-react-native-date-utils';
 import imageProvider from "@data-access/image-provider";
 import connectionUtils from "@utils/connection-utils";
 import ImagePicker from "mainam-react-native-select-image";
+import snackbar from '@utils/snackbar-utils';
+import constants from '@resources/strings';
 
 export default class ProfileScreen extends Component {
     constructor(props) {
@@ -35,13 +37,17 @@ export default class ProfileScreen extends Component {
     }
     componentWillMount() {
         this.props.navigation.state.params.data && this.setState({
-            data: this.props.navigation.state.params.data
+            data: this.props.navigation.state.params.data,
+            imgAvtLocal: this.props.navigation.state.params.data.avatar ? this.props.navigation.state.params.data.avatar.absoluteUrl() : '',
+            imgLocal: this.props.navigation.state.params.data.cover ? this.props.navigation.state.params.data.cover.absoluteUrl() : '',
         })
     }
     componentWillReceiveProps(nextProps) {
         if (nextProps.navigation.state.params && nextProps.navigation.state.params.data) {
             this.setState({
-                data: nextProps.navigation.state.params.data
+                data: nextProps.navigation.state.params.data,
+                imgAvtLocal: this.props.navigation.state.params.data.avatar ? this.props.navigation.state.params.data.avatar.absoluteUrl() : '',
+                imgLocal: this.props.navigation.state.params.data.cover ? this.props.navigation.state.params.data.cover.absoluteUrl() : '',
             })
         }
     }
@@ -106,7 +112,7 @@ export default class ProfileScreen extends Component {
                     },
                     () => {
                         let data = {
-                            image: image,
+                            cover: image,
                             type: this.state.data.type,
                         }
                         let id = this.state.data.id
@@ -197,7 +203,7 @@ export default class ProfileScreen extends Component {
                     },
                     () => {
                         let data = {
-                            image: image,
+                            avatar: image,
                             type: this.state.data.type,
                         }
                         let id = this.state.data.id
@@ -233,9 +239,10 @@ export default class ProfileScreen extends Component {
         const source = this.state.imgLocal
             ? { uri: this.state.imgLocal.absoluteUrl() }
             : icSupport
+
         const sourceAvt = this.state.imgAvtLocal
             ? { uri: this.state.imgAvtLocal.absoluteUrl() }
-            : icSupport;
+            : icSupport
         return (
             <ActivityPanel
                 icBack={require('@images/new/left_arrow_white.png')}
@@ -257,12 +264,12 @@ export default class ProfileScreen extends Component {
                             style={styles.imgBaner}
                             resizeMode="cover"
                             loadingStyle={{ size: "small", color: "gray" }}
-                            source={this.state.data.cover ? { uri: this.state.data.cover.absoluteUrl()} : source}
+                            source={source}
                             defaultImage={() => {
                                 return (
                                     <ScaledImage
                                         resizeMode="cover"
-                                        source={icSupport} 
+                                        source={icSupport}
                                         width={70}
                                         style={styles.imgBaner}
                                     />
@@ -277,7 +284,7 @@ export default class ProfileScreen extends Component {
                         </TouchableOpacity>
                         <View style={styles.avtBtn}>
                             <ImageLoad
-                                source={this.state.data.avatar ? {uri : this.state.data.avatar.absoluteUrl()} : sourceAvt}
+                                source={sourceAvt}
                                 imageStyle={styles.imageStyle}
                                 borderRadius={60}
                                 customImagePlaceholderDefaultStyle={styles.customImagePlace}
@@ -290,7 +297,7 @@ export default class ProfileScreen extends Component {
                                             resizeMode="cover"
                                             source={icSupport}
                                             width={120}
-                                            style={styles.styleImgLoad}
+                                            style={styles.imageStyle}
                                         />
                                     );
                                 }}

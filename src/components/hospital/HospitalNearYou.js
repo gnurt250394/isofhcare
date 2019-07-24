@@ -245,7 +245,6 @@ class HospitalNearYou extends Component {
     }
 
     render() {
-        console.log(this.state.data, 'dataaaaaa');
         return (
             <View style={{ backgroundColor: '#fff' }}>
                 <HeaderLine onPress={this.onShowInfo} isShowViewAll={true} title={Dimensions.get("window").width <= 375 ? 'PHÒNG KHÁM,\nBỆNH VIỆN GẦN BẠN' : 'PHÒNG KHÁM, BỆNH VIỆN GẦN BẠN'} />
