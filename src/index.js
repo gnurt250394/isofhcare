@@ -19,20 +19,10 @@ let codePushOptions = { checkFrequency: codePush.CheckFrequency.MANUAL };
 // let codePushOptions = {installMode: codePush.InstallMode.IMMEDIATE };
 import { Text, TextInput } from 'react-native';
 
-let originalGetDefaultProps = Text.getDefaultProps;
-Text.getDefaultProps = function() {
-  return {
-    ...originalGetDefaultProps(),
-    allowFontScaling: false,
-  };
-}
-let originalGetDefaultProps2 = TextInput.getDefaultProps;
-TextInput.getDefaultProps = function() {
-  return {
-    ...originalGetDefaultProps2(),
-    allowFontScaling: false,
-  };
-}
+Text.defaultProps = Text.defaultProps || {};
+Text.defaultProps.allowFontScaling = false;
+TextInput.defaultProps = TextInput.defaultProps || {};
+TextInput.defaultProps.allowFontScaling = false;
 
 class Kernel extends Component {
   constructor(props) {
