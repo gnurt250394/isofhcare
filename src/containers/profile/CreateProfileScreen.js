@@ -118,8 +118,8 @@ class CreateProfileScreen extends Component {
                             "name": name,
                             "dob": this.state.dob ? this.state.dob.format('yyyy-MM-dd') + ' 00:00:00' : null,
                             "gender": gender ? gender : null,
-                            "height": height ? height : null,
-                            "weight": weight ? weight : null,
+                            "height": height ? Number(height) : null,
+                            "weight": weight ? Number(weight) : null,
                             "phone": phone,
                             "address": address ? address : null
                         }
@@ -287,7 +287,7 @@ class CreateProfileScreen extends Component {
                             <Field style={[styles.mucdichkham, { flexDirection: 'row' }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
                                 <Field style={{ width: '60%' }}>
                                     <Field>
-                                        <Text style={styles.mdk}>{'Chiều cao'}</Text>
+                                        <Text style={styles.mdk}>{'Chiều cao (cm)'}</Text>
 
                                         <TextField
                                             hideError={true}
@@ -324,7 +324,7 @@ class CreateProfileScreen extends Component {
                                 </Field>
                                 <Field style={{ flex: 1 }}>
                                     <Field>
-                                        <Text style={styles.mdk}>{'Cân nặng'}</Text>
+                                        <Text style={styles.mdk}>{'Cân nặng (kg)'}</Text>
 
                                         <TextField
                                             hideError={true}
