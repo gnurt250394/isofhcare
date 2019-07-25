@@ -118,4 +118,4 @@ function mapStateToProps(state) {
         ehealth: state.ehealth
     };
 }
-export default connect(mapStateToProps)(ListProfileScreen);
+export default connect(mapStateToProps)(HistoryTimeScreen);
