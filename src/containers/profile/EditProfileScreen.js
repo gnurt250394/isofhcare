@@ -44,8 +44,8 @@ class EditProfileScreen extends Component {
             status: 2,
             reset: 1,
             bmi: '',
-            height:'',
-            weight:''
+            height: '',
+            weight: ''
         };
     }
     componentDidMount() {
@@ -114,9 +114,9 @@ class EditProfileScreen extends Component {
         if (!this.form.isValid()) {
             return;
         }
-        if(this.state.weight && isNaN(this.state.weight)){
+        if (this.state.weight && isNaN(this.state.weight)) {
             this.setState({
-                weightError:'Cân nặng không hợp lệ'
+                weightError: 'Cân nặng không hợp lệ'
             })
             return
         }
@@ -134,7 +134,7 @@ class EditProfileScreen extends Component {
                         let profileNo = this.state.profileNo
                         let gender = this.state.gender
                         let height = this.state.height
-                        let weight = this.state.weight ? parseFloat(this.state.weight).toFixed(1) : ''                        
+                        let weight = this.state.weight ? parseFloat(this.state.weight).toFixed(1) : ''
                         let address = this.state.address
                         let type = this.state.type
                         let id = this.state.id
@@ -151,8 +151,12 @@ class EditProfileScreen extends Component {
                             "type": type
                         }
                         profileProvider.updateProfile(id, data).then(res => {
-                            if(res.code == 0 ){
-                                this.props.navigation.navigate('profile', { data:res.data.profile})
+                            if (res.code == 0) {
+                                this.props.navigation.navigate('profile', { data: res.data.profile })
+                                snackbar.show('Cập nhật hồ sơ thành công', "success");
+
+                            }else{
+                                snackbar.show('Cập nhật hồ sơ không thành công', "danger");
                             }
                         }).catch(err => {
                             console.log(err);
@@ -297,83 +301,83 @@ class EditProfileScreen extends Component {
                             <Text style={[styles.errorStyle]}>{this.state.valid}</Text>
                             <Field style={[styles.mucdichkham, { flexDirection: 'row' }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
                                 <Field style={{ width: '60%' }}>
-                                <Field>
-                                    <Text style={styles.mdk}>{'Chiều cao'}</Text>
+                                    <Field>
+                                        <Text style={styles.mdk}>{'Chiều cao'}</Text>
 
-                                    <TextField
-                                        hideError={true}
-                                        onValidate={(valid, messages) => {
-                                            if (valid) {
-                                                this.setState({ heightError: "" });
-                                            } else {
-                                                this.setState({ heightError: messages });
-                                            }
-                                        }}
-                                        validate={{
-                                            rules: {
-                                                number: true
-                                            },
-                                            messages: {
-                                                number: 'Chiều cao không hợp lệ',
-                                            }
-                                        }}
-                                        placeholder={'Chiều cao'}
-                                        multiline={true}
-                                        inputStyle={[
-                                            styles.ktq,
-                                        ]}
-                                        errorStyle={styles.errorStyle}
-                                        onChangeText={this.onChangeText("height")}
-                                        value={this.state.height}
-                                        autoCapitalize={"none"}
-                                        returnKeyType={"next"}
-                                        // underlineColorAndroid="transparent"
-                                        autoCorrect={false}
-                                    />
-                                </Field>
-                            <Text style={[styles.errorStyle]}>{this.state.heightError}</Text>
+                                        <TextField
+                                            hideError={true}
+                                            onValidate={(valid, messages) => {
+                                                if (valid) {
+                                                    this.setState({ heightError: "" });
+                                                } else {
+                                                    this.setState({ heightError: messages });
+                                                }
+                                            }}
+                                            validate={{
+                                                rules: {
+                                                    number: true
+                                                },
+                                                messages: {
+                                                    number: 'Chiều cao không hợp lệ',
+                                                }
+                                            }}
+                                            placeholder={'Chiều cao'}
+                                            multiline={true}
+                                            inputStyle={[
+                                                styles.ktq,
+                                            ]}
+                                            errorStyle={styles.errorStyle}
+                                            onChangeText={this.onChangeText("height")}
+                                            value={this.state.height}
+                                            autoCapitalize={"none"}
+                                            returnKeyType={"next"}
+                                            // underlineColorAndroid="transparent"
+                                            autoCorrect={false}
+                                        />
+                                    </Field>
+                                    <Text style={[styles.errorStyle]}>{this.state.heightError}</Text>
                                 </Field>
                                 <Field style={{ flex: 1 }}>
-                                <Field>
-                                    <Text style={styles.mdk}>{'Cân nặng'}</Text>
+                                    <Field>
+                                        <Text style={styles.mdk}>{'Cân nặng'}</Text>
 
-                                    <TextField
-                                        hideError={true}
-                                        onValidate={(valid, messages) => {
-                                            if (valid) {
-                                                this.setState({ weightError: "" });
-                                            } else {
-                                                this.setState({ weightError: messages });
-                                            }
-                                        }}
-                                        // validate={{
-                                        //     rules: {
-                                        //         number: true,
-                                        //     },
-                                        //     messages: {
-                                        //         number: 'Cân nặng không hợp lệ',
-                                        //     }
-                                        // }}
-                                        placeholder={'Cân nặng'}
-                                        multiline={true}
-                                        inputStyle={[
-                                            styles.ktq,
-                                        ]}
-                                        errorStyle={styles.errorStyle}
-                                        onChangeText={this.onChangeText("weight")}
-                                        value={this.state.weight}
-                                        autoCapitalize={"none"}
-                                        returnKeyType={"next"}
-                                        // underlineColorAndroid="transparent"
-                                        autoCorrect={false}
-                                    />
+                                        <TextField
+                                            hideError={true}
+                                            onValidate={(valid, messages) => {
+                                                if (valid) {
+                                                    this.setState({ weightError: "" });
+                                                } else {
+                                                    this.setState({ weightError: messages });
+                                                }
+                                            }}
+                                            // validate={{
+                                            //     rules: {
+                                            //         number: true,
+                                            //     },
+                                            //     messages: {
+                                            //         number: 'Cân nặng không hợp lệ',
+                                            //     }
+                                            // }}
+                                            placeholder={'Cân nặng'}
+                                            multiline={true}
+                                            inputStyle={[
+                                                styles.ktq,
+                                            ]}
+                                            errorStyle={styles.errorStyle}
+                                            onChangeText={this.onChangeText("weight")}
+                                            value={this.state.weight}
+                                            autoCapitalize={"none"}
+                                            returnKeyType={"next"}
+                                            // underlineColorAndroid="transparent"
+                                            autoCorrect={false}
+                                        />
+                                    </Field>
+                                    <Text style={[styles.errorStyle]}>{this.state.weightError}</Text>
+
                                 </Field>
-                            <Text style={[styles.errorStyle]}>{this.state.weightError}</Text>
-
-                            </Field>
                             </Field>
                             {this.state.type == "FAMILY" ? (<Field style={[styles.mucdichkham, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
-                                <Field style={{marginTop:10}}><Text style={styles.mdk}>{'Số điện thoại'}</Text>
+                                <Field style={{ marginTop: 10 }}><Text style={styles.mdk}>{'Số điện thoại'}</Text>
                                     <TextField
                                         hideError={true}
                                         onValidate={(valid, messages) => {
@@ -409,7 +413,7 @@ class EditProfileScreen extends Component {
                                 </Field>
                                 <Text style={[styles.errorStyle]}>{this.state.phoneError}</Text></Field>) : (<Field></Field>)}
 
-                            <Field style={[styles.mucdichkham,this.state.type == "FAMILY" ?{}: { marginTop: 10 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
+                            <Field style={[styles.mucdichkham, this.state.type == "FAMILY" ? {} : { marginTop: 10 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
                                 <Text style={styles.mdk}>{'Địa chỉ'}</Text>
                                 <TextField
                                     hideError={true}

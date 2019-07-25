@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   viewDrawer: {
     flexDirection: 'row',
     marginLeft: 30,
-    padding:5,
+    padding:10,
     marginBottom: 20,
   },
   txDrawer: {

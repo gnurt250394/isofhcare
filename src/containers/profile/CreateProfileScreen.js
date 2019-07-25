@@ -42,10 +42,10 @@ class CreateProfileScreen extends Component {
             valid: '',
             isDataNull: '',
             status: 2,
-            reset:1
+            reset: 1
         };
     }
-    
+
     onChangeText = type => text => {
         this.setState({ [type]: text });
     };
@@ -92,9 +92,9 @@ class CreateProfileScreen extends Component {
         if (!this.form.isValid()) {
             return;
         }
-        if(this.state.weight && isNaN(this.state.weight)){
+        if (this.state.weight && isNaN(this.state.weight)) {
             this.setState({
-                weightError:'Cân nặng không hợp lệ'
+                weightError: 'Cân nặng không hợp lệ'
             })
             return
         }
@@ -125,8 +125,13 @@ class CreateProfileScreen extends Component {
                         }
                         profileProvider.createProfile(data).then(res => {
                             console.log(res)
-                            this.props.navigation.navigate('listProfile',{reset : this.state.reset + 1})
+                            if (res.code == 0) {
+                                this.props.navigation.navigate('listProfile', { reset: this.state.reset + 1 })
+                                snackbar.show('Thêm thành viên thành công','success')
+                            }
+                            else { snackbar.show('Thêm thành viên không thành công','danger') }
                         }).catch(err => {
+                            snackbar.show('Thêm thành viên không thành công','danger') 
                             console.log(err);
                         })
                     });
@@ -135,7 +140,7 @@ class CreateProfileScreen extends Component {
                 snackbar.show(constants.msg.app.not_internet, "danger");
             });
     }
-   
+
     render() {
         let maxDate = new Date();
         maxDate = new Date(
@@ -155,10 +160,10 @@ class CreateProfileScreen extends Component {
             : icSupport;
 
         return (
-            <View style = {{flex:1,backgroundColor:'#fff'}}>
+            <View style={{ flex: 1, backgroundColor: '#fff' }}>
                 <ScrollView keyboardShouldPersistTaps='handled' style={{ flex: 1, paddingVertical: 5 }}>
                     <View style={styles.container}>
-                    <Text style = {styles.txTitle}>THÊM THÀNH VIÊN MỚI</Text>
+                        <Text style={styles.txTitle}>THÊM THÀNH VIÊN MỚI</Text>
                         <Form ref={ref => (this.form = ref)} style={[{ flex: 1 }]}>
                             <Field style={[styles.mucdichkham, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
                                 <Text style={styles.mdk}>{constants.fullname}</Text>
@@ -281,80 +286,80 @@ class CreateProfileScreen extends Component {
                             <Text style={[styles.errorStyle]}>{this.state.valid}</Text>
                             <Field style={[styles.mucdichkham, { flexDirection: 'row' }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
                                 <Field style={{ width: '60%' }}>
-                                <Field>
-                                    <Text style={styles.mdk}>{'Chiều cao'}</Text>
+                                    <Field>
+                                        <Text style={styles.mdk}>{'Chiều cao'}</Text>
 
-                                    <TextField
-                                        hideError={true}
-                                        onValidate={(valid, messages) => {
-                                            if (valid) {
-                                                this.setState({ heightError: "" });
-                                            } else {
-                                                this.setState({ heightError: messages });
-                                            }
-                                        }}
-                                        validate={{
-                                            rules: {
-                                                number: true
-                                            },
-                                            messages: {
-                                                number: 'Chiều cao không hợp lệ',
-                                            }
-                                        }}
-                                        placeholder={'Chiều cao'}
-                                        multiline={true}
-                                        inputStyle={[
-                                            styles.ktq,
-                                        ]}
-                                        errorStyle={styles.errorStyle}
-                                        onChangeText={this.onChangeText("height")}
-                                        value={this.state.height}
-                                        autoCapitalize={"none"}
-                                        returnKeyType={"next"}
-                                        // underlineColorAndroid="transparent"
-                                        autoCorrect={false}
-                                    />
-                                </Field>
-                            <Text style={[styles.errorStyle]}>{this.state.heightError}</Text>
+                                        <TextField
+                                            hideError={true}
+                                            onValidate={(valid, messages) => {
+                                                if (valid) {
+                                                    this.setState({ heightError: "" });
+                                                } else {
+                                                    this.setState({ heightError: messages });
+                                                }
+                                            }}
+                                            validate={{
+                                                rules: {
+                                                    number: true
+                                                },
+                                                messages: {
+                                                    number: 'Chiều cao không hợp lệ',
+                                                }
+                                            }}
+                                            placeholder={'Chiều cao'}
+                                            multiline={true}
+                                            inputStyle={[
+                                                styles.ktq,
+                                            ]}
+                                            errorStyle={styles.errorStyle}
+                                            onChangeText={this.onChangeText("height")}
+                                            value={this.state.height}
+                                            autoCapitalize={"none"}
+                                            returnKeyType={"next"}
+                                            // underlineColorAndroid="transparent"
+                                            autoCorrect={false}
+                                        />
+                                    </Field>
+                                    <Text style={[styles.errorStyle]}>{this.state.heightError}</Text>
                                 </Field>
                                 <Field style={{ flex: 1 }}>
-                                <Field>
-                                    <Text style={styles.mdk}>{'Cân nặng'}</Text>
+                                    <Field>
+                                        <Text style={styles.mdk}>{'Cân nặng'}</Text>
 
-                                    <TextField
-                                        hideError={true}
-                                        onValidate={(valid, messages) => {
-                                            if (valid) {
-                                                this.setState({ weightError: "" });
-                                            } else {
-                                                this.setState({ weightError: messages });
-                                            }
-                                        }}
-                                        // validate={{
-                                        //     rules: {
-                                        //         number: true,
-                                        //     },
-                                        //     messages: {
-                                        //         number: 'Cân nặng không hợp lệ',
-                                        //     }
-                                        // }}
-                                        placeholder={'Cân nặng'}
-                                        multiline={true}
-                                        inputStyle={[
-                                            styles.ktq,
-                                        ]}
-                                        errorStyle={styles.errorStyle}
-                                        onChangeText={this.onChangeText("weight")}
-                                        value={this.state.weight}
-                                        autoCapitalize={"none"}
-                                        returnKeyType={"next"}
-                                        // underlineColorAndroid="transparent"
-                                        autoCorrect={false}
-                                    />
+                                        <TextField
+                                            hideError={true}
+                                            onValidate={(valid, messages) => {
+                                                if (valid) {
+                                                    this.setState({ weightError: "" });
+                                                } else {
+                                                    this.setState({ weightError: messages });
+                                                }
+                                            }}
+                                            // validate={{
+                                            //     rules: {
+                                            //         number: true,
+                                            //     },
+                                            //     messages: {
+                                            //         number: 'Cân nặng không hợp lệ',
+                                            //     }
+                                            // }}
+                                            placeholder={'Cân nặng'}
+                                            multiline={true}
+                                            inputStyle={[
+                                                styles.ktq,
+                                            ]}
+                                            errorStyle={styles.errorStyle}
+                                            onChangeText={this.onChangeText("weight")}
+                                            value={this.state.weight}
+                                            autoCapitalize={"none"}
+                                            returnKeyType={"next"}
+                                            // underlineColorAndroid="transparent"
+                                            autoCorrect={false}
+                                        />
+                                    </Field>
+                                    <Text style={[styles.errorStyle]}>{this.state.weightError}</Text>
+
                                 </Field>
-                            <Text style={[styles.errorStyle]}>{this.state.weightError}</Text>
-
-                            </Field>
                             </Field>
                             <Field style={[styles.mucdichkham, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
                                 <Text style={styles.mdk}>{'Số điện thoại'}</Text>
@@ -498,7 +503,7 @@ const styles = StyleSheet.create({
         // borderRadius:5,
 
     },
-    txTitle:{fontSize:16,color:'#4BBA7B', textAlign:'center',fontWeight:'600',marginTop:40,marginBottom:10},
+    txTitle: { fontSize: 16, color: '#4BBA7B', textAlign: 'center', fontWeight: '600', marginTop: 40, marginBottom: 10 },
     mdk: {
         marginLeft: 12,
         flex: 1,
@@ -624,10 +629,10 @@ const styles = StyleSheet.create({
         height: 45,
     },
     labelStyle: { color: '#53657B', fontSize: 16, marginBottom: 10, marginLeft: 50 },
-    btnDone: { justifyContent: 'center', alignItems: 'center', height: 30, width: 78, backgroundColor: '#359A60',borderRadius:5, },
-    btnReject: { justifyContent: 'center', alignItems: 'center', height: 30, width: 78,marginLeft:10,borderRadius:5, backgroundColor: '#FFB800', },
-    viewBtn : { flexDirection: 'row', justifyContent: 'center', alignItems: 'center',marginTop:20},
-    txDone:{ color: '#fff' },
+    btnDone: { justifyContent: 'center', alignItems: 'center', height: 30, width: 78, backgroundColor: '#359A60', borderRadius: 5, },
+    btnReject: { justifyContent: 'center', alignItems: 'center', height: 30, width: 78, marginLeft: 10, borderRadius: 5, backgroundColor: '#FFB800', },
+    viewBtn: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20 },
+    txDone: { color: '#fff' },
 });
 function mapStateToProps(state) {
     return {

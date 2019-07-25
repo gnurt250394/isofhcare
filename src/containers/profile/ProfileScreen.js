@@ -331,9 +331,9 @@ export default class ProfileScreen extends Component {
                         <View style={styles.viewItem}>
                             <Text><Text style={styles.txLabel}>Ngày sinh: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.dob ? this.state.data.dob.toDateObject('-').format('dd/MM/yyyy') : ('')}</Text></Text>
                         </View>
-                        <View style={styles.viewItem}>
+                        {/* <View style={styles.viewItem}>
                             <Text><Text style={styles.txLabel}>ID: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.profileNoID ? this.state.data.profileNoID : ''}</Text></Text>
-                        </View>
+                        </View> */}
                         <View style={styles.viewItem}>
                             <Text><Text style={styles.txLabel}>Giới tính: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.gender ? (this.state.data.gender == 1 ? 'Nam' : 'Nữ') : ''}</Text></Text>
                         </View>

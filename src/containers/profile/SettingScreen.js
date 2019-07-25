@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     },
     viewDrawer: {
         flexDirection: 'row',
-        padding: 5,
+        padding: 10,
         marginLeft: 30,
         marginVertical: 10
     },

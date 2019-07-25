@@ -69,6 +69,7 @@ class ListProfileScreen extends Component {
                 this.setState({
                     isVisible: false
                 })
+                
                 this.onRefresh()
             }).catch(err => {
                 this.setState({
@@ -88,18 +89,16 @@ class ListProfileScreen extends Component {
     }
     renderItem = (item, index) => {
         return (
-            <TouchableOpacity onPress={() => this.onClickItem(item)} style={{ paddingHorizontal: 10, marginVertical: 10 }}>
+            <TouchableOpacity onPress={() => this.onClickItem(item)} style={{ paddingHorizontal: 10, marginVertical: 5,flex:1 }}>
                 <Card style={styles.cardView}>
-                    <View>
                         <Text style={styles.txName}>{item.name}</Text>
-                        <Text style={styles.txLabel}>ID: <Text style={styles.txId}>{item.profileNoID}</Text></Text>
-                    </View>
+                        {/* <Text style={styles.txLabel}>ID: <Text style={styles.txId}>{item.profileNoID}</Text></Text> */}
                     {item.type !== 'ORIGINAL' ? (<TouchableOpacity onPress={() => this.onDeleteItem(item.id)}>
                         <ScaledImage height={20} source={require('@images/new/profile/ic_clear.png')}></ScaledImage>
                         <Text style={styles.txDelelte}>Xóa</Text>
                     </TouchableOpacity>) : (<View></View>)}
                 </Card>
-                <View style={{ height: 0.5, width: '95%', backgroundColor: '#4BBA7B', marginVertical: 5, alignSelf: 'center' }}></View>
+                <View style={{ height: 1, width: '98%', backgroundColor: '#4BBA7B',  alignSelf: 'center',marginTop:5}}></View>
             </TouchableOpacity>
         )
     }
@@ -162,6 +161,7 @@ class ListProfileScreen extends Component {
 }
 const styles = StyleSheet.create({
     container: {
+        flex:1
     },
     txId: {
         color: '#000'
@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: 10
+        padding: 20,
     },
     txName: { color: '#4BBA7B', fontWeight: '500', fontSize: 15, maxWidth: 200 },
     txDelelte: { color: '#C4C4C4', fontSize: 10 },

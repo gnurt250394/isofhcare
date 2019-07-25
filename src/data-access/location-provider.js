@@ -114,5 +114,46 @@ module.exports = {
                 reject(e);
             });
         })
-    }
+    },
+    getAllCountry() {
+        return new Promise((resolve, reject) => {
+            client.requestApi("get", constants.api.location.getAllCountry, {}, (s, e) => {
+                if (s)
+                    resolve(s)
+                else
+                    reject(e)
+            });
+        })
+    },
+
+    districtGetByProvince(provinceId) {
+        return new Promise ((resolve, reject) => {
+            client.requestApi('get', `${constants.api.location.districtGetByProvince}/{${provinceId}}`,{},(s,e)=> {
+                if(s)
+                resolve(s)
+                else
+                reject(e)
+            })
+        })
+    },
+    zoneGetByDistrict(districtId){
+        return new Promise((resolve,reject) => {
+            client.requestApi('get',`${constants.api.location.zoneGetByDistrict}/{${districtId}}`,{},(s,e) => {
+                if(s)
+                resolve(s)
+                else
+                reject(e)
+            })
+        })
+    },
+    getAllProvince(){
+        return new Promise((resolve,reject) => {
+            client.requestApi('get',constants.api.location.getAllProvince,{},(s,e) => {
+                if(s)
+                resolve(s)
+                else
+                reject(e)
+            })
+        })
+    },
 }
