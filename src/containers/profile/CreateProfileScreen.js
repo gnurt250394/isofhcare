@@ -92,6 +92,12 @@ class CreateProfileScreen extends Component {
         if (!this.form.isValid()) {
             return;
         }
+        if(this.state.weight && isNaN(this.state.weight)){
+            this.setState({
+                weightError:'Cân nặng không hợp lệ'
+            })
+            return
+        }
         connectionUtils
             .isConnected()
             .then(s => {
@@ -104,9 +110,10 @@ class CreateProfileScreen extends Component {
                         let dob = this.state.dob
                         let gender = this.state.gender
                         let height = this.state.height
-                        let weight = this.state.weight
+                        let weight = this.state.weight ? parseFloat(this.state.weight).toFixed(1) : ''
                         let phone = this.state.phone
                         let address = this.state.address
+                        // parseFloat(item.distance).toFixed(1)
                         let data = {
                             "name": name,
                             "dob": this.state.dob ? this.state.dob.format('yyyy-MM-dd') + ' 00:00:00' : null,
@@ -273,8 +280,8 @@ class CreateProfileScreen extends Component {
                             </Field>
                             <Text style={[styles.errorStyle]}>{this.state.valid}</Text>
                             <Field style={[styles.mucdichkham, { flexDirection: 'row' }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
-
                                 <Field style={{ width: '60%' }}>
+                                <Field>
                                     <Text style={styles.mdk}>{'Chiều cao'}</Text>
 
                                     <TextField
@@ -288,10 +295,10 @@ class CreateProfileScreen extends Component {
                                         }}
                                         validate={{
                                             rules: {
-                                                maxlength: 255
+                                                number: true
                                             },
                                             messages: {
-                                                maxlength: constants.msg.user.text_without_255,
+                                                number: 'Chiều cao không hợp lệ',
                                             }
                                         }}
                                         placeholder={'Chiều cao'}
@@ -308,7 +315,10 @@ class CreateProfileScreen extends Component {
                                         autoCorrect={false}
                                     />
                                 </Field>
+                            <Text style={[styles.errorStyle]}>{this.state.heightError}</Text>
+                                </Field>
                                 <Field style={{ flex: 1 }}>
+                                <Field>
                                     <Text style={styles.mdk}>{'Cân nặng'}</Text>
 
                                     <TextField
@@ -320,15 +330,14 @@ class CreateProfileScreen extends Component {
                                                 this.setState({ weightError: messages });
                                             }
                                         }}
-                                        validate={{
-                                            rules: {
-                                                minlength: 1,
-                                                maxlength: 255
-                                            },
-                                            messages: {
-                                                maxlength: constants.msg.user.text_without_255,
-                                            }
-                                        }}
+                                        // validate={{
+                                        //     rules: {
+                                        //         number: true,
+                                        //     },
+                                        //     messages: {
+                                        //         number: 'Cân nặng không hợp lệ',
+                                        //     }
+                                        // }}
                                         placeholder={'Cân nặng'}
                                         multiline={true}
                                         inputStyle={[
@@ -343,8 +352,10 @@ class CreateProfileScreen extends Component {
                                         autoCorrect={false}
                                     />
                                 </Field>
+                            <Text style={[styles.errorStyle]}>{this.state.weightError}</Text>
+
                             </Field>
-                            <Text style={[styles.errorStyle]}>{this.state.height}</Text>
+                            </Field>
                             <Field style={[styles.mucdichkham, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
                                 <Text style={styles.mdk}>{'Số điện thoại'}</Text>
                                 <TextField
