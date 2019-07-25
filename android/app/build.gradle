@@ -100,10 +100,10 @@ android {
 
     defaultConfig {
         applicationId "com.isofh.isofhcare"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 27
-        versionCode 62
-        versionName "4.5"
+        versionCode 63
+        versionName "4.6"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -154,6 +154,7 @@ android {
 }
 
 dependencies {
+    implementation project(':@react-native-community_async-storage')
     compile project(':react-native-get-location')
     compile project(':react-native-code-push')
     compile project(':appcenter-crashes')

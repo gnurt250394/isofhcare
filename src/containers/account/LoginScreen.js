@@ -195,7 +195,9 @@ class LoginScreen extends Component {
 										<Field clearWhenFocus={true}>
 											<TextField
 												getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-													placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.phone} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
+													placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'}
+													inputStyle={styles.textInputStyle}
+													labelStyle={styles.labelStyle} placeholder={constants.phone} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
 												onChangeText={s => this.setState({ email: s })}
 												errorStyle={styles.errorStyle}
 												validate={{
@@ -227,14 +229,14 @@ class LoginScreen extends Component {
 															required: "Mật khẩu không được bỏ trống"
 														}
 													}}
-													inputStyle={styles.input}
+													// inputStyle={styles.input}
 													placeholder={constants.input_password}
 													autoCapitalize={"none"}
 												>
 
 												</TextField>
 												{
-													this.state.password ? (this.state.secureTextEntry ? (<TouchableOpacity style={{ position: 'absolute', right: 3,top:40, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 3,top:40, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
+													this.state.password ? (this.state.secureTextEntry ? (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 40, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 40, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
 												}
 											</Field>
 										</Field>
@@ -272,7 +274,7 @@ class LoginScreen extends Component {
 								</Card>
 							</View>
 							<SocialNetwork />
-							<Text style = {{color:'#000',textAlign:'center',marginVertical:20}}>Nếu chưa có tài khoản có thể đăng ký <Text onPress={this.register.bind(this)} style = {{color:'#1EA3EA'}}>tại đây</Text></Text>
+							<Text style={{ color: '#000', textAlign: 'center', marginVertical: 20 }}>Nếu chưa có tài khoản có thể đăng ký <Text onPress={this.register.bind(this)} style={{ color: '#1EA3EA' }}>tại đây</Text></Text>
 							{/* <TouchableOpacity onPress={this.register.bind(this)} style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center' }} >
 								<Text style={{ color: '#FFF', fontSize: 17 }}>{"ĐĂNG KÝ"}</Text>
 							</TouchableOpacity> */}
