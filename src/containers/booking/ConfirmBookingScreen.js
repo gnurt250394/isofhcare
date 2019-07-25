@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Platform } from 'react-native';
 import { connect } from 'react-redux';
 import dateUtils from 'mainam-react-native-date-utils';
 import stringUtils from 'mainam-react-native-string-utils';
@@ -10,8 +10,10 @@ import walletProvider from '@data-access/wallet-provider';
 import snackbar from '@utils/snackbar-utils';
 import connectionUtils from '@utils/connection-utils';
 import payoo from 'mainam-react-native-payoo';
+import { NativeModules } from 'react-native';
 import constants from '@resources/strings';
 var convert = require('xml-js');
+var PayooModule = NativeModules.PayooModule;
 
 class ConfirmBookingScreen extends Component {
     constructor(props) {
@@ -20,7 +22,6 @@ class ConfirmBookingScreen extends Component {
         let service = this.props.navigation.state.params.service;
         let hospital = this.props.navigation.state.params.hospital;
         let profile = this.props.navigation.state.params.profile;
-        let specialist = this.props.navigation.state.params.specialist;
         let bookingDate = this.props.navigation.state.params.bookingDate;
         let schedule = this.props.navigation.state.params.schedule;
         let reason = this.props.navigation.state.params.reason;
@@ -31,18 +32,16 @@ class ConfirmBookingScreen extends Component {
             snackbar.show("Không tồn tại đặt khám", "danger");
             this.props.navigation.pop();
         }
-
         this.state = {
             serviceType,
             service,
             hospital,
             profile,
-            specialist,
             bookingDate,
             schedule,
             reason,
             images,
-            paymentMethod: 1,
+            paymentMethod: 2,
             contact,
             booking
         }
@@ -62,19 +61,20 @@ class ConfirmBookingScreen extends Component {
                             navigate: {
                                 screen: "createBookingSuccess",
                                 params: {
-                                    booking
+                                    booking,
+                                    service: this.state.service
                                 }
                             }
                         });
                         break;
                     case 5:
                         this.setState({ isLoading: false }, () => {
-                            snackbar.show("Phiên đặt khám của bạn đã hết hạn. Vui lòng thực hiện lại", "danger");
+                            snackbar.show(constants.msg.booking.booking_expired, "danger");
                         });
                 }
             }).catch(e => {
                 this.setState({ isLoading: false }, () => {
-                    snackbar.show("Xác nhận đặt khám không thành công", "danger");
+                    snackbar.show(constants.msg.booking.booking_err2, "danger");
                 });
             });
         })
@@ -116,15 +116,24 @@ class ConfirmBookingScreen extends Component {
         booking.hospital = this.state.hospital;
         booking.profile = this.state.profile;
         booking.payment = this.state.paymentMethod;
+        let price = 0;
+        let serviceText = "";
+        if (this.state.service && this.state.service.length) {
+            price = this.state.service.reduce((total, item) => {
+                return total + parseInt((item && item.service && item.service.price ? item.service.price : 0));
+            }, 0);
+            serviceText = this.state.service.map(item => (item && item.service ? item.service.id + " - " + item.service.name : "")).join(', ');
+        }
+
         this.setState({ isLoading: true }, () => {
-            let memo = `THANH TOÁN ${this.getPaymentMethod()} - Đặt khám - ${this.state.service.id} - ${this.state.service.name} - ${this.state.hospital.hospital.name} - ${this.state.schedule.time.format("yyyy-MM-dd HH:mm:ss")} - ${this.state.profile.medicalRecords.name}`;
+            let memo = `THANH TOÁN ${this.getPaymentMethod()} - Đặt khám - ${booking.book.codeBooking} - ${serviceText} - ${this.state.hospital.hospital.name} - ${this.state.schedule.time.format("yyyy-MM-dd HH:mm:ss")} - ${this.state.profile.medicalRecords.name}`;
             walletProvider.createOnlinePayment(
                 this.props.userApp.currentUser.id,
                 this.getPaymentMethod(),
                 this.state.hospital.hospital.id,
                 booking.book.id,
                 this.getPaymentReturnUrl(),
-                this.state.service.price,
+                price,
                 memo,
                 booking.book.hash,
                 booking.jwtData,
@@ -160,18 +169,26 @@ class ConfirmBookingScreen extends Component {
                             console.log(orderJSON);
 
                             payment_order.orderInfo = payment_order.data;
-                            payoo.initialize(payment_order.shop_id, payment_order.check_sum_key).then(() => {
-                                payoo.pay(payment_order, {}).then(x => {
-                                    let obj = JSON.parse(x);
-                                    walletProvider.onlineTransactionPaid(vnp_TxnRef, this.getPaymentMethod(), obj);
-                                    this.props.navigation.navigate("home", {
-                                        navigate: {
-                                            screen: "createBookingSuccess",
-                                            params: {
-                                                booking
-                                            }
-                                        }
-                                    });
+                            payment_order.cashAmount = parseInt(this.state.service.price);
+                            let payooSDK = payoo;
+                            if (Platform.OS == 'ios') {
+                                payooSDK = PayooModule;
+                            }
+                            payooSDK.initialize(payment_order.shop_id, payment_order.check_sum_key).then(() => {
+                                payooSDK.pay(payment_order, {}).then(x => {
+                                    alert(x);
+                                    // alert(JSON.stringify(x));
+                                    // return;
+                                    // let obj = JSON.parse(x);
+                                    // walletProvider.onlineTransactionPaid(vnp_TxnRef, this.getPaymentMethod(), obj);
+                                    // this.props.navigation.navigate("home", {
+                                    //     navigate: {
+                                    //         screen: "createBookingSuccess",
+                                    //         params: {
+                                    //             booking
+                                    //         }
+                                    //     }
+                                    // });
                                 }).catch(y => {
                                     booking.transactionCode = data.online_transactions[0].id;
                                     this.props.navigation.navigate("paymentBookingError", { booking })
@@ -292,8 +309,15 @@ class ConfirmBookingScreen extends Component {
                             console.log(orderJSON);
 
                             payment_order.orderInfo = payment_order.data;
-                            payoo.initialize(payment_order.shop_id, payment_order.check_sum_key).then(() => {
-                                payoo.pay(payment_order, {}).then(x => {
+                            payment_order.cashAmount = parseInt(this.state.service.price);
+
+                            let payooSDK = payoo;
+                            if (Platform.OS == 'ios') {
+                                payooSDK = PayooModule;
+                            }
+
+                            payooSDK.initialize(payment_order.shop_id, payment_order.check_sum_key).then(() => {
+                                payooSDK.pay(payment_order, {}).then(x => {
                                     let obj = JSON.parse(x);
                                     walletProvider.onlineTransactionPaid(vnp_TxnRef, this.getPaymentMethod(), obj);
                                     this.props.navigation.navigate("home", {
@@ -350,7 +374,6 @@ class ConfirmBookingScreen extends Component {
 
                 })
             }).catch(e => {
-                debugger;
                 this.setState({ isLoading: false }, () => {
                     if (e && e.response && e.response.data) {
                         let response = e.response.data;
@@ -399,9 +422,13 @@ class ConfirmBookingScreen extends Component {
             <ActivityPanel style={styles.AcPanel} title="Xác nhận lịch khám"
                 isLoading={this.state.isLoading}>
                 <ScrollView keyboardShouldPersistTaps='handled' style={styles.container}>
+                    <View style={{ paddingHorizontal: 20, marginVertical: 20 }}>
+                        <Text style={{ fontWeight: 'bold', color: '#000' }}>{'HỒ SƠ: ' + this.state.profile.medicalRecords.name.toUpperCase()}</Text>
+                        <Text style={{ color: 'gray' }}>SĐT: {this.props.userApp.currentUser.phone}</Text>
+                    </View>
                     <View style={styles.viewDetails}>
                         <View style={{ paddingHorizontal: 20, marginTop: 20, flexDirection: 'row', alignItems: 'center' }}>
-                            <Text style={{ fontWeight: 'bold', color: 'rgb(2,195,154)', marginRight: 10 }}>DỊCH VỤ {(this.state.service.name || "").toUpperCase()}</Text>
+                            <Text style={{ fontWeight: 'bold', color: 'rgb(2,195,154)', marginRight: 10 }}>{(this.state.serviceType.name || "").toUpperCase()}</Text>
                             <ScaleImage width={20} source={require("@images/new/booking/ic_tick.png")} />
                         </View>
                         <View style={styles.view11} >
@@ -413,27 +440,53 @@ class ConfirmBookingScreen extends Component {
                                 </View>
                             </View>
 
-                            <View style={styles.view2}>
+                            {/* <View style={styles.view2}>
                                 <ScaleImage style={styles.ic_Location} width={20} source={require("@images/new/booking/ic_doctor.png")} />
                                 <Text style={[styles.text5]}>Bác sĩ khám: <Text>{this.state.schedule.doctor.name}</Text></Text>
-                            </View>
+                            </View> */}
 
                             <View style={[styles.view2, { alignItems: 'flex-start' }]}>
                                 <ScaleImage style={styles.ic_Location} width={20} source={require("@images/new/booking/ic_bookingDate2.png")} />
                                 <View>
                                     <Text style={[styles.text5, {}]}>Thời gian</Text>
-                                    <Text style={[styles.text5, { marginTop: 10 }]}><Text style={{ color: 'rgb(106,1,54)', fontWeight: 'bold' }}>{this.state.schedule.label} {this.state.schedule.time.format("HH") < 12 ? "sáng" : "chiều"} - {this.state.bookingDate.format("thu")}</Text> ngày {this.state.bookingDate.format("dd/MM/yyyy")} </Text>
+                                    <Text style={[styles.text5, { marginTop: 10 }]}><Text style={{ color: 'rgb(106,1,54)', fontWeight: 'bold' }}>{this.state.schedule.label2} {this.state.schedule.time.format("HH") < 12 ? "AM" : "PM"} - {this.state.bookingDate.format("thu")}</Text> ngày {this.state.bookingDate.format("dd/MM/yyyy")} </Text>
                                 </View>
                             </View>
 
-                            <View style={styles.view2}>
-                                <ScaleImage style={[styles.ic_Location, { marginRight: 22 }]} width={17} source={require("@images/new/booking/ic_note.png")} />
-                                <Text style={styles.text5}>Lý do: {this.state.reason}</Text>
-                            </View>
-                            <View style={styles.view2}>
-                                <ScaleImage style={[styles.ic_Location]} width={20} source={require("@images/new/booking/ic_coin.png")} />
-                                <Text style={styles.text5}>Giá dịch vụ: {parseFloat(this.state.service.price).formatPrice()}đ</Text>
-                            </View>
+                            {(this.state.reason && this.state.reason.trim()) ?
+                                <View style={[styles.view2, { alignItems: 'flex-start' }]}>
+                                    <ScaleImage style={[styles.ic_Location, { marginRight: 22 }]} width={17} source={require("@images/new/booking/ic_note.png")} />
+                                    <View>
+                                        <Text style={styles.text5}>Triệu chứng:</Text>
+                                        <Text style={[styles.text5, { fontWeight: 'bold' }]}>{this.state.reason}</Text>
+                                    </View>
+                                </View> : null
+                            }
+                            {this.state.service && this.state.service.length ?
+                                <View style={[styles.view2, { alignItems: 'flex-start' }]}>
+                                    <ScaleImage style={[styles.ic_Location]} width={20} source={require("@images/new/booking/ic_coin.png")} />
+                                    <View>
+                                        <Text style={styles.text5}>Dịch vụ: </Text>
+                                        {
+                                            this.state.service.map((item, index) => <View key={index} style={{ flexDirection: 'row', marginTop: 5 }}>
+                                                <Text style={{ flex: 1, fontWeight: 'bold', marginLeft: 20, color: '#000' }} numberOfLines={1}>{index + 1}. {item.service.name}</Text>
+                                                <Text style={{ color: '#ccc' }}>({parseInt(item.service.price).formatPrice()}đ)</Text>
+                                            </View>
+                                            )
+                                        }
+                                    </View>
+                                </View> : null
+                            }
+                            {this.state.service && this.state.service.length ?
+                                <View style={[styles.view2, { alignItems: 'flex-start' }]}>
+                                    <ScaleImage style={[styles.ic_Location]} width={20} source={require("@images/new/booking/ic_coin.png")} />
+                                    <View style={{ flexDirection: 'row' }}>
+                                        <Text style={[styles.text5]}>Tổng tiền: <Text style={{ fontWeight: 'bold', marginLeft: 20, color: '#d0021b' }} numberOfLines={1}>{this.state.service.reduce((start, item) => {
+                                            return start + parseInt(item.service.price)
+                                        }, 0).formatPrice()}đ</Text></Text>
+                                    </View>
+                                </View> : null
+                            }
 
 
                         </View>
@@ -481,9 +534,9 @@ class ConfirmBookingScreen extends Component {
                                 <View style={{ backgroundColor: 'rgb(2,195,154)', width: 10, height: 10, borderRadius: 5 }}></View>
                             }
                         </View>
-                        <Text style={styles.ckeckthanhtoan}>Thanh toán tại bệnh viện</Text>
+                        <Text style={styles.ckeckthanhtoan}>Thanh toán sau tại CSYT</Text>
                     </TouchableOpacity>
-
+                    <View style={{ height: 50 }} />
                 </ScrollView>
                 <TouchableOpacity style={styles.btn} onPress={this.createBooking.bind(this)}>
                     <Text style={styles.btntext}>Xác Nhận</Text>

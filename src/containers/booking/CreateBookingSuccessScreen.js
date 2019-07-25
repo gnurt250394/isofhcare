@@ -6,6 +6,7 @@ import dateUtils from 'mainam-react-native-date-utils';
 import ScaleImage from "mainam-react-native-scaleimage";
 import QRCode from 'react-native-qrcode';
 import Modal from "@components/modal";
+import constants from '@resources/strings';
 
 class CreateBookingSuccessScreen extends Component {
     constructor(props) {
@@ -25,28 +26,27 @@ class CreateBookingSuccessScreen extends Component {
             case 1:
                 return "VNPAY";
             case 2:
-                return "Thanh toán sau tại CSYT";
+                return constants.booking.payment_csyt;
             case 3:
                 return "PAYOO";
             case 4:
-                return "PAYOO - Cửa hàng tiện ích";
+                return constants.booking.payment_payoo;
         }
         return "";
     }
 
     render() {
         let booking = this.props.navigation.state.params.booking;
+        let service = this.props.navigation.state.params.service || [];
         if (!booking || !booking.profile || !booking.hospital || !booking.hospital.hospital || !booking.book) {
             this.props.navigation.pop();
             return null;
         }
-        console.log(this.props.navigation.state.params.booking.book)
         let bookingTime = booking.book.bookingTime.toDateObject("-");
-        console.log(bookingTime);
         return (
             <ActivityPanel
                 hideBackButton={true}
-                title="Đặt lịch khám"
+                title={constants.title.create_booking_success}
                 titleStyle={{ color: '#FFF', marginRight: 31 }}
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#02C39A"
@@ -59,40 +59,63 @@ class CreateBookingSuccessScreen extends Component {
                 <View style={styles.container}>
                     <ScrollView keyboardShouldPersistTaps='handled' style={{ flex: 1 }}>
                         <ScaleImage style={styles.image1} height={80} source={require("@images/new/booking/ic_rating.png")} />
-                        <Text style={styles.text1}>Đặt khám thành công!</Text>
+                        <Text style={styles.text1}>{constants.booking.booking_success}</Text>
                         <View style={{ backgroundColor: '#effbf9', padding: 20, marginTop: 20 }}>
                             <View style={styles.row}>
-                                <Text style={styles.label}>Họ tên:</Text>
+                                <Text style={styles.label}>{constants.booking.name}</Text>
                                 <Text style={styles.text}>{(booking.profile.medicalRecords.name || "").toUpperCase()}</Text>
                             </View>
                             <View style={styles.row}>
-                                <Text style={styles.label}>Địa chỉ đặt khám:</Text>
+                                <Text style={styles.label}>{constants.booking.location_booking}</Text>
                                 <Text style={styles.text}>{booking.hospital.hospital.name}</Text>
                             </View>
                             <View style={styles.row}>
-                                <Text style={styles.label}>Thời gian:</Text>
-                                <Text style={styles.text}>{bookingTime.format("HH:mm") + " " + (bookingTime.format("HH") < 12 ? "AM" : "PM") + " - " + bookingTime.format("thu, dd/MM/yyyy")}</Text>
+                                <Text style={styles.label}>{constants.booking.time}</Text>
+                                <Text style={styles.text}>{bookingTime.format("hh:mm") + " " + (bookingTime.format("HH") < 12 ? "AM" : "PM") + " - " + bookingTime.format("thu, dd/MM/yyyy")}</Text>
                             </View>
+                            {service && service.length ?
+                                <View style={styles.row}>
+                                    <Text style={styles.label}>{"Dịch vụ"}</Text>
+                                    <View style={{ flex: 1, marginLeft: 10 }}>
+                                        {service.map((item, index) => {
+                                            return <View key={index} style={{ flex: 1 }}>
+                                                <Text numberOfLines={1} style={[styles.text, { flex: 1 }]}>{item.service.name}</Text>
+                                                <Text style={[styles.text, { marginBottom: 5 }]}>({parseInt(item.service.price).formatPrice()}đ)</Text>
+                                            </View>
+                                        })}
+                                    </View>
+                                </View> : null
+                            }
                             <View style={styles.row}>
-                                <Text style={styles.label}>Hình thức thanh toán:</Text>
+                                <Text style={styles.label}>{constants.booking.payment_method}</Text>
                                 <Text style={styles.text}>{this.getPaymentMethod(booking)}</Text>
                             </View>
                             {
+                                service && service.length ?
+                                    <View style={styles.row}>
+                                        <Text style={styles.label}>{"Tổng tiền"}</Text>
+                                        <Text style={[styles.text, { color: "#d0021b" }]}>{service.reduce((start, item) => {
+                                            return start + parseInt(item.service.price)
+                                        }, 0).formatPrice()}đ</Text>
+                                    </View> : null
+                            }
+
+                            {/* {
                                 booking.payment == 4 && <View>
                                     <View style={styles.row}>
-                                        <Text style={styles.label}>Mã thanh toán:</Text>
+                                        <Text style={styles.label}>{constants.booking.code_payment}</Text>
                                         <Text style={styles.text}>{booking.online_transactions && booking.online_transactions.length ? booking.online_transactions[0].bill_ref_code : ""}</Text>
                                     </View>
                                     <View style={styles.row}>
-                                        <Text style={styles.label}>Hạn thanh toán:</Text>
+                                        <Text style={styles.label}>{constants.booking.payment_duration}</Text>
                                         <Text style={styles.text}>{booking.book.expireDatePayoo.toDateObject('-').format("dd/MM/yyyy")}</Text>
                                     </View>
                                 </View>
-                            }
+                            } */}
                         </View>
                         <View style={styles.view2}>
                             <View style={styles.col}>
-                                <Text style={styles.col1}>Mã code:</Text>
+                                <Text style={styles.col1}>{constants.booking.code}</Text>
                                 <TouchableOpacity onPress={this.onQrClick} style={{ alignItems: 'center', marginTop: 10 }}>
                                     <QRCode
                                         style={{ alignSelf: 'center', backgroundColor: '#000' }}
@@ -100,18 +123,18 @@ class CreateBookingSuccessScreen extends Component {
                                         size={100}
                                         fgColor='white' />
                                 </TouchableOpacity>
-                                <Text style={{ textAlign: 'center', color: '#4a4a4a', marginVertical: 5 }}>Mã đặt khám: {booking.book.codeBooking}</Text>
+                                <Text style={{ textAlign: 'center', color: '#4a4a4a', marginVertical: 5 }}>{constants.booking.code_booking} {booking.book.codeBooking}</Text>
 
                             </View>
                         </View>
                         <View style={styles.view1}>
-                            <Text style={styles.text2}>Lịch đặt khám của bạn đã được gửi đi. Vui lòng đến trước hẹn 15 phút để thực hiện các thủ tục khác.</Text>
+                            <Text style={styles.text2}>{constants.booking.booking_send}</Text>
                         </View>
 
                     </ScrollView>
                     <TouchableOpacity style={styles.btn}><Text style={styles.btntext} onPress={() => {
                         this.props.navigation.pop();
-                    }}>Về trang chủ</Text></TouchableOpacity>
+                    }}>{constants.booking.go_home}</Text></TouchableOpacity>
                 </View>
                 <Modal
                     isVisible={this.state.isVisible}

@@ -11,6 +11,7 @@ import bookingProvider from "@data-access/booking-provider";
 import { connect } from "react-redux";
 import ActivityPanel from "@components/ActivityPanel";
 import dateUtils from "mainam-react-native-date-utils";
+import constants from '@resources/strings';
 
 class PatientHistoryScreen extends Component {
   constructor(props) {
@@ -157,10 +158,10 @@ class PatientHistoryScreen extends Component {
   }
   onClickItem = (item) => {
     this.props.navigation.navigate("detailsHistory", {
-      id: item.item.booking.id
+      id: item.booking.id
     });
   };
-  renderItem = item => {
+  renderItem = ({ item }) => {
     return (
       <TouchableOpacity style={styles.listBtn} onPress={() => this.onClickItem(item)}>
         <View style={{ flexDirection: "row" }}>
@@ -174,13 +175,13 @@ class PatientHistoryScreen extends Component {
               <Text
                 style={{ fontSize: 40, fontWeight: "bold", color: "#C6C6C9", textAlign: 'center' }}
               >
-                {item.item.booking.bookingTime
-                  ? item.item.booking.bookingTime.toDateObject("-").format("dd")
+                {item.booking.bookingTime
+                  ? item.booking.bookingTime.toDateObject("-").format("dd")
                   : ""}
               </Text>
               <Text style={{ fontWeight: "bold", color: 'rgb(74,74,74)', marginTop: -5 }}>
-                {item.item.booking.bookingTime
-                  ? item.item.booking.bookingTime
+                {item.booking.bookingTime
+                  ? item.booking.bookingTime
                     .toDateObject("-")
                     .format("MM/yyyy")
                   : ""}
@@ -188,8 +189,8 @@ class PatientHistoryScreen extends Component {
             </View>
 
             <Text style={{ marginTop: 10 }}>
-              {item.item.booking.bookingTime
-                ? item.item.booking.bookingTime
+              {item.booking.bookingTime
+                ? item.booking.bookingTime
                   .toDateObject("-")
                   .format("HH:mm")
                 : ""}
@@ -203,12 +204,13 @@ class PatientHistoryScreen extends Component {
               padding: 10
             }}
           >
-            <Text style={{ fontWeight: "bold", color: 'rgb(74,74,74)' }}>{item.item.service.name ? item.item.service.name : ''}</Text>
+            <Text style={{ fontWeight: "bold", color: 'rgb(74,74,74)' }}>{item.serviceType ? item.serviceType.name : ''}</Text>
+           
             <View style={{ marginVertical: 10 }}>
-              <Text style={{ color: 'rgb(142,142,147)' }}>{item.item.medicalRecords.name ? item.item.medicalRecords.name : ''}</Text>
-              <Text style={{ color: 'rgb(142,142,147)' }}>{item.item.hospital.name ? item.item.hospital.name : item.item.hospital.name}</Text>
+              <Text style={{ color: 'rgb(142,142,147)' }}>{item.medicalRecords.name ? item.medicalRecords.name : ''}</Text>
+              <Text style={{ color: 'rgb(142,142,147)' }}>{item.hospital ? item.hospital.name : ""}</Text>
             </View>
-            {item.item.booking.status || item.item.booking.status == 0 ? this.renderStatus(item.item.booking.status) : null}
+            {item.booking.status || item.booking.status == 0 ? this.renderStatus(item.booking.status) : null}
           </View>
         </View>
       </TouchableOpacity>
@@ -222,61 +224,61 @@ class PatientHistoryScreen extends Component {
             color: '#FFF', paddingHorizontal: 5,
             alignSelf: 'flex-start',
             overflow: 'hidden'
-          }]}>Chờ phục vụ</Text>
+          }]}>{constants.booking.status.pending}</Text>
         );
       case 1:
         return (
           <Text style={[styles.statusReject, {
             color: 'rgb(208,2,27)', paddingHorizontal: 5,
             alignSelf: 'flex-start'
-          }]}>Đã huỷ (không đến)</Text>
+          }]}>{constants.booking.status.cancel}</Text>
         )
       case 2: return (
         <Text style={[styles.statusReject, {
           color: 'rgb(208,2,27)', paddingHorizontal: 5,
           alignSelf: 'flex-start'
-        }]}>Thanh toán thất bại</Text>
+        }]}>{constants.booking.status.payment_failer}</Text>
       )
       case 3: return (
         <Text style={[styles.statusTx, {
           color: '#FFF', paddingHorizontal: 5,
           alignSelf: 'flex-start',
           overflow: 'hidden'
-        }]}>Đã thanh toán</Text>
+        }]}>{constants.booking.status.paymented}</Text>
       )
       case 4: return (
         <Text style={[styles.statusTx, {
           color: '#FFF', paddingHorizontal: 5,
           alignSelf: 'flex-start',
           overflow: 'hidden'
-        }]}>Thanh toán sau</Text>
+        }]}>{constants.booking.status.payment_last}</Text>
       )
       case 5: return (
         <Text style={[styles.statusTx, {
           color: '#FFF', paddingHorizontal: 5,
           alignSelf: 'flex-start',
           overflow: 'hidden'
-        }]}>Chờ thanh toán</Text>
+        }]}>{constants.booking.status.payment_pending}</Text>
       )
       case 6: return (
         <Text style={[styles.statusTx, {
           color: '#FFF', paddingHorizontal: 5,
           alignSelf: 'flex-start',
           overflow: 'hidden'
-        }]}>Đã xác nhận</Text>
+        }]}>{constants.booking.status.confirm}</Text>
       )
       case 7: return (
         <Text style={[styles.statusTx, {
           color: '#FFF', paddingHorizontal: 5,
           alignSelf: 'flex-start',
           overflow: 'hidden'
-        }]}>Đã có hồ sơ</Text>
+        }]}>{constants.booking.status.have_profile}</Text>
       )
       case 8: return (
         <Text style={[styles.statusReject, {
           color: 'rgb(208,2,27)', paddingHorizontal: 5,
           alignSelf: 'flex-start'
-        }]}>Đã huỷ (không phục vụ)</Text>
+        }]}>{constants.booking.status.rejected}</Text>
       )
 
 
@@ -285,7 +287,7 @@ class PatientHistoryScreen extends Component {
   render() {
     return (
       <ActivityPanel
-        title="Lịch sử đặt lịch"
+        title={constants.title.patient_history_screen}
       >
         <View style={{ flex: 1 }}>
           <FlatList
@@ -301,7 +303,7 @@ class PatientHistoryScreen extends Component {
               !this.state.refreshing &&
                 (!this.state.data1 || this.state.data1.length == 0) ? (
                   <View style={{ alignItems: "center", marginTop: 50 }}>
-                    <Text style={{ fontStyle: "italic" }}>Không có dữ liệu</Text>
+                    <Text style={{ fontStyle: "italic" }}>{constants.none_data}</Text>
                   </View>
                 ) : null
             }

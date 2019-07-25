@@ -35,14 +35,13 @@ import GroupChatScreen from "@containers/chat/GroupChatScreen";
 import ChatScreen from "@containers/chat/ChatScreen";
 import ProfileScreen from "@containers/account/ProfileScreen";
 import { EHealthNavigator } from "@ehealth/navigator";
-import { BookingDHYNavigation } from "@dhy/navigator";
 import NotificationScreen from "@containers/notification/NotificationScreen";
 import ListQuestionScreen from "@containers/question/ListQuestionScreen";
 import CreateQuestionStep1Screen from "@containers/question/CreateQuestionStep1Screen";
 import CreateQuestionStep2Screen from "@containers/question/CreateQuestionStep2Screen";
 import DetailQuestionScreen from "@containers/question/DetailQuestionScreen";
 import PaymentWithVNPayScreen from "@containers/payment/PaymentWithVNPayScreen";
-import ChangePass from "@containers/account/ChangePassWord";
+import ChangePasswordScreen from "@containers/account/ChangePasswordScreen";
 import FingerScreen from "@containers/account/FingerScreen";
 import FingerSettingScreen from "@containers/account/FingerSettingScreen";
 //=========BOOKING NAVIGATION
@@ -74,6 +73,8 @@ import ConfirmGetTicketScreen from "@containers/ticket/ConfirmGetTicketScreen";
 import ScanQRCodeScreen from "@containers/ticket/ScanQRCodeScreen";
 import GetTicketFinishScreen from "@containers/ticket/GetTicketFinishScreen";
 //---------------------------------
+import ViewEhealthDetailScreen from '@containers/ehealth/ViewEhealthDetailScreen';
+
 //........................eHealth................
 
 
@@ -84,7 +85,6 @@ const RootNavigator = createStackNavigator(
     // testVNPay: { screen: TestVNPayScreen },
     // scanQRCode: { screen: ScanQRCodeScreen },
     splash: { screen: SplashScreen },
-    addBookingBVDHY: { screen: BookingDHYNavigation },
     groupChat: { screen: GroupChatScreen },
     groupChatFacility: { screen: GroupChatScreen },
     chat: { screen: ChatScreen },
@@ -121,7 +121,7 @@ const RootNavigator = createStackNavigator(
     createQuestionStep1: { screen: CreateQuestionStep1Screen },
     createQuestionStep2: { screen: CreateQuestionStep2Screen },
     detailQuestion: { screen: DetailQuestionScreen },
-    changePass: { screen: ChangePass },
+    changePassword: { screen: ChangePasswordScreen },
     FingerScreen: { screen: FingerScreen },
     FingerSettingScreen: { screen: FingerSettingScreen },
     //---------------booking navigation
@@ -154,6 +154,7 @@ const RootNavigator = createStackNavigator(
     //----------------------------------------
     //----------------ehealth-----------------
     ehealth: { screen: EHealthNavigator },
+    viewDetailEhealth: { screen: ViewEhealthDetailScreen },
    
     emptyScreen: { screen: EmptyScreen }
   },

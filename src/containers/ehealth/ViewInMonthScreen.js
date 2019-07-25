@@ -7,13 +7,11 @@ import dateUtils from 'mainam-react-native-date-utils';
 import snackbar from '@utils/snackbar-utils';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import { Card } from 'native-base';
-import ReactNativeAN from 'react-native-alarm-notification';
 import ActionSheet from 'react-native-actionsheet'
 import { Notification, NotificationOpen } from 'react-native-firebase';
 import DateTimePicker from "mainam-react-native-date-picker";
 import TextField from "mainam-react-native-form-validate/TextField";
 import ehealthProvider from '@data-access/ehealth-provider'
-import Modal from '@components/modal';
 import ExportPDF from '@components/ehealth/ExportPDF';
 import firebase from 'react-native-firebase';
 import connectionUtils from '@utils/connection-utils';
@@ -28,31 +26,12 @@ LocaleConfig.locales['en'] = {
 
 LocaleConfig.defaultLocale = 'en';
 var fireDate
-var alarmNotifData = {
-    id: "12345",                                  // Required
-    title: "Isofh Care ",               // Required
-    message: "Đã đến giờ uống thuốc",           // Required
-    channel: "isofh-care-channel",                     // Required. Same id as specified in MainApplication's onCreate method
-    ticker: "My Notification Ticker",
-    auto_cancel: false,                            // default: true
-    vibrate: true,
-    vibration: 500,                               // default: 100, no vibration if vibrate: false
-    small_icon: "ic_launcher",                    // Required
-    large_icon: "ic_launcher",
-    play_sound: true,
-    sound_name: null,                             // Plays custom notification ringtone if sound_name: null
-    color: "red",
-    schedule_once: false,                          // Works with ReactNativeAN.scheduleAlarm so alarm fires once
-    tag: 'some_tag',
-    fire_date: fireDate,                          // Date for firing alarm, Required for ReactNativeAN.scheduleAlarm.
-    data: { foo: "bar" },
-}
 
 class ListProfileScreen extends Component {
 
     constructor(props) {
         super(props)
-        console.log(this.props,'view in month')
+        console.log(this.props, 'view in month')
         let patient = this.props.ehealth.patient;
         patient.history = (patient.history || []).sort((a, b) => {
             a.timeGoIn && b.timeGoIn ? a.timeGoIn.toDateObject("-") - b.timeGoIn.toDateObject("-") : ''
@@ -91,6 +70,7 @@ class ListProfileScreen extends Component {
             switchValue: false,
             dataPatient: '',
             dateSelected,
+            isVisible: false
 
         }
 
@@ -227,7 +207,7 @@ class ListProfileScreen extends Component {
     onDayPress(day) {
 
         if (this.state.histories[day.dateString]) {
-            console.log(day.dateString,'sdasd')
+            console.log(day.dateString, 'sdasd')
             let histories = JSON.parse(JSON.stringify(this.state.histories));
             if (this.state.dateSelected && histories[this.state.dateSelected]) {
                 delete histories[this.state.dateSelected].selected;
@@ -267,10 +247,7 @@ class ListProfileScreen extends Component {
 
             });
         } else {
-            this.setState({
-                status: 1,
-                isVisible: true
-            })
+            snackbar.show(this.renderTextError(1), "danger");
         }
     }
     onPressTime = () => {
@@ -371,7 +348,7 @@ class ListProfileScreen extends Component {
 
             }
         } else {
-            snackbar.show('Bạn chưa chọn giờ uống thuốc', 'danger');
+            snackbar.show(constants.msg.ehealth.not_select_time_drug, 'danger');
         }
     }
     onBlur = () => {
@@ -381,7 +358,6 @@ class ListProfileScreen extends Component {
         let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : ''
         let isMedicineTime = this.state.isMedicineTime ? 1 : 0
         let histories = JSON.parse(JSON.stringify(this.state.histories));
-        console.log()
         let id = this.state.dateSelected ? histories[this.state.dateSelected].history.id : histories[this.state.latestTime.format("yyyy-MM-dd")].history.id
         ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
 
@@ -391,195 +367,106 @@ class ListProfileScreen extends Component {
     }
     onPressAppointment = () => {
         if (this.state.appointmentDate) {
-            this.setState({
-                status: 2,
-                isVisible: true
-            })
+            snackbar.show(this.renderTextError(2), "danger");
+
         } else {
-            this.setState({
-                status: 4,
-                isVisible: true
-            })
+            snackbar.show(this.renderTextError(4), "danger");
+
         }
     }
     onShareEhealth = () => {
         this.actionSheetGetTicket.show();
     }
-    renderTextContent = () => {
-        switch (this.state.status) {
-            case 1: return (
-                <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>{constants.msg.ehealth.not_result_of_this_date}</Text>
-            )
-            case 2: return (
-                <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>{constants.msg.ehealth.re_examination_in_date + this.state.reCheckDate.toDateObject('-').format('dd/MM/yyyy') + '!'}</Text>
-            )
-            case 3: return (
-                <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>{constants.msg.ehealth.examination_in_date}</Text>
-            )
-            case 4: return (
-                <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>{constants.msg.ehealth.not_re_examination}</Text>
-            )
-            case 5: return (
-                <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>{constants.msg.ehealth.not_examination}</Text>
-            )
-            case 6: return (
-                <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>{"Bạn chưa có kết quả khám ở ngày này!"}</Text>
-            )
-            case 7: return (
-                <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10, fontSize: 18 }}>{'Đã chia sẻ Y bạ thành công!'}</Text>
-            )
-            case 8: return (
-                <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}><ScaleImage height={20} source={require('@images/new/ehealth/ic_warning.png')}></ScaleImage><Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10, fontSize: 18 }}>{'Chưa chia sẻ được!'}</Text></View>
-            )
-            default: return (
-                <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10 }}>{constants.msg.ehealth.not_examination}</Text>
-            )
+    renderTextError = (status) => {
+        switch (status) {
+            case 1: return constants.msg.ehealth.not_result_of_this_date;
+            case 2: return constants.msg.ehealth.re_examination_in_date + this.state.reCheckDate.toDateObject('-').format('dd/MM/yyyy') + '!';
+            case 3: return constants.msg.ehealth.examination_in_date;
+            case 4: return constants.msg.ehealth.not_re_examination;
+            case 5: return constants.msg.ehealth.not_examination;
+            case 6: return "Bạn chưa có kết quả khám ở ngày này!";
+            case 7: return "Đã chia sẻ Y bạ thành công!";
+            case 8: return "Chưa chia sẻ được!";
+            default: return constants.msg.ehealth.not_examination;
         }
     }
     viewResult() {
         connectionUtils.isConnected().then(s => {
-        this.setState({
-            isLoading: true
-        }, () => {
-            try {
-                let patientHistoryId = this.state.histories[this.state.dateSelected].history.patientHistoryId
-                let hospitalId = this.state.patient.hospitalEntity.id
-                ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId).then(s => {
-                    console.log(s,'ssssssss')
-                    let resultDetail = null;
-                    let result = null;
-                    if (s.data && s.data.data) {
-                        if (s.data.data.result) {
-                            try {
-                                result = JSON.parse(s.data.data.result);
-                                console.log('co ket qua',result)
-                            } catch (error) {
-                                console.log(error,'errorerror')
+            this.setState({
+                isLoading: true
+            }, () => {
+                try {
+                    let patientHistoryId = this.state.histories[this.state.dateSelected].history.patientHistoryId
+
+                    let hospitalId = this.state.patient.hospitalEntity.id
+                    ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId).then(s => {
+                        let resultDetail = null;
+                        let result = null;
+                        if (s.data && s.data.data) {
+                            if (s.data.data.result) {
+                                try {
+                                    result = JSON.parse(s.data.data.result);
+                                } catch (error) {
+                                }
+                            }
+                            if (!result ||
+                                (
+                                    !(result.ListDiagnostic && result.ListDiagnostic.length) &&
+                                    !(result.ListMedicine && result.ListMedicine.length) &&
+                                    !(result.ListResulGiaiPhau && result.ListResulGiaiPhau.length) &&
+                                    !(result.ListResulHoaSinh && result.ListResulHoaSinh.length) &&
+                                    !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
+                                    !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
+                                    !(result.ListResulViSinh && result.ListResulViSinh.length) &&
+                                    !(result.ListResultCheckup && result.ListResultCheckup.length)
+
+                                )
+                            ) {
+                                throw "";
+                            }
+                            else {
+                                this.setState({
+                                    isLoading: false
+                                }, () => {
+                                    this.props.navigation.navigate("viewInDay", {
+                                        dateSelected: this.state.dateSelected
+                                    });
+                                });
                             }
                         }
-                        if (!result ||
-                            (
-                                !(result.ListDiagnostic && result.ListDiagnostic.length) &&
-                                !(result.ListMedicine && result.ListMedicine.length) &&
-                                !(result.ListResulGiaiPhau && result.ListResulGiaiPhau.length) &&
-                                !(result.ListResulHoaSinh && result.ListResulHoaSinh.length) &&
-                                !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
-                                !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
-                                !(result.ListResulViSinh && result.ListResulViSinh.length)&&
-                                !(result.ListResultCheckup && result.ListResultCheckup.length)
-
-                            )
-                        ) {
-                            console.log('ko kq',result)
-                            throw "";
-                        }
-                        else {
-                            this.setState({
-                                isLoading: false
-                            }, () => {
-                                this.props.navigation.navigate("viewInDay", {
-                                    dateSelected: this.state.dateSelected
-                                });
-                            });
-                        }
-                    }
-                }).catch(err => {
-                    console.log(err,'err')
+                    }).catch(err => {
+                        this.setState({
+                            isLoading: false
+                        });
+                        snackbar.show(this.renderTextError(6), "danger");
+                    })
+                } catch (error) {
                     this.setState({
                         isLoading: false,
-                        status: 6,
-                        isVisible: true
                     });
-                })
-            } catch (error) {
-                console.log(error,'error')
-                this.setState({
-                    isLoading: false,
-                    status: 6,
-                    isVisible: true
-                });
-            }
+                    snackbar.show(this.renderTextError(6), "danger");
+                }
 
-        });
-    }).catch(e => {
-        snackbar.show(constants.msg.app.not_internet, "danger");
-    })
+            });
+        }).catch(e => {
+            snackbar.show(constants.msg.app.not_internet, "danger");
+        })
 
     }
-    componentWillReceiveProps(nextProps){
-        if(nextProps.navigation.state.params && nextProps.navigation.state.params.status){
-            this.setState({
-                isVisible:true,
-                status:nextProps.navigation.state.params.status
-            })
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.navigation.state.params && nextProps.navigation.state.params.status) {
+            snackbar.show(this.renderTextError(nextProps.navigation.state.params.status), "danger");
+            nextProps.navigation.state.params.status = null
         }
     }
-    onShareEhealthWithProfile () {
-        
-        //check status 6
-        this.setState({
-            isLoading: true
-        }, () => {
-            try {
-                let patientHistoryId = this.state.histories[this.state.dateSelected].history.patientHistoryId
-                let hospitalId = this.state.patient.hospitalEntity.id
-                console.log(patientHistoryId)
-                ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId).then(s => {
-                    let resultDetail = null;
-                    let result = null;
-                    if (s.data && s.data.data) {
-                        if (s.data.data.result) {
-                            try {
-                                result = JSON.parse(s.data.data.result);
-                            } catch (error) {
-
-                            }
-                        }
-                        if (!result ||
-                            (
-                                !(result.ListDiagnostic && result.ListDiagnostic.length) &&
-                                !(result.ListMedicine && result.ListMedicine.length) &&
-                                !(result.ListResulGiaiPhau && result.ListResulGiaiPhau.length) &&
-                                !(result.ListResulHoaSinh && result.ListResulHoaSinh.length) &&
-                                !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
-                                !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
-                                !(result.ListResulViSinh && result.ListResulViSinh.length)&&
-                                !(result.ListResultCheckup && result.ListResultCheckup.length)
-                            )
-                        ) {
-                            throw "";
-                        }
-                        else {
-                            this.setState({
-                                isLoading: false
-                            }, () => {
-                                this.props.navigation.navigate('searchProfile', { dataPatient: this.state.dataPatient,lastDate:this.state.lastDate })
-
-                            });
-                        }
-                    }
-                }).catch(err => {
-                    this.setState({
-                        isLoading: false,
-                        status: 6,
-                        isVisible: true
-                    });
-                })
-            } catch (error) {
-                this.setState({
-                    isLoading: false,
-                    status: 6,
-                    isVisible: true
-                });
-            }
-
-        });
-
+    onShareEhealthWithProfile() {
+        this.props.navigation.navigate('searchProfile', { dataPatient: this.state.dataPatient, lastDate: this.state.lastDate })
     }
     exportPdf() {
         this.setState({
             isLoading: true
         }, () => {
+
             try {
                 let patientHistoryId = this.state.histories[this.state.dateSelected].history.patientHistoryId
                 let hospitalId = this.state.patient.hospitalEntity.id
@@ -601,40 +488,40 @@ class ListProfileScreen extends Component {
 
                             }
                         }
-                        if (!result ||
-                            (
-                                !(result.ListDiagnostic && result.ListDiagnostic.length) &&
-                                !(result.ListMedicine && result.ListMedicine.length) &&
-                                !(result.ListResulGiaiPhau && result.ListResulGiaiPhau.length) &&
-                                !(result.ListResulHoaSinh && result.ListResulHoaSinh.length) &&
-                                !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
-                                !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
-                                !(result.ListResulViSinh && result.ListResulViSinh.length) &&
-                                !(result.ListResultCheckup && result.ListResultCheckup.length)
-                                
-                            )
-                        ) {
-                            this.setState({
-                                isLoading: false,
-                                status: 6,
-                                isVisible: true
-                            });
-                            return;
-                        }
+                        // if (!result ||
+                        //     (
+                        //         !(result.ListDiagnostic && result.ListDiagnostic.length) &&
+                        //         !(result.ListMedicine && result.ListMedicine.length) &&
+                        //         !(result.ListResulGiaiPhau && result.ListResulGiaiPhau.length) &&
+                        //         !(result.ListResulHoaSinh && result.ListResulHoaSinh.length) &&
+                        //         !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
+                        //         !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
+                        //         !(result.ListResulViSinh && result.ListResulViSinh.length) &&
+                        //         !(result.ListResultCheckup && result.ListResultCheckup.length)
 
-                        if (result && resultDetail) {
-                            result.hospital = this.props.ehealth.hospital.hospital;
-                            this.exportPdfCom.getWrappedInstance().exportPdf({
-                                type: "all",
-                                result: result,
-                                fileName: constants.filenamePDF + patientHistoryId
-                            }, () => {
-                                this.setState({ isLoading: false });
-                            });
-                        }
-                        else {
+                        //     )
+                        // ) {
+                        //     this.setState({
+                        //         isLoading: false,
+                        //         status: 6,
+                        //         isVisible: true
+                        //     });
+                        //     return;
+                        // }
+
+                        // if (result && resultDetail) {
+                        result.hospital = this.props.ehealth.hospital.hospital;
+                        this.exportPdfCom.getWrappedInstance().exportPdf({
+                            type: "all",
+                            result: result,
+                            fileName: constants.filenamePDF + patientHistoryId
+                        }, () => {
                             this.setState({ isLoading: false });
-                        }
+                        });
+                        // }
+                        // else {
+                        this.setState({ isLoading: false });
+                        // }
                     }
                     else {
                         this.setState({ isLoading: false });
@@ -656,17 +543,14 @@ class ListProfileScreen extends Component {
                 isLoading={this.state.isLoading}
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#22b060"
-                actionbarStyle={{
-                    backgroundColor: '#22b060',
-                    borderBottomWidth: 0
-                }}
+                actionbarStyle={styles.actionbarStyle}
                 titleStyle={{
                     color: '#FFF'
                 }}
             >
                 <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
-                    <View style={{ justifyContent: 'center', flex: 1, alignItems: 'center' }}>
-                        <Calendar style={{ marginBottom: 3, backgroundColor: "#FFF", width: '100%' }}
+                    <View style={styles.viewCalendar}>
+                        <Calendar style={styles.calendarStyle}
                             // markedDates={this.state.listSchedule}
                             current={this.state.latestTime.format("yyyy-MM-dd")}
                             // onDayPress={(day) => { console.log('selected day', day) }}
@@ -682,39 +566,39 @@ class ListProfileScreen extends Component {
                             markedDates={this.state.histories}
                         />
                         <TouchableOpacity onPress={this.viewResult.bind(this)} style={styles.viewBtn}>
-                            <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>{constants.ehealth.checkupResult}</Text>
+                            <Text style={styles.txCheckResult}>{constants.ehealth.checkupResult}</Text>
                         </TouchableOpacity>
                         <Card style={styles.cardView}>
-                            <View style={{ flexDirection: 'row', marginVertical: 10, }}>
+                            <View style={styles.viewSuggest}>
                                 <View style={styles.viewLine}></View>
                                 <TextInput onBlur={this.onBlur} multiline={true} onChangeText={s => {
                                     this.setState({ suggestions: s })
-                                }} value={this.state.suggestions} underlineColorAndroid={'#fff'} style={{ marginLeft: 5, color: '#9caac4', fontSize: 18, width: '95%' }} placeholder={'Bạn cần làm gì?'}></TextInput>
+                                }} value={this.state.suggestions} underlineColorAndroid={'#fff'} style={styles.inputSuggest} placeholder={'Bạn cần làm gì?'}></TextInput>
                             </View>
-                            <Text style={{ color: '#bdc6d8', fontSize: 15 }}>Suggestion</Text>
+                            <Text style={styles.txSuggest}>{constants.ehealth.suggestion}</Text>
                             <View style={styles.viewBTnSuggest}>
                                 <TouchableOpacity onPress={this.onPressAppointment} style={[styles.btnReExamination, { backgroundColor: '#4CD565', }]}>
-                                    <Text style={{ color: '#fff', padding: 2 }}>Lịch tái khám</Text>
+                                    <Text style={styles.txReExamination}>{constants.ehealth.re_examination}</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={this.onShareEhealth} style={[styles.btnReExamination, { backgroundColor: '#2E66E7', }]}>
-                                    <Text style={{ color: '#fff', padding: 2 }}>Chia sẻ y bạ</Text>
+                                    <Text style={styles.txReExamination}>{constants.ehealth.share_ehealth}</Text>
                                 </TouchableOpacity>
                             </View>
-                            <View style={{ height: 1, backgroundColor: '#97979710', marginVertical: 10 }} />
+                            <View style={styles.viewBorder} />
                             <View>
-                                <Text style={styles.txLabel}>Ghi chú</Text>
+                                <Text style={styles.txLabel}>{constants.ehealth.note}</Text>
                                 <TextInput onBlur={this.onBlur} multiline={true} onChangeText={s => {
                                     this.setState({ note: s })
                                 }} value={this.state.note} underlineColorAndroid={'#fff'} style={[styles.txContent,]} placeholder={'Nhập ghi chú'}></TextInput>
                             </View>
                             <View>
-                                <Text style={styles.txLabel}>Thời gian</Text>
+                                <Text style={styles.txLabel}>{constants.ehealth.clock}</Text>
                                 <TouchableOpacity onPress={this.onPressTime}><Text style={styles.txContent}>{this.state.date ? (new Date().format("dd/MM/yyyy") + " " + this.state.date).toDateObject('/').format('HH:mm') : 'Chọn giờ'}</Text>
                                 </TouchableOpacity>
                             </View>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <View style={styles.viewAlarm}>
                                 <View >
-                                    <Text style={styles.txLabel}>Nhắc uống thuốc</Text>
+                                    <Text style={styles.txLabel}>{constants.ehealth.redmine_drug}</Text>
                                     <TouchableOpacity onPress={this.onPressTimeAlarm}><Text style={styles.txContent}><Text style={styles.txContent}>{this.state.timeAlarm ? (new Date().format("dd/MM/yyyy") + " " + this.state.timeAlarm).toDateObject('/').format('HH:mm') : 'Chọn giờ'}</Text></Text></TouchableOpacity>
                                 </View>
                                 <Switch onValueChange={this.onSetAlarm} trackColor={{
@@ -725,7 +609,7 @@ class ListProfileScreen extends Component {
                             </View>
                         </Card>
                     </View>
-                    <View style={{ height: 50 }}></View>
+                    <View style={styles.viewSpaceBottom}></View>
                 </ScrollView>
                 <DateTimePicker
                     mode={'time'}
@@ -736,27 +620,11 @@ class ListProfileScreen extends Component {
                     }}
                     cancelTextIOS={"Hủy bỏ"}
                     confirmTextIOS={"Xác nhận"}
-                    date={this.state.isTimeAlarm ? this.state.dobAlarm : this.state.dob || new Date()}
+                    date={(this.state.isTimeAlarm ? this.state.dobAlarm : this.state.dob) || new Date()}
                 />
-                <Modal
-                    isVisible={this.state.isVisible}
-                    onBackdropPress={() => this.setState({ isVisible: false })}
-                    backdropOpacity={0.5}
-                    animationInTiming={500}
-                    animationOutTiming={500}
-                    style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
-                    backdropTransitionInTiming={1000}
-                    backdropTransitionOutTiming={1000}
-                >
-                    <View style={{ backgroundColor: '#fff', marginHorizontal: 20, marginVertical: 60, borderRadius: 5 }}>
-                        <Text style={{ fontSize: 22, color: '#27AE60', textAlign: 'center', marginTop: 10, marginHorizontal: 20 }}>Thông báo</Text>
-                        {this.renderTextContent(1)}
-                        <TouchableOpacity onPress={() => this.setState({ isVisible: false })} style={{ justifyContent: 'center', alignItems: 'center', height: 41, backgroundColor: '#878787', borderBottomLeftRadius: 5, borderBottomRightRadius: 5 }}><Text style={{ color: '#fff' }}>OK, XONG</Text></TouchableOpacity>
-                    </View>
-                </Modal>
                 <ActionSheet
                     ref={o => this.actionSheetGetTicket = o}
-                    options={["Hồ sơ trên ISOFHCARE", "Khác", "Hủy"]}
+                    options={[constants.actionSheet.profile_on_isofhcare, constants.actionSheet.orther, constants.actionSheet.cancel]}
                     cancelButtonIndex={2}
                     destructiveButtonIndex={2}
                     onPress={(index) => {
@@ -870,7 +738,31 @@ const styles = StyleSheet.create({
     txContent: {
         color: '#554a4c',
         marginTop: 5, marginBottom: 25,
-    }
+    },
+    txPopUp: { textAlign: 'center', marginVertical: 20, marginHorizontal: 10 },
+    txShareFinish: { textAlign: 'center', marginVertical: 20, marginHorizontal: 10, fontSize: 18 },
+    viewShareErr: { flexDirection: 'row', alignItems: 'center', padding: 10 },
+    txShareErr: { textAlign: 'center', marginVertical: 20, marginHorizontal: 10, fontSize: 18 },
+    actionbarStyle: {
+        backgroundColor: '#22b060',
+        borderBottomWidth: 0
+    },
+    viewCalendar: { justifyContent: 'center', flex: 1, alignItems: 'center' },
+    calendarStyle: { marginBottom: 3, backgroundColor: "#FFF", width: '100%' },
+    txCheckResult: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
+    viewSuggest: { flexDirection: 'row', marginVertical: 10, },
+    inputSuggest: { marginLeft: 5, color: '#9caac4', fontSize: 18, width: '95%' },
+    txSuggest: { color: '#bdc6d8', fontSize: 15 },
+    txReExamination: { color: '#fff', padding: 2 },
+    viewBorder: { height: 1, backgroundColor: '#97979710', marginVertical: 10 },
+    viewAlarm: { flexDirection: 'row', justifyContent: 'space-between' },
+    viewSpaceBottom: { height: 50 },
+    viewModal: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+    viewPopup: { backgroundColor: '#fff', marginHorizontal: 20, marginVertical: 60, borderRadius: 5 },
+    txNotifi: { fontSize: 22, color: '#27AE60', textAlign: 'center', marginTop: 10, marginHorizontal: 20 },
+    btnDone: { justifyContent: 'center', alignItems: 'center', height: 41, backgroundColor: '#878787', borderBottomLeftRadius: 5, borderBottomRightRadius: 5 },
+    txDone: { color: '#fff' },
+
 });
 
 function mapStateToProps(state) {

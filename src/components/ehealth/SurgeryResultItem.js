@@ -3,7 +3,6 @@ import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Keyboa
 import { connect } from 'react-redux';
 import ScaleImage from "mainam-react-native-scaleimage";
 import constants from '@resources/strings';
-import ExportPDF from '@ehealth/daihocy/components/ExportPDF';
 
 class CheckupResult extends Component {
     constructor(props) {
@@ -19,38 +18,26 @@ class CheckupResult extends Component {
         //     }
         //     text = text.trim();
         // }
-        return <Text style={{ marginLeft: 10, marginBottom: 10 }}>{text}</Text>
+        return <Text style={styles.txItem}>{text}</Text>
     }
 
     render() {
         let { item } = this.props;
-        return <View style={{ flex: 1, marginTop: 20 }} key={this.props.key}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
-                <Text style={{ flex: 1, fontWeight: 'bold', fontSize: 15, color: constants.colors.primary_bold }}>{item.ServiceName}</Text>
+        return <View style={styles.container} key={this.props.key}>
+            <View style={styles.viewCheckup}>
+                <Text style={styles.txServiceName}>{item.ServiceName}</Text>
                 {/* <TouchableOpacity onPress={() => this.exportPdf()}>
                         <Text style={{ borderColor: '#065cb4', borderWidth: 2, paddingLeft: 12, paddingRight: 12, paddingTop: 8, paddingBottom: 8, borderRadius: 20, color: "#065cb4", fontWeight: 'bold' }}>Xuất PDF</Text>
                     </TouchableOpacity> */}
             </View>
-            <View style={{
-                backgroundColor: "#ffffff",
-                shadowColor: "rgba(0, 0, 0, 0.05)",
-                shadowOffset: {
-                    width: 0,
-                    height: 2
-                },
-                shadowRadius: 10,
-                shadowOpacity: 1,
-                elevation: 3,
-                borderRadius: 5,
-                padding: 10
-            }}>
+            <View style={styles.viewList}>
                 {
                     item.BiopsyLocation ?
                         <View>
 
                             <Text style={styles.diagnosticLabel}>Vị trí sinh thiết</Text>
-                            <View style={{ flexDirection: 'row' }}>
-                                <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
+                            <View style={styles.viewItem}>
+                                <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
                                 {this.renderItem(item.BiopsyLocation)}
                             </View>
                         </View> : null
@@ -61,8 +48,8 @@ class CheckupResult extends Component {
                         <View>
 
                             <Text style={styles.diagnosticLabel}>Vị thể</Text>
-                            <View style={{ flexDirection: 'row' }}>
-                                <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
+                            <View style={styles.viewItem}>
+                                <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
                                 {this.renderItem(item.Microsome)}
                             </View>
                         </View> : null
@@ -73,21 +60,21 @@ class CheckupResult extends Component {
                         <View>
 
                             <Text style={styles.diagnosticLabel}>Đại thể</Text>
-                            <View style={{ flexDirection: 'row' }}>
-                                <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
+                            <View style={styles.viewItem}>
+                                <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
                                 {this.renderItem(item.Macrosome)}
                             </View>
                         </View> : null
                 }
 
                 {
-                    (item.Result || item.Discussion) ?
+                    (item.Result || item.Discussion || item.SummaryResult) ?
                         <View>
 
                             <Text style={styles.diagnosticLabel}>Kết quả</Text>
-                            <View style={{ flexDirection: 'row' }}>
-                                <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
-                                {this.renderItem(item.Result + item.Discussion)}
+                            <View style={styles.viewItem}>
+                                <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
+                                {this.renderItem(item.Result + item.Discussion + item.SummaryResult)}
                             </View>
                         </View> : null
                 }
@@ -97,12 +84,12 @@ class CheckupResult extends Component {
                         && (item.ServiceMedicTestLine && item.ServiceMedicTestLine.length > 0) ?
                         item.ServiceMedicTestLine.map((item, i) => {
                             return (<View key={i}>
-                                <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                                <View style={styles.viewImg}>
                                     {
                                         item.IsVerified ?
-                                            <ScaleImage source={require("@ehealth/daihocy/resources/images/check.png")} width={12} style={{ marginTop: 4, marginRight: 7 }} />
+                                            <ScaleImage source={require("@images/new/ehealth/check.png")} width={12} style={styles.scaleImg} />
                                             :
-                                            <ScaleImage source={require("@ehealth/daihocy/resources/images/uncheck.png")} width={12} style={{ marginTop: 4, marginRight: 7 }} />
+                                            <ScaleImage source={require("@images/new/ehealth/uncheck.png")} width={12} style={styles.scaleImg} />
                                     }
                                     <Text style={styles.diagnosticLabel1}>{item.NameLine}</Text>
                                 </View>
@@ -119,8 +106,8 @@ class CheckupResult extends Component {
                         <View>
 
                             <Text style={styles.diagnosticLabel}>Kết luận</Text>
-                            <View style={{ flexDirection: 'row' }}>
-                                <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
+                            <View style={styles.viewItem}>
+                                <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
                                 {
                                     this.renderItem(item.Conclusion)
                                 }
@@ -150,6 +137,26 @@ const styles = StyleSheet.create({
         fontWeight: 'bold', marginBottom: 5
     },
     breakline: {
-    }
+    },
+    txItem:{ marginLeft: 10, marginBottom: 10 },
+    container:{ flex: 1, marginTop: 20 },
+    viewCheckup:{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
+    txServiceName:{ flex: 1, fontWeight: 'bold', fontSize: 15, color: constants.colors.primary_bold },
+    viewList:{
+        backgroundColor: "#ffffff",
+        shadowColor: "rgba(0, 0, 0, 0.05)",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowRadius: 10,
+        shadowOpacity: 1,
+        elevation: 3,
+        borderRadius: 5,
+        padding: 10
+    },
+    viewItem:{ flexDirection: 'row' },
+    viewImg:{ flexDirection: 'row', marginTop: 10 },
+    scaleImg:{ marginTop: 4, marginRight: 7 }
 })
 export default connect(mapStateToProps)(CheckupResult);

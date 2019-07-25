@@ -4,13 +4,17 @@ import { connect } from 'react-redux';
 import ScaleImage from "mainam-react-native-scaleimage";
 import constants from '@resources/strings';
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
-import resultUtils from '@ehealth/daihocy/utils/result-utils';
+import resultUtils from '@ehealth/utils/result-utils';
 import ActionSheet from 'react-native-actionsheet'
 
 
 class MedicalTestResult extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+        }
+    }
+    componentDidMount() {
         let result1 = this.props.result;
         let hasResult = false;
         if (result1) {
@@ -28,7 +32,8 @@ class MedicalTestResult extends Component {
             }
         }
         if (!hasResult) {
-            this.state = {hasResult: false}
+
+            this.state = { hasResult: false }
             return null;
         }
 
@@ -46,7 +51,7 @@ class MedicalTestResult extends Component {
                 item.value.ListMedical.push.apply(item.value.ListMedical, entry.ListMedical);
             });
         }
-                
+
         if (result1.ListResulHuyetHoc && result1.ListResulHuyetHoc.length > 0) {
             var item = {
                 type: 'Huyết Học',
@@ -89,14 +94,18 @@ class MedicalTestResult extends Component {
             });
         }
 
-        this.state = {
+        this.setState({
             hasResult: true,
             listTime: [],
             medicalTestResult: result,
             currentGroup: result[0]
+        })
+    }
+    componentWillReceiveProps(nextProps) {
+        if (this.props.result != nextProps.result) {
+            this.componentDidMount();
         }
     }
-
     viewGroup(item) {
         this.setState({
             currentGroup: item
@@ -187,20 +196,23 @@ class MedicalTestResult extends Component {
         actions.push("Hủy");
 
         return (<View style={{ flex: 1, padding: 10 }}>
-            <View style={[styles.item, { marginTop: 0 }]}>
-                <View style={styles.round1}>
-                    <View style={styles.round2} />
+            {
+                (this.props.showTitle == true || this.props.showTitle == undefined) &&
+                <View style={[styles.item, { marginTop: 0 }]}>
+                    <View style={styles.round1}>
+                        <View style={styles.round2} />
+                    </View>
+                    <View style={[styles.itemlabel, { marginTop: 0 }]}>
+                        <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>KẾT QUẢ XÉT NGHIỆM</Text>
+                    </View>
                 </View>
-                <View style={[styles.itemlabel, { marginTop: 0 }]}>
-                    <Text style={[{ fontWeight: 'bold', fontSize: 18 }]}>KẾT QUẢ XÉT NGHIỆM</Text>
-                </View>
-            </View>
+            }
             {
                 this.state.currentGroup && <View style={{ alignItems: 'flex-end', marginVertical: 10 }}><TouchableOpacity onPress={() => {
                     this.actionSheetChooseType.show();
-                }} style={{ flexDirection: 'row', alignItems:'center' }}>
-                    <Text style={{marginRight: 10}}>{this.state.currentGroup.type}</Text>
-                    <ScaleImage source={require("@images/new/down.png")} width={10}/>
+                }} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Text style={{ marginRight: 10 }}>{this.state.currentGroup.type}</Text>
+                    <ScaleImage source={require("@images/new/down.png")} width={10} />
                 </TouchableOpacity></View>
             }
             {
@@ -260,5 +272,10 @@ const styles = StyleSheet.create({
     groupSelected: {
         color: constants.colors.primary_bold
     },
+    cellStyle:{ backgroundColor: '#DFF5F2' },
+    tableWrappe:{ flexDirection: 'row' },
+    viewCurrentGroup:{ alignItems: 'flex-end', marginVertical: 10 },
+    btnCurrentGroup:{ flexDirection: 'row', alignItems: 'center' },
+    txCurrent:{ marginRight: 10 }
 })
 export default connect(mapStateToProps)(MedicalTestResult);

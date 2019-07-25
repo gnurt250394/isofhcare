@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { View, FlatList, TouchableOpacity, Text, TextInput, ActivityIndicator } from 'react-native'
+import { View, FlatList, TouchableOpacity, Text, TextInput, ActivityIndicator, StyleSheet } from 'react-native'
 import { connect } from 'react-redux';
 import ActivityPanel from '@components/ActivityPanel'
 import serviceTypeProvider from '@data-access/service-type-provider';
@@ -28,7 +28,7 @@ class SearchProfileScreen extends Component {
             finish: false,
             loading: false,
             status: '',
-            isSearch:false
+            isSearch: false
 
         }
     }
@@ -81,7 +81,7 @@ class SearchProfileScreen extends Component {
         console.log('onRefreshList')
         if (!this.state.loading)
             this.setState(
-                { refreshing: true, page: 1, finish: false, loading: true,isSearch:true },
+                { refreshing: true, page: 1, finish: false, loading: true, isSearch: true },
                 () => {
                     this.onSearch();
                 }
@@ -155,30 +155,20 @@ class SearchProfileScreen extends Component {
             historyProvider.addHistory(userId, USER_EHEALTH_HISTORY, name, dataId, JSON.stringify(data))
             ehealthProvider.shareWithProfile(dataId, hospitalId, patientHistoryId).then(res => {
                 if (res.code == 0 && res.data.status == 1) {
-                    this.props.navigation.navigate('viewInMonth',{lastDate:lastDate,status:7})
+                    this.props.navigation.navigate('viewInMonth', { lastDate: lastDate, status: 7 })
                 } else {
-                    this.props.navigation.navigate('viewInMonth',{lastDate:lastDate,status:8})
+                    this.props.navigation.navigate('viewInMonth', { lastDate: lastDate, status: 8 })
 
                 }
 
             }).catch(err => {
-                this.props.navigation.navigate('viewInMonth',{lastDate:lastDate,status:8})
+                this.props.navigation.navigate('viewInMonth', { lastDate: lastDate, status: 8 })
 
                 console.log(err)
             })
         }).catch(e => {
             snackbar.show(constants.msg.app.not_internet, "danger");
         })
-    }
-    renderTextContent = () => {
-        switch (this.state.status) {
-            case 1: return (
-                <Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10, fontSize: 18 }}>{'Đã chia sẻ Y bạ thành công!'}</Text>
-            )
-            case 2: return (
-                <View style={{ flexDirection: 'row', alignItems: 'center', padding: 10 }}><ScaleImage height={20} source={require('@images/new/ehealth/ic_warning.png')}></ScaleImage><Text style={{ textAlign: 'center', marginVertical: 20, marginHorizontal: 10, fontSize: 18 }}>{'Chưa chia sẻ được!'}</Text></View>
-            )
-        }
     }
     renderSearchButton() {
         return (
@@ -206,20 +196,16 @@ class SearchProfileScreen extends Component {
         const icSupport = require("@images/new/user.png");
         return (
             <TouchableOpacity onPress={() => this.selectProfile(item)}>
-                <View style={{ marginBottom: 2, backgroundColor: '#FFF', padding: 20, flexDirection: 'column', borderBottomColor: '#A5A5A5', borderBottomWidth: 0.7 }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View style={styles.viewItem}>
+                    <View style={styles.viewList}>
+                        <View style={styles.viewImage}>
                             <ImageLoad
                                 resizeMode="cover"
-                                imageStyle={{ borderRadius: 15, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
+                                imageStyle={styles.imageStyle}
                                 borderRadius={20}
-                                customImagePlaceholderDefaultStyle={{
-                                    width: 30,
-                                    height: 30,
-                                    alignSelf: "center"
-                                }}
+                                customImagePlaceholderDefaultStyle={styles.imageCustom}
                                 placeholderSource={icSupport}
-                                style={{ width: 30, height: 30 }}
+                                style={styles.image}
                                 resizeMode="cover"
                                 loadingStyle={{ size: "small", color: "gray" }}
                                 source={item.user.avatar
@@ -231,12 +217,12 @@ class SearchProfileScreen extends Component {
                                             resizeMode="cover"
                                             source={icSupport}
                                             width={30}
-                                            style={{ width: 30, height: 30 }}
+                                            style={styles.scaledImage}
                                         />
                                     );
                                 }}
                             />
-                            <Text style={{ fontWeight: '200', fontSize: 15, marginLeft: 10 }}>
+                            <Text style={styles.textName}>
                                 {item.user.name}
                             </Text>
                         </View>
@@ -248,37 +234,30 @@ class SearchProfileScreen extends Component {
     render() {
         return (
             <ActivityPanel
-                backButton={<TouchableOpacity style={{ paddingLeft: 20 }} onPress={() => this.props.navigation.pop()}><Text>Hủy</Text></TouchableOpacity>}
-                titleStyle={{ marginRight: 0 }} title={constants.title.search_profile}
+                backButton={<TouchableOpacity style={styles.activity} onPress={() => this.props.navigation.pop()}><Text>{constants.ehealth.cancel}</Text></TouchableOpacity>}
+                titleStyle={styles.titleStyle} title={constants.title.search_profile}
                 isLoading={this.state.isLoading} menuButton={this.renderSearchButton()} showFullScreen={true}
             >
                 {
                     this.state.showSearch ?
-                        <View style={{
-                            justifyContent: 'space-between',
-                            elevation: 5,
-                            height: 55,
-                            justifyContent: 'center', alignItems: 'center',
-                            backgroundColor: constants.colors.actionbar_color,
-                            flexDirection: 'row'
-                        }}>
-                            <TextInput autoFocus={true} style={{ flex: 1, color: constants.colors.actionbar_title_color, padding: 10 }} placeholderTextColor='#dddddd' underlineColorAndroid="transparent" placeholder={"Nhập từ khóa tìm kiếm"} onChangeText={(s) => {
+                        <View style={styles.viewSearch}>
+                            <TextInput autoFocus={true} style={styles.textInput} placeholderTextColor='#dddddd' underlineColorAndroid="transparent" placeholder={constants.ehealth.inputKeyword} onChangeText={(s) => {
                                 this.searchTextChange(s);
                             }} returnKeyType="search" onSubmitEditing={this.onRefreshList} />
                             <TouchableOpacity onPress={this.onRefreshList}>
-                                <Text style={{ backgroundColor: constants.colors.actionbar_title_color, padding: 7, borderRadius: 20, marginRight: 10, paddingLeft: 15, paddingRight: 15, fontWeight: 'bold', color: '#FFF' }}>{constants.search}</Text>
+                                <Text style={styles.txSearch}>{constants.search}</Text>
                             </TouchableOpacity>
                         </View>
                         : null
                 }
                 {
                     !this.state.searchValue && !this.state.isSearch ? (
-                        <View style={{ paddingLeft: 20, paddingVertical: 10, marginTop: 10, backgroundColor: '#fff', borderColor: '#A5A5A5', borderBottomWidth: 0.7 }}><Text style={{ fontSize: 15, color: '#000', }}>Tìm kiếm gần đây</Text></View>
+                        <View style={styles.viewTxSearch}><Text style={styles.txtSearch}>{constants.ehealth.lastSearch}</Text></View>
 
                     ) : null
                 }
                 <FlatList
-                    style={{ flex: 1, backgroundColor: '#FFF' }}
+                    style={styles.flatList}
                     refreshing={this.state.refreshing}
                     onRefresh={this.onRefresh}
                     keyExtractor={(item, index) => index.toString()}
@@ -286,50 +265,65 @@ class SearchProfileScreen extends Component {
                     ListHeaderComponent={() =>
                         !this.state.refreshing &&
                             (!this.state.listProfileSearch || this.state.listProfileSearch.length == 0) ?
-                            <View style={{ width: '100%', marginTop: 50, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center' }}>
+                            <View style={styles.viewHeader}>
                                 <ScaleImage source={require("@images/empty_result.png")} width={120} />
-                                <Text style={{ textAlign: 'center' }}>{this.state.searchValue ? 'Không có kết quả nào cho hồ sơ ' : 'Không có hồ sơ chia sẻ gần đây '}<Text style={{ fontWeight: 'bold', color: constants.colors.actionbar_title_color }}>{this.state.searchValue}</Text></Text>
+                                <Text style={styles.txErr}>{this.state.searchValue ? constants.ehealth.not_result_for_keyword : constants.ehealth.not_result_for_last_search}<Text style={{ fontWeight: 'bold', color: constants.colors.actionbar_title_color }}>{this.state.searchValue}</Text></Text>
                             </View> : null
                     }
                     onEndReached={this.state.isSearch ? this.onLoadMore.bind(this) : {}}
                     onEndReachedThreshold={this.state.isSearch ? 1 : -1}
-                    ListFooterComponent={() => <View style={{ height: 10 }} />}
+                    ListFooterComponent={() => <View style={styles.viewFooter} />}
                     data={this.state.listProfileSearch}
                     renderItem={this.renderItem}
                 />
                 {
                     this.state.loadMore ?
-                        <View style={{ alignItems: 'center', padding: 10, position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+                        <View style={styles.viewLoading}>
                             <ActivityIndicator
                                 size={'small'}
                                 color={'gray'}
                             />
                         </View> : null
                 }
-                <Modal
-                    isVisible={this.state.isVisible}
-                    onBackdropPress={() => this.setState({ isVisible: false })}
-                    backdropOpacity={0.5}
-                    animationInTiming={500}
-                    animationOutTiming={500}
-                    style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
-                    backdropTransitionInTiming={1000}
-                    backdropTransitionOutTiming={1000}
-                >
-                    <View style={{ backgroundColor: '#fff', marginHorizontal: 20, marginVertical: 60, borderRadius: 5 }}>
-                        <Text style={{ fontSize: 22, color: '#27AE60', textAlign: 'center', marginTop: 10, marginHorizontal: 20 }}>Thông báo</Text>
-                        {this.renderTextContent()}
-                        <TouchableOpacity onPress={() => {
-                            this.setState({ isVisible: false })
-                            this.props.navigation.pop()
-                        }}
-                            style={{ justifyContent: 'center', alignItems: 'center', height: 41, backgroundColor: '#878787', borderBottomLeftRadius: 5, borderBottomRightRadius: 5 }}><Text style={{ color: '#fff' }}>OK, XONG</Text></TouchableOpacity>
-                    </View>
-                </Modal>
+
             </ActivityPanel>
         )
     }
 }
+const styles = StyleSheet.create({
+    viewSearch: {
+        justifyContent: 'space-between',
+        elevation: 5,
+        height: 55,
+        justifyContent: 'center', alignItems: 'center',
+        backgroundColor: constants.colors.actionbar_color,
+        flexDirection: 'row'
+    },
+    textInput: { flex: 1, color: constants.colors.actionbar_title_color, padding: 10 },
+    viewItem: { marginBottom: 2, backgroundColor: '#FFF', padding: 20, flexDirection: 'column', borderBottomColor: '#A5A5A5', borderBottomWidth: 0.7 },
+    viewList: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+    imageStyle: { borderRadius: 15, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' },
+    viewImage: { flexDirection: 'row', alignItems: 'center' },
+    imageCustom: {
+        width: 30,
+        height: 30,
+        alignSelf: "center"
+    },
+    image: { width: 30, height: 30 },
+    scaledImage: { width: 30, height: 30 },
+    textName: { fontWeight: '200', fontSize: 15, marginLeft: 10 },
+    activity: { paddingLeft: 20 },
+    titleStyle: { marginRight: 0 },
+    txSearch: { backgroundColor: constants.colors.actionbar_title_color, padding: 7, borderRadius: 20, marginRight: 10, paddingLeft: 15, paddingRight: 15, fontWeight: 'bold', color: '#FFF' },
+    viewTxSearch: { paddingLeft: 20, paddingVertical: 10, marginTop: 10, backgroundColor: '#fff', borderColor: '#A5A5A5', borderBottomWidth: 0.7 },
+    txtSearch: { fontSize: 15, color: '#000', },
+    flatList: { flex: 1, backgroundColor: '#FFF' },
+    viewHeader: { width: '100%', marginTop: 50, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center' },
+    txErr: { textAlign: 'center' },
+    viewLoading: { alignItems: 'center', padding: 10, position: 'absolute', bottom: 0, left: 0, right: 0 },
+    viewFooter: { height: 10 }
+
+})
 function mapStateToProps(state) {
     return {
         userApp: state.userApp,

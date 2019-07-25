@@ -259,15 +259,15 @@ class FacilityDetailScreen extends Component {
     }
 
     booking() {
-        if (this.props.userApp.isLogin) {
-            if (this.state.facility.facility.id == 403) {
-                this.props.navigation.navigate("addBookingBVDHY");
-            } else {
-                snackbar.show("Chưa kết nối đến " + this.state.facility.facility.name, "danger");
-            }
-        } else {
-            this.props.navigation.navigate("login")
-        }
+        // if (this.props.userApp.isLogin) {
+        //     if (this.state.facility.facility.id == 403) {
+        //         this.props.navigation.navigate("addBookingBVDHY");
+        //     } else {
+        //         snackbar.show("Chưa kết nối đến " + this.state.facility.facility.name, "danger");
+        //     }
+        // } else {
+        //     this.props.navigation.navigate("login")
+        // }
     }
 
     render() {

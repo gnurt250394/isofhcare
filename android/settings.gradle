@@ -1,4 +1,6 @@
 rootProject.name = 'APP'
+include ':react-native-get-location'
+project(':react-native-get-location').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-get-location/android')
 include ':react-native-code-push'
 project(':react-native-code-push').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-code-push/android/app')
 include ':appcenter-crashes'
@@ -7,8 +9,6 @@ include ':appcenter-analytics'
 project(':appcenter-analytics').projectDir = new File(rootProject.projectDir, '../node_modules/appcenter-analytics/android')
 include ':appcenter'
 project(':appcenter').projectDir = new File(rootProject.projectDir, '../node_modules/appcenter/android')
-include ':react-native-alarm-notification'
-project(':react-native-alarm-notification').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-alarm-notification/android')
 include ':react-native-sms'
 project(':react-native-sms').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-sms/android')
 include ':react-native-extra-dimensions-android'
@@ -16,7 +16,7 @@ project(':react-native-extra-dimensions-android').projectDir = new File(rootProj
 include ':mainam-react-native-payoo'
 project(':mainam-react-native-payoo').projectDir = new File(rootProject.projectDir, '../node_modules/mainam-react-native-payoo/android')
 include ':react-native-location-switch'
-project(':react-native-location-switch').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-location-switch/android')
+project(':react-native-location-switch').projectDir = new File(rootProject.projectDir, '../node_modules/mainam-react-native-location-switch/android')
 include ':react-native-location'
 project(':react-native-location').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-location/android')
 include ':react-native-vector-icons'
@@ -54,4 +54,7 @@ include ':rn-fetch-blob'
 project(':rn-fetch-blob').projectDir = new File(rootProject.projectDir, '../node_modules/rn-fetch-blob/android')
 include ':react-native-linear-gradient'
 project(':react-native-linear-gradient').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-linear-gradient/android')
+include ':@react-native-community_async-storage'
+project(':@react-native-community_async-storage').projectDir = new File(rootProject.projectDir, '../node_modules/@react-native-community/async-storage/android')
+
 include ':app'

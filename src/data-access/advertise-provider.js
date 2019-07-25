@@ -43,7 +43,8 @@ module.exports = {
                     }
                 }
             }).catch(e => {
-                callback(undefined, e);
+                if (callback)
+                    callback(undefined, e);
             });
         }
     },

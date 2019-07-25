@@ -1,0 +1,11 @@
+framework module PayooSDK {
+  umbrella header "PayooSDK.h"
+
+  export *
+  module * { export * }
+}
+
+module PayooSDK.Swift {
+    header "PayooSDK-Swift.h"
+    requires objc
+}

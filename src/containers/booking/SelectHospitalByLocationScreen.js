@@ -11,7 +11,7 @@ import { Card } from 'native-base';
 import hospitalProvider from '@data-access/hospital-provider';
 import ImageLoad from 'mainam-react-native-image-loader';
 import snackbar from '@utils/snackbar-utils';
-import constants from '@dhy/strings';
+import constants from '@resources/strings'
 
 
 import clientUtils from '@utils/client-utils';
@@ -120,6 +120,7 @@ class SelectHospitalScreenLocation extends Component {
         if (item.zone && item.zone.name)
             address += ", " + item.zone.name;
         if (item.district && item.district.name)
+        
             address += ", " + item.district.name;
         if (item.province && item.province.countryCode)
             address += ", " + item.province.countryCode;
@@ -129,7 +130,7 @@ class SelectHospitalScreenLocation extends Component {
         return (
             <ActivityPanel
                 isLoading={this.state.isLoading}
-                style={styles.AcPanel} title="Địa điểm gần bạn"
+                style={styles.AcPanel} title={constants.title.location_near}
                 backButton={<TouchableOpacity style={{ paddingLeft: 20 }} onPress={() => this.props.navigation.pop()}><Text>Hủy</Text></TouchableOpacity>}
                 titleStyle={{ marginLeft: 10 }}
                 containerStyle={{
@@ -158,7 +159,7 @@ class SelectHospitalScreenLocation extends Component {
                                 (!this.state.data || this.state.data.length == 0) ? (
                                     <View style={{ alignItems: "center", marginTop: 50 }}>
                                         <Text style={{ fontStyle: "italic" }}>
-                                            Không có dữ liệu</Text>
+                                            {constants.none_data}</Text>
                                     </View>
                                 ) : null
                         }

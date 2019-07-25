@@ -7,7 +7,6 @@ import Dash from 'mainam-react-native-dash-view';
 import bookingProvider from '@data-access/booking-provider';
 import hospitalProvider from '@data-access/hospital-provider';
 import constants from '@resources/strings';
-import constants2 from '@ehealth/daihocy/resources/strings';
 import dateUtils from 'mainam-react-native-date-utils';
 import stringUtils from 'mainam-react-native-string-utils';
 import profileProvider from '@data-access/profile-provider';
@@ -28,71 +27,61 @@ const DEVICE_WIDTH = Dimensions.get('window').width;
 class ViewEhealthDetailScreen extends Component {
     constructor(props) {
         super(props)
-        this.state = {
-            result : '',
-            resultDetail : '',
-            detailsHospital:'',
-            hospitalName:'',
-            user:''
-        }
-    }
-    componentDidMount(){
         let result = this.props.navigation.state.params.result;
         let resultDetail = this.props.navigation.state.params.resultDetail;
-        let user = this.props.navigation.state.params.user 
+        let user = this.props.navigation.state.params.user
         let hospitalName = this.props.navigation.state.params.hospitalName
 
-        this.setState({
-            result :result,
-            resultDetail:resultDetail,
-            user:user,
-            hospitalName:hospitalName
-        })
+        this.state = {
+            result: result,
+            resultDetail: resultDetail,
+            user: user,
+            hospitalName: hospitalName,
+            detailsHospital: ""
+        }
     }
-    componentWillReceiveProps(nextProps){
-        console.log(nextProps,'nextProps')
-        if(nextProps.navigation.state.params && nextProps.navigation.state.params.result){
-            console.log('chay vao nextprops')
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.navigation.state.params && nextProps.navigation.state.params.result) {
             let result = nextProps.navigation.state.params.result;
             let resultDetail = nextProps.navigation.state.params.resultDetail;
-            let user = nextProps.navigation.state.params.user 
+            let user = nextProps.navigation.state.params.user
             let hospitalName = nextProps.navigation.state.params.hospitalName
             this.setState({
-                result :result,
-                resultDetail:resultDetail,
-                user:user,
-                hospitalName:hospitalName
+                result: result,
+                resultDetail: resultDetail,
+                user: user,
+                hospitalName: hospitalName
             })
         }
     }
-    renderDetails = () =>{
-        console.log('re-render',this.state.result)
-        if(this.state.user){
-            return(
+    renderDetails = () => {
+        if (this.state.user) {
+            return (
                 <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
-                <ProfileInfomation hospitalName ={this.state.hospitalName} avatar = {this.state.user.avatar} patientName = {this.state.resultDetail.Profile.PatientName} resultDetail={this.state.resultDetail} />
-                <View style={{ height: 1, backgroundColor: '#27ae60', }} />
-                <CheckupResult result={this.state.result} />
-                <MedicalTestResult result={this.state.result} />
-                <DiagnosticResult result={this.state.result} />
-                <SurgeryResult result={this.state.result} />
-                <Medicine result={this.state.result} />
-                <TotalMoney result={this.state.result} resultDetail={this.state.resultDetail} />
-                <View style={{height: 50}}/>
+                    <ProfileInfomation hospitalName={this.state.hospitalName} avatar={this.state.user.avatar} patientName={this.state.resultDetail.Profile.PatientName} resultDetail={this.state.resultDetail} />
+                    <View style={{ height: 1, backgroundColor: '#27ae60', }} />
+                    <CheckupResult result={this.state.result} />
+                    <MedicalTestResult result={this.state.result} />
+                    <DiagnosticResult result={this.state.result} />
+                    <SurgeryResult result={this.state.result} />
+                    <Medicine result={this.state.result} />
+                    <TotalMoney result={this.state.result} resultDetail={this.state.resultDetail} />
+                    <View style={{ height: 50 }} />
                 </ScrollView>
             )
-        }else{
-            return(
+        } else {
+            return (
                 <ScrollView ref={ref => this.flListDate = ref} showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
-                <ProfileInfomation resultDetail={this.state.resultDetail} />
-                <View style={{ height: 1, backgroundColor: '#27ae60', }} />
-                <CheckupResult result={this.state.result} />
-                <MedicalTestResult result={this.state.result} />
-                <DiagnosticResult result={this.state.result} />
-                <SurgeryResult result={this.state.result} />
-                <Medicine result={this.state.result} />
-                <TotalMoney result={this.state.result} resultDetail={this.state.resultDetail} />
-                <View style={{height: 50}}/>
+                    <ProfileInfomation resultDetail={this.state.resultDetail} />
+                    <View style={{ height: 1, backgroundColor: '#27ae60', }} />
+                    <CheckupResult result={this.state.result} />
+                    <MedicalTestResult result={this.state.result} />
+                    <DiagnosticResult result={this.state.result} />
+                    <SurgeryResult result={this.state.result} />
+                    <Medicine result={this.state.result} />
+                    <TotalMoney result={this.state.result} resultDetail={this.state.resultDetail} />
+                    <View style={{ height: 50 }} />
                 </ScrollView>
             )
         }
@@ -100,31 +89,36 @@ class ViewEhealthDetailScreen extends Component {
     render() {
 
         return (
-            <ActivityPanel style={{ flex: 1 }} title={constants.title.ehealth_details}
+            <ActivityPanel style={styles.container} title={constants.title.ehealth_details}
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#22b060"
-                actionbarStyle={{
-                    backgroundColor: '#22b060',
-                    borderBottomWidth: 0
-                }}
-                titleStyle={{
-                    color: '#FFF'
-                }}
+                actionbarStyle={styles.actionbarStyle}
+                titleStyle={styles.titleStyle}
                 isLoading={this.state.isLoading}>
-               {this.renderDetails()}
+                {this.renderDetails()}
             </ActivityPanel>
         );
     }
 }
 
 const styles = StyleSheet.create({
+    container: { flex: 1 },
     round1: { width: 20, height: 20, backgroundColor: '#FFF', borderColor: '#8fa1aa', borderWidth: 1.5, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
     round2: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#7daa3c' },
     round3: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#c74444' },
     itemlabel: { marginLeft: 5, flex: 1, marginTop: 2 },
     itemcontent: { color: '#0076ff' },
-    item: { marginTop: 10, flexDirection: 'row' }
+    item: { marginTop: 10, flexDirection: 'row' },
+    viewRenderDetails: { height: 1, backgroundColor: '#27ae60', },
+    viewBottomDetails: { height: 50 },
+    actionbarStyle: {
+        backgroundColor: '#22b060',
+        borderBottomWidth: 0
+    },
+    titleStyle: {
+        color: '#FFF'
+    },
 });
 
 function mapStateToProps(state) {

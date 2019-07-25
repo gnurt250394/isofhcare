@@ -13,3 +13,4 @@ ios/APP.xcworkspace/xcuserdata/socoboy.xcuserdatad/UserInterfaceState.xcuserstat
 .idea
 ios/Pods
 ios/Podfile.lock
+yarn-error.log

@@ -15,7 +15,6 @@ const DEVICE_WIDTH = Dimensions.get('window').width;
 import ImageLoad from 'mainam-react-native-image-loader';
 import ScaledImage from "mainam-react-native-scaleimage";
 import { Table, Row } from 'react-native-table-component';
-import ExportPDF from '@ehealth/daihocy/components/ExportPDF';
 
 class CheckupResult extends Component {
     constructor(props) {
@@ -27,25 +26,13 @@ class CheckupResult extends Component {
     renderItemCheckup(item) {
         const tableHead = ['STT', 'Tên thuốc', 'Số lượng', 'Đơn vị'];
         return <View style={{ flex: 1 }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
-                <Text style={{ flex: 1, fontWeight: 'bold', fontSize: 15, color: constants.colors.primary_bold }}>{item.ServiceName}</Text>
+            <View style={styles.viewItemCheckUp}>
+                <Text style={styles.txServiceName}>{item.ServiceName}</Text>
                 {/* <TouchableOpacity onPress={() => this.exportPdf()}>
                         <Text style={{ borderColor: '#065cb4', borderWidth: 2, paddingLeft: 12, paddingRight: 12, paddingTop: 8, paddingBottom: 8, borderRadius: 20, color: "#065cb4", fontWeight: 'bold' }}>Xuất PDF</Text>
                     </TouchableOpacity> */}
             </View>
-            <View style={{
-                backgroundColor: "#ffffff",
-                shadowColor: "rgba(0, 0, 0, 0.05)",
-                shadowOffset: {
-                    width: 0,
-                    height: 2
-                },
-                shadowRadius: 10,
-                shadowOpacity: 1,
-                elevation: 3,
-                borderRadius: 5,
-                padding: 10
-            }}>
+            <View style={styles.viewItem}>
                 {
                     [
                         this.renderItem("Chẩn đoán", item.First_Diagnostic),
@@ -63,7 +50,7 @@ class CheckupResult extends Component {
             return null
         return (
             <View>
-                <Table style={[styles.table, { marginTop: 10 }]} borderStyle={{ borderWidth: 0.5, borderColor: '#c8e1ff' }}>
+                <Table style={[styles.table, { marginTop: 10 }]} borderStyle={styles.borderStyle}>
                     <Row data={tableHead} style={styles.head} textStyle={styles.textHead} flexArr={[1, 3, 1, 1]} />
                     {this.renderMedicine(0, value)}
                 </Table>
@@ -76,16 +63,16 @@ class CheckupResult extends Component {
             return (<View><Text style={styles.diagnosticLabel}>{lable}</Text>
                 {
                     value ?
-                        <View style={{ flexDirection: 'row' }}>
-                            <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
-                            <Text style={{ marginLeft: 10, marginBottom: 10 }}>{value}</Text>
+                        <View style={styles.viewListItem}>
+                            <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
+                            <Text style={styles.txValue}>{value}</Text>
                         </View> : null
                 }
                 {
                     value2 ?
-                        <View style={{ flexDirection: 'row' }}>
-                            <ScaleImage source={require("@ehealth/daihocy/resources/images/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
-                            <Text style={{ marginLeft: 10, marginBottom: 10 }}>{value2}</Text>
+                        <View style={styles.viewListItem}>
+                            <ScaleImage source={require("@images/new/ehealth/ic_dot.png")} width={5} style={{ marginTop: 7 }} />
+                            <Text style={styles.txValue}>{value2}</Text>
                         </View> : null
                 }
             </View>)
@@ -118,11 +105,11 @@ class CheckupResult extends Component {
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 style={{ padding: 10 }} key={index}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 30 }}>
-                    <Text style={{ flex: 1, fontWeight: 'bold', fontSize: 15, color: constants.colors.primary_bold }}>{item.ServiceName}</Text>
-                    <TouchableOpacity onPress={() => this.exportPdf()}>
+                <View style={styles.viewServiceName}>
+                    <Text style={styles.txServiceName}>{item.ServiceName}</Text>
+                    {/* <TouchableOpacity onPress={() => this.exportPdf()}>
                         <Text style={{ borderColor: '#065cb4', borderWidth: 2, paddingLeft: 12, paddingRight: 12, paddingTop: 8, paddingBottom: 8, borderRadius: 20, color: "#065cb4", fontWeight: 'bold' }}>Xuất PDF</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
                 <View style={styles.slide}>
 
@@ -216,13 +203,13 @@ class CheckupResult extends Component {
                         }
                     </View>
                 </View>
-                <View style={{ height: 50 }}></View>
+                <View style={styles.viewSpaceBottom}></View>
             </ScrollView>
         </View>
     }
     render() {
         let { item } = this.props;
-        return <View style={{ flex: 1, marginTop: 20 }} key={this.props.key}>
+        return <View style={styles.container} key={this.props.key}>
             {
                 this.renderItemCheckup(item)
             }
@@ -237,6 +224,7 @@ function mapStateToProps(state) {
     };
 }
 const styles = StyleSheet.create({
+    container:{ flex: 1, marginTop: 20 },
     round1: { width: 20, height: 20, backgroundColor: '#FFF', borderColor: '#8fa1aa', borderWidth: 1.5, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
     round2: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#7daa3c' },
     round3: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#c74444' },
@@ -260,6 +248,27 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 10,
         backgroundColor: constants.colors.breakline
-    }
+    },
+    viewItemCheckUp:{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
+    txServiceName:{ flex: 1, fontWeight: 'bold', fontSize: 15, color: constants.colors.primary_bold },
+    viewItem:{
+        backgroundColor: "#ffffff",
+        shadowColor: "rgba(0, 0, 0, 0.05)",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowRadius: 10,
+        shadowOpacity: 1,
+        elevation: 3,
+        borderRadius: 5,
+        padding: 10
+    },
+    borderStyle:{ borderWidth: 0.5, borderColor: '#c8e1ff' },
+    viewListItem:{ flexDirection: 'row' },
+    txValue:{ marginLeft: 10, marginBottom: 10 },
+    viewServiceName:{ flexDirection: 'row', alignItems: 'center', marginBottom: 30 },
+    viewSpaceBottom:{ height: 50 },
+
 })
 export default connect(mapStateToProps)(CheckupResult);

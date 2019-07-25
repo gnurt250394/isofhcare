@@ -19,6 +19,7 @@ import ImageLoad from 'mainam-react-native-image-loader';
 import snackbar from '@utils/snackbar-utils';
 import Modal from "@components/modal";
 import stylemodal from "@styles/modal-style";
+import constants from "@resources/strings";
 
 class DetailsHistoryScreen extends Component {
   constructor(props) {
@@ -48,17 +49,18 @@ class DetailsHistoryScreen extends Component {
             address: s.data.hospital.address,
             booking: s.data.booking || {},
             service: s.data.service || {},
+            services: s.data.services || [],
             hospital: s.data.hospital || {},
             medicalRecords: s.data.medicalRecords || {},
             isLoading: false
           })
         } else {
-          snackbar.show("Không thể xem chi tiết đặt khám này", "danger");
+          snackbar.show(constants.msg.booking.cannot_show_details_booking, "danger");
           this.props.navigation.pop();
           return;
         }
       }).catch(err => {
-        snackbar.show("Không thể xem chi tiết đặt khám này", "danger");
+        snackbar.show(constants.msg.booking.cannot_show_details_booking, "danger");
         this.props.navigation.pop();
         return;
       });
@@ -67,17 +69,17 @@ class DetailsHistoryScreen extends Component {
   renderStatus = () => {
     switch (Number(this.state.booking.statusPay)) {
       case 0:
-        return <Text style={styles.paymentHospital}>Chưa chọn hình thức</Text>;
+        return <Text style={styles.paymentHospital}>{constants.booking.status.not_select_payment}</Text>;
       case 1:
-        return <Text style={styles.paymentHospital}>Ví Isofh</Text>;
+        return <Text style={styles.paymentHospital}>{constants.booking.status.payment_isofh}</Text>;
       case 2:
-        return <Text style={styles.paymentHospital}>VNPAY</Text>;
+        return <Text style={styles.paymentHospital}>{constants.booking.status.payment_VNPAY}</Text>;
       case 3:
-        return <Text style={styles.paymentHospital}>Thanh toán sau tại CSYT</Text>;
+        return <Text style={styles.paymentHospital}>{constants.booking.status.payment_CSYT}</Text>;
       case 4:
-        return <Text style={styles.paymentHospital}>Thanh toán Payoo</Text>;
+        return <Text style={styles.paymentHospital}>{constants.booking.status.payment_payoo}</Text>;
       case 5:
-        return <Text style={styles.paymentHospital}>Payoo - Cửa hàng tiện ích</Text>;
+        return <Text style={styles.paymentHospital}>{constants.booking.status.payment_payoo2}</Text>;
 
     }
   };
@@ -86,25 +88,25 @@ class DetailsHistoryScreen extends Component {
       case 0:
         return (
           <View style={styles.statusTx}>
-            <Text style={styles.txStatus}>Chờ phục vụ</Text>
+            <Text style={styles.txStatus}>{constants.booking.status.pending}</Text>
           </View>
         );
       case 1:
-        return <Text style={styles.txStatus}>Đã huỷ (không đến)</Text>;
+        return <Text style={styles.txStatus}>{constants.booking.status.cancel}</Text>;
       case 2:
-        return <Text style={styles.txStatus}>Thanh toán thất bại</Text>;
+        return <Text style={styles.txStatus}>{constants.booking.status.payment_failer}</Text>;
       case 3:
-        return <Text style={styles.txStatus}>Đã thanh toán</Text>;
+        return <Text style={styles.txStatus}>{constants.booking.status.paymented}</Text>;
       case 4:
-        return <Text style={styles.txStatus}>Thanh toán sau</Text>;
+        return <Text style={styles.txStatus}>{constants.booking.status.payment_last}</Text>;
       case 5:
-        return <Text style={styles.txStatus}>Chờ thanh toán</Text>;
+        return <Text style={styles.txStatus}>{constants.booking.status.payment_pending}</Text>;
       case 6:
-        return <Text style={styles.txStatus}>Đã xác nhận</Text>;
+        return <Text style={styles.txStatus}>{constants.booking.status.confirm}</Text>;
       case 7:
-        return <Text style={styles.txStatus}>Đã có hồ sơ</Text>;
+        return <Text style={styles.txStatus}>{constants.booking.status.have_profile}</Text>;
       case 8:
-        return <Text style={styles.txStatus}>Đã huỷ (không phục vụ)</Text>;
+        return <Text style={styles.txStatus}>{constants.booking.status.rejected}</Text>;
       default:
         <Text style={styles.txStatus} />;
     }
@@ -184,17 +186,28 @@ class DetailsHistoryScreen extends Component {
               />
               <Text style={styles.txName}>{this.state.medicalRecords.name}</Text>
             </View>
-            <View style={styles.viewService}>
-              <ScaledImage
-                height={20}
-                width={20}
-                source={require("@images/ic_service.png")}
-              />
-              <Text style={styles.txService}>Dịch vụ khám</Text>
-              <Text style={styles.txInfoService}>{this.state.service.name}</Text>
-            </View>
+            {this.state.services && this.state.services.length ?
+              <View style={[styles.viewService, { alignItems: 'flex-start' }]}>
+                <ScaledImage
+                  height={20}
+                  width={20}
+                  source={require("@images/ic_service.png")}
+                />
+                <Text style={styles.txService}>Dịch vụ</Text>
+                <View>
+                  {
+                    this.state.services.map((item, index) => {
+                      return <View>
+                        <Text numberOfLines={1} key={index} style={[styles.txInfoService, { alignSelf: 'flex-end', fontWeight: 'bold' }]}>{item.name}</Text>
+                        <Text key={index} style={[styles.txInfoService, { alignSelf: 'flex-end', marginBottom: 5 }]}>({item.price.formatPrice()}đ)</Text>
+                      </View>
+                    })
+                  }
+                </View>
+              </View> : null
+            }
             <View style={{ backgroundColor: '#EDECED', height: 1, marginLeft: 12 }}></View>
-            <View style={styles.viewLocation}>
+            <View style={[styles.viewLocation, { alignItems: 'flex-start' }]}>
               <ScaledImage
                 height={20}
                 width={20}
@@ -219,7 +232,7 @@ class DetailsHistoryScreen extends Component {
               <Text style={styles.txDate}>Ngày khám</Text>
               <View style={styles.viewDateTime}>
                 <Text style={styles.txTime}>
-                  {this.state.booking.bookingTime.toDateObject("-").format("HH:mm")}
+                  {this.state.booking.bookingTime.toDateObject("-").format("hh:mm")}
                   {this.checkAm()}
                 </Text>
                 <Text style={styles.txDateInfo}>
@@ -229,7 +242,7 @@ class DetailsHistoryScreen extends Component {
               </View>
             </View>
             <View style={styles.viewSymptom}>
-              <Text><Text style={{ fontWeight: 'bold' }}>Triệu chứng: </Text> {this.state.booking.content}</Text>
+              <Text><Text style={{ fontWeight: 'bold' }}>Ghi chú: </Text> {this.state.booking.content}</Text>
               <View>
                 {this.renderImages()}
                 {/* <ScaledImage
@@ -239,18 +252,24 @@ class DetailsHistoryScreen extends Component {
                 /> */}
               </View>
             </View>
-            <View style={styles.viewPrice}>
-              <ScaledImage
-                source={require("@images/ic_price.png")}
-                width={20}
-                height={20}
-              />
-              <Text style={styles.txLabelPrice}>Giá dịch vụ</Text>
-              <Text style={styles.txPrice}>
-                {Number(this.state.service.price).formatPrice() + 'đ'}
-              </Text>
-            </View>
-            <View style={{ backgroundColor: '#EDECED', height: 1, marginLeft: 12 }}></View>
+            {
+              this.state.services && this.state.services.length ?
+                <React.Fragment>
+                  <View style={styles.viewPrice}>
+                    <ScaledImage
+                      source={require("@images/ic_price.png")}
+                      width={20}
+                      height={20}
+                    />
+                    <Text style={styles.txLabelPrice}>Tổng tiền dịch vụ</Text>
+                    <Text style={styles.txPrice}>
+                      {this.state.services.reduce((start, item) => start + parseInt(item.price), 0).formatPrice() + 'đ'}
+                    </Text>
+                  </View>
+                  <View style={{ backgroundColor: '#EDECED', height: 1, marginLeft: 12 }}></View>
+                </React.Fragment>
+                : null
+            }
             <View style={styles.viewPayment}>
               <ScaledImage
                 height={19}
