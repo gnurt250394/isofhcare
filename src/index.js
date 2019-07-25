@@ -17,6 +17,15 @@ import { Alert } from 'react-native';
 import snackbar from "@utils/snackbar-utils";
 let codePushOptions = { checkFrequency: codePush.CheckFrequency.MANUAL };
 // let codePushOptions = {installMode: codePush.InstallMode.IMMEDIATE };
+import { Text, TextInput, Animated } from 'react-native';
+
+Text.defaultProps = Text.defaultProps || {};
+Text.defaultProps.allowFontScaling = false;
+TextInput.defaultProps = TextInput.defaultProps || {};
+TextInput.defaultProps.allowFontScaling = false;
+Animated.Text.defaultProps = TextInput.defaultProps || {};
+Animated.Text.defaultProps.allowFontScaling = false;
+
 class Kernel extends Component {
   constructor(props) {
     super(props);

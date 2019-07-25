@@ -19,12 +19,14 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>4.5</string>
+	<string>4.6</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>fb457683741386685</string>
@@ -43,19 +45,19 @@
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
-			<key>CFBundleURLIconFile</key>
-			<string></string>
 			<key>CFBundleURLName</key>
 			<string>com.isofh.appisofhcarestable</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.isofh.appisofhcarestable</string>
+				<string>payoo</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>10</string>
-	<key>FacebookAppID</key>
+	<string>63</string>
+	<key>CodePushDeploymentKey</key>
+	<string>DUbW5MDD3IKtX3UTmV-wMGTf5d1rSJeC8CBJH</string>
+  	<key>FacebookAppID</key>
 	<string>457683741386685</string>
 	<key>FacebookDisplayName</key>
 	<string>iSofH Care</string>
@@ -74,15 +76,15 @@
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
-    <key>NSExceptionDomains</key>
-    <dict>
-      <key>codepush.azurewebsites.net</key>
-      <dict><!-- read the ATS Apple Docs for available options --></dict>
-      <key>codepush.blob.core.windows.net</key>
-      <dict><!-- read the ATS Apple Docs for available options --></dict>
-      <key>codepushupdates.azureedge.net</key>
-      <dict><!-- read the ATS Apple Docs for available options --></dict>
-    </dict>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>codepush.azurewebsites.net</key>
+			<dict/>
+			<key>codepush.blob.core.windows.net</key>
+			<dict/>
+			<key>codepushupdates.azureedge.net</key>
+			<dict/>
+		</dict>
 	</dict>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>This app requires access to apple music.</string>
@@ -149,7 +151,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-  <key>CodePushDeploymentKey</key>
-  <string>DUbW5MDD3IKtX3UTmV-wMGTf5d1rSJeC8CBJH</string>
 </dict>
 </plist>

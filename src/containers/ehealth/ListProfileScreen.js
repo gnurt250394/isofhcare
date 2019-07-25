@@ -12,6 +12,7 @@ import profileProvider from '@data-access/profile-provider';
 import snackbar from '@utils/snackbar-utils';
 import ImageLoad from 'mainam-react-native-image-loader';
 import ehealthProvider from '@data-access/ehealth-provider';
+import { Card } from 'native-base';
 
 class ListProfileScreen extends PureComponent {
     constructor(props) {
@@ -31,58 +32,45 @@ class ListProfileScreen extends PureComponent {
         this.props.dispatch({ type: constants.action.action_select_patient_group_ehealth, value: item })
         this.props.navigation.navigate('viewInMonth');
     }
-    renderItemProfile(item, index) {
+    renderItemProfile = ({ item, index }) => {
         const source = this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar.absoluteUrl() } : require("@images/new/user.png");
-        return <TouchableOpacity style={{}} onPress={() => this.onPress(item)}>
-            <View style={styles.viewItem}>
-                <View style={styles.viewImage}>
-                    <ImageLoad
-                        resizeMode="cover"
-                        imageStyle={styles.imageStyle}
-                        borderRadius={30}
-                        customImagePlaceholderDefaultStyle={[styles.avatar, { width: 60, height: 60 }]}
-                        placeholderSource={require("@images/new/user.png")}
-                        resizeMode="cover"
-                        loadingStyle={{ size: 'small', color: 'gray' }}
-                        source={source}
-                        style={styles.imgLoad}
-                        defaultImage={() => {
-                            return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={60} height={60} />
-                        }}
-                    />
-                    <Text style={{ color: '#758289' }}>{item.patientValue}</Text>
-                </View>
+        return (
+            <Card style={{ flexDirection: 'row' }}>
+                <TouchableOpacity style={[styles.viewItem]} onPress={() => this.onPress(item)}>
 
-                <View style={styles.viewListItem}>
-                    <View style={styles.viewPatienName}>
-                        <View style={styles.viewLineHeight}></View>
-                        <View style={styles.viewBettwen}>
-                            <View style={styles.viewCircle}>
-                                <View style={styles.viewSquarBlue}></View>
-                            </View>
-                            <Text style={[styles.txPatientName, Platform.OS == 'ios' ? { width: 165 } : {}]}>{item.patientName}</Text>
+                    <View style={styles.viewImage}>
+                        <ImageLoad
+                            resizeMode="cover"
+                            imageStyle={styles.imageStyle}
+                            borderRadius={30}
+                            customImagePlaceholderDefaultStyle={[styles.avatar, { width: 60, height: 60 }]}
+                            placeholderSource={require("@images/new/user.png")}
+                            resizeMode="cover"
+                            loadingStyle={{ size: 'small', color: 'gray' }}
+                            source={source}
+                            style={styles.imgLoad}
+                            defaultImage={() => {
+                                return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={60} height={60} />
+                            }}
+                        />
+                        <Text style={{ color: '#758289', fontSize: 12, marginTop: 5, fontWeight: 'bold' }}>{item.patientValue}</Text>
+                    </View>
+
+                    <View style={styles.viewListItem}>
+                        <Text style={[styles.txPatientName]}>{item.patientName}</Text>
+                        <Text style={styles.txHospitalEntityName}>{item.hospitalEntity.name}</Text>
+                        <View style={styles.viewTime}>
+                            <ScaleImage resizeMode='cover' source={require("@images/new/ehealth/ic_timer.png")} width={15} tintColor={'#8fa1aa'} />
+                            <Text style={styles.txLastTime}>{constants.ehealth.lastTime2}{item.latestTime ? item.latestTime.toDateObject('-').format('dd/MM/yyyy') : ''}</Text>
                         </View>
                     </View>
-                    <View style={styles.viewHospitalName}>
-                        <View style={styles.viewTxHospital}>
-                            <View style={styles.viewBorderCircleRed}>
-                                <View style={styles.viewCircleRed}></View>
-                            </View>
-                            <Text style={styles.txHospitalEntityName}>{item.hospitalEntity.name}</Text>
-                        </View>
-                    </View>
-                    <View style={styles.viewTime}>
-                        <ScaleImage resizeMode='cover' source={require("@images/new/ehealth/ic_timer.png")} width={20} tintColor={'#8fa1aa'} />
-                        <Text style={styles.txLastTime}>{constants.ehealth.lastTime2}{item.latestTime ? item.latestTime.toDateObject('-').format('dd/MM/yyyy') : ''}</Text>
-                    </View>
-                </View>
-                <View style={styles.txCountTime}>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.txCountTime}>
                     <Text style={styles.txCount}>{item.countTime}</Text>
                     <Text>{constants.ehealth.time}</Text>
-                </View>
-            </View>
-            <View style={styles.borderBottom} />
-        </TouchableOpacity>
+                </TouchableOpacity>
+            </Card>
+        )
     }
     onRefresh() {
         if (!this.state.loading)
@@ -117,14 +105,19 @@ class ListProfileScreen extends PureComponent {
     }
     render() {
         return (
-            <ActivityPanel style={styles.container}
+            <ActivityPanel style={{ flex: 1 }}
                 // title="HỒ SƠ Y BẠ GIA ĐÌNH"
-                title={<Text>{constants.title.list_profile_ehealth}{'\n'}<Text style={{ fontSize: 12, fontWeight: 'normal' }}>{constants.ehealth.total}{this.state.listData ? this.state.listData.length : 0}{constants.ehealth.member}</Text></Text>}
+                title={<Text style={{}}>{constants.title.list_profile_ehealth}{'\n'}<Text style={{ fontSize: 12, fontWeight: 'normal' }}>{constants.ehealth.total}{this.state.listData ? this.state.listData.length : 0}{constants.ehealth.member}</Text></Text>}
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#22b060"
-                actionbarStyle={styles.actionbarStyle}
-                titleStyle={styles.titleStyle}
+                actionbarStyle={{
+                    backgroundColor: '#22b060',
+                    borderBottomWidth: 0
+                }}
+                titleStyle={{
+                    color: '#FFF'
+                }}
                 showFullScreen={true} isLoading={this.state.isLoading}>
                 <FlatList
                     showsVerticalScrollIndicator={false}
@@ -134,8 +127,8 @@ class ListProfileScreen extends PureComponent {
                     keyExtractor={(item, index) => index.toString()}
                     extraData={this.state}
                     data={this.state.listData}
-                    ListFooterComponent={() => <View style={styles.viewFooter}></View>}
-                    renderItem={({ item, index }) => this.renderItemProfile.call(this, item, index)}
+                    ListFooterComponent={() => <View style={{ height: 10 }}></View>}
+                    renderItem={this.renderItemProfile}
                 />
             </ActivityPanel>
         );
@@ -146,11 +139,11 @@ const styles = StyleSheet.create({
     style1: {
         flexDirection: 'row', alignItems: 'center', marginTop: 10, marginLeft: 20
     },
-    titleStyle:{
+    titleStyle: {
         color: '#FFF'
     },
-    viewFooter:{ height: 10 },
-    container:{ flex: 1 },
+    viewFooter: { height: 10 },
+    container: { flex: 1 },
     text1: {
         fontSize: 16,
         fontWeight: "bold",
@@ -199,14 +192,15 @@ const styles = StyleSheet.create({
     hospital_text: { alignItems: 'flex-end', textAlign: 'center', margin: 5, fontSize: 13 },
     avatar: {
         alignSelf: 'center',
-        borderRadius: 25,
-        width: 45,
-        height: 45
+        borderRadius: 30,
+        width: 60,
+        height: 60
     },
     viewItem: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+        flex: 1
     },
-    viewImage: { justifyContent: 'center', width: 100, alignItems: 'center' },
+    viewImage: { justifyContent: 'center', width: 100, alignItems: 'center', paddingVertical: 5 },
     imageStyle: { borderRadius: 30, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' },
     imgLoad: {
         alignSelf: 'center',
@@ -214,28 +208,27 @@ const styles = StyleSheet.create({
         width: 60,
         height: 60
     },
-    viewListItem: { flex: 1, borderRightColor: '#c8d1d6', borderRightWidth: 1, paddingVertical: 10 },
+    viewListItem: { flex: 1, borderRightColor: '#c8d1d6', borderRightWidth: 1, paddingVertical: 10, paddingRight: 5 },
     viewPatienName: { position: 'relative' },
     viewLineHeight: { position: 'absolute', left: 9, top: 0, bottom: 0, width: 2, backgroundColor: '#91a3ad', },
     viewBettwen: { flexDirection: 'row', height: 40 },
     viewCircle: { width: 20, height: 20, borderWidth: 1.5, borderColor: '#91a3ad', borderRadius: 10, justifyContent: 'center', alignItems: 'center', left: 0, bottom: 0, backgroundColor: '#FFF' },
     viewSquarBlue: { width: 8, height: 8, backgroundColor: '#7eac39', borderRadius: 4 },
-    txPatientName: { marginLeft: 10, color: '#63737a', fontSize: 15 },
+    txPatientName: { color: '#63737a', fontSize: 15, fontWeight: 'bold' },
     viewHospitalName: { marginTop: -2, paddingRight: 4 },
     viewTxHospital: { flexDirection: 'row', alignItems: 'flex-start' },
     viewBorderCircleRed: { marginTop: 2, width: 20, height: 20, borderWidth: 1.5, borderColor: '#91a3ad', borderRadius: 10, justifyContent: 'center', alignItems: 'center', left: 0, bottom: 0, backgroundColor: '#FFF' },
     viewCircleRed: { width: 8, height: 8, backgroundColor: '#c84242', borderRadius: 4 },
-    txHospitalEntityName: { flex: 1, marginLeft: 10, color: '#51626a', fontSize: 15 },
-    viewTime: { flexDirection: 'row', marginTop: 10, alignItems: 'center' },
-    txLastTime: { marginLeft: 10, color: '#045684' },
-    txCountTime: { paddingHorizontal: 20, justifyContent: 'center', alignItems: 'center', width: 85 },
+    txHospitalEntityName: { flex: 1, color: '#51626a', fontSize: 14, marginTop: 10 },
+    viewTime: { flexDirection: 'row', marginTop: 10, alignItems: 'center', flex: 1 },
+    txLastTime: { marginLeft: 5, color: '#045684', flex: 1, fontSize: 13 },
+    txCountTime: { justifyContent: 'center', alignItems: 'center', width: 80 },
     txCount: { color: '#f36819', fontSize: 30 },
     borderBottom: { height: 1, backgroundColor: '#00000050' },
     actionbarStyle: {
         backgroundColor: '#22b060',
         borderBottomWidth: 0
     }
-
 });
 
 function mapStateToProps(state) {

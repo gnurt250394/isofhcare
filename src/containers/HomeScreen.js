@@ -27,6 +27,7 @@ import { IndicatorViewPager } from "mainam-react-native-viewpager";
 import firebase from 'react-native-firebase';
 import codePush from "react-native-code-push";
 
+
 class HomeScreen extends Component {
   constructor(props) {
     super(props);
