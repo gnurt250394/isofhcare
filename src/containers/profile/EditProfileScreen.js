@@ -109,6 +109,59 @@ class EditProfileScreen extends Component {
         }
 
     };
+    selectDistrict = (districts) => {
+        let districtsError = districts ? "" : this.state.districtsError;
+        if (!districts || !this.state.districts || districts.id != this.state.districts.id) {
+            this.setState({ districts, districtsError })
+        } else {
+            this.setState({ districts, districtsError });
+        }
+    }
+    onSelectDistrict = () => {
+        if (this.state.provinces) {
+            this.props.navigation.navigate('selectDistrict', {
+                onSelected: this.selectDistrict.bind(this),
+                id: this.state.provinces.id
+            })
+        } else {
+            snackbar.show('Bạn chưa chọn Tỉnh/Thành phố')
+        }
+    }
+    selectprovinces(provinces) {
+        let provincesError = provinces ? "" : this.state.provincesError;
+        if (!provinces || !this.state.provinces || provinces.id != this.state.provinces.id) {
+            this.setState({ provinces, provincesError })
+        } else {
+            this.setState({ provinces, provincesError });
+        }
+    }
+    onSelectProvince = () => {
+        this.props.navigation.navigate("selectProvince", { onSelected: this.selectprovinces.bind(this) });
+    }
+    selectZone = (zone) => {
+        let zoneError = zone ? "" : this.state.zoneError;
+        if (!zone || !this.state.zone || zone.id != this.state.zone.id) {
+            this.setState({ zone, zoneError })
+        } else {
+            this.setState({ zone, zoneError });
+        }
+    }
+    onSelectZone = () => {
+        if (!this.state.provinces.id) {
+            snackbar.show("Bạn chưa chọn Tỉnh/Thành phố")
+        }
+        if (!this.state.districts.id) {
+            snackbar.show("Bạn chưa chọn Quận/Huyện")
+        }
+        if (this.state.provinces.id && this.state.districts.id) {
+            this.props.navigation.navigate('selectZone', {
+                onSelected: this.selectZone.bind(this),
+                id: this.state.districts.id
+            })
+            return
+        }
+
+    }
     onCreateProfile = () => {
         Keyboard.dismiss();
         if (!this.form.isValid()) {
@@ -139,6 +192,9 @@ class EditProfileScreen extends Component {
                         let type = this.state.type
                         let id = this.state.id
                         let phone = this.state.phone
+                        let idProvince = this.state.provinces ? this.state.provinces.id : ''
+                        let idDistrics = this.state.districts ? this.state.districts.id : ''
+                        let idZone = this.state.zone ? this.state.zone.id : ''
                         let data = {
                             "name": name,
                             "dob": dob ? dob.toDateObject().format('yyyy-MM-dd') + ' 00:00:00' : dobOld,
@@ -148,14 +204,18 @@ class EditProfileScreen extends Component {
                             "weight": weight ? Number(weight) : null,
                             "phone": phone,
                             "address": address ? address : null,
+                            "countryId": '',
+                            "provinceId": idProvince,
+                            "districtId":idDistrics,
+                            "zoneId": idZone,
                             "type": type
                         }
-                        profileProvider.updateProfile(id, data).then(res => {
+                        profileProvider.updateProfile(id, data,).then(res => {
                             if (res.code == 0) {
                                 this.props.navigation.navigate('profile', { data: res.data.profile })
                                 snackbar.show('Cập nhật hồ sơ thành công', "success");
 
-                            }else{
+                            } else {
                                 snackbar.show('Cập nhật hồ sơ không thành công', "danger");
                             }
                         }).catch(err => {
@@ -413,8 +473,80 @@ class EditProfileScreen extends Component {
                                 </Field>
                                 <Text style={[styles.errorStyle]}>{this.state.phoneError}</Text></Field>) : (<Field></Field>)}
 
+                            <Field style={[styles.mucdichkham, { flexDirection: 'row' }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
+                                <Field style={{ flex: 1 }}>
+                                    <Text style={styles.mdk}>{'Địa chỉ'}</Text>
+                                    <Field>
+                                        <TextField
+                                            hideError={true}
+                                            onPress={this.onSelectProvince}
+                                            placeholder={'Tỉnh/Thành phố'}
+                                            editable={false}
+                                            multiline={true}
+                                            inputStyle={[
+                                                styles.ktq,
+                                            ]}
+                                            errorStyle={styles.errorStyle}
+                                            value={this.state.provinces && this.state.provinces.countryCode ? this.state.provinces.countryCode : ''}
+                                            autoCapitalize={"none"}
+                                            returnKeyType={"next"}
+                                            // underlineColorAndroid="transparent"
+                                            autoCorrect={false}
+                                        />
+                                    </Field>
+
+                                </Field>
+
+                                <Field style={{ flex: 1 }}>
+                                    <Field>
+                                        <TextField
+                                            hideError={true}
+                                            // validate={{
+                                            //     rules: {
+                                            //         number: true,
+                                            //     },
+                                            //     messages: {
+                                            //         number: 'Cân nặng không hợp lệ',
+                                            //     }
+                                            // }}
+                                            placeholder={'Quận/Huyện'}
+                                            multiline={true}
+                                            inputStyle={[
+                                                styles.ktq,
+                                            ]}
+                                            onPress={this.onSelectDistrict}
+                                            editable={false}
+                                            errorStyle={styles.errorStyle}
+                                            value={this.state.districts && this.state.districts.name ? this.state.districts.name : ''}
+                                            autoCapitalize={"none"}
+                                            returnKeyType={"next"}
+                                            // underlineColorAndroid="transparent"
+                                            autoCorrect={false}
+                                        />
+                                    </Field>
+                                </Field>
+                                <Field style={{ flex: 1 }}>
+                                    <Field>
+                                        <TextField
+                                            hideError={true}
+                                            placeholder={'Xã phường'}
+                                            multiline={true}
+                                            onPress={this.onSelectZone}
+                                            editable={false}
+                                            inputStyle={[
+                                                styles.ktq,
+                                            ]}
+                                            errorStyle={styles.errorStyle}
+                                            value={this.state.zone && this.state.zone.name ? this.state.zone.name : ''}
+                                            autoCapitalize={"none"}
+                                            returnKeyType={"next"}
+                                            // underlineColorAndroid="transparent"
+                                            autoCorrect={false}
+                                        />
+                                    </Field>
+                                </Field>
+                            </Field>
                             <Field style={[styles.mucdichkham, this.state.type == "FAMILY" ? {} : { marginTop: 10 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
-                                <Text style={styles.mdk}>{'Địa chỉ'}</Text>
                                 <TextField
                                     hideError={true}
                                     onValidate={(valid, messages) => {
@@ -433,7 +565,7 @@ class EditProfileScreen extends Component {
                                             maxlength: constants.msg.user.text_without_255,
                                         }
                                     }}
-                                    placeholder={'Địa chỉ'}
+                                    placeholder={'Thôn/Xóm, số nhà'}
                                     multiline={true}
                                     inputStyle={[
                                         styles.ktq,

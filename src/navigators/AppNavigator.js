@@ -21,6 +21,10 @@ import GroupChatScreen from "@containers/chat/GroupChatScreen";
 import ChatScreen from "@containers/chat/ChatScreen";
 // import ProfileScreen from "@containers/account/ProfileScreen";
 import ProfileScreen from "@containers/profile/ProfileScreen";
+import SelectProvinceScreen from "@containers/profile/SelectProvinceScreen";
+import SelectZoneScreen from "@containers/profile/SelectZoneScreen";
+import SelectDistrictScreen from "@containers/profile/SelectDistrictScreen";
+
 import { EHealthNavigator } from "@ehealth/navigator";
 import NotificationScreen from "@containers/notification/NotificationScreen";
 import ListQuestionScreen from "@containers/question/ListQuestionScreen";
@@ -74,7 +78,6 @@ import HospitalByLocationScreen from '@containers/home/HospitalByLocationScreen'
 const RootNavigator = createStackNavigator(
   {
     // createProfileTicketScreen : {screen:CreateProfileTicketScreen},
-    // selectLocationScreen : {screen:SelectLocationScreen},
     // testVNPay: { screen: TestVNPayScreen },
     // scanQRCode: { screen: ScanQRCodeScreen },
     //=---------------Profile-----------------
@@ -84,6 +87,9 @@ const RootNavigator = createStackNavigator(
     listProfile:{screen:ListProfileScreen},
     createProfile: { screen: CreateProfileScreen },
     editProfile:{screen:EditProfileScreen},
+    selectProvince : {screen:SelectProvinceScreen},
+    selectDistrict : {screen:SelectDistrictScreen},
+    selectZone : {screen:SelectZoneScreen},
     groupChat: { screen: GroupChatScreen },
     groupChatFacility: { screen: GroupChatScreen },
     chat: { screen: ChatScreen },

@@ -22,6 +22,8 @@ import constants from "@resources/strings";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import ActionSheet from 'react-native-actionsheet'
 import profileProvider from '@data-access/profile-provider'
+import locationProvider from '@data-access/location-provider';
+import Modal from "@components/modal";
 
 class CreateProfileScreen extends Component {
     constructor() {
@@ -42,7 +44,7 @@ class CreateProfileScreen extends Component {
             valid: '',
             isDataNull: '',
             status: 2,
-            reset: 1
+            reset: 1,
         };
     }
 
@@ -112,7 +114,10 @@ class CreateProfileScreen extends Component {
                         let height = this.state.height
                         let weight = this.state.weight ? parseFloat(this.state.weight).toFixed(1) : ''
                         let phone = this.state.phone
-                        let address = this.state.address
+                        // let address = this.state.address
+                        let idProvince = this.state.provinces ? this.state.provinces.id : ''
+                        let idDistrics =  this.state.districts ? this.state.districts.id : ''
+                        let idZone = this.state.zone ? this.state.zone.id : ''
                         // parseFloat(item.distance).toFixed(1)
                         let data = {
                             "name": name,
@@ -121,17 +126,17 @@ class CreateProfileScreen extends Component {
                             "height": height ? Number(height) : null,
                             "weight": weight ? Number(weight) : null,
                             "phone": phone,
-                            "address": address ? address : null
+                            // "address": address ? address : null
                         }
-                        profileProvider.createProfile(data).then(res => {
+                        profileProvider.createProfile(data,idProvince,idDistrics,idZone).then(res => {
                             console.log(res)
                             if (res.code == 0) {
                                 this.props.navigation.navigate('listProfile', { reset: this.state.reset + 1 })
-                                snackbar.show('Thêm thành viên thành công','success')
+                                snackbar.show('Thêm thành viên thành công', 'success')
                             }
-                            else { snackbar.show('Thêm thành viên không thành công','danger') }
+                            else { snackbar.show('Thêm thành viên không thành công', 'danger') }
                         }).catch(err => {
-                            snackbar.show('Thêm thành viên không thành công','danger') 
+                            snackbar.show('Thêm thành viên không thành công', 'danger')
                             console.log(err);
                         })
                     });
@@ -140,7 +145,66 @@ class CreateProfileScreen extends Component {
                 snackbar.show(constants.msg.app.not_internet, "danger");
             });
     }
+    selectDistrict = (districts) => {
+        let districtsError = districts ? "" : this.state.districtsError;
+        if (!districts || !this.state.districts || districts.id != this.state.districts.id) {
+            this.setState({ districts, districtsError })
+        } else {
+            this.setState({ districts, districtsError });
+        }
+    }
+    onSelectDistrict = () => {
+        if (this.state.provinces) {
+            this.props.navigation.navigate('selectDistrict', {
+                onSelected: this.selectDistrict.bind(this),
+                id: this.state.provinces.id
+            })
+        } else {
+            snackbar.show('Bạn chưa chọn Tỉnh/Thành phố')
+        }
+    }
+    selectprovinces(provinces) {
+        let provincesError = provinces ? "" : this.state.provincesError;
+        if (!provinces || !this.state.provinces || provinces.id != this.state.provinces.id) {
+            this.setState({ provinces, provincesError })
+        } else {
+            this.setState({ provinces, provincesError });
+        }
+    }
+    onSelectProvince = () => {
+        this.props.navigation.navigate("selectProvince", { onSelected: this.selectprovinces.bind(this) });
+    }
+    selectZone = (zone) => {
+        let zoneError = zone ? "" : this.state.zoneError;
+        if (!zone || !this.state.zone || zone.id != this.state.zone.id) {
+            this.setState({ zone, zoneError })
+        } else {
+            this.setState({ zone, zoneError });
+        }
+    }
+    onSelectZone = () => {
+        if(!this.state.provinces.id){
+            snackbar.show("Bạn chưa chọn Tỉnh/Thành phố")
+        }
+        if(!this.state.districts.id){
+            snackbar.show("Bạn chưa chọn Quận/Huyện")
+        }
+        if(this.state.provinces.id  && this.state.districts.id){
+            this.props.navigation.navigate('selectZone', {
+                onSelected: this.selectZone.bind(this),
+                id: this.state.districts.id
+            })
+            return
+        }
 
+    }
+    renderItem = ({ item }) => {
+        return (
+            <View style={{ margin: 5, borderRadius: 1, borderColor: '#A4A4A4', padding: 5 }}>
+                <Text style={{ color: '#4BBA7B', textAlign: 'left' }}>{item.countryCode}</Text>
+            </View>
+        )
+    }
     render() {
         let maxDate = new Date();
         maxDate = new Date(
@@ -397,7 +461,7 @@ class CreateProfileScreen extends Component {
                                 />
                             </Field>
                             <Text style={[styles.errorStyle]}>{this.state.phoneError}</Text>
-                            <Field style={[styles.mucdichkham, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
+                            {/* <Field style={[styles.mucdichkham, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
                                 <Text style={styles.mdk}>{'Địa chỉ'}</Text>
                                 <TextField
                                     hideError={true}
@@ -418,6 +482,113 @@ class CreateProfileScreen extends Component {
                                         }
                                     }}
                                     placeholder={'Địa chỉ'}
+                                    multiline={true}
+                                    inputStyle={[
+                                        styles.ktq,
+                                    ]}
+                                    errorStyle={styles.errorStyle}
+                                    onChangeText={this.onChangeText("address")}
+                                    value={this.state.address}
+                                    autoCapitalize={"none"}
+                                    returnKeyType={"next"}
+                                    // underlineColorAndroid="transparent"
+                                    autoCorrect={false}
+                                />
+                            </Field>
+                            <Text style={[styles.errorStyle]}>{this.state.addressError}</Text> */}
+                            <Field style={[styles.mucdichkham, { flexDirection: 'row' }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
+                                <Field style={{ flex: 1 }}>
+                                <Text style={styles.mdk}>{'Địa chỉ'}</Text>
+                                    <Field>
+                                        <TextField
+                                            hideError={true}
+                                            onPress={this.onSelectProvince}
+                                            placeholder={'Tỉnh/Thành phố'}
+                                            editable={false}
+                                            multiline={true}
+                                            inputStyle={[
+                                                styles.ktq,
+                                            ]}
+                                            errorStyle={styles.errorStyle}
+                                            value={this.state.provinces && this.state.provinces.countryCode ? this.state.provinces.countryCode : ''}
+                                            autoCapitalize={"none"}
+                                            returnKeyType={"next"}
+                                            // underlineColorAndroid="transparent"
+                                            autoCorrect={false}
+                                        />
+                                    </Field>
+
+                                </Field>
+
+                                <Field style={{ flex: 1 }}>
+                                    <Field>
+                                        <TextField
+                                            hideError={true}
+                                            // validate={{
+                                            //     rules: {
+                                            //         number: true,
+                                            //     },
+                                            //     messages: {
+                                            //         number: 'Cân nặng không hợp lệ',
+                                            //     }
+                                            // }}
+                                            placeholder={'Quận/Huyện'}
+                                            multiline={true}
+                                            inputStyle={[
+                                                styles.ktq,
+                                            ]}
+                                            onPress={this.onSelectDistrict}
+                                            editable={false}
+                                            errorStyle={styles.errorStyle}
+                                            value={this.state.districts && this.state.districts.name ? this.state.districts.name : ''}
+                                            autoCapitalize={"none"}
+                                            returnKeyType={"next"}
+                                            // underlineColorAndroid="transparent"
+                                            autoCorrect={false}
+                                        />
+                                    </Field>
+                                </Field>
+                                <Field style={{ flex: 1 }}>
+                                    <Field>
+                                        <TextField
+                                            hideError={true}
+                                            placeholder={'Xã phường'}
+                                            multiline={true}
+                                            onPress = {this.onSelectZone}
+                                            editable={false}
+                                            inputStyle={[
+                                                styles.ktq,
+                                            ]}
+                                            errorStyle={styles.errorStyle}
+                                            value={this.state.zone && this.state.zone.name ? this.state.zone.name : ''}
+                                            autoCapitalize={"none"}
+                                            returnKeyType={"next"}
+                                            // underlineColorAndroid="transparent"
+                                            autoCorrect={false}
+                                        />
+                                    </Field>
+                                </Field>
+                            </Field>
+                            <Field style={[styles.mucdichkham, this.state.type == "FAMILY" ? {} : { marginTop: 10 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
+                                <TextField
+                                    hideError={true}
+                                    onValidate={(valid, messages) => {
+                                        if (valid) {
+                                            this.setState({ addressError: "" });
+                                        } else {
+                                            this.setState({ addressError: messages });
+                                        }
+                                    }}
+                                    validate={{
+                                        rules: {
+                                            maxlength: 255
+                                        },
+                                        messages: {
+                                            required: constants.msg.user.fullname_not_null,
+                                            maxlength: constants.msg.user.text_without_255,
+                                        }
+                                    }}
+                                    placeholder={'Thôn/Xóm, số nhà'}
                                     multiline={true}
                                     inputStyle={[
                                         styles.ktq,
