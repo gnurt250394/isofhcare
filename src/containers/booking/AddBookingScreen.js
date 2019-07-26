@@ -609,16 +609,19 @@ class AddBookingScreen extends Component {
             <DateTimePicker
                 isVisible={this.state.toggelDateTimePickerVisible}
                 onConfirm={newDate => {
-                    if (newDate && this.state.bookingDate && newDate.ddmmyyyy() == this.state.bookingDate.ddmmyyyy())
-                        return;
                     this.setState({
-                        bookingDate: newDate,
-                        date: newDate.format("thu, dd tháng MM").replaceAll(" 0", " "),
                         toggelDateTimePickerVisible: false,
-                        allowBooking: true,
-                        serviceError: "",
-                        scheduleError: ""
-                    });
+                    }, () => {
+                        if (newDate && this.state.bookingDate && newDate.ddmmyyyy() == this.state.bookingDate.ddmmyyyy())
+                            return;
+                        this.setState({
+                            bookingDate: newDate,
+                            date: newDate.format("thu, dd tháng MM").replaceAll(" 0", " "),
+                            allowBooking: true,
+                            serviceError: "",
+                            scheduleError: ""
+                        });
+                    })
                 }}
                 onCancel={() => {
                     this.setState({ toggelDateTimePickerVisible: false })
