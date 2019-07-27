@@ -29,7 +29,6 @@ import firebase from 'react-native-firebase';
 import ScaledImage from 'mainam-react-native-scaleimage'
 import NotificationScreen from '@containers/notification/NotificationScreen'
 import NavigationService from "@navigators/NavigationService";
-import MenuProfile from '@containers/profile/MenuProfile'
 
 const width = Dimensions.get("window").width
 class HomeScreen extends Component {
@@ -161,17 +160,8 @@ class HomeScreen extends Component {
               // }}
               />
             </View> */}
-            <View style={{ flex: 1 }}>
-              <MenuProfile
-                onLogout={() => {
-                  this.viewPager.setPage(0);
-                }}
-                showLoading={(loading, callback) => {
-                  this.setState({ isLoading: loading }, callback);
-                }}
-              />
-            </View>
-            <View style={{ flex: 1 }}>
+            
+            {/* <View style={{ flex: 1 }}>
               <NotificationScreen
                 refreshNotification={this.state.refreshNotification}
               // onLogout={() => {
@@ -181,7 +171,7 @@ class HomeScreen extends Component {
               //   this.setState({ isLoading: loading }, callback);
               // }}
               />
-            </View>
+            </View> */}
           </IndicatorViewPager>
 
 
@@ -274,7 +264,7 @@ class HomeScreen extends Component {
                   height={width < 375 ? 20 : 30}
                 />
               </TouchableOpacity>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={[
                   this.state.tabIndex == 3 ? styles.tab_selected : styles.tab
                 ]}
@@ -286,8 +276,8 @@ class HomeScreen extends Component {
 
                   height={width < 375 ? 20 : 30}
                 />
-              </TouchableOpacity>
-              <TouchableOpacity
+              </TouchableOpacity> */}
+              {/* <TouchableOpacity
                 style={[styles.tab_selected, { position: 'relative' }]}
                 onPress={this.swipe.bind(this, 2)}
               >
@@ -298,7 +288,7 @@ class HomeScreen extends Component {
                     : null
                 }
 
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
           </View>
           <PushController />

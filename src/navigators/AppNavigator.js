@@ -75,106 +75,120 @@ import HospitalScreen from '@containers/home/HospitalScreen'
 import DrugScreen from '@containers/home/DrugScreen'
 import DrawerNav from './DrawerNav'
 import HospitalByLocationScreen from '@containers/home/HospitalByLocationScreen'
+// const RootNavigator = createStackNavigator(
+//   {
+//     // createProfileTicketScreen : {screen:CreateProfileTicketScreen},
+//     // testVNPay: { screen: TestVNPayScreen },
+//     // scanQRCode: { screen: ScanQRCodeScreen },
+//     //=---------------Profile-----------------
+//     // profile: { screen: ProfileScreen },
+//     splash: { screen: SplashScreen },
+//     setting:{screen:SettingScreen},
+//     listProfile:{screen:ListProfileScreen},
+//     createProfile: { screen: CreateProfileScreen },
+//     editProfile:{screen:EditProfileScreen},
+//     selectProvince : {screen:SelectProvinceScreen},
+//     selectDistrict : {screen:SelectDistrictScreen},
+//     selectZone : {screen:SelectZoneScreen},
+//     groupChat: { screen: GroupChatScreen },
+//     groupChatFacility: { screen: GroupChatScreen },
+//     chat: { screen: ChatScreen },
+//     intro: { screen: IntroScreen },
+//     home: {
+//       screen: DrawerNav, navigationOptions: ({ navigation }) => ({
+//         header: null
+//       })
+//     },
+//     login: { screen: LoginScreen },
+//     forgotPassword: { screen: ForgotPasswordScreen },
+//     enterPassword: { screen: EnterPasswordScreen },
+//     register: { screen: RegisterScreen },
+//     photoViewer: { screen: PhotoViewerScreen },
+//     about: { screen: AboutScreen },
+//     terms: { screen: TermsScreen },
+//     policy: { screen: PolicyScreen },
+//     specialist: { screen: SpecialistScreen },
+//     confirmCode: { screen: ConfirmCodeScreen },
+//     resetPassword: { screen: ResetPasswordScreen },
+//     profile: { screen: ProfileScreen },
+//     notification: { screen: NotificationScreen },
+//     listQuestion: { screen: ListQuestionScreen },
+//     createQuestionStep1: { screen: CreateQuestionStep1Screen },
+//     createQuestionStep2: { screen: CreateQuestionStep2Screen },
+//     detailQuestion: { screen: DetailQuestionScreen },
+//     changePassword: { screen: ChangePasswordScreen },
+//     FingerScreen: { screen: FingerScreen },
+//     FingerSettingScreen: { screen: FingerSettingScreen },
+//     //---------------booking navigation
+//     addBooking: { screen: AddBookingScreen },
+//     selectHospital: { screen: SelectHospitalScreen },
+//     selectHospitalByLocation: { screen: SelectHospitalByLocationScreen },
+//     selectTime: { screen: SelectTimeScreen },
+//     selectService: { screen: SelectServiceScreen },
+//     selectServiceType: { screen: SelectServiceTypeScreen },
+//     selectSpecialist: { screen: SelectSpecialistScreen },
+//     confirmBooking: { screen: ConfirmBookingScreen },
+//     createBookingSuccess: { screen: CreateBookingSuccessScreen },
+//     paymentBookingError: { screen: PaymentBookingErrorScreen },
+//     detailsHistory: { screen: DetailsHistoryScreen },
+//     createProfile: { screen: CreateProfileScreen },
+//     paymentVNPay: { screen: PaymentWithVNPayScreen },
+//     filterSpecialist: { screen: FilterSpecialistScreen },
+//     //---------------------------------
+//     selectProfile: { screen: SelectProfileScreen },
+//     detailsProfile: { screen: ProfileInfo },
+//     detailsDoctorScreen: { screen: DetailsDoctorScreen },
+//     //
+//     PatientHistoryScreen: { screen: PatientHistoryScreen },
+//     //------------------get ticket ----------------
+//     selectHealthFacilitiesScreen: { screen: SelectHealthFacilitiesScreen },
+//     selectProfileMedical: { screen: SelectProfileMedicalScreen },
+//     scanQRCode: { screen: ScanQRCodeScreen },
+//     getTicketFinish: { screen: GetTicketFinishScreen },
+//     confirmGetTicket: { screen: ConfirmGetTicketScreen },
+//     //----------------------------------------
+//     //----------------ehealth-----------------
+//     ehealth: { screen: EHealthNavigator },
+//     viewDetailEhealth: { screen: ViewEhealthDetailScreen },
+
+//     emptyScreen: { screen: EmptyScreen },
+//     hospital: { screen: HospitalScreen },
+//     drug: { screen: DrugScreen },
+//     hospitalByLocation:{screen:HospitalByLocationScreen}
+//   },
+
+//   {
+//     headerMode: "none",
+//     // cardStyle: {
+//     //   backgroundColor: 'transparent', opacity: 1,
+//     // },
+//     // transitionConfig: () => ({
+//     //   containerStyle: {
+//     //     backgroundColor: 'transparent',
+//     //   },
+//     // }),
+//     header: null,
+//     gesturesEnabled: false,
+//     navigationOptions: {
+//       header: null,
+//       gesturesEnabled: false
+//     },
+//     // mode: Platform.OS == "ios" ? "modal" : "card"
+//   }
+// )
+
 const RootNavigator = createStackNavigator(
   {
-    // createProfileTicketScreen : {screen:CreateProfileTicketScreen},
-    // testVNPay: { screen: TestVNPayScreen },
-    // scanQRCode: { screen: ScanQRCodeScreen },
-    //=---------------Profile-----------------
-    // profile: { screen: ProfileScreen },
-    splash: { screen: SplashScreen },
-    setting:{screen:SettingScreen},
-    listProfile:{screen:ListProfileScreen},
-    createProfile: { screen: CreateProfileScreen },
-    editProfile:{screen:EditProfileScreen},
-    selectProvince : {screen:SelectProvinceScreen},
-    selectDistrict : {screen:SelectDistrictScreen},
-    selectZone : {screen:SelectZoneScreen},
-    groupChat: { screen: GroupChatScreen },
-    groupChatFacility: { screen: GroupChatScreen },
-    chat: { screen: ChatScreen },
-    intro: { screen: IntroScreen },
+    splash: SplashScreen,
     home: {
-      screen: DrawerNav, navigationOptions: ({ navigation }) => ({
-        header: null
-      })
-    },
-    login: { screen: LoginScreen },
-    forgotPassword: { screen: ForgotPasswordScreen },
-    enterPassword: { screen: EnterPasswordScreen },
-    register: { screen: RegisterScreen },
-    photoViewer: { screen: PhotoViewerScreen },
-    about: { screen: AboutScreen },
-    terms: { screen: TermsScreen },
-    policy: { screen: PolicyScreen },
-    specialist: { screen: SpecialistScreen },
-    confirmCode: { screen: ConfirmCodeScreen },
-    resetPassword: { screen: ResetPasswordScreen },
-    profile: { screen: ProfileScreen },
-    notification: { screen: NotificationScreen },
-    listQuestion: { screen: ListQuestionScreen },
-    createQuestionStep1: { screen: CreateQuestionStep1Screen },
-    createQuestionStep2: { screen: CreateQuestionStep2Screen },
-    detailQuestion: { screen: DetailQuestionScreen },
-    changePassword: { screen: ChangePasswordScreen },
-    FingerScreen: { screen: FingerScreen },
-    FingerSettingScreen: { screen: FingerSettingScreen },
-    //---------------booking navigation
-    addBooking: { screen: AddBookingScreen },
-    selectHospital: { screen: SelectHospitalScreen },
-    selectHospitalByLocation: { screen: SelectHospitalByLocationScreen },
-    selectTime: { screen: SelectTimeScreen },
-    selectService: { screen: SelectServiceScreen },
-    selectServiceType: { screen: SelectServiceTypeScreen },
-    selectSpecialist: { screen: SelectSpecialistScreen },
-    confirmBooking: { screen: ConfirmBookingScreen },
-    createBookingSuccess: { screen: CreateBookingSuccessScreen },
-    paymentBookingError: { screen: PaymentBookingErrorScreen },
-    detailsHistory: { screen: DetailsHistoryScreen },
-    createProfile: { screen: CreateProfileScreen },
-    paymentVNPay: { screen: PaymentWithVNPayScreen },
-    filterSpecialist: { screen: FilterSpecialistScreen },
-    //---------------------------------
-    selectProfile: { screen: SelectProfileScreen },
-    detailsProfile: { screen: ProfileInfo },
-    detailsDoctorScreen: { screen: DetailsDoctorScreen },
-    //
-    PatientHistoryScreen: { screen: PatientHistoryScreen },
-    //------------------get ticket ----------------
-    selectHealthFacilitiesScreen: { screen: SelectHealthFacilitiesScreen },
-    selectProfileMedical: { screen: SelectProfileMedicalScreen },
-    scanQRCode: { screen: ScanQRCodeScreen },
-    getTicketFinish: { screen: GetTicketFinishScreen },
-    confirmGetTicket: { screen: ConfirmGetTicketScreen },
-    //----------------------------------------
-    //----------------ehealth-----------------
-    ehealth: { screen: EHealthNavigator },
-    viewDetailEhealth: { screen: ViewEhealthDetailScreen },
-
-    emptyScreen: { screen: EmptyScreen },
-    hospital: { screen: HospitalScreen },
-    drug: { screen: DrugScreen },
-    hospitalByLocation:{screen:HospitalByLocationScreen}
-  },
-
-  {
-    headerMode: "none",
-    // cardStyle: {
-    //   backgroundColor: 'transparent', opacity: 1,
-    // },
-    // transitionConfig: () => ({
-    //   containerStyle: {
-    //     backgroundColor: 'transparent',
-    //   },
-    // }),
-    header: null,
-    gesturesEnabled: false,
-    navigationOptions: {
-      header: null,
-      gesturesEnabled: false
-    },
-    // mode: Platform.OS == "ios" ? "modal" : "card"
+            screen: DrawerNav, 
+            navigationOptions: ({ navigation }) => ({
+              header: null
+            })
+          },
+      
   }
-)
+);
+
 
 export { RootNavigator };
