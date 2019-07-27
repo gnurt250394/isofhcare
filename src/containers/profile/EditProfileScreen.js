@@ -480,14 +480,13 @@ class EditProfileScreen extends Component {
                                         <TextField
                                             hideError={true}
                                             onPress={this.onSelectProvince}
-                                            placeholder={'Tỉnh/Thành phố'}
                                             editable={false}
                                             multiline={true}
                                             inputStyle={[
                                                 styles.ktq,
                                             ]}
                                             errorStyle={styles.errorStyle}
-                                            value={this.state.provinces && this.state.provinces.countryCode ? this.state.provinces.countryCode : ''}
+                                            value={this.state.provinces && this.state.provinces.countryCode ? this.state.provinces.countryCode : 'Tỉnh/Thành phố'}
                                             autoCapitalize={"none"}
                                             returnKeyType={"next"}
                                             // underlineColorAndroid="transparent"
@@ -510,7 +509,6 @@ class EditProfileScreen extends Component {
                                             //         number: 'Cân nặng không hợp lệ',
                                             //     }
                                             // }}
-                                            placeholder={'Quận/Huyện'}
                                             multiline={true}
                                             inputStyle={[
                                                 styles.ktq,
@@ -518,7 +516,7 @@ class EditProfileScreen extends Component {
                                             onPress={this.onSelectDistrict}
                                             editable={false}
                                             errorStyle={styles.errorStyle}
-                                            value={this.state.districts && this.state.districts.name ? this.state.districts.name : ''}
+                                            value={this.state.districts && this.state.districts.name ? this.state.districts.name : 'Quận/Huyện'}
                                             autoCapitalize={"none"}
                                             returnKeyType={"next"}
                                             // underlineColorAndroid="transparent"
@@ -531,7 +529,6 @@ class EditProfileScreen extends Component {
                                     <Field>
                                         <TextField
                                             hideError={true}
-                                            placeholder={'Xã phường'}
                                             multiline={true}
                                             onPress={this.onSelectZone}
                                             editable={false}
@@ -539,7 +536,7 @@ class EditProfileScreen extends Component {
                                                 styles.ktq,
                                             ]}
                                             errorStyle={styles.errorStyle}
-                                            value={this.state.zone && this.state.zone.name ? this.state.zone.name : ''}
+                                            value={this.state.zone && this.state.zone.name ? this.state.zone.name : 'Xã phường'}
                                             autoCapitalize={"none"}
                                             returnKeyType={"next"}
                                             // underlineColorAndroid="transparent"
@@ -677,7 +674,6 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         paddingHorizontal: 10,
         borderRadius: 5,
-        flex: 1,
         marginHorizontal: 10
 
     },

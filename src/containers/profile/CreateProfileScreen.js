@@ -422,7 +422,6 @@ class CreateProfileScreen extends Component {
                                         />
                                     </Field>
                                     <Text style={[styles.errorStyle]}>{this.state.weightError}</Text>
-
                                 </Field>
                             </Field>
                             <Field style={[styles.mucdichkham, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
@@ -503,14 +502,13 @@ class CreateProfileScreen extends Component {
                                         <TextField
                                             hideError={true}
                                             onPress={this.onSelectProvince}
-                                            placeholder={'Tỉnh/Thành phố'}
                                             editable={false}
                                             multiline={true}
                                             inputStyle={[
-                                                styles.ktq,
+                                                styles.ktq
                                             ]}
                                             errorStyle={styles.errorStyle}
-                                            value={this.state.provinces && this.state.provinces.countryCode ? this.state.provinces.countryCode : ''}
+                                            value={this.state.provinces && this.state.provinces.countryCode ? this.state.provinces.countryCode : 'Tỉnh/Thành phố'}
                                             autoCapitalize={"none"}
                                             returnKeyType={"next"}
                                             // underlineColorAndroid="transparent"
@@ -533,7 +531,6 @@ class CreateProfileScreen extends Component {
                                             //         number: 'Cân nặng không hợp lệ',
                                             //     }
                                             // }}
-                                            placeholder={'Quận/Huyện'}
                                             multiline={true}
                                             inputStyle={[
                                                 styles.ktq,
@@ -541,7 +538,7 @@ class CreateProfileScreen extends Component {
                                             onPress={this.onSelectDistrict}
                                             editable={false}
                                             errorStyle={styles.errorStyle}
-                                            value={this.state.districts && this.state.districts.name ? this.state.districts.name : ''}
+                                            value={this.state.districts && this.state.districts.name ? this.state.districts.name : 'Quận/Huyện'}
                                             autoCapitalize={"none"}
                                             returnKeyType={"next"}
                                             // underlineColorAndroid="transparent"
@@ -554,7 +551,6 @@ class CreateProfileScreen extends Component {
                                     <Field>
                                         <TextField
                                             hideError={true}
-                                            placeholder={'Xã phường'}
                                             multiline={true}
                                             onPress = {this.onSelectZone}
                                             editable={false}
@@ -562,7 +558,7 @@ class CreateProfileScreen extends Component {
                                                 styles.ktq,
                                             ]}
                                             errorStyle={styles.errorStyle}
-                                            value={this.state.zone && this.state.zone.name ? this.state.zone.name : ''}
+                                            value={this.state.zone && this.state.zone.name ? this.state.zone.name : 'Xã phường'}
                                             autoCapitalize={"none"}
                                             returnKeyType={"next"}
                                             // underlineColorAndroid="transparent"
@@ -700,7 +696,6 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         paddingHorizontal: 10,
         borderRadius: 5,
-        flex: 1,
         marginHorizontal: 10
 
     },
