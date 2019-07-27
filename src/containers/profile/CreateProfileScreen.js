@@ -126,9 +126,12 @@ class CreateProfileScreen extends Component {
                             "height": height ? Number(height) : null,
                             "weight": weight ? Number(weight) : null,
                             "phone": phone,
-                            // "address": address ? address : null
+                            "countryId": '',
+                            "provinceId": idProvince,
+                            "districtId":idDistrics,
+                            "zoneId": idZone,
                         }
-                        profileProvider.createProfile(data,idProvince,idDistrics,idZone).then(res => {
+                        profileProvider.createProfile(data).then(res => {
                             console.log(res)
                             if (res.code == 0) {
                                 this.props.navigation.navigate('listProfile', { reset: this.state.reset + 1 })
@@ -148,7 +151,7 @@ class CreateProfileScreen extends Component {
     selectDistrict = (districts) => {
         let districtsError = districts ? "" : this.state.districtsError;
         if (!districts || !this.state.districts || districts.id != this.state.districts.id) {
-            this.setState({ districts, districtsError })
+            this.setState({ districts, districtsError,zone:[] })
         } else {
             this.setState({ districts, districtsError });
         }
@@ -166,7 +169,7 @@ class CreateProfileScreen extends Component {
     selectprovinces(provinces) {
         let provincesError = provinces ? "" : this.state.provincesError;
         if (!provinces || !this.state.provinces || provinces.id != this.state.provinces.id) {
-            this.setState({ provinces, provincesError })
+            this.setState({ provinces, provincesError,districts:[],zone:[] })
         } else {
             this.setState({ provinces, provincesError });
         }
@@ -505,7 +508,7 @@ class CreateProfileScreen extends Component {
                                             editable={false}
                                             multiline={true}
                                             inputStyle={[
-                                                styles.ktq
+                                                styles.ktq,
                                             ]}
                                             errorStyle={styles.errorStyle}
                                             value={this.state.provinces && this.state.provinces.countryCode ? this.state.provinces.countryCode : 'Tỉnh/Thành phố'}
