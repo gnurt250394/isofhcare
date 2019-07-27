@@ -25,6 +25,21 @@ class Slide extends Component {
             }
         </IndicatorViewPager >
     }
+    componentWillReceiveProps(props) {
+        if (props.autoPlay != this.props.autoPlay || props.inteval != this.props.inteval || props.dataArray != this.state.dataArray) {
+            this.setState({ array: props.dataArray || [] }, () => {
+                if (this.myInteval) {
+                    try {
+                        clearInterval(this.myInteval);
+                    } catch (error) {
+
+                    }
+                }
+                if (props.autoPlay && props.dataArray && props.dataArray.length > 1)
+                    this.myInteval = setInterval(this.nextPosition, props.inteval ? props.inteval : 2000);
+            })
+        }
+    }
 
     onPageScroll(e) {
         var position = e.position;
@@ -36,17 +51,17 @@ class Slide extends Component {
         })
     }
     renderIndicator(array) {
-        return <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+        return <View style={[{ flexDirection: 'row', justifyContent: 'center' }, this.props.indicatorStyle]}>
             {
                 array.map((item, index) => {
                     return (
-                        <View key={index} style={{ margin: 2, width: 6, height: 6, backgroundColor: '#000', borderRadius: 3.5, backgroundColor: this.state.position == index ? 'rgb(74,144,226)' : "#00000060" }}></View>
+                        <View key={index} style={[{ margin: 2, width: 6, height: 6, backgroundColor: '#000', borderRadius: 3.5, backgroundColor: this.state.position == index ? 'rgb(74,144,226)' : "#00000060" }, this.state.position == index ? this.props.indicatorItemActive : this.props.indicatorItem]}></View>
                     )
                 })
             }
         </View >
     }
-    nextPosition() {
+    nextPosition = () => {
         try {
             if (this.state.array && this.state.array.length > 1) {
                 let position = this.state.position;
@@ -67,7 +82,7 @@ class Slide extends Component {
     }
     componentDidMount() {
         if (this.props.autoPlay && this.state.array && this.state.array.length > 1)
-            this.myInteval = setInterval(() => { this.nextPosition() }, this.props.inteval ? this.props.inteval : 2000);
+            this.myInteval = setInterval(this.nextPosition, this.props.inteval ? this.props.inteval : 2000);
     }
     componentWillUnmount() {
         if (this.myInteval) {

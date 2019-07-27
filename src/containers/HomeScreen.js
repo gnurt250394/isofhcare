@@ -17,24 +17,29 @@ import constants from "@resources/strings";
 import redux from "@redux-store";
 import Home from "@containers/home/tab/Home";
 import Account from "@containers/home/tab/Account";
-const { width, height } = Dimensions.get("window");
+import Videos from "@containers/home/tab/Videos";
+import Notification from "@containers/home/tab/Notification";
+import Community from "@containers/home/tab/Community";
 import PushController from "@components/notification/PushController";
 import NotificationBadge from "@components/notification/NotificationBadge";
 import ActivityPanel from "@components/ActivityPanel";
-import ScaledImage from "../../node_modules/mainam-react-native-scaleimage";
 import snackbar from "@utils/snackbar-utils";
 import { IndicatorViewPager } from "mainam-react-native-viewpager";
 import firebase from 'react-native-firebase';
-import codePush from "react-native-code-push";
+import ScaledImage from 'mainam-react-native-scaleimage'
+import NotificationScreen from '@containers/notification/NotificationScreen'
+import NavigationService from "@navigators/NavigationService";
+import MenuProfile from '@containers/profile/MenuProfile'
 
-
+const width = Dimensions.get("window").width
 class HomeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       tabIndex: 0,
       active: true,
-      text: ""
+      text: "",
+      refreshNotification: 1
     };
 
   }
@@ -50,7 +55,7 @@ class HomeScreen extends Component {
     DeviceEventEmitter.addListener(
       "hardwareBackPress",
       this.handleHardwareBack.bind(this)
-    );    
+    );
   }
 
   componentWillUnmount() {
@@ -86,6 +91,8 @@ class HomeScreen extends Component {
     this.setState({
       tabIndex: tabIndex
     });
+
+
   }
   onAction = active => {
     console.log(active, "active");
@@ -105,7 +112,9 @@ class HomeScreen extends Component {
   render() {
     const { active } = this.state;
     return (
-      <ActivityPanel isLoading={this.state.isLoading}
+      <ActivityPanel
+        statusbarBackgroundColor="#4BBA7B"
+        isLoading={this.state.isLoading}
         hideActionbar={true}
       >
         <View style={[{ flex: 1 }, this.props.style]}>
@@ -123,17 +132,37 @@ class HomeScreen extends Component {
           >
             <View style={{ flex: 1 }}>
               <Home
-                userInfoClick={() => {
-                  if (this.viewPager) this.viewPager.setPage(3);
-                }}
                 navigation={this.props.navigation}
                 style={{ flex: 1 }}
               />
             </View>
             {/* <View style={{ flex: 1, backgroundColor: "#000" }} /> */}
             {/* <View style={{ flex: 1, backgroundColor: "#cac" }} /> */}
+            {/* <View style={{ flex: 1 }}>
+              <Community
+              // onLogout={() => {
+              //   this.viewPager.setPage(0);
+              // }}
+              // showLoading={(loading, callback) => {
+              //   this.setState({ isLoading: loading }, callback);
+              // }}
+              />
+            </View> */}
+            {/* <View style={{ flex: 1 }}>
+              <Videos
+                onProcess={() => {
+                  this.viewPager.setPage(0);
+                }}
+              // onLogout={() => {
+              //   this.viewPager.setPage(0);
+              // }}
+              // showLoading={(loading, callback) => {
+              //   this.setState({ isLoading: loading }, callback);
+              // }}
+              />
+            </View> */}
             <View style={{ flex: 1 }}>
-              <Account
+              <MenuProfile
                 onLogout={() => {
                   this.viewPager.setPage(0);
                 }}
@@ -142,7 +171,19 @@ class HomeScreen extends Component {
                 }}
               />
             </View>
+            <View style={{ flex: 1 }}>
+              <NotificationScreen
+                refreshNotification={this.state.refreshNotification}
+              // onLogout={() => {
+              //   this.viewPager.setPage(0);
+              // }}
+              // showLoading={(loading, callback) => {
+              //   this.setState({ isLoading: loading }, callback);
+              // }}
+              />
+            </View>
           </IndicatorViewPager>
+
 
           {/* <Swiper
             ref={ref => (this.swiper = ref)}
@@ -172,16 +213,8 @@ class HomeScreen extends Component {
               style={{
                 height: 61,
                 flexDirection: "row",
-                backgroundColor: "#ffffff",
-                shadowColor: "rgba(0, 0, 0, 0.09)",
-                shadowOffset: {
-                  width: 0,
-                  height: 0
-                },
-                shadowRadius: 4,
-                shadowOpacity: 1,
+                backgroundColor: "#4BBA7B",
                 marginTop: -3,
-                elevation: 5
               }}
             >
               <TouchableOpacity
@@ -191,23 +224,11 @@ class HomeScreen extends Component {
                 onPress={this.swipe.bind(this, 0)}
               >
                 <ScaledImage
+                  source={require("@images/new/home/ic_home.png")}
+                  height={width < 375 ? 20 : 30}
+                  style={this.state.tabIndex == 0 ? { tintColor: '#000' } : {}}
 
-                  source={
-                    this.state.tabIndex == 0
-                      ? require("@images/new/ic_home_home2.png")
-                      : require("@images/new/ic_home_home0.png")
-                  }
-                  width={20}
                 />
-                <Text
-                  style={[
-                    this.state.tabIndex == 0
-                      ? styles.tab_label_selected
-                      : styles.tab_label
-                  ]}
-                >
-                  Trang chủ
-                </Text>
               </TouchableOpacity>
               {/* <TouchableOpacity
                 style={[this.state.tabIndex == 1 ? styles.tab_selected : styles.tab]}
@@ -227,25 +248,56 @@ class HomeScreen extends Component {
                 style={[
                   this.state.tabIndex == 1 ? styles.tab_selected : styles.tab
                 ]}
+                onPress={() => {
+                  snackbar.show('Tính năng đang phát triển');
+                }}
+              >
+                <ScaledImage
+                  source={require("@images/new/home/ic_community.png")}
+                  // style={this.state.tabIndex == 1 ? { tintColor: '#000' } : {}}
+
+                  height={width < 375 ? 20 : 30}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  this.state.tabIndex == 2 ? styles.tab_selected : styles.tab
+                ]}
+                onPress={() => {
+                  snackbar.show('Tính năng đang phát triển');
+                }}
+              >
+                <ScaledImage
+                  source={require("@images/new/home/ic_videos.png")}
+                  // style={this.state.tabIndex == 2 ? { tintColor: '#000' } : {}}
+
+                  height={width < 375 ? 20 : 30}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  this.state.tabIndex == 3 ? styles.tab_selected : styles.tab
+                ]}
                 onPress={this.swipe.bind(this, 1)}
               >
                 <ScaledImage
-                  source={
-                    this.state.tabIndex == 1
-                      ? require("@images/new/ic_home_account2.png")
-                      : require("@images/new/ic_home_account0.png")
-                  }
-                  height={20}
+                  source={require("@images/new/home/ic_account.png")}
+                  style={this.state.tabIndex == 1 ? { tintColor: '#000' } : {}}
+
+                  height={width < 375 ? 20 : 30}
                 />
-                <Text
-                  style={[
-                    this.state.tabIndex == 1
-                      ? styles.tab_label_selected
-                      : styles.tab_label
-                  ]}
-                >
-                  Tài khoản
-                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.tab_selected, { position: 'relative' }]}
+                onPress={this.swipe.bind(this, 2)}
+              >
+                <ScaledImage source={require("@images/new/home/ic_bell.png")} width={width < 375 ? 20 : 30} style={this.state.tabIndex == 2 ? { tintColor: '#000' } : {}} />
+                {
+                  this.props.userApp.isLogin && (this.props.userApp.unReadNotificationCount || 0) ?
+                    <Text numberOfLines={1} style={styles.countNotificaiton}>{(this.props.userApp.unReadNotificationCount || 0) > 99 ? "99+" : this.props.userApp.unReadNotificationCount}</Text>
+                    : null
+                }
+
               </TouchableOpacity>
             </View>
           </View>
@@ -255,7 +307,28 @@ class HomeScreen extends Component {
     );
   }
   swipe(targetIndex) {
-    if (this.viewPager) this.viewPager.setPage(targetIndex);
+     if(targetIndex == 2 && !this.props.userApp.isLogin)
+      {NavigationService.navigate("login", {
+        nextScreen: { screen: "notification", param: {} }
+      }) 
+      return  
+    }
+    if(targetIndex == 1 && !this.props.userApp.isLogin)
+      {NavigationService.navigate("login")
+      // , {
+      //   nextScreen: { screen: "notification", param: {} }
+      // }) 
+      return  
+    }
+      this.setState({
+        refreshNotification: this.state.refreshNotification+1
+      })
+
+
+
+    // this.viewPager && this.viewPager.setPage(targetIndex)
+    this.viewPager && targetIndex == 2 && !this.props.userApp.isLogin ? this.viewPager && this.viewPager.setPage(0) : this.viewPager && this.viewPager.setPage(targetIndex);
+
   }
 }
 
@@ -264,13 +337,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     flex: 1,
-    backgroundColor: "#fff"
+    backgroundColor: "#4BBA7B"
   },
   tab: {
     alignItems: "center",
     justifyContent: "center",
     flex: 1,
-    backgroundColor: "#FFF"
+    backgroundColor: "#4BBA7B"
   },
   tab_label_selected: {
     marginTop: 5,
@@ -295,7 +368,8 @@ const styles = StyleSheet.create({
     width: null,
     height: null,
     resizeMode: "cover"
-  }
+  },
+  countNotificaiton: { overflow: 'hidden', position: 'absolute', right: 25, top: 12, backgroundColor: 'red', borderRadius: 6, color: '#FFF', fontSize: 12, paddingHorizontal: 3, textAlign: 'center' },
 });
 
 function mapStateToProps(state) {

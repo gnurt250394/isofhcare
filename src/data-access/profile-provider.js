@@ -26,6 +26,7 @@ module.exports = {
                     }
                 }
                 else {
+
                     if (callback)
                         callback(undefined, e);
                 }
@@ -60,5 +61,72 @@ module.exports = {
             reject(e)
         })
     })
+    },
+    getListProfile(){
+        return new Promise((resolve, reject) => {
+            client.requestApi('get',constants.api.profile.get_list_profile,{},(s,e) => {
+                if(s)
+                resolve(s)
+                else
+                reject(e)
+            })
+        })
+    },
+    deleteFamilyProfile(id){
+        return new Promise ((resolve,reject) => {
+            client.requestApi('delete',`${constants.api.profile.delete_family_profile}/${id}`,{},(s,e) => {
+                if(s)
+                resolve(s)
+                else
+                reject(e)
+            })
+        })
+    },
+    createProfile (data,provinceId,districtId,zoneId){
+        let body = {
+           profile: data,
+           countryId: '',
+           provinceId:provinceId,
+           districtId:districtId,
+           zoneId:zoneId
+        }
+        return new Promise ((resolve,reject) => {
+            client.requestApi('post',`${constants.api.profile.create_profile}`,body,(s,e) => {
+                if(s)
+                resolve(s)
+                else
+                reject(e)
+            })
+        })
+    },
+    updateProfile(id,data){
+        return new Promise((resolve,reject) => {
+            client.requestApi('put',`${constants.api.profile.update_profile}/${id}`,data,(s,e) => {
+                if(s)
+                resolve(s)
+                else
+                reject(e)
+            })
+        })
+    },
+    updateAvatar(id,data){
+        return new Promise((resolve,reject) => {
+            client.requestApi('put',`${constants.api.profile.update_avatar}/${id}`,data,(s,e) => {
+                if(s)
+                resolve(s)
+                else
+                reject(e)
+            })
+        })
+    },
+    updateCover(id,data){
+        return new Promise((resolve,reject) => {
+            client.requestApi('put',`${constants.api.profile.update_cover}/${id}`,data,(s,e) => {
+                if(s)
+                resolve(s)
+                else
+                reject(e)
+            })
+        })
     }
 }

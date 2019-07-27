@@ -23,365 +23,75 @@ import redux from "@redux-store";
 import ImageLoad from "mainam-react-native-image-loader";
 import * as Animatable from 'react-native-animatable';
 
+import Actionbar from '@components/home/Actionbar';
+import SlideBanner from '@components/home/SlideBanner';
+import TopHospital from '@components/hospital/TopHospital';
+import HospitalNearYou from '@components/hospital/HospitalNearYou';
+import TopDrug from '@components/drug/TopDrug';
+import TopNews from '@components/news/TopNews';
 class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      ads: [],
       refreshing: false,
-      ads0: [],
-      features: [
-        {
-          icon: require("@images/new/home/ic_ticket_news.png"),
-          text: "Lấy số",
-          onPress: () => {
-            if (this.props.userApp.isLogin)
-              this.props.navigation.navigate("selectHealthFacilitiesScreen");
-            else
-              this.props.navigation.navigate("login", {
-                nextScreen: { screen: "selectHealthFacilitiesScreen", param: {} }
-              });
-          }
-        },
-        {
-          icon: require("@images/new/home/ic_booking_news.png"),
-          text: "Đặt khám",
-          onPress: () => {
-            if (this.props.userApp.isLogin)
-              this.props.navigation.navigate("addBooking");
-            else
-              this.props.navigation.navigate("login", {
-                nextScreen: { screen: "addBooking", param: {} }
-              });
-          }
-        },
-        {
-          icon: require("@images/new/home/ic_question_news.png"),
-          text: "Tư vấn",
-          onPress: () => {
-            this.props.navigation.navigate("listQuestion");
-          }
-        },
-        {
-          icon: require("@images/new/home/ic_ehealth_news.png"),
-          text: "Y bạ",
-          onPress: () => {
-            if (this.props.userApp.isLogin)
-              this.props.navigation.navigate("ehealth");
-            else
-              this.props.navigation.navigate("login", {
-                nextScreen: { screen: 'ehealth' }
-              });
-          }
-        }
-      ]
-    };
-  }
+      countReset: 0,
+    }
 
-  getTopAds(reload) {
-    advertiseProvider.getTop(100, (s, e) => {
-      if (s) {
-        if (s.length == 0) {
-          if (!reload)
-            this.getTopAds(true);
-        }
-        this.setState({
-          ads: (s || []).filter(x => x.advertise && x.advertise.type == 2 && x.advertise.images),
-          ads0: (s || []).filter(x => x.advertise && x.advertise.type == 1 && x.advertise.images)
-          // .filter(item => { return item.advertise && item.advertise.images })
-        });
-      }
-      else {
-        if (!reload)
-          this.getTopAds(true);
-      }
-      if (e) {
-        if (!reload)
-          this.getTopAds(true);
-      }
-    });
   }
-  componentWillMount() {
-    this.onRefresh();
+  componentDidMount(){
+
   }
-  renderAds() {
-    return (<View>
-      <View style={styles.viewAds}>
-        <Text style={styles.txAds}>Ưu đãi</Text>
-        <ScaledImage source={require("@images/new/ic_more.png")} width={20} style={styles.imgMore} />
-      </View>
-      <FlatList
-        style={styles.listAds}
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        keyExtractor={(item, index) => index.toString()}
-        extraData={this.state}
-        data={this.state.ads}
-        ListFooterComponent={<View style={styles.viewFooter}></View>}
-        renderItem={({ item, index }) => {
-          if (!item || !item.advertise || !item.advertise.images)
-            return null;
-          return (
-            <Card style={styles.cardView}>
-              <TouchableOpacity
-                onPress={() => {
-                  if (item.advertise && item.advertise.value) {
-                    Linking.openURL(item.advertise.value);
-                  } else {
-                    snackbar.show("Url không tồn tại", "danger");
-                  }
-                }}
-              >
-                <ScaledImage
-                  uri={item.advertise.images.absoluteUrl()}
-                  width={DEVICE_WIDTH - 60}
-                />
-                <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensAds}>{item.advertise ? item.advertise.title : ""}</Text>
-              </TouchableOpacity>
-            </Card>
-          );
-        }}
-      />
-    </View>)
-  }
-  pagination() {
-    const { ads0, activeSlide } = this.state;
-    let length = ads0.length;
-    return (
-      <View style={styles.viewPagination}>
-        <Pagination
-          dotsLength={length}
-          activeDotIndex={activeSlide || 0}
-          dotContainerStyle={styles.dotContainer}
-          dotStyle={styles.dotStyle}
-          inactiveDotStyle={
-           styles.inactiveDotStyle
-          }
-          inactiveDotOpacity={0.4}
-          inactiveDotScale={0.6}
-          containerStyle={
-             styles.containerPagination
-          }
-        />
-      </View>
-    );
-  }
-  logout() {
-    this.props.dispatch(redux.userLogout());
-  }
+  onRefresh = () => {
+    this.setState({
+      refreshing: true,
+      countReset: this.state.countReset + 1,
 
-  onRefresh(reload) {
-    this.setState({ refreshing: true }, () => {
-      advertiseProvider.getTop(100, (s, e) => {
-        if (s) {
-          if (s.length == 0) {
-            if (!reload)
-              this.getTopAds(true);
-            this.setState({
-              refreshing: false,
-
-            })
-          }
-          this.setState({
-            ads: (s || []).filter(x => x.advertise && x.advertise.type == 2 && x.advertise.images),
-            ads0: (s || []).filter(x => x.advertise && x.advertise.type == 1 && x.advertise.images),
-            refreshing: false,
-
-            // .filter(item => { return item.advertise && item.advertise.images })
-          });
-        }
-        else {
-          this.setState({
-            refreshing: false,
-
-          })
-          if (!reload)
-            this.getTopAds(true);
-        }
-        if (e) {
-          this.setState({
-            refreshing: false,
-
-          })
-          if (!reload)
-            this.getTopAds(true);
-        }
-      });
     })
+    setTimeout(() => this.setState({
+      refreshing: false
+    }), 200)
   }
-
-  getItemWidth() {
-    const width = DEVICE_WIDTH - 40;
-    if (width >= 320) {
-      return Platform.OS == 'ios' ? 70 : 75;
-    }
-
-    if (width > 300) {
-      return Platform.OS == 'ios' ? 100 : 110;
-    }
-
-    if (width > 250)
-      return 70;
-    return width - 50;
+  openDrawer = () => {
+    this.props.navigation.openDrawer()
   }
+  goToTop = () => {
+    this.scroll.scrollTo({x: 0, y:504, animated: true});
 
+ }
+  handleScroll = (event) => {
+
+  }
   render() {
-    const icSupport = require("@images/new/user.png");
-    const source = this.props.userApp.isLogin ? (this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar.absoluteUrl() } : icSupport) : icSupport;
-
     return (
-      // <ActivityPanel
-      //   hideActionbar={true}
-      //   style={[{ flex: 1 }, this.props.style]}
-      //   hideBackButton={true}
-      // >
-        <View style={styles.viewRender}>
-          <ScaledImage source={require("@images/new/home/bg_home_new.png")} width={DEVICE_WIDTH} style={styles.scaledImgRender} />
-          <View style={styles.viewLogo}>
-            <View style={styles.banner}>
-              <ScaledImage source={require("@images/new/isofhcare.png")} width={116} />
-            </View>
-            <NotificationBadge />
+      <View>
+        <Actionbar openDrawer={this.openDrawer} />
+        <View style={{height:150,backgroundColor:'#4BBA7B'  }}></View>
+        <ScrollView 
+          style={{top:-150}}
+          onScroll={this.handleScroll}
+          ref={(c) => {this.scroll = c}}
+          refreshControl={<RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this.onRefresh}
+          />}>
+          <View>
+            <SlideBanner countReset={this.state.countReset} />
+            <TopHospital countReset={this.state.countReset} />
+            <HospitalNearYou countReset={this.state.countReset} />
+            <TopDrug countReset={this.state.countReset} />
+            <TopNews countReset={this.state.countReset} />
+            <View style={{ width: '100%', height: 50 }}></View>
           </View>
-          <ScrollView
-            refreshControl={<RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={this.onRefresh.bind(this)}
-            />}
-            showsVerticalScrollIndicator={false}
-            style={styles.scrollViewRender}
-          >
-            <View style={styles.viewCard}>
-              <Card style={styles.cardRender}>
 
-                {this.props.userApp.isLogin &&
-                  <View style={styles.viewLogin}>
-                    {/*   <ImageLoad
-                      resizeMode="cover"
-                      imageStyle={{ borderRadius: 20, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
-                      borderRadius={20}
-                      customImagePlaceholderDefaultStyle={{
-                        width: 40,
-                        height: 40,
-                        alignSelf: "center"
-                      }}
-                      placeholderSource={icSupport}
-                      style={{ width: 40, height: 40, alignSelf: "center" }}
-                      resizeMode="cover"
-                      loadingStyle={{ size: "small", color: "gray" }}
-                      source={source}
-                      defaultImage={() => {
-                        return (
-                          <ScaledImage
-                            resizeMode="cover"
-                            source={icSupport}
-                            width={40}
-                            style={{ width: 40, height: 40, alignSelf: "center" }}
-                          />
-                        );
-                      }}
-                    />  */}
-                    <Text style={styles.txHello} >Xin chào, <Text style={styles.txName}>{((name) => {
-                      if (!name) return "";
-                      let x = name.trim().split(" ");
-                      name = (x[x.length - 1]).toLowerCase();
-                      if (name[0])
-                        return name.charAt(0).toUpperCase() + name.slice(1);
-                      return name;
-                    }).call(this, this.props.userApp.currentUser.name) + '!'}</Text></Text>
-                  </View>
-                }
+        </ScrollView>
+      </View>
 
-                <View style={styles.viewFeatures}>
-                  {
-                    (this.state.features || []).map((item, position) => {
-                      return (
-                        <Animatable.View key={position} delay={100} animation={"swing"} direction="alternate">
-                          {
-                            item.empty ? <View style={{ flex: 1, marginLeft: 5, alignItems: 'center', height: 100, width: this.getItemWidth() }}
-                            ></View> :
-                              <TouchableOpacity
-                                style={{ flex: 1, marginLeft: 5, alignItems: 'center', width: this.getItemWidth() }}
-                                onPress={item.onPress}
-                              >
-                                <View style={{ position: 'relative', padding: 5 }}>
-                                  <ScaledImage style={[styles.icon]} source={item.icon} height={48} />
-                                </View>
-                                <Text style={[styles.label]}>{item.text}</Text>
-                              </TouchableOpacity>
-
-                          }
-                        </Animatable.View>);
-                    })
-                  }
-                </View>
-              </Card>
-            </View>
-            {
-              this.renderAds()
-            }
-            <View style={{ height: 30 }} />
-          </ScrollView>
-        </View>
-      // </ActivityPanel>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  icon: {
-  },
-  label: {
-    marginTop: 2, color: '#4A4A4A', fontSize: 15, fontWeight: '600', lineHeight: 20
-  },
-  subLabel: {
-    color: '#9B9B9B', fontSize: 12, textAlign: 'center', marginTop: 5
-  },
-  viewAds:{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' },
-  txAds:{ padding: 12, paddingLeft: 20, paddingBottom: 5, color: 'rgba(74,74,74,0.6)', fontWeight: '500', flex: 1 },
-  imgMore:{ marginTop: 10, marginRight: 20 },
-  listAds:{ paddingHorizontal: 20 },
-  viewFooter:{ width: 35 },
-  cardView:{ width: DEVICE_WIDTH - 60, borderRadius: 6, marginRight: 10 },
-  txContensAds:{ color: '#000', margin: 13 },
-  viewPagination:{ position: 'absolute', bottom: 0, width: DEVICE_WIDTH },
-  dotContainer:{ width: 10, margin: 0, padding: 0, height: 10 },
-  dotStyle:{
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    marginHorizontal: 10,
-    backgroundColor: "#02c39a",
-    paddingHorizontal: 0,
-    margin: 0,
-    padding: 0
-  },
-  inactiveDotStyle: {
-    // Define styles for inactive dots here
-    backgroundColor: "#d8d8d8"
-  },
-  containerPagination:{
-    paddingVertical: 10,
-    paddingHorizontal: 0
-  },
-  viewRender:{ flex: 1, position: 'relative' },
-  scaledImgRender:{ position: 'absolute', top: 72, right: 0, left: 0 },
-  viewLogo:{ height: 75, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10, backgroundColor: '#fff', borderBottomColor: '#7c817f', borderBottomWidth: 0.5 },
-  banner:{ flex: 1, alignItems: 'center', marginLeft: 45 },
-  scrollViewRender:{
-    flex: 1,
-    paddingTop: 0
-  },
-  viewCard:{ padding: 21 },
-  cardRender:{ borderRadius: 6, marginTop: 130 },
-  viewLogin:{ alignItems: 'center', flexDirection: 'row', borderBottomColor: 'rgba(151, 151, 151, 0.29)', borderBottomWidth: 1, paddingVertical: 10, marginHorizontal: 20, justifyContent: 'center' },
-  txHello:{ marginLeft: 5, fontSize: 18, fontWeight: 'bold', color: "#4a4a4a" },
-  txName:{ color: 'rgb(255,138,21)' },
-  viewFeatures:{
-    flexDirection: "row", padding: 10, marginVertical: 20, flexWrap: 'wrap',
-    justifyContent: 'center'
-  },
-  
+
 });
 
 function mapStateToProps(state) {

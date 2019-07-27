@@ -2,27 +2,14 @@ import {
   StackRouter,
   createStackNavigator,
 } from "react-navigation";
+import React from 'react';
 import { Platform } from "react-native";
 import LoginScreen from "@containers/account/LoginScreen";
 import RegisterScreen from "@containers/account/RegisterScreen";
 import EnterPasswordScreen from "@containers/account/EnterPasswordScreen";
 import ForgotPasswordScreen from "@containers/account/ForgotPasswordScreen";
 import SplashScreen from "@containers/SplashScreen";
-import HomeScreen from "@containers/HomeScreen";
-import SearchDrugScreen from "@containers/drug/SearchDrugScreen";
-import SearchFacilityScreen from "@containers/facility/SearchFacilityScreen";
-import SearchFacilityResultScreen from "@containers/facility/SearchFacilityResultScreen";
-import SearchByLocationScreen from "@containers/facility/SearchByLocationScreen";
-import SearchDrugResultScreen from "@containers/drug/SearchDrugResultScreen";
-import DrugDetailScreen from "@containers/drug/DrugDetailScreen";
-import FacilityDetailScreen from "@containers/facility/FacilityDetailScreen";
-import MyFacilityScreen from "@containers/facility/MyFacilityScreen";
-import AddNewDrugStoreScreen from "@containers/facility/AddNewDrugStoreScreen";
-import AddNewClinicScreen from "@containers/facility/AddNewClinicScreen";
 import PhotoViewerScreen from "@containers/image/PhotoViewerScreen";
-import SearchDiseaseScreen from "@containers/disease/SearchDiseaseScreen";
-import DiseaseDetailScreen from "@containers/disease/DiseaseDetailScreen";
-import SearchDiseaseResultScreen from "@containers/disease/SearchDiseaseResultScreen";
 import IntroScreen from "@containers/intro/IntroScreen";
 import AboutScreen from "@containers/utility/AboutScreen";
 import TermsScreen from "@containers/utility/TermsScreen";
@@ -30,10 +17,14 @@ import PolicyScreen from "@containers/utility/PolicyScreen";
 import SpecialistScreen from "@containers/specialist/SpecialistScreen";
 import ConfirmCodeScreen from "@containers/account/ConfirmCodeScreen";
 import ResetPasswordScreen from "@containers/account/ResetPasswordScreen";
-import SymptomScreen from "@containers/symptom/SymptomScreen";
 import GroupChatScreen from "@containers/chat/GroupChatScreen";
 import ChatScreen from "@containers/chat/ChatScreen";
-import ProfileScreen from "@containers/account/ProfileScreen";
+// import ProfileScreen from "@containers/account/ProfileScreen";
+import ProfileScreen from "@containers/profile/ProfileScreen";
+import SelectProvinceScreen from "@containers/profile/SelectProvinceScreen";
+import SelectZoneScreen from "@containers/profile/SelectZoneScreen";
+import SelectDistrictScreen from "@containers/profile/SelectDistrictScreen";
+
 import { EHealthNavigator } from "@ehealth/navigator";
 import NotificationScreen from "@containers/notification/NotificationScreen";
 import ListQuestionScreen from "@containers/question/ListQuestionScreen";
@@ -59,8 +50,13 @@ import PaymentBookingErrorScreen from "@containers/booking/PaymentBookingErrorSc
 import DetailsHistoryScreen from "@containers/booking/DetailsHistoryScreen"
 //=========PROFILE NAVIGATION
 import SelectProfileScreen from "@containers/booking/SelectProfileScreen";
-import CreateProfileScreen from "@containers/booking/CreateProfileScreen";
+// import CreateProfileScreen from "@containers/booking/CreateProfileScreen";
 import ProfileInfo from '@containers/account/ProfileInfo'
+import CreateProfileScreen from "@containers/profile/CreateProfileScreen";
+import MenuProfile from '@containers/profile/MenuProfile'
+import ListProfileScreen from '@containers/profile/ListProfileScreen'
+import EditProfileScreen from '@containers/profile/EditProfileScreen'
+import SettingScreen from '@containers/profile/SettingScreen'
 //---------------------------
 import PatientHistoryScreen from "@containers/booking/PatientHistoryScreen";
 //.....details doctor.......
@@ -74,39 +70,39 @@ import ScanQRCodeScreen from "@containers/ticket/ScanQRCodeScreen";
 import GetTicketFinishScreen from "@containers/ticket/GetTicketFinishScreen";
 //---------------------------------
 import ViewEhealthDetailScreen from '@containers/ehealth/ViewEhealthDetailScreen';
-
 //........................eHealth................
-
-
+import HospitalScreen from '@containers/home/HospitalScreen'
+import DrugScreen from '@containers/home/DrugScreen'
+import DrawerNav from './DrawerNav'
+import HospitalByLocationScreen from '@containers/home/HospitalByLocationScreen'
 const RootNavigator = createStackNavigator(
   {
     // createProfileTicketScreen : {screen:CreateProfileTicketScreen},
-    // selectLocationScreen : {screen:SelectLocationScreen},
     // testVNPay: { screen: TestVNPayScreen },
     // scanQRCode: { screen: ScanQRCodeScreen },
+    //=---------------Profile-----------------
+    // profile: { screen: ProfileScreen },
     splash: { screen: SplashScreen },
+    setting:{screen:SettingScreen},
+    listProfile:{screen:ListProfileScreen},
+    createProfile: { screen: CreateProfileScreen },
+    editProfile:{screen:EditProfileScreen},
+    selectProvince : {screen:SelectProvinceScreen},
+    selectDistrict : {screen:SelectDistrictScreen},
+    selectZone : {screen:SelectZoneScreen},
     groupChat: { screen: GroupChatScreen },
     groupChatFacility: { screen: GroupChatScreen },
     chat: { screen: ChatScreen },
     intro: { screen: IntroScreen },
-    home: { screen: HomeScreen },
+    home: {
+      screen: DrawerNav, navigationOptions: ({ navigation }) => ({
+        header: null
+      })
+    },
     login: { screen: LoginScreen },
     forgotPassword: { screen: ForgotPasswordScreen },
     enterPassword: { screen: EnterPasswordScreen },
     register: { screen: RegisterScreen },
-    searchFacility: { screen: SearchFacilityScreen },
-    searchFacilityResult: { screen: SearchFacilityResultScreen },
-    searchFacilityByLocation: { screen: SearchByLocationScreen },
-    searchDrug: { screen: SearchDrugScreen },
-    searchDrugResult: { screen: SearchDrugResultScreen },
-    searchDisease: { screen: SearchDiseaseScreen },
-    diseaseDetail: { screen: DiseaseDetailScreen },
-    searchDiseaseResult: { screen: SearchDiseaseResultScreen },
-    drugDetailScreen: { screen: DrugDetailScreen },
-    facilityDetailScreen: { screen: FacilityDetailScreen },
-    myFacility: { screen: MyFacilityScreen },
-    addNewDrugStore: { screen: AddNewDrugStoreScreen },
-    addNewClinic: { screen: AddNewClinicScreen },
     photoViewer: { screen: PhotoViewerScreen },
     about: { screen: AboutScreen },
     terms: { screen: TermsScreen },
@@ -114,7 +110,6 @@ const RootNavigator = createStackNavigator(
     specialist: { screen: SpecialistScreen },
     confirmCode: { screen: ConfirmCodeScreen },
     resetPassword: { screen: ResetPasswordScreen },
-    symptom: { screen: SymptomScreen },
     profile: { screen: ProfileScreen },
     notification: { screen: NotificationScreen },
     listQuestion: { screen: ListQuestionScreen },
@@ -136,10 +131,10 @@ const RootNavigator = createStackNavigator(
     createBookingSuccess: { screen: CreateBookingSuccessScreen },
     paymentBookingError: { screen: PaymentBookingErrorScreen },
     detailsHistory: { screen: DetailsHistoryScreen },
-    paymentVNPay: { screen: PaymentWithVNPayScreen },
-    filterSpecialist :{screen : FilterSpecialistScreen},
-    //---------------------------------
     createProfile: { screen: CreateProfileScreen },
+    paymentVNPay: { screen: PaymentWithVNPayScreen },
+    filterSpecialist: { screen: FilterSpecialistScreen },
+    //---------------------------------
     selectProfile: { screen: SelectProfileScreen },
     detailsProfile: { screen: ProfileInfo },
     detailsDoctorScreen: { screen: DetailsDoctorScreen },
@@ -155,9 +150,13 @@ const RootNavigator = createStackNavigator(
     //----------------ehealth-----------------
     ehealth: { screen: EHealthNavigator },
     viewDetailEhealth: { screen: ViewEhealthDetailScreen },
-   
-    emptyScreen: { screen: EmptyScreen }
+
+    emptyScreen: { screen: EmptyScreen },
+    hospital: { screen: HospitalScreen },
+    drug: { screen: DrugScreen },
+    hospitalByLocation:{screen:HospitalByLocationScreen}
   },
+
   {
     headerMode: "none",
     // cardStyle: {
