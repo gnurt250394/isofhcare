@@ -521,6 +521,7 @@ class CreateProfileScreen extends Component {
                                 </Field>
 
                                 <Field style={{ flex: 1 }}>
+                                <Text style={styles.mdk}></Text>
                                     <Field>
                                         <TextField
                                             hideError={true}
@@ -549,6 +550,7 @@ class CreateProfileScreen extends Component {
                                     </Field>
                                 </Field>
                                 <Field style={{ flex: 1 }}>
+                                <Text style={styles.mdk}></Text>
                                     <Field>
                                         <TextField
                                             hideError={true}
@@ -570,6 +572,7 @@ class CreateProfileScreen extends Component {
                                 </Field>
                             </Field>
                             <Field style={[styles.mucdichkham, this.state.type == "FAMILY" ? {} : { marginTop: 10 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
+                            <Text style={styles.mdk}></Text>                             
                                 <TextField
                                     hideError={true}
                                     onValidate={(valid, messages) => {
