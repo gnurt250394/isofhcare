@@ -36,6 +36,7 @@ class ListProfileScreen extends Component {
         patient.history = (patient.history || []).sort((a, b) => {
             a.timeGoIn && b.timeGoIn ? a.timeGoIn.toDateObject("-") - b.timeGoIn.toDateObject("-") : ''
         });
+
         let latestTime = patient.latestTime ? patient.latestTime.toDateObject("-") : new Date()
         let histories = this.groupHistory(patient.history, latestTime);
         let dateSelected = "";
@@ -53,6 +54,7 @@ class ListProfileScreen extends Component {
                 histories[dateSelected].selectedColor = '#27ae60';
             }
         }
+        console.log(histories,'historieshistories')
         this.state = {
             refreshing: false,
             data: [],
@@ -94,6 +96,8 @@ class ListProfileScreen extends Component {
         if (focus) {
             focus.selected = true;
         }
+
+        console.log(obj,'objobjobjobjobjobj')
         return obj;
     }
 
@@ -290,6 +294,7 @@ class ListProfileScreen extends Component {
                 let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : ''
                 let isMedicineTime = this.state.isMedicineTime ? 1 : 0
                 let histories = JSON.parse(JSON.stringify(this.state.histories));
+                
                 let id = this.state.dateSelected ? histories[this.state.dateSelected].history.id : histories[this.state.latestTime.format("yyyy-MM-dd")].history.id
                 ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
                 }).catch(err => {

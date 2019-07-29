@@ -5,7 +5,32 @@ import datacacheProvider from '@data-access/datacache-provider';
 
 const Realm = require('realm');
 import realmModel from '@models/realm-models';
-module.exports = {
+module.exports = {    
+    getListBanner(requestApi) {
+        return new Promise((resolve, reject) => {
+            if (!requestApi) {
+                datacacheProvider.readPromise("", constants.key.storage.LIST_BANNER).then(s => {
+                    this.getListBanner(true);
+                    resolve(s);
+                }).catch(e => {
+                    this.getListBanner(true).then(s => {
+                        resolve(s);
+                    }).catch(e => {
+                        reject([]);
+                    })
+                });
+            }
+            else {
+                client.requestApi("get", constants.api.advertise.get_list_banner, {}, (s, e) => {
+                    if (s && s.code == 0 && s.data && s.data.banner ) {
+                        datacacheProvider.save("", constants.key.storage.LIST_BANNER, s.data.banner);
+                        resolve(s.data.banner);
+                    }
+                    reject([]);
+                });
+            }
+        });
+    },
     create(content, title, type, value, images) {
         return new Promise((resolve, reject) => {
             client.requestApi("post", constants.api.advertise.create, {

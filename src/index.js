@@ -25,7 +25,6 @@ TextInput.defaultProps = TextInput.defaultProps || {};
 TextInput.defaultProps.allowFontScaling = false;
 Animated.Text.defaultProps = TextInput.defaultProps || {};
 Animated.Text.defaultProps.allowFontScaling = false;
-
 class Kernel extends Component {
   constructor(props) {
     super(props);
@@ -33,7 +32,7 @@ class Kernel extends Component {
 
     }
   }
-
+  
   componentDidMount() {
     codePush.checkForUpdate().then(update => {
       if (update) {
