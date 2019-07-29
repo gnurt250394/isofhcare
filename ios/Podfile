@@ -20,6 +20,7 @@ target 'APP' do
   pod 'FBSDKLoginKit', '~> 5.0.1'
   pod 'FBSDKShareKit', '~> 5.0.1'
   # facebook account kit
+  pod 'AccountKit', '~> 5.0.1'
   pod 'RNAccountKit', :path => '../node_modules/react-native-facebook-account-kit/ios'
 
   # this is very important to have!
