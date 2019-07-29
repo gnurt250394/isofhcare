@@ -84,12 +84,11 @@ module.exports = {
     },
     createProfile (data,provinceId,districtId,zoneId){
         let body = {
-           profile: data,
-           countryId: '',
-           provinceId:provinceId,
-           districtId:districtId,
-           zoneId:zoneId
-        }
+            profile: data,
+            provinceId:provinceId,
+            districtId:districtId,
+            zoneId:zoneId
+         }
         return new Promise ((resolve,reject) => {
             client.requestApi('post',`${constants.api.profile.create_profile}`,body,(s,e) => {
                 if(s)

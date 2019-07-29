@@ -126,7 +126,7 @@ class CreateProfileScreen extends Component {
                             "height": height ? Number(height) : null,
                             "weight": weight ? Number(weight) : null,
                             "phone": phone,
-                            // "address": address ? address : null
+                            
                         }
                         profileProvider.createProfile(data,idProvince,idDistrics,idZone).then(res => {
                             console.log(res)
@@ -148,7 +148,7 @@ class CreateProfileScreen extends Component {
     selectDistrict = (districts) => {
         let districtsError = districts ? "" : this.state.districtsError;
         if (!districts || !this.state.districts || districts.id != this.state.districts.id) {
-            this.setState({ districts, districtsError })
+            this.setState({ districts, districtsError,zone:[] })
         } else {
             this.setState({ districts, districtsError });
         }
@@ -166,7 +166,7 @@ class CreateProfileScreen extends Component {
     selectprovinces(provinces) {
         let provincesError = provinces ? "" : this.state.provincesError;
         if (!provinces || !this.state.provinces || provinces.id != this.state.provinces.id) {
-            this.setState({ provinces, provincesError })
+            this.setState({ provinces, provincesError,districts:[],zone:[] })
         } else {
             this.setState({ provinces, provincesError });
         }
@@ -183,11 +183,13 @@ class CreateProfileScreen extends Component {
         }
     }
     onSelectZone = () => {
-        if(!this.state.provinces.id){
+        if(!this.state.provinces || !this.state.provinces.id){
             snackbar.show("Bạn chưa chọn Tỉnh/Thành phố")
+            return
         }
-        if(!this.state.districts.id){
+        if(!this.state.districts || !this.state.districts.id){
             snackbar.show("Bạn chưa chọn Quận/Huyện")
+            return
         }
         if(this.state.provinces.id  && this.state.districts.id){
             this.props.navigation.navigate('selectZone', {
@@ -505,7 +507,7 @@ class CreateProfileScreen extends Component {
                                             editable={false}
                                             multiline={true}
                                             inputStyle={[
-                                                styles.ktq
+                                                styles.ktq,
                                             ]}
                                             errorStyle={styles.errorStyle}
                                             value={this.state.provinces && this.state.provinces.countryCode ? this.state.provinces.countryCode : 'Tỉnh/Thành phố'}

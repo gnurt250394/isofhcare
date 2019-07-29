@@ -203,7 +203,6 @@ class EditProfileScreen extends Component {
                             "height": height ? Number(height) : null,
                             "weight": weight ? Number(weight) : null,
                             "phone": phone,
-                            "address": address ? address : null,
                             "countryId": '',
                             "provinceId": idProvince,
                             "districtId":idDistrics,
