@@ -99,6 +99,7 @@ class ConfirmBookingScreen extends Component {
             case 2:
                 return "";
             case 3:
+            case 5:
             case 4:
                 return constants.key.payment_return_url.payoo;
         }
@@ -106,6 +107,7 @@ class ConfirmBookingScreen extends Component {
     getPaymentMethodUi() {
         switch (this.state.paymentMethod) {
             case 3:
+            case 5:
                 return "SDK";
             default:
                 return "";
@@ -163,39 +165,15 @@ class ConfirmBookingScreen extends Component {
                             break;
                         case 3:
                         case 5:
-
+                            debugger;
                             let vnp_TxnRef = data.online_transactions[0].id;
                             let payment_order = s.payment_order;
-                            let html = convert.xml2json(payment_order.data, { compact: true, spaces: 4 })
-                            let orderJSON = JSON.parse(html);
-                            console.log(orderJSON);
-
                             payment_order.orderInfo = payment_order.data;
-                            payment_order.cashAmount = parseInt(this.state.service.price);
-                            let payooSDK = payoo;
-                            if (Platform.OS == 'ios') {
-                                payooSDK = PayooModule;
-                            }
-                            payooSDK.initialize(payment_order.shop_id, payment_order.check_sum_key).then(() => {
-                                payooSDK.pay(this.state.paymentMethod == 5 ? 1 : 0, payment_order, {}).then(x => {
-                                    alert(x);
-                                    // alert(JSON.stringify(x));
-                                    // return;
-                                    // let obj = JSON.parse(x);
-                                    // walletProvider.onlineTransactionPaid(vnp_TxnRef, this.getPaymentMethod(), obj);
-                                    // this.props.navigation.navigate("home", {
-                                    //     navigate: {
-                                    //         screen: "createBookingSuccess",
-                                    //         params: {
-                                    //             booking
-                                    //         }
-                                    //     }
-                                    // });
-                                }).catch(y => {
-                                    booking.transactionCode = data.online_transactions[0].id;
-                                    this.props.navigation.navigate("paymentBookingError", { booking })
-                                });
-                            })
+                            payment_order.cashAmount = this.state.service.reduce((total, item) => {
+                                return total + parseInt(item.service.price)
+                            }, 0);
+                            this.payment(payment_order, vnp_TxnRef, booking, data);
+
                             break;
                         case 1:
                             this.props.navigation.navigate("paymentVNPay", {
@@ -278,6 +256,30 @@ class ConfirmBookingScreen extends Component {
         })
     }
 
+    payment(payment_order, vnp_TxnRef, booking, data) {
+        let payooSDK = payoo;
+        if (Platform.OS == 'ios') {
+            payooSDK = PayooModule;
+        }
+        payooSDK.initialize(payment_order.shop_id, payment_order.check_sum_key).then(() => {
+            payooSDK.pay(this.state.paymentMethod == 5 ? 1 : 0, payment_order, {}).then(x => {
+                let obj = JSON.parse(x);
+                walletProvider.onlineTransactionPaid(vnp_TxnRef, this.getPaymentMethod(), obj);
+                this.props.navigation.navigate("home", {
+                    navigate: {
+                        screen: "createBookingSuccess",
+                        params: {
+                            booking
+                        }
+                    }
+                });
+            }).catch(y => {
+                booking.transactionCode = data.online_transactions[0].id;
+                this.props.navigation.navigate("paymentBookingError", { booking })
+            });
+        })
+    }
+
     retry(paymentId) {
         let booking = this.state.booking;
         this.setState({ isLoading: true }, () => {
@@ -304,38 +306,14 @@ class ConfirmBookingScreen extends Component {
                             break;
                         case 3:
                         case 5:
-
+                            debugger;
                             let vnp_TxnRef = data.id;
                             let payment_order = s.payment_order;
-                            let html = convert.xml2json(payment_order.data, { compact: true, spaces: 4 })
-                            let orderJSON = JSON.parse(html);
-                            console.log(orderJSON);
-
                             payment_order.orderInfo = payment_order.data;
-                            payment_order.cashAmount = parseInt(this.state.service.price);
-
-                            let payooSDK = payoo;
-                            if (Platform.OS == 'ios') {
-                                payooSDK = PayooModule;
-                            }
-
-                            payooSDK.initialize(payment_order.shop_id, payment_order.check_sum_key).then(() => {
-                                payooSDK.pay(this.state.paymentMethod == 5 ? 1 : 0, payment_order, {}).then(x => {
-                                    let obj = JSON.parse(x);
-                                    walletProvider.onlineTransactionPaid(vnp_TxnRef, this.getPaymentMethod(), obj);
-                                    this.props.navigation.navigate("home", {
-                                        navigate: {
-                                            screen: "createBookingSuccess",
-                                            params: {
-                                                booking
-                                            }
-                                        }
-                                    });
-                                }).catch(y => {
-                                    booking.transactionCode = data.online_transactions[0].id;
-                                    this.props.navigation.navigate("paymentBookingError", { booking })
-                                });
-                            })
+                            payment_order.cashAmount = this.state.service.reduce((total, item) => {
+                                return total + parseInt(item.service.price)
+                            }, 0);
+                            this.payment(payment_order, vnp_TxnRef, booking, data);
                             break;
                         case 1:
                             this.props.navigation.navigate("paymentVNPay", {
