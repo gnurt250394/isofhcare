@@ -88,6 +88,7 @@ class ConfirmBookingScreen extends Component {
             case 2:
                 return "";
             case 3:
+            case 5:
                 return "PAYOO";
             case 4:
                 return "PAYOO_BILL";
@@ -154,6 +155,7 @@ class ConfirmBookingScreen extends Component {
                             });
                             break;
                         case 3:
+                        case 5:
 
                             let vnp_TxnRef = data.online_transactions[0].id;
                             let payment_order = s.payment_order;
@@ -168,7 +170,7 @@ class ConfirmBookingScreen extends Component {
                                 payooSDK = PayooModule;
                             }
                             payooSDK.initialize(payment_order.shop_id, payment_order.check_sum_key).then(() => {
-                                payooSDK.pay(payment_order, {}).then(x => {
+                                payooSDK.pay(this.state.paymentMethod == 5 ? 1 : 0, payment_order, {}).then(x => {
                                     alert(x);
                                     // alert(JSON.stringify(x));
                                     // return;
@@ -294,6 +296,7 @@ class ConfirmBookingScreen extends Component {
                             });
                             break;
                         case 3:
+                        case 5:
 
                             let vnp_TxnRef = data.id;
                             let payment_order = s.payment_order;
@@ -310,7 +313,7 @@ class ConfirmBookingScreen extends Component {
                             }
 
                             payooSDK.initialize(payment_order.shop_id, payment_order.check_sum_key).then(() => {
-                                payooSDK.pay(payment_order, {}).then(x => {
+                                payooSDK.pay(this.state.paymentMethod == 5 ? 1 : 0, payment_order, {}).then(x => {
                                     let obj = JSON.parse(x);
                                     walletProvider.onlineTransactionPaid(vnp_TxnRef, this.getPaymentMethod(), obj);
                                     this.props.navigation.navigate("home", {
@@ -482,6 +485,14 @@ class ConfirmBookingScreen extends Component {
                             }
                         </View>
                         <Text style={styles.ckeckthanhtoan}>PAYOO</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 5 })}>
+                        <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
+                            {this.state.paymentMethod == 5 &&
+                                <View style={{ backgroundColor: 'rgb(2,195,154)', width: 10, height: 10, borderRadius: 5 }}></View>
+                            }
+                        </View>
+                        <Text style={styles.ckeckthanhtoan}>PAYOO - Trả góp 0%</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 4 })}>
                         <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
