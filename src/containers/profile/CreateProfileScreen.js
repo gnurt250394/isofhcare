@@ -126,12 +126,9 @@ class CreateProfileScreen extends Component {
                             "height": height ? Number(height) : null,
                             "weight": weight ? Number(weight) : null,
                             "phone": phone,
-                            "countryId": '',
-                            "provinceId": idProvince,
-                            "districtId":idDistrics,
-                            "zoneId": idZone,
+                            
                         }
-                        profileProvider.createProfile(data).then(res => {
+                        profileProvider.createProfile(data,idProvince,idDistrics,idZone).then(res => {
                             console.log(res)
                             if (res.code == 0) {
                                 this.props.navigation.navigate('listProfile', { reset: this.state.reset + 1 })
