@@ -89,7 +89,7 @@ class ListProfileScreen extends Component {
     }
     renderItem = (item, index) => {
         return (
-            <TouchableOpacity onPress={() => this.onClickItem(item)} style={{ paddingHorizontal: 10, marginVertical: 5,flex:1 }}>
+            <TouchableOpacity onPress={() => this.onClickItem(item)} style={{ paddingHorizontal: 10, marginBottom:5,flex:1 }}>
                 <Card style={styles.cardView}>
                         <Text style={styles.txName}>{item.name}</Text>
                         {/* <Text style={styles.txLabel}>ID: <Text style={styles.txId}>{item.profileNoID}</Text></Text> */}
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
 
     viewPopup: { backgroundColor: '#fff', marginHorizontal: 20, paddingVertical: 40, borderRadius: 5 },
     viewModal: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-    txBtn: { color: '#fff' },
+    txBtn: { color: '#fff',fontSize:16 },
     cardView: {
         flexDirection: 'row',
         justifyContent: 'space-between',
