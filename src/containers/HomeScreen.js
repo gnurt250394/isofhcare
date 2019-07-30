@@ -9,28 +9,29 @@ import {
   Dimensions,
   AppState,
   DeviceEventEmitter,
-  Alert
+  Alert,
+  ScrollView,
+  RefreshControl
 } from "react-native";
 import { connect } from "react-redux";
-import userProvider from "@data-access/user-provider";
 import constants from "@resources/strings";
 import redux from "@redux-store";
-import Home from "@containers/home/tab/Home";
-import Account from "@containers/home/tab/Account";
-import Videos from "@containers/home/tab/Videos";
-import Notification from "@containers/home/tab/Notification";
-import Community from "@containers/home/tab/Community";
 import PushController from "@components/notification/PushController";
 import NotificationBadge from "@components/notification/NotificationBadge";
 import ActivityPanel from "@components/ActivityPanel";
 import snackbar from "@utils/snackbar-utils";
-import { IndicatorViewPager } from "mainam-react-native-viewpager";
 import firebase from 'react-native-firebase';
 import ScaledImage from 'mainam-react-native-scaleimage'
-import NotificationScreen from '@containers/notification/NotificationScreen'
 import NavigationService from "@navigators/NavigationService";
 
-const width = Dimensions.get("window").width
+
+
+import Actionbar from '@components/home/Actionbar';
+import SlideBanner from '@components/home/SlideBanner';
+import TopHospital from '@components/hospital/TopHospital';
+import HospitalNearYou from '@components/hospital/HospitalNearYou';
+import TopDrug from '@components/drug/TopDrug';
+import TopNews from '@components/news/TopNews';
 class HomeScreen extends Component {
   constructor(props) {
     super(props);
@@ -38,7 +39,9 @@ class HomeScreen extends Component {
       tabIndex: 0,
       active: true,
       text: "",
-      refreshNotification: 1
+      refreshNotification: 1,
+      refreshing: false,
+      countReset: 0,
     };
 
   }
@@ -84,7 +87,22 @@ class HomeScreen extends Component {
       });
     }
   }
+  handleScroll = (event) => {
 
+  }
+  openDrawer = () => {
+    this.props.navigation.openDrawer()
+  }
+  onRefresh = () => {
+    this.setState({
+      refreshing: true,
+      countReset: this.state.countReset + 1,
+
+    })
+    setTimeout(() => this.setState({
+      refreshing: false
+    }), 200)
+  }
   render() {
     const { active } = this.state;
     return (
@@ -93,10 +111,30 @@ class HomeScreen extends Component {
         isLoading={this.state.isLoading}
         hideActionbar={true}
       >
-        <Home
-          navigation={this.props.navigation}
-          style={{ flex: 1 }}
-        />
+        <View style={{ flex: 1 }}>
+          <Actionbar openDrawer={this.openDrawer} />
+          <View style={{ position: 'relative' }}>
+            <View style={{ height: 150, backgroundColor: '#4BBA7B', position: "absolute", top: 0, left: 0, right: 0 }}></View>
+            <ScrollView
+              onScroll={this.handleScroll}
+              ref={(c) => { this.scroll = c }}
+              refreshControl={<RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this.onRefresh}
+              />}>
+              <View>
+                <SlideBanner countReset={this.state.countReset} />
+                <TopHospital countReset={this.state.countReset} />
+                <HospitalNearYou countReset={this.state.countReset} />
+                <TopDrug countReset={this.state.countReset} />
+                <TopNews countReset={this.state.countReset} />
+                <View style={{ width: '100%', height: 50 }}></View>
+              </View>
+
+            </ScrollView>
+          </View>
+        </View>
+        <PushController />
       </ActivityPanel>
     );
   }

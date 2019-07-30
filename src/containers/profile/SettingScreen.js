@@ -29,7 +29,7 @@ import { connect } from "react-redux";
                     {/* <DrawerItems></DrawerItems> */}
                     <View style={{ marginTop: 50 }}>
                         <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}><ScaledImage width={30} source={require('@images/new/profile/ic_setting.png')}></ScaledImage><Text style={{ fontSize: 20, color: '#4BBA7B', fontWeight: '600' }}>Cài Đặt</Text></View>
-                        <TouchableOpacity onPress={() => NavigationService.navigate('changePass')} style={styles.viewDrawer}>
+                        <TouchableOpacity onPress={() => NavigationService.navigate('changePassword')} style={styles.viewDrawer}>
                             <ScaledImage height={20} source={require('@images/new/profile/ic_change_password.png')} />
                             <Text style={styles.txDrawer}>Đổi mật khẩu</Text>
                         </TouchableOpacity>
