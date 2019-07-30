@@ -23,6 +23,11 @@ class SplashScreen extends Component {
 		this.Actions = this.props.navigation;
 	}
 	componentDidMount() {
+		this.props.dispatch({
+			type: constants.action.create_navigation_global,
+			value: this.props.navigation
+		});
+
 		console.disableYellowBox = true;
 		console.reportErrorsAsExceptions = false;
 		// this.Actions.navigate('home')
@@ -55,7 +60,7 @@ class SplashScreen extends Component {
 
 	render() {
 		return (
-			<ActivityPanel style={{ flex: 1 }}  hideActionbar={true} hideStatusbar={true} showFullScreen={true}>
+			<ActivityPanel style={{ flex: 1 }} hideActionbar={true} hideStatusbar={true} showFullScreen={true}>
 				<View style={{ position: 'relative', flex: 1 }}>
 					<View style={[{ justifyContent: 'center', alignItems: 'center', flex: 1 }]}>
 						<MyScaleImage animation="rubberBand" delay={500} duration={3000} source={require("@images/logo.png")} width={120} />

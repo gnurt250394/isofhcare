@@ -42,12 +42,6 @@ class HomeScreen extends Component {
     };
 
   }
-  componentWillMount() {
-    this.props.dispatch({
-      type: constants.action.create_navigation_global,
-      value: this.props.navigation
-    });
-  }
   componentDidMount() {
     DeviceEventEmitter.removeAllListeners("hardwareBackPress");
     AppState.addEventListener('change', this._handleAppStateChange);
@@ -80,23 +74,6 @@ class HomeScreen extends Component {
     this.props.navigation.pop();
     return true;
   };
-  logout() {
-    this.props.dispatch(redux.userLogout());
-  }
-  onPageScroll(e) {
-    var tabIndex = e.position;
-    var offset = e.offset * 100;
-    if (tabIndex == -1 || (tabIndex == 1 && offset > 0)) return;
-    this.setState({
-      tabIndex: tabIndex
-    });
-
-
-  }
-  onAction = active => {
-    console.log(active, "active");
-  };
-
   componentWillReceiveProps(newProps) {
     let navigate = newProps.navigation.getParam('navigate', undefined);
     if (this.state.navigate != navigate) {
@@ -116,209 +93,12 @@ class HomeScreen extends Component {
         isLoading={this.state.isLoading}
         hideActionbar={true}
       >
-        <View style={[{ flex: 1 }, this.props.style]}>
-          {/* <UserInactivity
-          timeForInactivity={2000}
-          onAction={this.onAction}
-          style={[{ flex: 1 }, this.props.style]}
-        > */}
-          <IndicatorViewPager
-            style={{ flex: 1 }}
-            ref={viewPager => {
-              this.viewPager = viewPager;
-            }}
-            onPageScroll={this.onPageScroll.bind(this)}
-          >
-            <View style={{ flex: 1 }}>
-              <Home
-                navigation={this.props.navigation}
-                style={{ flex: 1 }}
-              />
-            </View>
-            {/* <View style={{ flex: 1, backgroundColor: "#000" }} /> */}
-            {/* <View style={{ flex: 1, backgroundColor: "#cac" }} /> */}
-            {/* <View style={{ flex: 1 }}>
-              <Community
-              // onLogout={() => {
-              //   this.viewPager.setPage(0);
-              // }}
-              // showLoading={(loading, callback) => {
-              //   this.setState({ isLoading: loading }, callback);
-              // }}
-              />
-            </View> */}
-            {/* <View style={{ flex: 1 }}>
-              <Videos
-                onProcess={() => {
-                  this.viewPager.setPage(0);
-                }}
-              // onLogout={() => {
-              //   this.viewPager.setPage(0);
-              // }}
-              // showLoading={(loading, callback) => {
-              //   this.setState({ isLoading: loading }, callback);
-              // }}
-              />
-            </View> */}
-            
-            {/* <View style={{ flex: 1 }}>
-              <NotificationScreen
-                refreshNotification={this.state.refreshNotification}
-              // onLogout={() => {
-              //   this.viewPager.setPage(0);
-              // }}
-              // showLoading={(loading, callback) => {
-              //   this.setState({ isLoading: loading }, callback);
-              // }}
-              />
-            </View> */}
-          </IndicatorViewPager>
-
-
-          {/* <Swiper
-            ref={ref => (this.swiper = ref)}
-            onIndexChanged={index => {
-              this.setState({ tabIndex: index });
-            }}
-            dot={<View />}
-            activeDot={<View />}
-            paginationStyle={{
-              bottom: 30
-            }}
-            loop={false}
-            style={{ flex: 1 }}
-          >
-            <Home
-              navigation={this.props.navigation}
-              style={{ flex: 1 }}
-            />
-            <View style={{ flex: 1, backgroundColor: "#000" }} />
-            <View style={{ flex: 1, backgroundColor: "#cac" }} />
-            <Account showLoading={(loading, callback) => {
-              this.setState({ isLoading: loading }, callback);
-            }} />
-          </Swiper> */}
-          <View style={{}}>
-            <View
-              style={{
-                height: 61,
-                flexDirection: "row",
-                backgroundColor: "#4BBA7B",
-                marginTop: -3,
-              }}
-            >
-              <TouchableOpacity
-                style={[
-                  this.state.tabIndex == 0 ? styles.tab_selected : styles.tab
-                ]}
-                onPress={this.swipe.bind(this, 0)}
-              >
-                <ScaledImage
-                  source={require("@images/new/home/ic_home.png")}
-                  height={width < 375 ? 20 : 30}
-                  style={this.state.tabIndex == 0 ? { tintColor: '#000' } : {}}
-
-                />
-              </TouchableOpacity>
-              {/* <TouchableOpacity
-                style={[this.state.tabIndex == 1 ? styles.tab_selected : styles.tab]}
-                onPress={this.swipe.bind(this, 1)}
-              >
-                <ScaledImage source={this.state.tabIndex == 1 ? require("@images/new/ic_home_booking1.png") : require("@images/new/ic_home_booking0.png")} height={20} />
-                <Text style={[this.state.tabIndex == 1 ? styles.tab_label_selected : styles.tab_label]}>Lịch khám</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[this.state.tabIndex == 2 ? styles.tab_selected : styles.tab]}
-                onPress={this.swipe.bind(this, 2)}
-              >
-                <ScaledImage source={this.state.tabIndex == 2 ? require("@images/new/ic_home_service1.png") : require("@images/new/ic_home_service0.png")} height={20} />
-                <Text style={[this.state.tabIndex == 2 ? styles.tab_label_selected : styles.tab_label]}>Dịch vụ</Text>
-              </TouchableOpacity> */}
-              <TouchableOpacity
-                style={[
-                  this.state.tabIndex == 1 ? styles.tab_selected : styles.tab
-                ]}
-                onPress={() => {
-                  snackbar.show('Tính năng đang phát triển');
-                }}
-              >
-                <ScaledImage
-                  source={require("@images/new/home/ic_community.png")}
-                  // style={this.state.tabIndex == 1 ? { tintColor: '#000' } : {}}
-
-                  height={width < 375 ? 20 : 30}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[
-                  this.state.tabIndex == 2 ? styles.tab_selected : styles.tab
-                ]}
-                onPress={() => {
-                  snackbar.show('Tính năng đang phát triển');
-                }}
-              >
-                <ScaledImage
-                  source={require("@images/new/home/ic_videos.png")}
-                  // style={this.state.tabIndex == 2 ? { tintColor: '#000' } : {}}
-
-                  height={width < 375 ? 20 : 30}
-                />
-              </TouchableOpacity>
-              {/* <TouchableOpacity
-                style={[
-                  this.state.tabIndex == 3 ? styles.tab_selected : styles.tab
-                ]}
-                onPress={this.swipe.bind(this, 1)}
-              >
-                <ScaledImage
-                  source={require("@images/new/home/ic_account.png")}
-                  style={this.state.tabIndex == 1 ? { tintColor: '#000' } : {}}
-
-                  height={width < 375 ? 20 : 30}
-                />
-              </TouchableOpacity> */}
-              {/* <TouchableOpacity
-                style={[styles.tab_selected, { position: 'relative' }]}
-                onPress={this.swipe.bind(this, 2)}
-              >
-                <ScaledImage source={require("@images/new/home/ic_bell.png")} width={width < 375 ? 20 : 30} style={this.state.tabIndex == 2 ? { tintColor: '#000' } : {}} />
-                {
-                  this.props.userApp.isLogin && (this.props.userApp.unReadNotificationCount || 0) ?
-                    <Text numberOfLines={1} style={styles.countNotificaiton}>{(this.props.userApp.unReadNotificationCount || 0) > 99 ? "99+" : this.props.userApp.unReadNotificationCount}</Text>
-                    : null
-                }
-
-              </TouchableOpacity> */}
-            </View>
-          </View>
-          <PushController />
-        </View>
+        <Home
+          navigation={this.props.navigation}
+          style={{ flex: 1 }}
+        />
       </ActivityPanel>
     );
-  }
-  swipe(targetIndex) {
-     if(targetIndex == 2 && !this.props.userApp.isLogin)
-      {NavigationService.navigate("login", {
-        nextScreen: { screen: "notification", param: {} }
-      }) 
-      return  
-    }
-    if(targetIndex == 1 && !this.props.userApp.isLogin)
-      {NavigationService.navigate("login")
-      // , {
-      //   nextScreen: { screen: "notification", param: {} }
-      // }) 
-      return  
-    }
-      this.setState({
-        refreshNotification: this.state.refreshNotification+1
-      })
-
-
-
-    // this.viewPager && this.viewPager.setPage(targetIndex)
-    this.viewPager && targetIndex == 2 && !this.props.userApp.isLogin ? this.viewPager && this.viewPager.setPage(0) : this.viewPager && this.viewPager.setPage(targetIndex);
-
   }
 }
 

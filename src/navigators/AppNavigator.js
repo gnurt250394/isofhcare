@@ -181,12 +181,30 @@ const RootNavigator = createStackNavigator(
   {
     splash: SplashScreen,
     home: {
-            screen: DrawerNav, 
-            navigationOptions: ({ navigation }) => ({
-              header: null
-            })
-          },
-      
+      screen: DrawerNav,
+      navigationOptions: ({ navigation }) => ({
+        header: null
+      })
+    },
+
+  },
+  {
+    headerMode: "none",
+    // cardStyle: {
+    //   backgroundColor: 'transparent', opacity: 1,
+    // },
+    // transitionConfig: () => ({
+    //   containerStyle: {
+    //     backgroundColor: 'transparent',
+    //   },
+    // }),
+    header: null,
+    gesturesEnabled: false,
+    navigationOptions: {
+      header: null,
+      gesturesEnabled: false
+    },
+    // mode: Platform.OS == "ios" ? "modal" : "card"
   }
 );
 

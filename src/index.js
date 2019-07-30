@@ -32,7 +32,7 @@ class Kernel extends Component {
 
     }
   }
-  
+
   componentDidMount() {
     codePush.checkForUpdate().then(update => {
       if (update) {
@@ -85,7 +85,9 @@ class Kernel extends Component {
         <Root>
           <RootNavigator ref={navigatorRef => {
             NavigationService.setTopLevelNavigator(navigatorRef);
-          }} />
+          }}
+            screenProps={{ state: store.getState() }}
+          />
         </Root>
       </Provider>
     )
