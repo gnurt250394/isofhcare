@@ -21,7 +21,6 @@ class MenuProfile extends React.Component {
             <View style={styles.viewInfo}>
               <Text style={styles.txHello}>Xin Chào</Text>
               <Text style={styles.txName}>{this.props.userApp.currentUser.name && this.props.userApp.currentUser.name}</Text>
-              <Text style={styles.txId}>Id Here</Text>
             </View>
           </View>
         ) : (<ScaledImage source={require('@images/new/home/ic_drawer_logo.png')} style={[styles.imgLogo, this.props.userApp.isLogin ? {} : { marginVertical: 50 }]} height={80}></ScaledImage>
@@ -31,7 +30,7 @@ class MenuProfile extends React.Component {
         <View style={this.props.userApp.isLogin ? {marginTop:30}:{}}> 
         <TouchableOpacity onPress = {this.onProfileClick} style={styles.viewDrawer}>
           <ScaledImage height={15} source={require('@images/new/profile/ic_family.png')} />
-          <Text style={styles.txDrawer}>Thành viên gia đình</Text>
+          <Text style={[styles.txDrawer,{marginLeft:7}]}>Thành viên gia đình</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress = {() => NavigationService.navigate('PatientHistoryScreen')} style={styles.viewDrawer}>
           <ScaledImage height={20} source={require('@images/new/profile/ic_calendar.png')} />
@@ -43,7 +42,7 @@ class MenuProfile extends React.Component {
         </View>
         <TouchableOpacity onPress = {() => NavigationService.navigate("ehealth")} style={styles.viewDrawer}>
           <ScaledImage height={20} source={require('@images/new/profile/ic_ehealth_small.png')} />
-          <Text style={styles.txDrawer}>Y bạ điện tử</Text>
+          <Text style={[styles.txDrawer,{marginLeft:12}]}>Y bạ điện tử</Text>
         </TouchableOpacity>
         <View style={styles.viewDrawer}>
           <ScaledImage height={20} source={require('@images/new/profile/ic_drug.png')} />
@@ -75,13 +74,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginLeft: 30,
     padding:10,
-    // justifyContent:'center',
     alignItems:'center',
     marginBottom: 10,
   },
   txDrawer: {
     marginLeft: 10,
-    fontSize:18
+    fontSize:18,
+    textAlign:'left',
+    fontWeight:'600'
   },
   txHello: {
     color: '#fff',
@@ -91,7 +91,8 @@ const styles = StyleSheet.create({
   txName: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#fff'
+    color: '#fff',
+    marginTop:10
   },
   txId: {
     color: '#fff',
