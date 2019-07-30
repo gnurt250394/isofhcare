@@ -1,16 +1,23 @@
 import React, { Component } from 'react';
 import ScaledImage from "mainam-react-native-scaleimage";
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity,Linking } from 'react-native'
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Linking } from 'react-native'
 import ActivityPanel from '@components/ActivityPanel';
 import NavigationService from "@navigators/NavigationService";
 import redux from "@redux-store";
 import { connect } from "react-redux";
+import { StackActions, NavigationActions } from 'react-navigation';
 
- class SettingScreen extends Component {
+
+class SettingScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
         };
+        if (!this.props.userApp.isLogin) {
+            this.props.navigation.navigate("login", {
+                nextScreen: { screen: "notification", param: {} }
+            });
+        }
     }
 
     render() {
@@ -47,7 +54,13 @@ import { connect } from "react-redux";
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => {
                             this.props.dispatch(redux.userLogout());
-                            if (this.props.onLogout) this.props.onLogout();
+
+                            this.props.navigation.dispatch(StackActions.reset({
+                                index: 0,
+                                actions: [NavigationActions.navigate({ routeName: "home" })],
+                            }));
+
+                            this.props.navigation.navigate("home");
                         }} style={styles.viewDrawer}>
                             <ScaledImage height={18} source={require('@images/new/profile/ic_logout.png')} />
                             <Text style={styles.txDrawer}>Đăng xuất</Text>
@@ -114,8 +127,8 @@ const styles = StyleSheet.create({
 })
 function mapStateToProps(state) {
     return {
-      navigation: state.navigation,
-      userApp: state.userApp
+        navigation: state.navigation,
+        userApp: state.userApp
     };
-  }
-  export default connect(mapStateToProps)(SettingScreen);
+}
+export default connect(mapStateToProps)(SettingScreen);

@@ -43,7 +43,7 @@ class HomeScreen extends Component {
       refreshing: false,
       countReset: 0,
     };
-
+    this.props.navigation.setParams({ test: 1 })
   }
   componentDidMount() {
     DeviceEventEmitter.removeAllListeners("hardwareBackPress");

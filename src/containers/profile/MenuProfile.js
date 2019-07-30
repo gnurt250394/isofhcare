@@ -12,11 +12,18 @@ class MenuProfile extends React.Component {
     this.state = {
 
     }
+    if (!this.props.userApp.isLogin) {
+      this.props.navigation.navigate("login", {
+        nextScreen: { screen: "accountTab", param: {} }
+      });
+    }
   }
   onProfileClick = () => {
     NavigationService.navigate('listProfile')
   }
   render() {
+    if (!this.props.userApp.isLogin)
+      return null;
     return (
       <ActivityPanel
         statusbarBackgroundColor="#4BBA7B"

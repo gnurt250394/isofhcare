@@ -51,8 +51,8 @@ class NotificationScreen extends Component {
     this.props.dispatch(redux.getUnreadNotificationCount());
     this.onRefresh();
   }
-  componentWillReceiveProps(nextProps){
-    if(nextProps.refreshNotification){
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.refreshNotification) {
       this.onRefresh()
     }
   }
@@ -130,7 +130,7 @@ class NotificationScreen extends Component {
         });
 
         item.notification.watched = 1;
-        this.setState({ data: [...this.state.data]});
+        this.setState({ data: [...this.state.data] });
         switch (data.type) {
           case 1:
             this.openQuestion(data.id);
@@ -401,6 +401,8 @@ class NotificationScreen extends Component {
   }
 
   render() {
+    if (!this.props.userApp.isLogin)
+      return null;
     return (
       <ActivityPanel
         style={{ flex: 1 }}
@@ -409,7 +411,7 @@ class NotificationScreen extends Component {
         showFullScreen={true}
         menuButton={this.menuCreate()}
         isLoading={this.state.isLoading}
-        hideBackButton = {true}
+        hideBackButton={true}
 
       >
         <FlatList
