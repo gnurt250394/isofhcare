@@ -65,11 +65,11 @@ class ListProfileScreen extends PureComponent {
                         </View>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.txCountTime}>
+                <TouchableOpacity style={styles.txCountTime} onPress={() => this.props.navigation.navigate('historyTime')} >
                     <Text style={styles.txCount}>{item.countTime}</Text>
                     <Text>{constants.ehealth.time}</Text>
                 </TouchableOpacity>
-            </Card>
+            </Card >
         )
     }
     onRefresh() {

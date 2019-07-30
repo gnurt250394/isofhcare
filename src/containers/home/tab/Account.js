@@ -218,7 +218,7 @@ class Account extends Component {
               <TouchableOpacity
                 style={[styles.itemMenu, { marginTop: 40 }]}
                 onPress={() => {
-                  this.props.navigation.navigate("PatientHistoryScreen", {
+                  this.props.navigation.navigate("patientHistory", {
                     title: "Lịch khám"
                   });
                 }}

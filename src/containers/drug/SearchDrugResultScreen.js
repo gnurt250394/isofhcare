@@ -4,7 +4,7 @@ import { View, TextInput, ActivityIndicator, Text, FlatList, TouchableOpacity } 
 import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import drugProvider from '@data-access/drug-provider';
-import ItemDrug from '@components/drug/ItemDrug';
+// import ItemDrug from '@components/drug/ItemDrug';
 
 class SearchDrugScreen extends Component {
     constructor(props) {

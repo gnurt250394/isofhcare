@@ -28,6 +28,7 @@ RCT_REMAP_METHOD(test,
 }
 
 RCT_REMAP_METHOD(pay,
+                 type: (NSInteger)type
                  orderResponse:(NSDictionary *)orderResponse
                  paymentConfig:(NSDictionary *)paymentConfig
                  payWithResolver:(RCTPromiseResolveBlock)resolve
@@ -47,6 +48,8 @@ RCT_REMAP_METHOD(pay,
   PayooSDKPaymentConfig *_paymentConfig = [PayooSDKPaymentConfig makeWithBuilder:^(PayooSDKPaymentConfigBuilder *builder) {
     builder.defaultCustomerEmail =email;
     builder.defaultCustomerPhone = phone;
+    builder.supportedPaymentMethods=[NSNumber numberWithInteger:type==0?7:32];
+    
   }];
   
   OrderRequest *order = [[OrderRequest alloc] initWithOrderInfo:orderInfo checksum:checksum cashAmount:[cashAmount doubleValue]];

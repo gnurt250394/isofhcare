@@ -25,7 +25,6 @@ TextInput.defaultProps = TextInput.defaultProps || {};
 TextInput.defaultProps.allowFontScaling = false;
 Animated.Text.defaultProps = TextInput.defaultProps || {};
 Animated.Text.defaultProps.allowFontScaling = false;
-
 class Kernel extends Component {
   constructor(props) {
     super(props);
@@ -86,7 +85,9 @@ class Kernel extends Component {
         <Root>
           <RootNavigator ref={navigatorRef => {
             NavigationService.setTopLevelNavigator(navigatorRef);
-          }} />
+          }}
+            screenProps={{ state: store.getState() }}
+          />
         </Root>
       </Provider>
     )

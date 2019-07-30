@@ -13,11 +13,14 @@ import ViewMedicineScreen from '@containers/ehealth/ViewMedicineScreen';
 import ViewMoneyScreen from '@containers/ehealth/ViewMoneyScreen';
 import ViewSurgeryResultScreen from '@containers/ehealth/ViewSurgeryResultScreen';
 import SearchProfileScreen from '@containers/ehealth/SearchProfileScreen';
+import HistoryTimeScreen from '@containers/ehealth/HistoryTimeScreen';
+
 
 
 const EHealthNavigator = createStackNavigator({
     ehealth: { screen: EhealthScreen },
     listProfile: { screen: ListProfileScreen },
+    historyTime :{screen:HistoryTimeScreen},
     listProfileSmall: { screen: ListProfileSmallScreen },
     viewInMonth: { screen: ViewInMonthScreen },
     viewInDay: { screen: ViewInDayScreen },

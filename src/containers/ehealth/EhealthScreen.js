@@ -19,6 +19,7 @@ import hospitalProvider from '@data-access/hospital-provider';
 import ImageLoad from 'mainam-react-native-image-loader';
 import { Card } from "native-base";
 import constants from '@resources/strings';
+import snackbar from '@utils/snackbar-utils';
 
 class EhealthScreen extends Component {
     constructor(props) {
@@ -65,11 +66,14 @@ class EhealthScreen extends Component {
         this.props.navigation.navigate('listProfileSmall')
         : this.props.navigation.navigate('listProfile')
     }
+    onDisable = () => {
+        snackbar.show('Bạn chưa có lần khám gần nhất tại bệnh viện này','danger')
+    }
     renderItem = ({ item, index }) => {
         const source = item.hospital && item.hospital.avatar ? { uri: item.hospital.avatar.absoluteUrl() } : require("@images/new/user.png");
 
         return (
-            <TouchableOpacity style={styles.btnItem} onPress={this.onPress.bind(this, item)}>
+            <TouchableOpacity style={styles.btnItem} onPress={item.hospital.timeGoIn ? this.onPress.bind(this, item) : this.onDisable}>
                 <View style={styles.viewImg}>
                     <ImageLoad
                         resizeMode="cover"

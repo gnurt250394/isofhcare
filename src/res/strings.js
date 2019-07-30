@@ -1,6 +1,5 @@
 let isofhcare_service = 'isofhcare/';
 // let wallet_services = 'wallet-services-test/'; //test
-// let wallet_services = 'wallet-services-dev/'; //dev
 let wallet_services = 'wallet-services/'; //stable
 
 module.exports = {
@@ -20,7 +19,7 @@ module.exports = {
   input_password: "Mật khẩu",
   password: "Mật khẩu",
   forgot_password: "QUÊN MẬT KHẨU",
-  finish:"HOÀN THÀNH",
+  finish: "HOÀN THÀNH",
   ehealth: "Y bạ điện tử",
   booking: "Đặt lịch",
   home: "Trang chủ",
@@ -37,16 +36,16 @@ module.exports = {
   send: "Gửi",
   change_password: "Thay đổi mật khẩu",
   change_email: "Thay đổi email",
-  enter_old_password:'Nhập mật khẩu cũ',
-  enter_password:'Nhập mật khẩu',
-  password_not_null:'Mật khẩu không được bỏ trống',
-  old_password_not_null:'Mật khẩu cũ không được bỏ trống',
-  new_password_not_null:'"Mật khẩu mới không được bỏ trống"',
-  confirm_new_password_not_null:"Xác nhận mật khẩu mới không được bỏ trống",
-  confirm_password_not_null:'Xác nhận mật khẩu không được bỏ trống',
-  password_length_8:'Mật khẩu dài ít nhất 8 ký tự',
-  confirm_password_length_8:"Xác nhận mật khẩu dài ít nhất 8 kí tự",
-  new_password_not_match:'Mật khẩu và xác nhận mật khẩu không giống nhau',
+  enter_old_password: 'Nhập mật khẩu cũ',
+  enter_password: 'Nhập mật khẩu',
+  password_not_null: 'Mật khẩu không được bỏ trống',
+  old_password_not_null: 'Mật khẩu cũ không được bỏ trống',
+  new_password_not_null: '"Mật khẩu mới không được bỏ trống"',
+  confirm_new_password_not_null: "Xác nhận mật khẩu mới không được bỏ trống",
+  confirm_password_not_null: 'Xác nhận mật khẩu không được bỏ trống',
+  password_length_8: 'Mật khẩu dài ít nhất 8 ký tự',
+  confirm_password_length_8: "Xác nhận mật khẩu dài ít nhất 8 kí tự",
+  new_password_not_match: 'Mật khẩu và xác nhận mật khẩu không giống nhau',
   search: "Tìm kiếm",
   share: "Chia sẻ",
   update: "Cập nhật",
@@ -58,10 +57,10 @@ module.exports = {
   gender: 'Giới tính',
   select_gender: 'Chọn giới tính',
   none_data: 'Không có dữ liệu',
-  none_info:'Hiện tại chưa có thông tin',
-  none_service:'Không tìm thấy dịch vụ nào phù hợp',
-  none_service_type_match:'Không tìm thấy loại dịch vụ nào phù hợp ',
-  update_to_up_case:"CẬP NHẬT",
+  none_info: 'Hiện tại chưa có thông tin',
+  none_service: 'Không tìm thấy dịch vụ nào phù hợp',
+  none_service_type_match: 'Không tìm thấy loại dịch vụ nào phù hợp ',
+  update_to_up_case: "CẬP NHẬT",
   hospital: {
     BENH_VIEN_DAI_HOC_Y: 1
   },
@@ -125,7 +124,9 @@ module.exports = {
       KEY_REFRESH_TOKEN: 'KEY_REFRESH_TOKEN',
       LOCATION: "LOCATION",
       LASTEST_INFO: "LASTEST_INFO",
-
+      LIST_BANNER: "LIST_BANNER",
+      DATA_TOP_NEWS: 'DATA_TOP_NEWS',
+      DATA_TOP_HOSPITAL: 'DATA_TOP_HOSPITAL'
     }
   },
   msg: {
@@ -351,10 +352,10 @@ module.exports = {
     service: 'Dịch vụ khám',
     payment_price: 'Số tiền thanh toán:',
     change_payment_method: 'Đổi phương thức thanh toán',
-    location_premmission:'Quyền truy cập vị trí',
-    location_premission_content:"iSofHCare cần quyền truy cập vào vị trí của bạn",
-    location_open:'Bật vị trí trên thiết bị để tìm kiếm địa điểm gần bạn',
-    location_around:'Tìm kiếm gần tôi',
+    location_premmission: 'Quyền truy cập vị trí',
+    location_premission_content: "iSofHCare cần quyền truy cập vào vị trí của bạn",
+    location_open: 'Bật vị trí trên thiết bị để tìm kiếm địa điểm gần bạn',
+    location_around: 'Tìm kiếm gần tôi',
     status: {
       not_select_payment: 'Chưa chọn hình thức',
       payment_isofh: 'Ví Isofh',
@@ -406,7 +407,7 @@ module.exports = {
     note: 'Ghi chú',
     clock: 'Thời gian',
     redmine_drug: 'Nhắc uống thuốc',
-    view_finish:'XEM XONG'
+    view_finish: 'XEM XONG'
   },
   actionSheet: {
     orther: 'Khác',
@@ -417,7 +418,7 @@ module.exports = {
     save: 'Lưu',
     male: 'Nam',
     female: 'Nữ',
-    accept:'Đồng ý'
+    accept: 'Đồng ý'
 
   },
   title: {
@@ -429,13 +430,13 @@ module.exports = {
     patient_history_screen: 'Lịch sử đặt lịch',
     booking: "Đặt khám",
     location_near: 'Địa điểm gần bạn',
-    select_profile:'Tất cả hồ sơ',
-    select_service_type:"Chọn loại dịch vụ",
-    location:'Địa điểm',
+    select_profile: 'Tất cả hồ sơ',
+    select_service_type: "Chọn loại dịch vụ",
+    location: 'Địa điểm',
     service: 'Dịch vụ',
-    change_password:'Đổi mật khẩu',
-    result_ehealth:"KẾT QUẢ KHÁM",
-    result_ehealth_image:"KẾT QUẢ CHẨN ĐOÁN HÌNH ẢNH"
+    change_password: 'Đổi mật khẩu',
+    result_ehealth: "KẾT QUẢ KHÁM",
+    result_ehealth_image: "KẾT QUẢ CHẨN ĐOÁN HÌNH ẢNH"
   },
   api: {
     notification: {
@@ -449,7 +450,11 @@ module.exports = {
       getListCountry: isofhcare_service + "profile/get-countries",
       getListProvince: isofhcare_service + "province/get-all",
       getListDistrict: isofhcare_service + "profile/get-districts",
-      getListZone: isofhcare_service + "profile/get-zone-by-district"
+      getListZone: isofhcare_service + "profile/get-zone-by-district",
+      getAllCountry: isofhcare_service + 'country/get-all',
+      districtGetByProvince: isofhcare_service + 'district/get-by-province',
+      zoneGetByDistrict: isofhcare_service + 'zone/get-by-district',
+      getAllProvince: isofhcare_service + "province/get-all",
     },
     upload: {
       image: isofhcare_service + "upload/image"
@@ -524,7 +529,8 @@ module.exports = {
     },
     advertise: {
       create: isofhcare_service + "advertise/create",
-      search: isofhcare_service + "advertise/search"
+      search: isofhcare_service + "advertise/search",
+      get_list_banner: isofhcare_service + "advertise/list-banner",
     },
     hospital: {
       get_all: isofhcare_service + "hospital/get-all",
@@ -533,12 +539,19 @@ module.exports = {
       get_hospital_by_search: isofhcare_service + "hospital/search",
       get_by_location: isofhcare_service + "hospital/get-hospital-by-locate",
       get_default_hospital: isofhcare_service + 'hospital/get-default-hospital',
-      get_details_hospital: isofhcare_service + 'hospital/get-detail'
+      get_details_hospital: isofhcare_service + 'hospital/get-detail',
+      get_hospital_by_location: isofhcare_service + 'hospital/list-hospital-top-location'
     },
     profile: {
       get_by_user: isofhcare_service + "profile/get-by-user",
       get_details_user: isofhcare_service + '/user/get-detail',
-      get_profile_family: isofhcare_service + 'booking/get-group-patient-history'
+      get_profile_family: isofhcare_service + 'booking/get-group-patient-history',
+      get_list_profile: isofhcare_service + 'profile/get-list-profile',
+      delete_family_profile: isofhcare_service + 'profile/delete',
+      create_profile: isofhcare_service + 'profile/create-family-profile',
+      update_profile: isofhcare_service + 'profile/update-profile',
+      update_cover: isofhcare_service + 'user/update-cover',
+      update_avatar: isofhcare_service + 'user/update-avatar'
     },
     serviceType: {
       get_all: isofhcare_service + "service-type/get-all"
@@ -568,7 +581,12 @@ module.exports = {
       get_group_patient: isofhcare_service + 'booking/get-group-patient-history',
       update_data_user: isofhcare_service + 'patient-history-booking/update-data-note',
       search_profile_user: isofhcare_service + 'user/search',
-      share_with_profile: isofhcare_service + 'booking/share-user',
+      share_with_profile: isofhcare_service + 'booking/share-user'
+    },
+    home: {
+      get_list_drug: isofhcare_service + '/medicine/list-medicine-top',
+      get_list_news: isofhcare_service + 'news/list-news-top',
+      get_list_hospital_top_rate: isofhcare_service + 'hospital/list-hospital-top-rate'
     }
   }
 };

@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
 // import specialistProvider from '@data-access/specialist-provider';
 import symptomProvider from '@data-access/symptom-provider'
-import ItemFacility from '@components/facility/ItemFacility';
 import * as Animatable from 'react-native-animatable';
 import Dash from 'mainam-react-native-dash-view';
 import { Card } from 'native-base';

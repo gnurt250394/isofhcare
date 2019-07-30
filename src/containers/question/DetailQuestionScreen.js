@@ -154,7 +154,7 @@ class DetailQuestionScreen extends Component {
         })
     }
     onNavigateDetails = (item) => {
-        item.user && item.user.id != this.props.userApp.currentUser.id ? this.props.navigation.navigate('detailsDoctorScreen', {
+        item.user && item.user.id != this.props.userApp.currentUser.id ? this.props.navigation.navigate('detailsDoctor', {
             id: this.state.post.assignee.id
         }) : this.props.navigation.navigate('detailsProfile', {
             id: item.user.id

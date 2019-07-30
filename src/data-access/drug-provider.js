@@ -41,5 +41,30 @@ module.exports = {
             if (callback)
                 callback(s, e);
         });
+    },
+    getListDrug(requestApi) {
+        return new Promise((resolve, reject) => {
+            if (!requestApi) {
+                datacacheProvider.readPromise("", constants.key.storage.DATA_TOP_DRUG).then(s => {
+                    this.getListDrug(true);
+                    resolve(s);
+                }).catch(e => {
+                    this.getListDrug(true).then(s => {
+                        resolve(s);
+                    }).catch(e => {
+                        reject([]);
+                    })
+                });
+            }
+            else {
+                client.requestApi("get", constants.api.home.get_list_drug, {}, (s, e) => {
+                    if (s && s.code == 0 && s.data && s.data.medicines ) {
+                        datacacheProvider.save("", constants.key.storage.DATA_TOP_DRUG, s.data.medicines);
+                        resolve(s.data.medicines);
+                    }
+                    reject([]);
+                });
+            }
+        });
     }
 }
