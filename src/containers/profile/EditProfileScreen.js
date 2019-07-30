@@ -30,7 +30,7 @@ class EditProfileScreen extends Component {
             isGender: false,
             genderUser: [{ gender: "Nam", value: 1 }, { gender: "Nữ", value: 0 }],
             toggelDateTimePickerVisible: false,
-            valueGender: 2,
+            gender: 2,
             txGender: '',
             name: '',
             email: "",
@@ -56,7 +56,7 @@ class EditProfileScreen extends Component {
             name: data.name ? data.name : '',
             date: data && data.dob ? data.dob.toDateObject('-').format('dd/MM/yyyy') : (''),
             txGender: data.gender == 1 ? 'Nam' : 'Nữ',
-            valueGender: data.gender,
+            gender: data.gender,
             dobOld: data.dob ? data.dob : '',
             height: data.height ? data.height.toString() : '',
             weight: data.weight ? data.weight.toString() : '',
@@ -92,14 +92,14 @@ class EditProfileScreen extends Component {
                 case 0:
                     this.setState(
                         {
-                            valueGender: 1,
+                            gender: 1,
                             txGender: 'Nam'
                         });
                     return;
                 case 1:
                     this.setState(
                         {
-                            valueGender: 0,
+                            gender: 0,
                             txGender: 'Nữ'
                         });
                     return;
@@ -192,18 +192,17 @@ class EditProfileScreen extends Component {
                         let type = this.state.type
                         let id = this.state.id
                         let phone = this.state.phone
-                        let idProvince = this.state.provinces ? this.state.provinces.id : ''
-                        let idDistrics = this.state.districts ? this.state.districts.id : ''
-                        let idZone = this.state.zone ? this.state.zone.id : ''
+                        let idProvince = this.state.provinces ? this.state.provinces.id.toString() : null
+                        let idDistrics = this.state.districts ? this.state.districts.id.toString() : null
+                        let idZone = this.state.zone ? this.state.zone.id.toString() : null
                         let data = {
                             "name": name,
-                            "dob": dob ? dob.toDateObject().format('yyyy-MM-dd') + ' 00:00:00' : dobOld,
+                            "dob": dob ? dob.format('yyyy-MM-dd') + ' 00:00:00' : dobOld,
                             "profileNo": profileNo,
-                            "gender": gender ? gender : null,
+                            "gender": gender  ? gender : 0,
                             "height": height ? Number(height) : null,
                             "weight": weight ? Number(weight) : null,
                             "phone": phone,
-                            "countryId": '',
                             "provinceId": idProvince,
                             "districtId":idDistrics,
                             "zoneId": idZone,
@@ -767,7 +766,6 @@ const styles = StyleSheet.create({
     },
     errorStyle: {
         color: "red",
-        marginTop: 10,
         marginLeft: 13
     },
     textInputStyle: {

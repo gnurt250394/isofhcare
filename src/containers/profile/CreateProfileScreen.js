@@ -792,7 +792,6 @@ const styles = StyleSheet.create({
     },
     errorStyle: {
         color: "red",
-        marginTop: 10,
         marginLeft: 13
     },
     textInputStyle: {

@@ -49,6 +49,7 @@ export default class ProfileScreen extends Component {
                 imgAvtLocal: this.props.navigation.state.params.data.avatar ? this.props.navigation.state.params.data.avatar.absoluteUrl() : '',
                 imgLocal: this.props.navigation.state.params.data.cover ? this.props.navigation.state.params.data.cover.absoluteUrl() : '',
             })
+            console.log( nextProps.navigation.state.params.data,'xvideos')
         }
     }
     selectImage = () => {
@@ -312,9 +313,9 @@ export default class ProfileScreen extends Component {
                         </View>
                     </View>
                     <View style={styles.btnFeature}>
-                        <ScaledImage height={20} style={{ tintColor: '#fff' }} source={require('@images/new/profile/ic_account.png')}></ScaledImage>
-                        <Text style={[styles.txFeature, this.state.value == 1 ? {} : {}]} >Thông tin cá nhân</Text>
-                        <View style={{ width: 1 }}></View>
+                      <View><ScaledImage height={20} style={{ tintColor: '#fff',}} source={require('@images/new/profile/ic_account.png')}></ScaledImage></View>
+                        <Text style={[styles.txFeature]} >Thông tin cá nhân</Text>
+                        <View style={{ width: 20 }}></View>
                     </View>
                     {/* <TouchableOpacity onPress={() => this.onSelectFeature(2)} style={[styles.btnFeature, this.state.value == 2 ? { backgroundColor: '#4BBA7B' } : { backgroundColor: '#fff' }]}>
                             <ScaledImage height={20} style={this.state.value == 2 ? { tintColor: '#fff' } : { tintColor: '#4BBA7B' }} source={require('@images/new/profile/ic_deal_write.png')}></ScaledImage>
@@ -335,22 +336,23 @@ export default class ProfileScreen extends Component {
                             <Text><Text style={styles.txLabel}>ID: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.profileNoID ? this.state.data.profileNoID : ''}</Text></Text>
                         </View> */}
                         <View style={styles.viewItem}>
-                            <Text><Text style={styles.txLabel}>Giới tính: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.gender ? (this.state.data.gender == 1 ? 'Nam' : 'Nữ') : ''}</Text></Text>
+                            <Text><Text style={styles.txLabel}>Giới tính: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.gender || this.state.data.gender == 0 ? (this.state.data.gender == 0 ? 'Nữ' : 'Nam') : ''}</Text></Text>
                         </View>
                         <View style={[styles.viewItem, {}]}>
-                            <Text><Text style={styles.txLabel}>Chiều cao: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.height ? this.state.data.height : ''}</Text></Text>
-                            <Text style={[styles.txLabel]}>Cân nặng: <Text style={{ color: '#000' }}>{this.state.data && this.state.data.weight ? this.state.data.weight : ''}</Text></Text>
+                            <Text><Text style={styles.txLabel}>Chiều cao: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.height ? this.state.data.height : ''} cm</Text></Text>
+                            <Text style={[styles.txLabel]}>Cân nặng: <Text style={{ color: '#000' }}>{this.state.data && this.state.data.weight ? this.state.data.weight : ''} kg</Text></Text>
                             <View style={{ width: 20 }}></View>
                         </View>
                         <View style={styles.viewItem}>
-                            <Text><Text style={styles.txLabel}>Chỉ số BMI: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.bmi ? this.state.data.bmi : ''}</Text></Text>
+                            <Text><Text style={styles.txLabel}>Chỉ số BMI: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.height && this.state.data.weight ? parseFloat(this.state.data.weight/(Math.pow(this.state.data.height/100,2))).toFixed(1) : ''}</Text></Text>
                         </View>
                         <View style={styles.viewItem}>
-                            <Text><Text style={styles.txLabel}>Số điện thoại: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.phone ? this.state.data.phone : ''}</Text></Text>
+                            <Text><Text style={styles.txLabel}>Số điện thoại: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.phone ? this.state.data.phone.replace(/(\d\d\d\d)(\d\d\d)(\d\d\d)/, '$1.$2.$3') : ''}</Text></Text>
                         </View>
                         <View style={styles.viewItem}>
                             <Text><Text style={styles.txLabel}>Địa chỉ: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.address ? this.state.data.address : ''}</Text></Text>
                         </View>
+                        <View style={{height:1,backgroundColor:'#4BBA7B'}}></View>
                     </View>
                     <TouchableOpacity onPress={() => this.props.navigation.navigate('createProfile')} style={styles.btn}><Text style={styles.txBtn}>Thêm thành viên</Text></TouchableOpacity>
                 </ScrollView>
@@ -367,7 +369,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     scaledImage: { position: "absolute", top: 5, right: 5 },
-    btnFeature: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#4BBA7B', justifyContent: 'space-around', borderRadius: 5, borderColor: '#4BBA7B', paddingHorizontal: 2, paddingVertical: 10, marginHorizontal: 10, marginTop: 30 },
+    btnFeature: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#4BBA7B',justifyContent:'space-around', borderRadius: 5, borderColor: '#4BBA7B',  paddingVertical: 10, marginHorizontal: 10, marginTop: 30 },
     imageStyle: { borderRadius: 60, borderWidth: 2, borderColor: '#Fff' },
     customImagePlace: {
         width: 120,
@@ -376,7 +378,7 @@ const styles = StyleSheet.create({
     },
     styleImgLoad: { width: 120, height: 120, },
     avtBtn: {
-        position: 'absolute', top: 50
+        position: 'absolute', top: 50,
     },
     scaledImageAvt: { position: "absolute", bottom: 0, right: 0 },
     txTitle: { color: '#fff', textAlign: 'left', marginHorizontal: 10, },
@@ -397,11 +399,14 @@ const styles = StyleSheet.create({
         marginVertical: 10,
     },
     txLabel: {
-        color: '#4BBA7B'
+        color: '#4BBA7B',
+        fontSize:14
     },
     txContent: {
         marginLeft: 5,
-        color: '#000'
+        color: '#000',
+        fontSize:14
+
     },
     imgBaner: {
         width: '100%',
@@ -425,7 +430,8 @@ const styles = StyleSheet.create({
 
     txFeature: {
         textAlign: 'center',
-        color: '#FFF'
+        color: '#FFF',
+        fontSize:18
     },
     txBtn: { color: '#fff' },
 
