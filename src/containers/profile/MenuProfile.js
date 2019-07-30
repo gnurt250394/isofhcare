@@ -75,10 +75,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginLeft: 30,
     padding:10,
-    marginBottom: 20,
+    // justifyContent:'center',
+    alignItems:'center',
+    marginBottom: 10,
   },
   txDrawer: {
-    marginLeft: 10
+    marginLeft: 10,
+    fontSize:18
   },
   txHello: {
     color: '#fff',
