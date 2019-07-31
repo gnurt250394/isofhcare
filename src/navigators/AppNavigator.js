@@ -127,7 +127,9 @@ const LoginNavigation = createStackNavigator({
   enterPassword: { screen: EnterPasswordScreen },
   register: { screen: RegisterScreen },
   notification: { screen: NotificationScreen },
-  ehealth: { screen: EHealthNavigator }
+  ehealth: { screen: EHealthNavigator },
+  addBooking: { screen: BookingNavigation },
+  listQuestion: { screen: QuestionNavigation },
 },
   {
     headerMode: "none",
