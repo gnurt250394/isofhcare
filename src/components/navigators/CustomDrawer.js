@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Linking, Platform
 import React from 'react';
 import { DrawerItems } from 'react-navigation';
 import { connect } from "react-redux";
+import snackbar from '@utils/snackbar-utils';
 
 class CustomDrawer extends React.Component {
   constructor(props) {
