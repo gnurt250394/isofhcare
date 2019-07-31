@@ -92,6 +92,15 @@ import SpecialistScreen from "@containers/specialist/SpecialistScreen";
 import ConfirmCodeScreen from "@containers/account/ConfirmCodeScreen";
 import ResetPasswordScreen from "@containers/account/ResetPasswordScreen";
 
+const navigationOption = {
+  headerMode: "none",
+  header: null,
+  gesturesEnabled: false,
+  navigationOptions: {
+    header: null,
+    gesturesEnabled: false
+  }
+}
 const BookingNavigation = createStackNavigator({
   addBooking: { screen: AddBookingScreen },
   selectHospital: { screen: SelectHospitalScreen },
@@ -109,16 +118,24 @@ const BookingNavigation = createStackNavigator({
   filterSpecialist: { screen: FilterSpecialistScreen },
   selectProfile: { screen: SelectProfileScreen },
 },
-  {
-    headerMode: "none",
-    header: null,
-    gesturesEnabled: false,
-    navigationOptions: {
-      header: null,
-      gesturesEnabled: false
-    }
-  })
+  navigationOption)
+const QuestionNavigation = createStackNavigator({
+  listQuestion: { screen: ListQuestionScreen },
+  createQuestionStep1: { screen: CreateQuestionStep1Screen },
+  createQuestionStep2: { screen: CreateQuestionStep2Screen },
+  detailQuestion: { screen: DetailQuestionScreen },
+  detailsProfile: { screen: ProfileInfo },
+  detailsDoctor: { screen: DetailsDoctorScreen },
+},
+  navigationOption)
 
+const NotificationNavigation = createStackNavigator({
+  notification: {
+    screen: NotificationScreen
+  },
+  login: { screen: LoginScreen },
+},
+  navigationOption)
 const LoginNavigation = createStackNavigator({
   login: { screen: LoginScreen },
   forgotPassword: { screen: ForgotPasswordScreen },
@@ -126,20 +143,12 @@ const LoginNavigation = createStackNavigator({
   resetPassword: { screen: ResetPasswordScreen },
   enterPassword: { screen: EnterPasswordScreen },
   register: { screen: RegisterScreen },
-  notification: { screen: NotificationScreen },
+  notification: { screen: NotificationNavigation },
   ehealth: { screen: EHealthNavigator },
   addBooking: { screen: BookingNavigation },
   listQuestion: { screen: QuestionNavigation },
 },
-  {
-    headerMode: "none",
-    header: null,
-    gesturesEnabled: false,
-    navigationOptions: {
-      header: null,
-      gesturesEnabled: false
-    }
-  })
+  navigationOption)
 const ProfileNavigation = createStackNavigator({
   selectProfile: SelectProfileScreen,
   createProfile: CreateProfileScreen,
@@ -150,15 +159,7 @@ const ProfileNavigation = createStackNavigator({
   selectZone: { screen: SelectZoneScreen },
   profile: { screen: ProfileScreen },
 },
-  {
-    headerMode: "none",
-    header: null,
-    gesturesEnabled: false,
-    navigationOptions: {
-      header: null,
-      gesturesEnabled: false
-    }
-  })
+  navigationOption)
 const GetTicketNavigation = createStackNavigator({
   selectHealthFacilitiesScreen: { screen: SelectHealthFacilitiesScreen },
   selectProfileMedical: { screen: SelectProfileMedicalScreen },
@@ -166,47 +167,14 @@ const GetTicketNavigation = createStackNavigator({
   getTicketFinish: { screen: GetTicketFinishScreen },
   confirmGetTicket: { screen: ConfirmGetTicketScreen },
 },
-  {
-    headerMode: "none",
-    header: null,
-    gesturesEnabled: false,
-    navigationOptions: {
-      header: null,
-      gesturesEnabled: false
-    }
-  })
-const QuestionNavigation = createStackNavigator({
-  listQuestion: { screen: ListQuestionScreen },
-  createQuestionStep1: { screen: CreateQuestionStep1Screen },
-  createQuestionStep2: { screen: CreateQuestionStep2Screen },
-  detailQuestion: { screen: DetailQuestionScreen },
-  detailsProfile: { screen: ProfileInfo },
-  detailsDoctor: { screen: DetailsDoctorScreen },
-},
-  {
-    headerMode: "none",
-    header: null,
-    gesturesEnabled: false,
-    navigationOptions: {
-      header: null,
-      gesturesEnabled: false
-    }
-  })
+  navigationOption)
 
 const HomeNavigation = createStackNavigator({
   home: {
     screen: HomeScreen
   },
 },
-  {
-    headerMode: "none",
-    header: null,
-    gesturesEnabled: false,
-    navigationOptions: {
-      header: null,
-      gesturesEnabled: false
-    }
-  })
+  navigationOption)
 
 const AccountTabNavigation = createStackNavigator({
   menuScreen: {
@@ -216,36 +184,7 @@ const AccountTabNavigation = createStackNavigator({
     screen: LoginNavigation
   }
 },
-  {
-    headerMode: "none",
-    header: null,
-    gesturesEnabled: false,
-    navigationOptions: {
-      header: null,
-      gesturesEnabled: false
-    }
-  })
-const NotificationNavigation = createStackNavigator({
-  notification: {
-    screen: NotificationScreen
-  },
-  login: {
-    screen: LoginNavigation
-  }
-},
-  {
-    headerMode: "none",
-    header: null,
-    gesturesEnabled: false,
-    navigationOptions: {
-      header: null,
-      gesturesEnabled: false
-    }
-  })
-
-
-
-
+  navigationOption)
 
 
 class TabNavigatorComponent extends React.Component {
