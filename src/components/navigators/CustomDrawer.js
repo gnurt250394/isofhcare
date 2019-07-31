@@ -1,5 +1,5 @@
 import ScaledImage from "mainam-react-native-scaleimage";
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Linking } from 'react-native'
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Linking, Platform } from 'react-native'
 import React from 'react';
 import { DrawerItems } from 'react-navigation';
 import { connect } from "react-redux";
@@ -7,6 +7,13 @@ import { connect } from "react-redux";
 class CustomDrawer extends React.Component {
   constructor(props) {
     super(props)
+  }
+  ratingApp = () => {
+    if (Platform.OS == 'android') {
+      Linking.openURL('market://details?id=com.isofh.isofhcare');
+    } else {
+      Linking.openURL('itms://itunes.apple.com/us/app/apple-store/id1428148423?mt=8');
+    }
   }
 
   render() {
@@ -18,21 +25,24 @@ class CustomDrawer extends React.Component {
             <View style={styles.viewInfo}>
               <Text style={styles.txHello}>Xin Chào</Text>
               <Text style={styles.txName}>{this.props.userApp.currentUser.name && this.props.userApp.currentUser.name}</Text>
-              <Text style={styles.txId}>Id Here</Text>
             </View>
           </View>
         ) : (<View></View>)}
 
         <ScaledImage source={require('@images/new/home/ic_drawer_logo.png')} style={[styles.imgLogo, this.props.userApp.isLogin ? {} : { marginVertical: 50 }]} height={80}></ScaledImage>
         {/* <DrawerItems></DrawerItems> */}
-        <View style={styles.viewDrawer}>
+        <TouchableOpacity onPress={() => {
+          snackbar.show("Chức năng đang phát triển");
+        }} style={styles.viewDrawer}>
           <ScaledImage height={25} source={require('@images/new/home/ic_qr.png')} />
           <Text style={styles.txDrawer}>Quét mã đơn thuốc</Text>
-        </View>
-        <View style={styles.viewDrawer}>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => {
+          snackbar.show("Chức năng đang phát triển");
+        }} style={styles.viewDrawer}>
           <ScaledImage height={25} source={require('@images/new/home/ic_help.png')} />
           <Text style={styles.txDrawer}>Hỗ trợ</Text>
-        </View>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.viewDrawer}
           onPress={() => {
             Linking.openURL(
@@ -49,9 +59,7 @@ class CustomDrawer extends React.Component {
           <ScaledImage height={25} source={require('@images/new/home/ic_rules.png')} />
           <Text style={styles.txDrawer}>Điều khoản sử dụng</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => {
-          this.props.navigation.navigate("")
-        }} style={styles.viewDrawer}>
+        <TouchableOpacity onPress={this.ratingApp} style={styles.viewDrawer}>
           <ScaledImage height={25} source={require('@images/new/home/ic_rate.png')} />
           <Text style={styles.txDrawer}>Đánh giá Isofhcare</Text>
         </TouchableOpacity>
