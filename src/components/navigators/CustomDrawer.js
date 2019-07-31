@@ -1,5 +1,5 @@
 import ScaledImage from "mainam-react-native-scaleimage";
-import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from 'react-native'
+import { StyleSheet, View, Text, ScrollView, TouchableOpacity, Linking } from 'react-native'
 import React from 'react';
 import { DrawerItems } from 'react-navigation';
 import { connect } from "react-redux";
