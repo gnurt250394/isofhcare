@@ -15,6 +15,7 @@ import ehealthProvider from '@data-access/ehealth-provider'
 import ExportPDF from '@components/ehealth/ExportPDF';
 import firebase from 'react-native-firebase';
 import connectionUtils from '@utils/connection-utils';
+import ScaledImage from 'mainam-react-native-scaleimage';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 LocaleConfig.locales['en'] = {
@@ -565,32 +566,26 @@ class ListProfileScreen extends Component {
                             firstDay={1}
                             markedDates={this.state.histories}
                         />
-                        <TouchableOpacity onPress={this.viewResult.bind(this)} style={styles.viewBtn}>
+                        <TouchableOpacity onPress={this.viewResult.bind(this)} style={[styles.viewBtn,{backgroundColor:'#25B05F'}]}>
                             <Text style={styles.txCheckResult}>{constants.ehealth.checkupResult}</Text>
                         </TouchableOpacity>
+                        <View style={{alignItems:'center'}}>
+                        <View style = {{paddingHorizontal:20}}><ScaledImage height={100}  source = {require('@images/new/ehealth/ic_preclinical.png')}></ScaledImage></View>
+                        <Card style={[styles.viewBTnSuggest]}>
+                            <TouchableOpacity onPress={this.onShareEhealth} style={[styles.btnReExamination, { backgroundColor: '#109CF1', }]}>
+                                <Text style={styles.txReExamination}>{constants.ehealth.share_ehealth}</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={[styles.btnReExamination, { backgroundColor: '#707683', }]}>
+                                <Text style={styles.txReExamination}>{'Lịch sử chia sẻ'}</Text>
+                            </TouchableOpacity>
+
+                        </Card>
+                        </View>
+                        <TouchableOpacity onPress={this.onPressAppointment} style={styles.viewBtn}>
+                            <Text style={styles.txCheckResult}>{'LỊCH TÁI KHÁM'}</Text>
+                        </TouchableOpacity>
                         <Card style={styles.cardView}>
-                            <View style={styles.viewSuggest}>
-                                <View style={styles.viewLine}></View>
-                                <TextInput onBlur={this.onBlur} multiline={true} onChangeText={s => {
-                                    this.setState({ suggestions: s })
-                                }} value={this.state.suggestions} underlineColorAndroid={'#fff'} style={styles.inputSuggest} placeholder={'Bạn cần làm gì?'}></TextInput>
-                            </View>
-                            <Text style={styles.txSuggest}>{constants.ehealth.suggestion}</Text>
-                            <View style={styles.viewBTnSuggest}>
-                                <TouchableOpacity onPress={this.onPressAppointment} style={[styles.btnReExamination, { backgroundColor: '#4CD565', }]}>
-                                    <Text style={styles.txReExamination}>{constants.ehealth.re_examination}</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={this.onShareEhealth} style={[styles.btnReExamination, { backgroundColor: '#2E66E7', }]}>
-                                    <Text style={styles.txReExamination}>{constants.ehealth.share_ehealth}</Text>
-                                </TouchableOpacity>
-                            </View>
-                            <View style={styles.viewBorder} />
-                            <View>
-                                <Text style={styles.txLabel}>{constants.ehealth.note}</Text>
-                                <TextInput onBlur={this.onBlur} multiline={true} onChangeText={s => {
-                                    this.setState({ note: s })
-                                }} value={this.state.note} underlineColorAndroid={'#fff'} style={[styles.txContent,]} placeholder={'Nhập ghi chú'}></TextInput>
-                            </View>
+
                             <View>
                                 <Text style={styles.txLabel}>{constants.ehealth.clock}</Text>
                                 <TouchableOpacity onPress={this.onPressTime}><Text style={styles.txContent}>{this.state.date ? (new Date().format("dd/MM/yyyy") + " " + this.state.date).toDateObject('/').format('HH:mm') : 'Chọn giờ'}</Text>
@@ -606,6 +601,18 @@ class ListProfileScreen extends Component {
                                     false: "purple",
                                 }}
                                     value={this.state.switchValue} ></Switch>
+                            </View>
+                            <View>
+                                <Text style={styles.txLabel}>{constants.ehealth.note}</Text>
+                                <TextInput onBlur={this.onBlur} multiline={true} onChangeText={s => {
+                                    this.setState({ note: s })
+                                }} value={this.state.note} underlineColorAndroid={'#fff'} style={[styles.txContent,]} placeholder={'Nhập ghi chú'}></TextInput>
+                            </View>
+                            <View style={styles.viewSuggest}>
+                                <View style={styles.viewLine}></View>
+                                <TextInput onBlur={this.onBlur} multiline={true} onChangeText={s => {
+                                    this.setState({ suggestions: s })
+                                }} value={this.state.suggestions} underlineColorAndroid={'#fff'} style={styles.inputSuggest} placeholder={'Bạn cần làm gì?'}></TextInput>
                             </View>
                         </Card>
                     </View>
@@ -706,7 +713,7 @@ const styles = StyleSheet.create({
         height: 50,
         borderRadius: 5,
         marginVertical: 20,
-        backgroundColor: '#27AE60',
+        backgroundColor: '#F7685B',
         justifyContent: 'center',
         alignItems: 'center'
     },
@@ -719,14 +726,16 @@ const styles = StyleSheet.create({
         padding: 25,
     },
     viewLine: {
-        backgroundColor: '#4CD565',
-        height: '100%',
-        width: 1
+        backgroundColor: '#373A3C',
+        width: 1,
+        height: 30
     },
     viewBTnSuggest: {
         flexDirection: 'row',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        paddingVertical:20,
+        paddingHorizontal:40
     },
     btnReExamination: {
         padding: 2, borderRadius: 3, marginRight: 5, marginVertical: 10, paddingHorizontal: 5
@@ -736,7 +745,7 @@ const styles = StyleSheet.create({
         fontSize: 15
     },
     txContent: {
-        color: '#554a4c',
+        color: '#FF5444',
         marginTop: 5, marginBottom: 25,
     },
     txPopUp: { textAlign: 'center', marginVertical: 20, marginHorizontal: 10 },
@@ -750,7 +759,7 @@ const styles = StyleSheet.create({
     viewCalendar: { justifyContent: 'center', flex: 1, alignItems: 'center' },
     calendarStyle: { marginBottom: 3, backgroundColor: "#FFF", width: '100%' },
     txCheckResult: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
-    viewSuggest: { flexDirection: 'row', marginVertical: 10, },
+    viewSuggest: { flexDirection: 'row', marginVertical: 10, alignItems: 'center' },
     inputSuggest: { marginLeft: 5, color: '#9caac4', fontSize: 18, width: '95%' },
     txSuggest: { color: '#bdc6d8', fontSize: 15 },
     txReExamination: { color: '#fff', padding: 2 },
