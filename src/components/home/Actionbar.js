@@ -2,17 +2,17 @@ import React, { Component, PropTypes } from 'react';
 import { View, StyleSheet, TouchableOpacity, TextInput, Text } from 'react-native';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import ShoppingCart from '@components/home/ShoppingCart';
+import { connect } from "react-redux";
+import { DrawerActions } from 'react-navigation';
 class ActionBar extends Component {
     constructor(props) {
         super(props)
     }
 
-    
-
     render() {
         return (
             <View style={styles.containner}>
-                <TouchableOpacity onPress = {this.props.openDrawer} style={styles.button_menu}>
+                <TouchableOpacity onPress={() => this.props.navigation.dispatch(DrawerActions.openDrawer())} style={styles.button_menu}>
                     <ScaledImage source={require("@images/new/home/ic_menu.png")} width={30} />
                 </TouchableOpacity>
                 <View style={styles.search_panel}>
@@ -71,4 +71,9 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     }
 });
-export default ActionBar;
+function mapStateToProps(state) {
+    return {
+        navigation: state.navigation
+    };
+}
+export default connect(mapStateToProps)(ActionBar);
