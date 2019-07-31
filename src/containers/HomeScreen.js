@@ -90,9 +90,6 @@ class HomeScreen extends Component {
   handleScroll = (event) => {
 
   }
-  openDrawer = () => {
-    this.props.navigation.openDrawer()
-  }
   onRefresh = () => {
     this.setState({
       refreshing: true,
@@ -112,7 +109,7 @@ class HomeScreen extends Component {
         hideActionbar={true}
       >
         <View style={{ flex: 1 }}>
-          <Actionbar openDrawer={this.openDrawer} />
+          <Actionbar/>
           <View style={{ position: 'relative' }}>
             <View style={{ height: 150, backgroundColor: '#4BBA7B', position: "absolute", top: 0, left: 0, right: 0 }}></View>
             <ScrollView
