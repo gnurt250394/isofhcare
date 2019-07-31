@@ -64,8 +64,12 @@ class ListProfileScreen extends PureComponent {
                             <Text style={styles.txLastTime}>{constants.ehealth.lastTime2}{item.latestTime ? item.latestTime.toDateObject('-').format('dd/MM/yyyy') : ''}</Text>
                         </View>
                     </View>
+                    <View style={styles.viewTime}>
+                        <ScaleImage resizeMode='cover' source={require("@images/new/ehealth/ic_timer.png")} width={20} tintColor={'#8fa1aa'} />
+                        <Text style={styles.txLastTime}>{constants.ehealth.lastTime2}{item.latestTime ? item.latestTime.toDateObject('-').format('dd/MM/yyyy') : ''}</Text>
+                    </View>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.txCountTime} onPress={() => this.props.navigation.navigate('historyTime')} >
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('historyTime', { countTime: item.countTime })} style={styles.txCountTime}>
                     <Text style={styles.txCount}>{item.countTime}</Text>
                     <Text>{constants.ehealth.time}</Text>
                 </TouchableOpacity>
