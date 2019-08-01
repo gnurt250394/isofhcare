@@ -5,65 +5,79 @@ import ScaledImage from 'mainam-react-native-scaleimage';
 import ActivityPanel from '@components/ActivityPanel';
 import { connect } from 'react-redux';
 import ImageLoad from 'mainam-react-native-image-loader';
-const width = (Dimensions.get('window').width - 4 * 10) / 2;
+const width = (Dimensions.get('window').width) / 2;
 const spacing = 10;
+import dateUtils from 'mainam-react-native-date-utils';
+import resultUtils from './utils/result-utils';
+import snackbar from '@utils/snackbar-utils';
+import constants from '@resources/strings';
+
 class HistoryTimeScreen extends Component {
     constructor(props) {
         super(props);
+        let countTime = this.props.navigation.state.params && this.props.navigation.state.params.countTime ? this.props.navigation.state.params.countTime : ''
+        let item = this.props.navigation.state.params && this.props.navigation.state.params.item || {};
+
         this.state = {
-            data: [{
-                date: '15/07/2019',
-                name: 'Khám cận lâm sàng',
-                type: 1
-            }, {
-                date: '15/07/2019',
-                name: 'Khám cận lâm sàng',
-                type: 2
-            }, {
-                date: '15/07/2019',
-                name: 'Khám cận lâm sàng',
-                type: 4
-            }, {
-                date: '15/07/2019',
-                name: 'Khám cận lâm sàng',
-                type: 5
-            }, {
-                date: '15/07/2019',
-                name: 'Khám cận lâm sàng',
-                type: 7
-            }],
-            countTime: ''
+            data: item.history || [],
+            countTime: countTime
         };
     }
-    componentWillMount() {
-        let countTime = this.props.navigation.state.params && this.props.navigation.state.params.countTime ? this.props.navigation.state.params.countTime : ''
-        this.setState({
-            countTime: countTime
-        })
-    }
+
     renderImg = (item) => {
         switch (item.type) {
             case 1:
-                return (<ScaledImage style={styles.img} style={{ borderRadius: 15 }} height={30} source={require('@images/new/ehealth/ic_peclinical.png')}></ScaledImage>)
+                return (<ScaledImage style={styles.img} style={{ borderRadius: 15 }} height={50} source={require('@images/new/ehealth/ic_peclinical.png')}></ScaledImage>)
             case 2:
-                return (<ScaledImage style={styles.img} height={30} source={require('@images/new/ehealth/ic_ct_scan.png')}></ScaledImage>)
+                return (<ScaledImage style={styles.img} height={50} source={require('@images/new/ehealth/ic_ct_scan.png')}></ScaledImage>)
             case 4:
-                return (<ScaledImage style={styles.img} height={30} source={require('@images/new/ehealth/ic_analysis.png')}></ScaledImage>)
+                return (<ScaledImage style={styles.img} height={50} source={require('@images/new/ehealth/ic_analysis.png')}></ScaledImage>)
             case 5:
-                return (<ScaledImage style={styles.img} height={30} source={require('@images/new/ehealth/ic_magnetic.png')}></ScaledImage>)
+                return (<ScaledImage style={styles.img} height={50} source={require('@images/new/ehealth/ic_magnetic.png')}></ScaledImage>)
             case 7:
-                return (<ScaledImage style={styles.img} height={30} source={require('@images/new/ehealth/ic_endoscopic.png')}></ScaledImage>)
+                return (<ScaledImage style={styles.img} height={50} source={require('@images/new/ehealth/ic_endoscopic.png')}></ScaledImage>)
+            default:
+                return (<ScaledImage style={styles.img} style={{ borderRadius: 15 }} height={50} source={require('@images/new/ehealth/ic_peclinical.png')}></ScaledImage>)
+
         }
+    }
+    getTime(text) {
+        try {
+            if (text) {
+                return text.toDateObject('-').format('dd/MM/yyyy');
+            }
+            return "";
+        } catch (error) {
+            return "";
+        }
+    }
+    viewResult = (item) => {
+        console.log(item);
+        this.setState({ isLoading: true }, () => {
+            resultUtils.getDetail(item.patientHistoryId, this.props.ehealth.hospital.hospital.id).then(result => {
+                this.setState({ isLoading: false }, () => {
+                    if (!result.hasResult)
+                        snackbar.show(constants.msg.ehealth.not_result_ehealth_in_day, "danger");
+                    else {
+                        this.props.navigation.navigate("viewDetail", { result: result.result, resultDetail: result.resultDetail })
+                    }
+                });
+            });
+        });
     }
     renderItem = ({ item }) => {
         return (
             <View style={styles.viewItem}>
                 <Card style={styles.cardStyle}>
-                    {this.renderImg(item)}
-                    <View style={styles.viewDetails}>
-                        <Text style={{ color: '#479AE3', marginVertical: 20, fontSize: 14 }}>{item.date}</Text>
-                        <Text style={{ fontSize: 14 }}>{item.name}</Text>
-                    </View>
+                    <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => {
+                        this.viewResult(item)
+                    }}>
+                        {this.renderImg(item)}
+                        <View style={styles.viewDetails}>
+                            <Text style={{ color: '#479AE3', marginVertical: 15, fontSize: 14 }}>{this.getTime(item.timeGoIn)}</Text>
+                            <Text style={{ fontSize: 14, minHeight: 20 }}>{item.serViceType}</Text>
+                        </View>
+                    </TouchableOpacity>
                 </Card>
             </View>
         )
@@ -74,30 +88,16 @@ class HistoryTimeScreen extends Component {
         return (
             <ActivityPanel style={styles.container}
                 // title="HỒ SƠ Y BẠ GIA ĐÌNH"
-                title={<Text style={{ fontSize: 18 }}>{'Lịch sử y bạ ('}<Text style={{ color: 'red' }}>{this.state.countTime} lần</Text>)</Text>}
+                isLoading={this.state.isLoading}
+                title={<Text style={{ color: '#FFF' }}>{'Lịch sử y bạ '}<Text style={{ color: '#b61827' }}>({this.state.countTime} lần)</Text></Text>}
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#22b060"
+                statusbarBackgroundColor="#4BBA7B"
                 actionbarStyle={styles.actionbarStyle}
-                menuButton={<TouchableOpacity style={styles.menu} >
-                    <ImageLoad
-                        resizeMode="cover"
-                        imageStyle={styles.imageStyle}
-                        borderRadius={15}
-                        customImagePlaceholderDefaultStyle={[styles.avatar, { width: 30, height: 30 }]}
-                        placeholderSource={require("@images/new/user.png")}
-                        resizeMode="cover"
-                        loadingStyle={{ size: 'small', color: 'gray' }}
-                        source={source}
-                        style={styles.imgLoad}
-                        defaultImage={() => {
-                            return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={30} height={30} />
-                        }}
-                    /></TouchableOpacity>}
                 titleStyle={styles.titleStyle}>
                 <FlatList
                     data={this.state.data}
-                    style={{ flex: 1, }}
+                    style={{ flex: 1 }}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={this.renderItem}
                     extraData={this.state}
@@ -124,21 +124,21 @@ const styles = StyleSheet.create({
         backgroundColor: '#F9FAFB'
     },
     cardStyle: {
-        width: width,
+        width: '100%',
         borderRadius: 5,
-        height: 140,
-        justifyContent: 'center',
         alignItems: 'center',
-
+        minHeight: 150,
+        paddingVertical: 10,
+        justifyContent: 'center',
     },
     viewItem: {
+        width: width,
+        padding: 5,
+        paddingHorizontal: 10,
+
         // , padding: 5, flex: 1 / 2, height: 180, marginTop: 20, 
         justifyContent: 'center', alignItems: 'center',
-        width: width,
-        marginHorizontal: 10,
-        marginVertical: 5,
-        height: 180,
-
+        width: width
     },
     viewDetails: {
         justifyContent: 'center',
@@ -149,6 +149,7 @@ const styles = StyleSheet.create({
 
     },
     actionbarStyle: {
+        backgroundColor: '#4BBA7B',
         borderBottomWidth: 0
     },
     imageStyle: { borderRadius: 30, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' },

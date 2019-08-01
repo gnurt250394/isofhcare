@@ -25,25 +25,6 @@ module.exports = {
             });
         });
     },
-    detailPatientHistory(patientHistoryId, hospitalId,id) {
-        let id2 = id ? `&id=${id}` : ''
-        return new Promise((resolve, reject) => {
-            client.requestApi(
-                "get",
-                constants.api.booking.get_detail_patient_historyid +
-                "/" +
-                patientHistoryId +
-                "?hospitalId=" +
-                hospitalId + id2,
-                {},
-                (s, e) => {
-                    if (s) resolve(s);
-                    else reject(e);
-                }
-            );
-        });
-    },
-
     search(page, size, queryString) {
         let active = 1
         let specialistId = -1

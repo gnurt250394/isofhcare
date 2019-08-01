@@ -11,7 +11,9 @@ import ActionSheet from 'react-native-actionsheet'
 import { Notification, NotificationOpen } from 'react-native-firebase';
 import DateTimePicker from "mainam-react-native-date-picker";
 import TextField from "mainam-react-native-form-validate/TextField";
-import ehealthProvider from '@data-access/ehealth-provider'
+import ehealthProvider from '@data-access/ehealth-provider';
+import bookingProvider from '@data-access/booking-provider';
+import resultUtils from './utils/result-utils';
 import ExportPDF from '@components/ehealth/ExportPDF';
 import firebase from 'react-native-firebase';
 import connectionUtils from '@utils/connection-utils';
@@ -55,7 +57,7 @@ class ListProfileScreen extends Component {
                 histories[dateSelected].selectedColor = '#27ae60';
             }
         }
-        console.log(histories,'historieshistories')
+        console.log(histories, 'historieshistories')
         this.state = {
             refreshing: false,
             data: [],
@@ -98,7 +100,7 @@ class ListProfileScreen extends Component {
             focus.selected = true;
         }
 
-        console.log(obj,'objobjobjobjobjobj')
+        console.log(obj, 'objobjobjobjobjobj')
         return obj;
     }
 
@@ -173,11 +175,11 @@ class ListProfileScreen extends Component {
 
     }
     onGetDetails = () => {
-        let lastDate = this.state.lastDate ? this.state.lastDate.toDateObject('-').format('dd/MM/yyyy') : null
-        let dateSelected = this.state.dateString ? this.state.dateString.toDateObject('-').format('dd/MM/yyyy') : null
-        let patientHistoryId = this.state.patient.patientHistoryId
-        let hospitalId = this.state.patient.hospitalEntity.id
-        ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId).then(res => {
+        let lastDate = this.state.lastDate ? this.state.lastDate.toDateObject('-').format('dd/MM/yyyy') : null;
+        let dateSelected = this.state.dateString ? this.state.dateString.toDateObject('-').format('dd/MM/yyyy') : null;
+        let patientHistoryId = this.state.patient.patientHistoryId;
+        let hospitalId = this.state.patient.hospitalEntity.id;
+        bookingProvider.detailPatientHistory(patientHistoryId, hospitalId).then(res => {
             let medicineTime = res.data.data.medicineTime ? (new Date().format("yyyy/MM/dd") + " " + res.data.data.medicineTime).toDateObject('/') : ''
             console.log(medicineTime, 'medicineTime')
             let time = res.data.data.time ? (new Date().format("yyyy/MM/dd") + " " + res.data.data.time).toDateObject('/') : ''
@@ -221,7 +223,7 @@ class ListProfileScreen extends Component {
             histories[day.dateString].selectedColor = '#27ae60'
             let patientHistoryId = histories[day.dateString].history.patientHistoryId
             let hospitalId = this.state.patient.hospitalEntity.id
-            ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId).then(res => {
+            bookingProvider.detailPatientHistory(patientHistoryId, hospitalId).then(res => {
                 let medicineTime = res.data.data.medicineTime ? (new Date().format("yyyy/MM/dd") + " " + res.data.data.medicineTime).toDateObject('/') : ''
                 let time = res.data.data.time ? (new Date().format("yyyy/MM/dd") + " " + res.data.data.time).toDateObject('/') : ''
                 this.setState({
@@ -295,7 +297,7 @@ class ListProfileScreen extends Component {
                 let medicineTime = this.state.dobAlarm ? this.state.dobAlarm.format('HH:mm:ss') : ''
                 let isMedicineTime = this.state.isMedicineTime ? 1 : 0
                 let histories = JSON.parse(JSON.stringify(this.state.histories));
-                
+
                 let id = this.state.dateSelected ? histories[this.state.dateSelected].history.id : histories[this.state.latestTime.format("yyyy-MM-dd")].history.id
                 ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
                 }).catch(err => {
@@ -402,57 +404,34 @@ class ListProfileScreen extends Component {
                 isLoading: true
             }, () => {
                 try {
-                    let patientHistoryId = this.state.histories[this.state.dateSelected].history.patientHistoryId
-
-                    let hospitalId = this.state.patient.hospitalEntity.id
-                    ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId).then(s => {
-                        let resultDetail = null;
-                        let result = null;
-                        if (s.data && s.data.data) {
-                            if (s.data.data.result) {
-                                try {
-                                    result = JSON.parse(s.data.data.result);
-                                } catch (error) {
-                                }
-                            }
-                            if (!result ||
-                                (
-                                    !(result.ListDiagnostic && result.ListDiagnostic.length) &&
-                                    !(result.ListMedicine && result.ListMedicine.length) &&
-                                    !(result.ListResulGiaiPhau && result.ListResulGiaiPhau.length) &&
-                                    !(result.ListResulHoaSinh && result.ListResulHoaSinh.length) &&
-                                    !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
-                                    !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
-                                    !(result.ListResulViSinh && result.ListResulViSinh.length) &&
-                                    !(result.ListResultCheckup && result.ListResultCheckup.length)
-
-                                )
-                            ) {
-                                throw "";
-                            }
-                            else {
-                                this.setState({
-                                    isLoading: false
-                                }, () => {
-                                    this.props.navigation.navigate("viewInDay", {
-                                        dateSelected: this.state.dateSelected
-                                    });
+                    let patientHistoryId = this.state.histories[this.state.dateSelected].history.patientHistoryId;
+                    let hospitalId = this.state.patient.hospitalEntity.id;
+                    resultUtils.getDetail(patientHistoryId, hospitalId).then(result => {
+                        this.setState({
+                            isLoading: false
+                        }, () => {
+                            if (result.hasResult) {
+                                this.props.navigation.navigate("viewInDay", {
+                                    dateSelected: this.state.dateSelected
                                 });
+                            } else {
+                                snackbar.show(this.renderTextError(6), "danger");
                             }
-                        }
+                        });
                     }).catch(err => {
                         this.setState({
                             isLoading: false
+                        }, () => {
+                            snackbar.show(this.renderTextError(6), "danger");
                         });
-                        snackbar.show(this.renderTextError(6), "danger");
                     })
                 } catch (error) {
                     this.setState({
                         isLoading: false,
+                    }, () => {
+                        snackbar.show(this.renderTextError(6), "danger");
                     });
-                    snackbar.show(this.renderTextError(6), "danger");
                 }
-
             });
         }).catch(e => {
             snackbar.show(constants.msg.app.not_internet, "danger");
@@ -472,50 +451,12 @@ class ListProfileScreen extends Component {
         this.setState({
             isLoading: true
         }, () => {
-
             try {
-                let patientHistoryId = this.state.histories[this.state.dateSelected].history.patientHistoryId
-                let hospitalId = this.state.patient.hospitalEntity.id
-                ehealthProvider.detailPatientHistory(patientHistoryId, hospitalId).then(s => {
-                    let resultDetail = null;
-                    let result = null;
-                    if (s.data && s.data.data) {
-                        if (s.data.data.resultDetail) {
-                            try {
-                                resultDetail = JSON.parse(s.data.data.resultDetail);
-                            } catch (error) {
-
-                            }
-                        }
-                        if (s.data.data.result) {
-                            try {
-                                result = JSON.parse(s.data.data.result);
-                            } catch (error) {
-
-                            }
-                        }
-                        // if (!result ||
-                        //     (
-                        //         !(result.ListDiagnostic && result.ListDiagnostic.length) &&
-                        //         !(result.ListMedicine && result.ListMedicine.length) &&
-                        //         !(result.ListResulGiaiPhau && result.ListResulGiaiPhau.length) &&
-                        //         !(result.ListResulHoaSinh && result.ListResulHoaSinh.length) &&
-                        //         !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
-                        //         !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
-                        //         !(result.ListResulViSinh && result.ListResulViSinh.length) &&
-                        //         !(result.ListResultCheckup && result.ListResultCheckup.length)
-
-                        //     )
-                        // ) {
-                        //     this.setState({
-                        //         isLoading: false,
-                        //         status: 6,
-                        //         isVisible: true
-                        //     });
-                        //     return;
-                        // }
-
-                        // if (result && resultDetail) {
+                let patientHistoryId = this.state.histories[this.state.dateSelected].history.patientHistoryId;
+                let hospitalId = this.state.patient.hospitalEntity.id;
+                resultUtils.getDetail(patientHistoryId, hospitalId).then(result => {
+                    if (result) {
+                        result = result.result;
                         result.hospital = this.props.ehealth.hospital.hospital;
                         this.exportPdfCom.getWrappedInstance().exportPdf({
                             type: "all",
@@ -524,10 +465,6 @@ class ListProfileScreen extends Component {
                         }, () => {
                             this.setState({ isLoading: false });
                         });
-                        // }
-                        // else {
-                        this.setState({ isLoading: false });
-                        // }
                     }
                     else {
                         this.setState({ isLoading: false });
@@ -538,7 +475,6 @@ class ListProfileScreen extends Component {
             } catch (error) {
                 this.setState({ isLoading: false });
             }
-
         });
     }
     render() {
@@ -548,7 +484,7 @@ class ListProfileScreen extends Component {
                 iosBarStyle={'dark-content'}
                 isLoading={this.state.isLoading}
                 iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#22b060"
+                statusbarBackgroundColor="#4BBA7B"
                 actionbarStyle={styles.actionbarStyle}
                 titleStyle={{
                     color: '#FFF'
@@ -556,35 +492,43 @@ class ListProfileScreen extends Component {
             >
                 <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
                     <View style={styles.viewCalendar}>
-                        <Calendar style={styles.calendarStyle}
-                            // markedDates={this.state.listSchedule}
-                            current={this.state.latestTime.format("yyyy-MM-dd")}
-                            // onDayPress={(day) => { console.log('selected day', day) }}
-                            onDayLongPress={(day) => { console.log('selected day', day) }}
-                            monthFormat={'MMMM - yyyy'}
-                            onMonthChange={(month) => { console.log('month changed', month) }}
-                            hideArrows={true}
-                            hideExtraDays={true}
-                            onDayPress={(day) => { this.onDayPress(day) }}
-                            // monthFormat={'MMMM - yyyy'}
-                            // onMonthChange={(month) => { this.onMonthChange(month, true) }}
-                            firstDay={1}
-                            markedDates={this.state.histories}
-                        />
-                        <TouchableOpacity onPress={this.viewResult.bind(this)} style={[styles.viewBtn,{backgroundColor:'#25B05F'}]}>
+                        <View style={{ position: 'relative', left: 0, right: 0, width: DEVICE_WIDTH }}>
+                            <Calendar style={styles.calendarStyle}
+                                // markedDates={this.state.listSchedule}
+                                current={this.state.latestTime.format("yyyy-MM-dd")}
+                                // onDayPress={(day) => { console.log('selected day', day) }}
+                                onDayLongPress={(day) => { console.log('selected day', day) }}
+                                monthFormat={'MMMM - yyyy'}
+                                onMonthChange={(month) => { console.log('month changed', month) }}
+                                // hideArrows={true}
+                                hideExtraDays={true}
+                                onDayPress={(day) => { this.onDayPress(day) }}
+                                // monthFormat={'MMMM - yyyy'}
+                                // onMonthChange={(month) => { this.onMonthChange(month, true) }}
+                                firstDay={1}
+                                markedDates={this.state.histories}
+                            />
+                            <TouchableOpacity
+                                onPress={() => {
+                                    this.setState({ toggelMonthPicker: true })
+                                }}
+                                style={{ position: 'absolute', top: 0, left: 70, right: 70, height: 60 }}>
+                            </TouchableOpacity>
+                        </View>
+                        <TouchableOpacity onPress={this.viewResult.bind(this)} style={[styles.viewBtn, { backgroundColor: '#25B05F' }]}>
                             <Text style={styles.txCheckResult}>{constants.ehealth.checkupResult}</Text>
                         </TouchableOpacity>
-                        <View style={{alignItems:'center'}}>
-                        <View style = {{paddingHorizontal:20}}><ScaledImage height={100}  source = {require('@images/new/ehealth/ic_preclinical.png')}></ScaledImage></View>
-                        <Card style={[styles.viewBTnSuggest]}>
-                            <TouchableOpacity onPress={this.onShareEhealth} style={[styles.btnReExamination, { backgroundColor: '#109CF1', }]}>
-                                <Text style={styles.txReExamination}>{constants.ehealth.share_ehealth}</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={[styles.btnReExamination, { backgroundColor: '#707683', }]}>
-                                <Text style={styles.txReExamination}>{'Lịch sử chia sẻ'}</Text>
-                            </TouchableOpacity>
+                        <View style={{ alignItems: 'center' }}>
+                            <View style={{ paddingHorizontal: 20 }}><ScaledImage height={100} source={require('@images/new/ehealth/ic_preclinical.png')}></ScaledImage></View>
+                            <Card style={[styles.viewBTnSuggest]}>
+                                <TouchableOpacity onPress={this.onShareEhealth} style={[styles.btnReExamination, { backgroundColor: '#109CF1', }]}>
+                                    <Text style={styles.txReExamination}>{constants.ehealth.share_ehealth}</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={[styles.btnReExamination, { backgroundColor: '#707683', }]}>
+                                    <Text style={styles.txReExamination}>{'Lịch sử chia sẻ'}</Text>
+                                </TouchableOpacity>
 
-                        </Card>
+                            </Card>
                         </View>
                         <TouchableOpacity onPress={this.onPressAppointment} style={styles.viewBtn}>
                             <Text style={styles.txCheckResult}>{'LỊCH TÁI KHÁM'}</Text>
@@ -623,6 +567,19 @@ class ListProfileScreen extends Component {
                     </View>
                     <View style={styles.viewSpaceBottom}></View>
                 </ScrollView>
+                <DateTimePicker
+                    mode={'month'}
+                    isVisible={this.state.toggelMonthPicker}
+                    onConfirm={newDate => {
+                        this.setState({ latestTime: newDate, toggelMonthPicker: false })
+                    }}
+                    onCancel={() => {
+                        this.setState({ toggelMonthPicker: false });
+                    }}
+                    cancelTextIOS={"Hủy bỏ"}
+                    confirmTextIOS={"Xác nhận"}
+                    date={this.state.latestTime || new Date()}
+                />
                 <DateTimePicker
                     mode={'time'}
                     isVisible={this.state.toggelDateTimePickerVisible}
@@ -739,8 +696,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        paddingVertical:20,
-        paddingHorizontal:40
+        paddingVertical: 20,
+        paddingHorizontal: 40
     },
     btnReExamination: {
         padding: 2, borderRadius: 3, marginRight: 5, marginVertical: 10, paddingHorizontal: 5
@@ -758,7 +715,7 @@ const styles = StyleSheet.create({
     viewShareErr: { flexDirection: 'row', alignItems: 'center', padding: 10 },
     txShareErr: { textAlign: 'center', marginVertical: 20, marginHorizontal: 10, fontSize: 18 },
     actionbarStyle: {
-        backgroundColor: '#22b060',
+        backgroundColor: '#4BBA7B',
         borderBottomWidth: 0
     },
     viewCalendar: { justifyContent: 'center', flex: 1, alignItems: 'center' },

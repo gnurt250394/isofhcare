@@ -8,6 +8,7 @@ import stringUtils from 'mainam-react-native-string-utils';
 import snackbar from '@utils/snackbar-utils';
 import constants from '@resources/strings';
 import ScaledImage from 'mainam-react-native-scaleimage';
+import resultUtils from './utils/result-utils';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 
@@ -83,64 +84,12 @@ class ViewInDateScreen extends Component {
     }
     getDetailPatientHistory(patientHistoryId) {
         this.setState({ isLoading: true }, () => {
-            bookingProvider.detailPatientHistory(patientHistoryId, this.props.ehealth.hospital.hospital.id).then(s => {
-                this.setState({ isLoading: false }, () => {
-                    switch (s.code) {
-                        case 0:
-                            let resultDetail = null;
-                            let result = null;
-                            if (s.data && s.data.data) {
-                                if (s.data.data.resultDetail) {
-                                    try {
-                                        resultDetail = JSON.parse(s.data.data.resultDetail);
-                                    } catch (error) {
-
-                                    }
-                                }
-                                if (s.data.data.result) {
-                                    try {
-                                        result = JSON.parse(s.data.data.result);
-                                        if (!result ||
-                                            (
-                                                !(result.ListDiagnostic && result.ListDiagnostic.length) &&
-                                                !(result.ListMedicine && result.ListMedicine.length) &&
-                                                !(result.ListResulGiaiPhau && result.ListResulGiaiPhau.length) &&
-                                                !(result.ListResulHoaSinh && result.ListResulHoaSinh.length) &&
-                                                !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
-                                                !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
-                                                !(result.ListResulViSinh && result.ListResulViSinh.length) &&
-                                                !(result.ListResultCheckup && result.ListResultCheckup.length)
-
-                                            )
-                                        ) {
-                                            this.setState({
-                                                hasResult: false
-                                            })
-                                            snackbar.show(constants.msg.ehealth.not_result_ehealth_in_day, "danger");
-                                        } else {
-                                            this.setState({
-                                                hasResult: true,
-                                                result,
-                                                resultDetail
-                                            });
-                                        }
-                                    } catch (error) {
-                                        this.setState({ hasResult: false, result: {} });
-                                        snackbar.show(constants.msg.ehealth.not_result_ehealth_in_day, "danger");
-
-                                    }
-                                }
-                            }
-
-                            break;
-                    }
-                })
-            }).catch(e => {
-                this.setState({ isLoading: false }, () => {
-
+            resultUtils.getDetail(patientHistoryId, this.props.ehealth.hospital.hospital.id).then(result => {
+                this.setState({ result: result.result, resultDetail: result.resultDetail, hasResult: result.hasResult, isLoading: false }, () => {
+                    if (!result.hasResult)
+                        snackbar.show(constants.msg.ehealth.not_result_ehealth_in_day, "danger");
                 })
             })
-
         })
     }
     getItemLayout = (data, index) => (
@@ -183,7 +132,7 @@ class ViewInDateScreen extends Component {
                 note = item.First_Diagnostic;
             if (note)
                 return (
-                    <View style= {{marginTop:10}}>
+                    <View style={{ marginTop: 10 }}>
                         <Text style={styles.txResultEhealth}>{'KẾT QUẢ KHÁM CẬN LÂM SÀNG'}</Text>
                         <TouchableOpacity style={styles.card} onPress={this.viewCheckupResult}>
                             {/* <View style={styles.viewCheckupResult}></View> */}
@@ -209,7 +158,7 @@ class ViewInDateScreen extends Component {
                 note = item.Conclusion;
             if (note)
                 return (
-                    <View style= {{marginTop:10}}>
+                    <View style={{ marginTop: 10 }}>
                         <Text style={styles.txResultEhealth}>{'KẾT QUẢ CHẨN ĐOÁN HÌNH ẢNH'}</Text>
                         <TouchableOpacity style={styles.card} onPress={this.viewDiagnosticResult}>
                             <ScaledImage height={50} source={require('@images/new/ehealth/ic_preclinical.png')}></ScaledImage>
@@ -265,7 +214,7 @@ class ViewInDateScreen extends Component {
                 note = item.BiopsyLocation;
             if (note)
                 return (
-                    <View style = {{marginTop:10}}>
+                    <View style={{ marginTop: 10 }}>
                         <Text style={styles.txResultEhealth}>{'KẾT QUẢ GIẢI PHẪU'}</Text>
                         <TouchableOpacity style={styles.card} onPress={this.viewSurgeryResult}>
                             <ScaledImage height={50} source={require('@images/new/ehealth/img_orther_service.png')}></ScaledImage>
@@ -303,17 +252,17 @@ class ViewInDateScreen extends Component {
             let note = item.ServiceName + " " + item.Measure + ", " + item.Quantity + " " + item.Unit;
             if (note)
                 return (
-                    <View style = {{marginTop:10}}>
+                    <View style={{ marginTop: 10 }}>
                         <Text style={styles.txResultEhealth}>{'THUỐC'}</Text>
 
-                <TouchableOpacity style={styles.card} onPress={this.viewMedicine}>
-                    <ScaledImage height={50} source={require('@images/new/ehealth/img_drug2.png')}></ScaledImage>
-                    <View style={styles.viewDrug}>
-                        <Text style={styles.txMedicine}>{note}</Text>
+                        <TouchableOpacity style={styles.card} onPress={this.viewMedicine}>
+                            <ScaledImage height={50} source={require('@images/new/ehealth/img_drug2.png')}></ScaledImage>
+                            <View style={styles.viewDrug}>
+                                <Text style={styles.txMedicine}>{note}</Text>
+                            </View>
+                            <ScaledImage height={30} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
+                        </TouchableOpacity>
                     </View>
-                    <ScaledImage height={30} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
-                </TouchableOpacity>
-                </View>
                 )
         }
         return null;
@@ -374,7 +323,7 @@ class ViewInDateScreen extends Component {
             <ActivityPanel style={styles.container} title={constants.title.ehealth}
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#22b060"
+                statusbarBackgroundColor="#4BBA7B"
                 actionbarStyle={styles.actionbarStyle}
                 titleStyle={styles.titleStyle}
                 isLoading={this.state.isLoading}>
@@ -552,7 +501,7 @@ const styles = StyleSheet.create({
     },
     viewCheckupResult: { width: 10, height: 10, backgroundColor: '#ff4355', borderRadius: 5, marginTop: 22, marginLeft: 10 },
     viewNote: { flex: 1, padding: 15 },
-    txResultEhealth: { fontSize: 18, color: '#fff', fontWeight: '700',marginTop:10 },
+    txResultEhealth: { fontSize: 18, color: '#fff', fontWeight: '700', marginTop: 10 },
     txNote: { paddingTop: 5, fontSize: 14, color: '#373A3C', flex: 1 },
     viewMaker: { width: 5, height: '100%', backgroundColor: '#ff4355', borderRadius: 2.5 },
     viewDiagnosticResult: { width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 },
@@ -576,7 +525,7 @@ const styles = StyleSheet.create({
     txMedical: { paddingTop: 5, color: '#373A3C' },
     footerMedical: { width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 },
     actionbarStyle: {
-        backgroundColor: '#22b060',
+        backgroundColor: '#4BBA7B',
         borderBottomWidth: 0
     },
     titleStyle: {
