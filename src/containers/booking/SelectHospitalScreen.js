@@ -199,10 +199,10 @@ class SelectHospitalScreen extends Component {
         }, () => {
             let promise = null;
             if (this.state.region) {
-                promise = hospitalProvider.getByLocation(page, size, this.state.region.latitude, this.state.region.longitude, stringQuyery, -1);
+                promise = hospitalProvider.getByLocation(page, size, this.state.region.latitude, this.state.region.longitude, stringQuyery, -1, 1);
             }
             else {
-                promise = hospitalProvider.getByLocation(page, size, 190, 190, stringQuyery, -1);
+                promise = hospitalProvider.getByLocation(page, size, 190, 190, stringQuyery, -1, 1);
             };
             promise.then(s => {
                 this.setState({
