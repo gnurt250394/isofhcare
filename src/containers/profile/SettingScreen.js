@@ -26,7 +26,7 @@ class SettingScreen extends Component {
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'dark-content'}
                 iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#22b060"
+                statusbarBackgroundColor="#4BBA7B"
                 actionbarStyle={styles.actionbarStyle}
                 titleStyle={{
                     color: '#FFF'
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
         borderColor: '#fff',
     },
     actionbarStyle: {
-        backgroundColor: '#22b060',
+        backgroundColor: '#4BBA7B',
         borderBottomWidth: 0
     },
     viewInfo: {
