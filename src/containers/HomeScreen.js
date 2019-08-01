@@ -91,14 +91,14 @@ class HomeScreen extends Component {
 
   }
   onRefresh = () => {
-    this.setState({
-      refreshing: true,
-      countReset: this.state.countReset + 1,
+    // this.setState({
+    //   refreshing: true,
+    //   countReset: this.state.countReset + 1,
 
-    })
-    setTimeout(() => this.setState({
-      refreshing: false
-    }), 200)
+    // })
+    // setTimeout(() => this.setState({
+    //   refreshing: false
+    // }), 200)
   }
   render() {
     const { active } = this.state;
@@ -115,16 +115,17 @@ class HomeScreen extends Component {
             <ScrollView
               onScroll={this.handleScroll}
               ref={(c) => { this.scroll = c }}
-              refreshControl={<RefreshControl
-                refreshing={this.state.refreshing}
-                onRefresh={this.onRefresh}
-              />}>
+              // refreshControl={<RefreshControl
+              //   refreshing={this.state.refreshing}
+              //   onRefresh={this.onRefresh}
+              // />}>
+              >
               <View>
-                <SlideBanner countReset={this.state.countReset} />
-                <TopHospital countReset={this.state.countReset} />
-                <HospitalNearYou countReset={this.state.countReset} />
-                <TopDrug countReset={this.state.countReset} />
-                <TopNews countReset={this.state.countReset} />
+                <SlideBanner  />
+                <TopHospital  />
+                <HospitalNearYou  />
+                <TopDrug  />
+                <TopNews  />
                 <View style={{ width: '100%', height: 50 }}></View>
               </View>
 

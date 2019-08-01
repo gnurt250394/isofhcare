@@ -8,6 +8,7 @@ import { connect } from "react-redux";
 import constants from '@resources/strings';
 import profileProvider from '@data-access/profile-provider'
 import Modal from '@components/modal';
+import NavigationService from "@navigators/NavigationService";
 
 class ListProfileScreen extends Component {
     constructor(props) {
@@ -54,7 +55,7 @@ class ListProfileScreen extends Component {
         })
     }
     onClickItem = (item) => {
-        this.props.navigation.navigate('profile', { data: item })
+        NavigationService.navigate('profile', { data: item })
     }
     onDeleteItem = (id) => {
         this.setState({

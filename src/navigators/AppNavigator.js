@@ -129,7 +129,7 @@ const LoginNavigation = createStackNavigator({
   notification: { screen: NotificationScreen },
   ehealth: { screen: EHealthNavigator },
   addBooking: { screen: BookingNavigation },
-  listQuestion: { screen: QuestionNavigation },
+  listQuestion: { screen: ListQuestionScreen },
 },
   {
     headerMode: "none",
@@ -212,6 +212,7 @@ const AccountTabNavigation = createStackNavigator({
   menuScreen: {
     screen: MenuProfileScreen
   },
+
   login: {
     screen: LoginNavigation
   }
@@ -412,7 +413,17 @@ const RootNavigator = createStackNavigator(
     about: { screen: AboutScreen },
     terms: { screen: TermsScreen },
     policy: { screen: PolicyScreen },
-
+    //profile
+    selectProfile: { screen: SelectProfileScreen },
+    createProfile: { screen: CreateProfileScreen },
+    listProfileUser: { screen: ListProfileScreen },
+    editProfile: { screen: EditProfileScreen },
+    selectProvince: { screen: SelectProvinceScreen },
+    selectDistrict: { screen: SelectDistrictScreen },
+    selectZone: { screen: SelectZoneScreen },
+    profile: { screen: ProfileScreen },
+    listProfileUser: { screen: ListProfileScreen },
+    //
     home: DrawerNav,
     ehealth: EHealthNavigator,
     viewDetailEhealth: { screen: ViewEhealthDetailScreen },
