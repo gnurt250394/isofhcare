@@ -96,6 +96,7 @@ class ConfirmBookingScreen extends Component {
         switch (this.state.paymentMethod) {
             case 1:
                 return constants.key.payment_return_url.vnpay;
+            // return "http://localhost:8888/order/vnpay_return";
             case 2:
                 return "";
             case 3:
@@ -165,7 +166,6 @@ class ConfirmBookingScreen extends Component {
                             break;
                         case 3:
                         case 5:
-                            debugger;
                             let vnp_TxnRef = data.online_transactions[0].id;
                             let payment_order = s.payment_order;
                             payment_order.orderInfo = payment_order.data;
@@ -306,7 +306,6 @@ class ConfirmBookingScreen extends Component {
                             break;
                         case 3:
                         case 5:
-                            debugger;
                             let vnp_TxnRef = data.id;
                             let payment_order = s.payment_order;
                             payment_order.orderInfo = payment_order.data;
