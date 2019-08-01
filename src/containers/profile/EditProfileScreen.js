@@ -147,11 +147,13 @@ class EditProfileScreen extends Component {
         }
     }
     onSelectZone = () => {
-        if (!this.state.provinces.id) {
+        if (!this.state.provinces) {
             snackbar.show("Bạn chưa chọn Tỉnh/Thành phố")
+            return
         }
-        if (!this.state.districts.id) {
+        if (!this.state.districts) {
             snackbar.show("Bạn chưa chọn Quận/Huyện")
+            return
         }
         if (this.state.provinces.id && this.state.districts.id) {
             this.props.navigation.navigate('selectZone', {

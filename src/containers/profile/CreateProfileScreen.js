@@ -183,11 +183,11 @@ class CreateProfileScreen extends Component {
         }
     }
     onSelectZone = () => {
-        if(!this.state.provinces || !this.state.provinces.id){
+        if(!this.state.provinces){
             snackbar.show("Bạn chưa chọn Tỉnh/Thành phố")
             return
         }
-        if(!this.state.districts || !this.state.districts.id){
+        if(!this.state.districts){
             snackbar.show("Bạn chưa chọn Quận/Huyện")
             return
         }
