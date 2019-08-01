@@ -89,7 +89,7 @@ module.exports = {
   key: {
     payment_return_url:
     {
-      vnpay: "vnpay://payment_isofhcare_return",
+      vnpay: "http://localhost:8888/order/vnpay_return",
       payoo: "payoo://payment_isofhcare_return"
     },
     history: {
