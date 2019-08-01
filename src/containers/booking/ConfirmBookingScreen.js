@@ -231,7 +231,7 @@ class ConfirmBookingScreen extends Component {
                                             this.retry(this.state.paymentId);
                                             return;
                                         case "vendor_id":
-                                            snackbar.show("Vender không tồn tại trong hệ thống", "danger");
+                                            snackbar.show("Vendor không tồn tại trong hệ thống", "danger");
                                             return;
                                     }
                                 }
@@ -369,7 +369,7 @@ class ConfirmBookingScreen extends Component {
                                             snackbar.show("Đặt khám đã tồn tại trong hệ thống", "danger");
                                             return;
                                         case "vendor_id":
-                                            snackbar.show("Vender không tồn tại trong hệ thống", "danger");
+                                            snackbar.show("Vendor không tồn tại trong hệ thống", "danger");
                                             return;
                                     }
                                 }
