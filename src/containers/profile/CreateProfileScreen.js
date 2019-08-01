@@ -116,7 +116,7 @@ class CreateProfileScreen extends Component {
                         let phone = this.state.phone
                         // let address = this.state.address
                         let idProvince = this.state.provinces ? this.state.provinces.id : ''
-                        let idDistrics =  this.state.districts ? this.state.districts.id : ''
+                        let idDistrics = this.state.districts ? this.state.districts.id : ''
                         let idZone = this.state.zone ? this.state.zone.id : ''
                         // parseFloat(item.distance).toFixed(1)
                         let data = {
@@ -126,9 +126,9 @@ class CreateProfileScreen extends Component {
                             "height": height ? Number(height) : null,
                             "weight": weight ? Number(weight) : null,
                             "phone": phone,
-                            
+
                         }
-                        profileProvider.createProfile(data,idProvince,idDistrics,idZone).then(res => {
+                        profileProvider.createProfile(data, idProvince, idDistrics, idZone).then(res => {
                             console.log(res)
                             if (res.code == 0) {
                                 this.props.navigation.navigate('listProfile', { reset: this.state.reset + 1 })
@@ -148,7 +148,7 @@ class CreateProfileScreen extends Component {
     selectDistrict = (districts) => {
         let districtsError = districts ? "" : this.state.districtsError;
         if (!districts || !this.state.districts || districts.id != this.state.districts.id) {
-            this.setState({ districts, districtsError,zone:[] })
+            this.setState({ districts, districtsError, zone: [] })
         } else {
             this.setState({ districts, districtsError });
         }
@@ -166,7 +166,7 @@ class CreateProfileScreen extends Component {
     selectprovinces(provinces) {
         let provincesError = provinces ? "" : this.state.provincesError;
         if (!provinces || !this.state.provinces || provinces.id != this.state.provinces.id) {
-            this.setState({ provinces, provincesError,districts:[],zone:[] })
+            this.setState({ provinces, provincesError, districts: [], zone: [] })
         } else {
             this.setState({ provinces, provincesError });
         }
@@ -183,15 +183,15 @@ class CreateProfileScreen extends Component {
         }
     }
     onSelectZone = () => {
-        if(!this.state.provinces){
+        if (!this.state.provinces) {
             snackbar.show("Bạn chưa chọn Tỉnh/Thành phố")
             return
         }
-        if(!this.state.districts){
+        if (!this.state.districts) {
             snackbar.show("Bạn chưa chọn Quận/Huyện")
             return
         }
-        if(this.state.provinces.id  && this.state.districts.id){
+        if (this.state.provinces.id && this.state.districts.id) {
             this.props.navigation.navigate('selectZone', {
                 onSelected: this.selectZone.bind(this),
                 id: this.state.districts.id
@@ -499,7 +499,7 @@ class CreateProfileScreen extends Component {
                             <Text style={[styles.errorStyle]}>{this.state.addressError}</Text> */}
                             <Field style={[styles.mucdichkham, { flexDirection: 'row' }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
                                 <Field style={{ flex: 1 }}>
-                                <Text style={styles.mdk}>{'Địa chỉ'}</Text>
+                                    <Text style={styles.mdk}>{'Địa chỉ'}</Text>
                                     <Field>
                                         <TextField
                                             hideError={true}
@@ -507,7 +507,7 @@ class CreateProfileScreen extends Component {
                                             editable={false}
                                             multiline={true}
                                             inputStyle={[
-                                                styles.ktq,
+                                                styles.ktq,{ minHeight: 80 }
                                             ]}
                                             errorStyle={styles.errorStyle}
                                             value={this.state.provinces && this.state.provinces.countryCode ? this.state.provinces.countryCode : 'Tỉnh/Thành phố'}
@@ -521,7 +521,7 @@ class CreateProfileScreen extends Component {
                                 </Field>
 
                                 <Field style={{ flex: 1 }}>
-                                <Text style={styles.mdk}></Text>
+                                    <Text style={styles.mdk}></Text>
                                     <Field>
                                         <TextField
                                             hideError={true}
@@ -535,7 +535,7 @@ class CreateProfileScreen extends Component {
                                             // }}
                                             multiline={true}
                                             inputStyle={[
-                                                styles.ktq,
+                                                styles.ktq,{ minHeight: 80 }
                                             ]}
                                             onPress={this.onSelectDistrict}
                                             editable={false}
@@ -549,15 +549,15 @@ class CreateProfileScreen extends Component {
                                     </Field>
                                 </Field>
                                 <Field style={{ flex: 1 }}>
-                                <Text style={styles.mdk}></Text>
+                                    <Text style={styles.mdk}></Text>
                                     <Field>
                                         <TextField
                                             hideError={true}
                                             multiline={true}
-                                            onPress = {this.onSelectZone}
+                                            onPress={this.onSelectZone}
                                             editable={false}
                                             inputStyle={[
-                                                styles.ktq,
+                                                styles.ktq,{ minHeight: 80 }
                                             ]}
                                             errorStyle={styles.errorStyle}
                                             value={this.state.zone && this.state.zone.name ? this.state.zone.name : 'Xã phường'}
@@ -570,7 +570,7 @@ class CreateProfileScreen extends Component {
                                 </Field>
                             </Field>
                             <Field style={[styles.mucdichkham, this.state.type == "FAMILY" ? {} : { marginTop: 10 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
-                            <Text style={styles.mdk}></Text>                             
+                                <Text style={styles.mdk}></Text>
                                 <TextField
                                     hideError={true}
                                     onValidate={(valid, messages) => {

@@ -483,7 +483,7 @@ class EditProfileScreen extends Component {
                                             editable={false}
                                             multiline={true}
                                             inputStyle={[
-                                                styles.ktq,
+                                                styles.ktq,{minHeight:80}
                                             ]}
                                             errorStyle={styles.errorStyle}
                                             value={this.state.provinces && this.state.provinces.countryCode ? this.state.provinces.countryCode : 'Tỉnh/Thành phố'}
@@ -511,7 +511,7 @@ class EditProfileScreen extends Component {
                                             // }}
                                             multiline={true}
                                             inputStyle={[
-                                                styles.ktq,
+                                                styles.ktq,{minHeight:80}
                                             ]}
                                             onPress={this.onSelectDistrict}
                                             editable={false}
@@ -533,7 +533,7 @@ class EditProfileScreen extends Component {
                                             onPress={this.onSelectZone}
                                             editable={false}
                                             inputStyle={[
-                                                styles.ktq,
+                                                styles.ktq,{minHeight:80}
                                             ]}
                                             errorStyle={styles.errorStyle}
                                             value={this.state.zone && this.state.zone.name ? this.state.zone.name : 'Xã phường'}
@@ -586,8 +586,6 @@ class EditProfileScreen extends Component {
                             <TouchableOpacity onPress={() => this.props.navigation.pop()} style={styles.btnReject}><Text style={styles.txDone}>Hủy</Text></TouchableOpacity>
                         </View>
                     </View>
-
-
                 </ScrollView>
                 <ImagePicker ref={ref => (this.imagePicker = ref)} />
                 <DateTimePicker
