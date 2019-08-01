@@ -44,9 +44,9 @@ module.exports = {
             });
         })
     },
-    getByLocation(page, size, lat, lon, stringQuyery, serviceTypeId) {
+    getByLocation(page, size, lat, lon, stringQuyery, serviceTypeId, type) {
         return new Promise((resolve, reject) => {
-            client.requestApi("get", `${constants.api.hospital.get_by_location}?page=${page}&size=${size}&serviceTypeId=${serviceTypeId}&lat=${lat}&lon=${lon}&stringQuyery=${stringQuyery}`, {}, (s, e) => {
+            client.requestApi("get", `${constants.api.hospital.get_by_location}?page=${page}&size=${size}&serviceTypeId=${serviceTypeId}&lat=${lat}&lon=${lon}&stringQuyery=${stringQuyery}&type=${type}`, {}, (s, e) => {
                 if (s)
                     resolve(s);
                 else
@@ -111,7 +111,7 @@ module.exports = {
             }
             else {
                 client.requestApi("get", constants.api.home.get_list_hospital_top_rate, {}, (s, e) => {
-                    if (s && s.code == 0 && s.data && s.data.hospitals ) {
+                    if (s && s.code == 0 && s.data && s.data.hospitals) {
                         datacacheProvider.save("", constants.key.storage.DATA_TOP_HOSPITAL, s.data.hospitals);
                         resolve(s.data.hospitals);
                     }
@@ -120,9 +120,9 @@ module.exports = {
             }
         });
     },
-    getHospitalNear(lat,lon){
-        return new Promise((resolve,reject) => {
-            client.requestApi('get',`${constants.api.hospital.get_hospital_by_location}?lat=${lat}&lon=${lon}`, {}, (s, e) => {
+    getHospitalNear(lat, lon) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('get', `${constants.api.hospital.get_hospital_by_location}?lat=${lat}&lon=${lon}`, {}, (s, e) => {
                 if (s)
                     resolve(s);
                 else
