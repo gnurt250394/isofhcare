@@ -130,7 +130,7 @@ class ConfirmBookingScreen extends Component {
         }
 
         this.setState({ isLoading: true }, () => {
-            let memo = `THANH TOÁN ${this.getPaymentMethod()} - Đặt khám - ${booking.book.codeBooking} - ${serviceText} - ${this.state.hospital.hospital.name} - ${this.state.schedule.time.format("yyyy-MM-dd HH:mm:ss")} - ${this.state.profile.medicalRecords.name}`;
+            let memo = `THANH TOÁN ${this.getPaymentMethod()} - Đặt khám - ${booking.book.codeBooking} - ${serviceText} - ${this.state.hospital.hospital.name} - ${this.state.bookingDate.format("yyyy-MM-dd")} ${this.state.schedule.time.format("HH:mm:ss")} - ${this.state.profile.medicalRecords.name}`;
             walletProvider.createOnlinePayment(
                 this.props.userApp.currentUser.id,
                 this.getPaymentMethod(),
