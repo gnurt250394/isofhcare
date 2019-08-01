@@ -492,21 +492,29 @@ class ListProfileScreen extends Component {
             >
                 <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
                     <View style={styles.viewCalendar}>
-                        <Calendar style={styles.calendarStyle}
-                            // markedDates={this.state.listSchedule}
-                            current={this.state.latestTime.format("yyyy-MM-dd")}
-                            // onDayPress={(day) => { console.log('selected day', day) }}
-                            onDayLongPress={(day) => { console.log('selected day', day) }}
-                            monthFormat={'MMMM - yyyy'}
-                            onMonthChange={(month) => { console.log('month changed', month) }}
-                            hideArrows={true}
-                            hideExtraDays={true}
-                            onDayPress={(day) => { this.onDayPress(day) }}
-                            // monthFormat={'MMMM - yyyy'}
-                            // onMonthChange={(month) => { this.onMonthChange(month, true) }}
-                            firstDay={1}
-                            markedDates={this.state.histories}
-                        />
+                        <View style={{ position: 'relative', left: 0, right: 0, width: DEVICE_WIDTH }}>
+                            <Calendar style={styles.calendarStyle}
+                                // markedDates={this.state.listSchedule}
+                                current={this.state.latestTime.format("yyyy-MM-dd")}
+                                // onDayPress={(day) => { console.log('selected day', day) }}
+                                onDayLongPress={(day) => { console.log('selected day', day) }}
+                                monthFormat={'MMMM - yyyy'}
+                                onMonthChange={(month) => { console.log('month changed', month) }}
+                                // hideArrows={true}
+                                hideExtraDays={true}
+                                onDayPress={(day) => { this.onDayPress(day) }}
+                                // monthFormat={'MMMM - yyyy'}
+                                // onMonthChange={(month) => { this.onMonthChange(month, true) }}
+                                firstDay={1}
+                                markedDates={this.state.histories}
+                            />
+                            <TouchableOpacity
+                                onPress={() => {
+                                    this.setState({ toggelMonthPicker: true })
+                                }}
+                                style={{ position: 'absolute', top: 0, left: 70, right: 70, height: 60 }}>
+                            </TouchableOpacity>
+                        </View>
                         <TouchableOpacity onPress={this.viewResult.bind(this)} style={[styles.viewBtn, { backgroundColor: '#25B05F' }]}>
                             <Text style={styles.txCheckResult}>{constants.ehealth.checkupResult}</Text>
                         </TouchableOpacity>
@@ -559,6 +567,19 @@ class ListProfileScreen extends Component {
                     </View>
                     <View style={styles.viewSpaceBottom}></View>
                 </ScrollView>
+                <DateTimePicker
+                    mode={'month'}
+                    isVisible={this.state.toggelMonthPicker}
+                    onConfirm={newDate => {
+                        this.setState({ latestTime: newDate, toggelMonthPicker: false })
+                    }}
+                    onCancel={() => {
+                        this.setState({ toggelMonthPicker: false });
+                    }}
+                    cancelTextIOS={"Hủy bỏ"}
+                    confirmTextIOS={"Xác nhận"}
+                    date={this.state.latestTime || new Date()}
+                />
                 <DateTimePicker
                     mode={'time'}
                     isVisible={this.state.toggelDateTimePickerVisible}
