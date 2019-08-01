@@ -8,12 +8,15 @@ import ImageLoad from 'mainam-react-native-image-loader';
 const width = (Dimensions.get('window').width) / 2;
 const spacing = 10;
 import dateUtils from 'mainam-react-native-date-utils';
+import resultUtils from './utils/result-utils';
+import snackbar from '@utils/snackbar-utils';
+import constants from '@resources/strings';
+
 class HistoryTimeScreen extends Component {
     constructor(props) {
         super(props);
         let countTime = this.props.navigation.state.params && this.props.navigation.state.params.countTime ? this.props.navigation.state.params.countTime : ''
         let item = this.props.navigation.state.params && this.props.navigation.state.params.item || {};
-        alert(JSON.stringify(item.history));
 
         this.state = {
             data: item.history || [],
@@ -48,15 +51,33 @@ class HistoryTimeScreen extends Component {
             return "";
         }
     }
+    viewResult = (item) => {
+        console.log(item);
+        this.setState({ isLoading: true }, () => {
+            resultUtils.getDetail(item.patientHistoryId, this.props.ehealth.hospital.hospital.id).then(result => {
+                this.setState({ isLoading: false }, () => {
+                    if (!result.hasResult)
+                        snackbar.show(constants.msg.ehealth.not_result_ehealth_in_day, "danger");
+                    else {
+                        this.props.navigation.navigate("viewDetail", { result: result.result, resultDetail: result.resultDetail })
+                    }
+                });
+            });
+        });
+    }
     renderItem = ({ item }) => {
         return (
             <View style={styles.viewItem}>
                 <Card style={styles.cardStyle}>
-                    {this.renderImg(item)}
-                    <View style={styles.viewDetails}>
-                        <Text style={{ color: '#479AE3', marginVertical: 15, fontSize: 14 }}>{this.getTime(item.timeGoIn)}</Text>
-                        <Text style={{ fontSize: 14, minHeight: 20 }}>{item.serViceType}</Text>
-                    </View>
+                    <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => {
+                        this.viewResult(item)
+                    }}>
+                        {this.renderImg(item)}
+                        <View style={styles.viewDetails}>
+                            <Text style={{ color: '#479AE3', marginVertical: 15, fontSize: 14 }}>{this.getTime(item.timeGoIn)}</Text>
+                            <Text style={{ fontSize: 14, minHeight: 20 }}>{item.serViceType}</Text>
+                        </View>
+                    </TouchableOpacity>
                 </Card>
             </View>
         )
@@ -67,6 +88,7 @@ class HistoryTimeScreen extends Component {
         return (
             <ActivityPanel style={styles.container}
                 // title="HỒ SƠ Y BẠ GIA ĐÌNH"
+                isLoading={this.state.isLoading}
                 title={<Text style={{ color: '#FFF' }}>{'Lịch sử y bạ '}<Text style={{ color: '#b61827' }}>({this.state.countTime} lần)</Text></Text>}
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
