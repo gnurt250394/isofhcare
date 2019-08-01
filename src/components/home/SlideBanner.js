@@ -14,6 +14,17 @@ class SlideBanner extends Component {
             ads: []
         }
     }
+
+    setAds(ads) {
+        this.setState({
+            ads: ads
+        });
+    }
+
+    getAds() {
+        return advertiseProvider.getListBanner();
+    }
+
     getListBanner(reload) {
         if (reload)
             return;

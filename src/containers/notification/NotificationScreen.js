@@ -460,8 +460,6 @@ const styles = StyleSheet.create({
 function mapStateToProps(state) {
   return {
     userApp: state.userApp,
-    ehealth: state.ehealth
-
   };
 }
 export default connect(mapStateToProps)(NotificationScreen);
