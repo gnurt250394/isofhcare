@@ -94,54 +94,7 @@ import SpecialistScreen from "@containers/specialist/SpecialistScreen";
 import ConfirmCodeScreen from "@containers/account/ConfirmCodeScreen";
 import ResetPasswordScreen from "@containers/account/ResetPasswordScreen";
 
-const BookingNavigation = createStackNavigator({
-  addBooking: { screen: AddBookingScreen },
-  selectHospital: { screen: SelectHospitalScreen },
-  selectHospitalByLocation: { screen: SelectHospitalByLocationScreen },
-  selectTime: { screen: SelectTimeScreen },
-  selectService: { screen: SelectServiceScreen },
-  selectServiceType: { screen: SelectServiceTypeScreen },
-  selectSpecialist: { screen: SelectSpecialistScreen },
-  confirmBooking: { screen: ConfirmBookingScreen },
-  createBookingSuccess: { screen: CreateBookingSuccessScreen },
-  paymentBookingError: { screen: PaymentBookingErrorScreen },
-  detailsHistory: { screen: DetailsHistoryScreen },
-  createProfile: { screen: CreateProfileScreen },
-  paymentVNPay: { screen: PaymentWithVNPayScreen },
-  filterSpecialist: { screen: FilterSpecialistScreen },
-  selectProfile: { screen: SelectProfileScreen },
-},
-  {
-    headerMode: "none",
-    header: null,
-    gesturesEnabled: false,
-    navigationOptions: {
-      header: null,
-      gesturesEnabled: false
-    }
-  })
 
-const LoginNavigation = createStackNavigator({
-  login: { screen: LoginScreen },
-  forgotPassword: { screen: ForgotPasswordScreen },
-  confirmCode: { screen: ConfirmCodeScreen },
-  resetPassword: { screen: ResetPasswordScreen },
-  enterPassword: { screen: EnterPasswordScreen },
-  register: { screen: RegisterScreen },
-  notification: NotificationScreen,
-  ehealth: { screen: EHealthNavigator },
-  addBooking: { screen: BookingNavigation },
-  listQuestion: ListQuestionScreen,
-},
-  {
-    headerMode: "none",
-    header: null,
-    gesturesEnabled: false,
-    navigationOptions: {
-      header: null,
-      gesturesEnabled: false
-    }
-  })
 const ProfileNavigation = createStackNavigator({
   selectProfile: SelectProfileScreen,
   createProfile: CreateProfileScreen,
@@ -277,17 +230,34 @@ const RootNavigator = createStackNavigator(
     home: DrawerNav,
     ehealth: EHealthNavigator,
     viewDetailEhealth: { screen: ViewEhealthDetailScreen },
-    login: LoginNavigation,
-    //
-    listQuestion: { screen: ListQuestionScreen },
+    login: { screen: LoginScreen },
+    forgotPassword: { screen: ForgotPasswordScreen },
+    confirmCode: { screen: ConfirmCodeScreen },
+    resetPassword: { screen: ResetPasswordScreen },
+    enterPassword: { screen: EnterPasswordScreen },
+    register: { screen: RegisterScreen },
+    listQuestion: ListQuestionScreen,
     createQuestionStep1: { screen: CreateQuestionStep1Screen },
     createQuestionStep2: { screen: CreateQuestionStep2Screen },
     detailQuestion: { screen: DetailQuestionScreen },
     detailsProfile: { screen: ProfileInfo },
     detailsDoctor: { screen: DetailsDoctorScreen },
     // booking navigation
-    addBooking: BookingNavigation,
+    addBooking: AddBookingScreen,
+    selectHospital: { screen: SelectHospitalScreen },
+    selectHospitalByLocation: { screen: SelectHospitalByLocationScreen },
+    selectTime: { screen: SelectTimeScreen },
+    selectService: { screen: SelectServiceScreen },
+    selectServiceType: { screen: SelectServiceTypeScreen },
+    selectSpecialist: { screen: SelectSpecialistScreen },
+    confirmBooking: { screen: ConfirmBookingScreen },
     createBookingSuccess: { screen: CreateBookingSuccessScreen },
+    paymentBookingError: { screen: PaymentBookingErrorScreen },
+    detailsHistory: { screen: DetailsHistoryScreen },
+    createProfile: { screen: CreateProfileScreen },
+    paymentVNPay: { screen: PaymentWithVNPayScreen },
+    filterSpecialist: { screen: FilterSpecialistScreen },
+    selectProfile: { screen: SelectProfileScreen },
     patientHistory: { screen: PatientHistoryScreen },
 
     //get Ticket

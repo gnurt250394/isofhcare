@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     viewItem: { flexDirection: 'row', justifyContent: 'flex-start', padding: 10, borderRadius: 5 },
-    btnItem: { flexDirection: 'row', alignItems: 'center' },
+    btnItem: { flexDirection: 'row', alignItems: 'center', flex: 1 },
     imgLoad: {
         alignSelf: 'center',
         borderRadius: 30,
