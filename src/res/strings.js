@@ -473,6 +473,7 @@ module.exports = {
       get_detail: isofhcare_service + "user/get-detail",
       refresh_password_by_token: isofhcare_service + "user/refresh-password-by-token",
       check_used_phone: isofhcare_service + "user/check-used-phone",
+      user_app: isofhcare_service + "user/user-app",
     },
     keyvalue: {
       get: isofhcare_service + "key-value/get-value",
