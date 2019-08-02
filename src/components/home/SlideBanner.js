@@ -63,8 +63,6 @@ class SlideBanner extends Component {
         icon: require("@images/new/home/ic_ticket.png"),
         text: "LẤY SỐ\nKHÁM",
         onPress: () => {
-            this.props.navigation.navigate("getTicket");
-            return;
             if (this.props.userApp.isLogin)
                 if (this.props.userApp.currentUser.bookingNumberHospital == true)
                     this.props.navigation.navigate("getTicket");
