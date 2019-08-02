@@ -1,5 +1,7 @@
 import React from 'react';
 import { connect } from "react-redux";
+import NavigationService from "@navigators/NavigationService";
+import userProvider from '@data-access/user-provider';
 
 import { createDrawerNavigator, DrawerItems, createBottomTabNavigator, TabBarBottom, createStackNavigator } from 'react-navigation';
 //splash
@@ -126,10 +128,10 @@ const LoginNavigation = createStackNavigator({
   resetPassword: { screen: ResetPasswordScreen },
   enterPassword: { screen: EnterPasswordScreen },
   register: { screen: RegisterScreen },
-  notification: { screen: NotificationScreen },
+  notification: NotificationScreen,
   ehealth: { screen: EHealthNavigator },
   addBooking: { screen: BookingNavigation },
-  listQuestion: { screen: ListQuestionScreen },
+  listQuestion: ListQuestionScreen,
 },
   {
     headerMode: "none",
@@ -175,225 +177,83 @@ const GetTicketNavigation = createStackNavigator({
       gesturesEnabled: false
     }
   })
-const QuestionNavigation = createStackNavigator({
-  listQuestion: { screen: ListQuestionScreen },
-  createQuestionStep1: { screen: CreateQuestionStep1Screen },
-  createQuestionStep2: { screen: CreateQuestionStep2Screen },
-  detailQuestion: { screen: DetailQuestionScreen },
-  detailsProfile: { screen: ProfileInfo },
-  detailsDoctor: { screen: DetailsDoctorScreen },
-},
+
+const TabNavigatorComponent = createBottomTabNavigator(
   {
-    headerMode: "none",
-    header: null,
-    gesturesEnabled: false,
-    navigationOptions: {
-      header: null,
-      gesturesEnabled: false
-    }
-  })
-
-const HomeNavigation = createStackNavigator({
-  home: {
-    screen: HomeScreen
-  },
-},
-  {
-    headerMode: "none",
-    header: null,
-    gesturesEnabled: false,
-    navigationOptions: {
-      header: null,
-      gesturesEnabled: false
-    }
-  })
-
-const AccountTabNavigation = createStackNavigator({
-  menuScreen: {
-    screen: MenuProfileScreen
-  },
-
-  login: {
-    screen: LoginNavigation
-  }
-},
-  {
-    headerMode: "none",
-    header: null,
-    gesturesEnabled: false,
-    navigationOptions: {
-      header: null,
-      gesturesEnabled: false
-    }
-  })
-const NotificationNavigation = createStackNavigator({
-  notification: {
-    screen: NotificationScreen
-  },
-  login: {
-    screen: LoginNavigation
-  }
-},
-  {
-    headerMode: "none",
-    header: null,
-    gesturesEnabled: false,
-    navigationOptions: {
-      header: null,
-      gesturesEnabled: false
-    }
-  })
-
-
-
-
-
-
-class TabNavigatorComponent extends React.Component {
-  render() {
-    const TabNavigator = createBottomTabNavigator(
-      {
-        homeTab: {
-          screen: HomeNavigation,
-          navigationOptions: {
-            tabBarLabel: "Home",
-            tabBarIcon: ({ tintColor }) => <ScaledImage height={25} source={require('@images/new/home/ic_home.png')} style={{ tintColor: tintColor }} />,
-          }
-        },
-        communityTab: {
-          screen: MenuProfileScreen,
-          navigationOptions: {
-            tabBarLabel: "Cộng đồng",
-            tabBarIcon: ({ tintColor }) => <ScaledImage height={20} source={require('@images/new/home/ic_community.png')} style={{ tintColor: tintColor }} />,
-            tabBarOnPress: ({ navigation, defaultHandler }) => {
-              snackbar.show("Chức năng đang phát triển");
-            },
-          }
-        },
-        videoTab: {
-          screen: MenuProfileScreen,
-          navigationOptions: {
-            tabBarLabel: "Video",
-            tabBarIcon: ({ tintColor }) => <ScaledImage height={25} source={require('@images/new/home/ic_videos.png')} style={{ tintColor: tintColor }} />,
-            tabBarOnPress: ({ navigation, defaultHandler }) => {
-              snackbar.show("Chức năng đang phát triển");
-            },
-          }
-        },
-        accountTab: {
-          screen: AccountTabNavigation,
-          navigationOptions: {
-            tabBarOnPress: ({ navigation, defaultHandler }) => {
-              if (this.props.userApp.isLogin) {
-                defaultHandler();
-              } else {
-                this.props.navigation.navigate("login");
-              }
-            },
-            tabBarLabel: "Video",
-            tabBarIcon: ({ tintColor }) => <ScaledImage height={22} source={require('@images/new/home/ic_account.png')} style={{ tintColor: tintColor }} />,
-          }
-        },
-        notificationTab: {
-          screen: NotificationNavigation,
-          navigationOptions: {
-            tabBarOnPress: ({ navigation, defaultHandler }) => {
-              if (this.props.userApp.isLogin) {
-                defaultHandler();
-              } else {
-                this.props.navigation.navigate("login");
-              }
-            },
-            tabBarLabel: "Thông báo",
-            tabBarIcon: ({ tintColor }) => <ScaledImage height={25} source={require('@images/new/home/ic_bell.png')} style={{ tintColor: tintColor }} />,
-          }
-        }
-      },
-      {
-        swipeEnabled: true,
-        animationEnabled: true,
-        tabBarPosition: 'bottom',
-        tabBarOptions: {
-          showLabel: false,
-          activeTintColor: 'blue',
-          inactiveTintColor: 'white',
-          style: {
-            backgroundColor: "#4BBA7B",
-          },
-        }
+    homeTab: {
+      screen: HomeScreen,
+      navigationOptions: {
+        tabBarLabel: "Home",
+        tabBarIcon: ({ tintColor }) => <ScaledImage height={25} source={require('@images/new/home/ic_home.png')} style={{ tintColor: tintColor }} />,
       }
-    )
-    return <TabNavigator></TabNavigator>
+    },
+    communityTab: {
+      screen: MenuProfileScreen,
+      navigationOptions: {
+        tabBarLabel: "Cộng đồng",
+        tabBarIcon: ({ tintColor }) => <ScaledImage height={20} source={require('@images/new/home/ic_community.png')} style={{ tintColor: tintColor }} />,
+        tabBarOnPress: ({ navigation, defaultHandler }) => {
+          snackbar.show("Chức năng đang phát triển");
+        },
+      }
+    },
+    videoTab: {
+      screen: MenuProfileScreen,
+      navigationOptions: {
+        tabBarLabel: "Video",
+        tabBarIcon: ({ tintColor }) => <ScaledImage height={25} source={require('@images/new/home/ic_videos.png')} style={{ tintColor: tintColor }} />,
+        tabBarOnPress: ({ navigation, defaultHandler }) => {
+          snackbar.show("Chức năng đang phát triển");
+        },
+      }
+    },
+    accountTab: {
+      screen: MenuProfileScreen,
+      navigationOptions: {
+        tabBarOnPress: ({ navigation, defaultHandler }) => {
+          if (userProvider.isLogin) {
+            defaultHandler();
+          } else {
+            NavigationService.navigate("login");
+          }
+        },
+        tabBarLabel: "Video",
+        tabBarIcon: ({ tintColor }) => <ScaledImage height={22} source={require('@images/new/home/ic_account.png')} style={{ tintColor: tintColor }} />,
+      }
+    },
+    notificationTab: {
+      screen: NotificationScreen,
+      navigationOptions: {
+        tabBarOnPress: ({ navigation, defaultHandler }) => {
+          if (userProvider.isLogin) {
+            defaultHandler();
+          } else {
+            NavigationService.navigate("login");
+          }
+        },
+        tabBarLabel: "Thông báo",
+        tabBarIcon: ({ tintColor }) => <ScaledImage height={25} source={require('@images/new/home/ic_bell.png')} style={{ tintColor: tintColor }} />,
+      }
+    }
+  },
+  {
+    swipeEnabled: true,
+    animationEnabled: true,
+    tabBarPosition: 'bottom',
+    tabBarOptions: {
+      showLabel: false,
+      activeTintColor: 'blue',
+      inactiveTintColor: 'white',
+      style: {
+        backgroundColor: "#4BBA7B",
+      },
+    }
   }
-}
-function mapStateToProps(state) {
-  return {
-    userApp: state.userApp,
-    navigation: state.navigation
-  }
-}
-const TabNavigatorComponentConnect = connect(mapStateToProps)(TabNavigatorComponent);
+)
 
 
 const DrawerNav = createDrawerNavigator({
-  home: TabNavigatorComponentConnect,
-  // "home": {
-  //   navigationOptions: {
-  //     focused:false,
-  //   },
-  //   screen: (props) => <HomeScreen {...props}></HomeScreen>
-  // },
-  "qr": {
-    navigationOptions: {
-      drawerLabel: 'Quét Mã',
-      drawerIcon: () => (
-        <ScaledImage height={25} source={require('@images/new/home/ic_qr.png')} />
-      ),
-    },
-    screen: (props) => <HomeScreen {...props}></HomeScreen>
-
-  },
-  "help": {
-    navigationOptions: {
-      drawerLabel: 'Hỗ trợ',
-      drawerIcon: () => (
-        <ScaledImage height={25} source={require('@images/new/home/ic_help.png')} />
-      ),
-    },
-    screen: (props) => <HomeScreen {...props}></HomeScreen>
-
-  },
-  "abort": {
-    navigationOptions: {
-      drawerLabel: 'Báo Lỗi',
-      drawerIcon: () => (
-        <ScaledImage height={25} source={require('@images/new/home/ic_abort.png')} />
-      ),
-    },
-    screen: (props) => <HomeScreen {...props}></HomeScreen>
-
-  },
-  "rules": {
-    navigationOptions: {
-      drawerLabel: 'Điều Khoản Sử Dụng',
-      drawerIcon: () => (
-        <ScaledImage height={25} source={require('@images/new/home/ic_rules.png')} />
-      ),
-    },
-    screen: (props) => <HomeScreen {...props}></HomeScreen>
-
-  },
-  "rate": {
-    navigationOptions: {
-      drawerLabel: 'Đánh Giá Isofhcare',
-      drawerIcon: () => (
-        <ScaledImage height={25} source={require('@images/new/home/ic_rate.png')} />
-      ),
-    },
-    screen: (props) => <HomeScreen {...props}></HomeScreen>
-
-  },
-
+  home: TabNavigatorComponent
 }, {
     contentComponent: CustomDrawer,
     initialRouteName: 'home',
@@ -429,7 +289,12 @@ const RootNavigator = createStackNavigator(
     viewDetailEhealth: { screen: ViewEhealthDetailScreen },
     login: LoginNavigation,
     //
-    listQuestion: QuestionNavigation,
+    listQuestion: { screen: ListQuestionScreen },
+    createQuestionStep1: { screen: CreateQuestionStep1Screen },
+    createQuestionStep2: { screen: CreateQuestionStep2Screen },
+    detailQuestion: { screen: DetailQuestionScreen },
+    detailsProfile: { screen: ProfileInfo },
+    detailsDoctor: { screen: DetailsDoctorScreen },
     // booking navigation
     addBooking: BookingNavigation,
     createBookingSuccess: { screen: CreateBookingSuccessScreen },
