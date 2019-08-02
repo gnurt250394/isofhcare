@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import userProvider from '@data-access/user-provider';
+import appProvider from '@data-access/app-provider';
 import constants from '@resources/strings';
 import redux from '@redux-store';
 import ActivityPanel from '@components/ActivityPanel';
@@ -30,6 +31,7 @@ class SplashScreen extends Component {
 
 		console.disableYellowBox = true;
 		console.reportErrorsAsExceptions = false;
+		appProvider.setActiveApp();
 		// this.Actions.navigate('home')
 		// setTimeout(() => {
 		// 	this.Actions.dispatch(StackActions.reset({
