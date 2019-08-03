@@ -78,7 +78,7 @@ import EditProfileScreen from '@containers/profile/EditProfileScreen'
 import SelectProvinceScreen from "@containers/profile/SelectProvinceScreen";
 import SelectZoneScreen from "@containers/profile/SelectZoneScreen";
 import SelectDistrictScreen from "@containers/profile/SelectDistrictScreen";
-
+import SelectRelationshipScreen from "@containers/profile/SelectRelationshipScreen";
 //
 import HospitalByLocationScreen from '@containers/home/HospitalByLocationScreen'
 import HospitalScreen from '@containers/home/HospitalScreen'
@@ -280,9 +280,10 @@ const RootNavigator = createStackNavigator(
     editProfile: { screen: EditProfileScreen },
     selectProvince: { screen: SelectProvinceScreen },
     selectDistrict: { screen: SelectDistrictScreen },
+    selectRelationship:{screen:SelectRelationshipScreen},
     selectZone: { screen: SelectZoneScreen },
     profile: { screen: ProfileScreen },
-    listProfileUser: { screen: ListProfileScreen },
+    // listProfileUser: { screen: ListProfileScreen },
     //
     home: DrawerNav,
     ehealth: EHealthNavigator,

@@ -24,6 +24,7 @@ import ActionSheet from 'react-native-actionsheet'
 import profileProvider from '@data-access/profile-provider'
 import locationProvider from '@data-access/location-provider';
 import Modal from "@components/modal";
+import NavigationService from "@navigators/NavigationService";
 
 class CreateProfileScreen extends Component {
     constructor() {
@@ -118,17 +119,23 @@ class CreateProfileScreen extends Component {
                         let idProvince = this.state.provinces ? this.state.provinces.id : ''
                         let idDistrics = this.state.districts ? this.state.districts.id : ''
                         let idZone = this.state.zone ? this.state.zone.id : ''
+                        let village = this.state.village ? this.state.village : ''
+                        let relationshipType = this.state.relationshipType ? this.state.relationshipType : ''
                         // parseFloat(item.distance).toFixed(1)
                         let data = {
                             "name": name,
                             "dob": this.state.dob ? this.state.dob.format('yyyy-MM-dd') + ' 00:00:00' : null,
                             "gender": gender ? gender : null,
-                            "height": height ? Number(height) : null,
+                            "height":  height ? Number(height) : null,
                             "weight": weight ? Number(weight) : null,
-                            "phone": phone,
-
+                            "phone":phone,
+                            "provinceId": idProvince,
+                            "districtId": idDistrics,
+                            "zoneId": idZone,
+                            "village": village,
+                            "relationshipType": relationshipType
                         }
-                        profileProvider.createProfile(data, idProvince, idDistrics, idZone).then(res => {
+                        profileProvider.createProfile(data).then(res => {
                             console.log(res)
                             if (res.code == 0) {
                                 this.props.navigation.navigate('listProfile', { reset: this.state.reset + 1 })
@@ -198,6 +205,22 @@ class CreateProfileScreen extends Component {
             })
             return
         }
+
+    }
+    selectRelationShip = (relationShip) => {
+        let relationShipError = relationShip ? "" : this.state.relationShipError;
+        if (!relationShip || !this.state.zone || relationShip.id != this.state.relationShip.id) {
+            this.setState({ relationShip, relationShipError })
+        } else {
+            this.setState({ relationShip, relationShipError });
+        }
+    }
+    
+    onSelectRelationShip = () => {
+            NavigationService.navigate('selectRelationship', {
+                onSelected: this.selectRelationShip.bind(this),
+                // id: this.state.relationShip.id
+        })
 
     }
     renderItem = ({ item }) => {
@@ -354,7 +377,6 @@ class CreateProfileScreen extends Component {
                                 <Field style={{ width: '60%' }}>
                                     <Field>
                                         <Text style={styles.mdk}>{'Chiều cao (cm)'}</Text>
-
                                         <TextField
                                             hideError={true}
                                             onValidate={(valid, messages) => {
@@ -391,7 +413,6 @@ class CreateProfileScreen extends Component {
                                 <Field style={{ flex: 1 }}>
                                     <Field>
                                         <Text style={styles.mdk}>{'Cân nặng (kg)'}</Text>
-
                                         <TextField
                                             hideError={true}
                                             onValidate={(valid, messages) => {
@@ -507,7 +528,7 @@ class CreateProfileScreen extends Component {
                                             editable={false}
                                             multiline={true}
                                             inputStyle={[
-                                                styles.ktq,{ minHeight: 80 }
+                                                styles.ktq,{ minHeight: 60 }
                                             ]}
                                             errorStyle={styles.errorStyle}
                                             value={this.state.provinces && this.state.provinces.countryCode ? this.state.provinces.countryCode : 'Tỉnh/Thành phố'}
@@ -535,7 +556,7 @@ class CreateProfileScreen extends Component {
                                             // }}
                                             multiline={true}
                                             inputStyle={[
-                                                styles.ktq,{ minHeight: 80 }
+                                                styles.ktq,{ minHeight: 60 }
                                             ]}
                                             onPress={this.onSelectDistrict}
                                             editable={false}
@@ -557,7 +578,7 @@ class CreateProfileScreen extends Component {
                                             onPress={this.onSelectZone}
                                             editable={false}
                                             inputStyle={[
-                                                styles.ktq,{ minHeight: 80 }
+                                                styles.ktq,{ minHeight: 60 }
                                             ]}
                                             errorStyle={styles.errorStyle}
                                             value={this.state.zone && this.state.zone.name ? this.state.zone.name : 'Xã phường'}
@@ -604,6 +625,26 @@ class CreateProfileScreen extends Component {
                                 />
                             </Field>
                             <Text style={[styles.errorStyle]}>{this.state.addressError}</Text>
+                            <Field style={{ flex: 1 }}>
+                                    <Text style={styles.mdk}></Text>
+                                    <Field>
+                                        <TextField
+                                            hideError={true}
+                                            multiline={true}
+                                            onPress={this.onSelectRelationShip}
+                                            editable={false}
+                                            inputStyle={[
+                                                styles.ktq,{ minHeight: 60 }
+                                            ]}
+                                            errorStyle={styles.errorStyle}
+                                            value={this.state.relationShip && this.state.relationShip.name ? this.state.relationShip.name : 'Quan hệ'}
+                                            autoCapitalize={"none"}
+                                            returnKeyType={"next"}
+                                            // underlineColorAndroid="transparent"
+                                            autoCorrect={false}
+                                        />
+                                    </Field>
+                                </Field>
                         </Form>
                         <View style={styles.viewBtn}>
                             <TouchableOpacity onPress={this.onCreateProfile} style={styles.btnDone}><Text style={styles.txDone}>Lưu</Text></TouchableOpacity>
@@ -668,7 +709,7 @@ const styles = StyleSheet.create({
         marginRight: 5
     },
     mucdichkham: {
-        flex: 1
+        // flex: 1
         // borderStyle: "solid",
         // borderWidth: 1,
         // borderColor: '#4BBA7B',
@@ -704,7 +745,7 @@ const styles = StyleSheet.create({
     container: {
         // borderStyle: "solid",
         marginVertical: 20,
-        paddingHorizontal: 20,
+        paddingHorizontal: 10,
         flex: 1
 
         // borderColor: "rgba(0, 0, 0, 0.07)"
