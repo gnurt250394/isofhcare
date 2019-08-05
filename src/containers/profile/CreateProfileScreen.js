@@ -119,8 +119,8 @@ class CreateProfileScreen extends Component {
                         let idProvince = this.state.provinces ? this.state.provinces.id : ''
                         let idDistrics = this.state.districts ? this.state.districts.id : ''
                         let idZone = this.state.zone ? this.state.zone.id : ''
-                        let village = this.state.village ? this.state.village : ''
-                        let relationshipType = this.state.relationshipType ? this.state.relationshipType : ''
+                        let village = this.state.address ? this.state.address : ''
+                        let relationshipType = this.state.relationShip && this.state.relationShip.type ? this.state.relationShip.type : ''
                         // parseFloat(item.distance).toFixed(1)
                         let data = {
                             "name": name,
@@ -138,7 +138,7 @@ class CreateProfileScreen extends Component {
                         profileProvider.createProfile(data).then(res => {
                             console.log(res)
                             if (res.code == 0) {
-                                this.props.navigation.navigate('listProfile', { reset: this.state.reset + 1 })
+                                this.props.navigation.navigate('listProfileUser', { reset: this.state.reset + 1 })
                                 snackbar.show('Thêm thành viên thành công', 'success')
                             }
                             else { snackbar.show('Thêm thành viên không thành công', 'danger') }
@@ -209,7 +209,7 @@ class CreateProfileScreen extends Component {
     }
     selectRelationShip = (relationShip) => {
         let relationShipError = relationShip ? "" : this.state.relationShipError;
-        if (!relationShip || !this.state.zone || relationShip.id != this.state.relationShip.id) {
+        if (!relationShip || !this.state.relationShip || relationShip.id != this.state.relationShip.id) {
             this.setState({ relationShip, relationShipError })
         } else {
             this.setState({ relationShip, relationShipError });

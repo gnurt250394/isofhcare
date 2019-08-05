@@ -79,6 +79,9 @@ import SelectProvinceScreen from "@containers/profile/SelectProvinceScreen";
 import SelectZoneScreen from "@containers/profile/SelectZoneScreen";
 import SelectDistrictScreen from "@containers/profile/SelectDistrictScreen";
 import SelectRelationshipScreen from "@containers/profile/SelectRelationshipScreen";
+import OtpPhoneNumberScreen from "@containers/account/OtpPhoneNumberScreen";
+
+
 //
 import HospitalByLocationScreen from '@containers/home/HospitalByLocationScreen'
 import HospitalScreen from '@containers/home/HospitalScreen'
@@ -283,6 +286,7 @@ const RootNavigator = createStackNavigator(
     selectRelationship:{screen:SelectRelationshipScreen},
     selectZone: { screen: SelectZoneScreen },
     profile: { screen: ProfileScreen },
+    OtpPhoneNumberScreen:{screen:OtpPhoneNumberScreen},
     // listProfileUser: { screen: ListProfileScreen },
     //
     home: DrawerNav,

@@ -22,7 +22,49 @@ class SelectRelationshipScreen extends Component {
                 {
                     id: 1,
                     name: 'Cha',
-                }, { id: 2, name: 'Mẹ' }, { id: 3, name: 'Con trai' }, { id: 4, name: 'Con gái' }, { id: 5, name: 'Cháu trai' }, { id: 6, name: 'cháu gái' }, { id: 7, name: 'Ông' }, { id: 8, name: 'Bà' }, { id: 9, name: 'Vợ' }, { id: 10, name: 'Chồng' }
+                    type: 'DAD'
+                }, {
+                    id: 2,
+                    name: 'Mẹ',
+                    type: 'MOTHER'
+                }, {
+                    id: 3,
+                    name: 'Con trai',
+                    type: 'BOY'
+                }, {
+                    id: 4,
+                    name: 'Con gái',
+                    type: 'DAUGHTER'
+                }, {
+                    id: 5,
+                    name: 'Cháu trai',
+                    type: 'GRANDSON'
+                }, {
+                    id: 6,
+                    name: 'Cháu gái',
+                    type: 'NIECE'
+                }, {
+                    id: 7,
+                    name: 'Ông',
+                    type: 'GRANDFATHER'
+                }, {
+                    id: 8,
+                    name: 'Bà',
+                    type: 'GRANDMOTHER'
+                }, {
+                    id: 9,
+                    name: 'Vợ',
+                    type: 'WIFE'
+                }, {
+                    id: 10,
+                    name: 'Chồng',
+                    type: 'HUSBAND'
+                },
+                {
+                    id: 11,
+                    name: 'Khác',
+                    type: 'OTHER'
+                },
             ]
         }
     }
