@@ -23,9 +23,7 @@ import snackbar from "@utils/snackbar-utils";
 import firebase from 'react-native-firebase';
 import ScaledImage from 'mainam-react-native-scaleimage'
 import NavigationService from "@navigators/NavigationService";
-
-
-
+import appProvider from '@data-access/app-provider';
 import Actionbar from '@components/home/Actionbar';
 import SlideBanner from '@components/home/SlideBanner';
 import TopHospital from '@components/hospital/TopHospital';
@@ -46,6 +44,7 @@ class HomeScreen extends Component {
     this.props.navigation.setParams({ test: 1 })
   }
   componentDidMount() {
+    appProvider.setActiveApp();
     DeviceEventEmitter.removeAllListeners("hardwareBackPress");
     // AppState.addEventListener('change', this._handleAppStateChange);
     DeviceEventEmitter.addListener(
