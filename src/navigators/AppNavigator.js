@@ -80,6 +80,8 @@ import SelectZoneScreen from "@containers/profile/SelectZoneScreen";
 import SelectDistrictScreen from "@containers/profile/SelectDistrictScreen";
 import SelectRelationshipScreen from "@containers/profile/SelectRelationshipScreen";
 import OtpPhoneNumberScreen from "@containers/account/OtpPhoneNumberScreen";
+import SendConfirmProfileScreen from "@containers/profile/SendConfirmProfileScreen";
+
 
 
 //
@@ -286,7 +288,8 @@ const RootNavigator = createStackNavigator(
     selectRelationship:{screen:SelectRelationshipScreen},
     selectZone: { screen: SelectZoneScreen },
     profile: { screen: ProfileScreen },
-    OtpPhoneNumberScreen:{screen:OtpPhoneNumberScreen},
+    otpPhoneNumber:{screen:OtpPhoneNumberScreen},
+    sendConfirmProfile:{screen:SendConfirmProfileScreen},
     // listProfileUser: { screen: ListProfileScreen },
     //
     home: DrawerNav,

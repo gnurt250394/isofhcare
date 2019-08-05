@@ -271,31 +271,18 @@ class ProfileScreen extends Component {
             >
                 <ScrollView style={{ flex: 1 }} >
                     <View style={styles.viewBaner}>
-                        <ImageLoad
-                            // imageStyle={styles.imgBaner}
-                            // customImagePlaceholderDefaultStyle={styles.customImagePlace}
-                            // placeholderSource={{}}
+                        <ScaledImage
+                            // resizeMode="cover"
+                            source={require('@images/new/profile/img_cover_profile.png')}
+                            width={70}
                             style={styles.imgBaner}
-                            resizeMode="cover"
-                            loadingStyle={{ size: "small", color: "gray" }}
-                            source={source}
-                            defaultImage={() => {
-                                return (
-                                    <ScaledImage
-                                        resizeMode="cover"
-                                        source={icSupport}
-                                        width={70}
-                                        style={styles.imgBaner}
-                                    />
-                                );
-                            }}
                         />
-                        <TouchableOpacity onPress={this.selectImage} style={styles.scaledImage}>
+                        {/* <TouchableOpacity onPress={this.selectImage} style={styles.scaledImage}>
                             <ScaledImage
                                 source={require("@images/new/profile/ic_instagram.png")}
                                 width={30}
                             />
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                         <View style={styles.avtBtn}>
                             <ImageLoad
                                 source={sourceAvt}
