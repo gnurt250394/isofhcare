@@ -30,6 +30,7 @@ class SplashScreen extends Component {
 
 		console.disableYellowBox = true;
 		console.reportErrorsAsExceptions = false;
+
 		// this.Actions.navigate('home')
 		// setTimeout(() => {
 		// 	this.Actions.dispatch(StackActions.reset({
@@ -42,6 +43,7 @@ class SplashScreen extends Component {
 				if (s) {
 					// s.id = "55";
 					this.props.dispatch(redux.userLogin(s));
+
 				}
 				else {
 					this.props.dispatch(redux.userLogout());

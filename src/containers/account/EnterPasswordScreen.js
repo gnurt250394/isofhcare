@@ -93,7 +93,6 @@ class EnterPasswordScreen extends Component {
           switch (s.code) {
             case 0:
             case 9:
-              debugger;
               var user = s.data.user;
               user.bookingNumberHospital = s.data.bookingNumberHospital;
               user.bookingStatus = s.data.bookingStatus;

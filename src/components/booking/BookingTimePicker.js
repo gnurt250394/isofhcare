@@ -406,7 +406,6 @@ class SelectTimeScreen extends Component {
     //     //         }
     //     //     });
     //     // console.log(listTime);
-    //     debugger;
 
     //     this.setState({
     //         listTime: [{

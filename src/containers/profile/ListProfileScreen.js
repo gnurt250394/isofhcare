@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     },
     txTitle: { color: '#fff', textAlign: 'left', marginHorizontal: 10, fontSize: 14 },
     actionbarStyle: {
-        backgroundColor: '#22b060',
+        backgroundColor: '#4BBA7B',
         borderBottomWidth: 0
     },
     btn: {

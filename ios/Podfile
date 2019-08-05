@@ -77,6 +77,8 @@ target 'APP' do
 
   pod 'CodePush', :path => '../node_modules/react-native-code-push'
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
+  pod 'react-native-print', :path => '../node_modules/react-native-print'
+
 end
 
 # very important to have, unless you removed React dependencies for Libraries

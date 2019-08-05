@@ -89,7 +89,7 @@ module.exports = {
   key: {
     payment_return_url:
     {
-      vnpay: "vnpay://payment_isofhcare_return",
+      vnpay: "http://localhost:8888/order/vnpay_return",
       payoo: "payoo://payment_isofhcare_return"
     },
     history: {
@@ -379,7 +379,7 @@ module.exports = {
     checkupResult: 'KẾT QUẢ KHÁM',
     diagnosticResult: 'KẾT QUẢ CHẨN ĐOÁN HÌNH ẢNH',
     describe: 'Mô tả',
-    conclude: 'kết luận',
+    conclude: 'Kết luận',
     ehealth_location: 'Các Cơ Sở Y Tế đã khám',
     not_result_ehealth_location: 'Hiện tại chưa có thông tin',
     lastTime: 'Lần gần nhất: ',
@@ -473,6 +473,7 @@ module.exports = {
       get_detail: isofhcare_service + "user/get-detail",
       refresh_password_by_token: isofhcare_service + "user/refresh-password-by-token",
       check_used_phone: isofhcare_service + "user/check-used-phone",
+      use_app: isofhcare_service + "user/use-app",
     },
     keyvalue: {
       get: isofhcare_service + "key-value/get-value",

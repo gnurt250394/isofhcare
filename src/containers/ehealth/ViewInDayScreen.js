@@ -7,6 +7,8 @@ import dateUtils from 'mainam-react-native-date-utils';
 import stringUtils from 'mainam-react-native-string-utils';
 import snackbar from '@utils/snackbar-utils';
 import constants from '@resources/strings';
+import ScaledImage from 'mainam-react-native-scaleimage';
+import resultUtils from './utils/result-utils';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 
@@ -82,64 +84,12 @@ class ViewInDateScreen extends Component {
     }
     getDetailPatientHistory(patientHistoryId) {
         this.setState({ isLoading: true }, () => {
-            bookingProvider.detailPatientHistory(patientHistoryId, this.props.ehealth.hospital.hospital.id).then(s => {
-                this.setState({ isLoading: false }, () => {
-                    switch (s.code) {
-                        case 0:
-                            let resultDetail = null;
-                            let result = null;
-                            if (s.data && s.data.data) {
-                                if (s.data.data.resultDetail) {
-                                    try {
-                                        resultDetail = JSON.parse(s.data.data.resultDetail);
-                                    } catch (error) {
-
-                                    }
-                                }
-                                if (s.data.data.result) {
-                                    try {
-                                        result = JSON.parse(s.data.data.result);
-                                        if (!result ||
-                                            (
-                                                !(result.ListDiagnostic && result.ListDiagnostic.length) &&
-                                                !(result.ListMedicine && result.ListMedicine.length) &&
-                                                !(result.ListResulGiaiPhau && result.ListResulGiaiPhau.length) &&
-                                                !(result.ListResulHoaSinh && result.ListResulHoaSinh.length) &&
-                                                !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
-                                                !(result.ListResulHuyetHoc && result.ListResulHuyetHoc.length) &&
-                                                !(result.ListResulViSinh && result.ListResulViSinh.length) &&
-                                                !(result.ListResultCheckup && result.ListResultCheckup.length)
-
-                                            )
-                                        ) {
-                                            this.setState({
-                                                hasResult: false
-                                            })
-                                            snackbar.show(constants.msg.ehealth.not_result_ehealth_in_day, "danger");
-                                        } else {
-                                            this.setState({
-                                                hasResult: true,
-                                                result,
-                                                resultDetail
-                                            });
-                                        }
-                                    } catch (error) {
-                                        this.setState({ hasResult: false, result: {} });
-                                        snackbar.show(constants.msg.ehealth.not_result_ehealth_in_day, "danger");
-
-                                    }
-                                }
-                            }
-
-                            break;
-                    }
-                })
-            }).catch(e => {
-                this.setState({ isLoading: false }, () => {
-
+            resultUtils.getDetail(patientHistoryId, this.props.ehealth.hospital.hospital.id).then(result => {
+                this.setState({ result: result.result, resultDetail: result.resultDetail, hasResult: result.hasResult, isLoading: false }, () => {
+                    if (!result.hasResult)
+                        snackbar.show(constants.msg.ehealth.not_result_ehealth_in_day, "danger");
                 })
             })
-
         })
     }
     getItemLayout = (data, index) => (
@@ -181,14 +131,17 @@ class ViewInDateScreen extends Component {
             if (!note)
                 note = item.First_Diagnostic;
             if (note)
-                return <TouchableOpacity style={styles.card} onPress={this.viewCheckupResult}>
-                    <View style={styles.viewCheckupResult}></View>
-                    <View style={styles.viewNote}>
-                        <Text style={styles.txResultEhealth}>{constants.ehealth.result_ehealth}</Text>
-                        <Text style={styles.txNote}>{note}</Text>
-                    </View>
-                    <View style={styles.viewMaker}></View>
-                </TouchableOpacity>
+                return (
+                    <View style={{ marginTop: 10 }}>
+                        <Text style={styles.txResultEhealth}>{'KẾT QUẢ KHÁM CẬN LÂM SÀNG'}</Text>
+                        <TouchableOpacity style={styles.card} onPress={this.viewCheckupResult}>
+                            {/* <View style={styles.viewCheckupResult}></View> */}
+                            <ScaledImage height={50} source={require('@images/new/ehealth/ic_preclinical.png')}></ScaledImage>
+                            <View style={styles.viewNote}>
+                                <Text style={styles.txNote}>{note}</Text>
+                            </View>
+                            <ScaledImage height={30} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
+                        </TouchableOpacity></View>)
         }
         return null;
     }
@@ -204,14 +157,18 @@ class ViewInDateScreen extends Component {
             if (!note)
                 note = item.Conclusion;
             if (note)
-                return <TouchableOpacity style={styles.card} onPress={this.viewDiagnosticResult}>
-                    <View style={styles.viewDiagnosticResult}></View>
-                    <View style={styles.viewTx}>
-                        <Text style={styles.txResultEhealth}>{constants.ehealth.image_result}</Text>
-                        <Text style={styles.txNoteBlue}>{note}</Text>
+                return (
+                    <View style={{ marginTop: 10 }}>
+                        <Text style={styles.txResultEhealth}>{'KẾT QUẢ CHẨN ĐOÁN HÌNH ẢNH'}</Text>
+                        <TouchableOpacity style={styles.card} onPress={this.viewDiagnosticResult}>
+                            <ScaledImage height={50} source={require('@images/new/ehealth/ic_preclinical.png')}></ScaledImage>
+                            <View style={styles.viewTx}>
+                                <Text style={styles.txNoteBlue}>{note}</Text>
+                            </View>
+                            <ScaledImage height={30} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
+                        </TouchableOpacity>
                     </View>
-                    <View style={styles.viewMakerBlue}></View>
-                </TouchableOpacity>
+                )
         }
         return null;
     }
@@ -229,12 +186,12 @@ class ViewInDateScreen extends Component {
                 return null;
             // }
             return <TouchableOpacity style={styles.card} onPress={this.viewMoney}>
-                <View style={styles.viewMoney}></View>
+                <ScaledImage height={50} source={require('@images/new/ehealth/ic_preclinical.png')}></ScaledImage>
                 <View style={styles.viewTxMoney}>
                     <Text style={styles.txResultEhealth}>{constants.ehealth.money}</Text>
                     <Text style={styles.txMoney}>{money.formatPrice() + " đ"}</Text>
                 </View>
-                <View style={styles.makerMoney}></View>
+                <ScaledImage height={30} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
             </TouchableOpacity>
         }
         return null;
@@ -256,14 +213,18 @@ class ViewInDateScreen extends Component {
             if (!note)
                 note = item.BiopsyLocation;
             if (note)
-                return <TouchableOpacity style={styles.card} onPress={this.viewSurgeryResult}>
-                    <View style={styles.viewSurgeryResult}></View>
-                    <View style={styles.viewTxSurgery}>
-                        <Text style={styles.txResultEhealth}>{constants.ehealth.surgery_result}</Text>
-                        <Text style={styles.txSurgery}>{note}</Text>
+                return (
+                    <View style={{ marginTop: 10 }}>
+                        <Text style={styles.txResultEhealth}>{'KẾT QUẢ GIẢI PHẪU'}</Text>
+                        <TouchableOpacity style={styles.card} onPress={this.viewSurgeryResult}>
+                            <ScaledImage height={50} source={require('@images/new/ehealth/img_orther_service.png')}></ScaledImage>
+                            <View style={styles.viewTxSurgery}>
+                                <Text style={styles.txSurgery}>{note}</Text>
+                            </View>
+                            <ScaledImage height={30} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
+                        </TouchableOpacity>
                     </View>
-                    <View style={styles.footerSurgery}></View>
-                </TouchableOpacity>
+                )
         }
         return null;
     }
@@ -290,24 +251,29 @@ class ViewInDateScreen extends Component {
 
             let note = item.ServiceName + " " + item.Measure + ", " + item.Quantity + " " + item.Unit;
             if (note)
-                return <TouchableOpacity style={styles.card} onPress={this.viewMedicine}>
-                    <View style={styles.viewMedicine}></View>
-                    <View style={styles.viewDrug}>
-                        <Text style={styles.txResultEhealth}>{constants.ehealth.drug}</Text>
-                        <Text style={styles.txMedicine}>{note}</Text>
+                return (
+                    <View style={{ marginTop: 10 }}>
+                        <Text style={styles.txResultEhealth}>{'THUỐC'}</Text>
+
+                        <TouchableOpacity style={styles.card} onPress={this.viewMedicine}>
+                            <ScaledImage height={50} source={require('@images/new/ehealth/img_drug2.png')}></ScaledImage>
+                            <View style={styles.viewDrug}>
+                                <Text style={styles.txMedicine}>{note}</Text>
+                            </View>
+                            <ScaledImage height={30} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
+                        </TouchableOpacity>
                     </View>
-                    <View style={styles.footerMedicine}></View>
-                </TouchableOpacity>
+                )
         }
         return null;
     }
     renderMedicalTest() {
-        
-        if (this.state.result 
+
+        if (this.state.result
             && ((this.state.result.ListResulHoaSinh && this.state.result.ListResulHoaSinh.length)
-            || (this.state.result.ListResulHuyetHoc && this.state.result.ListResulHuyetHoc.length)
-            || (this.state.result.ListResulViSinh && this.state.result.ListResulViSinh.length)
-            || (this.state.result.ListResulOther && this.state.result.ListResulOther.length))
+                || (this.state.result.ListResulHuyetHoc && this.state.result.ListResulHuyetHoc.length)
+                || (this.state.result.ListResulViSinh && this.state.result.ListResulViSinh.length)
+                || (this.state.result.ListResulOther && this.state.result.ListResulOther.length))
         ) {
             let arr = [];
             if (this.state.result.ListResulHoaSinh && this.state.result.ListResulHoaSinh.length)
@@ -338,24 +304,26 @@ class ViewInDateScreen extends Component {
             }
 
             if (note)
-                return <TouchableOpacity style={styles.card} onPress={this.viewMedicalTestResult}>
-                    <View style={styles.viewMedical}></View>
-                    <View style={styles.viewTxMedical}>
-                        <Text style={styles.txResultEhealth}>{constants.ehealth.test_result}</Text>
-                        <Text style={styles.txMedical}>{note}</Text>
-                    </View>
-                    <View style={styles.footerMedical}></View>
-                </TouchableOpacity>
+                return (
+                    <View>
+                        <Text style={styles.txResultEhealth}>{'KẾT QUẢ XÉT NGHIỆM'}</Text>
+                        <TouchableOpacity style={styles.card} onPress={this.viewMedicalTestResult}>
+                            <ScaledImage height={50} source={require('@images/new/ehealth/img_drug.png')}></ScaledImage>
+                            <View style={styles.viewTxMedical}>
+                                <Text style={styles.txMedical}>{note}</Text>
+                            </View>
+                            <ScaledImage height={30} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
+                        </TouchableOpacity>
+                    </View>)
         }
         return null;
     }
     render() {
-
         return (
             <ActivityPanel style={styles.container} title={constants.title.ehealth}
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#22b060"
+                statusbarBackgroundColor="#4BBA7B"
                 actionbarStyle={styles.actionbarStyle}
                 titleStyle={styles.titleStyle}
                 isLoading={this.state.isLoading}>
@@ -420,7 +388,8 @@ class ViewInDateScreen extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        backgroundColor: '#4F4F4F'
     },
     viewSpaceTop: { height: 100 },
     txDateColor: { color: '#bbbbbb' },
@@ -432,6 +401,7 @@ const styles = StyleSheet.create({
             width: 0,
             height: 2
         },
+        alignItems: 'center',
         shadowRadius: 10,
         shadowOpacity: 1, marginTop: 10, padding: 10, flexDirection: 'row', shadowOpacity: 1, borderRadius: 8
     },
@@ -531,37 +501,37 @@ const styles = StyleSheet.create({
     },
     viewCheckupResult: { width: 10, height: 10, backgroundColor: '#ff4355', borderRadius: 5, marginTop: 22, marginLeft: 10 },
     viewNote: { flex: 1, padding: 15 },
-    txResultEhealth: { fontSize: 18 },
-    txNote: { paddingTop: 5, color: '#ff4355', flex: 1 },
+    txResultEhealth: { fontSize: 18, color: '#fff', fontWeight: '700', marginTop: 10 },
+    txNote: { paddingTop: 5, fontSize: 14, color: '#373A3C', flex: 1 },
     viewMaker: { width: 5, height: '100%', backgroundColor: '#ff4355', borderRadius: 2.5 },
     viewDiagnosticResult: { width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 },
     viewTx: { flex: 1, padding: 15 },
-    txNoteBlue: { paddingTop: 5, color: '#2e66e7', flex: 1 },
+    txNoteBlue: { paddingTop: 5, color: '#373A3C', flex: 1 },
     viewMakerBlue: { width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 },
     viewMoney: { width: 10, height: 10, backgroundColor: '#ff4355', borderRadius: 5, marginTop: 22, marginLeft: 10 },
     viewTxMoney: { flex: 1, padding: 15 },
-    txMoney: { paddingTop: 5, color: '#ff4355', flex: 1, fontWeight: 'bold' },
+    txMoney: { paddingTop: 5, color: '#373A3C', flex: 1, fontWeight: 'bold' },
     makerMoney: { width: 5, height: '100%', backgroundColor: '#ff4355', borderRadius: 2.5 },
     viewSurgeryResult: { width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 },
     viewTxSurgery: { flex: 1, padding: 15 },
-    txSurgery: { paddingTop: 5, color: '#2e66e7', flex: 1 },
+    txSurgery: { paddingTop: 5, color: '#373A3C', flex: 1 },
     footerSurgery: { width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 },
     viewMedicine: { width: 10, height: 10, backgroundColor: '#fbaa21', borderRadius: 5, marginTop: 22, marginLeft: 10 },
     viewDrug: { flex: 1, padding: 15 },
-    txMedicine: { paddingTop: 5, color: '#fbaa21', flex: 1 },
+    txMedicine: { paddingTop: 5, color: '#373A3C', flex: 1 },
     footerMedicine: { width: 5, height: '100%', backgroundColor: '#fbaa21', borderRadius: 2.5 },
     viewMedical: { width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 },
     viewTxMedical: { flex: 1, padding: 15 },
-    txMedical: { paddingTop: 5, color: '#2e66e7' },
+    txMedical: { paddingTop: 5, color: '#373A3C' },
     footerMedical: { width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 },
     actionbarStyle: {
-        backgroundColor: '#22b060',
+        backgroundColor: '#4BBA7B',
         borderBottomWidth: 0
     },
     titleStyle: {
         color: '#FFF'
     },
-    container2: { flex: 1, alignItems: 'center' },
+    container2: { flex: 1, alignItems: 'center', backgroundColor: '#4F4F4F' },
     viewDateSelected: {
         width: 40,
         height: 40,
@@ -593,7 +563,7 @@ const styles = StyleSheet.create({
     },
     txDayNotSelect: {
         fontSize: 18,
-        color: '#2e2e39',
+        color: '#fff',
     },
     renderData: { flex: 1, width: DEVICE_WIDTH, padding: 10 },
     btnInfo: {

@@ -1,38 +1,85 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Dimensions } from 'react-native';
 import { Card } from 'native-base';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import ActivityPanel from '@components/ActivityPanel';
 import { connect } from 'react-redux';
 import ImageLoad from 'mainam-react-native-image-loader';
+const width = (Dimensions.get('window').width) / 2;
+const spacing = 10;
+import dateUtils from 'mainam-react-native-date-utils';
+import resultUtils from './utils/result-utils';
+import snackbar from '@utils/snackbar-utils';
+import constants from '@resources/strings';
 
- class HistoryTimeScreen extends Component {
+class HistoryTimeScreen extends Component {
     constructor(props) {
         super(props);
+        let countTime = this.props.navigation.state.params && this.props.navigation.state.params.countTime ? this.props.navigation.state.params.countTime : ''
+        let item = this.props.navigation.state.params && this.props.navigation.state.params.item || {};
+
         this.state = {
-            data: [{
-                date: '15/07/2019',
-                type: 'Khám cận lâm sàng'
-            }, {
-                date: '15/07/2019',
-                type: 'Khám cận lâm sàng'
-            }, {
-                date: '15/07/2019',
-                type: 'Khám cận lâm sàng'
-            }]
+            data: item.history || [],
+            countTime: countTime
         };
     }
-    renderItem = ({ item }) => {
-        const source = this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar.absoluteUrl() } : require("@images/new/user.png");
 
+    renderImg = (item) => {
+        switch (item.type) {
+            case 1:
+                return (<ScaledImage style={styles.img} style={{ borderRadius: 15 }} height={50} source={require('@images/new/ehealth/ic_peclinical.png')}></ScaledImage>)
+            case 2:
+                return (<ScaledImage style={styles.img} height={50} source={require('@images/new/ehealth/ic_ct_scan.png')}></ScaledImage>)
+            case 4:
+                return (<ScaledImage style={styles.img} height={50} source={require('@images/new/ehealth/ic_analysis.png')}></ScaledImage>)
+            case 5:
+                return (<ScaledImage style={styles.img} height={50} source={require('@images/new/ehealth/ic_magnetic.png')}></ScaledImage>)
+            case 7:
+                return (<ScaledImage style={styles.img} height={50} source={require('@images/new/ehealth/ic_endoscopic.png')}></ScaledImage>)
+            default:
+                return (<ScaledImage style={styles.img} style={{ borderRadius: 15 }} height={50} source={require('@images/new/ehealth/ic_peclinical.png')}></ScaledImage>)
+
+        }
+    }
+    getTime(text) {
+        try {
+            if (text) {
+                return text.toDateObject('-').format('dd/MM/yyyy');
+            }
+            return "";
+        } catch (error) {
+            return "";
+        }
+    }
+    viewResult = (item) => {
+        console.log(item);
+        this.setState({ isLoading: true }, () => {
+            resultUtils.getDetail(item.patientHistoryId, this.props.ehealth.hospital.hospital.id).then(result => {
+                this.setState({ isLoading: false }, () => {
+                    if (!result.hasResult)
+                        snackbar.show(constants.msg.ehealth.not_result_ehealth_in_day, "danger");
+                    else {
+                        this.props.navigation.navigate("viewDetail", { result: result.result, resultDetail: result.resultDetail })
+                    }
+                });
+            });
+        });
+    }
+    renderItem = ({ item }) => {
         return (
-            <Card style={styles.cardStyle}>
-                <ScaledImage style = {styles.img} height={100} uri={'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBg5BBAZxlBkNfmhQIjNjek9PviIoskVFu3q6cgY-OXMrvL8r2ig'}></ScaledImage>
-                <View style={styles.viewDetails}>
-                    <Text style={{color:'#479AE3'}}>{item.date}</Text>
-                    <Text>{item.type}</Text>
-                </View>
-            </Card>
+            <View style={styles.viewItem}>
+                <Card style={styles.cardStyle}>
+                    <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => {
+                        this.viewResult(item)
+                    }}>
+                        {this.renderImg(item)}
+                        <View style={styles.viewDetails}>
+                            <Text style={{ color: '#479AE3', marginVertical: 15, fontSize: 14 }}>{this.getTime(item.timeGoIn)}</Text>
+                            <Text style={{ fontSize: 14, minHeight: 20 }}>{item.serViceType}</Text>
+                        </View>
+                    </TouchableOpacity>
+                </Card>
+            </View>
         )
     }
     render() {
@@ -40,61 +87,69 @@ import ImageLoad from 'mainam-react-native-image-loader';
 
         return (
             <ActivityPanel style={styles.container}
-            // title="HỒ SƠ Y BẠ GIA ĐÌNH"
-            title={<Text>{'Lịch sử y bạ('}<Text>16</Text>)lần</Text>}
-            icBack={require('@images/new/left_arrow_white.png')}
-            iosBarStyle={'light-content'}
-            statusbarBackgroundColor="#22b060"
-            actionbarStyle={styles.actionbarStyle}
-            menuButton = {<TouchableOpacity style={styles.menu} >
-            <ImageLoad
-                        resizeMode="cover"
-                        imageStyle={styles.imageStyle}
-                        borderRadius={30}
-                        customImagePlaceholderDefaultStyle={[styles.avatar, { width: 60, height: 60 }]}
-                        placeholderSource={require("@images/new/user.png")}
-                        resizeMode="cover"
-                        loadingStyle={{ size: 'small', color: 'gray' }}
-                        source={source}
-                        style={styles.imgLoad}
-                        defaultImage={() => {
-                            return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={60} height={60} />
-                        }}
-                    /></TouchableOpacity>}
-            titleStyle={styles.titleStyle}>
-            <View style={{justifyContent:'center',flex:1}}>
+                // title="HỒ SƠ Y BẠ GIA ĐÌNH"
+                isLoading={this.state.isLoading}
+                title={<Text style={{ color: '#FFF' }}>{'Lịch sử y bạ '}<Text style={{ color: '#b61827' }}>({this.state.countTime} lần)</Text></Text>}
+                icBack={require('@images/new/left_arrow_white.png')}
+                iosBarStyle={'light-content'}
+                statusbarBackgroundColor="#4BBA7B"
+                actionbarStyle={styles.actionbarStyle}
+                titleStyle={styles.titleStyle}>
                 <FlatList
                     data={this.state.data}
+                    style={{ flex: 1 }}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={this.renderItem}
                     extraData={this.state}
                     numColumns={2}
+                    ListHeaderComponent={() => {
+                        return (
+                            <View style={{ height: 10 }}></View>
+                        )
+                    }}
+                    ListFooterComponent={() => {
+                        return (
+                            <View style={{ height: 50 }}></View>
+                        )
+                    }}
                 ></FlatList>
-            </View>
             </ActivityPanel>
 
         );
     }
 }
 const styles = StyleSheet.create({
-    containder: {
+    container: {
         flex: 1,
-        justifyContent:'center'
+        backgroundColor: '#F9FAFB'
     },
     cardStyle: {
-        padding: 5,
+        width: '100%',
         borderRadius: 5,
-        marginHorizontal:10
+        alignItems: 'center',
+        minHeight: 150,
+        paddingVertical: 10,
+        justifyContent: 'center',
+    },
+    viewItem: {
+        width: width,
+        padding: 5,
+        paddingHorizontal: 10,
+
+        // , padding: 5, flex: 1 / 2, height: 180, marginTop: 20, 
+        justifyContent: 'center', alignItems: 'center',
+        width: width
     },
     viewDetails: {
         justifyContent: 'center',
         alignItems: 'center',
     },
-    img:{
-        // position:'absolute',
+    img: {
         // top:-50
+
     },
     actionbarStyle: {
+        backgroundColor: '#4BBA7B',
         borderBottomWidth: 0
     },
     imageStyle: { borderRadius: 30, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' },

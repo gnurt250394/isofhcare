@@ -23,9 +23,7 @@ import snackbar from "@utils/snackbar-utils";
 import firebase from 'react-native-firebase';
 import ScaledImage from 'mainam-react-native-scaleimage'
 import NavigationService from "@navigators/NavigationService";
-
-
-
+import appProvider from '@data-access/app-provider';
 import Actionbar from '@components/home/Actionbar';
 import SlideBanner from '@components/home/SlideBanner';
 import TopHospital from '@components/hospital/TopHospital';
@@ -46,8 +44,9 @@ class HomeScreen extends Component {
     this.props.navigation.setParams({ test: 1 })
   }
   componentDidMount() {
+    appProvider.setActiveApp();
     DeviceEventEmitter.removeAllListeners("hardwareBackPress");
-    AppState.addEventListener('change', this._handleAppStateChange);
+    // AppState.addEventListener('change', this._handleAppStateChange);
     DeviceEventEmitter.addListener(
       "hardwareBackPress",
       this.handleHardwareBack.bind(this)
@@ -55,24 +54,24 @@ class HomeScreen extends Component {
   }
 
   componentWillUnmount() {
-    AppState.removeEventListener('change', this._handleAppStateChange);
+    // AppState.removeEventListener('change', this._handleAppStateChange);
     DeviceEventEmitter.removeAllListeners("hardwareBackPress");
   }
-  _handleAppStateChange = (nextAppState) => {
-    if (
-      nextAppState === 'active'
-    ) {
-      if (this.props.userApp.isLogin) {
-        this.props.dispatch(redux.getUnreadNotificationCount());
-        console.log('active');
-      }
-      else {
-        firebase.notifications().setBadge(0);
-      }
-    }
+  // _handleAppStateChange = (nextAppState) => {
+  //   if (
+  //     nextAppState === 'active'
+  //   ) {
+  //     if (this.props.userApp.isLogin) {
+  //       this.props.dispatch(redux.getUnreadNotificationCount());
+  //       console.log('active');
+  //     }
+  //     else {
+  //       firebase.notifications().setBadge(0);
+  //     }
+  //   }
 
-    this.setState({ appState: nextAppState });
-  };
+  //   this.setState({ appState: nextAppState });
+  // };
   handleHardwareBack = () => {
     this.props.navigation.pop();
     return true;
@@ -90,21 +89,26 @@ class HomeScreen extends Component {
   handleScroll = (event) => {
 
   }
-  openDrawer = () => {
-    this.props.navigation.openDrawer()
-  }
   onRefresh = () => {
     this.setState({
-      refreshing: true,
-      countReset: this.state.countReset + 1,
-
+      refreshing: true
+    }, () => {
+      // let promise = [];
+      // promise.push(this.slide.getWrappedInstance().getAds());
+      // promise.push(this.slide.getWrappedInstance().getAds());
+      // promise.push(this.slide.getWrappedInstance().getAds());
+      // promise.push(this.slide.getWrappedInstance().getAds());
+      // Promise.all(promise).then(values => {
+      //   this.slide.getWrappedInstance().setAds(values[0]);
+      //   this.slide.getWrappedInstance().setAds(values[0]);
+      //   this.slide.getWrappedInstance().setAds(values[0]);
+      //   this.slide.getWrappedInstance().setAds(values[0]);
+      //   this.setState({ refreshing: false })
+      // })
     })
-    setTimeout(() => this.setState({
-      refreshing: false
-    }), 200)
   }
+
   render() {
-    const { active } = this.state;
     return (
       <ActivityPanel
         statusbarBackgroundColor="#4BBA7B"
@@ -112,7 +116,7 @@ class HomeScreen extends Component {
         hideActionbar={true}
       >
         <View style={{ flex: 1 }}>
-          <Actionbar openDrawer={this.openDrawer} />
+          <Actionbar />
           <View style={{ position: 'relative' }}>
             <View style={{ height: 150, backgroundColor: '#4BBA7B', position: "absolute", top: 0, left: 0, right: 0 }}></View>
             <ScrollView
@@ -123,11 +127,12 @@ class HomeScreen extends Component {
                 onRefresh={this.onRefresh}
               />}>
               <View>
-                <SlideBanner countReset={this.state.countReset} />
-                <TopHospital countReset={this.state.countReset} />
+                <SlideBanner ref={ref => this.slide = ref} />
+                {/* // countReset={this.state.countReset} /> */}
+                {/* <TopHospital countReset={this.state.countReset} />
                 <HospitalNearYou countReset={this.state.countReset} />
                 <TopDrug countReset={this.state.countReset} />
-                <TopNews countReset={this.state.countReset} />
+                <TopNews countReset={this.state.countReset} /> */}
                 <View style={{ width: '100%', height: 50 }}></View>
               </View>
 
@@ -180,9 +185,10 @@ const styles = StyleSheet.create({
   countNotificaiton: { overflow: 'hidden', position: 'absolute', right: 25, top: 12, backgroundColor: 'red', borderRadius: 6, color: '#FFF', fontSize: 12, paddingHorizontal: 3, textAlign: 'center' },
 });
 
-function mapStateToProps(state) {
-  return {
-    userApp: state.userApp
-  };
-}
-export default connect(mapStateToProps)(HomeScreen);
+export default HomeScreen;
+// function mapStateToProps(state) {
+//   return {
+//     userApp: state.userApp
+//   };
+// }
+// export default connect(mapStateToProps)(HomeScreen);

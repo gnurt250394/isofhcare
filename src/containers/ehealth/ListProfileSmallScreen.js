@@ -109,9 +109,9 @@ class ListProfileSmallScreen extends PureComponent {
                 title={<Text style={{fontSize: 16}}>{constants.title.list_profile_ehealth}{'\n'}<Text style={{ fontSize: 12, fontWeight: 'normal' }}>{constants.ehealth.total}{this.state.listData ? this.state.listData.length : 0}{constants.ehealth.member}</Text></Text>}
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#22b060"
+                statusbarBackgroundColor="#4BBA7B"
                 actionbarStyle={{
-                    backgroundColor: '#22b060',
+                    backgroundColor: '#4BBA7B',
                     borderBottomWidth: 0
                 }}
                 titleStyle={{
@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
     txCount: { color: '#f36819', fontSize: 22 },
     borderBottom: { height: 1, backgroundColor: '#00000050' },
     actionbarStyle: {
-        backgroundColor: '#22b060',
+        backgroundColor: '#4BBA7B',
         borderBottomWidth: 0
     }
 });

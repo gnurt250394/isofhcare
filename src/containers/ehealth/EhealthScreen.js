@@ -62,39 +62,39 @@ class EhealthScreen extends Component {
     }
     onPress = (item) => {
         this.props.dispatch({ type: constants.action.action_select_hospital_ehealth, value: item })
-        Dimensions.get('window').width < 375 ? 
-        this.props.navigation.navigate('listProfileSmall')
-        : this.props.navigation.navigate('listProfile')
+        Dimensions.get('window').width < 375 ?
+            this.props.navigation.navigate('listProfileSmall')
+            : this.props.navigation.navigate('listProfile')
     }
     onDisable = () => {
-        snackbar.show('Bạn chưa có lần khám gần nhất tại bệnh viện này','danger')
+        snackbar.show('Bạn chưa có lần khám gần nhất tại bệnh viện này', 'danger')
     }
     renderItem = ({ item, index }) => {
         const source = item.hospital && item.hospital.avatar ? { uri: item.hospital.avatar.absoluteUrl() } : require("@images/new/user.png");
 
         return (
-            <TouchableOpacity style={styles.btnItem} onPress={item.hospital.timeGoIn ? this.onPress.bind(this, item) : this.onDisable}>
-                <View style={styles.viewImg}>
+            <Card style={styles.viewItem}>
+                <TouchableOpacity style={styles.btnItem} onPress={item.hospital.timeGoIn ? this.onPress.bind(this, item) : this.onDisable}>
                     <ImageLoad
                         resizeMode="cover"
                         imageStyle={styles.imageStyle}
-                        borderRadius={40}
-                        customImagePlaceholderDefaultStyle={[styles.avatar, { width: 80, height: 80 }]}
+                        borderRadius={30}
+                        customImagePlaceholderDefaultStyle={[styles.avatar, { width: 60, height: 60 }]}
                         placeholderSource={require("@images/new/user.png")}
                         resizeMode="cover"
                         loadingStyle={{ size: 'small', color: 'gray' }}
                         source={source}
                         style={styles.imgLoad}
                         defaultImage={() => {
-                            return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={80} height={80} />
+                            return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={60} height={60} />
                         }}
                     />
                     <View style={styles.viewTx}>
                         <Text style={styles.txHospitalName}>{item.hospital.name}</Text>
                         <Text style={styles.txLastTime}>{constants.ehealth.lastTime}<Text>{item.hospital.timeGoIn ? item.hospital.timeGoIn.toDateObject('-').format('dd/MM/yyyy') : ''}</Text></Text>
                     </View>
-                </View>
-            </TouchableOpacity>
+                </TouchableOpacity>
+            </Card>
         )
     }
     onBackClick = () => {
@@ -107,7 +107,7 @@ class EhealthScreen extends Component {
                 titleStyle={styles.txTitle}
                 title={constants.title.ehealth}
                 iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#22b060"
+                statusbarBackgroundColor="#4BBA7B"
                 actionbarStyle={styles.actionbarStyle}
                 style={styles.container}
             >
@@ -141,41 +141,34 @@ const styles = StyleSheet.create({
     },
     txHeader: {
         marginTop: 10,
-        fontSize: 18
+        fontSize: 16,
+        fontWeight: 'bold'
     },
-    viewItem: { flexDirection: 'row', justifyContent: 'flex-start', paddingVertical: 10, paddingHorizontal: 10, borderRadius: 5 },
-    viewImg: {
-        flexDirection: 'row', paddingVertical: 20, paddingHorizontal: 10,
-        borderRadius: 3,
-        backgroundColor: "#ffffff",
-        borderStyle: "solid",
-        borderWidth: 1,
-        borderColor: "#d5d9db"
-    },
-    btnItem: { marginTop: 10, },
+    viewItem: { flexDirection: 'row', justifyContent: 'flex-start', padding: 10, borderRadius: 5 },
+    btnItem: { flexDirection: 'row', alignItems: 'center', flex: 1 },
     imgLoad: {
         alignSelf: 'center',
-        borderRadius: 40,
-        width: 80,
-        height: 80
+        borderRadius: 30,
+        width: 60,
+        height: 60
     },
     imageStyle: {
-        borderRadius: 40, borderWidth: 0.5, borderColor: '#27AE60',
+        borderRadius: 30, borderWidth: 0.5, borderColor: '#27AE60',
     },
-    viewTx: { padding: 15, },
+    viewTx: { marginLeft: 10 },
     txHospitalName: { fontWeight: 'bold', color: '#5A5956', fontSize: 15 },
     txLastTime: { color: '#5A5956', marginTop: 5 },
-    txTitle:{ color: '#fff' },
-    actionbarStyle:{
-        backgroundColor: '#22b060',
+    txTitle: { color: '#fff' },
+    actionbarStyle: {
+        backgroundColor: '#4BBA7B',
         borderBottomWidth: 0
     },
-    viewContent:{
+    viewContent: {
         paddingHorizontal: 10, flex: 1, backgroundColor: '#f0f5f9'
     },
-    viewFlatList:{ flex: 1 },
-    viewTxNone:{ alignItems: 'center', marginTop: 50 },
-    viewTxTime:{ fontStyle: 'italic' }
+    viewFlatList: { flex: 1 },
+    viewTxNone: { alignItems: 'center', marginTop: 50 },
+    viewTxTime: { fontStyle: 'italic' }
 
 
 

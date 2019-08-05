@@ -115,7 +115,6 @@ class SelectServiceScreen extends Component {
         }
 
 
-        // debugger;
         // item.checked = !item.checked
         this.setState({
             listServiceSearch: [...this.state.listServiceSearch]
