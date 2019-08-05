@@ -24,10 +24,11 @@ class ListProfileScreen extends Component {
             isVisible: false,
         };
     }
-    onShowOptions = (id) => {
+    onShowOptions = (id,medicalRelatedId) => {
         this.actionSheetOptions.show();
         this.setState({
-            idProfile: id
+            idProfile: id,
+            medicalRelatedId:medicalRelatedId ? medialRelatedId : null
         })
     };
     onRefresh = () => {
@@ -41,7 +42,10 @@ class ListProfileScreen extends Component {
         try {
             switch (index) {
                 case 0:
-                    NavigationService.navigate("shareDataProfile")
+                    NavigationService.navigate("shareDataProfile",{
+                        medialRelatedId:this.state.medialRelatedId,
+                        id:this.state.idProfile
+                    })
                     return;
                 case 1:
                     this.setState(
@@ -138,7 +142,7 @@ class ListProfileScreen extends Component {
                                 }
                             </View>
                         </TouchableOpacity>
-                        <TouchableOpacity style = {{padding:10}} onPress={() => this.onShowOptions(item.medicalRecords.id)}>
+                        <TouchableOpacity style = {{padding:10}} onPress={() => this.onShowOptions(item.medicalRecords.id,item.medicalRecords.medicalRelatedId)}>
                             <ScaledImage height={8} source={require('@images/new/profile/ic_three_dot.png')}></ScaledImage>
                         </TouchableOpacity>
                     </View>

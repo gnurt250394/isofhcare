@@ -124,7 +124,7 @@ module.exports = {
     },
     sendConfirmProfile(id){
         return new Promise((resolve,reject) => {
-            client.requestApi('put',`${constants.api.profile.send_confirm}/${id}`,(s,e) => {
+            client.requestApi('put',`${constants.api.profile.send_confirm}/${id}`,{},(s,e) => {
                 if(s)
                 resolve(s)
                 else
@@ -132,5 +132,14 @@ module.exports = {
             })
         })
     },
-    
+    sharePermission(data){
+        return new Promise((resolve,reject) => {
+            client.requestApi('put',constants.api.profile.share_permission,data,(s,e) => {
+                if(s)
+                resolve(s)
+                else 
+                reject(e)
+            })
+        })
+    }
 }
