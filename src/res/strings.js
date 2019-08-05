@@ -379,7 +379,7 @@ module.exports = {
     checkupResult: 'KẾT QUẢ KHÁM',
     diagnosticResult: 'KẾT QUẢ CHẨN ĐOÁN HÌNH ẢNH',
     describe: 'Mô tả',
-    conclude: 'kết luận',
+    conclude: 'Kết luận',
     ehealth_location: 'Các Cơ Sở Y Tế đã khám',
     not_result_ehealth_location: 'Hiện tại chưa có thông tin',
     lastTime: 'Lần gần nhất: ',
