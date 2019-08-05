@@ -79,9 +79,9 @@ import SelectProvinceScreen from "@containers/profile/SelectProvinceScreen";
 import SelectZoneScreen from "@containers/profile/SelectZoneScreen";
 import SelectDistrictScreen from "@containers/profile/SelectDistrictScreen";
 import SelectRelationshipScreen from "@containers/profile/SelectRelationshipScreen";
-import OtpPhoneNumberScreen from "@containers/account/OtpPhoneNumberScreen";
+import CheckOtpScreen from "@containers/profile/CheckOtpScreen";
 import SendConfirmProfileScreen from "@containers/profile/SendConfirmProfileScreen";
-
+import ShareDataProfileScreen from '@containers/profile/ShareDataProfileScreen'
 
 
 //
@@ -283,12 +283,13 @@ const RootNavigator = createStackNavigator(
     createProfile: { screen: CreateProfileScreen },
     listProfileUser: { screen: ListProfileScreen },
     editProfile: { screen: EditProfileScreen },
+    shareDataProfile:{screen:ShareDataProfileScreen},
+    checkOtp:{screen:CheckOtpScreen},
     selectProvince: { screen: SelectProvinceScreen },
     selectDistrict: { screen: SelectDistrictScreen },
     selectRelationship:{screen:SelectRelationshipScreen},
     selectZone: { screen: SelectZoneScreen },
     profile: { screen: ProfileScreen },
-    otpPhoneNumber:{screen:OtpPhoneNumberScreen},
     sendConfirmProfile:{screen:SendConfirmProfileScreen},
     // listProfileUser: { screen: ListProfileScreen },
     //

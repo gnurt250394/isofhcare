@@ -10,12 +10,14 @@ import userProvider from '@data-access/user-provider'
 import snackbar from '@utils/snackbar-utils';
 import { connect } from "react-redux";
 
-class OtpPhoneNumberScreen extends React.PureComponent {
+class CheckOtpScreen extends React.PureComponent {
     constructor(props) {
         super(props)
+        let phone = this.props.navigation.state.params && this.props.navigation.state.params.phone ? this.props.navigation.state.params.phone : ''
         this.state = {
             seconds: 90,
-            txErr: ''
+            txErr: '',
+            phone
         }
     }
     componentDidMount() {
@@ -27,20 +29,21 @@ class OtpPhoneNumberScreen extends React.PureComponent {
         }, 1000);
     }
     onReSendPhone = () => {
-        let details = this.props.navigation.state.params && this.props.navigation.state.params.details ? this.props.navigation.state.params.details :''
+        let details = this.props.navigation.state.params && this.props.navigation.state.params.details ? this.props.navigation.state.params.details : ''
         details && userProvider.reSendOtp(details).then(res => {
             // if (res.code == 'OK') {
             //     console.log('thanh cong')
             // } else {
             //     console.log('that bai');
             // }
-            if(res.code == 'OK')
-            {this.setState({
-                seconds:90
-            })}else{
-                snackbar.show(res.message,'danger')
+            if (res.code == 'OK') {
+                this.setState({
+                    seconds: 90
+                })
+            } else {
+                snackbar.show(res.message, 'danger')
             }
-            
+
         })
     }
     onCheckToken = () => {
@@ -65,7 +68,7 @@ class OtpPhoneNumberScreen extends React.PureComponent {
                     // } else this.props.navigation.navigate("home", { showDraw: false });
                     return;
                 } else {
-                    snackbar.show(res.message,'danger')
+                    snackbar.show(res.message, 'danger')
 
                 }
             })
@@ -84,7 +87,7 @@ class OtpPhoneNumberScreen extends React.PureComponent {
                     style={{ flex: 1 }} keyboardShouldPersistTaps="handled">
                     <View style={{ flex: 1, padding: 20 }}>
                         <ScaleImage source={require("@images/new/isofhcare.png")} width={180} style={styles.logo} />
-                        <Text style={styles.txContents}>Vui lòng nhập mã xác thực được gửi tới số điện thoại</Text>
+                        <Text style={styles.txContents}>Một mã xác nhận 6 chữ số vừa được gửi đến số điện thoại {this.state.phone}. Vui lòng điền mã số và hoàn tất thêm thành viên</Text>
                         <OTPTextView
                             containerStyle={styles.textInputContainer}
                             handleTextChange={text => this.setState({ text1: text })}
@@ -99,10 +102,11 @@ class OtpPhoneNumberScreen extends React.PureComponent {
                         <TouchableOpacity onPress={this.onReSendPhone} style={styles.btnReSend}><Text style={styles.txBtnReSend}>Gửi lại mã</Text></TouchableOpacity>
                         {this.state.txErr ? <Text style={styles.txErr}>{this.state.txErr}</Text> : null}
                     </View>
+                    <TouchableOpacity onPress={this.onCheckToken} style={styles.btnFinish} >
+                        <Text style={styles.txFinish}>{"HOÀN TẤT"}</Text>
+                    </TouchableOpacity>
                 </ScrollView>
-                <TouchableOpacity onPress={this.onCheckToken} style={styles.btnFinish} >
-                    <Text style={styles.txFinish}>{"HOÀN TẤT"}</Text>
-                </TouchableOpacity>
+
             </ActivityPanel>
         )
     }
@@ -134,8 +138,8 @@ const styles = StyleSheet.create({
 
 });
 function mapStateToProps(state) {
-	return {
-		userApp: state.userApp
-	};
+    return {
+        userApp: state.userApp
+    };
 }
-export default connect(mapStateToProps)(OtpPhoneNumberScreen);
+export default connect(mapStateToProps)(CheckOtpScreen);

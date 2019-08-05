@@ -10,6 +10,7 @@ import profileProvider from '@data-access/profile-provider'
 import Modal from '@components/modal';
 import NavigationService from "@navigators/NavigationService";
 import LinearGradient from 'react-native-linear-gradient';
+import ActionSheet from 'react-native-actionsheet'
 
 class ListProfileScreen extends Component {
     constructor(props) {
@@ -23,6 +24,12 @@ class ListProfileScreen extends Component {
             isVisible: false,
         };
     }
+    onShowOptions = (id) => {
+        this.actionSheetOptions.show();
+        this.setState({
+            idProfile: id
+        })
+    };
     onRefresh = () => {
         this.setState({
             refreshing: true,
@@ -30,6 +37,25 @@ class ListProfileScreen extends Component {
             this.onLoad();
         })
     }
+    onSetOptions = index => {
+        try {
+            switch (index) {
+                case 0:
+                    NavigationService.navigate("shareDataProfile")
+                    return;
+                case 1:
+                    this.setState(
+                        {
+                            isVisible: true,
+
+                        });
+                    return;
+            }
+        } catch (error) {
+
+        }
+
+    };
     componentDidMount() {
         this.onRefresh();
     }
@@ -60,8 +86,7 @@ class ListProfileScreen extends Component {
     }
     onDeleteItem = (id) => {
         this.setState({
-            isVisible: true,
-            idProfile: id
+
         })
     }
     onClickDone = () => {
@@ -102,19 +127,21 @@ class ListProfileScreen extends Component {
                 marginHorizontal: 10,
             }}>
                 <Card style={styles.cardView}>
-                    <TouchableOpacity onPress={() => this.onClickItem(item)} style={styles.viewProfileFamily}>
-                        <View>
-                            <Text style={styles.txName}>{item.medicalRecords.name}</Text>
-                            {
-                                item.medicalRecords.relationshipType ?
-                                    <Text style={{ color: '#02C293', fontSize: 14 }}>Quan hệ: <Text style={{ color: '#868686', fontSize: 14 }}>{item.medicalRecords.relationshipType}</Text></Text>
-                                    : <View></View>
-                            }
-                        </View>
-                        <TouchableOpacity onPress={() => this.onDeleteItem(item.medicalRecords.id)}>
+                    <View style={styles.viewProfileFamily}>
+                        <TouchableOpacity onPress={() => this.onClickItem(item)} >
+                            <View>
+                                <Text style={styles.txName}>{item.medicalRecords.name}</Text>
+                                {
+                                    item.medicalRecords.relationshipType ?
+                                        <Text style={{ color: '#02C293', fontSize: 14 }}>Quan hệ: <Text style={{ color: '#868686', fontSize: 14 }}>{item.medicalRecords.relationshipType}</Text></Text>
+                                        : <View></View>
+                                }
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity style = {{padding:10}} onPress={() => this.onShowOptions(item.medicalRecords.id)}>
                             <ScaledImage height={8} source={require('@images/new/profile/ic_three_dot.png')}></ScaledImage>
                         </TouchableOpacity>
-                    </TouchableOpacity>
+                    </View>
                 </Card>
             </View>
                 )
@@ -172,6 +199,13 @@ class ListProfileScreen extends Component {
                         </View>
                     </View>
                 </Modal>
+                <ActionSheet
+                    ref={o => this.actionSheetOptions = o}
+                    options={['Cài đặt chia sẻ', 'Xóa', 'Hủy']}
+                    cancelButtonIndex={2}
+                    // destructiveButtonIndex={1}
+                    onPress={this.onSetOptions}
+                />
             </ActivityPanel>
 
         );

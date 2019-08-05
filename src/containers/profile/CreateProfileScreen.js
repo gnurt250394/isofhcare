@@ -33,8 +33,8 @@ class CreateProfileScreen extends Component {
             isGender: false,
             genderUser: [{ gender: "Nam", value: 1 }, { gender: "Nữ", value: 0 }],
             toggelDateTimePickerVisible: false,
-            valueGender: 2,
-            txGender: '',
+            valueGender: 1,
+            txGender: 'Nam',
             name: '',
             email: "",
             dob: "",
@@ -144,7 +144,9 @@ class CreateProfileScreen extends Component {
                                         snackbar.show('Thêm thành viên thành công', 'success')
                                         break
                                     case 'NOT_EXIST_ACCOUNT':
-                                        NavigationService.navigate('otpPhoneNumber')
+                                        NavigationService.navigate('otpPhoneNumber',{
+                                            phone:phone
+                                        })
                                         break
                                     case 'EXIST_ACCOUNT':
                                        this.setState({
@@ -243,8 +245,22 @@ class CreateProfileScreen extends Component {
     }
     onSendConfirm = () => {
         profileProvider.sendConfirmProfile(this.state.id).then(res => {
-            console.log(res,'send confirm')
+            this.setState({
+                isVisible:false
+            })
+            if(res.code == 0){
+                snackbar.show('Thành công','success')
+                
+            }else{
+                snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại','danger')
+
+            }
         }).catch(err => {
+            this.setState({
+                isVisible:false
+            })
+            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại','danger')
+
             console.log(err)
         })
       }
@@ -391,9 +407,7 @@ class CreateProfileScreen extends Component {
                                 >
                                     <Text style={styles.mdk}>{constants.gender}</Text>
                                     <Text style={[styles.ktq, { paddingVertical: 12 }]}>
-                                        {!this.state.txGender
-                                            ? constants.select_gender
-                                            : this.state.txGender}
+                                        {this.state.txGender}
                                     </Text>
                                 </TouchableOpacity>
                             </Field>
@@ -756,14 +770,14 @@ const styles = StyleSheet.create({
         textAlign:'center'
     },
     mucdichkham: {
-        // flex: 1
+        flex: 1
         // borderStyle: "solid",
         // borderWidth: 1,
         // borderColor: '#4BBA7B',
         // borderRadius:5,
 
     },
-    viewPopup: { backgroundColor: '#fff', marginHorizontal: 20, paddingHorizontal:20,paddingVertical:40, borderRadius: 5 },
+    viewPopup: { backgroundColor: '#fff', marginHorizontal: 20, paddingHorizontal:20,paddingVertical:40, borderRadius: 5,alignItems:'center' },
     txSend: {
         color: '#4BBA7B',
         fontSize: 14,
@@ -905,7 +919,10 @@ const styles = StyleSheet.create({
     btnConfirm: {
         padding: 5,
         backgroundColor: '#359A60',
-        borderRadius: 5
+        borderRadius: 5,
+        justifyContent:'center',
+        alignItems:'center',
+        marginTop:20
     },
     txConfirm: {
         color: '#fff',
