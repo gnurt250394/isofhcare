@@ -24,11 +24,11 @@ class ListProfileScreen extends Component {
             isVisible: false,
         };
     }
-    onShowOptions = (id,medicalRelatedId) => {
+    onShowOptions = (id, medicalRelatedId) => {
         this.actionSheetOptions.show();
         this.setState({
             idProfile: id,
-            medicalRelatedId:medicalRelatedId ? medialRelatedId : null
+            medicalRelatedId: medicalRelatedId ? medialRelatedId : null
         })
     };
     onRefresh = () => {
@@ -42,9 +42,9 @@ class ListProfileScreen extends Component {
         try {
             switch (index) {
                 case 0:
-                    NavigationService.navigate("shareDataProfile",{
-                        medialRelatedId:this.state.medialRelatedId,
-                        id:this.state.idProfile
+                    NavigationService.navigate("shareDataProfile", {
+                        medialRelatedId: this.state.medialRelatedId,
+                        id: this.state.idProfile
                     })
                     return;
                 case 1:
@@ -116,6 +116,35 @@ class ListProfileScreen extends Component {
             this.onRefresh()
         }
     }
+    renderRelation = (type) => {
+        switch (type) {
+            case 'DAD':
+                return <Text style={{ color: '#868686', fontSize: 14 }}>Cha</Text>
+            case 'MOTHER':
+                return <Text style={{ color: '#868686', fontSize: 14 }}>Mẹ</Text>
+            case 'BOY':
+                return <Text style={{ color: '#868686', fontSize: 14 }}>Con trai</Text>
+            case 'DAUGHTER':
+                return <Text style={{ color: '#868686', fontSize: 14 }}>Con gái</Text>
+            case 'GRANDSON':
+                return <Text style={{ color: '#868686', fontSize: 14 }}>Cháu trai</Text>
+            case 'NIECE':
+                return <Text style={{ color: '#868686', fontSize: 14 }}>Cháu gái</Text>
+            case 'GRANDFATHER':
+                return <Text style={{ color: '#868686', fontSize: 14 }}>Ông</Text>
+            case 'GRANDMOTHER':
+                return <Text style={{ color: '#868686', fontSize: 14 }}>Bà</Text>
+            case 'WIFE':
+                return <Text style={{ color: '#868686', fontSize: 14 }}>Vợ</Text>
+            case 'HUSBAND':
+                return <Text style={{ color: '#868686', fontSize: 14 }}>Chồng</Text>
+            case 'OTHER':
+                return <Text style={{ color: '#868686', fontSize: 14 }}>Khác</Text>
+
+            default:
+                return <Text style={{ color: '#868686', fontSize: 14 }}></Text>
+        }
+    }
     renderItem = (item, index) => {
         return (
             item.medicalRecords.status == 1 ? (
@@ -136,17 +165,17 @@ class ListProfileScreen extends Component {
                                 <Text style={styles.txName}>{item.medicalRecords.name}</Text>
                                 {
                                     item.medicalRecords.relationshipType ?
-                                        <Text style={{ color: '#02C293', fontSize: 14 }}>Quan hệ: <Text style={{ color: '#868686', fontSize: 14 }}>{item.medicalRecords.relationshipType}</Text></Text>
+                                        < Text style={{ color: '#02C293', fontSize: 14 }}>Quan hệ: {this.renderRelation(item.medicalRecords.relationshipType)}</Text>
                                         : <View></View>
                                 }
                             </View>
                         </TouchableOpacity>
-                        <TouchableOpacity  style = {{padding:10}}  onPress={() => this.onShowOptions(item.medicalRecords.id,item.medicalRecords.medicalRelatedId ? item.medicalRecords.medicalRelatedId : null)}>
+                        <TouchableOpacity style={{ padding: 10 }} onPress={() => this.onShowOptions(item.medicalRecords.id, item.medicalRecords.medicalRelatedId ? item.medicalRecords.medicalRelatedId : null)}>
                             <ScaledImage height={8} source={require('@images/new/profile/ic_three_dot.png')}></ScaledImage>
                         </TouchableOpacity>
                     </View>
                 </Card>
-            </View>
+            </View >
                 )
         )
     }
