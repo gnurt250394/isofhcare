@@ -78,6 +78,11 @@ import EditProfileScreen from '@containers/profile/EditProfileScreen'
 import SelectProvinceScreen from "@containers/profile/SelectProvinceScreen";
 import SelectZoneScreen from "@containers/profile/SelectZoneScreen";
 import SelectDistrictScreen from "@containers/profile/SelectDistrictScreen";
+import SelectRelationshipScreen from "@containers/profile/SelectRelationshipScreen";
+import CheckOtpScreen from "@containers/profile/CheckOtpScreen";
+import SendConfirmProfileScreen from "@containers/profile/SendConfirmProfileScreen";
+import ShareDataProfileScreen from '@containers/profile/ShareDataProfileScreen'
+
 
 //
 import HospitalByLocationScreen from '@containers/home/HospitalByLocationScreen'
@@ -226,7 +231,21 @@ const RootNavigator = createStackNavigator(
     about: { screen: AboutScreen },
     terms: { screen: TermsScreen },
     policy: { screen: PolicyScreen },
-
+    //profile
+    selectProfile: { screen: SelectProfileScreen },
+    createProfile: { screen: CreateProfileScreen },
+    listProfileUser: { screen: ListProfileScreen },
+    editProfile: { screen: EditProfileScreen },
+    shareDataProfile:{screen:ShareDataProfileScreen},
+    checkOtp:{screen:CheckOtpScreen},
+    selectProvince: { screen: SelectProvinceScreen },
+    selectDistrict: { screen: SelectDistrictScreen },
+    selectRelationship:{screen:SelectRelationshipScreen},
+    selectZone: { screen: SelectZoneScreen },
+    profile: { screen: ProfileScreen },
+    sendConfirmProfile:{screen:SendConfirmProfileScreen},
+    // listProfileUser: { screen: ListProfileScreen },
+    //
     home: DrawerNav,
     ehealth: EHealthNavigator,
     viewDetailEhealth: { screen: ViewEhealthDetailScreen },

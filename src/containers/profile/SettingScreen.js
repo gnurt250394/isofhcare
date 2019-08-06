@@ -6,7 +6,7 @@ import NavigationService from "@navigators/NavigationService";
 import redux from "@redux-store";
 import { connect } from "react-redux";
 import { StackActions, NavigationActions } from 'react-navigation';
-
+import DeviceInfo from 'react-native-device-info';
 
 class SettingScreen extends Component {
     constructor(props) {
@@ -65,6 +65,10 @@ class SettingScreen extends Component {
                             <ScaledImage height={18} source={require('@images/new/profile/ic_logout.png')} />
                             <Text style={styles.txDrawer}>Đăng xuất</Text>
                         </TouchableOpacity>
+                        <View style = {{justifyContent:'center',alignItems:'center'}}>
+          <Text style={styles.txVersion}>{'Phiên bản ' + DeviceInfo.getVersion() + '.'+ DeviceInfo.getBuildNumber()}</Text>
+          </View>
+
                     </View>
                 </ScrollView>
             </ActivityPanel>
@@ -82,6 +86,10 @@ const styles = StyleSheet.create({
     actionbarStyle: {
         backgroundColor: '#4BBA7B',
         borderBottomWidth: 0
+    },
+    txVersion:{
+        fontWeight:'bold',
+        fontSize:14
     },
     viewInfo: {
         marginLeft: 10

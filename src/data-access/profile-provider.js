@@ -82,15 +82,9 @@ module.exports = {
             })
         })
     },
-    createProfile (data,provinceId,districtId,zoneId){
-        let body = {
-            profile: data,
-            provinceId:provinceId,
-            districtId:districtId,
-            zoneId:zoneId
-         }
+    createProfile (data){
         return new Promise ((resolve,reject) => {
-            client.requestApi('post',`${constants.api.profile.create_profile}`,body,(s,e) => {
+            client.requestApi('post',`${constants.api.profile.create_profile}`,data,(s,e) => {
                 if(s)
                 resolve(s)
                 else
@@ -121,6 +115,46 @@ module.exports = {
     updateCover(id,data){
         return new Promise((resolve,reject) => {
             client.requestApi('put',`${constants.api.profile.update_cover}/${id}`,data,(s,e) => {
+                if(s)
+                resolve(s)
+                else
+                reject(e)
+            })
+        })
+    },
+    sendConfirmProfile(id){
+        return new Promise((resolve,reject) => {
+            client.requestApi('put',`${constants.api.profile.send_confirm}/${id}`,{},(s,e) => {
+                if(s)
+                resolve(s)
+                else
+                reject(e)
+            })
+        })
+    },
+    sharePermission(data){
+        return new Promise((resolve,reject) => {
+            client.requestApi('put',constants.api.profile.share_permission,data,(s,e) => {
+                if(s)
+                resolve(s)
+                else 
+                reject(e)
+            })
+        })
+    },
+    checkOtp (data,id){
+        return new Promise((resolve,reject) => {
+            client.requestApi('put',constants.api.profile.check_otp + '/' + id,data,(s,e) => {
+                if(s)
+                resolve(s)
+                else
+                reject(e)
+            })
+        })
+    },
+    resendOtp (id){
+        return new Promise((resolve,reject) => {
+            client.requestApi('put',constants.api.profile.resend_otp + '/' +id,{},(s,e) => {
                 if(s)
                 resolve(s)
                 else

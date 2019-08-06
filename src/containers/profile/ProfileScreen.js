@@ -12,14 +12,23 @@ import connectionUtils from "@utils/connection-utils";
 import ImagePicker from "mainam-react-native-select-image";
 import snackbar from '@utils/snackbar-utils';
 import constants from '@resources/strings';
+import objectUtils from "@utils/object-utils";
+import redux from "@redux-store";
+import { connect } from "react-redux";
 
-export default class ProfileScreen extends Component {
+class ProfileScreen extends Component {
     constructor(props) {
         super(props);
+        let data = this.props.navigation.state.params && this.props.navigation.state.params.data ? this.props.navigation.state.params.data.medicalRecords : ''
+        let imgAvtLocal = this.props.navigation.state.params && this.props.navigation.state.params.data && this.props.navigation.state.params.data.avatar ? this.props.navigation.state.params.data.avatar.absoluteUrl() : ''
+        let imgLocal = this.props.navigation.state.params && this.props.navigation.state.params.data && this.props.navigation.state.params.data.cover ? this.props.navigation.state.params.data.cover.absoluteUrl() : ''
         this.state = {
             value: 1,
             refresh: false,
-            isLoading: false
+            isLoading: false,
+            data: data,
+            imgAvtLocal: imgAvtLocal,
+            imgLocal: imgLocal
         };
     }
     onSelectFeature = (value) => {
@@ -35,21 +44,14 @@ export default class ProfileScreen extends Component {
             case 2: return (<Transaction></Transaction>)
         }
     }
-    componentWillMount() {
-        this.props.navigation.state.params.data && this.setState({
-            data: this.props.navigation.state.params.data,
-            imgAvtLocal: this.props.navigation.state.params.data.avatar ? this.props.navigation.state.params.data.avatar.absoluteUrl() : '',
-            imgLocal: this.props.navigation.state.params.data.cover ? this.props.navigation.state.params.data.cover.absoluteUrl() : '',
-        })
-    }
+
     componentWillReceiveProps(nextProps) {
         if (nextProps.navigation.state.params && nextProps.navigation.state.params.data) {
             this.setState({
                 data: nextProps.navigation.state.params.data,
-                imgAvtLocal: this.props.navigation.state.params.data.avatar ? this.props.navigation.state.params.data.avatar.absoluteUrl() : '',
-                imgLocal: this.props.navigation.state.params.data.cover ? this.props.navigation.state.params.data.cover.absoluteUrl() : '',
+                // imgAvtLocal: this.props.navigation.state.params.data.avatar ? this.props.navigation.state.params.data.avatar.absoluteUrl() : '',
+                // imgLocal: this.props.navigation.state.params.data.cover ? this.props.navigation.state.params.data.cover.absoluteUrl() : '',
             })
-            console.log( nextProps.navigation.state.params.data,'xvideos')
         }
     }
     selectImage = () => {
@@ -158,6 +160,7 @@ export default class ProfileScreen extends Component {
                         });
                         imageProvider.upload(this.state.imageAvt.path, (s, e) => {
                             if (s.success && s.data.code == 0) {
+                                console.log(s, 'xoasd');
                                 let images = s.data.data.images[0].thumbnail;
                                 this.setState({
                                     imgAvtLocal: images
@@ -211,7 +214,16 @@ export default class ProfileScreen extends Component {
                         profileProvider
                             .updateAvatar(id, data)
                             .then(res => {
+                                console.log(res, 'fssdas')
                                 if (res.code == 0) {
+                                    if (this.state.data.type == 'ORIGINAL') {
+                                        let user = res.data.user;
+                                        let current = this.props.userApp.currentUser;
+                                        user.bookingNumberHospital = current.bookingNumberHospital;
+                                        user.bookingStatus = current.bookingStatus;
+                                        this.props.dispatch(redux.userLogin(user));
+                                    }
+
                                     this.setState({
                                         isLoading: false
                                     });
@@ -226,6 +238,7 @@ export default class ProfileScreen extends Component {
                                 this.setState({
                                     isLoading: false
                                 });
+                                console.log(err, 'asdsd');
                                 snackbar.show(constants.msg.app.err_try_again, "danger");
                             });
                     }
@@ -234,6 +247,35 @@ export default class ProfileScreen extends Component {
             .catch(e => {
                 snackbar.show(constants.msg.app.not_internet, "danger");
             });
+    }
+    renderRelation = () => {
+        switch (this.state.data.relationshipType) {
+            case 'DAD':
+                return <Text style={styles.txContent}>Cha</Text>
+            case 'MOTHER':
+                return <Text style={styles.txContent}>Mẹ</Text>
+            case 'BOY':
+                return <Text style={styles.txContent}>Con trai</Text>
+            case 'DAUGHTER':
+                return <Text style={styles.txContent}>Con gái</Text>
+            case 'GRANDSON':
+                return <Text style={styles.txContent}>Cháu trai</Text>
+            case 'NIECE':
+                return <Text style={styles.txContent}>Cháu gái</Text>
+            case 'GRANDFATHER':
+                return <Text style={styles.txContent}>Ông</Text>
+            case 'GRANDMOTHER':
+                return <Text style={styles.txContent}>Bà</Text>
+            case 'WIFE':
+                return <Text style={styles.txContent}>Vợ</Text>
+            case 'HUSBAND':
+                return <Text style={styles.txContent}>Chồng</Text>
+            case 'OTHER':
+                return <Text style={styles.txContent}>Khác</Text>
+
+            default:
+                return <Text style={styles.txContent}></Text>
+        }
     }
     render() {
         const icSupport = require("@images/new/user.png");
@@ -258,31 +300,18 @@ export default class ProfileScreen extends Component {
             >
                 <ScrollView style={{ flex: 1 }} >
                     <View style={styles.viewBaner}>
-                        <ImageLoad
-                            // imageStyle={styles.imgBaner}
-                            // customImagePlaceholderDefaultStyle={styles.customImagePlace}
-                            // placeholderSource={{}}
+                        <ScaledImage
+                            // resizeMode="cover"
+                            source={require('@images/new/profile/img_cover_profile.png')}
+                            width={70}
                             style={styles.imgBaner}
-                            resizeMode="cover"
-                            loadingStyle={{ size: "small", color: "gray" }}
-                            source={source}
-                            defaultImage={() => {
-                                return (
-                                    <ScaledImage
-                                        resizeMode="cover"
-                                        source={icSupport}
-                                        width={70}
-                                        style={styles.imgBaner}
-                                    />
-                                );
-                            }}
                         />
-                        <TouchableOpacity onPress={this.selectImage} style={styles.scaledImage}>
+                        {/* <TouchableOpacity onPress={this.selectImage} style={styles.scaledImage}>
                             <ScaledImage
                                 source={require("@images/new/profile/ic_instagram.png")}
                                 width={30}
                             />
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                         <View style={styles.avtBtn}>
                             <ImageLoad
                                 source={sourceAvt}
@@ -313,7 +342,7 @@ export default class ProfileScreen extends Component {
                         </View>
                     </View>
                     <View style={styles.btnFeature}>
-                      <View><ScaledImage height={20} style={{ tintColor: '#fff',}} source={require('@images/new/profile/ic_account.png')}></ScaledImage></View>
+                        <View><ScaledImage height={20} style={{ tintColor: '#fff', }} source={require('@images/new/profile/ic_account.png')}></ScaledImage></View>
                         <Text style={[styles.txFeature]} >Thông tin cá nhân</Text>
                         <View style={{ width: 20 }}></View>
                     </View>
@@ -344,7 +373,7 @@ export default class ProfileScreen extends Component {
                             <View style={{ width: 20 }}></View>
                         </View>
                         <View style={styles.viewItem}>
-                            <Text><Text style={styles.txLabel}>Chỉ số BMI: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.height && this.state.data.weight ? parseFloat(this.state.data.weight/(Math.pow(this.state.data.height/100,2))).toFixed(1) : ''}</Text></Text>
+                            <Text><Text style={styles.txLabel}>Chỉ số BMI: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.height && this.state.data.weight ? parseFloat(this.state.data.weight / (Math.pow(this.state.data.height / 100, 2))).toFixed(1) : ''}</Text></Text>
                         </View>
                         <View style={styles.viewItem}>
                             <Text><Text style={styles.txLabel}>Số điện thoại: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.phone ? this.state.data.phone.replace(/(\d\d\d\d)(\d\d\d)(\d\d\d)/, '$1.$2.$3') : ''}</Text></Text>
@@ -352,7 +381,10 @@ export default class ProfileScreen extends Component {
                         <View style={styles.viewItem}>
                             <Text><Text style={styles.txLabel}>Địa chỉ: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.address ? this.state.data.address : ''}</Text></Text>
                         </View>
-                        <View style={{height:1,backgroundColor:'#4BBA7B'}}></View>
+                        <View style={styles.viewItem}>
+                            <Text><Text style={styles.txLabel}>Quan hệ: </Text>{this.renderRelation()}</Text>
+                        </View>
+                        <View style={{ height: 1, backgroundColor: '#4BBA7B' }}></View>
                     </View>
                     <TouchableOpacity onPress={() => this.props.navigation.navigate('createProfile')} style={styles.btn}><Text style={styles.txBtn}>Thêm thành viên</Text></TouchableOpacity>
                 </ScrollView>
@@ -369,7 +401,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     scaledImage: { position: "absolute", top: 5, right: 5 },
-    btnFeature: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#4BBA7B',justifyContent:'space-around', borderRadius: 5, borderColor: '#4BBA7B',  paddingVertical: 10, marginHorizontal: 10, marginTop: 30 },
+    btnFeature: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#4BBA7B', justifyContent: 'space-around', borderRadius: 5, borderColor: '#4BBA7B', paddingVertical: 10, marginHorizontal: 10, marginTop: 30 },
     imageStyle: { borderRadius: 60, borderWidth: 2, borderColor: '#Fff' },
     customImagePlace: {
         width: 120,
@@ -400,12 +432,12 @@ const styles = StyleSheet.create({
     },
     txLabel: {
         color: '#4BBA7B',
-        fontSize:14
+        fontSize: 14
     },
     txContent: {
         marginLeft: 5,
         color: '#000',
-        fontSize:14
+        fontSize: 14
 
     },
     imgBaner: {
@@ -431,8 +463,14 @@ const styles = StyleSheet.create({
     txFeature: {
         textAlign: 'center',
         color: '#FFF',
-        fontSize:18
+        fontSize: 18
     },
     txBtn: { color: '#fff' },
 
 })
+function mapStateToProps(state) {
+    return {
+        userApp: state.userApp
+    };
+}
+export default connect(mapStateToProps)(ProfileScreen);

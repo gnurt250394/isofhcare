@@ -24,16 +24,17 @@ import ActionSheet from 'react-native-actionsheet'
 import profileProvider from '@data-access/profile-provider'
 import locationProvider from '@data-access/location-provider';
 import Modal from "@components/modal";
+import NavigationService from "@navigators/NavigationService";
 
 class CreateProfileScreen extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             isGender: false,
             genderUser: [{ gender: "Nam", value: 1 }, { gender: "Nữ", value: 0 }],
             toggelDateTimePickerVisible: false,
-            valueGender: 2,
-            txGender: '',
+            valueGender: '1',
+            txGender: 'Nam',
             name: '',
             email: "",
             dob: "",
@@ -72,14 +73,14 @@ class CreateProfileScreen extends Component {
                 case 0:
                     this.setState(
                         {
-                            valueGender: 1,
+                            valueGender: '1',
                             txGender: 'Nam'
                         });
                     return;
                 case 1:
                     this.setState(
                         {
-                            valueGender: 0,
+                            valueGender: '0',
                             txGender: 'Nữ'
                         });
                     return;
@@ -100,6 +101,12 @@ class CreateProfileScreen extends Component {
             })
             return
         }
+        if(!this.state.relationShip){
+            this.setState({
+                relationErr:'Bạn chưa chọn mối quan hệ'
+            })
+            return
+        }
         connectionUtils
             .isConnected()
             .then(s => {
@@ -110,14 +117,16 @@ class CreateProfileScreen extends Component {
                     () => {
                         let name = this.state.name
                         let dob = this.state.dob
-                        let gender = this.state.gender
+                        let gender = this.state.valueGender
                         let height = this.state.height
                         let weight = this.state.weight ? parseFloat(this.state.weight).toFixed(1) : ''
                         let phone = this.state.phone
                         // let address = this.state.address
-                        let idProvince = this.state.provinces ? this.state.provinces.id : ''
-                        let idDistrics =  this.state.districts ? this.state.districts.id : ''
-                        let idZone = this.state.zone ? this.state.zone.id : ''
+                        let idProvince = this.state.provinces ? this.state.provinces.id :null
+                        let idDistrics = this.state.districts ? this.state.districts.id : null
+                        let idZone = this.state.zone ? this.state.zone.id : null
+                        let village = this.state.address ? this.state.address : null
+                        let relationshipType = this.state.relationShip && this.state.relationShip.type ? this.state.relationShip.type : ''
                         // parseFloat(item.distance).toFixed(1)
                         let data = {
                             "name": name,
@@ -126,13 +135,33 @@ class CreateProfileScreen extends Component {
                             "height": height ? Number(height) : null,
                             "weight": weight ? Number(weight) : null,
                             "phone": phone,
-                            
+                            "provinceId": idProvince,
+                            "districtId": idDistrics,
+                            "zoneId": idZone,
+                            "village": village,
+                            "relationshipType": relationshipType
                         }
-                        profileProvider.createProfile(data,idProvince,idDistrics,idZone).then(res => {
+                        profileProvider.createProfile(data).then(res => {
                             console.log(res)
                             if (res.code == 0) {
-                                this.props.navigation.navigate('listProfile', { reset: this.state.reset + 1 })
-                                snackbar.show('Thêm thành viên thành công', 'success')
+                                switch (res.data.TYPE) {
+                                    case 'PHONE_VALID':
+                                        NavigationService.navigate('listProfileUser', { reset: this.state.reset + 1 })
+                                        snackbar.show('Thêm thành viên thành công', 'success')
+                                        break
+                                    case 'NOT_EXIST_ACCOUNT':
+                                        NavigationService.navigate('otpPhoneNumber',{
+                                            id:res.data.medicalRecords.id
+                                        })
+                                        break
+                                    case 'EXIST_ACCOUNT':
+                                       this.setState({
+                                        phone: phone,
+                                        id: res.data.medicalRecords.id,
+                                        isVisible:true
+                                       })
+                                        break
+                                }
                             }
                             else { snackbar.show('Thêm thành viên không thành công', 'danger') }
                         }).catch(err => {
@@ -148,7 +177,7 @@ class CreateProfileScreen extends Component {
     selectDistrict = (districts) => {
         let districtsError = districts ? "" : this.state.districtsError;
         if (!districts || !this.state.districts || districts.id != this.state.districts.id) {
-            this.setState({ districts, districtsError,zone:[] })
+            this.setState({ districts, districtsError, zone: [] })
         } else {
             this.setState({ districts, districtsError });
         }
@@ -166,7 +195,7 @@ class CreateProfileScreen extends Component {
     selectprovinces(provinces) {
         let provincesError = provinces ? "" : this.state.provincesError;
         if (!provinces || !this.state.provinces || provinces.id != this.state.provinces.id) {
-            this.setState({ provinces, provincesError,districts:[],zone:[] })
+            this.setState({ provinces, provincesError, districts: [], zone: [] })
         } else {
             this.setState({ provinces, provincesError });
         }
@@ -183,15 +212,15 @@ class CreateProfileScreen extends Component {
         }
     }
     onSelectZone = () => {
-        if(!this.state.provinces || !this.state.provinces.id){
+        if (!this.state.provinces) {
             snackbar.show("Bạn chưa chọn Tỉnh/Thành phố")
             return
         }
-        if(!this.state.districts || !this.state.districts.id){
+        if (!this.state.districts) {
             snackbar.show("Bạn chưa chọn Quận/Huyện")
             return
         }
-        if(this.state.provinces.id  && this.state.districts.id){
+        if (this.state.provinces.id && this.state.districts.id) {
             this.props.navigation.navigate('selectZone', {
                 onSelected: this.selectZone.bind(this),
                 id: this.state.districts.id
@@ -200,6 +229,47 @@ class CreateProfileScreen extends Component {
         }
 
     }
+    selectRelationShip = (relationShip) => {
+        let relationShipError = relationShip ? "" : this.state.relationShipError;
+        if (!relationShip || !this.state.relationShip || relationShip.id != this.state.relationShip.id) {
+            this.setState({ relationShip, relationShipError })
+        } else {
+            this.setState({ relationShip, relationShipError });
+        }
+    }
+    onCloseModal = () => {
+        this.setState({
+            isVisible: false
+        })
+    }
+    onSelectRelationShip = () => {
+        NavigationService.navigate('selectRelationship', {
+            onSelected: this.selectRelationShip.bind(this),
+            // id: this.state.relationShip.id
+        })
+
+    }
+    onSendConfirm = () => {
+        profileProvider.sendConfirmProfile(this.state.id).then(res => {
+            this.setState({
+                isVisible:false
+            })
+            if(res.code == 0){
+                snackbar.show('Thành công','success')
+                
+            }else{
+                snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại','danger')
+
+            }
+        }).catch(err => {
+            this.setState({
+                isVisible:false
+            })
+            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại','danger')
+
+            console.log(err)
+        })
+      }
     renderItem = ({ item }) => {
         return (
             <View style={{ margin: 5, borderRadius: 1, borderColor: '#A4A4A4', padding: 5 }}>
@@ -232,7 +302,7 @@ class CreateProfileScreen extends Component {
                         <Text style={styles.txTitle}>THÊM THÀNH VIÊN MỚI</Text>
                         <Form ref={ref => (this.form = ref)} style={[{ flex: 1 }]}>
                             <Field style={[styles.mucdichkham, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
-                                <Text style={styles.mdk}>{constants.fullname}</Text>
+                                <Text style={styles.mdk}>{constants.fullname} <Text style = {{color:'red'}}>(*)</Text></Text>
                                 <TextField
                                     hideError={true}
                                     onValidate={(valid, messages) => {
@@ -268,9 +338,6 @@ class CreateProfileScreen extends Component {
                                 />
                             </Field>
                             <Text style={[styles.errorStyle]}>{this.state.nameError}</Text>
-
-
-
                             <Field
 
                                 style={[styles.mucdichkham, { flexDirection: 'row' }]}
@@ -341,11 +408,9 @@ class CreateProfileScreen extends Component {
                                     ]}
                                     onPress={this.onShowGender}
                                 >
-                                    <Text style={styles.mdk}>{constants.gender}</Text>
+                                    <Text style={styles.mdk}>{constants.gender} <Text style = {{color:'red'}}>(*)</Text></Text>
                                     <Text style={[styles.ktq, { paddingVertical: 12 }]}>
-                                        {!this.state.txGender
-                                            ? constants.select_gender
-                                            : this.state.txGender}
+                                        {this.state.txGender}
                                     </Text>
                                 </TouchableOpacity>
                             </Field>
@@ -354,7 +419,6 @@ class CreateProfileScreen extends Component {
                                 <Field style={{ width: '60%' }}>
                                     <Field>
                                         <Text style={styles.mdk}>{'Chiều cao (cm)'}</Text>
-
                                         <TextField
                                             hideError={true}
                                             onValidate={(valid, messages) => {
@@ -391,7 +455,6 @@ class CreateProfileScreen extends Component {
                                 <Field style={{ flex: 1 }}>
                                     <Field>
                                         <Text style={styles.mdk}>{'Cân nặng (kg)'}</Text>
-
                                         <TextField
                                             hideError={true}
                                             onValidate={(valid, messages) => {
@@ -427,7 +490,7 @@ class CreateProfileScreen extends Component {
                                 </Field>
                             </Field>
                             <Field style={[styles.mucdichkham, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
-                                <Text style={styles.mdk}>{'Số điện thoại'}</Text>
+                                <Text style={styles.mdk}>{'Số điện thoại'}  <Text style = {{color:'red'}}>(*)</Text></Text>
                                 <TextField
                                     hideError={true}
                                     onValidate={(valid, messages) => {
@@ -499,7 +562,7 @@ class CreateProfileScreen extends Component {
                             <Text style={[styles.errorStyle]}>{this.state.addressError}</Text> */}
                             <Field style={[styles.mucdichkham, { flexDirection: 'row' }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
                                 <Field style={{ flex: 1 }}>
-                                <Text style={styles.mdk}>{'Địa chỉ'}</Text>
+                                    <Text style={styles.mdk}>{'Địa chỉ'}</Text>
                                     <Field>
                                         <TextField
                                             hideError={true}
@@ -507,7 +570,7 @@ class CreateProfileScreen extends Component {
                                             editable={false}
                                             multiline={true}
                                             inputStyle={[
-                                                styles.ktq,
+                                                styles.ktq, { minHeight: 60 }
                                             ]}
                                             errorStyle={styles.errorStyle}
                                             value={this.state.provinces && this.state.provinces.countryCode ? this.state.provinces.countryCode : 'Tỉnh/Thành phố'}
@@ -521,7 +584,7 @@ class CreateProfileScreen extends Component {
                                 </Field>
 
                                 <Field style={{ flex: 1 }}>
-                                <Text style={styles.mdk}></Text>
+                                    <Text style={styles.mdk}></Text>
                                     <Field>
                                         <TextField
                                             hideError={true}
@@ -535,7 +598,7 @@ class CreateProfileScreen extends Component {
                                             // }}
                                             multiline={true}
                                             inputStyle={[
-                                                styles.ktq,
+                                                styles.ktq, { minHeight: 60 }
                                             ]}
                                             onPress={this.onSelectDistrict}
                                             editable={false}
@@ -549,15 +612,15 @@ class CreateProfileScreen extends Component {
                                     </Field>
                                 </Field>
                                 <Field style={{ flex: 1 }}>
-                                <Text style={styles.mdk}></Text>
+                                    <Text style={styles.mdk}></Text>
                                     <Field>
                                         <TextField
                                             hideError={true}
                                             multiline={true}
-                                            onPress = {this.onSelectZone}
+                                            onPress={this.onSelectZone}
                                             editable={false}
                                             inputStyle={[
-                                                styles.ktq,
+                                                styles.ktq, { minHeight: 60 }
                                             ]}
                                             errorStyle={styles.errorStyle}
                                             value={this.state.zone && this.state.zone.name ? this.state.zone.name : 'Xã phường'}
@@ -570,7 +633,7 @@ class CreateProfileScreen extends Component {
                                 </Field>
                             </Field>
                             <Field style={[styles.mucdichkham, this.state.type == "FAMILY" ? {} : { marginTop: 10 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
-                            <Text style={styles.mdk}></Text>                             
+                                <Text style={styles.mdk}></Text>
                                 <TextField
                                     hideError={true}
                                     onValidate={(valid, messages) => {
@@ -604,6 +667,27 @@ class CreateProfileScreen extends Component {
                                 />
                             </Field>
                             <Text style={[styles.errorStyle]}>{this.state.addressError}</Text>
+                            <Field style={{ flex: 1 }}>
+                                <Text style={styles.mdk}>Quan hệ <Text style = {{color:'red'}}>(*)</Text></Text>
+                                <Field>
+                                    <TextField
+                                        hideError={true}
+                                        multiline={true}
+                                        onPress={this.onSelectRelationShip}
+                                        editable={false}
+                                        inputStyle={[
+                                            styles.ktq, { minHeight: 60 }
+                                        ]}
+                                        errorStyle={styles.errorStyle}
+                                        value={this.state.relationShip && this.state.relationShip.name ? this.state.relationShip.name : 'Quan hệ'}
+                                        autoCapitalize={"none"}
+                                        returnKeyType={"next"}
+                                        // underlineColorAndroid="transparent"
+                                        autoCorrect={false}
+                                    />
+                                </Field>
+                            <Text style={[styles.errorStyle]}>{this.state.relationErr}</Text>
+                            </Field>
                         </Form>
                         <View style={styles.viewBtn}>
                             <TouchableOpacity onPress={this.onCreateProfile} style={styles.btnDone}><Text style={styles.txDone}>Lưu</Text></TouchableOpacity>
@@ -644,6 +728,22 @@ class CreateProfileScreen extends Component {
                     // destructiveButtonIndex={1}
                     onPress={this.onSetGender}
                 />
+                <Modal
+                    isVisible={this.state.isVisible}
+                    onBackdropPress={this.onCloseModal}
+                    backdropOpacity={0.5}
+                    animationInTiming={500}
+                    animationOutTiming={500}
+                    style={styles.viewModal}
+                    backdropTransitionInTiming={1000}
+                    backdropTransitionOutTiming={1000}
+                >
+                    <View style={styles.viewPopup}>
+                        <Text style={styles.txNumber}>ISOFHCARE đã tìm thấy tài khoản sở hữu số điện thoại {this.state.phone ? this.state.phone : ''} trên hệ thống.</Text>
+                    <Text style={styles.txDetails}>Vui lòng <Text style={styles.txSend}>GỬI</Text> và <Text style={styles.txSend}>ĐỢI XÁC NHẬN</Text> mối quan hệ với chủ tài khoản trên. Mọi thông tin thành viên gia đình sẽ lấy theo tài khoản sẵn có.</Text>
+                        <TouchableOpacity onPress={this.onSendConfirm} style={styles.btnConfirm}><Text style={styles.txConfirm}>Gửi xác nhận</Text></TouchableOpacity>
+                    </View>
+                </Modal>
                 {Platform.OS == "ios" && <KeyboardSpacer />}
             </View>
         );
@@ -667,6 +767,12 @@ const styles = StyleSheet.create({
     imgmdk: {
         marginRight: 5
     },
+    txNumber: {
+        fontSize: 14,
+        fontStyle: 'italic',
+        color: '#000',
+        textAlign:'center'
+    },
     mucdichkham: {
         flex: 1
         // borderStyle: "solid",
@@ -674,6 +780,12 @@ const styles = StyleSheet.create({
         // borderColor: '#4BBA7B',
         // borderRadius:5,
 
+    },
+    viewPopup: { backgroundColor: '#fff', marginHorizontal: 20, paddingHorizontal:20,paddingVertical:40, borderRadius: 5,alignItems:'center' },
+    txSend: {
+        color: '#4BBA7B',
+        fontSize: 14,
+        fontWeight: 'bold'
     },
     txTitle: { fontSize: 16, color: '#4BBA7B', textAlign: 'center', fontWeight: '600', marginTop: 40, marginBottom: 10 },
     mdk: {
@@ -685,6 +797,11 @@ const styles = StyleSheet.create({
         letterSpacing: 0,
         color: "#000000",
 
+    },
+    txDetails: {
+        fontSize: 14,
+        color: '#000',
+        textAlign:'center'
     },
     ktq: {
         fontSize: 12,
@@ -704,7 +821,7 @@ const styles = StyleSheet.create({
     container: {
         // borderStyle: "solid",
         marginVertical: 20,
-        paddingHorizontal: 20,
+        paddingHorizontal: 10,
         flex: 1
 
         // borderColor: "rgba(0, 0, 0, 0.07)"
@@ -803,6 +920,18 @@ const styles = StyleSheet.create({
     btnReject: { justifyContent: 'center', alignItems: 'center', height: 30, width: 78, marginLeft: 10, borderRadius: 5, backgroundColor: '#FFB800', },
     viewBtn: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20 },
     txDone: { color: '#fff' },
+    btnConfirm: {
+        padding: 5,
+        backgroundColor: '#359A60',
+        borderRadius: 5,
+        justifyContent:'center',
+        alignItems:'center',
+        marginTop:20
+    },
+    txConfirm: {
+        color: '#fff',
+        fontSize: 14
+    }
 });
 function mapStateToProps(state) {
     return {
