@@ -248,6 +248,35 @@ class ProfileScreen extends Component {
                 snackbar.show(constants.msg.app.not_internet, "danger");
             });
     }
+    renderRelation = () => {
+        switch (this.state.data.relationshipType) {
+            case 'DAD':
+                return <Text style={styles.txContent}>Cha</Text>
+            case 'MOTHER':
+                return <Text style={styles.txContent}>Mẹ</Text>
+            case 'BOY':
+                return <Text style={styles.txContent}>Con trai</Text>
+            case 'DAUGHTER':
+                return <Text style={styles.txContent}>Con gái</Text>
+            case 'GRANDSON':
+                return <Text style={styles.txContent}>Cháu trai</Text>
+            case 'NIECE':
+                return <Text style={styles.txContent}>Cháu gái</Text>
+            case 'GRANDFATHER':
+                return <Text style={styles.txContent}>Ông</Text>
+            case 'GRANDMOTHER':
+                return <Text style={styles.txContent}>Bà</Text>
+            case 'WIFE':
+                return <Text style={styles.txContent}>Vợ</Text>
+            case 'HUSBAND':
+                return <Text style={styles.txContent}>Chồng</Text>
+            case 'OTHER':
+                return <Text style={styles.txContent}>Khác</Text>
+
+            default:
+                return <Text style={styles.txContent}></Text>
+        }
+    }
     render() {
         const icSupport = require("@images/new/user.png");
         const source = this.state.imgLocal
@@ -351,6 +380,9 @@ class ProfileScreen extends Component {
                         </View>
                         <View style={styles.viewItem}>
                             <Text><Text style={styles.txLabel}>Địa chỉ: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.address ? this.state.data.address : ''}</Text></Text>
+                        </View>
+                        <View style={styles.viewItem}>
+                            <Text><Text style={styles.txLabel}>Quan hệ: </Text>{this.renderRelation()}</Text>
                         </View>
                         <View style={{ height: 1, backgroundColor: '#4BBA7B' }}></View>
                     </View>

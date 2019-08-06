@@ -22,6 +22,7 @@ import constants from "@resources/strings";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import ActionSheet from 'react-native-actionsheet'
 import profileProvider from '@data-access/profile-provider'
+import NavigationService from "@navigators/NavigationService";
 
 class EditProfileScreen extends Component {
     constructor(props) {
@@ -40,7 +41,7 @@ class EditProfileScreen extends Component {
             profileNo: data.profileNo ? data.profileNo : '',
             id: data.id,
             phone: data.phone,
-            data:data
+            data: data
         };
     }
     onChangeText = type => text => {
@@ -160,9 +161,9 @@ class EditProfileScreen extends Component {
                     () => {
                         let data = this.state.data
                         data.dob = this.state.dob ? this.state.dob.format('yyyy-MM-dd') + ' 00:00:00' : this.state.dobOld,
-                        data.gender = this.state.gender
+                            data.gender = this.state.gender
                         data.height = this.state.height ? Number(this.state.height) : null,
-                        data.weight = this.state.weight ? Number(parseFloat(this.state.weight).toFixed(1))  : null
+                            data.weight = this.state.weight ? Number(parseFloat(this.state.weight).toFixed(1)) : null
                         data.address = this.state.address
                         let id = this.state.id
                         data.phone = this.state.phone
@@ -170,7 +171,7 @@ class EditProfileScreen extends Component {
                         data.idDistrics = this.state.districts ? this.state.districts.id.toString() : null
                         data.idZone = this.state.zone ? this.state.zone.id.toString() : null
                         data.relationshipType = this.state.relationshipType
-                        profileProvider.updateProfile(id, data,).then(res => {
+                        profileProvider.updateProfile(id, data).then(res => {
                             if (res.code == 0) {
                                 this.props.navigation.navigate('profile', { data: res.data.medicalRecords })
                                 snackbar.show('Cập nhật hồ sơ thành công', "success");
@@ -187,7 +188,21 @@ class EditProfileScreen extends Component {
                 snackbar.show(constants.msg.app.not_internet, "danger");
             });
     }
+    onSelectRelationShip = () => {
+        NavigationService.navigate('selectRelationship', {
+            onSelected: this.selectRelationShip.bind(this),
+            // id: this.state.relationShip.id
+        })
 
+    }
+    selectRelationShip = (relationShip) => {
+        let relationShipError = relationShip ? "" : this.state.relationShipError;
+        if (!relationShip || !this.state.relationShip || relationShip.id != this.state.relationShip.id) {
+            this.setState({ relationShip, relationShipError })
+        } else {
+            this.setState({ relationShip, relationShipError });
+        }
+    }
     render() {
         let maxDate = new Date();
         maxDate = new Date(
@@ -443,7 +458,7 @@ class EditProfileScreen extends Component {
                                             editable={false}
                                             multiline={true}
                                             inputStyle={[
-                                                styles.ktq,{minHeight:80}
+                                                styles.ktq, { minHeight: 80 }
                                             ]}
                                             errorStyle={styles.errorStyle}
                                             value={this.state.provinces && this.state.provinces.countryCode ? this.state.provinces.countryCode : 'Tỉnh/Thành phố'}
@@ -457,7 +472,7 @@ class EditProfileScreen extends Component {
                                 </Field>
 
                                 <Field style={{ flex: 1 }}>
-                                <Text style={styles.mdk}></Text>
+                                    <Text style={styles.mdk}></Text>
                                     <Field>
                                         <TextField
                                             hideError={true}
@@ -471,7 +486,7 @@ class EditProfileScreen extends Component {
                                             // }}
                                             multiline={true}
                                             inputStyle={[
-                                                styles.ktq,{minHeight:80}
+                                                styles.ktq, { minHeight: 80 }
                                             ]}
                                             onPress={this.onSelectDistrict}
                                             editable={false}
@@ -485,7 +500,7 @@ class EditProfileScreen extends Component {
                                     </Field>
                                 </Field>
                                 <Field style={{ flex: 1 }}>
-                                <Text style={styles.mdk}></Text>
+                                    <Text style={styles.mdk}></Text>
                                     <Field>
                                         <TextField
                                             hideError={true}
@@ -493,7 +508,7 @@ class EditProfileScreen extends Component {
                                             onPress={this.onSelectZone}
                                             editable={false}
                                             inputStyle={[
-                                                styles.ktq,{minHeight:80}
+                                                styles.ktq, { minHeight: 80 }
                                             ]}
                                             errorStyle={styles.errorStyle}
                                             value={this.state.zone && this.state.zone.name ? this.state.zone.name : 'Xã phường'}
@@ -506,7 +521,7 @@ class EditProfileScreen extends Component {
                                 </Field>
                             </Field>
                             <Field style={[styles.mucdichkham, this.state.type == "FAMILY" ? {} : { marginTop: 10 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
-                            <Text style={styles.mdk}></Text>
+                                <Text style={styles.mdk}></Text>
                                 <TextField
                                     hideError={true}
                                     onValidate={(valid, messages) => {
@@ -540,6 +555,27 @@ class EditProfileScreen extends Component {
                                 />
                             </Field>
                             <Text style={[styles.errorStyle]}>{this.state.addressError}</Text>
+                            <Field style={{ flex: 1 }}>
+                                <Text style={styles.mdk}>Quan hệ <Text style={{ color: 'red' }}>(*)</Text></Text>
+                                <Field>
+                                    <TextField
+                                        hideError={true}
+                                        multiline={true}
+                                        onPress={this.onSelectRelationShip}
+                                        editable={false}
+                                        inputStyle={[
+                                            styles.ktq, { minHeight: 60 }
+                                        ]}
+                                        errorStyle={styles.errorStyle}
+                                        value={this.state.relationShip && this.state.relationShip.name ? this.state.relationShip.name : 'Quan hệ'}
+                                        autoCapitalize={"none"}
+                                        returnKeyType={"next"}
+                                        // underlineColorAndroid="transparent"
+                                        autoCorrect={false}
+                                    />
+                                </Field>
+                                <Text style={[styles.errorStyle]}>{this.state.relationErr}</Text>
+                            </Field>
                         </Form>
                         <View style={styles.viewBtn}>
                             <TouchableOpacity onPress={this.onCreateProfile} style={styles.btnDone}><Text style={styles.txDone}>Lưu</Text></TouchableOpacity>
