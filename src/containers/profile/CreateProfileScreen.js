@@ -150,7 +150,7 @@ class CreateProfileScreen extends Component {
                                         snackbar.show('Thêm thành viên thành công', 'success')
                                         break
                                     case 'NOT_EXIST_ACCOUNT':
-                                        NavigationService.navigate('otpPhoneNumber',{
+                                        NavigationService.navigate('checkOtp',{
                                             id:res.data.medicalRecords.id
                                         })
                                         break
