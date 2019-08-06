@@ -122,10 +122,11 @@ class HomeScreen extends Component {
             <ScrollView
               onScroll={this.handleScroll}
               ref={(c) => { this.scroll = c }}
-              refreshControl={<RefreshControl
-                refreshing={this.state.refreshing}
-                onRefresh={this.onRefresh}
-              />}>
+              // refreshControl={<RefreshControl
+              //   refreshing={this.state.refreshing}
+              //   onRefresh={this.onRefresh}
+              // />}>
+              >
               <View>
                 <SlideBanner ref={ref => this.slide = ref} />
                 {/* // countReset={this.state.countReset} /> */}

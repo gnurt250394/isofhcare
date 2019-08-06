@@ -11,7 +11,7 @@ class MenuProfile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-
+      avatar: this.props.userApp.currentUser.avatar
     }
     if (!this.props.userApp.isLogin) {
       this.props.navigation.navigate("login", {
@@ -20,7 +20,14 @@ class MenuProfile extends React.Component {
     }
   }
   onProfileClick = () => {
-    NavigationService.navigate('listProfile')
+    NavigationService.navigate('listProfileUser')
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps) {
+      this.setState({
+        avatar: this.props.userApp.currentUser.avatar
+      })
+    }
   }
   render() {
     if (!this.props.userApp.isLogin)
@@ -34,7 +41,7 @@ class MenuProfile extends React.Component {
         <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
           {this.props.userApp.isLogin ? (
             <View style={styles.viewHeader}>
-              <ScaledImage style={styles.avatarStyle} uri={this.props.userApp.currentUser.avatar} height={60} ></ScaledImage>
+              <ScaledImage style={styles.avatarStyle} uri={this.state.avatar.absoluteUrl()} height={60} ></ScaledImage>
               <View style={styles.viewInfo}>
                 <Text style={styles.txHello}>Xin Chào</Text>
                 <Text style={styles.txName}>{this.props.userApp.currentUser.name && this.props.userApp.currentUser.name}</Text>

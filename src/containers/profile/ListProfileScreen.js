@@ -8,6 +8,9 @@ import { connect } from "react-redux";
 import constants from '@resources/strings';
 import profileProvider from '@data-access/profile-provider'
 import Modal from '@components/modal';
+import NavigationService from "@navigators/NavigationService";
+import LinearGradient from 'react-native-linear-gradient';
+import ActionSheet from 'react-native-actionsheet'
 
 class ListProfileScreen extends Component {
     constructor(props) {
@@ -21,6 +24,13 @@ class ListProfileScreen extends Component {
             isVisible: false,
         };
     }
+    onShowOptions = (id,medicalRelatedId) => {
+        this.actionSheetOptions.show();
+        this.setState({
+            idProfile: id,
+            medicalRelatedId:medicalRelatedId ? medialRelatedId : null
+        })
+    };
     onRefresh = () => {
         this.setState({
             refreshing: true,
@@ -28,6 +38,28 @@ class ListProfileScreen extends Component {
             this.onLoad();
         })
     }
+    onSetOptions = index => {
+        try {
+            switch (index) {
+                case 0:
+                    NavigationService.navigate("shareDataProfile",{
+                        medialRelatedId:this.state.medialRelatedId,
+                        id:this.state.idProfile
+                    })
+                    return;
+                case 1:
+                    this.setState(
+                        {
+                            isVisible: true,
+
+                        });
+                    return;
+            }
+        } catch (error) {
+
+        }
+
+    };
     componentDidMount() {
         this.onRefresh();
     }
@@ -39,9 +71,9 @@ class ListProfileScreen extends Component {
             }, () => {
                 switch (s.code) {
                     case 0:
-                        if (s.data && s.data.profiles) {
+                        if (s.data) {
                             this.setState({
-                                data: s.data.profiles,
+                                data: s.data,
                             });
                         }
                         break;
@@ -54,22 +86,19 @@ class ListProfileScreen extends Component {
         })
     }
     onClickItem = (item) => {
-        this.props.navigation.navigate('profile', { data: item })
+        NavigationService.navigate('profile', { data: item })
     }
     onDeleteItem = (id) => {
         this.setState({
-            isVisible: true,
-            idProfile: id
+
         })
     }
     onClickDone = () => {
         this.state.idProfile &&
             profileProvider.deleteFamilyProfile(this.state.idProfile).then(res => {
-                console.log(res, 'resss')
                 this.setState({
                     isVisible: false
                 })
-                
                 this.onRefresh()
             }).catch(err => {
                 this.setState({
@@ -82,24 +111,43 @@ class ListProfileScreen extends Component {
             isVisible: false
         })
     }
-    componentWillReceiveProps(nextProps){
-        if(nextProps.navigation.state.params && nextProps.navigation.state.params.reset){
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.navigation.state.params && nextProps.navigation.state.params.reset) {
             this.onRefresh()
         }
     }
     renderItem = (item, index) => {
         return (
-            <TouchableOpacity onPress={() => this.onClickItem(item)} style={{ paddingHorizontal: 10, marginBottom:5,flex:1 }}>
-                <Card style={styles.cardView}>
-                        <Text style={styles.txName}>{item.name}</Text>
-                        {/* <Text style={styles.txLabel}>ID: <Text style={styles.txId}>{item.profileNoID}</Text></Text> */}
-                    {item.type !== 'ORIGINAL' ? (<TouchableOpacity onPress={() => this.onDeleteItem(item.id)}>
-                        <ScaledImage height={20} source={require('@images/new/profile/ic_clear.png')}></ScaledImage>
-                        <Text style={styles.txDelelte}>Xóa</Text>
-                    </TouchableOpacity>) : (<View></View>)}
+            item.medicalRecords.status == 1 ? (
+                <Card style={styles.viewProfileUser}>
+                    <TouchableOpacity style={{ flex: 1 }} onPress={() => this.onClickItem(item)}>
+                        <LinearGradient style={styles.viewGradientUser} colors={['#02C293', '#01bb72', '#01BF88']}>
+                            <Text style={styles.txProfileUser}>{item.medicalRecords.name}</Text>
+                        </LinearGradient>
+                    </TouchableOpacity>
                 </Card>
-                <View style={{ height: 1, width: '98%', backgroundColor: '#4BBA7B',  alignSelf: 'center',marginTop:5}}></View>
-            </TouchableOpacity>
+            ) : (<View style={{
+                marginHorizontal: 10,
+            }}>
+                <Card style={styles.cardView}>
+                    <View style={styles.viewProfileFamily}>
+                        <TouchableOpacity onPress={() => this.onClickItem(item)} >
+                            <View>
+                                <Text style={styles.txName}>{item.medicalRecords.name}</Text>
+                                {
+                                    item.medicalRecords.relationshipType ?
+                                        <Text style={{ color: '#02C293', fontSize: 14 }}>Quan hệ: <Text style={{ color: '#868686', fontSize: 14 }}>{item.medicalRecords.relationshipType}</Text></Text>
+                                        : <View></View>
+                                }
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity  style = {{padding:10}}  onPress={() => this.onShowOptions(item.medicalRecords.id,item.medicalRecords.medicalRelatedId ? item.medicalRecords.medicalRelatedId : null)}>
+                            <ScaledImage height={8} source={require('@images/new/profile/ic_three_dot.png')}></ScaledImage>
+                        </TouchableOpacity>
+                    </View>
+                </Card>
+            </View>
+                )
         )
     }
     render() {
@@ -132,7 +180,7 @@ class ListProfileScreen extends Component {
                                 </View>
                             ) : null
                     }
-                    ListFooterComponent={() => <TouchableOpacity onPress={() => this.props.navigation.navigate('createProfile',{screen:'listProfile'})} style={styles.btn}><Text style={styles.txBtn}>Thêm thành viên</Text></TouchableOpacity>
+                    ListFooterComponent={() => <TouchableOpacity onPress={() => NavigationService.navigate('createProfile')}><LinearGradient colors={['#02C293', '#01bb72', '#01BF88']} style={styles.btn}><Text style={styles.txBtn}>Thêm thành viên</Text></LinearGradient></TouchableOpacity>
                     }
                 ></FlatList>
                 <Modal
@@ -151,9 +199,15 @@ class ListProfileScreen extends Component {
                             <TouchableOpacity onPress={this.onClickDone} style={styles.btnDone}><Text style={styles.txDone}>Đồng ý</Text></TouchableOpacity>
                             <TouchableOpacity onPress={this.onCloseModal} style={styles.btnReject}><Text style={styles.txDone}>Hủy</Text></TouchableOpacity>
                         </View>
-
                     </View>
                 </Modal>
+                <ActionSheet
+                    ref={o => this.actionSheetOptions = o}
+                    options={['Cài đặt chia sẻ', 'Xóa', 'Hủy']}
+                    cancelButtonIndex={2}
+                    // destructiveButtonIndex={1}
+                    onPress={this.onSetOptions}
+                />
             </ActivityPanel>
 
         );
@@ -161,7 +215,7 @@ class ListProfileScreen extends Component {
 }
 const styles = StyleSheet.create({
     container: {
-        flex:1
+        flex: 1,
     },
     txId: {
         color: '#000'
@@ -178,12 +232,14 @@ const styles = StyleSheet.create({
 
     viewPopup: { backgroundColor: '#fff', marginHorizontal: 20, paddingVertical: 40, borderRadius: 5 },
     viewModal: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-    txBtn: { color: '#fff',fontSize:16 },
+    txBtn: { color: '#fff', fontSize: 16 },
     cardView: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: 20,
+        paddingHorizontal: 10,
+        minHeight: 60,
+        borderWidth: 1,
+        borderRadius: 10,
+        borderColor: '#01BF88',
+        justifyContent: 'center'
     },
     txName: { color: '#4BBA7B', fontWeight: '500', fontSize: 15, maxWidth: 200 },
     txDelelte: { color: '#C4C4C4', fontSize: 10 },
@@ -192,7 +248,33 @@ const styles = StyleSheet.create({
     btnReject: { justifyContent: 'center', alignItems: 'center', height: 30, width: 78, marginLeft: 10, borderRadius: 5, backgroundColor: '#FFB800', },
     viewBtn: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20 },
     txDone: { color: '#fff' },
-
+    viewProfileUser: {
+        // backgroundColor: '#01BE84',
+        borderTopLeftRadius: 10,
+        borderBottomLeftRadius: 10,
+        // padding: 10,
+        marginVertical: 20,
+        marginLeft: 10,
+        flex: 1,
+        minHeight: 50,
+        justifyContent: 'center'
+    },
+    txProfileUser: {
+        fontSize: 14,
+        color: '#fff',
+        fontWeight: 'bold'
+    },
+    viewProfileFamily: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingVertical: 10,
+    },
+    viewGradientUser: {
+        flex: 1, justifyContent: 'center', borderTopLeftRadius: 10,
+        padding: 10,
+        borderBottomLeftRadius: 10,
+    }
 })
 function mapStateToProps(state) {
     return {

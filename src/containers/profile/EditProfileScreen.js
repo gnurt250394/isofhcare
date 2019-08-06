@@ -22,37 +22,13 @@ import constants from "@resources/strings";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import ActionSheet from 'react-native-actionsheet'
 import profileProvider from '@data-access/profile-provider'
+import NavigationService from "@navigators/NavigationService";
 
 class EditProfileScreen extends Component {
-    constructor() {
-        super();
-        this.state = {
-            isGender: false,
-            genderUser: [{ gender: "Nam", value: 1 }, { gender: "Nữ", value: 0 }],
-            toggelDateTimePickerVisible: false,
-            gender: 2,
-            txGender: '',
-            name: '',
-            email: "",
-            dob: "",
-            imgLocal: "",
-            date: "",
-            image: "",
-            imageUris: [],
-            valid: '',
-            isDataNull: '',
-            status: 2,
-            reset: 1,
-            bmi: '',
-            height: '',
-            weight: ''
-        };
-    }
-    componentDidMount() {
-        console.log(this.props)
+    constructor(props) {
+        super(props);
         let data = this.props.navigation.state.params.data
-        console.log(data, 'data props')
-        this.setState({
+        this.state = {
             name: data.name ? data.name : '',
             date: data && data.dob ? data.dob.toDateObject('-').format('dd/MM/yyyy') : (''),
             txGender: data.gender == 1 ? 'Nam' : 'Nữ',
@@ -61,12 +37,12 @@ class EditProfileScreen extends Component {
             height: data.height ? data.height.toString() : '',
             weight: data.weight ? data.weight.toString() : '',
             address: data.address ? data.address : '',
-            type: data.type ? data.type : '',
+            relationshipType: data.relationshipType ? data.relationshipType : '',
             profileNo: data.profileNo ? data.profileNo : '',
             id: data.id,
             phone: data.phone,
-
-        })
+            data: data
+        };
     }
     onChangeText = type => text => {
         this.setState({ [type]: text });
@@ -92,14 +68,14 @@ class EditProfileScreen extends Component {
                 case 0:
                     this.setState(
                         {
-                            gender: 1,
+                            gender: '1',
                             txGender: 'Nam'
                         });
                     return;
                 case 1:
                     this.setState(
                         {
-                            gender: 0,
+                            gender: '0',
                             txGender: 'Nữ'
                         });
                     return;
@@ -147,11 +123,13 @@ class EditProfileScreen extends Component {
         }
     }
     onSelectZone = () => {
-        if (!this.state.provinces.id) {
+        if (!this.state.provinces) {
             snackbar.show("Bạn chưa chọn Tỉnh/Thành phố")
+            return
         }
-        if (!this.state.districts.id) {
+        if (!this.state.districts) {
             snackbar.show("Bạn chưa chọn Quận/Huyện")
+            return
         }
         if (this.state.provinces.id && this.state.districts.id) {
             this.props.navigation.navigate('selectZone', {
@@ -181,36 +159,21 @@ class EditProfileScreen extends Component {
                         isLoading: true
                     },
                     () => {
-                        let name = this.state.name
-                        let dob = this.state.dob
-                        let dobOld = this.state.dobOld
-                        let profileNo = this.state.profileNo
-                        let gender = this.state.gender
-                        let height = this.state.height
-                        let weight = this.state.weight ? parseFloat(this.state.weight).toFixed(1) : ''
-                        let address = this.state.address
-                        let type = this.state.type
+                        let data = this.state.data
+                        data.dob = this.state.dob ? this.state.dob.format('yyyy-MM-dd') + ' 00:00:00' : this.state.dobOld,
+                            data.gender = this.state.gender
+                        data.height = this.state.height ? Number(this.state.height) : null,
+                            data.weight = this.state.weight ? Number(parseFloat(this.state.weight).toFixed(1)) : null
+                        data.address = this.state.address
                         let id = this.state.id
-                        let phone = this.state.phone
-                        let idProvince = this.state.provinces ? this.state.provinces.id.toString() : null
-                        let idDistrics = this.state.districts ? this.state.districts.id.toString() : null
-                        let idZone = this.state.zone ? this.state.zone.id.toString() : null
-                        let data = {
-                            "name": name,
-                            "dob": dob ? dob.format('yyyy-MM-dd') + ' 00:00:00' : dobOld,
-                            "profileNo": profileNo,
-                            "gender": gender  ? gender : 0,
-                            "height": height ? Number(height) : null,
-                            "weight": weight ? Number(weight) : null,
-                            "phone": phone,
-                            "provinceId": idProvince,
-                            "districtId":idDistrics,
-                            "zoneId": idZone,
-                            "type": type
-                        }
-                        profileProvider.updateProfile(id, data,).then(res => {
+                        data.phone = this.state.phone
+                        data.idProvince = this.state.provinces ? this.state.provinces.id.toString() : null
+                        data.idDistrics = this.state.districts ? this.state.districts.id.toString() : null
+                        data.idZone = this.state.zone ? this.state.zone.id.toString() : null
+                        data.relationshipType = this.state.relationshipType
+                        profileProvider.updateProfile(id, data).then(res => {
                             if (res.code == 0) {
-                                this.props.navigation.navigate('profile', { data: res.data.profile })
+                                this.props.navigation.navigate('profile', { data: res.data.medicalRecords })
                                 snackbar.show('Cập nhật hồ sơ thành công', "success");
 
                             } else {
@@ -225,7 +188,21 @@ class EditProfileScreen extends Component {
                 snackbar.show(constants.msg.app.not_internet, "danger");
             });
     }
+    onSelectRelationShip = () => {
+        NavigationService.navigate('selectRelationship', {
+            onSelected: this.selectRelationShip.bind(this),
+            // id: this.state.relationShip.id
+        })
 
+    }
+    selectRelationShip = (relationShip) => {
+        let relationShipError = relationShip ? "" : this.state.relationShipError;
+        if (!relationShip || !this.state.relationShip || relationShip.id != this.state.relationShip.id) {
+            this.setState({ relationShip, relationShipError })
+        } else {
+            this.setState({ relationShip, relationShipError });
+        }
+    }
     render() {
         let maxDate = new Date();
         maxDate = new Date(
@@ -481,7 +458,7 @@ class EditProfileScreen extends Component {
                                             editable={false}
                                             multiline={true}
                                             inputStyle={[
-                                                styles.ktq,
+                                                styles.ktq, { minHeight: 80 }
                                             ]}
                                             errorStyle={styles.errorStyle}
                                             value={this.state.provinces && this.state.provinces.countryCode ? this.state.provinces.countryCode : 'Tỉnh/Thành phố'}
@@ -495,7 +472,7 @@ class EditProfileScreen extends Component {
                                 </Field>
 
                                 <Field style={{ flex: 1 }}>
-                                <Text style={styles.mdk}></Text>
+                                    <Text style={styles.mdk}></Text>
                                     <Field>
                                         <TextField
                                             hideError={true}
@@ -509,7 +486,7 @@ class EditProfileScreen extends Component {
                                             // }}
                                             multiline={true}
                                             inputStyle={[
-                                                styles.ktq,
+                                                styles.ktq, { minHeight: 80 }
                                             ]}
                                             onPress={this.onSelectDistrict}
                                             editable={false}
@@ -523,7 +500,7 @@ class EditProfileScreen extends Component {
                                     </Field>
                                 </Field>
                                 <Field style={{ flex: 1 }}>
-                                <Text style={styles.mdk}></Text>
+                                    <Text style={styles.mdk}></Text>
                                     <Field>
                                         <TextField
                                             hideError={true}
@@ -531,7 +508,7 @@ class EditProfileScreen extends Component {
                                             onPress={this.onSelectZone}
                                             editable={false}
                                             inputStyle={[
-                                                styles.ktq,
+                                                styles.ktq, { minHeight: 80 }
                                             ]}
                                             errorStyle={styles.errorStyle}
                                             value={this.state.zone && this.state.zone.name ? this.state.zone.name : 'Xã phường'}
@@ -544,7 +521,7 @@ class EditProfileScreen extends Component {
                                 </Field>
                             </Field>
                             <Field style={[styles.mucdichkham, this.state.type == "FAMILY" ? {} : { marginTop: 10 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
-                            <Text style={styles.mdk}></Text>
+                                <Text style={styles.mdk}></Text>
                                 <TextField
                                     hideError={true}
                                     onValidate={(valid, messages) => {
@@ -578,14 +555,33 @@ class EditProfileScreen extends Component {
                                 />
                             </Field>
                             <Text style={[styles.errorStyle]}>{this.state.addressError}</Text>
+                            <Field style={{ flex: 1 }}>
+                                <Text style={styles.mdk}>Quan hệ <Text style={{ color: 'red' }}>(*)</Text></Text>
+                                <Field>
+                                    <TextField
+                                        hideError={true}
+                                        multiline={true}
+                                        onPress={this.onSelectRelationShip}
+                                        editable={false}
+                                        inputStyle={[
+                                            styles.ktq, { minHeight: 60 }
+                                        ]}
+                                        errorStyle={styles.errorStyle}
+                                        value={this.state.relationShip && this.state.relationShip.name ? this.state.relationShip.name : 'Quan hệ'}
+                                        autoCapitalize={"none"}
+                                        returnKeyType={"next"}
+                                        // underlineColorAndroid="transparent"
+                                        autoCorrect={false}
+                                    />
+                                </Field>
+                                <Text style={[styles.errorStyle]}>{this.state.relationErr}</Text>
+                            </Field>
                         </Form>
                         <View style={styles.viewBtn}>
                             <TouchableOpacity onPress={this.onCreateProfile} style={styles.btnDone}><Text style={styles.txDone}>Lưu</Text></TouchableOpacity>
                             <TouchableOpacity onPress={() => this.props.navigation.pop()} style={styles.btnReject}><Text style={styles.txDone}>Hủy</Text></TouchableOpacity>
                         </View>
                     </View>
-
-
                 </ScrollView>
                 <ImagePicker ref={ref => (this.imagePicker = ref)} />
                 <DateTimePicker
