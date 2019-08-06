@@ -31,16 +31,12 @@ class CheckOtpScreen extends React.PureComponent {
     onReSendPhone = () => {
         let id = this.props.navigation.state.params && this.props.navigation.state.params.id ? this.props.navigation.state.params.id : null
              profileProvider.resendOtp(id).then(res => {
-                
-            if (res.code == 'OK') {
                 this.setState({
                     seconds: 90
                 })
-                
-            } else {
-                snackbar.show(res.message, 'danger')
-            }
 
+        }).cacth(err => {
+            snackbar.show(res.message, 'danger')
         })
     }
     onCheckToken = () => {
