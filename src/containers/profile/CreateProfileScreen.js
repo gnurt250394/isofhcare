@@ -27,8 +27,8 @@ import Modal from "@components/modal";
 import NavigationService from "@navigators/NavigationService";
 
 class CreateProfileScreen extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             isGender: false,
             genderUser: [{ gender: "Nam", value: 1 }, { gender: "Nữ", value: 0 }],
@@ -302,7 +302,7 @@ class CreateProfileScreen extends Component {
                         <Text style={styles.txTitle}>THÊM THÀNH VIÊN MỚI</Text>
                         <Form ref={ref => (this.form = ref)} style={[{ flex: 1 }]}>
                             <Field style={[styles.mucdichkham, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
-                                <Text style={styles.mdk}>{constants.fullname}</Text>
+                                <Text style={styles.mdk}>{constants.fullname} <Text style = {{color:'red'}}>(*)</Text></Text>
                                 <TextField
                                     hideError={true}
                                     onValidate={(valid, messages) => {
@@ -338,9 +338,6 @@ class CreateProfileScreen extends Component {
                                 />
                             </Field>
                             <Text style={[styles.errorStyle]}>{this.state.nameError}</Text>
-
-
-
                             <Field
 
                                 style={[styles.mucdichkham, { flexDirection: 'row' }]}
@@ -411,7 +408,7 @@ class CreateProfileScreen extends Component {
                                     ]}
                                     onPress={this.onShowGender}
                                 >
-                                    <Text style={styles.mdk}>{constants.gender}</Text>
+                                    <Text style={styles.mdk}>{constants.gender} <Text style = {{color:'red'}}>(*)</Text></Text>
                                     <Text style={[styles.ktq, { paddingVertical: 12 }]}>
                                         {this.state.txGender}
                                     </Text>
@@ -493,7 +490,7 @@ class CreateProfileScreen extends Component {
                                 </Field>
                             </Field>
                             <Field style={[styles.mucdichkham, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
-                                <Text style={styles.mdk}>{'Số điện thoại'}</Text>
+                                <Text style={styles.mdk}>{'Số điện thoại'}  <Text style = {{color:'red'}}>(*)</Text></Text>
                                 <TextField
                                     hideError={true}
                                     onValidate={(valid, messages) => {
@@ -671,7 +668,7 @@ class CreateProfileScreen extends Component {
                             </Field>
                             <Text style={[styles.errorStyle]}>{this.state.addressError}</Text>
                             <Field style={{ flex: 1 }}>
-                                <Text style={styles.mdk}></Text>
+                                <Text style={styles.mdk}>Quan hệ <Text style = {{color:'red'}}>(*)</Text></Text>
                                 <Field>
                                     <TextField
                                         hideError={true}

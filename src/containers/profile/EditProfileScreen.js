@@ -36,10 +36,11 @@ class EditProfileScreen extends Component {
             height: data.height ? data.height.toString() : '',
             weight: data.weight ? data.weight.toString() : '',
             address: data.address ? data.address : '',
-            type: data.type ? data.type : '',
+            relationshipType: data.relationshipType ? data.relationshipType : '',
             profileNo: data.profileNo ? data.profileNo : '',
             id: data.id,
             phone: data.phone,
+            data:data
         };
     }
     onChangeText = type => text => {
@@ -157,36 +158,21 @@ class EditProfileScreen extends Component {
                         isLoading: true
                     },
                     () => {
-                        let name = this.state.name
-                        let dob = this.state.dob
-                        let dobOld = this.state.dobOld
-                        let profileNo = this.state.profileNo
-                        let gender = this.state.gender
-                        let height = this.state.height
-                        let weight = this.state.weight ? parseFloat(this.state.weight).toFixed(1) : ''
-                        let address = this.state.address
-                        let type = this.state.type
+                        let data = this.state.data
+                        data.dob = this.state.dob ? this.state.dob.format('yyyy-MM-dd') + ' 00:00:00' : this.state.dobOld,
+                        data.gender = this.state.gender
+                        data.height = this.state.height ? Number(this.state.height) : null,
+                        data.weight = this.state.weight ? Number(parseFloat(this.state.weight).toFixed(1))  : null
+                        data.address = this.state.address
                         let id = this.state.id
-                        let phone = this.state.phone
-                        let idProvince = this.state.provinces ? this.state.provinces.id.toString() : null
-                        let idDistrics = this.state.districts ? this.state.districts.id.toString() : null
-                        let idZone = this.state.zone ? this.state.zone.id.toString() : null
-                        let data = {
-                            "name": name,
-                            "dob": dob ? dob.format('yyyy-MM-dd') + ' 00:00:00' : dobOld,
-                            "profileNo": profileNo,
-                            "gender": gender  ? gender : 0,
-                            "height": height ? Number(height) : null,
-                            "weight": weight ? Number(weight) : null,
-                            "phone": phone,
-                            "provinceId": idProvince,
-                            "districtId":idDistrics,
-                            "zoneId": idZone,
-                            "type": type
-                        }
+                        data.phone = this.state.phone
+                        data.idProvince = this.state.provinces ? this.state.provinces.id.toString() : null
+                        data.idDistrics = this.state.districts ? this.state.districts.id.toString() : null
+                        data.idZone = this.state.zone ? this.state.zone.id.toString() : null
+                        data.relationshipType = this.state.relationshipType
                         profileProvider.updateProfile(id, data,).then(res => {
                             if (res.code == 0) {
-                                this.props.navigation.navigate('profile', { data: res.data.profile })
+                                this.props.navigation.navigate('profile', { data: res.data.medicalRecords })
                                 snackbar.show('Cập nhật hồ sơ thành công', "success");
 
                             } else {

@@ -141,14 +141,13 @@ class ListProfileScreen extends Component {
                                 }
                             </View>
                         </TouchableOpacity>
-                        <TouchableOpacity style = {{padding:10}} onPress={() => this.onShowOptions(item.medicalRecords.id,item.medicalRecords.medicalRelatedId)}>
+                        <TouchableOpacity  style = {{padding:10}}  onPress={() => this.onShowOptions(item.medicalRecords.id,item.medicalRecords.medicalRelatedId ? item.medicalRecords.medicalRelatedId : null)}>
                             <ScaledImage height={8} source={require('@images/new/profile/ic_three_dot.png')}></ScaledImage>
                         </TouchableOpacity>
                     </View>
                 </Card>
             </View>
                 )
-
         )
     }
     render() {
@@ -181,7 +180,7 @@ class ListProfileScreen extends Component {
                                 </View>
                             ) : null
                     }
-                    ListFooterComponent={() => <TouchableOpacity onPress={() => NavigationService.navigate('createProfile', { screen: 'listProfile' })}><LinearGradient colors={['#02C293', '#01bb72', '#01BF88']} style={styles.btn}><Text style={styles.txBtn}>Thêm thành viên</Text></LinearGradient></TouchableOpacity>
+                    ListFooterComponent={() => <TouchableOpacity onPress={() => NavigationService.navigate('createProfile')}><LinearGradient colors={['#02C293', '#01bb72', '#01BF88']} style={styles.btn}><Text style={styles.txBtn}>Thêm thành viên</Text></LinearGradient></TouchableOpacity>
                     }
                 ></FlatList>
                 <Modal
