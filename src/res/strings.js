@@ -552,7 +552,9 @@ module.exports = {
       update_cover: isofhcare_service + 'user/update-cover',
       update_avatar: isofhcare_service + 'user/update-avatar',
       send_confirm: isofhcare_service + 'medical-records/send-confirm',
-      share_permission : isofhcare_service + 'medical-records/update-permission'
+      share_permission : isofhcare_service + 'medical-records/update-permission',
+      check_otp : isofhcare_service + 'medical-records/check-otp',
+      resend_otp : isofhcare_service + 'medical-records/resend-otp'
     },
     serviceType: {
       get_all: isofhcare_service + "service-type/get-all"

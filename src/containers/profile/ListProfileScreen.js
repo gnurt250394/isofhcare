@@ -96,7 +96,6 @@ class ListProfileScreen extends Component {
     onClickDone = () => {
         this.state.idProfile &&
             profileProvider.deleteFamilyProfile(this.state.idProfile).then(res => {
-                console.log(res, 'resss')
                 this.setState({
                     isVisible: false
                 })

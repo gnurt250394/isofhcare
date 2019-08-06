@@ -33,7 +33,7 @@ class CreateProfileScreen extends Component {
             isGender: false,
             genderUser: [{ gender: "Nam", value: 1 }, { gender: "Nữ", value: 0 }],
             toggelDateTimePickerVisible: false,
-            valueGender: 1,
+            valueGender: '1',
             txGender: 'Nam',
             name: '',
             email: "",
@@ -73,14 +73,14 @@ class CreateProfileScreen extends Component {
                 case 0:
                     this.setState(
                         {
-                            valueGender: 1,
+                            valueGender: '1',
                             txGender: 'Nam'
                         });
                     return;
                 case 1:
                     this.setState(
                         {
-                            valueGender: 0,
+                            valueGender: '0',
                             txGender: 'Nữ'
                         });
                     return;
@@ -101,6 +101,12 @@ class CreateProfileScreen extends Component {
             })
             return
         }
+        if(!this.state.relationShip){
+            this.setState({
+                relationErr:'Bạn chưa chọn mối quan hệ'
+            })
+            return
+        }
         connectionUtils
             .isConnected()
             .then(s => {
@@ -111,7 +117,7 @@ class CreateProfileScreen extends Component {
                     () => {
                         let name = this.state.name
                         let dob = this.state.dob
-                        let gender = this.state.gender
+                        let gender = this.state.valueGender
                         let height = this.state.height
                         let weight = this.state.weight ? parseFloat(this.state.weight).toFixed(1) : ''
                         let phone = this.state.phone
@@ -145,7 +151,7 @@ class CreateProfileScreen extends Component {
                                         break
                                     case 'NOT_EXIST_ACCOUNT':
                                         NavigationService.navigate('otpPhoneNumber',{
-                                            phone:phone
+                                            id:res.data.medicalRecords.id
                                         })
                                         break
                                     case 'EXIST_ACCOUNT':
@@ -683,6 +689,7 @@ class CreateProfileScreen extends Component {
                                         autoCorrect={false}
                                     />
                                 </Field>
+                            <Text style={[styles.errorStyle]}>{this.state.relationErr}</Text>
                             </Field>
                         </Form>
                         <View style={styles.viewBtn}>

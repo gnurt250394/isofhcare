@@ -141,5 +141,25 @@ module.exports = {
                 reject(e)
             })
         })
+    },
+    checkOtp (data,id){
+        return new Promise((resolve,reject) => {
+            client.requestApi('put',constants.api.profile.check_otp + '/' + id,data,(s,e) => {
+                if(s)
+                resolve(s)
+                else
+                reject(e)
+            })
+        })
+    },
+    resendOtp (id){
+        return new Promise((resolve,reject) => {
+            client.requestApi('put',constants.api.profile.resend_otp + '/' +id,{},(s,e) => {
+                if(s)
+                resolve(s)
+                else
+                reject(e)
+            })
+        })
     }
 }

@@ -24,35 +24,10 @@ import ActionSheet from 'react-native-actionsheet'
 import profileProvider from '@data-access/profile-provider'
 
 class EditProfileScreen extends Component {
-    constructor() {
-        super();
-        this.state = {
-            isGender: false,
-            genderUser: [{ gender: "Nam", value: 1 }, { gender: "Nữ", value: 0 }],
-            toggelDateTimePickerVisible: false,
-            gender: 2,
-            txGender: '',
-            name: '',
-            email: "",
-            dob: "",
-            imgLocal: "",
-            date: "",
-            image: "",
-            imageUris: [],
-            valid: '',
-            isDataNull: '',
-            status: 2,
-            reset: 1,
-            bmi: '',
-            height: '',
-            weight: ''
-        };
-    }
-    componentDidMount() {
-        console.log(this.props)
+    constructor(props) {
+        super(props);
         let data = this.props.navigation.state.params.data
-        console.log(data, 'data props')
-        this.setState({
+        this.state = {
             name: data.name ? data.name : '',
             date: data && data.dob ? data.dob.toDateObject('-').format('dd/MM/yyyy') : (''),
             txGender: data.gender == 1 ? 'Nam' : 'Nữ',
@@ -65,8 +40,7 @@ class EditProfileScreen extends Component {
             profileNo: data.profileNo ? data.profileNo : '',
             id: data.id,
             phone: data.phone,
-
-        })
+        };
     }
     onChangeText = type => text => {
         this.setState({ [type]: text });
@@ -92,14 +66,14 @@ class EditProfileScreen extends Component {
                 case 0:
                     this.setState(
                         {
-                            gender: 1,
+                            gender: '1',
                             txGender: 'Nam'
                         });
                     return;
                 case 1:
                     this.setState(
                         {
-                            gender: 0,
+                            gender: '0',
                             txGender: 'Nữ'
                         });
                     return;

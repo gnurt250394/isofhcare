@@ -9,15 +9,15 @@ import ActivityPanel from "@components/ActivityPanel";
 import userProvider from '@data-access/user-provider'
 import snackbar from '@utils/snackbar-utils';
 import { connect } from "react-redux";
+import profileProvider from '@data-access/profile-provider'
+import NavigationService from "@navigators/NavigationService";
 
 class CheckOtpScreen extends React.PureComponent {
     constructor(props) {
         super(props)
-        let phone = this.props.navigation.state.params && this.props.navigation.state.params.phone ? this.props.navigation.state.params.phone : ''
         this.state = {
             seconds: 90,
             txErr: '',
-            phone
         }
     }
     componentDidMount() {
@@ -29,17 +29,14 @@ class CheckOtpScreen extends React.PureComponent {
         }, 1000);
     }
     onReSendPhone = () => {
-        let details = this.props.navigation.state.params && this.props.navigation.state.params.details ? this.props.navigation.state.params.details : ''
-        details && userProvider.reSendOtp(details).then(res => {
-            // if (res.code == 'OK') {
-            //     console.log('thanh cong')
-            // } else {
-            //     console.log('that bai');
-            // }
+        let id = this.props.navigation.state.params && this.props.navigation.state.params.id ? this.props.navigation.state.params.id : null
+             profileProvider.resendOtp(id).then(res => {
+                
             if (res.code == 'OK') {
                 this.setState({
                     seconds: 90
                 })
+                
             } else {
                 snackbar.show(res.message, 'danger')
             }
@@ -47,28 +44,17 @@ class CheckOtpScreen extends React.PureComponent {
         })
     }
     onCheckToken = () => {
-        let token = this.state.text1
-        if (token) {
-            userProvider.checkOtpSignup(token).then(res => {
-                if (res.code == 'OK') {
-                    this.props.userApp.loginToken = res.details
-                    // let data = this.props.navigation.state.params ? this.props.navigation.state.params.data : ''
-                    // let user = data ? data.user : ''
-                    // user.loginToken = res.details
-                    // user.bookingNumberHospital = data.bookingNumberHospital;
-                    // user.bookingStatus = data.bookingStatus;
-                    // if (data.profile && data.profile.uid)
-                    //     user.uid = data.profile.uid;
-                    // this.props.dispatch(redux.userLogin(user));
-                    // if (this.nextScreen) {
-                    //     this.props.navigation.replace(
-                    //         this.nextScreen.screen,
-                    //         this.nextScreen.param
-                    //     );
-                    // } else this.props.navigation.navigate("home", { showDraw: false });
+        let data = {
+            'otp' : this.state.text1
+        }
+        let id = this.props.navigation.state.params && this.props.navigation.state.params.id ? this.props.navigation.state.params.id : null
+        if (data && id) {
+            profileProvider.checkOtp(data,id).then(res => {
+                if (res.code == 0) {
+                    NavigationService.navigate('listProfileUser')
                     return;
                 } else {
-                    snackbar.show(res.message, 'danger')
+                    snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
 
                 }
             })
