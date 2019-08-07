@@ -18,6 +18,7 @@ class CheckOtpScreen extends React.PureComponent {
         this.state = {
             seconds: 90,
             txErr: '',
+            reset: 2
         }
     }
     componentDidMount() {
@@ -30,24 +31,24 @@ class CheckOtpScreen extends React.PureComponent {
     }
     onReSendPhone = () => {
         let id = this.props.navigation.state.params && this.props.navigation.state.params.id ? this.props.navigation.state.params.id : null
-             profileProvider.resendOtp(id).then(res => {
-                this.setState({
-                    seconds: 90
-                })
+        profileProvider.resendOtp(id).then(res => {
+            this.setState({
+                seconds: 90
+            })
 
-        }).cacth(err => {
-            snackbar.show(res.message, 'danger')
+        }).catch(err => {
+            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
         })
     }
     onCheckToken = () => {
         let data = {
-            'otp' : this.state.text1
+            'otp': this.state.text1
         }
         let id = this.props.navigation.state.params && this.props.navigation.state.params.id ? this.props.navigation.state.params.id : null
         if (data && id) {
-            profileProvider.checkOtp(data,id).then(res => {
+            profileProvider.checkOtp(data, id).then(res => {
                 if (res.code == 0) {
-                    NavigationService.navigate('listProfileUser')
+                    NavigationService.navigate('listProfileUser', { reset: this.state.reset + 1 })
                     return;
                 } else {
                     snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
