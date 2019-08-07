@@ -145,9 +145,15 @@ class EditProfileScreen extends Component {
         if (!this.form.isValid()) {
             return;
         }
-        if (this.state.weight && isNaN(this.state.weight)) {
+        if (this.state.weight && isNaN(this.state.weight) || this.state.weight && Number(this.state.weight) < 0 ) {
             this.setState({
                 weightError: 'Cân nặng không hợp lệ'
+            })
+            return
+        }
+        if (this.state.height && isNaN(this.state.height) || this.state.height && Number(this.state.height) < 0 ) {
+            this.setState({
+                heightError: 'Chiều cao không hợp lệ'
             })
             return
         }
