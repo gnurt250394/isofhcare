@@ -95,21 +95,21 @@ class CreateProfileScreen extends Component {
         if (!this.form.isValid()) {
             return;
         }
-        if (this.state.weight && isNaN(this.state.weight) || this.state.weight && Number(this.state.weight) < 0 ) {
+        if (this.state.weight && isNaN(this.state.weight) || this.state.weight && Number(this.state.weight) < 0) {
             this.setState({
                 weightError: 'Cân nặng không hợp lệ'
             })
             return
         }
-        if (this.state.height && isNaN(this.state.height) || this.state.height && Number(this.state.height) < 0 ) {
+        if (this.state.height && isNaN(this.state.height) || this.state.height && Number(this.state.height) < 0) {
             this.setState({
                 heightError: 'Chiều cao không hợp lệ'
             })
             return
         }
-        if(!this.state.relationShip){
+        if (!this.state.relationShip) {
             this.setState({
-                relationErr:'Bạn chưa chọn mối quan hệ'
+                relationErr: 'Bạn chưa chọn mối quan hệ'
             })
             return
         }
@@ -128,7 +128,7 @@ class CreateProfileScreen extends Component {
                         let weight = this.state.weight ? parseFloat(this.state.weight).toFixed(1) : ''
                         let phone = this.state.phone
                         // let address = this.state.address
-                        let idProvince = this.state.provinces ? this.state.provinces.id :null
+                        let idProvince = this.state.provinces ? this.state.provinces.id : null
                         let idDistrics = this.state.districts ? this.state.districts.id : null
                         let idZone = this.state.zone ? this.state.zone.id : null
                         let village = this.state.address ? this.state.address : null
@@ -148,37 +148,52 @@ class CreateProfileScreen extends Component {
                             "relationshipType": relationshipType
                         }
                         profileProvider.createProfile(data).then(res => {
-                            console.log(res)
-                            if (res.code == 0) {
-                                switch (res.data.TYPE) {
-                                    case 'PHONE_VALID':
-                                        NavigationService.navigate('listProfileUser', { reset: this.state.reset + 1 })
-                                        snackbar.show('Thêm thành viên thành công', 'success')
-                                        break
-                                    case 'NOT_EXIST_ACCOUNT':
-                                        NavigationService.navigate('checkOtp',{
-                                            id:res.data.medicalRecords.id
-                                        })
-                                        break
-                                    case 'EXIST_ACCOUNT':
-                                       this.setState({
-                                        phone: phone,
-                                        id: res.data.medicalRecords.id,
-                                        isVisible:true
-                                       })
-                                        break
-                                }
-                                return
+                            switch (res.code) {
+                                case 0:
+                                    switch (res.data.TYPE) {
+                                        case 'PHONE_VALID':
+                                            NavigationService.navigate('listProfileUser', { reset: this.state.reset + 1 })
+                                            snackbar.show('Thêm thành viên thành công', 'success')
+                                            break
+                                        case 'NOT_EXIST_ACCOUNT':
+                                            NavigationService.navigate('checkOtp', {
+                                                id: res.data.medicalRecords.id
+                                            })
+                                            break
+                                        case 'EXIST_ACCOUNT':
+                                            this.setState({
+                                                phone: phone,
+                                                id: res.data.medicalRecords.id,
+                                                isVisible: true
+                                            })
+                                            break
+                                    }
+                                    break
+                                case 1:
+                                    snackbar.show('Bạn không có quyền chỉnh sửa hồ sơ này', "success");
+                                    break
+                                case 2:
+                                    snackbar.show('Bạn đang không đăng nhập với ứng dụng bệnh nhân', "success");
+                                    break
+                                case 3:
+                                    snackbar.show('Họ tên không được để trống', "success");
+                                    break
+                                case 4:
+                                    snackbar.show('Số điện thoại không được để trống', "success");
+                                    break
+                                case 5:
+                                    snackbar.show('Số điện thoại sai định dạng', "success");
+                                    break
+                                case 6:
+                                    snackbar.show('Giới tính không được để trống', "success");
+                                    break
+                                case 7:
+                                    snackbar.show('Mối quan hệ không được để trống', "success");
+                                    break
+                                case 8:
+                                    snackbar.show('Số điện thoại đã tồn tại trong danh sách hồ sơ của bạn', "success");
+                                    break
                             }
-                            if(res.code == 3){
-                                snackbar.show('Số điện thoại đã tồn tại trong danh sách hồ sơ của bạn', 'danger') 
-                                return
-                            }
-                            if(res.code == 5){
-                                snackbar.show('Số điện thoại sai định dạng', 'danger') 
-                                return
-                            }
-                            else { snackbar.show('Thêm thành viên không thành công', 'danger') }
                         }).catch(err => {
                             snackbar.show('Thêm thành viên không thành công', 'danger')
                             console.log(err);
@@ -267,24 +282,24 @@ class CreateProfileScreen extends Component {
     onSendConfirm = () => {
         profileProvider.sendConfirmProfile(this.state.id).then(res => {
             this.setState({
-                isVisible:false
+                isVisible: false
             })
-            if(res.code == 0){
-                snackbar.show('Thành công','success')
-                
-            }else{
-                snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại','danger')
+            if (res.code == 0) {
+                snackbar.show('Thành công', 'success')
+
+            } else {
+                snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
 
             }
         }).catch(err => {
             this.setState({
-                isVisible:false
+                isVisible: false
             })
-            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại','danger')
+            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
 
             console.log(err)
         })
-      }
+    }
     renderItem = ({ item }) => {
         return (
             <View style={{ margin: 5, borderRadius: 1, borderColor: '#A4A4A4', padding: 5 }}>
@@ -317,7 +332,7 @@ class CreateProfileScreen extends Component {
                         <Text style={styles.txTitle}>THÊM THÀNH VIÊN MỚI</Text>
                         <Form ref={ref => (this.form = ref)} style={[{ flex: 1 }]}>
                             <Field style={[styles.mucdichkham, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
-                                <Text style={styles.mdk}>{constants.fullname} <Text style = {{color:'red'}}>(*)</Text></Text>
+                                <Text style={styles.mdk}>{constants.fullname} <Text style={{ color: 'red' }}>(*)</Text></Text>
                                 <TextField
                                     hideError={true}
                                     onValidate={(valid, messages) => {
@@ -423,7 +438,7 @@ class CreateProfileScreen extends Component {
                                     ]}
                                     onPress={this.onShowGender}
                                 >
-                                    <Text style={styles.mdk}>{constants.gender} <Text style = {{color:'red'}}>(*)</Text></Text>
+                                    <Text style={styles.mdk}>{constants.gender} <Text style={{ color: 'red' }}>(*)</Text></Text>
                                     <Text style={[styles.ktq, { paddingVertical: 12 }]}>
                                         {this.state.txGender}
                                     </Text>
@@ -505,7 +520,7 @@ class CreateProfileScreen extends Component {
                                 </Field>
                             </Field>
                             <Field style={[styles.mucdichkham, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
-                                <Text style={styles.mdk}>{'Số điện thoại'}  <Text style = {{color:'red'}}>(*)</Text></Text>
+                                <Text style={styles.mdk}>{'Số điện thoại'}  <Text style={{ color: 'red' }}>(*)</Text></Text>
                                 <TextField
                                     hideError={true}
                                     onValidate={(valid, messages) => {
@@ -683,7 +698,7 @@ class CreateProfileScreen extends Component {
                             </Field>
                             <Text style={[styles.errorStyle]}>{this.state.addressError}</Text>
                             <Field style={{ flex: 1 }}>
-                                <Text style={styles.mdk}>Quan hệ <Text style = {{color:'red'}}>(*)</Text></Text>
+                                <Text style={styles.mdk}>Quan hệ <Text style={{ color: 'red' }}>(*)</Text></Text>
                                 <Field>
                                     <TextField
                                         hideError={true}
@@ -701,7 +716,7 @@ class CreateProfileScreen extends Component {
                                         autoCorrect={false}
                                     />
                                 </Field>
-                            <Text style={[styles.errorStyle]}>{this.state.relationErr}</Text>
+                                <Text style={[styles.errorStyle]}>{this.state.relationErr}</Text>
                             </Field>
                         </Form>
                         <View style={styles.viewBtn}>
@@ -755,7 +770,7 @@ class CreateProfileScreen extends Component {
                 >
                     <View style={styles.viewPopup}>
                         <Text style={styles.txNumber}>ISOFHCARE đã tìm thấy tài khoản sở hữu số điện thoại {this.state.phone ? this.state.phone : ''} trên hệ thống.</Text>
-                    <Text style={styles.txDetails}>Vui lòng <Text style={styles.txSend}>GỬI</Text> và <Text style={styles.txSend}>ĐỢI XÁC NHẬN</Text> mối quan hệ với chủ tài khoản trên. Mọi thông tin thành viên gia đình sẽ lấy theo tài khoản sẵn có.</Text>
+                        <Text style={styles.txDetails}>Vui lòng <Text style={styles.txSend}>GỬI</Text> và <Text style={styles.txSend}>ĐỢI XÁC NHẬN</Text> mối quan hệ với chủ tài khoản trên. Mọi thông tin thành viên gia đình sẽ lấy theo tài khoản sẵn có.</Text>
                         <TouchableOpacity onPress={this.onSendConfirm} style={styles.btnConfirm}><Text style={styles.txConfirm}>Gửi xác nhận</Text></TouchableOpacity>
                     </View>
                 </Modal>
@@ -786,7 +801,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontStyle: 'italic',
         color: '#000',
-        textAlign:'center'
+        textAlign: 'center'
     },
     mucdichkham: {
         flex: 1
@@ -796,7 +811,7 @@ const styles = StyleSheet.create({
         // borderRadius:5,
 
     },
-    viewPopup: { backgroundColor: '#fff', marginHorizontal: 20, paddingHorizontal:20,paddingVertical:40, borderRadius: 5,alignItems:'center' },
+    viewPopup: { backgroundColor: '#fff', marginHorizontal: 20, paddingHorizontal: 20, paddingVertical: 40, borderRadius: 5, alignItems: 'center' },
     txSend: {
         color: '#4BBA7B',
         fontSize: 14,
@@ -816,7 +831,7 @@ const styles = StyleSheet.create({
     txDetails: {
         fontSize: 14,
         color: '#000',
-        textAlign:'center'
+        textAlign: 'center'
     },
     ktq: {
         fontSize: 12,
@@ -939,9 +954,9 @@ const styles = StyleSheet.create({
         padding: 5,
         backgroundColor: '#359A60',
         borderRadius: 5,
-        justifyContent:'center',
-        alignItems:'center',
-        marginTop:20
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 20
     },
     txConfirm: {
         color: '#fff',

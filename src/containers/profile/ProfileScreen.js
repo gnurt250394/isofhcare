@@ -208,8 +208,9 @@ class ProfileScreen extends Component {
             let district = dataLocation.district
             let province = dataLocation.province
             let zone = dataLocation.zone
+            let relationshipType = this.state.data.relationshipType
             this.props.navigation.navigate('editProfile', { data: this.state.data,
-                country:country, district:district,province:province,zone:zone   })
+                country:country, district:district,province:province,zone:zone,relationshipType:relationshipType   })
         }
     }
     render() {
