@@ -13,7 +13,7 @@ import profileProvider from '@data-access/profile-provider';
 import snackbar from '@utils/snackbar-utils';
 import ImageLoad from 'mainam-react-native-image-loader';
 import { Calendar, LocaleConfig, Agenda } from 'react-native-calendars';
-import { Card } from 'native-base';
+import { Card, Icon } from 'native-base';
 import ProfileInfomation from '@components/ehealth/ProfileInfomation';
 import CheckupResult from '@components/ehealth/CheckupResult';
 import SurgeryResult from '@components/ehealth/SurgeryResult';
@@ -21,8 +21,8 @@ import MedicalTestResult from '@components/ehealth/MedicalTestResult';
 import DiagnosticResult from '@components/ehealth/DiagnosticResult';
 import Medicine from '@components/ehealth/Medicine';
 import TotalMoney from '@components/ehealth/TotalMoney';
+import ExportPDF from '@components/ehealth/ExportPDF';
 
-const DEVICE_WIDTH = Dimensions.get('window').width;
 
 class ViewEhealthDetailScreen extends Component {
     constructor(props) {
@@ -86,6 +86,21 @@ class ViewEhealthDetailScreen extends Component {
             )
         }
     }
+    print = () => {
+        let result = this.state.result;
+        result.hospital = this.props.ehealth.hospital.hospital;
+        let patientHistoryId = this.props.ehealth.patient.patientHistoryId;
+        this.setState({ isLoading: true }, () => {
+            this.exportPdfCom.getWrappedInstance().exportPdf({
+                type: "all",
+                result: result,
+                fileName: constants.filenamePDF + patientHistoryId,
+                print: true
+            }, () => {
+                this.setState({ isLoading: false });
+            });
+        })
+    }
     render() {
 
         return (
@@ -95,8 +110,11 @@ class ViewEhealthDetailScreen extends Component {
                 statusbarBackgroundColor="#4BBA7B"
                 actionbarStyle={styles.actionbarStyle}
                 titleStyle={styles.titleStyle}
-                isLoading={this.state.isLoading}>
+                isLoading={this.state.isLoading}
+                menuButton={<TouchableOpacity style={styles.btnPrint} onPress={this.print}><Icon name='print' style={{ color: '#00000080' }} /></TouchableOpacity>}
+            >
                 {this.renderDetails()}
+                <ExportPDF ref={(element) => this.exportPdfCom = element} />
             </ActivityPanel>
         );
     }
@@ -117,8 +135,12 @@ const styles = StyleSheet.create({
         borderBottomWidth: 0
     },
     titleStyle: {
-        color: '#FFF'
+        color: '#FFF',
+        marginLeft: 50
     },
+    btnPrint: {
+        paddingHorizontal: 10
+    }
 });
 
 function mapStateToProps(state) {
