@@ -101,12 +101,12 @@ class ListProfileScreen extends Component {
                     isVisible: false
                 })
                 this.onRefresh()
-                snackbar.show('Xóa thành công','success')
+                snackbar.show('Xóa thành công', 'success')
             }).catch(err => {
                 this.setState({
                     isVisible: false
                 })
-                snackbar.show('Thất bại','danger')
+                snackbar.show('Thất bại', 'danger')
 
             })
     }
@@ -156,7 +156,6 @@ class ListProfileScreen extends Component {
                 return <Text style={{ color: '#868686', fontSize: 14 }}>Chồng</Text>
             case 'OTHER':
                 return <Text style={{ color: '#868686', fontSize: 14 }}>Khác</Text>
-
             default:
                 return <Text style={{ color: '#868686', fontSize: 14 }}></Text>
         }
@@ -164,10 +163,9 @@ class ListProfileScreen extends Component {
     renderItem = (item, index) => {
         return (
             item.medicalRecords.statusConfirm == "NEED_CONFIRM" ?
-
                 (
                     <View>
-                        <Text style = {{color:'red',fontSize:14,marginHorizontal:12}}>Tài khoản {item.medicalRecords.name} có số điện thoại {item.medicalRecords.phone} muốn xác nhận mối quan hệ với bạn.</Text>
+                        <Text style={{ color: 'red', fontSize: 14, marginHorizontal: 12 }}>Tài khoản {item.medicalRecords.name} có số điện thoại {item.medicalRecords.phone} muốn xác nhận mối quan hệ với bạn.</Text>
                         {item.medicalRecords.status == 1 ? (
                             <Card style={styles.viewProfileUser}>
                                 <TouchableOpacity style={{ flex: 1 }} onPress={() => this.onClickItem(item)}>
@@ -186,7 +184,7 @@ class ListProfileScreen extends Component {
                                             <Text style={styles.txName}>{item.medicalRecords.name}</Text>
                                             {
                                                 item.medicalRecords.relationshipType ?
-                                                    < Text style={{ color: '#02C293', fontSize: 14 }}>Quan hệ: {this.renderRelation(item.medicalRecords.relationshipType)}</Text>
+                                                    <Text style={{ color: '#02C293', fontSize: 14 }}>Quan hệ: {this.renderRelation(item.medicalRecords.relationshipType)}</Text>
                                                     : <View></View>
                                             }
                                         </View>
@@ -222,11 +220,15 @@ class ListProfileScreen extends Component {
                                         <Text style={styles.txName}>{item.medicalRecords.name}</Text>
                                         {
                                             item.medicalRecords.relationshipType ?
-                                                < Text style={{ color: '#02C293', fontSize: 14 }}>Quan hệ: {this.renderRelation(item.medicalRecords.relationshipType)}</Text>
+                                                <Text style={{ color: '#02C293', fontSize: 14 }}>Quan hệ: {this.renderRelation(item.medicalRecords.relationshipType)}</Text>
                                                 : <View></View>
                                         }
                                     </View>
                                 </TouchableOpacity>
+                                {
+                                    item.medicalRecords.statusConfirm == "WAIT_CONFIRM" ?
+                                        (<Text>Chờ xác nhận</Text>) : (<View></View>)
+                                }
                                 <TouchableOpacity style={{ padding: 10 }} onPress={() => this.onShowOptions(item.medicalRecords.id, item.medicalRecords.medicalRelatedId ? item.medicalRecords.medicalRelatedId : null)}>
                                     <ScaledImage height={8} source={require('@images/new/profile/ic_three_dot.png')}></ScaledImage>
                                 </TouchableOpacity>
