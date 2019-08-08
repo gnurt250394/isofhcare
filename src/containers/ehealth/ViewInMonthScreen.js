@@ -412,7 +412,8 @@ class ListProfileScreen extends Component {
                         }, () => {
                             if (result.hasResult) {
                                 this.props.navigation.navigate("viewInDay", {
-                                    dateSelected: this.state.dateSelected
+                                    dateSelected: this.state.dateSelected,
+                                    histories: this.state.histories
                                 });
                             } else {
                                 snackbar.show(this.renderTextError(6), "danger");

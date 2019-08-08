@@ -10,16 +10,21 @@ import constants from '@resources/strings';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import resultUtils from './utils/result-utils';
 import { Card } from 'native-base';
+import DateTimePicker from "mainam-react-native-date-picker";
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 
 class ViewInDateScreen extends Component {
     constructor(props) {
         super(props)
+        let histories = this.props.navigation.state.params.histories;
         this.state = {
             dayInMonth: [],
+            // dayNames: ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'],
+            // dayNamesShort: ['CN', 'T.2', 'T.3', 'T.4', 'T.5', 'T.6', 'T.7']
             dayNames: ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'],
-            hasResult: false
+            hasResult: false,
+            histories: histories
         }
         this.viewCheckupResult = this.viewCheckupResult.bind(this);
         this.viewMedicalTestResult = this.viewMedicalTestResult.bind(this);
@@ -27,6 +32,7 @@ class ViewInDateScreen extends Component {
         this.viewMedicine = this.viewMedicine.bind(this);
         this.viewMoney = this.viewMoney.bind(this);
         this.viewSurgeryResult = this.viewSurgeryResult.bind(this);
+
     }
     componentDidMount() {
         let _dateSelected = this.props.navigation.state.params.dateSelected;
@@ -52,7 +58,7 @@ class ViewInDateScreen extends Component {
             try {
                 var date = new Date(month + "/" + i + "/" + year);
                 var time = date.getTime();
-                if (!isNaN(time)) {
+                if (!isNaN(time) && date.getDate() == i) {
                     let patientHistory = obj2[date.ddmmyyyy()];
                     date.patientHistory = patientHistory;
                     if (!dateSelected && _dateSelected.format("yyyy-MM-dd") == date.format("yyyy-MM-dd")) {
@@ -329,6 +335,9 @@ class ViewInDateScreen extends Component {
         }
         return null;
     }
+    changeMonth = () => {
+        this.setState({ toggelMonthPicker: true })
+    }
     render() {
         return (
             <ActivityPanel style={styles.container} title={constants.title.ehealth}
@@ -339,6 +348,9 @@ class ViewInDateScreen extends Component {
                 titleStyle={styles.titleStyle}
                 isLoading={this.state.isLoading}>
                 <View style={styles.container2}>
+                    <TouchableOpacity onPress={this.changeMonth}>
+                        <Text style={{ padding: 20, fontWeight: 'bold', fontSize: 15 }}>{this.state.dateSelected ? this.state.dateSelected.format("dd/MM/yyyy") : ""}</Text>
+                    </TouchableOpacity>
                     <View style={styles.viewSpaceTop}>
                         <ScrollView ref={ref => this.flListDate = ref} horizontal={true} showsHorizontalScrollIndicator={false}>
                             {this.state.dayInMonth.map((item, index) => {
@@ -347,9 +359,20 @@ class ViewInDateScreen extends Component {
                                     {item == this.state.dateSelected ?
                                         <View style={styles.viewDateSelected}>
                                             <Text style={styles.txDay}>{item.format("dd").toNumber()}</Text>
+                                            {
+                                                this.state.histories[item.format("yyyy-MM-dd")] ?
+                                                    <View style={{ height: 4, width: 4, borderRadius: 2, backgroundColor: '#FFF' }}></View>
+                                                    :
+                                                    <View style={{ height: 4, width: 4, borderRadius: 2 }}></View>
+                                            }
                                         </View> :
                                         <View style={styles.viewTxDay}>
                                             <Text style={styles.txDayNotSelect}>{item.format("dd").toNumber()}</Text>
+                                            {
+                                                this.state.histories[item.format("yyyy-MM-dd")] ? <View style={{ height: 4, width: 4, borderRadius: 2, backgroundColor: 'blue' }}></View>
+                                                    :
+                                                    <View style={{ height: 4, width: 4, borderRadius: 2 }}></View>
+                                            }
                                         </View>
                                     }
                                 </TouchableOpacity>
@@ -392,6 +415,23 @@ class ViewInDateScreen extends Component {
                         </TouchableOpacity>
                     }
                 </View>
+                <DateTimePicker
+                    mode={'month'}
+                    isVisible={this.state.toggelMonthPicker}
+                    onConfirm={newDate => {
+                        this.setState({ toggelMonthPicker: false }, () => {
+                            let month = newDate.format("MM");
+                            let year = newDate.format("yyyy");
+                            this.renderDayInMonth(month, year, newDate);
+                        });
+                    }}
+                    onCancel={() => {
+                        this.setState({ toggelMonthPicker: false });
+                    }}
+                    cancelTextIOS={"Hủy bỏ"}
+                    confirmTextIOS={"Xác nhận"}
+                    date={this.state.dateSelected || new Date()}
+                />
             </ActivityPanel>
         );
     }
