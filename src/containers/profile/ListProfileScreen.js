@@ -101,10 +101,13 @@ class ListProfileScreen extends Component {
                     isVisible: false
                 })
                 this.onRefresh()
+                snackbar.show('Xóa thành công','success')
             }).catch(err => {
                 this.setState({
                     isVisible: false
                 })
+                snackbar.show('Thất bại','danger')
+
             })
     }
     onCloseModal = () => {
@@ -322,7 +325,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         minHeight: 60,
         borderWidth: 1,
-        borderRadius: 10,
+        borderRadius: 20,
         borderColor: '#01BF88',
         justifyContent: 'center'
     },
@@ -335,8 +338,8 @@ const styles = StyleSheet.create({
     txDone: { color: '#fff' },
     viewProfileUser: {
         // backgroundColor: '#01BE84',
-        borderTopLeftRadius: 10,
-        borderBottomLeftRadius: 10,
+        borderTopLeftRadius: 50,
+        borderBottomLeftRadius: 50,
         // padding: 10,
         marginVertical: 20,
         marginLeft: 10,

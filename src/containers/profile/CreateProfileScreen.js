@@ -170,28 +170,28 @@ class CreateProfileScreen extends Component {
                                     }
                                     break
                                 case 1:
-                                    snackbar.show('Bạn không có quyền chỉnh sửa hồ sơ này', "success");
+                                    snackbar.show('Bạn không có quyền chỉnh sửa hồ sơ này', "danger");
                                     break
                                 case 2:
-                                    snackbar.show('Bạn đang không đăng nhập với ứng dụng bệnh nhân', "success");
+                                    snackbar.show('Bạn đang không đăng nhập với ứng dụng bệnh nhân', "danger");
                                     break
                                 case 3:
-                                    snackbar.show('Họ tên không được để trống', "success");
+                                    snackbar.show('Họ tên không được để trống', "danger");
                                     break
                                 case 4:
-                                    snackbar.show('Số điện thoại không được để trống', "success");
+                                    snackbar.show('Số điện thoại không được để trống', "danger");
                                     break
                                 case 5:
-                                    snackbar.show('Số điện thoại sai định dạng', "success");
+                                    snackbar.show('Số điện thoại sai định dạng', "danger");
                                     break
                                 case 6:
-                                    snackbar.show('Giới tính không được để trống', "success");
+                                    snackbar.show('Giới tính không được để trống', "danger");
                                     break
                                 case 7:
-                                    snackbar.show('Mối quan hệ không được để trống', "success");
+                                    snackbar.show('Mối quan hệ không được để trống', "danger");
                                     break
                                 case 8:
-                                    snackbar.show('Số điện thoại đã tồn tại trong danh sách hồ sơ của bạn', "success");
+                                    snackbar.show('Số điện thoại đã tồn tại trong danh sách hồ sơ của bạn', "danger");
                                     break
                             }
                         }).catch(err => {

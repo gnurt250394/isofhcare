@@ -301,10 +301,10 @@ class EditProfileScreen extends Component {
                                     snackbar.show('Cập nhật hồ sơ thành công', "success");
                                     break
                                 case 1:
-                                    snackbar.show('Bạn không có quyền chỉnh sửa hồ sơ này', "success");
+                                    snackbar.show('Bạn không có quyền chỉnh sửa hồ sơ này', "danger");
                                     break
                                 case 2:
-                                    snackbar.show('Bạn đang không đăng nhập với ứng dụng bệnh nhân', "success");
+                                    snackbar.show('Bạn đang không đăng nhập với ứng dụng bệnh nhân', "danger");
                                     break
                             }
                         }).catch(err => {
@@ -589,7 +589,7 @@ class EditProfileScreen extends Component {
                                                 styles.ktq, { minHeight: 80 }
                                             ]}
                                             errorStyle={styles.errorStyle}
-                                            value={this.state.provinces && this.state.provinces.countryCode ? this.state.provinces.countryCode : 'Tỉnh/Thành phố'}
+                                            value={this.state.provinces && this.state.provinces.name ? this.state.provinces.name : 'Tỉnh/Thành phố'}
                                             autoCapitalize={"none"}
                                             returnKeyType={"next"}
                                             // underlineColorAndroid="transparent"
