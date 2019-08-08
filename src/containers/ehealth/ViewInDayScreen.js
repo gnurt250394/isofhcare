@@ -9,6 +9,7 @@ import snackbar from '@utils/snackbar-utils';
 import constants from '@resources/strings';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import resultUtils from './utils/result-utils';
+import { Card } from 'native-base';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 
@@ -133,15 +134,18 @@ class ViewInDateScreen extends Component {
             if (note)
                 return (
                     <View style={{ marginTop: 10 }}>
-                        <Text style={styles.txResultEhealth}>{'KẾT QUẢ KHÁM CẬN LÂM SÀNG'}</Text>
-                        <TouchableOpacity style={styles.card} onPress={this.viewCheckupResult}>
-                            {/* <View style={styles.viewCheckupResult}></View> */}
-                            <ScaledImage height={50} source={require('@images/new/ehealth/ic_preclinical.png')}></ScaledImage>
-                            <View style={styles.viewNote}>
-                                <Text style={styles.txNote}>{note}</Text>
-                            </View>
-                            <ScaledImage height={30} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
-                        </TouchableOpacity></View>)
+                        <Text style={styles.txResultEhealth}>{'KẾT QUẢ KHÁM'}</Text>
+                        <Card style={styles.card}>
+                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={this.viewCheckupResult}>
+                                {/* <View style={styles.viewCheckupResult}></View> */}
+                                <ScaledImage height={50} source={require('@images/new/ehealth/ic_preclinical.png')}></ScaledImage>
+                                <View style={styles.viewNote}>
+                                    <Text style={styles.txNote}>{note}</Text>
+                                </View>
+                                <ScaledImage height={20} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
+                            </TouchableOpacity>
+                        </Card>
+                    </View>)
         }
         return null;
     }
@@ -160,13 +164,15 @@ class ViewInDateScreen extends Component {
                 return (
                     <View style={{ marginTop: 10 }}>
                         <Text style={styles.txResultEhealth}>{'KẾT QUẢ CHẨN ĐOÁN HÌNH ẢNH'}</Text>
-                        <TouchableOpacity style={styles.card} onPress={this.viewDiagnosticResult}>
-                            <ScaledImage height={50} source={require('@images/new/ehealth/ic_preclinical.png')}></ScaledImage>
-                            <View style={styles.viewTx}>
-                                <Text style={styles.txNoteBlue}>{note}</Text>
-                            </View>
-                            <ScaledImage height={30} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
-                        </TouchableOpacity>
+                        <Card style={styles.card}>
+                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={this.viewDiagnosticResult}>
+                                <ScaledImage height={50} source={require('@images/new/ehealth/img_ct_scan.png')}></ScaledImage>
+                                <View style={styles.viewTx}>
+                                    <Text style={styles.txNoteBlue}>{note}</Text>
+                                </View>
+                                <ScaledImage height={20} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
+                            </TouchableOpacity>
+                        </Card>
                     </View>
                 )
         }
@@ -191,7 +197,7 @@ class ViewInDateScreen extends Component {
                     <Text style={styles.txResultEhealth}>{constants.ehealth.money}</Text>
                     <Text style={styles.txMoney}>{money.formatPrice() + " đ"}</Text>
                 </View>
-                <ScaledImage height={30} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
+                <ScaledImage height={20} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
             </TouchableOpacity>
         }
         return null;
@@ -216,13 +222,15 @@ class ViewInDateScreen extends Component {
                 return (
                     <View style={{ marginTop: 10 }}>
                         <Text style={styles.txResultEhealth}>{'KẾT QUẢ GIẢI PHẪU'}</Text>
-                        <TouchableOpacity style={styles.card} onPress={this.viewSurgeryResult}>
-                            <ScaledImage height={50} source={require('@images/new/ehealth/img_orther_service.png')}></ScaledImage>
-                            <View style={styles.viewTxSurgery}>
-                                <Text style={styles.txSurgery}>{note}</Text>
-                            </View>
-                            <ScaledImage height={30} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
-                        </TouchableOpacity>
+                        <Card style={styles.card}>
+                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={this.viewSurgeryResult}>
+                                <ScaledImage height={50} source={require('@images/new/ehealth/img_orther_service.png')}></ScaledImage>
+                                <View style={styles.viewTxSurgery}>
+                                    <Text style={styles.txSurgery}>{note}</Text>
+                                </View>
+                                <ScaledImage height={20} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
+                            </TouchableOpacity>
+                        </Card>
                     </View>
                 )
         }
@@ -254,14 +262,15 @@ class ViewInDateScreen extends Component {
                 return (
                     <View style={{ marginTop: 10 }}>
                         <Text style={styles.txResultEhealth}>{'THUỐC'}</Text>
-
-                        <TouchableOpacity style={styles.card} onPress={this.viewMedicine}>
-                            <ScaledImage height={50} source={require('@images/new/ehealth/img_drug2.png')}></ScaledImage>
-                            <View style={styles.viewDrug}>
-                                <Text style={styles.txMedicine}>{note}</Text>
-                            </View>
-                            <ScaledImage height={30} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
-                        </TouchableOpacity>
+                        <Card style={styles.card}>
+                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={this.viewSurgeryResult}>
+                                <ScaledImage height={50} source={require('@images/new/ehealth/img_drug2.png')}></ScaledImage>
+                                <View style={styles.viewDrug}>
+                                    <Text style={styles.txMedicine}>{note}</Text>
+                                </View>
+                                <ScaledImage height={20} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
+                            </TouchableOpacity>
+                        </Card>
                     </View>
                 )
         }
@@ -307,13 +316,15 @@ class ViewInDateScreen extends Component {
                 return (
                     <View>
                         <Text style={styles.txResultEhealth}>{'KẾT QUẢ XÉT NGHIỆM'}</Text>
-                        <TouchableOpacity style={styles.card} onPress={this.viewMedicalTestResult}>
-                            <ScaledImage height={50} source={require('@images/new/ehealth/img_drug.png')}></ScaledImage>
-                            <View style={styles.viewTxMedical}>
-                                <Text style={styles.txMedical}>{note}</Text>
-                            </View>
-                            <ScaledImage height={30} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
-                        </TouchableOpacity>
+                        <Card style={styles.card}>
+                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={this.viewMedicalTestResult}>
+                                <ScaledImage height={50} source={require('@images/new/ehealth/ic_xet_nghiem.png')}></ScaledImage>
+                                <View style={styles.viewTxMedical}>
+                                    <Text style={styles.txMedical}>{note}</Text>
+                                </View>
+                                <ScaledImage height={20} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
+                            </TouchableOpacity>
+                        </Card>
                     </View>)
         }
         return null;
@@ -501,7 +512,7 @@ const styles = StyleSheet.create({
     },
     viewCheckupResult: { width: 10, height: 10, backgroundColor: '#ff4355', borderRadius: 5, marginTop: 22, marginLeft: 10 },
     viewNote: { flex: 1, padding: 15 },
-    txResultEhealth: { fontSize: 18, color: '#fff', fontWeight: '700', marginTop: 10 },
+    txResultEhealth: { fontSize: 18, fontWeight: '700', marginTop: 10 },
     txNote: { paddingTop: 5, fontSize: 14, color: '#373A3C', flex: 1 },
     viewMaker: { width: 5, height: '100%', backgroundColor: '#ff4355', borderRadius: 2.5 },
     viewDiagnosticResult: { width: 10, height: 10, backgroundColor: '#2e66e7', borderRadius: 5, marginTop: 22, marginLeft: 10 },
@@ -531,7 +542,7 @@ const styles = StyleSheet.create({
     titleStyle: {
         color: '#FFF'
     },
-    container2: { flex: 1, alignItems: 'center', backgroundColor: '#4F4F4F' },
+    container2: { flex: 1, alignItems: 'center' },
     viewDateSelected: {
         width: 40,
         height: 40,
@@ -561,9 +572,12 @@ const styles = StyleSheet.create({
         margin: 5,
         marginTop: 10,
     },
+    txDay: {
+        fontWeight: 'bold',
+        color: '#FFF'
+    },
     txDayNotSelect: {
-        fontSize: 18,
-        color: '#fff',
+        // fontSize: 18,
     },
     renderData: { flex: 1, width: DEVICE_WIDTH, padding: 10 },
     btnInfo: {
