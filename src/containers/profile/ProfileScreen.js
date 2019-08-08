@@ -186,9 +186,10 @@ class ProfileScreen extends Component {
         }
     }
     renderAddress = () => {
-        if (this.state.data) {
+        let dataLocaotion = this.props.navigation.state.params && this.props.navigation.state.params.data ? this.props.navigation.state.params.data.medicalRecords : ''
+        if (dataLocaotion) {
             if (this.state.data.address && this.state.data.village) {
-                return (<Text style={styles.txContent}>{this.state.data.village + ' ' + this.state.data.address}</Text>)
+                return (<Text style={styles.txContent}>{this.state.data.village + ', ' + this.state.data.address}</Text>)
             }
 
             if (this.state.data.address && !this.state.data.village) {
@@ -202,15 +203,17 @@ class ProfileScreen extends Component {
     }
     onEdit = () => {
         let dataLocation = this.props.navigation.state.params && this.props.navigation.state.params.data ? this.props.navigation.state.params.data : ''
-        if(dataLocation){
+        if (dataLocation) {
 
             let country = dataLocation.country
             let district = dataLocation.district
             let province = dataLocation.province
             let zone = dataLocation.zone
             let relationshipType = this.state.data.relationshipType
-            this.props.navigation.navigate('editProfile', { data: this.state.data,
-                country:country, district:district,province:province,zone:zone,relationshipType:relationshipType   })
+            this.props.navigation.navigate('editProfile', {
+                data: this.state.data,
+                country: country, district: district, province: province, zone: zone, relationshipType: relationshipType
+            })
         }
     }
     render() {
@@ -315,11 +318,14 @@ class ProfileScreen extends Component {
                             <Text><Text style={styles.txLabel}>Số điện thoại: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.phone ? this.state.data.phone.replace(/(\d\d\d\d)(\d\d\d)(\d\d\d)/, '$1.$2.$3') : ''}</Text></Text>
                         </View>
                         <View style={styles.viewItem}>
-                            <Text><Text style={styles.txLabel}>Địa chỉ: </Text>{this.renderAddress()}</Text>
+                            <Text><Text style={styles.txLabel}>Địa chỉ: </Text>{this.state.data.address}</Text>
                         </View>
-                        <View style={styles.viewItem}>
-                            <Text><Text style={styles.txLabel}>Quan hệ: </Text>{this.renderRelation()}</Text>
-                        </View>
+                        {this.state.data.status != 1 ? (
+                            <View style={styles.viewItem}>
+                                <Text><Text style={styles.txLabel}>Quan hệ: </Text>{this.renderRelation()}</Text>
+                            </View>
+                        ) : (<View></View>)}
+
                         <View style={{ height: 1, backgroundColor: '#4BBA7B' }}></View>
                     </View>
                     <TouchableOpacity onPress={() => this.props.navigation.navigate('createProfile')} style={styles.btn}><Text style={styles.txBtn}>Thêm thành viên</Text></TouchableOpacity>
