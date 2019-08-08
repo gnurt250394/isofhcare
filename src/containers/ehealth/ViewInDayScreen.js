@@ -224,7 +224,7 @@ class ViewInDateScreen extends Component {
                         <Text style={styles.txResultEhealth}>{'KẾT QUẢ GIẢI PHẪU'}</Text>
                         <Card style={styles.card}>
                             <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={this.viewSurgeryResult}>
-                                <ScaledImage height={50} source={require('@images/new/ehealth/img_orther_service.png')}></ScaledImage>
+                                <ScaledImage height={50} source={require('@images/new/ehealth/img_giaiphau.png')}></ScaledImage>
                                 <View style={styles.viewTxSurgery}>
                                     <Text style={styles.txSurgery}>{note}</Text>
                                 </View>
