@@ -64,7 +64,7 @@ class HistoryTimeScreen extends Component {
             case "ED":
                 return require("@images/new/ehealth/img_endoscopic.png");
             case "XQ":
-                return require("@images/new/ehealth/ic_kqk_cls.png");
+                return require("@images/new/ehealth/img_xquang.png");
             default:
                 return require("@images/new/ehealth/img_orther_service.png");
 
