@@ -172,6 +172,11 @@ class CreateProfileScreen extends Component {
                             }
                             if(res.code == 3){
                                 snackbar.show('Số điện thoại đã tồn tại trong danh sách hồ sơ của bạn', 'danger') 
+                                return
+                            }
+                            if(res.code == 5){
+                                snackbar.show('Số điện thoại sai định dạng', 'danger') 
+                                return
                             }
                             else { snackbar.show('Thêm thành viên không thành công', 'danger') }
                         }).catch(err => {
