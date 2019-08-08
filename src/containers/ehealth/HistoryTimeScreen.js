@@ -24,23 +24,6 @@ class HistoryTimeScreen extends Component {
         };
     }
 
-    renderImg = (item) => {
-        switch (item.type) {
-            case 1:
-                return (<ScaledImage style={styles.img} style={{ borderRadius: 15 }} height={50} source={require('@images/new/ehealth/ic_peclinical.png')}></ScaledImage>)
-            case 2:
-                return (<ScaledImage style={styles.img} height={50} source={require('@images/new/ehealth/ic_ct_scan.png')}></ScaledImage>)
-            case 4:
-                return (<ScaledImage style={styles.img} height={50} source={require('@images/new/ehealth/ic_analysis.png')}></ScaledImage>)
-            case 5:
-                return (<ScaledImage style={styles.img} height={50} source={require('@images/new/ehealth/ic_magnetic.png')}></ScaledImage>)
-            case 7:
-                return (<ScaledImage style={styles.img} height={50} source={require('@images/new/ehealth/ic_endoscopic.png')}></ScaledImage>)
-            default:
-                return (<ScaledImage style={styles.img} style={{ borderRadius: 15 }} height={50} source={require('@images/new/ehealth/ic_peclinical.png')}></ScaledImage>)
-
-        }
-    }
     getTime(text) {
         try {
             if (text) {
@@ -65,6 +48,30 @@ class HistoryTimeScreen extends Component {
             });
         });
     }
+
+    getImage(item) {
+        switch (item.serviceType) {
+            case "CheckUp":
+                return require("@images/new/ehealth/ic_kqk_cls.png");
+            case "MedicalTest":
+                return require("@images/new/ehealth/ic_xet_nghiem.png");
+            case "MR":
+                return require("@images/new/ehealth/img_conghuongtu.png");
+            case "CT":
+                return require("@images/new/ehealth/ic_ct_catlop.png");
+            case "US":
+                return require("@images/new/ehealth/img_noisoi.png");
+            case "ED":
+                return require("@images/new/ehealth/img_endoscopic.png");
+            case "XQ":
+                return require("@images/new/ehealth/ic_kqk_cls.png");
+            default:
+                return require("@images/new/ehealth/img_orther_service.png");
+
+        }
+
+    }
+
     renderItem = ({ item }) => {
         return (
             <View style={styles.viewItem}>
@@ -72,10 +79,12 @@ class HistoryTimeScreen extends Component {
                     <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => {
                         this.viewResult(item)
                     }}>
-                        {this.renderImg(item)}
+                        <View style={{ width: 150, height: 100, alignItems: 'center' }}>
+                            <ScaledImage style={styles.img} height={100} width={150} source={this.getImage(item)}></ScaledImage>
+                        </View>
                         <View style={styles.viewDetails}>
-                            <Text style={{ color: '#479AE3', marginVertical: 15, fontSize: 14 }}>{this.getTime(item.timeGoIn)}</Text>
-                            <Text style={{ fontSize: 14, minHeight: 20 }}>{item.serViceType}</Text>
+                            <Text style={{ color: '#479AE3', marginVertical: 10, fontSize: 14 }}>{this.getTime(item.timeGoIn)}</Text>
+                            <Text style={{ fontSize: 14, minHeight: 20, fontWeight: 'bold' }}>{item.serviceName}</Text>
                         </View>
                     </TouchableOpacity>
                 </Card>
