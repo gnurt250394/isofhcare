@@ -54,98 +54,6 @@ class ProfileScreen extends Component {
             })
         }
     }
-    selectImage = () => {
-        connectionUtils
-            .isConnected()
-            .then(s => {
-                if (this.imagePicker) {
-                    this.imagePicker.open(true, 200, 200, image => {
-                        setTimeout(() => {
-                            Keyboard.dismiss();
-                        }, 500);
-                        this.setState({
-                            image
-                        });
-                        imageProvider.upload(this.state.image.path, (s, e) => {
-                            if (s.success && s.data.code == 0) {
-                                let images = s.data.data.images[0].thumbnail;
-                                this.setState({
-                                    imgLocal: images
-                                });
-                                this.onUpdate()
-                            }
-                            if (e) {
-                                this.setState({
-                                    isLoading: false
-                                });
-                            }
-                        });
-                    });
-                }
-            })
-            .catch(e => {
-                snackbar.show(constants.msg.app.not_internet, "danger");
-            });
-    }
-
-    onUpdate = () => {
-        if (this.state.image)
-            this.setState({ isLoading: true }, () => {
-                imageProvider.upload(this.state.image.path, (s, e) => {
-                    if (s.success && s.data.code == 0) {
-                        let image = s.data.data.images[0].thumbnail;
-                        this.onUpdate2(image);
-                    }
-                    if (e) {
-                        this.setState({
-                            isLoading: false
-                        });
-                    }
-                });
-            });
-        else this.onUpdate2("");
-    };
-    onUpdate2(image) {
-        connectionUtils
-            .isConnected()
-            .then(s => {
-                this.setState(
-                    {
-                        isLoading: true
-                    },
-                    () => {
-                        let data = {
-                            cover: image,
-                            type: this.state.data.type,
-                        }
-                        let id = this.state.data.id
-                        profileProvider
-                            .updateCover(id, data)
-                            .then(res => {
-                                if (res.code == 0) {
-                                    this.setState({
-                                        isLoading: false
-                                    });
-                                }
-                                else {
-                                    this.setState({
-                                        isLoading: false
-                                    });
-                                }
-                            })
-                            .catch(err => {
-                                this.setState({
-                                    isLoading: false
-                                });
-                                snackbar.show(constants.msg.app.err_try_again, "danger");
-                            });
-                    }
-                )
-            })
-            .catch(e => {
-                snackbar.show(constants.msg.app.not_internet, "danger");
-            });
-    }
     selectImageAvt = () => {
         connectionUtils
             .isConnected()
@@ -277,6 +185,33 @@ class ProfileScreen extends Component {
                 return <Text style={styles.txContent}></Text>
         }
     }
+    renderAddress = () => {
+        if (this.state.data) {
+            if (this.state.data.address && this.state.data.village) {
+                return (<Text style={styles.txContent}>{this.state.data.village + ' ' + this.state.data.address}</Text>)
+            }
+
+            if (this.state.data.address && !this.state.data.village) {
+                return (<Text style={styles.txContent}>{this.state.data.address}</Text>)
+            }
+            if (!this.state.data.address && this.state.data.village) {
+                return (<Text style={styles.txContent}>{this.state.data.village}</Text>)
+            }
+        }
+
+    }
+    onEdit = () => {
+        let dataLocation = this.props.navigation.state.params && this.props.navigation.state.params.data ? this.props.navigation.state.params.data : ''
+        if(dataLocation){
+
+            let country = dataLocation.country
+            let district = dataLocation.district
+            let province = dataLocation.province
+            let zone = dataLocation.zone
+            this.props.navigation.navigate('editProfile', { data: this.state.data,
+                country:country, district:district,province:province,zone:zone   })
+        }
+    }
     render() {
         const icSupport = require("@images/new/user.png");
         const source = this.state.imgLocal
@@ -295,7 +230,7 @@ class ProfileScreen extends Component {
                 statusbarBackgroundColor="#359A60"
                 actionbarStyle={styles.actionbarStyle}
                 style={styles.container}
-                menuButton={<TouchableOpacity onPress={() => this.props.navigation.navigate('editProfile', { data: this.state.data })}><ScaledImage style={{ tintColor: '#fff', marginRight: 10 }} height={20} source={require('@images/new/profile/ic_edit.png')}></ScaledImage></TouchableOpacity>}
+                menuButton={<TouchableOpacity onPress={this.onEdit}><ScaledImage style={{ tintColor: '#fff', marginRight: 10 }} height={20} source={require('@images/new/profile/ic_edit.png')}></ScaledImage></TouchableOpacity>}
 
             >
                 <ScrollView style={{ flex: 1 }} >
@@ -379,7 +314,7 @@ class ProfileScreen extends Component {
                             <Text><Text style={styles.txLabel}>Số điện thoại: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.phone ? this.state.data.phone.replace(/(\d\d\d\d)(\d\d\d)(\d\d\d)/, '$1.$2.$3') : ''}</Text></Text>
                         </View>
                         <View style={styles.viewItem}>
-                            <Text><Text style={styles.txLabel}>Địa chỉ: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.address ? this.state.data.address : ''}</Text></Text>
+                            <Text><Text style={styles.txLabel}>Địa chỉ: </Text>{this.renderAddress()}</Text>
                         </View>
                         <View style={styles.viewItem}>
                             <Text><Text style={styles.txLabel}>Quan hệ: </Text>{this.renderRelation()}</Text>

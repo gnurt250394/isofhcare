@@ -28,7 +28,7 @@ class ListProfileScreen extends Component {
         this.actionSheetOptions.show();
         this.setState({
             idProfile: id,
-            medicalRelatedId: medicalRelatedId ? medialRelatedId : null
+            medicalRelatedId: medicalRelatedId ? medicalRelatedId : null
         })
     };
     onRefresh = () => {
@@ -43,7 +43,7 @@ class ListProfileScreen extends Component {
             switch (index) {
                 case 0:
                     NavigationService.navigate("shareDataProfile", {
-                        medialRelatedId: this.state.medialRelatedId,
+                        medicalRelatedId: this.state.medicalRelatedId,
                         id: this.state.idProfile
                     })
                     return;
