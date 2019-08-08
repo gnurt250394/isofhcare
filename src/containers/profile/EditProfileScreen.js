@@ -28,6 +28,11 @@ class EditProfileScreen extends Component {
     constructor(props) {
         super(props);
         let data = this.props.navigation.state.params.data
+        let country = this.props.navigation.state.params.country
+        let district = this.props.navigation.state.params.district
+        let province = this.props.navigation.state.params.province
+        let zone = this.props.navigation.state.params.zone
+
         this.state = {
             name: data.name ? data.name : '',
             date: data && data.dob ? data.dob.toDateObject('-').format('dd/MM/yyyy') : (''),
@@ -41,7 +46,11 @@ class EditProfileScreen extends Component {
             profileNo: data.profileNo ? data.profileNo : '',
             id: data.id,
             phone: data.phone,
-            data: data
+            data: data,
+            country,
+            districts:district,
+            provinces:province,
+            zone
         };
     }
     onChangeText = type => text => {
@@ -145,13 +154,13 @@ class EditProfileScreen extends Component {
         if (!this.form.isValid()) {
             return;
         }
-        if (this.state.weight && isNaN(this.state.weight) || this.state.weight && Number(this.state.weight) < 0 ) {
+        if (this.state.weight && isNaN(this.state.weight) || this.state.weight && Number(this.state.weight) < 0) {
             this.setState({
                 weightError: 'Cân nặng không hợp lệ'
             })
             return
         }
-        if (this.state.height && isNaN(this.state.height) || this.state.height && Number(this.state.height) < 0 ) {
+        if (this.state.height && isNaN(this.state.height) || this.state.height && Number(this.state.height) < 0) {
             this.setState({
                 heightError: 'Chiều cao không hợp lệ'
             })
