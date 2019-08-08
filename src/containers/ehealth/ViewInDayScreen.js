@@ -349,7 +349,7 @@ class ViewInDateScreen extends Component {
                 isLoading={this.state.isLoading}>
                 <View style={styles.container2}>
                     <TouchableOpacity onPress={this.changeMonth}>
-                        <Text style={{ padding: 20, fontWeight: 'bold', fontSize: 15 }}>{this.state.dateSelected ? this.state.dateSelected.format("dd/MM/yyyy") : ""}</Text>
+                        <Text style={{ padding: 20, fontWeight: 'bold', fontSize: 15 }}>{this.state.dateSelected ? "Tháng " + this.state.dateSelected.format("MM/yyyy") : ""}</Text>
                     </TouchableOpacity>
                     <View style={styles.viewSpaceTop}>
                         <ScrollView ref={ref => this.flListDate = ref} horizontal={true} showsHorizontalScrollIndicator={false}>
@@ -419,7 +419,7 @@ class ViewInDateScreen extends Component {
                     mode={'month'}
                     isVisible={this.state.toggelMonthPicker}
                     onConfirm={newDate => {
-                        this.setState({ toggelMonthPicker: false }, () => {
+                        this.setState({ toggelMonthPicker: false, result: null }, () => {
                             let month = newDate.format("MM");
                             let year = newDate.format("yyyy");
                             this.renderDayInMonth(month, year, newDate);
