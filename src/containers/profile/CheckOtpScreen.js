@@ -50,7 +50,16 @@ class CheckOtpScreen extends React.PureComponent {
                 if (res.code == 0) {
                     NavigationService.navigate('listProfileUser', { reset: this.state.reset + 1 })
                     return;
-                } else {
+                }
+                if(res.code == 4){
+                    snackbar.show('Mã bạn nhập đã hết hạn','danger')
+                    return
+                }
+                if(res.code == 5){
+                    snackbar.show('Mã bạn nhập không đúng','danger')
+                    return
+                }
+                else {
                     snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
 
                 }
