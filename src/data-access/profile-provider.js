@@ -161,5 +161,15 @@ module.exports = {
                 reject(e)
             })
         })
+    },
+    confirm (id){
+        return new Promise((resolve,reject) => {
+            client.requestApi('put',constants.api.profile.confirm + '/' + id , {},(s,e) => {
+                if(s)
+                resolve(s)
+                else
+                reject(e)
+            } )
+        })
     }
 }

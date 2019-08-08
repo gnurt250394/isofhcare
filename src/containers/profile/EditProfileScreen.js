@@ -41,17 +41,20 @@ class EditProfileScreen extends Component {
             dobOld: data.dob ? data.dob : '',
             height: data.height ? data.height.toString() : '',
             weight: data.weight ? data.weight.toString() : '',
-            address: data.address ? data.address : '',
+            address: data.village ? data.village : '',
             relationshipType: data.relationshipType ? data.relationshipType : '',
             profileNo: data.profileNo ? data.profileNo : '',
             id: data.id,
             phone: data.phone,
             data: data,
             country,
-            districts:district,
-            provinces:province,
+            districts: district,
+            provinces: province,
             zone
         };
+    }
+    componentDidMount() {
+        this.renderRelation()
     }
     onChangeText = type => text => {
         this.setState({ [type]: text });
@@ -94,6 +97,109 @@ class EditProfileScreen extends Component {
         }
 
     };
+    renderRelation = () => {
+        switch (this.props.navigation.state.params.relationshipType) {
+            case 'DAD':
+                this.setState({
+                    relationShip: {
+                        id: 1,
+                        name: 'Cha',
+                        type: 'DAD'
+                    }
+                })
+                break
+            case 'MOTHER':
+                this.setState({
+                    relationShip: {
+                        id: 2,
+                        name: 'Mẹ',
+                        type: 'MOTHER'
+                    }
+                })
+                break
+            case 'BOY':
+                this.setState({
+                    relationShip: {
+                        id: 3,
+                        name: 'Con trai',
+                        type: 'BOY'
+                    }
+                })
+                break
+            case 'DAUGHTER':
+                this.setState({
+                    relationShip: {
+                        id: 4,
+                        name: 'Con gái',
+                        type: 'DAUGHTER'
+                    }
+                })
+                break
+            case 'GRANDSON':
+                this.setState({
+                    relationShip: {
+                        id: 5,
+                        name: 'Cháu trai',
+                        type: 'GRANDSON'
+                    }
+                })
+                break
+            case 'NIECE':
+                this.setState({
+                    relationShip: {
+                        id: 6,
+                        name: 'Cháu gái',
+                        type: 'NIECE'
+                    }
+                })
+                break
+            case 'GRANDFATHER':
+                this.setState({
+                    relationShip: {
+                        id: 7,
+                        name: 'Ông',
+                        type: 'GRANDFATHER'
+                    }
+                })
+                break
+            case 'GRANDMOTHER':
+                this.setState({
+                    relationShip: {
+                        id: 8,
+                        name: 'Bà',
+                        type: 'GRANDMOTHER'
+                    }
+                })
+                break
+            case 'WIFE':
+                this.setState({
+                    relationShip: {
+                        id: 9,
+                        name: 'Vợ',
+                        type: 'WIFE'
+                    }
+                })
+                break
+            case 'HUSBAND':
+                this.setState({
+                    relationShip: {
+                        id: 10,
+                        name: 'Chồng',
+                        type: 'HUSBAND'
+                    }
+                })
+                break
+            case 'OTHER':
+                this.setState({
+                    id: 11,
+                    relationShip: {
+                        name: 'Khác',
+                        type: 'OTHER'
+                    }
+                })
+                break
+        }
+    }
     selectDistrict = (districts) => {
         let districtsError = districts ? "" : this.state.districtsError;
         if (!districts || !this.state.districts || districts.id != this.state.districts.id) {
@@ -179,20 +285,27 @@ class EditProfileScreen extends Component {
                             data.gender = this.state.gender
                         data.height = this.state.height ? Number(this.state.height) : null,
                             data.weight = this.state.weight ? Number(parseFloat(this.state.weight).toFixed(1)) : null
-                        data.address = this.state.address
+                        // data.address = this.state.address
                         let id = this.state.id
                         data.phone = this.state.phone
-                        data.idProvince = this.state.provinces ? this.state.provinces.id.toString() : null
-                        data.idDistrics = this.state.districts ? this.state.districts.id.toString() : null
-                        data.idZone = this.state.zone ? this.state.zone.id.toString() : null
+                        data.provinceId = this.state.provinces ? this.state.provinces.id.toString() : null
+                        data.districtId = this.state.districts ? this.state.districts.id.toString() : null
+                        data.zoneId = this.state.zone ? this.state.zone.id.toString() : null
+                        data.village = this.state.address ? this.state.address : null
                         data.relationshipType = this.state.relationshipType
                         profileProvider.updateProfile(id, data).then(res => {
-                            if (res.code == 0) {
-                                this.props.navigation.navigate('profile', { data: res.data.medicalRecords })
-                                snackbar.show('Cập nhật hồ sơ thành công', "success");
 
-                            } else {
-                                snackbar.show('Cập nhật hồ sơ không thành công', "danger");
+                            switch (res.code) {
+                                case 0:
+                                    this.props.navigation.navigate('profile', { data: res.data.medicalRecords })
+                                    snackbar.show('Cập nhật hồ sơ thành công', "success");
+                                    break
+                                case 1:
+                                    snackbar.show('Bạn không có quyền chỉnh sửa hồ sơ này', "success");
+                                    break
+                                case 2:
+                                    snackbar.show('Bạn đang không đăng nhập với ứng dụng bệnh nhân', "success");
+                                    break
                             }
                         }).catch(err => {
                             console.log(err);
@@ -544,15 +657,6 @@ class EditProfileScreen extends Component {
                                             this.setState({ addressError: "" });
                                         } else {
                                             this.setState({ addressError: messages });
-                                        }
-                                    }}
-                                    validate={{
-                                        rules: {
-                                            maxlength: 255
-                                        },
-                                        messages: {
-                                            required: constants.msg.user.fullname_not_null,
-                                            maxlength: constants.msg.user.text_without_255,
                                         }
                                     }}
                                     placeholder={'Thôn/Xóm, số nhà'}
