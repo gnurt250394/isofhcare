@@ -478,6 +478,18 @@ class ListProfileScreen extends Component {
             }
         });
     }
+    openHistorySharing = () => {
+        try {
+            if (this.state.histories && this.state.dateSelected) {
+                let patientHistoryId = this.state.histories[this.state.dateSelected].history.patientHistoryId;
+                this.props.navigation.navigate("historySharing", {
+                    patientHistoryId
+                });
+            }
+        } catch (error) {
+
+        }
+    }
     render() {
         return (
             <ActivityPanel style={{ flex: 1 }} title={constants.title.ehealth}
@@ -525,7 +537,7 @@ class ListProfileScreen extends Component {
                                 <TouchableOpacity onPress={this.onShareEhealth} style={[styles.btnReExamination, { backgroundColor: '#109CF1', }]}>
                                     <Text style={styles.txReExamination}>{constants.ehealth.share_ehealth}</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={[styles.btnReExamination, { backgroundColor: '#707683', }]}>
+                                <TouchableOpacity onPress={this.openHistorySharing} style={[styles.btnReExamination, { backgroundColor: '#707683', }]}>
                                     <Text style={styles.txReExamination}>{'Lịch sử chia sẻ'}</Text>
                                 </TouchableOpacity>
 

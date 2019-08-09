@@ -11,16 +11,15 @@ import dateUtils from 'mainam-react-native-date-utils';
 import resultUtils from './utils/result-utils';
 import snackbar from '@utils/snackbar-utils';
 import constants from '@resources/strings';
+import ehealthProvider from '@data-access/ehealth-provider';
 
-class HistoryTimeScreen extends Component {
+class HistorySharingScreen extends Component {
     constructor(props) {
         super(props);
-        let countTime = this.props.navigation.state.params && this.props.navigation.state.params.countTime ? this.props.navigation.state.params.countTime : ''
-        let item = this.props.navigation.state.params && this.props.navigation.state.params.item || {};
-
+        let patientHistoryId = this.props.navigation.state.params ? this.props.navigation.state.params.patientHistoryId || "" : ""
         this.state = {
-            data: item.history || [],
-            countTime: countTime
+            patientHistoryId: patientHistoryId,
+            refreshing: false
         };
     }
 
@@ -72,6 +71,41 @@ class HistoryTimeScreen extends Component {
 
     }
 
+    componentDidMount() {
+
+        this.onRefresh();
+    }
+    onLoad() {
+        this.setState({
+            loading: true,
+            refreshing: true
+        }, () => {
+            ehealthProvider.getListShareUser(this.props.ehealth.hospital.hospital.id).then(s => {
+                this.setState({
+                    loading: false,
+                    refreshing: false
+                }, () => {
+                    if (s) {
+                        switch (s.code) {
+                            case 0:
+                                this.setState({
+                                    data: (s.data.patientHistorys || [])//.filter(item => item.patientHistoryId == this.state.patientHistoryId)
+                                });
+                                break;
+                        }
+                    }
+                });
+
+            })
+                .catch(e => {
+                    this.setState({
+                        loading: false,
+                        refreshing: false
+                    });
+                });
+        });
+    }
+
     renderItem = ({ item }) => {
         return (
             <View style={styles.viewItem}>
@@ -91,36 +125,45 @@ class HistoryTimeScreen extends Component {
             </View>
         )
     }
-    render() {
-        const source = this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar.absoluteUrl() } : require("@images/new/user.png");
 
+    onRefresh() {
+        if (!this.state.loading)
+            this.onLoad();
+    }
+
+    render() {
         return (
             <ActivityPanel style={styles.container}
                 // title="HỒ SƠ Y BẠ GIA ĐÌNH"
                 isLoading={this.state.isLoading}
-                title={<Text style={{ color: '#FFF' }}>{'Lịch sử y bạ '}<Text style={{ color: '#b61827' }}>({this.state.countTime} lần)</Text></Text>}
+                title={"Lịch sử chia sẻ y bạ"}
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#4BBA7B"
                 actionbarStyle={styles.actionbarStyle}
-                titleStyle={styles.titleStyle}>
+                titleStyle={styles.titleStyle}
+            >
                 <FlatList
-                    data={this.state.data}
+                    numColumns={2}
+                    onRefresh={this.onRefresh.bind(this)}
+                    refreshing={this.state.refreshing}
+                    onEndReachedThreshold={1}
                     style={{ flex: 1 }}
                     keyExtractor={(item, index) => index.toString()}
-                    renderItem={this.renderItem}
                     extraData={this.state}
-                    numColumns={2}
-                    ListHeaderComponent={() => {
-                        return (
-                            <View style={{ height: 10 }}></View>
-                        )
-                    }}
-                    ListFooterComponent={() => {
-                        return (
-                            <View style={{ height: 50 }}></View>
-                        )
-                    }}
+                    data={this.state.data}
+                    renderItem={this.renderItem}
+                    ListHeaderComponent={() =>
+                        !this.state.refreshing &&
+                            (!this.state.data || this.state.data.length == 0) ? (
+                                <View style={{ alignItems: "center", marginTop: 50 }}>
+                                    <Text style={{ fontStyle: "italic" }}>
+                                        Chưa có chia sẻ nào
+                            </Text>
+                                </View>
+                            ) : null
+                    }
+                    ListFooterComponent={() => <View style={{ height: 10 }} />}
                 ></FlatList>
             </ActivityPanel>
 
@@ -174,6 +217,9 @@ const styles = StyleSheet.create({
         width: 45,
         height: 45
     },
+    titleStyle: {
+        color: '#fff'
+    }
 })
 
 function mapStateToProps(state) {
@@ -182,4 +228,4 @@ function mapStateToProps(state) {
         ehealth: state.ehealth
     };
 }
-export default connect(mapStateToProps)(HistoryTimeScreen);
+export default connect(mapStateToProps)(HistorySharingScreen);
