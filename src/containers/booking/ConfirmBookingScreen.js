@@ -57,7 +57,7 @@ class ConfirmBookingScreen extends Component {
             bookingProvider.confirmPayment(bookingId).then(s => {
                 switch (s.code) {
                     case 0:
-                        this.props.navigation.navigate("home", {
+                        this.props.navigation.navigate("homeTab", {
                             navigate: {
                                 screen: "createBookingSuccess",
                                 params: {
@@ -467,16 +467,12 @@ class ConfirmBookingScreen extends Component {
                                     </View>
                                 </View> : null
                             }
-
-
                         </View>
                     </View>
                     <View style={{ paddingHorizontal: 20, marginTop: 20, flexDirection: 'row', alignItems: 'center' }}>
                         <Text style={{ fontWeight: 'bold', color: 'rgb(2,195,154)', marginRight: 10 }}>CHỌN PHƯƠNG THỨC THANH TOÁN</Text>
                         <ScaleImage width={20} source={require("@images/new/booking/ic_tick.png")} />
                     </View>
-
-
                     {/* <View style={styles.ckeck}> */}
                     {/* <ScaleImage style={styles.ckecked} height={20} source={require("@images/new/ic_ckecked.png")} /> */}
                     {/* <Text style={styles.ckeckthanhtoan}>Ví ISOFHCARE</Text> */}
@@ -521,7 +517,7 @@ class ConfirmBookingScreen extends Component {
                             </TouchableOpacity>
                         </React.Fragment>
                     }
-                    < TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 2 })}>
+                    <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 2 })}>
                         <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
                             {this.state.paymentMethod == 2 &&
                                 <View style={{ backgroundColor: 'rgb(2,195,154)', width: 10, height: 10, borderRadius: 5 }}></View>
@@ -534,7 +530,7 @@ class ConfirmBookingScreen extends Component {
                 <TouchableOpacity style={styles.btn} onPress={this.createBooking.bind(this)}>
                     <Text style={styles.btntext}>Xác Nhận</Text>
                 </TouchableOpacity>
-            </ActivityPanel >
+            </ActivityPanel>
         );
     }
 }
@@ -684,7 +680,6 @@ const styles = StyleSheet.create({
     },
     ckeckthanhtoan: {
         opacity: 0.8,
-
         fontSize: 16, fontWeight: "bold",
         fontStyle: "normal",
         letterSpacing: 0,
