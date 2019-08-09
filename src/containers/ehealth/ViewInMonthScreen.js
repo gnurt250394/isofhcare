@@ -512,7 +512,6 @@ class ListProfileScreen extends Component {
         return (
             <ActivityPanel style={{ flex: 1 }} title={constants.title.ehealth}
                 icBack={require('@images/new/left_arrow_white.png')}
-                iosBarStyle={'dark-content'}
                 isLoading={this.state.isLoading}
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#4BBA7B"
@@ -557,7 +556,6 @@ class ListProfileScreen extends Component {
                                     <Text style={styles.txCheckResult}>{constants.ehealth.checkupResult}</Text>
                                 </TouchableOpacity>
                                 <View style={{ alignItems: 'center' }}>
-                                    <View style={{ paddingHorizontal: 20 }}><ScaledImage height={100} source={require('@images/new/ehealth/ic_preclinical.png')}></ScaledImage></View>
                                     <Card style={[styles.viewBTnSuggest]}>
                                         <TouchableOpacity onPress={this.onShareEhealth} style={[styles.btnReExamination, { backgroundColor: '#109CF1', }]}>
                                             <Text style={styles.txReExamination}>{constants.ehealth.share_ehealth}</Text>
