@@ -383,7 +383,7 @@ class ListProfileScreen extends Component {
         }
     }
     onShareEhealth = () => {
-        this.actionSheetGetTicket.show();
+        this.props.navigation.navigate("ehealthSharing");
     }
     renderTextError = (status) => {
         switch (status) {
@@ -627,32 +627,19 @@ class ListProfileScreen extends Component {
                     date={(this.state.isTimeAlarm ? this.state.dobAlarm : this.state.dob) || new Date()}
                 />
                 <ActionSheet
-                    ref={o => this.actionSheetGetTicket = o}
-                    options={[constants.actionSheet.profile_on_isofhcare, constants.actionSheet.orther, constants.actionSheet.cancel]}
-                    cancelButtonIndex={2}
-                    destructiveButtonIndex={2}
-                    onPress={(index) => {
-                        switch (index) {
-                            case 0:
-                                this.onShareEhealthWithProfile()
-                                break;
-                            case 1:
-                                this.exportPdf();
-
-                        }
-                    }}
-                />
-                <ActionSheet
                     ref={o => this.actionSheetShare = o}
-                    options={[constants.ehealth.share_ehealth, "Lịch sử chia sẻ", constants.actionSheet.cancel]}
-                    cancelButtonIndex={2}
-                    destructiveButtonIndex={2}
+                    options={["Chia sẻ trên hồ sơ iSofHCare", "Chia sẻ trên ứng dụng khác", "Lịch sử chia sẻ", constants.actionSheet.cancel]}
+                    cancelButtonIndex={3}
+                    destructiveButtonIndex={3}
                     onPress={(index) => {
                         switch (index) {
                             case 0:
                                 this.onShareEhealth();
                                 break;
                             case 1:
+                                this.exportPdf();
+                                break;
+                            case 2:
                                 this.openHistorySharing();
 
 
