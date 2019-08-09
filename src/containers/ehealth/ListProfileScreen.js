@@ -66,7 +66,7 @@ class ListProfileScreen extends PureComponent {
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => {
                         this.props.dispatch({ type: constants.action.action_select_patient_group_ehealth, value: item })
-                        this.props.navigation.navigate('historyTime', { countTime: item.countTime, item })
+                        this.props.navigation.navigate('historyEhealth', { countTime: item.countTime, item })
                     }} style={styles.txCountTime}>
                         <Text style={styles.txCount}>{item.countTime}</Text>
                         <Text>{constants.ehealth.time}</Text>
