@@ -490,6 +490,24 @@ class ListProfileScreen extends Component {
 
         }
     }
+    selectDate = () => {
+        let histories = this.state.histories;
+        let latestTime = this.state.latestTime || new Date();
+        let start = latestTime.format("yyyy-MM") + "-01";
+        let end = latestTime.format("yyyy-MM") + "-31";
+        let keys = [];
+        for (var key in histories) {
+            if (key >= start && key <= end) {
+                keys.push(key);
+            }
+        }
+        keys.sort((itema, itemb) => { return itema < itemb ? 1 : -1 });
+        if (keys.length) {
+            this.onDayPress({
+                dateString: keys[0]
+            })
+        }
+    }
     render() {
         return (
             <ActivityPanel style={{ flex: 1 }} title={constants.title.ehealth}
@@ -512,7 +530,11 @@ class ListProfileScreen extends Component {
                                 // onDayPress={(day) => { console.log('selected day', day) }}
                                 onDayLongPress={(day) => { console.log('selected day', day) }}
                                 monthFormat={'MMMM - yyyy'}
-                                onMonthChange={(month) => { console.log('month changed', month) }}
+                                onMonthChange={(month) => {
+                                    this.setState({ latestTime: new Date(month.dateString) }, () => {
+                                        this.selectDate();
+                                    })
+                                }}
                                 // hideArrows={true}
                                 hideExtraDays={true}
                                 onDayPress={(day) => { this.onDayPress(day) }}
@@ -528,55 +550,60 @@ class ListProfileScreen extends Component {
                                 style={{ position: 'absolute', top: 0, left: 70, right: 70, height: 60 }}>
                             </TouchableOpacity>
                         </View>
-                        <TouchableOpacity onPress={this.viewResult.bind(this)} style={[styles.viewBtn, { backgroundColor: '#25B05F' }]}>
-                            <Text style={styles.txCheckResult}>{constants.ehealth.checkupResult}</Text>
-                        </TouchableOpacity>
-                        <View style={{ alignItems: 'center' }}>
-                            <View style={{ paddingHorizontal: 20 }}><ScaledImage height={100} source={require('@images/new/ehealth/ic_preclinical.png')}></ScaledImage></View>
-                            <Card style={[styles.viewBTnSuggest]}>
-                                <TouchableOpacity onPress={this.onShareEhealth} style={[styles.btnReExamination, { backgroundColor: '#109CF1', }]}>
-                                    <Text style={styles.txReExamination}>{constants.ehealth.share_ehealth}</Text>
+                        {
+                            this.state.dateSelected &&
+                            <React.Fragment>
+                                <TouchableOpacity onPress={this.viewResult.bind(this)} style={[styles.viewBtn, { backgroundColor: '#25B05F' }]}>
+                                    <Text style={styles.txCheckResult}>{constants.ehealth.checkupResult}</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={this.openHistorySharing} style={[styles.btnReExamination, { backgroundColor: '#707683', }]}>
-                                    <Text style={styles.txReExamination}>{'Lịch sử chia sẻ'}</Text>
-                                </TouchableOpacity>
+                                <View style={{ alignItems: 'center' }}>
+                                    <View style={{ paddingHorizontal: 20 }}><ScaledImage height={100} source={require('@images/new/ehealth/ic_preclinical.png')}></ScaledImage></View>
+                                    <Card style={[styles.viewBTnSuggest]}>
+                                        <TouchableOpacity onPress={this.onShareEhealth} style={[styles.btnReExamination, { backgroundColor: '#109CF1', }]}>
+                                            <Text style={styles.txReExamination}>{constants.ehealth.share_ehealth}</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity onPress={this.openHistorySharing} style={[styles.btnReExamination, { backgroundColor: '#707683', }]}>
+                                            <Text style={styles.txReExamination}>{'Lịch sử chia sẻ'}</Text>
+                                        </TouchableOpacity>
 
-                            </Card>
-                        </View>
-                        <TouchableOpacity onPress={this.onPressAppointment} style={styles.viewBtn}>
-                            <Text style={styles.txCheckResult}>{'LỊCH TÁI KHÁM'}</Text>
-                        </TouchableOpacity>
-                        <Card style={styles.cardView}>
-
-                            <View>
-                                <Text style={styles.txLabel}>{constants.ehealth.clock}</Text>
-                                <TouchableOpacity onPress={this.onPressTime}><Text style={styles.txContent}>{this.state.date ? (new Date().format("dd/MM/yyyy") + " " + this.state.date).toDateObject('/').format('HH:mm') : 'Chọn giờ'}</Text>
-                                </TouchableOpacity>
-                            </View>
-                            <View style={styles.viewAlarm}>
-                                <View >
-                                    <Text style={styles.txLabel}>{constants.ehealth.redmine_drug}</Text>
-                                    <TouchableOpacity onPress={this.onPressTimeAlarm}><Text style={styles.txContent}><Text style={styles.txContent}>{this.state.timeAlarm ? (new Date().format("dd/MM/yyyy") + " " + this.state.timeAlarm).toDateObject('/').format('HH:mm') : 'Chọn giờ'}</Text></Text></TouchableOpacity>
+                                    </Card>
                                 </View>
-                                <Switch onValueChange={this.onSetAlarm} trackColor={{
-                                    true: "yellow",
-                                    false: "purple",
-                                }}
-                                    value={this.state.switchValue} ></Switch>
-                            </View>
-                            <View>
-                                <Text style={styles.txLabel}>{constants.ehealth.note}</Text>
-                                <TextInput onBlur={this.onBlur} multiline={true} onChangeText={s => {
-                                    this.setState({ note: s })
-                                }} value={this.state.note} underlineColorAndroid={'#fff'} style={[styles.txContent,]} placeholder={'Nhập ghi chú'}></TextInput>
-                            </View>
-                            <View style={styles.viewSuggest}>
-                                <View style={styles.viewLine}></View>
-                                <TextInput onBlur={this.onBlur} multiline={true} onChangeText={s => {
-                                    this.setState({ suggestions: s })
-                                }} value={this.state.suggestions} underlineColorAndroid={'#fff'} style={styles.inputSuggest} placeholder={'Bạn cần làm gì?'}></TextInput>
-                            </View>
-                        </Card>
+                                <TouchableOpacity onPress={this.onPressAppointment} style={styles.viewBtn}>
+                                    <Text style={styles.txCheckResult}>{'LỊCH TÁI KHÁM'}</Text>
+                                </TouchableOpacity>
+                                <Card style={styles.cardView}>
+
+                                    <View>
+                                        <Text style={styles.txLabel}>{constants.ehealth.clock}</Text>
+                                        <TouchableOpacity onPress={this.onPressTime}><Text style={styles.txContent}>{this.state.date ? (new Date().format("dd/MM/yyyy") + " " + this.state.date).toDateObject('/').format('HH:mm') : 'Chọn giờ'}</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View style={styles.viewAlarm}>
+                                        <View >
+                                            <Text style={styles.txLabel}>{constants.ehealth.redmine_drug}</Text>
+                                            <TouchableOpacity onPress={this.onPressTimeAlarm}><Text style={styles.txContent}><Text style={styles.txContent}>{this.state.timeAlarm ? (new Date().format("dd/MM/yyyy") + " " + this.state.timeAlarm).toDateObject('/').format('HH:mm') : 'Chọn giờ'}</Text></Text></TouchableOpacity>
+                                        </View>
+                                        <Switch onValueChange={this.onSetAlarm} trackColor={{
+                                            true: "yellow",
+                                            false: "purple",
+                                        }}
+                                            value={this.state.switchValue} ></Switch>
+                                    </View>
+                                    <View>
+                                        <Text style={styles.txLabel}>{constants.ehealth.note}</Text>
+                                        <TextInput onBlur={this.onBlur} multiline={true} onChangeText={s => {
+                                            this.setState({ note: s })
+                                        }} value={this.state.note} underlineColorAndroid={'#fff'} style={[styles.txContent,]} placeholder={'Nhập ghi chú'}></TextInput>
+                                    </View>
+                                    <View style={styles.viewSuggest}>
+                                        <View style={styles.viewLine}></View>
+                                        <TextInput onBlur={this.onBlur} multiline={true} onChangeText={s => {
+                                            this.setState({ suggestions: s })
+                                        }} value={this.state.suggestions} underlineColorAndroid={'#fff'} style={styles.inputSuggest} placeholder={'Bạn cần làm gì?'}></TextInput>
+                                    </View>
+                                </Card>
+                            </React.Fragment>
+                        }
                     </View>
                     <View style={styles.viewSpaceBottom}></View>
                 </ScrollView>
@@ -584,7 +611,9 @@ class ListProfileScreen extends Component {
                     mode={'month'}
                     isVisible={this.state.toggelMonthPicker}
                     onConfirm={newDate => {
-                        this.setState({ latestTime: newDate, toggelMonthPicker: false })
+                        this.setState({ latestTime: newDate, toggelMonthPicker: false, dateSelected: null }, () => {
+                            this.selectDate();
+                        })
                     }}
                     onCancel={() => {
                         this.setState({ toggelMonthPicker: false });
