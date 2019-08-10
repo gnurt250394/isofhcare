@@ -6,7 +6,7 @@ import constants from '@resources/strings';
 import dateUtils from 'mainam-react-native-date-utils';
 import snackbar from '@utils/snackbar-utils';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
-import { Card } from 'native-base';
+import { Card, Icon } from 'native-base';
 import ActionSheet from 'react-native-actionsheet'
 import { Notification, NotificationOpen } from 'react-native-firebase';
 import DateTimePicker from "mainam-react-native-date-picker";
@@ -383,7 +383,9 @@ class ListProfileScreen extends Component {
         }
     }
     onShareEhealth = () => {
-        this.actionSheetGetTicket.show();
+        this.props.navigation.navigate("ehealthSharing", {
+            history: this.state.histories[this.state.dateSelected].history
+        });
     }
     renderTextError = (status) => {
         switch (status) {
@@ -508,6 +510,9 @@ class ListProfileScreen extends Component {
             })
         }
     }
+    showShare = () => {
+        this.actionSheetShare.show();
+    }
     render() {
         return (
             <ActivityPanel style={{ flex: 1 }} title={constants.title.ehealth}
@@ -516,9 +521,11 @@ class ListProfileScreen extends Component {
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#4BBA7B"
                 actionbarStyle={styles.actionbarStyle}
-                titleStyle={{
-                    color: '#FFF'
-                }}
+                titleStyle={styles.titleStyle}
+                menuButton={this.state.dateSelected ?
+                    <TouchableOpacity style={styles.btnShare} onPress={this.showShare}><Icon name='share' style={{ color: '#FFF' }} /></TouchableOpacity> :
+                    <TouchableOpacity style={[styles.btnShare, { width: 50 }]} onPress={this.showShare}></TouchableOpacity>}
+
             >
                 <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
                     <View style={styles.viewCalendar}>
@@ -555,20 +562,10 @@ class ListProfileScreen extends Component {
                                 <TouchableOpacity onPress={this.viewResult.bind(this)} style={[styles.viewBtn, { backgroundColor: '#25B05F' }]}>
                                     <Text style={styles.txCheckResult}>{constants.ehealth.checkupResult}</Text>
                                 </TouchableOpacity>
-                                <View style={{ alignItems: 'center' }}>
-                                    <Card style={[styles.viewBTnSuggest]}>
-                                        <TouchableOpacity onPress={this.onShareEhealth} style={[styles.btnReExamination, { backgroundColor: '#109CF1', }]}>
-                                            <Text style={styles.txReExamination}>{constants.ehealth.share_ehealth}</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={this.openHistorySharing} style={[styles.btnReExamination, { backgroundColor: '#707683', }]}>
-                                            <Text style={styles.txReExamination}>{'Lịch sử chia sẻ'}</Text>
-                                        </TouchableOpacity>
-
-                                    </Card>
-                                </View>
                                 <TouchableOpacity onPress={this.onPressAppointment} style={styles.viewBtn}>
                                     <Text style={styles.txCheckResult}>{'LỊCH TÁI KHÁM'}</Text>
                                 </TouchableOpacity>
+
                                 <Card style={styles.cardView}>
 
                                     <View>
@@ -632,17 +629,21 @@ class ListProfileScreen extends Component {
                     date={(this.state.isTimeAlarm ? this.state.dobAlarm : this.state.dob) || new Date()}
                 />
                 <ActionSheet
-                    ref={o => this.actionSheetGetTicket = o}
-                    options={[constants.actionSheet.profile_on_isofhcare, constants.actionSheet.orther, constants.actionSheet.cancel]}
-                    cancelButtonIndex={2}
-                    destructiveButtonIndex={2}
+                    ref={o => this.actionSheetShare = o}
+                    options={["Chia sẻ trên hồ sơ iSofHCare", "Chia sẻ trên ứng dụng khác", "Lịch sử chia sẻ", constants.actionSheet.cancel]}
+                    cancelButtonIndex={3}
+                    destructiveButtonIndex={3}
                     onPress={(index) => {
                         switch (index) {
                             case 0:
-                                this.onShareEhealthWithProfile()
+                                this.onShareEhealth();
                                 break;
                             case 1:
                                 this.exportPdf();
+                                break;
+                            case 2:
+                                this.openHistorySharing();
+
 
                         }
                     }}
@@ -654,6 +655,10 @@ class ListProfileScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+    titleStyle:
+    {
+        color: '#FFF', marginLeft: 65
+    },
     style1: {
         flexDirection: 'row', alignItems: 'center', marginTop: 10, marginLeft: 20
     },
@@ -714,7 +719,8 @@ const styles = StyleSheet.create({
         maxWidth: DEVICE_WIDTH - 80,
         height: 50,
         borderRadius: 5,
-        marginVertical: 20,
+        marginBottom: 10,
+        marginTop: 10,
         backgroundColor: '#F7685B',
         justifyContent: 'center',
         alignItems: 'center'
@@ -740,7 +746,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 40
     },
     btnReExamination: {
-        padding: 2, borderRadius: 3, marginRight: 5, marginVertical: 10, paddingHorizontal: 5
+        padding: 2, borderRadius: 3, marginRight: 5, marginVertical: 10, paddingHorizontal: 5,
+        minWidth: 150
     },
     txLabel: {
         color: '#9caac4',
@@ -764,7 +771,7 @@ const styles = StyleSheet.create({
     viewSuggest: { flexDirection: 'row', marginVertical: 10, alignItems: 'center' },
     inputSuggest: { marginLeft: 5, color: '#9caac4', fontSize: 18, width: '95%' },
     txSuggest: { color: '#bdc6d8', fontSize: 15 },
-    txReExamination: { color: '#fff', padding: 2 },
+    txReExamination: { color: '#fff', fontSize: 15, textAlign: 'center', paddingVertical: 10, fontWeight: 'bold' },
     viewBorder: { height: 1, backgroundColor: '#97979710', marginVertical: 10 },
     viewAlarm: { flexDirection: 'row', justifyContent: 'space-between' },
     viewSpaceBottom: { height: 50 },
@@ -773,6 +780,9 @@ const styles = StyleSheet.create({
     txNotifi: { fontSize: 22, color: '#27AE60', textAlign: 'center', marginTop: 10, marginHorizontal: 20 },
     btnDone: { justifyContent: 'center', alignItems: 'center', height: 41, backgroundColor: '#878787', borderBottomLeftRadius: 5, borderBottomRightRadius: 5 },
     txDone: { color: '#fff' },
+    btnShare: {
+        paddingHorizontal: 20
+    }
 
 });
 
