@@ -32,7 +32,7 @@ class EditProfileScreen extends Component {
         let district = this.props.navigation.state.params.district
         let province = this.props.navigation.state.params.province
         let zone = this.props.navigation.state.params.zone
-
+        console.log(data, 'data passed')
         this.state = {
             name: data.name ? data.name : '',
             date: data && data.dob ? data.dob.toDateObject('-').format('dd/MM/yyyy') : (''),
@@ -674,27 +674,31 @@ class EditProfileScreen extends Component {
                                 />
                             </Field>
                             <Text style={[styles.errorStyle]}>{this.state.addressError}</Text>
-                            <Field style={{ flex: 1 }}>
-                                <Text style={styles.mdk}>Quan hệ <Text style={{ color: 'red' }}>(*)</Text></Text>
-                                <Field>
-                                    <TextField
-                                        hideError={true}
-                                        multiline={true}
-                                        onPress={this.onSelectRelationShip}
-                                        editable={false}
-                                        inputStyle={[
-                                            styles.ktq, { minHeight: 60 }
-                                        ]}
-                                        errorStyle={styles.errorStyle}
-                                        value={this.state.relationShip && this.state.relationShip.name ? this.state.relationShip.name : 'Quan hệ'}
-                                        autoCapitalize={"none"}
-                                        returnKeyType={"next"}
-                                        // underlineColorAndroid="transparent"
-                                        autoCorrect={false}
-                                    />
+                            {this.state.data.status !== 1 ? (
+                                <Field style={{ flex: 1 }}>
+                                    <Text style={styles.mdk}>Quan hệ <Text style={{ color: 'red' }}>(*)</Text></Text>
+                                    <Field>
+                                        <TextField
+                                            hideError={true}
+                                            multiline={true}
+                                            onPress={this.onSelectRelationShip}
+                                            editable={false}
+                                            inputStyle={[
+                                                styles.ktq, { minHeight: 60 }
+                                            ]}
+                                            errorStyle={styles.errorStyle}
+                                            value={this.state.relationShip && this.state.relationShip.name ? this.state.relationShip.name : 'Quan hệ'}
+                                            autoCapitalize={"none"}
+                                            returnKeyType={"next"}
+                                            // underlineColorAndroid="transparent"
+                                            autoCorrect={false}
+                                        />
+                                    </Field>
+                                    <Text style={[styles.errorStyle]}>{this.state.relationErr}</Text>
                                 </Field>
-                                <Text style={[styles.errorStyle]}>{this.state.relationErr}</Text>
-                            </Field>
+                            ) : (<View></View>)
+                            }
+
                         </Form>
                         <View style={styles.viewBtn}>
                             <TouchableOpacity onPress={this.onCreateProfile} style={styles.btnDone}><Text style={styles.txDone}>Lưu</Text></TouchableOpacity>
