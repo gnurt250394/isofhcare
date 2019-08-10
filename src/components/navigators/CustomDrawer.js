@@ -20,28 +20,22 @@ class CustomDrawer extends React.Component {
   render() {
     return (
       <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-        {this.props.userApp.isLogin ? (
-          <View style={styles.viewHeader}>
-            <ScaledImage style={styles.avatarStyle} uri={this.props.userApp.currentUser.avatar} height={60} ></ScaledImage>
-            <View style={styles.viewInfo}>
-              <Text style={styles.txHello}>Xin Chào</Text>
-              <Text style={styles.txName}>{this.props.userApp.currentUser.name && this.props.userApp.currentUser.name}</Text>
-            </View>
-          </View>
-        ) : (<View></View>)}
-
         <ScaledImage source={require('@images/new/home/ic_drawer_logo.png')} style={[styles.imgLogo, this.props.userApp.isLogin ? {} : { marginVertical: 50 }]} height={80}></ScaledImage>
         {/* <DrawerItems></DrawerItems> */}
         <TouchableOpacity onPress={() => {
           snackbar.show("Chức năng đang phát triển");
         }} style={styles.viewDrawer}>
-          <ScaledImage height={25} source={require('@images/new/home/ic_qr.png')} />
+          <View style={{ width: 25, height: 25 }}>
+            <ScaledImage height={25} width={25} source={require('@images/new/home/ic_qr.png')} />
+          </View>
           <Text style={styles.txDrawer}>Quét mã đơn thuốc</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => {
           snackbar.show("Chức năng đang phát triển");
         }} style={styles.viewDrawer}>
-          <ScaledImage height={25} source={require('@images/new/home/ic_help.png')} />
+          <View style={{ width: 25, height: 25 }}>
+            <ScaledImage height={25} width={25} source={require('@images/new/home/ic_help.png')} />
+          </View>
           <Text style={styles.txDrawer}>Hỗ trợ</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.viewDrawer}
@@ -50,22 +44,28 @@ class CustomDrawer extends React.Component {
               "mailto:support@isofhcare.vn?subject=Báo lỗi quá trình sử dụng app ISofhCare&body="
             );
           }}>
-          <ScaledImage height={25} source={require('@images/new/home/ic_abort.png')} />
+          <View style={{ width: 25, height: 25 }}>
+            <ScaledImage height={25} width={25} source={require('@images/new/home/ic_abort.png')} />
+          </View>
           <Text style={styles.txDrawer}>Báo lỗi</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.viewDrawer}
           onPress={() => {
             this.props.navigation.navigate("terms");
           }}>
-          <ScaledImage height={25} source={require('@images/new/home/ic_rules.png')} />
+          <View style={{ width: 25, height: 25 }}>
+            <ScaledImage height={25} width={25} source={require('@images/new/home/ic_rules.png')} />
+          </View>
           <Text style={styles.txDrawer}>Điều khoản sử dụng</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={this.ratingApp} style={styles.viewDrawer}>
-          <ScaledImage height={25} source={require('@images/new/home/ic_rate.png')} />
+          <View style={{ width: 25, height: 25 }}>
+            <ScaledImage height={25} width={25} source={require('@images/new/home/ic_rate.png')} />
+          </View>
           <Text style={styles.txDrawer}>Đánh giá Isofhcare</Text>
         </TouchableOpacity>
         <View style={{ alignItems: 'flex-end', flex: 1 }}>
-          <ScaledImage style={{ right: -20 }} height={200} source={require('@images/new/home/ic_logo_lager.png')}></ScaledImage>
+          <ScaledImage height={200} source={require('@images/new/home/ic_logo_lager.png')}></ScaledImage>
         </View>
       </ScrollView>
     )

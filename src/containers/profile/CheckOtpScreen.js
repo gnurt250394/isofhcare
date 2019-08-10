@@ -48,7 +48,7 @@ class CheckOtpScreen extends React.PureComponent {
         if (data && id) {
             profileProvider.checkOtp(data, id).then(res => {
                 if (res.code == 0) {
-                    NavigationService.navigate('listProfileUser', { reset: this.state.reset + 1 })
+                    NavigationService.navigate('shareDataProfile', { id: res.data.record.id })
                     return;
                 }
                 if(res.code == 4){

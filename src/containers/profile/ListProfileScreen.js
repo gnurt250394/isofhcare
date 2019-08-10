@@ -25,11 +25,12 @@ class ListProfileScreen extends Component {
             isVisible: false,
         };
     }
-    onShowOptions = (id, medicalRelatedId) => {
+    onShowOptions = (id,sharePermission,medicalRelatedId) => {
         this.actionSheetOptions.show();
         this.setState({
             idProfile: id,
-            medicalRelatedId: medicalRelatedId ? medicalRelatedId : null
+            medicalRelatedId: medicalRelatedId ? medicalRelatedId : null,
+            sharePermission:sharePermission
         })
     };
     onRefresh = () => {
@@ -45,7 +46,8 @@ class ListProfileScreen extends Component {
                 case 0:
                     NavigationService.navigate("shareDataProfile", {
                         medicalRelatedId: this.state.medicalRelatedId,
-                        id: this.state.idProfile
+                        id: this.state.idProfile,
+                        sharePermission:this.state.sharePermission
                     })
                     return;
                 case 1:
@@ -194,7 +196,7 @@ class ListProfileScreen extends Component {
                                             <TouchableOpacity onPress={() => this.onConfirm(item.medicalRecords.id)} style={{ paddingHorizontal: 20, paddingVertical: 5, backgroundColor: '#FFAE00', borderRadius: 5 }}><Text style={{ color: '#fff', fontWeight: 'bold' }}>XÁC NHẬN</Text></TouchableOpacity>
                                         ) : (<View></View>)
                                     }
-                                    <TouchableOpacity style={{ padding: 10 }} onPress={() => this.onShowOptions(item.medicalRecords.id, item.medicalRecords.medicalRelatedId ? item.medicalRecords.medicalRelatedId : null)}>
+                                    <TouchableOpacity style={{ padding: 10 }} onPress={() => this.onShowOptions(item.medicalRecords.id,item.medicalRecords.sharePermission, item.medicalRecords.medicalRelatedId ? item.medicalRecords.medicalRelatedId : null)}>
                                         <ScaledImage height={8} source={require('@images/new/profile/ic_three_dot.png')}></ScaledImage>
                                     </TouchableOpacity>
                                 </View>
@@ -229,14 +231,13 @@ class ListProfileScreen extends Component {
                                     item.medicalRecords.statusConfirm == "WAIT_CONFIRM" ?
                                         (<Text>Chờ xác nhận</Text>) : (<View></View>)
                                 }
-                                <TouchableOpacity style={{ padding: 10 }} onPress={() => this.onShowOptions(item.medicalRecords.id, item.medicalRecords.medicalRelatedId ? item.medicalRecords.medicalRelatedId : null)}>
+                                <TouchableOpacity style={{ padding: 10 }} onPress={() => this.onShowOptions(item.medicalRecords.id,item.medicalRecords.sharePermission, item.medicalRecords.medicalRelatedId ? item.medicalRecords.medicalRelatedId : null)}>
                                     <ScaledImage height={8} source={require('@images/new/profile/ic_three_dot.png')}></ScaledImage>
                                 </TouchableOpacity>
                             </View>
                         </Card>
                     </View>
                         )
-
                 )
         )
     }
@@ -361,9 +362,9 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
     },
     viewGradientUser: {
-        flex: 1, justifyContent: 'center', borderTopLeftRadius: 10,
+        flex: 1, justifyContent: 'center', borderTopLeftRadius: 50,
         padding: 10,
-        borderBottomLeftRadius: 10,
+        borderBottomLeftRadius: 50,
     }
 })
 function mapStateToProps(state) {
