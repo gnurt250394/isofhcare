@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
 import { Card } from 'native-base';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import ActivityPanel from '@components/ActivityPanel';
 import { connect } from 'react-redux';
-import ImageLoad from 'mainam-react-native-image-loader';
 const width = (Dimensions.get('window').width) / 2;
 const spacing = 10;
 import dateUtils from 'mainam-react-native-date-utils';
@@ -15,12 +14,9 @@ import constants from '@resources/strings';
 class EhealthSharingScreen extends Component {
     constructor(props) {
         super(props);
-        let countTime = this.props.navigation.state.params && this.props.navigation.state.params.countTime ? this.props.navigation.state.params.countTime : ''
-        let item = this.props.navigation.state.params && this.props.navigation.state.params.item || {};
-
+        let history = this.props.navigation.state.params ? this.props.navigation.state.params.history || {} : {}
         this.state = {
-            data: item.history || [],
-            countTime: countTime
+            history: history
         };
     }
 
@@ -75,53 +71,41 @@ class EhealthSharingScreen extends Component {
     renderItem = ({ item }) => {
         return (
             <View style={styles.viewItem}>
-                <Card style={styles.cardStyle}>
-                    <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => {
-                        this.viewResult(item)
-                    }}>
-                        <View style={{ width: 150, height: 100, alignItems: 'center' }}>
-                            <ScaledImage style={styles.img} height={100} width={150} source={this.getImage(item)}></ScaledImage>
-                        </View>
-                        <View style={styles.viewDetails}>
-                            <Text style={{ color: '#479AE3', marginVertical: 10, fontSize: 14 }}>{this.getTime(item.timeGoIn)}</Text>
-                            <Text style={{ fontSize: 14, minHeight: 20, fontWeight: 'bold' }}>{item.serviceName}</Text>
-                        </View>
-                    </TouchableOpacity>
-                </Card>
+
             </View>
         )
     }
     render() {
-        const source = this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar.absoluteUrl() } : require("@images/new/user.png");
-
+        let item = this.state.history;
         return (
             <ActivityPanel style={styles.container}
                 // title="HỒ SƠ Y BẠ GIA ĐÌNH"
                 isLoading={this.state.isLoading}
-                title={<Text style={{ color: '#FFF' }}>{'Lịch sử y bạ '}<Text style={{ color: '#b61827' }}>({this.state.countTime} lần)</Text></Text>}
+                title={"Chia sẻ y bạ"}
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#4BBA7B"
                 actionbarStyle={styles.actionbarStyle}
-                titleStyle={styles.titleStyle}>
-                <FlatList
-                    data={this.state.data}
-                    style={{ flex: 1 }}
-                    keyExtractor={(item, index) => index.toString()}
-                    renderItem={this.renderItem}
-                    extraData={this.state}
-                    numColumns={2}
-                    ListHeaderComponent={() => {
-                        return (
-                            <View style={{ height: 10 }}></View>
-                        )
-                    }}
-                    ListFooterComponent={() => {
-                        return (
-                            <View style={{ height: 50 }}></View>
-                        )
-                    }}
-                ></FlatList>
+                titleStyle={styles.titleStyle}
+            >
+                <ScrollView>
+                    <View style={{ margin: 10 }}>
+                        <Card style={styles.cardStyle}>
+                            <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => {
+                                this.viewResult(item)
+                            }}>
+                                <View style={{ width: 150, height: 100, alignItems: 'center' }}>
+                                    <ScaledImage style={styles.img} height={100} width={150} source={this.getImage(item)}></ScaledImage>
+                                </View>
+                                <View style={styles.viewDetails}>
+                                    <Text style={{ color: '#479AE3', marginVertical: 10, fontSize: 14 }}>{this.getTime(item.timeGoIn)}</Text>
+                                    <Text style={{ fontSize: 14, minHeight: 20, fontWeight: 'bold' }}>{item.serviceName}</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </Card>
+                    </View>
+
+                </ScrollView>
             </ActivityPanel>
 
         );
@@ -133,7 +117,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#F9FAFB'
     },
     cardStyle: {
-        width: '100%',
+        margin: 10,
+        width: 200, alignSelf: 'center',
         borderRadius: 5,
         alignItems: 'center',
         minHeight: 150,
@@ -174,6 +159,9 @@ const styles = StyleSheet.create({
         width: 45,
         height: 45
     },
+    titleStyle: {
+        color: '#FFF'
+    }
 })
 
 function mapStateToProps(state) {

@@ -383,7 +383,9 @@ class ListProfileScreen extends Component {
         }
     }
     onShareEhealth = () => {
-        this.props.navigation.navigate("ehealthSharing");
+        this.props.navigation.navigate("ehealthSharing", {
+            history: this.state.histories[this.state.dateSelected].history
+        });
     }
     renderTextError = (status) => {
         switch (status) {
