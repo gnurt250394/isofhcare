@@ -411,6 +411,8 @@ class NotificationScreen extends Component {
         showFullScreen={true}
         menuButton={this.menuCreate()}
         isLoading={this.state.isLoading}
+        iosBarStyle={'light-content'}
+        statusbarBackgroundColor="#4BBA7B"
         hideBackButton={true}
 
       >
