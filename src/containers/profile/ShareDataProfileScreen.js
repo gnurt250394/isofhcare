@@ -9,13 +9,16 @@ import snackbar from "@utils/snackbar-utils";
 export default class ShareDataProfileScreen extends Component {
   constructor(props) {
     super(props);
-    let medialRelatedId = this.props.navigation.state.params && this.props.navigation.state.params.medialRelatedId ? this.props.navigation.state.params.medialRelatedId : null
+    let shareId = this.props.navigation.state.params && this.props.navigation.state.params.shareId ? this.props.navigation.state.params.shareId : null
     let id = this.props.navigation.state.params && this.props.navigation.state.params.id ? this.props.navigation.state.params.id : null
+    let permissionsOld = this.props.navigation.state.params && this.props.navigation.state.params.sharePermission ? this.props.navigation.state.params.sharePermission : ''
     this.state = {
-      ehealth: false,
-      bookingDate: false,
+      ehealth: permissionsOld == 'YBDT' || permissionsOld == 'YBDT,DATKHAM' ? true : false,
+      bookingDate: permissionsOld == 'DATKHAM' || permissionsOld == 'YBDT,DATKHAM' ? true : false,
+      permissionsOld,
       id,
-      medialRelatedId
+      shareId,
+      reset: 2
     };
   }
   shareEhealth = () => {
@@ -30,33 +33,34 @@ export default class ShareDataProfileScreen extends Component {
   }
   updatePermission = () => {
     let id = this.state.id
-    let medialRelatedId = this.state.medialRelatedId
-    let permissions 
-    if(!this.state.ehealth && !this.state.bookingDate){
+    let shareId = this.state.shareId
+    let permissions
+    if (!this.state.ehealth && !this.state.bookingDate) {
       permissions = ''
     }
-    if(this.state.ehealth){
+    if (this.state.ehealth) {
       permissions = 'YBDT'
     }
-    if(this.state.bookingDate){
+    if (this.state.bookingDate) {
       permissions = 'DATKHAM'
     }
-    if(this.state.bookingDate && this.state.ehealth){
+    if (this.state.bookingDate && this.state.ehealth) {
       permissions = 'YBDT,DATKHAM'
     }
     let data = {
       "recordId": id,
-      "shareId": medialRelatedId,
+      "shareId": shareId,
       "permissions": permissions
     }
     profileProvider.sharePermission(data).then(res => {
-      if(res.code == 0 && res.data){
-        NavigationService.pop()
-      }else{
-        snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại')
+      if (res.code == 0 && res.data) {
+        snackbar.show('Thành công', 'success')
+        NavigationService.navigate('listProfileUser', { reset: this.state.reset + 1 })
+      } else {
+        snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
       }
-    }).catch(err =>{
-      snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại')
+    }).catch(err => {
+      snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
       console.log(err);
     })
 
@@ -81,7 +85,7 @@ export default class ShareDataProfileScreen extends Component {
           <Text style={styles.txContent}>CHỌN DỮ LIỆU BẠN MUỐN CHIA SẺ VỚI THÀNH VIÊN NÀY</Text>
           <View style={styles.viewSelected}><CheckBox onPress={this.shareEhealth} checked={this.state.ehealth} color="#02C39A"></CheckBox><Text style={styles.txSelected}>Y bạ điện tử của tôi</Text></View>
           <View style={styles.viewSelected}><CheckBox onPress={this.shareBookingDate} checked={this.state.bookingDate} color="#02C39A"></CheckBox><Text style={styles.txSelected}>Lịch khám của tôi</Text></View>
-          <View style={styles.viewBtn}><TouchableOpacity onPress = {this.updatePermission} style={styles.btnConfirm}><Text style={styles.txConfirm}>XÁC NHẬN</Text></TouchableOpacity></View>
+          <View style={styles.viewBtn}><TouchableOpacity onPress={this.updatePermission} style={styles.btnConfirm}><Text style={styles.txConfirm}>XÁC NHẬN</Text></TouchableOpacity></View>
         </View>
       </ActivityPanel>
     );
