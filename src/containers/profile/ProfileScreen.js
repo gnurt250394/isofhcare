@@ -281,9 +281,9 @@ class ProfileScreen extends Component {
                         </View>
                     </View>
                     <View style={styles.btnFeature}>
-                        <View><ScaledImage height={20} style={{ tintColor: '#fff', }} source={require('@images/new/profile/ic_account.png')}></ScaledImage></View>
+                        <View><ScaledImage height={20} style={{ tintColor: '#fff',marginLeft:-28 }} source={require('@images/new/profile/ic_account.png')}></ScaledImage></View>
                         <Text style={[styles.txFeature]} >Thông tin cá nhân</Text>
-                        <View style={{ width: 20 }}></View>
+                        <View></View>
                     </View>
                     {/* <TouchableOpacity onPress={() => this.onSelectFeature(2)} style={[styles.btnFeature, this.state.value == 2 ? { backgroundColor: '#4BBA7B' } : { backgroundColor: '#fff' }]}>
                             <ScaledImage height={20} style={this.state.value == 2 ? { tintColor: '#fff' } : { tintColor: '#4BBA7B' }} source={require('@images/new/profile/ic_deal_write.png')}></ScaledImage>
@@ -326,7 +326,6 @@ class ProfileScreen extends Component {
                             </View>
                         ) : (<View></View>)}
 
-                        <View style={{ height: 1, backgroundColor: '#4BBA7B' }}></View>
                     </View>
                     <TouchableOpacity onPress={() => this.props.navigation.navigate('createProfile')} style={styles.btn}><Text style={styles.txBtn}>Thêm thành viên</Text></TouchableOpacity>
                 </ScrollView>
@@ -343,7 +342,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     scaledImage: { position: "absolute", top: 5, right: 5 },
-    btnFeature: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#4BBA7B', justifyContent: 'space-around', borderRadius: 5, borderColor: '#4BBA7B', paddingVertical: 10, marginHorizontal: 10, marginTop: 30 },
+    btnFeature: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#4BBA7B', justifyContent: 'space-around', borderTopLeftRadius:50,borderBottomLeftRadius:50, borderColor: '#4BBA7B', paddingVertical: 10,marginLeft:10, marginTop: 30,paddingHorizontal:0 },
     imageStyle: { borderRadius: 60, borderWidth: 2, borderColor: '#Fff' },
     customImagePlace: {
         width: 120,
@@ -361,11 +360,15 @@ const styles = StyleSheet.create({
         borderBottomWidth: 0
     },
     btn: {
-        paddingHorizontal: 10, paddingVertical: 5, backgroundColor: '#359A60', borderRadius: 5, justifyContent: 'center', alignItems: 'center', alignSelf: 'flex-start', marginHorizontal: 10, marginLeft: 12, marginBottom: 20, marginTop: 10
+        paddingHorizontal: 10, paddingVertical: 15, backgroundColor: '#4BBA7B', borderRadius: 8, justifyContent: 'center', alignItems: 'center', alignSelf: 'flex-start', marginHorizontal: 10, marginLeft: 12, marginBottom: 20, marginTop: 10
     },
     containerInfo: {
         padding: 10,
         flex: 1,
+        borderRadius:20,
+        borderWidth:1,
+        borderColor:'#01C295',
+        margin:10
     },
     viewItem: {
         flexDirection: 'row',
@@ -373,7 +376,7 @@ const styles = StyleSheet.create({
         marginVertical: 10,
     },
     txLabel: {
-        color: '#4BBA7B',
+        color: '#01C295',
         fontSize: 14
     },
     txContent: {
