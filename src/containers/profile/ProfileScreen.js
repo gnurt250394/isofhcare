@@ -20,7 +20,7 @@ class ProfileScreen extends Component {
     constructor(props) {
         super(props);
         let data = this.props.navigation.state.params && this.props.navigation.state.params.data ? this.props.navigation.state.params.data.medicalRecords : ''
-        let imgAvtLocal = this.props.navigation.state.params && this.props.navigation.state.params.data && this.props.navigation.state.params.data.avatar ? this.props.navigation.state.params.data.avatar.absoluteUrl() : ''
+        let imgAvtLocal = this.props.navigation.state.params && this.props.navigation.state.params.data && this.props.navigation.state.params.data.avatar ? this.props.navigation.state.params.data.avatar : ''
         let imgLocal = this.props.navigation.state.params && this.props.navigation.state.params.data && this.props.navigation.state.params.data.cover ? this.props.navigation.state.params.data.cover.absoluteUrl() : ''
         this.state = {
             value: 1,
