@@ -15,6 +15,7 @@ import ViewSurgeryResultScreen from '@containers/ehealth/ViewSurgeryResultScreen
 import SearchProfileScreen from '@containers/ehealth/SearchProfileScreen';
 import HistoryEhealthScreen from '@containers/ehealth/HistoryEhealthScreen';
 import HistorySharingScreen from '@containers/ehealth/HistorySharingScreen';
+import EhealthSharingScreen from '@containers/ehealth/EhealthSharingScreen';
 
 
 
@@ -23,6 +24,7 @@ const EHealthNavigator = createStackNavigator({
     listProfile: { screen: ListProfileScreen },
     historyEhealth: { screen: HistoryEhealthScreen },
     historySharing: { screen: HistorySharingScreen },
+    ehealthSharing: { screen: EhealthSharingScreen },
     listProfileSmall: { screen: ListProfileSmallScreen },
     viewInMonth: { screen: ViewInMonthScreen },
     viewInDay: { screen: ViewInDayScreen },
