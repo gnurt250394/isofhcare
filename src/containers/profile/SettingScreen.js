@@ -65,10 +65,9 @@ class SettingScreen extends Component {
                             <ScaledImage height={18} source={require('@images/new/profile/ic_logout.png')} />
                             <Text style={styles.txDrawer}>Đăng xuất</Text>
                         </TouchableOpacity>
-                        <View style = {{justifyContent:'center',alignItems:'center'}}>
-          <Text style={styles.txVersion}>{'Phiên bản ' + DeviceInfo.getVersion() + '.'+ DeviceInfo.getBuildNumber()}</Text>
-          </View>
-
+                        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                            <Text style={styles.txVersion}>{'Phiên bản ' + DeviceInfo.getVersion() + '.' + DeviceInfo.getBuildNumber()}</Text>
+                        </View>
                     </View>
                 </ScrollView>
             </ActivityPanel>
@@ -87,9 +86,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#4BBA7B',
         borderBottomWidth: 0
     },
-    txVersion:{
-        fontWeight:'bold',
-        fontSize:14
+    txVersion: {
+        fontWeight: 'bold',
+        fontSize: 14
     },
     viewInfo: {
         marginLeft: 10
@@ -98,7 +97,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         padding: 10,
         marginLeft: 30,
-        marginVertical: 10
     },
     txDrawer: {
         marginLeft: 10,
