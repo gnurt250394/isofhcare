@@ -175,8 +175,6 @@ class ListProfileScreen extends Component {
 
     }
     onGetDetails = () => {
-        let lastDate = this.state.lastDate ? this.state.lastDate.toDateObject('-').format('dd/MM/yyyy') : null;
-        let dateSelected = this.state.dateString ? this.state.dateString.toDateObject('-').format('dd/MM/yyyy') : null;
         let patientHistoryId = this.state.patient.patientHistoryId;
         let hospitalId = this.state.patient.hospitalEntity.id;
         bookingProvider.detailPatientHistory(patientHistoryId, hospitalId).then(res => {

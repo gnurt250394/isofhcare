@@ -40,11 +40,13 @@ module.exports = {
             });
         });
     },
-    shareWithProfile(recieveUserId, hospitalId, patientHistoryId) {
+    shareWithProfile(recieveUserId, hospitalId, patientHistoryId, fromDate, toDate) {
         let body = {
             recieveUserId: recieveUserId,
             hospitalId: hospitalId,
-            patientHistoryId: patientHistoryId
+            patientHistoryId: patientHistoryId,
+            fromDate,
+            toDate
         }
         return new Promise((resolve, reject) => {
             client.requestApi('post', constants.api.ehealth.share_with_profile, body, (s, e) => {
