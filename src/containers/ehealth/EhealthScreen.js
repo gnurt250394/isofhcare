@@ -62,9 +62,7 @@ class EhealthScreen extends Component {
     }
     onPress = (item) => {
         this.props.dispatch({ type: constants.action.action_select_hospital_ehealth, value: item })
-        Dimensions.get('window').width < 375 ?
-            this.props.navigation.navigate('listProfileSmall')
-            : this.props.navigation.navigate('listProfile')
+        this.props.navigation.navigate('listProfile');
     }
     onDisable = () => {
         snackbar.show('Bạn chưa có lần khám gần nhất tại bệnh viện này', 'danger')

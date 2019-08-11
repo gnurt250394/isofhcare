@@ -2,7 +2,6 @@ import { StackRouter, createStackNavigator, StackNavigator } from 'react-navigat
 import { Platform } from 'react-native';
 import EhealthScreen from '@containers/ehealth/EhealthScreen';
 import ListProfileScreen from '@containers/ehealth/ListProfileScreen';
-import ListProfileSmallScreen from '@containers/ehealth/ListProfileSmallScreen';
 import ViewInMonthScreen from '@containers/ehealth/ViewInMonthScreen';
 import ViewInDayScreen from '@containers/ehealth/ViewInDayScreen';
 import ViewEhealthDetailScreen from '@containers/ehealth/ViewEhealthDetailScreen';
@@ -25,7 +24,6 @@ const EHealthNavigator = createStackNavigator({
     historyEhealth: { screen: HistoryEhealthScreen },
     historySharing: { screen: HistorySharingScreen },
     ehealthSharing: { screen: EhealthSharingScreen },
-    listProfileSmall: { screen: ListProfileSmallScreen },
     viewInMonth: { screen: ViewInMonthScreen },
     viewInDay: { screen: ViewInDayScreen },
     viewDetail: { screen: ViewEhealthDetailScreen },
