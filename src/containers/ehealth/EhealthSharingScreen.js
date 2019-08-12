@@ -54,7 +54,7 @@ class EhealthSharingScreen extends Component {
     getImage(item) {
         switch (item.serviceType) {
             case "CheckUp":
-                return require("@images/new/ehealth/ic_kqk_cls.png");
+                return require("@images/new/ehealth/img_checkup.png");
             case "MedicalTest":
                 return require("@images/new/ehealth/ic_xet_nghiem.png");
             case "MR":
@@ -62,7 +62,7 @@ class EhealthSharingScreen extends Component {
             case "CT":
                 return require("@images/new/ehealth/ic_ct_catlop.png");
             case "US":
-                return require("@images/new/ehealth/img_noisoi.png");
+                return require("@images/new/ehealth/img_sieuam.png");
             case "ED":
                 return require("@images/new/ehealth/img_endoscopic.png");
             case "XQ":
@@ -74,13 +74,31 @@ class EhealthSharingScreen extends Component {
 
     }
 
-    renderItem = ({ item }) => {
-        return (
-            <View style={styles.viewItem}>
 
-            </View>
-        )
+
+    getImageSmall(item) {
+        switch (item.serviceType) {
+            case "CheckUp":
+                return require("@images/new/ehealth/img_checkup_small.png");
+            case "MedicalTest":
+                return require("@images/new/ehealth/ic_xet_nghiem_small.png");
+            case "MR":
+                return require("@images/new/ehealth/img_conghuongtu_small.png");
+            case "CT":
+                return require("@images/new/ehealth/ic_ct_catlop_small.png");
+            case "US":
+                return require("@images/new/ehealth/img_sieuam_small.png");
+            case "ED":
+                return require("@images/new/ehealth/img_endoscopic_small.png");
+            case "XQ":
+                return require("@images/new/ehealth/img_xquang_small.png");
+            default:
+                return require("@images/new/ehealth/img_orther_service_small.png");
+
+        }
+
     }
+
     onSelectProfile = (profile) => {
         this.setState({ user: profile.user });
     }
@@ -101,7 +119,7 @@ class EhealthSharingScreen extends Component {
             let hospitalId = this.props.ehealth.hospital.hospital.id
             let patientHistoryId = this.props.ehealth.patient.patientHistoryId;
             this.setState({ isLoading: true }, () => {
-                ehealthProvider.shareWithProfile(this.state.user.id, hospitalId, patientHistoryId, this.state.fromDate.format("yyyy-MM-dd"+" 00:00:00"), this.state.toDate.format("yyyy-MM-dd")+" 23:59:59").then(res => {
+                ehealthProvider.shareWithProfile(this.state.user.id, hospitalId, patientHistoryId, this.state.fromDate.format("yyyy-MM-dd" + " 00:00:00"), this.state.toDate.format("yyyy-MM-dd") + " 23:59:59").then(res => {
                     this.setState({ isLoading: false }, () => {
                         if (res.code == 0 && res.data.status == 1) {
                             snackbar.show("Chia sẻ thành công", "success");
@@ -145,7 +163,10 @@ class EhealthSharingScreen extends Component {
                                 </View>
                                 <View style={styles.viewDetails}>
                                     <Text style={{ color: '#479AE3', marginVertical: 10, fontSize: 14 }}>{this.getTime(item.timeGoIn)}</Text>
-                                    <Text style={{ fontSize: 14, minHeight: 20, fontWeight: 'bold' }}>{item.serviceName}</Text>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                        <ScaledImage style={styles.img} height={20} width={20} source={this.getImageSmall(item)}></ScaledImage>
+                                        <Text style={{ marginLeft: 5, fontSize: 14, minHeight: 20, fontWeight: 'bold' }}>{item.serviceName}</Text>
+                                    </View>
                                 </View>
                             </TouchableOpacity>
                         </Card>
