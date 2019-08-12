@@ -58,24 +58,43 @@ class CreateBookingSuccessScreen extends Component {
                 }}>
                 <View style={styles.container}>
                     <ScrollView keyboardShouldPersistTaps='handled' style={{ flex: 1 }}>
-                        <ScaleImage style={styles.image1} height={80} source={require("@images/new/booking/ic_rating.png")} />
-                        <Text style={styles.text1}>{constants.booking.booking_success}</Text>
-                        <View style={{ backgroundColor: '#effbf9', padding: 20, marginTop: 20 }}>
-                            <View style={styles.row}>
-                                <Text style={styles.label}>{constants.booking.name}</Text>
-                                <Text style={styles.text}>{(booking.profile.medicalRecords.name || "").toUpperCase()}</Text>
+                        {/* <ScaleImage style={styles.image1} height={80} source={require("@images/new/booking/ic_rating.png")} />
+                        <Text style={styles.text1}>{constants.booking.booking_success}</Text> */}
+                        <View style={styles.view2}>
+                                <View style={styles.col}>
+                                    <Text style={styles.col1}>{constants.booking.code}</Text>
+                                    <TouchableOpacity onPress={this.onQrClick} style={{ alignItems: 'center', marginTop: 10 }}>
+                                        <QRCode
+                                            style={{ alignSelf: 'center', backgroundColor: '#000' }}
+                                            value={booking.book.codeBooking}
+                                            size={100}
+                                            fgColor='white' />
+                                    </TouchableOpacity>
+                                    <Text style={{ textAlign: 'center', color: '#4a4a4a', marginVertical: 5 }}>{constants.booking.code_booking} {booking.book.codeBooking}</Text>
+                                </View>
                             </View>
-                            <View style={styles.row}>
-                                <Text style={styles.label}>{constants.booking.location_booking}</Text>
+                        <View style={{ backgroundColor: '#effbf9', padding: 20, marginTop: 20 }}>
+                        <View style={styles.row}>
+                                <Text style={styles.label}>{"Cơ sở y tế:"}</Text>
                                 <Text style={styles.text}>{booking.hospital.hospital.name}</Text>
                             </View>
+                            <View style={styles.row}>
+                                <Text style={styles.label}>{"Địa chỉ:"}</Text>
+                                <Text style={styles.text}>{booking.hospital.hospital.address}</Text>
+                            </View>
+                            
+                            {/* Ho ten <View style={styles.row}>
+                                <Text style={styles.label}>{constants.booking.name}</Text>
+                                <Text style={styles.text}>{(booking.profile.medicalRecords.name || "").toUpperCase()}</Text>
+                            </View> */}
+                          
                             <View style={styles.row}>
                                 <Text style={styles.label}>{constants.booking.time}</Text>
                                 <Text style={styles.text}>{bookingTime.format("hh:mm") + " " + (bookingTime.format("HH") < 12 ? "AM" : "PM") + " - " + bookingTime.format("thu, dd/MM/yyyy")}</Text>
                             </View>
                             {service && service.length ?
                                 <View style={styles.row}>
-                                    <Text style={styles.label}>{"Dịch vụ"}</Text>
+                                    <Text style={styles.label}>{"Dịch vụ:"}</Text>
                                     <View style={{ flex: 1, marginLeft: 10 }}>
                                         {service.map((item, index) => {
                                             return <View key={index} style={{ flex: 1 }}>
@@ -87,7 +106,7 @@ class CreateBookingSuccessScreen extends Component {
                                 </View> : null
                             }
                             <View style={styles.row}>
-                                <Text style={styles.label}>{constants.booking.payment_method}</Text>
+                                <Text style={styles.label}>{constants.booking.payment_method}:</Text>
                                 <Text style={styles.text}>{this.getPaymentMethod(booking)}</Text>
                             </View>
                             {
@@ -99,7 +118,6 @@ class CreateBookingSuccessScreen extends Component {
                                         }, 0).formatPrice()}đ</Text>
                                     </View> : null
                             }
-
                             {/* {
                                 booking.payment == 4 && <View>
                                     <View style={styles.row}>
@@ -113,24 +131,9 @@ class CreateBookingSuccessScreen extends Component {
                                 </View>
                             } */}
                         </View>
-                        <View style={styles.view2}>
-                            <View style={styles.col}>
-                                <Text style={styles.col1}>{constants.booking.code}</Text>
-                                <TouchableOpacity onPress={this.onQrClick} style={{ alignItems: 'center', marginTop: 10 }}>
-                                    <QRCode
-                                        style={{ alignSelf: 'center', backgroundColor: '#000' }}
-                                        value={booking.book.codeBooking}
-                                        size={100}
-                                        fgColor='white' />
-                                </TouchableOpacity>
-                                <Text style={{ textAlign: 'center', color: '#4a4a4a', marginVertical: 5 }}>{constants.booking.code_booking} {booking.book.codeBooking}</Text>
-
-                            </View>
-                        </View>
                         <View style={styles.view1}>
                             <Text style={styles.text2}>{constants.booking.booking_send}</Text>
                         </View>
-
                     </ScrollView>
                     <TouchableOpacity style={styles.btn}><Text style={styles.btntext} onPress={() => {
                         this.props.navigation.pop();
@@ -149,7 +152,6 @@ class CreateBookingSuccessScreen extends Component {
                     <QRCode
                         value={booking.book.codeBooking}
                         size={250}
-
                         fgColor='white' />
                 </Modal>
             </ActivityPanel>
