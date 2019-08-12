@@ -20,16 +20,18 @@ class MenuProfile extends React.Component {
       });
     }
   }
-  onProfileClick = () => {
-    NavigationService.navigate('listProfileUser')
-  }
+  
   componentWillReceiveProps(nextProps) {
     if (nextProps) {
+      console.log(nextProps)
       this.setState({
-        avatar: this.props.userApp.currentUser.avatar
+        avatar: nextProps.userApp.currentUser.avatar
       })
     }
   }
+  onProfileClick = () => {
+    NavigationService.navigate('listProfileUser')
+}
   render() {
     if (!this.props.userApp.isLogin)
       return null;

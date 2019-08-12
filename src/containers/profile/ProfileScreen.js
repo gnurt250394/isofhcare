@@ -20,15 +20,14 @@ class ProfileScreen extends Component {
     constructor(props) {
         super(props);
         let data = this.props.navigation.state.params && this.props.navigation.state.params.data ? this.props.navigation.state.params.data.medicalRecords : ''
-        let imgAvtLocal = this.props.navigation.state.params && this.props.navigation.state.params.data && this.props.navigation.state.params.data.avatar ? this.props.navigation.state.params.data.avatar : ''
-        let imgLocal = this.props.navigation.state.params && this.props.navigation.state.params.data && this.props.navigation.state.params.data.cover ? this.props.navigation.state.params.data.cover.absoluteUrl() : ''
+        let imgAvtLocal = this.props.navigation.state.params && this.props.navigation.state.params.data.medicalRecords.avatar ? this.props.navigation.state.params.data.medicalRecords.avatar : ''
         this.state = {
             value: 1,
             refresh: false,
             isLoading: false,
             data: data,
             imgAvtLocal: imgAvtLocal,
-            imgLocal: imgLocal
+
         };
     }
     onSelectFeature = (value) => {
@@ -122,14 +121,12 @@ class ProfileScreen extends Component {
                         profileProvider
                             .updateAvatar(id, data)
                             .then(res => {
-                                console.log(res, 'fssdas')
                                 if (res.code == 0) {
-                                    if (this.state.data.type == 'ORIGINAL') {
-                                        let user = res.data.user;
+                                    if (this.state.data.status == 1) {
                                         let current = this.props.userApp.currentUser;
-                                        user.bookingNumberHospital = current.bookingNumberHospital;
-                                        user.bookingStatus = current.bookingStatus;
-                                        this.props.dispatch(redux.userLogin(user));
+                                        current.avatar = res.data.medicalRecords.avatar
+                                        this.props.dispatch(redux.userLogin(current));
+                                        console.log(current, 'new user')
                                     }
 
                                     this.setState({
@@ -218,13 +215,10 @@ class ProfileScreen extends Component {
     }
     render() {
         const icSupport = require("@images/new/user.png");
-        const source = this.state.imgLocal
-            ? { uri: this.state.imgLocal.absoluteUrl() }
-            : icSupport
-
         const sourceAvt = this.state.imgAvtLocal
             ? { uri: this.state.imgAvtLocal.absoluteUrl() }
             : icSupport
+        console.log(sourceAvt, 'sourceAvtsourceAvtsourceAvt');
         return (
             <ActivityPanel
                 icBack={require('@images/new/left_arrow_white.png')}
@@ -237,7 +231,7 @@ class ProfileScreen extends Component {
                 menuButton={<TouchableOpacity onPress={this.onEdit}><ScaledImage style={{ tintColor: '#fff', marginRight: 10 }} height={20} source={require('@images/new/profile/ic_edit.png')}></ScaledImage></TouchableOpacity>}
 
             >
-                <ScrollView style={{ flex: 1 }} >
+                <ScrollView  style={{ flex: 1 }} >
                     <View style={styles.viewBaner}>
                         <ScaledImage
                             // resizeMode="cover"
@@ -281,7 +275,7 @@ class ProfileScreen extends Component {
                         </View>
                     </View>
                     <View style={styles.btnFeature}>
-                        <View><ScaledImage height={20} style={{ tintColor: '#fff',marginLeft:-28 }} source={require('@images/new/profile/ic_account.png')}></ScaledImage></View>
+                        <View><ScaledImage height={20} style={{ tintColor: '#fff', marginLeft: -28 }} source={require('@images/new/profile/ic_account.png')}></ScaledImage></View>
                         <Text style={[styles.txFeature]} >Thông tin cá nhân</Text>
                         <View></View>
                     </View>
@@ -342,7 +336,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     scaledImage: { position: "absolute", top: 5, right: 5 },
-    btnFeature: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#4BBA7B', justifyContent: 'space-around', borderTopLeftRadius:50,borderBottomLeftRadius:50, borderColor: '#4BBA7B', paddingVertical: 10,marginLeft:10, marginTop: 30,paddingHorizontal:0 },
+    btnFeature: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#4BBA7B', justifyContent: 'space-around', borderTopLeftRadius: 50, borderBottomLeftRadius: 50, borderColor: '#4BBA7B', paddingVertical: 10, marginLeft: 10, marginTop: 30, paddingHorizontal: 0 },
     imageStyle: { borderRadius: 60, borderWidth: 2, borderColor: '#Fff' },
     customImagePlace: {
         width: 120,
@@ -365,10 +359,10 @@ const styles = StyleSheet.create({
     containerInfo: {
         padding: 10,
         flex: 1,
-        borderRadius:20,
-        borderWidth:1,
-        borderColor:'#01C295',
-        margin:10
+        borderRadius: 20,
+        borderWidth: 1,
+        borderColor: '#01C295',
+        margin: 10
     },
     viewItem: {
         flexDirection: 'row',
