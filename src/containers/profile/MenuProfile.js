@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import NavigationService from "@navigators/NavigationService";
 import DeviceInfo from 'react-native-device-info';
 import ActivityPanel from "@components/ActivityPanel";
+import ImageLoad from "mainam-react-native-image-loader";
 
 class MenuProfile extends React.Component {
   constructor(props) {
@@ -35,6 +36,10 @@ class MenuProfile extends React.Component {
   render() {
     if (!this.props.userApp.isLogin)
       return null;
+      const icSupport = require("@images/new/user.png");
+      const source = this.state.avatar
+        ? { uri: this.state.avatar.absoluteUrl().absoluteUrl() }
+        : icSupport;
     return (
       <ActivityPanel
         statusbarBackgroundColor="#4BBA7B"
@@ -44,7 +49,33 @@ class MenuProfile extends React.Component {
         <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
           {this.props.userApp.isLogin ? (
             <View style={styles.viewHeader}>
-              <ScaledImage style={styles.avatarStyle} uri={this.state.avatar.absoluteUrl()} height={60} ></ScaledImage>
+              {/* <ScaledImage style={styles.avatarStyle} uri={this.state.avatar.absoluteUrl()} height={60} ></ScaledImage> */}
+              <View
+          style={{marginLeft:15}}
+          
+        >
+          <ImageLoad
+            resizeMode="cover"
+            imageStyle={styles.imageStyle}
+            borderRadius={30}
+            customImagePlaceholderDefaultStyle={styles.customImagePlace}
+            placeholderSource={icSupport}
+            style={styles.styleImgLoad}
+            resizeMode="cover"
+            loadingStyle={{ size: "small", color: "gray" }}
+            source={source}
+            defaultImage={() => {
+              return (
+                <ScaledImage
+                  resizeMode="cover"
+                  source={icSupport}
+                  width={60}
+                  style={styles.styleImgLoad}
+                />
+              );
+            }}
+          />
+        </View>
               <View style={styles.viewInfo}>
                 <Text style={styles.txHello}>Xin Chào</Text>
                 <Text style={styles.txName}>{this.props.userApp.currentUser.name && this.props.userApp.currentUser.name}</Text>
@@ -96,7 +127,8 @@ const styles = StyleSheet.create({
     borderColor: '#fff',
   },
   txVersion: { marginLeft: 30, marginTop: 10 },
-
+  imageStyle:{ borderRadius: 30, borderWidth: 1, borderColor: '#fff' },
+  styleImgLoad:{ width: 60, height: 60, alignSelf: "center" },
   viewInfo: {
     marginLeft: 10
   },
