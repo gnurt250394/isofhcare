@@ -51,7 +51,7 @@ class MenuProfile extends React.Component {
             <View style={styles.viewHeader}>
               {/* <ScaledImage style={styles.avatarStyle} uri={this.state.avatar.absoluteUrl()} height={60} ></ScaledImage> */}
               <View
-          style={{ position: "relative" }}
+          style={{marginLeft:15}}
           
         >
           <ImageLoad
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     borderColor: '#fff',
   },
   txVersion: { marginLeft: 30, marginTop: 10 },
-  imageStyle:{ borderRadius: 30, borderWidth: 0.5, borderColor: '#fff' },
+  imageStyle:{ borderRadius: 30, borderWidth: 1, borderColor: '#fff' },
   styleImgLoad:{ width: 60, height: 60, alignSelf: "center" },
   viewInfo: {
     marginLeft: 10
