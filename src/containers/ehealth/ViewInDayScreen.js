@@ -161,7 +161,7 @@ class ViewInDateScreen extends Component {
                         <Card style={styles.card}>
                             <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={this.viewCheckupResult}>
                                 {/* <View style={styles.viewCheckupResult}></View> */}
-                                <ScaledImage height={50} source={require('@images/new/ehealth/ic_preclinical.png')}></ScaledImage>
+                                <ScaledImage height={50} source={require('@images/new/ehealth/img_checkup.png')}></ScaledImage>
                                 <View style={styles.viewNote}>
                                     <Text style={styles.txNote}>{note}</Text>
                                 </View>
@@ -189,7 +189,7 @@ class ViewInDateScreen extends Component {
                         <Text style={styles.txResultEhealth}>{'KẾT QUẢ CHẨN ĐOÁN HÌNH ẢNH'}</Text>
                         <Card style={styles.card}>
                             <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={this.viewDiagnosticResult}>
-                                <ScaledImage height={50} source={require('@images/new/ehealth/img_ct_scan.png')}></ScaledImage>
+                                <ScaledImage height={50} source={require('@images/new/ehealth/ic_ct_catlop.png')}></ScaledImage>
                                 <View style={styles.viewTx}>
                                     <Text style={styles.txNoteBlue}>{note}</Text>
                                 </View>
@@ -215,7 +215,7 @@ class ViewInDateScreen extends Component {
                 return null;
             // }
             return <TouchableOpacity style={styles.card} onPress={this.viewMoney}>
-                <ScaledImage height={50} source={require('@images/new/ehealth/ic_preclinical.png')}></ScaledImage>
+                <ScaledImage height={50} source={require('@images/new/ehealth/img_checkup.png')}></ScaledImage>
                 <View style={styles.viewTxMoney}>
                     <Text style={styles.txResultEhealth}>{constants.ehealth.money}</Text>
                     <Text style={styles.txMoney}>{money.formatPrice() + " đ"}</Text>
@@ -286,7 +286,7 @@ class ViewInDateScreen extends Component {
                     <View style={{ marginTop: 10 }}>
                         <Text style={styles.txResultEhealth}>{'THUỐC'}</Text>
                         <Card style={styles.card}>
-                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={this.viewSurgeryResult}>
+                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={this.viewMedicine}>
                                 <ScaledImage height={50} source={require('@images/new/ehealth/img_drug2.png')}></ScaledImage>
                                 <View style={styles.viewDrug}>
                                     <Text style={styles.txMedicine}>{note}</Text>

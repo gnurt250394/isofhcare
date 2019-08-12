@@ -51,7 +51,7 @@ class HistorySharingScreen extends Component {
     getImage(item) {
         switch (item.serviceType) {
             case "CheckUp":
-                return require("@images/new/ehealth/ic_kqk_cls.png");
+                return require("@images/new/ehealth/img_checkup.png");
             case "MedicalTest":
                 return require("@images/new/ehealth/ic_xet_nghiem.png");
             case "MR":
@@ -59,13 +59,36 @@ class HistorySharingScreen extends Component {
             case "CT":
                 return require("@images/new/ehealth/ic_ct_catlop.png");
             case "US":
-                return require("@images/new/ehealth/img_noisoi.png");
+                return require("@images/new/ehealth/img_sieuam.png");
             case "ED":
                 return require("@images/new/ehealth/img_endoscopic.png");
             case "XQ":
                 return require("@images/new/ehealth/img_xquang.png");
             default:
                 return require("@images/new/ehealth/img_orther_service.png");
+
+        }
+
+    }
+
+    getImageSmall(item) {
+        switch (item.serviceType) {
+            case "CheckUp":
+                return require("@images/new/ehealth/img_checkup_small.png");
+            case "MedicalTest":
+                return require("@images/new/ehealth/ic_xet_nghiem_small.png");
+            case "MR":
+                return require("@images/new/ehealth/img_conghuongtu_small.png");
+            case "CT":
+                return require("@images/new/ehealth/ic_ct_catlop_small.png");
+            case "US":
+                return require("@images/new/ehealth/img_sieuam_small.png");
+            case "ED":
+                return require("@images/new/ehealth/img_endoscopic_small.png");
+            case "XQ":
+                return require("@images/new/ehealth/img_xquang_small.png");
+            default:
+                return require("@images/new/ehealth/img_orther_service_small.png");
 
         }
 
@@ -118,7 +141,10 @@ class HistorySharingScreen extends Component {
                         </View>
                         <View style={styles.viewDetails}>
                             <Text style={{ color: '#479AE3', marginVertical: 10, fontSize: 14 }}>{this.getTime(item.timeGoIn)}</Text>
-                            <Text style={{ fontSize: 14, minHeight: 20, fontWeight: 'bold' }}>{item.serviceName}</Text>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                <ScaledImage style={styles.img} height={20} width={20} source={this.getImageSmall(item)}></ScaledImage>
+                                <Text style={{ marginLeft: 5, fontSize: 14, minHeight: 20, fontWeight: 'bold' }}>{item.serviceName}</Text>
+                            </View>
                         </View>
                     </TouchableOpacity>
                 </Card>
