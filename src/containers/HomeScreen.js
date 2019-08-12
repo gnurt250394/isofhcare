@@ -76,8 +76,9 @@ class HomeScreen extends Component {
     this.props.navigation.pop();
     return true;
   };
-  componentWillReceiveProps(newProps) {
-    let navigate = newProps.navigation.getParam('navigate', undefined);
+  
+  componentWillReceiveProps(nextProps) {
+    let navigate = nextProps.navigation.getParam('navigate', undefined);
     if (this.state.navigate != navigate) {
       this.setState({ navigate }, () => {
         if (navigate) {
