@@ -43,7 +43,7 @@ class ConfirmBookingScreen extends Component {
             images,
             paymentMethod: 2,
             contact,
-            booking
+            booking,
         }
     }
     componentDidMount() {
@@ -404,7 +404,7 @@ class ConfirmBookingScreen extends Component {
                 <ScrollView keyboardShouldPersistTaps='handled' style={styles.container}>
                     <View style={{ paddingHorizontal: 20, marginVertical: 20 }}>
                         <Text style={{ fontWeight: 'bold', color: '#000' }}>{'HỒ SƠ: ' + this.state.profile.medicalRecords.name.toUpperCase()}</Text>
-                        <Text style={{ color: 'gray' }}>SĐT: {this.props.userApp.currentUser.phone}</Text>
+                        <Text style={{ color: 'gray' }}>SĐT: {this.state.profile.medicalRecords.phone}</Text>
                     </View>
                     <View style={styles.viewDetails}>
                         <View style={{ paddingHorizontal: 20, marginTop: 20, flexDirection: 'row', alignItems: 'center' }}>
