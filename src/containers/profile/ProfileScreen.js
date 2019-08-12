@@ -73,7 +73,7 @@ class ProfileScreen extends Component {
                                 this.setState({
                                     imgAvtLocal: images
                                 });
-                                this.onUpdateAvt()
+                                this.onUpdateAvt2(images)
                             }
                             if (e) {
                                 this.setState({
@@ -88,23 +88,23 @@ class ProfileScreen extends Component {
                 snackbar.show(constants.msg.app.not_internet, "danger");
             });
     }
-    onUpdateAvt = () => {
-        if (this.state.imageAvt)
-            this.setState({ isLoading: true }, () => {
-                imageProvider.upload(this.state.imageAvt.path, (s, e) => {
-                    if (s.success && s.data.code == 0) {
-                        let image = s.data.data.images[0].thumbnail;
-                        this.onUpdateAvt2(image);
-                    }
-                    if (e) {
-                        this.setState({
-                            isLoading: false
-                        });
-                    }
-                });
-            });
-        else this.onUpdateAvt2("");
-    };
+    // onUpdateAvt = () => {
+    //     if (this.state.imageAvt)
+    //         this.setState({ isLoading: true }, () => {
+    //             imageProvider.upload(this.state.imageAvt.path, (s, e) => {
+    //                 if (s.success && s.data.code == 0) {
+    //                     let image = s.data.data.images[0].thumbnail;
+    //                     this.onUpdateAvt2(image);
+    //                 }
+    //                 if (e) {
+    //                     this.setState({
+    //                         isLoading: false
+    //                     });
+    //                 }
+    //             });
+    //         });
+    //     else this.onUpdateAvt2("");
+    // };
     onUpdateAvt2(image) {
         connectionUtils
             .isConnected()
