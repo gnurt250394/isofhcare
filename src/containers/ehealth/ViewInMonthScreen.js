@@ -535,7 +535,7 @@ class ListProfileScreen extends Component {
                                 onDayLongPress={(day) => { console.log('selected day', day) }}
                                 monthFormat={'MMMM - yyyy'}
                                 onMonthChange={(month) => {
-                                    this.setState({ latestTime: new Date(month.dateString) }, () => {
+                                    this.setState({ latestTime: new Date(month.dateString), toggelMonthPicker: false, dateSelected: null }, () => {
                                         this.selectDate();
                                     })
                                 }}
