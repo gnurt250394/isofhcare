@@ -42,6 +42,23 @@ class ViewInDateScreen extends Component {
         this.renderDayInMonth(month, year, date);
     }
 
+    selectDate = (latestTime) => {
+        let histories = this.state.histories;
+        let start = latestTime.format("yyyy-MM") + "-01";
+        let end = latestTime.format("yyyy-MM") + "-31";
+        let keys = [];
+        for (var key in histories) {
+            if (key >= start && key <= end) {
+                keys.push(key);
+            }
+        }
+        keys.sort((itema, itemb) => { return itema < itemb ? 1 : -1 });
+        if (keys.length) {
+            return new Date(keys[0]);
+        }
+        return null;
+    }
+
     renderDayInMonth(month, year, _dateSelected) {
         let dateSelected = null;
         let index = -1;
@@ -346,7 +363,13 @@ class ViewInDateScreen extends Component {
                 statusbarBackgroundColor="#4BBA7B"
                 actionbarStyle={styles.actionbarStyle}
                 titleStyle={styles.titleStyle}
-                isLoading={this.state.isLoading}>
+                isLoading={this.state.isLoading}
+
+            // menuButton={this.state.dateSelected ?
+            //     <TouchableOpacity style={styles.btnShare} onPress={this.showShare}><Icon name='share' style={{ color: '#FFF' }} /></TouchableOpacity> :
+            //     <TouchableOpacity style={[styles.btnShare, { width: 50 }]} onPress={this.showShare}></TouchableOpacity>}
+
+            >
                 <View style={styles.container2}>
                     <TouchableOpacity onPress={this.changeMonth}>
                         <Text style={{ padding: 20, fontWeight: 'bold', fontSize: 15 }}>{this.state.dateSelected ? "Tháng " + this.state.dateSelected.format("MM/yyyy") : ""}</Text>
@@ -380,34 +403,35 @@ class ViewInDateScreen extends Component {
                         </ScrollView>
                     </View>
                     {
-                        this.state.hasResult && <ScrollView style={styles.renderData}
-                            showsVerticalScrollIndicator={false}
-                        >
-                            {
-                                this.renderCheckupResult()
-                            }
-                            {
-                                this.renderMedicalTest()
-                            }
-                            {
-                                this.renderDiagnosticResult()
-                            }
-                            {
-                                this.renderSurgeryResult()
-                            }
-                            {
-                                this.renderMedicine()
-                            }
-                            {
-                                this.renderMoney()
-                            }
+                        this.state.hasResult ?
+                            <ScrollView style={styles.renderData}
+                                showsVerticalScrollIndicator={false}
+                            >
+                                {
+                                    this.renderCheckupResult()
+                                }
+                                {
+                                    this.renderMedicalTest()
+                                }
+                                {
+                                    this.renderDiagnosticResult()
+                                }
+                                {
+                                    this.renderSurgeryResult()
+                                }
+                                {
+                                    this.renderMedicine()
+                                }
+                                {
+                                    this.renderMoney()
+                                }
 
-                            <View style={styles.viewSpaceBottom}></View>
-
-
-                        </ScrollView>
+                                <View style={styles.viewSpaceBottom}></View>
+                            </ScrollView> :
+                            !this.state.isLoading && <Text>Không có lịch khám nào trong tháng này</Text>
                     }
-                    {this.state.hasResult &&
+                    {
+                        this.state.hasResult &&
                         <TouchableOpacity style={styles.btnInfo} onPress={() => {
                             this.props.navigation.navigate("viewDetail", { result: this.state.result, resultDetail: this.state.resultDetail })
                         }}>
@@ -419,10 +443,10 @@ class ViewInDateScreen extends Component {
                     mode={'month'}
                     isVisible={this.state.toggelMonthPicker}
                     onConfirm={newDate => {
-                        this.setState({ toggelMonthPicker: false, result: null }, () => {
+                        this.setState({ toggelMonthPicker: false, result: null, hasResult: null, dateSelected: null }, () => {
                             let month = newDate.format("MM");
                             let year = newDate.format("yyyy");
-                            this.renderDayInMonth(month, year, newDate);
+                            this.renderDayInMonth(month, year, this.selectDate(newDate) || newDate);
                         });
                     }}
                     onCancel={() => {
