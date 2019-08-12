@@ -12,7 +12,6 @@ import ImageLoad from 'mainam-react-native-image-loader';
 import ehealthProvider from '@data-access/ehealth-provider';
 import historyProvider from '@data-access/history-provider';
 import realmModel from '@models/realm-models';
-import connectionUtils from '@utils/connection-utils';
 import Modal from '@components/modal';
 class SearchProfileScreen extends Component {
     constructor(props) {
@@ -141,34 +140,16 @@ class SearchProfileScreen extends Component {
 
     }
     selectProfile = (item) => {
-        console.log(this.props);
-        connectionUtils.isConnected().then(s => {
-            let userId = this.props.userApp.currentUser.id
-            let type = constants.key.history.user_ehealth
-            let name = ''
-            let dataId = item.user.id
-            let data = item
-            let hospitalId = this.state.dataPatient.hospitalId
-            let patientHistoryId = this.state.dataPatient.patientHistoryId
-            const { USER_EHEALTH_HISTORY } = realmModel;
-            let lastDate = this.props.navigation.state.params && this.props.navigation.state.params.lastDate ? this.props.navigation.state.params.lastDate : ''
-            historyProvider.addHistory(userId, USER_EHEALTH_HISTORY, name, dataId, JSON.stringify(data))
-            ehealthProvider.shareWithProfile(dataId, hospitalId, patientHistoryId).then(res => {
-                if (res.code == 0 && res.data.status == 1) {
-                    this.props.navigation.navigate('viewInMonth', { lastDate: lastDate, status: 7 })
-                } else {
-                    this.props.navigation.navigate('viewInMonth', { lastDate: lastDate, status: 8 })
+        let userId = this.props.userApp.currentUser.id;
+        let dataId = item.user.id;
+        const { USER_EHEALTH_HISTORY } = realmModel;
+        historyProvider.addHistory(userId, USER_EHEALTH_HISTORY, name, dataId, JSON.stringify(item))
 
-                }
-
-            }).catch(err => {
-                this.props.navigation.navigate('viewInMonth', { lastDate: lastDate, status: 8 })
-
-                console.log(err)
-            })
-        }).catch(e => {
-            snackbar.show(constants.msg.app.not_internet, "danger");
-        })
+        let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
+        if (callback) {
+            callback(item);
+            this.props.navigation.pop();
+        }
     }
     renderSearchButton() {
         return (
