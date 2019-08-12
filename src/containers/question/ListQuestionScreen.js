@@ -67,7 +67,7 @@ class ListQuestionScreen extends Component {
                 } : {
                         borderBottomWidth: 0
                     }]}
-                titleStyle={[this.props.userApp.isLogin ? { marginRight: 0 } : {}]}
+                titleStyle={[this.props.userApp.isLogin ? { marginRight: 0 } : {}, { color: '#FFF' }]}
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#02C39A"
             >

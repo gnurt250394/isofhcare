@@ -289,7 +289,7 @@ class NotificationScreen extends Component {
             });
           }}
         >
-          <ScaleImage source={require("@images/new/ic_remove.png")} width={20} />
+          <ScaleImage source={require("@images/new/ic_remove.png")} width={20} style={{tintColor:'#FFF'}} />
         </TouchableOpacity>
       </View >
     );
@@ -413,6 +413,8 @@ class NotificationScreen extends Component {
         isLoading={this.state.isLoading}
         iosBarStyle={'light-content'}
         statusbarBackgroundColor="#4BBA7B"
+        actionbarStyle={styles.actionbarStyle}
+        titleStyle={styles.titleStyle}
         hideBackButton={true}
 
       >
@@ -456,6 +458,14 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     width: 50,
     height: 50
+  },
+  actionbarStyle: {
+    backgroundColor: '#4BBA7B',
+    borderBottomWidth: 0
+  },
+  titleStyle: {
+    color: '#fff',
+    marginLeft: 65
   }
 })
 

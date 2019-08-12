@@ -13,6 +13,7 @@ import AboutScreen from "@containers/utility/AboutScreen";
 
 
 import HomeScreen from "@containers/HomeScreen";
+import AccountScreen from "@containers/account/AccountScreen";
 import NotificationScreen from "@containers/notification/NotificationScreen";
 import MenuProfileScreen from '@containers/profile/MenuProfile';
 
@@ -166,16 +167,16 @@ const TabNavigatorComponent = createBottomTabNavigator(
       }
     },
     accountTab: {
-      screen: MenuProfileScreen,
+      screen: AccountScreen,
       navigationOptions: {
-        tabBarOnPress: ({ navigation, defaultHandler }) => {
-          if (userProvider.isLogin) {
-            defaultHandler();
-          } else {
-            NavigationService.navigate("login");
-          }
-        },
-        tabBarLabel: "Video",
+        // tabBarOnPress: ({ navigation, defaultHandler }) => {
+        //   if (userProvider.isLogin) {
+        //     defaultHandler();
+        //   } else {
+        //     NavigationService.navigate("login");
+        //   }
+        // },
+        tabBarLabel: "Account",
         tabBarIcon: ({ tintColor }) => <ScaledImage height={22} source={require('@images/new/home/ic_account.png')} style={{ tintColor: tintColor }} />,
       }
     },
@@ -210,19 +211,19 @@ const TabNavigatorComponent = createBottomTabNavigator(
 )
 
 
-const DrawerNav = createDrawerNavigator({
-  home: TabNavigatorComponent
-}, {
-    contentComponent: CustomDrawer,
-    initialRouteName: 'home',
-    drawerPosition: 'left',
-    contentOptions: {
-      inactiveTintColor: '#000',
-    },
-    drawerOpenRoute: 'DrawerOpen',
-    drawerCloseRoute: 'DrawerClose'
-  }
-);
+// const DrawerNav = createDrawerNavigator({
+//   home: TabNavigatorComponent
+// }, {
+//     // contentComponent: CustomDrawer,
+//     // initialRouteName: 'home',
+//     // drawerPosition: 'left',
+//     // contentOptions: {
+//     //   inactiveTintColor: '#000',
+//     // },
+//     // drawerOpenRoute: 'DrawerOpen',
+//     // drawerCloseRoute: 'DrawerClose'
+//   }
+// );
 
 const RootNavigator = createStackNavigator(
   {
@@ -246,7 +247,7 @@ const RootNavigator = createStackNavigator(
     sendConfirmProfile:{screen:SendConfirmProfileScreen},
     // listProfileUser: { screen: ListProfileScreen },
     //
-    home: DrawerNav,
+    home: TabNavigatorComponent,
     ehealth: EHealthNavigator,
     viewDetailEhealth: { screen: ViewEhealthDetailScreen },
     login: { screen: LoginScreen },
