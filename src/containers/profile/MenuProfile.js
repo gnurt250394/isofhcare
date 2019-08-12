@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import NavigationService from "@navigators/NavigationService";
 import DeviceInfo from 'react-native-device-info';
 import ActivityPanel from "@components/ActivityPanel";
+import ImageLoad from "mainam-react-native-image-loader";
 
 class MenuProfile extends React.Component {
   constructor(props) {
