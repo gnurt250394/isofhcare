@@ -141,7 +141,8 @@ class SearchProfileScreen extends Component {
     }
     selectProfile = (item) => {
         let userId = this.props.userApp.currentUser.id;
-        let dataId = item.user.id;
+        let dataId = item.user.id; 
+        let name = ''
         const { USER_EHEALTH_HISTORY } = realmModel;
         historyProvider.addHistory(userId, USER_EHEALTH_HISTORY, name, dataId, JSON.stringify(item))
 
