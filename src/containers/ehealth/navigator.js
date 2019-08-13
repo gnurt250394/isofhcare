@@ -26,7 +26,6 @@ const EHealthNavigator = createStackNavigator({
     ehealthSharing: { screen: EhealthSharingScreen },
     viewInMonth: { screen: ViewInMonthScreen },
     viewInDay: { screen: ViewInDayScreen },
-    viewDetail: { screen: ViewEhealthDetailScreen },
     viewCheckupResult: { screen: ViewCheckupResultScreen },
     viewDiagnosticResult: { screen: ViewDiagnosticResultScreen },
     viewMedicalTestResult: { screen: ViewMedicalTestResultScreen },

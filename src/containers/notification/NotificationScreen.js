@@ -21,7 +21,6 @@ import firebase from 'react-native-firebase';
 import redux from '@redux-store'
 import ImageLoad from 'mainam-react-native-image-loader';
 import bookingProvider from '@data-access/booking-provider';
-import hospitalProvider from '@data-access/hospital-provider';
 import NavigationService from "@navigators/NavigationService";
 
 import clientUtils from '@utils/client-utils';
@@ -157,50 +156,27 @@ class NotificationScreen extends Component {
   }
   detailsEhealth = (data, user) => {
     this.setState({ isLoading: true }, () => {
-      bookingProvider.detailPatientHistory(data.patientHistoryId, data.hospitalId, data.id).then(s => {
-        switch (s.code) {
-          case 0:
-            let resultDetail = null;
-            let result = null;
-            if (s.data && s.data.data) {
-              if (s.data.data.resultDetail) {
-                this.setState({
-                  isLoading: false
-                })
-                try {
-                  resultDetail = JSON.parse(s.data.data.resultDetail);
-                } catch (error) {
-
-                }
-              }
-              if (s.data.data.result) {
-                try {
-                  result = JSON.parse(s.data.data.result);
-                  hospitalProvider.getDetailsById(data.hospitalId).then(res => {
-                    this.setState({
-                      isLoading: false
-                    })
-                    NavigationService.navigate('viewDetailEhealth', { result: result, resultDetail: resultDetail, hospitalName: res.data.hospital.name, user: data })
-                  })
-                } catch (error) {
-                  this.setState({
-                    isLoading: false
-                  })
-                  console.log(error)
-                  snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
-                }
-              }
-            }
-            break;
-          default:
-            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
-            break
-        }
-      }).catch(e => {
+      notificationProvider.openEhealth(data.patientHistoryId, data.hospitalId, data.id).then(s => {
         this.setState({ isLoading: false }, () => {
-
+          let { hasResult, result, resultDetail, hospital, data } = s;
+          if (hasResult && data) {
+            if (hospital && result) {
+              this.props.dispatch({ type: constants.action.action_select_patient_group_ehealth, value: data });
+              this.props.dispatch({ type: constants.action.action_select_hospital_ehealth, value: hospital });
+              NavigationService.navigate('viewDetailEhealth', { result, resultDetail });
+            }
+          } else {
+            snackbar.show('Hồ sơ này chưa có kết quả', 'danger')
+          }
         })
-      })
+      }).catch(e => {
+        this.setState({
+          isLoading: false
+        }, () => {
+          console.log(e)
+          snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+        })
+      });
     })
   }
   openTicket(id) {

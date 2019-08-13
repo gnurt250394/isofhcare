@@ -169,42 +169,28 @@ class PushController extends Component {
     openDetailsEhealth(data) {
         if (!this.props.userApp.isLogin)
             return;
-        bookingProvider.detailPatientHistory(data.patientHistoryId, data.hospitalId,data.id).then(s => {
-            this.setState({ isLoading: false }, () => {
-                switch (s.code) {
-                    case 0:
-                        let resultDetail = null;
-                        let result = null;
-                        if (s.data && s.data.data) {
-                            if (s.data.data.resultDetail) {
-                                try {
-                                    resultDetail = JSON.parse(s.data.data.resultDetail);
-                                } catch (error) {
-
-                                }
-                            }
-                            if (s.data.data.result) {
-                                try {
-                                    result = JSON.parse(s.data.data.result);
-                                    hospitalProvider.getDetailsById(data.hospitalId).then(res => {
-                                        NavigationService.navigate('viewDetailEhealth', { result: result, resultDetail: resultDetail, hospitalName: res.data.hospital.name, user: data })
-                                    })
-                                } catch (error) {
-                                    snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
-                                }
-                            }
+        this.setState({ isLoading: true }, () => {
+            notificationProvider.openEhealth(data.patientHistoryId, data.hospitalId, data.id).then(s => {
+                this.setState({ isLoading: false }, () => {
+                    let { hasResult, result, resultDetail, hospital, data } = s;
+                    if (hasResult && data) {
+                        if (hospital && result) {
+                            this.props.dispatch({ type: constants.action.action_select_patient_group_ehealth, value: data });
+                            this.props.dispatch({ type: constants.action.action_select_hospital_ehealth, value: hospital });
+                            NavigationService.navigate('viewDetailEhealth', { result, resultDetail });
                         }
-
-                        break;
-                    default:
-                        snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
-                        break
-                }
-            })
-        }).catch(e => {
-            this.setState({ isLoading: false }, () => {
-
-            })
+                    } else {
+                        snackbar.show('Hồ sơ này chưa có kết quả', 'danger')
+                    }
+                })
+            }).catch(e => {
+                this.setState({
+                    isLoading: false
+                }, () => {
+                    console.log(e)
+                    snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                })
+            });
         })
     }
     openTicket(id) {

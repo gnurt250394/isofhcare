@@ -42,7 +42,7 @@ class HistoryEhealthScreen extends Component {
                     if (!result.hasResult)
                         snackbar.show(constants.msg.ehealth.not_result_ehealth_in_day, "danger");
                     else {
-                        this.props.navigation.navigate("viewDetail", { result: result.result, resultDetail: result.resultDetail })
+                        this.props.navigation.navigate("viewDetailEhealth", { result: result.result, resultDetail: result.resultDetail })
                     }
                 });
             });
