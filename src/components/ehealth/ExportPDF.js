@@ -831,7 +831,12 @@ class ExportPDF extends Component {
                         // alert("file://" + filePath.filePath);
                         if (options.print) {
                             // await RNPrint.print({ filePath: 'https://graduateland.com/api/v2/users/jesper/cv' })
-                            await RNPrint.print({ filePath: filePath.filePath })
+                            // debugger;
+                            try {
+                                await RNPrint.print({ filePath: filePath.filePath })
+                            } catch (error) {
+                                await RNPrint.print({ filePath: "file://" + filePath.filePath })
+                            }
                         } else {
                             Share.open({
                                 title: constants.share,
@@ -839,7 +844,6 @@ class ExportPDF extends Component {
                             });
                         }
                     } catch (error) {
-                        alert(JSON.stringify(error));
                         console.log(error);
                     }
                 });
