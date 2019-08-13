@@ -514,7 +514,8 @@ module.exports = {
       create: isofhcare_service + "booking/create",
       confirmPay: isofhcare_service + "booking/confirm-pay",
       detail: isofhcare_service + "booking/get-detail",
-      getByAuthor: isofhcare_service + "booking/get-by-author"
+      getByAuthor: isofhcare_service + "booking/get-by-author",
+      get_list_share_user: isofhcare_service + "booking/list-share-user"
     },
     question: {
       create: isofhcare_service + "post/create",
