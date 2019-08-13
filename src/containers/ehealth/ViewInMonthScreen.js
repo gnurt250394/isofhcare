@@ -199,8 +199,9 @@ class ListProfileScreen extends Component {
                 })
 
                 medicineTime && medicineTime.setMinutes(medicineTime.getMinutes())
-                let dataAlarm = this.state.dobAlarm
-                dataAlarm.setMinutes(dataAlarm.getMinutes());
+                let dataAlarm = this.state.dobAlarm;
+                if (dataAlarm.getMinutes)
+                    dataAlarm.setMinutes(dataAlarm.getMinutes());
                 res.data.data.isMedicineTime &&
                     this.onAlarm(dataAlarm.getTime(), patientHistoryId, hospitalId)
             }).catch(err => {
@@ -306,8 +307,9 @@ class ListProfileScreen extends Component {
                     ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
                         let time = this.state.dobAlarm.format('HH')
                         let minutes = this.state.dobAlarm.format('mm')
-                        let dataAlarm = this.state.dobAlarm
-                        dataAlarm.setMinutes(dataAlarm.getMinutes());
+                        let dataAlarm = this.state.dobAlarm;
+                        if (dataAlarm.getMinutes)
+                            dataAlarm.setMinutes(dataAlarm.getMinutes());
                         this.onAlarm(dataAlarm.getTime(), patientHistoryId, hospitalId)
                     }).catch(err => {
                         console.log(err);
@@ -498,7 +500,7 @@ class ListProfileScreen extends Component {
                                 monthFormat={'MMMM - yyyy'}
                                 onMonthChange={(month) => {
                                     if (!this.state.latestTime || !this.state.latestTime.format("MMyyyy") != month.month + month.year) {
-                                        this.setState({ latestTime: new Date(month.dateString), toggelMonthPicker: false}, () => {
+                                        this.setState({ latestTime: new Date(month.dateString), toggelMonthPicker: false }, () => {
                                             this.selectDate();
                                         })
                                     }
@@ -568,7 +570,7 @@ class ListProfileScreen extends Component {
                     mode={'month'}
                     isVisible={this.state.toggelMonthPicker}
                     onConfirm={newDate => {
-                        this.setState({ latestTime: newDate, toggelMonthPicker: false}, () => {
+                        this.setState({ latestTime: newDate, toggelMonthPicker: false }, () => {
                             this.selectDate();
                         })
                     }}
