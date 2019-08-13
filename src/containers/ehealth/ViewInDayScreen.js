@@ -172,7 +172,28 @@ class ViewInDateScreen extends Component {
         }
         return null;
     }
-
+    renderX() {
+        debugger;
+        if (this.state.result && this.state.result.ListResultCheckup && this.state.result.ListResultCheckup.length) {
+            let item = this.state.result.ListResultCheckup[this.state.result.ListResultCheckup.length - 1];
+            let note = item.DoctorAdviceTxt;
+            if (!note)
+                return null;
+            return (
+                <View style={{ marginTop: 10 }}>
+                    <Text style={styles.txResultEhealth}>{'LỜI DẶN BÁC SĨ'}</Text>
+                    <Card style={styles.card}>
+                        <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={this.viewCheckupResult}>
+                            <View style={styles.viewNote}>
+                                <Text style={styles.txNote}>{note}</Text>
+                            </View>
+                            <ScaledImage height={20} source={require('@images/new/ehealth/ic_right_arrow.png')}></ScaledImage>
+                        </TouchableOpacity>
+                    </Card>
+                </View>)
+        }
+        return null;
+    }
     renderDiagnosticResult() {
         if (this.state.result && this.state.result.ListDiagnostic && this.state.result.ListDiagnostic.length) {
             let item = this.state.result.ListDiagnostic[this.state.result.ListDiagnostic.length - 1];
@@ -424,6 +445,9 @@ class ViewInDateScreen extends Component {
                                 }
                                 {
                                     this.renderMoney()
+                                }
+                                {
+                                    this.renderX()
                                 }
 
                                 <View style={styles.viewSpaceBottom}></View>
