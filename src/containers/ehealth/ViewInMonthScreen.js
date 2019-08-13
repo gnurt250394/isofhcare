@@ -174,9 +174,7 @@ class ListProfileScreen extends Component {
 
 
     onDayPress(day) {
-
         if (this.state.histories[day.dateString]) {
-            console.log(day.dateString, 'sdasd')
             let histories = JSON.parse(JSON.stringify(this.state.histories));
             if (this.state.dateSelected && histories[this.state.dateSelected]) {
                 delete histories[this.state.dateSelected].selected;
@@ -499,9 +497,11 @@ class ListProfileScreen extends Component {
                                 onDayLongPress={(day) => { console.log('selected day', day) }}
                                 monthFormat={'MMMM - yyyy'}
                                 onMonthChange={(month) => {
-                                    this.setState({ latestTime: new Date(month.dateString), toggelMonthPicker: false, dateSelected: null }, () => {
-                                        this.selectDate();
-                                    })
+                                    if (!this.state.latestTime || !this.state.latestTime.format("MMyyyy") != month.month + month.year) {
+                                        this.setState({ latestTime: new Date(month.dateString), toggelMonthPicker: false}, () => {
+                                            this.selectDate();
+                                        })
+                                    }
                                 }}
                                 // hideArrows={true}
                                 hideExtraDays={true}
@@ -568,7 +568,7 @@ class ListProfileScreen extends Component {
                     mode={'month'}
                     isVisible={this.state.toggelMonthPicker}
                     onConfirm={newDate => {
-                        this.setState({ latestTime: newDate, toggelMonthPicker: false, dateSelected: null }, () => {
+                        this.setState({ latestTime: newDate, toggelMonthPicker: false}, () => {
                             this.selectDate();
                         })
                     }}
