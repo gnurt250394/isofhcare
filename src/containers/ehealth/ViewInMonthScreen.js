@@ -409,9 +409,6 @@ class ListProfileScreen extends Component {
             nextProps.navigation.state.params.status = null
         }
     }
-    onShareEhealthWithProfile() {
-        this.props.navigation.navigate('searchProfile', { dataPatient: this.state.dataPatient, lastDate: this.state.lastDate })
-    }
     exportPdf() {
         this.setState({
             isLoading: true
