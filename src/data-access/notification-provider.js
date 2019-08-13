@@ -1,11 +1,30 @@
 import client from '@utils/client-utils';
 import string from 'mainam-react-native-string-utils';
 import constants from '@resources/strings';
-import { Platform } from 'react-native';
-import firebase from 'react-native-firebase';
-
-
+import resultUtils from '@containers/ehealth/utils/result-utils';
+import hospitalProvider from '@data-access/hospital-provider';
 module.exports = {
+    openEhealth(patientHistoryId, hospitalId, id) {
+        return new Promise((resolve, reject) => {
+            resultUtils.getDetail(patientHistoryId, hospitalId, id).then(s => {
+                let hasResult = s.hasResult;
+                let data = s.data;
+                let result = s.result;
+                let resultDetail = s.resultDetail;
+                let hospital = null;
+                hospitalProvider.getDetailsById(hospitalId).then(s => {
+                    if (s.code == 0) {
+                        hospital = s.data;
+                    }
+                    resolve({ hasResult, result, resultDetail, hospital, data });
+                }).catch(e => {
+                    reject(e);
+                })
+            }).catch(e => {
+                reject(e);
+            })
+        });
+    },
     search(page, size) {
         return new Promise((resolve, reject) => {
             client.requestApi("get", `${constants.api.notification.search}?page=${page}&size=${size}`, {}, (s, e) => {

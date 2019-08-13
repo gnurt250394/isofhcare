@@ -57,7 +57,6 @@ class ListProfileScreen extends Component {
                 histories[dateSelected].selectedColor = '#27ae60';
             }
         }
-        console.log(histories, 'historieshistories')
         this.state = {
             refreshing: false,
             data: [],
@@ -99,47 +98,12 @@ class ListProfileScreen extends Component {
         if (focus) {
             focus.selected = true;
         }
-
-        console.log(obj, 'objobjobjobjobjobj')
         return obj;
     }
 
     componentDidMount() {
-        // firebase.messaging().hasPermission()
-        //     .then(enabled => {
-        //         if (!enabled) {
-        //             firebase.messaging().requestPermission()
-        //                 .then(() => {
-        //                     // User has authorised  
-        //                 })
-        //                 .catch(error => {
-        //                     // User has rejected permissions  
-        //                 });
-        //         }
-        //     });
-        // this.notificationListener = firebase.notifications().onNotification(this.onNotification.bind(this));
         this.onGetDetails()
-
     }
-    // onNotification() {
-    //     if (!this.props.userApp.isLogin)
-    //         return;
-    //     console.log(notification);
-    //     if (!notification || notification.show_in_foreground)
-    //         return;
-    //     let body = "";
-    //     let title = "";
-    //     if (Platform.OS == 'ios') {
-    //         body = notification.title;
-    //         title = "iSofhCare";
-    //     } else {
-    //         title = notification.title;
-    //         body = "";
-    //     }
-    //     console.log(object)
-    //     firebase.notifications().displayNotification(notification)
-
-    // }
     onAlarm = (fire_date, patientHistoryId, hospitalId) => {
         if (fire_date < new Date().getTime())
             return;
