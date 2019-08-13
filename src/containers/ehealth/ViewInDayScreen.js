@@ -173,7 +173,6 @@ class ViewInDateScreen extends Component {
         return null;
     }
     renderX() {
-        debugger;
         if (this.state.result && this.state.result.ListResultCheckup && this.state.result.ListResultCheckup.length) {
             let item = this.state.result.ListResultCheckup[this.state.result.ListResultCheckup.length - 1];
             let note = item.DoctorAdviceTxt;
