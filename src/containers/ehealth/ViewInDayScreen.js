@@ -456,7 +456,7 @@ class ViewInDateScreen extends Component {
                     {
                         this.state.hasResult &&
                         <TouchableOpacity style={styles.btnInfo} onPress={() => {
-                            this.props.navigation.navigate("viewDetail", { result: this.state.result, resultDetail: this.state.resultDetail })
+                            this.props.navigation.navigate("viewDetailEhealth", { result: this.state.result, resultDetail: this.state.resultDetail })
                         }}>
                             <Text style={styles.txBtnInfo}>{constants.ehealth.full_result}</Text>
                         </TouchableOpacity>
