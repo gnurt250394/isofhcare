@@ -51,7 +51,7 @@ class LoginSocial extends Component {
         props = this.props;
         GoogleSignin.signOut();
         GoogleSignin.signIn().then(this.googleSignInCallBack.bind(this)).catch((err) => {
-            snackbar.show(constants.msg.user.canot_get_user_info_in_account_google);
+            snackbar.show(constants.msg.user.canot_get_user_info_in_account_google,"danger");
         }).done();
     }
 
