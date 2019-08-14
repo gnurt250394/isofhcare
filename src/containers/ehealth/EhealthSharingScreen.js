@@ -115,7 +115,7 @@ class EhealthSharingScreen extends Component {
             snackbar.show("Vui lòng chọn ngày kết thúc", "danger");
             return;
         }
-        if (this.state.toDate< this.state.fromDate) {
+        if (this.state.toDate < this.state.fromDate) {
             snackbar.show("Ngày bắt đầu phải lớn hơn ngày kết thúc", "danger");
             return;
         }
@@ -252,7 +252,7 @@ class EhealthSharingScreen extends Component {
                     isVisible={this.state.toggelDateTimePickerVisible}
                     onConfirm={newDate => {
                         if (this.state.pickFromDate) {
-                            if (this.state.mode == 'date') {
+                            if (this.state.mode == 'date' && this.state.fromDate) {
                                 newDate.setHours(this.state.fromDate.getHours())
                                 newDate.setMinutes(this.state.fromDate.getMinutes())
                                 newDate.setSeconds(this.state.fromDate.getSeconds())
@@ -270,7 +270,7 @@ class EhealthSharingScreen extends Component {
                                     }
                                 });
                         } else {
-                            if (this.state.mode == 'date') {
+                            if (this.state.mode == 'date' && this.state.toDate) {
                                 newDate.setHours(this.state.toDate.getHours())
                                 newDate.setMinutes(this.state.toDate.getMinutes())
                                 newDate.setSeconds(this.state.toDate.getSeconds())
