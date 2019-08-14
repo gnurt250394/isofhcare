@@ -334,7 +334,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     scaledImage: { position: "absolute", top: 5, right: 5 },
-    btnFeature: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#4BBA7B', justifyContent: 'space-around', borderTopLeftRadius: 50, borderBottomLeftRadius: 50, borderColor: '#4BBA7B', paddingVertical: 10, marginLeft: 10, marginTop: 30, paddingHorizontal: 0 },
+    btnFeature: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#4BBA7B', justifyContent: 'space-around', borderTopLeftRadius: 50, borderBottomLeftRadius: 50, borderColor: '#4BBA7B', paddingVertical: 10, marginLeft: 10, marginTop: 30, paddingHorizontal: 0,flex:1 },
     imageStyle: { borderRadius: 60, borderWidth: 2, borderColor: '#Fff' },
     customImagePlace: {
         width: 120,
@@ -398,9 +398,7 @@ const styles = StyleSheet.create({
     },
 
     txFeature: {
-        textAlign: 'center',
         color: '#FFF',
-        fontSize: 18
     },
     txBtn: { color: '#fff' },
 

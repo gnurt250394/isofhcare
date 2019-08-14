@@ -791,7 +791,8 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         paddingHorizontal: 10,
         borderRadius: 5,
-        marginHorizontal: 10
+        marginHorizontal: 10,
+        minHeight:41
 
     },
     container: {
