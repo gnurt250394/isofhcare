@@ -10,7 +10,7 @@ const FBSDK = require('react-native-fbsdk');
 import redux from '@redux-store';
 import { Toast } from 'native-base'
 import RNAccountKit from 'react-native-facebook-account-kit';
-
+import { LoginButton, AccessToken } from 'react-native-fbsdk';
 const {
     LoginManager,
     GraphRequest,
@@ -51,7 +51,7 @@ class LoginSocial extends Component {
         props = this.props;
         GoogleSignin.signOut();
         GoogleSignin.signIn().then(this.googleSignInCallBack.bind(this)).catch((err) => {
-            snackbar.show(constants.msg.user.canot_get_user_info_in_account_google);
+            snackbar.show(constants.msg.user.canot_get_user_info_in_account_google,"danger");
         }).done();
     }
 
@@ -151,7 +151,7 @@ class LoginSocial extends Component {
 
         }
         props = this.props;
-        LoginManager.logInWithReadPermissions(['public_profile']).then(
+        LoginManager.logInWithPermissions(['public_profile']).then(
             this.facebookSignInSuccessCallBack.bind(this),
             this.facebookSignInErrorCallBack.bind(this)
         );
@@ -159,6 +159,33 @@ class LoginSocial extends Component {
     render() {
         return (
             <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 10 }}>
+                {/* <LoginButton
+                    onLoginFinished={
+                        (error, result) => {
+                            debugger;
+                            if (error) {
+                                console.log("login has error: " + result.error);
+                            } else if (result.isCancelled) {
+                                console.log("login is cancelled.");
+                            } else {
+                                const infoRequest = new GraphRequest('/me', {
+                                    parameters: {
+                                        'fields': {
+                                            'string': 'email,name,picture,id'
+                                        }
+                                    }
+                                }, this.facebookGraphRequestCallBack.bind(this));
+                                new GraphRequestManager().addRequest(infoRequest).start();
+                                // this.facebookSignInSuccessCallBack
+                                // AccessToken.getCurrentAccessToken().then(
+                                //     (data) => {
+                                //         console.log(data.accessToken.toString())
+                                //     }
+                                // )
+                            }
+                        }
+                    }
+                    onLogoutFinished={() => console.log("logout.")} /> */}
                 <TouchableOpacity style={{ flexDirection: 'row', marginRight: 50 }} onPress={this.handleSigninFacebook.bind(this)}>
                     <ScaleImage source={require("@images/new/facebook.png")} height={20} style={{ marginRight: 10 }} />
                     <Text>Facebook</Text>

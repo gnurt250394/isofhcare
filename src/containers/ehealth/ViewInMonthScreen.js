@@ -564,7 +564,7 @@ class ListProfileScreen extends Component {
                     <View style={styles.viewSpaceBottom}></View>
                 </ScrollView>
                 <DateTimePicker
-                    mode={'month'}
+                    mode={'date'}
                     isVisible={this.state.toggelMonthPicker}
                     onConfirm={newDate => {
                         this.setState({ latestTime: newDate, toggelMonthPicker: false }, () => {
