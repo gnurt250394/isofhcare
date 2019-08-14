@@ -24,7 +24,7 @@ import TotalMoney from '@components/ehealth/TotalMoney';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 
-class ViewCheckupResultScreen extends Component {
+class ViewSurgeryResultScreen extends Component {
     constructor(props) {
         super(props)
         console.log(this.props, 'view in ViewEhealthDetailScreen')
@@ -97,4 +97,4 @@ function mapStateToProps(state) {
         ehealth: state.ehealth
     };
 }
-export default connect(mapStateToProps)(ViewCheckupResultScreen);
+export default connect(mapStateToProps)(ViewSurgeryResultScreen);
