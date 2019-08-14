@@ -19,15 +19,13 @@ import { connect } from "react-redux";
 class ProfileScreen extends Component {
     constructor(props) {
         super(props);
-        let data = this.props.navigation.state.params && this.props.navigation.state.params.data ? this.props.navigation.state.params.data.medicalRecords : ''
-        let imgAvtLocal = this.props.navigation.state.params && this.props.navigation.state.params.data.medicalRecords.avatar ? this.props.navigation.state.params.data.medicalRecords.avatar : ''
+        let data = (this.props.navigation.state.params && this.props.navigation.state.params.data) ? this.props.navigation.state.params.data.medicalRecords || {} : {}
         this.state = {
             value: 1,
             refresh: false,
             isLoading: false,
             data: data,
-            imgAvtLocal: imgAvtLocal,
-
+            imgAvtLocal: data.avatar || '',
         };
     }
     onSelectFeature = (value) => {
