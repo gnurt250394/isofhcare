@@ -21,8 +21,8 @@ class EhealthSharingScreen extends Component {
         let history = this.props.navigation.state.params ? this.props.navigation.state.params.history || {} : {}
         this.state = {
             history: history,
-            fromDate: new Date(),
-            toDate: new Date()
+            // fromDate: new Date(),
+            // toDate: new Date()
         };
     }
 
@@ -115,6 +115,10 @@ class EhealthSharingScreen extends Component {
             snackbar.show("Vui lòng chọn ngày kết thúc", "danger");
             return;
         }
+        if (this.state.toDate< this.state.fromDate) {
+            snackbar.show("Ngày bắt đầu phải lớn hơn ngày kết thúc", "danger");
+            return;
+        }
         connectionUtils.isConnected().then(s => {
             let hospitalId = this.props.ehealth.hospital.hospital.id
             let patientHistoryId = this.state.history.patientHistoryId;
@@ -174,6 +178,7 @@ class EhealthSharingScreen extends Component {
                             <TouchableOpacity onPress={() => {
                                 this.setState({
                                     pickFromDate: true,
+                                    mode: "date",
                                     toggelDateTimePickerVisible: true
                                 })
                             }} style={{ flexDirection: 'row', alignItems: 'center', margin: 10 }}>
@@ -187,7 +192,7 @@ class EhealthSharingScreen extends Component {
                                             Chọn ngày
                                 </Text> :
                                         <Text style={{ fontWeight: 'bold', color: 'red', textAlign: 'right', flex: 1 }}>
-                                            {this.state.fromDate.format("dd/MM/yyyy")}
+                                            {this.state.fromDate.format("dd/MM/yyyy HH:mm")}
                                         </Text>
                                 }
                             </TouchableOpacity>
@@ -195,6 +200,7 @@ class EhealthSharingScreen extends Component {
                             <TouchableOpacity onPress={() => {
                                 this.setState({
                                     pickFromDate: false,
+                                    mode: "date",
                                     toggelDateTimePickerVisible: true
                                 })
                             }} style={{ flexDirection: 'row', alignItems: 'center', margin: 10 }}>
@@ -208,7 +214,7 @@ class EhealthSharingScreen extends Component {
                                             Chọn ngày
                                     </Text> :
                                         <Text style={{ fontWeight: 'bold', color: 'red', textAlign: 'right', flex: 1 }}>
-                                            {this.state.toDate.format("dd/MM/yyyy")}
+                                            {this.state.toDate.format("dd/MM/yyyy HH:mm")}
                                         </Text>
 
                                 }
@@ -242,21 +248,44 @@ class EhealthSharingScreen extends Component {
 
                 </ScrollView>
                 <DateTimePicker
+                    mode={this.state.mode}
                     isVisible={this.state.toggelDateTimePickerVisible}
                     onConfirm={newDate => {
                         if (this.state.pickFromDate) {
+                            if (this.state.mode == 'date') {
+                                newDate.setHours(this.state.fromDate.getHours())
+                                newDate.setMinutes(this.state.fromDate.getMinutes())
+                                newDate.setSeconds(this.state.fromDate.getSeconds())
+                            }
                             this.setState(
                                 {
                                     toggelDateTimePickerVisible: false,
                                     fromDate: newDate
                                 }, () => {
+                                    if (this.state.mode == "date") {
+                                        this.setState({
+                                            mode: 'time',
+                                            toggelDateTimePickerVisible: true
+                                        })
+                                    }
                                 });
                         } else {
+                            if (this.state.mode == 'date') {
+                                newDate.setHours(this.state.toDate.getHours())
+                                newDate.setMinutes(this.state.toDate.getMinutes())
+                                newDate.setSeconds(this.state.toDate.getSeconds())
+                            }
                             this.setState(
                                 {
                                     toggelDateTimePickerVisible: false,
                                     toDate: newDate
                                 }, () => {
+                                    if (this.state.mode == "date") {
+                                        this.setState({
+                                            mode: 'time',
+                                            toggelDateTimePickerVisible: true
+                                        })
+                                    }
                                 });
                         }
                     }}
@@ -273,6 +302,7 @@ class EhealthSharingScreen extends Component {
                     }
                     date={(this.state.pickFromDate ? this.state.fromDate : this.state.toDate) || new Date()}
                 />
+
             </ActivityPanel >
 
         );
