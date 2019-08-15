@@ -207,7 +207,7 @@ class CreateProfileScreen extends Component {
     selectDistrict = (districts) => {
         let districtsError = districts ? "" : this.state.districtsError;
         if (!districts || !this.state.districts || districts.id != this.state.districts.id) {
-            this.setState({ districts, districtsError, zone: [] })
+            this.setState({ districts, districtsError, zone: null}) 
         } else {
             this.setState({ districts, districtsError });
         }
@@ -225,7 +225,7 @@ class CreateProfileScreen extends Component {
     selectprovinces(provinces) {
         let provincesError = provinces ? "" : this.state.provincesError;
         if (!provinces || !this.state.provinces || provinces.id != this.state.provinces.id) {
-            this.setState({ provinces, provincesError, districts: [], zone: [] })
+            this.setState({ provinces, provincesError, districts: null, zone: null })
         } else {
             this.setState({ provinces, provincesError });
         }
