@@ -287,13 +287,18 @@ class ViewInDateScreen extends Component {
                 item = this.state.result.ListMedicine[this.state.result.ListMedicine.length - 1];
             }
             if (!item) {
-                if (this.state.result.ListResultCheckup && this.state.result.ListResultCheckup.length) {
-                    let item2 = this.state.result.ListResultCheckup[this.state.result.ListResultCheckup.length - 1];
-                    if (item2.ListMedicine && item2.ListMedicine.length)
-                        item = item2.ListMedicine[item2.ListMedicine.length - 1];
-                    if (!item)
-                        if (item2.ListExternalMedicine && item2.ListExternalMedicine.length)
-                            item = item2.ListExternalMedicine[item2.ListExternalMedicine.length - 1];
+                if (this.state.result.ListResultCheckup) {
+                    for (let i = this.state.result.ListResultCheckup.length - 1; i >= 0; i--) {
+                        let item2 = this.state.result.ListResultCheckup[i];
+                        if (item2.ListMedicine && item2.ListMedicine.length)
+                            item = item2.ListMedicine[item2.ListMedicine.length - 1];
+                        if (!item)
+                            if (item2.ListExternalMedicine && item2.ListExternalMedicine.length)
+                                item = item2.ListExternalMedicine[item2.ListExternalMedicine.length - 1];
+
+                        if (item)
+                            break;
+                    }
 
                 }
             }
