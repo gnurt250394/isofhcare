@@ -38,7 +38,7 @@ class MenuProfile extends React.Component {
       return null;
       const icSupport = require("@images/new/user.png");
       const source = this.state.avatar
-        ? { uri: this.state.avatar.absoluteUrl().absoluteUrl() }
+        ? { uri: this.state.avatar.absoluteUrl() }
         : icSupport;
     return (
       <ActivityPanel
@@ -68,7 +68,7 @@ class MenuProfile extends React.Component {
               return (
                 <ScaledImage
                   resizeMode="cover"
-                  source={icSupport}
+                  source={source}
                   width={60}
                   style={styles.styleImgLoad}
                 />
