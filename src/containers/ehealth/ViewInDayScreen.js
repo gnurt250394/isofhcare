@@ -467,7 +467,7 @@ class ViewInDateScreen extends Component {
                     }
                 </View>
                 <DateTimePicker
-                    mode={'month'}
+                    mode={'date'}
                     isVisible={this.state.toggelMonthPicker}
                     onConfirm={newDate => {
                         this.setState({ toggelMonthPicker: false, result: null, hasResult: null, dateSelected: null }, () => {
