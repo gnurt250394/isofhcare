@@ -32,8 +32,8 @@ module.exports = {
       }
     });
   },
-  detailPatientHistory(patientHistoryId, hospitalId, id) {
-    let id2 = id ? `&id=${id}` : ''
+  detailPatientHistory(patientHistoryId, hospitalId, shareId) {
+    let id2 = shareId ? `&shareId=${shareId}` : ''
     return new Promise((resolve, reject) => {
       client.requestApi(
         "get",
