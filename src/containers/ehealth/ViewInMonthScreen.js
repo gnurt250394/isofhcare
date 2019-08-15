@@ -74,7 +74,8 @@ class ListProfileScreen extends Component {
             switchValue: false,
             dataPatient: '',
             dateSelected,
-            isVisible: false
+            isVisible: false,
+            hasResult: true
 
         }
 
@@ -174,11 +175,11 @@ class ListProfileScreen extends Component {
 
 
     onDayPress(day) {
-        let histories = JSON.parse(JSON.stringify(this.state.histories));
-        if (this.state.dateSelected && histories[this.state.dateSelected]) {
-            delete histories[this.state.dateSelected].selected;
-        }
         if (day && this.state.histories[day.dateString]) {
+            let histories = JSON.parse(JSON.stringify(this.state.histories));
+            if (this.state.dateSelected && histories[this.state.dateSelected]) {
+                delete histories[this.state.dateSelected].selected;
+            }
             histories[day.dateString].selected = true;
             histories[day.dateString].selectedColor = '#27ae60'
             let patientHistoryId = histories[day.dateString].history.patientHistoryId
@@ -209,6 +210,7 @@ class ListProfileScreen extends Component {
             })
 
             this.setState({
+                hasResult: true,
                 dateSelected: day.dateString,
                 histories: histories,
             }, () => {
@@ -216,10 +218,9 @@ class ListProfileScreen extends Component {
             });
         } else {
             this.setState({
-                dateSelected: null,
-            }, () => {
-                snackbar.show(this.renderTextError(1), "danger");
+                hasResult: false,
             });
+            snackbar.show(this.renderTextError(1), "danger");
         }
     }
     onPressTime = () => {
@@ -456,6 +457,7 @@ class ListProfileScreen extends Component {
         }
     }
     selectDate = () => {
+        debugger;
         let histories = this.state.histories;
         let latestTime = this.state.latestTime || new Date();
         let start = latestTime.format("yyyy-MM") + "-01";
@@ -524,7 +526,7 @@ class ListProfileScreen extends Component {
                             </TouchableOpacity>
                         </View>
                         {
-                            this.state.dateSelected &&
+                            (this.state.dateSelected && this.state.hasResult) &&
                             <React.Fragment>
                                 <TouchableOpacity onPress={this.viewResult.bind(this)} style={[styles.viewBtn, { backgroundColor: '#25B05F' }]}>
                                     <Text style={styles.txCheckResult}>{constants.ehealth.checkupResult}</Text>
