@@ -172,7 +172,7 @@ class ViewInDateScreen extends Component {
         }
         return null;
     }
-    renderX() {
+    renderDoctorAdviceTxt() {
         if (this.state.result && this.state.result.ListResultCheckup && this.state.result.ListResultCheckup.length) {
             let item = this.state.result.ListResultCheckup[this.state.result.ListResultCheckup.length - 1];
             let note = item.DoctorAdviceTxt;
@@ -320,7 +320,6 @@ class ViewInDateScreen extends Component {
         return null;
     }
     renderMedicalTest() {
-
         if (this.state.result
             && ((this.state.result.ListResulHoaSinh && this.state.result.ListResulHoaSinh.length)
                 || (this.state.result.ListResulHuyetHoc && this.state.result.ListResulHuyetHoc.length)
@@ -335,7 +334,7 @@ class ViewInDateScreen extends Component {
                     arr = this.state.result.ListResulHuyetHoc;
             if (!arr.length)
                 if (this.state.result.ListResulViSinh && this.state.result.ListResulViSinh.length)
-                    arr = this.state.result.ListResulblnh;
+                    arr = this.state.result.ListResulViSinh;
             if (!arr.length)
                 if (this.state.result.ListResulOther && this.state.result.ListResulOther.length)
                     arr = this.state.result.ListResulOther;
@@ -446,7 +445,7 @@ class ViewInDateScreen extends Component {
                                     this.renderMoney()
                                 }
                                 {
-                                    this.renderX()
+                                    this.renderDoctorAdviceTxt()
                                 }
 
                                 <View style={styles.viewSpaceBottom}></View>
