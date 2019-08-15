@@ -576,8 +576,7 @@ class EditProfileScreen extends Component {
                                 </Field>
                                 <Text style={[styles.errorStyle]}>{this.state.phoneError}</Text></Field>) : (<Field></Field>)}
 
-                            <Field style={[styles.mucdichkham, { flexDirection: 'row' }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
-                                <Field style={{ flex: 1 }}>
+                                <Field style={[styles.mucdichkham, { marginTop: 10 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
                                     <Text style={styles.mdk}>{'Địa chỉ'}</Text>
                                     <Field>
                                         <TextField
@@ -586,7 +585,7 @@ class EditProfileScreen extends Component {
                                             editable={false}
                                             multiline={true}
                                             inputStyle={[
-                                                styles.ktq, { minHeight: 80 }
+                                                styles.ktq, { minHeight: 41 }
                                             ]}
                                             errorStyle={styles.errorStyle}
                                             value={this.state.provinces && this.state.provinces.countryCode ? this.state.provinces.countryCode : 'Tỉnh/Thành phố'}
@@ -599,7 +598,7 @@ class EditProfileScreen extends Component {
 
                                 </Field>
 
-                                <Field style={{ flex: 1 }}>
+                                <Field style={[styles.mucdichkham, { marginTop: 10 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
                                     <Text style={styles.mdk}></Text>
                                     <Field>
                                         <TextField
@@ -614,7 +613,7 @@ class EditProfileScreen extends Component {
                                             // }}
                                             multiline={true}
                                             inputStyle={[
-                                                styles.ktq, { minHeight: 80 }
+                                                styles.ktq, { minHeight: 41 }
                                             ]}
                                             onPress={this.onSelectDistrict}
                                             editable={false}
@@ -627,7 +626,7 @@ class EditProfileScreen extends Component {
                                         />
                                     </Field>
                                 </Field>
-                                <Field style={{ flex: 1 }}>
+                                <Field style={[styles.mucdichkham, { marginTop: 10 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
                                     <Text style={styles.mdk}></Text>
                                     <Field>
                                         <TextField
@@ -636,7 +635,7 @@ class EditProfileScreen extends Component {
                                             onPress={this.onSelectZone}
                                             editable={false}
                                             inputStyle={[
-                                                styles.ktq, { minHeight: 80 }
+                                                styles.ktq, { minHeight: 41 }
                                             ]}
                                             errorStyle={styles.errorStyle}
                                             value={this.state.zone && this.state.zone.name ? this.state.zone.name : 'Xã phường'}
@@ -647,7 +646,6 @@ class EditProfileScreen extends Component {
                                         />
                                     </Field>
                                 </Field>
-                            </Field>
                             <Field style={[styles.mucdichkham, this.state.type == "FAMILY" ? {} : { marginTop: 10 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
                                 <Text style={styles.mdk}></Text>
                                 <TextField
