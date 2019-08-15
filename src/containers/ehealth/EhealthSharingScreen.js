@@ -123,7 +123,7 @@ class EhealthSharingScreen extends Component {
             let hospitalId = this.props.ehealth.hospital.hospital.id
             let patientHistoryId = this.state.history.patientHistoryId;
             this.setState({ isLoading: true }, () => {
-                ehealthProvider.shareWithProfile(this.state.user.id, hospitalId, patientHistoryId, this.state.fromDate.format("yyyy-MM-dd" + " 00:00:00"), this.state.toDate.format("yyyy-MM-dd") + " 23:59:59").then(res => {
+                ehealthProvider.shareWithProfile(this.state.user.id, hospitalId, patientHistoryId, this.state.fromDate.format("yyyy-MM-dd HH:mm:ss"), this.state.toDate.format("yyyy-MM-dd HH:mm:ss")).then(res => {
                     this.setState({ isLoading: false }, () => {
                         if (res.code == 0 && res.data.status == 1) {
                             snackbar.show("Chia sẻ thành công", "success");
