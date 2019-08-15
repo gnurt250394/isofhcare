@@ -4,9 +4,9 @@ import constants from '@resources/strings';
 import resultUtils from '@containers/ehealth/utils/result-utils';
 import hospitalProvider from '@data-access/hospital-provider';
 module.exports = {
-    openEhealth(patientHistoryId, hospitalId, shareId) {
+    openEhealth(patientHistoryId, hospitalId, id, shareId) {
         return new Promise((resolve, reject) => {
-            resultUtils.getDetail(patientHistoryId, hospitalId, shareId).then(s => {
+            resultUtils.getDetail(patientHistoryId, hospitalId, id, shareId).then(s => {
                 let hasResult = s.hasResult;
                 let data = s.data;
                 let result = s.result;

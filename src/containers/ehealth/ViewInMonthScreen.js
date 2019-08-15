@@ -457,7 +457,6 @@ class ListProfileScreen extends Component {
         }
     }
     selectDate = () => {
-        debugger;
         let histories = this.state.histories;
         let latestTime = this.state.latestTime || new Date();
         let start = latestTime.format("yyyy-MM") + "-01";

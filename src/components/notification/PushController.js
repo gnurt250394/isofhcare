@@ -170,19 +170,44 @@ class PushController extends Component {
         if (!this.props.userApp.isLogin)
             return;
         this.setState({ isLoading: true }, () => {
-            notificationProvider.openEhealth(data.patientHistoryId, data.hospitalId, data.id).then(s => {
-                this.setState({ isLoading: false }, () => {
-                    let { hasResult, result, resultDetail, hospital, data } = s;
-                    if (hasResult && data) {
-                        if (hospital && result) {
-                            this.props.dispatch({ type: constants.action.action_select_patient_group_ehealth, value: data });
-                            this.props.dispatch({ type: constants.action.action_select_hospital_ehealth, value: hospital });
-                            NavigationService.navigate('viewDetailEhealth', { result, resultDetail });
-                        }
-                    } else {
-                        snackbar.show('Hồ sơ này chưa có kết quả', 'danger')
-                    }
-                })
+            bookingProvider.detailPatientHistory(data.patientHistoryId, data.hospitalId, data.id, data.shareId).then(s => {
+                switch (s.code) {
+                    case 0:
+                        notificationProvider.openEhealth(data.patientHistoryId, data.hospitalId, data.id, data.shareId).then(s => {
+                            this.setState({ isLoading: false }, () => {
+                                let { hasResult, result, resultDetail, hospital, data } = s;
+                                if (hasResult && data) {
+                                    if (hospital && result) {
+                                        this.props.dispatch({ type: constants.action.action_select_patient_group_ehealth, value: data });
+                                        this.props.dispatch({ type: constants.action.action_select_hospital_ehealth, value: hospital });
+                                        NavigationService.navigate('viewDetailEhealth', { result, resultDetail });
+                                    }
+                                } else {
+                                    snackbar.show('Hồ sơ này chưa có kết quả', 'danger')
+                                }
+                            })
+                        }).catch(e => {
+                            this.setState({
+                                isLoading: false
+                            }, () => {
+                                console.log(e)
+                                snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                            })
+                        });
+                        break;
+                    case 9:
+                        this.setState({
+                            isLoading: false
+                        }, () => {
+                            snackbar.show('Y bạ chưa xác định', 'danger')
+                        })
+                    case 7:
+                        this.setState({
+                            isLoading: false
+                        }, () => {
+                            snackbar.show('Hồ sơ chia sẻ đến bạn đã hết thời gian', 'danger')
+                        })
+                }
             }).catch(e => {
                 this.setState({
                     isLoading: false
