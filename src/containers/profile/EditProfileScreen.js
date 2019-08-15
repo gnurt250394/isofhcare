@@ -203,7 +203,7 @@ class EditProfileScreen extends Component {
     selectDistrict = (districts) => {
         let districtsError = districts ? "" : this.state.districtsError;
         if (!districts || !this.state.districts || districts.id != this.state.districts.id) {
-            this.setState({ districts, districtsError })
+            this.setState({ districts, districtsError, zone: null })
         } else {
             this.setState({ districts, districtsError });
         }
@@ -221,7 +221,7 @@ class EditProfileScreen extends Component {
     selectprovinces(provinces) {
         let provincesError = provinces ? "" : this.state.provincesError;
         if (!provinces || !this.state.provinces || provinces.id != this.state.provinces.id) {
-            this.setState({ provinces, provincesError })
+            this.setState({ provinces, provincesError, districts: null, zone: null  })
         } else {
             this.setState({ provinces, provincesError });
         }
@@ -290,7 +290,7 @@ class EditProfileScreen extends Component {
                         data.phone = this.state.phone
                         data.provinceId = this.state.provinces ? this.state.provinces.id.toString() : null
                         data.districtId = this.state.districts ? this.state.districts.id.toString() : null
-                        data.zoneId = this.state.zone ? this.state.zone.id.toString() : null
+                        data.zoneId = this.state.zone  ? this.state.zone.id.toString() : null
                         data.village = this.state.address ? this.state.address : null
                         data.relationshipType = this.state.relationshipType
                         profileProvider.updateProfile(id, data).then(res => {
@@ -589,7 +589,7 @@ class EditProfileScreen extends Component {
                                                 styles.ktq, { minHeight: 80 }
                                             ]}
                                             errorStyle={styles.errorStyle}
-                                            value={this.state.provinces && this.state.provinces.name ? this.state.provinces.name : 'Tỉnh/Thành phố'}
+                                            value={this.state.provinces && this.state.provinces.countryCode ? this.state.provinces.countryCode : 'Tỉnh/Thành phố'}
                                             autoCapitalize={"none"}
                                             returnKeyType={"next"}
                                             // underlineColorAndroid="transparent"

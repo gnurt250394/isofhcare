@@ -20,6 +20,7 @@ class ProfileScreen extends Component {
     constructor(props) {
         super(props);
         let data = (this.props.navigation.state.params && this.props.navigation.state.params.data) ? this.props.navigation.state.params.data.medicalRecords || {} : {}
+        console.log(data)
         this.state = {
             value: 1,
             refresh: false,
@@ -119,6 +120,7 @@ class ProfileScreen extends Component {
                         profileProvider
                             .updateAvatar(id, data)
                             .then(res => {
+                                console.log(res,'upload')
                                 if (res.code == 0) {
                                     if (this.state.data.status == 1) {
                                         let current = this.props.userApp.currentUser;
@@ -216,7 +218,6 @@ class ProfileScreen extends Component {
         const sourceAvt = this.state.imgAvtLocal
             ? { uri: this.state.imgAvtLocal.absoluteUrl() }
             : icSupport
-        console.log(sourceAvt, 'sourceAvtsourceAvtsourceAvt');
         return (
             <ActivityPanel
                 icBack={require('@images/new/left_arrow_white.png')}
