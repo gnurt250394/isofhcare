@@ -5,11 +5,13 @@ import { connect } from 'react-redux';
 import bookingProvider from '@data-access/booking-provider';
 import dateUtils from 'mainam-react-native-date-utils';
 import stringUtils from 'mainam-react-native-string-utils';
+import ActionSheet from 'react-native-actionsheet';
+import ExportPDF from '@components/ehealth/ExportPDF';
 import snackbar from '@utils/snackbar-utils';
 import constants from '@resources/strings';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import resultUtils from './utils/result-utils';
-import { Card } from 'native-base';
+import { Card, Icon } from 'native-base';
 import DateTimePicker from "mainam-react-native-date-picker";
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
@@ -379,6 +381,60 @@ class ViewInDateScreen extends Component {
     changeMonth = () => {
         this.setState({ toggelMonthPicker: true })
     }
+
+    showShare = () => {
+        this.actionSheetShare.show();
+    }
+    onShareEhealth = () => {
+        if (this.state.dateSelected) {
+            this.props.navigation.navigate("ehealthSharing", {
+                history: this.state.histories[this.state.dateSelected.format('yyyy-MM-dd')].history
+            });
+        }
+    }
+
+    exportPdf() {
+        this.setState({
+            isLoading: true
+        }, () => {
+            try {
+                let patientHistoryId = this.state.histories[this.state.dateSelected.format("yyyy-MM-dd")].history.patientHistoryId;
+                let hospitalId = this.props.ehealth.patient.hospitalEntity.id;
+                resultUtils.getDetail(patientHistoryId, hospitalId).then(result => {
+                    if (result) {
+                        result = result.result;
+                        result.hospital = this.props.ehealth.hospital.hospital;
+                        this.exportPdfCom.getWrappedInstance().exportPdf({
+                            type: "all",
+                            result: result,
+                            fileName: constants.filenamePDF + patientHistoryId
+                        }, () => {
+                            this.setState({ isLoading: false });
+                        });
+                    }
+                    else {
+                        this.setState({ isLoading: false });
+                    }
+                }).catch(err => {
+                    this.setState({ isLoading: false });
+                })
+            } catch (error) {
+                this.setState({ isLoading: false });
+            }
+        });
+    }
+    openHistorySharing = () => {
+        try {
+            if (this.state.histories && this.state.dateSelected) {
+                let patientHistoryId = this.state.histories[this.state.dateSelected.format("yyyy-MM-dd")].history.patientHistoryId;
+                this.props.navigation.navigate("historySharing", {
+                    patientHistoryId
+                });
+            }
+        } catch (error) {
+
+        }
+    }
     render() {
         return (
             <ActivityPanel style={styles.container} title={constants.title.ehealth}
@@ -388,11 +444,9 @@ class ViewInDateScreen extends Component {
                 actionbarStyle={styles.actionbarStyle}
                 titleStyle={styles.titleStyle}
                 isLoading={this.state.isLoading}
-
-            // menuButton={this.state.dateSelected ?
-            //     <TouchableOpacity style={styles.btnShare} onPress={this.showShare}><Icon name='share' style={{ color: '#FFF' }} /></TouchableOpacity> :
-            //     <TouchableOpacity style={[styles.btnShare, { width: 50 }]} onPress={this.showShare}></TouchableOpacity>}
-
+                menuButton={this.state.dateSelected ?
+                    <TouchableOpacity style={styles.btnShare} onPress={this.showShare}><Icon name='share' style={{ color: '#FFF' }} /></TouchableOpacity> :
+                    <TouchableOpacity style={[styles.btnShare, { width: 50 }]} onPress={this.showShare}></TouchableOpacity>}
             >
                 <View style={styles.container2}>
                     <TouchableOpacity onPress={this.changeMonth}>
@@ -483,6 +537,28 @@ class ViewInDateScreen extends Component {
                     confirmTextIOS={"Xác nhận"}
                     date={this.state.dateSelected || new Date()}
                 />
+                <ActionSheet
+                    ref={o => this.actionSheetShare = o}
+                    options={["Chia sẻ trên hồ sơ iSofHCare", "Chia sẻ trên ứng dụng khác", "Lịch sử chia sẻ", constants.actionSheet.cancel]}
+                    cancelButtonIndex={3}
+                    destructiveButtonIndex={3}
+                    onPress={(index) => {
+                        switch (index) {
+                            case 0:
+                                this.onShareEhealth();
+                                break;
+                            case 1:
+                                this.exportPdf();
+                                break;
+                            case 2:
+                                this.openHistorySharing();
+
+
+                        }
+                    }}
+                />
+                <ExportPDF ref={(element) => this.exportPdfCom = element} />
+
             </ActivityPanel>
         );
     }
@@ -630,8 +706,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#4BBA7B',
         borderBottomWidth: 0
     },
-    titleStyle: {
-        color: '#FFF'
+    titleStyle:
+    {
+        color: '#FFF', marginLeft: 65
     },
     container2: { flex: 1, alignItems: 'center' },
     viewDateSelected: {
@@ -686,7 +763,10 @@ const styles = StyleSheet.create({
     txNotifi: { fontSize: 22, color: '#27AE60', textAlign: 'center', marginTop: 10, marginHorizontal: 20 },
     txErr: { textAlign: 'center', marginVertical: 20, marginHorizontal: 10 },
     btnConfirm: { justifyContent: 'center', alignItems: 'center', height: 41, backgroundColor: '#878787', borderBottomLeftRadius: 5, borderBottomRightRadius: 5 },
-    viewSpaceBottom: { height: 50 }
+    viewSpaceBottom: { height: 50 },
+    btnShare: {
+        paddingHorizontal: 20
+    }
 
 });
 

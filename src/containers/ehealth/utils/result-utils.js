@@ -1,8 +1,8 @@
 import bookingProvider from '@data-access/booking-provider';
 module.exports = {
-    getDetail(patientHistoryId, hospitalId, id) {
+    getDetail(patientHistoryId, hospitalId, shareId) {
         return new Promise((resolve, reject) => {
-            bookingProvider.detailPatientHistory(patientHistoryId, hospitalId, id).then(s => {
+            bookingProvider.detailPatientHistory(patientHistoryId, hospitalId, shareId).then(s => {
                 let resultDetail = null;
                 let result = null;
                 switch (s.code) {

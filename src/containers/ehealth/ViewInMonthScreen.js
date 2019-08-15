@@ -7,7 +7,7 @@ import dateUtils from 'mainam-react-native-date-utils';
 import snackbar from '@utils/snackbar-utils';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import { Card, Icon } from 'native-base';
-import ActionSheet from 'react-native-actionsheet'
+import ActionSheet from 'react-native-actionsheet';
 import { Notification, NotificationOpen } from 'react-native-firebase';
 import DateTimePicker from "mainam-react-native-date-picker";
 import TextField from "mainam-react-native-form-validate/TextField";
@@ -174,11 +174,11 @@ class ListProfileScreen extends Component {
 
 
     onDayPress(day) {
-        if (this.state.histories[day.dateString]) {
-            let histories = JSON.parse(JSON.stringify(this.state.histories));
-            if (this.state.dateSelected && histories[this.state.dateSelected]) {
-                delete histories[this.state.dateSelected].selected;
-            }
+        let histories = JSON.parse(JSON.stringify(this.state.histories));
+        if (this.state.dateSelected && histories[this.state.dateSelected]) {
+            delete histories[this.state.dateSelected].selected;
+        }
+        if (day && this.state.histories[day.dateString]) {
             histories[day.dateString].selected = true;
             histories[day.dateString].selectedColor = '#27ae60'
             let patientHistoryId = histories[day.dateString].history.patientHistoryId
@@ -215,7 +215,11 @@ class ListProfileScreen extends Component {
 
             });
         } else {
-            snackbar.show(this.renderTextError(1), "danger");
+            this.setState({
+                dateSelected: null,
+            }, () => {
+                snackbar.show(this.renderTextError(1), "danger");
+            });
         }
     }
     onPressTime = () => {
@@ -467,6 +471,8 @@ class ListProfileScreen extends Component {
             this.onDayPress({
                 dateString: keys[0]
             })
+        } else {
+            this.onDayPress(null);
         }
     }
     showShare = () => {
