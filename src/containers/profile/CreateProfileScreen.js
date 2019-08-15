@@ -207,7 +207,7 @@ class CreateProfileScreen extends Component {
     selectDistrict = (districts) => {
         let districtsError = districts ? "" : this.state.districtsError;
         if (!districts || !this.state.districts || districts.id != this.state.districts.id) {
-            this.setState({ districts, districtsError, zone: null}) 
+            this.setState({ districts, districtsError, zone: null })
         } else {
             this.setState({ districts, districtsError });
         }
@@ -286,7 +286,7 @@ class CreateProfileScreen extends Component {
             })
             if (res.code == 0) {
                 snackbar.show('Thành công', 'success')
-                NavigationService.navigate('shareDataProfile',{id:res.data.record.id,shareId:res.data.shareRecord.id})
+                NavigationService.navigate('shareDataProfile', { id: res.data.record.id, shareId: res.data.shareRecord.id })
 
             } else {
                 snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
@@ -591,8 +591,7 @@ class CreateProfileScreen extends Component {
                                 />
                             </Field>
                             <Text style={[styles.errorStyle]}>{this.state.addressError}</Text> */}
-                            <Field style={[styles.mucdichkham, { flexDirection: 'row' }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
-                                <Field style={{ flex: 1 }}>
+                                <Field style={[styles.mucdichkham, { marginTop: 10 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
                                     <Text style={styles.mdk}>{'Địa chỉ'}</Text>
                                     <Field>
                                         <TextField
@@ -601,7 +600,7 @@ class CreateProfileScreen extends Component {
                                             editable={false}
                                             multiline={true}
                                             inputStyle={[
-                                                styles.ktq, { minHeight: 60 }
+                                                styles.ktq, { minHeight: 41 }
                                             ]}
                                             errorStyle={styles.errorStyle}
                                             value={this.state.provinces && this.state.provinces.countryCode ? this.state.provinces.countryCode : 'Tỉnh/Thành phố'}
@@ -614,7 +613,7 @@ class CreateProfileScreen extends Component {
 
                                 </Field>
 
-                                <Field style={{ flex: 1 }}>
+                                <Field style={[styles.mucdichkham, { marginTop: 10 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
                                     <Text style={styles.mdk}></Text>
                                     <Field>
                                         <TextField
@@ -629,7 +628,7 @@ class CreateProfileScreen extends Component {
                                             // }}
                                             multiline={true}
                                             inputStyle={[
-                                                styles.ktq, { minHeight: 60 }
+                                                styles.ktq, { minHeight: 41 }
                                             ]}
                                             onPress={this.onSelectDistrict}
                                             editable={false}
@@ -642,7 +641,7 @@ class CreateProfileScreen extends Component {
                                         />
                                     </Field>
                                 </Field>
-                                <Field style={{ flex: 1 }}>
+                                <Field style={[styles.mucdichkham, { marginTop: 10 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
                                     <Text style={styles.mdk}></Text>
                                     <Field>
                                         <TextField
@@ -651,7 +650,7 @@ class CreateProfileScreen extends Component {
                                             onPress={this.onSelectZone}
                                             editable={false}
                                             inputStyle={[
-                                                styles.ktq, { minHeight: 60 }
+                                                styles.ktq, { minHeight: 41 }
                                             ]}
                                             errorStyle={styles.errorStyle}
                                             value={this.state.zone && this.state.zone.name ? this.state.zone.name : 'Xã phường'}
@@ -662,27 +661,10 @@ class CreateProfileScreen extends Component {
                                         />
                                     </Field>
                                 </Field>
-                            </Field>
                             <Field style={[styles.mucdichkham, this.state.type == "FAMILY" ? {} : { marginTop: 10 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
                                 <Text style={styles.mdk}></Text>
                                 <TextField
                                     hideError={true}
-                                    onValidate={(valid, messages) => {
-                                        if (valid) {
-                                            this.setState({ addressError: "" });
-                                        } else {
-                                            this.setState({ addressError: messages });
-                                        }
-                                    }}
-                                    validate={{
-                                        rules: {
-                                            maxlength: 255
-                                        },
-                                        messages: {
-                                            required: constants.msg.user.fullname_not_null,
-                                            maxlength: constants.msg.user.text_without_255,
-                                        }
-                                    }}
                                     placeholder={'Thôn/Xóm, số nhà'}
                                     multiline={true}
                                     inputStyle={[
@@ -847,7 +829,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         borderRadius: 5,
         marginHorizontal: 10,
-        minHeight:41
+        minHeight: 41
     },
     container: {
         // borderStyle: "solid",
