@@ -12,6 +12,17 @@ import bookingProvider from '@data-access/booking-provider';
 import dataCacheProvider from '@data-access/datacache-provider';
 import constants from '@resources/strings';
 const DEVICE_WIDTH = Dimensions.get('window').width;
+import { Calendar, LocaleConfig } from 'react-native-calendars';
+import DateTimePicker from "mainam-react-native-date-picker";
+
+LocaleConfig.locales['en'] = {
+    monthNames: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
+    monthNamesShort: ['Th 1', 'Th 2', 'Th 3', 'Th 4', 'Th 5', 'Th 6', 'Th 7', 'Th 8', 'Th 9', 'Th 10', 'Th 11', 'Th 12'],
+    dayNames: ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'],
+    dayNamesShort: ['CN', 'T.2', 'T.3', 'T.4', 'T.5', 'T.6', 'T.7']
+};
+
+LocaleConfig.defaultLocale = 'en';
 
 
 class SelectTimeScreen extends Component {
@@ -21,15 +32,16 @@ class SelectTimeScreen extends Component {
         let hospital = this.props.navigation.state.params.hospital;
         let profile = this.props.navigation.state.params.profile;
         let specialist = this.props.navigation.state.params.specialist;
+        let service = this.props.navigation.state.params.service;
         let bookingDate = this.props.navigation.state.params.bookingDate;
         let reason = this.props.navigation.state.params.reason;
         let contact = this.props.navigation.state.params.contact;
         let images = this.props.navigation.state.params.images;
-        console.log(specialist, 's');
         this.state = {
             serviceType,
             hospital,
             profile,
+            service,
             specialist,
             bookingDate,
             listTime: [],
@@ -125,9 +137,7 @@ class SelectTimeScreen extends Component {
         })
     }
     selectService(service) {
-        // alert(JSON.stringify(service));
-        // return;
-        this.setState({ service: service, schedule: null, serviceError: "", scheduleError: "", allowBooking: true }, () => {
+        this.setState({ schedule: null, serviceError: "", scheduleError: "", allowBooking: true }, () => {
             this.setState({ isLoading: true }, () => {
                 scheduleProvider.getByDateAndService(service.id, this.state.bookingDate.format("yyyy-MM-dd")).then(s => {
                     let listTime = [];
@@ -192,7 +202,7 @@ class SelectTimeScreen extends Component {
                         isLoading: false,
                         listTime: listTime.sort((a, b) => {
                             return a.time - b.time
-                        })
+                        }),
                     }, () => {
                         this.analyseTime(this.state.listTime);
                     });
@@ -229,7 +239,7 @@ class SelectTimeScreen extends Component {
         if (error)
             return;
         connectionUtils.isConnected().then(s => {
-            console.log(this.state.schedule.time,this.state.schedule.time.format("yyyy-MM-dd HH:mm:ss"));
+            console.log(this.state.schedule.time, this.state.schedule.time.format("yyyy-MM-dd HH:mm:ss"));
             this.setState({ isLoading: true }, () => {
                 console.log(this.state.schedule.time);
                 bookingProvider.create(
@@ -400,105 +410,131 @@ class SelectTimeScreen extends Component {
         </TouchableOpacity>
     }
 
-    render() {
-        return (<ActivityPanel isLoading={this.state.isLoading} style={{ flex: 1, backgroundColor: '#f7f9fb' }} title="Thời gian">
+    selectMonth(date) {
+        if (this.state.service && this.state.service.length) {
+            let service = this.state.service[0];
+            this.setState({ isLoading: true }, () => {
+                console.log(this.state.service);
+                scheduleProvider.search(service.service.id, date.getFirstDateOfMonth().format("yyyy-MM-dd 00:00:00"), date.getLastDateOfMonth().format("yyyy-MM-dd 23:59:59"), 1, 1000).then(s => {
+                    alert(JSON.stringify(s));
+                })
+                this.setState({ isLoading: false });
+            })
+        }
+    }
 
-            <View style={styles.container}>
-                <ScrollView keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
-                    <View style={styles.article}>
-                        <TouchableOpacity style={styles.mucdichkham} onPress={() => {
-                            this.props.navigation.navigate("selectService", {
-                                hospital: this.state.hospital,
-                                specialist: this.state.specialist,
-                                serviceType: this.state.serviceType,
-                                onSelected: this.selectService.bind(this)
-                            })
-                        }}>
-                            <ScaleImage style={styles.imgIc} height={15} source={require("@images/new/booking/ic_specialist.png")} />
-                            <Text style={styles.mdk}>{this.state.service ? this.state.service.name : "Chọn dịch vụ"}</Text>
-                            <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
-                        </TouchableOpacity>
+    selectTime = (item) => () => {
+        if (item.type == 0) {
+            snackbar.show("Đã kín lịch trong khung giờ này", "danger");
+            return;
+        }
+        this.setState({ schedule: item })
+    }
+
+    renderTimePicker(fromHour, toHour, label) {
+        return (
+            (this.state.listTime.filter(item => new Date(item.time).format("HH") >= fromHour && new Date(item.time).format("HH") < toHour).length) ?
+                <View style={{ marginTop: 10 }}>
+                    <Text style={{ color: '#00c088', fontWeight: 'bold', marginLeft: 5, fontSize: 16 }}>{label}</Text>
+                    <View style={{ flexWrap: 'wrap', flexDirection: 'row', alignItems: 'center', alignContent: 'center' }}>
                         {
-                            this.state.serviceError ?
-                                <Text style={[styles.errorStyle]}>{this.state.serviceError}</Text> : null
+                            this.state.listTime.filter(item => new Date(item.time).format("HH") >= fromHour && new Date(item.time).format("HH") < toHour).map((item, index) => {
+                                return <TouchableOpacity onPress={this.selectTime(item)} key={index} style={[{ paddingHorizontal: 5, alignSelf: 'center', minWidth: 60, borderRadius: 8, paddingVertical: 3, borderWidth: 1, borderColor: '#cacaca', margin: 5 },
+                                {
+                                    borderColor: this.getColor(item)
+                                }, this.state.schedule == item ? styles.item_selected : {}]}>
+                                    <Text style={[{ fontWeight: 'bold', color: '#00c088', textAlign: 'center', color: this.getColor(item) },
+                                    this.state.schedule == item ? styles.item_label_selected : {}]}>{item.label}</Text>
+                                </TouchableOpacity>
+                            })
+                        }
+                    </View>
+                </View> : null
+        )
+    }
+
+    render() {
+        console.log(this.state.listTime);
+        return (<ActivityPanel
+            icBack={require('@images/new/left_arrow_white.png')}
+            iosBarStyle={'light-content'}
+            statusbarBackgroundColor="#4BBA7B"
+            actionbarStyle={styles.actionbarStyle}
+            titleStyle={styles.titleStyle}
+            isLoading={this.state.isLoading}
+            title="Chọn thời gian" >
+            <View style={{ backgroundColor: '#FFF', flex: 1 }}>
+                <ScaleImage source={require("@images/new/booking/bg_booking.png")} height={200} width={DEVICE_WIDTH} style={{ position: 'absolute', bottom: 10, right: 10 }} />
+                <View style={styles.container}>
+                    <Text style={{ color: '#00c088', fontWeight: 'bold', fontSize: 16, margin: 10 }}>CHỌN NGÀY GIỜ CÓ MÀU XANH</Text>
+                    <ScrollView keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
+
+                        <View style={{ position: 'relative', left: 0, right: 0, width: DEVICE_WIDTH }}>
+                            <Calendar style={{ width: '100%' }}
+                                // markedDates={this.state.listSchedule}
+                                current={(this.state.latestTime || new Date()).format("yyyy-MM-dd")}
+                                onDayPress={(day) => {
+                                    this.setState({
+                                        dateString: day.dateString,
+                                        bookingDate: day.dateString.toDateObject()
+                                    }, () => {
+                                        this.selectService(this.state.service[0].service)
+                                    })
+                                }}
+                                monthFormat={'MMMM - yyyy'}
+                                onMonthChange={(month) => {
+                                    this.selectMonth(month.dateString.toDateObject())
+                                }}
+                                // hideArrows={true}
+                                hideExtraDays={true}
+                                firstDay={1}
+                            />
+                            <TouchableOpacity
+                                onPress={() => {
+                                    this.setState({ toggelMonthPicker: true })
+                                }}
+                                style={{ position: 'absolute', top: 0, left: 70, right: 70, height: 60 }}>
+                            </TouchableOpacity>
+                        </View>
+                        {
+                            this.state.dateString ?
+                                this.state.listTime && this.state.listTime.length ?
+                                    <View style={{ margin: 10 }}>
+                                        <Text style={{ color: '#00c088', fontWeight: 'bold', fontSize: 16 }}>LỊCH KHÁM {this.state.dateString.toDateObject().format("thu, dd/MM/yyyy").toUpperCase()}</Text>
+                                        {
+                                            this.state.scheduleError ?
+                                                <Text style={[styles.errorStyle]}>{this.state.scheduleError}</Text> :
+                                                <Text style={{ fontStyle: 'italic', marginVertical: 20, textAlign: 'center' }}>Vui lòng nhấn để chọn khung giờ khám</Text>
+                                        }
+
+                                        {this.renderTimePicker(0, 12, "Sáng")}
+                                        {this.renderTimePicker(12, 24, "Chiều")}
+                                    </View>
+                                    : <Text style={[styles.errorStyle]}>{"Ngày bạn chọn không có lịch khám nào"}</Text>
+                                :
+                                null
                         }
 
-                        <View style={styles.border}></View>
-                    </View>
-
-                    {
-                        this.state.listTime && this.state.listTime.length > 0 ?
-                            <View style={styles.chonGioKham}>
-                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <ScaleImage source={require("@images/new/booking/ic_bookingDate.png")} width={20} />
-                                    <Text style={styles.txtchongiokham}>Chọn giờ khám</Text>
-                                </View>
-                                <Text style={{ marginTop: 20, fontSize: 14, color: '#8e8e93' }}>Gợi ý: Chọn những giờ màu xanh sẽ giúp bạn được phục vụ nhanh hơn</Text>
-
-                                <View style={{ position: 'relative', marginTop: 20, height: 100, paddingTop: 40 }}>
-                                    {
-                                        this.state.listTime.map((item, index) =>
-                                            this.renderTime(item, index))
-                                    }
-                                    {this.state.schedule &&
-                                        <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', left: this.state.schedule.marginLeft - 1, top: 10 }}>
-                                            <ScaleImage height={30} source={this.getIcon(this.state.schedule)} />
-                                            <Text style={{ fontSize: 11, marginLeft: 2, fontWeight: 'bold' }}>{this.state.schedule.label}</Text>
-                                        </View>
-                                    }
-                                    {
-                                        this.state.listTime.map((item, index) =>
-                                            this.renderLabel(item, index))
-                                    }
-                                </View>
-                                {/* </View> */}
-
-
-
-                                {/* <View style={{ width: this.state.listTime.length * 24 + 100, alignSelf: 'center', position: 'relative', marginTop: 20 }}>
-                                    {this.state.schedule &&
-                                        <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', left: (this.state.index || 0) * 24 + 50, top: 0 }}>
-                                            <ScaleImage height={30} source={this.getIcon(this.state.schedule)} />
-                                            <Text style={{ fontSize: 9, marginLeft: 5, fontWeight: 'bold' }}>{this.state.schedule.label}</Text>
-                                        </View>
-                                    }
-                                    <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                                        {
-                                            this.state.listTime.map((item, index) => {
-                                                return <TouchableOpacity key={index} style={{ justifyContent: 'center' }}
-                                                    onPress={() => {
-                                                        if (item.type == 0) {
-                                                            snackbar.show("Đã kín lịch trong khung giờ này", "danger");
-                                                            return;
-                                                        }
-                                                        this.setState({ schedule: item, index })
-                                                    }}
-                                                >
-                                                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: "center", marginTop: 30 }}>
-                                                        <View style={{ width: 8, height: 5, backgroundColor: index != 0 ? this.getColor(item) : 'transparent' }}></View>
-                                                        <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: this.getColor(item), justifyContent: 'center', alignItems: 'center' }}>
-                                                            <View style={{ width: 2, height: 2, backgroundColor: '#FFF', borderRadius: 1 }}></View>
-                                                        </View>
-                                                        <View style={{ width: 8, height: 5, backgroundColor: index < this.state.listTime.length - 1 ? this.getColor(item) : 'transparent' }}></View>
-                                                    </View>
-                                                    <Text style={{ fontSize: 7 }}>{this.showLabel(item, index) ?
-                                                        item.label : " "}</Text>
-                                                </TouchableOpacity>
-                                            })
-                                        }
-                                    </View>
-                                </View> */}
-                                {
-                                    this.state.scheduleError ?
-                                        <Text style={[styles.errorStyle]}>{this.state.scheduleError}</Text> : null
-                                }
-
-                            </View> : null
-                    }
-                </ScrollView>
-                <TouchableOpacity style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]} onPress={this.confirmBooking.bind(this)}>
-                    <Text style={styles.btntext}>Xác nhận</Text>
-                </TouchableOpacity>
+                    </ScrollView>
+                    <TouchableOpacity style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]} onPress={this.confirmBooking.bind(this)}>
+                        <Text style={styles.btntext}>Xác nhận</Text>
+                    </TouchableOpacity>
+                </View>
+                <DateTimePicker
+                    mode={'date'}
+                    isVisible={this.state.toggelMonthPicker}
+                    onConfirm={newDate => {
+                        this.setState({ latestTime: newDate, toggelMonthPicker: false }, () => {
+                            this.selectMonth(newDate);
+                        })
+                    }}
+                    onCancel={() => {
+                        this.setState({ toggelMonthPicker: false });
+                    }}
+                    cancelTextIOS={"Hủy bỏ"}
+                    confirmTextIOS={"Xác nhận"}
+                    date={this.state.latestTime || new Date()}
+                />
             </View>
         </ActivityPanel>
         );
@@ -513,10 +549,6 @@ function mapStateToProps(state) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#f7f9fb",
-
-
-
     },
     name: {
         backgroundColor: "#ffffff",
@@ -641,9 +673,22 @@ const styles = StyleSheet.create({
         marginLeft: 5
     },
     errorStyle: {
+        marginVertical: 20,
         color: 'red',
-        marginTop: 10,
-        marginLeft: 25
+        textAlign: 'center'
+    },
+    actionbarStyle: {
+        backgroundColor: '#4BBA7B',
+        borderBottomWidth: 0
+    },
+    titleStyle: {
+        color: '#FFF'
+    },
+    item_label_selected: {
+        color: '#FFF'
+    },
+    item_selected: {
+        backgroundColor: '#00c088'
     }
 })
 export default connect(mapStateToProps)(SelectTimeScreen);
