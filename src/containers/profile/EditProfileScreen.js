@@ -583,8 +583,8 @@ class EditProfileScreen extends Component {
                                 </Field>
                                 <Text style={[styles.errorStyle]}>{this.state.phoneError}</Text></Field>) : (<Field></Field>)}
 
-                            <Field style={[styles.mucdichkham, { marginTop: 10 },]}>
-                                <Text style={styles.mdk}>{'Địa chỉ'}</Text>
+                            <Field style={[styles.mucdichkham,]}>
+                                <Text style={styles.mdk}>{'Tỉnh/Thành phố'}</Text>
                                 <Field>
                                     <TextField
                                         hideError={true}
@@ -606,7 +606,7 @@ class EditProfileScreen extends Component {
                             </Field>
 
                             <Field style={[styles.mucdichkham, { marginTop: 10 },]}>
-                                <Text style={styles.mdk}></Text>
+                                <Text style={styles.mdk}>Quận/Huyện</Text>
                                 <Field>
                                     <TextField
                                         hideError={true}
@@ -634,7 +634,7 @@ class EditProfileScreen extends Component {
                                 </Field>
                             </Field>
                             <Field style={[styles.mucdichkham, { marginTop: 10 },]}>
-                                <Text style={styles.mdk}></Text>
+                                <Text style={styles.mdk}>Xã phường</Text>
                                 <Field>
                                     <TextField
                                         hideError={true}
@@ -654,7 +654,7 @@ class EditProfileScreen extends Component {
                                 </Field>
                             </Field>
                             <Field style={[styles.mucdichkham, this.state.type == "FAMILY" ? {} : { marginTop: 10 },]}>
-                                <Text style={styles.mdk}></Text>
+                                <Text style={styles.mdk}>Thôn/Xóm, số nhà</Text>
                                 <TextField
                                     hideError={true}
                                     onValidate={(valid, messages) => {
