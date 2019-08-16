@@ -341,7 +341,7 @@ class CreateProfileScreen extends Component {
                 <ScrollView keyboardShouldPersistTaps='handled' style={{ flex: 1, paddingVertical: 5 }}>
                     <View style={styles.container}>
                         <Form ref={ref => (this.form = ref)} style={[{ flex: 1 }]}>
-                            <Field style={[styles.mucdichkham, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
+                            <Field style={[styles.mucdichkham,]}>
                                 <Text style={styles.mdk}>{constants.fullname} <Text style={{ color: 'red' }}>(*)</Text></Text>
                                 <TextField
                                     hideError={true}
@@ -455,7 +455,7 @@ class CreateProfileScreen extends Component {
                                 </TouchableOpacity>
                             </Field>
                             <Text style={[styles.errorStyle]}>{this.state.valid}</Text>
-                            <Field style={[styles.mucdichkham, { flexDirection: 'row' }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
+                            <Field style={[styles.mucdichkham, { flexDirection: 'row' },]}>
                                 <Field style={{ width: '60%' }}>
                                     <Field>
                                         <Text style={styles.mdk}>{'Chiều cao (cm)'}</Text>
@@ -529,7 +529,7 @@ class CreateProfileScreen extends Component {
                                     <Text style={[styles.errorStyle]}>{this.state.weightError}</Text>
                                 </Field>
                             </Field>
-                            <Field style={[styles.mucdichkham, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
+                            <Field style={[styles.mucdichkham,]}>
                                 <Text style={styles.mdk}>{'Số điện thoại'}  <Text style={{ color: 'red' }}>(*)</Text></Text>
                                 <TextField
                                     hideError={true}
@@ -600,7 +600,7 @@ class CreateProfileScreen extends Component {
                                 />
                             </Field>
                             <Text style={[styles.errorStyle]}>{this.state.addressError}</Text> */}
-                                <Field style={[styles.mucdichkham, { marginTop: 10 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
+                                <Field style={[styles.mucdichkham, { marginTop: 10 }]}>
                                     <Text style={styles.mdk}>{'Địa chỉ'}</Text>
                                     <Field>
                                         <TextField
@@ -622,7 +622,7 @@ class CreateProfileScreen extends Component {
 
                                 </Field>
 
-                                <Field style={[styles.mucdichkham, { marginTop: 10 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
+                                <Field style={[styles.mucdichkham, { marginTop: 10 },]}>
                                     <Text style={styles.mdk}></Text>
                                     <Field>
                                         <TextField
@@ -650,7 +650,7 @@ class CreateProfileScreen extends Component {
                                         />
                                     </Field>
                                 </Field>
-                                <Field style={[styles.mucdichkham, { marginTop: 10 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
+                                <Field style={[styles.mucdichkham, { marginTop: 10 },]}>
                                     <Text style={styles.mdk}></Text>
                                     <Field>
                                         <TextField
@@ -670,7 +670,7 @@ class CreateProfileScreen extends Component {
                                         />
                                     </Field>
                                 </Field>
-                            <Field style={[styles.mucdichkham, this.state.type == "FAMILY" ? {} : { marginTop: 10 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
+                            <Field style={[styles.mucdichkham, this.state.type == "FAMILY" ? {} : { marginTop: 10 },]}>
                                 <Text style={styles.mdk}></Text>
                                 <TextField
                                     hideError={true}
