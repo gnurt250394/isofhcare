@@ -46,7 +46,7 @@ class ViewCheckupResultScreen extends Component {
                 <Medicine showTitle={false} result={this.state.result} />
                 <TouchableOpacity style={styles.btnViewFinish} onPress={() => {
                     this.props.navigation.pop();
-                }}><Text style={styles.txViewFinish}>XEM XONG</Text>
+                }}><Text style={styles.txViewFinish}>{constants.ehealth.view_finish}</Text>
                 </TouchableOpacity>
                 <View style={styles.viewSpaceBottom} />
             </ScrollView>
@@ -69,8 +69,8 @@ class ViewCheckupResultScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-    container:{ flex: 1 },
-    btnViewFinish:{
+    container: { flex: 1 },
+    btnViewFinish: {
         alignSelf: 'center',
         width: 252,
         maxWidth: DEVICE_WIDTH,
@@ -80,13 +80,13 @@ const styles = StyleSheet.create({
         marginVertical: 20,
         padding: 10, alignItems: 'center'
     },
-    txViewFinish:{ fontWeight: 'bold', color: '#FFF', fontSize: 17 },
-    viewSpaceBottom:{ height: 50 },
-    actionbarStyle:{
+    txViewFinish: { fontWeight: 'bold', color: '#FFF', fontSize: 17 },
+    viewSpaceBottom: { height: 50 },
+    actionbarStyle: {
         backgroundColor: '#4BBA7B',
         borderBottomWidth: 0
     },
-    titleStyle:{
+    titleStyle: {
         color: '#FFF'
     }
 });
