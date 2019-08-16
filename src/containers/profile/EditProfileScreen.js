@@ -23,6 +23,7 @@ import KeyboardSpacer from "react-native-keyboard-spacer";
 import ActionSheet from 'react-native-actionsheet'
 import profileProvider from '@data-access/profile-provider'
 import NavigationService from "@navigators/NavigationService";
+import ActivityPanel from "@components/ActivityPanel";
 
 class EditProfileScreen extends Component {
     constructor(props) {
@@ -45,6 +46,7 @@ class EditProfileScreen extends Component {
             relationshipType: data.relationshipType ? data.relationshipType : '',
             profileNo: data.profileNo ? data.profileNo : '',
             id: data.id,
+            dob: data.dob ? data.dob.toDateObject('-') : '',
             phone: data.phone,
             data: data,
             country,
@@ -221,7 +223,7 @@ class EditProfileScreen extends Component {
     selectprovinces(provinces) {
         let provincesError = provinces ? "" : this.state.provincesError;
         if (!provinces || !this.state.provinces || provinces.id != this.state.provinces.id) {
-            this.setState({ provinces, provincesError, districts: null, zone: null  })
+            this.setState({ provinces, provincesError, districts: null, zone: null })
         } else {
             this.setState({ provinces, provincesError });
         }
@@ -282,22 +284,22 @@ class EditProfileScreen extends Component {
                     () => {
                         let data = this.state.data
                         data.dob = this.state.dob ? this.state.dob.format('yyyy-MM-dd') + ' 00:00:00' : this.state.dobOld,
-                            data.gender = this.state.gender
+                        data.gender = this.state.gender
                         data.height = this.state.height ? Number(this.state.height) : null,
-                            data.weight = this.state.weight ? Number(parseFloat(this.state.weight).toFixed(1)) : null
+                        data.weight = this.state.weight ? Number(parseFloat(this.state.weight).toFixed(1)) : null
                         // data.address = this.state.address
                         let id = this.state.id
                         data.phone = this.state.phone
                         data.provinceId = this.state.provinces ? this.state.provinces.id.toString() : null
                         data.districtId = this.state.districts ? this.state.districts.id.toString() : null
-                        data.zoneId = this.state.zone  ? this.state.zone.id.toString() : null
+                        data.zoneId = this.state.zone ? this.state.zone.id.toString() : null
                         data.village = this.state.address ? this.state.address : null
                         data.relationshipType = this.state.relationshipType
                         profileProvider.updateProfile(id, data).then(res => {
 
                             switch (res.code) {
                                 case 0:
-                                    this.props.navigation.navigate('profile', { data: res.data.medicalRecords })
+                                    this.props.navigation.navigate('profile', { data: res.data })
                                     snackbar.show('Cập nhật hồ sơ thành công', "success");
                                     break
                                 case 1:
@@ -350,10 +352,17 @@ class EditProfileScreen extends Component {
             : icSupport;
 
         return (
-            <View style={{ flex: 1, backgroundColor: '#fff' }}>
+            <ActivityPanel
+                icBack={require('@images/new/left_arrow_white.png')}
+                titleStyle={styles.txTitle}
+                title={'SỬA THÔNG TIN'}
+                iosBarStyle={'light-content'}
+                style={{ flex: 1, backgroundColor: '#fff' }}
+                statusbarBackgroundColor="#359A60"
+                actionbarStyle={styles.actionbarStyle}
+            >
                 <ScrollView keyboardShouldPersistTaps='handled' style={{ flex: 1, paddingVertical: 5 }}>
                     <View style={styles.container}>
-                        <Text style={styles.txTitle}>SỬA THÔNG TIN</Text>
                         <Form ref={ref => (this.form = ref)} style={[{ flex: 1 }]}>
                             <Field style={[styles.mucdichkham, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
                                 <Text style={styles.mdk}>{constants.fullname}</Text>
@@ -382,6 +391,7 @@ class EditProfileScreen extends Component {
                                     inputStyle={[
                                         styles.ktq,
                                     ]}
+                                    editable={false}
                                     errorStyle={styles.errorStyle}
                                     onChangeText={this.onChangeText("name")}
                                     value={this.state.name}
@@ -396,7 +406,7 @@ class EditProfileScreen extends Component {
                                 style={[styles.mucdichkham, { flexDirection: 'row' }]}
                             >
                                 <Field style={{ width: '60%' }}>
-                                    <Text style={styles.mdk}>{'Ngày tháng năm sinh'}</Text>
+                                    <Text style={styles.mdk}>{'Ngày sinh'}</Text>
 
                                     <TextField
                                         // value={this.state.date || ""}
@@ -408,12 +418,8 @@ class EditProfileScreen extends Component {
                                         editable={false}
                                         getComponent={(
                                             value,
-                                            onChangeText,
-                                            onFocus,
-                                            onBlur,
-                                            isError
                                         ) => (
-                                                <Text style={[styles.ktq, { paddingVertical: 12 }]}>{value ? (value) : ('Ngày tháng năm sinh')}</Text>
+                                                <Text style={[styles.ktq, { paddingVertical: 12 }]}>{value ? (value) : ('Ngày sinh')}</Text>
                                             )}
                                         // onChangeText={s => {
                                         //   this.setState({ date: s });
@@ -451,6 +457,7 @@ class EditProfileScreen extends Component {
                                     style={[
                                         styles.mucdichkham,
                                     ]}
+                                    disabled={true}
                                     onPress={this.onShowGender}
                                 >
                                     <Text style={styles.mdk}>{constants.gender}</Text>
@@ -576,76 +583,76 @@ class EditProfileScreen extends Component {
                                 </Field>
                                 <Text style={[styles.errorStyle]}>{this.state.phoneError}</Text></Field>) : (<Field></Field>)}
 
-                                <Field style={[styles.mucdichkham, { marginTop: 10 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
-                                    <Text style={styles.mdk}>{'Địa chỉ'}</Text>
-                                    <Field>
-                                        <TextField
-                                            hideError={true}
-                                            onPress={this.onSelectProvince}
-                                            editable={false}
-                                            multiline={true}
-                                            inputStyle={[
-                                                styles.ktq, { minHeight: 41 }
-                                            ]}
-                                            errorStyle={styles.errorStyle}
-                                            value={this.state.provinces && this.state.provinces.countryCode ? this.state.provinces.countryCode : 'Tỉnh/Thành phố'}
-                                            autoCapitalize={"none"}
-                                            returnKeyType={"next"}
-                                            // underlineColorAndroid="transparent"
-                                            autoCorrect={false}
-                                        />
-                                    </Field>
-
+                            <Field style={[styles.mucdichkham, { marginTop: 10 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
+                                <Text style={styles.mdk}>{'Địa chỉ'}</Text>
+                                <Field>
+                                    <TextField
+                                        hideError={true}
+                                        onPress={this.onSelectProvince}
+                                        editable={false}
+                                        multiline={true}
+                                        inputStyle={[
+                                            styles.ktq, { minHeight: 41 }
+                                        ]}
+                                        errorStyle={styles.errorStyle}
+                                        value={this.state.provinces && this.state.provinces.countryCode ? this.state.provinces.countryCode : 'Tỉnh/Thành phố'}
+                                        autoCapitalize={"none"}
+                                        returnKeyType={"next"}
+                                        // underlineColorAndroid="transparent"
+                                        autoCorrect={false}
+                                    />
                                 </Field>
 
-                                <Field style={[styles.mucdichkham, { marginTop: 10 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
-                                    <Text style={styles.mdk}></Text>
-                                    <Field>
-                                        <TextField
-                                            hideError={true}
-                                            // validate={{
-                                            //     rules: {
-                                            //         number: true,
-                                            //     },
-                                            //     messages: {
-                                            //         number: 'Cân nặng không hợp lệ',
-                                            //     }
-                                            // }}
-                                            multiline={true}
-                                            inputStyle={[
-                                                styles.ktq, { minHeight: 41 }
-                                            ]}
-                                            onPress={this.onSelectDistrict}
-                                            editable={false}
-                                            errorStyle={styles.errorStyle}
-                                            value={this.state.districts && this.state.districts.name ? this.state.districts.name : 'Quận/Huyện'}
-                                            autoCapitalize={"none"}
-                                            returnKeyType={"next"}
-                                            // underlineColorAndroid="transparent"
-                                            autoCorrect={false}
-                                        />
-                                    </Field>
+                            </Field>
+
+                            <Field style={[styles.mucdichkham, { marginTop: 10 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
+                                <Text style={styles.mdk}></Text>
+                                <Field>
+                                    <TextField
+                                        hideError={true}
+                                        // validate={{
+                                        //     rules: {
+                                        //         number: true,
+                                        //     },
+                                        //     messages: {
+                                        //         number: 'Cân nặng không hợp lệ',
+                                        //     }
+                                        // }}
+                                        multiline={true}
+                                        inputStyle={[
+                                            styles.ktq, { minHeight: 41 }
+                                        ]}
+                                        onPress={this.onSelectDistrict}
+                                        editable={false}
+                                        errorStyle={styles.errorStyle}
+                                        value={this.state.districts && this.state.districts.name ? this.state.districts.name : 'Quận/Huyện'}
+                                        autoCapitalize={"none"}
+                                        returnKeyType={"next"}
+                                        // underlineColorAndroid="transparent"
+                                        autoCorrect={false}
+                                    />
                                 </Field>
-                                <Field style={[styles.mucdichkham, { marginTop: 10 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
-                                    <Text style={styles.mdk}></Text>
-                                    <Field>
-                                        <TextField
-                                            hideError={true}
-                                            multiline={true}
-                                            onPress={this.onSelectZone}
-                                            editable={false}
-                                            inputStyle={[
-                                                styles.ktq, { minHeight: 41 }
-                                            ]}
-                                            errorStyle={styles.errorStyle}
-                                            value={this.state.zone && this.state.zone.name ? this.state.zone.name : 'Xã phường'}
-                                            autoCapitalize={"none"}
-                                            returnKeyType={"next"}
-                                            // underlineColorAndroid="transparent"
-                                            autoCorrect={false}
-                                        />
-                                    </Field>
+                            </Field>
+                            <Field style={[styles.mucdichkham, { marginTop: 10 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
+                                <Text style={styles.mdk}></Text>
+                                <Field>
+                                    <TextField
+                                        hideError={true}
+                                        multiline={true}
+                                        onPress={this.onSelectZone}
+                                        editable={false}
+                                        inputStyle={[
+                                            styles.ktq, { minHeight: 41 }
+                                        ]}
+                                        errorStyle={styles.errorStyle}
+                                        value={this.state.zone && this.state.zone.name ? this.state.zone.name : 'Xã phường'}
+                                        autoCapitalize={"none"}
+                                        returnKeyType={"next"}
+                                        // underlineColorAndroid="transparent"
+                                        autoCorrect={false}
+                                    />
                                 </Field>
+                            </Field>
                             <Field style={[styles.mucdichkham, this.state.type == "FAMILY" ? {} : { marginTop: 10 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
                                 <Text style={styles.mdk}></Text>
                                 <TextField
@@ -721,7 +728,6 @@ class EditProfileScreen extends Component {
                     onCancel={() => {
                         this.setState({ toggelDateTimePickerVisible: false });
                     }}
-                    date={new Date()}
                     minimumDate={minDate}
                     maximumDate={new Date()}
                     cancelTextIOS={constants.actionSheet.cancel2}
@@ -736,7 +742,7 @@ class EditProfileScreen extends Component {
                     onPress={this.onSetGender}
                 />
                 {Platform.OS == "ios" && <KeyboardSpacer />}
-            </View>
+            </ActivityPanel>
         );
     }
 
@@ -766,7 +772,7 @@ const styles = StyleSheet.create({
         // borderRadius:5,
 
     },
-    txTitle: { fontSize: 16, color: '#4BBA7B', textAlign: 'center', fontWeight: '600', marginTop: 40, marginBottom: 10 },
+    txTitle: { color: '#fff', textAlign: 'left', marginHorizontal: 10, fontSize: 14 },
     mdk: {
         marginLeft: 12,
         flex: 1,
@@ -776,6 +782,10 @@ const styles = StyleSheet.create({
         letterSpacing: 0,
         color: "#000000",
 
+    },
+    actionbarStyle: {
+        backgroundColor: '#4BBA7B',
+        borderBottomWidth: 0
     },
     ktq: {
         fontSize: 12,
@@ -790,7 +800,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         borderRadius: 5,
         marginHorizontal: 10,
-        minHeight:41
+        minHeight: 41
 
     },
     container: {

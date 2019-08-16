@@ -46,10 +46,11 @@ class ProfileScreen extends Component {
     componentWillReceiveProps(nextProps) {
         if (nextProps.navigation.state.params && nextProps.navigation.state.params.data) {
             this.setState({
-                data: nextProps.navigation.state.params.data,
+                data: nextProps.navigation.state.params.data.medicalRecords,
                 // imgAvtLocal: this.props.navigation.state.params.data.avatar ? this.props.navigation.state.params.data.avatar.absoluteUrl() : '',
                 // imgLocal: this.props.navigation.state.params.data.cover ? this.props.navigation.state.params.data.cover.absoluteUrl() : '',
             })
+            this.props = nextProps
         }
     }
     selectImageAvt = () => {
@@ -128,9 +129,11 @@ class ProfileScreen extends Component {
                                         this.props.dispatch(redux.userLogin(current));
                                         console.log(current, 'new user')
                                     }
-
+                                    let data = this.state.data
+                                    data.avatar = res.data.medicalRecords.avatar
                                     this.setState({
-                                        isLoading: false
+                                        isLoading: false,
+                                        data : data
                                     });
                                 }
                                 else {
@@ -301,7 +304,7 @@ class ProfileScreen extends Component {
                         </View>
                         <View style={[styles.viewItem, {}]}>
                             <Text><Text style={styles.txLabel}>Chiều cao: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.height ? this.state.data.height + 'cm' : ''} </Text></Text>
-                            <Text style={[styles.txLabel]}>Cân nặng: <Text style={{ color: '#000' }}>{this.state.data && this.state.data.weight ? this.state.data.weight + 'kg' : ''} </Text></Text>
+                            <Text style={[styles.txLabel]}>Cân nặng: <Text style={{ color: '#000',fontWeight:'normal' }}>{this.state.data && this.state.data.weight ? this.state.data.weight + 'kg' : ''} </Text></Text>
                             <View style={{ width: 20 }}></View>
                         </View>
                         <View style={styles.viewItem}>
@@ -311,7 +314,7 @@ class ProfileScreen extends Component {
                             <Text><Text style={styles.txLabel}>Số điện thoại: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.phone ? this.state.data.phone.replace(/(\d\d\d\d)(\d\d\d)(\d\d\d)/, '$1.$2.$3') : ''}</Text></Text>
                         </View>
                         <View style={styles.viewItem}>
-                            <Text><Text style={styles.txLabel}>Địa chỉ: </Text>{this.state.data.address}</Text>
+                            <Text><Text style={styles.txLabel}>Địa chỉ: </Text><Text style ={{fontSize:14,color:'#000'}}>{this.state.data.address}</Text></Text>
                         </View>
                         {this.state.data.status != 1 ? (
                             <View style={styles.viewItem}>
@@ -370,7 +373,8 @@ const styles = StyleSheet.create({
     },
     txLabel: {
         color: '#01C295',
-        fontSize: 14
+        fontSize: 14,
+        fontWeight:'bold'
     },
     txContent: {
         marginLeft: 5,
@@ -400,6 +404,8 @@ const styles = StyleSheet.create({
 
     txFeature: {
         color: '#FFF',
+        fontWeight:'bold',
+        fontSize:16
     },
     txBtn: { color: '#fff' },
 
