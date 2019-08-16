@@ -364,7 +364,7 @@ class EditProfileScreen extends Component {
                 <ScrollView keyboardShouldPersistTaps='handled' style={{ flex: 1, paddingVertical: 5 }}>
                     <View style={styles.container}>
                         <Form ref={ref => (this.form = ref)} style={[{ flex: 1 }]}>
-                            <Field style={[styles.mucdichkham, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
+                            <Field style={[styles.mucdichkham]}>
                                 <Text style={styles.mdk}>{constants.fullname}</Text>
                                 <TextField
                                     hideError={true}
@@ -469,7 +469,7 @@ class EditProfileScreen extends Component {
                                 </TouchableOpacity>
                             </Field>
                             <Text style={[styles.errorStyle]}>{this.state.valid}</Text>
-                            <Field style={[styles.mucdichkham, { flexDirection: 'row' }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
+                            <Field style={[styles.mucdichkham, { flexDirection: 'row' }]}>
                                 <Field style={{ width: '60%' }}>
                                     <Field>
                                         <Text style={styles.mdk}>{'Chiều cao (cm)'}</Text>
@@ -546,7 +546,7 @@ class EditProfileScreen extends Component {
 
                                 </Field>
                             </Field>
-                            {this.state.type == "FAMILY" ? (<Field style={[styles.mucdichkham, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
+                            {this.state.type == "FAMILY" ? (<Field style={[styles.mucdichkham,]}>
                                 <Field style={{ marginTop: 10 }}><Text style={styles.mdk}>{'Số điện thoại'}</Text>
                                     <TextField
                                         hideError={true}
@@ -583,8 +583,8 @@ class EditProfileScreen extends Component {
                                 </Field>
                                 <Text style={[styles.errorStyle]}>{this.state.phoneError}</Text></Field>) : (<Field></Field>)}
 
-                            <Field style={[styles.mucdichkham, { marginTop: 10 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
-                                <Text style={styles.mdk}>{'Địa chỉ'}</Text>
+                            <Field style={[styles.mucdichkham,]}>
+                                <Text style={styles.mdk}>{'Tỉnh/Thành phố'}</Text>
                                 <Field>
                                     <TextField
                                         hideError={true}
@@ -605,8 +605,8 @@ class EditProfileScreen extends Component {
 
                             </Field>
 
-                            <Field style={[styles.mucdichkham, { marginTop: 10 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
-                                <Text style={styles.mdk}></Text>
+                            <Field style={[styles.mucdichkham, { marginTop: 10 },]}>
+                                <Text style={styles.mdk}>Quận/Huyện</Text>
                                 <Field>
                                     <TextField
                                         hideError={true}
@@ -633,8 +633,8 @@ class EditProfileScreen extends Component {
                                     />
                                 </Field>
                             </Field>
-                            <Field style={[styles.mucdichkham, { marginTop: 10 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
-                                <Text style={styles.mdk}></Text>
+                            <Field style={[styles.mucdichkham, { marginTop: 10 },]}>
+                                <Text style={styles.mdk}>Xã phường</Text>
                                 <Field>
                                     <TextField
                                         hideError={true}
@@ -653,8 +653,8 @@ class EditProfileScreen extends Component {
                                     />
                                 </Field>
                             </Field>
-                            <Field style={[styles.mucdichkham, this.state.type == "FAMILY" ? {} : { marginTop: 10 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
-                                <Text style={styles.mdk}></Text>
+                            <Field style={[styles.mucdichkham, this.state.type == "FAMILY" ? {} : { marginTop: 10 },]}>
+                                <Text style={styles.mdk}>Thôn/Xóm, số nhà</Text>
                                 <TextField
                                     hideError={true}
                                     onValidate={(valid, messages) => {
@@ -689,7 +689,7 @@ class EditProfileScreen extends Component {
                                             onPress={this.onSelectRelationShip}
                                             editable={false}
                                             inputStyle={[
-                                                styles.ktq, { minHeight: 60 }
+                                                styles.ktq, { minHeight: 41 }
                                             ]}
                                             errorStyle={styles.errorStyle}
                                             value={this.state.relationShip && this.state.relationShip.name ? this.state.relationShip.name : 'Quan hệ'}
