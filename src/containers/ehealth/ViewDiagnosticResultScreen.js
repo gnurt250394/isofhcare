@@ -46,7 +46,7 @@ class ViewCheckupResultScreen extends Component {
                 <DiagnosticResult showTitle={false} result={this.state.result} />
                 <TouchableOpacity style={styles.btnFinish} onPress={() => {
                     this.props.navigation.pop();
-                }}><Text style={styles.txFinish}>{constants.title.result_ehealth}</Text>
+                }}><Text style={styles.txFinish}>{constants.ehealth.view_finish}</Text>
                 </TouchableOpacity>
                 <View style={styles.viewFooter} />
             </ScrollView>
