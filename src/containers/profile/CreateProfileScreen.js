@@ -25,6 +25,7 @@ import profileProvider from '@data-access/profile-provider'
 import locationProvider from '@data-access/location-provider';
 import Modal from "@components/modal";
 import NavigationService from "@navigators/NavigationService";
+import ActivityPanel from "@components/ActivityPanel";
 
 class CreateProfileScreen extends Component {
     constructor(props) {
@@ -327,10 +328,18 @@ class CreateProfileScreen extends Component {
             : icSupport;
 
         return (
-            <View style={{ flex: 1, backgroundColor: '#fff' }}>
+            <ActivityPanel
+                icBack={require('@images/new/left_arrow_white.png')}
+                titleStyle={styles.txTitle}
+                title={'THÊM THÀNH VIÊN MỚI'}
+                iosBarStyle={'light-content'}
+                statusbarBackgroundColor="#359A60"
+                actionbarStyle={styles.actionbarStyle}
+                style={{flex:1,backgroundColor:'#fff'}}
+
+            >
                 <ScrollView keyboardShouldPersistTaps='handled' style={{ flex: 1, paddingVertical: 5 }}>
                     <View style={styles.container}>
-                        <Text style={styles.txTitle}>THÊM THÀNH VIÊN MỚI</Text>
                         <Form ref={ref => (this.form = ref)} style={[{ flex: 1 }]}>
                             <Field style={[styles.mucdichkham, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
                                 <Text style={styles.mdk}>{constants.fullname} <Text style={{ color: 'red' }}>(*)</Text></Text>
@@ -758,7 +767,7 @@ class CreateProfileScreen extends Component {
                     </View>
                 </Modal>
                 {Platform.OS == "ios" && <KeyboardSpacer />}
-            </View>
+            </ActivityPanel>
         );
     }
 
@@ -800,7 +809,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: 'bold'
     },
-    txTitle: { fontSize: 16, color: '#4BBA7B', textAlign: 'center', fontWeight: '600', marginTop: 40, marginBottom: 10 },
+    txTitle: { color: '#fff', textAlign: 'left', marginHorizontal: 10,fontSize:14 },
     mdk: {
         marginLeft: 12,
         flex: 1,
@@ -838,6 +847,10 @@ const styles = StyleSheet.create({
         flex: 1
 
         // borderColor: "rgba(0, 0, 0, 0.07)"
+    },
+    actionbarStyle: {
+        backgroundColor: '#4BBA7B',
+        borderBottomWidth: 0
     },
     btnhuy: {
         fontSize: 18,
