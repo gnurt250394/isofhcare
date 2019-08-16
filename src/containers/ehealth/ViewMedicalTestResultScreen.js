@@ -43,7 +43,7 @@ class ViewCheckupResultScreen extends Component {
                 <MedicalTestResult showTitle={false} result={this.state.result} />
                 <TouchableOpacity style={styles.btnViewFinish} onPress={() => {
                     this.props.navigation.pop();
-                }}><Text style={styles.txDone}>XEM XONG</Text>
+                }}><Text style={styles.txDone}>{constants.ehealth.view_finish}</Text>
                 </TouchableOpacity>
                 <View style={styles.viewBottomSpace} />
             </ScrollView>
