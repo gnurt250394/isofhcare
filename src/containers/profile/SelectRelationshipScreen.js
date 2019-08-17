@@ -13,40 +13,53 @@ import locationProvider from '@data-access/location-provider';
 class SelectRelationshipScreen extends Component {
     constructor(props) {
         super(props);
+        let gender = this.props.navigation.state.params && this.props.navigation.state.params.gender ? this.props.navigation.state.params.gender : null
         this.state = {
             listService: [],
             listServiceSearch: [],
             searchValue: "",
             refreshing: false,
-            data: [
+            gender: gender,
+            dataMale: [
                 {
                     id: 1,
                     name: 'Cha',
                     type: 'DAD'
                 }, {
-                    id: 2,
-                    name: 'Mẹ',
-                    type: 'MOTHER'
-                }, {
                     id: 3,
                     name: 'Con trai',
                     type: 'BOY'
-                }, {
-                    id: 4,
-                    name: 'Con gái',
-                    type: 'DAUGHTER'
                 }, {
                     id: 5,
                     name: 'Cháu trai',
                     type: 'GRANDSON'
                 }, {
-                    id: 6,
-                    name: 'Cháu gái',
-                    type: 'NIECE'
-                }, {
                     id: 7,
                     name: 'Ông',
                     type: 'GRANDFATHER'
+                }, {
+                    id: 10,
+                    name: 'Chồng',
+                    type: 'HUSBAND'
+                }, {
+                    id: 11,
+                    name: 'Khác',
+                    type: 'OTHER'
+                },
+            ],
+            dataFemale: [
+                {
+                    id: 2,
+                    name: 'Mẹ',
+                    type: 'MOTHER'
+                }, {
+                    id: 4,
+                    name: 'Con gái',
+                    type: 'DAUGHTER'
+                }, {
+                    id: 6,
+                    name: 'Cháu gái',
+                    type: 'NIECE'
                 }, {
                     id: 8,
                     name: 'Bà',
@@ -55,10 +68,6 @@ class SelectRelationshipScreen extends Component {
                     id: 9,
                     name: 'Vợ',
                     type: 'WIFE'
-                }, {
-                    id: 10,
-                    name: 'Chồng',
-                    type: 'HUSBAND'
                 },
                 {
                     id: 11,
@@ -89,11 +98,27 @@ class SelectRelationshipScreen extends Component {
         this.setState({ searchValue: s });
     }
     onSearch = () => {
-        var s = this.state.searchValue;
-        var listSearch = this.state.data.filter(function (item) {
-            return (item == null || item.name.trim().toLowerCase().unsignText().indexOf(s.trim().toLowerCase().unsignText()) != -1);
-        });
-        this.setState({ dataSearch: listSearch });
+        switch(this.state.gender){
+            case '0' : {
+                var s = this.state.searchValue;
+                var listSearch = this.state.dataFemale.filter(function (item) {
+                    return (item == null || item.name.trim().toLowerCase().unsignText().indexOf(s.trim().toLowerCase().unsignText()) != -1);
+                });
+                this.setState({ dataSearch: listSearch });
+                break
+            }
+            case '1' : {
+                var s = this.state.searchValue;
+                var listSearch = this.state.dataMale.filter(function (item) {
+                    return (item == null || item.name.trim().toLowerCase().unsignText().indexOf(s.trim().toLowerCase().unsignText()) != -1);
+                });
+                this.setState({ dataSearch: listSearch });
+                break
+            }
+        }        
+            
+        
+
     }
     renderSearchButton() {
         return (
