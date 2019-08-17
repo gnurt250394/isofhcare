@@ -146,6 +146,9 @@ class NotificationScreen extends Component {
           case 6:
             this.detailsEhealth(data, item.user)
             break
+            case 7:
+            NavigationService.navigate('listProfileUser')
+            break
           default:
             this.setState({ isLoading: false });
         }
