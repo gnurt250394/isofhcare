@@ -276,6 +276,7 @@ class CreateProfileScreen extends Component {
     onSelectRelationShip = () => {
         NavigationService.navigate('selectRelationship', {
             onSelected: this.selectRelationShip.bind(this),
+            gender : this.state.valueGender
             // id: this.state.relationShip.id
         })
 
