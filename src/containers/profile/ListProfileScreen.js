@@ -122,11 +122,15 @@ class ListProfileScreen extends Component {
             this.onRefresh()
         }
     }
-    onConfirm = (id) => {
+    onConfirm = (id,sharePermission,medicalRelatedId) => {
         profileProvider.confirm(id).then(res => {
             if (res.code == 0) {
-                this.onRefresh()
-                snackbar.show('Xác nhận thành công', 'success')
+                NavigationService.navigate("shareDataProfile", {
+                    medicalRelatedId: medicalRelatedId,
+                    id:id,
+                    sharePermission: sharePermission
+                })
+                return;
             } else {
                 snackbar.show('Xác nhận không thành công', 'danger')
             }
@@ -193,7 +197,7 @@ class ListProfileScreen extends Component {
                                     </TouchableOpacity>
                                     {
                                         item.medicalRecords.statusConfirm == "NEED_CONFIRM" ? (
-                                            <TouchableOpacity onPress={() => this.onConfirm(item.medicalRecords.id)} style={{ paddingHorizontal: 20, paddingVertical: 5, backgroundColor: '#FFAE00', borderRadius: 5 }}><Text style={{ color: '#fff', fontWeight: 'bold' }}>XÁC NHẬN</Text></TouchableOpacity>
+                                            <TouchableOpacity onPress={() => this.onConfirm(item.medicalRecords.id,item.medicalRecords.sharePermission, item.medicalRecords.medicalRelatedId)} style={{ paddingHorizontal: 20, paddingVertical: 5, backgroundColor: '#FFAE00', borderRadius: 5 }}><Text style={{ color: '#fff', fontWeight: 'bold' }}>XÁC NHẬN</Text></TouchableOpacity>
                                         ) : (<View></View>)
                                     }
                                     <TouchableOpacity style={{ padding: 10 }} onPress={() => this.onShowOptions(item.medicalRecords.id, item.medicalRecords.sharePermission, item.medicalRecords.medicalRelatedId ? item.medicalRecords.medicalRelatedId : null)}>
