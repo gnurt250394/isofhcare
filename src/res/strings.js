@@ -557,7 +557,8 @@ module.exports = {
       share_permission : isofhcare_service + 'medical-records/update-permission',
       check_otp : isofhcare_service + 'medical-records/check-otp',
       resend_otp : isofhcare_service + 'medical-records/resend-otp',
-      confirm : isofhcare_service + 'medical-records/confirm'
+      confirm : isofhcare_service + 'medical-records/confirm',
+      get_details_medical: isofhcare_service + 'medical-records/get-detail-medical-record'
     },
     serviceType: {
       get_all: isofhcare_service + "service-type/get-all"

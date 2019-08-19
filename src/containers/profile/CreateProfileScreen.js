@@ -483,6 +483,7 @@ class CreateProfileScreen extends Component {
                                             inputStyle={[
                                                 styles.ktq,
                                             ]}
+                                            keyboardType="numeric"
                                             errorStyle={styles.errorStyle}
                                             onChangeText={this.onChangeText("height")}
                                             value={this.state.height}
@@ -519,6 +520,7 @@ class CreateProfileScreen extends Component {
                                             inputStyle={[
                                                 styles.ktq,
                                             ]}
+                                            keyboardType="numeric"
                                             errorStyle={styles.errorStyle}
                                             onChangeText={this.onChangeText("weight")}
                                             value={this.state.weight}
@@ -552,6 +554,7 @@ class CreateProfileScreen extends Component {
                                             phone: "SĐT không hợp lệ"
                                         }
                                     }}
+                                    keyboardType="numeric"
                                     placeholder={'Số điện thoại'}
                                     multiline={true}
                                     inputStyle={[
