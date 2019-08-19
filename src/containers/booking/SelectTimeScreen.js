@@ -30,24 +30,14 @@ class SelectTimeScreen extends Component {
         super(props);
         let serviceType = this.props.navigation.state.params.serviceType;
         let hospital = this.props.navigation.state.params.hospital;
-        let profile = this.props.navigation.state.params.profile;
         let specialist = this.props.navigation.state.params.specialist;
         let service = this.props.navigation.state.params.service;
-        let bookingDate = this.props.navigation.state.params.bookingDate;
-        let reason = this.props.navigation.state.params.reason;
-        let contact = this.props.navigation.state.params.contact;
-        let images = this.props.navigation.state.params.images;
         this.state = {
             serviceType,
             hospital,
-            profile,
             service,
             specialist,
-            bookingDate,
-            listTime: [],
-            reason,
-            images,
-            contact
+            listTime: []
         }
     }
     getLable(time) {
@@ -215,116 +205,6 @@ class SelectTimeScreen extends Component {
             })
         });
     }
-    confirmBooking() {
-        if (!this.state.allowBooking)
-            return;
-        let error = false;
-
-        if (this.state.service) {
-            if (!this.state.listTime || this.state.listTime.length == 0)
-                this.setState({ serviceError: "Không tồn tại lịch khám của dịch vụ này" })
-            else
-                this.setState({ serviceError: "" })
-        } else {
-            this.setState({ serviceError: "Dịch vụ không được bỏ trống" })
-            error = true;
-        }
-        if (this.state.schedule) {
-            this.setState({ scheduleError: "" })
-        } else {
-            this.setState({ scheduleError: "Giờ khám không được bỏ trống" })
-            error = true;
-        }
-
-        if (error)
-            return;
-        connectionUtils.isConnected().then(s => {
-            console.log(this.state.schedule.time, this.state.schedule.time.format("yyyy-MM-dd HH:mm:ss"));
-            this.setState({ isLoading: true }, () => {
-                console.log(this.state.schedule.time);
-                bookingProvider.create(
-                    this.state.hospital.hospital.id,
-                    this.state.schedule.schedule.id,
-                    this.state.profile.medicalRecords.id,
-                    this.state.specialist.id,
-                    this.state.service.id,
-                    this.state.schedule.time.format("yyyy-MM-dd HH:mm:ss"),
-                    this.state.reason,
-                    this.state.images,
-                    this.state.contact
-                ).then(s => {
-                    this.setState({ isLoading: false }, () => {
-                        if (s) {
-                            switch (s.code) {
-                                case 0:
-                                    dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, this.state.profile);
-
-                                    this.props.navigation.navigate("confirmBooking", {
-                                        serviceType: this.state.serviceType,
-                                        service: this.state.service,
-                                        profile: this.state.profile,
-                                        hospital: this.state.hospital,
-                                        specialist: this.state.specialist,
-                                        bookingDate: this.state.bookingDate,
-                                        schedule: this.state.schedule,
-                                        reason: this.state.reason,
-                                        images: this.state.images,
-                                        contact: this.state.contact,
-                                        booking: s.data
-                                    });
-                                    break;
-                                case 1:
-                                    this.setState({ isLoading: false }, () => {
-                                        snackbar.show("Đặt khám phải cùng ngày giờ với lịch làm việc", "danger");
-                                    });
-                                    break;
-                                case 2:
-                                    this.setState({ isLoading: false }, () => {
-                                        snackbar.show("Đã kín lịch trong khung giờ này", "danger");
-                                    });
-                                    break;
-                                case 401:
-                                    this.setState({ isLoading: false }, () => {
-                                        snackbar.show("Vui lòng đăng nhập để thực hiện", "danger");
-                                        this.props.navigation.navigate("login"
-                                            // , {
-                                            //     nextScreen: {
-                                            //         screen: "confirmBooking", params: this.props.navigation.state.params
-                                            //     }
-                                            // }
-                                        );
-                                    });
-                                    break;
-                                default:
-                                    this.setState({ isLoading: false }, () => {
-                                        snackbar.show("Đặt khám không thành công", "danger");
-                                    });
-                                    break;
-                            }
-                        }
-                    });
-                }).catch(e => {
-                    this.setState({ isLoading: false }, () => {
-                    });
-                })
-            });
-        }).catch(e => {
-            snackbar.show(constants.msg.app.not_internet, "danger");
-        })
-        return;
-        // this.props.navigation.navigate("confirmBooking", {
-        //     serviceType: this.state.serviceType,
-        //     service: this.state.service,
-        //     profile: this.state.profile,
-        //     hospital: this.state.hospital,
-        //     specialist: this.state.specialist,
-        //     bookingDate: this.state.bookingDate,
-        //     schedule: this.state.schedule,
-        //     reason: this.state.reason,
-        //     images: this.state.images,
-        //     contact: this.state.contact
-        // });
-    }
 
     getColor(item) {
         if (item.type == 0)
@@ -431,6 +311,32 @@ class SelectTimeScreen extends Component {
         this.setState({ schedule: item })
     }
 
+    confirm = () => {
+        if (!this.state.allowBooking)
+            return;
+        let error = false;
+
+        if (this.state.schedule) {
+            this.setState({ scheduleError: "" })
+        } else {
+            this.setState({ scheduleError: "Giờ khám không được bỏ trống" })
+            error = true;
+        }
+
+        if (error)
+            return;
+
+        if (this.state.bookingDate && this.state.schedule) {
+            let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
+            if (callback) {
+                callback(this.state.bookingDate, this.state.schedule);
+                this.props.navigation.pop();
+            }
+        } else {
+            this.setState({ scheduleError: "Vui lòng chọn ngày và khung giờ khám" });
+        }
+    }
+
     renderTimePicker(fromHour, toHour, label) {
         return (
             (this.state.listTime.filter(item => new Date(item.time).format("HH") >= fromHour && new Date(item.time).format("HH") < toHour).length) ?
@@ -466,9 +372,8 @@ class SelectTimeScreen extends Component {
             <View style={{ backgroundColor: '#FFF', flex: 1 }}>
                 <ScaleImage source={require("@images/new/booking/bg_booking.png")} height={200} width={DEVICE_WIDTH} style={{ position: 'absolute', bottom: 10, right: 10 }} />
                 <View style={styles.container}>
-                    <Text style={{ color: '#00c088', fontWeight: 'bold', fontSize: 16, margin: 10 }}>CHỌN NGÀY GIỜ CÓ MÀU XANH</Text>
                     <ScrollView keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
-
+                        <Text style={{ color: '#00c088', fontWeight: 'bold', fontSize: 16, margin: 10 }}>CHỌN NGÀY GIỜ CÓ MÀU XANH</Text>
                         <View style={{ position: 'relative', left: 0, right: 0, width: DEVICE_WIDTH }}>
                             <Calendar style={{ width: '100%' }}
                                 // markedDates={this.state.listSchedule}
@@ -510,13 +415,13 @@ class SelectTimeScreen extends Component {
                                         {this.renderTimePicker(0, 12, "Sáng")}
                                         {this.renderTimePicker(12, 24, "Chiều")}
                                     </View>
-                                    : <Text style={[styles.errorStyle]}>{"Ngày bạn chọn không có lịch khám nào"}</Text>
+                                    : !this.state.isLoading ? <Text style={[styles.errorStyle]}>{"Ngày bạn chọn không có lịch khám nào"}</Text> : null
                                 :
-                                null
+                                <Text style={{ fontStyle: 'italic', marginVertical: 20, textAlign: 'center' }}>Vui lòng chọn khung giờ khám</Text>
                         }
 
                     </ScrollView>
-                    <TouchableOpacity style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]} onPress={this.confirmBooking.bind(this)}>
+                    <TouchableOpacity style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]} onPress={this.confirm}>
                         <Text style={styles.btntext}>Xác nhận</Text>
                     </TouchableOpacity>
                 </View>

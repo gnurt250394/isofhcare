@@ -352,29 +352,13 @@ class AddBookingScreen extends Component {
             }).catch(e => {
                 snackbar.show(constants.msg.app.not_internet, "danger");
             })
-
-
-
-
-
-            // this.props.navigation.navigate("selectTime", {
-            //     profile: this.state.profile,
-            //     hospital: this.state.hospital,
-            //     specialist: this.state.specialist,
-            //     serviceType: this.state.serviceType ? this.state.serviceType : '',
-            //     bookingDate: this.state.bookingDate,
-            //     reason: reason,
-            //     img,
-            //     contact: this.state.contact
-            // });
         }
     }
-    onTimePickerChange(schedule) {
-        if (schedule)
-            this.setState({ schedule, scheduleError: "" });
-        else {
-            this.setState({ schedule });
-        }
+    onSelectDateTime = (date, schedule) => {
+        this.setState({ schedule, bookingDate: date, scheduleError: "" });
+    }
+    renderBookingTime() {
+
     }
     render() {
         let avatar = ((this.state.profile || {}).medicalRecords || {}).avatar;
@@ -502,39 +486,35 @@ class AddBookingScreen extends Component {
                         }}>
                             <ScaleImage style={styles.imgIc} height={15} source={require("@images/new/booking/ic_specialist.png")} />
                             <Text style={styles.mdk}>{constants.booking.service}</Text>
-                            {/* <Text>{JSON.stringify(this.state.listServicesSelected)}</Text> */}
                             {this.state.listServicesSelected && this.state.listServicesSelected.length ?
                                 <View style={{ flex: 1 }}>
                                     {
                                         this.state.listServicesSelected.map((item, index) => <Text style={{ marginHorizontal: 10, marginBottom: 5, alignSelf: 'flex-end' }} numberOfLines={1} key={index}>{item.service.name}</Text>)
                                     }
-                                    {/* <Text numberOfLines={1} style={styles.ktq}>{this.state.service.name}</Text> */}
-                                    {/* <Text numberOfLines={1} style={styles.ktq}>{this.state.service.price.formatPrice() + 'đ'}</Text> */}
                                 </View> :
                                 <Text numberOfLines={1} style={styles.ktq}>{constants.booking.select_service}</Text>
                             }
 
                             <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
                         </TouchableOpacity>
-                        {/* {
-                        this.state.serviceError ?
-                            <Text style={[styles.errorStyle]}>{this.state.serviceError}</Text> : null
-                    } */}
+                        {
+                            this.state.serviceError ?
+                                <Text style={[styles.errorStyle]}>{this.state.serviceError}</Text> : null
+                        }
                         <View style={styles.border}></View>
                         <TouchableOpacity style={styles.mucdichkham} onPress={() => {
                             console.log(this.state.listServicesSelected);
                             this.props.navigation.navigate("selectTime", {
                                 serviceType: this.state.serviceType,
                                 hospital: this.state.hospital,
-                                profile: this.state.profile,
                                 specialist: this.state.specialist,
                                 service: this.state.listServicesSelected,
+                                onSelected: this.onSelectDateTime
                             });
-                            // this.setState({ toggelDateTimePickerVisible: true })
                         }}>
                             <ScaleImage style={styles.imgIc} height={18} source={require("@images/new/booking/ic_bookingDate.png")} />
                             <Text style={styles.mdk}>{constants.booking.date_booking}</Text>
-                            <Text style={styles.ktq}>{this.state.date ? this.state.date : constants.booking.select_date_booking}</Text>
+                            <Text style={styles.ktq}>{this.renderBookingTime}</Text>
                             <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
                         </TouchableOpacity>
                         {
@@ -549,7 +529,6 @@ class AddBookingScreen extends Component {
                         {/* <View style={[styles.mucdichkham, { paddingHorizontal: 20 }]}>
                         <Text style={{ fontSize: 14, color: '#8e8e93' }}>{constants.booking.select_time_note}</Text>
                     </View> */}
-                        <BookingTimePicker onChange={this.onTimePickerChange.bind(this)} />
                         {
                             this.state.scheduleError ?
                                 <Text style={[styles.errorStyle]}>{this.state.scheduleError}</Text> : null
@@ -622,32 +601,6 @@ class AddBookingScreen extends Component {
                     <TouchableOpacity onPress={this.addBooking.bind(this)} style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]}><Text style={styles.datkham}>Đặt khám</Text></TouchableOpacity>
                 </View>
                 <ImagePicker ref={ref => this.imagePicker = ref} />
-
-                <DateTimePicker
-                    isVisible={this.state.toggelDateTimePickerVisible}
-                    onConfirm={newDate => {
-                        this.setState({
-                            toggelDateTimePickerVisible: false,
-                        }, () => {
-                            if (newDate && this.state.bookingDate && newDate.ddmmyyyy() == this.state.bookingDate.ddmmyyyy())
-                                return;
-                            this.setState({
-                                bookingDate: newDate,
-                                date: newDate.format("thu, dd tháng MM").replaceAll(" 0", " "),
-                                allowBooking: true,
-                                serviceError: "",
-                                scheduleError: ""
-                            });
-                        })
-                    }}
-                    onCancel={() => {
-                        this.setState({ toggelDateTimePickerVisible: false })
-                    }}
-                    minimumDate={minDate}
-                    cancelTextIOS={constants.actionSheet.cancel2}
-                    confirmTextIOS={constants.actionSheet.confirm}
-                    date={this.state.bookingDate || minDate}
-                />
             </View>
 
         </ActivityPanel>);
