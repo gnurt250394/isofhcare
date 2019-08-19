@@ -139,8 +139,8 @@ class CreateProfileScreen extends Component {
                             "name": name,
                             "dob": this.state.dob ? this.state.dob.format('yyyy-MM-dd') + ' 00:00:00' : null,
                             "gender": gender ? gender : null,
-                            "height": height ? Number(height) : null,
-                            "weight": weight ? Number(weight) : null,
+                            "height": height ? Number(height) : 0,
+                            "weight": weight ? Number(weight) : 0,
                             "phone": phone,
                             "provinceId": idProvince,
                             "districtId": idDistrics,
@@ -149,6 +149,7 @@ class CreateProfileScreen extends Component {
                             "relationshipType": relationshipType
                         }
                         profileProvider.createProfile(data).then(res => {
+                            console.log(res.code,'dasdasd');
                             switch (res.code) {
                                 case 0:
                                     switch (res.data.TYPE) {

@@ -285,8 +285,8 @@ class EditProfileScreen extends Component {
                         let data = this.state.data
                         data.dob = this.state.dob ? this.state.dob.format('yyyy-MM-dd') + ' 00:00:00' : this.state.dobOld,
                         data.gender = this.state.gender
-                        data.height = this.state.height ? Number(this.state.height) : null,
-                        data.weight = this.state.weight ? Number(parseFloat(this.state.weight).toFixed(1)) : null
+                        data.height = this.state.height ? Number(this.state.height) : 0,
+                        data.weight = this.state.weight ? Number(parseFloat(this.state.weight).toFixed(1)) : 0
                         // data.address = this.state.address
                         let id = this.state.id
                         data.phone = this.state.phone

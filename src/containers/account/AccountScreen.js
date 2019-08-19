@@ -33,7 +33,7 @@ class AccountScreen extends Component {
       isShowFigner: false
     };
   }
-  showLoading(loading, callback) {
+  showLoading = (loading, callback) => {
     if (this.props.showLoading) {
       this.props.showLoading(loading, callback);
     } else {
@@ -55,7 +55,7 @@ class AccountScreen extends Component {
                     userProvider
                       .update(this.props.userApp.currentUser.id, user)
                       .then(s => {
-                        this.showLoading(false);
+                        this.showLoading(false,() => {});
                         if (s.code == 0) {
                           var user = s.data.user;
                           let current = this.props.userApp.currentUser;
@@ -70,7 +70,7 @@ class AccountScreen extends Component {
                         }
                       })
                       .catch(e => {
-                        this.showLoading(false);
+                        this.showLoading(false,() => {});
                         snackbar.show(
                           "Cập nhật ảnh đại diện không thành công",
                           "danger"
@@ -81,7 +81,7 @@ class AccountScreen extends Component {
               });
             })
             .catch(e => {
-              this.showLoading(false);
+              this.showLoading(false,() => {});
               snackbar.show("Upload ảnh không thành công", "danger");
             });
         });
