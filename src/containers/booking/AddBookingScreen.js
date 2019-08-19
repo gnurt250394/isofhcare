@@ -286,9 +286,11 @@ class AddBookingScreen extends Component {
                 this.setState({ isLoading: true }, () => {
                     console.log(this.state.schedule.time);
                     let serviceIds = this.state.listServicesSelected.map(item => item.service.id).join(",");
-                    let bookingDate = this.state.bookingDate.format("yyyy-MM-dd") + " " + this.state.schedule.label + ":00";
+                    let bookingDate = this.state.bookingDate.format("yyyy-MM-dd ") + new Date(this.state.schedule.key).format("HH:mm:ss");
+                    console.log(this.state.schedule, bookingDate);
                     bookingProvider.create(
                         this.state.hospital.hospital.id,
+                        this.state.schedule && this.state.schedule.schedule ? this.state.schedule.schedule.id : "",
                         this.state.profile.medicalRecords.id,
                         this.state.serviceType.id,
                         serviceIds,
@@ -324,6 +326,11 @@ class AddBookingScreen extends Component {
                                             snackbar.show(constants.msg.booking.full_slot_on_this_time, "danger");
                                         });
                                         break;
+                                    // case 4:
+                                    //     this.setState({ isLoading: false }, () => {
+                                    //         snackbar.show("Hồ sơ này không tồn tại", "danger");
+                                    //     });
+                                    //     break;
                                     case 401:
                                         this.setState({ isLoading: false }, () => {
                                             snackbar.show(constants.msg.booking.booking_must_login, "danger");
@@ -358,7 +365,12 @@ class AddBookingScreen extends Component {
         this.setState({ schedule, bookingDate: date, scheduleError: "" });
     }
     renderBookingTime() {
-
+        if (this.state.bookingDate && this.state.schedule)
+            return <View>
+                <Text style={{ textAlign: 'right', color: '#02C39A', fontWeight: 'bold' }}>{(new Date(this.state.schedule.key)).format("HH:mm tt")}</Text>
+                <Text style={{ textAlign: 'right', color: '#02C39A', fontWeight: 'bold' }}>{(new Date(this.state.schedule.key)).format("thu, ngày dd/MM/yyyy")}</Text>
+            </View>
+        return <Text>Chọn ngày và giờ</Text>;
     }
     render() {
         let avatar = ((this.state.profile || {}).medicalRecords || {}).avatar;
@@ -505,33 +517,18 @@ class AddBookingScreen extends Component {
                         <TouchableOpacity style={styles.mucdichkham} onPress={() => {
                             console.log(this.state.listServicesSelected);
                             this.props.navigation.navigate("selectTime", {
-                                serviceType: this.state.serviceType,
-                                hospital: this.state.hospital,
-                                specialist: this.state.specialist,
                                 service: this.state.listServicesSelected,
                                 onSelected: this.onSelectDateTime
                             });
                         }}>
-                            <ScaleImage style={styles.imgIc} height={18} source={require("@images/new/booking/ic_bookingDate.png")} />
+                            <ScaleImage style={styles.imgIc} height={18} source={require("@images/new/booking/ic_bookingTime.png")} />
                             <Text style={styles.mdk}>{constants.booking.date_booking}</Text>
-                            <Text style={styles.ktq}>{this.renderBookingTime}</Text>
+                            <View style={styles.ktq}>{this.renderBookingTime()}</View>
                             <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
                         </TouchableOpacity>
                         {
                             this.state.bookingError ?
                                 <Text style={[styles.errorStyle]}>{this.state.bookingError}</Text> : null
-                        }
-                        <View style={styles.border}></View>
-                        <View style={styles.mucdichkham}>
-                            <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_bookingTime.png")} />
-                            <Text style={styles.mdk}>{constants.booking.select_time_booking}</Text>
-                        </View>
-                        {/* <View style={[styles.mucdichkham, { paddingHorizontal: 20 }]}>
-                        <Text style={{ fontSize: 14, color: '#8e8e93' }}>{constants.booking.select_time_note}</Text>
-                    </View> */}
-                        {
-                            this.state.scheduleError ?
-                                <Text style={[styles.errorStyle]}>{this.state.scheduleError}</Text> : null
                         }
                     </View>
                     <View style={styles.article}>

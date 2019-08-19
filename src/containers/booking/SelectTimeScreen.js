@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Keyboard, Image, TouchableHighlight, FlatList, Dimensions, TouchableWithoutFeedback } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
 import ScaleImage from "mainam-react-native-scaleimage";
 import connectionUtils from '@utils/connection-utils';
@@ -8,9 +8,6 @@ import clientUtils from '@utils/client-utils';
 import scheduleProvider from '@data-access/schedule-provider';
 import snackbar from '@utils/snackbar-utils';
 import dateUtils from "mainam-react-native-date-utils";
-import bookingProvider from '@data-access/booking-provider';
-import dataCacheProvider from '@data-access/datacache-provider';
-import constants from '@resources/strings';
 const DEVICE_WIDTH = Dimensions.get('window').width;
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import DateTimePicker from "mainam-react-native-date-picker";
@@ -28,22 +25,11 @@ LocaleConfig.defaultLocale = 'en';
 class SelectTimeScreen extends Component {
     constructor(props) {
         super(props);
-        let serviceType = this.props.navigation.state.params.serviceType;
-        let hospital = this.props.navigation.state.params.hospital;
-        let specialist = this.props.navigation.state.params.specialist;
         let service = this.props.navigation.state.params.service;
         this.state = {
-            serviceType,
-            hospital,
             service,
-            specialist,
             listTime: []
         }
-    }
-    getLable(time) {
-        let h = parseInt(time / 60);
-        let m = time % 60;
-        return (h ? h < 10 ? "0" + h : h : "00") + ":" + (m ? m : "00");
     }
     getTime(yourDateString) {
         var yourDate = new Date(yourDateString);
@@ -57,152 +43,62 @@ class SelectTimeScreen extends Component {
         }
         return yourDate;
     }
-    analyseTime(listTime) {
-        let numberIgnore = 0;
-        let itemWidth = 30;
-        let widthIgnore = 30;
 
-        length = listTime.length;
-        for (let i = 0; i < listTime.length; i++) {
-            if (i == length - 1)
-                continue;
-            let nex = listTime[i + 1];
-            let item = listTime[i];
-            if (nex.time - item.time > 30 * 60 * 1000) {
-                nex.left = 1;
-                item.right = 1;
-                numberIgnore++;
-            }
-        }
-
-        // let width = (length * itemWidth) + (numberIgnore * (itemWidth + 5));
-
-        // if (width >= DEVICE_WIDTH - 80) {
-        //     width = DEVICE_WIDTH - 80;
-
-        //     itemWidth = (width - (5 * numberIgnore)) / (length + numberIgnore);
-        //     widthIgnore = itemWidth + 5;
-        // }
-
-        let width = (length * itemWidth) + (numberIgnore * widthIgnore);
-
-        if (width >= DEVICE_WIDTH - 80) {
-            width = DEVICE_WIDTH - 80;
-
-            itemWidth = (width - numberIgnore * widthIgnore) / (length);
-            // widthIgnore = itemWidth + 5;
-        }
-        if (itemWidth < 15) {
-            widthIgnore = 30;
-            width = (length * itemWidth) + (numberIgnore * widthIgnore);
-
-            if (width >= DEVICE_WIDTH - 80) {
-                width = DEVICE_WIDTH - 80;
-
-                itemWidth = (width - numberIgnore * widthIgnore) / (length);
-                // widthIgnore = itemWidth + 5;
-            }
-
-        }
-
-        let marginLeft = (DEVICE_WIDTH - width) / 2 - 30;
-        for (let i = 0; i < listTime.length; i++) {
-            let item = listTime[i];
-            if (i != 0) {
-                if (item.left) {
-                    marginLeft += widthIgnore + itemWidth;
-                }
-                else {
-                    marginLeft += itemWidth;
-                }
-            }
-            item.marginLeft = marginLeft;
-        }
-        console.log(listTime);
-        this.setState({
-            itemWidth,
-            numberIgnore,
-            widthIgnore,
-            timeWidth: width
-        })
-    }
-    selectService(service) {
-        this.setState({ schedule: null, serviceError: "", scheduleError: "", allowBooking: true }, () => {
-            this.setState({ isLoading: true }, () => {
-                scheduleProvider.getByDateAndService(service.id, this.state.bookingDate.format("yyyy-MM-dd")).then(s => {
-                    let listTime = [];
-                    if (s.code == 0 && s.data) {
-                        let data = s.data || [];
-                        data.forEach((item, index) => {
-                            for (var key in item) {
-                                try {
-                                    // let date = new Date(key).format("yyyy/MM/dd HH:mm:ss") + " GMT +7";
-                                    // let key1 = key.replace("T", " ") + ":00 GMT +7";
-                                    let time = this.getTime(key);
-                                    // let minute = time.format("mm");
-                                    // let label = "";
-                                    // if (minute == 0)
-                                    //     label = time.format("HH:mm");
-                                    // else
-                                    label = time.format("HH") + "h" + time.format("mm");
-                                    let schedule = {
-                                        label,
-                                        time,
-                                        key: key,
-                                        percent: 100
-                                    }
-                                    let schedules = ((item[key] || {}).detailSchedules || []);
-                                    schedules.forEach((item2, index2) => {
-                                        let detailSchedule = item2.detailSchedule;
-                                        if (item2.numberCase && detailSchedule) {
-                                            let percent = ((item2.numberSlot || 0) * 100) / (item2.numberCase || 1);
-                                            if (percent <= schedule.percent) {
-                                                schedule.percent = percent;
-                                                schedule.schedule = detailSchedule;
-                                                schedule.doctor = item2.doctorVendor;
-                                                schedule.numberSlot = item2.numberSlot || 0;
-                                                schedule.numberCase = item2.numberCase || 1;
-
-                                                let available = 100 - percent;
-                                                if (available == 0)
-                                                    schedule.type = 0;
-                                                else
-                                                    if (available < 30)
-                                                        schedule.type = 1;
-                                                    else
-                                                        if (available < 70)
-                                                            schedule.type = 2;
-                                                        else
-                                                            schedule.type = 3;
-                                            }
-                                        }
-                                    });
-                                    if (schedule.schedule) {
-                                        listTime.push(schedule);
-                                    }
-                                } catch (error) {
-
-                                }
-                            }
-                        });
+    selectDay(day) {
+        let data = this.state.schedules[day].schedules || [];
+        let listTime = [];
+        data.forEach((item, index) => {
+            for (var key in item) {
+                try {
+                    let time = this.getTime(key);
+                    label = time.format("HH") + "h" + time.format("mm");
+                    let schedule = {
+                        label,
+                        time,
+                        key: key,
+                        percent: 100
                     }
-                    console.log(listTime);
+                    let schedules = ((item[key] || {}).detailSchedules || []);
+                    schedules.forEach((item2, index2) => {
+                        let detailSchedule = item2.detailSchedule;
+                        if (item2.numberCase && detailSchedule) {
+                            let percent = ((item2.numberSlot || 0) * 100) / (item2.numberCase || 1);
+                            if (percent <= schedule.percent) {
+                                schedule.percent = percent;
+                                schedule.schedule = detailSchedule;
+                                schedule.doctor = item2.doctorVendor;
+                                schedule.numberSlot = item2.numberSlot || 0;
+                                schedule.numberCase = item2.numberCase || 1;
 
-                    this.setState({
-                        isLoading: false,
-                        listTime: listTime.sort((a, b) => {
-                            return a.time - b.time
-                        }),
-                    }, () => {
-                        this.analyseTime(this.state.listTime);
+                                let available = 100 - percent;
+                                if (available == 0)
+                                    schedule.type = 0;
+                                else
+                                    if (available < 30)
+                                        schedule.type = 1;
+                                    else
+                                        if (available < 70)
+                                            schedule.type = 2;
+                                        else
+                                            schedule.type = 3;
+                            }
+                        }
                     });
-                }).catch(e => {
-                    this.setState({
-                        isLoading: false,
-                        listTime: []
-                    })
-                });
-            })
+                    if (schedule.schedule) {
+                        listTime.push(schedule);
+                    }
+                } catch (error) {
+
+                }
+            }
+        });
+        console.log(listTime);
+
+        this.setState({
+            listTime: listTime.sort((a, b) => {
+                return a.time - b.time
+            }),
+        }, () => {
         });
     }
 
@@ -216,78 +112,48 @@ class SelectTimeScreen extends Component {
         return "#02c39a";
     }
 
-
-    getIcon(item) {
-        if (item.type == 0)
-            return require("@images/new/booking/ic_timepicker0.png");
-        if (item.type == 1)
-            return require("@images/new/booking/ic_timepicker1.png");
-        if (item.type == 2)
-            return require("@images/new/booking/ic_timepicker2.png");
-        return require("@images/new/booking/ic_timepicker3.png");
+    componentDidMount() {
+        this.selectMonth(new Date());
     }
-    renderLabel(item, index) {
-        let margin = 0;
-        let label = item.label;
-        if (item.right && index != 0 && !(item.left & item.right)) {
-            let time = new Date(item.time.getTime() + 30 * 60000);
-            label = time.format("HH") + "h" + time.format("mm");
-            margin += this.state.itemWidth;
+    groupSchedule(schedules) {
+        let obj = {};
+        schedules.forEach(item => {
+            if (Object.keys(item).length) {
+                let key = new Date(Object.keys(item)[0]);
+                if (new Date(key) <= new Date())
+                    return;
+                let tgi = new Date(key).format("yyyy-MM-dd");
+                if (!obj[tgi]) {
+                    obj[tgi] = {
+                        schedules: [],
+                        marked: true,
+                        color: 'green',
+                        selectedColor: '#27ae60'
+                    }
+                } else {
+                    obj[tgi].schedules.push(item);
+                }
+            }
+        });
+        let selected = null;
+        for (let key in obj) {
+            let keyDate = new Date(key);
+            if (keyDate > new Date() && (selected == null || keyDate < selected)) {
+                selected = keyDate;
+            }
         }
-        margin += 7;
-        if (index == 0 || index == this.state.listTime.length - 1 || item.left || item.right)
-            return (<Text style={{ fontSize: 9, position: 'absolute', left: item.marginLeft + margin, top: 50 }}>{label}</Text>)
-        return null;
-    }
-    renderIgnoreTime(item, index) {
-        return <TouchableOpacity
-            onPress={() => {
-                snackbar.show("Không có lịch trong khung giờ này", "danger");
-                return;
-            }}
-            style={{
-                position: 'absolute', left: this.state.itemWidth - 0, flexDirection: 'row', alignItems: 'center', paddingVertical: 20,
-            }}>
-            <View style={{ width: this.state.widthIgnore + 10, height: 5, backgroundColor: '#cacaca' }}>
-            </View>
-            <View style={{
-                position: 'absolute',
-                width: 8, height: 8,
-                borderRadius: 4,
-                backgroundColor: '#cacaca', justifyContent: 'center', alignItems: 'center'
-            }}>
-                <View style={{ width: 2, height: 2, backgroundColor: '#FFF', borderRadius: 1 }}></View>
-            </View>
-        </TouchableOpacity>
-    }
-    renderPointer(item, time) {
-        return <View style={{
-            top: 18.7, position: 'absolute', width: 8, height: 8,
-            borderRadius: 4,
-            backgroundColor: this.getColor(item), justifyContent: 'center', alignItems: 'center'
-        }}>
-            <View style={{ width: 2, height: 2, backgroundColor: '#FFF', borderRadius: 1 }}></View>
-        </View>
-    }
-    renderTime(item, index) {
-        return <TouchableOpacity onPress={() => {
-            if (item.type == 0) {
-                snackbar.show("Đã kín lịch trong khung giờ này", "danger");
-                return;
-            }
-            this.setState({ schedule: item, index })
-        }}
-            style={[{ flexDirection: 'row', position: 'absolute', paddingVertical: 20, left: item.marginLeft + 7, alignItems: 'center', marginTop: 20 }, item.right ? { width: this.state.itemWidth + this.state.widthIgnore + 1 } : {}]}>
-
-            <View style={[{ width: this.state.itemWidth + 1, height: 5, backgroundColor: this.getColor(item), marginLeft: 0, borderTopLeftRadius: 2.5, borderBottomLeftRadius: 2.5 }, index == this.state.listTime.length - 1 ? { borderTopRightRadius: 2.5, borderBottomRightRadius: 2.5 } : {}]}>
-            </View>
-            {
-                item.right && this.renderIgnoreTime(item, index)
-            }
-            {
-                this.renderPointer(item, index)
-            }
-        </TouchableOpacity>
+        if (selected) {
+            (obj[selected.format("yyyy-MM-dd")] || {}).selected = true;
+        }
+        this.setState({
+            dateString: selected ? selected.format("yyyy-MM-dd") : null,
+            bookingDate: selected,
+            schedules: obj
+        }, () => {
+            if (this.state.dateString)
+                this.selectDay(this.state.dateString);
+        })
+        return obj;
     }
 
     selectMonth(date) {
@@ -295,10 +161,14 @@ class SelectTimeScreen extends Component {
             let service = this.state.service[0];
             this.setState({ isLoading: true }, () => {
                 console.log(this.state.service);
-                scheduleProvider.search(service.service.id, date.getFirstDateOfMonth().format("yyyy-MM-dd 00:00:00"), date.getLastDateOfMonth().format("yyyy-MM-dd 23:59:59"), 1, 1000).then(s => {
-                    alert(JSON.stringify(s));
+
+                scheduleProvider.getByMonthAndService(service.service.id, date.format("yyyyMM")).then(s => {
+                    this.setState({ isLoading: false }, () => {
+                        this.groupSchedule(s.data);
+                    });
+                }).catch(e => {
+                    this.setState({ isLoading: false });
                 })
-                this.setState({ isLoading: false });
             })
         }
     }
@@ -308,7 +178,7 @@ class SelectTimeScreen extends Component {
             snackbar.show("Đã kín lịch trong khung giờ này", "danger");
             return;
         }
-        this.setState({ schedule: item })
+        this.setState({ schedule: item, allowBooking: true })
     }
 
     confirm = () => {
@@ -376,19 +246,30 @@ class SelectTimeScreen extends Component {
                         <Text style={{ color: '#00c088', fontWeight: 'bold', fontSize: 16, margin: 10 }}>CHỌN NGÀY GIỜ CÓ MÀU XANH</Text>
                         <View style={{ position: 'relative', left: 0, right: 0, width: DEVICE_WIDTH }}>
                             <Calendar style={{ width: '100%' }}
-                                // markedDates={this.state.listSchedule}
+                                markedDates={this.state.schedules}
                                 current={(this.state.latestTime || new Date()).format("yyyy-MM-dd")}
                                 onDayPress={(day) => {
-                                    this.setState({
-                                        dateString: day.dateString,
-                                        bookingDate: day.dateString.toDateObject()
-                                    }, () => {
-                                        this.selectService(this.state.service[0].service)
-                                    })
+                                    let schedules = JSON.parse(JSON.stringify(this.state.schedules));
+                                    if (schedules.hasOwnProperty(day.dateString)) {
+                                        if (this.state.dateString) {
+                                            delete schedules[this.state.dateString].selected;
+                                        }
+                                        schedules[day.dateString].selected = true;
+                                        schedules[day.dateString].selectedColor = '#27ae60';
+                                        this.setState({
+                                            dateString: day.dateString,
+                                            bookingDate: day.dateString.toDateObject(),
+                                            schedules: schedules
+                                        }, () => {
+                                            this.selectDay(this.state.dateString);
+                                        })
+                                    }
                                 }}
                                 monthFormat={'MMMM - yyyy'}
                                 onMonthChange={(month) => {
-                                    this.selectMonth(month.dateString.toDateObject())
+                                    this.setState({ latestTime: new Date(month.dateString) }, () => {
+                                        this.selectMonth(month.dateString.toDateObject())
+                                    })
                                 }}
                                 // hideArrows={true}
                                 hideExtraDays={true}
