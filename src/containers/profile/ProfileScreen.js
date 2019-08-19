@@ -19,39 +19,42 @@ import { connect } from "react-redux";
 class ProfileScreen extends Component {
     constructor(props) {
         super(props);
-        let data = (this.props.navigation.state.params && this.props.navigation.state.params.data) ? this.props.navigation.state.params.data.medicalRecords || {} : {}
-        console.log(data)
         this.state = {
-            value: 1,
-            refresh: false,
-            isLoading: false,
-            data: data,
-            imgAvtLocal: data.avatar || '',
+
         };
     }
-    onSelectFeature = (value) => {
+
+    componentDidMount() {
+        let id = this.props.navigation.state.params && this.props.navigation.state.params.id ? this.props.navigation.state.params.id : ''
         this.setState({
-            value: value
+            loading: true
+        }, () => {
+            this.onGetDetail(id)
         })
-    }
-    renderContent = () => {
-        switch (this.state.value) {
-            case 1: return (
-                <ProfileInfo></ProfileInfo>
-            )
-            case 2: return (<Transaction></Transaction>)
-        }
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.navigation.state.params && nextProps.navigation.state.params.data) {
-            this.setState({
-                data: nextProps.navigation.state.params.data.medicalRecords,
-                // imgAvtLocal: this.props.navigation.state.params.data.avatar ? this.props.navigation.state.params.data.avatar.absoluteUrl() : '',
-                // imgLocal: this.props.navigation.state.params.data.cover ? this.props.navigation.state.params.data.cover.absoluteUrl() : '',
-            })
-            this.props = nextProps
+        if (nextProps.navigation.state.params && nextProps.navigation.state.params.id) {
+            let id = nextProps.navigation.state.params && nextProps.navigation.state.params.id ? nextProps.navigation.state.params.id : ''
+            console.log(id);
+            this.onGetDetail(id)
         }
+    }
+    onGetDetail = (id) => {
+
+        profileProvider.getDetailsMedical(id).then(res => {
+            if (res.code == 0) {
+                this.setState({
+                    imgAvtLocal: res.data.medicalRecords.avatar,
+                    data: res.data,
+                    loading: false
+                })
+            }
+        }).catch(err => {
+            this.setState({
+                loading: false
+            })
+        })
     }
     selectImageAvt = () => {
         connectionUtils
@@ -67,7 +70,6 @@ class ProfileScreen extends Component {
                         });
                         imageProvider.upload(this.state.imageAvt.path, (s, e) => {
                             if (s.success && s.data.code == 0) {
-                                console.log(s, 'xoasd');
                                 let images = s.data.data.images[0].thumbnail;
                                 this.setState({
                                     imgAvtLocal: images
@@ -115,25 +117,21 @@ class ProfileScreen extends Component {
                     () => {
                         let data = {
                             avatar: image,
-                            type: this.state.data.type,
+                            type: this.state.data.medicalRecords.type,
                         }
-                        let id = this.state.data.id
+                        let id = this.state.data.medicalRecords.id
                         profileProvider
                             .updateAvatar(id, data)
                             .then(res => {
-                                console.log(res,'upload')
                                 if (res.code == 0) {
-                                    if (this.state.data.status == 1) {
+                                    if (this.state.data.medicalRecords.status == 1) {
                                         let current = this.props.userApp.currentUser;
                                         current.avatar = res.data.medicalRecords.avatar
                                         this.props.dispatch(redux.userLogin(current));
-                                        console.log(current, 'new user')
                                     }
-                                    let data = this.state.data
-                                    data.avatar = res.data.medicalRecords.avatar
                                     this.setState({
                                         isLoading: false,
-                                        data : data
+                                        imgAvtLocal: res.data.medicalRecords.avatar
                                     });
                                 }
                                 else {
@@ -157,70 +155,67 @@ class ProfileScreen extends Component {
             });
     }
     renderRelation = () => {
-        switch (this.state.data.relationshipType) {
-            case 'DAD':
-                return <Text style={styles.txContent}>Cha</Text>
-            case 'MOTHER':
-                return <Text style={styles.txContent}>Mẹ</Text>
-            case 'BOY':
-                return <Text style={styles.txContent}>Con trai</Text>
-            case 'DAUGHTER':
-                return <Text style={styles.txContent}>Con gái</Text>
-            case 'GRANDSON':
-                return <Text style={styles.txContent}>Cháu trai</Text>
-            case 'NIECE':
-                return <Text style={styles.txContent}>Cháu gái</Text>
-            case 'GRANDFATHER':
-                return <Text style={styles.txContent}>Ông</Text>
-            case 'GRANDMOTHER':
-                return <Text style={styles.txContent}>Bà</Text>
-            case 'WIFE':
-                return <Text style={styles.txContent}>Vợ</Text>
-            case 'HUSBAND':
-                return <Text style={styles.txContent}>Chồng</Text>
-            case 'OTHER':
-                return <Text style={styles.txContent}>Khác</Text>
+        if (this.state.data && this.state.data.medicalRecords && this.state.data.medicalRecords.relationshipType)
+            switch (this.state.data.medicalRecords.relationshipType) {
+                case 'DAD':
+                    return <Text style={styles.txContent}>Cha</Text>
+                case 'MOTHER':
+                    return <Text style={styles.txContent}>Mẹ</Text>
+                case 'BOY':
+                    return <Text style={styles.txContent}>Con trai</Text>
+                case 'DAUGHTER':
+                    return <Text style={styles.txContent}>Con gái</Text>
+                case 'GRANDSON':
+                    return <Text style={styles.txContent}>Cháu trai</Text>
+                case 'NIECE':
+                    return <Text style={styles.txContent}>Cháu gái</Text>
+                case 'GRANDFATHER':
+                    return <Text style={styles.txContent}>Ông</Text>
+                case 'GRANDMOTHER':
+                    return <Text style={styles.txContent}>Bà</Text>
+                case 'WIFE':
+                    return <Text style={styles.txContent}>Vợ</Text>
+                case 'HUSBAND':
+                    return <Text style={styles.txContent}>Chồng</Text>
+                case 'OTHER':
+                    return <Text style={styles.txContent}>Khác</Text>
 
-            default:
-                return <Text style={styles.txContent}></Text>
-        }
+                default:
+                    return <Text style={styles.txContent}></Text>
+            }
     }
     renderAddress = () => {
-        let dataLocaotion = this.props.navigation.state.params && this.props.navigation.state.params.data ? this.props.navigation.state.params.data.medicalRecords : ''
-        if (dataLocaotion) {
-            if (this.state.data.address && this.state.data.village) {
-                return (<Text style={styles.txContent}>{this.state.data.village + ', ' + this.state.data.address}</Text>)
-            }
+        let dataLocaotion = this.state.data && this.state.data.medicalRecords ? this.state.data.medicalRecords : {}
+        return (<Text style={styles.txContent}>{dataLocaotion.address}</Text>)
+        // let dataLocaotion = this.state.data && this.state.data.medicalRecords ? this.state.data.medicalRecords : {}
+        // if (dataLocaotion) {
+        //     if (dataLocaotion.address && dataLocaotion.village) {
+        //         return (<Text style={styles.txContent}>{dataLocaotion.village + ', ' + dataLocaotion.address}</Text>)
+        //     }
 
-            if (this.state.data.address && !this.state.data.village) {
-                return (<Text style={styles.txContent}>{this.state.data.address}</Text>)
-            }
-            if (!this.state.data.address && this.state.data.village) {
-                return (<Text style={styles.txContent}>{this.state.data.village}</Text>)
-            }
-        }
+        //     if (dataLocaotion.address && !dataLocaotion.village) {
+        //         return (<Text style={styles.txContent}>{dataLocaotion.address}</Text>)
+        //     }
+        //     if (!dataLocaotion.address && dataLocaotion.village) {
+        //         return (<Text style={styles.txContent}>{dataLocaotion.village}</Text>)
+        //     }
+        // }
 
     }
     onEdit = () => {
-        let dataLocation = this.props.navigation.state.params && this.props.navigation.state.params.data ? this.props.navigation.state.params.data : ''
-        if (dataLocation) {
 
-            let country = dataLocation.country
-            let district = dataLocation.district
-            let province = dataLocation.province
-            let zone = dataLocation.zone
-            let relationshipType = this.state.data.relationshipType
-            this.props.navigation.navigate('editProfile', {
-                data: this.state.data,
-                country: country, district: district, province: province, zone: zone, relationshipType: relationshipType
-            })
-        }
+        this.props.navigation.navigate('editProfile', {
+            data: this.state.data,
+        })
     }
     render() {
         const icSupport = require("@images/new/user.png");
+        const details = this.state.data && this.state.data.medicalRecords ? this.state.data.medicalRecords : {}
         const sourceAvt = this.state.imgAvtLocal
             ? { uri: this.state.imgAvtLocal.absoluteUrl() }
             : icSupport
+        console.log(sourceAvt, 'sourceAvtsourceAvt')
+        console.log(this.state.imgAvtLocal, 'ád')
         return (
             <ActivityPanel
                 icBack={require('@images/new/left_arrow_white.png')}
@@ -231,9 +226,9 @@ class ProfileScreen extends Component {
                 actionbarStyle={styles.actionbarStyle}
                 style={styles.container}
                 menuButton={<TouchableOpacity onPress={this.onEdit}><ScaledImage style={{ tintColor: '#fff', marginRight: 10 }} height={20} source={require('@images/new/profile/ic_edit.png')}></ScaledImage></TouchableOpacity>}
-
+                isLoading={this.state.loading}
             >
-                <ScrollView  style={{ flex: 1 }} >
+                <ScrollView bounces={false} style={{ flex: 1 }} >
                     <View style={styles.viewBaner}>
                         <ScaledImage
                             // resizeMode="cover"
@@ -255,6 +250,7 @@ class ProfileScreen extends Component {
                                 customImagePlaceholderDefaultStyle={styles.customImagePlace}
                                 style={styles.styleImgLoad}
                                 resizeMode="cover"
+                                placeholderSource={icSupport}
                                 loadingStyle={{ size: "small", color: "gray" }}
                                 defaultImage={() => {
                                     return (
@@ -281,42 +277,34 @@ class ProfileScreen extends Component {
                         <Text style={[styles.txFeature]} >Thông tin cá nhân</Text>
                         <View></View>
                     </View>
-                    {/* <TouchableOpacity onPress={() => this.onSelectFeature(2)} style={[styles.btnFeature, this.state.value == 2 ? { backgroundColor: '#4BBA7B' } : { backgroundColor: '#fff' }]}>
-                            <ScaledImage height={20} style={this.state.value == 2 ? { tintColor: '#fff' } : { tintColor: '#4BBA7B' }} source={require('@images/new/profile/ic_deal_write.png')}></ScaledImage>
-                            <Text style={[styles.txFeature, this.state.value == 2 ? { color: '#FFF' } : {}]}>Giao dịch</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => this.onSelectFeature(3)} style={[styles.btnFeature, this.state.value == 3 ? { backgroundColor: '#4BBA7B' } : { backgroundColor: '#fff' }]}>
-                            <ScaledImage height={20} style={this.state.value == 3 ? { tintColor: '#fff' } : { tintColor: '#4BBA7B' }} source={require('@images/new/profile/ic_account.png')}></ScaledImage>
-                            <Text style={[styles.txFeature, this.state.value == 3 ? { color: '#FFF' } : {}]}>Y bạ điện tử</Text>
-                        </TouchableOpacity> */}
                     <View style={styles.containerInfo}>
                         <View style={styles.viewItem}>
-                            <Text><Text style={styles.txLabel}>Họ và tên: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.name}</Text></Text>
+                            <Text><Text style={styles.txLabel}>Họ và tên: </Text><Text style={styles.txContent}>{details && details.name}</Text></Text>
                         </View>
                         <View style={styles.viewItem}>
-                            <Text><Text style={styles.txLabel}>Ngày sinh: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.dob ? this.state.data.dob.toDateObject('-').format('dd/MM/yyyy') : ('')}</Text></Text>
+                            <Text><Text style={styles.txLabel}>Ngày sinh: </Text><Text style={styles.txContent}>{details && details.dob ? details.dob.toDateObject('-').format('dd/MM/yyyy') : ('')}</Text></Text>
                         </View>
                         {/* <View style={styles.viewItem}>
-                            <Text><Text style={styles.txLabel}>ID: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.profileNoID ? this.state.data.profileNoID : ''}</Text></Text>
+                            <Text><Text style={styles.txLabel}>ID: </Text><Text style={styles.txContent}>{details && details.profileNoID ? details.profileNoID : ''}</Text></Text>
                         </View> */}
                         <View style={styles.viewItem}>
-                            <Text><Text style={styles.txLabel}>Giới tính: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.gender || this.state.data.gender == 0 ? (this.state.data.gender == 0 ? 'Nữ' : 'Nam') : ''}</Text></Text>
+                            <Text><Text style={styles.txLabel}>Giới tính: </Text><Text style={styles.txContent}>{details && details.gender || details.gender == 0 ? (details.gender == 0 ? 'Nữ' : 'Nam') : ''}</Text></Text>
                         </View>
                         <View style={[styles.viewItem, {}]}>
-                            <Text><Text style={styles.txLabel}>Chiều cao: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.height ? this.state.data.height + 'cm' : ''} </Text></Text>
-                            <Text style={[styles.txLabel]}>Cân nặng: <Text style={{ color: '#000',fontWeight:'normal' }}>{this.state.data && this.state.data.weight ? this.state.data.weight + 'kg' : ''} </Text></Text>
+                            <Text><Text style={styles.txLabel}>Chiều cao: </Text><Text style={styles.txContent}>{details && details.height ? details.height + 'cm' : ''} </Text></Text>
+                            <Text style={[styles.txLabel]}>Cân nặng: <Text style={{ color: '#000', fontWeight: 'normal' }}>{details && details.weight ? details.weight + 'kg' : ''} </Text></Text>
                             <View style={{ width: 20 }}></View>
                         </View>
                         <View style={styles.viewItem}>
-                            <Text><Text style={styles.txLabel}>Chỉ số BMI: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.height && this.state.data.weight ? parseFloat(this.state.data.weight / (Math.pow(this.state.data.height / 100, 2))).toFixed(1) : ''}</Text></Text>
+                            <Text><Text style={styles.txLabel}>Chỉ số BMI: </Text><Text style={styles.txContent}>{details && details.height && details.weight ? parseFloat(details.weight / (Math.pow(details.height / 100, 2))).toFixed(1) : ''}</Text></Text>
                         </View>
                         <View style={styles.viewItem}>
-                            <Text><Text style={styles.txLabel}>Số điện thoại: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.phone ? this.state.data.phone.replace(/(\d\d\d\d)(\d\d\d)(\d\d\d)/, '$1.$2.$3') : ''}</Text></Text>
+                            <Text><Text style={styles.txLabel}>Số điện thoại: </Text><Text style={styles.txContent}>{details && details.phone ? details.phone.replace(/(\d\d\d\d)(\d\d\d)(\d\d\d)/, '$1.$2.$3') : ''}</Text></Text>
                         </View>
                         <View style={styles.viewItem}>
-                            <Text><Text style={styles.txLabel}>Địa chỉ: </Text><Text style ={{fontSize:14,color:'#000'}}>{this.state.data.address}</Text></Text>
+                            <Text><Text style={styles.txLabel}>Địa chỉ: </Text><Text style={{ fontSize: 14, color: '#000' }}>{this.renderAddress()}</Text></Text>
                         </View>
-                        {this.state.data.status != 1 ? (
+                        {details.status != 1 ? (
                             <View style={styles.viewItem}>
                                 <Text><Text style={styles.txLabel}>Quan hệ: </Text>{this.renderRelation()}</Text>
                             </View>
@@ -338,12 +326,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     scaledImage: { position: "absolute", top: 5, right: 5 },
-    btnFeature: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#4BBA7B', justifyContent: 'space-around', borderTopLeftRadius: 50, borderBottomLeftRadius: 50, borderColor: '#4BBA7B', paddingVertical: 10, marginLeft: 10, marginTop: 30, paddingHorizontal: 0,flex:1 },
+    btnFeature: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#4BBA7B', justifyContent: 'space-around', borderTopLeftRadius: 50, borderBottomLeftRadius: 50, borderColor: '#4BBA7B', paddingVertical: 10, marginLeft: 10, marginTop: 30, paddingHorizontal: 0, flex: 1 },
     imageStyle: { borderRadius: 60, borderWidth: 2, borderColor: '#Fff' },
     customImagePlace: {
         width: 120,
         height: 120,
-        alignSelf: "center"
+        alignSelf: "center",
     },
     styleImgLoad: { width: 120, height: 120, },
     avtBtn: {
@@ -374,7 +362,7 @@ const styles = StyleSheet.create({
     txLabel: {
         color: '#01C295',
         fontSize: 14,
-        fontWeight:'bold'
+        fontWeight: 'bold'
     },
     txContent: {
         marginLeft: 5,
@@ -404,8 +392,8 @@ const styles = StyleSheet.create({
 
     txFeature: {
         color: '#FFF',
-        fontWeight:'bold',
-        fontSize:16
+        fontWeight: 'bold',
+        fontSize: 16
     },
     txBtn: { color: '#fff' },
 

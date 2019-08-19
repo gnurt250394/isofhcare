@@ -89,7 +89,7 @@ class ListProfileScreen extends Component {
         })
     }
     onClickItem = (item) => {
-        NavigationService.navigate('profile', { data: item })
+        NavigationService.navigate('profile', { id: item.medicalRecords.id })
     }
     onDeleteItem = (id) => {
         this.setState({

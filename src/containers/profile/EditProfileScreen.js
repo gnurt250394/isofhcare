@@ -29,30 +29,32 @@ class EditProfileScreen extends Component {
     constructor(props) {
         super(props);
         let data = this.props.navigation.state.params.data
-        let country = this.props.navigation.state.params.country
-        let district = this.props.navigation.state.params.district
-        let province = this.props.navigation.state.params.province
-        let zone = this.props.navigation.state.params.zone
-        console.log(data, 'data passed')
+        let dataProfile = data.medicalRecords
+        let country = data.country
+        let district = data.district
+        let province = data.province
+        let zone = data.zone
         this.state = {
-            name: data.name ? data.name : '',
-            date: data && data.dob ? data.dob.toDateObject('-').format('dd/MM/yyyy') : (''),
-            txGender: data.gender == 1 ? 'Nam' : 'Nữ',
-            gender: data.gender,
-            dobOld: data.dob ? data.dob : '',
-            height: data.height ? data.height.toString() : '',
-            weight: data.weight ? data.weight.toString() : '',
-            address: data.village ? data.village : '',
-            relationshipType: data.relationshipType ? data.relationshipType : '',
-            profileNo: data.profileNo ? data.profileNo : '',
-            id: data.id,
-            dob: data.dob ? data.dob.toDateObject('-') : '',
-            phone: data.phone,
-            data: data,
+            name: dataProfile.name ? dataProfile.name : '',
+            date: dataProfile && dataProfile.dob ? dataProfile.dob.toDateObject('-').format('dd/MM/yyyy') : (''),
+            txGender: dataProfile.gender == 1 ? 'Nam' : 'Nữ',
+            gender: dataProfile.gender,
+            dobOld: dataProfile.dob ? dataProfile.dob : '',
+            height: dataProfile.height ? dataProfile.height.toString() : '',
+            weight: dataProfile.weight ? dataProfile.weight.toString() : '',
+            address: dataProfile.village ? dataProfile.village : '',
+            relationshipType: dataProfile.relationshipType ? dataProfile.relationshipType : '',
+            profileNo: dataProfile.profileNo ? dataProfile.profileNo : '',
+            id: dataProfile.id,
+            dob: dataProfile.dob ? dataProfile.dob.toDateObject('-') : '',
+            phone: dataProfile.phone,
+            data: dataProfile,
             country,
             districts: district,
             provinces: province,
-            zone
+            zone,
+            dataProfile,
+            isReset: 1
         };
     }
     componentDidMount() {
@@ -282,11 +284,11 @@ class EditProfileScreen extends Component {
                         isLoading: true
                     },
                     () => {
-                        let data = this.state.data
+                        let data = this.state.dataProfile
                         data.dob = this.state.dob ? this.state.dob.format('yyyy-MM-dd') + ' 00:00:00' : this.state.dobOld,
-                        data.gender = this.state.gender
+                            data.gender = this.state.gender
                         data.height = this.state.height ? Number(this.state.height) : 0,
-                        data.weight = this.state.weight ? Number(parseFloat(this.state.weight).toFixed(1)) : 0
+                            data.weight = this.state.weight ? Number(parseFloat(this.state.weight).toFixed(1)) : 0
                         // data.address = this.state.address
                         let id = this.state.id
                         data.phone = this.state.phone
@@ -299,7 +301,7 @@ class EditProfileScreen extends Component {
 
                             switch (res.code) {
                                 case 0:
-                                    this.props.navigation.navigate('profile', { data: res.data })
+                                    NavigationService.navigate('profile',{id:res.data.medicalRecords.id})
                                     snackbar.show('Cập nhật hồ sơ thành công', "success");
                                     break
                                 case 1:
@@ -321,7 +323,7 @@ class EditProfileScreen extends Component {
     onSelectRelationShip = () => {
         NavigationService.navigate('selectRelationship', {
             onSelected: this.selectRelationShip.bind(this),
-            gender : this.state.gender
+            gender: this.state.gender
             // id: this.state.relationShip.id
         })
 
@@ -492,6 +494,7 @@ class EditProfileScreen extends Component {
                                                     number: 'Chiều cao không hợp lệ',
                                                 }
                                             }}
+                                            keyboardType="numeric"
                                             placeholder={'Chiều cao'}
                                             multiline={true}
                                             inputStyle={[
@@ -534,6 +537,7 @@ class EditProfileScreen extends Component {
                                             inputStyle={[
                                                 styles.ktq,
                                             ]}
+                                            keyboardType="numeric"
                                             errorStyle={styles.errorStyle}
                                             onChangeText={this.onChangeText("weight")}
                                             value={this.state.weight}
@@ -568,11 +572,13 @@ class EditProfileScreen extends Component {
                                                 phone: "SĐT không hợp lệ"
                                             }
                                         }}
+                                        keyboardType="numeric"
                                         placeholder={'Số điện thoại'}
                                         multiline={true}
                                         inputStyle={[
                                             styles.ktq,
                                         ]}
+
                                         errorStyle={styles.errorStyle}
                                         onChangeText={this.onChangeText("phone")}
                                         value={this.state.phone}
