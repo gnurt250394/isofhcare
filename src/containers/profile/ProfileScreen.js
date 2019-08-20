@@ -155,10 +155,14 @@ class ProfileScreen extends Component {
             });
     }
     onEdit = () => {
+        if (this.state.data.medicalRecords.status == 2) {
+            snackbar.show('Bạn không có quyền chỉnh sửa hồ sơ này', 'danger')
 
-        this.props.navigation.navigate('editProfile', {
-            data: this.state.data,
-        })
+        } else {
+            this.props.navigation.navigate('editProfile', {
+                data: this.state.data,
+            })
+        }
     }
     renderAddress = () => {
         let dataLocaotion = this.state.data && this.state.data.medicalRecords ? this.state.data.medicalRecords : {}
@@ -259,56 +263,56 @@ class ProfileScreen extends Component {
             }
 
             case 'WAIT_CONFIRM': {
-                return(
+                return (
                     <ScrollView bounces={false} style={{ flex: 1 }} >
-                    <View style={styles.btnFeature}>
-                        <View><ScaledImage height={20} style={{ tintColor: '#fff', marginLeft: -28 }} source={require('@images/new/profile/ic_account.png')}></ScaledImage></View>
-                        <Text style={[styles.txFeature]} >Thông tin cá nhân</Text>
-                        <View></View>
-                    </View>
-                    <View style={styles.containerInfo}>
-                        <View style={styles.viewItem}>
-                            <Text><Text style={styles.txLabel}>Họ và tên: </Text><Text style={styles.txContent}>{details && details.name}</Text></Text>
+                        <View style={styles.btnFeature}>
+                            <View><ScaledImage height={20} style={{ tintColor: '#fff', marginLeft: -28 }} source={require('@images/new/profile/ic_account.png')}></ScaledImage></View>
+                            <Text style={[styles.txFeature]} >Thông tin cá nhân</Text>
+                            <View></View>
                         </View>
-                        <View style={styles.viewItem}>
-                            <Text><Text style={styles.txLabel}>Số điện thoại: </Text><Text style={styles.txContent}>{details && details.phone ? details.phone.replace(/(\d\d\d\d)(\d\d\d)(\d\d\d)/, '$1.$2.$3') : ''}</Text></Text>
-                        </View>
-                        {details.status != 1 ? (
+                        <View style={styles.containerInfo}>
                             <View style={styles.viewItem}>
-                                <Text><Text style={styles.txLabel}>Quan hệ: </Text>{this.renderRelation()}</Text>
+                                <Text><Text style={styles.txLabel}>Họ và tên: </Text><Text style={styles.txContent}>{details && details.name}</Text></Text>
                             </View>
-                        ) : (<View></View>)}
+                            <View style={styles.viewItem}>
+                                <Text><Text style={styles.txLabel}>Số điện thoại: </Text><Text style={styles.txContent}>{details && details.phone ? details.phone.replace(/(\d\d\d\d)(\d\d\d)(\d\d\d)/, '$1.$2.$3') : ''}</Text></Text>
+                            </View>
+                            {details.status != 1 ? (
+                                <View style={styles.viewItem}>
+                                    <Text><Text style={styles.txLabel}>Quan hệ: </Text>{this.renderRelation()}</Text>
+                                </View>
+                            ) : (<View></View>)}
 
-                    </View>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('createProfile')} style={styles.btn}><Text style={styles.txBtn}>Thêm thành viên</Text></TouchableOpacity>
-                </ScrollView>
+                        </View>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('createProfile')} style={styles.btn}><Text style={styles.txBtn}>Thêm thành viên</Text></TouchableOpacity>
+                    </ScrollView>
                 )
             }
             case 'NEED_CONFIRM': {
-                return(
+                return (
                     <ScrollView bounces={false} style={{ flex: 1 }} >
-                    
-                    <View style={styles.btnFeature}>
-                        <View><ScaledImage height={20} style={{ tintColor: '#fff', marginLeft: -28 }} source={require('@images/new/profile/ic_account.png')}></ScaledImage></View>
-                        <Text style={[styles.txFeature]} >Thông tin cá nhân</Text>
-                        <View></View>
-                    </View>
-                    <View style={styles.containerInfo}>
-                        <View style={styles.viewItem}>
-                            <Text><Text style={styles.txLabel}>Họ và tên: </Text><Text style={styles.txContent}>{details && details.name}</Text></Text>
-                        </View>
-                        <View style={styles.viewItem}>
-                            <Text><Text style={styles.txLabel}>Số điện thoại: </Text><Text style={styles.txContent}>{details && details.phone ? details.phone.replace(/(\d\d\d\d)(\d\d\d)(\d\d\d)/, '$1.$2.$3') : ''}</Text></Text>
-                        </View>
-                        {details.status != 1 ? (
-                            <View style={styles.viewItem}>
-                                <Text><Text style={styles.txLabel}>Quan hệ: </Text>{this.renderRelation()}</Text>
-                            </View>
-                        ) : (<View></View>)}
 
-                    </View>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('createProfile')} style={styles.btn}><Text style={styles.txBtn}>Thêm thành viên</Text></TouchableOpacity>
-                </ScrollView>
+                        <View style={styles.btnFeature}>
+                            <View><ScaledImage height={20} style={{ tintColor: '#fff', marginLeft: -28 }} source={require('@images/new/profile/ic_account.png')}></ScaledImage></View>
+                            <Text style={[styles.txFeature]} >Thông tin cá nhân</Text>
+                            <View></View>
+                        </View>
+                        <View style={styles.containerInfo}>
+                            <View style={styles.viewItem}>
+                                <Text><Text style={styles.txLabel}>Họ và tên: </Text><Text style={styles.txContent}>{details && details.name}</Text></Text>
+                            </View>
+                            <View style={styles.viewItem}>
+                                <Text><Text style={styles.txLabel}>Số điện thoại: </Text><Text style={styles.txContent}>{details && details.phone ? details.phone.replace(/(\d\d\d\d)(\d\d\d)(\d\d\d)/, '$1.$2.$3') : ''}</Text></Text>
+                            </View>
+                            {details.status != 1 ? (
+                                <View style={styles.viewItem}>
+                                    <Text><Text style={styles.txLabel}>Quan hệ: </Text>{this.renderRelation()}</Text>
+                                </View>
+                            ) : (<View></View>)}
+
+                        </View>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('createProfile')} style={styles.btn}><Text style={styles.txBtn}>Thêm thành viên</Text></TouchableOpacity>
+                    </ScrollView>
                 )
             }
         }
@@ -331,50 +335,50 @@ class ProfileScreen extends Component {
                 menuButton={<TouchableOpacity onPress={this.onEdit}><ScaledImage style={{ tintColor: '#fff', marginRight: 10 }} height={20} source={require('@images/new/profile/ic_edit.png')}></ScaledImage></TouchableOpacity>}
                 isLoading={this.state.loading}
             >
-               <View style={styles.viewBaner}>
-                            <ScaledImage
-                                // resizeMode="cover"
-                                source={require('@images/new/profile/img_cover_profile.png')}
-                                width={70}
-                                style={styles.imgBaner}
-                            />
-                            {/* <TouchableOpacity onPress={this.selectImage} style={styles.scaledImage}>
+                <View style={styles.viewBaner}>
+                    <ScaledImage
+                        // resizeMode="cover"
+                        source={require('@images/new/profile/img_cover_profile.png')}
+                        width={70}
+                        style={styles.imgBaner}
+                    />
+                    {/* <TouchableOpacity onPress={this.selectImage} style={styles.scaledImage}>
                     <ScaledImage
                         source={require("@images/new/profile/ic_instagram.png")}
                         width={30}
                     />
                 </TouchableOpacity> */}
-                            <View style={styles.avtBtn}>
-                                <ImageLoad
-                                    source={sourceAvt}
-                                    imageStyle={styles.imageStyle}
-                                    borderRadius={60}
-                                    customImagePlaceholderDefaultStyle={styles.customImagePlace}
-                                    style={styles.styleImgLoad}
-                                    resizeMode="cover"
-                                    placeholderSource={icSupport}
-                                    loadingStyle={{ size: "small", color: "gray" }}
-                                    defaultImage={() => {
-                                        return (
-                                            <ScaledImage
-                                                resizeMode="cover"
-                                                source={icSupport}
-                                                width={120}
-                                                style={styles.imageStyle}
-                                            />
-                                        );
-                                    }}
-                                />
-                                <TouchableOpacity onPress={this.selectImageAvt} style={styles.scaledImageAvt}
-                                >
+                    <View style={styles.avtBtn}>
+                        <ImageLoad
+                            source={sourceAvt}
+                            imageStyle={styles.imageStyle}
+                            borderRadius={60}
+                            customImagePlaceholderDefaultStyle={styles.customImagePlace}
+                            style={styles.styleImgLoad}
+                            resizeMode="cover"
+                            placeholderSource={icSupport}
+                            loadingStyle={{ size: "small", color: "gray" }}
+                            defaultImage={() => {
+                                return (
                                     <ScaledImage
-                                        source={require("@images/new/profile/instagram_logo_black.png")}
-                                        width={30}
+                                        resizeMode="cover"
+                                        source={icSupport}
+                                        width={120}
+                                        style={styles.imageStyle}
                                     />
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    {this.renderProfile(details)}
+                                );
+                            }}
+                        />
+                        <TouchableOpacity onPress={this.selectImageAvt} style={styles.scaledImageAvt}
+                        >
+                            <ScaledImage
+                                source={require("@images/new/profile/instagram_logo_black.png")}
+                                width={30}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                </View>
+                {this.renderProfile(details)}
                 <ImagePicker ref={ref => (this.imagePicker = ref)} />
             </ActivityPanel>
         );
