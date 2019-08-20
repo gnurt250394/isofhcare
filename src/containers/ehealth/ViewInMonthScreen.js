@@ -28,7 +28,6 @@ LocaleConfig.locales['en'] = {
 };
 
 LocaleConfig.defaultLocale = 'en';
-var fireDate
 
 class ListProfileScreen extends Component {
 
