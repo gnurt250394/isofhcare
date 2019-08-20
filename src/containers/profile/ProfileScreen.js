@@ -115,15 +115,20 @@ class ProfileScreen extends Component {
                         isLoading: true
                     },
                     () => {
-                        let data = {
+                        let data = this.state.data.medicalRecords.status == 1 ? {
                             avatar: image,
-                            type: this.state.data.medicalRecords.type,
-                        }
+                            type: 'FAMILY',
+                        } : {
+                                avatar: image,
+                                type: 'ORIGINAL',
+                            }
+                        console.log(data, 'body');
                         let id = this.state.data.medicalRecords.id
                         profileProvider
                             .updateAvatar(id, data)
                             .then(res => {
                                 if (res.code == 0) {
+                                    console.log(res, 'ádasd')
                                     if (this.state.data.medicalRecords.status == 1) {
                                         let current = this.props.userApp.currentUser;
                                         current.avatar = res.data.medicalRecords.avatar
@@ -155,7 +160,7 @@ class ProfileScreen extends Component {
             });
     }
     onEdit = () => {
-        if (this.state.data.medicalRecords.status == 2) {
+        if (this.state.data.medicalRecords.status == 2 && this.state.data.medicalRecords.alreadyHaveAccount) {
             snackbar.show('Bạn không có quyền chỉnh sửa hồ sơ này', 'danger')
 
         } else {
