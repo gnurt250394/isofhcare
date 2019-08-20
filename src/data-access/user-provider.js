@@ -162,7 +162,7 @@ module.exports = {
   update(userId, user) {
     return new Promise((resolve, reject) => {
       var body = {
-        user: user
+        user: user,
       };
       client.requestApi(
         "put",
