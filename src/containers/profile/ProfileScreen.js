@@ -154,6 +154,30 @@ class ProfileScreen extends Component {
                 snackbar.show(constants.msg.app.not_internet, "danger");
             });
     }
+    onEdit = () => {
+
+        this.props.navigation.navigate('editProfile', {
+            data: this.state.data,
+        })
+    }
+    renderAddress = () => {
+        let dataLocaotion = this.state.data && this.state.data.medicalRecords ? this.state.data.medicalRecords : {}
+        return (<Text style={styles.txContent}>{dataLocaotion.address}</Text>)
+        // let dataLocaotion = this.state.data && this.state.data.medicalRecords ? this.state.data.medicalRecords : {}
+        // if (dataLocaotion) {
+        //     if (dataLocaotion.address && dataLocaotion.village) {
+        //         return (<Text style={styles.txContent}>{dataLocaotion.village + ', ' + dataLocaotion.address}</Text>)
+        //     }
+
+        //     if (dataLocaotion.address && !dataLocaotion.village) {
+        //         return (<Text style={styles.txContent}>{dataLocaotion.address}</Text>)
+        //     }
+        //     if (!dataLocaotion.address && dataLocaotion.village) {
+        //         return (<Text style={styles.txContent}>{dataLocaotion.village}</Text>)
+        //     }
+        // }
+
+    }
     renderRelation = () => {
         if (this.state.data && this.state.data.medicalRecords && this.state.data.medicalRecords.relationshipType)
             switch (this.state.data.medicalRecords.relationshipType) {
@@ -184,29 +208,110 @@ class ProfileScreen extends Component {
                     return <Text style={styles.txContent}></Text>
             }
     }
-    renderAddress = () => {
-        let dataLocaotion = this.state.data && this.state.data.medicalRecords ? this.state.data.medicalRecords : {}
-        return (<Text style={styles.txContent}>{dataLocaotion.address}</Text>)
-        // let dataLocaotion = this.state.data && this.state.data.medicalRecords ? this.state.data.medicalRecords : {}
-        // if (dataLocaotion) {
-        //     if (dataLocaotion.address && dataLocaotion.village) {
-        //         return (<Text style={styles.txContent}>{dataLocaotion.village + ', ' + dataLocaotion.address}</Text>)
-        //     }
+    //render profile by statusConfirm
+    renderProfile = (details) => {
+        switch (details.statusConfirm) {
+            case 'ACTIVE': {
+                return (
+                    <ScrollView bounces={false} style={{ flex: 1 }} >
+                        <View style={styles.btnFeature}>
+                            <View><ScaledImage height={20} style={{ tintColor: '#fff', marginLeft: -28 }} source={require('@images/new/profile/ic_account.png')}></ScaledImage></View>
+                            <Text style={[styles.txFeature]} >Thông tin cá nhân</Text>
+                            <View></View>
+                        </View>
+                        <View style={styles.containerInfo}>
+                            <View style={styles.viewItem}>
+                                <Text><Text style={styles.txLabel}>Họ và tên: </Text><Text style={styles.txContent}>{details && details.name}</Text></Text>
+                            </View>
+                            <View style={styles.viewItem}>
+                                <Text><Text style={styles.txLabel}>Ngày sinh: </Text><Text style={styles.txContent}>{details && details.dob ? details.dob.toDateObject('-').format('dd/MM/yyyy') : ('')}</Text></Text>
+                            </View>
+                            {/* <View style={styles.viewItem}>
+                    <Text><Text style={styles.txLabel}>ID: </Text><Text style={styles.txContent}>{details && details.profileNoID ? details.profileNoID : ''}</Text></Text>
+                </View> */}
+                            <View style={styles.viewItem}>
+                                <Text><Text style={styles.txLabel}>Giới tính: </Text><Text style={styles.txContent}>{details && details.gender || details.gender == 0 ? (details.gender == 0 ? 'Nữ' : 'Nam') : ''}</Text></Text>
+                            </View>
+                            <View style={[styles.viewItem, {}]}>
+                                <Text><Text style={styles.txLabel}>Chiều cao: </Text><Text style={styles.txContent}>{details && details.height ? details.height + 'cm' : ''} </Text></Text>
+                                <Text style={[styles.txLabel]}>Cân nặng: <Text style={{ color: '#000', fontWeight: 'normal' }}>{details && details.weight ? details.weight + 'kg' : ''} </Text></Text>
+                                <View style={{ width: 20 }}></View>
+                            </View>
+                            <View style={styles.viewItem}>
+                                <Text><Text style={styles.txLabel}>Chỉ số BMI: </Text><Text style={styles.txContent}>{details && details.height && details.weight ? parseFloat(details.weight / (Math.pow(details.height / 100, 2))).toFixed(1) : ''}</Text></Text>
+                            </View>
+                            <View style={styles.viewItem}>
+                                <Text><Text style={styles.txLabel}>Số điện thoại: </Text><Text style={styles.txContent}>{details && details.phone ? details.phone.replace(/(\d\d\d\d)(\d\d\d)(\d\d\d)/, '$1.$2.$3') : ''}</Text></Text>
+                            </View>
+                            <View style={styles.viewItem}>
+                                <Text><Text style={styles.txLabel}>Địa chỉ: </Text><Text style={{ fontSize: 14, color: '#000' }}>{this.renderAddress()}</Text></Text>
+                            </View>
+                            {details.status != 1 ? (
+                                <View style={styles.viewItem}>
+                                    <Text><Text style={styles.txLabel}>Quan hệ: </Text>{this.renderRelation()}</Text>
+                                </View>
+                            ) : (<View></View>)}
 
-        //     if (dataLocaotion.address && !dataLocaotion.village) {
-        //         return (<Text style={styles.txContent}>{dataLocaotion.address}</Text>)
-        //     }
-        //     if (!dataLocaotion.address && dataLocaotion.village) {
-        //         return (<Text style={styles.txContent}>{dataLocaotion.village}</Text>)
-        //     }
-        // }
+                        </View>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('createProfile')} style={styles.btn}><Text style={styles.txBtn}>Thêm thành viên</Text></TouchableOpacity>
+                    </ScrollView>
+                )
+            }
 
-    }
-    onEdit = () => {
+            case 'WAIT_CONFIRM': {
+                return(
+                    <ScrollView bounces={false} style={{ flex: 1 }} >
+                    <View style={styles.btnFeature}>
+                        <View><ScaledImage height={20} style={{ tintColor: '#fff', marginLeft: -28 }} source={require('@images/new/profile/ic_account.png')}></ScaledImage></View>
+                        <Text style={[styles.txFeature]} >Thông tin cá nhân</Text>
+                        <View></View>
+                    </View>
+                    <View style={styles.containerInfo}>
+                        <View style={styles.viewItem}>
+                            <Text><Text style={styles.txLabel}>Họ và tên: </Text><Text style={styles.txContent}>{details && details.name}</Text></Text>
+                        </View>
+                        <View style={styles.viewItem}>
+                            <Text><Text style={styles.txLabel}>Số điện thoại: </Text><Text style={styles.txContent}>{details && details.phone ? details.phone.replace(/(\d\d\d\d)(\d\d\d)(\d\d\d)/, '$1.$2.$3') : ''}</Text></Text>
+                        </View>
+                        {details.status != 1 ? (
+                            <View style={styles.viewItem}>
+                                <Text><Text style={styles.txLabel}>Quan hệ: </Text>{this.renderRelation()}</Text>
+                            </View>
+                        ) : (<View></View>)}
 
-        this.props.navigation.navigate('editProfile', {
-            data: this.state.data,
-        })
+                    </View>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('createProfile')} style={styles.btn}><Text style={styles.txBtn}>Thêm thành viên</Text></TouchableOpacity>
+                </ScrollView>
+                )
+            }
+            case 'NEED_CONFIRM': {
+                return(
+                    <ScrollView bounces={false} style={{ flex: 1 }} >
+                    
+                    <View style={styles.btnFeature}>
+                        <View><ScaledImage height={20} style={{ tintColor: '#fff', marginLeft: -28 }} source={require('@images/new/profile/ic_account.png')}></ScaledImage></View>
+                        <Text style={[styles.txFeature]} >Thông tin cá nhân</Text>
+                        <View></View>
+                    </View>
+                    <View style={styles.containerInfo}>
+                        <View style={styles.viewItem}>
+                            <Text><Text style={styles.txLabel}>Họ và tên: </Text><Text style={styles.txContent}>{details && details.name}</Text></Text>
+                        </View>
+                        <View style={styles.viewItem}>
+                            <Text><Text style={styles.txLabel}>Số điện thoại: </Text><Text style={styles.txContent}>{details && details.phone ? details.phone.replace(/(\d\d\d\d)(\d\d\d)(\d\d\d)/, '$1.$2.$3') : ''}</Text></Text>
+                        </View>
+                        {details.status != 1 ? (
+                            <View style={styles.viewItem}>
+                                <Text><Text style={styles.txLabel}>Quan hệ: </Text>{this.renderRelation()}</Text>
+                            </View>
+                        ) : (<View></View>)}
+
+                    </View>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate('createProfile')} style={styles.btn}><Text style={styles.txBtn}>Thêm thành viên</Text></TouchableOpacity>
+                </ScrollView>
+                )
+            }
+        }
     }
     render() {
         const icSupport = require("@images/new/user.png");
@@ -214,8 +319,6 @@ class ProfileScreen extends Component {
         const sourceAvt = this.state.imgAvtLocal
             ? { uri: this.state.imgAvtLocal.absoluteUrl() }
             : icSupport
-        console.log(sourceAvt, 'sourceAvtsourceAvt')
-        console.log(this.state.imgAvtLocal, 'ád')
         return (
             <ActivityPanel
                 icBack={require('@images/new/left_arrow_white.png')}
@@ -228,91 +331,50 @@ class ProfileScreen extends Component {
                 menuButton={<TouchableOpacity onPress={this.onEdit}><ScaledImage style={{ tintColor: '#fff', marginRight: 10 }} height={20} source={require('@images/new/profile/ic_edit.png')}></ScaledImage></TouchableOpacity>}
                 isLoading={this.state.loading}
             >
-                <ScrollView bounces={false} style={{ flex: 1 }} >
-                    <View style={styles.viewBaner}>
-                        <ScaledImage
-                            // resizeMode="cover"
-                            source={require('@images/new/profile/img_cover_profile.png')}
-                            width={70}
-                            style={styles.imgBaner}
-                        />
-                        {/* <TouchableOpacity onPress={this.selectImage} style={styles.scaledImage}>
+               <View style={styles.viewBaner}>
                             <ScaledImage
-                                source={require("@images/new/profile/ic_instagram.png")}
-                                width={30}
+                                // resizeMode="cover"
+                                source={require('@images/new/profile/img_cover_profile.png')}
+                                width={70}
+                                style={styles.imgBaner}
                             />
-                        </TouchableOpacity> */}
-                        <View style={styles.avtBtn}>
-                            <ImageLoad
-                                source={sourceAvt}
-                                imageStyle={styles.imageStyle}
-                                borderRadius={60}
-                                customImagePlaceholderDefaultStyle={styles.customImagePlace}
-                                style={styles.styleImgLoad}
-                                resizeMode="cover"
-                                placeholderSource={icSupport}
-                                loadingStyle={{ size: "small", color: "gray" }}
-                                defaultImage={() => {
-                                    return (
-                                        <ScaledImage
-                                            resizeMode="cover"
-                                            source={icSupport}
-                                            width={120}
-                                            style={styles.imageStyle}
-                                        />
-                                    );
-                                }}
-                            />
-                            <TouchableOpacity onPress={this.selectImageAvt} style={styles.scaledImageAvt}
-                            >
-                                <ScaledImage
-                                    source={require("@images/new/profile/instagram_logo_black.png")}
-                                    width={30}
+                            {/* <TouchableOpacity onPress={this.selectImage} style={styles.scaledImage}>
+                    <ScaledImage
+                        source={require("@images/new/profile/ic_instagram.png")}
+                        width={30}
+                    />
+                </TouchableOpacity> */}
+                            <View style={styles.avtBtn}>
+                                <ImageLoad
+                                    source={sourceAvt}
+                                    imageStyle={styles.imageStyle}
+                                    borderRadius={60}
+                                    customImagePlaceholderDefaultStyle={styles.customImagePlace}
+                                    style={styles.styleImgLoad}
+                                    resizeMode="cover"
+                                    placeholderSource={icSupport}
+                                    loadingStyle={{ size: "small", color: "gray" }}
+                                    defaultImage={() => {
+                                        return (
+                                            <ScaledImage
+                                                resizeMode="cover"
+                                                source={icSupport}
+                                                width={120}
+                                                style={styles.imageStyle}
+                                            />
+                                        );
+                                    }}
                                 />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    <View style={styles.btnFeature}>
-                        <View><ScaledImage height={20} style={{ tintColor: '#fff', marginLeft: -28 }} source={require('@images/new/profile/ic_account.png')}></ScaledImage></View>
-                        <Text style={[styles.txFeature]} >Thông tin cá nhân</Text>
-                        <View></View>
-                    </View>
-                    <View style={styles.containerInfo}>
-                        <View style={styles.viewItem}>
-                            <Text><Text style={styles.txLabel}>Họ và tên: </Text><Text style={styles.txContent}>{details && details.name}</Text></Text>
-                        </View>
-                        <View style={styles.viewItem}>
-                            <Text><Text style={styles.txLabel}>Ngày sinh: </Text><Text style={styles.txContent}>{details && details.dob ? details.dob.toDateObject('-').format('dd/MM/yyyy') : ('')}</Text></Text>
-                        </View>
-                        {/* <View style={styles.viewItem}>
-                            <Text><Text style={styles.txLabel}>ID: </Text><Text style={styles.txContent}>{details && details.profileNoID ? details.profileNoID : ''}</Text></Text>
-                        </View> */}
-                        <View style={styles.viewItem}>
-                            <Text><Text style={styles.txLabel}>Giới tính: </Text><Text style={styles.txContent}>{details && details.gender || details.gender == 0 ? (details.gender == 0 ? 'Nữ' : 'Nam') : ''}</Text></Text>
-                        </View>
-                        <View style={[styles.viewItem, {}]}>
-                            <Text><Text style={styles.txLabel}>Chiều cao: </Text><Text style={styles.txContent}>{details && details.height ? details.height + 'cm' : ''} </Text></Text>
-                            <Text style={[styles.txLabel]}>Cân nặng: <Text style={{ color: '#000', fontWeight: 'normal' }}>{details && details.weight ? details.weight + 'kg' : ''} </Text></Text>
-                            <View style={{ width: 20 }}></View>
-                        </View>
-                        <View style={styles.viewItem}>
-                            <Text><Text style={styles.txLabel}>Chỉ số BMI: </Text><Text style={styles.txContent}>{details && details.height && details.weight ? parseFloat(details.weight / (Math.pow(details.height / 100, 2))).toFixed(1) : ''}</Text></Text>
-                        </View>
-                        <View style={styles.viewItem}>
-                            <Text><Text style={styles.txLabel}>Số điện thoại: </Text><Text style={styles.txContent}>{details && details.phone ? details.phone.replace(/(\d\d\d\d)(\d\d\d)(\d\d\d)/, '$1.$2.$3') : ''}</Text></Text>
-                        </View>
-                        <View style={styles.viewItem}>
-                            <Text><Text style={styles.txLabel}>Địa chỉ: </Text><Text style={{ fontSize: 14, color: '#000' }}>{this.renderAddress()}</Text></Text>
-                        </View>
-                        {details.status != 1 ? (
-                            <View style={styles.viewItem}>
-                                <Text><Text style={styles.txLabel}>Quan hệ: </Text>{this.renderRelation()}</Text>
+                                <TouchableOpacity onPress={this.selectImageAvt} style={styles.scaledImageAvt}
+                                >
+                                    <ScaledImage
+                                        source={require("@images/new/profile/instagram_logo_black.png")}
+                                        width={30}
+                                    />
+                                </TouchableOpacity>
                             </View>
-                        ) : (<View></View>)}
-
-                    </View>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('createProfile')} style={styles.btn}><Text style={styles.txBtn}>Thêm thành viên</Text></TouchableOpacity>
-                </ScrollView>
+                        </View>
+                    {this.renderProfile(details)}
                 <ImagePicker ref={ref => (this.imagePicker = ref)} />
             </ActivityPanel>
         );
