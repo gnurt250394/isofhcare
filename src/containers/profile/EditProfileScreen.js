@@ -641,7 +641,7 @@ class EditProfileScreen extends Component {
                                 </Field>
                             </Field>
                             <Field style={[styles.mucdichkham, { marginTop: 10 },]}>
-                                <Text style={styles.mdk}>Xã phường</Text>
+                                <Text style={styles.mdk}>Xã/Phường</Text>
                                 <Field>
                                     <TextField
                                         hideError={true}
@@ -652,7 +652,7 @@ class EditProfileScreen extends Component {
                                             styles.ktq, { minHeight: 41 }
                                         ]}
                                         errorStyle={styles.errorStyle}
-                                        value={this.state.zone && this.state.zone.name ? this.state.zone.name : 'Xã phường'}
+                                        value={this.state.zone && this.state.zone.name ? this.state.zone.name : 'Xã/Phường'}
                                         autoCapitalize={"none"}
                                         returnKeyType={"next"}
                                         // underlineColorAndroid="transparent"
@@ -661,7 +661,7 @@ class EditProfileScreen extends Component {
                                 </Field>
                             </Field>
                             <Field style={[styles.mucdichkham, this.state.type == "FAMILY" ? {} : { marginTop: 10 },]}>
-                                <Text style={styles.mdk}>Thôn/Xóm, số nhà</Text>
+                                <Text style={styles.mdk}>Thôn/Xóm/Số nhà</Text>
                                 <TextField
                                     hideError={true}
                                     onValidate={(valid, messages) => {
@@ -671,7 +671,7 @@ class EditProfileScreen extends Component {
                                             this.setState({ addressError: messages });
                                         }
                                     }}
-                                    placeholder={'Thôn/Xóm, số nhà'}
+                                    placeholder={'Thôn/Xóm/Số nhà'}
                                     multiline={true}
                                     inputStyle={[
                                         styles.ktq,

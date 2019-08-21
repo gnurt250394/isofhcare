@@ -57,6 +57,10 @@ class ProfileScreen extends Component {
         })
     }
     selectImageAvt = () => {
+        if (this.state.data.medicalRecords.status == 2 && this.state.data.medicalRecords.alreadyHaveAccount) {
+            snackbar.show('Bạn không có quyền chỉnh sửa hồ sơ này', 'danger')
+
+        } else {
         connectionUtils
             .isConnected()
             .then(s => {
@@ -88,6 +92,7 @@ class ProfileScreen extends Component {
             .catch(e => {
                 snackbar.show(constants.msg.app.not_internet, "danger");
             });
+        }
     }
     // onUpdateAvt = () => {
     //     if (this.state.imageAvt)
