@@ -61,37 +61,37 @@ class ProfileScreen extends Component {
             snackbar.show('Bạn không có quyền chỉnh sửa hồ sơ này', 'danger')
 
         } else {
-        connectionUtils
-            .isConnected()
-            .then(s => {
-                if (this.imagePicker) {
-                    this.imagePicker.open(true, 200, 200, image => {
-                        setTimeout(() => {
-                            Keyboard.dismiss();
-                        }, 500);
-                        this.setState({
-                            imageAvt: image
+            connectionUtils
+                .isConnected()
+                .then(s => {
+                    if (this.imagePicker) {
+                        this.imagePicker.open(true, 200, 200, image => {
+                            setTimeout(() => {
+                                Keyboard.dismiss();
+                            }, 500);
+                            this.setState({
+                                imageAvt: image
+                            });
+                            imageProvider.upload(this.state.imageAvt.path, (s, e) => {
+                                if (s.success && s.data.code == 0) {
+                                    let images = s.data.data.images[0].thumbnail;
+                                    this.setState({
+                                        imgAvtLocal: images
+                                    });
+                                    this.onUpdateAvt2(images)
+                                }
+                                if (e) {
+                                    this.setState({
+                                        isLoading: false
+                                    });
+                                }
+                            });
                         });
-                        imageProvider.upload(this.state.imageAvt.path, (s, e) => {
-                            if (s.success && s.data.code == 0) {
-                                let images = s.data.data.images[0].thumbnail;
-                                this.setState({
-                                    imgAvtLocal: images
-                                });
-                                this.onUpdateAvt2(images)
-                            }
-                            if (e) {
-                                this.setState({
-                                    isLoading: false
-                                });
-                            }
-                        });
-                    });
-                }
-            })
-            .catch(e => {
-                snackbar.show(constants.msg.app.not_internet, "danger");
-            });
+                    }
+                })
+                .catch(e => {
+                    snackbar.show(constants.msg.app.not_internet, "danger");
+                });
         }
     }
     // onUpdateAvt = () => {
@@ -227,7 +227,7 @@ class ProfileScreen extends Component {
         switch (details.statusConfirm) {
             case 'ACTIVE': {
                 return (
-                    <ScrollView bounces={false} style={{ flex: 1 }} >
+                    <View style={{ flex: 1 }} >
                         <View style={styles.btnFeature}>
                             <View><ScaledImage height={20} style={{ tintColor: '#fff', marginLeft: -28 }} source={require('@images/new/profile/ic_account.png')}></ScaledImage></View>
                             <Text style={[styles.txFeature]} >Thông tin cá nhân</Text>
@@ -268,13 +268,13 @@ class ProfileScreen extends Component {
 
                         </View>
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('createProfile')} style={styles.btn}><Text style={styles.txBtn}>Thêm thành viên</Text></TouchableOpacity>
-                    </ScrollView>
+                    </View>
                 )
             }
 
             case 'WAIT_CONFIRM': {
                 return (
-                    <ScrollView bounces={false} style={{ flex: 1 }} >
+                    <View style={{ flex: 1 }} >
                         <View style={styles.btnFeature}>
                             <View><ScaledImage height={20} style={{ tintColor: '#fff', marginLeft: -28 }} source={require('@images/new/profile/ic_account.png')}></ScaledImage></View>
                             <Text style={[styles.txFeature]} >Thông tin cá nhân</Text>
@@ -295,12 +295,12 @@ class ProfileScreen extends Component {
 
                         </View>
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('createProfile')} style={styles.btn}><Text style={styles.txBtn}>Thêm thành viên</Text></TouchableOpacity>
-                    </ScrollView>
+                    </View>
                 )
             }
             case 'NEED_CONFIRM': {
                 return (
-                    <ScrollView bounces={false} style={{ flex: 1 }} >
+                    <View style={{ flex: 1 }} >
 
                         <View style={styles.btnFeature}>
                             <View><ScaledImage height={20} style={{ tintColor: '#fff', marginLeft: -28 }} source={require('@images/new/profile/ic_account.png')}></ScaledImage></View>
@@ -322,7 +322,7 @@ class ProfileScreen extends Component {
 
                         </View>
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('createProfile')} style={styles.btn}><Text style={styles.txBtn}>Thêm thành viên</Text></TouchableOpacity>
-                    </ScrollView>
+                    </View>
                 )
             }
         }
@@ -345,6 +345,7 @@ class ProfileScreen extends Component {
                 menuButton={<TouchableOpacity onPress={this.onEdit}><ScaledImage style={{ tintColor: '#fff', marginRight: 10 }} height={20} source={require('@images/new/profile/ic_edit.png')}></ScaledImage></TouchableOpacity>}
                 isLoading={this.state.loading}
             >
+                <ScrollView bounces = {false}>
                 <View style={styles.viewBaner}>
                     <ScaledImage
                         // resizeMode="cover"
@@ -389,6 +390,7 @@ class ProfileScreen extends Component {
                     </View>
                 </View>
                 {this.renderProfile(details)}
+                </ScrollView>
                 <ImagePicker ref={ref => (this.imagePicker = ref)} />
             </ActivityPanel>
         );

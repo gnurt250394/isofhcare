@@ -75,14 +75,16 @@ class CreateProfileScreen extends Component {
                     this.setState(
                         {
                             valueGender: '1',
-                            txGender: 'Nam'
+                            txGender: 'Nam',
+                            relationShip: null
                         });
                     return;
                 case 1:
                     this.setState(
                         {
                             valueGender: '0',
-                            txGender: 'Nữ'
+                            txGender: 'Nữ',
+                            relationShip: null
                         });
                     return;
             }
@@ -149,7 +151,7 @@ class CreateProfileScreen extends Component {
                             "relationshipType": relationshipType
                         }
                         profileProvider.createProfile(data).then(res => {
-                            console.log(res.code,'dasdasd');
+                            console.log(res.code, 'dasdasd');
                             switch (res.code) {
                                 case 0:
                                     switch (res.data.TYPE) {
@@ -264,9 +266,9 @@ class CreateProfileScreen extends Component {
     selectRelationShip = (relationShip) => {
         let relationShipError = relationShip ? "" : this.state.relationShipError;
         if (!relationShip || !this.state.relationShip || relationShip.id != this.state.relationShip.id) {
-            this.setState({ relationShip, relationShipError })
+            this.setState({ relationShip, relationShipError, relationErr: '' })
         } else {
-            this.setState({ relationShip, relationShipError });
+            this.setState({ relationShip, relationShipError, relationErr: '' });
         }
     }
     onCloseModal = () => {
@@ -277,7 +279,7 @@ class CreateProfileScreen extends Component {
     onSelectRelationShip = () => {
         NavigationService.navigate('selectRelationship', {
             onSelected: this.selectRelationShip.bind(this),
-            gender : this.state.valueGender
+            gender: this.state.valueGender
             // id: this.state.relationShip.id
         })
 
@@ -337,7 +339,7 @@ class CreateProfileScreen extends Component {
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#359A60"
                 actionbarStyle={styles.actionbarStyle}
-                style={{flex:1,backgroundColor:'#fff'}}
+                style={{ flex: 1, backgroundColor: '#fff' }}
 
             >
                 <ScrollView keyboardShouldPersistTaps='handled' style={{ flex: 1, paddingVertical: 5 }}>
@@ -605,76 +607,76 @@ class CreateProfileScreen extends Component {
                                 />
                             </Field>
                             <Text style={[styles.errorStyle]}>{this.state.addressError}</Text> */}
-                                <Field style={[styles.mucdichkham,]}>
-                                    <Text style={styles.mdk}>{'Tỉnh/Thành phố'}</Text>
-                                    <Field>
-                                        <TextField
-                                            hideError={true}
-                                            onPress={this.onSelectProvince}
-                                            editable={false}
-                                            multiline={true}
-                                            inputStyle={[
-                                                styles.ktq, { minHeight: 41 }
-                                            ]}
-                                            errorStyle={styles.errorStyle}
-                                            value={this.state.provinces && this.state.provinces.countryCode ? this.state.provinces.countryCode : 'Tỉnh/Thành phố'}
-                                            autoCapitalize={"none"}
-                                            returnKeyType={"next"}
-                                            // underlineColorAndroid="transparent"
-                                            autoCorrect={false}
-                                        />
-                                    </Field>
-
+                            <Field style={[styles.mucdichkham,]}>
+                                <Text style={styles.mdk}>{'Tỉnh/Thành phố'}</Text>
+                                <Field>
+                                    <TextField
+                                        hideError={true}
+                                        onPress={this.onSelectProvince}
+                                        editable={false}
+                                        multiline={true}
+                                        inputStyle={[
+                                            styles.ktq, { minHeight: 41 }
+                                        ]}
+                                        errorStyle={styles.errorStyle}
+                                        value={this.state.provinces && this.state.provinces.countryCode ? this.state.provinces.countryCode : 'Tỉnh/Thành phố'}
+                                        autoCapitalize={"none"}
+                                        returnKeyType={"next"}
+                                        // underlineColorAndroid="transparent"
+                                        autoCorrect={false}
+                                    />
                                 </Field>
 
-                                <Field style={[styles.mucdichkham, { marginTop: 10 },]}>
-                                    <Text style={styles.mdk}>Quận/Huyện</Text>
-                                    <Field>
-                                        <TextField
-                                            hideError={true}
-                                            // validate={{
-                                            //     rules: {
-                                            //         number: true,
-                                            //     },
-                                            //     messages: {
-                                            //         number: 'Cân nặng không hợp lệ',
-                                            //     }
-                                            // }}
-                                            multiline={true}
-                                            inputStyle={[
-                                                styles.ktq, { minHeight: 41 }
-                                            ]}
-                                            onPress={this.onSelectDistrict}
-                                            editable={false}
-                                            errorStyle={styles.errorStyle}
-                                            value={this.state.districts && this.state.districts.name ? this.state.districts.name : 'Quận/Huyện'}
-                                            autoCapitalize={"none"}
-                                            returnKeyType={"next"}
-                                            // underlineColorAndroid="transparent"
-                                            autoCorrect={false}
-                                        />
-                                    </Field>
+                            </Field>
+
+                            <Field style={[styles.mucdichkham, { marginTop: 10 },]}>
+                                <Text style={styles.mdk}>Quận/Huyện</Text>
+                                <Field>
+                                    <TextField
+                                        hideError={true}
+                                        // validate={{
+                                        //     rules: {
+                                        //         number: true,
+                                        //     },
+                                        //     messages: {
+                                        //         number: 'Cân nặng không hợp lệ',
+                                        //     }
+                                        // }}
+                                        multiline={true}
+                                        inputStyle={[
+                                            styles.ktq, { minHeight: 41 }
+                                        ]}
+                                        onPress={this.onSelectDistrict}
+                                        editable={false}
+                                        errorStyle={styles.errorStyle}
+                                        value={this.state.districts && this.state.districts.name ? this.state.districts.name : 'Quận/Huyện'}
+                                        autoCapitalize={"none"}
+                                        returnKeyType={"next"}
+                                        // underlineColorAndroid="transparent"
+                                        autoCorrect={false}
+                                    />
                                 </Field>
-                                <Field style={[styles.mucdichkham, { marginTop: 10 },]}>
+                            </Field>
+                            <Field style={[styles.mucdichkham, { marginTop: 10 },]}>
                                 <Text style={styles.mdk}>{'Xã/Phường'}</Text>
-                                    <Field>
-                                        <TextField
-                                            hideError={true}
-                                            multiline={true}
-                                            onPress={this.onSelectZone}
-                                            editable={false}
-                                            inputStyle={[
-                                                styles.ktq, { minHeight: 41 }
-                                            ]}
-                                            errorStyle={styles.errorStyle}
-                                            value={this.state.zone && this.state.zone.name ? this.state.zone.name : 'Xã/Phường'}
-                                            autoCapitalize={"none"}
-                                            returnKeyType={"next"}
-                                            // underlineColorAndroid="transparent"
-                                            autoCorrect={false}
-                                        />
-                                    </Field>
+                                <Field>
+                                    <TextField
+                                        hideError={true}
+                                        multiline={true}
+                                        onPress={this.onSelectZone}
+                                        editable={false}
+                                        inputStyle={[
+                                            styles.ktq, { minHeight: 41 }
+                                        ]}
+                                        errorStyle={styles.errorStyle}
+                                        value={this.state.zone && this.state.zone.name ? this.state.zone.name : 'Xã/Phường'}
+                                        autoCapitalize={"none"}
+                                        returnKeyType={"next"}
+                                        // underlineColorAndroid="transparent"
+                                        autoCorrect={false}
+                                    />
                                 </Field>
+                            </Field>
                             <Field style={[styles.mucdichkham, this.state.type == "FAMILY" ? {} : { marginTop: 10 },]}>
                                 <Text style={styles.mdk}>Thôn/Xóm/Số nhà</Text>
                                 <TextField
@@ -814,7 +816,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: 'bold'
     },
-    txTitle: { color: '#fff', textAlign: 'left', marginHorizontal: 10,fontSize:14 },
+    txTitle: { color: '#fff', textAlign: 'left', marginHorizontal: 10, fontSize: 14 },
     mdk: {
         marginLeft: 12,
         flex: 1,
@@ -844,7 +846,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         marginHorizontal: 10,
         minHeight: 41,
-        justifyContent:'center'
+        justifyContent: 'center'
     },
     container: {
         // borderStyle: "solid",
