@@ -11,7 +11,7 @@ class SelectServiceScreen extends Component {
     constructor(props) {
         super(props);
         let hospital = this.props.navigation.state.params.hospital;
-        let serviceType = this.props.navigation.state.params.serviceType;
+        let serviceType = this.props.navigation.state.params.serviceType || {};
         this.listServicesSelected = this.props.navigation.state.params.listServicesSelected || [];
         if (!hospital) {
             this.props.navigation.pop();
@@ -45,7 +45,7 @@ class SelectServiceScreen extends Component {
 
 
     onRefresh = () => {
-        let serviceType = this.state.serviceType ? this.state.serviceType.id : ''
+        let serviceType = this.state.serviceType ? this.state.serviceType.id || "" : ''
         let specialist = "";//this.state.specialist ? this.state.specialist.id : ''
         this.setState({ refreshing: true }, () => {
             serviceProvider.getAll(this.state.hospital.hospital.id, specialist, serviceType).then(s => {
@@ -55,9 +55,9 @@ class SelectServiceScreen extends Component {
                     if (s) {
                         switch (s.code) {
                             case 0:
-                                 let listService = s.data.data.sort(function(a,b){
-                                        return new Date(a.service.createdDate) - new Date(b.service.createdDate);
-                                      });
+                                let listService = s.data.data.sort(function (a, b) {
+                                    return new Date(a.service.createdDate) - new Date(b.service.createdDate);
+                                });
                                 this.setState({
                                     listService: listService
                                 }, () => {
@@ -129,7 +129,7 @@ class SelectServiceScreen extends Component {
             this.props.navigation.pop();
         }
     }
- 
+
     render() {
         return (
             <ActivityPanel
@@ -185,7 +185,7 @@ class SelectServiceScreen extends Component {
                         <TouchableOpacity onPress={this.onPressItem1.bind(this, item)}>
                             <View style={[{ marginBottom: 2, padding: 20, flexDirection: 'column', borderBottomColor: '#00000011', borderBottomWidth: 0.7 }, item.checked ? { backgroundColor: 'rgba(240, 243, 189, 0.2)' } : { backgroundColor: '#FFF' }]}>
                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <Text style={{ fontWeight: 'bold', flex: 1}}>
+                                    <Text style={{ fontWeight: 'bold', flex: 1 }}>
                                         {item.service.name}
                                     </Text>
                                     {item.checked &&
