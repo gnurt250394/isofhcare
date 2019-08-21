@@ -53,16 +53,17 @@ class SelectTimeScreen extends Component {
         let data = this.state.schedules[day].schedules || [];
         let listTime = [];
         if (this.state.schedules[day].noSchedule) {
-            let date = new Date(new Date(day).format("yyyy-MM-dd 08:00"));
-            // date.setHours(date.getHours() - 7);
-            // date.setMinutes(date.getMinutes() + (8 * 60));
-            let i = 0;
+            let date = new Date(new Date(day).format("yyyy-MM-dd"));
+            // console.log(date);
+            date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
+            date.setMinutes(date.getMinutes() + (8 * 60));
             while (true) {
                 if (date.format("HH:mm") > "16:30")
                     break;
+                console.log(date);
                 if (date.format("HH:mm") <= "11:30" || date.format("HH:mm") >= "13:30") {
                     listTime.push({
-                        key: date.format("yyyy-MM-dd HH:mm:ss"),
+                        key: date.getTime(),
                         schedule: {
                         },
                         time: date.getTime(),
@@ -71,7 +72,6 @@ class SelectTimeScreen extends Component {
                     });
                 }
                 date.setMinutes(date.getMinutes() + 30);
-                i++;
             }
             this.setState({ listTime })
         }

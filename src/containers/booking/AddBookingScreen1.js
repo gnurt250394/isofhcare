@@ -209,7 +209,6 @@ class AddBookingScreen extends Component {
     }
 
     addBooking = () => {
-        debugger;
         Keyboard.dismiss();
         if (!this.state.allowBooking)
             return;
