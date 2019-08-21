@@ -81,13 +81,13 @@ class SlideBanner extends Component {
         onPress: () => {
             if (this.props.userApp.isLogin)
                 if (this.props.userApp.currentUser.bookingStatus != false || this.props.userApp.currentUser.bookingStatus == undefined)
-                    this.props.navigation.navigate("addBooking");
+                    this.props.navigation.navigate("addBooking1");
                 else
                     snackbar.show("Tính năng đang phát triển", "");
 
             else
                 this.props.navigation.navigate("login", {
-                    nextScreen: { screen: "addBooking", param: {} }
+                    nextScreen: { screen: "addBooking1", param: {} }
                 });
         }
     },
