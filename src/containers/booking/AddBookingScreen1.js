@@ -208,7 +208,8 @@ class AddBookingScreen extends Component {
         this.setState({ listServicesSelected: services });
     }
 
-    addBooking() {
+    addBooking = () => {
+        debugger;
         Keyboard.dismiss();
         if (!this.state.allowBooking)
             return;
@@ -227,12 +228,12 @@ class AddBookingScreen extends Component {
             this.setState({ profileError: constants.msg.booking.profile_not_null })
             error = true;
         }
-        if (this.state.serviceType) {
-            this.setState({ serviceTypeError: "" })
-        } else {
-            this.setState({ serviceTypeError: constants.msg.booking.require_not_null })
-            error = true;
-        }
+        // if (this.state.serviceType) {
+        //     this.setState({ serviceTypeError: "" })
+        // } else {
+        //     this.setState({ serviceTypeError: constants.msg.booking.require_not_null })
+        //     error = true;
+        // }
         // if (this.state.listServicesSelected && this.state.listServicesSelected.length) {
         //     this.setState({ serviceError: "" })
         // } else {
@@ -289,8 +290,9 @@ class AddBookingScreen extends Component {
                     let bookingDate = this.state.bookingDate.format("yyyy-MM-dd") + " " + this.state.schedule.label + ":00";
                     bookingProvider.create(
                         this.state.hospital.hospital.id,
+                        this.state.schedule && this.state.schedule.schedule ? this.state.schedule.schedule.id : "",
                         this.state.profile.medicalRecords.id,
-                        this.state.serviceType.id,
+                        (this.state.serviceType || {}).id,
                         serviceIds,
                         bookingDate,
                         reason,
@@ -352,21 +354,6 @@ class AddBookingScreen extends Component {
             }).catch(e => {
                 snackbar.show(constants.msg.app.not_internet, "danger");
             })
-
-
-
-
-
-            // this.props.navigation.navigate("selectTime", {
-            //     profile: this.state.profile,
-            //     hospital: this.state.hospital,
-            //     specialist: this.state.specialist,
-            //     serviceType: this.state.serviceType ? this.state.serviceType : '',
-            //     bookingDate: this.state.bookingDate,
-            //     reason: reason,
-            //     img,
-            //     contact: this.state.contact
-            // });
         }
     }
     onTimePickerChange(schedule) {
@@ -535,6 +522,7 @@ class AddBookingScreen extends Component {
                             console.log(this.state.listServicesSelected);
                             this.props.navigation.navigate("selectTime", {
                                 service: this.state.listServicesSelected,
+                                isNotHaveSchedule: true,
                                 onSelected: this.onSelectDateTime
                             });
                         }}>
@@ -612,7 +600,7 @@ class AddBookingScreen extends Component {
                 </KeyboardAwareScrollView>
 
                 <View style={styles.btn}>
-                    <TouchableOpacity onPress={this.addBooking.bind(this)} style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]}><Text style={styles.datkham}>Đặt khám</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={this.addBooking} style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]}><Text style={styles.datkham}>Đặt khám</Text></TouchableOpacity>
                 </View>
                 <ImagePicker ref={ref => this.imagePicker = ref} />
 
