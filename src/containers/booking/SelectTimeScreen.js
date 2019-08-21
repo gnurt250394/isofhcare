@@ -22,13 +22,18 @@ LocaleConfig.locales['en'] = {
 LocaleConfig.defaultLocale = 'en';
 
 
+
+
 class SelectTimeScreen extends Component {
     constructor(props) {
         super(props);
         let service = this.props.navigation.state.params.service;
+        let isNotHaveSchedule = this.props.navigation.state.params.isNotHaveSchedule;
+
         this.state = {
             service,
-            listTime: []
+            listTime: [],
+            isNotHaveSchedule
         }
     }
     getTime(yourDateString) {
@@ -47,53 +52,77 @@ class SelectTimeScreen extends Component {
     selectDay(day) {
         let data = this.state.schedules[day].schedules || [];
         let listTime = [];
-        data.forEach((item, index) => {
-            for (var key in item) {
-                try {
-                    let time = this.getTime(key);
-                    label = time.format("HH") + "h" + time.format("mm");
-                    let schedule = {
-                        label,
-                        time,
-                        key: key,
-                        percent: 100
-                    }
-                    let schedules = ((item[key] || {}).detailSchedules || []);
-                    schedules.forEach((item2, index2) => {
-                        let detailSchedule = item2.detailSchedule;
-                        if (item2.numberCase && detailSchedule) {
-                            let percent = ((item2.numberSlot || 0) * 100) / (item2.numberCase || 1);
-                            if (percent <= schedule.percent) {
-                                schedule.percent = percent;
-                                schedule.schedule = detailSchedule;
-                                schedule.doctor = item2.doctorVendor;
-                                schedule.numberSlot = item2.numberSlot || 0;
-                                schedule.numberCase = item2.numberCase || 1;
-
-                                let available = 100 - percent;
-                                if (available == 0)
-                                    schedule.type = 0;
-                                else
-                                    if (available < 30)
-                                        schedule.type = 1;
-                                    else
-                                        if (available < 70)
-                                            schedule.type = 2;
-                                        else
-                                            schedule.type = 3;
-                            }
-                        }
+        if (this.state.schedules[day].noSchedule) {
+            let date = new Date(new Date(day).format("yyyy-MM-dd"));
+            // console.log(date);
+            date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
+            date.setMinutes(date.getMinutes() + (8 * 60));
+            while (true) {
+                if (date.format("HH:mm") > "16:30")
+                    break;
+                console.log(date);
+                if (date.format("HH:mm") <= "11:30" || date.format("HH:mm") >= "13:30") {
+                    listTime.push({
+                        key: date.getTime(),
+                        schedule: {
+                        },
+                        time: date.getTime(),
+                        type: 3,
+                        label: date.format("HH:mm")
                     });
-                    if (schedule.schedule) {
-                        listTime.push(schedule);
-                    }
-                } catch (error) {
-
                 }
+                date.setMinutes(date.getMinutes() + 30);
             }
-        });
-        console.log(listTime);
+            this.setState({ listTime })
+        }
+        else {
+            data.forEach((item, index) => {
+                for (var key in item) {
+                    try {
+                        let time = this.getTime(key);
+                        label = time.format("HH") + "h" + time.format("mm");
+                        let schedule = {
+                            label,
+                            time,
+                            key: key,
+                            percent: 100
+                        }
+                        let schedules = ((item[key] || {}).detailSchedules || []);
+                        schedules.forEach((item2, index2) => {
+                            let detailSchedule = item2.detailSchedule;
+                            if (item2.numberCase && detailSchedule) {
+                                let percent = ((item2.numberSlot || 0) * 100) / (item2.numberCase || 1);
+                                if (percent <= schedule.percent) {
+                                    schedule.percent = percent;
+                                    schedule.schedule = detailSchedule;
+                                    schedule.doctor = item2.doctorVendor;
+                                    schedule.numberSlot = item2.numberSlot || 0;
+                                    schedule.numberCase = item2.numberCase || 1;
 
+                                    let available = 100 - percent;
+                                    if (available == 0)
+                                        schedule.type = 0;
+                                    else
+                                        if (available < 30)
+                                            schedule.type = 1;
+                                        else
+                                            if (available < 70)
+                                                schedule.type = 2;
+                                            else
+                                                schedule.type = 3;
+                                }
+                            }
+                        });
+                        if (schedule.schedule) {
+                            listTime.push(schedule);
+                        }
+                    } catch (error) {
+
+                    }
+                }
+            });
+            console.log(listTime);
+        }
         this.setState({
             listTime: listTime.sort((a, b) => {
                 return a.time - b.time
@@ -114,6 +143,48 @@ class SelectTimeScreen extends Component {
 
     componentDidMount() {
         this.selectMonth(new Date());
+    }
+    generateSchedule(month) {
+        let firstDay = month.getFirstDateOfMonth();
+        let lastDay = month.getLastDateOfMonth();
+        let obj = {};
+        while (firstDay <= lastDay) {
+            let key = firstDay.format("yyyy-MM-dd");;
+            obj[key] = {}
+            if (new Date(key) <= new Date() || firstDay.getDay() == 6 || firstDay.getDay() == 0) {
+                obj[key].disabled = true;
+                obj[key].disableTouchEvent = true;
+            } else {
+                obj[key].noSchedule = true;
+                obj[key].schedules = [];
+                obj[key].marked = true;
+                obj[key].color = 'green';
+                obj[key].selectedColor = '#27ae60';
+            }
+            // return;
+            firstDay.setDate(firstDay.getDate() + 1)
+        }
+        let selected = null;
+        for (let key in obj) {
+            if (obj[key].disabled)
+                continue;
+            let keyDate = new Date(key);
+            if (keyDate > new Date() && (selected == null || keyDate < selected)) {
+                selected = keyDate;
+            }
+        }
+        if (selected) {
+            (obj[selected.format("yyyy-MM-dd")] || {}).selected = true;
+        }
+        this.setState({
+            dateString: selected ? selected.format("yyyy-MM-dd") : null,
+            bookingDate: selected,
+            schedules: obj
+        }, () => {
+            if (this.state.dateString)
+                this.selectDay(this.state.dateString);
+        })
+        return obj;
     }
     groupSchedule(schedules) {
         let obj = {};
@@ -157,19 +228,23 @@ class SelectTimeScreen extends Component {
     }
 
     selectMonth(date) {
-        if (this.state.service && this.state.service.length) {
-            let service = this.state.service[0];
-            this.setState({ isLoading: true }, () => {
-                console.log(this.state.service);
+        if (this.state.isNotHaveSchedule) {
+            this.generateSchedule(date);
+        } else {
+            if (this.state.service && this.state.service.length) {
+                let service = this.state.service[0];
+                this.setState({ isLoading: true }, () => {
+                    console.log(this.state.service);
 
-                scheduleProvider.getByMonthAndService(service.service.id, date.format("yyyyMM")).then(s => {
-                    this.setState({ isLoading: false }, () => {
-                        this.groupSchedule(s.data);
-                    });
-                }).catch(e => {
-                    this.setState({ isLoading: false });
+                    scheduleProvider.getByMonthAndService(service.service.id, date.format("yyyyMM")).then(s => {
+                        this.setState({ isLoading: false }, () => {
+                            this.groupSchedule(s.data);
+                        });
+                    }).catch(e => {
+                        this.setState({ isLoading: false });
+                    })
                 })
-            })
+            }
         }
     }
 

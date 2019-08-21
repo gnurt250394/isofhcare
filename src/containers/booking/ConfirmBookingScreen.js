@@ -407,10 +407,12 @@ class ConfirmBookingScreen extends Component {
                         <Text style={{ color: 'gray' }}>SĐT: {this.state.profile.medicalRecords.phone}</Text>
                     </View>
                     <View style={styles.viewDetails}>
-                        <View style={{ paddingHorizontal: 20, marginTop: 20, flexDirection: 'row', alignItems: 'center' }}>
-                            <Text style={{ fontWeight: 'bold', color: 'rgb(2,195,154)', marginRight: 10 }}>{(this.state.serviceType.name || "").toUpperCase()}</Text>
-                            <ScaleImage width={20} source={require("@images/new/booking/ic_tick.png")} />
-                        </View>
+                        {this.state.serviceType &&
+                            <View style={{ paddingHorizontal: 20, marginTop: 20, flexDirection: 'row', alignItems: 'center' }}>
+                                <Text style={{ fontWeight: 'bold', color: 'rgb(2,195,154)', marginRight: 10 }}>{(this.state.serviceType.name || "").toUpperCase()}</Text>
+                                <ScaleImage width={20} source={require("@images/new/booking/ic_tick.png")} />
+                            </View>
+                        }
                         <View style={styles.view11} >
                             <View style={[styles.view2, { alignItems: 'flex-start' }]}>
                                 <ScaleImage style={styles.ic_Location} width={20} source={require("@images/new/hospital/ic_place.png")} />

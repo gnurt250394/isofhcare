@@ -46,6 +46,7 @@ import DetailsDoctorScreen from "@containers/question/DetailsDoctorScreen";
 
 //booking
 import AddBookingScreen from "@containers/booking/AddBookingScreen";
+import AddBookingScreen1 from "@containers/booking/AddBookingScreen1";
 import SelectHospitalScreen from "@containers/booking/SelectHospitalScreen";
 import SelectHospitalByLocationScreen from "@containers/booking/SelectHospitalByLocationScreen";
 import SelectTimeScreen from "@containers/booking/SelectTimeScreen";
@@ -237,14 +238,14 @@ const RootNavigator = createStackNavigator(
     createProfile: { screen: CreateProfileScreen },
     listProfileUser: { screen: ListProfileScreen },
     editProfile: { screen: EditProfileScreen },
-    shareDataProfile:{screen:ShareDataProfileScreen},
-    checkOtp:{screen:CheckOtpScreen},
+    shareDataProfile: { screen: ShareDataProfileScreen },
+    checkOtp: { screen: CheckOtpScreen },
     selectProvince: { screen: SelectProvinceScreen },
     selectDistrict: { screen: SelectDistrictScreen },
-    selectRelationship:{screen:SelectRelationshipScreen},
+    selectRelationship: { screen: SelectRelationshipScreen },
     selectZone: { screen: SelectZoneScreen },
     profile: { screen: ProfileScreen },
-    sendConfirmProfile:{screen:SendConfirmProfileScreen},
+    sendConfirmProfile: { screen: SendConfirmProfileScreen },
     // listProfileUser: { screen: ListProfileScreen },
     //
     home: TabNavigatorComponent,
@@ -264,6 +265,7 @@ const RootNavigator = createStackNavigator(
     detailsDoctor: { screen: DetailsDoctorScreen },
     // booking navigation
     addBooking: AddBookingScreen,
+    addBooking1: AddBookingScreen1,
     selectHospital: { screen: SelectHospitalScreen },
     selectHospitalByLocation: { screen: SelectHospitalByLocationScreen },
     selectTime: { screen: SelectTimeScreen },
