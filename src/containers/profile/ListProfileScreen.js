@@ -102,14 +102,22 @@ class ListProfileScreen extends Component {
                 this.setState({
                     isVisible: false
                 })
-                this.onRefresh()
-                snackbar.show('Xóa thành công', 'success')
+                if(res.code == 0){
+                    this.onRefresh()
+                    snackbar.show('Xóa thành công', 'success')
+                    return
+                }if(res.code == 4){
+                    snackbar.show('Hồ sơ không thể xóa do đã có đặt khám', 'danger')
+                    return
+                }else{
+                    snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                }
+               
             }).catch(err => {
                 this.setState({
                     isVisible: false
                 })
-                snackbar.show('Thất bại', 'danger')
-
+                snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
             })
     }
     onCloseModal = () => {
