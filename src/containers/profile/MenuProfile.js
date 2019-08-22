@@ -14,7 +14,6 @@ class MenuProfile extends React.Component {
     this.state = {
       avatar: this.props.userApp.currentUser.avatar
     }
-    console.log(this.props.userApp)
     if (!this.props.userApp.isLogin) {
       this.props.navigation.navigate("login", {
         nextScreen: { screen: "accountTab", param: {} }
@@ -24,7 +23,6 @@ class MenuProfile extends React.Component {
   
   componentWillReceiveProps(nextProps) {
     if (nextProps) {
-      console.log(nextProps)
       this.setState({
         avatar: nextProps.userApp.currentUser.avatar
       })
