@@ -40,14 +40,27 @@ module.exports = {
             });
         });
     },
-    shareWithProfile(recieveUserId,hospitalId,patientHistoryId) {
+    shareWithProfile(recieveUserId, hospitalId, patientHistoryId, fromDate, toDate) {
         let body = {
-            recieveUserId:recieveUserId,
-            hospitalId:hospitalId,
-            patientHistoryId:patientHistoryId
+            recieveUserId: recieveUserId,
+            hospitalId: hospitalId,
+            patientHistoryId: patientHistoryId,
+            fromDate,
+            toDate
         }
         return new Promise((resolve, reject) => {
-            client.requestApi('post',constants.api.ehealth.share_with_profile, body, (s, e) => {
+            client.requestApi('post', constants.api.ehealth.share_with_profile, body, (s, e) => {
+                if (s)
+                    resolve(s)
+                else {
+                    reject(e)
+                }
+            })
+        })
+    },
+    getListShareUser(hospitalId) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('get', `${constants.api.booking.get_list_share_user}?hospitalId=${hospitalId}`, {}, (s, e) => {
                 if (s)
                     resolve(s)
                 else {

@@ -2,7 +2,6 @@ import { StackRouter, createStackNavigator, StackNavigator } from 'react-navigat
 import { Platform } from 'react-native';
 import EhealthScreen from '@containers/ehealth/EhealthScreen';
 import ListProfileScreen from '@containers/ehealth/ListProfileScreen';
-import ListProfileSmallScreen from '@containers/ehealth/ListProfileSmallScreen';
 import ViewInMonthScreen from '@containers/ehealth/ViewInMonthScreen';
 import ViewInDayScreen from '@containers/ehealth/ViewInDayScreen';
 import ViewEhealthDetailScreen from '@containers/ehealth/ViewEhealthDetailScreen';
@@ -13,18 +12,20 @@ import ViewMedicineScreen from '@containers/ehealth/ViewMedicineScreen';
 import ViewMoneyScreen from '@containers/ehealth/ViewMoneyScreen';
 import ViewSurgeryResultScreen from '@containers/ehealth/ViewSurgeryResultScreen';
 import SearchProfileScreen from '@containers/ehealth/SearchProfileScreen';
-import HistoryTimeScreen from '@containers/ehealth/HistoryTimeScreen';
+import HistoryEhealthScreen from '@containers/ehealth/HistoryEhealthScreen';
+import HistorySharingScreen from '@containers/ehealth/HistorySharingScreen';
+import EhealthSharingScreen from '@containers/ehealth/EhealthSharingScreen';
 
 
 
 const EHealthNavigator = createStackNavigator({
     ehealth: { screen: EhealthScreen },
     listProfile: { screen: ListProfileScreen },
-    historyTime :{screen:HistoryTimeScreen},
-    listProfileSmall: { screen: ListProfileSmallScreen },
+    historyEhealth: { screen: HistoryEhealthScreen },
+    historySharing: { screen: HistorySharingScreen },
+    ehealthSharing: { screen: EhealthSharingScreen },
     viewInMonth: { screen: ViewInMonthScreen },
     viewInDay: { screen: ViewInDayScreen },
-    viewDetail: { screen: ViewEhealthDetailScreen },
     viewCheckupResult: { screen: ViewCheckupResultScreen },
     viewDiagnosticResult: { screen: ViewDiagnosticResultScreen },
     viewMedicalTestResult: { screen: ViewMedicalTestResultScreen },

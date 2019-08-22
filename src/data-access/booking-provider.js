@@ -32,8 +32,9 @@ module.exports = {
       }
     });
   },
-  detailPatientHistory(patientHistoryId, hospitalId, id) {
+  detailPatientHistory(patientHistoryId, hospitalId, id, shareId) {
     let id2 = id ? `&id=${id}` : ''
+    let shareId2 = shareId ? `&shareId=${shareId}` : ''
     return new Promise((resolve, reject) => {
       client.requestApi(
         "get",
@@ -41,7 +42,7 @@ module.exports = {
         "/" +
         patientHistoryId +
         "?hospitalId=" +
-        hospitalId + id2,
+        hospitalId + id2 + shareId2,
         {},
         (s, e) => {
           if (s) resolve(s);
@@ -104,12 +105,13 @@ module.exports = {
       })
     })
   },
-  create(hospitalId, medicalRecordId, serviceTypeId, serviceId, bookingTime, content, images) {
+  create(hospitalId, detailScheduleId, medicalRecordId, serviceTypeId, serviceId, bookingTime, content, images) {
     return new Promise((resolve, reject) => {
       client.requestApi(
         "post",
         `${constants.api.booking.create}/${hospitalId}`,
         {
+          detailScheduleId,
           medicalRecordId,
           serviceTypeId,
           serviceId,

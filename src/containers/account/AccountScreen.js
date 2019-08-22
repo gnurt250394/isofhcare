@@ -24,18 +24,16 @@ import redux from "@redux-store";
 import ImagePicker from "mainam-react-native-select-image";
 import imageProvider from "@data-access/image-provider";
 import userProvider from "@data-access/user-provider";
-import FingerprintPopup from "../../account/FingerprintPopup";
-import Modal from "@components/modal";
 import DeviceInfo from 'react-native-device-info';
 
-class Account extends Component {
+class AccountScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isShowFigner: false
     };
   }
-  showLoading(loading, callback) {
+  showLoading = (loading, callback) => {
     if (this.props.showLoading) {
       this.props.showLoading(loading, callback);
     } else {
@@ -57,7 +55,7 @@ class Account extends Component {
                     userProvider
                       .update(this.props.userApp.currentUser.id, user)
                       .then(s => {
-                        this.showLoading(false);
+                        this.showLoading(false,() => {});
                         if (s.code == 0) {
                           var user = s.data.user;
                           let current = this.props.userApp.currentUser;
@@ -72,7 +70,7 @@ class Account extends Component {
                         }
                       })
                       .catch(e => {
-                        this.showLoading(false);
+                        this.showLoading(false,() => {});
                         snackbar.show(
                           "Cập nhật ảnh đại diện không thành công",
                           "danger"
@@ -83,7 +81,7 @@ class Account extends Component {
               });
             })
             .catch(e => {
-              this.showLoading(false);
+              this.showLoading(false,() => {});
               snackbar.show("Upload ảnh không thành công", "danger");
             });
         });
@@ -196,7 +194,7 @@ class Account extends Component {
                 <Text style={[styles.itemText, { fontWeight: "bold" }]}>
                   Kích hoạt ví IsofhCare
               </Text>
-                <ScaledImage
+                <ScaledImage style={{ tintColor: '#008D6F' }}
                   source={require("@images/new/ic_menu_wallet.png")}
                   width={24}
                   height={24}
@@ -218,13 +216,65 @@ class Account extends Component {
               <TouchableOpacity
                 style={[styles.itemMenu, { marginTop: 40 }]}
                 onPress={() => {
+                  this.props.navigation.navigate("listProfileUser");
+                }}
+              >
+                <Text style={styles.itemText}>Thành viên gia đình</Text>
+                <ScaledImage style={{ tintColor: '#008D6F' }}
+                  source={require("@images/new/profile/ic_family.png")}
+                  width={30}
+                  height={30}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.itemMenu]}
+                onPress={() => {
+                  this.props.navigation.navigate("ehealth");
+                }}
+              >
+                <Text style={styles.itemText}>Y bạ điện tử</Text>
+                <ScaledImage style={{ tintColor: '#008D6F' }}
+                  source={require("@images/new/ic_menu_ehealth.png")}
+                  width={24}
+                  height={24}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.itemMenu]}
+                onPress={() => {
+                  snackbar.show("Chức năng đang phát triển");
+                }}
+              >
+                <Text style={styles.itemText}>Lịch sử giao dịch</Text>
+                <ScaledImage style={{ tintColor: '#008D6F' }}
+                  source={require("@images/new/profile/ic_history.png")}
+                  width={24}
+                  height={24}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.itemMenu]}
+                onPress={() => {
+                  snackbar.show("Chức năng đang phát triển");
+                }}
+              >
+                <Text style={styles.itemText}>Thuốc đã đặt mua</Text>
+                <ScaledImage style={{ tintColor: '#008D6F' }}
+                  source={require("@images/new/profile/ic_drug.png")}
+                  width={24}
+                  height={24}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.itemMenu]}
+                onPress={() => {
                   this.props.navigation.navigate("patientHistory", {
                     title: "Lịch khám"
                   });
                 }}
               >
                 <Text style={styles.itemText}>Lịch khám</Text>
-                <ScaledImage
+                <ScaledImage style={{ tintColor: '#008D6F' }}
                   source={require("@images/new/ic_menu_list_booking.png")}
                   width={24}
                   height={24}
@@ -251,7 +301,7 @@ class Account extends Component {
                 >
                   Cài đặt
               </Text>
-                <ScaledImage
+                <ScaledImage style={{ tintColor: '#008D6F' }}
                   source={require("@images/new/ic_menu_setting.png")}
                   width={24}
                   height={24}
@@ -268,7 +318,7 @@ class Account extends Component {
                 }}
               >
                 <Text style={styles.itemText}>Đổi mật khẩu</Text>
-                <ScaledImage
+                <ScaledImage style={{ tintColor: '#008D6F' }}
                   source={require("@images/new/ic_menu_change_password.png")}
                   width={24}
                   height={24}
@@ -282,7 +332,7 @@ class Account extends Component {
               onPress={this.onFingerClick}
             >
               <Text style={styles.itemText}>Đăng nhập bằng vân tay</Text>
-              <ScaledImage
+              <ScaledImage style={{ tintColor: '#008D6F' }}
                 source={require("@images/new/fingerprint.png")}
                 width={24}
                 height={24}
@@ -305,7 +355,7 @@ class Account extends Component {
           {/* {
           this.state.showSetting && <TouchableOpacity style={[styles.itemMenu, { paddingLeft: 40 }]}>
             <Text style={styles.itemText}>Đăng nhập vân tay</Text>
-            <ScaledImage source={require("@images/new/ic_menu_fingerprint.png")} width={24} height={24} />
+            <ScaledImage style={{ tintColor: '#008D6F' }} source={require("@images/new/ic_menu_fingerprint.png")} width={24} height={24} />
           </TouchableOpacity>
         } */}
           <TouchableOpacity
@@ -315,7 +365,7 @@ class Account extends Component {
             }}
           >
             <Text style={styles.itemText}>Về iSofH</Text>
-            <ScaledImage
+            <ScaledImage style={{ tintColor: '#008D6F' }}
               source={require("@images/new/ic_menu_aboutus.png")}
               width={24}
               height={24}
@@ -330,7 +380,7 @@ class Account extends Component {
             }}
           >
             <Text style={styles.itemText}>Hỗ trợ</Text>
-            <ScaledImage
+            <ScaledImage style={{ tintColor: '#008D6F' }}
               source={require("@images/new/ic_menu_support.png")}
               width={24}
               height={24}
@@ -345,7 +395,7 @@ class Account extends Component {
             }}
           >
             <Text style={styles.itemText}>Báo lỗi</Text>
-            <ScaledImage
+            <ScaledImage style={{ tintColor: '#008D6F' }}
               source={require("@images/new/ic_menu_feedback.png")}
               width={24}
               height={24}
@@ -358,7 +408,7 @@ class Account extends Component {
             }}
           >
             <Text style={styles.itemText}>Điều khoản sử dụng</Text>
-            <ScaledImage
+            <ScaledImage style={{ tintColor: '#008D6F' }}
               source={require("@images/new/ic_menu_terms.png")}
               width={24}
               height={24}
@@ -373,15 +423,15 @@ class Account extends Component {
               }}
             >
               <Text style={styles.itemText}>Đăng xuất</Text>
-              <ScaledImage
+              <ScaledImage style={{ tintColor: '#008D6F' }}
                 source={require("@images/new/ic_menu_logout.png")}
                 width={24}
                 height={24}
               />
             </TouchableOpacity>
           )}
-          <View>
-          <Text style={styles.txVersion}>{'Phiên bản ' + DeviceInfo.getVersion() + '.'+ DeviceInfo.getBuildNumber()}</Text>
+          <View style={[styles.itemMenu, { borderBottomWidth: 0 }]}>
+            <Text style={[styles.itemText, { color: '#00000080' }]}>{'Phiên bản ' + DeviceInfo.getVersion() + '.' + DeviceInfo.getBuildNumber()}</Text>
           </View>
           <View style={styles.viewSpaceBottom} />
           <ImagePicker ref={ref => (this.imagePicker = ref)} />
@@ -431,24 +481,27 @@ const styles = StyleSheet.create({
   },
   itemText: {
     flex: 1,
-    fontWeight: "400"
+    fontWeight: "400",
+    fontWeight: 'bold',
+    fontSize: 15,
+    color: '#008D6F'
   },
-  viewCurrentUser:{ flexDirection: "row", alignItems: "center", marginTop: 30 },
-  txUserName:{ color: "#000000", fontSize: 20 },
-  viewInfo:{ flex: 1 },
-  txViewProfile:{ color: "#008D6F", marginTop: 10 },
-  btnImage:{ position: "relative" },
-  imageStyle:{ borderRadius: 35, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' },
-  customImagePlace:{
+  viewCurrentUser: { flexDirection: "row", alignItems: "center", marginTop: 30 },
+  txUserName: { color: "#000000", fontSize: 20 },
+  viewInfo: { flex: 1 },
+  txViewProfile: { color: "#008D6F", marginTop: 10 },
+  btnImage: { position: "relative" },
+  imageStyle: { borderRadius: 35, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' },
+  customImagePlace: {
     width: 70,
     height: 70,
     alignSelf: "center"
   },
-  styleImgLoad:{ width: 70, height: 70, alignSelf: "center" },
-  scaledImage:{ position: "absolute", bottom: 0, right: 0 },
-  viewUserNotLogin:{ alignItems: "center", marginTop: 30 },
-  viewScaledImg:{ marginBottom: 30 },
-  btnLogin:{
+  styleImgLoad: { width: 70, height: 70, alignSelf: "center" },
+  scaledImage: { position: "absolute", bottom: 0, right: 0 },
+  viewUserNotLogin: { alignItems: "center", marginTop: 30 },
+  viewScaledImg: { marginBottom: 30 },
+  btnLogin: {
     padding: 18,
     backgroundColor: "#02C39A",
     borderRadius: 5,
@@ -456,20 +509,20 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginTop: 20
   },
-  txLogin:{
+  txLogin: {
     color: "#FFF",
     fontWeight: "bold",
     textAlign: "center",
     fontSize: 17
   },
-  styleScrollView:{
+  styleScrollView: {
     flex: 1,
     paddingTop: 0,
     paddingHorizontal: 20,
     paddingTop: 20
   },
-  txVersion:{marginLeft:10,marginTop:10},
-  viewSpaceBottom:{ height: 100 }
+  txVersion: { marginLeft: 10, marginTop: 10 },
+  viewSpaceBottom: { height: 100 }
 
 
 });
@@ -480,4 +533,4 @@ function mapStateToProps(state) {
     userApp: state.userApp
   };
 }
-export default connect(mapStateToProps)(Account);
+export default connect(mapStateToProps)(AccountScreen);

@@ -12,188 +12,105 @@ import connectionUtils from "@utils/connection-utils";
 import ImagePicker from "mainam-react-native-select-image";
 import snackbar from '@utils/snackbar-utils';
 import constants from '@resources/strings';
+import objectUtils from "@utils/object-utils";
+import redux from "@redux-store";
+import { connect } from "react-redux";
 
-export default class ProfileScreen extends Component {
+class ProfileScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            value: 1,
-            refresh: false,
-            isLoading: false
+
         };
     }
-    onSelectFeature = (value) => {
+
+    componentDidMount() {
+        let id = this.props.navigation.state.params && this.props.navigation.state.params.id ? this.props.navigation.state.params.id : ''
         this.setState({
-            value: value
+            loading: true
+        }, () => {
+            this.onGetDetail(id)
         })
-    }
-    renderContent = () => {
-        switch (this.state.value) {
-            case 1: return (
-                <ProfileInfo></ProfileInfo>
-            )
-            case 2: return (<Transaction></Transaction>)
-        }
-    }
-    componentWillMount() {
-        this.props.navigation.state.params.data && this.setState({
-            data: this.props.navigation.state.params.data,
-            imgAvtLocal: this.props.navigation.state.params.data.avatar ? this.props.navigation.state.params.data.avatar.absoluteUrl() : '',
-            imgLocal: this.props.navigation.state.params.data.cover ? this.props.navigation.state.params.data.cover.absoluteUrl() : '',
-        })
-    }
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.navigation.state.params && nextProps.navigation.state.params.data) {
-            this.setState({
-                data: nextProps.navigation.state.params.data,
-                imgAvtLocal: this.props.navigation.state.params.data.avatar ? this.props.navigation.state.params.data.avatar.absoluteUrl() : '',
-                imgLocal: this.props.navigation.state.params.data.cover ? this.props.navigation.state.params.data.cover.absoluteUrl() : '',
-            })
-            console.log( nextProps.navigation.state.params.data,'xvideos')
-        }
-    }
-    selectImage = () => {
-        connectionUtils
-            .isConnected()
-            .then(s => {
-                if (this.imagePicker) {
-                    this.imagePicker.open(true, 200, 200, image => {
-                        setTimeout(() => {
-                            Keyboard.dismiss();
-                        }, 500);
-                        this.setState({
-                            image
-                        });
-                        imageProvider.upload(this.state.image.path, (s, e) => {
-                            if (s.success && s.data.code == 0) {
-                                let images = s.data.data.images[0].thumbnail;
-                                this.setState({
-                                    imgLocal: images
-                                });
-                                this.onUpdate()
-                            }
-                            if (e) {
-                                this.setState({
-                                    isLoading: false
-                                });
-                            }
-                        });
-                    });
-                }
-            })
-            .catch(e => {
-                snackbar.show(constants.msg.app.not_internet, "danger");
-            });
     }
 
-    onUpdate = () => {
-        if (this.state.image)
-            this.setState({ isLoading: true }, () => {
-                imageProvider.upload(this.state.image.path, (s, e) => {
-                    if (s.success && s.data.code == 0) {
-                        let image = s.data.data.images[0].thumbnail;
-                        this.onUpdate2(image);
-                    }
-                    if (e) {
-                        this.setState({
-                            isLoading: false
-                        });
-                    }
-                });
-            });
-        else this.onUpdate2("");
-    };
-    onUpdate2(image) {
-        connectionUtils
-            .isConnected()
-            .then(s => {
-                this.setState(
-                    {
-                        isLoading: true
-                    },
-                    () => {
-                        let data = {
-                            cover: image,
-                            type: this.state.data.type,
-                        }
-                        let id = this.state.data.id
-                        profileProvider
-                            .updateCover(id, data)
-                            .then(res => {
-                                if (res.code == 0) {
-                                    this.setState({
-                                        isLoading: false
-                                    });
-                                }
-                                else {
-                                    this.setState({
-                                        isLoading: false
-                                    });
-                                }
-                            })
-                            .catch(err => {
-                                this.setState({
-                                    isLoading: false
-                                });
-                                snackbar.show(constants.msg.app.err_try_again, "danger");
-                            });
-                    }
-                )
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.navigation.state.params && nextProps.navigation.state.params.id) {
+            let id = nextProps.navigation.state.params && nextProps.navigation.state.params.id ? nextProps.navigation.state.params.id : ''
+            console.log(id);
+            this.onGetDetail(id)
+        }
+    }
+    onGetDetail = (id) => {
+
+        profileProvider.getDetailsMedical(id).then(res => {
+            if (res.code == 0) {
+                this.setState({
+                    imgAvtLocal: res.data.medicalRecords.avatar,
+                    data: res.data,
+                    loading: false
+                })
+            }
+        }).catch(err => {
+            this.setState({
+                loading: false
             })
-            .catch(e => {
-                snackbar.show(constants.msg.app.not_internet, "danger");
-            });
+        })
     }
     selectImageAvt = () => {
-        connectionUtils
-            .isConnected()
-            .then(s => {
-                if (this.imagePicker) {
-                    this.imagePicker.open(true, 200, 200, image => {
-                        setTimeout(() => {
-                            Keyboard.dismiss();
-                        }, 500);
-                        this.setState({
-                            imageAvt: image
-                        });
-                        imageProvider.upload(this.state.imageAvt.path, (s, e) => {
-                            if (s.success && s.data.code == 0) {
-                                let images = s.data.data.images[0].thumbnail;
-                                this.setState({
-                                    imgAvtLocal: images
-                                });
-                                this.onUpdateAvt()
-                            }
-                            if (e) {
-                                this.setState({
-                                    isLoading: false
-                                });
-                            }
-                        });
-                    });
-                }
-            })
-            .catch(e => {
-                snackbar.show(constants.msg.app.not_internet, "danger");
-            });
-    }
-    onUpdateAvt = () => {
-        if (this.state.imageAvt)
-            this.setState({ isLoading: true }, () => {
-                imageProvider.upload(this.state.imageAvt.path, (s, e) => {
-                    if (s.success && s.data.code == 0) {
-                        let image = s.data.data.images[0].thumbnail;
-                        this.onUpdateAvt2(image);
-                    }
-                    if (e) {
-                        this.setState({
-                            isLoading: false
+        if (this.state.data.medicalRecords.status == 2 && this.state.data.medicalRecords.alreadyHaveAccount) {
+            snackbar.show('Bạn không có quyền chỉnh sửa hồ sơ này', 'danger')
+
+        } else {
+            connectionUtils
+                .isConnected()
+                .then(s => {
+                    if (this.imagePicker) {
+                        this.imagePicker.open(true, 200, 200, image => {
+                            setTimeout(() => {
+                                Keyboard.dismiss();
+                            }, 500);
+                            this.setState({
+                                imageAvt: image
+                            });
+                            imageProvider.upload(this.state.imageAvt.path, (s, e) => {
+                                if (s.success && s.data.code == 0) {
+                                    let images = s.data.data.images[0].thumbnail;
+                                    this.setState({
+                                        imgAvtLocal: images
+                                    });
+                                    this.onUpdateAvt2(images)
+                                }
+                                if (e) {
+                                    this.setState({
+                                        isLoading: false
+                                    });
+                                }
+                            });
                         });
                     }
+                })
+                .catch(e => {
+                    snackbar.show(constants.msg.app.not_internet, "danger");
                 });
-            });
-        else this.onUpdateAvt2("");
-    };
+        }
+    }
+    // onUpdateAvt = () => {
+    //     if (this.state.imageAvt)
+    //         this.setState({ isLoading: true }, () => {
+    //             imageProvider.upload(this.state.imageAvt.path, (s, e) => {
+    //                 if (s.success && s.data.code == 0) {
+    //                     let image = s.data.data.images[0].thumbnail;
+    //                     this.onUpdateAvt2(image);
+    //                 }
+    //                 if (e) {
+    //                     this.setState({
+    //                         isLoading: false
+    //                     });
+    //                 }
+    //             });
+    //         });
+    //     else this.onUpdateAvt2("");
+    // };
     onUpdateAvt2(image) {
         connectionUtils
             .isConnected()
@@ -203,17 +120,28 @@ export default class ProfileScreen extends Component {
                         isLoading: true
                     },
                     () => {
-                        let data = {
+                        let data = this.state.data.medicalRecords.status == 1 ? {
                             avatar: image,
-                            type: this.state.data.type,
-                        }
-                        let id = this.state.data.id
+                            type: 'FAMILY',
+                        } : {
+                                avatar: image,
+                                type: 'ORIGINAL',
+                            }
+                        console.log(data, 'body');
+                        let id = this.state.data.medicalRecords.id
                         profileProvider
                             .updateAvatar(id, data)
                             .then(res => {
                                 if (res.code == 0) {
+                                    console.log(res, 'ádasd')
+                                    if (this.state.data.medicalRecords.status == 1) {
+                                        let current = this.props.userApp.currentUser;
+                                        current.avatar = res.data.medicalRecords.avatar
+                                        this.props.dispatch(redux.userLogin(current));
+                                    }
                                     this.setState({
-                                        isLoading: false
+                                        isLoading: false,
+                                        imgAvtLocal: res.data.medicalRecords.avatar
                                     });
                                 }
                                 else {
@@ -226,6 +154,7 @@ export default class ProfileScreen extends Component {
                                 this.setState({
                                     isLoading: false
                                 });
+                                console.log(err, 'asdsd');
                                 snackbar.show(constants.msg.app.err_try_again, "danger");
                             });
                     }
@@ -235,12 +164,172 @@ export default class ProfileScreen extends Component {
                 snackbar.show(constants.msg.app.not_internet, "danger");
             });
     }
+    onEdit = () => {
+        if (this.state.data.medicalRecords.status == 2 && this.state.data.medicalRecords.alreadyHaveAccount) {
+            snackbar.show('Bạn không có quyền chỉnh sửa hồ sơ này', 'danger')
+
+        } else {
+            this.props.navigation.navigate('editProfile', {
+                data: this.state.data,
+            })
+        }
+    }
+    renderAddress = () => {
+        let dataLocaotion = this.state.data && this.state.data.medicalRecords ? this.state.data.medicalRecords : {}
+        return (<Text style={styles.txContent}>{dataLocaotion.address}</Text>)
+        // let dataLocaotion = this.state.data && this.state.data.medicalRecords ? this.state.data.medicalRecords : {}
+        // if (dataLocaotion) {
+        //     if (dataLocaotion.address && dataLocaotion.village) {
+        //         return (<Text style={styles.txContent}>{dataLocaotion.village + ', ' + dataLocaotion.address}</Text>)
+        //     }
+
+        //     if (dataLocaotion.address && !dataLocaotion.village) {
+        //         return (<Text style={styles.txContent}>{dataLocaotion.address}</Text>)
+        //     }
+        //     if (!dataLocaotion.address && dataLocaotion.village) {
+        //         return (<Text style={styles.txContent}>{dataLocaotion.village}</Text>)
+        //     }
+        // }
+
+    }
+    renderRelation = () => {
+        if (this.state.data && this.state.data.medicalRecords && this.state.data.medicalRecords.relationshipType)
+            switch (this.state.data.medicalRecords.relationshipType) {
+                case 'DAD':
+                    return <Text style={styles.txContent}>Cha</Text>
+                case 'MOTHER':
+                    return <Text style={styles.txContent}>Mẹ</Text>
+                case 'BOY':
+                    return <Text style={styles.txContent}>Con trai</Text>
+                case 'DAUGHTER':
+                    return <Text style={styles.txContent}>Con gái</Text>
+                case 'GRANDSON':
+                    return <Text style={styles.txContent}>Cháu trai</Text>
+                case 'NIECE':
+                    return <Text style={styles.txContent}>Cháu gái</Text>
+                case 'GRANDFATHER':
+                    return <Text style={styles.txContent}>Ông</Text>
+                case 'GRANDMOTHER':
+                    return <Text style={styles.txContent}>Bà</Text>
+                case 'WIFE':
+                    return <Text style={styles.txContent}>Vợ</Text>
+                case 'HUSBAND':
+                    return <Text style={styles.txContent}>Chồng</Text>
+                case 'OTHER':
+                    return <Text style={styles.txContent}>Khác</Text>
+
+                default:
+                    return <Text style={styles.txContent}></Text>
+            }
+    }
+    //render profile by statusConfirm
+    renderProfile = (details) => {
+        switch (details.statusConfirm) {
+            case 'ACTIVE': {
+                return (
+                    <View style={{ flex: 1 }} >
+                        <View style={styles.btnFeature}>
+                            <View><ScaledImage height={20} style={{ tintColor: '#fff', marginLeft: -28 }} source={require('@images/new/profile/ic_account.png')}></ScaledImage></View>
+                            <Text style={[styles.txFeature]} >Thông tin cá nhân</Text>
+                            <View></View>
+                        </View>
+                        <View style={styles.containerInfo}>
+                            <View style={styles.viewItem}>
+                                <Text><Text style={styles.txLabel}>Họ và tên: </Text><Text style={styles.txContent}>{details && details.name}</Text></Text>
+                            </View>
+                            <View style={styles.viewItem}>
+                                <Text><Text style={styles.txLabel}>Ngày sinh: </Text><Text style={styles.txContent}>{details && details.dob ? details.dob.toDateObject('-').format('dd/MM/yyyy') : ('')}</Text></Text>
+                            </View>
+                            {/* <View style={styles.viewItem}>
+                    <Text><Text style={styles.txLabel}>ID: </Text><Text style={styles.txContent}>{details && details.profileNoID ? details.profileNoID : ''}</Text></Text>
+                </View> */}
+                            <View style={styles.viewItem}>
+                                <Text><Text style={styles.txLabel}>Giới tính: </Text><Text style={styles.txContent}>{details && details.gender || details.gender == 0 ? (details.gender == 0 ? 'Nữ' : 'Nam') : ''}</Text></Text>
+                            </View>
+                            <View style={[styles.viewItem, {}]}>
+                                <Text><Text style={styles.txLabel}>Chiều cao: </Text><Text style={styles.txContent}>{details && details.height ? details.height + 'cm' : ''} </Text></Text>
+                                <Text style={[styles.txLabel]}>Cân nặng: <Text style={{ color: '#000', fontWeight: 'normal' }}>{details && details.weight ? details.weight + 'kg' : ''} </Text></Text>
+                                <View style={{ width: 20 }}></View>
+                            </View>
+                            <View style={styles.viewItem}>
+                                <Text><Text style={styles.txLabel}>Chỉ số BMI: </Text><Text style={styles.txContent}>{details && details.height && details.weight ? parseFloat(details.weight / (Math.pow(details.height / 100, 2))).toFixed(1) : ''}</Text></Text>
+                            </View>
+                            <View style={styles.viewItem}>
+                                <Text><Text style={styles.txLabel}>Số điện thoại: </Text><Text style={styles.txContent}>{details && details.phone ? details.phone.replace(/(\d\d\d\d)(\d\d\d)(\d\d\d)/, '$1.$2.$3') : ''}</Text></Text>
+                            </View>
+                            <View style={styles.viewItem}>
+                                <Text><Text style={styles.txLabel}>Địa chỉ: </Text><Text style={{ fontSize: 14, color: '#000' }}>{this.renderAddress()}</Text></Text>
+                            </View>
+                            {details.status != 1 ? (
+                                <View style={styles.viewItem}>
+                                    <Text><Text style={styles.txLabel}>Quan hệ: </Text>{this.renderRelation()}</Text>
+                                </View>
+                            ) : (<View></View>)}
+
+                        </View>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('createProfile')} style={styles.btn}><Text style={styles.txBtn}>Thêm thành viên</Text></TouchableOpacity>
+                    </View>
+                )
+            }
+
+            case 'WAIT_CONFIRM': {
+                return (
+                    <View style={{ flex: 1 }} >
+                        <View style={styles.btnFeature}>
+                            <View><ScaledImage height={20} style={{ tintColor: '#fff', marginLeft: -28 }} source={require('@images/new/profile/ic_account.png')}></ScaledImage></View>
+                            <Text style={[styles.txFeature]} >Thông tin cá nhân</Text>
+                            <View></View>
+                        </View>
+                        <View style={styles.containerInfo}>
+                            <View style={styles.viewItem}>
+                                <Text><Text style={styles.txLabel}>Họ và tên: </Text><Text style={styles.txContent}>{details && details.name}</Text></Text>
+                            </View>
+                            <View style={styles.viewItem}>
+                                <Text><Text style={styles.txLabel}>Số điện thoại: </Text><Text style={styles.txContent}>{details && details.phone ? details.phone.replace(/(\d\d\d\d)(\d\d\d)(\d\d\d)/, '$1.$2.$3') : ''}</Text></Text>
+                            </View>
+                            {details.status != 1 ? (
+                                <View style={styles.viewItem}>
+                                    <Text><Text style={styles.txLabel}>Quan hệ: </Text>{this.renderRelation()}</Text>
+                                </View>
+                            ) : (<View></View>)}
+
+                        </View>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('createProfile')} style={styles.btn}><Text style={styles.txBtn}>Thêm thành viên</Text></TouchableOpacity>
+                    </View>
+                )
+            }
+            case 'NEED_CONFIRM': {
+                return (
+                    <View style={{ flex: 1 }} >
+
+                        <View style={styles.btnFeature}>
+                            <View><ScaledImage height={20} style={{ tintColor: '#fff', marginLeft: -28 }} source={require('@images/new/profile/ic_account.png')}></ScaledImage></View>
+                            <Text style={[styles.txFeature]} >Thông tin cá nhân</Text>
+                            <View></View>
+                        </View>
+                        <View style={styles.containerInfo}>
+                            <View style={styles.viewItem}>
+                                <Text><Text style={styles.txLabel}>Họ và tên: </Text><Text style={styles.txContent}>{details && details.name}</Text></Text>
+                            </View>
+                            <View style={styles.viewItem}>
+                                <Text><Text style={styles.txLabel}>Số điện thoại: </Text><Text style={styles.txContent}>{details && details.phone ? details.phone.replace(/(\d\d\d\d)(\d\d\d)(\d\d\d)/, '$1.$2.$3') : ''}</Text></Text>
+                            </View>
+                            {details.status != 1 ? (
+                                <View style={styles.viewItem}>
+                                    <Text><Text style={styles.txLabel}>Quan hệ: </Text>{this.renderRelation()}</Text>
+                                </View>
+                            ) : (<View></View>)}
+
+                        </View>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('createProfile')} style={styles.btn}><Text style={styles.txBtn}>Thêm thành viên</Text></TouchableOpacity>
+                    </View>
+                )
+            }
+        }
+    }
     render() {
         const icSupport = require("@images/new/user.png");
-        const source = this.state.imgLocal
-            ? { uri: this.state.imgLocal.absoluteUrl() }
-            : icSupport
-
+        const details = this.state.data && this.state.data.medicalRecords ? this.state.data.medicalRecords : {}
         const sourceAvt = this.state.imgAvtLocal
             ? { uri: this.state.imgAvtLocal.absoluteUrl() }
             : icSupport
@@ -253,108 +342,54 @@ export default class ProfileScreen extends Component {
                 statusbarBackgroundColor="#359A60"
                 actionbarStyle={styles.actionbarStyle}
                 style={styles.container}
-                menuButton={<TouchableOpacity onPress={() => this.props.navigation.navigate('editProfile', { data: this.state.data })}><ScaledImage style={{ tintColor: '#fff', marginRight: 10 }} height={20} source={require('@images/new/profile/ic_edit.png')}></ScaledImage></TouchableOpacity>}
-
+                menuButton={<TouchableOpacity onPress={this.onEdit}><ScaledImage style={{ tintColor: '#fff', marginRight: 10 }} height={20} source={require('@images/new/profile/ic_edit.png')}></ScaledImage></TouchableOpacity>}
+                isLoading={this.state.loading}
             >
-                <ScrollView style={{ flex: 1 }} >
-                    <View style={styles.viewBaner}>
+                <ScrollView bounces = {false}>
+                <View style={styles.viewBaner}>
+                    <ScaledImage
+                        // resizeMode="cover"
+                        source={require('@images/new/profile/img_cover_profile.png')}
+                        width={70}
+                        style={styles.imgBaner}
+                    />
+                    {/* <TouchableOpacity onPress={this.selectImage} style={styles.scaledImage}>
+                    <ScaledImage
+                        source={require("@images/new/profile/ic_instagram.png")}
+                        width={30}
+                    />
+                </TouchableOpacity> */}
+                    <View style={styles.avtBtn}>
                         <ImageLoad
-                            // imageStyle={styles.imgBaner}
-                            // customImagePlaceholderDefaultStyle={styles.customImagePlace}
-                            // placeholderSource={{}}
-                            style={styles.imgBaner}
+                            source={sourceAvt}
+                            imageStyle={styles.imageStyle}
+                            borderRadius={60}
+                            customImagePlaceholderDefaultStyle={styles.customImagePlace}
+                            style={styles.styleImgLoad}
                             resizeMode="cover"
+                            placeholderSource={icSupport}
                             loadingStyle={{ size: "small", color: "gray" }}
-                            source={source}
                             defaultImage={() => {
                                 return (
                                     <ScaledImage
                                         resizeMode="cover"
                                         source={icSupport}
-                                        width={70}
-                                        style={styles.imgBaner}
+                                        width={120}
+                                        style={styles.imageStyle}
                                     />
                                 );
                             }}
                         />
-                        <TouchableOpacity onPress={this.selectImage} style={styles.scaledImage}>
+                        <TouchableOpacity onPress={this.selectImageAvt} style={styles.scaledImageAvt}
+                        >
                             <ScaledImage
-                                source={require("@images/new/profile/ic_instagram.png")}
+                                source={require("@images/new/profile/instagram_logo_black.png")}
                                 width={30}
                             />
                         </TouchableOpacity>
-                        <View style={styles.avtBtn}>
-                            <ImageLoad
-                                source={sourceAvt}
-                                imageStyle={styles.imageStyle}
-                                borderRadius={60}
-                                customImagePlaceholderDefaultStyle={styles.customImagePlace}
-                                style={styles.styleImgLoad}
-                                resizeMode="cover"
-                                loadingStyle={{ size: "small", color: "gray" }}
-                                defaultImage={() => {
-                                    return (
-                                        <ScaledImage
-                                            resizeMode="cover"
-                                            source={icSupport}
-                                            width={120}
-                                            style={styles.imageStyle}
-                                        />
-                                    );
-                                }}
-                            />
-                            <TouchableOpacity onPress={this.selectImageAvt} style={styles.scaledImageAvt}
-                            >
-                                <ScaledImage
-                                    source={require("@images/new/profile/instagram_logo_black.png")}
-                                    width={30}
-                                />
-                            </TouchableOpacity>
-                        </View>
                     </View>
-                    <View style={styles.btnFeature}>
-                      <View><ScaledImage height={20} style={{ tintColor: '#fff',}} source={require('@images/new/profile/ic_account.png')}></ScaledImage></View>
-                        <Text style={[styles.txFeature]} >Thông tin cá nhân</Text>
-                        <View style={{ width: 20 }}></View>
-                    </View>
-                    {/* <TouchableOpacity onPress={() => this.onSelectFeature(2)} style={[styles.btnFeature, this.state.value == 2 ? { backgroundColor: '#4BBA7B' } : { backgroundColor: '#fff' }]}>
-                            <ScaledImage height={20} style={this.state.value == 2 ? { tintColor: '#fff' } : { tintColor: '#4BBA7B' }} source={require('@images/new/profile/ic_deal_write.png')}></ScaledImage>
-                            <Text style={[styles.txFeature, this.state.value == 2 ? { color: '#FFF' } : {}]}>Giao dịch</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => this.onSelectFeature(3)} style={[styles.btnFeature, this.state.value == 3 ? { backgroundColor: '#4BBA7B' } : { backgroundColor: '#fff' }]}>
-                            <ScaledImage height={20} style={this.state.value == 3 ? { tintColor: '#fff' } : { tintColor: '#4BBA7B' }} source={require('@images/new/profile/ic_account.png')}></ScaledImage>
-                            <Text style={[styles.txFeature, this.state.value == 3 ? { color: '#FFF' } : {}]}>Y bạ điện tử</Text>
-                        </TouchableOpacity> */}
-                    <View style={styles.containerInfo}>
-                        <View style={styles.viewItem}>
-                            <Text><Text style={styles.txLabel}>Họ và tên: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.name}</Text></Text>
-                        </View>
-                        <View style={styles.viewItem}>
-                            <Text><Text style={styles.txLabel}>Ngày sinh: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.dob ? this.state.data.dob.toDateObject('-').format('dd/MM/yyyy') : ('')}</Text></Text>
-                        </View>
-                        {/* <View style={styles.viewItem}>
-                            <Text><Text style={styles.txLabel}>ID: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.profileNoID ? this.state.data.profileNoID : ''}</Text></Text>
-                        </View> */}
-                        <View style={styles.viewItem}>
-                            <Text><Text style={styles.txLabel}>Giới tính: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.gender || this.state.data.gender == 0 ? (this.state.data.gender == 0 ? 'Nữ' : 'Nam') : ''}</Text></Text>
-                        </View>
-                        <View style={[styles.viewItem, {}]}>
-                            <Text><Text style={styles.txLabel}>Chiều cao: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.height ? this.state.data.height : ''} cm</Text></Text>
-                            <Text style={[styles.txLabel]}>Cân nặng: <Text style={{ color: '#000' }}>{this.state.data && this.state.data.weight ? this.state.data.weight : ''} kg</Text></Text>
-                            <View style={{ width: 20 }}></View>
-                        </View>
-                        <View style={styles.viewItem}>
-                            <Text><Text style={styles.txLabel}>Chỉ số BMI: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.height && this.state.data.weight ? parseFloat(this.state.data.weight/(Math.pow(this.state.data.height/100,2))).toFixed(1) : ''}</Text></Text>
-                        </View>
-                        <View style={styles.viewItem}>
-                            <Text><Text style={styles.txLabel}>Số điện thoại: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.phone ? this.state.data.phone.replace(/(\d\d\d\d)(\d\d\d)(\d\d\d)/, '$1.$2.$3') : ''}</Text></Text>
-                        </View>
-                        <View style={styles.viewItem}>
-                            <Text><Text style={styles.txLabel}>Địa chỉ: </Text><Text style={styles.txContent}>{this.state.data && this.state.data.address ? this.state.data.address : ''}</Text></Text>
-                        </View>
-                        <View style={{height:1,backgroundColor:'#4BBA7B'}}></View>
-                    </View>
-                    <TouchableOpacity onPress={() => this.props.navigation.navigate('createProfile')} style={styles.btn}><Text style={styles.txBtn}>Thêm thành viên</Text></TouchableOpacity>
+                </View>
+                {this.renderProfile(details)}
                 </ScrollView>
                 <ImagePicker ref={ref => (this.imagePicker = ref)} />
             </ActivityPanel>
@@ -369,12 +404,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     scaledImage: { position: "absolute", top: 5, right: 5 },
-    btnFeature: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#4BBA7B',justifyContent:'space-around', borderRadius: 5, borderColor: '#4BBA7B',  paddingVertical: 10, marginHorizontal: 10, marginTop: 30 },
+    btnFeature: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#4BBA7B', justifyContent: 'space-around', borderTopLeftRadius: 50, borderBottomLeftRadius: 50, borderColor: '#4BBA7B', paddingVertical: 10, marginLeft: 10, marginTop: 30, paddingHorizontal: 0, flex: 1 },
     imageStyle: { borderRadius: 60, borderWidth: 2, borderColor: '#Fff' },
     customImagePlace: {
         width: 120,
         height: 120,
-        alignSelf: "center"
+        alignSelf: "center",
     },
     styleImgLoad: { width: 120, height: 120, },
     avtBtn: {
@@ -387,11 +422,15 @@ const styles = StyleSheet.create({
         borderBottomWidth: 0
     },
     btn: {
-        paddingHorizontal: 10, paddingVertical: 5, backgroundColor: '#359A60', borderRadius: 5, justifyContent: 'center', alignItems: 'center', alignSelf: 'flex-start', marginHorizontal: 10, marginLeft: 12, marginBottom: 20, marginTop: 10
+        paddingHorizontal: 10, paddingVertical: 15, backgroundColor: '#4BBA7B', borderRadius: 8, justifyContent: 'center', alignItems: 'center', alignSelf: 'flex-start', marginHorizontal: 10, marginLeft: 12, marginBottom: 20, marginTop: 10
     },
     containerInfo: {
         padding: 10,
         flex: 1,
+        borderRadius: 20,
+        borderWidth: 1,
+        borderColor: '#01C295',
+        margin: 10
     },
     viewItem: {
         flexDirection: 'row',
@@ -399,13 +438,14 @@ const styles = StyleSheet.create({
         marginVertical: 10,
     },
     txLabel: {
-        color: '#4BBA7B',
-        fontSize:14
+        color: '#01C295',
+        fontSize: 14,
+        fontWeight: 'bold'
     },
     txContent: {
         marginLeft: 5,
         color: '#000',
-        fontSize:14
+        fontSize: 14
 
     },
     imgBaner: {
@@ -429,10 +469,16 @@ const styles = StyleSheet.create({
     },
 
     txFeature: {
-        textAlign: 'center',
         color: '#FFF',
-        fontSize:18
+        fontWeight: 'bold',
+        fontSize: 16
     },
     txBtn: { color: '#fff' },
 
 })
+function mapStateToProps(state) {
+    return {
+        userApp: state.userApp
+    };
+}
+export default connect(mapStateToProps)(ProfileScreen);

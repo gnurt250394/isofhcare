@@ -6,8 +6,8 @@ import constants from '@resources/strings';
 import dateUtils from 'mainam-react-native-date-utils';
 import snackbar from '@utils/snackbar-utils';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
-import { Card } from 'native-base';
-import ActionSheet from 'react-native-actionsheet'
+import { Card, Icon } from 'native-base';
+import ActionSheet from 'react-native-actionsheet';
 import { Notification, NotificationOpen } from 'react-native-firebase';
 import DateTimePicker from "mainam-react-native-date-picker";
 import TextField from "mainam-react-native-form-validate/TextField";
@@ -28,7 +28,6 @@ LocaleConfig.locales['en'] = {
 };
 
 LocaleConfig.defaultLocale = 'en';
-var fireDate
 
 class ListProfileScreen extends Component {
 
@@ -57,7 +56,6 @@ class ListProfileScreen extends Component {
                 histories[dateSelected].selectedColor = '#27ae60';
             }
         }
-        console.log(histories, 'historieshistories')
         this.state = {
             refreshing: false,
             data: [],
@@ -75,7 +73,8 @@ class ListProfileScreen extends Component {
             switchValue: false,
             dataPatient: '',
             dateSelected,
-            isVisible: false
+            isVisible: false,
+            hasResult: true
 
         }
 
@@ -99,47 +98,12 @@ class ListProfileScreen extends Component {
         if (focus) {
             focus.selected = true;
         }
-
-        console.log(obj, 'objobjobjobjobjobj')
         return obj;
     }
 
     componentDidMount() {
-        // firebase.messaging().hasPermission()
-        //     .then(enabled => {
-        //         if (!enabled) {
-        //             firebase.messaging().requestPermission()
-        //                 .then(() => {
-        //                     // User has authorised  
-        //                 })
-        //                 .catch(error => {
-        //                     // User has rejected permissions  
-        //                 });
-        //         }
-        //     });
-        // this.notificationListener = firebase.notifications().onNotification(this.onNotification.bind(this));
         this.onGetDetails()
-
     }
-    // onNotification() {
-    //     if (!this.props.userApp.isLogin)
-    //         return;
-    //     console.log(notification);
-    //     if (!notification || notification.show_in_foreground)
-    //         return;
-    //     let body = "";
-    //     let title = "";
-    //     if (Platform.OS == 'ios') {
-    //         body = notification.title;
-    //         title = "iSofhCare";
-    //     } else {
-    //         title = notification.title;
-    //         body = "";
-    //     }
-    //     console.log(object)
-    //     firebase.notifications().displayNotification(notification)
-
-    // }
     onAlarm = (fire_date, patientHistoryId, hospitalId) => {
         if (fire_date < new Date().getTime())
             return;
@@ -175,8 +139,6 @@ class ListProfileScreen extends Component {
 
     }
     onGetDetails = () => {
-        let lastDate = this.state.lastDate ? this.state.lastDate.toDateObject('-').format('dd/MM/yyyy') : null;
-        let dateSelected = this.state.dateString ? this.state.dateString.toDateObject('-').format('dd/MM/yyyy') : null;
         let patientHistoryId = this.state.patient.patientHistoryId;
         let hospitalId = this.state.patient.hospitalEntity.id;
         bookingProvider.detailPatientHistory(patientHistoryId, hospitalId).then(res => {
@@ -212,9 +174,7 @@ class ListProfileScreen extends Component {
 
 
     onDayPress(day) {
-
-        if (this.state.histories[day.dateString]) {
-            console.log(day.dateString, 'sdasd')
+        if (day && this.state.histories[day.dateString]) {
             let histories = JSON.parse(JSON.stringify(this.state.histories));
             if (this.state.dateSelected && histories[this.state.dateSelected]) {
                 delete histories[this.state.dateSelected].selected;
@@ -239,8 +199,9 @@ class ListProfileScreen extends Component {
                 })
 
                 medicineTime && medicineTime.setMinutes(medicineTime.getMinutes())
-                let dataAlarm = this.state.dobAlarm
-                dataAlarm.setMinutes(dataAlarm.getMinutes());
+                let dataAlarm = this.state.dobAlarm;
+                if (dataAlarm.getMinutes)
+                    dataAlarm.setMinutes(dataAlarm.getMinutes());
                 res.data.data.isMedicineTime &&
                     this.onAlarm(dataAlarm.getTime(), patientHistoryId, hospitalId)
             }).catch(err => {
@@ -248,12 +209,16 @@ class ListProfileScreen extends Component {
             })
 
             this.setState({
+                hasResult: true,
                 dateSelected: day.dateString,
                 histories: histories,
             }, () => {
 
             });
         } else {
+            this.setState({
+                hasResult: false,
+            });
             snackbar.show(this.renderTextError(1), "danger");
         }
     }
@@ -346,8 +311,9 @@ class ListProfileScreen extends Component {
                     ehealthProvider.updateDataUSer(note, suggestions, time, medicineTime, isMedicineTime, id).then(res => {
                         let time = this.state.dobAlarm.format('HH')
                         let minutes = this.state.dobAlarm.format('mm')
-                        let dataAlarm = this.state.dobAlarm
-                        dataAlarm.setMinutes(dataAlarm.getMinutes());
+                        let dataAlarm = this.state.dobAlarm;
+                        if (dataAlarm.getMinutes)
+                            dataAlarm.setMinutes(dataAlarm.getMinutes());
                         this.onAlarm(dataAlarm.getTime(), patientHistoryId, hospitalId)
                     }).catch(err => {
                         console.log(err);
@@ -383,7 +349,9 @@ class ListProfileScreen extends Component {
         }
     }
     onShareEhealth = () => {
-        this.actionSheetGetTicket.show();
+        this.props.navigation.navigate("ehealthSharing", {
+            history: this.state.histories[this.state.dateSelected].history
+        });
     }
     renderTextError = (status) => {
         switch (status) {
@@ -412,7 +380,8 @@ class ListProfileScreen extends Component {
                         }, () => {
                             if (result.hasResult) {
                                 this.props.navigation.navigate("viewInDay", {
-                                    dateSelected: this.state.dateSelected
+                                    dateSelected: this.state.dateSelected,
+                                    histories: this.state.histories
                                 });
                             } else {
                                 snackbar.show(this.renderTextError(6), "danger");
@@ -444,9 +413,6 @@ class ListProfileScreen extends Component {
             nextProps.navigation.state.params.status = null
         }
     }
-    onShareEhealthWithProfile() {
-        this.props.navigation.navigate('searchProfile', { dataPatient: this.state.dataPatient, lastDate: this.state.lastDate })
-    }
     exportPdf() {
         this.setState({
             isLoading: true
@@ -477,18 +443,54 @@ class ListProfileScreen extends Component {
             }
         });
     }
+    openHistorySharing = () => {
+        try {
+            if (this.state.histories && this.state.dateSelected) {
+                let patientHistoryId = this.state.histories[this.state.dateSelected].history.patientHistoryId;
+                this.props.navigation.navigate("historySharing", {
+                    patientHistoryId
+                });
+            }
+        } catch (error) {
+
+        }
+    }
+    selectDate = () => {
+        let histories = this.state.histories;
+        let latestTime = this.state.latestTime || new Date();
+        let start = latestTime.format("yyyy-MM") + "-01";
+        let end = latestTime.format("yyyy-MM") + "-31";
+        let keys = [];
+        for (var key in histories) {
+            if (key >= start && key <= end) {
+                keys.push(key);
+            }
+        }
+        keys.sort((itema, itemb) => { return itema < itemb ? 1 : -1 });
+        if (keys.length) {
+            this.onDayPress({
+                dateString: keys[0]
+            })
+        } else {
+            this.onDayPress(null);
+        }
+    }
+    showShare = () => {
+        this.actionSheetShare.show();
+    }
     render() {
         return (
             <ActivityPanel style={{ flex: 1 }} title={constants.title.ehealth}
                 icBack={require('@images/new/left_arrow_white.png')}
-                iosBarStyle={'dark-content'}
                 isLoading={this.state.isLoading}
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#4BBA7B"
                 actionbarStyle={styles.actionbarStyle}
-                titleStyle={{
-                    color: '#FFF'
-                }}
+                titleStyle={styles.titleStyle}
+                menuButton={this.state.dateSelected ?
+                    <TouchableOpacity style={styles.btnShare} onPress={this.showShare}><Icon name='share' style={{ color: '#FFF' }} /></TouchableOpacity> :
+                    <TouchableOpacity style={[styles.btnShare, { width: 50 }]} onPress={this.showShare}></TouchableOpacity>}
+
             >
                 <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
                     <View style={styles.viewCalendar}>
@@ -499,7 +501,13 @@ class ListProfileScreen extends Component {
                                 // onDayPress={(day) => { console.log('selected day', day) }}
                                 onDayLongPress={(day) => { console.log('selected day', day) }}
                                 monthFormat={'MMMM - yyyy'}
-                                onMonthChange={(month) => { console.log('month changed', month) }}
+                                onMonthChange={(month) => {
+                                    if (!this.state.latestTime || !this.state.latestTime.format("MMyyyy") != month.month + month.year) {
+                                        this.setState({ latestTime: new Date(month.dateString), toggelMonthPicker: false }, () => {
+                                            this.selectDate();
+                                        })
+                                    }
+                                }}
                                 // hideArrows={true}
                                 hideExtraDays={true}
                                 onDayPress={(day) => { this.onDayPress(day) }}
@@ -515,63 +523,59 @@ class ListProfileScreen extends Component {
                                 style={{ position: 'absolute', top: 0, left: 70, right: 70, height: 60 }}>
                             </TouchableOpacity>
                         </View>
-                        <TouchableOpacity onPress={this.viewResult.bind(this)} style={[styles.viewBtn, { backgroundColor: '#25B05F' }]}>
-                            <Text style={styles.txCheckResult}>{constants.ehealth.checkupResult}</Text>
-                        </TouchableOpacity>
-                        <View style={{ alignItems: 'center' }}>
-                            <View style={{ paddingHorizontal: 20 }}><ScaledImage height={100} source={require('@images/new/ehealth/ic_preclinical.png')}></ScaledImage></View>
-                            <Card style={[styles.viewBTnSuggest]}>
-                                <TouchableOpacity onPress={this.onShareEhealth} style={[styles.btnReExamination, { backgroundColor: '#109CF1', }]}>
-                                    <Text style={styles.txReExamination}>{constants.ehealth.share_ehealth}</Text>
+                        {
+                            (this.state.dateSelected && this.state.hasResult) &&
+                            <React.Fragment>
+                                <TouchableOpacity onPress={this.viewResult.bind(this)} style={[styles.viewBtn, { backgroundColor: '#25B05F' }]}>
+                                    <Text style={styles.txCheckResult}>{constants.ehealth.checkupResult}</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={[styles.btnReExamination, { backgroundColor: '#707683', }]}>
-                                    <Text style={styles.txReExamination}>{'Lịch sử chia sẻ'}</Text>
+                                <TouchableOpacity onPress={this.onPressAppointment} style={styles.viewBtn}>
+                                    <Text style={styles.txCheckResult}>{'LỊCH TÁI KHÁM'}</Text>
                                 </TouchableOpacity>
 
-                            </Card>
-                        </View>
-                        <TouchableOpacity onPress={this.onPressAppointment} style={styles.viewBtn}>
-                            <Text style={styles.txCheckResult}>{'LỊCH TÁI KHÁM'}</Text>
-                        </TouchableOpacity>
-                        <Card style={styles.cardView}>
+                                <Card style={styles.cardView}>
 
-                            <View>
-                                <Text style={styles.txLabel}>{constants.ehealth.clock}</Text>
-                                <TouchableOpacity onPress={this.onPressTime}><Text style={styles.txContent}>{this.state.date ? (new Date().format("dd/MM/yyyy") + " " + this.state.date).toDateObject('/').format('HH:mm') : 'Chọn giờ'}</Text>
-                                </TouchableOpacity>
-                            </View>
-                            <View style={styles.viewAlarm}>
-                                <View >
-                                    <Text style={styles.txLabel}>{constants.ehealth.redmine_drug}</Text>
-                                    <TouchableOpacity onPress={this.onPressTimeAlarm}><Text style={styles.txContent}><Text style={styles.txContent}>{this.state.timeAlarm ? (new Date().format("dd/MM/yyyy") + " " + this.state.timeAlarm).toDateObject('/').format('HH:mm') : 'Chọn giờ'}</Text></Text></TouchableOpacity>
-                                </View>
-                                <Switch onValueChange={this.onSetAlarm} trackColor={{
-                                    true: "yellow",
-                                    false: "purple",
-                                }}
-                                    value={this.state.switchValue} ></Switch>
-                            </View>
-                            <View>
-                                <Text style={styles.txLabel}>{constants.ehealth.note}</Text>
-                                <TextInput onBlur={this.onBlur} multiline={true} onChangeText={s => {
-                                    this.setState({ note: s })
-                                }} value={this.state.note} underlineColorAndroid={'#fff'} style={[styles.txContent,]} placeholder={'Nhập ghi chú'}></TextInput>
-                            </View>
-                            <View style={styles.viewSuggest}>
-                                <View style={styles.viewLine}></View>
-                                <TextInput onBlur={this.onBlur} multiline={true} onChangeText={s => {
-                                    this.setState({ suggestions: s })
-                                }} value={this.state.suggestions} underlineColorAndroid={'#fff'} style={styles.inputSuggest} placeholder={'Bạn cần làm gì?'}></TextInput>
-                            </View>
-                        </Card>
+                                    <View>
+                                        <Text style={styles.txLabel}>{constants.ehealth.clock}</Text>
+                                        <TouchableOpacity onPress={this.onPressTime}><Text style={styles.txContent}>{this.state.date ? (new Date().format("dd/MM/yyyy") + " " + this.state.date).toDateObject('/').format('HH:mm') : 'Chọn giờ'}</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View style={styles.viewAlarm}>
+                                        <View >
+                                            <Text style={styles.txLabel}>{constants.ehealth.redmine_drug}</Text>
+                                            <TouchableOpacity onPress={this.onPressTimeAlarm}><Text style={styles.txContent}><Text style={styles.txContent}>{this.state.timeAlarm ? (new Date().format("dd/MM/yyyy") + " " + this.state.timeAlarm).toDateObject('/').format('HH:mm') : 'Chọn giờ'}</Text></Text></TouchableOpacity>
+                                        </View>
+                                        <Switch onValueChange={this.onSetAlarm} trackColor={{
+                                            true: "yellow",
+                                            false: "purple",
+                                        }}
+                                            value={this.state.switchValue} ></Switch>
+                                    </View>
+                                    <View>
+                                        <Text style={styles.txLabel}>{constants.ehealth.note}</Text>
+                                        <TextInput onBlur={this.onBlur} multiline={true} onChangeText={s => {
+                                            this.setState({ note: s })
+                                        }} value={this.state.note} underlineColorAndroid={'#fff'} style={[styles.txContent,]} placeholder={'Nhập ghi chú'}></TextInput>
+                                    </View>
+                                    <View style={styles.viewSuggest}>
+                                        <View style={styles.viewLine}></View>
+                                        <TextInput onBlur={this.onBlur} multiline={true} onChangeText={s => {
+                                            this.setState({ suggestions: s })
+                                        }} value={this.state.suggestions} underlineColorAndroid={'#fff'} style={styles.inputSuggest} placeholder={'Bạn cần làm gì?'}></TextInput>
+                                    </View>
+                                </Card>
+                            </React.Fragment>
+                        }
                     </View>
                     <View style={styles.viewSpaceBottom}></View>
                 </ScrollView>
                 <DateTimePicker
-                    mode={'month'}
+                    mode={'date'}
                     isVisible={this.state.toggelMonthPicker}
                     onConfirm={newDate => {
-                        this.setState({ latestTime: newDate, toggelMonthPicker: false })
+                        this.setState({ latestTime: newDate, toggelMonthPicker: false }, () => {
+                            this.selectDate();
+                        })
                     }}
                     onCancel={() => {
                         this.setState({ toggelMonthPicker: false });
@@ -592,17 +596,21 @@ class ListProfileScreen extends Component {
                     date={(this.state.isTimeAlarm ? this.state.dobAlarm : this.state.dob) || new Date()}
                 />
                 <ActionSheet
-                    ref={o => this.actionSheetGetTicket = o}
-                    options={[constants.actionSheet.profile_on_isofhcare, constants.actionSheet.orther, constants.actionSheet.cancel]}
-                    cancelButtonIndex={2}
-                    destructiveButtonIndex={2}
+                    ref={o => this.actionSheetShare = o}
+                    options={["Chia sẻ trên hồ sơ iSofHCare", "Chia sẻ trên ứng dụng khác", "Lịch sử chia sẻ", constants.actionSheet.cancel]}
+                    cancelButtonIndex={3}
+                    destructiveButtonIndex={3}
                     onPress={(index) => {
                         switch (index) {
                             case 0:
-                                this.onShareEhealthWithProfile()
+                                this.onShareEhealth();
                                 break;
                             case 1:
                                 this.exportPdf();
+                                break;
+                            case 2:
+                                this.openHistorySharing();
+
 
                         }
                     }}
@@ -614,6 +622,10 @@ class ListProfileScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+    titleStyle:
+    {
+        color: '#FFF', marginLeft: 65
+    },
     style1: {
         flexDirection: 'row', alignItems: 'center', marginTop: 10, marginLeft: 20
     },
@@ -674,7 +686,8 @@ const styles = StyleSheet.create({
         maxWidth: DEVICE_WIDTH - 80,
         height: 50,
         borderRadius: 5,
-        marginVertical: 20,
+        marginBottom: 10,
+        marginTop: 10,
         backgroundColor: '#F7685B',
         justifyContent: 'center',
         alignItems: 'center'
@@ -700,7 +713,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 40
     },
     btnReExamination: {
-        padding: 2, borderRadius: 3, marginRight: 5, marginVertical: 10, paddingHorizontal: 5
+        padding: 2, borderRadius: 3, marginRight: 5, marginVertical: 10, paddingHorizontal: 5,
+        minWidth: 150
     },
     txLabel: {
         color: '#9caac4',
@@ -724,7 +738,7 @@ const styles = StyleSheet.create({
     viewSuggest: { flexDirection: 'row', marginVertical: 10, alignItems: 'center' },
     inputSuggest: { marginLeft: 5, color: '#9caac4', fontSize: 18, width: '95%' },
     txSuggest: { color: '#bdc6d8', fontSize: 15 },
-    txReExamination: { color: '#fff', padding: 2 },
+    txReExamination: { color: '#fff', fontSize: 15, textAlign: 'center', paddingVertical: 10, fontWeight: 'bold' },
     viewBorder: { height: 1, backgroundColor: '#97979710', marginVertical: 10 },
     viewAlarm: { flexDirection: 'row', justifyContent: 'space-between' },
     viewSpaceBottom: { height: 50 },
@@ -733,6 +747,9 @@ const styles = StyleSheet.create({
     txNotifi: { fontSize: 22, color: '#27AE60', textAlign: 'center', marginTop: 10, marginHorizontal: 20 },
     btnDone: { justifyContent: 'center', alignItems: 'center', height: 41, backgroundColor: '#878787', borderBottomLeftRadius: 5, borderBottomRightRadius: 5 },
     txDone: { color: '#fff' },
+    btnShare: {
+        paddingHorizontal: 20
+    }
 
 });
 

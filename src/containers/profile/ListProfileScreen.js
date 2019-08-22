@@ -8,6 +8,10 @@ import { connect } from "react-redux";
 import constants from '@resources/strings';
 import profileProvider from '@data-access/profile-provider'
 import Modal from '@components/modal';
+import NavigationService from "@navigators/NavigationService";
+import LinearGradient from 'react-native-linear-gradient';
+import ActionSheet from 'react-native-actionsheet'
+import snackbar from "@utils/snackbar-utils";
 
 class ListProfileScreen extends Component {
     constructor(props) {
@@ -21,6 +25,14 @@ class ListProfileScreen extends Component {
             isVisible: false,
         };
     }
+    onShowOptions = (id, sharePermission, medicalRelatedId) => {
+        this.actionSheetOptions.show();
+        this.setState({
+            idProfile: id,
+            medicalRelatedId: medicalRelatedId ? medicalRelatedId : null,
+            sharePermission: sharePermission
+        })
+    };
     onRefresh = () => {
         this.setState({
             refreshing: true,
@@ -28,10 +40,33 @@ class ListProfileScreen extends Component {
             this.onLoad();
         })
     }
+    onSetOptions = index => {
+        try {
+            switch (index) {
+                case 0:
+                    NavigationService.navigate("shareDataProfile", {
+                        medicalRelatedId: this.state.medicalRelatedId,
+                        id: this.state.idProfile,
+                        sharePermission: this.state.sharePermission
+                    })
+                    return;
+                case 1:
+                    this.setState(
+                        {
+                            isVisible: true,
+
+                        });
+                    return;
+            }
+        } catch (error) {
+
+        }
+
+    };
     componentDidMount() {
         this.onRefresh();
     }
-
+    
     onLoad = () => {
         profileProvider.getListProfile().then(s => {
             this.setState({
@@ -39,9 +74,9 @@ class ListProfileScreen extends Component {
             }, () => {
                 switch (s.code) {
                     case 0:
-                        if (s.data && s.data.profiles) {
+                        if (s.data) {
                             this.setState({
-                                data: s.data.profiles,
+                                data: s.data,
                             });
                         }
                         break;
@@ -54,27 +89,35 @@ class ListProfileScreen extends Component {
         })
     }
     onClickItem = (item) => {
-        this.props.navigation.navigate('profile', { data: item })
+        NavigationService.navigate('profile', { id: item.medicalRecords.id })
     }
     onDeleteItem = (id) => {
         this.setState({
-            isVisible: true,
-            idProfile: id
+
         })
     }
     onClickDone = () => {
         this.state.idProfile &&
             profileProvider.deleteFamilyProfile(this.state.idProfile).then(res => {
-                console.log(res, 'resss')
                 this.setState({
                     isVisible: false
                 })
-                
-                this.onRefresh()
+                if(res.code == 0){
+                    this.onRefresh()
+                    snackbar.show('Xóa thành công', 'success')
+                    return
+                }if(res.code == 4){
+                    snackbar.show('Hồ sơ không thể xóa do đã có đặt khám', 'danger')
+                    return
+                }else{
+                    snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                }
+               
             }).catch(err => {
                 this.setState({
                     isVisible: false
                 })
+                snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
             })
     }
     onCloseModal = () => {
@@ -82,24 +125,132 @@ class ListProfileScreen extends Component {
             isVisible: false
         })
     }
-    componentWillReceiveProps(nextProps){
-        if(nextProps.navigation.state.params && nextProps.navigation.state.params.reset){
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.navigation.state.params && nextProps.navigation.state.params.reset) {
             this.onRefresh()
+        }
+    }
+    onConfirm = (id,sharePermission,medicalRelatedId) => {
+        profileProvider.confirm(id).then(res => {
+            if (res.code == 0) {
+                NavigationService.navigate("shareDataProfile", {
+                    medicalRelatedId: medicalRelatedId,
+                    id:id,
+                    sharePermission: sharePermission
+                })
+                return;
+            } else {
+                snackbar.show('Xác nhận không thành công', 'danger')
+            }
+        }).catch(err => {
+            snackbar.show('Xác nhận không thành công', 'danger')
+        })
+    }
+    renderRelation = (type) => {
+        switch (type) {
+            case 'DAD':
+                return <Text style={{ color: '#868686', fontSize: 14 }}>Cha</Text>
+            case 'MOTHER':
+                return <Text style={{ color: '#868686', fontSize: 14 }}>Mẹ</Text>
+            case 'BOY':
+                return <Text style={{ color: '#868686', fontSize: 14 }}>Con trai</Text>
+            case 'DAUGHTER':
+                return <Text style={{ color: '#868686', fontSize: 14 }}>Con gái</Text>
+            case 'GRANDSON':
+                return <Text style={{ color: '#868686', fontSize: 14 }}>Cháu trai</Text>
+            case 'NIECE':
+                return <Text style={{ color: '#868686', fontSize: 14 }}>Cháu gái</Text>
+            case 'GRANDFATHER':
+                return <Text style={{ color: '#868686', fontSize: 14 }}>Ông</Text>
+            case 'GRANDMOTHER':
+                return <Text style={{ color: '#868686', fontSize: 14 }}>Bà</Text>
+            case 'WIFE':
+                return <Text style={{ color: '#868686', fontSize: 14 }}>Vợ</Text>
+            case 'HUSBAND':
+                return <Text style={{ color: '#868686', fontSize: 14 }}>Chồng</Text>
+            case 'OTHER':
+                return <Text style={{ color: '#868686', fontSize: 14 }}>Khác</Text>
+            default:
+                return <Text style={{ color: '#868686', fontSize: 14 }}></Text>
         }
     }
     renderItem = (item, index) => {
         return (
-            <TouchableOpacity onPress={() => this.onClickItem(item)} style={{ paddingHorizontal: 10, marginBottom:5,flex:1 }}>
-                <Card style={styles.cardView}>
-                        <Text style={styles.txName}>{item.name}</Text>
-                        {/* <Text style={styles.txLabel}>ID: <Text style={styles.txId}>{item.profileNoID}</Text></Text> */}
-                    {item.type !== 'ORIGINAL' ? (<TouchableOpacity onPress={() => this.onDeleteItem(item.id)}>
-                        <ScaledImage height={20} source={require('@images/new/profile/ic_clear.png')}></ScaledImage>
-                        <Text style={styles.txDelelte}>Xóa</Text>
-                    </TouchableOpacity>) : (<View></View>)}
-                </Card>
-                <View style={{ height: 1, width: '98%', backgroundColor: '#4BBA7B',  alignSelf: 'center',marginTop:5}}></View>
-            </TouchableOpacity>
+            item.medicalRecords.statusConfirm == "NEED_CONFIRM" ?
+                (
+                    <View>
+                        <Text style={{ color: 'red', fontSize: 14, marginHorizontal: 12 }}>Tài khoản {item.medicalRecords.name} có số điện thoại {item.medicalRecords.phone} muốn xác nhận mối quan hệ với bạn.</Text>
+                        {item.medicalRecords.status == 1 ? (
+                            <Card style={styles.viewProfileUser}>
+                                <TouchableOpacity style={{ flex: 1 }} onPress={() => this.onClickItem(item)}>
+                                    <LinearGradient style={styles.viewGradientUser} colors={['#02C293', '#01bb72', '#01BF88']}>
+                                        <Text style={styles.txProfileUser}>{item.medicalRecords.name}</Text>
+                                    </LinearGradient>
+                                </TouchableOpacity>
+                            </Card>
+                        ) : (<View style={{
+                            marginHorizontal: 10,
+                        }}>
+                            <Card style={styles.cardView}>
+                                <View style={styles.viewProfileFamily}>
+                                    <TouchableOpacity onPress={() => this.onClickItem(item)} >
+                                        <View>
+                                            <Text style={styles.txName}>{item.medicalRecords.name}</Text>
+                                            {
+                                                item.medicalRecords.relationshipType ?
+                                                    <Text style={{ color: '#02C293', fontSize: 14 }}>Quan hệ: {this.renderRelation(item.medicalRecords.relationshipType)}</Text>
+                                                    : <View></View>
+                                            }
+                                        </View>
+                                    </TouchableOpacity>
+                                    {
+                                        item.medicalRecords.statusConfirm == "NEED_CONFIRM" ? (
+                                            <TouchableOpacity onPress={() => this.onConfirm(item.medicalRecords.id,item.medicalRecords.sharePermission, item.medicalRecords.medicalRelatedId)} style={{ paddingHorizontal: 20, paddingVertical: 5, backgroundColor: '#FFAE00', borderRadius: 5 }}><Text style={{ color: '#fff', fontWeight: 'bold' }}>XÁC NHẬN</Text></TouchableOpacity>
+                                        ) : (<View></View>)
+                                    }
+                                    <TouchableOpacity style={{ padding: 10 }} onPress={() => this.onShowOptions(item.medicalRecords.id, item.medicalRecords.sharePermission, item.medicalRecords.medicalRelatedId ? item.medicalRecords.medicalRelatedId : null)}>
+                                        <ScaledImage height={8} source={require('@images/new/profile/ic_three_dot.png')}></ScaledImage>
+                                    </TouchableOpacity>
+                                </View>
+                            </Card>
+                        </View>)}
+                    </View>
+                ) : (
+                    item.medicalRecords.status == 1 ? (
+                        <Card style={styles.viewProfileUser}>
+                            <TouchableOpacity style={{ flex: 1 }} onPress={() => this.onClickItem(item)}>
+                                <LinearGradient style={styles.viewGradientUser} colors={['#02C293', '#01bb72', '#01BF88']}>
+                                    <Text style={styles.txProfileUser}>{item.medicalRecords.name}</Text>
+                                </LinearGradient>
+                            </TouchableOpacity>
+                        </Card>
+                    ) : (<View style={{
+                        marginHorizontal: 10,
+                    }}>
+                        <Card style={styles.cardView}>
+                            <View style={styles.viewProfileFamily}>
+                                <TouchableOpacity onPress={() => this.onClickItem(item)} >
+                                    <View>
+                                        <Text style={styles.txName}>{item.medicalRecords.name}</Text>
+                                        {
+                                            item.medicalRecords.relationshipType ?
+                                                <Text style={{ color: '#02C293', fontSize: 14 }}>Quan hệ: {this.renderRelation(item.medicalRecords.relationshipType)}</Text>
+                                                : <View></View>
+                                        }
+                                    </View>
+                                </TouchableOpacity>
+                                {
+                                    item.medicalRecords.statusConfirm == "WAIT_CONFIRM" ?
+                                        (<Text>Chờ xác nhận</Text>) : (<View></View>)
+                                }
+                                <TouchableOpacity style={{ padding: 10 }} onPress={() => this.onShowOptions(item.medicalRecords.id, item.medicalRecords.sharePermission, item.medicalRecords.medicalRelatedId ? item.medicalRecords.medicalRelatedId : null)}>
+                                    <ScaledImage height={8} source={require('@images/new/profile/ic_three_dot.png')}></ScaledImage>
+                                </TouchableOpacity>
+                            </View>
+                        </Card>
+                    </View>
+                        )
+                )
         )
     }
     render() {
@@ -132,7 +283,7 @@ class ListProfileScreen extends Component {
                                 </View>
                             ) : null
                     }
-                    ListFooterComponent={() => <TouchableOpacity onPress={() => this.props.navigation.navigate('createProfile',{screen:'listProfile'})} style={styles.btn}><Text style={styles.txBtn}>Thêm thành viên</Text></TouchableOpacity>
+                    ListFooterComponent={() => <TouchableOpacity onPress={() => NavigationService.navigate('createProfile')}><LinearGradient colors={['#02C293', '#01bb72', '#01BF88']} style={styles.btn}><Text style={styles.txBtn}>Thêm thành viên</Text></LinearGradient></TouchableOpacity>
                     }
                 ></FlatList>
                 <Modal
@@ -151,9 +302,15 @@ class ListProfileScreen extends Component {
                             <TouchableOpacity onPress={this.onClickDone} style={styles.btnDone}><Text style={styles.txDone}>Đồng ý</Text></TouchableOpacity>
                             <TouchableOpacity onPress={this.onCloseModal} style={styles.btnReject}><Text style={styles.txDone}>Hủy</Text></TouchableOpacity>
                         </View>
-
                     </View>
                 </Modal>
+                <ActionSheet
+                    ref={o => this.actionSheetOptions = o}
+                    options={['Cài đặt chia sẻ', 'Xóa', 'Hủy']}
+                    cancelButtonIndex={2}
+                    // destructiveButtonIndex={1}
+                    onPress={this.onSetOptions}
+                />
             </ActivityPanel>
 
         );
@@ -161,7 +318,7 @@ class ListProfileScreen extends Component {
 }
 const styles = StyleSheet.create({
     container: {
-        flex:1
+        flex: 1,
     },
     txId: {
         color: '#000'
@@ -178,12 +335,14 @@ const styles = StyleSheet.create({
 
     viewPopup: { backgroundColor: '#fff', marginHorizontal: 20, paddingVertical: 40, borderRadius: 5 },
     viewModal: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-    txBtn: { color: '#fff',fontSize:16 },
+    txBtn: { color: '#fff', fontSize: 16 },
     cardView: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: 20,
+        paddingHorizontal: 10,
+        minHeight: 60,
+        borderWidth: 1,
+        borderRadius: 20,
+        borderColor: '#01BF88',
+        justifyContent: 'center'
     },
     txName: { color: '#4BBA7B', fontWeight: '500', fontSize: 15, maxWidth: 200 },
     txDelelte: { color: '#C4C4C4', fontSize: 10 },
@@ -192,7 +351,33 @@ const styles = StyleSheet.create({
     btnReject: { justifyContent: 'center', alignItems: 'center', height: 30, width: 78, marginLeft: 10, borderRadius: 5, backgroundColor: '#FFB800', },
     viewBtn: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20 },
     txDone: { color: '#fff' },
-
+    viewProfileUser: {
+        // backgroundColor: '#01BE84',
+        borderTopLeftRadius: 50,
+        borderBottomLeftRadius: 50,
+        // padding: 10,
+        marginVertical: 20,
+        marginLeft: 10,
+        flex: 1,
+        minHeight: 50,
+        justifyContent: 'center'
+    },
+    txProfileUser: {
+        fontSize: 14,
+        color: '#fff',
+        fontWeight: 'bold'
+    },
+    viewProfileFamily: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingVertical: 10,
+    },
+    viewGradientUser: {
+        flex: 1, justifyContent: 'center', borderTopLeftRadius: 50,
+        padding: 10,
+        borderBottomLeftRadius: 50,
+    }
 })
 function mapStateToProps(state) {
     return {

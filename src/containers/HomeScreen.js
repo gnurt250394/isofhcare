@@ -76,8 +76,9 @@ class HomeScreen extends Component {
     this.props.navigation.pop();
     return true;
   };
-  componentWillReceiveProps(newProps) {
-    let navigate = newProps.navigation.getParam('navigate', undefined);
+  
+  componentWillReceiveProps(nextProps) {
+    let navigate = nextProps.navigation.getParam('navigate', undefined);
     if (this.state.navigate != navigate) {
       this.setState({ navigate }, () => {
         if (navigate) {
@@ -122,10 +123,11 @@ class HomeScreen extends Component {
             <ScrollView
               onScroll={this.handleScroll}
               ref={(c) => { this.scroll = c }}
-              refreshControl={<RefreshControl
-                refreshing={this.state.refreshing}
-                onRefresh={this.onRefresh}
-              />}>
+              // refreshControl={<RefreshControl
+              //   refreshing={this.state.refreshing}
+              //   onRefresh={this.onRefresh}
+              // />}>
+              >
               <View>
                 <SlideBanner ref={ref => this.slide = ref} />
                 {/* // countReset={this.state.countReset} /> */}

@@ -514,7 +514,8 @@ module.exports = {
       create: isofhcare_service + "booking/create",
       confirmPay: isofhcare_service + "booking/confirm-pay",
       detail: isofhcare_service + "booking/get-detail",
-      getByAuthor: isofhcare_service + "booking/get-by-author"
+      getByAuthor: isofhcare_service + "booking/get-by-author",
+      get_list_share_user: isofhcare_service + "booking/list-share-user"
     },
     question: {
       create: isofhcare_service + "post/create",
@@ -547,12 +548,18 @@ module.exports = {
       get_by_user: isofhcare_service + "profile/get-by-user",
       get_details_user: isofhcare_service + '/user/get-detail',
       get_profile_family: isofhcare_service + 'booking/get-group-patient-history',
-      get_list_profile: isofhcare_service + 'profile/get-list-profile',
-      delete_family_profile: isofhcare_service + 'profile/delete',
-      create_profile: isofhcare_service + 'profile/create-family-profile',
-      update_profile: isofhcare_service + 'profile/update-profile',
+      get_list_profile: isofhcare_service + 'medical-records/get-list-medical-records',
+      delete_family_profile: isofhcare_service + 'medical-records/delete',
+      create_profile: isofhcare_service + 'medical-records/create-medical-records',
+      update_profile: isofhcare_service + 'medical-records/update-medical-records',
       update_cover: isofhcare_service + 'user/update-cover',
-      update_avatar: isofhcare_service + 'user/update-avatar'
+      update_avatar: isofhcare_service + 'medical-records/update-avatar',
+      send_confirm: isofhcare_service + 'medical-records/send-confirm',
+      share_permission : isofhcare_service + 'medical-records/update-permission',
+      check_otp : isofhcare_service + 'medical-records/check-otp',
+      resend_otp : isofhcare_service + 'medical-records/resend-otp',
+      confirm : isofhcare_service + 'medical-records/confirm',
+      get_details_medical: isofhcare_service + 'medical-records/get-detail-medical-record'
     },
     serviceType: {
       get_all: isofhcare_service + "service-type/get-all"
@@ -566,6 +573,7 @@ module.exports = {
     },
     schedule: {
       get_by_date_and_service: isofhcare_service + "schedule-booking/get-by-date-and-service",
+      get_by_month_and_service: isofhcare_service + "schedule-booking/get-by-month-and-service",
       search: isofhcare_service + "schedule-booking/search"
     },
     wallet: {

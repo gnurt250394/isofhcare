@@ -4,6 +4,8 @@ import NavigationService from "@navigators/NavigationService";
 import userProvider from '@data-access/user-provider';
 
 import { createDrawerNavigator, DrawerItems, createBottomTabNavigator, TabBarBottom, createStackNavigator } from 'react-navigation';
+import NotificationBadge from "@components/notification/NotificationBadge";
+
 //splash
 import SplashScreen from "@containers/SplashScreen";
 //intro
@@ -13,6 +15,8 @@ import AboutScreen from "@containers/utility/AboutScreen";
 
 
 import HomeScreen from "@containers/HomeScreen";
+import HomeScreenOld from "@containers/HomeScreenOld";
+import AccountScreen from "@containers/account/AccountScreen";
 import NotificationScreen from "@containers/notification/NotificationScreen";
 import MenuProfileScreen from '@containers/profile/MenuProfile';
 
@@ -45,6 +49,7 @@ import DetailsDoctorScreen from "@containers/question/DetailsDoctorScreen";
 
 //booking
 import AddBookingScreen from "@containers/booking/AddBookingScreen";
+import AddBookingScreen1 from "@containers/booking/AddBookingScreen1";
 import SelectHospitalScreen from "@containers/booking/SelectHospitalScreen";
 import SelectHospitalByLocationScreen from "@containers/booking/SelectHospitalByLocationScreen";
 import SelectTimeScreen from "@containers/booking/SelectTimeScreen";
@@ -78,6 +83,11 @@ import EditProfileScreen from '@containers/profile/EditProfileScreen'
 import SelectProvinceScreen from "@containers/profile/SelectProvinceScreen";
 import SelectZoneScreen from "@containers/profile/SelectZoneScreen";
 import SelectDistrictScreen from "@containers/profile/SelectDistrictScreen";
+import SelectRelationshipScreen from "@containers/profile/SelectRelationshipScreen";
+import CheckOtpScreen from "@containers/profile/CheckOtpScreen";
+import SendConfirmProfileScreen from "@containers/profile/SendConfirmProfileScreen";
+import ShareDataProfileScreen from '@containers/profile/ShareDataProfileScreen'
+
 
 //
 import HospitalByLocationScreen from '@containers/home/HospitalByLocationScreen'
@@ -134,7 +144,7 @@ const GetTicketNavigation = createStackNavigator({
 const TabNavigatorComponent = createBottomTabNavigator(
   {
     homeTab: {
-      screen: HomeScreen,
+      screen: HomeScreenOld,
       navigationOptions: {
         tabBarLabel: "Home",
         tabBarIcon: ({ tintColor }) => <ScaledImage height={25} source={require('@images/new/home/ic_home.png')} style={{ tintColor: tintColor }} />,
@@ -144,7 +154,7 @@ const TabNavigatorComponent = createBottomTabNavigator(
       screen: MenuProfileScreen,
       navigationOptions: {
         tabBarLabel: "Cộng đồng",
-        tabBarIcon: ({ tintColor }) => <ScaledImage height={20} source={require('@images/new/home/ic_community.png')} style={{ tintColor: tintColor }} />,
+        tabBarIcon: ({ tintColor }) => <ScaledImage touchable={false} height={20} source={require('@images/new/home/ic_community.png')} style={{ tintColor: tintColor }} />,
         tabBarOnPress: ({ navigation, defaultHandler }) => {
           snackbar.show("Chức năng đang phát triển");
         },
@@ -161,16 +171,16 @@ const TabNavigatorComponent = createBottomTabNavigator(
       }
     },
     accountTab: {
-      screen: MenuProfileScreen,
+      screen: AccountScreen,
       navigationOptions: {
-        tabBarOnPress: ({ navigation, defaultHandler }) => {
-          if (userProvider.isLogin) {
-            defaultHandler();
-          } else {
-            NavigationService.navigate("login");
-          }
-        },
-        tabBarLabel: "Video",
+        // tabBarOnPress: ({ navigation, defaultHandler }) => {
+        //   if (userProvider.isLogin) {
+        //     defaultHandler();
+        //   } else {
+        //     NavigationService.navigate("login");
+        //   }
+        // },
+        tabBarLabel: "Account",
         tabBarIcon: ({ tintColor }) => <ScaledImage height={22} source={require('@images/new/home/ic_account.png')} style={{ tintColor: tintColor }} />,
       }
     },
@@ -185,7 +195,7 @@ const TabNavigatorComponent = createBottomTabNavigator(
           }
         },
         tabBarLabel: "Thông báo",
-        tabBarIcon: ({ tintColor }) => <ScaledImage height={25} source={require('@images/new/home/ic_bell.png')} style={{ tintColor: tintColor }} />,
+        tabBarIcon: ({ tintColor }) => <NotificationBadge height={25} tintColor={tintColor} />
       }
     }
   },
@@ -205,19 +215,19 @@ const TabNavigatorComponent = createBottomTabNavigator(
 )
 
 
-const DrawerNav = createDrawerNavigator({
-  home: TabNavigatorComponent
-}, {
-    contentComponent: CustomDrawer,
-    initialRouteName: 'home',
-    drawerPosition: 'left',
-    contentOptions: {
-      inactiveTintColor: '#000',
-    },
-    drawerOpenRoute: 'DrawerOpen',
-    drawerCloseRoute: 'DrawerClose'
-  }
-);
+// const DrawerNav = createDrawerNavigator({
+//   home: TabNavigatorComponent
+// }, {
+//     // contentComponent: CustomDrawer,
+//     // initialRouteName: 'home',
+//     // drawerPosition: 'left',
+//     // contentOptions: {
+//     //   inactiveTintColor: '#000',
+//     // },
+//     // drawerOpenRoute: 'DrawerOpen',
+//     // drawerCloseRoute: 'DrawerClose'
+//   }
+// );
 
 const RootNavigator = createStackNavigator(
   {
@@ -226,8 +236,22 @@ const RootNavigator = createStackNavigator(
     about: { screen: AboutScreen },
     terms: { screen: TermsScreen },
     policy: { screen: PolicyScreen },
-
-    home: DrawerNav,
+    //profile
+    selectProfile: { screen: SelectProfileScreen },
+    createProfile: { screen: CreateProfileScreen },
+    listProfileUser: { screen: ListProfileScreen },
+    editProfile: { screen: EditProfileScreen },
+    shareDataProfile: { screen: ShareDataProfileScreen },
+    checkOtp: { screen: CheckOtpScreen },
+    selectProvince: { screen: SelectProvinceScreen },
+    selectDistrict: { screen: SelectDistrictScreen },
+    selectRelationship: { screen: SelectRelationshipScreen },
+    selectZone: { screen: SelectZoneScreen },
+    profile: { screen: ProfileScreen },
+    sendConfirmProfile: { screen: SendConfirmProfileScreen },
+    // listProfileUser: { screen: ListProfileScreen },
+    //
+    home: TabNavigatorComponent,
     ehealth: EHealthNavigator,
     viewDetailEhealth: { screen: ViewEhealthDetailScreen },
     login: { screen: LoginScreen },
@@ -244,6 +268,7 @@ const RootNavigator = createStackNavigator(
     detailsDoctor: { screen: DetailsDoctorScreen },
     // booking navigation
     addBooking: AddBookingScreen,
+    addBooking1: AddBookingScreen1,
     selectHospital: { screen: SelectHospitalScreen },
     selectHospitalByLocation: { screen: SelectHospitalByLocationScreen },
     selectTime: { screen: SelectTimeScreen },

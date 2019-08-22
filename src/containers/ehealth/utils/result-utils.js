@@ -1,8 +1,8 @@
 import bookingProvider from '@data-access/booking-provider';
 module.exports = {
-    getDetail(patientHistoryId, hospitalId) {
+    getDetail(patientHistoryId, hospitalId, id, shareId) {
         return new Promise((resolve, reject) => {
-            bookingProvider.detailPatientHistory(patientHistoryId, hospitalId).then(s => {
+            bookingProvider.detailPatientHistory(patientHistoryId, hospitalId, id, shareId).then(s => {
                 let resultDetail = null;
                 let result = null;
                 switch (s.code) {
@@ -33,14 +33,21 @@ module.exports = {
                                     ) {
                                         console.log(result);
                                         console.log(resultDetail);
-                                        resolve({ result, resultDetail, hasResult: false });
+                                        resolve({ data: s.data.data, result, resultDetail, hasResult: false });
                                     } else {
                                         console.log(result);
                                         console.log(resultDetail);
-                                        resolve({ result, resultDetail, hasResult: true });
+                                        resolve({ data: s.data.data, result, resultDetail, hasResult: true });
                                     }
                                 } catch (error) {
+                                    console.log(result);
+                                    console.log(resultDetail);
+                                    resolve({ data: s.data.data, result, resultDetail, hasResult: false });
                                 }
+                            } else {
+                                console.log(result);
+                                console.log(resultDetail);
+                                resolve({ data: s.data.data, result, resultDetail, hasResult: false });
                             }
                         }
                         break;
