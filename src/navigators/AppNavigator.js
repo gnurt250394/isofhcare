@@ -4,6 +4,8 @@ import NavigationService from "@navigators/NavigationService";
 import userProvider from '@data-access/user-provider';
 
 import { createDrawerNavigator, DrawerItems, createBottomTabNavigator, TabBarBottom, createStackNavigator } from 'react-navigation';
+import NotificationBadge from "@components/notification/NotificationBadge";
+
 //splash
 import SplashScreen from "@containers/SplashScreen";
 //intro
@@ -13,6 +15,7 @@ import AboutScreen from "@containers/utility/AboutScreen";
 
 
 import HomeScreen from "@containers/HomeScreen";
+import HomeScreenOld from "@containers/HomeScreenOld";
 import AccountScreen from "@containers/account/AccountScreen";
 import NotificationScreen from "@containers/notification/NotificationScreen";
 import MenuProfileScreen from '@containers/profile/MenuProfile';
@@ -141,7 +144,7 @@ const GetTicketNavigation = createStackNavigator({
 const TabNavigatorComponent = createBottomTabNavigator(
   {
     homeTab: {
-      screen: HomeScreen,
+      screen: HomeScreenOld,
       navigationOptions: {
         tabBarLabel: "Home",
         tabBarIcon: ({ tintColor }) => <ScaledImage height={25} source={require('@images/new/home/ic_home.png')} style={{ tintColor: tintColor }} />,
@@ -151,7 +154,7 @@ const TabNavigatorComponent = createBottomTabNavigator(
       screen: MenuProfileScreen,
       navigationOptions: {
         tabBarLabel: "Cộng đồng",
-        tabBarIcon: ({ tintColor }) => <ScaledImage height={20} source={require('@images/new/home/ic_community.png')} style={{ tintColor: tintColor }} />,
+        tabBarIcon: ({ tintColor }) => <ScaledImage touchable={false} height={20} source={require('@images/new/home/ic_community.png')} style={{ tintColor: tintColor }} />,
         tabBarOnPress: ({ navigation, defaultHandler }) => {
           snackbar.show("Chức năng đang phát triển");
         },
@@ -192,7 +195,7 @@ const TabNavigatorComponent = createBottomTabNavigator(
           }
         },
         tabBarLabel: "Thông báo",
-        tabBarIcon: ({ tintColor }) => <ScaledImage height={25} source={require('@images/new/home/ic_bell.png')} style={{ tintColor: tintColor }} />,
+        tabBarIcon: ({ tintColor }) => <NotificationBadge height={25} tintColor={tintColor} />
       }
     }
   },
