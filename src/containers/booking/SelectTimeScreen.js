@@ -58,10 +58,10 @@ class SelectTimeScreen extends Component {
             date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
             date.setMinutes(date.getMinutes() + (8 * 60));
             while (true) {
-                if (date.format("HH:mm") > "16:30")
+                if (date.format("HH:mm") > "16:00")
                     break;
                 console.log(date);
-                if (date.format("HH:mm") <= "11:30" || date.format("HH:mm") >= "13:30") {
+                if (date.format("HH:mm") < "11:30" || date.format("HH:mm") >= "13:30") {
                     listTime.push({
                         key: date.getTime(),
                         schedule: {
