@@ -211,7 +211,9 @@ class CreateProfileScreen extends Component {
     selectDistrict = (districts) => {
         let districtsError = districts ? "" : this.state.districtsError;
         if (!districts || !this.state.districts || districts.id != this.state.districts.id) {
-            this.setState({ districts, districtsError, zone: null })
+            this.setState({ districts, districtsError, zone: null }, () => {
+                this.onSelectZone()
+            })
         } else {
             this.setState({ districts, districtsError });
         }
@@ -229,7 +231,10 @@ class CreateProfileScreen extends Component {
     selectprovinces(provinces) {
         let provincesError = provinces ? "" : this.state.provincesError;
         if (!provinces || !this.state.provinces || provinces.id != this.state.provinces.id) {
-            this.setState({ provinces, provincesError, districts: null, zone: null })
+            this.setState({ provinces, provincesError, districts: null, zone: null }, () => {
+                this.onSelectDistrict()
+            })
+
         } else {
             this.setState({ provinces, provincesError });
         }
@@ -240,7 +245,9 @@ class CreateProfileScreen extends Component {
     selectZone = (zone) => {
         let zoneError = zone ? "" : this.state.zoneError;
         if (!zone || !this.state.zone || zone.id != this.state.zone.id) {
-            this.setState({ zone, zoneError })
+            this.setState({ zone, zoneError },() => {
+                
+            })
         } else {
             this.setState({ zone, zoneError });
         }
@@ -302,8 +309,6 @@ class CreateProfileScreen extends Component {
                 isVisible: false
             })
             snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
-
-            console.log(err)
         })
     }
     renderItem = ({ item }) => {
@@ -780,11 +785,6 @@ class CreateProfileScreen extends Component {
 
 }
 
-function mapStateToProps(state) {
-    return {
-        userApp: state.userApp
-    };
-}
 const styles = StyleSheet.create({
     AcPanel: {
         flex: 1,
@@ -838,7 +838,6 @@ const styles = StyleSheet.create({
         fontStyle: "normal",
         letterSpacing: 0,
         textAlign: "left",
-        color: "#8e8e93",
         backgroundColor: '#F2F2F2',
         borderColor: '#4BBA7B',
         borderWidth: 1,
@@ -846,7 +845,8 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         marginHorizontal: 10,
         minHeight: 41,
-        justifyContent: 'center'
+        justifyContent: 'center',
+        color: '#000'
     },
     container: {
         // borderStyle: "solid",
