@@ -24,55 +24,78 @@ class SelectRelationshipScreen extends Component {
                 {
                     id: 1,
                     name: 'Cha',
-                    type: 'DAD'
+                    type: 'DAD',
+                    gender:'1'
                 }, {
                     id: 3,
                     name: 'Con trai',
-                    type: 'BOY'
+                    type: 'BOY',
+                    gender:'1'
+
                 }, {
                     id: 5,
                     name: 'Cháu trai',
-                    type: 'GRANDSON'
+                    type: 'GRANDSON',
+                    gender:'1'
+
                 }, {
                     id: 7,
                     name: 'Ông',
-                    type: 'GRANDFATHER'
+                    type: 'GRANDFATHER',
+                    gender:'1'
+
                 }, {
                     id: 10,
                     name: 'Chồng',
-                    type: 'HUSBAND'
+                    type: 'HUSBAND',
+                    gender:'1'
+
                 }, {
                     id: 11,
                     name: 'Khác',
-                    type: 'OTHER'
+                    type: 'OTHER',
+                    gender:'1'
+
                 },
             ],
             dataFemale: [
                 {
                     id: 2,
                     name: 'Mẹ',
-                    type: 'MOTHER'
+                    type: 'MOTHER',
+                    gender:'2'
+
                 }, {
                     id: 4,
                     name: 'Con gái',
-                    type: 'DAUGHTER'
+                    type: 'DAUGHTER',
+                    gender:'2'
+
                 }, {
                     id: 6,
                     name: 'Cháu gái',
-                    type: 'NIECE'
+                    type: 'NIECE',
+                    gender:'2'
+
                 }, {
                     id: 8,
                     name: 'Bà',
-                    type: 'GRANDMOTHER'
+                    type: 'GRANDMOTHER',
+                    gender:'2'
+
                 }, {
                     id: 9,
                     name: 'Vợ',
-                    type: 'WIFE'
+                    type: 'WIFE',
+                    gender:'2'
+
                 },
                 {
                     id: 11,
                     name: 'Khác',
-                    type: 'OTHER'
+                    type: 'OTHER',
+                    gender:'2'
+
                 },
             ]
         }
