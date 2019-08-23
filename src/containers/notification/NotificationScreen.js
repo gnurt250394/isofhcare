@@ -146,7 +146,7 @@ class NotificationScreen extends Component {
           case 6:
             this.detailsEhealth(data, item.user)
             break
-            case 7:
+          case 7:
             NavigationService.navigate('listProfileUser')
             break
           default:
@@ -159,38 +159,45 @@ class NotificationScreen extends Component {
   }
   detailsEhealth = (data, user) => {
     this.setState({ isLoading: true }, () => {
-      bookingProvider.detailPatientHistory(data.patientHistoryId, data.hospitalId, data.id).then(s => {
-        if (s.code == 7) {
-          notificationProvider.openEhealth(data.patientHistoryId, data.hospitalId, data.id).then(s => {
-            this.setState({ isLoading: false }, () => {
-              let { hasResult, result, resultDetail, hospital, data } = s;
-              if (hasResult && data) {
-                if (hospital && result) {
-                  this.props.dispatch({ type: constants.action.action_select_patient_group_ehealth, value: data });
-                  this.props.dispatch({ type: constants.action.action_select_hospital_ehealth, value: hospital });
-                  NavigationService.navigate('viewDetailEhealth', { result, resultDetail });
+      bookingProvider.detailPatientHistory(data.patientHistoryId, data.hospitalId, data.id, data.shareId).then(s => {
+        switch (s.code) {
+          case 0:
+            notificationProvider.openEhealth(data.patientHistoryId, data.hospitalId, data.id, data.shareId).then(s => {
+              this.setState({ isLoading: false }, () => {
+                let { hasResult, result, resultDetail, hospital, data } = s;
+                if (hasResult && data) {
+                  if (hospital && result) {
+                    this.props.dispatch({ type: constants.action.action_select_patient_group_ehealth, value: data });
+                    this.props.dispatch({ type: constants.action.action_select_hospital_ehealth, value: hospital });
+                    NavigationService.navigate('viewDetailEhealth', { result, resultDetail });
+                  }
+                } else {
+                  snackbar.show('Hồ sơ này chưa có kết quả', 'danger')
                 }
-              } else {
-                snackbar.show('Hồ sơ này chưa có kết quả', 'danger')
-              }
-            })
-          }).catch(e => {
+              })
+            }).catch(e => {
+              this.setState({
+                isLoading: false
+              }, () => {
+                console.log(e)
+                snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+              })
+            });
+            break;
+          case 9:
             this.setState({
               isLoading: false
             }, () => {
-              console.log(e)
-              snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+              snackbar.show('Y bạ chưa xác định', 'danger')
             })
-          });
-        } else {
-          this.setState({
-            isLoading: false
-          }, () => {
-            console.log(e)
-            snackbar.show('Hồ sơ chia sẻ đến bạn đã hết thời gian', 'danger')
-          })
+          case 7:
+            this.setState({
+              isLoading: false
+            }, () => {
+              snackbar.show('Hồ sơ chia sẻ đến bạn đã hết thời gian', 'danger')
+            })
         }
-      }).then(e => {
+      }).catch(e => {
         this.setState({
           isLoading: false
         }, () => {
@@ -286,7 +293,7 @@ class NotificationScreen extends Component {
             });
           }}
         >
-          <ScaleImage source={require("@images/new/ic_remove.png")} width={20} style={{tintColor:'#FFF'}} />
+          <ScaleImage source={require("@images/new/ic_remove.png")} width={20} style={{ tintColor: '#FFF' }} />
         </TouchableOpacity>
       </View >
     );
