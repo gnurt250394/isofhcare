@@ -84,6 +84,8 @@ class ViewInDateScreen extends Component {
                         dateSelected = date;
                         index = i - 1;
                         patientHistoryId = patientHistory.patientHistoryId;
+                        id = patientHistory.id;
+
                     }
                     obj.push(date);
                 }
@@ -104,13 +106,13 @@ class ViewInDateScreen extends Component {
                     }
                 }, 200);
             }
-            if (patientHistoryId)
-                this.getDetailPatientHistory(patientHistoryId)
+            if (patientHistoryId && id)
+                this.getDetailPatientHistory(patientHistoryId,id)
         });
     }
-    getDetailPatientHistory(patientHistoryId) {
+    getDetailPatientHistory(patientHistoryId,id) {
         this.setState({ isLoading: true }, () => {
-            resultUtils.getDetail(patientHistoryId, this.props.ehealth.hospital.hospital.id).then(result => {
+            resultUtils.getDetail(patientHistoryId, this.props.ehealth.hospital.hospital.id,id).then(result => {
                 this.setState({ result: result.result, resultDetail: result.resultDetail, hasResult: result.hasResult, isLoading: false }, () => {
                     if (!result.hasResult)
                         snackbar.show(constants.msg.ehealth.not_result_ehealth_in_day, "danger");
@@ -127,7 +129,7 @@ class ViewInDateScreen extends Component {
             return;
         };
         this.setState({ dateSelected: item }, () => {
-            this.getDetailPatientHistory(item.patientHistory.patientHistoryId)
+            this.getDetailPatientHistory(item.patientHistory.patientHistoryId,item.patientHistory.id)
         })
     }
     viewCheckupResult() {

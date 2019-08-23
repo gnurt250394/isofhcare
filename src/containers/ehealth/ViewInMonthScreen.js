@@ -374,7 +374,9 @@ class ListProfileScreen extends Component {
                 try {
                     let patientHistoryId = this.state.histories[this.state.dateSelected].history.patientHistoryId;
                     let hospitalId = this.state.patient.hospitalEntity.id;
-                    resultUtils.getDetail(patientHistoryId, hospitalId).then(result => {
+                    let id = this.state.histories[this.state.dateSelected].history.id
+
+                    resultUtils.getDetail(patientHistoryId, hospitalId,id).then(result => {
                         this.setState({
                             isLoading: false
                         }, () => {
@@ -420,7 +422,8 @@ class ListProfileScreen extends Component {
             try {
                 let patientHistoryId = this.state.histories[this.state.dateSelected].history.patientHistoryId;
                 let hospitalId = this.state.patient.hospitalEntity.id;
-                resultUtils.getDetail(patientHistoryId, hospitalId).then(result => {
+                let id = this.state.histories[this.state.dateSelected].history.id
+                resultUtils.getDetail(patientHistoryId, hospitalId,id).then(result => {
                     if (result) {
                         result = result.result;
                         result.hospital = this.props.ehealth.hospital.hospital;
