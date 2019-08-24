@@ -66,7 +66,7 @@ class ListProfileScreen extends Component {
     componentDidMount() {
         this.onRefresh();
     }
-    
+
     onLoad = () => {
         profileProvider.getListProfile().then(s => {
             this.setState({
@@ -102,17 +102,17 @@ class ListProfileScreen extends Component {
                 this.setState({
                     isVisible: false
                 })
-                if(res.code == 0){
+                if (res.code == 0) {
                     this.onRefresh()
                     snackbar.show('Xóa thành công', 'success')
                     return
-                }if(res.code == 4){
+                } if (res.code == 4) {
                     snackbar.show('Hồ sơ không thể xóa do đã có đặt khám', 'danger')
                     return
-                }else{
+                } else {
                     snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
                 }
-               
+
             }).catch(err => {
                 this.setState({
                     isVisible: false
@@ -130,12 +130,12 @@ class ListProfileScreen extends Component {
             this.onRefresh()
         }
     }
-    onConfirm = (id,sharePermission,medicalRelatedId) => {
+    onConfirm = (id, sharePermission, medicalRelatedId) => {
         profileProvider.confirm(id).then(res => {
             if (res.code == 0) {
                 NavigationService.navigate("shareDataProfile", {
                     medicalRelatedId: medicalRelatedId,
-                    id:id,
+                    id: id,
                     sharePermission: sharePermission
                 })
                 return;
@@ -205,7 +205,7 @@ class ListProfileScreen extends Component {
                                     </TouchableOpacity>
                                     {
                                         item.medicalRecords.statusConfirm == "NEED_CONFIRM" ? (
-                                            <TouchableOpacity onPress={() => this.onConfirm(item.medicalRecords.id,item.medicalRecords.sharePermission, item.medicalRecords.medicalRelatedId)} style={{ paddingHorizontal: 20, paddingVertical: 5, backgroundColor: '#FFAE00', borderRadius: 5 }}><Text style={{ color: '#fff', fontWeight: 'bold' }}>XÁC NHẬN</Text></TouchableOpacity>
+                                            <TouchableOpacity onPress={() => this.onConfirm(item.medicalRecords.id, item.medicalRecords.sharePermission, item.medicalRecords.medicalRelatedId)} style={{ paddingHorizontal: 20, paddingVertical: 5, backgroundColor: '#FFAE00', borderRadius: 5 }}><Text style={{ color: '#fff', fontWeight: 'bold' }}>XÁC NHẬN</Text></TouchableOpacity>
                                         ) : (<View></View>)
                                     }
                                     <TouchableOpacity style={{ padding: 10 }} onPress={() => this.onShowOptions(item.medicalRecords.id, item.medicalRecords.sharePermission, item.medicalRecords.medicalRelatedId ? item.medicalRecords.medicalRelatedId : null)}>
@@ -263,6 +263,7 @@ class ListProfileScreen extends Component {
                 statusbarBackgroundColor="#359A60"
                 actionbarStyle={styles.actionbarStyle}
                 style={styles.container}
+                // isLoading={this.state.refreshing}
             >
                 <FlatList
                     data={this.state.data}
@@ -283,7 +284,11 @@ class ListProfileScreen extends Component {
                                 </View>
                             ) : null
                     }
-                    ListFooterComponent={() => <TouchableOpacity onPress={() => NavigationService.navigate('createProfile')}><LinearGradient colors={['#02C293', '#01bb72', '#01BF88']} style={styles.btn}><Text style={styles.txBtn}>Thêm thành viên</Text></LinearGradient></TouchableOpacity>
+                    ListFooterComponent={() =>
+                        !this.state.refreshing
+                            ? (
+                                <TouchableOpacity onPress={() => NavigationService.navigate('createProfile')}><LinearGradient colors={['#02C293', '#01bb72', '#01BF88']} style={styles.btn}><Text style={styles.txBtn}>Thêm thành viên</Text></LinearGradient></TouchableOpacity>
+                            ) : null
                     }
                 ></FlatList>
                 <Modal

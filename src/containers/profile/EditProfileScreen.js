@@ -603,7 +603,7 @@ class EditProfileScreen extends Component {
                                         editable={false}
                                         multiline={true}
                                         inputStyle={[
-                                            styles.ktq, { minHeight: 41 }
+                                            styles.ktq, { minHeight: 41 }, this.state.provinces && this.state.provinces.countryCode ? {} : { color: '#8d8d8d' }
                                         ]}
                                         errorStyle={styles.errorStyle}
                                         value={this.state.provinces && this.state.provinces.countryCode ? this.state.provinces.countryCode : 'Tỉnh/Thành phố'}
@@ -631,7 +631,7 @@ class EditProfileScreen extends Component {
                                         // }}
                                         multiline={true}
                                         inputStyle={[
-                                            styles.ktq, { minHeight: 41 }
+                                            styles.ktq, this.state.districts && this.state.districts.name ? {} : { color: '#8d8d8d' }, { minHeight: 41 }
                                         ]}
                                         onPress={this.onSelectDistrict}
                                         editable={false}
@@ -653,7 +653,7 @@ class EditProfileScreen extends Component {
                                         onPress={this.onSelectZone}
                                         editable={false}
                                         inputStyle={[
-                                            styles.ktq, { minHeight: 41 }
+                                            styles.ktq, { minHeight: 41 }, this.state.zone && this.state.zone.name ? {} : { color: '#8d8d8d' }
                                         ]}
                                         errorStyle={styles.errorStyle}
                                         value={this.state.zone && this.state.zone.name ? this.state.zone.name : 'Xã/Phường'}
@@ -700,8 +700,8 @@ class EditProfileScreen extends Component {
                                             onPress={this.onSelectRelationShip}
                                             editable={false}
                                             inputStyle={[
-                                                styles.ktq, { minHeight: 41 }
-                                            ]}
+                                            styles.ktq, { minHeight: 41 }, this.state.relationShip && this.state.relationShip.name ? {} : { color: '#8d8d8d' }
+                                        ]}
                                             errorStyle={styles.errorStyle}
                                             value={this.state.relationShip && this.state.relationShip.name ? this.state.relationShip.name : 'Quan hệ'}
                                             autoCapitalize={"none"}
