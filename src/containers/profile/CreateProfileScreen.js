@@ -381,7 +381,6 @@ class CreateProfileScreen extends Component {
                                     onChangeText={this.onChangeText("name")}
                                     value={this.state.name}
                                     autoCapitalize={"none"}
-                                    returnKeyType={"next"}
                                     // underlineColorAndroid="transparent"
                                     autoCorrect={false}
                                 />
@@ -443,7 +442,6 @@ class CreateProfileScreen extends Component {
                                                 this.setState({ isMin: messages });
                                             }
                                         }}
-                                        returnKeyType={"next"}
                                         autoCapitalize={"none"}
                                         autoCorrect={false}
                                         style={{
@@ -495,7 +493,6 @@ class CreateProfileScreen extends Component {
                                             onChangeText={this.onChangeText("height")}
                                             value={this.state.height}
                                             autoCapitalize={"none"}
-                                            returnKeyType={"next"}
                                             // underlineColorAndroid="transparent"
                                             autoCorrect={false}
                                         />
@@ -507,21 +504,6 @@ class CreateProfileScreen extends Component {
                                         <Text style={styles.mdk}>{'Cân nặng (kg)'}</Text>
                                         <TextField
                                             hideError={true}
-                                            onValidate={(valid, messages) => {
-                                                if (valid) {
-                                                    this.setState({ weightError: "" });
-                                                } else {
-                                                    this.setState({ weightError: messages });
-                                                }
-                                            }}
-                                            // validate={{
-                                            //     rules: {
-                                            //         number: true,
-                                            //     },
-                                            //     messages: {
-                                            //         number: 'Cân nặng không hợp lệ',
-                                            //     }
-                                            // }}
                                             placeholder={'Cân nặng'}
                                             multiline={true}
                                             inputStyle={[
@@ -532,7 +514,6 @@ class CreateProfileScreen extends Component {
                                             onChangeText={this.onChangeText("weight")}
                                             value={this.state.weight}
                                             autoCapitalize={"none"}
-                                            returnKeyType={"next"}
                                             // underlineColorAndroid="transparent"
                                             autoCorrect={false}
                                         />
@@ -571,7 +552,6 @@ class CreateProfileScreen extends Component {
                                     onChangeText={this.onChangeText("phone")}
                                     value={this.state.phone}
                                     autoCapitalize={"none"}
-                                    returnKeyType={"next"}
                                     // underlineColorAndroid="transparent"
                                     autoCorrect={false}
                                 />
@@ -606,7 +586,6 @@ class CreateProfileScreen extends Component {
                                     onChangeText={this.onChangeText("address")}
                                     value={this.state.address}
                                     autoCapitalize={"none"}
-                                    returnKeyType={"next"}
                                     // underlineColorAndroid="transparent"
                                     autoCorrect={false}
                                 />
@@ -626,7 +605,6 @@ class CreateProfileScreen extends Component {
                                         errorStyle={styles.errorStyle}
                                         value={this.state.provinces && this.state.provinces.countryCode ? this.state.provinces.countryCode : 'Tỉnh/Thành phố'}
                                         autoCapitalize={"none"}
-                                        returnKeyType={"next"}
                                         // underlineColorAndroid="transparent"
                                         autoCorrect={false}
                                     />
@@ -656,7 +634,6 @@ class CreateProfileScreen extends Component {
                                         errorStyle={styles.errorStyle}
                                         value={this.state.districts && this.state.districts.name ? this.state.districts.name : 'Quận/Huyện'}
                                         autoCapitalize={"none"}
-                                        returnKeyType={"next"}
                                         // underlineColorAndroid="transparent"
                                         autoCorrect={false}
                                     />
@@ -676,7 +653,6 @@ class CreateProfileScreen extends Component {
                                         errorStyle={styles.errorStyle}
                                         value={this.state.zone && this.state.zone.name ? this.state.zone.name : 'Xã/Phường'}
                                         autoCapitalize={"none"}
-                                        returnKeyType={"next"}
                                         // underlineColorAndroid="transparent"
                                         autoCorrect={false}
                                     />
@@ -695,7 +671,6 @@ class CreateProfileScreen extends Component {
                                     onChangeText={this.onChangeText("address")}
                                     value={this.state.address}
                                     autoCapitalize={"none"}
-                                    returnKeyType={"next"}
                                     // underlineColorAndroid="transparent"
                                     autoCorrect={false}
                                 />
@@ -715,7 +690,6 @@ class CreateProfileScreen extends Component {
                                         errorStyle={styles.errorStyle}
                                         value={this.state.relationShip && this.state.relationShip.name ? this.state.relationShip.name : 'Quan hệ'}
                                         autoCapitalize={"none"}
-                                        returnKeyType={"next"}
                                         // underlineColorAndroid="transparent"
                                         autoCorrect={false}
                                     />
