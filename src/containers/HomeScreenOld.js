@@ -12,7 +12,8 @@ import {
   Alert,
   ScrollView,
   FlatList,
-  RefreshControl
+  RefreshControl,
+  Linking
 } from "react-native";
 import { connect } from "react-redux";
 import constants from "@resources/strings";
