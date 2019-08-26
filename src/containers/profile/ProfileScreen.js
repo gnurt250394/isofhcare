@@ -38,7 +38,6 @@ class ProfileScreen extends Component {
     }
     onGetDetail = (id) => {
         profileProvider.getDetailsMedical(id).then(res => {
-            alert(JSON.stringify(res.data))
             if (res.code == 0) {
                 this.setState({
                     imgAvtLocal: res.data.medicalRecords.avatar,
