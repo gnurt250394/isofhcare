@@ -20,17 +20,13 @@ class ProfileScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-
+            loading: true
         };
     }
 
     componentDidMount() {
         let id = this.props.navigation.state.params && this.props.navigation.state.params.id ? this.props.navigation.state.params.id : ''
-        this.setState({
-            loading: true
-        }, () => {
             this.onGetDetail(id)
-        })
     }
 
     componentWillReceiveProps(nextProps) {
@@ -41,8 +37,8 @@ class ProfileScreen extends Component {
         }
     }
     onGetDetail = (id) => {
-
         profileProvider.getDetailsMedical(id).then(res => {
+            alert(JSON.stringify(res.data))
             if (res.code == 0) {
                 this.setState({
                     imgAvtLocal: res.data.medicalRecords.avatar,
@@ -345,6 +341,7 @@ class ProfileScreen extends Component {
                 menuButton={<TouchableOpacity onPress={this.onEdit}><ScaledImage style={{ tintColor: '#fff', marginRight: 10 }} height={20} source={require('@images/new/profile/ic_edit.png')}></ScaledImage></TouchableOpacity>}
                 isLoading={this.state.loading}
             >
+               {!this.state.loading ? (
                 <ScrollView bounces = {false}>
                 <View style={styles.viewBaner}>
                     <ScaledImage
@@ -391,6 +388,7 @@ class ProfileScreen extends Component {
                 </View>
                 {this.renderProfile(details)}
                 </ScrollView>
+               ):<View></View>}
                 <ImagePicker ref={ref => (this.imagePicker = ref)} />
             </ActivityPanel>
         );
