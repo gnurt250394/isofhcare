@@ -1,17 +1,16 @@
 package com.isofh.appisofhcaredev;
 
+import android.content.Intent;
+
+import androidx.annotation.NonNull;
+
 import com.facebook.react.ReactActivity;
- import android.content.Intent; // <--- import
-    import android.content.res.Configuration; // <--- import
-    import org.pweitz.reactnative.locationswitch.LocationSwitch;
-    import com.tkporter.sendsms.SendSMSPackage;
+import com.facebook.react.ReactActivityDelegate;
+import com.facebook.react.ReactRootView;
 import com.google.gson.Gson;
 import com.mainam.payoo.PayooModule;
-
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.support.annotation.NonNull;
+import com.swmansion.gesturehandler.react.RNGestureHandlerEnabledRootView;
+import com.tkporter.sendsms.SendSMSPackage;
 
 import org.pweitz.reactnative.locationswitch.LocationSwitch;
 
@@ -30,6 +29,17 @@ public class MainActivity extends ReactActivity implements OnPayooPaymentComplet
         return "APP";
     }
 
+
+    @Override
+    protected ReactActivityDelegate createReactActivityDelegate() {
+        return new ReactActivityDelegate(this, getMainComponentName()) {
+            @Override
+            protected ReactRootView createRootView() {
+                return new RNGestureHandlerEnabledRootView(MainActivity.this);
+            }
+        };
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -43,7 +53,7 @@ public class MainActivity extends ReactActivity implements OnPayooPaymentComplet
         if (groupType == GroupType.SUCCESS) {
             PayooModule.promise.resolve(new Gson().toJson(responseObject.getData()));
         } else {
-            PayooModule.promise.reject(groupType+"",responseObject.toString());
+            PayooModule.promise.reject(groupType + "", responseObject.toString());
         }
     }
 }

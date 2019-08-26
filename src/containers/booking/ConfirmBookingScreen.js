@@ -12,7 +12,6 @@ import connectionUtils from '@utils/connection-utils';
 import payoo from 'mainam-react-native-payoo';
 import { NativeModules } from 'react-native';
 import constants from '@resources/strings';
-var convert = require('xml-js');
 var PayooModule = NativeModules.PayooModule;
 
 class ConfirmBookingScreen extends Component {

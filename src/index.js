@@ -5,7 +5,7 @@ import { createStore, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 // import appProvider from "@data-access/app-provider";
 import AppReducer from "@reducers";
-import { RootNavigator } from "@navigators/AppNavigator";
+import { AppContainer } from "@navigators/AppNavigator";
 // import { NavigationActions, StackActions } from "react-navigation";
 // import userProvider from '@data-access/user-provider'
 import NavigationService from "@navigators/NavigationService";
@@ -83,7 +83,7 @@ class Kernel extends Component {
     return (
       <Provider store={store}>
         <Root>
-          <RootNavigator ref={navigatorRef => {
+          <AppContainer ref={navigatorRef => {
             NavigationService.setTopLevelNavigator(navigatorRef);
           }}
             screenProps={{ state: store.getState() }}

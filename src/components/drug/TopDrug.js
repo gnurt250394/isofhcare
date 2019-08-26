@@ -86,4 +86,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, null, null, { withRef: true })(TopDrug);
+export default connect(mapStateToProps, null, null, { forwardRef: true })(TopDrug);
