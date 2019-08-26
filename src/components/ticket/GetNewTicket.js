@@ -11,9 +11,6 @@ import questionProvider from '@data-access/question-provider';
 import clientUtils from '@utils/client-utils';
 import ActionSheet from 'react-native-actionsheet'
 const deviceWidth = Dimensions.get("window").width;
-const deviceHeight = Platform.OS === "ios"
-    ? Dimensions.get("window").height
-    : require("react-native-extra-dimensions-android").get("REAL_WINDOW_HEIGHT");
 class GetNewTicket extends Component {
 
     state = {

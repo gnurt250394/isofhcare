@@ -177,4 +177,4 @@ function mapStateToProps(state) {
         navigation: state.navigation
     }
 }
-export default connect(mapStateToProps, null, null, { withRef: true })(SearchPanel);
+export default connect(mapStateToProps, null, null, { forwardRef: true })(SearchPanel);

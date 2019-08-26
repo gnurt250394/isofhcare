@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import NavigationService from "@navigators/NavigationService";
 import userProvider from '@data-access/user-provider';
 
-import { createDrawerNavigator, DrawerItems, createBottomTabNavigator, TabBarBottom, createStackNavigator } from 'react-navigation';
+import { createDrawerNavigator, DrawerItems, createBottomTabNavigator, TabBarBottom, createStackNavigator, createAppContainer } from 'react-navigation';
 import NotificationBadge from "@components/notification/NotificationBadge";
 
 //splash
@@ -320,6 +320,5 @@ const RootNavigator = createStackNavigator(
     // mode: Platform.OS == "ios" ? "modal" : "card"
   }
 );
-
-
-export { RootNavigator };
+let AppContainer = createAppContainer(RootNavigator)
+export { AppContainer };

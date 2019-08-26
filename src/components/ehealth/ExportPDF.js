@@ -863,4 +863,4 @@ function mapStateToProps(state) {
         booking: state.booking
     };
 }
-export default connect(mapStateToProps, null, null, { withRef: true })(ExportPDF);
+export default connect(mapStateToProps, null, null, { forwardRef: true })(ExportPDF);

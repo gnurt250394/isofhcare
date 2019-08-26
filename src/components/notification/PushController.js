@@ -11,7 +11,6 @@ import snackbar from '@utils/snackbar-utils';
 import { connect } from 'react-redux';
 import firebase from 'react-native-firebase';
 import { Notification, NotificationOpen } from 'react-native-firebase';
-import DialogBox from 'mainam-react-native-dialog-box';
 import constants from '@resources/strings';
 import redux from '@redux-store'
 import NavigationService from "@navigators/NavigationService";
@@ -300,4 +299,4 @@ function mapStateToProps(state) {
         navigation: state.navigation
     };
 }
-export default connect(mapStateToProps, null, null, { withRef: true })(PushController);
+export default connect(mapStateToProps, null, null, { forwardRef: true })(PushController);

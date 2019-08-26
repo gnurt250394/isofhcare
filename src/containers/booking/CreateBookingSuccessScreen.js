@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-nati
 import { connect } from 'react-redux';
 import dateUtils from 'mainam-react-native-date-utils';
 import ScaleImage from "mainam-react-native-scaleimage";
-import QRCode from 'react-native-qrcode';
+import QRCode from 'mainam-react-native-qrcode';
 import Modal from "@components/modal";
 import constants from '@resources/strings';
 

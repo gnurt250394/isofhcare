@@ -11,7 +11,7 @@ import bookingProvider from "@data-access/booking-provider";
 import { connect } from "react-redux";
 import ActivityPanel from "@components/ActivityPanel";
 import ScaledImage from "mainam-react-native-scaleimage";
-import QRCode from 'react-native-qrcode';
+import QRCode from 'mainam-react-native-qrcode';
 import dateUtils from "mainam-react-native-date-utils";
 import stringUtils from "mainam-react-native-string-utils";
 import clientUtils from '@utils/client-utils';
