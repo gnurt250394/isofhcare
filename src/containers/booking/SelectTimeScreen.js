@@ -68,7 +68,8 @@ class SelectTimeScreen extends Component {
                         },
                         time: date.getTime(),
                         type: 3,
-                        label: date.format("HH:mm")
+                        label: date.format("HH:mm"),
+                        timeString: date.format("HH:mm:ss"),
                     });
                 }
                 date.setMinutes(date.getMinutes() + 30);
