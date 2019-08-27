@@ -5,7 +5,11 @@
   "scripts": {
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "android": "cd android && ./gradlew clean && cd../ react-native run-android",
+    "ios": "cd ios && xcodebuild clean && cd../ react-native run-ios",
+    "clean:android": "cd android && ./gradlew clean && cd../",
+    "clean:ios": "cd ios && xcodebuild clean && cd../"
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.6.1",
