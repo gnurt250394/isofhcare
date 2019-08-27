@@ -141,7 +141,7 @@ class ListProfileScreen extends Component {
     onGetDetails = () => {
         let patientHistoryId = this.state.patient.patientHistoryId;
         let hospitalId = this.state.patient.hospitalEntity.id;
-        bookingProvider.detailPatientHistory(patientHistoryId, hospitalId).then(res => {
+        bookingProvider.detailPatientHistory(patientHistoryId, hospitalId, this.state.patient.id).then(res => {
             let medicineTime = res.data.data.medicineTime ? (new Date().format("yyyy/MM/dd") + " " + res.data.data.medicineTime).toDateObject('/') : ''
             console.log(medicineTime, 'medicineTime')
             let time = res.data.data.time ? (new Date().format("yyyy/MM/dd") + " " + res.data.data.time).toDateObject('/') : ''
@@ -376,7 +376,7 @@ class ListProfileScreen extends Component {
                     let hospitalId = this.state.patient.hospitalEntity.id;
                     let id = this.state.histories[this.state.dateSelected].history.id
 
-                    resultUtils.getDetail(patientHistoryId, hospitalId,id).then(result => {
+                    resultUtils.getDetail(patientHistoryId, hospitalId, id).then(result => {
                         this.setState({
                             isLoading: false
                         }, () => {
@@ -423,7 +423,7 @@ class ListProfileScreen extends Component {
                 let patientHistoryId = this.state.histories[this.state.dateSelected].history.patientHistoryId;
                 let hospitalId = this.state.patient.hospitalEntity.id;
                 let id = this.state.histories[this.state.dateSelected].history.id
-                resultUtils.getDetail(patientHistoryId, hospitalId,id).then(result => {
+                resultUtils.getDetail(patientHistoryId, hospitalId, id).then(result => {
                     if (result) {
                         result = result.result;
                         result.hospital = this.props.ehealth.hospital.hospital;

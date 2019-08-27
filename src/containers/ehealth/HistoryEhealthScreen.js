@@ -37,7 +37,7 @@ class HistoryEhealthScreen extends Component {
     viewResult = (item) => {
         console.log(item);
         this.setState({ isLoading: true }, () => {
-            resultUtils.getDetail(item.patientHistoryId, this.props.ehealth.hospital.hospital.id).then(result => {
+            resultUtils.getDetail(item.patientHistoryId, this.props.ehealth.hospital.hospital.id, item.id).then(result => {
                 this.setState({ isLoading: false }, () => {
                     if (!result.hasResult)
                         snackbar.show(constants.msg.ehealth.not_result_ehealth_in_day, "danger");
