@@ -7,9 +7,9 @@
 
 #import "AppDelegate.h"
 #import <CodePush/CodePush.h>
-#import <AppCenterReactNativeCrashes/AppCenterReactNativeCrashes.h>
-#import <AppCenterReactNativeAnalytics/AppCenterReactNativeAnalytics.h>
-#import <AppCenterReactNative/AppCenterReactNative.h>
+#import "AppCenterReactNative.h"
+#import "AppCenterReactNativeAnalytics.h"
+#import "AppCenterReactNativeCrashes.h"
 #import <Firebase.h>
 
 #import <React/RCTBridge.h>
