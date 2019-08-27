@@ -28,13 +28,13 @@ target 'APP' do
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
   # appcenter
-  # pod 'appcenter', :path => '../node_modules/appcenter'
-  # pod 'appcenter-analytics', :path => '../node_modules/appcenter-analytics'
-  # pod 'appcenter-crashes', :path => '../node_modules/appcenter-crashes'
-  # pod 'AppCenter/Crashes', '~> 2.2.0'
-  # pod 'AppCenter/Analytics', '~> 2.2.0'
-  # pod 'AppCenterReactNativeShared', '~> 2.2.0'
-
+  pod 'appcenter', :path => '../node_modules/appcenter'
+  pod 'appcenter-analytics', :path => '../node_modules/appcenter-analytics'
+  pod 'appcenter-crashes', :path => '../node_modules/appcenter-crashes'
+  # pod 'AppCenter/Crashes', '~> 2.3.0'
+  # pod 'AppCenter/Analytics', '~> 2.3.0'
+  # pod 'AppCenterReactNativeShared', '~> 2.3.0'
+  
   #firebase
   pod 'Firebase', '~> 6.2.0'
   pod 'Firebase/Messaging', '~> 6.2.0'
