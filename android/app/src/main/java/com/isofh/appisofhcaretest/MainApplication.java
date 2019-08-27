@@ -10,6 +10,7 @@ import com.christopherdro.RNPrint.RNPrintPackage;
 import com.christopherdro.htmltopdf.RNHTMLtoPDFPackage;
 import com.facebook.CallbackManager;
 import com.facebook.react.ReactApplication;
+import com.reactnativecommunity.netinfo.NetInfoPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -29,7 +30,7 @@ import com.reactnative.photoview.PhotoViewPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.tkporter.sendsms.SendSMSPackage;
 import com.wheelpicker.WheelPickerPackage;
-
+import com.reactnativecommunity.webview.RNCWebViewPackage;
 import org.pweitz.reactnative.locationswitch.LocationSwitchPackage;
 import org.reactnative.camera.RNCameraPackage;
 
@@ -68,6 +69,8 @@ import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
               new MainReactPackage(),
+			  new RNCWebViewPackage(),
+            new NetInfoPackage(),
               new RNPrintPackage(),
               new WheelPickerPackage(),
               new ReactNativeGetLocationPackage(),

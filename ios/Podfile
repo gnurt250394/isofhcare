@@ -120,6 +120,8 @@ target 'APP' do
 
   pod 'react-native-webview', :path => '../node_modules/react-native-webview'
 
+  pod 'react-native-netinfo', :path => '../node_modules/@react-native-community/netinfo'
+
 end
 
 # very important to have, unless you removed React dependencies for Libraries
