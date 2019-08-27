@@ -73,6 +73,7 @@ class ViewInDateScreen extends Component {
             if (!obj2[key])
                 obj2[key] = item;
         });
+        let id=null;
         for (var i = 1; i <= 31; i++) {
             try {
                 var date = new Date(month + "/" + i + "/" + year);
@@ -85,7 +86,6 @@ class ViewInDateScreen extends Component {
                         index = i - 1;
                         patientHistoryId = patientHistory.patientHistoryId;
                         id = patientHistory.id;
-
                     }
                     obj.push(date);
                 }

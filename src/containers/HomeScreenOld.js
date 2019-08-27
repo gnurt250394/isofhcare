@@ -84,7 +84,6 @@ class HomeScreenOld extends Component {
   }
   getTopAds(reload) {
     advertiseProvider.getTop(100, (s, e) => {
-      debugger;
       if (s) {
         if (s.length == 0) {
           if (!reload)
