@@ -30,7 +30,7 @@ import com.reactnative.photoview.PhotoViewPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.tkporter.sendsms.SendSMSPackage;
 import com.wheelpicker.WheelPickerPackage;
-
+import com.reactnativecommunity.webview.RNCWebViewPackage;
 import org.pweitz.reactnative.locationswitch.LocationSwitchPackage;
 import org.reactnative.camera.RNCameraPackage;
 
@@ -69,6 +69,7 @@ import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
               new MainReactPackage(),
+			  new RNCWebViewPackage(),
             new NetInfoPackage(),
               new RNPrintPackage(),
               new WheelPickerPackage(),
