@@ -6,6 +6,7 @@ import snackbar from '@utils/snackbar-utils';
 import constants from '@resources/strings';
 import redux from '@redux-store'
 import firebase from 'react-native-firebase';
+import NavigationService from "@navigators/NavigationService";
 
 class NotificationBadge extends Component {
     constructor(props) {
@@ -33,11 +34,9 @@ class NotificationBadge extends Component {
                     style={{ padding: 10, paddingRight: 15, position: 'relative' }}
                     onPress={() => {
                         if (this.props.userApp.isLogin) {
-                            this.props.navigation.navigate("notificationTab");
+                            NavigationService.navigate("notificationTab");
                         } else {
-                            this.props.navigation.navigate("login", {
-                                nextScreen: { screen: "notificationTab", param: {} }
-                            });
+                            NavigationService.navigate("login");
                         }
                     }}
                 >
