@@ -7,9 +7,10 @@
 
 #import "AppDelegate.h"
 #import <CodePush/CodePush.h>
-#import "AppCenterReactNative.h"
-#import "AppCenterReactNativeAnalytics.h"
-#import "AppCenterReactNativeCrashes.h"
+#import <AppCenterReactNativeShared/AppCenterReactNativeShared.h>
+#import <AppCenterReactNative.h>
+#import <AppCenterReactNativeAnalytics.h>
+#import <AppCenterReactNativeCrashes.h>
 #import <Firebase.h>
 
 #import <React/RCTBridge.h>
@@ -27,10 +28,12 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  [AppCenterReactNativeCrashes registerWithAutomaticProcessing];  // Initialize AppCenter crashes
-  [AppCenterReactNativeAnalytics registerWithInitiallyEnabled:true];  // Initialize AppCenter analytics
-  [AppCenterReactNative register];  // Initialize AppCenter
+[AppCenterReactNative register]; // Initialize AppCenter
+[AppCenterReactNativeAnalytics registerWithInitiallyEnabled:true]; // Initialize AppCenter analytics
+[AppCenterReactNativeCrashes registerWithAutomaticProcessing]; // Initialize AppCenter crashes
+
 //  [Configuration setMerchantId:<#(nonnull NSString *)#> andScretKey:<#(nonnull NSString *)#>];
+
   //firebase
   [FIRApp configure];
   [GMSPlacesClient provideAPIKey:@"AIzaSyAuxCg_cGhru90abVUxnkTVVdsLzyr4sQ4"];
