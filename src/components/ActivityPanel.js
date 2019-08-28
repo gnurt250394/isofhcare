@@ -73,6 +73,7 @@ class ActivityPanel extends Component {
     render() {
         return (
             <Activity
+                statusbarBackgroundColor="#02C39A"
                 {...this.props}
                 containerStyle={[{
                     backgroundColor: "#f7f9fb"

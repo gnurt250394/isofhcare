@@ -281,7 +281,7 @@ class ListProfileScreen extends Component {
                 titleStyle={styles.txTitle}
                 title={'DANH SÁCH THÀNH VIÊN GIA ĐÌNH'}
                 iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#359A60"
+                statusbarBackgroundColor="#02C39A"
                 actionbarStyle={styles.actionbarStyle}
                 style={styles.container}
             // isLoading={this.state.refreshing}
@@ -308,7 +308,7 @@ class ListProfileScreen extends Component {
                     ListFooterComponent={() =>
                         !this.state.refreshing
                             ? (
-                                <TouchableOpacity onPress={() => NavigationService.navigate('createProfile')}><LinearGradient colors={['#02C293', '#01bb72', '#01BF88']} style={styles.btn}><Text style={styles.txBtn}>Thêm thành viên</Text></LinearGradient></TouchableOpacity>
+                                <TouchableOpacity onPress={() => NavigationService.navigate('createProfile')}><LinearGradient colors={['#02C39A', '#01bb72', '#01BF88']} style={styles.btn}><Text style={styles.txBtn}>Thêm thành viên</Text></LinearGradient></TouchableOpacity>
                             ) : null
                     }
                 ></FlatList>
@@ -351,7 +351,7 @@ const styles = StyleSheet.create({
     },
     txTitle: { color: '#fff', textAlign: 'left', marginHorizontal: 10, fontSize: 14 },
     actionbarStyle: {
-        backgroundColor: '#4BBA7B',
+        backgroundColor: '#02C39A',
         borderBottomWidth: 0
     },
     btn: {
@@ -370,9 +370,9 @@ const styles = StyleSheet.create({
         borderColor: '#01BF88',
         justifyContent: 'center'
     },
-    txName: { color: '#4BBA7B', fontWeight: '500', fontSize: 15, maxWidth: 200 },
+    txName: { color: '#02C39A', fontWeight: '500', fontSize: 15, maxWidth: 200 },
     txDelelte: { color: '#C4C4C4', fontSize: 10 },
-    txLabel: { color: '#4BBA7B' },
+    txLabel: { color: '#02C39A' },
     btnDone: { justifyContent: 'center', alignItems: 'center', height: 30, width: 78, backgroundColor: '#359A60', borderRadius: 5, },
     btnReject: { justifyContent: 'center', alignItems: 'center', height: 30, width: 78, marginLeft: 10, borderRadius: 5, backgroundColor: '#FFB800', },
     viewBtn: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20 },

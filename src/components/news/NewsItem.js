@@ -62,10 +62,10 @@ const styles = StyleSheet.create({
         marginBottom: 20,
 
     },
-    txTitle: { fontWeight: '600', color: '#4BBA7B', fontSize: 15 },
+    txTitle: { fontWeight: '600', color: '#02C39A', fontSize: 15 },
     contents: { width: '50%', paddingLeft: 5, top: -5 },
     viewImg: { position: 'relative', marginRight: 11, },
     viewStar: { position: 'absolute', top: 5, right: 5 },
-    txInfo: { color: '#4BBA7B', textAlign: 'right', bottom: -5, right: 10, position: 'absolute', fontSize: 12 }
+    txInfo: { color: '#02C39A', textAlign: 'right', bottom: -5, right: 10, position: 'absolute', fontSize: 12 }
 });
 export default NewsItem;

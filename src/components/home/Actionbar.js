@@ -34,7 +34,7 @@ class ActionBar extends Component {
 }
 const styles = StyleSheet.create({
     containner: {
-        backgroundColor: '#4BBA7B',
+        backgroundColor: '#02C39A',
         alignItems: 'center',
         height: 60,
         flexDirection: 'row',
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     },
     search_field: {
         padding: 0, flex: 1,
-        color: '#4BBA7B'
+        color: '#02C39A'
     },
     search_panel: {
         backgroundColor: '#FFF',

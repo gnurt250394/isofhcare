@@ -764,7 +764,7 @@ const styles = StyleSheet.create({
         flex: 1
         // borderStyle: "solid",
         // borderWidth: 1,
-        // borderColor: '#4BBA7B',
+        // borderColor: '#02C39A',
         // borderRadius:5,
 
     },
@@ -780,7 +780,7 @@ const styles = StyleSheet.create({
 
     },
     actionbarStyle: {
-        backgroundColor: '#4BBA7B',
+        backgroundColor: '#02C39A',
         borderBottomWidth: 0
     },
     ktq: {
@@ -791,7 +791,7 @@ const styles = StyleSheet.create({
         textAlign: "left",
         color: "#8e8e93",
         backgroundColor: '#F2F2F2',
-        borderColor: '#4BBA7B',
+        borderColor: '#02C39A',
         borderWidth: 1,
         paddingHorizontal: 10,
         borderRadius: 5,

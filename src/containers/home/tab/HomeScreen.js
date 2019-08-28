@@ -260,7 +260,7 @@ class HomeScreen extends Component {
   render() {
     return (
       <ActivityPanel
-        statusbarBackgroundColor="#4BBA7B"
+        statusbarBackgroundColor="#02C39A"
         isLoading={this.state.isLoading}
         hideActionbar={true}
       >

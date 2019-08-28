@@ -72,9 +72,9 @@ export default class ShareDataProfileScreen extends Component {
         title={'CÀI ĐẶT CHIA SẺ'}
         icBack={require('@images/new/left_arrow_white.png')}
         iosBarStyle={'light-content'}
-        statusbarBackgroundColor="#4BBA7B"
+        statusbarBackgroundColor="#02C39A"
         actionbarStyle={{
-          backgroundColor: '#4BBA7B',
+          backgroundColor: '#02C39A',
           borderBottomWidth: 0
         }}
         titleStyle={{

@@ -58,7 +58,7 @@ class ViewCheckupResultScreen extends Component {
             <ActivityPanel style={styles.container} title={constants.title.ehealth_details}
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#4BBA7B"
+                statusbarBackgroundColor="#02C39A"
                 actionbarStyle={styles.actionbarStyle}
                 titleStyle={styles.titleStyle}
                 isLoading={this.state.isLoading}>
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     txFinish: { fontWeight: 'bold', color: '#FFF', fontSize: 17 },
     viewFooter: { height: 50 },
     actionbarStyle:{
-        backgroundColor: '#4BBA7B',
+        backgroundColor: '#02C39A',
         borderBottomWidth: 0
     },
     titleStyle:{

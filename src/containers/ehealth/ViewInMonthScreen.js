@@ -484,7 +484,7 @@ class ListProfileScreen extends Component {
                 icBack={require('@images/new/left_arrow_white.png')}
                 isLoading={this.state.isLoading}
                 iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#4BBA7B"
+                statusbarBackgroundColor="#02C39A"
                 actionbarStyle={styles.actionbarStyle}
                 titleStyle={styles.titleStyle}
                 menuButton={this.state.dateSelected ?
@@ -729,7 +729,7 @@ const styles = StyleSheet.create({
     viewShareErr: { flexDirection: 'row', alignItems: 'center', padding: 10 },
     txShareErr: { textAlign: 'center', marginVertical: 20, marginHorizontal: 10, fontSize: 18 },
     actionbarStyle: {
-        backgroundColor: '#4BBA7B',
+        backgroundColor: '#02C39A',
         borderBottomWidth: 0
     },
     viewCalendar: { justifyContent: 'center', flex: 1, alignItems: 'center' },
