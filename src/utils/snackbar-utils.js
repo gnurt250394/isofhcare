@@ -1,4 +1,5 @@
-import { Toast } from 'native-base';
+// import { Toast } from 'native-base';
+import { showMessage, hideMessage } from "react-native-flash-message";
 module.exports = {
     showShort(message, type) {
         this.show(message, type, 3000);
@@ -18,11 +19,20 @@ module.exports = {
                 _type = type;
                 break;
         }
+        this.showWithTitle("iSofHCare", message, type, duration);
 
-        Toast.show({
-            text: message,
-            duration: 3000,
-            type: _type
-        });
+        // Toast.show({
+        //     text: message,
+        //     duration: 3000,
+        //     type: _type
+        // });
+    },
+    showWithTitle(message, description, type, duration) {
+        showMessage({
+            message,
+            description,
+            type,
+            duration
+        })
     }
 }
