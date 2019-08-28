@@ -32,7 +32,9 @@ xmlns:tools="http://schemas.android.com/tools"
         android:launchMode="singleTop"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:replace="android:allowBackup,android:supportsRtl">
+        tools:replace="android:allowBackup,android:supportsRtl"
+        android:usesCleartextTraffic="true"
+    >
        <activity
             android:name=".MainActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
