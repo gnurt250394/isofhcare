@@ -342,7 +342,6 @@ class CreateProfileScreen extends Component {
                 titleStyle={styles.txTitle}
                 title={'THÊM THÀNH VIÊN MỚI'}
                 iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#359A60"
                 actionbarStyle={styles.actionbarStyle}
                 style={{ flex: 1, backgroundColor: '#fff' }}
 
@@ -790,7 +789,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: 'bold'
     },
-    txTitle: { color: '#fff', textAlign: 'left', marginHorizontal: 10, fontSize: 14 },
+    txTitle: { color: '#fff', marginHorizontal: 10 },
     mdk: {
         marginLeft: 12,
         flex: 1,
