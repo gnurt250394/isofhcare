@@ -11,8 +11,9 @@
 		0925F0A5A56A4BF3BF9D899A /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C2A6A8F9F1934F8E90E0D571 /* Ionicons.ttf */; };
 		0CC780F6230C32FC00809AD8 /* AppCenter-Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0CC780F0230C32FB00809AD8 /* AppCenter-Config.plist */; };
 		0CC780F7230C32FC00809AD8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0CC780F1230C32FB00809AD8 /* GoogleService-Info.plist */; };
-		0CC782BF230D494200809AD8 /* PayooSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0CC782BC230D481800809AD8 /* PayooSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0CC782C3230D4A6900809AD8 /* PayooModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CC782C2230D4A6900809AD8 /* PayooModule.m */; };
+		0CF2A07223165BB900F2AE0F /* PayooSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CC782BC230D481800809AD8 /* PayooSDK.framework */; };
+		0CF2A07323165BB900F2AE0F /* PayooSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0CC782BC230D481800809AD8 /* PayooSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0DEAA14610D94A38A0C5287C /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5C0979753D5040ABB0742327 /* FontAwesome.ttf */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
@@ -186,13 +187,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		0CC782C0230D494200809AD8 /* Embed Frameworks */ = {
+		0CF2A08623165BB900F2AE0F /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				0CC782BF230D494200809AD8 /* PayooSDK.framework in Embed Frameworks */,
+				0CF2A07323165BB900F2AE0F /* PayooSDK.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -261,6 +262,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0CF2A07223165BB900F2AE0F /* PayooSDK.framework in Frameworks */,
 				F0DD48F1DDD47F2229C1B0E8 /* libPods-APP.a in Frameworks */,
 				EE36E305097545D29780BE35 /* libRealmReact.a in Frameworks */,
 				3B2D67992AFD48C49F98B2DA /* libc++.tbd in Frameworks */,
@@ -483,9 +485,8 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				3CB4D8D60E451A680CCEC51E /* [CP] Copy Pods Resources */,
-				ED4E6504CB4E3FD37DE9B43A /* [CP] Embed Pods Frameworks */,
-				FA2A531722C08EE80058483B /* Embed Frameworks */,
+				0CF2A08623165BB900F2AE0F /* Embed Frameworks */,
+				60B77A006D1432010B79B035 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -807,7 +808,7 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
-		8488B759A3FD75960E6386B5 /* [CP] Copy Pods Resources */ = {
+		60B77A006D1432010B79B035 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -929,25 +930,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "export RCT_METRO_PORT=\"${RCT_METRO_PORT:=8081}\"\necho \"export RCT_METRO_PORT=${RCT_METRO_PORT}\" > \"${SRCROOT}/../node_modules/react-native/scripts/.packager.env\"\nif [ -z \"${RCT_NO_LAUNCH_PACKAGER+xxx}\" ] ; then\n  if nc -w 5 -z localhost ${RCT_METRO_PORT} ; then\n    if ! curl -s \"http://localhost:${RCT_METRO_PORT}/status\" | grep -q \"packager-status:running\" ; then\n      echo \"Port ${RCT_METRO_PORT} already in use, packager is either not running or not running correctly\"\n      exit 2\n    fi\n  else\n    open \"$SRCROOT/../node_modules/react-native/scripts/launchPackager.command\" || echo \"Can't start packager automatically\"\n  fi\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		ED4E6504CB4E3FD37DE9B43A /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-APP/Pods-APP-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1087,6 +1069,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = BY2N2SG836;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1110,8 +1093,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.isofh.appisofhcaredev;
 				PRODUCT_NAME = APP;
-				PROVISIONING_PROFILE_SPECIFIER = "isofhcare for user development develop branch";
 				PROVISIONING_PROFILE = "0f5fbbc4-4172-466c-97bb-95964499866b";
+				PROVISIONING_PROFILE_SPECIFIER = "isofhcare for user development develop branch";
 				SWIFT_OBJC_BRIDGING_HEADER = "APP-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -1130,6 +1113,7 @@
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = BY2N2SG836;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1311,6 +1295,7 @@
 		83CBBA201A601CBA00E9B192 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -1337,6 +1322,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1364,6 +1350,7 @@
 		83CBBA211A601CBA00E9B192 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -1390,6 +1377,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
+				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
