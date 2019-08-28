@@ -6,10 +6,12 @@
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint .",
-    "android": "cd android && ./gradlew clean && cd../ react-native run-android",
-    "ios": "cd ios && xcodebuild clean && cd../ react-native run-ios",
+    "android": "cd android && ./gradlew clean && cd../ && react-native run-android",
+    "ios": "cd ios && xcodebuild clean && cd../ && react-native run-ios",
     "clean:android": "cd android && ./gradlew clean && cd../",
-    "clean:ios": "cd ios && xcodebuild clean && cd../"
+    "clean:ios": "cd ios && xcodebuild clean && cd../",
+    "bundle": "npx jetify && cd android && ./gradlew bundleRelease && cd../",    
+    "release": "npx jetify && cd android && ./gradlew assembleRelease && cd../"    
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.6.1",
