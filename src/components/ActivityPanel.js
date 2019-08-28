@@ -65,7 +65,7 @@ class ActivityPanel extends Component {
                 justifyContent: "center"
             }}
             >
-                <ActivityIndicator size={'large'} color={'blue'} />
+                <ActivityIndicator size={'large'} color={'#02C39A'} />
             </View>
         );
     }
