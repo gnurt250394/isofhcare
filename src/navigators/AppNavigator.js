@@ -14,11 +14,10 @@ import IntroScreen from "@containers/intro/IntroScreen";
 import AboutScreen from "@containers/utility/AboutScreen";
 
 
-import HomeScreen from "@containers/HomeScreen";
-import HomeScreenOld from "@containers/HomeScreenOld";
-import AccountScreen from "@containers/account/AccountScreen";
+// import HomeScreen from "@containers/HomeScreen";
+import HomeScreen from "@containers/home/tab/HomeScreen";
+import AccountScreen from "@containers/home/tab/AccountScreen";
 import NotificationScreen from "@containers/notification/NotificationScreen";
-import MenuProfileScreen from '@containers/profile/MenuProfile';
 
 import CustomDrawer from '@components/navigators/CustomDrawer'
 import ScaledImage from 'mainam-react-native-scaleimage';
@@ -144,14 +143,14 @@ const GetTicketNavigation = createStackNavigator({
 const TabNavigatorComponent = createBottomTabNavigator(
   {
     homeTab: {
-      screen: HomeScreenOld,
+      screen: HomeScreen,
       navigationOptions: {
         tabBarLabel: "Home",
         tabBarIcon: ({ tintColor }) => <ScaledImage height={25} source={require('@images/new/home/ic_home.png')} style={{ tintColor: tintColor }} />,
       }
     },
     communityTab: {
-      screen: MenuProfileScreen,
+      screen: AccountScreen,
       navigationOptions: {
         tabBarLabel: "Cộng đồng",
         tabBarIcon: ({ tintColor }) => <ScaledImage touchable={false} height={20} source={require('@images/new/home/ic_community.png')} style={{ tintColor: tintColor }} />,
@@ -161,7 +160,7 @@ const TabNavigatorComponent = createBottomTabNavigator(
       }
     },
     videoTab: {
-      screen: MenuProfileScreen,
+      screen: AccountScreen,
       navigationOptions: {
         tabBarLabel: "Video",
         tabBarIcon: ({ tintColor }) => <ScaledImage height={25} source={require('@images/new/home/ic_videos.png')} style={{ tintColor: tintColor }} />,
@@ -208,7 +207,7 @@ const TabNavigatorComponent = createBottomTabNavigator(
       activeTintColor: 'blue',
       inactiveTintColor: 'white',
       style: {
-        backgroundColor: "#4BBA7B",
+        backgroundColor: "#02C39A",
       },
     }
   }

@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
     },
     imgNotLocation: { width: "100%", height: 164, justifyContent: 'flex-end' },
     viewBtn: { backgroundColor: 'rgba(0, 0, 0, 0.5)', marginHorizontal: 20, paddingVertical: 10, marginBottom: 5, borderRadius: 5, justifyContent: 'center', alignItems: 'center' },
-    btnOpenLocation: { justifyContent: 'center', alignItems: 'center', flexDirection: 'row', borderRadius: 5, backgroundColor: '#4BBA7B', padding: 5, width: 100, marginTop: 10 },
+    btnOpenLocation: { justifyContent: 'center', alignItems: 'center', flexDirection: 'row', borderRadius: 5, backgroundColor: '#02C39A', padding: 5, width: 100, marginTop: 10 },
     txOpenLocation: { color: '#fff', fontStyle: 'italic' }
 });
 export default HospitalNearYou;

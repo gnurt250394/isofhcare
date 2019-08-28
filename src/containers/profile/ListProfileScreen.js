@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import ActivityPanel from "@components/ActivityPanel";
-import { Card } from 'native-base';
+import { Card, Icon } from 'native-base';
 import medicalRecordProvider from '@data-access/medical-record-provider';
 import { connect } from "react-redux";
 import constants from '@resources/strings';
@@ -12,6 +12,7 @@ import NavigationService from "@navigators/NavigationService";
 import LinearGradient from 'react-native-linear-gradient';
 import ActionSheet from 'react-native-actionsheet'
 import snackbar from "@utils/snackbar-utils";
+import * as Animatable from 'react-native-animatable';
 
 class ListProfileScreen extends Component {
     constructor(props) {
@@ -279,9 +280,9 @@ class ListProfileScreen extends Component {
             <ActivityPanel
                 icBack={require('@images/new/left_arrow_white.png')}
                 titleStyle={styles.txTitle}
-                title={'DANH SÁCH THÀNH VIÊN GIA ĐÌNH'}
+                title={'THÀNH VIÊN GIA ĐÌNH'}
                 iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#359A60"
+                statusbarBackgroundColor="#02C39A"
                 actionbarStyle={styles.actionbarStyle}
                 style={styles.container}
             // isLoading={this.state.refreshing}
@@ -303,12 +304,6 @@ class ListProfileScreen extends Component {
                                         {constants.none_info}
                                     </Text>
                                 </View>
-                            ) : null
-                    }
-                    ListFooterComponent={() =>
-                        !this.state.refreshing
-                            ? (
-                                <TouchableOpacity onPress={() => NavigationService.navigate('createProfile')}><LinearGradient colors={['#02C293', '#01bb72', '#01BF88']} style={styles.btn}><Text style={styles.txBtn}>Thêm thành viên</Text></LinearGradient></TouchableOpacity>
                             ) : null
                     }
                 ></FlatList>
@@ -337,7 +332,12 @@ class ListProfileScreen extends Component {
                     // destructiveButtonIndex={1}
                     onPress={this.onSetOptions}
                 />
-            </ActivityPanel>
+                <Animatable.View animation={"rotate"} style={{ position: 'absolute', borderRadius: 30, right: 20, bottom: 20, backgroundColor: '#02C39A', width: 60, height: 60, justifyContent: 'center', alignItems: 'center' }}>
+                    <TouchableOpacity onPress={() => NavigationService.navigate('createProfile')} style={{ width: 60, height: 60, justifyContent: 'center', alignItems: 'center' }}>
+                        <Icon name="add" style={{ color: '#FFF' }}></Icon>
+                    </TouchableOpacity>
+                </Animatable.View >
+            </ActivityPanel >
 
         );
     }
@@ -349,9 +349,9 @@ const styles = StyleSheet.create({
     txId: {
         color: '#000'
     },
-    txTitle: { color: '#fff', textAlign: 'left', marginHorizontal: 10, fontSize: 14 },
+    txTitle: { color: '#fff', marginHorizontal: 10 },
     actionbarStyle: {
-        backgroundColor: '#4BBA7B',
+        backgroundColor: '#02C39A',
         borderBottomWidth: 0
     },
     btn: {
@@ -370,9 +370,9 @@ const styles = StyleSheet.create({
         borderColor: '#01BF88',
         justifyContent: 'center'
     },
-    txName: { color: '#4BBA7B', fontWeight: '500', fontSize: 15, maxWidth: 200 },
+    txName: { color: '#02C39A', fontWeight: '500', fontSize: 15, maxWidth: 200 },
     txDelelte: { color: '#C4C4C4', fontSize: 10 },
-    txLabel: { color: '#4BBA7B' },
+    txLabel: { color: '#02C39A' },
     btnDone: { justifyContent: 'center', alignItems: 'center', height: 30, width: 78, backgroundColor: '#359A60', borderRadius: 5, },
     btnReject: { justifyContent: 'center', alignItems: 'center', height: 30, width: 78, marginLeft: 10, borderRadius: 5, backgroundColor: '#FFB800', },
     viewBtn: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20 },

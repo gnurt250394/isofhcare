@@ -65,7 +65,7 @@ class ActivityPanel extends Component {
                 justifyContent: "center"
             }}
             >
-                <ActivityIndicator size={'large'} color={'blue'} />
+                <ActivityIndicator size={'large'} color={'#02C39A'} />
             </View>
         );
     }
@@ -73,6 +73,7 @@ class ActivityPanel extends Component {
     render() {
         return (
             <Activity
+                statusbarBackgroundColor="#02C39A"
                 {...this.props}
                 containerStyle={[{
                     backgroundColor: "#f7f9fb"

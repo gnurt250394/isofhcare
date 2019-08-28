@@ -240,7 +240,7 @@ export default class HospitalByLocationScreen extends Component {
         return (
             <SafeAreaView style={styles.container}
             >
-            <StatusBar barStyle = {Platform.OS == 'ios'?'dark-content':'light-content'} backgroundColor={'#4BBA7B'}></StatusBar>
+            <StatusBar barStyle = {Platform.OS == 'ios'?'dark-content':'light-content'} backgroundColor={'#02C39A'}></StatusBar>
                 <Actionbar />
                 <HeaderLine onPress={this.onShowInfo} isShowViewAll={false} title={'PHÒNG KHÁM, BỆNH VIỆN GẦN BẠN'} />
                 <View style={styles.viewFlatList}>
@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
         height:30,
         justifyContent: 'center',
         alignItems:'center',
-        backgroundColor:"#4BBA7B",
+        backgroundColor:"#02C39A",
         marginRight: 10,
         borderRadius: 5,
     },

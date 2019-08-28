@@ -314,7 +314,7 @@ class CreateProfileScreen extends Component {
     renderItem = ({ item }) => {
         return (
             <View style={{ margin: 5, borderRadius: 1, borderColor: '#A4A4A4', padding: 5 }}>
-                <Text style={{ color: '#4BBA7B', textAlign: 'left' }}>{item.countryCode}</Text>
+                <Text style={{ color: '#02C39A', textAlign: 'left' }}>{item.countryCode}</Text>
             </View>
         )
     }
@@ -342,7 +342,6 @@ class CreateProfileScreen extends Component {
                 titleStyle={styles.txTitle}
                 title={'THÊM THÀNH VIÊN MỚI'}
                 iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#359A60"
                 actionbarStyle={styles.actionbarStyle}
                 style={{ flex: 1, backgroundColor: '#fff' }}
 
@@ -780,17 +779,17 @@ const styles = StyleSheet.create({
         flex: 1
         // borderStyle: "solid",
         // borderWidth: 1,
-        // borderColor: '#4BBA7B',
+        // borderColor: '#02C39A',
         // borderRadius:5,
 
     },
     viewPopup: { backgroundColor: '#fff', marginHorizontal: 20, paddingHorizontal: 20, paddingVertical: 40, borderRadius: 5, alignItems: 'center' },
     txSend: {
-        color: '#4BBA7B',
+        color: '#02C39A',
         fontSize: 14,
         fontWeight: 'bold'
     },
-    txTitle: { color: '#fff', textAlign: 'left', marginHorizontal: 10, fontSize: 14 },
+    txTitle: { color: '#fff', marginHorizontal: 10 },
     mdk: {
         marginLeft: 12,
         flex: 1,
@@ -813,7 +812,7 @@ const styles = StyleSheet.create({
         letterSpacing: 0,
         textAlign: "left",
         backgroundColor: '#F2F2F2',
-        borderColor: '#4BBA7B',
+        borderColor: '#02C39A',
         borderWidth: 1,
         paddingHorizontal: 10,
         borderRadius: 5,
@@ -831,7 +830,7 @@ const styles = StyleSheet.create({
         // borderColor: "rgba(0, 0, 0, 0.07)"
     },
     actionbarStyle: {
-        backgroundColor: '#4BBA7B',
+        backgroundColor: '#02C39A',
         borderBottomWidth: 0
     },
     btnhuy: {

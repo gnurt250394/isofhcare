@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   },
   btnStore: {
     flexDirection: 'row',
-    backgroundColor: '#4BBA7B',
+    backgroundColor: '#02C39A',
     justifyContent: 'space-around',
     alignItems: 'center',
     height: 31,
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   txName: {
     flex: 1,
     fontSize: 14,
-    color: '#4BBA7B',
+    color: '#02C39A',
     fontWeight: '500',
   },
   txPriceNew: {

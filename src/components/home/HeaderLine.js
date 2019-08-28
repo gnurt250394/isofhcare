@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   viewLine: {
     height: 2,
     width: 20,
-    backgroundColor: '#4BBA7B'
+    backgroundColor: '#02C39A'
   },
   viewTitle: {
     flexDirection: 'row',
@@ -37,5 +37,5 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   txTitle: { color: '#000', fontWeight: '600', fontSize: 14 },
-  txShowAll:{color: '#4BBA7B', fontSize: 12,marginTop: 2, }
+  txShowAll:{color: '#02C39A', fontSize: 12,marginTop: 2, }
 })

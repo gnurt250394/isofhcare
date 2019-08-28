@@ -63,7 +63,7 @@ justifyContent:'space-between'
   nameHospital:{
     fontSize:15,
     fontWeight:'600',
-    color:'#4BBA7B'
+    color:'#02C39A'
 
   },
 
@@ -88,7 +88,7 @@ justifyContent:'space-between'
   },
   btnStore: {
     flexDirection: 'row',
-    backgroundColor: '#4BBA7B',
+    backgroundColor: '#02C39A',
     justifyContent: 'center',
     alignItems: 'center',
     height: 31,
@@ -102,7 +102,7 @@ justifyContent:'space-between'
   },
   txName: {
     fontSize: 18,
-    color: '#4BBA7B',
+    color: '#02C39A',
     fontWeight: '500',
   },
   txPriceNew: {

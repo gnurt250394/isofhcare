@@ -105,7 +105,7 @@ class EhealthScreen extends Component {
                 titleStyle={styles.txTitle}
                 title={constants.title.ehealth}
                 iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#4BBA7B"
+                statusbarBackgroundColor="#02C39A"
                 actionbarStyle={styles.actionbarStyle}
                 style={styles.container}
             >
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     txLastTime: { color: '#5A5956', marginTop: 5 },
     txTitle: { color: '#fff' },
     actionbarStyle: {
-        backgroundColor: '#4BBA7B',
+        backgroundColor: '#02C39A',
         borderBottomWidth: 0
     },
     viewContent: {

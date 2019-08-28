@@ -28,7 +28,7 @@ import { Card, Toast } from "native-base";
 const DEVICE_WIDTH = Dimensions.get("window").width;
 import * as Animatable from 'react-native-animatable';
 import advertiseProvider from "@data-access/advertise-provider";
-class HomeScreenOld extends Component {
+class HomeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -260,7 +260,7 @@ class HomeScreenOld extends Component {
   render() {
     return (
       <ActivityPanel
-        statusbarBackgroundColor="#4BBA7B"
+        statusbarBackgroundColor="#02C39A"
         isLoading={this.state.isLoading}
         hideActionbar={true}
       >
@@ -400,4 +400,4 @@ function mapStateToProps(state) {
     userApp: state.userApp
   };
 }
-export default connect(mapStateToProps)(HomeScreenOld);
+export default connect(mapStateToProps)(HomeScreen);

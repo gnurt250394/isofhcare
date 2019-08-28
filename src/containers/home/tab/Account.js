@@ -8,7 +8,7 @@ import DeviceInfo from 'react-native-device-info';
 import ActivityPanel from "@components/ActivityPanel";
 import ImageLoad from "mainam-react-native-image-loader";
 
-class MenuProfile extends React.Component {
+class Account extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -176,4 +176,4 @@ function mapStateToProps(state) {
     userApp: state.userApp
   };
 }
-export default connect(mapStateToProps)(MenuProfile);
+export default connect(mapStateToProps)(Account);

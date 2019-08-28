@@ -440,7 +440,7 @@ class ViewInDateScreen extends Component {
             <ActivityPanel style={styles.container} title={constants.title.ehealth}
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#4BBA7B"
+                statusbarBackgroundColor="#02C39A"
                 actionbarStyle={styles.actionbarStyle}
                 titleStyle={styles.titleStyle}
                 isLoading={this.state.isLoading}
@@ -703,7 +703,7 @@ const styles = StyleSheet.create({
     txMedical: { paddingTop: 5, color: '#373A3C' },
     footerMedical: { width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 },
     actionbarStyle: {
-        backgroundColor: '#4BBA7B',
+        backgroundColor: '#02C39A',
         borderBottomWidth: 0
     },
     titleStyle:

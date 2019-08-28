@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   nameHospital: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#4BBA7B',
+    color: '#02C39A',
     minHeight: 40
 
   },
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
   },
   btnStore: {
     flexDirection: 'row',
-    backgroundColor: '#4BBA7B',
+    backgroundColor: '#02C39A',
     justifyContent: 'center',
     alignItems: 'center',
     height: 31,
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
   },
   txName: {
     fontSize: 18,
-    color: '#4BBA7B',
+    color: '#02C39A',
     fontWeight: '500',
   },
   txPriceNew: {

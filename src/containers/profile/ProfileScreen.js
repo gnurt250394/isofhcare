@@ -401,7 +401,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     scaledImage: { position: "absolute", top: 5, right: 5 },
-    btnFeature: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#4BBA7B', justifyContent: 'space-around', borderTopLeftRadius: 50, borderBottomLeftRadius: 50, borderColor: '#4BBA7B', paddingVertical: 10, marginLeft: 10, marginTop: 30, paddingHorizontal: 0, flex: 1 },
+    btnFeature: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#02C39A', justifyContent: 'space-around', borderTopLeftRadius: 50, borderBottomLeftRadius: 50, borderColor: '#02C39A', paddingVertical: 10, marginLeft: 10, marginTop: 30, paddingHorizontal: 0, flex: 1 },
     imageStyle: { borderRadius: 60, borderWidth: 2, borderColor: '#Fff' },
     customImagePlace: {
         width: 120,
@@ -415,11 +415,11 @@ const styles = StyleSheet.create({
     scaledImageAvt: { position: "absolute", bottom: 0, right: 0 },
     txTitle: { color: '#fff', textAlign: 'left', marginHorizontal: 10, },
     actionbarStyle: {
-        backgroundColor: '#4BBA7B',
+        backgroundColor: '#02C39A',
         borderBottomWidth: 0
     },
     btn: {
-        paddingHorizontal: 10, paddingVertical: 15, backgroundColor: '#4BBA7B', borderRadius: 8, justifyContent: 'center', alignItems: 'center', alignSelf: 'flex-start', marginHorizontal: 10, marginLeft: 12, marginBottom: 20, marginTop: 10
+        paddingHorizontal: 10, paddingVertical: 15, backgroundColor: '#02C39A', borderRadius: 8, justifyContent: 'center', alignItems: 'center', alignSelf: 'flex-start', marginHorizontal: 10, marginLeft: 12, marginBottom: 20, marginTop: 10
     },
     containerInfo: {
         padding: 10,
@@ -460,7 +460,7 @@ const styles = StyleSheet.create({
     },
     txName: {
         marginTop: 30,
-        color: '#4BBA7B',
+        color: '#02C39A',
         fontWeight: '600',
 
     },
