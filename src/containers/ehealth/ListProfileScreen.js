@@ -111,12 +111,7 @@ class ListProfileScreen extends PureComponent {
             this.onRefresh()
         }
     }
-    onAddEhealth = () => {
-        let hospitalId = this.props.ehealth.hospital.hospital.id
-        this.props.navigation.navigate('addNewEhealth', {
-            hospitalId: hospitalId
-        })
-    }
+   
     render() {
         return (
             <ActivityPanel style={{ flex: 1 }}
@@ -142,7 +137,6 @@ class ListProfileScreen extends PureComponent {
                     extraData={this.state}
                     data={this.state.listData}
                     ListFooterComponent={() => <View style={{ height: 10 }}></View>}
-                    ListHeaderComponent={() => !this.state.refreshing ? <TouchableOpacity onPress={this.onAddEhealth} style={styles.btnAddEhealth}><Text style={styles.txAddEhealth}>Thêm mới kết quả khám</Text></TouchableOpacity> : <View></View>}
                     renderItem={this.renderItemProfile}
                 />
             </ActivityPanel>
@@ -244,22 +238,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#02C39A',
         borderBottomWidth: 0
     },
-    btnAddEhealth: {
-        borderColor: '#01bf89',
-        borderRadius: 5,
-        borderWidth: 1,
-        backgroundColor: '#01bf89',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: 41,
-        marginVertical: 10,
-        marginHorizontal: 5
-    },
-    txAddEhealth: {
-        color: '#fff',
-        fontSize: 14,
-        fontWeight: 'bold'
-    }
+
 });
 
 function mapStateToProps(state) {

@@ -5,12 +5,15 @@ import ActivityPanel from "@components/ActivityPanel";
 import constants from '@resources/strings';
 import snackbar from '@utils/snackbar-utils';
 import ehealthProvider from '@data-access/ehealth-provider'
-export default class AddNewEhealthScreen extends Component {
+import ScaledImage from 'mainam-react-native-scaleimage';
+import { connect } from "react-redux";
+
+class AddNewEhealthScreen extends Component {
     constructor(props) {
         super(props);
-        let hospitalId = this.props.navigation.state.params && this.props.navigation.state.params.hospitalId ? this.props.navigation.state.params.hospitalId : null
+        let hospital = this.props.navigation.state.params && this.props.navigation.state.params.hospital ? this.props.navigation.state.params.hospital : null
         this.state = {
-            hospitalId,
+            hospital,
             countReset: 1
         };
     }
@@ -24,9 +27,9 @@ export default class AddNewEhealthScreen extends Component {
     }
     onConfirm = () => {
         let patientHistoryId = this.state.valueCode
-        let hospitalId = this.state.hospitalId
+        let hospital = this.state.hospital
 
-        ehealthProvider.addEhealthWithCode(hospitalId, patientHistoryId).then(res => {
+        ehealthProvider.addEhealthWithCode(hospital.hospital.id, patientHistoryId).then(res => {
             switch (res.code) {
                 case 2:
                     snackbar.show('Không lấy được thông tin tài khoản, xin vui lòng thử lại', 'danger')
@@ -38,7 +41,8 @@ export default class AddNewEhealthScreen extends Component {
                     snackbar.show('Tài khoản của bạn không sở hữu y bạ này', 'danger')
                     break
                 case 0:
-                    this.props.navigation.navigate('listProfile', { countReset: this.state.countReset + 1 })
+                    this.props.dispatch({ type: constants.action.action_select_hospital_ehealth, value: hospital })
+                    this.props.navigation.replace('listProfile');
                     snackbar.show('Thêm y bạ thành công', 'success')
                     break
             }
@@ -58,7 +62,7 @@ export default class AddNewEhealthScreen extends Component {
                 titleStyle={styles.txTitle}
                 title={constants.title.ehealth}
                 iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#4BBA7B"
+                statusbarBackgroundColor="#02C39A"
                 actionbarStyle={styles.actionbarStyle}
                 style={styles.container}
             >
@@ -68,6 +72,8 @@ export default class AddNewEhealthScreen extends Component {
                         <View style={{ width: 10 }}></View>
                         <TouchableOpacity onPress={this.onInsertCode} style={styles.btnAddEhealth}><Text style={styles.txAddEhealth}>NHẬP MÃ</Text></TouchableOpacity>
                     </View>
+                    <View style={{ maxWidth: '95%', marginTop: 20 }}><Text style={{ color: '#02C39A', fontSize: 14, fontWeight: 'bold', textAlign: 'center', marginTop: 20 }}>NHẬP HOẶC QUÉT MÃ HỒ SƠ ĐỂ XEM KẾT QUẢ KHÁM MỚI</Text></View>
+                    <ScaledImage height={400} style={{ marginTop: 20 }} source={require('@images/new/ehealth/img_demo_scan.jpg')}></ScaledImage>
                 </View>
                 <Modal
                     isVisible={this.state.isVisible}
@@ -115,7 +121,7 @@ const styles = StyleSheet.create({
     },
     txTitle: { color: '#fff' },
     actionbarStyle: {
-        backgroundColor: '#4BBA7B',
+        backgroundColor: '#02C39A',
         borderBottomWidth: 0
     },
     viewContent: {
@@ -127,9 +133,10 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         borderWidth: 1,
         borderColor: '#01bf89',
-        minWidth: '95%',
-        maxWidth: '95%',
-        marginTop: 30
+        minWidth: '50%',
+        maxWidth: '50%',
+        marginTop: 30,
+        fontSize:18
 
     },
     btnConfirm: {
@@ -146,10 +153,10 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     btnAddEhealth: {
-        borderColor: '#01bf89',
+        borderColor: '#02C39A',
         borderRadius: 5,
         borderWidth: 1,
-        backgroundColor: '#01bf89',
+        backgroundColor: '#02C39A',
         justifyContent: 'center',
         alignItems: 'center',
         height: 51,
@@ -162,3 +169,4 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     }
 })
+export default connect()(AddNewEhealthScreen);
