@@ -73,6 +73,7 @@ class ViewInDateScreen extends Component {
             if (!obj2[key])
                 obj2[key] = item;
         });
+        let id = "";
         for (var i = 1; i <= 31; i++) {
             try {
                 var date = new Date(month + "/" + i + "/" + year);
@@ -84,6 +85,7 @@ class ViewInDateScreen extends Component {
                         dateSelected = date;
                         index = i - 1;
                         patientHistoryId = patientHistory.patientHistoryId;
+                        id = patientHistory.id;
                     }
                     obj.push(date);
                 }
@@ -105,12 +107,12 @@ class ViewInDateScreen extends Component {
                 }, 200);
             }
             if (patientHistoryId)
-                this.getDetailPatientHistory(patientHistoryId)
+                this.getDetailPatientHistory(patientHistoryId, id)
         });
     }
-    getDetailPatientHistory(patientHistoryId) {
+    getDetailPatientHistory(patientHistoryId, id) {
         this.setState({ isLoading: true }, () => {
-            resultUtils.getDetail(patientHistoryId, this.props.ehealth.hospital.hospital.id).then(result => {
+            resultUtils.getDetail(patientHistoryId, this.props.ehealth.hospital.hospital.id, id).then(result => {
                 this.setState({ result: result.result, resultDetail: result.resultDetail, hasResult: result.hasResult, isLoading: false }, () => {
                     if (!result.hasResult)
                         snackbar.show(constants.msg.ehealth.not_result_ehealth_in_day, "danger");
@@ -400,7 +402,7 @@ class ViewInDateScreen extends Component {
             try {
                 let patientHistoryId = this.state.histories[this.state.dateSelected.format("yyyy-MM-dd")].history.patientHistoryId;
                 let hospitalId = this.props.ehealth.patient.hospitalEntity.id;
-                resultUtils.getDetail(patientHistoryId, hospitalId).then(result => {
+                resultUtils.getDetail(patientHistoryId, hospitalId, this.state.histories[this.state.dateSelected.format("yyyy-MM-dd")].history.id).then(result => {
                     if (result) {
                         result = result.result;
                         result.hospital = this.props.ehealth.hospital.hospital;
