@@ -102,6 +102,7 @@ import PolicyScreen from "@containers/utility/PolicyScreen";
 import SpecialistScreen from "@containers/specialist/SpecialistScreen";
 import ConfirmCodeScreen from "@containers/account/ConfirmCodeScreen";
 import ResetPasswordScreen from "@containers/account/ResetPasswordScreen";
+import { fromLeft, zoomIn, zoomOut, fromRight } from 'react-navigation-transitions';
 
 
 const ProfileNavigation = createStackNavigator({
@@ -228,6 +229,11 @@ const TabNavigatorComponent = createBottomTabNavigator(
 //   }
 // );
 
+const handleCustomTransition = ({ scenes }) => {
+  return fromRight();
+}
+
+
 const RootNavigator = createStackNavigator(
   {
     splash: SplashScreen,
@@ -317,6 +323,7 @@ const RootNavigator = createStackNavigator(
       gesturesEnabled: false
     },
     // mode: Platform.OS == "ios" ? "modal" : "card"
+    transitionConfig: (nav) => handleCustomTransition(nav)
   }
 );
 let AppContainer = createAppContainer(RootNavigator)
