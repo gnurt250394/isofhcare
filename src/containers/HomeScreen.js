@@ -95,15 +95,15 @@ class HomeScreen extends Component {
       refreshing: true
     }, () => {
       // let promise = [];
-      // promise.push(this.slide.getWrappedInstance().getAds());
-      // promise.push(this.slide.getWrappedInstance().getAds());
-      // promise.push(this.slide.getWrappedInstance().getAds());
-      // promise.push(this.slide.getWrappedInstance().getAds());
+      // promise.push(this.slide.getAds());
+      // promise.push(this.slide.getAds());
+      // promise.push(this.slide.getAds());
+      // promise.push(this.slide.getAds());
       // Promise.all(promise).then(values => {
-      //   this.slide.getWrappedInstance().setAds(values[0]);
-      //   this.slide.getWrappedInstance().setAds(values[0]);
-      //   this.slide.getWrappedInstance().setAds(values[0]);
-      //   this.slide.getWrappedInstance().setAds(values[0]);
+      //   this.slide.setAds(values[0]);
+      //   this.slide.setAds(values[0]);
+      //   this.slide.setAds(values[0]);
+      //   this.slide.setAds(values[0]);
       //   this.setState({ refreshing: false })
       // })
     })

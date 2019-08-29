@@ -46,7 +46,7 @@ class SelectHospitalByLocationScreen extends Component {
                 s.latitudeDelta = 0.1;
                 this.setState({ region: s, showOverlay: false }, () => {
                     if (this.searchPanel) {
-                        this.searchPanel.getWrappedInstance().setValue(s.name);
+                        this.searchPanel.setValue(s.name);
                     }
                     this.onRefresh();
                 });
@@ -156,7 +156,7 @@ class SelectHospitalByLocationScreen extends Component {
                     s.latitudeDelta = 0.1;
                     this.setState({ region: s, showOverlay: false }, () => {
                         if (this.searchPanel) {
-                            this.searchPanel.getWrappedInstance().setValue(s.name);
+                            this.searchPanel.setValue(s.name);
                         }
                         this.onRefresh();
                     });
@@ -197,7 +197,7 @@ class SelectHospitalByLocationScreen extends Component {
     }
     overlayClick() {
         if (this.searchPanel) {
-            this.searchPanel.getWrappedInstance().clear();
+            this.searchPanel.clear();
         }
         this.setState({ showOverlay: false });
     }
@@ -206,7 +206,7 @@ class SelectHospitalByLocationScreen extends Component {
     }
     onPressItemLocation(item) {
         if (this.searchPanel)
-            this.searchPanel.getWrappedInstance().setValue(item.name);
+            this.searchPanel.setValue(item.name);
         this.setState({ showOverlay: false });
 
         if (item.latitude && item.longitude) {

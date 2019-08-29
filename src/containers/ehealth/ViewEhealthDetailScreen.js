@@ -91,7 +91,7 @@ class ViewEhealthDetailScreen extends Component {
         result.hospital = this.props.ehealth.hospital.hospital;
         let patientHistoryId = this.props.ehealth.patient.patientHistoryId;
         this.setState({ isLoading: true }, () => {
-            this.exportPdfCom.getWrappedInstance().exportPdf({
+            this.exportPdfCom.exportPdf({
                 type: "all",
                 result: result,
                 fileName: constants.filenamePDF + patientHistoryId,

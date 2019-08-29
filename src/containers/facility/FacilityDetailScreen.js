@@ -166,7 +166,7 @@ class FacilityDetailScreen extends Component {
     }
     overlayClick() {
         if (this.searchPanel) {
-            this.searchPanel.getWrappedInstance().clear();
+            this.searchPanel.clear();
         }
         this.setState({ showOverlay: false });
     }
