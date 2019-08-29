@@ -160,9 +160,8 @@ class HistorySharingScreen extends Component {
     render() {
         return (
             <ActivityPanel style={styles.container}
-                // title="HỒ SƠ Y BẠ GIA ĐÌNH"
                 isLoading={this.state.isLoading}
-                title={"Lịch sử chia sẻ y bạ"}
+                title={"LỊCH SỬ CHIA SẺ"}
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#02C39A"
