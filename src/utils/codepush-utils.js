@@ -4,7 +4,7 @@ import snackbar from "@utils/snackbar-utils";
 import constants from '@resources/strings';
 import dataCacheProvider from '@data-access/datacache-provider';
 module.exports = {
-    checkupDate() {
+    checkupDate(silent) {
         codePush.checkForUpdate().then(update => {
             if (update) {
                 if (update.isMandatory) {
@@ -51,7 +51,13 @@ module.exports = {
                         { cancelable: false },
                     );
                 }
+            } else {
+                if (!silent)
+                    snackbar.show("Bạn đang sử dụng phiên bản iSofHCare mới nhất", "success");
             }
+        }).catch(e => {
+            if (!silent)
+                snackbar.show("Bạn đang sử dụng phiên bản iSofHCare mới nhất", "success");
         })
     }
 }
