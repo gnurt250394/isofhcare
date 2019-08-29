@@ -67,6 +67,7 @@ class EhealthScreen extends Component {
     onDisable = () => {
         snackbar.show('Bạn chưa có lần khám gần nhất tại bệnh viện này', 'danger')
     }
+   
     renderItem = ({ item, index }) => {
         const source = item.hospital && item.hospital.avatar ? { uri: item.hospital.avatar.absoluteUrl() } : require("@images/new/user.png");
 
@@ -166,8 +167,7 @@ const styles = StyleSheet.create({
     },
     viewFlatList: { flex: 1 },
     viewTxNone: { alignItems: 'center', marginTop: 50 },
-    viewTxTime: { fontStyle: 'italic' }
-
+    viewTxTime: { fontStyle: 'italic' },
 
 
 
