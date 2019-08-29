@@ -10,6 +10,7 @@ import com.christopherdro.RNPrint.RNPrintPackage;
 import com.christopherdro.htmltopdf.RNHTMLtoPDFPackage;
 import com.facebook.CallbackManager;
 import com.facebook.react.ReactApplication;
+import com.horcrux.svg.SvgPackage;
 import com.reactnativecommunity.netinfo.NetInfoPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -69,6 +70,7 @@ import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
               new MainReactPackage(),
+            new SvgPackage(),
 			  new RNCWebViewPackage(),
             new NetInfoPackage(),
               new RNPrintPackage(),
