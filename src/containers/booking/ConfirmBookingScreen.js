@@ -163,7 +163,7 @@ class ConfirmBookingScreen extends Component {
 
                             booking.online_transactions = data.online_transactions;
                             booking.valid_time = data.valid_time;
-                            this.props.navigation.navigate("home", {
+                            this.props.navigation.navigate("homeTab", {
                                 navigate: {
                                     screen: "createBookingSuccess",
                                     params: {
@@ -204,7 +204,7 @@ class ConfirmBookingScreen extends Component {
                                         this.props.navigation.navigate("paymentBookingError", { booking })
                                     }
                                     else {
-                                        this.props.navigation.navigate("home", {
+                                        this.props.navigation.navigate("homeTab", {
                                             navigate: {
                                                 screen: "createBookingSuccess",
                                                 params: {
@@ -273,7 +273,7 @@ class ConfirmBookingScreen extends Component {
             payooSDK.pay(this.state.paymentMethod == 5 ? 1 : 0, payment_order, {}).then(x => {
                 let obj = JSON.parse(x);
                 walletProvider.onlineTransactionPaid(vnp_TxnRef, this.getPaymentMethod(), obj);
-                this.props.navigation.navigate("home", {
+                this.props.navigation.navigate("homeTab", {
                     navigate: {
                         screen: "createBookingSuccess",
                         params: {
@@ -303,7 +303,7 @@ class ConfirmBookingScreen extends Component {
 
                             booking.online_transactions = data.online_transactions;
                             booking.valid_time = data.valid_time;
-                            this.props.navigation.navigate("home", {
+                            this.props.navigation.navigate("homeTab", {
                                 navigate: {
                                     screen: "createBookingSuccess",
                                     params: {
@@ -343,7 +343,7 @@ class ConfirmBookingScreen extends Component {
                                         this.props.navigation.navigate("paymentBookingError", { booking })
                                     }
                                     else {
-                                        this.props.navigation.navigate("home", {
+                                        this.props.navigation.navigate("homeTab", {
                                             navigate: {
                                                 screen: "createBookingSuccess",
                                                 params: {
@@ -491,41 +491,41 @@ class ConfirmBookingScreen extends Component {
                         <Text style={styles.sodu}>Số dư hiện tại: 350.000đ</Text>
                     </View> */}
                     {
-                        (this.state.service && this.state.service.length) &&
-                        <React.Fragment>
-                            <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 1 })}>
-                                <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
-                                    {this.state.paymentMethod == 1 &&
-                                        <View style={{ backgroundColor: 'rgb(2,195,154)', width: 10, height: 10, borderRadius: 5 }}></View>
-                                    }
-                                </View>
-                                <Text style={styles.ckeckthanhtoan}>VNPAY</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 3 })}>
-                                <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
-                                    {this.state.paymentMethod == 3 &&
-                                        <View style={{ backgroundColor: 'rgb(2,195,154)', width: 10, height: 10, borderRadius: 5 }}></View>
-                                    }
-                                </View>
-                                <Text style={styles.ckeckthanhtoan}>PAYOO</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 5 })}>
-                                <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
-                                    {this.state.paymentMethod == 5 &&
-                                        <View style={{ backgroundColor: 'rgb(2,195,154)', width: 10, height: 10, borderRadius: 5 }}></View>
-                                    }
-                                </View>
-                                <Text style={styles.ckeckthanhtoan}>PAYOO - Trả góp 0%</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 4 })}>
-                                <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
-                                    {this.state.paymentMethod == 4 &&
-                                        <View style={{ backgroundColor: 'rgb(2,195,154)', width: 10, height: 10, borderRadius: 5 }}></View>
-                                    }
-                                </View>
-                                <Text style={styles.ckeckthanhtoan}>PAYOO - Cửa hàng tiện ích</Text>
-                            </TouchableOpacity>
-                        </React.Fragment>
+                        (this.state.service && this.state.service.length) ?
+                            <React.Fragment>
+                                <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 1 })}>
+                                    <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
+                                        {this.state.paymentMethod == 1 &&
+                                            <View style={{ backgroundColor: 'rgb(2,195,154)', width: 10, height: 10, borderRadius: 5 }}></View>
+                                        }
+                                    </View>
+                                    <Text style={styles.ckeckthanhtoan}>VNPAY</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 3 })}>
+                                    <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
+                                        {this.state.paymentMethod == 3 &&
+                                            <View style={{ backgroundColor: 'rgb(2,195,154)', width: 10, height: 10, borderRadius: 5 }}></View>
+                                        }
+                                    </View>
+                                    <Text style={styles.ckeckthanhtoan}>PAYOO</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 5 })}>
+                                    <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
+                                        {this.state.paymentMethod == 5 &&
+                                            <View style={{ backgroundColor: 'rgb(2,195,154)', width: 10, height: 10, borderRadius: 5 }}></View>
+                                        }
+                                    </View>
+                                    <Text style={styles.ckeckthanhtoan}>PAYOO - Trả góp 0%</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 4 })}>
+                                    <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
+                                        {this.state.paymentMethod == 4 &&
+                                            <View style={{ backgroundColor: 'rgb(2,195,154)', width: 10, height: 10, borderRadius: 5 }}></View>
+                                        }
+                                    </View>
+                                    <Text style={styles.ckeckthanhtoan}>PAYOO - Cửa hàng tiện ích</Text>
+                                </TouchableOpacity>
+                            </React.Fragment> : null
                     }
                     <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 2 })}>
                         <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>

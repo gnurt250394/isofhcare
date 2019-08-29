@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-nati
 import { connect } from 'react-redux';
 import dateUtils from 'mainam-react-native-date-utils';
 import ScaleImage from "mainam-react-native-scaleimage";
-import QRCode from 'mainam-react-native-qrcode';
+import QRCode from 'react-native-qrcode-svg';
 import Modal from "@components/modal";
 import constants from '@resources/strings';
 
@@ -61,20 +61,22 @@ class CreateBookingSuccessScreen extends Component {
                         {/* <ScaleImage style={styles.image1} height={80} source={require("@images/new/booking/ic_rating.png")} />
                         <Text style={styles.text1}>{constants.booking.booking_success}</Text> */}
                         <View style={styles.view2}>
-                                <View style={styles.col}>
-                                    <Text style={styles.col1}>{constants.booking.code}</Text>
-                                    <TouchableOpacity onPress={this.onQrClick} style={{ alignItems: 'center', marginTop: 10 }}>
-                                        <QRCode
-                                            style={{ alignSelf: 'center', backgroundColor: '#000' }}
-                                            value={booking.book.codeBooking}
-                                            size={100}
-                                            fgColor='white' />
-                                    </TouchableOpacity>
-                                    <Text style={{ textAlign: 'center', color: '#4a4a4a', marginVertical: 5 }}>{constants.booking.code_booking} {booking.book.codeBooking}</Text>
-                                </View>
+                            <View style={styles.col}>
+                                <Text style={styles.col1}>{constants.booking.code}</Text>
+                                <TouchableOpacity onPress={this.onQrClick} style={{ alignItems: 'center', marginTop: 10 }}>
+                                    <QRCode
+                                        value={booking.book.codeBooking || ""}
+                                        logo={require('@images/new/logo.png') }
+                                        logoSize={20}
+                                        size={100}
+                                        logoBackgroundColor='transparent'
+                                    />
+                                </TouchableOpacity>
+                                <Text style={{ textAlign: 'center', color: '#4a4a4a', marginVertical: 5 }}>{constants.booking.code_booking} {booking.book.codeBooking}</Text>
                             </View>
+                        </View>
                         <View style={{ backgroundColor: '#effbf9', padding: 20, marginTop: 20 }}>
-                        <View style={styles.row}>
+                            <View style={styles.row}>
                                 <Text style={styles.label}>{"Cơ sở y tế:"}</Text>
                                 <Text style={styles.text}>{booking.hospital.hospital.name}</Text>
                             </View>
@@ -82,12 +84,12 @@ class CreateBookingSuccessScreen extends Component {
                                 <Text style={styles.label}>{"Địa chỉ:"}</Text>
                                 <Text style={styles.text}>{booking.hospital.hospital.address}</Text>
                             </View>
-                            
+
                             {/* Ho ten <View style={styles.row}>
                                 <Text style={styles.label}>{constants.booking.name}</Text>
                                 <Text style={styles.text}>{(booking.profile.medicalRecords.name || "").toUpperCase()}</Text>
                             </View> */}
-                          
+
                             <View style={styles.row}>
                                 <Text style={styles.label}>{constants.booking.time}</Text>
                                 <Text style={styles.text}>{bookingTime.format("hh:mm") + " " + (bookingTime.format("HH") < 12 ? "AM" : "PM") + " - " + bookingTime.format("thu, dd/MM/yyyy")}</Text>
@@ -150,9 +152,12 @@ class CreateBookingSuccessScreen extends Component {
                     backdropTransitionOutTiming={1000}
                 >
                     <QRCode
-                        value={booking.book.codeBooking}
+                        value={booking.book.codeBooking || ""}
+                        logo={require('@images/new/logo.png') }
+                        logoSize={40}
                         size={250}
-                        fgColor='white' />
+                        logoBackgroundColor='transparent'
+                    />
                 </Modal>
             </ActivityPanel>
         );
