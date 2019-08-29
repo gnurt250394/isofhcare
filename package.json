@@ -12,7 +12,8 @@
     "clean:ios": "cd ios && xcodebuild clean && cd../",
     "bundle": "npx jetify && cd android && ./gradlew bundleRelease && cd../",
     "release": "npx jetify && cd android && ./gradlew assembleRelease && cd../",
-    "pod": "cd ios && pod install && cd../"
+    "pod": "cd ios && pod install && cd../",
+    "pull": "git pull --rebase"
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.6.1",
