@@ -163,7 +163,7 @@ class ConfirmBookingScreen extends Component {
 
                             booking.online_transactions = data.online_transactions;
                             booking.valid_time = data.valid_time;
-                            this.props.navigation.navigate("home", {
+                            this.props.navigation.navigate("homeTab", {
                                 navigate: {
                                     screen: "createBookingSuccess",
                                     params: {
@@ -204,7 +204,7 @@ class ConfirmBookingScreen extends Component {
                                         this.props.navigation.navigate("paymentBookingError", { booking })
                                     }
                                     else {
-                                        this.props.navigation.navigate("home", {
+                                        this.props.navigation.navigate("homeTab", {
                                             navigate: {
                                                 screen: "createBookingSuccess",
                                                 params: {
@@ -273,7 +273,7 @@ class ConfirmBookingScreen extends Component {
             payooSDK.pay(this.state.paymentMethod == 5 ? 1 : 0, payment_order, {}).then(x => {
                 let obj = JSON.parse(x);
                 walletProvider.onlineTransactionPaid(vnp_TxnRef, this.getPaymentMethod(), obj);
-                this.props.navigation.navigate("home", {
+                this.props.navigation.navigate("homeTab", {
                     navigate: {
                         screen: "createBookingSuccess",
                         params: {
@@ -303,7 +303,7 @@ class ConfirmBookingScreen extends Component {
 
                             booking.online_transactions = data.online_transactions;
                             booking.valid_time = data.valid_time;
-                            this.props.navigation.navigate("home", {
+                            this.props.navigation.navigate("homeTab", {
                                 navigate: {
                                     screen: "createBookingSuccess",
                                     params: {
@@ -343,7 +343,7 @@ class ConfirmBookingScreen extends Component {
                                         this.props.navigation.navigate("paymentBookingError", { booking })
                                     }
                                     else {
-                                        this.props.navigation.navigate("home", {
+                                        this.props.navigation.navigate("homeTab", {
                                             navigate: {
                                                 screen: "createBookingSuccess",
                                                 params: {
@@ -406,7 +406,6 @@ class ConfirmBookingScreen extends Component {
     }
 
     render() {
-        debugger;
         return (
             <ActivityPanel style={styles.AcPanel} title="Xác nhận lịch khám"
                 isLoading={this.state.isLoading}>

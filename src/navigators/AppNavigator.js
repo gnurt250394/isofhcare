@@ -191,7 +191,9 @@ const TabNavigatorComponent = createBottomTabNavigator(
           if (userProvider.isLogin) {
             defaultHandler();
           } else {
-            NavigationService.navigate("login");
+            NavigationService.navigate("login", {
+              // nextScreen: { screen: "notificationTab", param: {} }
+            });
           }
         },
         tabBarLabel: "Thông báo",
@@ -257,6 +259,8 @@ const RootNavigator = createStackNavigator(
     // listProfileUser: { screen: ListProfileScreen },
     //
     home: TabNavigatorComponent,
+    homeTab: HomeScreen,
+    notificationTab: NotificationScreen,
     ehealth: EHealthNavigator,
     viewDetailEhealth: { screen: ViewEhealthDetailScreen },
     login: { screen: LoginScreen },

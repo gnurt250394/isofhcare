@@ -293,7 +293,7 @@ class ScanQRCodeScreen extends Component {
                                     showError2: false
                                 }, () => {
                                     setTimeout(() => {
-                                        this.props.navigation.navigate("home", {
+                                        this.props.navigation.navigate("homeTab", {
                                             navigate: { screen: "addBooking" }
                                         });
                                     }, 400);

@@ -122,6 +122,8 @@ target 'APP' do
 
   pod 'react-native-netinfo', :path => '../node_modules/@react-native-community/netinfo'
 
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
+
 end
 
 # very important to have, unless you removed React dependencies for Libraries
