@@ -68,6 +68,17 @@ module.exports = {
                 }
             })
         })
+    },
+    addEhealthWithCode(hospitalId, patientHistoryId) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('put', `${constants.api.ehealth.add_ehealth_with_code}/${hospitalId}/${patientHistoryId}`, {}, (s, e) => {
+                if (s)
+                    resolve(s)
+                else
+                    reject(e)
+            })
+        })
     }
+
 
 }

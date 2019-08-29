@@ -16,6 +16,8 @@ import HistoryEhealthScreen from '@containers/ehealth/HistoryEhealthScreen';
 import HistorySharingScreen from '@containers/ehealth/HistorySharingScreen';
 import EhealthSharingScreen from '@containers/ehealth/EhealthSharingScreen';
 import { fromLeft, zoomIn, zoomOut, fromRight } from 'react-navigation-transitions';
+import AddNewEhealthScreen from '@containers/ehealth/AddNewEhealthScreen';
+
 
 
 const handleCustomTransition = ({ scenes }) => {
@@ -36,6 +38,7 @@ const EHealthNavigator = createStackNavigator({
     viewMoney: { screen: ViewMoneyScreen },
     viewSurgeryResult: { screen: ViewSurgeryResultScreen },
     searchProfile: { screen: SearchProfileScreen },
+    addNewEhealth:{screen:AddNewEhealthScreen}
 }, {
         headerMode: 'none',
         header: null,
