@@ -197,7 +197,7 @@ class ListProfileScreen extends Component {
             item.medicalRecords.statusConfirm == "NEED_CONFIRM" ?
                 (
                     <View>
-                        <Text style={{ color: 'red', fontSize: 14, marginHorizontal: 12, textAlign: 'center' }}>Tài khoản {item.medicalRecords.name} có số điện thoại {item.medicalRecords.phone} muốn xác nhận mối quan hệ với bạn.</Text>
+                        <Text style={{ color: 'red', marginTop: 10, fontSize: 14, marginHorizontal: 12, textAlign: 'center' }}>Tài khoản {item.medicalRecords.name} có số điện thoại {item.medicalRecords.phone} muốn xác nhận mối quan hệ với bạn.</Text>
                         {item.medicalRecords.status == 1 ? (
                             <Card style={styles.viewProfileUser}>
                                 <TouchableOpacity style={{ flex: 1 }} onPress={() => this.onClickItem(item)}>
@@ -221,7 +221,7 @@ class ListProfileScreen extends Component {
                                             }
                                         </View>
                                     </TouchableOpacity>
-                                    <View style={{ flexDirection: 'row' }}>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                         {
                                             item.medicalRecords.statusConfirm == "NEED_CONFIRM" ? (
                                                 <TouchableOpacity disabled={this.state.disabled} onPress={() => this.onConfirm(item.medicalRecords.id, item.medicalRecords.sharePermission, item.medicalRecords.medicalRelatedId)} style={{ paddingHorizontal: 20, paddingVertical: 5, backgroundColor: '#FFAE00', borderRadius: 5 }}><Text style={{ color: '#fff', fontWeight: 'bold' }}>XÁC NHẬN</Text></TouchableOpacity>
@@ -275,6 +275,7 @@ class ListProfileScreen extends Component {
                 )
         )
     }
+    buttonAddShow = true;
     render() {
         return (
             <ActivityPanel
@@ -288,6 +289,31 @@ class ListProfileScreen extends Component {
             // isLoading={this.state.refreshing}
             >
                 <FlatList
+                    onScroll={(e) => {
+                        if (e.nativeEvent.contentOffset.y > 0) {
+                            if (this.top < e.nativeEvent.contentOffset.y) {
+                                console.log('down');
+                                if (this.buttonAddShow) {
+                                    this.buttonAddShow = false;
+                                    this.buttonAdd.slideInUp(2000);
+                                }
+                            } else {
+                                console.log('up');
+                                if (!this.buttonAddShow) {
+                                    this.buttonAddShow = true;
+                                    this.buttonAdd.slideOutDown(2000);
+                                }
+                            }
+                        }
+                        else {
+                            console.log('up');
+                            if (!this.buttonAddShow) {
+                                this.buttonAddShow = true;
+                                this.buttonAdd.fadeOutLeft(2000);
+                            }
+                        }
+                        this.top = e.nativeEvent.contentOffset.y
+                    }}
                     data={this.state.data}
                     extraData={this.state}
                     keyExtractor={(item, index) => index.toString()}
@@ -332,10 +358,12 @@ class ListProfileScreen extends Component {
                     // destructiveButtonIndex={1}
                     onPress={this.onSetOptions}
                 />
-                <Animatable.View animation={"rotate"} style={{ position: 'absolute', borderRadius: 30, right: 20, bottom: 20, backgroundColor: '#02C39A', width: 60, height: 60, justifyContent: 'center', alignItems: 'center' }}>
-                    <TouchableOpacity onPress={() => NavigationService.navigate('createProfile')} style={{ width: 60, height: 60, justifyContent: 'center', alignItems: 'center' }}>
-                        <Icon name="add" style={{ color: '#FFF' }}></Icon>
-                    </TouchableOpacity>
+                <Animatable.View ref={ref => this.buttonAdd = ref} animation={"rotate"} style={{ position: 'absolute', right: 20, bottom: 20 }}>
+                    <Card style={{ backgroundColor: '#02C39A', borderRadius: 30 }}>
+                        <TouchableOpacity onPress={() => NavigationService.navigate('createProfile')} style={{ backgroundColor: '#02C39A', borderRadius: 30, width: 60, margin: -1, height: 60, justifyContent: 'center', alignItems: 'center' }}>
+                            <Icon name="add" style={{ color: '#FFF' }}></Icon>
+                        </TouchableOpacity>
+                    </Card>
                 </Animatable.View >
             </ActivityPanel >
 
@@ -366,7 +394,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         minHeight: 60,
         borderWidth: 1,
-        borderRadius: 20,
+        borderRadius: 10,
         borderColor: '#01BF88',
         justifyContent: 'center'
     },
@@ -379,8 +407,8 @@ const styles = StyleSheet.create({
     txDone: { color: '#fff' },
     viewProfileUser: {
         // backgroundColor: '#01BE84',
-        borderTopLeftRadius: 50,
-        borderBottomLeftRadius: 50,
+        borderTopLeftRadius: 10,
+        borderBottomLeftRadius: 10,
         // padding: 10,
         marginVertical: 20,
         marginLeft: 10,
@@ -400,9 +428,10 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
     },
     viewGradientUser: {
-        flex: 1, justifyContent: 'center', borderTopLeftRadius: 50,
+        flex: 1, justifyContent: 'center',
+        borderTopLeftRadius: 10,
         padding: 10,
-        borderBottomLeftRadius: 50,
+        borderBottomLeftRadius: 10,
     }
 })
 function mapStateToProps(state) {
