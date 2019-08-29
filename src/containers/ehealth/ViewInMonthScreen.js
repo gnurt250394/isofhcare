@@ -374,7 +374,7 @@ class ListProfileScreen extends Component {
                 try {
                     let patientHistoryId = this.state.histories[this.state.dateSelected].history.patientHistoryId;
                     let hospitalId = this.state.patient.hospitalEntity.id;
-                    resultUtils.getDetail(patientHistoryId, hospitalId).then(result => {
+                    resultUtils.getDetail(patientHistoryId, hospitalId, this.state.histories[this.state.dateSelected].history.id).then(result => {
                         this.setState({
                             isLoading: false
                         }, () => {
