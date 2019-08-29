@@ -32,10 +32,10 @@ class ListQuestionScreen extends Component {
         if (this.state.reloadTime != reloadTime) {
             this.setState({ reloadTime }, () => {
                 if (this.listAnswered) {
-                    this.listAnswered.getWrappedInstance().onRefresh();
+                    this.listAnswered.onRefresh();
                 }
                 if (this.listNotAnswered) {
-                    this.listNotAnswered.getWrappedInstance().onRefresh();
+                    this.listNotAnswered.onRefresh();
                 }
             });
         }

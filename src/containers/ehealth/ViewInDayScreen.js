@@ -404,7 +404,7 @@ class ViewInDateScreen extends Component {
                     if (result) {
                         result = result.result;
                         result.hospital = this.props.ehealth.hospital.hospital;
-                        this.exportPdfCom.getWrappedInstance().exportPdf({
+                        this.exportPdfCom.exportPdf({
                             type: "all",
                             result: result,
                             fileName: constants.filenamePDF + patientHistoryId
