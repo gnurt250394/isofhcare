@@ -152,26 +152,26 @@ const TabNavigatorComponent = createBottomTabNavigator(
         tabBarIcon: ({ tintColor }) => <ScaledImage height={25} source={require('@images/new/home/ic_home.png')} style={{ tintColor: tintColor }} />,
       }
     },
-    communityTab: {
-      screen: AccountScreen,
-      navigationOptions: {
-        tabBarLabel: "Cộng đồng",
-        tabBarIcon: ({ tintColor }) => <ScaledImage touchable={false} height={20} source={require('@images/new/home/ic_community.png')} style={{ tintColor: tintColor }} />,
-        tabBarOnPress: ({ navigation, defaultHandler }) => {
-          snackbar.show("Chức năng đang phát triển");
-        },
-      }
-    },
-    videoTab: {
-      screen: AccountScreen,
-      navigationOptions: {
-        tabBarLabel: "Video",
-        tabBarIcon: ({ tintColor }) => <ScaledImage height={25} source={require('@images/new/home/ic_videos.png')} style={{ tintColor: tintColor }} />,
-        tabBarOnPress: ({ navigation, defaultHandler }) => {
-          snackbar.show("Chức năng đang phát triển");
-        },
-      }
-    },
+    // communityTab: {
+    //   screen: AccountScreen,
+    //   navigationOptions: {
+    //     tabBarLabel: "Cộng đồng",
+    //     tabBarIcon: ({ tintColor }) => <ScaledImage touchable={false} height={20} source={require('@images/new/home/ic_community.png')} style={{ tintColor: tintColor }} />,
+    //     tabBarOnPress: ({ navigation, defaultHandler }) => {
+    //       snackbar.show("Chức năng đang phát triển");
+    //     },
+    //   }
+    // },
+    // videoTab: {
+    //   screen: AccountScreen,
+    //   navigationOptions: {
+    //     tabBarLabel: "Video",
+    //     tabBarIcon: ({ tintColor }) => <ScaledImage height={25} source={require('@images/new/home/ic_videos.png')} style={{ tintColor: tintColor }} />,
+    //     tabBarOnPress: ({ navigation, defaultHandler }) => {
+    //       snackbar.show("Chức năng đang phát triển");
+    //     },
+    //   }
+    // },
     accountTab: {
       screen: AccountScreen,
       navigationOptions: {
