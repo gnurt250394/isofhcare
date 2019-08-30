@@ -25,25 +25,6 @@ module.exports = {
             });
         });
     },
-    detailPatientHistory(patientHistoryId, hospitalId,id) {
-        let id2 = id ? `&id=${id}` : ''
-        return new Promise((resolve, reject) => {
-            client.requestApi(
-                "get",
-                constants.api.booking.get_detail_patient_historyid +
-                "/" +
-                patientHistoryId +
-                "?hospitalId=" +
-                hospitalId + id2,
-                {},
-                (s, e) => {
-                    if (s) resolve(s);
-                    else reject(e);
-                }
-            );
-        });
-    },
-
     search(page, size, queryString) {
         let active = 1
         let specialistId = -1
@@ -59,14 +40,16 @@ module.exports = {
             });
         });
     },
-    shareWithProfile(recieveUserId,hospitalId,patientHistoryId) {
+    shareWithProfile(recieveUserId, hospitalId, patientHistoryId, fromDate, toDate) {
         let body = {
-            recieveUserId:recieveUserId,
-            hospitalId:hospitalId,
-            patientHistoryId:patientHistoryId
+            recieveUserId: recieveUserId,
+            hospitalId: hospitalId,
+            patientHistoryId: patientHistoryId,
+            fromDate,
+            toDate
         }
         return new Promise((resolve, reject) => {
-            client.requestApi('post',constants.api.ehealth.share_with_profile, body, (s, e) => {
+            client.requestApi('post', constants.api.ehealth.share_with_profile, body, (s, e) => {
                 if (s)
                     resolve(s)
                 else {
@@ -74,6 +57,28 @@ module.exports = {
                 }
             })
         })
+    },
+    getListShareUser(hospitalId) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('get', `${constants.api.booking.get_list_share_user}?hospitalId=${hospitalId}`, {}, (s, e) => {
+                if (s)
+                    resolve(s)
+                else {
+                    reject(e)
+                }
+            })
+        })
+    },
+    addEhealthWithCode(hospitalId, patientHistoryId) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('put', `${constants.api.ehealth.add_ehealth_with_code}/${hospitalId}/${patientHistoryId}`, {}, (s, e) => {
+                if (s)
+                    resolve(s)
+                else
+                    reject(e)
+            })
+        })
     }
+
 
 }

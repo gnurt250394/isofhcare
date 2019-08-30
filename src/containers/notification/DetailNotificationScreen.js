@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, WebView, ScrollView } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { WebView } from "react-native-webview";
 import constants from '@resources/strings';
 import ActivityPanel from '@components/ActivityPanel';
 import ScaleImage from 'mainam-react-native-scaleimage';

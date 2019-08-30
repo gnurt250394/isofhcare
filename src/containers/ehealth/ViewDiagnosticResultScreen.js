@@ -46,7 +46,7 @@ class ViewCheckupResultScreen extends Component {
                 <DiagnosticResult showTitle={false} result={this.state.result} />
                 <TouchableOpacity style={styles.btnFinish} onPress={() => {
                     this.props.navigation.pop();
-                }}><Text style={styles.txFinish}>{constants.title.result_ehealth}</Text>
+                }}><Text style={styles.txFinish}>{constants.ehealth.view_finish}</Text>
                 </TouchableOpacity>
                 <View style={styles.viewFooter} />
             </ScrollView>
@@ -58,7 +58,7 @@ class ViewCheckupResultScreen extends Component {
             <ActivityPanel style={styles.container} title={constants.title.ehealth_details}
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#22b060"
+                statusbarBackgroundColor="#02C39A"
                 actionbarStyle={styles.actionbarStyle}
                 titleStyle={styles.titleStyle}
                 isLoading={this.state.isLoading}>
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     txFinish:{ fontWeight: 'bold', color: '#FFF', fontSize: 17 },
     viewFooter:{ fontWeight: 'bold', color: '#FFF', fontSize: 17 },
     actionbarStyle:{
-        backgroundColor: '#22b060',
+        backgroundColor: '#02C39A',
         borderBottomWidth: 0
     },
     titleStyle:{

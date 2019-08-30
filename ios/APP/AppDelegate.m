@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -7,25 +7,33 @@
 
 #import "AppDelegate.h"
 #import <CodePush/CodePush.h>
-#import <AppCenterReactNativeCrashes/AppCenterReactNativeCrashes.h>
-#import <AppCenterReactNativeAnalytics/AppCenterReactNativeAnalytics.h>
-#import <AppCenterReactNative/AppCenterReactNative.h>
+#import <AppCenterReactNativeShared/AppCenterReactNativeShared.h>
+#import <AppCenterReactNative.h>
+#import <AppCenterReactNativeAnalytics.h>
+#import <AppCenterReactNativeCrashes.h>
 #import <Firebase.h>
+
+#import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <RNGoogleSignin/RNGoogleSignin.h>
 #import "RNFirebaseNotifications.h"
 #import "RNFirebaseMessaging.h"
+#import <PayooSDK/PayooSDK-Swift.h>
 @import GoogleMaps;
 @import GooglePlaces;
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  [AppCenterReactNativeCrashes registerWithAutomaticProcessing];  // Initialize AppCenter crashes
-  [AppCenterReactNativeAnalytics registerWithInitiallyEnabled:true];  // Initialize AppCenter analytics
-  [AppCenterReactNative register];  // Initialize AppCenter
+[AppCenterReactNative register]; // Initialize AppCenter
+[AppCenterReactNativeAnalytics registerWithInitiallyEnabled:true]; // Initialize AppCenter analytics
+[AppCenterReactNativeCrashes registerWithAutomaticProcessing]; // Initialize AppCenter crashes
+
+//  [Configuration setMerchantId:<#(nonnull NSString *)#> andScretKey:<#(nonnull NSString *)#>];
+
   //firebase
   [FIRApp configure];
   [GMSPlacesClient provideAPIKey:@"AIzaSyAuxCg_cGhru90abVUxnkTVVdsLzyr4sQ4"];
@@ -36,22 +44,11 @@
     didFinishLaunchingWithOptions:launchOptions];
   //=============================
 
-  NSURL *jsCodeLocation;
+  RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
+  RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
+                                                   moduleName:@"APP"
+                                            initialProperties:nil];
 
-  // jsCodeLocation = [NSURL URLWithString:@"http://192.168.100.115:8081/index.ios.bundle"];
-//  jsCodeLocation = [CodePush bundleURL];
-  
-#ifdef DEBUG
-  jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
-#else
-  jsCodeLocation = [CodePush bundleURL];
-#endif
-  
-
-  RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
-                                                      moduleName:@"APP"
-                                               initialProperties:nil
-                                                   launchOptions:launchOptions];
   rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
 
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
@@ -62,8 +59,22 @@
   return YES;
 }
 
+- (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
+{
+#if DEBUG
+  return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
+#else
+  return [CodePush bundleURL];
+#endif
+}
+
+- (BOOL) application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
+  return [Payoo application:app open:url options:options];
+}
+
 //login fb
 // add this method before @end
+
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
   BOOL handled = [[FBSDKApplicationDelegate sharedInstance] application:application
@@ -71,7 +82,7 @@
                                                       sourceApplication:sourceApplication
                                                              annotation:annotation
                   ];
-  
+
   return [[FBSDKApplicationDelegate sharedInstance] application:application
                                                         openURL:url
                                               sourceApplication:sourceApplication

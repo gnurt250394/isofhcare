@@ -46,7 +46,7 @@ class ViewCheckupResultScreen extends Component {
                 <TotalMoney showTitle={false}  result={this.state.result} resultDetail={this.state.resultDetail} />
                 <TouchableOpacity style={styles.btnViewFinish} onPress={() => {
                     this.props.navigation.pop();
-                }}><Text style={styles.txViewFinish}>XEM XONG</Text>
+                }}><Text style={styles.txViewFinish}>{constants.ehealth.view_finish}</Text>
                 </TouchableOpacity>
                 <View style={styles.viewSpaceBottom} />
             </ScrollView>
@@ -58,7 +58,7 @@ class ViewCheckupResultScreen extends Component {
             <ActivityPanel style={{ flex: 1 }} title={constants.title.ehealth_details}
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#22b060"
+                statusbarBackgroundColor="#02C39A"
                 actionbarStyle={styles.actionbarStyle}
                 titleStyle={styles.titleStyle}
                 isLoading={this.state.isLoading}>
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     txViewFinish:{ fontWeight: 'bold', color: '#FFF', fontSize: 17 },
     viewSpaceBottom:{ height: 50 },
     actionbarStyle:{
-        backgroundColor: '#22b060',
+        backgroundColor: '#02C39A',
         borderBottomWidth: 0
     },
     titleStyle:{

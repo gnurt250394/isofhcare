@@ -158,11 +158,6 @@ class DetailsDoctorScreen extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    userApp: state.userApp
-  };
-}
 const styles = StyleSheet.create({
   AcPanel: {
     flex: 1,

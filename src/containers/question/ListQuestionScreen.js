@@ -32,10 +32,10 @@ class ListQuestionScreen extends Component {
         if (this.state.reloadTime != reloadTime) {
             this.setState({ reloadTime }, () => {
                 if (this.listAnswered) {
-                    this.listAnswered.getWrappedInstance().onRefresh();
+                    this.listAnswered.onRefresh();
                 }
                 if (this.listNotAnswered) {
-                    this.listNotAnswered.getWrappedInstance().onRefresh();
+                    this.listNotAnswered.onRefresh();
                 }
             });
         }
@@ -67,7 +67,7 @@ class ListQuestionScreen extends Component {
                 } : {
                         borderBottomWidth: 0
                     }]}
-                titleStyle={[this.props.userApp.isLogin ? { marginRight: 0 } : {}]}
+                titleStyle={[this.props.userApp.isLogin ? { marginRight: 0 } : {}, { color: '#FFF' }]}
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#02C39A"
             >

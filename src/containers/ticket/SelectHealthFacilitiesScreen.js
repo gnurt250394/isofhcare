@@ -33,7 +33,7 @@ export default class SelectHealthFacilitiesScreen extends Component {
           this.viewPager.setPage(1);
           if (this.history) {
             try {
-              this.history.getWrappedInstance().onRefresh();
+              this.history.onRefresh();
             } catch (error) {
 
             }

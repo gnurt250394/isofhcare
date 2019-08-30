@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Platform } from 'react-native';
 import { connect } from 'react-redux';
 import dateUtils from 'mainam-react-native-date-utils';
 import stringUtils from 'mainam-react-native-string-utils';
@@ -10,8 +10,9 @@ import walletProvider from '@data-access/wallet-provider';
 import snackbar from '@utils/snackbar-utils';
 import connectionUtils from '@utils/connection-utils';
 import payoo from 'mainam-react-native-payoo';
+import { NativeModules } from 'react-native';
 import constants from '@resources/strings';
-var convert = require('xml-js');
+var PayooModule = NativeModules.PayooModule;
 
 class ConfirmBookingScreen extends Component {
     constructor(props) {
@@ -41,7 +42,7 @@ class ConfirmBookingScreen extends Component {
             images,
             paymentMethod: 2,
             contact,
-            booking
+            booking,
         }
     }
     componentDidMount() {
@@ -55,7 +56,7 @@ class ConfirmBookingScreen extends Component {
             bookingProvider.confirmPayment(bookingId).then(s => {
                 switch (s.code) {
                     case 0:
-                        this.props.navigation.navigate("home", {
+                        this.props.navigation.navigate("homeTab", {
                             navigate: {
                                 screen: "createBookingSuccess",
                                 params: {
@@ -84,6 +85,7 @@ class ConfirmBookingScreen extends Component {
             case 2:
                 return "";
             case 3:
+            case 5:
                 return "PAYOO";
             case 4:
                 return "PAYOO_BILL";
@@ -93,9 +95,11 @@ class ConfirmBookingScreen extends Component {
         switch (this.state.paymentMethod) {
             case 1:
                 return constants.key.payment_return_url.vnpay;
+            // return "http://localhost:8888/order/vnpay_return";
             case 2:
                 return "";
             case 3:
+            case 5:
             case 4:
                 return constants.key.payment_return_url.payoo;
         }
@@ -103,10 +107,20 @@ class ConfirmBookingScreen extends Component {
     getPaymentMethodUi() {
         switch (this.state.paymentMethod) {
             case 3:
+            case 5:
                 return "SDK";
             default:
                 return "";
         }
+    }
+
+    getBookingTime = () => {
+        try {
+            return this.state.bookingDate.format("yyyy-MM-dd") + " " + (this.state.schedule.timeString || ((this.state.schedule.time || new Date()).format("HH:mm:ss")));
+        } catch (error) {
+            console.log(error);
+        }
+        return "";
     }
 
 
@@ -124,7 +138,7 @@ class ConfirmBookingScreen extends Component {
         }
 
         this.setState({ isLoading: true }, () => {
-            let memo = `THANH TOÁN ${this.getPaymentMethod()} - Đặt khám - ${serviceText} - ${this.state.hospital.hospital.name} - ${this.state.schedule.time.format("yyyy-MM-dd HH:mm:ss")} - ${this.state.profile.medicalRecords.name}`;
+            let memo = `THANH TOÁN ${this.getPaymentMethod()} - Đặt khám - ${booking.book.codeBooking} - ${serviceText} - ${this.state.hospital.hospital.name} - ${this.getBookingTime()} - ${this.state.profile.medicalRecords.name}`;
             walletProvider.createOnlinePayment(
                 this.props.userApp.currentUser.id,
                 this.getPaymentMethod(),
@@ -149,7 +163,7 @@ class ConfirmBookingScreen extends Component {
 
                             booking.online_transactions = data.online_transactions;
                             booking.valid_time = data.valid_time;
-                            this.props.navigation.navigate("home", {
+                            this.props.navigation.navigate("homeTab", {
                                 navigate: {
                                     screen: "createBookingSuccess",
                                     params: {
@@ -159,31 +173,15 @@ class ConfirmBookingScreen extends Component {
                             });
                             break;
                         case 3:
-
+                        case 5:
                             let vnp_TxnRef = data.online_transactions[0].id;
                             let payment_order = s.payment_order;
-                            let html = convert.xml2json(payment_order.data, { compact: true, spaces: 4 })
-                            let orderJSON = JSON.parse(html);
-                            console.log(orderJSON);
-
                             payment_order.orderInfo = payment_order.data;
-                            payoo.initialize(payment_order.shop_id, payment_order.check_sum_key).then(() => {
-                                payoo.pay(payment_order, {}).then(x => {
-                                    let obj = JSON.parse(x);
-                                    walletProvider.onlineTransactionPaid(vnp_TxnRef, this.getPaymentMethod(), obj);
-                                    this.props.navigation.navigate("home", {
-                                        navigate: {
-                                            screen: "createBookingSuccess",
-                                            params: {
-                                                booking
-                                            }
-                                        }
-                                    });
-                                }).catch(y => {
-                                    booking.transactionCode = data.online_transactions[0].id;
-                                    this.props.navigation.navigate("paymentBookingError", { booking })
-                                });
-                            })
+                            payment_order.cashAmount = this.state.service.reduce((total, item) => {
+                                return total + parseInt(item.service.price)
+                            }, 0);
+                            this.payment(payment_order, vnp_TxnRef, booking, data);
+
                             break;
                         case 1:
                             this.props.navigation.navigate("paymentVNPay", {
@@ -206,7 +204,7 @@ class ConfirmBookingScreen extends Component {
                                         this.props.navigation.navigate("paymentBookingError", { booking })
                                     }
                                     else {
-                                        this.props.navigation.navigate("home", {
+                                        this.props.navigation.navigate("homeTab", {
                                             navigate: {
                                                 screen: "createBookingSuccess",
                                                 params: {
@@ -241,7 +239,7 @@ class ConfirmBookingScreen extends Component {
                                             this.retry(this.state.paymentId);
                                             return;
                                         case "vendor_id":
-                                            snackbar.show("Vender không tồn tại trong hệ thống", "danger");
+                                            snackbar.show("Vendor không tồn tại trong hệ thống", "danger");
                                             return;
                                     }
                                 }
@@ -266,6 +264,30 @@ class ConfirmBookingScreen extends Component {
         })
     }
 
+    payment(payment_order, vnp_TxnRef, booking, data) {
+        let payooSDK = payoo;
+        if (Platform.OS == 'ios') {
+            payooSDK = PayooModule;
+        }
+        payooSDK.initialize(payment_order.shop_id, payment_order.check_sum_key).then(() => {
+            payooSDK.pay(this.state.paymentMethod == 5 ? 1 : 0, payment_order, {}).then(x => {
+                let obj = JSON.parse(x);
+                walletProvider.onlineTransactionPaid(vnp_TxnRef, this.getPaymentMethod(), obj);
+                this.props.navigation.navigate("homeTab", {
+                    navigate: {
+                        screen: "createBookingSuccess",
+                        params: {
+                            booking
+                        }
+                    }
+                });
+            }).catch(y => {
+                booking.transactionCode = data.online_transactions[0].id;
+                this.props.navigation.navigate("paymentBookingError", { booking })
+            });
+        })
+    }
+
     retry(paymentId) {
         let booking = this.state.booking;
         this.setState({ isLoading: true }, () => {
@@ -281,7 +303,7 @@ class ConfirmBookingScreen extends Component {
 
                             booking.online_transactions = data.online_transactions;
                             booking.valid_time = data.valid_time;
-                            this.props.navigation.navigate("home", {
+                            this.props.navigation.navigate("homeTab", {
                                 navigate: {
                                     screen: "createBookingSuccess",
                                     params: {
@@ -291,31 +313,14 @@ class ConfirmBookingScreen extends Component {
                             });
                             break;
                         case 3:
-
+                        case 5:
                             let vnp_TxnRef = data.id;
                             let payment_order = s.payment_order;
-                            let html = convert.xml2json(payment_order.data, { compact: true, spaces: 4 })
-                            let orderJSON = JSON.parse(html);
-                            console.log(orderJSON);
-
                             payment_order.orderInfo = payment_order.data;
-                            payoo.initialize(payment_order.shop_id, payment_order.check_sum_key).then(() => {
-                                payoo.pay(payment_order, {}).then(x => {
-                                    let obj = JSON.parse(x);
-                                    walletProvider.onlineTransactionPaid(vnp_TxnRef, this.getPaymentMethod(), obj);
-                                    this.props.navigation.navigate("home", {
-                                        navigate: {
-                                            screen: "createBookingSuccess",
-                                            params: {
-                                                booking
-                                            }
-                                        }
-                                    });
-                                }).catch(y => {
-                                    booking.transactionCode = data.online_transactions[0].id;
-                                    this.props.navigation.navigate("paymentBookingError", { booking })
-                                });
-                            })
+                            payment_order.cashAmount = this.state.service.reduce((total, item) => {
+                                return total + parseInt(item.service.price)
+                            }, 0);
+                            this.payment(payment_order, vnp_TxnRef, booking, data);
                             break;
                         case 1:
                             this.props.navigation.navigate("paymentVNPay", {
@@ -338,7 +343,7 @@ class ConfirmBookingScreen extends Component {
                                         this.props.navigation.navigate("paymentBookingError", { booking })
                                     }
                                     else {
-                                        this.props.navigation.navigate("home", {
+                                        this.props.navigation.navigate("homeTab", {
                                             navigate: {
                                                 screen: "createBookingSuccess",
                                                 params: {
@@ -372,7 +377,7 @@ class ConfirmBookingScreen extends Component {
                                             snackbar.show("Đặt khám đã tồn tại trong hệ thống", "danger");
                                             return;
                                         case "vendor_id":
-                                            snackbar.show("Vender không tồn tại trong hệ thống", "danger");
+                                            snackbar.show("Vendor không tồn tại trong hệ thống", "danger");
                                             return;
                                     }
                                 }
@@ -407,13 +412,15 @@ class ConfirmBookingScreen extends Component {
                 <ScrollView keyboardShouldPersistTaps='handled' style={styles.container}>
                     <View style={{ paddingHorizontal: 20, marginVertical: 20 }}>
                         <Text style={{ fontWeight: 'bold', color: '#000' }}>{'HỒ SƠ: ' + this.state.profile.medicalRecords.name.toUpperCase()}</Text>
-                        <Text style={{ color: 'gray' }}>SĐT: {this.props.userApp.currentUser.phone}</Text>
+                        <Text style={{ color: 'gray' }}>SĐT: {this.state.profile.medicalRecords.phone}</Text>
                     </View>
                     <View style={styles.viewDetails}>
-                        <View style={{ paddingHorizontal: 20, marginTop: 20, flexDirection: 'row', alignItems: 'center' }}>
-                            <Text style={{ fontWeight: 'bold', color: 'rgb(2,195,154)', marginRight: 10 }}>{(this.state.serviceType.name || "").toUpperCase()}</Text>
-                            <ScaleImage width={20} source={require("@images/new/booking/ic_tick.png")} />
-                        </View>
+                        {this.state.serviceType &&
+                            <View style={{ paddingHorizontal: 20, marginTop: 20, flexDirection: 'row', alignItems: 'center' }}>
+                                <Text style={{ fontWeight: 'bold', color: 'rgb(2,195,154)', marginRight: 10 }}>{(this.state.serviceType.name || "").toUpperCase()}</Text>
+                                <ScaleImage width={20} source={require("@images/new/booking/ic_tick.png")} />
+                            </View>
+                        }
                         <View style={styles.view11} >
                             <View style={[styles.view2, { alignItems: 'flex-start' }]}>
                                 <ScaleImage style={styles.ic_Location} width={20} source={require("@images/new/hospital/ic_place.png")} />
@@ -432,7 +439,7 @@ class ConfirmBookingScreen extends Component {
                                 <ScaleImage style={styles.ic_Location} width={20} source={require("@images/new/booking/ic_bookingDate2.png")} />
                                 <View>
                                     <Text style={[styles.text5, {}]}>Thời gian</Text>
-                                    <Text style={[styles.text5, { marginTop: 10 }]}><Text style={{ color: 'rgb(106,1,54)', fontWeight: 'bold' }}>{this.state.schedule.label2} {this.state.schedule.time.format("HH") < 12 ? "AM" : "PM"} - {this.state.bookingDate.format("thu")}</Text> ngày {this.state.bookingDate.format("dd/MM/yyyy")} </Text>
+                                    <Text style={[styles.text5, { marginTop: 10 }]}><Text style={{ color: 'rgb(106,1,54)', fontWeight: 'bold' }}>{this.state.schedule.key.toDateObject().format("HH:mm tt")} - {this.state.bookingDate.format("thu")}</Text> ngày {this.state.bookingDate.format("dd/MM/yyyy")} </Text>
                                 </View>
                             </View>
 
@@ -470,16 +477,12 @@ class ConfirmBookingScreen extends Component {
                                     </View>
                                 </View> : null
                             }
-
-
                         </View>
                     </View>
                     <View style={{ paddingHorizontal: 20, marginTop: 20, flexDirection: 'row', alignItems: 'center' }}>
                         <Text style={{ fontWeight: 'bold', color: 'rgb(2,195,154)', marginRight: 10 }}>CHỌN PHƯƠNG THỨC THANH TOÁN</Text>
                         <ScaleImage width={20} source={require("@images/new/booking/ic_tick.png")} />
                     </View>
-
-
                     {/* <View style={styles.ckeck}> */}
                     {/* <ScaleImage style={styles.ckecked} height={20} source={require("@images/new/ic_ckecked.png")} /> */}
                     {/* <Text style={styles.ckeckthanhtoan}>Ví ISOFHCARE</Text> */}
@@ -487,30 +490,43 @@ class ConfirmBookingScreen extends Component {
                     {/* <View>
                         <Text style={styles.sodu}>Số dư hiện tại: 350.000đ</Text>
                     </View> */}
-                    <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 1 })}>
-                        <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
-                            {this.state.paymentMethod == 1 &&
-                                <View style={{ backgroundColor: 'rgb(2,195,154)', width: 10, height: 10, borderRadius: 5 }}></View>
-                            }
-                        </View>
-                        <Text style={styles.ckeckthanhtoan}>VNPAY</Text>
-                    </TouchableOpacity> */}
-                    {/* <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 3 })}>
-                        <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
-                            {this.state.paymentMethod == 3 &&
-                                <View style={{ backgroundColor: 'rgb(2,195,154)', width: 10, height: 10, borderRadius: 5 }}></View>
-                            }
-                        </View>
-                        <Text style={styles.ckeckthanhtoan}>PAYOO</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 4 })}>
-                        <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
-                            {this.state.paymentMethod == 4 &&
-                                <View style={{ backgroundColor: 'rgb(2,195,154)', width: 10, height: 10, borderRadius: 5 }}></View>
-                            }
-                        </View>
-                        <Text style={styles.ckeckthanhtoan}>PAYOO - Cửa hàng tiện ích</Text>
-                    </TouchableOpacity>
+                    {
+                        (this.state.service && this.state.service.length) ?
+                            <React.Fragment>
+                                <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 1 })}>
+                                    <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
+                                        {this.state.paymentMethod == 1 &&
+                                            <View style={{ backgroundColor: 'rgb(2,195,154)', width: 10, height: 10, borderRadius: 5 }}></View>
+                                        }
+                                    </View>
+                                    <Text style={styles.ckeckthanhtoan}>VNPAY</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 3 })}>
+                                    <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
+                                        {this.state.paymentMethod == 3 &&
+                                            <View style={{ backgroundColor: 'rgb(2,195,154)', width: 10, height: 10, borderRadius: 5 }}></View>
+                                        }
+                                    </View>
+                                    <Text style={styles.ckeckthanhtoan}>PAYOO</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 5 })}>
+                                    <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
+                                        {this.state.paymentMethod == 5 &&
+                                            <View style={{ backgroundColor: 'rgb(2,195,154)', width: 10, height: 10, borderRadius: 5 }}></View>
+                                        }
+                                    </View>
+                                    <Text style={styles.ckeckthanhtoan}>PAYOO - Trả góp 0%</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 4 })}>
+                                    <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
+                                        {this.state.paymentMethod == 4 &&
+                                            <View style={{ backgroundColor: 'rgb(2,195,154)', width: 10, height: 10, borderRadius: 5 }}></View>
+                                        }
+                                    </View>
+                                    <Text style={styles.ckeckthanhtoan}>PAYOO - Cửa hàng tiện ích</Text>
+                                </TouchableOpacity>
+                            </React.Fragment> : null
+                    }
                     <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 2 })}>
                         <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
                             {this.state.paymentMethod == 2 &&
@@ -674,7 +690,6 @@ const styles = StyleSheet.create({
     },
     ckeckthanhtoan: {
         opacity: 0.8,
-
         fontSize: 16, fontWeight: "bold",
         fontStyle: "normal",
         letterSpacing: 0,

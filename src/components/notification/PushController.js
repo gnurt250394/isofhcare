@@ -11,7 +11,6 @@ import snackbar from '@utils/snackbar-utils';
 import { connect } from 'react-redux';
 import firebase from 'react-native-firebase';
 import { Notification, NotificationOpen } from 'react-native-firebase';
-import DialogBox from 'mainam-react-native-dialog-box';
 import constants from '@resources/strings';
 import redux from '@redux-store'
 import NavigationService from "@navigators/NavigationService";
@@ -169,42 +168,53 @@ class PushController extends Component {
     openDetailsEhealth(data) {
         if (!this.props.userApp.isLogin)
             return;
-        bookingProvider.detailPatientHistory(data.patientHistoryId, data.hospitalId,data.id).then(s => {
-            this.setState({ isLoading: false }, () => {
+        this.setState({ isLoading: true }, () => {
+            bookingProvider.detailPatientHistory(data.patientHistoryId, data.hospitalId, data.id, data.shareId).then(s => {
                 switch (s.code) {
                     case 0:
-                        let resultDetail = null;
-                        let result = null;
-                        if (s.data && s.data.data) {
-                            if (s.data.data.resultDetail) {
-                                try {
-                                    resultDetail = JSON.parse(s.data.data.resultDetail);
-                                } catch (error) {
-
+                        notificationProvider.openEhealth(data.patientHistoryId, data.hospitalId, data.id, data.shareId).then(s => {
+                            this.setState({ isLoading: false }, () => {
+                                let { hasResult, result, resultDetail, hospital, data } = s;
+                                if (hasResult && data) {
+                                    if (hospital && result) {
+                                        this.props.dispatch({ type: constants.action.action_select_patient_group_ehealth, value: data });
+                                        this.props.dispatch({ type: constants.action.action_select_hospital_ehealth, value: hospital });
+                                        NavigationService.navigate('viewDetailEhealth', { result, resultDetail });
+                                    }
+                                } else {
+                                    snackbar.show('Hồ sơ này chưa có kết quả', 'danger')
                                 }
-                            }
-                            if (s.data.data.result) {
-                                try {
-                                    result = JSON.parse(s.data.data.result);
-                                    hospitalProvider.getDetailsById(data.hospitalId).then(res => {
-                                        NavigationService.navigate('viewDetailEhealth', { result: result, resultDetail: resultDetail, hospitalName: res.data.hospital.name, user: data })
-                                    })
-                                } catch (error) {
-                                    snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
-                                }
-                            }
-                        }
-
+                            })
+                        }).catch(e => {
+                            this.setState({
+                                isLoading: false
+                            }, () => {
+                                console.log(e)
+                                snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                            })
+                        });
                         break;
-                    default:
-                        snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
-                        break
+                    case 9:
+                        this.setState({
+                            isLoading: false
+                        }, () => {
+                            snackbar.show('Y bạ chưa xác định', 'danger')
+                        })
+                    case 7:
+                        this.setState({
+                            isLoading: false
+                        }, () => {
+                            snackbar.show('Hồ sơ chia sẻ đến bạn đã hết thời gian', 'danger')
+                        })
                 }
-            })
-        }).catch(e => {
-            this.setState({ isLoading: false }, () => {
-
-            })
+            }).catch(e => {
+                this.setState({
+                    isLoading: false
+                }, () => {
+                    console.log(e)
+                    snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                })
+            });
         })
     }
     openTicket(id) {
@@ -289,4 +299,4 @@ function mapStateToProps(state) {
         navigation: state.navigation
     };
 }
-export default connect(mapStateToProps, null, null, { withRef: true })(PushController);
+export default connect(mapStateToProps, null, null, { forwardRef: true })(PushController);

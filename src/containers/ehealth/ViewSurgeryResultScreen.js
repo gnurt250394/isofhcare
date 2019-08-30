@@ -24,7 +24,7 @@ import TotalMoney from '@components/ehealth/TotalMoney';
 
 const DEVICE_WIDTH = Dimensions.get('window').width;
 
-class ViewCheckupResultScreen extends Component {
+class ViewSurgeryResultScreen extends Component {
     constructor(props) {
         super(props)
         console.log(this.props, 'view in ViewEhealthDetailScreen')
@@ -46,7 +46,7 @@ class ViewCheckupResultScreen extends Component {
                 <SurgeryResult showTitle={false} result={this.state.result} />
                 <TouchableOpacity style={styles.btnViewFinish} onPress={() => {
                     this.props.navigation.pop();
-                }}><Text style={styles.txViewFinish}>XEM XONG</Text>
+                }}><Text style={styles.txViewFinish}>{constants.ehealth.view_finish}</Text>
                 </TouchableOpacity>
                 <View style={styles.viewSpaceBottom} />
             </ScrollView>
@@ -58,7 +58,7 @@ class ViewCheckupResultScreen extends Component {
             <ActivityPanel style={styles.container} title={constants.title.ehealth_details}
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#22b060"
+                statusbarBackgroundColor="#02C39A"
                 actionbarStyle={styles.actionbarStyle}
                 titleStyle={styles.titleStyle}
                 isLoading={this.state.isLoading}>
@@ -69,8 +69,8 @@ class ViewCheckupResultScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-    container:{ flex: 1 },
-    btnViewFinish:{
+    container: { flex: 1 },
+    btnViewFinish: {
         alignSelf: 'center',
         width: 252,
         maxWidth: DEVICE_WIDTH,
@@ -80,13 +80,13 @@ const styles = StyleSheet.create({
         marginVertical: 20,
         padding: 10, alignItems: 'center'
     },
-    txViewFinish:{ fontWeight: 'bold', color: '#FFF', fontSize: 17 },
-    viewSpaceBottom:{ height: 50 },
-    actionbarStyle:{
-        backgroundColor: '#22b060',
+    txViewFinish: { fontWeight: 'bold', color: '#FFF', fontSize: 17 },
+    viewSpaceBottom: { height: 50 },
+    actionbarStyle: {
+        backgroundColor: '#02C39A',
         borderBottomWidth: 0
     },
-    titleStyle:{
+    titleStyle: {
         color: '#FFF'
     }
 });
@@ -97,4 +97,4 @@ function mapStateToProps(state) {
         ehealth: state.ehealth
     };
 }
-export default connect(mapStateToProps)(ViewCheckupResultScreen);
+export default connect(mapStateToProps)(ViewSurgeryResultScreen);

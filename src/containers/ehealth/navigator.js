@@ -2,7 +2,6 @@ import { StackRouter, createStackNavigator, StackNavigator } from 'react-navigat
 import { Platform } from 'react-native';
 import EhealthScreen from '@containers/ehealth/EhealthScreen';
 import ListProfileScreen from '@containers/ehealth/ListProfileScreen';
-import ListProfileSmallScreen from '@containers/ehealth/ListProfileSmallScreen';
 import ViewInMonthScreen from '@containers/ehealth/ViewInMonthScreen';
 import ViewInDayScreen from '@containers/ehealth/ViewInDayScreen';
 import ViewEhealthDetailScreen from '@containers/ehealth/ViewEhealthDetailScreen';
@@ -13,15 +12,27 @@ import ViewMedicineScreen from '@containers/ehealth/ViewMedicineScreen';
 import ViewMoneyScreen from '@containers/ehealth/ViewMoneyScreen';
 import ViewSurgeryResultScreen from '@containers/ehealth/ViewSurgeryResultScreen';
 import SearchProfileScreen from '@containers/ehealth/SearchProfileScreen';
+import HistoryEhealthScreen from '@containers/ehealth/HistoryEhealthScreen';
+import HistorySharingScreen from '@containers/ehealth/HistorySharingScreen';
+import EhealthSharingScreen from '@containers/ehealth/EhealthSharingScreen';
+import { fromLeft, zoomIn, zoomOut, fromRight } from 'react-navigation-transitions';
+import AddNewEhealthScreen from '@containers/ehealth/AddNewEhealthScreen';
+import SelectLocationEhealthScreen from '@containers/ehealth/SelectLocationEhealthScreen';
 
 
+
+
+const handleCustomTransition = ({ scenes }) => {
+    return fromRight();
+  }
 const EHealthNavigator = createStackNavigator({
     ehealth: { screen: EhealthScreen },
     listProfile: { screen: ListProfileScreen },
-    listProfileSmall: { screen: ListProfileSmallScreen },
+    historyEhealth: { screen: HistoryEhealthScreen },
+    historySharing: { screen: HistorySharingScreen },
+    ehealthSharing: { screen: EhealthSharingScreen },
     viewInMonth: { screen: ViewInMonthScreen },
     viewInDay: { screen: ViewInDayScreen },
-    viewDetail: { screen: ViewEhealthDetailScreen },
     viewCheckupResult: { screen: ViewCheckupResultScreen },
     viewDiagnosticResult: { screen: ViewDiagnosticResultScreen },
     viewMedicalTestResult: { screen: ViewMedicalTestResultScreen },
@@ -29,6 +40,8 @@ const EHealthNavigator = createStackNavigator({
     viewMoney: { screen: ViewMoneyScreen },
     viewSurgeryResult: { screen: ViewSurgeryResultScreen },
     searchProfile: { screen: SearchProfileScreen },
+    addNewEhealth:{screen:AddNewEhealthScreen},
+    selectLocationEhealth:{screen:SelectLocationEhealthScreen}
 }, {
         headerMode: 'none',
         header: null,
@@ -37,7 +50,8 @@ const EHealthNavigator = createStackNavigator({
             header: null,
             gesturesEnabled: false
         },
-        mode: Platform.OS == 'ios' ? 'modal' : 'card'
+        // mode: Platform.OS == 'ios' ? 'modal' : 'card'
+        transitionConfig: (nav) => handleCustomTransition(nav)
     });
 
 export { EHealthNavigator };

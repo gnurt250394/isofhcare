@@ -11,7 +11,7 @@ import bookingProvider from "@data-access/booking-provider";
 import { connect } from "react-redux";
 import ActivityPanel from "@components/ActivityPanel";
 import ScaledImage from "mainam-react-native-scaleimage";
-import QRCode from 'react-native-qrcode';
+import QRCode from 'react-native-qrcode-svg';
 import dateUtils from "mainam-react-native-date-utils";
 import stringUtils from "mainam-react-native-string-utils";
 import clientUtils from '@utils/client-utils';
@@ -20,7 +20,7 @@ import snackbar from '@utils/snackbar-utils';
 import Modal from "@components/modal";
 import stylemodal from "@styles/modal-style";
 import constants from "@resources/strings";
-
+import Barcode from 'mainam-react-native-barcode'
 class DetailsHistoryScreen extends Component {
   constructor(props) {
     super(props);
@@ -154,6 +154,12 @@ class DetailsHistoryScreen extends Component {
       value: this.state.booking.codeBooking ? this.state.booking.codeBooking : 0
     })
   }
+  onBarCodeClick = () => {
+    this.setState({
+      isVisibleIdHis: true,
+      valueHis: this.state.booking.codeBooking ? this.state.booking.codeBooking : 0
+    })
+  }
   render() {
     const avatar = this.state.medicalRecords && this.state.medicalRecords.avatar ? { uri: `${this.state.medicalRecords.avatar.absoluteUrl()}` } : require("@images/new/user.png")
     return (
@@ -186,6 +192,40 @@ class DetailsHistoryScreen extends Component {
               />
               <Text style={styles.txName}>{this.state.medicalRecords.name}</Text>
             </View>
+            {this.state.booking.hisPatientHistoryId ? (
+              <View style={styles.viewBaCode}>
+                <ScaledImage
+                  width={20}
+                  height={20}
+                  source={require("@images/ic_barcode.png")}
+                />
+                <Text style={styles.txLabelBarcode}>Mã code</Text>
+                <TouchableOpacity style={{ marginRight: 10 }}>
+                  <Barcode
+                    value={this.state.booking.hisPatientHistoryId ? this.state.booking.hisPatientHistoryId : 0}
+                    size={80}
+                  />
+                </TouchableOpacity>
+              </View>
+            ) : (
+                <View style={styles.viewBaCode}>
+                  <ScaledImage
+                    width={20}
+                    height={20}
+                    source={require("@images/ic_barcode.png")}
+                  />
+                  <Text style={styles.txLabelBarcode}>Mã code</Text>
+                  <TouchableOpacity onPress={this.onQrClick} style={{ marginRight: 10 }}>
+                    <QRCode
+                      value={this.state.booking.codeBooking ? this.state.booking.codeBooking : 0}
+                      logo={require('@images/new/logo.png') }
+                      logoSize={20}
+                      size={80}
+                      logoBackgroundColor='transparent'
+                    />
+                  </TouchableOpacity>
+                </View>
+              )}
             {this.state.services && this.state.services.length ?
               <View style={[styles.viewService, { alignItems: 'flex-start' }]}>
                 <ScaledImage
@@ -206,6 +246,8 @@ class DetailsHistoryScreen extends Component {
                 </View>
               </View> : null
             }
+
+
             <View style={{ backgroundColor: '#EDECED', height: 1, marginLeft: 12 }}></View>
             <View style={[styles.viewLocation, { alignItems: 'flex-start' }]}>
               <ScaledImage
@@ -290,20 +332,7 @@ class DetailsHistoryScreen extends Component {
             </View>
             <View style={{ backgroundColor: '#EDECED', height: 1, marginLeft: 12 }}></View>
 
-            <View style={styles.viewBaCode}>
-              <ScaledImage
-                width={20}
-                height={20}
-                source={require("@images/ic_barcode.png")}
-              />
-              <Text style={styles.txLabelBarcode}>Mã code</Text>
-              <TouchableOpacity onPress={this.onQrClick} style={{ marginRight: 10 }}>
-                <QRCode
-                  value={this.state.booking.codeBooking ? this.state.booking.codeBooking : 0}
-                  size={80}
-                  fgColor='white' />
-              </TouchableOpacity>
-            </View>
+
           </View>
           <View style={{ with: '100%', height: 50, backgroundColor: "#f7f9fb" }}></View>
         </ScrollView>}
@@ -323,6 +352,24 @@ class DetailsHistoryScreen extends Component {
 
             fgColor='white' />
         </Modal>
+        {/* <Modal
+          isVisible={this.state.isVisibleIdHis}
+          onBackdropPress={() => this.setState({ isVisibleIdHis: false })}
+          backdropOpacity={0.5}
+          animationInTiming={500}
+          animationOutTiming={500}
+          style={{ flex: 1,  justifyContent: 'center'}}
+          backdropTransitionInTiming={1000}
+          backdropTransitionOutTiming={1000}
+        >
+        <View>
+          <Barcode
+            value={this.state.value}
+            size={80}
+            ></Barcode>
+            </View>
+        </Modal> */}
+
       </ActivityPanel>
     );
   }

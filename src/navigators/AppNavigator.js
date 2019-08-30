@@ -1,51 +1,56 @@
-import {
-  StackRouter,
-  createStackNavigator,
-} from "react-navigation";
-import { Platform } from "react-native";
+import React from 'react';
+import { connect } from "react-redux";
+import NavigationService from "@navigators/NavigationService";
+import userProvider from '@data-access/user-provider';
+
+import { createDrawerNavigator, DrawerItems, createBottomTabNavigator, TabBarBottom, createStackNavigator, createAppContainer } from 'react-navigation';
+import NotificationBadge from "@components/notification/NotificationBadge";
+
+//splash
+import SplashScreen from "@containers/SplashScreen";
+//intro
+import IntroScreen from "@containers/intro/IntroScreen";
+//about
+import AboutScreen from "@containers/utility/AboutScreen";
+//scan qrcode
+import QRCodeScannerScreen from "@containers/qrcode/QRCodeScannerScreen";
+
+
+// import HomeScreen from "@containers/HomeScreen";
+import HomeScreen from "@containers/home/tab/HomeScreen";
+import AccountScreen from "@containers/home/tab/AccountScreen";
+import NotificationScreen from "@containers/notification/NotificationScreen";
+
+import CustomDrawer from '@components/navigators/CustomDrawer'
+import ScaledImage from 'mainam-react-native-scaleimage';
+import snackbar from '@utils/snackbar-utils';
+
+import SettingScreen from '@containers/profile/SettingScreen'
+
+
+//y ba dien tu
+import { EHealthNavigator } from "@ehealth/navigator";
+import ViewEhealthDetailScreen from '@containers/ehealth/ViewEhealthDetailScreen';
+
+//login
 import LoginScreen from "@containers/account/LoginScreen";
 import RegisterScreen from "@containers/account/RegisterScreen";
 import EnterPasswordScreen from "@containers/account/EnterPasswordScreen";
 import ForgotPasswordScreen from "@containers/account/ForgotPasswordScreen";
-import SplashScreen from "@containers/SplashScreen";
-import HomeScreen from "@containers/HomeScreen";
-import SearchDrugScreen from "@containers/drug/SearchDrugScreen";
-import SearchFacilityScreen from "@containers/facility/SearchFacilityScreen";
-import SearchFacilityResultScreen from "@containers/facility/SearchFacilityResultScreen";
-import SearchByLocationScreen from "@containers/facility/SearchByLocationScreen";
-import SearchDrugResultScreen from "@containers/drug/SearchDrugResultScreen";
-import DrugDetailScreen from "@containers/drug/DrugDetailScreen";
-import FacilityDetailScreen from "@containers/facility/FacilityDetailScreen";
-import MyFacilityScreen from "@containers/facility/MyFacilityScreen";
-import AddNewDrugStoreScreen from "@containers/facility/AddNewDrugStoreScreen";
-import AddNewClinicScreen from "@containers/facility/AddNewClinicScreen";
-import PhotoViewerScreen from "@containers/image/PhotoViewerScreen";
-import SearchDiseaseScreen from "@containers/disease/SearchDiseaseScreen";
-import DiseaseDetailScreen from "@containers/disease/DiseaseDetailScreen";
-import SearchDiseaseResultScreen from "@containers/disease/SearchDiseaseResultScreen";
-import IntroScreen from "@containers/intro/IntroScreen";
-import AboutScreen from "@containers/utility/AboutScreen";
-import TermsScreen from "@containers/utility/TermsScreen";
-import PolicyScreen from "@containers/utility/PolicyScreen";
-import SpecialistScreen from "@containers/specialist/SpecialistScreen";
-import ConfirmCodeScreen from "@containers/account/ConfirmCodeScreen";
-import ResetPasswordScreen from "@containers/account/ResetPasswordScreen";
-import SymptomScreen from "@containers/symptom/SymptomScreen";
-import GroupChatScreen from "@containers/chat/GroupChatScreen";
-import ChatScreen from "@containers/chat/ChatScreen";
-import ProfileScreen from "@containers/account/ProfileScreen";
-import { EHealthNavigator } from "@ehealth/navigator";
-import NotificationScreen from "@containers/notification/NotificationScreen";
+import ChangePasswordScreen from "@containers/account/ChangePasswordScreen";
+
+//question
 import ListQuestionScreen from "@containers/question/ListQuestionScreen";
 import CreateQuestionStep1Screen from "@containers/question/CreateQuestionStep1Screen";
 import CreateQuestionStep2Screen from "@containers/question/CreateQuestionStep2Screen";
 import DetailQuestionScreen from "@containers/question/DetailQuestionScreen";
-import PaymentWithVNPayScreen from "@containers/payment/PaymentWithVNPayScreen";
-import ChangePasswordScreen from "@containers/account/ChangePasswordScreen";
-import FingerScreen from "@containers/account/FingerScreen";
-import FingerSettingScreen from "@containers/account/FingerSettingScreen";
-//=========BOOKING NAVIGATION
+import ProfileInfo from '@containers/account/ProfileInfo'
+import DetailsDoctorScreen from "@containers/question/DetailsDoctorScreen";
+
+
+//booking
 import AddBookingScreen from "@containers/booking/AddBookingScreen";
+import AddBookingScreen1 from "@containers/booking/AddBookingScreen1";
 import SelectHospitalScreen from "@containers/booking/SelectHospitalScreen";
 import SelectHospitalByLocationScreen from "@containers/booking/SelectHospitalByLocationScreen";
 import SelectTimeScreen from "@containers/booking/SelectTimeScreen";
@@ -57,75 +62,225 @@ import ConfirmBookingScreen from "@containers/booking/ConfirmBookingScreen";
 import CreateBookingSuccessScreen from "@containers/booking/CreateBookingSuccessScreen";
 import PaymentBookingErrorScreen from "@containers/booking/PaymentBookingErrorScreen";
 import DetailsHistoryScreen from "@containers/booking/DetailsHistoryScreen"
-//=========PROFILE NAVIGATION
+
+import CreateProfileScreen from "@containers/profile/CreateProfileScreen";
+import PaymentWithVNPayScreen from "@containers/payment/PaymentWithVNPayScreen";
 import SelectProfileScreen from "@containers/booking/SelectProfileScreen";
-import CreateProfileScreen from "@containers/booking/CreateProfileScreen";
-import ProfileInfo from '@containers/account/ProfileInfo'
-//---------------------------
-import PatientHistoryScreen from "@containers/booking/PatientHistoryScreen";
-//.....details doctor.......
-import DetailsDoctorScreen from "@containers/question/DetailsDoctorScreen";
-import EmptyScreen from "@containers/EmptyScreen2";
+
 //-------get ticket----------------
 import SelectProfileMedicalScreen from "@containers/ticket/SelectProfileMedicalScreen";
 import SelectHealthFacilitiesScreen from "@containers/ticket/SelectHealthFacilitiesScreen";
 import ConfirmGetTicketScreen from "@containers/ticket/ConfirmGetTicketScreen";
 import ScanQRCodeScreen from "@containers/ticket/ScanQRCodeScreen";
 import GetTicketFinishScreen from "@containers/ticket/GetTicketFinishScreen";
-//---------------------------------
-import ViewEhealthDetailScreen from '@containers/ehealth/ViewEhealthDetailScreen';
 
-//........................eHealth................
+//photo viewer
+import PhotoViewerScreen from "@containers/image/PhotoViewerScreen";
+
+//profile
+import ProfileScreen from "@containers/profile/ProfileScreen";
+import ListProfileScreen from '@containers/profile/ListProfileScreen'
+import EditProfileScreen from '@containers/profile/EditProfileScreen'
+import SelectProvinceScreen from "@containers/profile/SelectProvinceScreen";
+import SelectZoneScreen from "@containers/profile/SelectZoneScreen";
+import SelectDistrictScreen from "@containers/profile/SelectDistrictScreen";
+import SelectRelationshipScreen from "@containers/profile/SelectRelationshipScreen";
+import CheckOtpScreen from "@containers/profile/CheckOtpScreen";
+import SendConfirmProfileScreen from "@containers/profile/SendConfirmProfileScreen";
+import ShareDataProfileScreen from '@containers/profile/ShareDataProfileScreen'
+
+
+//
+import HospitalByLocationScreen from '@containers/home/HospitalByLocationScreen'
+import HospitalScreen from '@containers/home/HospitalScreen'
+import DrugScreen from '@containers/home/DrugScreen'
+
+
+//
+import PatientHistoryScreen from "@containers/booking/PatientHistoryScreen";
+//
+import TermsScreen from "@containers/utility/TermsScreen";
+import PolicyScreen from "@containers/utility/PolicyScreen";
+import SpecialistScreen from "@containers/specialist/SpecialistScreen";
+import ConfirmCodeScreen from "@containers/account/ConfirmCodeScreen";
+import ResetPasswordScreen from "@containers/account/ResetPasswordScreen";
+import { fromLeft, zoomIn, zoomOut, fromRight } from 'react-navigation-transitions';
+
+
+const ProfileNavigation = createStackNavigator({
+  selectProfile: SelectProfileScreen,
+  createProfile: CreateProfileScreen,
+  listProfile: { screen: ListProfileScreen },
+  editProfile: { screen: EditProfileScreen },
+  selectProvince: { screen: SelectProvinceScreen },
+  selectDistrict: { screen: SelectDistrictScreen },
+  selectZone: { screen: SelectZoneScreen },
+  profile: { screen: ProfileScreen },
+},
+  {
+    headerMode: "none",
+    header: null,
+    gesturesEnabled: false,
+    navigationOptions: {
+      header: null,
+      gesturesEnabled: false
+    }
+  })
+const GetTicketNavigation = createStackNavigator({
+  selectHealthFacilitiesScreen: { screen: SelectHealthFacilitiesScreen },
+  selectProfileMedical: { screen: SelectProfileMedicalScreen },
+  scanQRCode: { screen: ScanQRCodeScreen },
+  getTicketFinish: { screen: GetTicketFinishScreen },
+  confirmGetTicket: { screen: ConfirmGetTicketScreen },
+},
+  {
+    headerMode: "none",
+    header: null,
+    gesturesEnabled: false,
+    navigationOptions: {
+      header: null,
+      gesturesEnabled: false
+    }
+  })
+
+const TabNavigatorComponent = createBottomTabNavigator(
+  {
+    homeTab: {
+      screen: HomeScreen,
+      navigationOptions: {
+        tabBarLabel: "Home",
+        tabBarIcon: ({ tintColor }) => <ScaledImage height={25} source={require('@images/new/home/ic_home.png')} style={{ tintColor: tintColor }} />,
+      }
+    },
+    communityTab: {
+      screen: AccountScreen,
+      navigationOptions: {
+        tabBarLabel: "Cộng đồng",
+        tabBarIcon: ({ tintColor }) => <ScaledImage touchable={false} height={20} source={require('@images/new/home/ic_community.png')} style={{ tintColor: tintColor }} />,
+        tabBarOnPress: ({ navigation, defaultHandler }) => {
+          snackbar.show("Chức năng đang phát triển");
+        },
+      }
+    },
+    videoTab: {
+      screen: AccountScreen,
+      navigationOptions: {
+        tabBarLabel: "Video",
+        tabBarIcon: ({ tintColor }) => <ScaledImage height={25} source={require('@images/new/home/ic_videos.png')} style={{ tintColor: tintColor }} />,
+        tabBarOnPress: ({ navigation, defaultHandler }) => {
+          snackbar.show("Chức năng đang phát triển");
+        },
+      }
+    },
+    accountTab: {
+      screen: AccountScreen,
+      navigationOptions: {
+        // tabBarOnPress: ({ navigation, defaultHandler }) => {
+        //   if (userProvider.isLogin) {
+        //     defaultHandler();
+        //   } else {
+        //     NavigationService.navigate("login");
+        //   }
+        // },
+        tabBarLabel: "Account",
+        tabBarIcon: ({ tintColor }) => <ScaledImage height={22} source={require('@images/new/home/ic_account.png')} style={{ tintColor: tintColor }} />,
+      }
+    },
+    notificationTab: {
+      screen: NotificationScreen,
+      navigationOptions: {
+        tabBarOnPress: ({ navigation, defaultHandler }) => {
+          if (userProvider.isLogin) {
+            defaultHandler();
+          } else {
+            NavigationService.navigate("login", {
+              // nextScreen: { screen: "notificationTab", param: {} }
+            });
+          }
+        },
+        tabBarLabel: "Thông báo",
+        tabBarIcon: ({ tintColor }) => <NotificationBadge height={25} tintColor={tintColor} />
+      }
+    }
+  },
+  {
+    swipeEnabled: true,
+    animationEnabled: true,
+    tabBarPosition: 'bottom',
+    tabBarOptions: {
+      showLabel: false,
+      activeTintColor: 'blue',
+      inactiveTintColor: 'white',
+      style: {
+        backgroundColor: "#02C39A",
+      },
+    }
+  }
+)
+
+
+// const DrawerNav = createDrawerNavigator({
+//   home: TabNavigatorComponent
+// }, {
+//     // contentComponent: CustomDrawer,
+//     // initialRouteName: 'home',
+//     // drawerPosition: 'left',
+//     // contentOptions: {
+//     //   inactiveTintColor: '#000',
+//     // },
+//     // drawerOpenRoute: 'DrawerOpen',
+//     // drawerCloseRoute: 'DrawerClose'
+//   }
+// );
+
+const handleCustomTransition = ({ scenes }) => {
+  return fromRight();
+}
 
 
 const RootNavigator = createStackNavigator(
   {
-    // createProfileTicketScreen : {screen:CreateProfileTicketScreen},
-    // selectLocationScreen : {screen:SelectLocationScreen},
-    // testVNPay: { screen: TestVNPayScreen },
-    // scanQRCode: { screen: ScanQRCodeScreen },
-    splash: { screen: SplashScreen },
-    groupChat: { screen: GroupChatScreen },
-    groupChatFacility: { screen: GroupChatScreen },
-    chat: { screen: ChatScreen },
+    splash: SplashScreen,
+    qrcodeScanner: QRCodeScannerScreen,
     intro: { screen: IntroScreen },
-    home: { screen: HomeScreen },
-    login: { screen: LoginScreen },
-    forgotPassword: { screen: ForgotPasswordScreen },
-    enterPassword: { screen: EnterPasswordScreen },
-    register: { screen: RegisterScreen },
-    searchFacility: { screen: SearchFacilityScreen },
-    searchFacilityResult: { screen: SearchFacilityResultScreen },
-    searchFacilityByLocation: { screen: SearchByLocationScreen },
-    searchDrug: { screen: SearchDrugScreen },
-    searchDrugResult: { screen: SearchDrugResultScreen },
-    searchDisease: { screen: SearchDiseaseScreen },
-    diseaseDetail: { screen: DiseaseDetailScreen },
-    searchDiseaseResult: { screen: SearchDiseaseResultScreen },
-    drugDetailScreen: { screen: DrugDetailScreen },
-    facilityDetailScreen: { screen: FacilityDetailScreen },
-    myFacility: { screen: MyFacilityScreen },
-    addNewDrugStore: { screen: AddNewDrugStoreScreen },
-    addNewClinic: { screen: AddNewClinicScreen },
-    photoViewer: { screen: PhotoViewerScreen },
     about: { screen: AboutScreen },
     terms: { screen: TermsScreen },
     policy: { screen: PolicyScreen },
-    specialist: { screen: SpecialistScreen },
+    //profile
+    selectProfile: { screen: SelectProfileScreen },
+    createProfile: { screen: CreateProfileScreen },
+    listProfileUser: { screen: ListProfileScreen },
+    editProfile: { screen: EditProfileScreen },
+    shareDataProfile: { screen: ShareDataProfileScreen },
+    checkOtp: { screen: CheckOtpScreen },
+    selectProvince: { screen: SelectProvinceScreen },
+    selectDistrict: { screen: SelectDistrictScreen },
+    selectRelationship: { screen: SelectRelationshipScreen },
+    selectZone: { screen: SelectZoneScreen },
+    profile: { screen: ProfileScreen },
+    sendConfirmProfile: { screen: SendConfirmProfileScreen },
+    // listProfileUser: { screen: ListProfileScreen },
+    //
+    home: TabNavigatorComponent,
+    homeTab: HomeScreen,
+    notificationTab: NotificationScreen,
+    ehealth: EHealthNavigator,
+    viewDetailEhealth: { screen: ViewEhealthDetailScreen },
+    login: { screen: LoginScreen },
+    forgotPassword: { screen: ForgotPasswordScreen },
     confirmCode: { screen: ConfirmCodeScreen },
     resetPassword: { screen: ResetPasswordScreen },
-    symptom: { screen: SymptomScreen },
-    profile: { screen: ProfileScreen },
-    notification: { screen: NotificationScreen },
-    listQuestion: { screen: ListQuestionScreen },
+    enterPassword: { screen: EnterPasswordScreen },
+    register: { screen: RegisterScreen },
+    listQuestion: ListQuestionScreen,
     createQuestionStep1: { screen: CreateQuestionStep1Screen },
     createQuestionStep2: { screen: CreateQuestionStep2Screen },
     detailQuestion: { screen: DetailQuestionScreen },
-    changePassword: { screen: ChangePasswordScreen },
-    FingerScreen: { screen: FingerScreen },
-    FingerSettingScreen: { screen: FingerSettingScreen },
-    //---------------booking navigation
-    addBooking: { screen: AddBookingScreen },
+    detailsProfile: { screen: ProfileInfo },
+    detailsDoctor: { screen: DetailsDoctorScreen },
+    // booking navigation
+    addBooking: AddBookingScreen,
+    addBooking1: AddBookingScreen1,
     selectHospital: { screen: SelectHospitalScreen },
     selectHospitalByLocation: { screen: SelectHospitalByLocationScreen },
     selectTime: { screen: SelectTimeScreen },
@@ -136,27 +291,27 @@ const RootNavigator = createStackNavigator(
     createBookingSuccess: { screen: CreateBookingSuccessScreen },
     paymentBookingError: { screen: PaymentBookingErrorScreen },
     detailsHistory: { screen: DetailsHistoryScreen },
-    paymentVNPay: { screen: PaymentWithVNPayScreen },
-    filterSpecialist :{screen : FilterSpecialistScreen},
-    //---------------------------------
     createProfile: { screen: CreateProfileScreen },
+    paymentVNPay: { screen: PaymentWithVNPayScreen },
+    filterSpecialist: { screen: FilterSpecialistScreen },
     selectProfile: { screen: SelectProfileScreen },
-    detailsProfile: { screen: ProfileInfo },
-    detailsDoctorScreen: { screen: DetailsDoctorScreen },
+    patientHistory: { screen: PatientHistoryScreen },
+
+    //get Ticket
+    getTicket: GetTicketNavigation,
+    //menu profile
+    setting: { screen: SettingScreen },
+    changePassword: { screen: ChangePasswordScreen },
     //
-    PatientHistoryScreen: { screen: PatientHistoryScreen },
-    //------------------get ticket ----------------
-    selectHealthFacilitiesScreen: { screen: SelectHealthFacilitiesScreen },
-    selectProfileMedical: { screen: SelectProfileMedicalScreen },
-    scanQRCode: { screen: ScanQRCodeScreen },
-    getTicketFinish: { screen: GetTicketFinishScreen },
-    confirmGetTicket: { screen: ConfirmGetTicketScreen },
-    //----------------------------------------
-    //----------------ehealth-----------------
-    ehealth: { screen: EHealthNavigator },
-    viewDetailEhealth: { screen: ViewEhealthDetailScreen },
-   
-    emptyScreen: { screen: EmptyScreen }
+    //
+    specialist: { screen: SpecialistScreen },
+
+
+
+    hospital: { screen: HospitalScreen },
+    drug: { screen: DrugScreen },
+    hospitalByLocation: { screen: HospitalByLocationScreen },
+    photoViewer: { screen: PhotoViewerScreen }
   },
   {
     headerMode: "none",
@@ -175,7 +330,8 @@ const RootNavigator = createStackNavigator(
       gesturesEnabled: false
     },
     // mode: Platform.OS == "ios" ? "modal" : "card"
+    transitionConfig: (nav) => handleCustomTransition(nav)
   }
-)
-
-export { RootNavigator };
+);
+let AppContainer = createAppContainer(RootNavigator)
+export { AppContainer };
