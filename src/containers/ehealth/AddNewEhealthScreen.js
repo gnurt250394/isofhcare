@@ -18,7 +18,52 @@ class AddNewEhealthScreen extends Component {
         };
     }
     onScanQr = () => {
-
+        this.props.navigation.navigate("qrcodeScanner", {
+            title: "QUÉT MÃ HỒ SƠ",
+            textHelp: "Di chuyển camera đến vùng chứa mã hồ sơ để quét",
+            onCheckData: data => {
+                return new Promise((resolve, reject) => {
+                    ehealthProvider.addEhealthWithCode(this.state.hospital.hospital.id, data).then(res => {
+                        switch (res.code) {
+                            case 2:
+                                reject(2);
+                                break
+                            case 3:
+                                reject(3);
+                                break
+                            case 4:
+                                reject(4);
+                                break
+                            case 0:
+                                resolve(data);
+                                break
+                        }
+                        reject(-1);
+                    });
+                });
+            },
+            onSuccess: data => {
+                this.props.dispatch({ type: constants.action.action_select_hospital_ehealth, value: this.state.hospital })
+                this.props.navigation.replace('listProfile');
+                snackbar.show('Thêm y bạ thành công', 'success')
+            },
+            onError: error => {
+                switch (error) {
+                    case 2:
+                        snackbar.show('Không lấy được thông tin tài khoản, xin vui lòng thử lại', 'danger');
+                        break;
+                    case 3:
+                        snackbar.show('Không tìm thấy y bạ', 'danger')
+                        break;
+                    case 4:
+                        snackbar.show('Tài khoản của bạn không sở hữu y bạ này', 'danger')
+                        break;
+                    default:
+                        snackbar.show('Xác thực không thành công', 'danger')
+                        break;
+                }
+            }
+        });
     }
     onInsertCode = () => {
         this.setState({
@@ -136,7 +181,7 @@ const styles = StyleSheet.create({
         minWidth: '50%',
         maxWidth: '50%',
         marginTop: 30,
-        fontSize:18
+        fontSize: 18
 
     },
     btnConfirm: {
