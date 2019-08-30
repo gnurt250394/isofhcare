@@ -214,7 +214,7 @@ class AccountScreen extends Component {
                 height={24}
               />
             </TouchableOpacity> */}
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={[styles.itemMenu, { marginTop: 40 }]}
                 onPress={() => {
                   this.props.navigation.navigate("listProfileUser");
@@ -226,9 +226,9 @@ class AccountScreen extends Component {
                   width={30}
                   height={30}
                 />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <TouchableOpacity
-                style={[styles.itemMenu]}
+                style={[styles.itemMenu, { marginTop: 40 }]}
                 onPress={() => {
                   this.props.navigation.navigate("ehealth");
                 }}
@@ -240,7 +240,7 @@ class AccountScreen extends Component {
                   height={24}
                 />
               </TouchableOpacity>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={[styles.itemMenu]}
                 onPress={() => {
                   snackbar.show("Chức năng đang phát triển");
@@ -252,8 +252,8 @@ class AccountScreen extends Component {
                   width={24}
                   height={24}
                 />
-              </TouchableOpacity>
-              <TouchableOpacity
+              </TouchableOpacity> */}
+              {/* <TouchableOpacity
                 style={[styles.itemMenu]}
                 onPress={() => {
                   snackbar.show("Chức năng đang phát triển");
@@ -265,7 +265,7 @@ class AccountScreen extends Component {
                   width={24}
                   height={24}
                 />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <TouchableOpacity
                 style={[styles.itemMenu]}
                 onPress={() => {

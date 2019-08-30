@@ -490,7 +490,7 @@ class ConfirmBookingScreen extends Component {
                     {/* <View>
                         <Text style={styles.sodu}>Số dư hiện tại: 350.000đ</Text>
                     </View> */}
-                    {
+                    {/* {
                         (this.state.service && this.state.service.length) ?
                             <React.Fragment>
                                 <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 1 })}>
@@ -526,7 +526,7 @@ class ConfirmBookingScreen extends Component {
                                     <Text style={styles.ckeckthanhtoan}>PAYOO - Cửa hàng tiện ích</Text>
                                 </TouchableOpacity>
                             </React.Fragment> : null
-                    }
+                    } */}
                     <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 2 })}>
                         <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
                             {this.state.paymentMethod == 2 &&
