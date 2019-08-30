@@ -1,4 +1,4 @@
-package com.isofh.appisofhcare;
+package com.isofh.isofhcare;
 import android.app.Application;
 
 import com.BV.LinearGradient.LinearGradientPackage;
