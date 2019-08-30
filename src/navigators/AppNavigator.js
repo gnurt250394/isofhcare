@@ -12,6 +12,8 @@ import SplashScreen from "@containers/SplashScreen";
 import IntroScreen from "@containers/intro/IntroScreen";
 //about
 import AboutScreen from "@containers/utility/AboutScreen";
+//scan qrcode
+import QRCodeScannerScreen from "@containers/qrcode/QRCodeScannerScreen";
 
 
 // import HomeScreen from "@containers/HomeScreen";
@@ -239,6 +241,7 @@ const handleCustomTransition = ({ scenes }) => {
 const RootNavigator = createStackNavigator(
   {
     splash: SplashScreen,
+    qrcodeScanner: QRCodeScannerScreen,
     intro: { screen: IntroScreen },
     about: { screen: AboutScreen },
     terms: { screen: TermsScreen },
