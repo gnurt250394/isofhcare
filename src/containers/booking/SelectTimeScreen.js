@@ -152,7 +152,9 @@ class SelectTimeScreen extends Component {
         while (firstDay <= lastDay) {
             let key = firstDay.format("yyyy-MM-dd");;
             obj[key] = {}
-            if (new Date(key) <= new Date() || firstDay.getDay() == 6 || firstDay.getDay() == 0) {
+            if (new Date(key) <= new Date() 
+            // || firstDay.getDay() == 6 
+            || firstDay.getDay() == 0) {
                 obj[key].disabled = true;
                 obj[key].disableTouchEvent = true;
             } else {
