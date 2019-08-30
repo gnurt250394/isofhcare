@@ -21,7 +21,7 @@ import {
     Platform,
     View,
     Linking,
-    Alert
+    Alert    
 } from 'react-native';
 
 import ticketProvider from '@data-access/ticket-provider';
