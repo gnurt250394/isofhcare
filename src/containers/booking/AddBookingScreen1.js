@@ -384,7 +384,7 @@ class AddBookingScreen extends Component {
             icBack={require('@images/new/left_arrow_white.png')}
             isLoading={this.state.isLoading}
             iosBarStyle={'light-content'}
-            statusbarBackgroundColor="#4BBA7B"
+            statusbarBackgroundColor="#02C39A"
             actionbarStyle={styles.actionbarStyle}
             titleStyle={styles.titleStyle}
         // menuButton={<TouchableOpacity style={styles.menu} onPress={() => snackbar.show(constants.msg.app.in_development)}><ScaleImage style={styles.img} height={20} source={require("@images/new/booking/ic_info.png")} /></TouchableOpacity>}
@@ -843,7 +843,7 @@ const styles = StyleSheet.create({
         marginRight: 25
     },
     actionbarStyle: {
-        backgroundColor: '#4BBA7B',
+        backgroundColor: '#02C39A',
         borderBottomWidth: 0
     },
     titleStyle:

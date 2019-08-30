@@ -11,7 +11,7 @@ import bookingProvider from "@data-access/booking-provider";
 import { connect } from "react-redux";
 import ActivityPanel from "@components/ActivityPanel";
 import ScaledImage from "mainam-react-native-scaleimage";
-import QRCode from 'react-native-qrcode';
+import QRCode from 'react-native-qrcode-svg';
 import dateUtils from "mainam-react-native-date-utils";
 import stringUtils from "mainam-react-native-string-utils";
 import clientUtils from '@utils/client-utils';
@@ -218,8 +218,11 @@ class DetailsHistoryScreen extends Component {
                   <TouchableOpacity onPress={this.onQrClick} style={{ marginRight: 10 }}>
                     <QRCode
                       value={this.state.booking.codeBooking ? this.state.booking.codeBooking : 0}
+                      logo={require('@images/new/logo.png') }
+                      logoSize={20}
                       size={80}
-                      fgColor='white' />
+                      logoBackgroundColor='transparent'
+                    />
                   </TouchableOpacity>
                 </View>
               )}
@@ -243,7 +246,7 @@ class DetailsHistoryScreen extends Component {
                 </View>
               </View> : null
             }
-            
+
 
             <View style={{ backgroundColor: '#EDECED', height: 1, marginLeft: 12 }}></View>
             <View style={[styles.viewLocation, { alignItems: 'flex-start' }]}>
@@ -366,7 +369,7 @@ class DetailsHistoryScreen extends Component {
             ></Barcode>
             </View>
         </Modal> */}
-        
+
       </ActivityPanel>
     );
   }

@@ -26,7 +26,7 @@ class SettingScreen extends Component {
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'dark-content'}
                 iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#4BBA7B"
+                statusbarBackgroundColor="#02C39A"
                 actionbarStyle={styles.actionbarStyle}
                 titleStyle={{
                     color: '#FFF'
@@ -35,7 +35,7 @@ class SettingScreen extends Component {
                 <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
                     {/* <DrawerItems></DrawerItems> */}
                     <View style={{ marginTop: 50 }}>
-                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}><ScaledImage width={30} source={require('@images/new/profile/ic_setting.png')}></ScaledImage><Text style={{ fontSize: 20, color: '#4BBA7B', fontWeight: '600' }}>Cài Đặt</Text></View>
+                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}><ScaledImage width={30} source={require('@images/new/profile/ic_setting.png')}></ScaledImage><Text style={{ fontSize: 20, color: '#02C39A', fontWeight: '600' }}>Cài Đặt</Text></View>
                         <TouchableOpacity onPress={() => NavigationService.navigate('changePassword')} style={styles.viewDrawer}>
                             <ScaledImage height={20} source={require('@images/new/profile/ic_change_password.png')} />
                             <Text style={styles.txDrawer}>Đổi mật khẩu</Text>
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
         borderColor: '#fff',
     },
     actionbarStyle: {
-        backgroundColor: '#4BBA7B',
+        backgroundColor: '#02C39A',
         borderBottomWidth: 0
     },
     txVersion: {

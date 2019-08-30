@@ -416,7 +416,7 @@ class NotificationScreen extends Component {
         menuButton={this.menuCreate()}
         isLoading={this.state.isLoading}
         iosBarStyle={'light-content'}
-        statusbarBackgroundColor="#4BBA7B"
+        statusbarBackgroundColor="#02C39A"
         actionbarStyle={styles.actionbarStyle}
         titleStyle={styles.titleStyle}
         hideBackButton={true}
@@ -464,7 +464,7 @@ const styles = StyleSheet.create({
     height: 50
   },
   actionbarStyle: {
-    backgroundColor: '#4BBA7B',
+    backgroundColor: '#02C39A',
     borderBottomWidth: 0
   },
   titleStyle: {

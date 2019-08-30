@@ -98,6 +98,7 @@ class LoginScreen extends Component {
 		if (!this.form.isValid()) {
 			return;
 		}
+
 		this.setState({ isLoading: true }, () => {
 			userProvider.login(this.state.email.trim(), this.state.password).then(s => {
 				this.setState({ isLoading: false });
@@ -129,6 +130,8 @@ class LoginScreen extends Component {
 					case 1:
 						snackbar.show(constants.msg.user.account_blocked, "danger");
 						return;
+					case 500:
+						snackbar.show(constants.msg.error_occur, "danger");
 				}
 			}).catch(e => {
 				this.setState({ isLoading: false });

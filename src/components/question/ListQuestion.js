@@ -179,4 +179,4 @@ function mapStateToProps(state) {
         userApp: state.userApp
     };
 }
-export default connect(mapStateToProps, null, null, { withRef: true })(ListQuestion);
+export default connect(mapStateToProps, null, null, { forwardRef: true })(ListQuestion);

@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   txLabel:{
-    color:'#4BBA7B'
+    color:'#02C39A'
   },
   txContent:{
     marginLeft:5,

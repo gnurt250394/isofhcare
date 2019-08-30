@@ -95,15 +95,15 @@ class HomeScreen extends Component {
       refreshing: true
     }, () => {
       // let promise = [];
-      // promise.push(this.slide.getWrappedInstance().getAds());
-      // promise.push(this.slide.getWrappedInstance().getAds());
-      // promise.push(this.slide.getWrappedInstance().getAds());
-      // promise.push(this.slide.getWrappedInstance().getAds());
+      // promise.push(this.slide.getAds());
+      // promise.push(this.slide.getAds());
+      // promise.push(this.slide.getAds());
+      // promise.push(this.slide.getAds());
       // Promise.all(promise).then(values => {
-      //   this.slide.getWrappedInstance().setAds(values[0]);
-      //   this.slide.getWrappedInstance().setAds(values[0]);
-      //   this.slide.getWrappedInstance().setAds(values[0]);
-      //   this.slide.getWrappedInstance().setAds(values[0]);
+      //   this.slide.setAds(values[0]);
+      //   this.slide.setAds(values[0]);
+      //   this.slide.setAds(values[0]);
+      //   this.slide.setAds(values[0]);
       //   this.setState({ refreshing: false })
       // })
     })
@@ -112,14 +112,14 @@ class HomeScreen extends Component {
   render() {
     return (
       <ActivityPanel
-        statusbarBackgroundColor="#4BBA7B"
+        statusbarBackgroundColor="#02C39A"
         isLoading={this.state.isLoading}
         hideActionbar={true}
       >
         <View style={{ flex: 1 }}>
           <Actionbar />
           <View style={{ position: 'relative' }}>
-            <View style={{ height: 150, backgroundColor: '#4BBA7B', position: "absolute", top: 0, left: 0, right: 0 }}></View>
+            <View style={{ height: 150, backgroundColor: '#02C39A', position: "absolute", top: 0, left: 0, right: 0 }}></View>
             <ScrollView
               onScroll={this.handleScroll}
               ref={(c) => { this.scroll = c }}
@@ -152,13 +152,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     flex: 1,
-    backgroundColor: "#4BBA7B"
+    backgroundColor: "#02C39A"
   },
   tab: {
     alignItems: "center",
     justifyContent: "center",
     flex: 1,
-    backgroundColor: "#4BBA7B"
+    backgroundColor: "#02C39A"
   },
   tab_label_selected: {
     marginTop: 5,

@@ -126,7 +126,8 @@ module.exports = {
       LASTEST_INFO: "LASTEST_INFO",
       LIST_BANNER: "LIST_BANNER",
       DATA_TOP_NEWS: 'DATA_TOP_NEWS',
-      DATA_TOP_HOSPITAL: 'DATA_TOP_HOSPITAL'
+      DATA_TOP_HOSPITAL: 'DATA_TOP_HOSPITAL',
+      KEY_HAS_UPDATE_NEW_VERSION: "KEY_HAS_UPDATE_NEW_VERSION"
     }
   },
   msg: {
@@ -555,10 +556,10 @@ module.exports = {
       update_cover: isofhcare_service + 'user/update-cover',
       update_avatar: isofhcare_service + 'medical-records/update-avatar',
       send_confirm: isofhcare_service + 'medical-records/send-confirm',
-      share_permission : isofhcare_service + 'medical-records/update-permission',
-      check_otp : isofhcare_service + 'medical-records/check-otp',
-      resend_otp : isofhcare_service + 'medical-records/resend-otp',
-      confirm : isofhcare_service + 'medical-records/confirm',
+      share_permission: isofhcare_service + 'medical-records/update-permission',
+      check_otp: isofhcare_service + 'medical-records/check-otp',
+      resend_otp: isofhcare_service + 'medical-records/resend-otp',
+      confirm: isofhcare_service + 'medical-records/confirm',
       get_details_medical: isofhcare_service + 'medical-records/get-detail-medical-record'
     },
     serviceType: {
@@ -590,7 +591,8 @@ module.exports = {
       get_group_patient: isofhcare_service + 'booking/get-group-patient-history',
       update_data_user: isofhcare_service + 'patient-history-booking/update-data-note',
       search_profile_user: isofhcare_service + 'user/search',
-      share_with_profile: isofhcare_service + 'booking/share-user'
+      share_with_profile: isofhcare_service + 'booking/share-user',
+      add_ehealth_with_code:isofhcare_service + 'patient-history-booking/verify'
     },
     home: {
       get_list_drug: isofhcare_service + '/medicine/list-medicine-top',

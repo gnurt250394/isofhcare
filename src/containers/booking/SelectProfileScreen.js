@@ -10,7 +10,7 @@ import medicalRecordProvider from '@data-access/medical-record-provider';
 import ImageLoad from 'mainam-react-native-image-loader';
 import clientUtils from '@utils/client-utils';
 import constants from '@resources/strings';
-
+import profileProvider from '@data-access/profile-provider'
 class SelectProfileScreen extends Component {
     constructor(props) {
         super(props);
@@ -43,35 +43,40 @@ class SelectProfileScreen extends Component {
     onLoad() {
         const { page, size } = this.state;
         this.setState({
-            loading: true,
+            // loading: true,
             refreshing: page == 1,
             loadMore: page != 1
         }, () => {
-            medicalRecordProvider.getByUser(this.props.userApp.currentUser.id, page, size).then(s => {
+            profileProvider.getListProfile().then(s => {
                 this.setState({
-                    loading: false,
+                    // loading: false,
                     refreshing: false,
-                    loadMore: false
+                    // loadMore: false
                 }, () => {
                     switch (s.code) {
                         case 0:
-                            if (s.data && s.data.data) {
-                                var list = [];
-                                var finish = false;
-                                if (s.data.data.length == 0) {
-                                    finish = true;
-                                }
-                                if (page != 1) {
-                                    list = this.state.data;
-                                    list.push.apply(list, s.data.data);
-                                } else {
-                                    list = s.data.data;
-                                }
-                                this.setState({
-                                    data: [...list],
-                                    finish: finish
-                                });
-                            }
+                            // if (s.data && s.data.data) {
+                            //     var list = [];
+                            //     var finish = false;
+                            //     if (s.data.data.length == 0) {
+                            //         finish = true;
+                            //     }
+                            //     if (page != 1) {
+                            //         list = this.state.data;
+                            //         list.push.apply(list, s.data.data);
+                            //     } else {
+                            //         list = s.data.data;
+                            //     }
+                            //     this.setState({
+                            //         data: [...list],
+                            //         finish: finish
+                            //     });
+                            // }
+
+                            this.setState({
+                                data: s.data,
+
+                            });
                             break;
                     }
                 });
@@ -99,15 +104,15 @@ class SelectProfileScreen extends Component {
             );
     }
     selectPofile(profile) {
-       this.setState({
-           disable:true
-       },() => {
-        let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
-        if (callback) {
-            callback(profile);
-        }
-        this.props.navigation.pop();
-       })
+        this.setState({
+            disable: true
+        }, () => {
+            let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
+            if (callback) {
+                callback(profile);
+            }
+            this.props.navigation.pop();
+        })
     }
     render() {
         return (
@@ -130,7 +135,7 @@ class SelectProfileScreen extends Component {
                                 <View style={{ alignItems: "center", marginTop: 50 }}>
                                     <Text style={{ fontStyle: "italic" }}>
                                         {constants.none_info}
-                </Text>
+                                    </Text>
                                 </View>
                             ) : null
                     }
@@ -138,7 +143,7 @@ class SelectProfileScreen extends Component {
                     renderItem={({ item, index }) => {
                         const source = item.medicalRecords && item.medicalRecords.avatar ? { uri: item.medicalRecords.avatar.absoluteUrl() } : require("@images/new/user.png");
 
-                        return (<TouchableOpacity style={styles.bn} disabled = {this.state.disable} onPress={this.selectPofile.bind(this, item)}>
+                        return (<TouchableOpacity style={styles.bn} disabled={this.state.disable} onPress={this.selectPofile.bind(this, item)}>
                             <ImageLoad
                                 resizeMode="cover"
                                 imageStyle={{ borderRadius: 20, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}

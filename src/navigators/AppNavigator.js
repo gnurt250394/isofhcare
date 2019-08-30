@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import NavigationService from "@navigators/NavigationService";
 import userProvider from '@data-access/user-provider';
 
-import { createDrawerNavigator, DrawerItems, createBottomTabNavigator, TabBarBottom, createStackNavigator } from 'react-navigation';
+import { createDrawerNavigator, DrawerItems, createBottomTabNavigator, TabBarBottom, createStackNavigator, createAppContainer } from 'react-navigation';
 import NotificationBadge from "@components/notification/NotificationBadge";
 
 //splash
@@ -12,13 +12,14 @@ import SplashScreen from "@containers/SplashScreen";
 import IntroScreen from "@containers/intro/IntroScreen";
 //about
 import AboutScreen from "@containers/utility/AboutScreen";
+//scan qrcode
+import QRCodeScannerScreen from "@containers/qrcode/QRCodeScannerScreen";
 
 
-import HomeScreen from "@containers/HomeScreen";
-import HomeScreenOld from "@containers/HomeScreenOld";
-import AccountScreen from "@containers/account/AccountScreen";
+// import HomeScreen from "@containers/HomeScreen";
+import HomeScreen from "@containers/home/tab/HomeScreen";
+import AccountScreen from "@containers/home/tab/AccountScreen";
 import NotificationScreen from "@containers/notification/NotificationScreen";
-import MenuProfileScreen from '@containers/profile/MenuProfile';
 
 import CustomDrawer from '@components/navigators/CustomDrawer'
 import ScaledImage from 'mainam-react-native-scaleimage';
@@ -103,6 +104,7 @@ import PolicyScreen from "@containers/utility/PolicyScreen";
 import SpecialistScreen from "@containers/specialist/SpecialistScreen";
 import ConfirmCodeScreen from "@containers/account/ConfirmCodeScreen";
 import ResetPasswordScreen from "@containers/account/ResetPasswordScreen";
+import { fromLeft, zoomIn, zoomOut, fromRight } from 'react-navigation-transitions';
 
 
 const ProfileNavigation = createStackNavigator({
@@ -144,14 +146,14 @@ const GetTicketNavigation = createStackNavigator({
 const TabNavigatorComponent = createBottomTabNavigator(
   {
     homeTab: {
-      screen: HomeScreenOld,
+      screen: HomeScreen,
       navigationOptions: {
         tabBarLabel: "Home",
         tabBarIcon: ({ tintColor }) => <ScaledImage height={25} source={require('@images/new/home/ic_home.png')} style={{ tintColor: tintColor }} />,
       }
     },
     communityTab: {
-      screen: MenuProfileScreen,
+      screen: AccountScreen,
       navigationOptions: {
         tabBarLabel: "Cộng đồng",
         tabBarIcon: ({ tintColor }) => <ScaledImage touchable={false} height={20} source={require('@images/new/home/ic_community.png')} style={{ tintColor: tintColor }} />,
@@ -161,7 +163,7 @@ const TabNavigatorComponent = createBottomTabNavigator(
       }
     },
     videoTab: {
-      screen: MenuProfileScreen,
+      screen: AccountScreen,
       navigationOptions: {
         tabBarLabel: "Video",
         tabBarIcon: ({ tintColor }) => <ScaledImage height={25} source={require('@images/new/home/ic_videos.png')} style={{ tintColor: tintColor }} />,
@@ -191,7 +193,9 @@ const TabNavigatorComponent = createBottomTabNavigator(
           if (userProvider.isLogin) {
             defaultHandler();
           } else {
-            NavigationService.navigate("login");
+            NavigationService.navigate("login", {
+              // nextScreen: { screen: "notificationTab", param: {} }
+            });
           }
         },
         tabBarLabel: "Thông báo",
@@ -208,7 +212,7 @@ const TabNavigatorComponent = createBottomTabNavigator(
       activeTintColor: 'blue',
       inactiveTintColor: 'white',
       style: {
-        backgroundColor: "#4BBA7B",
+        backgroundColor: "#02C39A",
       },
     }
   }
@@ -229,9 +233,15 @@ const TabNavigatorComponent = createBottomTabNavigator(
 //   }
 // );
 
+const handleCustomTransition = ({ scenes }) => {
+  return fromRight();
+}
+
+
 const RootNavigator = createStackNavigator(
   {
     splash: SplashScreen,
+    qrcodeScanner: QRCodeScannerScreen,
     intro: { screen: IntroScreen },
     about: { screen: AboutScreen },
     terms: { screen: TermsScreen },
@@ -252,6 +262,8 @@ const RootNavigator = createStackNavigator(
     // listProfileUser: { screen: ListProfileScreen },
     //
     home: TabNavigatorComponent,
+    homeTab: HomeScreen,
+    notificationTab: NotificationScreen,
     ehealth: EHealthNavigator,
     viewDetailEhealth: { screen: ViewEhealthDetailScreen },
     login: { screen: LoginScreen },
@@ -318,8 +330,8 @@ const RootNavigator = createStackNavigator(
       gesturesEnabled: false
     },
     // mode: Platform.OS == "ios" ? "modal" : "card"
+    transitionConfig: (nav) => handleCustomTransition(nav)
   }
 );
-
-
-export { RootNavigator };
+let AppContainer = createAppContainer(RootNavigator)
+export { AppContainer };

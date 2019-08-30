@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
 import { View } from 'react-native';
 import { connect } from 'react-redux';
-import { WebView } from 'react-native';
+import { WebView } from "react-native-webview";
 import dateUtils from 'mainam-react-native-date-utils';
 import snackbarUtils from '@utils/snackbar-utils';
 class PaymentWithVNPayScreen extends Component {

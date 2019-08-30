@@ -15,9 +15,16 @@ import SearchProfileScreen from '@containers/ehealth/SearchProfileScreen';
 import HistoryEhealthScreen from '@containers/ehealth/HistoryEhealthScreen';
 import HistorySharingScreen from '@containers/ehealth/HistorySharingScreen';
 import EhealthSharingScreen from '@containers/ehealth/EhealthSharingScreen';
+import { fromLeft, zoomIn, zoomOut, fromRight } from 'react-navigation-transitions';
+import AddNewEhealthScreen from '@containers/ehealth/AddNewEhealthScreen';
+import SelectLocationEhealthScreen from '@containers/ehealth/SelectLocationEhealthScreen';
 
 
 
+
+const handleCustomTransition = ({ scenes }) => {
+    return fromRight();
+  }
 const EHealthNavigator = createStackNavigator({
     ehealth: { screen: EhealthScreen },
     listProfile: { screen: ListProfileScreen },
@@ -33,6 +40,8 @@ const EHealthNavigator = createStackNavigator({
     viewMoney: { screen: ViewMoneyScreen },
     viewSurgeryResult: { screen: ViewSurgeryResultScreen },
     searchProfile: { screen: SearchProfileScreen },
+    addNewEhealth:{screen:AddNewEhealthScreen},
+    selectLocationEhealth:{screen:SelectLocationEhealthScreen}
 }, {
         headerMode: 'none',
         header: null,
@@ -41,7 +50,8 @@ const EHealthNavigator = createStackNavigator({
             header: null,
             gesturesEnabled: false
         },
-        mode: Platform.OS == 'ios' ? 'modal' : 'card'
+        // mode: Platform.OS == 'ios' ? 'modal' : 'card'
+        transitionConfig: (nav) => handleCustomTransition(nav)
     });
 
 export { EHealthNavigator };

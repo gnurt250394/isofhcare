@@ -36,7 +36,7 @@ class HistorySharingScreen extends Component {
     viewResult = (item) => {
         console.log(item);
         this.setState({ isLoading: true }, () => {
-            resultUtils.getDetail(item.patientHistoryId, this.props.ehealth.hospital.hospital.id).then(result => {
+            resultUtils.getDetail(item.patientHistoryId, this.props.ehealth.hospital.hospital.id, item.id).then(result => {
                 this.setState({ isLoading: false }, () => {
                     if (!result.hasResult)
                         snackbar.show(constants.msg.ehealth.not_result_ehealth_in_day, "danger");
@@ -160,12 +160,11 @@ class HistorySharingScreen extends Component {
     render() {
         return (
             <ActivityPanel style={styles.container}
-                // title="HỒ SƠ Y BẠ GIA ĐÌNH"
                 isLoading={this.state.isLoading}
-                title={"Lịch sử chia sẻ y bạ"}
+                title={"LỊCH SỬ CHIA SẺ"}
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#4BBA7B"
+                statusbarBackgroundColor="#02C39A"
                 actionbarStyle={styles.actionbarStyle}
                 titleStyle={styles.titleStyle}
             >
@@ -227,7 +226,7 @@ const styles = StyleSheet.create({
 
     },
     actionbarStyle: {
-        backgroundColor: '#4BBA7B',
+        backgroundColor: '#02C39A',
         borderBottomWidth: 0
     },
     imageStyle: { borderRadius: 30, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' },

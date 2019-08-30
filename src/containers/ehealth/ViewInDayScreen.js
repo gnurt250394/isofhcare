@@ -73,6 +73,7 @@ class ViewInDateScreen extends Component {
             if (!obj2[key])
                 obj2[key] = item;
         });
+        let id = "";
         for (var i = 1; i <= 31; i++) {
             try {
                 var date = new Date(month + "/" + i + "/" + year);
@@ -85,7 +86,6 @@ class ViewInDateScreen extends Component {
                         index = i - 1;
                         patientHistoryId = patientHistory.patientHistoryId;
                         id = patientHistory.id;
-
                     }
                     obj.push(date);
                 }
@@ -106,13 +106,13 @@ class ViewInDateScreen extends Component {
                     }
                 }, 200);
             }
-            if (patientHistoryId && id)
-                this.getDetailPatientHistory(patientHistoryId,id)
+            if (patientHistoryId)
+                this.getDetailPatientHistory(patientHistoryId, id)
         });
     }
-    getDetailPatientHistory(patientHistoryId,id) {
+    getDetailPatientHistory(patientHistoryId, id) {
         this.setState({ isLoading: true }, () => {
-            resultUtils.getDetail(patientHistoryId, this.props.ehealth.hospital.hospital.id,id).then(result => {
+            resultUtils.getDetail(patientHistoryId, this.props.ehealth.hospital.hospital.id, id).then(result => {
                 this.setState({ result: result.result, resultDetail: result.resultDetail, hasResult: result.hasResult, isLoading: false }, () => {
                     if (!result.hasResult)
                         snackbar.show(constants.msg.ehealth.not_result_ehealth_in_day, "danger");
@@ -129,7 +129,7 @@ class ViewInDateScreen extends Component {
             return;
         };
         this.setState({ dateSelected: item }, () => {
-            this.getDetailPatientHistory(item.patientHistory.patientHistoryId,item.patientHistory.id)
+            this.getDetailPatientHistory(item.patientHistory.patientHistoryId)
         })
     }
     viewCheckupResult() {
@@ -402,11 +402,11 @@ class ViewInDateScreen extends Component {
             try {
                 let patientHistoryId = this.state.histories[this.state.dateSelected.format("yyyy-MM-dd")].history.patientHistoryId;
                 let hospitalId = this.props.ehealth.patient.hospitalEntity.id;
-                resultUtils.getDetail(patientHistoryId, hospitalId).then(result => {
+                resultUtils.getDetail(patientHistoryId, hospitalId, this.state.histories[this.state.dateSelected.format("yyyy-MM-dd")].history.id).then(result => {
                     if (result) {
                         result = result.result;
                         result.hospital = this.props.ehealth.hospital.hospital;
-                        this.exportPdfCom.getWrappedInstance().exportPdf({
+                        this.exportPdfCom.exportPdf({
                             type: "all",
                             result: result,
                             fileName: constants.filenamePDF + patientHistoryId
@@ -442,7 +442,7 @@ class ViewInDateScreen extends Component {
             <ActivityPanel style={styles.container} title={constants.title.ehealth}
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#4BBA7B"
+                statusbarBackgroundColor="#02C39A"
                 actionbarStyle={styles.actionbarStyle}
                 titleStyle={styles.titleStyle}
                 isLoading={this.state.isLoading}
@@ -705,7 +705,7 @@ const styles = StyleSheet.create({
     txMedical: { paddingTop: 5, color: '#373A3C' },
     footerMedical: { width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 },
     actionbarStyle: {
-        backgroundColor: '#4BBA7B',
+        backgroundColor: '#02C39A',
         borderBottomWidth: 0
     },
     titleStyle:

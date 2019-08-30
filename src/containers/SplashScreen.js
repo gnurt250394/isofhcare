@@ -8,6 +8,7 @@ import ActivityPanel from '@components/ActivityPanel';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import { StackActions, NavigationActions } from 'react-navigation';
 import * as Animatable from 'react-native-animatable';
+import snackbar from "@utils/snackbar-utils";
 MyScaleImage = Animatable.createAnimatableComponent(ScaleImage);
 const resetAction = (route) => {
 	return StackActions.reset({
@@ -31,13 +32,13 @@ class SplashScreen extends Component {
 		console.disableYellowBox = true;
 		console.reportErrorsAsExceptions = false;
 
-		// this.Actions.navigate('home')
-		// setTimeout(() => {
-		// 	this.Actions.dispatch(StackActions.reset({
-		// 		index: 0,
-		// 		actions: [NavigationActions.navigate({ routeName: "home" })],
-		// 	}));
-		// }, 3000);
+		dataCache.read("", constants.key.storage.KEY_HAS_UPDATE_NEW_VERSION, (s) => {
+			dataCacheProvider.save("", constants.key.storage.KEY_HAS_UPDATE_NEW_VERSION, 0);
+			if (s == 1) {
+				snackbar.show("Ứng dụng của bạn vừa được cập nhật", "success");
+			}
+		});
+
 		userProvider.getAccountStorage((s) => {
 			setTimeout(() => {
 				if (s) {

@@ -25,6 +25,7 @@ import ImagePicker from "mainam-react-native-select-image";
 import imageProvider from "@data-access/image-provider";
 import userProvider from "@data-access/user-provider";
 import DeviceInfo from 'react-native-device-info';
+import codePushUtils from '@utils/codepush-utils';
 
 class AccountScreen extends Component {
   constructor(props) {
@@ -55,7 +56,7 @@ class AccountScreen extends Component {
                     userProvider
                       .update(this.props.userApp.currentUser.id, user)
                       .then(s => {
-                        this.showLoading(false,() => {});
+                        this.showLoading(false, () => { });
                         if (s.code == 0) {
                           var user = s.data.user;
                           let current = this.props.userApp.currentUser;
@@ -70,7 +71,7 @@ class AccountScreen extends Component {
                         }
                       })
                       .catch(e => {
-                        this.showLoading(false,() => {});
+                        this.showLoading(false, () => { });
                         snackbar.show(
                           "Cập nhật ảnh đại diện không thành công",
                           "danger"
@@ -81,7 +82,7 @@ class AccountScreen extends Component {
               });
             })
             .catch(e => {
-              this.showLoading(false,() => {});
+              this.showLoading(false, () => { });
               snackbar.show("Upload ảnh không thành công", "danger");
             });
         });
@@ -430,9 +431,12 @@ class AccountScreen extends Component {
               />
             </TouchableOpacity>
           )}
-          <View style={[styles.itemMenu, { borderBottomWidth: 0 }]}>
+          <TouchableOpacity style={[styles.itemMenu, { borderBottomWidth: 0 }]} onPress={() => {
+            snackbar.show("Đang kiểm tra cập nhật", "success");
+            codePushUtils.checkupDate();
+          }}>
             <Text style={[styles.itemText, { color: '#00000080' }]}>{'Phiên bản ' + DeviceInfo.getVersion() + '.' + DeviceInfo.getBuildNumber()}</Text>
-          </View>
+          </TouchableOpacity>
           <View style={styles.viewSpaceBottom} />
           <ImagePicker ref={ref => (this.imagePicker = ref)} />
         </ScrollView>
@@ -529,7 +533,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
   return {
-    navigation: state.navigation,
+    // navigation: state.navigation,
     userApp: state.userApp
   };
 }

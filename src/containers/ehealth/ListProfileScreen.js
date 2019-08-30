@@ -106,6 +106,12 @@ class ListProfileScreen extends PureComponent {
             });
         });
     }
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.navigation.state.params && nextProps.navigation.state.params.countReset) {
+            this.onRefresh()
+        }
+    }
+   
     render() {
         return (
             <ActivityPanel style={{ flex: 1 }}
@@ -113,9 +119,9 @@ class ListProfileScreen extends PureComponent {
                 title={<Text style={{}}>{constants.title.list_profile_ehealth}{'\n'}<Text style={{ fontSize: 12, fontWeight: 'normal' }}>{constants.ehealth.total}{this.state.listData ? this.state.listData.length : 0}{constants.ehealth.member}</Text></Text>}
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#4BBA7B"
+                statusbarBackgroundColor="#02C39A"
                 actionbarStyle={{
-                    backgroundColor: '#4BBA7B',
+                    backgroundColor: '#02C39A',
                     borderBottomWidth: 0
                 }}
                 titleStyle={{
@@ -229,9 +235,10 @@ const styles = StyleSheet.create({
     txCount: { color: '#f36819', fontSize: 30 },
     borderBottom: { height: 1, backgroundColor: '#00000050' },
     actionbarStyle: {
-        backgroundColor: '#4BBA7B',
+        backgroundColor: '#02C39A',
         borderBottomWidth: 0
-    }
+    },
+
 });
 
 function mapStateToProps(state) {

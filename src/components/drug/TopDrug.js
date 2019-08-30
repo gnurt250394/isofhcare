@@ -51,7 +51,7 @@ class TopDrug extends Component {
         {/* <View style={styles.viewTitle}><View>       */}
         <HeaderLine onPress={this.showAllDrug} title={Dimensions.get("window").width < 375 ? 'SẢN PHẨM\nTHUỐC BÁN CHẠY' : 'SẢN PHẨM THUỐC BÁN CHẠY'} isShowViewAll={true} />
         {/* <Text style={{color:'#000',fontWeight:'600'}}>{'Sản phẩm thuốc bán chạy'.toUpperCase()}</Text>
-        </View><Text style={{color:'#4BBA7B'}}>Xem tất cả>></Text></View> */}
+        </View><Text style={{color:'#02C39A'}}>Xem tất cả>></Text></View> */}
         {this.state.dataDrug ? (<ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
           <View style={{ width: 190 * Math.round(this.state.dataDrug.length / 2), flexWrap: 'wrap', flexDirection: 'row' }}>
             {this.state.dataDrug && this.state.dataDrug.slice(0, 20).map((item, index) => this.renderItem(item, index))}
@@ -86,4 +86,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, null, null, { withRef: true })(TopDrug);
+export default connect(mapStateToProps, null, null, { forwardRef: true })(TopDrug);

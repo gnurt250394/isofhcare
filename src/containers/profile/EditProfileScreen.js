@@ -403,7 +403,6 @@ class EditProfileScreen extends Component {
                                     onChangeText={this.onChangeText("name")}
                                     value={this.state.name}
                                     autoCapitalize={"none"}
-                                    returnKeyType={"next"}
                                     // underlineColorAndroid="transparent"
                                     autoCorrect={false}
                                 />
@@ -452,7 +451,6 @@ class EditProfileScreen extends Component {
                                                 this.setState({ isMin: messages });
                                             }
                                         }}
-                                        returnKeyType={"next"}
                                         autoCapitalize={"none"}
                                         autoCorrect={false}
                                         style={{
@@ -508,7 +506,6 @@ class EditProfileScreen extends Component {
                                             onChangeText={this.onChangeText("height")}
                                             value={this.state.height}
                                             autoCapitalize={"none"}
-                                            returnKeyType={"next"}
                                             // underlineColorAndroid="transparent"
                                             autoCorrect={false}
                                         />
@@ -546,7 +543,6 @@ class EditProfileScreen extends Component {
                                             onChangeText={this.onChangeText("weight")}
                                             value={this.state.weight}
                                             autoCapitalize={"none"}
-                                            returnKeyType={"next"}
                                             // underlineColorAndroid="transparent"
                                             autoCorrect={false}
                                         />
@@ -587,7 +583,6 @@ class EditProfileScreen extends Component {
                                         onChangeText={this.onChangeText("phone")}
                                         value={this.state.phone}
                                         autoCapitalize={"none"}
-                                        returnKeyType={"next"}
                                         // underlineColorAndroid="transparent"
                                         autoCorrect={false}
                                     />
@@ -603,12 +598,11 @@ class EditProfileScreen extends Component {
                                         editable={false}
                                         multiline={true}
                                         inputStyle={[
-                                            styles.ktq, { minHeight: 41 }
+                                            styles.ktq, { minHeight: 41 }, this.state.provinces && this.state.provinces.countryCode ? {} : { color: '#8d8d8d' }
                                         ]}
                                         errorStyle={styles.errorStyle}
                                         value={this.state.provinces && this.state.provinces.countryCode ? this.state.provinces.countryCode : 'Tỉnh/Thành phố'}
                                         autoCapitalize={"none"}
-                                        returnKeyType={"next"}
                                         // underlineColorAndroid="transparent"
                                         autoCorrect={false}
                                     />
@@ -631,14 +625,13 @@ class EditProfileScreen extends Component {
                                         // }}
                                         multiline={true}
                                         inputStyle={[
-                                            styles.ktq, { minHeight: 41 }
+                                            styles.ktq, this.state.districts && this.state.districts.name ? {} : { color: '#8d8d8d' }, { minHeight: 41 }
                                         ]}
                                         onPress={this.onSelectDistrict}
                                         editable={false}
                                         errorStyle={styles.errorStyle}
                                         value={this.state.districts && this.state.districts.name ? this.state.districts.name : 'Quận/Huyện'}
                                         autoCapitalize={"none"}
-                                        returnKeyType={"next"}
                                         // underlineColorAndroid="transparent"
                                         autoCorrect={false}
                                     />
@@ -653,12 +646,11 @@ class EditProfileScreen extends Component {
                                         onPress={this.onSelectZone}
                                         editable={false}
                                         inputStyle={[
-                                            styles.ktq, { minHeight: 41 }
+                                            styles.ktq, { minHeight: 41 }, this.state.zone && this.state.zone.name ? {} : { color: '#8d8d8d' }
                                         ]}
                                         errorStyle={styles.errorStyle}
                                         value={this.state.zone && this.state.zone.name ? this.state.zone.name : 'Xã/Phường'}
                                         autoCapitalize={"none"}
-                                        returnKeyType={"next"}
                                         // underlineColorAndroid="transparent"
                                         autoCorrect={false}
                                     />
@@ -684,7 +676,6 @@ class EditProfileScreen extends Component {
                                     onChangeText={this.onChangeText("address")}
                                     value={this.state.address}
                                     autoCapitalize={"none"}
-                                    returnKeyType={"next"}
                                     // underlineColorAndroid="transparent"
                                     autoCorrect={false}
                                 />
@@ -700,12 +691,11 @@ class EditProfileScreen extends Component {
                                             onPress={this.onSelectRelationShip}
                                             editable={false}
                                             inputStyle={[
-                                                styles.ktq, { minHeight: 41 }
-                                            ]}
+                                            styles.ktq, { minHeight: 41 }, this.state.relationShip && this.state.relationShip.name ? {} : { color: '#8d8d8d' }
+                                        ]}
                                             errorStyle={styles.errorStyle}
                                             value={this.state.relationShip && this.state.relationShip.name ? this.state.relationShip.name : 'Quan hệ'}
                                             autoCapitalize={"none"}
-                                            returnKeyType={"next"}
                                             // underlineColorAndroid="transparent"
                                             autoCorrect={false}
                                         />
@@ -774,7 +764,7 @@ const styles = StyleSheet.create({
         flex: 1
         // borderStyle: "solid",
         // borderWidth: 1,
-        // borderColor: '#4BBA7B',
+        // borderColor: '#02C39A',
         // borderRadius:5,
 
     },
@@ -790,7 +780,7 @@ const styles = StyleSheet.create({
 
     },
     actionbarStyle: {
-        backgroundColor: '#4BBA7B',
+        backgroundColor: '#02C39A',
         borderBottomWidth: 0
     },
     ktq: {
@@ -801,7 +791,7 @@ const styles = StyleSheet.create({
         textAlign: "left",
         color: "#8e8e93",
         backgroundColor: '#F2F2F2',
-        borderColor: '#4BBA7B',
+        borderColor: '#02C39A',
         borderWidth: 1,
         paddingHorizontal: 10,
         borderRadius: 5,

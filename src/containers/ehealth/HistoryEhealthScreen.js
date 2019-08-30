@@ -37,7 +37,7 @@ class HistoryEhealthScreen extends Component {
     viewResult = (item) => {
         console.log(item);
         this.setState({ isLoading: true }, () => {
-            resultUtils.getDetail(item.patientHistoryId, this.props.ehealth.hospital.hospital.id).then(result => {
+            resultUtils.getDetail(item.patientHistoryId, this.props.ehealth.hospital.hospital.id, item.id).then(result => {
                 this.setState({ isLoading: false }, () => {
                     if (!result.hasResult)
                         snackbar.show(constants.msg.ehealth.not_result_ehealth_in_day, "danger");
@@ -126,7 +126,7 @@ class HistoryEhealthScreen extends Component {
                 title={<Text style={{ color: '#FFF' }}>{'Lịch sử y bạ '}<Text style={{ color: '#b61827' }}>({this.state.countTime} lần)</Text></Text>}
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#4BBA7B"
+                statusbarBackgroundColor="#02C39A"
                 actionbarStyle={styles.actionbarStyle}
                 titleStyle={styles.titleStyle}>
                 <FlatList
@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
 
     },
     actionbarStyle: {
-        backgroundColor: '#4BBA7B',
+        backgroundColor: '#02C39A',
         borderBottomWidth: 0
     },
     imageStyle: { borderRadius: 30, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' },

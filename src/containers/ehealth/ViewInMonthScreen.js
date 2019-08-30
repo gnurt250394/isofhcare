@@ -374,9 +374,7 @@ class ListProfileScreen extends Component {
                 try {
                     let patientHistoryId = this.state.histories[this.state.dateSelected].history.patientHistoryId;
                     let hospitalId = this.state.patient.hospitalEntity.id;
-                    let id = this.state.histories[this.state.dateSelected].history.id
-
-                    resultUtils.getDetail(patientHistoryId, hospitalId,id).then(result => {
+                    resultUtils.getDetail(patientHistoryId, hospitalId, this.state.histories[this.state.dateSelected].history.id).then(result => {
                         this.setState({
                             isLoading: false
                         }, () => {
@@ -422,12 +420,11 @@ class ListProfileScreen extends Component {
             try {
                 let patientHistoryId = this.state.histories[this.state.dateSelected].history.patientHistoryId;
                 let hospitalId = this.state.patient.hospitalEntity.id;
-                let id = this.state.histories[this.state.dateSelected].history.id
-                resultUtils.getDetail(patientHistoryId, hospitalId,id).then(result => {
+                resultUtils.getDetail(patientHistoryId, hospitalId).then(result => {
                     if (result) {
                         result = result.result;
                         result.hospital = this.props.ehealth.hospital.hospital;
-                        this.exportPdfCom.getWrappedInstance().exportPdf({
+                        this.exportPdfCom.exportPdf({
                             type: "all",
                             result: result,
                             fileName: constants.filenamePDF + patientHistoryId
@@ -487,7 +484,7 @@ class ListProfileScreen extends Component {
                 icBack={require('@images/new/left_arrow_white.png')}
                 isLoading={this.state.isLoading}
                 iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#4BBA7B"
+                statusbarBackgroundColor="#02C39A"
                 actionbarStyle={styles.actionbarStyle}
                 titleStyle={styles.titleStyle}
                 menuButton={this.state.dateSelected ?
@@ -732,7 +729,7 @@ const styles = StyleSheet.create({
     viewShareErr: { flexDirection: 'row', alignItems: 'center', padding: 10 },
     txShareErr: { textAlign: 'center', marginVertical: 20, marginHorizontal: 10, fontSize: 18 },
     actionbarStyle: {
-        backgroundColor: '#4BBA7B',
+        backgroundColor: '#02C39A',
         borderBottomWidth: 0
     },
     viewCalendar: { justifyContent: 'center', flex: 1, alignItems: 'center' },

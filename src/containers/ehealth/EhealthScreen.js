@@ -67,6 +67,13 @@ class EhealthScreen extends Component {
     onDisable = () => {
         snackbar.show('Bạn chưa có lần khám gần nhất tại bệnh viện này', 'danger')
     }
+    onAddEhealth = () => {
+        this.props.navigation.navigate('selectLocationEhealth')
+        // let hospitalId = this.props.ehealth.hospital.hospital.id
+        // this.props.navigation.navigate('addNewEhealth', {
+        //     hospitalId: hospitalId
+        // })
+    }
     renderItem = ({ item, index }) => {
         const source = item.hospital && item.hospital.avatar ? { uri: item.hospital.avatar.absoluteUrl() } : require("@images/new/user.png");
 
@@ -105,11 +112,12 @@ class EhealthScreen extends Component {
                 titleStyle={styles.txTitle}
                 title={constants.title.ehealth}
                 iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#4BBA7B"
+                statusbarBackgroundColor="#02C39A"
                 actionbarStyle={styles.actionbarStyle}
                 style={styles.container}
             >
                 <View style={styles.viewContent} >
+                <TouchableOpacity onPress={this.onAddEhealth} style={styles.btnAddEhealth}><Text style={styles.txAddEhealth}>Thêm mới kết quả khám</Text></TouchableOpacity>
                     <Text style={styles.txHeader}>{constants.ehealth.ehealth_location}</Text>
                     <View style={styles.viewFlatList}>
                         <FlatList
@@ -158,7 +166,7 @@ const styles = StyleSheet.create({
     txLastTime: { color: '#5A5956', marginTop: 5 },
     txTitle: { color: '#fff' },
     actionbarStyle: {
-        backgroundColor: '#4BBA7B',
+        backgroundColor: '#02C39A',
         borderBottomWidth: 0
     },
     viewContent: {
@@ -166,9 +174,21 @@ const styles = StyleSheet.create({
     },
     viewFlatList: { flex: 1 },
     viewTxNone: { alignItems: 'center', marginTop: 50 },
-    viewTxTime: { fontStyle: 'italic' }
-
-
+    viewTxTime: { fontStyle: 'italic' },
+    btnAddEhealth: {
+        borderRadius: 5,
+        backgroundColor: '#02C39A',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 41,
+        marginVertical: 10,
+        marginHorizontal: 5
+    },
+    txAddEhealth: {
+        color: '#fff',
+        fontSize: 14,
+        fontWeight: 'bold'
+    }
 
 
 
