@@ -243,4 +243,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps, null, null, { withRef: true })(TicketHistory);
+export default connect(mapStateToProps, null, null, { forwardRef: true })(TicketHistory);

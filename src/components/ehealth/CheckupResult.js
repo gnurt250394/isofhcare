@@ -1,19 +1,8 @@
 import React, { Component, PropTypes } from 'react';
-import ActivityPanel from '@components/ActivityPanel';
-import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Keyboard, Image, TouchableHighlight, FlatList, Dimensions, TouchableWithoutFeedback } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Keyboard, Image, FlatList, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
-import ScaleImage from "mainam-react-native-scaleimage";
-import connectionUtils from '@utils/connection-utils';
-import clientUtils from '@utils/client-utils';
-import scheduleProvider from '@data-access/schedule-provider';
-import snackbar from '@utils/snackbar-utils';
 import dateUtils from "mainam-react-native-date-utils";
-import bookingProvider from '@data-access/booking-provider';
-import dataCacheProvider from '@data-access/datacache-provider';
 import constants from '@resources/strings';
-const DEVICE_WIDTH = Dimensions.get('window').width;
-import ImageLoad from 'mainam-react-native-image-loader';
-import ScaledImage from "mainam-react-native-scaleimage";
 import CheckupResultItem from '@components/ehealth/CheckupResultItem';
 
 
@@ -63,7 +52,7 @@ const styles = StyleSheet.create({
     itemlabel: { marginLeft: 5, flex: 1, marginTop: 2 },
     itemcontent: { color: '#0076ff' },
     item: { marginTop: 10, flexDirection: 'row' },
-    container:{ flex: 1, padding: 10 },
-    txCheckUp:{ fontWeight: 'bold', fontSize: 18 },
+    container: { flex: 1, padding: 10 },
+    txCheckUp: { fontWeight: 'bold', fontSize: 18 },
 })
 export default connect(mapStateToProps)(CheckupResult);

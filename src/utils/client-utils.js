@@ -1,17 +1,21 @@
 import axios from 'axios';
-// const server_url = "http://123.24.206.9:8000"; //dev
+import DeviceInfo from 'react-native-device-info';
+import { Platform } from 'react-native';
+const server_url = "http://123.24.206.9:8000"; //dev
 // const server_url = "http://123.24.206.9:8000"; //test
-const server_url = "https://api.produce.isofhcare.com"; //release
+// const server_url = "https://api.produce.isofhcare.com"; //release
 // const server_url = "http://34.95.91.81"; //stable
 
-// const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofh-care-dev/o/"; //dev
+const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofh-care-dev/o/"; //dev
 // const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofh-care-dev/o/"; //test
 // const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofh-care-stable/o/"; //stable
-const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofhcare-storage/o/"; //release
+// const resource_url = "https://www.googleapis.com/download/storage/v1/b/isofhcare-storage/o/"; //release
 
 
 const httpClient = axios.create();
 httpClient.defaults.timeout = 50000;
+let deviceOS = DeviceInfo.getSystemVersion();
+let appVersion = DeviceInfo.getReadableVersion();
 
 String.prototype.absoluteUrl =
   String.prototype.absolute ||
@@ -30,7 +34,7 @@ String.prototype.absoluteUrl =
       _this2.endsWith(".png") ||
       _this2.endsWith(".gif")
     ) {
-      let image = resource_url + encodeURIComponent(_this + "")+"?alt=media";
+      let image = resource_url + encodeURIComponent(_this + "") + "?alt=media";
       // console.log(image);
       return image;
     }
@@ -97,7 +101,10 @@ module.exports = {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",
         Authorization: this.auth,
-        MobileMode: "user"
+        MobileMode: "user",
+        deviceType: "mobile",
+        deviceOs: Platform.OS + " " + deviceOS,
+        appVersion: appVersion
         // 'MobileMode': 'vender',
       },
       data
@@ -130,7 +137,11 @@ module.exports = {
         Accept: "application/json",
         "Content-Type": "application/json",
         Authorization: auth ? auth : '',
-        MobileMode: "user"
+        MobileMode: "user",
+        deviceType: "mobile",
+        deviceOs: Platform.OS + " " + deviceOS,
+        appVersion: appVersion
+
         // 'MobileMode': 'vender'
       },
       dataBody
@@ -157,7 +168,10 @@ module.exports = {
       Accept: "application/json",
       "Content-Type": "application/json",
       Authorization: this.auth,
-      MobileMode: "user"
+      MobileMode: "user",
+      deviceType: "mobile",
+      deviceOs: Platform.OS + " " + deviceOS,
+      appVersion: appVersion
       // 'MobileMode': 'vender'
     };
     if (!header) header = {};

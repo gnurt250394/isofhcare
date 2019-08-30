@@ -7,19 +7,19 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>iSofHCare</string>
+	<string>USER RELEASE</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
-	<string>62</string>
+	<string>72</string>
 	<key>CFBundleName</key>
 	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>4.6</string>
+	<string>4.9</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -49,12 +49,22 @@
 			<string>com.isofh.appisofhcare</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
+				<string>payoo</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.isofh.appisofhcare</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
 				<string>com.isofh.appisofhcare</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>63</string>
+	<string>72</string>
 	<key>CodePushDeploymentKey</key>
 	<string>9OM3k719UBeR8rqQjwBsxUevuXYKSJbqbqu--S</string>
 	<key>FacebookAppID</key>
@@ -93,7 +103,11 @@
 	<key>NSCalendarsUsageDescription</key>
 	<string>This app requires access to the calenda.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Granting access will allow you to select photos and add them to attachment fields.</string>
+	<string>This app requires access to the camera.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Granting access will allow you to select contact to payment.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>$(ISOFH_CARE) requires FaceID access to allows you quick and secure access</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>This app requires access to the location to get and find all facilities near you </string>
 	<key>NSLocationWhenInUseUsageDescription</key>
@@ -101,7 +115,7 @@
 	<key>NSMotionUsageDescription</key>
 	<string>This app requires access to motion.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Granting access will allow you to take photos and add them to attachment fields.</string>
+	<string>This app requires access to the photo library.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>This app requires access to the speech recognition library.</string>
 	<key>UIAppFonts</key>
@@ -132,10 +146,6 @@
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
-	<key>UIRequiredDeviceCapabilities</key>
-	<array>
-		<string>armv7</string>
-	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

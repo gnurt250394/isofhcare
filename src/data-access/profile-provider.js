@@ -26,6 +26,7 @@ module.exports = {
                     }
                 }
                 else {
+
                     if (callback)
                         callback(undefined, e);
                 }
@@ -60,5 +61,125 @@ module.exports = {
             reject(e)
         })
     })
+    },
+    getListProfile(){
+        return new Promise((resolve, reject) => {
+            client.requestApi('get',constants.api.profile.get_list_profile,{},(s,e) => {
+                if(s)
+                resolve(s)
+                else
+                reject(e)
+            })
+        })
+    },
+    deleteFamilyProfile(id){
+        return new Promise ((resolve,reject) => {
+            client.requestApi('delete',`${constants.api.profile.delete_family_profile}/${id}`,{},(s,e) => {
+                if(s)
+                resolve(s)
+                else
+                reject(e)
+            })
+        })
+    },
+    createProfile (data){
+        return new Promise ((resolve,reject) => {
+            client.requestApi('post',`${constants.api.profile.create_profile}`,data,(s,e) => {
+                if(s)
+                resolve(s)
+                else
+                reject(e)
+            })
+        })
+    },
+    updateProfile(id,data){
+        return new Promise((resolve,reject) => {
+            client.requestApi('put',`${constants.api.profile.update_profile}/${id}`,data,(s,e) => {
+                if(s)
+                resolve(s)
+                else
+                reject(e)
+            })
+        })
+    },
+    updateAvatar(id,data){
+        return new Promise((resolve,reject) => {
+            client.requestApi('put',`${constants.api.profile.update_avatar}/${id}`,data,(s,e) => {
+                if(s)
+                resolve(s)
+                else
+                reject(e)
+            })
+        })
+    },
+    updateCover(id,data){
+        return new Promise((resolve,reject) => {
+            client.requestApi('put',`${constants.api.profile.update_cover}/${id}`,data,(s,e) => {
+                if(s)
+                resolve(s)
+                else
+                reject(e)
+            })
+        })
+    },
+    sendConfirmProfile(id){
+        return new Promise((resolve,reject) => {
+            client.requestApi('put',`${constants.api.profile.send_confirm}/${id}`,{},(s,e) => {
+                if(s)
+                resolve(s)
+                else
+                reject(e)
+            })
+        })
+    },
+    sharePermission(data){
+        return new Promise((resolve,reject) => {
+            client.requestApi('put',constants.api.profile.share_permission,data,(s,e) => {
+                if(s)
+                resolve(s)
+                else 
+                reject(e)
+            })
+        })
+    },
+    checkOtp (data,id){
+        return new Promise((resolve,reject) => {
+            client.requestApi('put',constants.api.profile.check_otp + '/' + id,data,(s,e) => {
+                if(s)
+                resolve(s)
+                else
+                reject(e)
+            })
+        })
+    },
+    resendOtp (id){
+        return new Promise((resolve,reject) => {
+            client.requestApi('put',constants.api.profile.resend_otp + '/' + id,{},(s,e) => {
+                if(s)
+                resolve(s)
+                else
+                reject(e)
+            })
+        })
+    },
+    confirm (id){
+        return new Promise((resolve,reject) => {
+            client.requestApi('put',constants.api.profile.confirm + '/' + id , {},(s,e) => {
+                if(s)
+                resolve(s)
+                else
+                reject(e)
+            } )
+        })
+    },
+    getDetailsMedical(id){
+        return new Promise((resolve,reject) => {
+            client.requestApi('get',constants.api.profile.get_details_medical+'/' + id,{},(s,e) => {
+                if(s)
+                resolve(s)
+                else
+                reject(e)
+            })
+        })
     }
 }

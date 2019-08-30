@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import dateUtils from 'mainam-react-native-date-utils';
 import permission from 'mainam-react-native-permission';
 import resultUtils from '@ehealth/utils/result-utils';
-
+import RNPrint from 'react-native-print';
 class ExportPDF extends Component {
     renderResult(result, hospital) {
         if (result.Profile.IsContract) {
@@ -743,9 +743,10 @@ class ExportPDF extends Component {
         }
         div += " </div>"
         div += " </div>"
-      
+
         return div;
     }
+
 
 
 
@@ -809,11 +810,13 @@ class ExportPDF extends Component {
             html: html,
             fileName: filename,
             directory: 'docs',
+            print: option.print,
+            // base64: true,
         };
 
         await permission.requestStoragePermission((s) => {
             if (s) {
-                let file = RNHTMLtoPDF.convert(options).then(filePath => {
+                let file = RNHTMLtoPDF.convert(options).then(async filePath => {
                     if (finish)
                         setTimeout(function () {
                             finish();
@@ -825,10 +828,21 @@ class ExportPDF extends Component {
                         //     social: Share.Social.EMAIL
                         // });
 
-                        Share.open({
-                            title: constants.share,
-                            url: "file://" + filePath.filePath,
-                        });
+                        // alert("file://" + filePath.filePath);
+                        if (options.print) {
+                            // await RNPrint.print({ filePath: 'https://graduateland.com/api/v2/users/jesper/cv' })
+                            // debugger;
+                            try {
+                                await RNPrint.print({ filePath: filePath.filePath })
+                            } catch (error) {
+                                await RNPrint.print({ filePath: "file://" + filePath.filePath })
+                            }
+                        } else {
+                            Share.open({
+                                title: constants.share,
+                                url: "file://" + filePath.filePath,
+                            });
+                        }
                     } catch (error) {
                         console.log(error);
                     }
@@ -849,4 +863,4 @@ function mapStateToProps(state) {
         booking: state.booking
     };
 }
-export default connect(mapStateToProps, null, null, { withRef: true })(ExportPDF);
+export default connect(mapStateToProps, null, null, { forwardRef: true })(ExportPDF);

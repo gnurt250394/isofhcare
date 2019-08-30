@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import drugProvider from '@data-access/drug-provider';
 import SearchPanel from '@components/SearchPanel';
-import ItemDrug from '@components/drug/ItemDrug';
+// import ItemDrug from '@components/drug/ItemDrug';
 import realmModel from '@models/realm-models';
 const Realm = require('realm');
 import historyProvider from '@data-access/history-provider';
@@ -25,7 +25,7 @@ class SearchDrugScreen extends Component {
     }
     overlayClick() {
         if (this.searchPanel) {
-            this.searchPanel.getWrappedInstance().clear();
+            this.searchPanel.clear();
         }
         this.setState({ showOverlay: false });
     }

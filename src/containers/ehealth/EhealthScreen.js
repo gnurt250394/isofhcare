@@ -19,6 +19,7 @@ import hospitalProvider from '@data-access/hospital-provider';
 import ImageLoad from 'mainam-react-native-image-loader';
 import { Card } from "native-base";
 import constants from '@resources/strings';
+import snackbar from '@utils/snackbar-utils';
 
 class EhealthScreen extends Component {
     constructor(props) {
@@ -61,36 +62,44 @@ class EhealthScreen extends Component {
     }
     onPress = (item) => {
         this.props.dispatch({ type: constants.action.action_select_hospital_ehealth, value: item })
-        Dimensions.get('window').width < 375 ? 
-        this.props.navigation.navigate('listProfileSmall')
-        : this.props.navigation.navigate('listProfile')
+        this.props.navigation.navigate('listProfile');
+    }
+    onDisable = () => {
+        snackbar.show('Bạn chưa có lần khám gần nhất tại bệnh viện này', 'danger')
+    }
+    onAddEhealth = () => {
+        this.props.navigation.navigate('selectLocationEhealth')
+        // let hospitalId = this.props.ehealth.hospital.hospital.id
+        // this.props.navigation.navigate('addNewEhealth', {
+        //     hospitalId: hospitalId
+        // })
     }
     renderItem = ({ item, index }) => {
         const source = item.hospital && item.hospital.avatar ? { uri: item.hospital.avatar.absoluteUrl() } : require("@images/new/user.png");
 
         return (
-            <TouchableOpacity style={styles.btnItem} onPress={this.onPress.bind(this, item)}>
-                <View style={styles.viewImg}>
+            <Card style={styles.viewItem}>
+                <TouchableOpacity style={styles.btnItem} onPress={item.hospital.timeGoIn ? this.onPress.bind(this, item) : this.onDisable}>
                     <ImageLoad
                         resizeMode="cover"
                         imageStyle={styles.imageStyle}
-                        borderRadius={40}
-                        customImagePlaceholderDefaultStyle={[styles.avatar, { width: 80, height: 80 }]}
+                        borderRadius={30}
+                        customImagePlaceholderDefaultStyle={[styles.avatar, { width: 60, height: 60 }]}
                         placeholderSource={require("@images/new/user.png")}
                         resizeMode="cover"
                         loadingStyle={{ size: 'small', color: 'gray' }}
                         source={source}
                         style={styles.imgLoad}
                         defaultImage={() => {
-                            return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={80} height={80} />
+                            return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={60} height={60} />
                         }}
                     />
                     <View style={styles.viewTx}>
                         <Text style={styles.txHospitalName}>{item.hospital.name}</Text>
                         <Text style={styles.txLastTime}>{constants.ehealth.lastTime}<Text>{item.hospital.timeGoIn ? item.hospital.timeGoIn.toDateObject('-').format('dd/MM/yyyy') : ''}</Text></Text>
                     </View>
-                </View>
-            </TouchableOpacity>
+                </TouchableOpacity>
+            </Card>
         )
     }
     onBackClick = () => {
@@ -103,11 +112,12 @@ class EhealthScreen extends Component {
                 titleStyle={styles.txTitle}
                 title={constants.title.ehealth}
                 iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#22b060"
+                statusbarBackgroundColor="#02C39A"
                 actionbarStyle={styles.actionbarStyle}
                 style={styles.container}
             >
                 <View style={styles.viewContent} >
+                <TouchableOpacity onPress={this.onAddEhealth} style={styles.btnAddEhealth}><Text style={styles.txAddEhealth}>Thêm mới kết quả khám</Text></TouchableOpacity>
                     <Text style={styles.txHeader}>{constants.ehealth.ehealth_location}</Text>
                     <View style={styles.viewFlatList}>
                         <FlatList
@@ -137,43 +147,48 @@ const styles = StyleSheet.create({
     },
     txHeader: {
         marginTop: 10,
-        fontSize: 18
+        fontSize: 16,
+        fontWeight: 'bold'
     },
-    viewItem: { flexDirection: 'row', justifyContent: 'flex-start', paddingVertical: 10, paddingHorizontal: 10, borderRadius: 5 },
-    viewImg: {
-        flexDirection: 'row', paddingVertical: 20, paddingHorizontal: 10,
-        borderRadius: 3,
-        backgroundColor: "#ffffff",
-        borderStyle: "solid",
-        borderWidth: 1,
-        borderColor: "#d5d9db"
-    },
-    btnItem: { marginTop: 10, },
+    viewItem: { flexDirection: 'row', justifyContent: 'flex-start', padding: 10, borderRadius: 5 },
+    btnItem: { flexDirection: 'row', alignItems: 'center', flex: 1 },
     imgLoad: {
         alignSelf: 'center',
-        borderRadius: 40,
-        width: 80,
-        height: 80
+        borderRadius: 30,
+        width: 60,
+        height: 60
     },
     imageStyle: {
-        borderRadius: 40, borderWidth: 0.5, borderColor: '#27AE60',
+        borderRadius: 30, borderWidth: 0.5, borderColor: '#27AE60',
     },
-    viewTx: { padding: 15, },
+    viewTx: { marginLeft: 10 },
     txHospitalName: { fontWeight: 'bold', color: '#5A5956', fontSize: 15 },
     txLastTime: { color: '#5A5956', marginTop: 5 },
-    txTitle:{ color: '#fff' },
-    actionbarStyle:{
-        backgroundColor: '#22b060',
+    txTitle: { color: '#fff' },
+    actionbarStyle: {
+        backgroundColor: '#02C39A',
         borderBottomWidth: 0
     },
-    viewContent:{
+    viewContent: {
         paddingHorizontal: 10, flex: 1, backgroundColor: '#f0f5f9'
     },
-    viewFlatList:{ flex: 1 },
-    viewTxNone:{ alignItems: 'center', marginTop: 50 },
-    viewTxTime:{ fontStyle: 'italic' }
-
-
+    viewFlatList: { flex: 1 },
+    viewTxNone: { alignItems: 'center', marginTop: 50 },
+    viewTxTime: { fontStyle: 'italic' },
+    btnAddEhealth: {
+        borderRadius: 5,
+        backgroundColor: '#02C39A',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 41,
+        marginVertical: 10,
+        marginHorizontal: 5
+    },
+    txAddEhealth: {
+        color: '#fff',
+        fontSize: 14,
+        fontWeight: 'bold'
+    }
 
 
 

@@ -35,10 +35,9 @@ class ListProfileScreen extends PureComponent {
     renderItemProfile = ({ item, index }) => {
         const source = this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar.absoluteUrl() } : require("@images/new/user.png");
         return (
-            <Card style={{ flexDirection: 'row' }}>
-                <TouchableOpacity style={[styles.viewItem]} onPress={() => this.onPress(item)}>
-
-                    <View style={styles.viewImage}>
+            <View style={{ marginHorizontal: 5 }}>
+                <Card style={{ flexDirection: 'row' }}>
+                    <TouchableOpacity style={[styles.viewItem]} onPress={() => this.onPress(item)}>
                         <ImageLoad
                             resizeMode="cover"
                             imageStyle={styles.imageStyle}
@@ -53,23 +52,27 @@ class ListProfileScreen extends PureComponent {
                                 return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={60} height={60} />
                             }}
                         />
-                        <Text style={{ color: '#758289', fontSize: 12, marginTop: 5, fontWeight: 'bold' }}>{item.patientValue}</Text>
-                    </View>
 
-                    <View style={styles.viewListItem}>
-                        <Text style={[styles.txPatientName]}>{item.patientName}</Text>
-                        <Text style={styles.txHospitalEntityName}>{item.hospitalEntity.name}</Text>
-                        <View style={styles.viewTime}>
-                            <ScaleImage resizeMode='cover' source={require("@images/new/ehealth/ic_timer.png")} width={15} tintColor={'#8fa1aa'} />
-                            <Text style={styles.txLastTime}>{constants.ehealth.lastTime2}{item.latestTime ? item.latestTime.toDateObject('-').format('dd/MM/yyyy') : ''}</Text>
+                        <View style={styles.viewListItem}>
+                            <Text style={[styles.txPatientName]}>{item.patientName}</Text>
+                            <Text style={styles.txHospitalEntityName}>{item.hospitalEntity.name}</Text>
+
+                            <Text style={styles.txHospitalEntityName}>Mã bệnh nhân: <Text style={{ fontWeight: 'bold' }}>{item.patientValue}</Text></Text>
+                            <View style={styles.viewTime}>
+                                <ScaleImage resizeMode='cover' source={require("@images/new/ehealth/ic_timer.png")} width={15} tintColor={'#8fa1aa'} />
+                                <Text style={styles.txLastTime}>{constants.ehealth.lastTime2}{item.latestTime ? item.latestTime.toDateObject('-').format('dd/MM/yyyy') : ''}</Text>
+                            </View>
                         </View>
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.txCountTime}>
-                    <Text style={styles.txCount}>{item.countTime}</Text>
-                    <Text>{constants.ehealth.time}</Text>
-                </TouchableOpacity>
-            </Card>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => {
+                        this.props.dispatch({ type: constants.action.action_select_patient_group_ehealth, value: item })
+                        this.props.navigation.navigate('historyEhealth', { countTime: item.countTime, item })
+                    }} style={styles.txCountTime}>
+                        <Text style={styles.txCount}>{item.countTime}</Text>
+                        <Text>{constants.ehealth.time}</Text>
+                    </TouchableOpacity>
+                </Card>
+            </View>
         )
     }
     onRefresh() {
@@ -103,6 +106,12 @@ class ListProfileScreen extends PureComponent {
             });
         });
     }
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.navigation.state.params && nextProps.navigation.state.params.countReset) {
+            this.onRefresh()
+        }
+    }
+   
     render() {
         return (
             <ActivityPanel style={{ flex: 1 }}
@@ -110,9 +119,9 @@ class ListProfileScreen extends PureComponent {
                 title={<Text style={{}}>{constants.title.list_profile_ehealth}{'\n'}<Text style={{ fontSize: 12, fontWeight: 'normal' }}>{constants.ehealth.total}{this.state.listData ? this.state.listData.length : 0}{constants.ehealth.member}</Text></Text>}
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#22b060"
+                statusbarBackgroundColor="#02C39A"
                 actionbarStyle={{
-                    backgroundColor: '#22b060',
+                    backgroundColor: '#02C39A',
                     borderBottomWidth: 0
                 }}
                 titleStyle={{
@@ -197,10 +206,10 @@ const styles = StyleSheet.create({
         height: 60
     },
     viewItem: {
+        padding: 10,
         flexDirection: 'row',
-        flex: 1
+        flex: 1,
     },
-    viewImage: { justifyContent: 'center', width: 100, alignItems: 'center', paddingVertical: 5 },
     imageStyle: { borderRadius: 30, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' },
     imgLoad: {
         alignSelf: 'center',
@@ -208,7 +217,7 @@ const styles = StyleSheet.create({
         width: 60,
         height: 60
     },
-    viewListItem: { flex: 1, borderRightColor: '#c8d1d6', borderRightWidth: 1, paddingVertical: 10, paddingRight: 5 },
+    viewListItem: { flex: 1, paddingLeft: 10 },
     viewPatienName: { position: 'relative' },
     viewLineHeight: { position: 'absolute', left: 9, top: 0, bottom: 0, width: 2, backgroundColor: '#91a3ad', },
     viewBettwen: { flexDirection: 'row', height: 40 },
@@ -222,13 +231,14 @@ const styles = StyleSheet.create({
     txHospitalEntityName: { flex: 1, color: '#51626a', fontSize: 14, marginTop: 10 },
     viewTime: { flexDirection: 'row', marginTop: 10, alignItems: 'center', flex: 1 },
     txLastTime: { marginLeft: 5, color: '#045684', flex: 1, fontSize: 13 },
-    txCountTime: { justifyContent: 'center', alignItems: 'center', width: 80 },
+    txCountTime: { justifyContent: 'center', alignItems: 'center', width: 80, borderLeftColor: '#c8d1d6', borderLeftWidth: 1 },
     txCount: { color: '#f36819', fontSize: 30 },
     borderBottom: { height: 1, backgroundColor: '#00000050' },
     actionbarStyle: {
-        backgroundColor: '#22b060',
+        backgroundColor: '#02C39A',
         borderBottomWidth: 0
-    }
+    },
+
 });
 
 function mapStateToProps(state) {

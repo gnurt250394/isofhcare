@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { Provider } from "react-redux";
-import { Root } from "native-base";
+// import { Root } from "native-base";
 import { createStore, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 // import appProvider from "@data-access/app-provider";
 import AppReducer from "@reducers";
-import { RootNavigator } from "@navigators/AppNavigator";
+import { AppContainer } from "@navigators/AppNavigator";
 // import { NavigationActions, StackActions } from "react-navigation";
 // import userProvider from '@data-access/user-provider'
 import NavigationService from "@navigators/NavigationService";
@@ -18,6 +18,7 @@ import snackbar from "@utils/snackbar-utils";
 let codePushOptions = { checkFrequency: codePush.CheckFrequency.MANUAL };
 // let codePushOptions = {installMode: codePush.InstallMode.IMMEDIATE };
 import { Text, TextInput, Animated } from 'react-native';
+import codePushUtils from '@utils/codepush-utils';
 
 Text.defaultProps = Text.defaultProps || {};
 Text.defaultProps.allowFontScaling = false;
@@ -25,7 +26,7 @@ TextInput.defaultProps = TextInput.defaultProps || {};
 TextInput.defaultProps.allowFontScaling = false;
 Animated.Text.defaultProps = TextInput.defaultProps || {};
 Animated.Text.defaultProps.allowFontScaling = false;
-
+import FlashMessage from "react-native-flash-message";
 class Kernel extends Component {
   constructor(props) {
     super(props);
@@ -35,59 +36,19 @@ class Kernel extends Component {
   }
 
   componentDidMount() {
-    codePush.checkForUpdate().then(update => {
-      if (update) {
-        if (update.isMandatory) {
-          Alert.alert(
-            'THÔNG BÁO',
-            'Ứng dụng đã có phiên bản mới. Bạn vui lòng cập nhật để có trải nghiệm tốt nhất!',
-            [
-              {
-                text: 'Cập nhật', onPress: () => {
-                  snackbar.show("Ứng dụng đang được cập nhật, vui lòng chờ", "success")
-                  codePush.sync({
-                    // updateDialog: true,
-                    installMode: codePush.InstallMode.IMMEDIATE
-                  });
-                }
-              },
-            ],
-            { cancelable: false },
-          );
-        } else {
-          Alert.alert(
-            'THÔNG BÁO',
-            'Ứng dụng đã có phiên bản mới. Bạn vui lòng cập nhật để có trải nghiệm tốt nhất!',
-            [
-              {
-                text: 'Để sau',
-                onPress: () => console.log('Cancel Pressed'),
-                style: 'cancel',
-              },
-              {
-                text: 'Cập nhật', onPress: () => {
-                  snackbar.show("Ứng dụng đang được cập nhật, vui lòng chờ", "success")
-                  codePush.sync({
-                    // updateDialog: true,
-                    installMode: codePush.InstallMode.IMMEDIATE
-                  });
-                }
-              },
-            ],
-            { cancelable: false },
-          );
-        }
-      }
-    })
+    codePushUtils.checkupDate(true);
   }
   render() {
     return (
       <Provider store={store}>
-        <Root>
-          <RootNavigator ref={navigatorRef => {
-            NavigationService.setTopLevelNavigator(navigatorRef);
-          }} />
-        </Root>
+        {/* <Root> */}
+        <AppContainer ref={navigatorRef => {
+          NavigationService.setTopLevelNavigator(navigatorRef);
+        }}
+          screenProps={{ state: store.getState() }}
+        />
+        {/* </Root> */}
+        <FlashMessage floating={true} position="top" ref="myLocalFlashMessage" />
       </Provider>
     )
   }

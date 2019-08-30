@@ -21,7 +21,7 @@ import firebase from 'react-native-firebase';
 import redux from '@redux-store'
 import ImageLoad from 'mainam-react-native-image-loader';
 import bookingProvider from '@data-access/booking-provider';
-import hospitalProvider from '@data-access/hospital-provider';
+import NavigationService from "@navigators/NavigationService";
 
 import clientUtils from '@utils/client-utils';
 
@@ -50,8 +50,14 @@ class NotificationScreen extends Component {
     this.props.dispatch(redux.getUnreadNotificationCount());
     this.onRefresh();
   }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.refreshNotification) {
+      this.onRefresh()
+    }
+  }
   onLoad() {
     const { page, size } = this.state;
+    // this.props.refreshNotification = false
     this.setState({
       loading: true,
       refreshing: page == 1,
@@ -123,7 +129,7 @@ class NotificationScreen extends Component {
         });
 
         item.notification.watched = 1;
-        this.setState({ data: [...this.state.data]});
+        this.setState({ data: [...this.state.data] });
         switch (data.type) {
           case 1:
             this.openQuestion(data.id);
@@ -140,6 +146,9 @@ class NotificationScreen extends Component {
           case 6:
             this.detailsEhealth(data, item.user)
             break
+          case 7:
+            NavigationService.navigate('listProfileUser')
+            break
           default:
             this.setState({ isLoading: false });
         }
@@ -150,50 +159,52 @@ class NotificationScreen extends Component {
   }
   detailsEhealth = (data, user) => {
     this.setState({ isLoading: true }, () => {
-      bookingProvider.detailPatientHistory(data.patientHistoryId, data.hospitalId, data.id).then(s => {
+      bookingProvider.detailPatientHistory(data.patientHistoryId, data.hospitalId, data.id, data.shareId).then(s => {
         switch (s.code) {
           case 0:
-            let resultDetail = null;
-            let result = null;
-            if (s.data && s.data.data) {
-              if (s.data.data.resultDetail) {
-                this.setState({
-                  isLoading: false
-                })
-                try {
-                  resultDetail = JSON.parse(s.data.data.resultDetail);
-                } catch (error) {
-
+            notificationProvider.openEhealth(data.patientHistoryId, data.hospitalId, data.id, data.shareId).then(s => {
+              this.setState({ isLoading: false }, () => {
+                let { hasResult, result, resultDetail, hospital, data } = s;
+                if (hasResult && data) {
+                  if (hospital && result) {
+                    this.props.dispatch({ type: constants.action.action_select_patient_group_ehealth, value: data });
+                    this.props.dispatch({ type: constants.action.action_select_hospital_ehealth, value: hospital });
+                    NavigationService.navigate('viewDetailEhealth', { result, resultDetail });
+                  }
+                } else {
+                  snackbar.show('Hồ sơ này chưa có kết quả', 'danger')
                 }
-              }
-              if (s.data.data.result) {
-                try {
-                  result = JSON.parse(s.data.data.result);
-                  hospitalProvider.getDetailsById(data.hospitalId).then(res => {
-                    this.setState({
-                      isLoading: false
-                    })
-                    this.props.navigation.navigate('viewDetailEhealth', { result: result, resultDetail: resultDetail, hospitalName: res.data.hospital.name, user: data })
-                  })
-                } catch (error) {
-                  this.setState({
-                    isLoading: false
-                  })
-                  console.log(error)
-                  snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
-                }
-              }
-            }
+              })
+            }).catch(e => {
+              this.setState({
+                isLoading: false
+              }, () => {
+                console.log(e)
+                snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+              })
+            });
             break;
-          default:
-            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
-            break
+          case 9:
+            this.setState({
+              isLoading: false
+            }, () => {
+              snackbar.show('Y bạ chưa xác định', 'danger')
+            })
+          case 7:
+            this.setState({
+              isLoading: false
+            }, () => {
+              snackbar.show('Hồ sơ chia sẻ đến bạn đã hết thời gian', 'danger')
+            })
         }
       }).catch(e => {
-        this.setState({ isLoading: false }, () => {
-
+        this.setState({
+          isLoading: false
+        }, () => {
+          console.log(e)
+          snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
         })
-      })
+      });
     })
   }
   openTicket(id) {
@@ -203,7 +214,7 @@ class NotificationScreen extends Component {
           switch (s.code) {
             case 0:
               if (s.data && s.data.numberHospital) {
-                this.props.navigation.navigate("getTicketFinish", s.data);
+                NavigationService.navigate("getTicketFinish", s.data);
               }
           }
         });
@@ -220,7 +231,7 @@ class NotificationScreen extends Component {
       questionProvider.detail(id).then(s => {
         this.setState({ isLoading: false }, () => {
           if (s && s.data) {
-            this.props.navigation.navigate("detailQuestion", { post: s.data });
+            NavigationService.navigate("detailQuestion", { post: s.data });
           } else {
             snackbar.show("Lỗi, bài viết không tồn tại", "danger");
           }
@@ -234,7 +245,7 @@ class NotificationScreen extends Component {
   }
   openBooking(id) {
     this.setState({ isLoading: false }, () => {
-      this.props.navigation.navigate("detailsHistory", {
+      NavigationService.navigate("detailsHistory", {
         id
       });
     });
@@ -282,7 +293,7 @@ class NotificationScreen extends Component {
             });
           }}
         >
-          <ScaleImage source={require("@images/new/ic_remove.png")} width={20} />
+          <ScaleImage source={require("@images/new/ic_remove.png")} width={20} style={{ tintColor: '#FFF' }} />
         </TouchableOpacity>
       </View >
     );
@@ -394,6 +405,8 @@ class NotificationScreen extends Component {
   }
 
   render() {
+    if (!this.props.userApp.isLogin)
+      return null;
     return (
       <ActivityPanel
         style={{ flex: 1 }}
@@ -402,6 +415,11 @@ class NotificationScreen extends Component {
         showFullScreen={true}
         menuButton={this.menuCreate()}
         isLoading={this.state.isLoading}
+        iosBarStyle={'light-content'}
+        statusbarBackgroundColor="#02C39A"
+        actionbarStyle={styles.actionbarStyle}
+        titleStyle={styles.titleStyle}
+        hideBackButton={true}
 
       >
         <FlatList
@@ -444,14 +462,20 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     width: 50,
     height: 50
+  },
+  actionbarStyle: {
+    backgroundColor: '#02C39A',
+    borderBottomWidth: 0
+  },
+  titleStyle: {
+    color: '#fff',
+    marginLeft: 65
   }
 })
 
 function mapStateToProps(state) {
   return {
     userApp: state.userApp,
-    ehealth: state.ehealth
-
   };
 }
 export default connect(mapStateToProps)(NotificationScreen);

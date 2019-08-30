@@ -21,7 +21,7 @@ import {
     Platform,
     View,
     Linking,
-    Alert
+    Alert    
 } from 'react-native';
 
 import ticketProvider from '@data-access/ticket-provider';
@@ -242,9 +242,6 @@ class ScanQRCodeScreen extends Component {
     }
 
     render() {
-        const deviceHeight = Platform.OS === "ios"
-            ? Dimensions.get("window").height
-            : require("react-native-extra-dimensions-android").get("REAL_WINDOW_HEIGHT");
         return (
             <ActivityPanel isLoading={this.state.isLoading} style={{ flex: 1 }} title="Quét QR BHYT" >
 
@@ -264,7 +261,6 @@ class ScanQRCodeScreen extends Component {
                     transparent={true}
                     isVisible={this.state.showError}
                     deviceWidth={deviceWidth}
-                    deviceHeight={deviceHeight}
                 >
                     <View style={styles.viewModal}>
                         <View style={styles.viewDialog}>
@@ -286,7 +282,6 @@ class ScanQRCodeScreen extends Component {
                     }} transparent={true}
                     isVisible={this.state.showError2}
                     deviceWidth={deviceWidth}
-                    deviceHeight={deviceHeight}
                 >
                     <View style={styles.viewModal}>
                         <View style={styles.viewDialog}>
@@ -298,7 +293,7 @@ class ScanQRCodeScreen extends Component {
                                     showError2: false
                                 }, () => {
                                     setTimeout(() => {
-                                        this.props.navigation.navigate("home", {
+                                        this.props.navigation.navigate("homeTab", {
                                             navigate: { screen: "addBooking" }
                                         });
                                     }, 400);
