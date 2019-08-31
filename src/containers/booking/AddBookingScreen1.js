@@ -233,12 +233,12 @@ class AddBookingScreen extends Component {
         //     this.setState({ serviceTypeError: constants.msg.booking.require_not_null })
         //     error = true;
         // }
-        // if (this.state.listServicesSelected && this.state.listServicesSelected.length) {
-        //     this.setState({ serviceError: "" })
-        // } else {
-        //     this.setState({ serviceError: constants.msg.booking.service_not_null })
-        //     error = true;
-        // }
+        if (this.state.listServicesSelected && this.state.listServicesSelected.length) {
+            this.setState({ serviceError: "" })
+        } else {
+            this.setState({ serviceError: constants.msg.booking.service_not_null })
+            error = true;
+        }
         if (this.state.bookingDate) {
             this.setState({ bookingError: "" })
         } else {
@@ -512,10 +512,10 @@ class AddBookingScreen extends Component {
 
                             <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
                         </TouchableOpacity>
-                        {/* {
+                        {
                         this.state.serviceError ?
                             <Text style={[styles.errorStyle]}>{this.state.serviceError}</Text> : null
-                    } */}
+                    }
                         <View style={styles.border}></View>
                         <TouchableOpacity style={styles.mucdichkham} onPress={() => {
                             console.log(this.state.listServicesSelected);
