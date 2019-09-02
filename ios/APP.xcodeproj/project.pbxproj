@@ -1093,10 +1093,10 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.isofh.appisofhcaredev;
+				PRODUCT_BUNDLE_IDENTIFIER = com.isofh.appisofhcaretest;
 				PRODUCT_NAME = APP;
 				PROVISIONING_PROFILE = "0f5fbbc4-4172-466c-97bb-95964499866b";
-				PROVISIONING_PROFILE_SPECIFIER = "isofhcare for user development develop branch";
+				PROVISIONING_PROFILE_SPECIFIER = "isofhcare for user development dev branch";
 				SWIFT_OBJC_BRIDGING_HEADER = "APP-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -1138,7 +1138,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.isofh.appisofhcaredev;
+				PRODUCT_BUNDLE_IDENTIFIER = com.isofh.appisofhcaretest;
 				PRODUCT_NAME = APP;
 				PROVISIONING_PROFILE = "a85727cc-7f0e-4e39-81ab-abf948e917c6";
 				PROVISIONING_PROFILE_SPECIFIER = "isofhcare for use distribution develop branch";
