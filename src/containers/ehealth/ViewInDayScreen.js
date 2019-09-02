@@ -559,7 +559,7 @@ class ViewInDateScreen extends Component {
                         }
                     }}
                 />
-                <ExportPDF ref={(element) => this.exportPdfCom = element} />
+                <ExportPDF endLoading = {() => this.setState({isLoading:false})} ref={(element) => this.exportPdfCom = element} />
 
             </ActivityPanel>
         );
