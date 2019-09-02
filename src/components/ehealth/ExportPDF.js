@@ -847,7 +847,12 @@ class ExportPDF extends Component {
                         console.log(error);
                     }
                 });
+            } else {
+                this.props.endLoading()
             }
+        }).catch(err => {
+            this.props.endLoading()
+
         })
     }
 

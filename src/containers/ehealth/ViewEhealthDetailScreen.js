@@ -91,33 +91,39 @@ class ViewEhealthDetailScreen extends Component {
         result.hospital = this.props.ehealth.hospital.hospital;
         let patientHistoryId = this.props.ehealth.patient.patientHistoryId;
         this.setState({ isLoading: true }, () => {
-            this.exportPdfCom.exportPdf({
-                type: "all",
-                result: result,
-                fileName: constants.filenamePDF + patientHistoryId,
-                print: true
-            }, () => {
+            try {
+                this.exportPdfCom.exportPdf({
+                    type: "all",
+                    result: result,
+                    fileName: constants.filenamePDF + patientHistoryId,
+                    print: true
+                }, () => {
+                    this.setState({ isLoading: false });
+                });
+            } catch (err) {
                 this.setState({ isLoading: false });
-            });
+            }
         })
     }
-    render() {
 
-        return (
-            <ActivityPanel style={styles.container} title={constants.title.ehealth_details}
-                icBack={require('@images/new/left_arrow_white.png')}
-                iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#02C39A"
-                actionbarStyle={styles.actionbarStyle}
-                titleStyle={styles.titleStyle}
-                isLoading={this.state.isLoading}
-                menuButton={<TouchableOpacity style={styles.btnPrint} onPress={this.print}><Icon name='print' style={{ color: '#00000080' }} /></TouchableOpacity>}
-            >
-                {this.renderDetails()}
-                <ExportPDF ref={(element) => this.exportPdfCom = element} />
-            </ActivityPanel>
-        );
-    }
+
+render() {
+
+    return (
+        <ActivityPanel style={styles.container} title={constants.title.ehealth_details}
+            icBack={require('@images/new/left_arrow_white.png')}
+            iosBarStyle={'light-content'}
+            statusbarBackgroundColor="#02C39A"
+            actionbarStyle={styles.actionbarStyle}
+            titleStyle={styles.titleStyle}
+            isLoading={this.state.isLoading}
+            menuButton={<TouchableOpacity style={styles.btnPrint} onPress={this.print}><Icon name='print' style={{ color: '#00000080' }} /></TouchableOpacity>}
+        >
+            {this.renderDetails()}
+            <ExportPDF endLoading = {() => {this.setState({isLoading:false})}} ref={(element) => this.exportPdfCom = element} />
+        </ActivityPanel>
+    );
+}
 }
 
 const styles = StyleSheet.create({
