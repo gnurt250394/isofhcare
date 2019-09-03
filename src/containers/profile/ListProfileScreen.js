@@ -138,7 +138,7 @@ class ListProfileScreen extends Component {
             profileProvider.confirm(id).then(res => {
                 if (res.code == 0) {
                     NavigationService.navigate("shareDataProfile", {
-                        medicalRelatedId: medicalRelatedId,
+                        shareId: medicalRelatedId,
                         id: id,
                         sharePermission: sharePermission
                     })
