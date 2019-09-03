@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Text, StatusBar, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native';
 import PropTypes from 'prop-types';
+const DEVICE_WIDTH = Dimensions.get("window").width;
 import constants from '@resources/strings'
 import { isIphoneX } from 'react-native-iphone-x-helper'
 import Activity from 'mainam-react-native-activity-panel';
@@ -12,6 +13,7 @@ import {
     Image,
     View
 } from 'react-native';
+import ScaledImage from 'mainam-react-native-scaleimage';
 
 
 class ActivityPanel extends Component {
@@ -83,7 +85,11 @@ class ActivityPanel extends Component {
                 paddingTop={this.state.paddingTop}
             // translucent={true}
             >
-                {/* {this.props.children} */}
+                {this.showBackground === false ?
+                    null :
+                    <ScaledImage source={require("@images/new/background.png")} height={200} width={DEVICE_WIDTH} style={{ position: 'absolute', bottom: 10, right: 10 }} />
+                }
+                {this.props.children}
             </Activity>
         );
     }
