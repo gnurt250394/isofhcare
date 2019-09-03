@@ -34,6 +34,7 @@ export default class ShareDataProfileScreen extends Component {
   updatePermission = () => {
     let id = this.state.id
     let shareId = this.state.shareId
+    console.log(id,shareId,'áhgdgádgah')
     let permissions
     if (!this.state.ehealth && !this.state.bookingDate) {
       permissions = ''
@@ -47,6 +48,7 @@ export default class ShareDataProfileScreen extends Component {
     if (this.state.bookingDate && this.state.ehealth) {
       permissions = 'YBDT,DATKHAM'
     }
+
     let data = {
       "recordId": id,
       "shareId": shareId,
