@@ -54,7 +54,7 @@ export default class ShareDataProfileScreen extends Component {
     }
     profileProvider.sharePermission(data).then(res => {
       if (res.code == 0 && res.data) {
-        snackbar.show('Thành công', 'success')
+        snackbar.show('Cài đặt chia sẻ thành công', 'success')
         NavigationService.navigate('listProfileUser', { reset: this.state.reset + 1 })
       } else {
         snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')

@@ -297,7 +297,6 @@ class CreateProfileScreen extends Component {
                 isVisible: false
             })
             if (res.code == 0) {
-                snackbar.show('Thành công', 'success')
                 NavigationService.navigate('shareDataProfile', { id: res.data.record.id, shareId: res.data.shareRecord.id })
 
             } else {
