@@ -160,14 +160,16 @@ class ConfirmBookingScreen extends Component {
                 this.setState({ isLoading: false, paymentId }, () => {
                     switch (this.state.paymentMethod) {
                         case 4:
-
                             booking.online_transactions = data.online_transactions;
                             booking.valid_time = data.valid_time;
+                            console.log(booking,'bookingbookingbooking');
                             this.props.navigation.navigate("homeTab", {
                                 navigate: {
                                     screen: "createBookingSuccess",
                                     params: {
-                                        booking
+                                        booking,
+                                        service:this.state.service
+
                                     }
                                 }
                             });
@@ -208,7 +210,9 @@ class ConfirmBookingScreen extends Component {
                                             navigate: {
                                                 screen: "createBookingSuccess",
                                                 params: {
-                                                    booking
+                                                    booking,
+                                                    service:this.state.service
+
                                                 }
                                             }
                                         });
@@ -277,7 +281,9 @@ class ConfirmBookingScreen extends Component {
                     navigate: {
                         screen: "createBookingSuccess",
                         params: {
-                            booking
+                            booking,
+                            service:this.state.service
+
                         }
                     }
                 });
@@ -307,7 +313,9 @@ class ConfirmBookingScreen extends Component {
                                 navigate: {
                                     screen: "createBookingSuccess",
                                     params: {
-                                        booking
+                                        booking,
+                                        service:this.state.service
+
                                     }
                                 }
                             });
@@ -347,7 +355,8 @@ class ConfirmBookingScreen extends Component {
                                             navigate: {
                                                 screen: "createBookingSuccess",
                                                 params: {
-                                                    booking
+                                                    booking,
+                                                    service:this.state.service
                                                 }
                                             }
                                         });
