@@ -118,7 +118,8 @@ class HomeScreen extends Component {
   }
   renderAds() {
     return (<View>
-      <View style={styles.viewAds}>
+      <ScaledImage source={require("@images/new/slogan.jpg")} width={DEVICE_WIDTH} />
+      {/* <View style={styles.viewAds}>
         <Text style={styles.txAds}>Ưu đãi</Text>
         <ScaledImage source={require("@images/new/ic_more.png")} width={20} style={styles.imgMore} />
       </View>
@@ -153,7 +154,7 @@ class HomeScreen extends Component {
             </Card>
           );
         }}
-      />
+      /> */}
     </View>)
   }
   pagination() {
