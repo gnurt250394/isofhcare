@@ -67,6 +67,7 @@ class DetailsHistoryScreen extends Component {
     });
   }
   renderStatus = () => {
+    alert(this.state.booking.statusPay);
     switch (Number(this.state.booking.statusPay)) {
       case 0:
         return <Text style={styles.paymentHospital}>{constants.booking.status.not_select_payment}</Text>;
@@ -165,9 +166,15 @@ class DetailsHistoryScreen extends Component {
     return (
       <ActivityPanel
         isLoading={this.state.isLoading}
-        style={{ flex: 1, backgroundColor: "#f7f9fb" }}
+        icBack={require('@images/new/left_arrow_white.png')}
+        iosBarStyle={'light-content'}
+        statusbarBackgroundColor="#02C39A"
+        actionbarStyle={styles.actionbarStyle}
+        titleStyle={styles.titleStyle}
+        isLoading={this.state.isLoading}
         title="Chi tiết đặt lịch"
       >
+
         {this.state.booking && <ScrollView>
           <View>
             <View style={styles.viewName}>
@@ -238,7 +245,7 @@ class DetailsHistoryScreen extends Component {
                 <View>
                   {
                     this.state.services.map((item, index) => {
-                      return <View>
+                      return <View key={index}>
                         <Text numberOfLines={1} key={index} style={[styles.txInfoService, { alignSelf: 'flex-end', fontWeight: 'bold' }]}>{item.name}</Text>
                         <Text key={index} style={[styles.txInfoService, { alignSelf: 'flex-end', marginBottom: 5 }]}>({item.price.formatPrice()}đ)</Text>
                       </View>
@@ -567,7 +574,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginHorizontal: 10,
     flex: 1
-  }
+  },
+  actionbarStyle: {
+    backgroundColor: '#02C39A',
+    borderBottomWidth: 0
+  },
+  titleStyle: {
+    color: '#FFF'
+  },
 });
 function mapStateToProps(state) {
   return {
