@@ -390,8 +390,6 @@ class AddBookingScreen extends Component {
         // menuButton={<TouchableOpacity style={styles.menu} onPress={() => snackbar.show(constants.msg.app.in_development)}><ScaleImage style={styles.img} height={20} source={require("@images/new/booking/ic_info.png")} /></TouchableOpacity>}
         >
             <View style={{ backgroundColor: '#f7f9fb', flex: 1 }}>
-                <ScaleImage source={require("@images/new/booking/bg_booking.png")} height={200} width={DEVICE_WIDTH} style={{ position: 'absolute', bottom: 10, right: 10 }} />
-
                 <KeyboardAwareScrollView>
                     <View style={styles.article}>
                         <TouchableOpacity style={styles.name} onPress={() => {

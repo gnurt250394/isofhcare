@@ -390,8 +390,6 @@ class AddBookingScreen extends Component {
 
         >
             <View style={{ backgroundColor: 'transparent', flex: 1 }}>
-                <ScaleImage source={require("@images/new/booking/bg_booking.png")} height={200} width={DEVICE_WIDTH} style={{ position: 'absolute', bottom: 10, right: 10 }} />
-
                 <KeyboardAwareScrollView>
                     <View style={styles.article}>
                         <TouchableOpacity style={styles.name} onPress={() => {
