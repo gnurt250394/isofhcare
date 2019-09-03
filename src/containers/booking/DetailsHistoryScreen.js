@@ -197,7 +197,7 @@ class DetailsHistoryScreen extends Component {
                 <ScaledImage
                   width={20}
                   height={20}
-                  source={require("@images/ic_barcode.png")}
+                  source={require("@images/new/booking/ic_barcode.png")}
                 />
                 <Text style={styles.txLabelBarcode}>Mã code</Text>
                 <TouchableOpacity style={{ marginRight: 10 }}>
@@ -212,17 +212,18 @@ class DetailsHistoryScreen extends Component {
                   <ScaledImage
                     width={20}
                     height={20}
-                    source={require("@images/ic_barcode.png")}
+                    source={require("@images/new/booking/ic_barcode.png")}
                   />
                   <Text style={styles.txLabelBarcode}>Mã code</Text>
-                  <TouchableOpacity onPress={this.onQrClick} style={{ marginRight: 10 }}>
+                  <TouchableOpacity onPress={this.onQrClick} style={{ marginRight: 10, alignItems: 'center' }}>
                     <QRCode
-                      value={this.state.booking.codeBooking ? this.state.booking.codeBooking : 0}
-                      logo={require('@images/new/logo.png') }
+                      value={this.state.booking.codeBooking || 0}
+                      logo={require('@images/new/logo.png')}
                       logoSize={20}
                       size={80}
                       logoBackgroundColor='transparent'
                     />
+                    <Text>{this.state.booking.codeBooking}</Text>
                   </TouchableOpacity>
                 </View>
               )}

@@ -7,7 +7,6 @@ import snackbar from '@utils/snackbar-utils';
 import Form from 'mainam-react-native-form-validate/Form';
 import TextField from 'mainam-react-native-form-validate/TextField';
 import eyeImg from '@images/eye_black.png';
-import ButtonSubmit from '@components/ButtonSubmit';
 import userProvider from '@data-access/user-provider';
 import constants from '@resources/strings';
 import FloatingLabel from 'mainam-react-native-floating-label';

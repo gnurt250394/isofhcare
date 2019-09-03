@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import UserInput from "@components/UserInput";
 import ActivityPanel from "@components/ActivityPanel";
-import ButtonSubmit from "@components/ButtonSubmit";
 import {
   View,
   ScrollView,

@@ -99,7 +99,7 @@ class SelectServiceScreen extends Component {
     renderSearchButton() {
         return (
             <TouchableOpacity onPress={() => this.showSearch()} style={{ padding: 10 }}>
-                <ScaleImage source={require("@images/ictimkiem.png")} width={20} />
+                <ScaleImage source={require("@images/ic_timkiem.png")} width={20} />
             </TouchableOpacity>
         );
     }
