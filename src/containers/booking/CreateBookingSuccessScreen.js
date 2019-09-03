@@ -108,13 +108,13 @@ class CreateBookingSuccessScreen extends Component {
                                 </View> : null
                             }
                             <View style={styles.row}>
-                                <Text style={styles.label}>{constants.booking.payment_method}:</Text>
+                                <Text style={styles.label}>{constants.booking.payment_method}</Text>
                                 <Text style={styles.text}>{this.getPaymentMethod(booking)}</Text>
                             </View>
                             {
                                 service && service.length ?
                                     <View style={styles.row}>
-                                        <Text style={styles.label}>{"Tổng tiền"}</Text>
+                                        <Text style={styles.label}>{"Tổng tiền:"}</Text>
                                         <Text style={[styles.text, { color: "#d0021b" }]}>{service.reduce((start, item) => {
                                             return start + parseInt(item.service.price)
                                         }, 0).formatPrice()}đ</Text>
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
         textAlign: 'right',
         flex: 1,
         fontSize: 13,
-        fontWeight: "600",
+        fontWeight: "bold",
         color: "#000000",
     },
     view1: {
