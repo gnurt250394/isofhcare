@@ -320,7 +320,7 @@ class CreateQuestionStep2Screen extends Component {
                                             this.state.specialist && this.state.specialist.name ? this.state.specialist.name : "Chọn chuyên khoa"
                                         }
                                     </Text>
-                                    <ScaleImage source={require("@images/icdropdown.png")} height={8} style={{ marginRight: 5 }} />
+                                    <ScaleImage source={require("@images/ic_dropdown.png")} height={8} style={{ marginRight: 5 }} />
                                 </TouchableOpacity>
                                 <Text style={[styles.label, { marginTop: 20 }]}>Tiền sử bệnh</Text>
                                 <View style={{ flexDirection: 'row' }}>
