@@ -55,17 +55,35 @@ class ConfirmBookingScreen extends Component {
         if (nextAppState == 'inactive' || nextAppState == 'background') {
             console.log("1", nextAppState);
         } else {
-            console.log("2", nextAppState);
+            this.setState({ isLoading: true }, () => {
+                bookingProvider.detail(this.state.booking.book.id).then(s => {
+                    this.setState({ isLoading: false }, () => {
+                        if (s.code == 0 && s.data && s.data.booking) {
+                            if (s.code == 0 && s.data && s.data.booking) {
+                                switch (s.data.booking.status) {
+                                    case 3: //đã thanh toán
+                                        let booking = this.state.booking;
+                                        booking.hospital = this.state.hospital;
+                                        booking.profile = this.state.profile;
+                                        booking.payment = this.state.paymentMethod;
+                                        this.props.navigation.navigate("homeTab", {
+                                            navigate: {
+                                                screen: "createBookingSuccess",
+                                                params: {
+                                                    booking,
+                                                    service: this.state.service
+
+                                                }
+                                            }
+                                        });
+                                        break;
+                                }
+                            }
+                        }
+                    });
+                });
+            });
         }
-        // this.state = nextAppState;
-        // console.log('App has come to the foreground!', nextAppState);
-        // if (
-        //     this.state.appState.match(/inactive|background/) &&
-        //     nextAppState === 'active'
-        // ) {
-        //     console.log('App has come to the foreground!');
-        // }
-        // this.setState({ appState: nextAppState });
     };
 
     confirmPayment(booking, bookingId) {
@@ -308,8 +326,10 @@ class ConfirmBookingScreen extends Component {
                     }
                 });
             }).catch(y => {
-                booking.transactionCode = data.online_transactions[0].id;
-                this.props.navigation.navigate("paymentBookingError", { booking })
+                if (y.code != 2) {
+                    booking.transactionCode = data.online_transactions[0].id;
+                    this.props.navigation.navigate("paymentBookingError", { booking })
+                }
             });
         })
     }
@@ -425,7 +445,7 @@ class ConfirmBookingScreen extends Component {
             this.setState({ isLoading: true }, () => {
                 bookingProvider.detail(this.state.booking.book.id).then(s => {
                     this.setState({ isLoading: false }, () => {
-                        if (s.code==0 && s.data && s.data.booking) {
+                        if (s.code == 0 && s.data && s.data.booking) {
                             switch (s.data.booking.status) {
                                 case 3: //đã thanh toán
                                     snackbar.show("Đặt khám đã được thanh toán", "danger")
