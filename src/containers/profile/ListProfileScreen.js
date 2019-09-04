@@ -46,7 +46,7 @@ class ListProfileScreen extends Component {
             switch (index) {
                 case 0:
                     NavigationService.navigate("shareDataProfile", {
-                        medicalRelatedId: this.state.medicalRelatedId,
+                        shareId: this.state.medicalRelatedId,
                         id: this.state.idProfile,
                         sharePermission: this.state.sharePermission
                     })
