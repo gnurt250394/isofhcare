@@ -55,13 +55,7 @@ class ViewCheckupResultScreen extends Component {
     render() {
 
         return (
-            <ActivityPanel style={styles.container} title={constants.title.ehealth_details}
-                icBack={require('@images/new/left_arrow_white.png')}
-                iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#02C39A"
-                actionbarStyle={styles.actionbarStyle}
-                titleStyle={styles.titleStyle}
-                isLoading={this.state.isLoading}>
+            <ActivityPanel style={styles.container} title={constants.title.ehealth_details}isLoading={this.state.isLoading}>
                 {this.renderDetails()}
             </ActivityPanel>
         );
@@ -83,16 +77,7 @@ const styles = StyleSheet.create({
         padding: 10, alignItems: 'center'
     },
     txFinish:{ fontWeight: 'bold', color: '#FFF', fontSize: 17 },
-    viewFooter:{ fontWeight: 'bold', color: '#FFF', fontSize: 17 },
-    actionbarStyle:{
-        backgroundColor: '#02C39A',
-        borderBottomWidth: 0
-    },
-    titleStyle:{
-        color: '#FFF'
-    },
-
-
+    viewFooter:{ fontWeight: 'bold', color: '#FFF', fontSize: 17 }
 });
 
 function mapStateToProps(state) {

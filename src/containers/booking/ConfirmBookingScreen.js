@@ -55,7 +55,6 @@ class ConfirmBookingScreen extends Component {
         if (nextAppState == 'inactive' || nextAppState == 'background') {
             console.log("1", nextAppState);
         } else {
-            alert(1);
             console.log("2", nextAppState);
         }
         // this.state = nextAppState;

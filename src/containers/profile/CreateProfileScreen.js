@@ -337,13 +337,7 @@ class CreateProfileScreen extends Component {
 
         return (
             <ActivityPanel
-                icBack={require('@images/new/left_arrow_white.png')}
-                titleStyle={styles.txTitle}
                 title={'THÊM THÀNH VIÊN MỚI'}
-                iosBarStyle={'light-content'}
-                actionbarStyle={styles.actionbarStyle}
-                style={{ flex: 1, backgroundColor: '#fff' }}
-
             >
                 <ScrollView keyboardShouldPersistTaps='handled' style={{ flex: 1, paddingVertical: 5 }}>
                     <View style={styles.container}>
@@ -788,7 +782,6 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: 'bold'
     },
-    txTitle: { color: '#fff', marginHorizontal: 10 },
     mdk: {
         marginLeft: 12,
         flex: 1,
@@ -828,10 +821,7 @@ const styles = StyleSheet.create({
 
         // borderColor: "rgba(0, 0, 0, 0.07)"
     },
-    actionbarStyle: {
-        backgroundColor: '#02C39A',
-        borderBottomWidth: 0
-    },
+    
     btnhuy: {
         fontSize: 18,
         fontWeight: "normal",

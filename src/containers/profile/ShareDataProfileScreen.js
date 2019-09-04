@@ -72,16 +72,6 @@ export default class ShareDataProfileScreen extends Component {
       <ActivityPanel style={{ flex: 1 }}
         // title="HỒ SƠ Y BẠ GIA ĐÌNH"
         title={'CÀI ĐẶT CHIA SẺ'}
-        icBack={require('@images/new/left_arrow_white.png')}
-        iosBarStyle={'light-content'}
-        statusbarBackgroundColor="#02C39A"
-        actionbarStyle={{
-          backgroundColor: '#02C39A',
-          borderBottomWidth: 0
-        }}
-        titleStyle={{
-          color: '#FFF'
-        }}
         showFullScreen={true} isLoading={this.state.isLoading}>
         <View style={styles.viewConfirm}>
           <Text style={styles.txContent}>CHỌN DỮ LIỆU BẠN MUỐN CHIA SẺ VỚI THÀNH VIÊN NÀY</Text>

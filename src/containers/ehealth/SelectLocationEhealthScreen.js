@@ -253,12 +253,7 @@ class SelectLocationEhealthScreen extends Component {
     render() {
         return (
             <ActivityPanel
-                icBack={require('@images/new/left_arrow_white.png')}
-                titleStyle={styles.txTitle}
                 title={'CHỌN BỆNH VIỆN'}
-                iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#02C39A"
-                actionbarStyle={styles.actionbarStyle}
                 style={styles.container}
             >
                 <DialogBox ref={dialogbox => { this.dialogbox = dialogbox }} />
@@ -354,11 +349,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#f0f5f9',
         borderStyle: 'solid',
     },
-    txTitle: { color: '#fff' },
-    actionbarStyle: {
-        backgroundColor: '#02C39A',
-        borderBottomWidth: 0
-    },
+    
     search: {
         backgroundColor: '#ffffff',
         borderStyle: 'solid',

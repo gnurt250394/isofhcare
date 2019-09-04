@@ -40,7 +40,7 @@ class MenuProfile extends React.Component {
         : icSupport;
     return (
       <ActivityPanel
-        statusbarBackgroundColor="#02C39A"
+        
         isLoading={this.state.isLoading}
         hideActionbar={true}
       >

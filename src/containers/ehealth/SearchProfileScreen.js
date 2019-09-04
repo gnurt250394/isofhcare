@@ -217,7 +217,7 @@ class SearchProfileScreen extends Component {
         return (
             <ActivityPanel
                 backButton={<TouchableOpacity style={styles.activity} onPress={() => this.props.navigation.pop()}><Text>{constants.ehealth.cancel}</Text></TouchableOpacity>}
-                titleStyle={styles.titleStyle} title={constants.title.search_profile}
+         title={constants.title.search_profile}
                 isLoading={this.state.isLoading} menuButton={this.renderSearchButton()} showFullScreen={true}
             >
                 {

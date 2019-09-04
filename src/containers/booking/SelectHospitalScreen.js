@@ -289,8 +289,9 @@ class SelectHospitalScreen extends Component {
             <ActivityPanel
                 isLoading={this.state.isLoading}
                 style={styles.AcPanel} title={constants.title.location}
-                backButton={<TouchableOpacity style={{ paddingLeft: 20 }} onPress={() => this.props.navigation.pop()}><Text>Hủy</Text></TouchableOpacity>}
-                titleStyle={{ marginLeft: 10 }}>
+                backButton={<TouchableOpacity style={{ paddingLeft: 20 }} onPress={() => this.props.navigation.pop()}><Text style={{ color: '#FFF' }}>Hủy</Text></TouchableOpacity>}
+                isLoading={this.state.isLoading}
+            >
                 <DialogBox ref={dialogbox => { this.dialogbox = dialogbox }} />
 
 
@@ -472,7 +473,12 @@ const styles = StyleSheet.create({
         letterSpacing: 0,
         color: "#02c39a",
         marginLeft: 15,
-    }
+    },
+    
+    titleStyle: {
+        color: '#FFF',
+        marginLeft: 10
+    },
 
 })
 export default connect(mapStateToProps)(SelectHospitalScreen);

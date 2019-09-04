@@ -137,10 +137,7 @@ class EnterPasswordScreen extends Component {
   render() {
     return (
       <ActivityPanel
-        style={{ flex: 1 }}
         title={constants.register}
-        titleStyle={{ textAlign: 'left', marginLeft: 20 }}
-        showFullScreen={true}
       >
         <ScrollView
           showsVerticalScrollIndicator={false}

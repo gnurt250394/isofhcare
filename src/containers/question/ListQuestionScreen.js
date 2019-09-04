@@ -61,15 +61,7 @@ class ListQuestionScreen extends Component {
                 showFullScreen={true}
                 menuButton={this.props.userApp.isLogin ? this.menuCreate() : null}
                 isLoading={this.state.isLoading}
-                actionbarStyle={[this.props.userApp.isLogin ? {
-                    backgroundColor: '#02C39A',
-                    borderBottomWidth: 0
-                } : {
-                        borderBottomWidth: 0
-                    }]}
-                titleStyle={[this.props.userApp.isLogin ? { marginRight: 0 } : {}, { color: '#FFF' }]}
-                iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#02C39A"
+                titleStyle={[this.props.userApp.isLogin ? { marginRight: 0 } : {}, { color: '#FFF' }]}                               
             >
                 {
                     this.props.userApp.isLogin ?

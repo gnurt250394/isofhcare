@@ -440,11 +440,7 @@ class ViewInDateScreen extends Component {
     render() {
         return (
             <ActivityPanel style={styles.container} title={constants.title.ehealth}
-                icBack={require('@images/new/left_arrow_white.png')}
-                iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#02C39A"
-                actionbarStyle={styles.actionbarStyle}
-                titleStyle={styles.titleStyle}
+                
                 isLoading={this.state.isLoading}
                 menuButton={this.state.dateSelected ?
                     <TouchableOpacity style={styles.btnShare} onPress={this.showShare}><Icon name='share' style={{ color: '#FFF' }} /></TouchableOpacity> :
@@ -704,10 +700,7 @@ const styles = StyleSheet.create({
     viewTxMedical: { flex: 1, padding: 15 },
     txMedical: { paddingTop: 5, color: '#373A3C' },
     footerMedical: { width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 },
-    actionbarStyle: {
-        backgroundColor: '#02C39A',
-        borderBottomWidth: 0
-    },
+    
     titleStyle:
     {
         color: '#FFF', marginLeft: 65

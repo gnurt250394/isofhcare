@@ -381,12 +381,12 @@ class AddBookingScreen extends Component {
         // minDate.setDate(minDate.getDate());
 
         return (<ActivityPanel title="Đặt Khám"
-            icBack={require('@images/new/left_arrow_white.png')}
+            
             isLoading={this.state.isLoading}
-            iosBarStyle={'light-content'}
-            statusbarBackgroundColor="#02C39A"
-            actionbarStyle={styles.actionbarStyle}
-            titleStyle={styles.titleStyle}
+            
+            
+            
+    
         // menuButton={<TouchableOpacity style={styles.menu} onPress={() => snackbar.show(constants.msg.app.in_development)}><ScaleImage style={styles.img} height={20} source={require("@images/new/booking/ic_info.png")} /></TouchableOpacity>}
         >
             <View style={{ backgroundColor: '#f7f9fb', flex: 1 }}>
@@ -839,14 +839,6 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginLeft: 25,
         marginRight: 25
-    },
-    actionbarStyle: {
-        backgroundColor: '#02C39A',
-        borderBottomWidth: 0
-    },
-    titleStyle:
-    {
-        color: '#FFF', marginLeft: 10
     },
 });
 
