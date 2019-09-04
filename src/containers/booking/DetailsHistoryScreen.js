@@ -165,9 +165,15 @@ class DetailsHistoryScreen extends Component {
     return (
       <ActivityPanel
         isLoading={this.state.isLoading}
-        style={{ flex: 1, backgroundColor: "#f7f9fb" }}
+        
+        
+        
+        
+
+        isLoading={this.state.isLoading}
         title="Chi tiết đặt lịch"
       >
+
         {this.state.booking && <ScrollView>
           <View>
             <View style={styles.viewName}>
@@ -197,7 +203,7 @@ class DetailsHistoryScreen extends Component {
                 <ScaledImage
                   width={20}
                   height={20}
-                  source={require("@images/ic_barcode.png")}
+                  source={require("@images/new/booking/ic_barcode.png")}
                 />
                 <Text style={styles.txLabelBarcode}>Mã code</Text>
                 <TouchableOpacity style={{ marginRight: 10 }}>
@@ -212,17 +218,18 @@ class DetailsHistoryScreen extends Component {
                   <ScaledImage
                     width={20}
                     height={20}
-                    source={require("@images/ic_barcode.png")}
+                    source={require("@images/new/booking/ic_barcode.png")}
                   />
                   <Text style={styles.txLabelBarcode}>Mã code</Text>
-                  <TouchableOpacity onPress={this.onQrClick} style={{ marginRight: 10 }}>
+                  <TouchableOpacity onPress={this.onQrClick} style={{ marginRight: 10, alignItems: 'center' }}>
                     <QRCode
-                      value={this.state.booking.codeBooking ? this.state.booking.codeBooking : 0}
-                      logo={require('@images/new/logo.png') }
+                      value={this.state.booking.codeBooking || 0}
+                      logo={require('@images/new/logo.png')}
                       logoSize={20}
                       size={80}
                       logoBackgroundColor='transparent'
                     />
+                    <Text>{this.state.booking.codeBooking}</Text>
                   </TouchableOpacity>
                 </View>
               )}
@@ -237,7 +244,7 @@ class DetailsHistoryScreen extends Component {
                 <View>
                   {
                     this.state.services.map((item, index) => {
-                      return <View>
+                      return <View key={index}>
                         <Text numberOfLines={1} key={index} style={[styles.txInfoService, { alignSelf: 'flex-end', fontWeight: 'bold' }]}>{item.name}</Text>
                         <Text key={index} style={[styles.txInfoService, { alignSelf: 'flex-end', marginBottom: 5 }]}>({item.price.formatPrice()}đ)</Text>
                       </View>
@@ -566,7 +573,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginHorizontal: 10,
     flex: 1
-  }
+  },
+  
+  titleStyle: {
+    color: '#FFF'
+  },
 });
 function mapStateToProps(state) {
   return {

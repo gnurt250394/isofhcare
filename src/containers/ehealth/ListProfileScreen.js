@@ -117,16 +117,6 @@ class ListProfileScreen extends PureComponent {
             <ActivityPanel style={{ flex: 1 }}
                 // title="HỒ SƠ Y BẠ GIA ĐÌNH"
                 title={<Text style={{}}>{constants.title.list_profile_ehealth}{'\n'}<Text style={{ fontSize: 12, fontWeight: 'normal' }}>{constants.ehealth.total}{this.state.listData ? this.state.listData.length : 0}{constants.ehealth.member}</Text></Text>}
-                icBack={require('@images/new/left_arrow_white.png')}
-                iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#02C39A"
-                actionbarStyle={{
-                    backgroundColor: '#02C39A',
-                    borderBottomWidth: 0
-                }}
-                titleStyle={{
-                    color: '#FFF'
-                }}
                 showFullScreen={true} isLoading={this.state.isLoading}>
                 <FlatList
                     showsVerticalScrollIndicator={false}
@@ -234,10 +224,7 @@ const styles = StyleSheet.create({
     txCountTime: { justifyContent: 'center', alignItems: 'center', width: 80, borderLeftColor: '#c8d1d6', borderLeftWidth: 1 },
     txCount: { color: '#f36819', fontSize: 30 },
     borderBottom: { height: 1, backgroundColor: '#00000050' },
-    actionbarStyle: {
-        backgroundColor: '#02C39A',
-        borderBottomWidth: 0
-    },
+    
 
 });
 

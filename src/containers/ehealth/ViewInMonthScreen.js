@@ -480,13 +480,8 @@ class ListProfileScreen extends Component {
     }
     render() {
         return (
-            <ActivityPanel style={{ flex: 1 }} title={constants.title.ehealth}
-                icBack={require('@images/new/left_arrow_white.png')}
+            <ActivityPanel style={{ flex: 1 }} title={constants.title.ehealth}                
                 isLoading={this.state.isLoading}
-                iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#02C39A"
-                actionbarStyle={styles.actionbarStyle}
-                titleStyle={styles.titleStyle}
                 menuButton={this.state.dateSelected ?
                     <TouchableOpacity style={styles.btnShare} onPress={this.showShare}><Icon name='share' style={{ color: '#FFF' }} /></TouchableOpacity> :
                     <TouchableOpacity style={[styles.btnShare, { width: 50 }]} onPress={this.showShare}></TouchableOpacity>}
@@ -728,10 +723,7 @@ const styles = StyleSheet.create({
     txShareFinish: { textAlign: 'center', marginVertical: 20, marginHorizontal: 10, fontSize: 18 },
     viewShareErr: { flexDirection: 'row', alignItems: 'center', padding: 10 },
     txShareErr: { textAlign: 'center', marginVertical: 20, marginHorizontal: 10, fontSize: 18 },
-    actionbarStyle: {
-        backgroundColor: '#02C39A',
-        borderBottomWidth: 0
-    },
+    
     viewCalendar: { justifyContent: 'center', flex: 1, alignItems: 'center' },
     calendarStyle: { marginBottom: 3, backgroundColor: "#FFF", width: '100%' },
     txCheckResult: { color: '#fff', fontWeight: 'bold', fontSize: 16 },

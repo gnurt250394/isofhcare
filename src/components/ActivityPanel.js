@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Text, StatusBar, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native';
 import PropTypes from 'prop-types';
+const DEVICE_WIDTH = Dimensions.get("window").width;
 import constants from '@resources/strings'
 import { isIphoneX } from 'react-native-iphone-x-helper'
 import Activity from 'mainam-react-native-activity-panel';
@@ -12,6 +13,7 @@ import {
     Image,
     View
 } from 'react-native';
+import ScaledImage from 'mainam-react-native-scaleimage';
 
 
 class ActivityPanel extends Component {
@@ -46,7 +48,9 @@ class ActivityPanel extends Component {
                 backButtonClick={() => this.backPress()}
                 showMessengerClicked={() => this.msgPress()}
                 {...this.props}
-                actionbarStyle={[{ paddingTop: this.state.paddingTop, backgroundColor: constants.colors.actionbar_color }, this.props.actionbarStyle]}
+                icBack={require('@images/new/left_arrow_white.png')}
+                titleStyle={[styles.titleStyle, this.props.titleStyle]}
+                actionbarStyle={[{ paddingTop: this.state.paddingTop, backgroundColor: constants.colors.actionbar_color }, styles.actionbarStyle, this.props.actionbarStyle]}
             />
         );
     }
@@ -74,6 +78,8 @@ class ActivityPanel extends Component {
         return (
             <Activity
                 statusbarBackgroundColor="#02C39A"
+                icBack={require('@images/new/left_arrow_white.png')}
+                iosBarStyle={'light-content'}
                 {...this.props}
                 containerStyle={[{
                     backgroundColor: "#f7f9fb"
@@ -83,11 +89,25 @@ class ActivityPanel extends Component {
                 paddingTop={this.state.paddingTop}
             // translucent={true}
             >
-                {/* {this.props.children} */}
+                {this.showBackground === false ?
+                    null :
+                    <ScaledImage source={require("@images/new/background.png")} height={200} width={DEVICE_WIDTH} style={{ position: 'absolute', bottom: 10, right: 10 }} />
+                }
+                {this.props.children}
             </Activity>
         );
     }
 }
+const styles = StyleSheet.create({
+    actionbarStyle: {
+        backgroundColor: '#02C39A',
+        borderBottomWidth: 0
+    },
+    titleStyle: {
+        color: '#FFF',
+        marginLeft: 10
+    }
+});
 function mapStateToProps(state) {
     return {
         navigation: state.navigation

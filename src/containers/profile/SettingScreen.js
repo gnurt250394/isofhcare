@@ -23,14 +23,6 @@ class SettingScreen extends Component {
     render() {
         return (
             <ActivityPanel style={{ flex: 1 }}
-                icBack={require('@images/new/left_arrow_white.png')}
-                iosBarStyle={'dark-content'}
-                iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#02C39A"
-                actionbarStyle={styles.actionbarStyle}
-                titleStyle={{
-                    color: '#FFF'
-                }}
             >
                 <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
                     {/* <DrawerItems></DrawerItems> */}
@@ -82,10 +74,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#fff',
     },
-    actionbarStyle: {
-        backgroundColor: '#02C39A',
-        borderBottomWidth: 0
-    },
+    
     txVersion: {
         fontWeight: 'bold',
         fontSize: 14

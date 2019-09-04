@@ -46,7 +46,7 @@ class ListProfileScreen extends Component {
             switch (index) {
                 case 0:
                     NavigationService.navigate("shareDataProfile", {
-                        medicalRelatedId: this.state.medicalRelatedId,
+                        shareId: this.state.medicalRelatedId,
                         id: this.state.idProfile,
                         sharePermission: this.state.sharePermission
                     })
@@ -138,7 +138,7 @@ class ListProfileScreen extends Component {
             profileProvider.confirm(id).then(res => {
                 if (res.code == 0) {
                     NavigationService.navigate("shareDataProfile", {
-                        medicalRelatedId: medicalRelatedId,
+                        shareId: medicalRelatedId,
                         id: id,
                         sharePermission: sharePermission
                     })
@@ -279,12 +279,7 @@ class ListProfileScreen extends Component {
     render() {
         return (
             <ActivityPanel
-                icBack={require('@images/new/left_arrow_white.png')}
-                titleStyle={styles.txTitle}
                 title={'THÀNH VIÊN GIA ĐÌNH'}
-                iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#02C39A"
-                actionbarStyle={styles.actionbarStyle}
                 style={styles.container}
             // isLoading={this.state.refreshing}
             >
@@ -376,11 +371,6 @@ const styles = StyleSheet.create({
     },
     txId: {
         color: '#000'
-    },
-    txTitle: { color: '#fff', marginHorizontal: 10 },
-    actionbarStyle: {
-        backgroundColor: '#02C39A',
-        borderBottomWidth: 0
     },
     btn: {
         paddingHorizontal: 10, paddingVertical: 5, backgroundColor: '#359A60', borderRadius: 5, justifyContent: 'center', alignItems: 'center', alignSelf: 'flex-start', marginHorizontal: 10, marginLeft: 12, marginBottom: 20, marginTop: 10

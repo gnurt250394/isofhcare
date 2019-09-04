@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import UserInput from "@components/UserInput";
 import ActivityPanel from "@components/ActivityPanel";
-import ButtonSubmit from "@components/ButtonSubmit";
 import {
   View,
   ScrollView,
@@ -116,10 +115,7 @@ class RegisterScreen extends Component {
     return (
       this.state.verified && (
         <ActivityPanel
-          style={{ flex: 1 }}
-          title="Đăng ký"
-          titleStyle={{ textAlign: 'left', marginLeft: 20 }}
-          showFullScreen={true}
+          title="Đăng ký"          
         >
           <ScrollView
             showsVerticalScrollIndicator={false}
@@ -254,7 +250,7 @@ class RegisterScreen extends Component {
             confirmTextIOS={"Xác nhận"}
             date={this.state.dob || new Date()}
           />
-        </ActivityPanel>
+        </ActivityPanel >
       )
     );
   }

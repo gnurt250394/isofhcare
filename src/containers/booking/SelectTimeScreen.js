@@ -152,9 +152,9 @@ class SelectTimeScreen extends Component {
         while (firstDay <= lastDay) {
             let key = firstDay.format("yyyy-MM-dd");;
             obj[key] = {}
-            if (new Date(key) <= new Date() 
-            // || firstDay.getDay() == 6 
-            || firstDay.getDay() == 0) {
+            if (new Date(key) <= new Date()
+                // || firstDay.getDay() == 6 
+                || firstDay.getDay() == 0) {
                 obj[key].disabled = true;
                 obj[key].disableTouchEvent = true;
             } else {
@@ -310,15 +310,9 @@ class SelectTimeScreen extends Component {
     render() {
         console.log(this.state.listTime);
         return (<ActivityPanel
-            icBack={require('@images/new/left_arrow_white.png')}
-            iosBarStyle={'light-content'}
-            statusbarBackgroundColor="#02C39A"
-            actionbarStyle={styles.actionbarStyle}
-            titleStyle={styles.titleStyle}
             isLoading={this.state.isLoading}
-            title="Chọn thời gian" >
-            <View style={{ backgroundColor: '#FFF', flex: 1 }}>
-                <ScaleImage source={require("@images/new/booking/bg_booking.png")} height={200} width={DEVICE_WIDTH} style={{ position: 'absolute', bottom: 10, right: 10 }} />
+            title="Chọn thời gian">
+            <View style={{ flex: 1 }}>
                 <View style={styles.container}>
                     <ScrollView keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
                         <Text style={{ color: '#00c088', fontWeight: 'bold', fontSize: 16, margin: 10 }}>CHỌN NGÀY GIỜ CÓ MÀU XANH</Text>
@@ -541,10 +535,7 @@ const styles = StyleSheet.create({
         color: 'red',
         textAlign: 'center'
     },
-    actionbarStyle: {
-        backgroundColor: '#02C39A',
-        borderBottomWidth: 0
-    },
+
     titleStyle: {
         color: '#FFF'
     },

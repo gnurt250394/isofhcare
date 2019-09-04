@@ -125,8 +125,8 @@ class SearchPanel extends Component {
                     {
                         this.state.keyword ?
                             <TouchableOpacity style={{ padding: 10 }} onPress={this.clear.bind(this)}>
-                                <ScaledImage width={12} style={{ margin: 4 }} source={require("@images/icclose.png")} />
-                            </TouchableOpacity> : <ScaledImage width={20} style={{ margin: 10 }} source={require("@images/ictimkiem.png")} />
+                                <ScaledImage width={12} style={{ margin: 4 }} source={require("@images/ic_close.png")} />
+                            </TouchableOpacity> : <ScaledImage width={20} style={{ margin: 10 }} source={require("@images/ic_timkiem.png")} />
                     }
                 </View>
                 {
