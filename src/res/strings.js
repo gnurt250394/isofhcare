@@ -836,6 +836,7 @@ module.exports = {
       login_social: isofhcare_service + "user/login-social",
       logout: isofhcare_service + "user/logout",
       register: isofhcare_service + "user/register",
+      registerV2: isofhcare_service + 'v3.0/user/registration',
       forgot_password: isofhcare_service + "user/forget-password",
       update: isofhcare_service + "user/update",
       change_password: isofhcare_service + "user/update-password",
