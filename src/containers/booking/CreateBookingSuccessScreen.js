@@ -66,7 +66,7 @@ class CreateBookingSuccessScreen extends Component {
                                 <TouchableOpacity onPress={this.onQrClick} style={{ alignItems: 'center', marginTop: 10 }}>
                                     <QRCode
                                         value={booking.book.codeBooking || ""}
-                                        logo={require('@images/new/logo.png') }
+                                        logo={require('@images/new/logo.png')}
                                         logoSize={20}
                                         size={100}
                                         logoBackgroundColor='transparent'
@@ -120,7 +120,7 @@ class CreateBookingSuccessScreen extends Component {
                                         }, 0).formatPrice()}đ</Text>
                                     </View> : null
                             }
-                            {/* {
+                            {
                                 booking.payment == 4 && <View>
                                     <View style={styles.row}>
                                         <Text style={styles.label}>{constants.booking.code_payment}</Text>
@@ -131,7 +131,7 @@ class CreateBookingSuccessScreen extends Component {
                                         <Text style={styles.text}>{booking.book.expireDatePayoo.toDateObject('-').format("dd/MM/yyyy")}</Text>
                                     </View>
                                 </View>
-                            } */}
+                            }
                         </View>
                         <View style={styles.view1}>
                             <Text style={styles.text2}>{constants.booking.booking_send}</Text>
@@ -153,7 +153,7 @@ class CreateBookingSuccessScreen extends Component {
                 >
                     <QRCode
                         value={booking.book.codeBooking || ""}
-                        logo={require('@images/new/logo.png') }
+                        logo={require('@images/new/logo.png')}
                         logoSize={40}
                         size={250}
                         logoBackgroundColor='transparent'
