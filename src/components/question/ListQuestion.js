@@ -121,7 +121,7 @@ class ListQuestion extends Component {
         }
     }
     renderItemPost(item, index) {
-        const icSupport = require("@images/ichotro.png");
+        const icSupport = require("@images/user.png");
         const DEVICE_WIDTH = Dimensions.get('window').width;
         const source = item.author && item.author.avatar ? { uri: item.author.avatar.absoluteUrl() } : icSupport;
         var image = "";

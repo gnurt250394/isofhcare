@@ -10,7 +10,7 @@ import clientUtils from '@utils/client-utils';
 import convertUtils from 'mainam-react-native-convert-utils';
 import ImageLoad from 'mainam-react-native-image-loader';
 const bgImage = require("@images/bg.png")
-const icSupport = require("@images/ichotro.png")
+const icSupport = require("@images/user.png")
 const icCamera = require("@images/photoCamera.png")
 const icEdit = require("@images/edit1.png")
 import redux from '@redux-store';

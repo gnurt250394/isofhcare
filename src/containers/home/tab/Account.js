@@ -20,7 +20,7 @@ class Account extends React.Component {
       });
     }
   }
-  
+
   componentWillReceiveProps(nextProps) {
     if (nextProps) {
       this.setState({
@@ -30,17 +30,17 @@ class Account extends React.Component {
   }
   onProfileClick = () => {
     NavigationService.navigate('listProfileUser')
-}
+  }
   render() {
     if (!this.props.userApp.isLogin)
       return null;
-      const icSupport = require("@images/new/user.png");
-      const source = this.state.avatar
-        ? { uri: this.state.avatar.absoluteUrl() }
-        : icSupport;
+    const icSupport = require("@images/new/user.png");
+    const source = this.state.avatar
+      ? { uri: this.state.avatar.absoluteUrl() }
+      : icSupport;
     return (
       <ActivityPanel
-        statusbarBackgroundColor="#02C39A"
+        
         isLoading={this.state.isLoading}
         hideActionbar={true}
       >
@@ -49,31 +49,31 @@ class Account extends React.Component {
             <View style={styles.viewHeader}>
               {/* <ScaledImage style={styles.avatarStyle} uri={this.state.avatar.absoluteUrl()} height={60} ></ScaledImage> */}
               <View
-          style={{marginLeft:15}}
-          
-        >
-          <ImageLoad
-            resizeMode="cover"
-            imageStyle={styles.imageStyle}
-            borderRadius={30}
-            customImagePlaceholderDefaultStyle={styles.customImagePlace}
-            placeholderSource={icSupport}
-            style={styles.styleImgLoad}
-            resizeMode="cover"
-            loadingStyle={{ size: "small", color: "gray" }}
-            source={source}
-            defaultImage={() => {
-              return (
-                <ScaledImage
+                style={{ marginLeft: 15 }}
+
+              >
+                <ImageLoad
                   resizeMode="cover"
-                  source={source}
-                  width={60}
+                  imageStyle={styles.imageStyle}
+                  borderRadius={30}
+                  customImagePlaceholderDefaultStyle={styles.customImagePlace}
+                  placeholderSource={icSupport}
                   style={styles.styleImgLoad}
+                  resizeMode="cover"
+                  loadingStyle={{ size: "small", color: "gray" }}
+                  source={source}
+                  defaultImage={() => {
+                    return (
+                      <ScaledImage
+                        resizeMode="cover"
+                        source={source}
+                        width={60}
+                        style={styles.styleImgLoad}
+                      />
+                    );
+                  }}
                 />
-              );
-            }}
-          />
-        </View>
+              </View>
               <View style={styles.viewInfo}>
                 <Text style={styles.txHello}>Xin Chào</Text>
                 <Text style={styles.txName}>{this.props.userApp.currentUser.name && this.props.userApp.currentUser.name}</Text>
@@ -125,8 +125,8 @@ const styles = StyleSheet.create({
     borderColor: '#fff',
   },
   txVersion: { marginLeft: 30, marginTop: 10 },
-  imageStyle:{ borderRadius: 30, borderWidth: 1, borderColor: '#fff' },
-  styleImgLoad:{ width: 60, height: 60, alignSelf: "center" },
+  imageStyle: { borderRadius: 30, borderWidth: 1, borderColor: '#fff' },
+  styleImgLoad: { width: 60, height: 60, alignSelf: "center" },
   viewInfo: {
     marginLeft: 10
   },

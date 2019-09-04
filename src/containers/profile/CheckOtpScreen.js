@@ -70,9 +70,7 @@ class CheckOtpScreen extends React.PureComponent {
         return (
             <ActivityPanel
                 style={{ flex: 1 }}
-                title="Xác nhận số điện thoại"
-                titleStyle={styles.titleStyle}
-                showFullScreen={true}
+                title="Xác nhận số điện thoại"  
             >
                 <ScrollView
                     showsVerticalScrollIndicator={false}

@@ -92,7 +92,7 @@ class SpecialistScreen extends Component {
     menuButton() {
         return (<View style={{ flexDirection: 'row' }}>
             <TouchableOpacity style={{ padding: 10, paddingRight: 10 }} onPress={this.showSearchView.bind(this)}>
-                <ScaledImage source={require("@images/ictimkiem.png")} width={20} />
+                <ScaledImage source={require("@images/ic_timkiem.png")} width={20} />
             </TouchableOpacity>
         </View>);
     }
@@ -130,7 +130,7 @@ class SpecialistScreen extends Component {
                     <TextInput ref={ref => this.searchInput = ref} placeholder={"Nhập nội dung tìm kiếm"} style={{ flexDirection: 'row', flex: 1 }} returnKeyType="search" underlineColorAndroid="transparent" onSubmitEditing={this.search.bind(this)} onChangeText={(x) => this.setState({ keyword: x })} value={this.state.keyword} />
                     {this.state.keyword ?
                         <TouchableOpacity style={{ padding: 10 }} onPress={() => { this.setState({ keyword: "" }, this.search) }}>
-                            <ScaledImage width={20} source={require("@images/icclose.png")} />
+                            <ScaledImage width={20} source={require("@images/ic_close.png")} />
                         </TouchableOpacity> : null
                     }
                 </Animatable.View>

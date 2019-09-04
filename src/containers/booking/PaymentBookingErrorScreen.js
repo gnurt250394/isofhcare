@@ -22,8 +22,8 @@ class PaymentBookingErrorScreen extends Component {
                 // hideBackButton={true}
                 style={styles.AcPanel} title={constants.title.booking}
                 titleStyle={{ color: '#FFF' }}
-                iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#02C39A"
+                
+                
                 containerStyle={{
                     backgroundColor: "#02C39A"
                 }}
