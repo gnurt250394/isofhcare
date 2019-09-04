@@ -39,6 +39,7 @@ import EnterPasswordScreen from "@containers/account/EnterPasswordScreen";
 import ForgotPasswordScreen from "@containers/account/ForgotPasswordScreen";
 import ChangePasswordScreen from "@containers/account/ChangePasswordScreen";
 
+
 //question
 import ListQuestionScreen from "@containers/question/ListQuestionScreen";
 import CreateQuestionStep1Screen from "@containers/question/CreateQuestionStep1Screen";
@@ -296,7 +297,6 @@ const RootNavigator = createStackNavigator(
     filterSpecialist: { screen: FilterSpecialistScreen },
     selectProfile: { screen: SelectProfileScreen },
     patientHistory: { screen: PatientHistoryScreen },
-
     //get Ticket
     getTicket: GetTicketNavigation,
     //menu profile

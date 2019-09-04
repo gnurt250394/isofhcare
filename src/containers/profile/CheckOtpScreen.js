@@ -15,6 +15,7 @@ import NavigationService from "@navigators/NavigationService";
 class CheckOtpScreen extends React.PureComponent {
     constructor(props) {
         super(props)
+        let user = this.props.navigation.state.params && this.props.navigation.state.params.user ? user : null
         this.state = {
             seconds: 90,
             txErr: '',
@@ -41,29 +42,34 @@ class CheckOtpScreen extends React.PureComponent {
         })
     }
     onCheckToken = () => {
-        let data = {
-            'otp': this.state.text1
-        }
-        let id = this.props.navigation.state.params && this.props.navigation.state.params.id ? this.props.navigation.state.params.id : null
-        if (data && id) {
-            profileProvider.checkOtp(data, id).then(res => {
-                if (res.code == 0) {
-                    NavigationService.navigate('shareDataProfile', { id: res.data.record.id })
-                    return;
-                }
-                if(res.code == 4){
-                    snackbar.show('Mã bạn nhập đã hết hạn','danger')
-                    return
-                }
-                if(res.code == 5){
-                    snackbar.show('Mã bạn nhập không đúng','danger')
-                    return
-                }
-                else {
-                    snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+        if (this.state.user) {
+            alert('dang ky')
+         } 
+        else {
+            let data = {
+                'otp': this.state.text1
+            }
+            let id = this.props.navigation.state.params && this.props.navigation.state.params.id ? this.props.navigation.state.params.id : null
+            if (data && id) {
+                profileProvider.checkOtp(data, id).then(res => {
+                    if (res.code == 0) {
+                        NavigationService.navigate('shareDataProfile', { id: res.data.record.id })
+                        return;
+                    }
+                    if (res.code == 4) {
+                        snackbar.show('Mã bạn nhập đã hết hạn', 'danger')
+                        return
+                    }
+                    if (res.code == 5) {
+                        snackbar.show('Mã bạn nhập không đúng', 'danger')
+                        return
+                    }
+                    else {
+                        snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
 
-                }
-            })
+                    }
+                })
+            }
         }
     }
     render() {

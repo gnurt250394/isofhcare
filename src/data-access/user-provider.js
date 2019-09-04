@@ -121,44 +121,67 @@ module.exports = {
       );
     });
   },
-  register(
-    name,
-    avatar,
-    email,
-    phone,
-    password,
-    dob,
-    gender,
-    accessToken,
-    socialType,
-    socialId
-  ) {
-    return new Promise((resolve, reject) => {
-      // reject({});
-      var body = {
-        user: {
-          email,
-          avatar,
-          password: password.toMd5(),
-          name,
-          gender: 1,
-          phone: phone,
-          dob,
-          role: 1,
-          gender
-        },
-        applicationId: "457683741386685",
-        accessToken,
-        socialId,
-        socialType: socialType ? socialType : 1,
-        device: { os: os, deviceId: this.deviceId, token: this.deviceToken }
-      };
-      client.requestApi("post", constants.api.user.register, body, (s, e) => {
+  register(dateBirth,gender,name,phone,password){
+    return new Promise ((resolve,reject) => {
+      let body = {
+        "username": phone,
+        "dateBirth":dateBirth,
+        "gender": gender,
+        "name": name,
+        "telephone": phone,
+        "password": password,
+        "email": null,
+        "isUsing2FA": null,
+        "roles": [
+            {
+                "id": 1
+            }
+        ]
+    }
+      client.requestApi("post", constants.api.user.registerV2, body, (s, e) => {
         if (s) resolve(s);
         else reject(e);
       });
-    });
+    })
   },
+  // register(
+  //   name,
+  //   avatar,
+  //   email,
+  //   phone,
+  //   password,
+  //   dob,
+  //   gender,
+  //   accessToken,
+  //   socialType,
+  //   socialId
+  // ) {
+  //   return new Promise((resolve, reject) => {
+  //     // reject({});
+  //     var body = {
+  //       user: {
+  //         email,
+  //         avatar,
+  //         password: password.toMd5(),
+  //         name,
+  //         gender: 1,
+  //         phone: phone,
+  //         dob,
+  //         role: 1,
+  //         gender
+  //       },
+  //       applicationId: "457683741386685",
+  //       accessToken,
+  //       socialId,
+  //       socialType: socialType ? socialType : 1,
+  //       device: { os: os, deviceId: this.deviceId, token: this.deviceToken }
+  //     };
+  //     client.requestApi("post", constants.api.user.register, body, (s, e) => {
+  //       if (s) resolve(s);
+  //       else reject(e);
+  //     });
+  //   });
+  // },
   update(userId, user) {
     return new Promise((resolve, reject) => {
       var body = {

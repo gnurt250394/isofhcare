@@ -33,17 +33,27 @@ import DateTimePicker from 'mainam-react-native-date-picker';
 class RegisterScreen extends Component {
   constructor(props) {
     super(props);
-    let user = this.props.navigation.getParam("user", null);
+    let user
+    //  = this.props.navigation.getParam("user", null);
     this.nextScreen = this.props.navigation.getParam("nextScreen", null);
     // var phone = this.props.navigation.getParam("phone", null);
     // var token = this.props.navigation.getParam("token", null);
+
     let verified = true;
     if (!user) user = {};
     user.verified = verified;
     user.press = false;
     user.pressConfirm = false;
     user.gender = 1;
+    user.showPass = true;
+    user.showPassConfirm = true;
+    user.press = false;
+    user.pressConfirm = false;
+    user.secureTextPassEntry = true
+    user.secureTextPass2Entry = true
     this.state = user;
+    this.showPass = this.showPass.bind(this);
+    this.showPassConfirm = this.showPassConfirm.bind(this);
   }
   setDate(newDate) {
     this.setState({ dob: newDate, date: newDate.format("dd/MM/yyyy") }, () => {
@@ -75,28 +85,71 @@ class RegisterScreen extends Component {
       });
   }
 
-  register() {
+  // register() {
+  //   if (!this.form.isValid()) {
+  //     return;
+  //   }
+  //   Keyboard.dismiss();
+  //   this.props.navigation.navigate("enterPassword", {
+  //     user: {
+  //       phone: this.state.phone,
+  //       // email: this.state.email,
+  //       fullname: this.state.fullname,
+  //       dob: this.state.dob,
+  //       gender: this.state.gender,
+  //       token: this.state.token,
+  //       socialId: this.state.socialId,
+  //       socialType: this.state.socialType ? this.state.socialType : 1
+  //     },
+  //     nextScreen: this.nextScreen
+  //   });
+  // }
+  ////
+  onRegiter = () => {
     if (!this.form.isValid()) {
       return;
     }
     Keyboard.dismiss();
-    this.props.navigation.navigate("enterPassword", {
-      user: {
-        phone: this.state.phone,
-        // email: this.state.email,
-        fullname: this.state.fullname,
-        dob: this.state.dob,
-        gender: this.state.gender,
-        token: this.state.token,
-        socialId: this.state.socialId,
-        socialType: this.state.socialType ? this.state.socialType : 1
-      },
-      nextScreen: this.nextScreen
-    });
+    let dateBirth = this.state.dob
+    let gender = this.state.gender
+    let name = this.state.fullname
+    let phone = this.state.phone
+    let password = this.state.password
+
+    userProvider.register(dateBirth, gender, name, phone, password).then(res => {
+      if (res.code == 'OK')
+        this.props.navigation.navigate('checkOtp', { user: this.state.user })
+      else {
+        snackbar.show(res.message, 'danger')
+      }
+    })
+
   }
 
+
+  //
   showDatePicker() {
     this.setState({ toggelDateTimePickerVisible: true });
+  }
+  onShowPass = () => {
+    this.setState({
+      secureTextPassEntry: !this.state.secureTextPassEntry
+    })
+  }
+  onShowPass2 = () => {
+    this.setState({
+      secureTextPass2Entry: !this.state.secureTextPass2Entry
+    })
+  }
+  showPass() {
+    this.state.press === false
+      ? this.setState({ showPass: false, press: true })
+      : this.setState({ showPass: true, press: false });
+  }
+  showPassConfirm() {
+    this.state.pressConfirm === false
+      ? this.setState({ showPassConfirm: false, pressConfirm: true })
+      : this.setState({ showPassConfirm: true, pressConfirm: false });
   }
 
   render() {
@@ -129,7 +182,7 @@ class RegisterScreen extends Component {
                 <Form ref={ref => (this.form = ref)}>
                   <TextField
                     getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-                      placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Họ tên"}
+                      placeholderStyle={{ fontSize: 16, }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Họ tên"}
                       onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
                     onChangeText={s => {
                       this.setState({ fullname: s });
@@ -147,49 +200,6 @@ class RegisterScreen extends Component {
                     }}
                     autoCapitalize={"none"}
                   />
-
-                  <Field
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: "center",
-                      position: 'relative'
-                    }}
-                  >
-                    <TextField
-                      value={this.state.date || ""}
-                      onPress={this.showDatePicker.bind(this)}
-                      dateFormat={"dd/MM/yyyy"}
-                      splitDate={"/"}
-                      editable={false}
-                      getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-                        editable={false}
-                        placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.dob}
-                        onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
-                      onChangeText={s => {
-                        this.setState({ date: s });
-                      }}
-                      errorStyle={styles.errorStyle}
-                      validate={{
-                        rules: {
-                          date: true,
-                          max: maxDate,
-                          min: minDate
-                        },
-                        messages: {
-                          date: "Nhập đúng định dạng ngày",
-                          max: "Không cho phép chọn dưới 15 tuổi",
-                          min: "Không cho phép chon trên 150 tuổi"
-                        }
-                      }}
-                      returnKeyType={"next"}
-                      autoCapitalize={"none"}
-                      autoCorrect={false}
-                      style={{
-                        flex: 1
-                      }}
-                    />
-                    <ScaleImage source={require("@images/new/calendar.png")} width={20} style={{ position: 'absolute', right: 0, top: this.state.date ? 40 : 40 }} />
-                  </Field>
                   <View
                     style={{
                       flexDirection: 'row',
@@ -197,7 +207,7 @@ class RegisterScreen extends Component {
                       marginTop: 25
                     }}
                   >
-                    <Text style={[styles.label]}>Giới tính</Text>
+                    <Text style={styles.labelStyle}>Giới tính</Text>
                     <View style={{ flexDirection: "row", justifyContent: 'flex-end', flex: 1 }}>
                       <TouchableOpacity
                         onPress={() => {
@@ -227,12 +237,132 @@ class RegisterScreen extends Component {
                       </TouchableOpacity>
                     </View>
                   </View>
+                  <TextField
+                    getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
+                      placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'}
+                      inputStyle={styles.textInputStyle}
+                      labelStyle={styles.labelStyle} placeholder={constants.phone} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
+                    onChangeText={s => this.setState({ phone: s })}
+                    errorStyle={styles.errorStyle}
+                    validate={{
+                      rules: {
+                        required: true,
+                        phone: true
+                      },
+                      messages: {
+                        required: "Số điện thoại không được bỏ trống",
+                        phone: "SĐT không hợp lệ"
+                      }
+                    }}
 
+                    placeholder={constants.input_password}
+                    autoCapitalize={"none"}
+                  />
+                  <Field
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: "center",
+                      position: 'relative'
+                    }}
+                  >
+
+                    <TextField
+                      value={this.state.date || ""}
+                      onPress={this.showDatePicker.bind(this)}
+                      dateFormat={"dd/MM/yyyy"}
+                      splitDate={"/"}
+                      editable={false}
+                      getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
+                        editable={false}
+                        placeholderStyle={{ fontSize: 16, }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.dob}
+                        onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
+                      onChangeText={s => {
+                        this.setState({ date: s });
+                      }}
+                      errorStyle={styles.errorStyle}
+                      validate={{
+                        rules: {
+                          date: true,
+                          required: true,
+                          max: maxDate,
+                          min: minDate
+                        },
+                        messages: {
+                          date: "Nhập đúng định dạng ngày",
+                          required: 'Ngày sinh không được bỏ trống',
+                          max: "Không cho phép chọn dưới 15 tuổi",
+                          min: "Không cho phép chọn trên 150 tuổi"
+                        }
+                      }}
+                      returnKeyType={"next"}
+                      autoCapitalize={"none"}
+                      autoCorrect={false}
+                      style={{
+                        flex: 1
+                      }}
+                    />
+                    <ScaleImage source={require("@images/new/calendar.png")} width={20} style={{ position: 'absolute', right: 0, top: this.state.date ? 40 : 40 }} />
+                  </Field>
+
+                  <Field style={styles.inputPass}>
+                    <TextField
+                      getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
+                        placeholderStyle={{ fontSize: 16, }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.input_password}
+                        secureTextEntry={this.state.secureTextPassEntry}
+                        onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
+                      onChangeText={s => {
+                        this.setState({ password: s });
+                      }}
+                      errorStyle={styles.errorStyle}
+                      validate={{
+                        rules: {
+                          required: true,
+                          minlength: 8
+                        },
+                        messages: {
+                          required: constants.password_not_null,
+                          minlength: constants.password_length_8
+                        }
+                      }}
+                      autoCapitalize={"none"}
+                    />
+                    {
+                      this.state.password ? (this.state.secureTextPassEntry ? (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 40, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 40, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
+                    }
+                  </Field>
+                  <Field style={styles.inputPass}>
+                    <TextField
+                      getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
+                        placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={'Xác nhận mật khẩu'}
+
+                        secureTextEntry={this.state.secureTextPass2Entry}
+                        onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
+                      onChangeText={s => {
+                        this.setState({ confirm_password: s });
+                      }}
+                      errorStyle={styles.errorStyle}
+                      validate={{
+                        rules: {
+                          required: true,
+                          equalTo: this.state.password
+                        },
+                        messages: {
+                          required: constants.confirm_password_not_null,
+                          equalTo: constants.new_password_not_match
+                        }
+                      }}
+                      autoCapitalize={"none"}
+                    />
+                    {
+                      this.state.confirm_password ? (this.state.secureTextPass2Entry ? (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 40, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowPass2}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 40, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowPass2}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
+                    }
+                  </Field>
                 </Form>
+                <View style={{ height: 50 }}></View>
               </View>
             </KeyboardAvoidingView>
           </ScrollView>
-          <TouchableOpacity style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center', marginBottom: 20 }} onPress={this.register.bind(this)}>
+          <TouchableOpacity onPress={this.onRegiter} style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center', marginBottom: 20 }} >
             <Text style={{ color: '#FFF', fontSize: 17 }}>{"TIẾP TỤC"}</Text>
           </TouchableOpacity>
 
@@ -296,7 +426,34 @@ const styles = StyleSheet.create({
     marginLeft: 0,
     fontSize: 20
   },
-  labelStyle: { paddingTop: 10, color: '#53657B', fontSize: 16 }
+  labelStyle: { paddingTop: 10, color: '#53657B', fontSize: 16 },
+  btnEye: {
+    position: "absolute",
+    right: 25,
+    top: 10
+  },
+  iconEye: {
+    width: 25,
+    height: 25,
+    tintColor: "rgba(0,0,0,0.2)"
+  },
+  textInputPassStyle: {
+    color: "#53657B",
+    fontWeight: "600",
+    height: 45,
+    marginLeft: 0,
+    fontSize: 20,
+    alignSelf: 'stretch',
+    paddingRight: 45,
+
+
+  },
+  inputPass: {
+    position: 'relative',
+    alignSelf: 'stretch',
+    justifyContent: 'center'
+  },
+
 });
 function mapStateToProps(state) {
   return {

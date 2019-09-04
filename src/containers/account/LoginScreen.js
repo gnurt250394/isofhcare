@@ -58,38 +58,38 @@ class LoginScreen extends Component {
 
 
 	register() {
-		// this.props.navigation.navigate("register", {  })
+		this.props.navigation.navigate("register", {})
 		// return;
-		let verify = async () => {
-			RNAccountKit.loginWithPhone().then(async token => {
-				console.log(token);
-				if (!token) {
-					snackbar.show("Xác minh số điện thoại không thành công", "danger");
-				} else {
-					let account = await RNAccountKit.getCurrentAccount();
-					if (account && account.phoneNumber) {
-						this.props.navigation.navigate("register", {
-							user: {
-								phone: "0" + account.phoneNumber.number,
-								token: token.token,
-								socialType: 1,
-								socialId: "0"
-							},
-							nextScreen: this.nextScreen
-						});
-					} else {
-						snackbar.show("Xác minh số điện thoại không thành công", "danger");
-					}
-				}
-			});
-		};
-		RNAccountKit.logout()
-			.then(() => {
-				verify();
-			})
-			.catch(x => {
-				verify();
-			});
+		// let verify = async () => {
+		// 	RNAccountKit.loginWithPhone().then(async token => {
+		// 		console.log(token);
+		// 		if (!token) {
+		// 			snackbar.show("Xác minh số điện thoại không thành công", "danger");
+		// 		} else {
+		// 			let account = await RNAccountKit.getCurrentAccount();
+		// 			if (account && account.phoneNumber) {
+		// 				this.props.navigation.navigate("register", {
+		// 					user: {
+		// 						phone: "0" + account.phoneNumber.number,
+		// 						token: token.token,
+		// 						socialType: 1,
+		// 						socialId: "0"
+		// 					},
+		// 					nextScreen: this.nextScreen
+		// 				});
+		// 			} else {
+		// 				snackbar.show("Xác minh số điện thoại không thành công", "danger");
+		// 			}
+		// 		}
+		// 	});
+		// };
+		// RNAccountKit.logout()
+		// 	.then(() => {
+		// 		verify();
+		// 	})
+		// 	.catch(x => {
+		// 		verify();
+		// 	});
 	}
 
 	login() {
@@ -192,7 +192,7 @@ class LoginScreen extends Component {
 					<KeyboardAvoidingView behavior="padding">
 						<View style={{ flex: 1 }}>
 							<View style={{ margin: 22 }}>
-								<Card style={{ padding: 22, paddingTop: 10, borderRadius: 5, marginTop: 60 }}>
+								<Card style={{ padding: 22, paddingTop: 10, borderRadius: 8, marginTop: 60, borderColor: '#02C39A', borderWidth: 1 }}>
 									<Form ref={ref => (this.form = ref)}>
 										<Field clearWhenFocus={true}>
 											<TextField
@@ -244,8 +244,23 @@ class LoginScreen extends Component {
 										</Field>
 										<View style={{ flexDirection: 'row', marginTop: 15 }}>
 											<TouchableOpacity
-												onPress={this.forgotPassword.bind(this)}
+												onPress={this.register.bind(this)}
 												style={{ alignItems: "flex-start", flex: 1 }}
+											>
+												<Text
+													numberOfLines={1}
+													ellipsizeMode="tail"
+													style={{
+														color: '#028090',
+														paddingRight: 5,
+														fontSize: 14
+													}}>
+													Tạo tài khoản
+													</Text>
+											</TouchableOpacity>
+											<TouchableOpacity
+												onPress={this.forgotPassword.bind(this)}
+												style={{ alignItems: "flex-end", flex: 1 }}
 											>
 												<Text
 													numberOfLines={1}
@@ -258,31 +273,17 @@ class LoginScreen extends Component {
 													Quên mật khẩu?
 													</Text>
 											</TouchableOpacity>
-											<TouchableOpacity
-												onPress={this.login.bind(this)}
-												style={{ alignItems: "center", justifyContent: 'flex-end', flex: 1, flexDirection: 'row' }}
-											>
-												<Text
-													style={{
-														color: "rgb(2,195,154)",
-														fontSize: 14,
-														fontWeight: 'bold',
-														marginRight: 5
-													}}
-												>Đăng nhập</Text><ScaleImage source={require("@images/new/right_arrow.png")} height={10} />
-											</TouchableOpacity>
 										</View>
 									</Form>
 								</Card>
 							</View>
-							<SocialNetwork />
-							<Text style={{ color: '#000', textAlign: 'center', marginVertical: 20 }}>Nếu chưa có tài khoản có thể đăng ký <Text onPress={this.register.bind(this)} style={{ color: '#1EA3EA' }}>tại đây</Text></Text>
-							{/* <TouchableOpacity onPress={this.register.bind(this)} style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center' }} >
-								<Text style={{ color: '#FFF', fontSize: 17 }}>{"ĐĂNG KÝ"}</Text>
-							</TouchableOpacity> */}
+							{/* <SocialNetwork /> */}
+							{/* <Text style={{ color: '#000', textAlign: 'center', marginVertical: 20 }}>Nếu chưa có tài khoản có thể đăng ký <Text onPress={this.register.bind(this)} style={{ color: '#1EA3EA' }}>tại đây</Text></Text> */}
+							<TouchableOpacity onPress={this.login.bind(this)} style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center' }} >
+								<Text style={{ color: '#FFF', fontSize: 17 }}>{"ĐĂNG NHẬP"}</Text>
+							</TouchableOpacity>
 						</View>
 					</KeyboardAvoidingView>
-
 				</ScrollView>
 			</ActivityPanel>
 		);
