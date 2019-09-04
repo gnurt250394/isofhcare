@@ -192,9 +192,6 @@ class QRCodeScannerScreen extends Component {
     render() {
         return (
             <ActivityPanel isLoading={this.state.isLoading} title={this.state.title || "QUÉT MÃ QRCODE"}
-                icBack={require('@images/new/left_arrow_white.png')}
-                titleStyle={styles.txTitle}
-                actionbarStyle={styles.actionbarStyle}
             >
                 <QRCodeScanner
                     // reactivate={true}
@@ -237,13 +234,6 @@ class QRCodeScannerScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-    actionbarStyle: {
-        backgroundColor: '#02C39A',
-        borderBottomWidth: 0
-    },
-    txTitle: {
-        color: '#FFF'
-    },
     centerText: {
         flex: 1,
         textAlign: 'center',

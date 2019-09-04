@@ -77,12 +77,6 @@ componentWillUnmount(){
         title={"Nội dung"}
         showFullScreen={true}
         isLoading={this.state.isLoading}
-        iosBarStyle={'light-content'}
-        statusbarBackgroundColor="#02C39A"
-        actionbarStyle={{
-          backgroundColor: '#02C39A',
-          borderBottomWidth: 0
-        }}
         titleStyle={{
           color: '#FFF'
         }}

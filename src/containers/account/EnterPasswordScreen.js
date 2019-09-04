@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import UserInput from "@components/UserInput";
 import ActivityPanel from "@components/ActivityPanel";
-import ButtonSubmit from "@components/ButtonSubmit";
 import {
   View,
   ScrollView,
@@ -138,10 +137,7 @@ class EnterPasswordScreen extends Component {
   render() {
     return (
       <ActivityPanel
-        style={{ flex: 1 }}
         title={constants.register}
-        titleStyle={{ textAlign: 'left', marginLeft: 20 }}
-        showFullScreen={true}
       >
         <ScrollView
           showsVerticalScrollIndicator={false}

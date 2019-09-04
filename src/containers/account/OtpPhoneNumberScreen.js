@@ -76,7 +76,7 @@ class OtpPhoneNumberScreen extends React.PureComponent {
             <ActivityPanel
                 style={{ flex: 1 }}
                 title="Xác nhận số điện thoại"
-                titleStyle={styles.titleStyle}
+        
                 showFullScreen={true}
             >
                 <ScrollView

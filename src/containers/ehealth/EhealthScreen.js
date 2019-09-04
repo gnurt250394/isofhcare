@@ -108,12 +108,7 @@ class EhealthScreen extends Component {
     render() {
         return (
             <ActivityPanel
-                icBack={require('@images/new/left_arrow_white.png')}
-                titleStyle={styles.txTitle}
                 title={constants.title.ehealth}
-                iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#02C39A"
-                actionbarStyle={styles.actionbarStyle}
                 style={styles.container}
             >
                 <View style={styles.viewContent} >
@@ -164,11 +159,7 @@ const styles = StyleSheet.create({
     viewTx: { marginLeft: 10 },
     txHospitalName: { fontWeight: 'bold', color: '#5A5956', fontSize: 15 },
     txLastTime: { color: '#5A5956', marginTop: 5 },
-    txTitle: { color: '#fff' },
-    actionbarStyle: {
-        backgroundColor: '#02C39A',
-        borderBottomWidth: 0
-    },
+    
     viewContent: {
         paddingHorizontal: 10, flex: 1, backgroundColor: '#f0f5f9'
     },

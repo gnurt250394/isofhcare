@@ -282,20 +282,11 @@ class CreateQuestionStep2Screen extends Component {
         return (
             <ActivityPanel
                 backButtonClick={this.onClickBack}
-
                 style={{ flex: 1 }}
                 title={"Thông tin bổ sung"}
                 showFullScreen={true}
-                isLoading={this.state.isLoading}
-                actionbarStyle={{
-                    backgroundColor: '#02C39A',
-                    borderBottomWidth: 0
-                }}
-                titleStyle={{
-                    color: '#FFF'
-                }}
-                iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#02C39A"
+                isLoading={this.state.isLoading}                
+                
             >
                 <ScrollView
                     bounces={false}
@@ -320,7 +311,7 @@ class CreateQuestionStep2Screen extends Component {
                                             this.state.specialist && this.state.specialist.name ? this.state.specialist.name : "Chọn chuyên khoa"
                                         }
                                     </Text>
-                                    <ScaleImage source={require("@images/icdropdown.png")} height={8} style={{ marginRight: 5 }} />
+                                    <ScaleImage source={require("@images/ic_dropdown.png")} height={8} style={{ marginRight: 5 }} />
                                 </TouchableOpacity>
                                 <Text style={[styles.label, { marginTop: 20 }]}>Tiền sử bệnh</Text>
                                 <View style={{ flexDirection: 'row' }}>

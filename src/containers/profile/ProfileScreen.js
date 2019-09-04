@@ -329,13 +329,9 @@ class ProfileScreen extends Component {
             ? { uri: this.state.imgAvtLocal.absoluteUrl() }
             : icSupport
         return (
-            <ActivityPanel
-                icBack={require('@images/new/left_arrow_white.png')}
+            <ActivityPanel                
                 titleStyle={styles.txTitle}
                 title={'PROFILE'}
-                iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#359A60"
-                actionbarStyle={styles.actionbarStyle}
                 style={styles.container}
                 menuButton={<TouchableOpacity onPress={this.onEdit}><ScaledImage style={{ tintColor: '#fff', marginRight: 10 }} height={20} source={require('@images/new/profile/ic_edit.png')}></ScaledImage></TouchableOpacity>}
                 isLoading={this.state.loading}
@@ -414,10 +410,7 @@ const styles = StyleSheet.create({
     },
     scaledImageAvt: { position: "absolute", bottom: 0, right: 0 },
     txTitle: { color: '#fff', textAlign: 'left', marginHorizontal: 10, },
-    actionbarStyle: {
-        backgroundColor: '#02C39A',
-        borderBottomWidth: 0
-    },
+    
     btn: {
         paddingHorizontal: 10, paddingVertical: 15, backgroundColor: '#02C39A', borderRadius: 8, justifyContent: 'center', alignItems: 'center', alignSelf: 'flex-start', marginHorizontal: 10, marginLeft: 12, marginBottom: 20, marginTop: 10
     },

@@ -34,6 +34,7 @@ export default class ShareDataProfileScreen extends Component {
   updatePermission = () => {
     let id = this.state.id
     let shareId = this.state.shareId
+    console.log(id,shareId,'áhgdgádgah')
     let permissions
     if (!this.state.ehealth && !this.state.bookingDate) {
       permissions = ''
@@ -47,6 +48,7 @@ export default class ShareDataProfileScreen extends Component {
     if (this.state.bookingDate && this.state.ehealth) {
       permissions = 'YBDT,DATKHAM'
     }
+
     let data = {
       "recordId": id,
       "shareId": shareId,
@@ -54,7 +56,7 @@ export default class ShareDataProfileScreen extends Component {
     }
     profileProvider.sharePermission(data).then(res => {
       if (res.code == 0 && res.data) {
-        snackbar.show('Thành công', 'success')
+        snackbar.show('Cài đặt chia sẻ thành công', 'success')
         NavigationService.navigate('listProfileUser', { reset: this.state.reset + 1 })
       } else {
         snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
@@ -70,16 +72,6 @@ export default class ShareDataProfileScreen extends Component {
       <ActivityPanel style={{ flex: 1 }}
         // title="HỒ SƠ Y BẠ GIA ĐÌNH"
         title={'CÀI ĐẶT CHIA SẺ'}
-        icBack={require('@images/new/left_arrow_white.png')}
-        iosBarStyle={'light-content'}
-        statusbarBackgroundColor="#02C39A"
-        actionbarStyle={{
-          backgroundColor: '#02C39A',
-          borderBottomWidth: 0
-        }}
-        titleStyle={{
-          color: '#FFF'
-        }}
         showFullScreen={true} isLoading={this.state.isLoading}>
         <View style={styles.viewConfirm}>
           <Text style={styles.txContent}>CHỌN DỮ LIỆU BẠN MUỐN CHIA SẺ VỚI THÀNH VIÊN NÀY</Text>

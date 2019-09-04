@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from "react";
 import ActivityPanel from "@components/ActivityPanel";
-import ButtonSubmit from "@components/ButtonSubmit";
 import {
 	View,
 	ScrollView,
@@ -179,10 +178,7 @@ class LoginScreen extends Component {
 	render() {
 		return (
 			<ActivityPanel
-				style={{ flex: 1 }}
-				image={require("@images/new/isofhcare.png")}
-				imageStyle={{ marginRight: 50 }}
-				showFullScreen={true}
+				title="Đăng nhập"
 				isLoading={this.state.isLoading}
 			>
 				<ScrollView

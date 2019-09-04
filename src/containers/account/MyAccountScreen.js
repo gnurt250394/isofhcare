@@ -18,7 +18,7 @@ import constants from '@resources/strings';
 const { height: DEVICE_HEIGHT, width: DEVICE_WIDTH } = Dimensions.get('window');
 
 const bgImage = require("@images/bg.png")
-const icSupport = require("@images/ichotro.png")
+const icSupport = require("@images/user.png")
 const icCamera = require("@images/photoCamera.png")
 const icEdit = require("@images/edit1.png")
 

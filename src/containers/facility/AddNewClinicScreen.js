@@ -464,7 +464,7 @@ class AddNewClinicScreen extends Component {
                                     padding: 0, flex: 1,
                                 }}>Chọn Tỉnh/TP</Text>
                             }
-                            <ScaledImage height={7} source={require("@images/icdropdown.png")} />
+                            <ScaledImage height={7} source={require("@images/ic_dropdown.png")} />
                         </TouchableOpacity>
                         <View style={{
                             marginTop: 15
@@ -487,7 +487,7 @@ class AddNewClinicScreen extends Component {
                                                         : null
                                             }
                                             <TouchableOpacity onPress={() => { this.setState({ logo: null }) }} style={{ position: 'absolute', top: 0, right: 0, backgroundColor: '#FFFFFF70', padding: 1, borderRadius: 5, margin: 2 }} >
-                                                <ScaledImage source={require("@images/icclose.png")} width={12} />
+                                                <ScaledImage source={require("@images/ic_close.png")} width={12} />
                                             </TouchableOpacity>
                                         </TouchableOpacity> :
                                         <TouchableOpacity onPress={this.selectLogo.bind(this)} style={{ margin: 2, width: 100, height: 100, borderColor: '#00000020', borderWidth: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -513,7 +513,7 @@ class AddNewClinicScreen extends Component {
                                                     : null
                                         }
                                         <TouchableOpacity onPress={this.removeImage.bind(this, index)} style={{ position: 'absolute', top: 0, right: 0, backgroundColor: '#FFFFFF70', padding: 1, borderRadius: 5, margin: 2 }} >
-                                            <ScaledImage source={require("@images/icclose.png")} width={12} />
+                                            <ScaledImage source={require("@images/ic_close.png")} width={12} />
                                         </TouchableOpacity>
                                     </TouchableOpacity>)
                                 }

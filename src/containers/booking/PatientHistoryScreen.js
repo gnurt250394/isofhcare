@@ -205,7 +205,7 @@ class PatientHistoryScreen extends Component {
             }}
           >
             <Text style={{ fontWeight: "bold", color: 'rgb(74,74,74)' }}>{item.serviceType ? item.serviceType.name : ''}</Text>
-           
+
             <View style={{ marginVertical: 10 }}>
               <Text style={{ color: 'rgb(142,142,147)' }}>{item.medicalRecords.name ? item.medicalRecords.name : ''}</Text>
               <Text style={{ color: 'rgb(142,142,147)' }}>{item.hospital ? item.hospital.name : ""}</Text>
@@ -288,6 +288,13 @@ class PatientHistoryScreen extends Component {
     return (
       <ActivityPanel
         title={constants.title.patient_history_screen}
+        isLoading={this.state.isLoading}
+        
+        
+        
+        
+
+        isLoading={this.state.isLoading}        
       >
         <View style={{ flex: 1 }}>
           <FlatList
@@ -364,6 +371,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 1,
 
+  },
+  
+  titleStyle: {
+    color: '#FFF'
   }
 });
 function mapStateToProps(state) {
