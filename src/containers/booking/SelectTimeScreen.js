@@ -310,13 +310,8 @@ class SelectTimeScreen extends Component {
     render() {
         console.log(this.state.listTime);
         return (<ActivityPanel
-            icBack={require('@images/new/left_arrow_white.png')}
-            iosBarStyle={'light-content'}
-            statusbarBackgroundColor="#02C39A"
-            actionbarStyle={styles.actionbarStyle}
-            titleStyle={styles.titleStyle}
             isLoading={this.state.isLoading}
-            title="Chọn thời gian" >
+            title="Chọn thời gian">
             <View style={{ flex: 1 }}>
                 <View style={styles.container}>
                     <ScrollView keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
@@ -540,10 +535,7 @@ const styles = StyleSheet.create({
         color: 'red',
         textAlign: 'center'
     },
-    actionbarStyle: {
-        backgroundColor: '#02C39A',
-        borderBottomWidth: 0
-    },
+
     titleStyle: {
         color: '#FFF'
     },

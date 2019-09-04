@@ -411,14 +411,10 @@ class NotificationScreen extends Component {
       <ActivityPanel
         style={{ flex: 1 }}
         titleStyle={{ marginRight: 0 }}
-        title="Thông báo"
+        title="THÔNG BÁO"
         showFullScreen={true}
         menuButton={this.menuCreate()}
         isLoading={this.state.isLoading}
-        iosBarStyle={'light-content'}
-        statusbarBackgroundColor="#02C39A"
-        actionbarStyle={styles.actionbarStyle}
-        titleStyle={styles.titleStyle}
         hideBackButton={true}
 
       >
@@ -463,10 +459,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50
   },
-  actionbarStyle: {
-    backgroundColor: '#02C39A',
-    borderBottomWidth: 0
-  },
+  
   titleStyle: {
     color: '#fff',
     marginLeft: 65

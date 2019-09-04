@@ -282,20 +282,11 @@ class CreateQuestionStep2Screen extends Component {
         return (
             <ActivityPanel
                 backButtonClick={this.onClickBack}
-
                 style={{ flex: 1 }}
                 title={"Thông tin bổ sung"}
                 showFullScreen={true}
-                isLoading={this.state.isLoading}
-                actionbarStyle={{
-                    backgroundColor: '#02C39A',
-                    borderBottomWidth: 0
-                }}
-                titleStyle={{
-                    color: '#FFF'
-                }}
-                iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#02C39A"
+                isLoading={this.state.isLoading}                
+                
             >
                 <ScrollView
                     bounces={false}

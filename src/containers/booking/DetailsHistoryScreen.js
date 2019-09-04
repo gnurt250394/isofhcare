@@ -67,7 +67,6 @@ class DetailsHistoryScreen extends Component {
     });
   }
   renderStatus = () => {
-    alert(this.state.booking.statusPay);
     switch (Number(this.state.booking.statusPay)) {
       case 0:
         return <Text style={styles.paymentHospital}>{constants.booking.status.not_select_payment}</Text>;
@@ -166,11 +165,11 @@ class DetailsHistoryScreen extends Component {
     return (
       <ActivityPanel
         isLoading={this.state.isLoading}
-        icBack={require('@images/new/left_arrow_white.png')}
-        iosBarStyle={'light-content'}
-        statusbarBackgroundColor="#02C39A"
-        actionbarStyle={styles.actionbarStyle}
-        titleStyle={styles.titleStyle}
+        
+        
+        
+        
+
         isLoading={this.state.isLoading}
         title="Chi tiết đặt lịch"
       >
@@ -575,10 +574,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     flex: 1
   },
-  actionbarStyle: {
-    backgroundColor: '#02C39A',
-    borderBottomWidth: 0
-  },
+  
   titleStyle: {
     color: '#FFF'
   },

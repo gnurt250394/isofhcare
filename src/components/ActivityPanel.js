@@ -48,7 +48,9 @@ class ActivityPanel extends Component {
                 backButtonClick={() => this.backPress()}
                 showMessengerClicked={() => this.msgPress()}
                 {...this.props}
-                actionbarStyle={[{ paddingTop: this.state.paddingTop, backgroundColor: constants.colors.actionbar_color }, this.props.actionbarStyle]}
+                icBack={require('@images/new/left_arrow_white.png')}
+                titleStyle={[styles.titleStyle, this.props.titleStyle]}
+                actionbarStyle={[{ paddingTop: this.state.paddingTop, backgroundColor: constants.colors.actionbar_color }, styles.actionbarStyle, this.props.actionbarStyle]}
             />
         );
     }
@@ -76,6 +78,8 @@ class ActivityPanel extends Component {
         return (
             <Activity
                 statusbarBackgroundColor="#02C39A"
+                icBack={require('@images/new/left_arrow_white.png')}
+                iosBarStyle={'light-content'}
                 {...this.props}
                 containerStyle={[{
                     backgroundColor: "#f7f9fb"
@@ -94,6 +98,16 @@ class ActivityPanel extends Component {
         );
     }
 }
+const styles = StyleSheet.create({
+    actionbarStyle: {
+        backgroundColor: '#02C39A',
+        borderBottomWidth: 0
+    },
+    titleStyle: {
+        color: '#FFF',
+        marginLeft: 10
+    }
+});
 function mapStateToProps(state) {
     return {
         navigation: state.navigation

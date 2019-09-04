@@ -124,11 +124,11 @@ class HistoryEhealthScreen extends Component {
                 // title="HỒ SƠ Y BẠ GIA ĐÌNH"
                 isLoading={this.state.isLoading}
                 title={<Text style={{ color: '#FFF' }}>{'Lịch sử y bạ '}<Text style={{ color: '#b61827' }}>({this.state.countTime} lần)</Text></Text>}
-                icBack={require('@images/new/left_arrow_white.png')}
-                iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#02C39A"
-                actionbarStyle={styles.actionbarStyle}
-                titleStyle={styles.titleStyle}>
+                
+                
+                
+                
+        >
                 <FlatList
                     data={this.state.data}
                     style={{ flex: 1 }}
@@ -182,10 +182,7 @@ const styles = StyleSheet.create({
         // top:-50
 
     },
-    actionbarStyle: {
-        backgroundColor: '#02C39A',
-        borderBottomWidth: 0
-    },
+    
     imageStyle: { borderRadius: 30, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' },
     imgLoad: {
         alignSelf: 'center',

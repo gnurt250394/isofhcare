@@ -48,8 +48,8 @@ class CreateBookingSuccessScreen extends Component {
                 hideBackButton={true}
                 title={constants.title.create_booking_success}
                 titleStyle={{ color: '#FFF', marginRight: 31 }}
-                iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#02C39A"
+                
+                
                 containerStyle={{
                     backgroundColor: "#02C39A"
                 }}

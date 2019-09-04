@@ -162,11 +162,11 @@ class HistorySharingScreen extends Component {
             <ActivityPanel style={styles.container}
                 isLoading={this.state.isLoading}
                 title={"LỊCH SỬ CHIA SẺ"}
-                icBack={require('@images/new/left_arrow_white.png')}
-                iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#02C39A"
-                actionbarStyle={styles.actionbarStyle}
-                titleStyle={styles.titleStyle}
+                
+                
+                
+                
+        
             >
                 <FlatList
                     numColumns={2}
@@ -225,10 +225,7 @@ const styles = StyleSheet.create({
         // top:-50
 
     },
-    actionbarStyle: {
-        backgroundColor: '#02C39A',
-        borderBottomWidth: 0
-    },
+    
     imageStyle: { borderRadius: 30, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' },
     imgLoad: {
         alignSelf: 'center',

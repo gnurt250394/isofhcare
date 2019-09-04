@@ -382,12 +382,6 @@ class AddBookingScreen extends Component {
         return (<ActivityPanel title="Đặt Khám"
             isLoading={this.state.isLoading}
             menuButton={<TouchableOpacity style={styles.menu} onPress={() => snackbar.show(constants.msg.app.in_development)}><ScaleImage style={styles.img} height={20} source={require("@images/new/booking/ic_info.png")} /></TouchableOpacity>}
-            icBack={require('@images/new/left_arrow_white.png')}
-            iosBarStyle={'light-content'}
-            statusbarBackgroundColor="#02C39A"
-            actionbarStyle={styles.actionbarStyle}
-            titleStyle={styles.titleStyle}
-
         >
             <View style={{ backgroundColor: 'transparent', flex: 1 }}>
                 <KeyboardAwareScrollView>
@@ -810,10 +804,6 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginLeft: 25,
         marginRight: 25
-    },
-    actionbarStyle: {
-        backgroundColor: '#02C39A',
-        borderBottomWidth: 0
     },
     titleStyle: {
         color: '#FFF',

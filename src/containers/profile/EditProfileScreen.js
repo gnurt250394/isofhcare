@@ -360,13 +360,7 @@ class EditProfileScreen extends Component {
 
         return (
             <ActivityPanel
-                icBack={require('@images/new/left_arrow_white.png')}
-                titleStyle={styles.txTitle}
                 title={'SỬA THÔNG TIN'}
-                iosBarStyle={'light-content'}
-                style={{ flex: 1, backgroundColor: '#fff' }}
-                statusbarBackgroundColor="#359A60"
-                actionbarStyle={styles.actionbarStyle}
             >
                 <ScrollView keyboardShouldPersistTaps='handled' style={{ flex: 1, paddingVertical: 5 }}>
                     <View style={styles.container}>
@@ -779,10 +773,7 @@ const styles = StyleSheet.create({
         color: "#000000",
 
     },
-    actionbarStyle: {
-        backgroundColor: '#02C39A',
-        borderBottomWidth: 0
-    },
+    
     ktq: {
         fontSize: 12,
         fontWeight: "normal",
