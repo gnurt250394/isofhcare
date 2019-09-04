@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Platform } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, TextInput, ScrollView, Platform, AppState } from 'react-native';
 import { connect } from 'react-redux';
 import dateUtils from 'mainam-react-native-date-utils';
 import stringUtils from 'mainam-react-native-string-utils';
@@ -46,8 +46,29 @@ class ConfirmBookingScreen extends Component {
         }
     }
     componentDidMount() {
-        console.log(this.state.hospital, 'sssssssss');
+        AppState.addEventListener('change', this._handleAppStateChange);
     }
+    componentWillUnmount() {
+        AppState.removeEventListener('change', this._handleAppStateChange);
+    }
+    _handleAppStateChange = (nextAppState) => {
+        if (nextAppState == 'inactive' || nextAppState == 'background') {
+            console.log("1", nextAppState);
+        } else {
+            alert(1);
+            console.log("2", nextAppState);
+        }
+        // this.state = nextAppState;
+        // console.log('App has come to the foreground!', nextAppState);
+        // if (
+        //     this.state.appState.match(/inactive|background/) &&
+        //     nextAppState === 'active'
+        // ) {
+        //     console.log('App has come to the foreground!');
+        // }
+        // this.setState({ appState: nextAppState });
+    };
+
     confirmPayment(booking, bookingId) {
         booking.hospital = this.state.hospital;
         booking.profile = this.state.profile;
@@ -162,13 +183,13 @@ class ConfirmBookingScreen extends Component {
                         case 4:
                             booking.online_transactions = data.online_transactions;
                             booking.valid_time = data.valid_time;
-                            console.log(booking,'bookingbookingbooking');
+                            console.log(booking, 'bookingbookingbooking');
                             this.props.navigation.navigate("homeTab", {
                                 navigate: {
                                     screen: "createBookingSuccess",
                                     params: {
                                         booking,
-                                        service:this.state.service
+                                        service: this.state.service
 
                                     }
                                 }
@@ -211,7 +232,7 @@ class ConfirmBookingScreen extends Component {
                                                 screen: "createBookingSuccess",
                                                 params: {
                                                     booking,
-                                                    service:this.state.service
+                                                    service: this.state.service
 
                                                 }
                                             }
@@ -282,7 +303,7 @@ class ConfirmBookingScreen extends Component {
                         screen: "createBookingSuccess",
                         params: {
                             booking,
-                            service:this.state.service
+                            service: this.state.service
 
                         }
                     }
@@ -314,7 +335,7 @@ class ConfirmBookingScreen extends Component {
                                     screen: "createBookingSuccess",
                                     params: {
                                         booking,
-                                        service:this.state.service
+                                        service: this.state.service
 
                                     }
                                 }
@@ -356,7 +377,7 @@ class ConfirmBookingScreen extends Component {
                                                 screen: "createBookingSuccess",
                                                 params: {
                                                     booking,
-                                                    service:this.state.service
+                                                    service: this.state.service
                                                 }
                                             }
                                         });
@@ -403,11 +424,32 @@ class ConfirmBookingScreen extends Component {
     createBooking() {
         connectionUtils.isConnected().then(s => {
             this.setState({ isLoading: true }, () => {
-                if (this.state.paymentMethod == 2)
-                    this.confirmPayment(this.state.booking, this.state.booking.book.id);
-                else {
-                    this.getPaymentLink(this.state.booking);
-                }
+                bookingProvider.detail(this.state.booking.book.id).then(s => {
+                    this.setState({ isLoading: false }, () => {
+                        if (s.code==0 && s.data && s.data.booking) {
+                            switch (s.data.booking.status) {
+                                case 3: //đã thanh toán
+                                    snackbar.show("Đặt khám đã được thanh toán", "danger")
+                                    break;
+                                case 4: //payment_last
+                                    snackbar.show("Đặt khám đã được thanh toán hoặc không tồn tại");
+                                    break;
+                                default:
+                                    this.setState({ isLoading: true }, () => {
+                                        if (this.state.paymentMethod == 2)
+                                            this.confirmPayment(this.state.booking, this.state.booking.book.id);
+                                        else {
+                                            this.getPaymentLink(this.state.booking);
+                                        }
+                                    });
+                            }
+                        }
+                    })
+                    // console.log(s.data);
+                }).catch(e => {
+                    this.setState({ isLoading: false }, () => {
+                    });
+                });
             });
         }).catch(e => {
             snackbar.show(constants.msg.app.not_internet, "danger");
@@ -417,7 +459,7 @@ class ConfirmBookingScreen extends Component {
     render() {
         return (
             <ActivityPanel style={styles.AcPanel} title="Xác nhận lịch khám"
-                isLoading={this.state.isLoading}>
+                isLoading={this.state.isLoading} >
                 <ScrollView keyboardShouldPersistTaps='handled' style={styles.container}>
                     <View style={{ paddingHorizontal: 20, marginVertical: 20 }}>
                         <Text style={{ fontWeight: 'bold', color: '#000' }}>{'HỒ SƠ: ' + this.state.profile.medicalRecords.name.toUpperCase()}</Text>
