@@ -91,7 +91,40 @@ class LoginScreen extends Component {
 		// 		verify();
 		// 	});
 	}
+	getDetails = (id, token) => {
+		userProvider.getDetailsUser(id).then(res => {
+			let user = res.details
+			user.loginToken = token
+			this.props.dispatch(redux.userLogin(user));
+		})
+		if (this.nextScreen) {
+			this.props.navigation.replace(
+				this.nextScreen.screen,
+				this.nextScreen.param
+			);
+		} else this.props.navigation.navigate("home", { showDraw: false });
+	}
 
+	loginV2() {
+		Keyboard.dismiss();
+		if (!this.form.isValid()) {
+			return;
+		}
+		this.setState({ isLoading: true }, () => {
+			userProvider.loginV2(this.state.email.trim(), this.state.password).then(s => {
+				this.setState({ isLoading: false });
+				if (s.code == 'OK') {
+					this.getDetails(s.id, s.jws)
+				} else {
+					snackbar.show(s.message, "danger");
+				}
+			}).catch(e => {
+				console.log(e)
+				this.setState({ isLoading: false });
+				snackbar.show(constants.msg.error_occur, "danger");
+			});
+		})
+	}
 	login() {
 		Keyboard.dismiss();
 		if (!this.form.isValid()) {
@@ -279,7 +312,7 @@ class LoginScreen extends Component {
 							</View>
 							{/* <SocialNetwork /> */}
 							{/* <Text style={{ color: '#000', textAlign: 'center', marginVertical: 20 }}>Nếu chưa có tài khoản có thể đăng ký <Text onPress={this.register.bind(this)} style={{ color: '#1EA3EA' }}>tại đây</Text></Text> */}
-							<TouchableOpacity onPress={this.login.bind(this)} style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center' }} >
+							<TouchableOpacity onPress={this.loginV2.bind(this)} style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center' }} >
 								<Text style={{ color: '#FFF', fontSize: 17 }}>{"ĐĂNG NHẬP"}</Text>
 							</TouchableOpacity>
 						</View>

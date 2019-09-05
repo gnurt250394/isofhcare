@@ -173,9 +173,9 @@ module.exports = {
       })
     })
   },
-  login(phone, password) {
+  loginV2(phone, password) {
     return new Promise((resolve, reject) => {
-      client.requestApi('post', `${constains.api.user.loginV2}?username=${phone}&password=${password}`, {}, (s, e) => {
+      client.requestApi('post', `${constants.api.user.loginV2}?username=${phone}&password=${password}`, {}, (s, e) => {
         if (s)
           resolve(s)
         else
