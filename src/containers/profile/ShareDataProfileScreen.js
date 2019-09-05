@@ -13,8 +13,7 @@ export default class ShareDataProfileScreen extends Component {
     let id = this.props.navigation.state.params && this.props.navigation.state.params.id ? this.props.navigation.state.params.id : null
     let permissionsOld = this.props.navigation.state.params && this.props.navigation.state.params.sharePermission ? this.props.navigation.state.params.sharePermission : ''
     this.state = {
-      ehealth: permissionsOld == 'YBDT' || permissionsOld == 'YBDT,DATKHAM' ? true : false,
-      bookingDate: permissionsOld == 'DATKHAM' || permissionsOld == 'YBDT,DATKHAM' ? true : false,
+      ehealth: permissionsOld == 'YBDT' ? true : false,
       permissionsOld,
       id,
       shareId,
@@ -26,29 +25,17 @@ export default class ShareDataProfileScreen extends Component {
       ehealth: !this.state.ehealth
     })
   }
-  shareBookingDate = () => {
-    this.setState({
-      bookingDate: !this.state.bookingDate
-    })
-  }
+
   updatePermission = () => {
     let id = this.state.id
     let shareId = this.state.shareId
-    console.log(id,shareId,'áhgdgádgah')
     let permissions
-    if (!this.state.ehealth && !this.state.bookingDate) {
+    if (!this.state.ehealth) {
       permissions = ''
     }
     if (this.state.ehealth) {
       permissions = 'YBDT'
     }
-    if (this.state.bookingDate) {
-      permissions = 'DATKHAM'
-    }
-    if (this.state.bookingDate && this.state.ehealth) {
-      permissions = 'YBDT,DATKHAM'
-    }
-
     let data = {
       "recordId": id,
       "shareId": shareId,
@@ -86,7 +73,7 @@ export default class ShareDataProfileScreen extends Component {
         <View style={styles.viewConfirm}>
           <Text style={styles.txContent}>CHỌN DỮ LIỆU BẠN MUỐN CHIA SẺ VỚI THÀNH VIÊN NÀY</Text>
           <View style={styles.viewSelected}><CheckBox onPress={this.shareEhealth} checked={this.state.ehealth} color="#02C39A"></CheckBox><Text style={styles.txSelected}>Y bạ điện tử của tôi</Text></View>
-          <View style={styles.viewSelected}><CheckBox onPress={this.shareBookingDate} checked={this.state.bookingDate} color="#02C39A"></CheckBox><Text style={styles.txSelected}>Lịch khám của tôi</Text></View>
+          {/* <View style={styles.viewSelected}><CheckBox onPress={this.shareBookingDate} checked={this.state.bookingDate} color="#02C39A"></CheckBox><Text style={styles.txSelected}>Lịch khám của tôi</Text></View> */}
           <View style={styles.viewBtn}><TouchableOpacity onPress={this.updatePermission} style={styles.btnConfirm}><Text style={styles.txConfirm}>XÁC NHẬN</Text></TouchableOpacity></View>
         </View>
       </ActivityPanel>
