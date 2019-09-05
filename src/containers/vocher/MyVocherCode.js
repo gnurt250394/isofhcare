@@ -3,7 +3,7 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native
 import ScaleImage from 'mainam-react-native-scaleimage';
 import LinearGradient from 'react-native-linear-gradient'
 import ImageLoad from "mainam-react-native-image-loader";
-import {Card} from 'native-base'
+import { Card } from 'native-base'
 const data = [
     {
         id: 1,
@@ -48,44 +48,45 @@ class MyVocherCode extends Component {
             default: return ''
         }
     }
+    defaultImage = () => {
+        return (
+            <ScaleImage source={icSupport} width={100} />
+        );
+    }
     renderItem = ({ item, index }) => {
         const icSupport = require("@images/new/user.png");
 
         return (
-            <View style={{padding:10}}>
+            <View style={{ padding: 10 }}>
                 <Card style={styles.containerItem} >
-                <ImageLoad
-                    source={icSupport}
-                    imageStyle={styles.imageStyle}
-                    borderRadius={60}
-                    customImagePlaceholderDefaultStyle={styles.customImagePlace}
-                    style={styles.styleImgLoad}
-                    resizeMode="cover"
-                    placeholderSource={icSupport}
-                    loadingStyle={{ size: "small", color: "gray" }}
-                    defaultImage={() => {
-                        return (
-                            <ScaleImage source={icSupport} width={100} />
-                        );
-                    }}
-                />
-                <View style={styles.container}>
-                    <Text style={[styles.containerText, { fontWeight: 'bold', fontSize: 16 }]}>{item.name}</Text>
-                    <Text style={styles.containerText}>{`HẠN SỬ DỤNG ĐẾN ${item.date}`}</Text>
-                    <View style={styles.containerRow}>
-                        <Text style={styles.quality}>{`CÒN X${item.quality} LẦN`}</Text>
-                        <LinearGradient
-                            colors={this.getColor(item.type)}
-                            locations={[0, 0.7, 1]}
-                            style={styles.btn}>
-                            <TouchableOpacity
-                                style={[, styles.shadow,]}
-                            >
-                                <Text style={styles.txtButton}>{this.getLabelButton(item.type)}</Text>
-                            </TouchableOpacity>
-                        </LinearGradient>
+                    <ImageLoad
+                        source={icSupport}
+                        imageStyle={styles.imageStyle}
+                        borderRadius={50}
+                        customImagePlaceholderDefaultStyle={styles.customImagePlace}
+                        style={styles.styleImgLoad}
+                        resizeMode="cover"
+                        placeholderSource={icSupport}
+                        loadingStyle={{ size: "small", color: "gray" }}
+                        defaultImage={this.defaultImage}
+                    />
+                    <View style={styles.container}>
+                        <Text style={[styles.containerText, { fontWeight: 'bold', fontSize: 16 }]}>{item.name}</Text>
+                        <Text style={styles.containerText}>{`HẠN SỬ DỤNG ĐẾN ${item.date}`}</Text>
+                        <View style={styles.containerRow}>
+                            <Text style={styles.quality}>{`CÒN X${item.quality} LẦN`}</Text>
+                            <LinearGradient
+                                colors={this.getColor(item.type)}
+                                locations={[0, 0.7, 1]}
+                                style={styles.btn}>
+                                <TouchableOpacity
+                                    style={[, styles.shadow,]}
+                                >
+                                    <Text style={styles.txtButton}>{this.getLabelButton(item.type)}</Text>
+                                </TouchableOpacity>
+                            </LinearGradient>
+                        </View>
                     </View>
-                </View>
                 </Card>
             </View>
         )
@@ -110,6 +111,7 @@ const styles = StyleSheet.create({
     styleImgLoad: {
         width: 100,
         height: 100,
+        paddingRight:5
     },
     shadow: {
         shadowColor: '#111111',
@@ -154,6 +156,7 @@ const styles = StyleSheet.create({
         borderColor: '#111111',
         borderWidth: 1,
         padding: 10,
+        borderRadius:5,
         backgroundColor: '#FFFFFF'
     },
     containerText: {
