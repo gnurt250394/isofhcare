@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput ,Keyboard,KeyboardAvoidingView} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import TextField from "mainam-react-native-form-validate/TextField";
 import FloatingLabel from 'mainam-react-native-floating-label';
 import constants from "@resources/strings";
 import LinearGradient from 'react-native-linear-gradient'
 import Field from "mainam-react-native-form-validate/Field";
 import Form from "mainam-react-native-form-validate/Form";
+import voucherProvider from '@data-access/voucher-provider'
+import snackbar from '@utils/snackbar-utils';
 
 class FillMyVocher extends Component {
     constructor(props) {
@@ -16,18 +18,30 @@ class FillMyVocher extends Component {
     }
     onChangeText = (s) => this.setState({ voucher: s })
 
-    comfirmVoucher=()=>{
+    comfirmVoucher = () => {
         Keyboard.dismiss();
-		if (!this.form.isValid()) {
-			return;
+        if (!this.form.isValid()) {
+            return;
         }
-       this.props.onPress && this.props.onPress(this.state.voucher)
+        voucherProvider.fillInVoucher(this.state.voucher).then(res => {
+            switch (res.code) {
+                case 0: this.props.onPress && this.props.onPress(res.data)
+                    break;
+
+                default: snackbar.show("Mã ưu đãi không tồn tại hoặc đã hết hạn vui lòng thử mã khác", "danger")
+                    break;
+            }
+        }).catch(err => {
+            console.log('err: ', err.response);
+
+        })
+
     }
     render() {
         return (
-            <View style={styles.container}>
-                <KeyboardAvoidingView behavior="padding">
-                <Form ref={ref => (this.form = ref)}>
+            <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+                <View style={styles.container}>
+                    <Form ref={ref => (this.form = ref)}>
                         <TextField
                             onChangeText={this.onChangeText}
                             inputStyle={styles.inputVoucher}
@@ -40,23 +54,23 @@ class FillMyVocher extends Component {
                                     required: "Mã ưu đãi không được bỏ trống",
                                 }
                             }}
-                            placeholder={'Mã ưu đãi'}
+                            placeholder={'Nhập mã ưu đãi'}
                             autoCapitalize={"none"}
                         />
-                </Form>
-                <LinearGradient
-                    colors={['rgb(255, 214, 51)', 'rgb(204, 163, 0)', 'rgb(179, 143, 0)']}
-                    locations={[0, 0.7, 1]}
-                    style={styles.containerButton}>
-                    <TouchableOpacity
-                    onPress={this.comfirmVoucher}
-                        style={styles.button}
-                    >
-                        <Text style={styles.txtButton}>XÁC NHẬN</Text>
-                    </TouchableOpacity>
-                </LinearGradient>
-                </KeyboardAvoidingView>
-            </View>
+                    </Form>
+                    <LinearGradient
+                        colors={['rgb(255, 214, 51)', 'rgb(204, 163, 0)', 'rgb(179, 143, 0)']}
+                        locations={[0, 0.7, 1]}
+                        style={styles.containerButton}>
+                        <TouchableOpacity
+                            onPress={this.comfirmVoucher}
+                            style={styles.button}
+                        >
+                            <Text style={styles.txtButton}>XÁC NHẬN</Text>
+                        </TouchableOpacity>
+                    </LinearGradient>
+                </View>
+            </TouchableWithoutFeedback>
         );
     }
 }
@@ -84,13 +98,16 @@ const styles = StyleSheet.create({
     },
     inputVoucher: {
         width: '70%',
+        height: 43,
         alignSelf: 'center',
         borderColor: '#111111',
         borderWidth: 0.7,
-        backgroundColor: '#DDDDDD',
+        backgroundColor: '#f2f2f2',
         textAlign: 'center',
-        fontSize: 15,
-        borderRadius: 5
+        fontSize: 16,
+        borderRadius: 5,
+        fontWeight: 'bold',
+        color: '#27AE60',
     },
     containerButton: {
         height: 43,

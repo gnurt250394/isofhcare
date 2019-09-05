@@ -1,108 +1,89 @@
 import React, { Component } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
-import ScaleImage from 'mainam-react-native-scaleimage';
-import LinearGradient from 'react-native-linear-gradient'
-import ImageLoad from "mainam-react-native-image-loader";
-import { Card } from 'native-base'
-const data = [
-    {
-        id: 1,
-        name: 'GIẢM 50.000Đ KHI ĐẶT KHÁM GIẢM 50.000Đ KHI ĐẶT KHÁM GIẢM 50.000Đ KHI ĐẶT KHÁM',
-        date: '20:00, 31/09/2019',
-        quality: 5,
-        type: 1
-    },
-    {
-        id: 2,
-        name: 'GIẢM 50.000Đ KHI ĐẶT KHÁM',
-        date: '20:00, 31/09/2019',
-        quality: 4,
-        type: 2
-    },
-    {
-        id: 3,
-        name: 'GIẢM 50.000Đ KHI ĐẶT KHÁM',
-        date: '20:00, 31/09/2019',
-        quality: 6,
-        type: 2
-    }
-]
+import voucherProvider from '@data-access/voucher-provider'
+import ItemListVoucher from '@components/voucher/ItemListVoucher';
+
 class MyVocherCode extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            refreshing: true,
+            page: 1,
+            size: 10,
+            data: []
         };
     }
 
-    getLabelButton = (type) => {
-        switch (type) {
-            case 1: return 'SỬ DỤNG NGAY'
-            case 2: return ' DÙNG SAU'
-            default: return ''
-        }
-    }
-    getColor = (type) => {
-        switch (type) {
-            case 2: return ['rgba(230, 51, 51, 0.70)', 'rgba(230, 51, 51, 0.90)', 'rgba(230, 51, 51, 1)']
-            case 1: return ['rgb(255, 214, 51)', 'rgb(204, 163, 0)', 'rgb(179, 143, 0)']
-            default: return ''
-        }
-    }
-    defaultImage = () => {
-        return (
-            <ScaleImage source={icSupport} width={100} />
-        );
-    }
-    comfirmVoucher=(item)=>()=>{
-        this.props.onPress && this.props.onPress(item)
-    }
-    renderItem = ({ item, index }) => {
-        const icSupport = require("@images/new/user.png");
 
+    comfirmVoucher = (item) => () => {
+        switch (item.type) {
+            case 0:
+                break;
+            case 1:
+                    voucherProvider.selectVoucher(item.code).then(res=>{
+                        this.props.onPress && this.props.onPress(item)
+                    }).catch(err=>{
+
+                    })
+                
+                break;
+            case 2:
+                break;
+            default:
+                break;
+        }
+
+    }
+    onRefresh = () => this.setState({ refreshing: true }, this.getListVoucher)
+
+    getListVoucher = () => {
+        voucherProvider.getListVoucher().then(res => {
+            switch (res.code) {
+                case 0: this.setState({ refreshing: false, data: res.data })
+                    break;
+                default: this.setState({ refreshing: false })
+                    break;
+            }
+
+            //    console.log('res: ', res);
+            //    this.formatData(res.data)
+        }).catch(err => {
+            console.log('err: ', err.response);
+            this.setState({ refreshing: false })
+        })
+
+    }
+
+    componentDidMount = () => {
+        this.getListVoucher()
+    };
+
+    renderItem = ({ item, index }) => {
         return (
-            <View style={{ padding: 10 }}>
-                <Card style={styles.containerItem} >
-                    <ImageLoad
-                        source={icSupport}
-                        imageStyle={styles.imageStyle}
-                        borderRadius={50}
-                        customImagePlaceholderDefaultStyle={styles.customImagePlace}
-                        style={styles.styleImgLoad}
-                        resizeMode="cover"
-                        placeholderSource={icSupport}
-                        loadingStyle={{ size: "small", color: "gray" }}
-                        defaultImage={this.defaultImage}
-                    />
-                    <View style={styles.container}>
-                        <Text style={[styles.containerText, { fontWeight: 'bold', fontSize: 16 }]}>{item.name}</Text>
-                        <Text style={styles.containerText}>{`HẠN SỬ DỤNG ĐẾN ${item.date}`}</Text>
-                        <View style={styles.containerRow}>
-                            <Text style={styles.quality}>{`CÒN X${item.quality} LẦN`}</Text>
-                            <LinearGradient
-                                colors={this.getColor(item.type)}
-                                locations={[0, 0.7, 1]}
-                                style={styles.btn}>
-                                <TouchableOpacity
-                                onPress={this.comfirmVoucher(item)}
-                                    style={[, styles.shadow,]}
-                                >
-                                    <Text style={styles.txtButton}>{this.getLabelButton(item.type)}</Text>
-                                </TouchableOpacity>
-                            </LinearGradient>
-                        </View>
-                    </View>
-                </Card>
-            </View>
+            <ItemListVoucher item={item} onPress={this.comfirmVoucher(item)} />
         )
     }
-
+    loadMore = () => {
+        const { page, size, data } = this.state
+        if (data.length >= size * page) {
+            this.setState(preState => {
+                return { page: preState.page + 1 }
+            }, this.getListVoucher)
+        }
+    }
+    listEmpty = () => !this.state.refreshing && <Text style={styles.none_data}>Hiện tại chưa có dữ liệu</Text>
     keyExtractor = (item, index) => index.toString()
     render() {
         return (
             <FlatList
-                data={data}
+                data={this.state.data}
                 renderItem={this.renderItem}
                 keyExtractor={this.keyExtractor}
+                onRefresh={this.onRefresh}
+                refreshing={this.state.refreshing}
+                ListEmptyComponent={this.listEmpty}
+                onEndReached={this.loadMore}
+                onEndReachedThreshold={1}
             />
         );
     }
@@ -111,63 +92,13 @@ class MyVocherCode extends Component {
 export default MyVocherCode;
 
 
+
+
 const styles = StyleSheet.create({
-    styleImgLoad: {
-        width: 100,
-        height: 100,
-        paddingRight:5
-    },
-    shadow: {
-        shadowColor: '#111111',
-        shadowOffset: { width: 2, height: 2 },
-        shadowOpacity: 0.6,
-        shadowRadius: 2
-    },
-    txtButton: {
-        color: '#FFFFFF',
-        fontWeight: '700',
-        fontSize: 15
-    },
-    quality: {
-        color: '#27AE60',
-        fontWeight: '500',
-        backgroundColor: '#FFFFFF',
-        width: '40%',
-        paddingVertical: 3
-    },
-    btn: {
-        backgroundColor: '#27AE60',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: 38,
-        width: '55%',
-        borderRadius: 7,
-        paddingHorizontal: 12,
-        elevation: 3
-    },
-    containerRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-    },
-    container: {
-        flex: 1
-    },
-    containerItem: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        borderColor: '#111111',
-        borderWidth: 1,
-        padding: 10,
-        borderRadius:5,
-        backgroundColor: '#FFFFFF'
-    },
-    containerText: {
-        padding: 4,
-        // backgroundColor: '#FFFFFF',
-        width: '100%',
-        marginBottom: 10,
-        color: '#27AE60'
+    none_data: {
+        fontStyle: 'italic',
+        marginTop: 30,
+        alignSelf: 'center',
+        fontSize: 16
     },
 })
