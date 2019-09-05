@@ -43,6 +43,7 @@ class ConfirmBookingScreen extends Component {
             paymentMethod: 2,
             contact,
             booking,
+            voucher:''
         }
     }
     componentDidMount() {
@@ -475,6 +476,27 @@ class ConfirmBookingScreen extends Component {
         })
     }
 
+    getVoucher=(voucher)=>{
+        console.log('voucher: ', voucher);
+        this.setState({voucher:voucher.name})
+    }
+    goToMyVoucher = () => {
+        this.props.navigation.navigate('myVoucher', {
+            onSelected:this.getVoucher
+        })
+    }
+    addVoucher = () => {
+        return (
+           
+                <TouchableOpacity
+                    style={styles.btnGoToVoucher}
+                    onPress={this.goToMyVoucher}
+                >
+                    <Text numberOfLines={1} style={styles.txtButtonVoucher}>{this.state.voucher.toUpperCase() || 'THÊM MÃ ƯU ĐÃI'}</Text>
+                    <ScaleImage width={10} source={require("@images/new/booking/ic_next.png")} />
+                </TouchableOpacity>
+        )
+    }
     render() {
         return (
             <ActivityPanel style={styles.AcPanel} title="Xác nhận lịch khám"
@@ -484,6 +506,7 @@ class ConfirmBookingScreen extends Component {
                         <Text style={{ fontWeight: 'bold', color: '#000' }}>{'HỒ SƠ: ' + this.state.profile.medicalRecords.name.toUpperCase()}</Text>
                         <Text style={{ color: 'gray' }}>SĐT: {this.state.profile.medicalRecords.phone}</Text>
                     </View>
+                    {this.addVoucher()}
                     <View style={styles.viewDetails}>
                         {this.state.serviceType &&
                             <View style={{ paddingHorizontal: 20, marginTop: 20, flexDirection: 'row', alignItems: 'center' }}>
@@ -549,6 +572,7 @@ class ConfirmBookingScreen extends Component {
                             }
                         </View>
                     </View>
+                   
                     <View style={{ paddingHorizontal: 20, marginTop: 20, flexDirection: 'row', alignItems: 'center' }}>
                         <Text style={{ fontWeight: 'bold', color: 'rgb(2,195,154)', marginRight: 10 }}>CHỌN PHƯƠNG THỨC THANH TOÁN</Text>
                         <ScaleImage width={20} source={require("@images/new/booking/ic_tick.png")} />
@@ -621,6 +645,21 @@ function mapStateToProps(state) {
     };
 }
 const styles = StyleSheet.create({
+    txtButtonVoucher: {
+        color: 'rgb(2,195,154)',
+        fontSize: 15,
+        fontWeight: 'bold',
+        paddingRight:15
+    },
+    btnGoToVoucher: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        marginBottom: 15,
+        backgroundColor: '#effbf9'
+    },
     AcPanel: {
         flex: 1,
         backgroundColor: '#cacaca',
