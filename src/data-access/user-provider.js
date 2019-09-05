@@ -121,11 +121,11 @@ module.exports = {
       );
     });
   },
-  register(dateBirth,gender,name,phone,password){
-    return new Promise ((resolve,reject) => {
+  register(dateBirth, gender, name, phone, password) {
+    return new Promise((resolve, reject) => {
       let body = {
         "username": phone,
-        "dateBirth":dateBirth,
+        "dateBirth": dateBirth,
         "gender": gender,
         "name": name,
         "telephone": phone,
@@ -133,15 +133,54 @@ module.exports = {
         "email": null,
         "isUsing2FA": null,
         "roles": [
-            {
-                "id": 1
-            }
+          {
+            "id": 1
+          }
         ]
-    }
+      }
       client.requestApi("post", constants.api.user.registerV2, body, (s, e) => {
         if (s) resolve(s);
         else reject(e);
       });
+    })
+  },
+  checkOtpPhone(id, otp) {
+    return new Promise((resolve, reject) => {
+      client.requestApi('get', `${constants.api.user.check_otp_phone}/${id}/confirm/${otp}`, {}, (s, e) => {
+        if (s)
+          resolve(s)
+        else reject(e)
+      })
+    })
+  },
+
+  reSendOtp(id) {
+    return new Promise((resolve, reject) => {
+      client.requestApi('get', `${constants.api.user.re_send_otp}/${id}/resendtoken`, {}, (s, e) => {
+        if (s)
+          resolve(s)
+        else reject(e)
+      })
+    })
+  },
+  getDetailsUser(id) {
+    return new Promise((resolve, reject) => {
+      client.requestApi('get', `${constants.api.user.get_user_details}/${id}`, {}, (s, e) => {
+        if (s)
+          resolve(s)
+        else
+          reject(e)
+      })
+    })
+  },
+  login(phone, password) {
+    return new Promise((resolve, reject) => {
+      client.requestApi('post', `${constains.api.user.loginV2}?username=${phone}&password=${password}`, {}, (s, e) => {
+        if (s)
+          resolve(s)
+        else
+          reject(e)
+      })
     })
   },
   // register(
@@ -220,7 +259,7 @@ module.exports = {
   // },
   detail(userId) {
     return new Promise((resolve, reject) => {
-      client.requestApi(
+      client.requestApiWithHeaderBear(
         "get",
         constants.api.user.get_detail + "/" + userId,
         {},

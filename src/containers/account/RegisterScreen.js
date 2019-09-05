@@ -118,7 +118,7 @@ class RegisterScreen extends Component {
 
     userProvider.register(dateBirth, gender, name, phone, password).then(res => {
       if (res.code == 'OK')
-        this.props.navigation.navigate('checkOtp', { user: this.state.user })
+        this.props.navigation.navigate('otpPhoneNumber', { user: this.state.user, id: res.details,phone : this.state.phone })
       else {
         snackbar.show(res.message, 'danger')
       }

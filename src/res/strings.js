@@ -464,7 +464,6 @@ module.exports = {
       login_social: isofhcare_service + "user/login-social",
       logout: isofhcare_service + "user/logout",
       register: isofhcare_service + "user/register",
-      registerV2: isofhcare_service + 'v3.0/user/registration',
       forgot_password: isofhcare_service + "user/forget-password",
       update: isofhcare_service + "user/update",
       change_password: isofhcare_service + "user/update-password",
@@ -475,6 +474,13 @@ module.exports = {
       refresh_password_by_token: isofhcare_service + "user/refresh-password-by-token",
       check_used_phone: isofhcare_service + "user/check-used-phone",
       use_app: isofhcare_service + "user/use-app",
+      //new api
+      registerV2: isofhcare_service + 'v3.0/user/registration',
+      check_otp_phone: isofhcare_service + 'v3.0/user/registration',
+      re_send_otp: isofhcare_service + 'v3.0/user/registration',
+      loginV2: isofhcare_service + 'v3.0/login',
+      get_user_details: isofhcare_service + 'v3.0/user'
+
     },
     keyvalue: {
       get: isofhcare_service + "key-value/get-value",
@@ -592,7 +598,7 @@ module.exports = {
       update_data_user: isofhcare_service + 'patient-history-booking/update-data-note',
       search_profile_user: isofhcare_service + 'user/search',
       share_with_profile: isofhcare_service + 'booking/share-user',
-      add_ehealth_with_code:isofhcare_service + 'patient-history-booking/verify'
+      add_ehealth_with_code: isofhcare_service + 'patient-history-booking/verify'
     },
     home: {
       get_list_drug: isofhcare_service + '/medicine/list-medicine-top',

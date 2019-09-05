@@ -38,6 +38,8 @@ import RegisterScreen from "@containers/account/RegisterScreen";
 import EnterPasswordScreen from "@containers/account/EnterPasswordScreen";
 import ForgotPasswordScreen from "@containers/account/ForgotPasswordScreen";
 import ChangePasswordScreen from "@containers/account/ChangePasswordScreen";
+import OtpPhoneNumberScreen from "@containers/account/OtpPhoneNumberScreen";
+
 
 
 //question
@@ -267,12 +269,15 @@ const RootNavigator = createStackNavigator(
     notificationTab: NotificationScreen,
     ehealth: EHealthNavigator,
     viewDetailEhealth: { screen: ViewEhealthDetailScreen },
+    //
     login: { screen: LoginScreen },
     forgotPassword: { screen: ForgotPasswordScreen },
     confirmCode: { screen: ConfirmCodeScreen },
     resetPassword: { screen: ResetPasswordScreen },
     enterPassword: { screen: EnterPasswordScreen },
     register: { screen: RegisterScreen },
+    otpPhoneNumber:{screen:OtpPhoneNumberScreen},
+    //
     listQuestion: ListQuestionScreen,
     createQuestionStep1: { screen: CreateQuestionStep1Screen },
     createQuestionStep2: { screen: CreateQuestionStep2Screen },
