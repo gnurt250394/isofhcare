@@ -6,7 +6,7 @@ import { Card } from 'native-base'
 import MyVocherCode from './MyVocherCode';
 import FillMyVocher from './FillMyVocher';
 
-class MyVocher extends Component {
+class MyVocherScreen extends Component {
     constructor(props) {
         super(props);
         let tabIndex = 0;
@@ -36,6 +36,12 @@ class MyVocher extends Component {
             isMyVocher: tabIndex == 0
         });
     }
+
+    comfirmVoucher=(voucher)=>{
+        let onSelected =  ((this.props.navigation.state || {}).params || {}).onSelected;
+       if(onSelected) onSelected(voucher)
+        this.props.navigation.pop()
+    }
     render() {
         return (
             <ActivityPanel
@@ -56,11 +62,11 @@ class MyVocher extends Component {
                     }}
                     onPageScroll={this.onPageScroll.bind(this)}>
                     <View style={styles.container}>
-                    <FillMyVocher />
+                    <FillMyVocher onPress={this.comfirmVoucher} />
                     </View>
                     <View style={styles.container}>
                         
-                        <MyVocherCode />
+                        <MyVocherCode  onPress={this.comfirmVoucher}/>
                     </View>
 
                 </IndicatorViewPager>
@@ -94,4 +100,4 @@ const styles = StyleSheet.create({
         overflow: 'hidden'
     },
 })
-export default MyVocher;
+export default MyVocherScreen;

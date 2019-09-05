@@ -7,7 +7,7 @@ import { Card } from 'native-base'
 const data = [
     {
         id: 1,
-        name: 'GIẢM 50.000Đ KHI ĐẶT KHÁM',
+        name: 'GIẢM 50.000Đ KHI ĐẶT KHÁM GIẢM 50.000Đ KHI ĐẶT KHÁM GIẢM 50.000Đ KHI ĐẶT KHÁM',
         date: '20:00, 31/09/2019',
         quality: 5,
         type: 1
@@ -53,6 +53,9 @@ class MyVocherCode extends Component {
             <ScaleImage source={icSupport} width={100} />
         );
     }
+    comfirmVoucher=(item)=>()=>{
+        this.props.onPress && this.props.onPress(item)
+    }
     renderItem = ({ item, index }) => {
         const icSupport = require("@images/new/user.png");
 
@@ -80,6 +83,7 @@ class MyVocherCode extends Component {
                                 locations={[0, 0.7, 1]}
                                 style={styles.btn}>
                                 <TouchableOpacity
+                                onPress={this.comfirmVoucher(item)}
                                     style={[, styles.shadow,]}
                                 >
                                     <Text style={styles.txtButton}>{this.getLabelButton(item.type)}</Text>
