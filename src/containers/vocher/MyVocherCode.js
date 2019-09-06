@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import voucherProvider from '@data-access/voucher-provider'
 import ItemListVoucher from '@components/voucher/ItemListVoucher';
+import snackbar from '@utils/snackbar-utils';
 
 class MyVocherCode extends Component {
     constructor(props) {
@@ -17,8 +18,12 @@ class MyVocherCode extends Component {
 
     comfirmVoucher = (item) => () => {
         let idBooking = this.props.idBooking 
-        voucherProvider.selectVoucher(item.code,item.id,idBooking).then(res => {
-            this.props.onPress && this.props.onPress(item)
+        voucherProvider.selectVoucher(item.id,idBooking).then(res => {
+            if(res.code == 0){
+                this.props.onPress && this.props.onPress(item)
+            }else{
+                snackbar.show("Mã Voucher không tồn tại","danger")
+            }
         }).catch(err => {
 
         })
