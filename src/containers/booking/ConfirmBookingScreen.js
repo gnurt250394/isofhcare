@@ -72,7 +72,8 @@ class ConfirmBookingScreen extends Component {
                                                 screen: "createBookingSuccess",
                                                 params: {
                                                     booking,
-                                                    service: this.state.service
+                                                    service: this.state.service,
+                                                    voucher:this.state.voucher
 
                                                 }
                                             }
@@ -100,7 +101,8 @@ class ConfirmBookingScreen extends Component {
                                 screen: "createBookingSuccess",
                                 params: {
                                     booking,
-                                    service: this.state.service
+                                    service: this.state.service,
+                                    voucher:this.state.voucher
                                 }
                             }
                         });
@@ -207,7 +209,8 @@ class ConfirmBookingScreen extends Component {
                                     screen: "createBookingSuccess",
                                     params: {
                                         booking,
-                                        service: this.state.service
+                                        service: this.state.service,
+                                        voucher:this.state.voucher
 
                                     }
                                 }
@@ -250,7 +253,8 @@ class ConfirmBookingScreen extends Component {
                                                 screen: "createBookingSuccess",
                                                 params: {
                                                     booking,
-                                                    service: this.state.service
+                                                    service: this.state.service,
+                                                    voucher:this.state.voucher
 
                                                 }
                                             }
@@ -321,8 +325,8 @@ class ConfirmBookingScreen extends Component {
                         screen: "createBookingSuccess",
                         params: {
                             booking,
-                            service: this.state.service
-
+                            service: this.state.service,
+                            voucher:this.state.voucher
                         }
                     }
                 });
@@ -355,7 +359,8 @@ class ConfirmBookingScreen extends Component {
                                     screen: "createBookingSuccess",
                                     params: {
                                         booking,
-                                        service: this.state.service
+                                        service: this.state.service,
+                                        voucher:this.state.voucher
 
                                     }
                                 }
@@ -397,7 +402,8 @@ class ConfirmBookingScreen extends Component {
                                                 screen: "createBookingSuccess",
                                                 params: {
                                                     booking,
-                                                    service: this.state.service
+                                                    service: this.state.service,
+                                                    voucher:this.state.voucher
                                                 }
                                             }
                                         });
