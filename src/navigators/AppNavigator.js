@@ -105,7 +105,7 @@ import SpecialistScreen from "@containers/specialist/SpecialistScreen";
 import ConfirmCodeScreen from "@containers/account/ConfirmCodeScreen";
 import ResetPasswordScreen from "@containers/account/ResetPasswordScreen";
 import { fromLeft, zoomIn, zoomOut, fromRight } from 'react-navigation-transitions';
-
+import MyVoucher from '@containers/vocher'
 
 const ProfileNavigation = createStackNavigator({
   selectProfile: SelectProfileScreen,
@@ -311,7 +311,8 @@ const RootNavigator = createStackNavigator(
     hospital: { screen: HospitalScreen },
     drug: { screen: DrugScreen },
     hospitalByLocation: { screen: HospitalByLocationScreen },
-    photoViewer: { screen: PhotoViewerScreen }
+    photoViewer: { screen: PhotoViewerScreen },
+    myVoucher:{screen : MyVoucher}
   },
   {
     headerMode: "none",

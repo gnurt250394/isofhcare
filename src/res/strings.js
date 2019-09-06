@@ -598,6 +598,9 @@ module.exports = {
       get_list_drug: isofhcare_service + '/medicine/list-medicine-top',
       get_list_news: isofhcare_service + 'news/list-news-top',
       get_list_hospital_top_rate: isofhcare_service + 'hospital/list-hospital-top-rate'
+    },
+    voucher:{
+      get_voucher:isofhcare_service + 'voucher'
     }
   }
 };
