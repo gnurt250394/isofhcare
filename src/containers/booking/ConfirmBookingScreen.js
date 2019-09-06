@@ -43,7 +43,7 @@ class ConfirmBookingScreen extends Component {
             paymentMethod: 2,
             contact,
             booking,
-            voucher:''
+            voucher: {}
         }
     }
     componentDidMount() {
@@ -54,7 +54,7 @@ class ConfirmBookingScreen extends Component {
     }
     _handleAppStateChange = (nextAppState) => {
         if (nextAppState == 'inactive' || nextAppState == 'background') {
-            console.log("1", nextAppState);
+
         } else {
             this.setState({ isLoading: true }, () => {
                 bookingProvider.detail(this.state.booking.book.id).then(s => {
@@ -157,7 +157,7 @@ class ConfirmBookingScreen extends Component {
         try {
             return this.state.bookingDate.format("yyyy-MM-dd") + " " + (this.state.schedule.timeString || ((this.state.schedule.time || new Date()).format("HH:mm:ss")));
         } catch (error) {
-            console.log(error);
+
         }
         return "";
     }
@@ -201,7 +201,7 @@ class ConfirmBookingScreen extends Component {
                         case 4:
                             booking.online_transactions = data.online_transactions;
                             booking.valid_time = data.valid_time;
-                            console.log(booking, 'bookingbookingbooking');
+
                             this.props.navigation.navigate("homeTab", {
                                 navigate: {
                                     screen: "createBookingSuccess",
@@ -465,7 +465,7 @@ class ConfirmBookingScreen extends Component {
                             }
                         }
                     })
-                    // console.log(s.data);
+                    // 
                 }).catch(e => {
                     this.setState({ isLoading: false }, () => {
                     });
@@ -476,28 +476,37 @@ class ConfirmBookingScreen extends Component {
         })
     }
 
-    getVoucher=(voucher)=>{
-        console.log('voucher: ', voucher);
-        this.setState({voucher:voucher.name})
+    getVoucher = (voucher) => {
+
+        this.setState({ voucher: voucher })
     }
     goToMyVoucher = () => {
         this.props.navigation.navigate('myVoucher', {
-            onSelected:this.getVoucher
+            onSelected: this.getVoucher
         })
     }
     addVoucher = () => {
         return (
-           
-                <TouchableOpacity
-                    style={styles.btnGoToVoucher}
-                    onPress={this.goToMyVoucher}
-                >
-                    <Text numberOfLines={1} style={styles.txtButtonVoucher}>{this.state.voucher.toUpperCase() || 'THÊM MÃ ƯU ĐÃI'}</Text>
-                    <ScaleImage width={10} source={require("@images/new/booking/ic_next.png")} />
-                </TouchableOpacity>
+
+            <TouchableOpacity
+                style={styles.btnGoToVoucher}
+                onPress={this.goToMyVoucher}
+            >
+                <Text numberOfLines={1} style={styles.txtButtonVoucher}>{this.state.voucher && this.state.voucher.price ? `GIẢM ${this.state.voucher.price.formatPrice()} KHI ĐẶT KHÁM` : 'THÊM MÃ ƯU ĐÃI'}</Text>
+                <ScaleImage width={10} source={require("@images/new/booking/ic_next.png")} />
+            </TouchableOpacity>
         )
     }
+
+    getPriceSecive = () => {
+        let priceVoucher = this.state.voucher && this.state.voucher.price ? this.state.voucher.price : 0
+        let priceFinal = this.state.service.reduce((start, item) => {
+            return start + parseInt(item.service.price)
+        }, 0)
+        return (priceFinal - priceVoucher).formatPrice()
+    }
     render() {
+
         return (
             <ActivityPanel style={styles.AcPanel} title="Xác nhận lịch khám"
                 isLoading={this.state.isLoading} >
@@ -556,7 +565,13 @@ class ConfirmBookingScreen extends Component {
                                                 <Text style={{ color: '#ccc' }}>({parseInt(item.service.price).formatPrice()}đ)</Text>
                                             </View>
                                             )
+
                                         }
+                                        {this.state.voucher && this.state.voucher.price ? <View style={{ flexDirection: 'row', marginTop: 5 }}>
+                                            <Text style={{ flex: 1, fontWeight: 'bold', marginLeft: 20, color: '#000' }} numberOfLines={1}> {''}</Text>
+                                            <Text style={{ color: '#ccc' }}>(-{parseInt(this.state.voucher.price).formatPrice()}đ)</Text>
+                                        </View> : null}
+
                                     </View>
                                 </View> : null
                             }
@@ -564,15 +579,13 @@ class ConfirmBookingScreen extends Component {
                                 <View style={[styles.view2, { alignItems: 'flex-start' }]}>
                                     <ScaleImage style={[styles.ic_Location]} width={20} source={require("@images/new/booking/ic_coin.png")} />
                                     <View style={{ flexDirection: 'row' }}>
-                                        <Text style={[styles.text5]}>Tổng tiền: <Text style={{ fontWeight: 'bold', marginLeft: 20, color: '#d0021b' }} numberOfLines={1}>{this.state.service.reduce((start, item) => {
-                                            return start + parseInt(item.service.price)
-                                        }, 0).formatPrice()}đ</Text></Text>
+                                        <Text style={[styles.text5]}>Tổng tiền: <Text style={{ fontWeight: 'bold', marginLeft: 20, color: '#d0021b' }} numberOfLines={1}>{this.getPriceSecive()}đ</Text></Text>
                                     </View>
                                 </View> : null
                             }
                         </View>
                     </View>
-                   
+
                     <View style={{ paddingHorizontal: 20, marginTop: 20, flexDirection: 'row', alignItems: 'center' }}>
                         <Text style={{ fontWeight: 'bold', color: 'rgb(2,195,154)', marginRight: 10 }}>CHỌN PHƯƠNG THỨC THANH TOÁN</Text>
                         <ScaleImage width={20} source={require("@images/new/booking/ic_tick.png")} />
@@ -649,7 +662,7 @@ const styles = StyleSheet.create({
         color: 'rgb(2,195,154)',
         fontSize: 15,
         fontWeight: 'bold',
-        paddingRight:15
+        paddingRight: 15
     },
     btnGoToVoucher: {
         flexDirection: 'row',

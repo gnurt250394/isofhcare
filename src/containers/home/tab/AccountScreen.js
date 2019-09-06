@@ -102,7 +102,7 @@ class AccountScreen extends Component {
           <Text style={styles.txUserName}>
             {this.props.userApp.currentUser.name}
           </Text>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => {
               this.props.navigation.navigate('detailsProfile')
             }}
@@ -110,7 +110,7 @@ class AccountScreen extends Component {
             <Text style={styles.txViewProfile}>
               Xem hồ sơ cá nhân
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         <TouchableOpacity
           style={styles.btnImage}
