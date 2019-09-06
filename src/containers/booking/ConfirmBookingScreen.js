@@ -487,8 +487,10 @@ class ConfirmBookingScreen extends Component {
         this.setState({ voucher: voucher })
     }
     goToMyVoucher = () => {
+        console.log(this.state.booking)
         this.props.navigation.navigate('myVoucher', {
-            onSelected: this.getVoucher
+            onSelected: this.getVoucher,
+            booking:this.state.booking.book
         })
     }
     addVoucher = () => {

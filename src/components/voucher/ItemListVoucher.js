@@ -53,14 +53,14 @@ class ItemListVoucher extends Component {
                         <View style={styles.containerRow}>
                             <Text style={styles.quality}>{`CÒN X${item.quantity} LẦN`}</Text>
                             <LinearGradient
-                                colors={this.getColor(item.type)}
+                                colors={['rgb(255, 214, 51)', 'rgb(204, 163, 0)', 'rgb(179, 143, 0)']}
                                 locations={[0, 0.7, 1]}
                                 style={styles.btn}>
                                 <TouchableOpacity
                                     onPress={onPress}
                                     style={[styles.button]}
                                 >
-                                    <Text style={styles.txtButton}>{this.getLabelButton(item.type)}</Text>
+                                    <Text style={styles.txtButton}>SỬ DỤNG NGAY</Text>
                                 </TouchableOpacity>
                             </LinearGradient>
                         </View>

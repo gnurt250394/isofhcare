@@ -19,7 +19,7 @@ module.exports = {
                 _type = type;
                 break;
         }
-        this.showWithTitle("iSofHCare", message, type, duration);
+        this.showWithTitle("iSofHCare", message, _type, duration);
 
         // Toast.show({
         //     text: message,

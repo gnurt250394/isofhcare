@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     txLastTime: { color: '#5A5956', marginTop: 5 },
     
     viewContent: {
-        paddingHorizontal: 10, flex: 1, backgroundColor: '#f0f5f9'
+        paddingHorizontal: 10, flex: 1        
     },
     viewFlatList: { flex: 1 },
     viewTxNone: { alignItems: 'center', marginTop: 50 },
