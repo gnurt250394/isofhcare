@@ -37,12 +37,13 @@ class MyVocherScreen extends Component {
         });
     }
 
-    comfirmVoucher=(voucher)=>{
-        let onSelected =  ((this.props.navigation.state || {}).params || {}).onSelected;
-       if(onSelected) onSelected(voucher)
+    comfirmVoucher = (voucher) => {
+        let onSelected = ((this.props.navigation.state || {}).params || {}).onSelected;
+        if (onSelected) onSelected(voucher)
         this.props.navigation.pop()
     }
     render() {
+        let booking = this.props.navigation.getParam('booking', null)
         return (
             <ActivityPanel
                 title="NHẬP MÃ ƯU ĐÃI"
@@ -62,11 +63,11 @@ class MyVocherScreen extends Component {
                     }}
                     onPageScroll={this.onPageScroll.bind(this)}>
                     <View style={styles.container}>
-                    <FillMyVocher onPress={this.comfirmVoucher} />
+                        <FillMyVocher onPress={this.comfirmVoucher} />
                     </View>
                     <View style={styles.container}>
-                        
-                        <MyVocherCode  onPress={this.comfirmVoucher}/>
+
+                        <MyVocherCode idBooking={booking ? booking.id : null} onPress={this.comfirmVoucher} />
                     </View>
 
                 </IndicatorViewPager>

@@ -16,7 +16,8 @@ class MyVocherCode extends Component {
 
 
     comfirmVoucher = (item) => () => {
-        voucherProvider.selectVoucher(item.code).then(res => {
+        let idBooking = this.props.idBooking 
+        voucherProvider.selectVoucher(item.code,item.id,idBooking).then(res => {
             this.props.onPress && this.props.onPress(item)
         }).catch(err => {
 
@@ -32,9 +33,6 @@ class MyVocherCode extends Component {
                 default: this.setState({ refreshing: false })
                     break;
             }
-
-            //    console.log('res: ', res);
-            //    this.formatData(res.data)
         }).catch(err => {
             console.log('err: ', err.response);
             this.setState({ refreshing: false })
@@ -51,14 +49,7 @@ class MyVocherCode extends Component {
             <ItemListVoucher item={item} onPress={this.comfirmVoucher(item)} />
         )
     }
-    loadMore = () => {
-        const { page, size, data } = this.state
-        if (data.length >= size * page) {
-            this.setState(preState => {
-                return { page: preState.page + 1 }
-            }, this.getListVoucher)
-        }
-    }
+  
     listEmpty = () => !this.state.refreshing && <Text style={styles.none_data}>Hiện tại chưa có dữ liệu</Text>
     keyExtractor = (item, index) => index.toString()
     render() {
@@ -70,8 +61,6 @@ class MyVocherCode extends Component {
                 onRefresh={this.onRefresh}
                 refreshing={this.state.refreshing}
                 ListEmptyComponent={this.listEmpty}
-                onEndReached={this.loadMore}
-                onEndReachedThreshold={1}
             />
         );
     }
