@@ -376,7 +376,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        backgroundColor: 'rgb(246, 249, 251)',
+        // backgroundColor: 'rgb(246, 249, 251)',
         borderStyle: 'solid',
         paddingTop: 20
     },
@@ -445,7 +445,7 @@ const styles = StyleSheet.create({
         borderBottomColor: 'rgba(0, 0, 0, 0.06)'
     },
     sc: {
-        backgroundColor: '#FFF', flex: 1
+        // backgroundColor: '#FFF', flex: 1
     },
     bv: {
         fontSize: 15,

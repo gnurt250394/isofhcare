@@ -99,7 +99,7 @@ class SelectServiceScreen extends Component {
     renderSearchButton() {
         return (
             <TouchableOpacity onPress={() => this.showSearch()} style={{ padding: 10 }}>
-                <ScaleImage source={require("@images/ic_timkiem.png")} width={20} />
+                <ScaleImage source={require("@images/ic_timkiem.png")} style={{ tintColor: '#FFF' }} width={20} />
             </TouchableOpacity>
         );
     }
@@ -133,7 +133,7 @@ class SelectServiceScreen extends Component {
     render() {
         return (
             <ActivityPanel
-                backButton={<TouchableOpacity style={{ paddingLeft: 20 }} onPress={() => this.props.navigation.pop()}><Text>Hủy</Text></TouchableOpacity>}
+                backButton={<TouchableOpacity style={{ paddingLeft: 20 }} onPress={() => this.props.navigation.pop()}><Text style={{ color: '#FFF' }}>Hủy</Text></TouchableOpacity>}
                 title={constants.title.service}
                 isLoading={this.state.isLoading}
                 menuButton={<View style={{ flexDirection: 'row', alignItems: 'center' }}>
