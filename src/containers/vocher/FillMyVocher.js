@@ -23,10 +23,18 @@ class FillMyVocher extends Component {
         if (!this.form.isValid()) {
             return;
         }
+        let booking = this.props.booking
+        let services = booking && booking.services ? booking.services : []
+        let priceServices = services.reduce((total, item) => {
+            return total + parseInt(item.price)
+        }, 0)
         voucherProvider.fillInVoucher(this.state.voucher).then(res => {
             if (res.data) {
-                this.props.onPress && this.props.onPress(res.data)
-
+                if (priceServices < res.data.price) {
+                    snackbar.show('Số tiền ưu đãi không được vượt quá tổng số tiền dịch vụ đã chọn', 'danger')
+                } else {
+                    this.props.onPress && this.props.onPress(res.data)
+                }
             } else {
                 snackbar.show("Mã ưu đãi không tồn tại hoặc đã hết hạn vui lòng thử mã khác", "danger")
             }
