@@ -22,9 +22,9 @@ module.exports = {
                 });
         })
     },
-    selectVoucher(voucher,idVoucher,idBooking) {
+    selectVoucher(idVoucher,idBooking) {
         return new Promise((resolve, reject) => {
-            client.requestApi("post", `${constants.api.voucher.get_voucher}/${voucher}/${idVoucher}/${idBooking}`,
+            client.requestApi("post", `${constants.api.voucher.get_voucher}/redeem/${idVoucher}/${idBooking}`,
                 {}, (s, e) => {
                     if (s)
                         resolve(s);
