@@ -63,11 +63,11 @@ class MyVocherScreen extends Component {
                     }}
                     onPageScroll={this.onPageScroll.bind(this)}>
                     <View style={styles.container}>
-                        <FillMyVocher onPress={this.comfirmVoucher} />
+                        <FillMyVocher booking={booking} onPress={this.comfirmVoucher} />
                     </View>
                     <View style={styles.container}>
 
-                        <MyVocherCode idBooking={booking ? booking.id : null} onPress={this.comfirmVoucher} />
+                        <MyVocherCode booking={booking} onPress={this.comfirmVoucher} />
                     </View>
 
                 </IndicatorViewPager>
