@@ -118,7 +118,7 @@ class RegisterScreen extends Component {
 
     userProvider.register(dateBirth, gender, name, phone, password).then(res => {
       if (res.code == 'OK')
-        this.props.navigation.navigate('otpPhoneNumber', { user: this.state.user, id: res.details,phone : this.state.phone })
+        this.props.navigation.navigate('otpPhoneNumber', { user: this.state.user, id: res.details, phone: this.state.phone })
       else {
         snackbar.show(res.message, 'danger')
       }
@@ -182,7 +182,7 @@ class RegisterScreen extends Component {
                 <Form ref={ref => (this.form = ref)}>
                   <TextField
                     getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-                      placeholderStyle={{ fontSize: 16, }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Họ tên"}
+                      placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Họ tên"}
                       onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
                     onChangeText={s => {
                       this.setState({ fullname: s });
@@ -207,7 +207,7 @@ class RegisterScreen extends Component {
                       marginTop: 25
                     }}
                   >
-                    <Text style={styles.labelStyle}>Giới tính</Text>
+                    <Text style={[{ fontSize: 16, fontWeight: '200' }]}>Giới tính</Text>
                     <View style={{ flexDirection: "row", justifyContent: 'flex-end', flex: 1 }}>
                       <TouchableOpacity
                         onPress={() => {
@@ -274,7 +274,7 @@ class RegisterScreen extends Component {
                       editable={false}
                       getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
                         editable={false}
-                        placeholderStyle={{ fontSize: 16, }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.dob}
+                        placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.dob}
                         onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
                       onChangeText={s => {
                         this.setState({ date: s });
@@ -307,7 +307,7 @@ class RegisterScreen extends Component {
                   <Field style={styles.inputPass}>
                     <TextField
                       getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-                        placeholderStyle={{ fontSize: 16, }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.input_password}
+                        placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.input_password}
                         secureTextEntry={this.state.secureTextPassEntry}
                         onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
                       onChangeText={s => {
