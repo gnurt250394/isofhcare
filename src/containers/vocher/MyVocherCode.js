@@ -16,23 +16,11 @@ class MyVocherCode extends Component {
 
 
     comfirmVoucher = (item) => () => {
-        switch (item.type) {
-            case 0:
-                break;
-            case 1:
-                    voucherProvider.selectVoucher(item.code).then(res=>{
-                        this.props.onPress && this.props.onPress(item)
-                    }).catch(err=>{
+        voucherProvider.selectVoucher(item.code).then(res => {
+            this.props.onPress && this.props.onPress(item)
+        }).catch(err => {
 
-                    })
-                
-                break;
-            case 2:
-                break;
-            default:
-                break;
-        }
-
+        })
     }
     onRefresh = () => this.setState({ refreshing: true }, this.getListVoucher)
 
