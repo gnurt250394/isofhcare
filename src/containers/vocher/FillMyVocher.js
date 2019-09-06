@@ -24,12 +24,11 @@ class FillMyVocher extends Component {
             return;
         }
         voucherProvider.fillInVoucher(this.state.voucher).then(res => {
-            switch (res.code) {
-                case 0: this.props.onPress && this.props.onPress(res.data)
-                    break;
+            if (res.data) {
+                this.props.onPress && this.props.onPress(res.data)
 
-                default: snackbar.show("Mã ưu đãi không tồn tại hoặc đã hết hạn vui lòng thử mã khác", "danger")
-                    break;
+            } else {
+                snackbar.show("Mã ưu đãi không tồn tại hoặc đã hết hạn vui lòng thử mã khác", "danger")
             }
         }).catch(err => {
             console.log('err: ', err.response);
