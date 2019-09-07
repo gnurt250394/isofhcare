@@ -37,7 +37,7 @@ class ItemListVoucher extends Component {
             <View style={{ padding: 10 }}>
                 <Card style={styles.containerItem} >
                     <ImageLoad
-                        source={{uri:item.image}}
+                        source={icSupport}
                         imageStyle={styles.imageStyle}
                         borderRadius={50}
                         customImagePlaceholderDefaultStyle={styles.customImagePlace}
@@ -48,19 +48,19 @@ class ItemListVoucher extends Component {
                         defaultImage={this.defaultImage}
                     />
                     <View style={styles.container}>
-                        <Text numberOfLines={2} style={[styles.containerText, { fontWeight: 'bold', fontSize: 16 }]}>GIẢM {item.price.formatPrice()} KHI ĐẶT KHÁM</Text>
+                        <Text numberOfLines={2} style={[styles.containerText, { fontWeight: 'bold', fontSize: 16 }]}>GIẢM {item.price.formatPrice()}đ KHI ĐẶT KHÁM</Text>
                         <Text style={styles.containerText}>{`HẠN SỬ DỤNG ĐẾN ${item.endTime.toDateObject('-').format("hh:mm, dd/MM/yyyy")}`}</Text>
                         <View style={styles.containerRow}>
-                            <Text style={styles.quality}>{`CÒN X${item.quantity} LẦN`}</Text>
+                            <Text style={styles.quality}>{`CÒN ${item.quantity} LẦN`}</Text>
                             <LinearGradient
-                                colors={this.getColor(item.type)}
+                                colors={['rgb(255, 214, 51)', 'rgb(204, 163, 0)', 'rgb(179, 143, 0)']}
                                 locations={[0, 0.7, 1]}
                                 style={styles.btn}>
                                 <TouchableOpacity
                                     onPress={onPress}
                                     style={[styles.button]}
                                 >
-                                    <Text style={styles.txtButton}>{this.getLabelButton(item.type)}</Text>
+                                    <Text style={styles.txtButton}>SỬ DỤNG NGAY</Text>
                                 </TouchableOpacity>
                             </LinearGradient>
                         </View>
