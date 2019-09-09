@@ -203,7 +203,6 @@ class ConfirmBookingScreen extends Component {
                         case 4:
                             booking.online_transactions = data.online_transactions;
                             booking.valid_time = data.valid_time;
-
                             this.props.navigation.navigate("homeTab", {
                                 navigate: {
                                     screen: "createBookingSuccess",
@@ -521,7 +520,7 @@ class ConfirmBookingScreen extends Component {
                 <ScrollView keyboardShouldPersistTaps='handled' style={styles.container}>
                     <View style={{ paddingHorizontal: 20, marginVertical: 20 }}>
                         <Text style={{ fontWeight: 'bold', color: '#000' }}>{'HỒ SƠ: ' + this.state.profile.medicalRecords.name.toUpperCase()}</Text>
-                        <Text style={{ color: 'gray' }}>SĐT: {this.state.profile.medicalRecords.phone}</Text>
+                        {this.state.profile.medicalRecords.phone ? <Text style={{ color: 'gray' }}>SĐT: {this.state.profile.medicalRecords.phone}</Text> : <View></View>}
                     </View>
                     {this.addVoucher()}
                     <View style={styles.viewDetails}>
