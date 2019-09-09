@@ -381,12 +381,12 @@ class AddBookingScreen extends Component {
         // minDate.setDate(minDate.getDate());
 
         return (<ActivityPanel title="Đặt Khám"
-            
+
             isLoading={this.state.isLoading}
-            
-            
-            
-    
+
+
+
+
         // menuButton={<TouchableOpacity style={styles.menu} onPress={() => snackbar.show(constants.msg.app.in_development)}><ScaleImage style={styles.img} height={20} source={require("@images/new/booking/ic_info.png")} /></TouchableOpacity>}
         >
             <View style={{ backgroundColor: '#f7f9fb', flex: 1 }}>
@@ -511,9 +511,9 @@ class AddBookingScreen extends Component {
                             <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
                         </TouchableOpacity>
                         {
-                        this.state.serviceError ?
-                            <Text style={[styles.errorStyle]}>{this.state.serviceError}</Text> : null
-                    }
+                            this.state.serviceError ?
+                                <Text style={[styles.errorStyle]}>{this.state.serviceError}</Text> : null
+                        }
                         <View style={styles.border}></View>
                         <TouchableOpacity style={styles.mucdichkham} onPress={() => {
                             console.log(this.state.listServicesSelected);
@@ -594,11 +594,14 @@ class AddBookingScreen extends Component {
                         }
                     </View>
                     <Text style={styles.des}>{constants.booking.simptom_note}</Text>
+                    <View style={styles.btn}>
+                        <TouchableOpacity onPress={this.addBooking} style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]}>
+                            <Text style={styles.datkham}>Đặt khám</Text>
+                        </TouchableOpacity>
+                    </View>
                 </KeyboardAwareScrollView>
 
-                <View style={styles.btn}>
-                    <TouchableOpacity onPress={this.addBooking} style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]}><Text style={styles.datkham}>Đặt khám</Text></TouchableOpacity>
-                </View>
+
                 <ImagePicker ref={ref => this.imagePicker = ref} />
 
                 <DateTimePicker
