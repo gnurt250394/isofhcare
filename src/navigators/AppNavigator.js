@@ -45,7 +45,7 @@ import CreateQuestionStep1Screen from "@containers/question/CreateQuestionStep1S
 import CreateQuestionStep2Screen from "@containers/question/CreateQuestionStep2Screen";
 import DetailQuestionScreen from "@containers/question/DetailQuestionScreen";
 import ProfileInfo from '@containers/account/ProfileInfo'
-import DetailsDoctorScreen from "@containers/question/DetailsDoctorScreen";
+// import DetailsDoctorScreen from "@containers/question/DetailsDoctorScreen";
 
 
 //booking
@@ -106,6 +106,10 @@ import ConfirmCodeScreen from "@containers/account/ConfirmCodeScreen";
 import ResetPasswordScreen from "@containers/account/ResetPasswordScreen";
 import { fromLeft, zoomIn, zoomOut, fromRight } from 'react-navigation-transitions';
 import MyVoucher from '@containers/vocher'
+import ListDoctorScreen from '@containers/booking/doctor/ListDoctorScreen';
+import DetailsDoctorScreen from '@containers/booking/doctor/DetailDoctorScreen';
+import AddBookingDoctorScreen from '@containers/booking/doctor/AddBookingDoctorScreen';
+
 
 const ProfileNavigation = createStackNavigator({
   selectProfile: SelectProfileScreen,
@@ -312,7 +316,9 @@ const RootNavigator = createStackNavigator(
     drug: { screen: DrugScreen },
     hospitalByLocation: { screen: HospitalByLocationScreen },
     photoViewer: { screen: PhotoViewerScreen },
-    myVoucher:{screen : MyVoucher}
+    myVoucher:{screen : MyVoucher},
+    listDoctor:{screen:ListDoctorScreen},
+    addBookingDoctor:{screen:AddBookingDoctorScreen}
   },
   {
     headerMode: "none",
