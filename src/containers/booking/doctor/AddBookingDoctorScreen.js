@@ -20,6 +20,7 @@ import medicalRecordProvider from '@data-access/medical-record-provider';
 import serviceTypeProvider from '@data-access/service-type-provider';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import bookingProvider from '@data-access/booking-provider';
+import walletProvider from '@data-access/wallet-provider';
 import StarRating from 'react-native-star-rating';
 
 import scheduleProvider from '@data-access/schedule-provider';
@@ -36,7 +37,7 @@ class AddBookingDoctorScreen extends Component {
             imageUris: [],
             bookingDate,
             schedule,
-            allowBooking: false,
+            allowBooking: true,
             contact: 2,
             listServicesSelected: [],
             profileDoctor,
@@ -158,42 +159,44 @@ class AddBookingDoctorScreen extends Component {
         if (nextAppState == 'inactive' || nextAppState == 'background') {
 
         } else {
-            this.setState({ isLoading: true }, () => {
-                bookingProvider.detail(this.state.booking.book.id).then(s => {
-                    this.setState({ isLoading: false }, () => {
-                        if (s.code == 0 && s.data && s.data.booking) {
+            let paymentMethod = this.paymentSelect.state.paymentMethod || 2
+                this.setState({ isLoading: true }, () => {
+                    bookingProvider.detail(this.state.booking.book.id).then(s => {
+                        this.setState({ isLoading: false }, () => {
                             if (s.code == 0 && s.data && s.data.booking) {
-                                switch (s.data.booking.status) {
-                                    case 3: //đã thanh toán
-                                        let booking = this.state.booking;
-                                        booking.hospital = this.state.hospital;
-                                        booking.profile = this.state.profile;
-                                        booking.payment = this.state.paymentMethod;
-                                        this.props.navigation.navigate("homeTab", {
-                                            navigate: {
-                                                screen: "createBookingSuccess",
-                                                params: {
-                                                    booking,
-                                                    service: this.state.service,
-                                                    voucher: this.state.voucher
+                                if (s.code == 0 && s.data && s.data.booking) {
+                                    switch (s.data.booking.status) {
+                                        case 3: //đã thanh toán
+                                            let booking = this.state.booking;
+                                            booking.hospital = this.state.hospital;
+                                            booking.profile = this.state.profile;
+                                            booking.payment = paymentMethod;
+                                            this.props.navigation.navigate("homeTab", {
+                                                navigate: {
+                                                    screen: "createBookingSuccess",
+                                                    params: {
+                                                        booking,
+                                                        service: this.state.service,
+                                                        voucher: this.state.voucher
 
+                                                    }
                                                 }
-                                            }
-                                        });
-                                        break;
+                                            });
+                                            break;
+                                    }
                                 }
                             }
-                        }
+                        });
                     });
                 });
-            });
         }
     };
 
     confirmPayment(booking, bookingId) {
+        let paymentMethod = this.paymentSelect.state.paymentMethod || 2
         booking.hospital = this.state.hospital;
         booking.profile = this.state.profile;
-        booking.payment = this.state.paymentMethod;
+        booking.payment = paymentMethod;
         this.setState({ isLoading: true }, () => {
             bookingProvider.confirmPayment(bookingId).then(s => {
                 switch (s.code) {
@@ -222,7 +225,8 @@ class AddBookingDoctorScreen extends Component {
         })
     }
     getPaymentMethod() {
-        switch (this.state.paymentMethod) {
+        let paymentMethod = this.paymentSelect.state.paymentMethod || 2
+        switch (paymentMethod) {
             case 1:
                 return "VNPAY";
             case 2:
@@ -235,7 +239,8 @@ class AddBookingDoctorScreen extends Component {
         }
     }
     getPaymentReturnUrl() {
-        switch (this.state.paymentMethod) {
+        let paymentMethod = this.paymentSelect.state.paymentMethod || 2
+        switch (paymentMethod) {
             case 1:
                 return constants.key.payment_return_url.vnpay;
             // return "http://localhost:8888/order/vnpay_return";
@@ -248,7 +253,8 @@ class AddBookingDoctorScreen extends Component {
         }
     }
     getPaymentMethodUi() {
-        switch (this.state.paymentMethod) {
+        let paymentMethod = this.paymentSelect.state.paymentMethod || 2
+        switch (paymentMethod) {
             case 3:
             case 5:
                 return "SDK";
@@ -268,9 +274,10 @@ class AddBookingDoctorScreen extends Component {
 
 
     getPaymentLink(booking) {
+        let paymentMethod = this.paymentSelect.state.paymentMethod || 2
         booking.hospital = this.state.hospital;
         booking.profile = this.state.profile;
-        booking.payment = this.state.paymentMethod;
+        booking.payment = paymentMethod;
         let price = 0;
         let serviceText = "";
         if (this.state.service && this.state.service.length) {
@@ -301,7 +308,7 @@ class AddBookingDoctorScreen extends Component {
                 let data = s.data;
                 let paymentId = data.id;
                 this.setState({ isLoading: false, paymentId }, () => {
-                    switch (this.state.paymentMethod) {
+                    switch (paymentMethod) {
                         case 4:
                             booking.online_transactions = data.online_transactions;
                             booking.valid_time = data.valid_time;
@@ -414,11 +421,12 @@ class AddBookingDoctorScreen extends Component {
 
     payment(payment_order, vnp_TxnRef, booking, data) {
         let payooSDK = payoo;
+        let paymentMethod = this.paymentSelect.state.paymentMethod || 2
         if (Platform.OS == 'ios') {
             payooSDK = PayooModule;
         }
         payooSDK.initialize(payment_order.shop_id, payment_order.check_sum_key).then(() => {
-            payooSDK.pay(this.state.paymentMethod == 5 ? 1 : 0, payment_order, {}).then(x => {
+            payooSDK.pay(paymentMethod == 5 ? 1 : 0, payment_order, {}).then(x => {
                 let obj = JSON.parse(x);
                 walletProvider.onlineTransactionPaid(vnp_TxnRef, this.getPaymentMethod(), obj);
                 this.props.navigation.navigate("homeTab", {
@@ -442,6 +450,7 @@ class AddBookingDoctorScreen extends Component {
 
     retry(paymentId) {
         let booking = this.state.booking;
+        let paymentMethod = this.paymentSelect.state.paymentMethod || 2
         this.setState({ isLoading: true }, () => {
             walletProvider.retry(paymentId, this.getPaymentReturnUrl(), this.getPaymentMethodUi(), this.getPaymentMethod()).then(s => {
                 this.setState({ isLoading: false }, () => {
@@ -450,7 +459,7 @@ class AddBookingDoctorScreen extends Component {
                         snackbar.show("Tạo thanh toán không thành công", "danger");
                         return;
                     }
-                    switch (this.state.paymentMethod) {
+                    switch (paymentMethod) {
                         case 4:
 
                             booking.online_transactions = data.online_transactions;
@@ -549,10 +558,11 @@ class AddBookingDoctorScreen extends Component {
     }
 
     createBooking() {
+        let paymentMethod = this.paymentSelect.state.paymentMethod || 2
         connectionUtils.isConnected().then(s => {
             console.log('s: ', s);
             this.setState({ isLoading: true }, () => {
-                bookingProvider.detail(this.state.booking.book.id).then(s => {
+                bookingProvider.detail(this.state.hospital.id).then(s => {
                     this.setState({ isLoading: false }, () => {
                         if (s.code == 0 && s.data && s.data.booking) {
                             switch (s.data.booking.status) {
@@ -564,10 +574,10 @@ class AddBookingDoctorScreen extends Component {
                                     break;
                                 default:
                                     this.setState({ isLoading: true }, () => {
-                                        if (this.state.paymentMethod == 2)
-                                            this.confirmPayment(this.state.booking, this.state.booking.book.id);
+                                        if (paymentMethod == 2)
+                                            this.confirmPayment(this.state.hospital, this.state.hospital.id);
                                         else {
-                                            this.getPaymentLink(this.state.booking);
+                                            this.getPaymentLink(this.state.hospital);
                                         }
                                     });
                             }
@@ -696,7 +706,7 @@ class AddBookingDoctorScreen extends Component {
     goVoucher = () => {
         this.props.navigation.navigate('myVoucher', {
             onSelected: this.getVoucher,
-            booking:this.state.hospital
+            booking: this.state.hospital
         })
     }
     render() {
@@ -835,7 +845,7 @@ class AddBookingDoctorScreen extends Component {
                             }
                         </View>
 
-                        <SelectPaymentDoctor service={services} />
+                        <SelectPaymentDoctor service={services} ref={ref => this.paymentSelect = ref} />
 
                         <View style={styles.btn}>
                             <TouchableOpacity onPress={this.createBooking.bind(this)} style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]}>

@@ -90,7 +90,8 @@ class DetailsDoctorScreen extends Component {
 
   addBooking=()=>{
     this.props.navigation.navigate('selectTimeDoctor',{
-      profileDoctor: this.state.profileDoctor
+      profileDoctor: this.state.profileDoctor,
+      isNotHaveSchedule:true
     })
   }
   render() {
