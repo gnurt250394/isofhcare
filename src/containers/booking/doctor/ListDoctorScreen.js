@@ -46,8 +46,9 @@ class ListDoctorScreen extends Component {
         })
     }
     addBookingDoctor = (item) => () => {
-        this.props.navigation.navigate('addBookingDoctor', {
-            profileDoctor: item
+        this.props.navigation.navigate('selectTimeDoctor', {
+            profileDoctor: item,
+            isNotHaveSchedule:true
         })
     }
     renderItem = ({ item }) => {

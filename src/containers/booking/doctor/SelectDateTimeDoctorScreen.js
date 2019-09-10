@@ -18,11 +18,11 @@ const data = [
         location: 'Tòa nhà A1',
         services: [{
             name: 'Khám bệnh theo yêu cầu',
-            price: 100000
+            price: 1000000
         },
         {
             name: 'Khám bệnh theo yêu cầu',
-            price: 100000
+            price: 1000000
         },
         ]
     },
@@ -53,12 +53,13 @@ class SelectDateTimeDoctorScreen extends Component {
         super(props);
         let service = this.props.navigation.state.params.service;
         let isNotHaveSchedule = this.props.navigation.state.params.isNotHaveSchedule;
-
+        let profileDoctor = this.props.navigation.getParam('profileDoctor',{})
         this.state = {
             service,
             listTime: [],
             isNotHaveSchedule,
-            listHospital: []
+            listHospital: [],
+            profileDoctor
         }
     }
     getTime(yourDateString) {
@@ -303,13 +304,19 @@ class SelectDateTimeDoctorScreen extends Component {
             return;
 
         if (this.state.bookingDate && this.state.schedule) {
-            let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
-            if (callback) {
+            // let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
+            // if (callback) {
                 let data = this.state.listHospital
                 let listFinal = data.find(e => e.checked = true)
-                callback(this.state.bookingDate, this.state.schedule, listFinal);
-                this.props.navigation.pop();
-            }
+                // callback(this.state.bookingDate, this.state.schedule, listFinal);
+            //     this.props.navigation.pop();
+            // }
+            this.props.navigation.navigate('addBookingDoctor',{
+                profileDoctor:this.state.profileDoctor,
+                bookingDate:this.state.bookingDate,
+                schedule:this.state.schedule,
+                hospital:listFinal
+            })
         } else {
             this.setState({ scheduleError: "Vui lòng chọn ngày và khung giờ khám" });
         }
@@ -429,15 +436,8 @@ class SelectDateTimeDoctorScreen extends Component {
                                 :
                                 <Text style={{ fontStyle: 'italic', marginVertical: 20, textAlign: 'center' }}>Vui lòng chọn khung giờ khám</Text>
                         }
-                        <View style={{
-                            padding: 10
-                        }}>
-                            <Text style={{
-                                color: '#02c39a',
-                                fontSize: 16,
-                                fontWeight: 'bold',
-                                paddingVertical: 10
-                            }}>Địa điểm khám</Text>
+                        <View style={{padding: 10}}>
+                            <Text style={styles.address}>Địa điểm khám</Text>
                             <FlatList
                                 data={this.state.listHospital}
                                 renderItem={this.renderItem}
@@ -477,6 +477,12 @@ function mapStateToProps(state) {
     };
 }
 const styles = StyleSheet.create({
+    address: {
+        color: '#02c39a',
+        fontSize: 16,
+        fontWeight: 'bold',
+        paddingVertical: 10
+    },
     nameHospital: {
         color: '#111',
         paddingLeft: 15,
