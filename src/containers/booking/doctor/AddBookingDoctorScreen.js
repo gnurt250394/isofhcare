@@ -6,14 +6,10 @@ import ScaleImage from "mainam-react-native-scaleimage";
 import ImagePicker from 'mainam-react-native-select-image';
 import imageProvider from '@data-access/image-provider';
 import connectionUtils from '@utils/connection-utils';
-import clientUtils from '@utils/client-utils';
 const DEVICE_HEIGHT = Dimensions.get('window').height;
 const DEVICE_WIDTH = Dimensions.get('window').width;
 import DateTimePicker from 'mainam-react-native-date-picker';
-import KeyboardSpacer from "react-native-keyboard-spacer";
 import snackbar from '@utils/snackbar-utils';
-import dateUtils from "mainam-react-native-date-utils";
-import stringUtils from "mainam-react-native-string-utils";
 import ImageLoad from 'mainam-react-native-image-loader';
 import Form from "mainam-react-native-form-validate/Form";
 import TextField from "mainam-react-native-form-validate/TextField";
@@ -23,12 +19,11 @@ import constants from '@resources/strings';
 import medicalRecordProvider from '@data-access/medical-record-provider';
 import serviceTypeProvider from '@data-access/service-type-provider';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import BookingTimePicker from '@components/booking/BookingTimePicker';
 import bookingProvider from '@data-access/booking-provider';
-import serviceProvider from '@data-access/service-provider';
 import StarRating from 'react-native-star-rating';
 
 import scheduleProvider from '@data-access/schedule-provider';
+import SelectPaymentDoctor from '@components/booking/doctor/SelectPaymentDoctor';
 class AddBookingDoctorScreen extends Component {
     constructor(props) {
         super(props);
@@ -39,7 +34,8 @@ class AddBookingDoctorScreen extends Component {
             allowBooking: false,
             contact: 2,
             listServicesSelected: [],
-            profileDoctor
+            profileDoctor,
+            hospital: {}
         }
     }
     _changeColor = () => {
@@ -50,33 +46,33 @@ class AddBookingDoctorScreen extends Component {
         imageUris.splice(index, 1);
         this.setState({ imageUris });
     }
-    // componentDidMount() {
-    //     dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, (s, e) => {
-    //         if (s) {
-    //             this.setState({ profile: s })
-    //         } else {
-    //             medicalRecordProvider.getByUser(this.props.userApp.currentUser.id, 1, 100).then(s => {
-    //                 switch (s.code) {
-    //                     case 0:
-    //                         if (s.data && s.data.data && s.data.data.length != 0) {
+    componentDidMount() {
+        dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, (s, e) => {
+            if (s) {
+                this.setState({ profile: s })
+            } else {
+                medicalRecordProvider.getByUser(this.props.userApp.currentUser.id, 1, 100).then(s => {
+                    switch (s.code) {
+                        case 0:
+                            if (s.data && s.data.data && s.data.data.length != 0) {
 
-    //                             let data = s.data.data;
-    //                             let profile = data.find(item => {
-    //                                 return item.medicalRecords.status == 1;
-    //                             });
-    //                             if (profile) {
-    //                                 this.setState({ profile: profile });
-    //                                 dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, profile);
-    //                             }
-    //                         }
-    //                         break;
-    //                 }
-    //             });
-    //         }
-    //     });
+                                let data = s.data.data;
+                                let profile = data.find(item => {
+                                    return item.medicalRecords.status == 1;
+                                });
+                                if (profile) {
+                                    this.setState({ profile: profile });
+                                    dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, profile);
+                                }
+                            }
+                            break;
+                    }
+                });
+            }
+        });
 
 
-    // }
+    }
     selectImage() {
         if (this.state.imageUris && this.state.imageUris.length >= 5) {
             snackbar.show(constants.msg.booking.image_without_five, "danger");
@@ -251,7 +247,7 @@ class AddBookingDoctorScreen extends Component {
 
             connectionUtils.isConnected().then(s => {
                 this.setState({ isLoading: true }, () => {
-                    console.log(this.state.schedule.time);
+                    
                     let serviceIds = this.state.listServicesSelected.map(item => item.service.id).join(",");
                     let bookingDate = this.state.bookingDate.format("yyyy-MM-dd") + " " + this.state.schedule.label + ":00";
                     bookingProvider.create(
@@ -329,14 +325,33 @@ class AddBookingDoctorScreen extends Component {
             this.setState({ schedule });
         }
     }
-    onSelectDateTime = (date, schedule) => {
-        this.setState({ schedule, bookingDate: date, scheduleError: "" });
+    onSelectDateTime = (date, schedule, hospital) => {
+        this.setState({ schedule, bookingDate: date, scheduleError: "", hospital });
+    }
+    selectTime = () => {
+        
+        this.props.navigation.navigate("selectTimeDoctor", {
+            service: this.state.listServicesSelected,
+            isNotHaveSchedule: true,
+            onSelected: this.onSelectDateTime
+        });
+    }
+
+    onSelectProfile = () => {
+        connectionUtils.isConnected().then(s => {
+            this.props.navigation.navigate("selectProfile", {
+                onSelected: this.selectProfile.bind(this),
+                profile: this.state.profile
+            });
+        }).catch(e => {
+            snackbar.show(constants.msg.app.not_internet, "danger");
+        });
     }
     renderBookingTime() {
         if (this.state.bookingDate && this.state.schedule)
             return <View>
-                <Text style={{ textAlign: 'right', color: '#fff', fontWeight: 'bold' }}>{(new Date(this.state.schedule.key)).format("HH:mm tt")}</Text>
-                <Text style={{ textAlign: 'right', color: '#fff', fontWeight: 'bold' }}>{(new Date(this.state.schedule.key)).format("thu, ngày dd/MM/yyyy")}</Text>
+                <Text style={{ textAlign: 'right', color: '#02c39a', fontWeight: 'bold' }}>{(new Date(this.state.schedule.key)).format("HH:mm tt")}</Text>
+                <Text style={{ textAlign: 'right', color: '#02c39a', fontWeight: 'bold' }}>{(new Date(this.state.schedule.key)).format("thu, ngày dd/MM/yyyy")}</Text>
             </View>
         return <Text style={{ textAlign: 'right' }}>Chọn ngày và giờ</Text>;
     }
@@ -378,18 +393,8 @@ class AddBookingDoctorScreen extends Component {
                 </View>
                 <View style={styles.between} />
 
-                <View style={{
-                    flexDirection: 'row',
-                    alignItems: 'flex-start',
-                    paddingLeft: 10,
-                    paddingTop: 5
-                }}>
-                    <Text style={{
-                        width: '40%',
-                        fontSize: 15,
-                        color: '#02C39A',
-                        fontWeight: '700'
-                    }}>Chuyên khoa</Text>
+                <View style={styles.positionDoctor}>
+                    <Text style={styles.txtAddress}>Chuyên khoa</Text>
                     <View>
                         {profileDoctor.position && profileDoctor.position.length > 0 ?
                             profileDoctor.position.map((e, i) => {
@@ -403,12 +408,37 @@ class AddBookingDoctorScreen extends Component {
             </View>
         )
     }
+    getPrice = () => {
+        const { hospital } = this.state
+        
+        let priceVoucher = this.state.voucher && this.state.voucher.price ? this.state.voucher.price : 0
+        let services = hospital.services || []
+        
+        let priceFinal = services.reduce((start, item) => {
+            
+            return start + parseInt(item.price)
+        }, 0)
+        
+        return (priceFinal - priceVoucher).formatPrice()
+
+    }
+    getVoucher = (voucher) => {
+
+        this.setState({ voucher: voucher })
+    }
+    goVoucher = () => {
+        this.props.navigation.navigate('myVoucher', {
+            onSelected: this.getVoucher,
+
+        })
+    }
     render() {
 
         let minDate = new Date();
         minDate.setDate(minDate.getDate() + 1);
         // minDate.setDate(minDate.getDate());
-        const { profileDoctor } = this.state
+        const { profileDoctor, profile, hospital } = this.state
+        const services = hospital.services || []
         return (
             <ActivityPanel title="Đặt Khám"
                 isLoading={this.state.isLoading} >
@@ -416,17 +446,10 @@ class AddBookingDoctorScreen extends Component {
                     <KeyboardAwareScrollView>
                         {this.renderProfile(profileDoctor)}
                         <View style={styles.article}>
-                            <TouchableOpacity style={styles.mucdichkham} onPress={() => {
-                                console.log(this.state.listServicesSelected);
-                                this.props.navigation.navigate("selectTime", {
-                                    service: this.state.listServicesSelected,
-                                    isNotHaveSchedule: true,
-                                    onSelected: this.onSelectDateTime
-                                });
-                            }}>
-                                <Text style={styles.mdk}>{constants.booking.date_booking}</Text>
+                            <TouchableOpacity style={styles.mucdichkham} onPress={this.selectTime}>
+                                <Text style={styles.mdk}>Thời gian khám</Text>
                                 <View style={styles.ktq}>{this.renderBookingTime()}</View>
-                                <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
+                                <ScaleImage style={styles.imgmdk} height={11} source={require("@images/new/booking/ic_next.png")} />
                             </TouchableOpacity>
                             {
                                 this.state.bookingError ?
@@ -437,24 +460,54 @@ class AddBookingDoctorScreen extends Component {
                             }}>
                                 <View style={styles.rowAddress}>
                                     <Text style={styles.txtAddress}>Địa điểm khám</Text>
-                                    <Text>Địa điểm khám</Text>
+                                    <Text>{hospital && hospital.name ? hospital.name : ''}</Text>
                                 </View>
                                 <View style={styles.rowAddress}>
                                     <Text style={styles.txtAddress}>Nơi làm thủ tục</Text>
-                                    <Text>Nơi làm thủ tục</Text>
+                                    <Text>{hospital && hospital.location ? hospital.location : ''}</Text>
                                 </View>
                             </View>
                         </View>
                         <View style={styles.between} />
-                        <View style={styles.article}>
-                            <Text >Dịch vụ khám</Text>
-                            <View style={{
-                                flexDirection: 'row',
-                                alignItems: 'center'
-                            }}>
-                                <Text style={{ flex: 1 }}>Khám bệnh theo yêu cầu</Text>
-                                <Text>(250.000đ)</Text>
+                        <View style={[styles.article,]}>
+                            <Text style={styles.txtServices}>Dịch vụ khám</Text>
+                            {services && services.length > 0 ?
+                                services.map((e, i) => {
+                                    return (
+                                        <View key={i} style={styles.groupServices}>
+                                            <Text style={{ flex: 1 }}>{e.name}</Text>
+                                            <Text>({e.price.formatPrice()}đ)</Text>
+                                        </View>
+                                    )
+                                })
+                                : null
+                            }
+                            <TouchableOpacity
+                                onPress={this.goVoucher}
+                                style={styles.btnVoucher}
+                            >
+                                <Text style={[styles.txtVoucher, { flex: 1 }]}>{this.state.voucher && this.state.voucher.price ? `GIẢM ${this.state.voucher.price.formatPrice()} KHI ĐẶT KHÁM` : 'Thêm mã ưu đãi'}</Text>
+                                <ScaleImage style={styles.imgmdk} height={11} source={require("@images/new/booking/ic_next.png")} />
+
+                            </TouchableOpacity>
+                            <View style={styles.groupSumPrice}>
+                                <Text style={styles.txtSumPrice}>Tổng tiền: </Text>
+                                <Text style={{ color: '#111' }}>{this.getPrice()}đ</Text>
                             </View>
+
+
+                            <TouchableOpacity style={styles.btnVoucher}
+                                onPress={this.onSelectProfile}
+                            >
+                                <Text style={styles.txtVoucher}>Đặt khám cho: </Text>
+                                {this.state.profile ?
+                                    <Text style={{ color: '#111', flex: 1 }}>{this.state.profile.medicalRecords.name}</Text>
+                                    :
+                                    <Text style={styles.txtname}>{constants.booking.select_profile}</Text>
+
+                                }
+                                <ScaleImage style={styles.imgmdk} height={11} source={require("@images/new/booking/ic_next.png")} />
+                            </TouchableOpacity>
                             <Form
                                 ref={ref => (this.form = ref)} style={styles.mota}>
                                 <TextField
@@ -493,16 +546,16 @@ class AddBookingDoctorScreen extends Component {
 
                         <View style={styles.list_image}>
                             {
-                                this.state.imageUris.map((item, index) => <View key={index} style={{ margin: 2, width: 88, height: 88, position: 'relative' }}>
-                                    <View style={{ marginTop: 8, width: 80, height: 80 }}>
-                                        <Image source={{ uri: item.uri }} resizeMode="cover" style={{ width: 80, height: 80, borderRadius: 8 }} />
+                                this.state.imageUris.map((item, index) => <View key={index} style={styles.containerImagepicker}>
+                                    <View style={styles.groupImagePicker}>
+                                        <Image source={{ uri: item.uri }} resizeMode="cover" style={styles.imagePicker} />
                                         {
                                             item.error ?
-                                                <View style={{ position: 'absolute', left: 20, top: 20 }} >
+                                                <View style={styles.error} >
                                                     <ScaleImage source={require("@images/ic_warning.png")} width={40} />
                                                 </View> :
                                                 item.loading ?
-                                                    < View style={{ position: 'absolute', left: 20, top: 20, backgroundColor: '#FFF', borderRadius: 20 }} >
+                                                    < View style={styles.imgLoading} >
                                                         <ScaleImage source={require("@images/loading.gif")} width={40} />
                                                     </View>
                                                     : null
@@ -514,12 +567,17 @@ class AddBookingDoctorScreen extends Component {
                                 </View>)
                             }
                         </View>
-                        <Text style={styles.des}>{constants.booking.simptom_note}</Text>
+
+                        <SelectPaymentDoctor service={services}/>
+
+                        <View style={styles.btn}>
+                            <TouchableOpacity onPress={this.addBooking} style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]}>
+                                <Text style={styles.datkham}>Đặt khám</Text>
+                            </TouchableOpacity>
+                        </View>
                     </KeyboardAwareScrollView>
 
-                    <View style={styles.btn}>
-                        <TouchableOpacity onPress={this.addBooking} style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]}><Text style={styles.datkham}>Đặt khám</Text></TouchableOpacity>
-                    </View>
+
                     <ImagePicker ref={ref => this.imagePicker = ref} />
 
                     <DateTimePicker
@@ -553,6 +611,74 @@ class AddBookingDoctorScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+    positionDoctor: {
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        paddingLeft: 10,
+        paddingTop: 5
+    },
+    imgLoading: {
+        position: 'absolute',
+        left: 20,
+        top: 20,
+        backgroundColor: '#FFF',
+        borderRadius: 20
+    },
+    error: {
+        position: 'absolute',
+        left: 20,
+        top: 20
+    },
+    imagePicker: {
+        width: 80,
+        height: 80,
+        borderRadius: 8
+    },
+    groupImagePicker: {
+        marginTop: 8,
+        width: 80,
+        height: 80
+    },
+    containerImagepicker: {
+        margin: 2,
+        width: 88,
+        height: 88,
+        position: 'relative'
+    },
+    txtSumPrice: {
+        color: '#111',
+        fontWeight: '500',
+        width: '40%'
+    },
+    groupSumPrice: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingLeft: 10
+    },
+    txtVoucher: {
+        color: '#02c39a',
+        fontWeight: 'bold',
+        width: '40%'
+    },
+    btnVoucher: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#FFFFDD',
+        paddingVertical: 10,
+        paddingHorizontal: 10,
+        marginVertical: 10
+    },
+    groupServices: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 10
+    },
+    txtServices: {
+        color: '#02c39a',
+        fontSize: 15,
+        fontWeight: '700',
+        paddingLeft: 10
+    },
     rowAddress: {
         flexDirection: 'row',
         alignItems: 'flex-start',
@@ -568,6 +694,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#02C39A',
         height: 1,
         width: '95%',
+        marginVertical: 7,
         alignSelf: 'center'
     },
     containerRating: {
@@ -606,8 +733,6 @@ const styles = StyleSheet.create({
     },
     imgName: {
         marginLeft: 5,
-
-
     },
     txtname: {
         fontSize: 15,
@@ -619,7 +744,6 @@ const styles = StyleSheet.create({
     },
     img: {
         marginRight: 5
-
     },
     article: {
         // marginTop: 12,
@@ -627,22 +751,19 @@ const styles = StyleSheet.create({
         borderStyle: "solid",
         borderWidth: 0.5,
         borderColor: "rgba(0, 0, 0, 0.06)",
-
     },
     mucdichkham: {
         flexDirection: 'row',
         alignItems: 'center',
         padding: 10,
-        backgroundColor: '#02c39a'
+        // backgroundColor: '#02c39a'
     },
     mdk: {
-        marginLeft: 12,
         fontSize: 15,
         fontWeight: "700",
         fontStyle: "normal",
         letterSpacing: 0,
         color: "#111111"
-
     },
     ktq: {
         flex: 1,
@@ -655,85 +776,8 @@ const styles = StyleSheet.create({
         marginRight: 10,
         marginLeft: 20
     },
-    border: {
-        borderWidth: 0.5,
-        borderColor: "rgba(0, 0, 0, 0.06)",
-        marginLeft: 15
-    },
-    imgIc: {
-        marginLeft: 10
-    },
     imgmdk: {
         marginRight: 5
-    },
-    lienlac: {
-        padding: 20,
-        fontSize: 13,
-        fontWeight: "normal",
-        fontStyle: "normal",
-        letterSpacing: 0,
-        color: "#8e8e93",
-        textAlign: 'center'
-    },
-    phoneSMS: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    contact_selected:
-    {
-        backgroundColor: '#FFF',
-        borderColor: '#02c39a', borderWidth: 1,
-        height: 40
-    },
-    contact_normal:
-    {
-        backgroundColor: '#FFF',
-        borderColor: 'rgba(0, 0, 0, 0.06)', borderWidth: 1,
-        height: 40
-    },
-    contact_text_selected:
-    {
-        color: '#02c39a'
-    },
-    contact_text_normal:
-    {
-        color: 'rgb(142, 142, 147)'
-    },
-    gach: {
-        borderStyle: "solid",
-        borderWidth: 0.7,
-        borderColor: "rgba(0, 0, 0, 0.06)",
-        height: 25,
-        alignItems: 'center'
-    },
-
-    phone: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        flexDirection: 'row'
-
-    },
-    sms: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        flexDirection: 'row'
-
-    },
-    dt: {
-        fontSize: 14,
-        fontWeight: "normal",
-        fontStyle: "normal",
-        letterSpacing: 0,
-        color: "#02c39a"
-    },
-    tinnhan: {
-        fontSize: 14,
-        fontWeight: "normal",
-        fontStyle: "normal",
-        letterSpacing: 0,
     },
     mota: {
         flexDirection: 'row',
@@ -755,18 +799,9 @@ const styles = StyleSheet.create({
     imgMT: {
         marginRight: 10
     },
-    des: {
-        fontSize: 13,
-        fontWeight: "normal",
-        fontStyle: "normal",
-        letterSpacing: 0.2,
-        color: "#4a4a4a",
-        padding: 25
-    },
     btn: {
         alignItems: 'center',
         padding: 30
-
     },
     button: {
         borderRadius: 6,
@@ -790,9 +825,6 @@ const styles = StyleSheet.create({
         color: "#ffffff",
         padding: 15,
         textAlign: 'center'
-    },
-    imgPhone: {
-        marginRight: 10
     },
     list_image: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 10, marginHorizontal: 20 },
     errorStyle: {

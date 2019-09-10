@@ -109,6 +109,7 @@ import MyVoucher from '@containers/vocher'
 import ListDoctorScreen from '@containers/booking/doctor/ListDoctorScreen';
 import DetailsDoctorScreen from '@containers/booking/doctor/DetailDoctorScreen';
 import AddBookingDoctorScreen from '@containers/booking/doctor/AddBookingDoctorScreen';
+import SelectDateTimeDoctorScreen from '@containers/booking/doctor/SelectDateTimeDoctorScreen';
 
 
 const ProfileNavigation = createStackNavigator({
@@ -318,7 +319,8 @@ const RootNavigator = createStackNavigator(
     photoViewer: { screen: PhotoViewerScreen },
     myVoucher:{screen : MyVoucher},
     listDoctor:{screen:ListDoctorScreen},
-    addBookingDoctor:{screen:AddBookingDoctorScreen}
+    addBookingDoctor:{screen:AddBookingDoctorScreen},
+    selectTimeDoctor:{screen:SelectDateTimeDoctorScreen}
   },
   {
     headerMode: "none",

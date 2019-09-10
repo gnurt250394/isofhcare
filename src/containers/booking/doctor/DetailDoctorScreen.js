@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ScrollView,
   Text,
+  TouchableOpacity
 } from "react-native";
 import { connect } from "react-redux";
 import ScaleImage from "mainam-react-native-scaleimage";
@@ -27,15 +28,20 @@ class DetailsDoctorScreen extends Component {
       rating: 0,
       isLoading: true,
       avatar: '',
-      id: ''
+      id: '',
+      profileDoctor: {}
     };
   }
   componentDidMount() {
-    var id = this.props.navigation.state.params ? this.props.navigation.state.params.id : ''
-    this.setState({
-      id: id
-    })
-    this.getDetails()
+    let profileDoctor = this.props.navigation.getParam('profileDoctor', {})
+    setTimeout(() => {
+      this.setState({ profileDoctor, isLoading: false })
+    }, 1000)
+    // var id = this.props.navigation.state.params ? this.props.navigation.state.params.id : ''
+    // this.setState({
+    //   id: id
+    // })
+    // this.getDetails()
   }
   getDetails = () => {
     connectionUtils
@@ -48,7 +54,7 @@ class DetailsDoctorScreen extends Component {
           () => {
             userProvider.detail(this.state.id).then(s => {
               if (s) {
-                console.log(s.data, 's.data')
+
 
                 this.setState({
                   name: s.data.user.name,
@@ -78,16 +84,21 @@ class DetailsDoctorScreen extends Component {
         })
       }
     }).catch(err => {
-      console.log(err)
-    })
 
+    })
+  }
+
+  addBooking=()=>{
+    this.props.navigation.navigate('addBookingDoctor',{
+      profileDoctor: this.state.profileDoctor
+    })
   }
   render() {
     const icSupport = require("@images/new/user.png");
-    const source = this.state.avatar
-      ? { uri: this.state.avatar.absoluteUrl() }
+    const { profileDoctor } = this.state
+    const source = profileDoctor && profileDoctor.avatar
+      ? { uri: profileDoctor.avatar.absoluteUrl() }
       : icSupport;
-
     return (
       <ActivityPanel
         title={"HỒ SƠ BÁC SỸ"}
@@ -98,58 +109,64 @@ class DetailsDoctorScreen extends Component {
           keyboardDismissMode='on-drag'
           style={{ flex: 1, paddingVertical: 5 }}>
           <View style={styles.viewImgUpload}>
-            <View style={{ position: "relative", width: 70, marginTop: 20, }} >
-              <ImageLoad
-                resizeMode="cover"
-                imageStyle={{ borderRadius: 35, borderWidth: 1, borderColor: 'rgba(0,0,0,0.07)' }}
-                borderRadius={35}
-                customImagePlaceholderDefaultStyle={{
-                  width: 70,
-                  height: 70,
-                  alignSelf: "center"
-                }}
-                placeholderSource={icSupport}
-                style={{ width: 70, height: 70, alignSelf: "center" }}
-                resizeMode="cover"
-                loadingStyle={{ size: "small", color: "gray" }}
-                source={source}
-                defaultImage={() => {
-                  return (
-                    <ScaleImage
-                      resizeMode="cover"
-                      source={icSupport}
-                      width={70}
-                      style={{ width: 70, height: 70, alignSelf: "center" }}
-                    />
-                  );
-                }}
-              />
+            <ImageLoad
+              resizeMode="cover"
+              imageStyle={styles.boderImage}
+              borderRadius={35}
+              customImagePlaceholderDefaultStyle={styles.imgPlaceHoder}
+              placeholderSource={icSupport}
+              style={styles.avatar}
+              loadingStyle={{ size: "small", color: "gray" }}
+              source={source}
+              defaultImage={() => {
+                return (
+                  <ScaleImage
+                    resizeMode="cover"
+                    source={icSupport}
+                    width={70}
+                    style={styles.imgDefault}
+                  />
+                );
+              }}
+            />
+            <View style={{ paddingLeft: 7 }}>
+              <Text style={styles.nameDoctor}>BS.{profileDoctor.name}</Text>
+              <Text style={styles.fontItalic}>{profileDoctor.quantity} lượt đặt khám</Text>
+              <View
+                style={styles.row}
+              >
+                <StarRating
+                  disabled={true}
+                  starSize={15}
+                  maxStars={5}
+                  rating={profileDoctor.rating}
+                  starStyle={{ margin: 2 }}
+                  fullStarColor={"#fbbd04"}
+                  emptyStarColor={"#fbbd04"}
+                />
+                <Text style={styles.rating}>{profileDoctor.rating}</Text>
+              </View>
+              <Text style={styles.fontItalic}>{this.state.name} nhận xét, {this.state.name} đánh giá</Text>
+
             </View>
           </View>
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginVertical: 20 }}>
-            <Text style={{ fontSize: 18, color: '#000' }}>BS.{this.state.name}</Text>
-            <Text style={{ marginVertical: 5 }}>Chuyên khoa: {this.state.nameSpecialist}</Text>
-            <Text>Số văn bằng chuyên môn: {this.state.certificateCode}</Text>
+          {/** */}
+          <TouchableOpacity
+            style={styles.btnBooking}
+            onPress={this.addBooking}
+          >
+            <Text style={styles.txtButtonBooking}>Đặt khám</Text>
+          </TouchableOpacity>
+          <View style={{ flex: 1, marginVertical: 20, paddingLeft: 10 }}>
+            <Text style={styles.colorBold}>Đơn vị công tác:</Text>
+
+            <Text style={styles.colorBold}>Chuyên khoa:</Text>
+
+            <Text style={styles.colorBold}>Quá trình công tác: {this.state.certificateCode}</Text>
+            <Text style={styles.colorBold}>Giới thiệu chung: {this.state.certificateCode}</Text>
           </View>
-          <View style={styles.viewRating}>
-            <Text style={{ fontSize: 32, color: 'rgb(2,195,154)' }}>{this.state.rating}</Text>
-            <StarRating
-              disabled={true}
-              starSize={18}
-              maxStars={5}
-              rating={this.state.rating}
-              starStyle={{ margin: 2 }}
-              fullStarColor={"#fbbd04"}
-              emptyStarColor={"#fbbd04"}
-            />
-          </View>
-          <View style={styles.viewIntro}>
-            <Text style={{ fontSize: 18, paddingVertical: 20, color: '#000', fontWeight: '400' }}>Giới thiệu</Text>
-            <Text style={{ width: '80%', marginTop: -10, marginBottom: 10, textAlign: 'center' }}>{this.state.intro}</Text>
-            {/* <TouchableOpacity style ={styles.viewBtn}>
-              <Text style={{color:'#fff'}}>Đặt khám</Text>
-            </TouchableOpacity> */}
-          </View>
+
+
         </ScrollView>
       </ActivityPanel>
     );
@@ -157,6 +174,42 @@ class DetailsDoctorScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  txtButtonBooking: {
+    color: '#fff',
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
+  btnBooking: {
+    backgroundColor: '#fbbd04',
+    paddingVertical: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    width: '30%',
+    marginLeft: '10%',
+    marginTop: 13
+  },
+  colorBold: {
+    color: 'rgb(2,195,154)',
+    fontSize: 15,
+    fontWeight: 'bold',
+    paddingVertical: 8
+  },
+  fontItalic: { fontStyle: 'italic' },
+  rating: { color: '#000', paddingLeft: 10 },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  nameDoctor: { fontSize: 16, color: 'rgb(2,195,154)' },
+  imgDefault: { width: 70, height: 70, alignSelf: "center" },
+  boderImage: { borderRadius: 35, borderWidth: 1, borderColor: 'rgba(0,0,0,0.07)' },
+  avatar: { width: 70, height: 70, alignSelf: "center" },
+  imgPlaceHoder: {
+    width: 70,
+    height: 70,
+    alignSelf: "center"
+  },
   AcPanel: {
     flex: 1,
     backgroundColor: "rgb(247,249,251)"
@@ -185,7 +238,8 @@ const styles = StyleSheet.create({
   viewImgUpload: {
     width: "100%",
     alignItems: "center",
-    justifyContent: "center"
+    flexDirection: 'row',
+    paddingHorizontal: 10
   },
 });
 function mapStateToProps(state) {

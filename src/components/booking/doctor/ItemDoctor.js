@@ -40,7 +40,7 @@ class ItemDoctor extends Component {
                                 defaultImage={this.defaultImage}
                             />
                             <View style={styles.paddingLeft5}>
-                                <Text style={styles.txtNameDoctor}>{item.name}</Text>
+                                <Text style={styles.txtNameDoctor}>BS {item.name}</Text>
                                 <Text style={styles.txtQuantity}>{item.quantity} lượt đặt khám</Text>
                                 <View style={styles.containerRating}>
                                     <StarRating
@@ -59,7 +59,7 @@ class ItemDoctor extends Component {
                         </View>
                         <LinearGradient
                             colors={['#FFB800', '#FF8A00']}
-                            locations={[0, 0.7, 1]}
+                            locations={[0,  1]}
                             style={styles.linear}>
                             <TouchableOpacity
                                 style={styles.buttonBooking}
@@ -80,8 +80,9 @@ class ItemDoctor extends Component {
                         <View style={{ flex: 1 }}>
                             {item.position && item.position.length > 0 ?
                                 item.position.map((e, i) => {
+                                    
                                     return (
-                                        <Text keyExtractor={i}>{e}</Text>
+                                        <Text key={i}>{e}</Text>
                                     )
                                 }) :
                                 null
@@ -96,7 +97,7 @@ class ItemDoctor extends Component {
                             {item.address && item.address.length > 0 ?
                                 item.address.map((e, i) => {
                                     return (
-                                        <Text keyExtractor={i}>{e}</Text>
+                                        <Text key={i}>{e}</Text>
                                     )
                                 }) :
                                 null

@@ -40,12 +40,14 @@ class ListDoctorScreen extends Component {
             this.setState({ data, isLoading: false })
         }, 1000)
     };
-    goDetailDoctor = () => {
-        this.props.navigation.navigate('detailsDoctor')
+    goDetailDoctor = (item) => () => {
+        this.props.navigation.navigate('detailsDoctor', {
+            profileDoctor: item
+        })
     }
-    addBookingDoctor=(item)=>()=>{
-        this.props.navigation.navigate('addBookingDoctor',{
-            profileDoctor:item
+    addBookingDoctor = (item) => () => {
+        this.props.navigation.navigate('addBookingDoctor', {
+            profileDoctor: item
         })
     }
     renderItem = ({ item }) => {
@@ -53,7 +55,7 @@ class ListDoctorScreen extends Component {
         return (
             <ItemDoctor
                 item={item}
-                onPressDoctor={this.goDetailDoctor}
+                onPressDoctor={this.goDetailDoctor(item)}
                 onPress={this.addBookingDoctor(item)}
             />
         )
