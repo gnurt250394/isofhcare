@@ -73,7 +73,7 @@ class ConfirmBookingScreen extends Component {
                                                 params: {
                                                     booking,
                                                     service: this.state.service,
-                                                    voucher:this.state.voucher
+                                                    voucher: this.state.voucher
 
                                                 }
                                             }
@@ -102,7 +102,7 @@ class ConfirmBookingScreen extends Component {
                                 params: {
                                     booking,
                                     service: this.state.service,
-                                    voucher:this.state.voucher
+                                    voucher: this.state.voucher
                                 }
                             }
                         });
@@ -209,7 +209,7 @@ class ConfirmBookingScreen extends Component {
                                     params: {
                                         booking,
                                         service: this.state.service,
-                                        voucher:this.state.voucher
+                                        voucher: this.state.voucher
 
                                     }
                                 }
@@ -253,7 +253,7 @@ class ConfirmBookingScreen extends Component {
                                                 params: {
                                                     booking,
                                                     service: this.state.service,
-                                                    voucher:this.state.voucher
+                                                    voucher: this.state.voucher
 
                                                 }
                                             }
@@ -325,7 +325,7 @@ class ConfirmBookingScreen extends Component {
                         params: {
                             booking,
                             service: this.state.service,
-                            voucher:this.state.voucher
+                            voucher: this.state.voucher
                         }
                     }
                 });
@@ -359,7 +359,7 @@ class ConfirmBookingScreen extends Component {
                                     params: {
                                         booking,
                                         service: this.state.service,
-                                        voucher:this.state.voucher
+                                        voucher: this.state.voucher
 
                                     }
                                 }
@@ -402,7 +402,7 @@ class ConfirmBookingScreen extends Component {
                                                 params: {
                                                     booking,
                                                     service: this.state.service,
-                                                    voucher:this.state.voucher
+                                                    voucher: this.state.voucher
                                                 }
                                             }
                                         });
@@ -489,7 +489,7 @@ class ConfirmBookingScreen extends Component {
         console.log(this.state.booking)
         this.props.navigation.navigate('myVoucher', {
             onSelected: this.getVoucher,
-            booking:this.state.booking.book
+            booking: this.state.booking.book
         })
     }
     addVoucher = () => {
@@ -608,33 +608,33 @@ class ConfirmBookingScreen extends Component {
                         (this.state.service && this.state.service.length) ?
                             <React.Fragment>
                                 <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 1 })}>
-                                    <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
+                                    <View style={styles.containerBtnSelect}>
                                         {this.state.paymentMethod == 1 &&
-                                            <View style={{ backgroundColor: 'rgb(2,195,154)', width: 10, height: 10, borderRadius: 5 }}></View>
+                                            <View style={styles.isSelected}></View>
                                         }
                                     </View>
                                     <Text style={styles.ckeckthanhtoan}>VNPAY</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 3 })}>
-                                    <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
+                                    <View style={styles.containerBtnSelect}>
                                         {this.state.paymentMethod == 3 &&
-                                            <View style={{ backgroundColor: 'rgb(2,195,154)', width: 10, height: 10, borderRadius: 5 }}></View>
+                                            <View style={styles.isSelected}></View>
                                         }
                                     </View>
                                     <Text style={styles.ckeckthanhtoan}>PAYOO</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 5 })}>
-                                    <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
+                                    <View style={styles.containerBtnSelect}>
                                         {this.state.paymentMethod == 5 &&
-                                            <View style={{ backgroundColor: 'rgb(2,195,154)', width: 10, height: 10, borderRadius: 5 }}></View>
+                                            <View style={styles.isSelected}></View>
                                         }
                                     </View>
                                     <Text style={styles.ckeckthanhtoan}>PAYOO - Trả góp 0%</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 4 })}>
-                                    <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
+                                    <View style={styles.containerBtnSelect}>
                                         {this.state.paymentMethod == 4 &&
-                                            <View style={{ backgroundColor: 'rgb(2,195,154)', width: 10, height: 10, borderRadius: 5 }}></View>
+                                            <View style={styles.isSelected}></View>
                                         }
                                     </View>
                                     <Text style={styles.ckeckthanhtoan}>PAYOO - Cửa hàng tiện ích</Text>
@@ -642,9 +642,9 @@ class ConfirmBookingScreen extends Component {
                             </React.Fragment> : null
                     }
                     <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 2 })}>
-                        <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
+                        <View style={styles.containerBtnSelect}>
                             {this.state.paymentMethod == 2 &&
-                                <View style={{ backgroundColor: 'rgb(2,195,154)', width: 10, height: 10, borderRadius: 5 }}></View>
+                                <View style={styles.isSelected}></View>
                             }
                         </View>
                         <Text style={styles.ckeckthanhtoan}>Thanh toán sau tại CSYT</Text>
@@ -665,6 +665,21 @@ function mapStateToProps(state) {
     };
 }
 const styles = StyleSheet.create({
+    isSelected: {
+        backgroundColor: 'rgb(2,195,154)',
+        width: 10,
+        height: 10,
+        borderRadius: 5
+    },
+    containerBtnSelect: {
+        width: 20,
+        height: 20,
+        borderRadius: 15,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 1.5,
+        borderColor: 'rgb(2,195,154)'
+    },
     txtButtonVoucher: {
         color: 'rgb(2,195,154)',
         fontSize: 15,
