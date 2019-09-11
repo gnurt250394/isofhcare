@@ -272,6 +272,7 @@ class ConfirmBookingScreen extends Component {
                 this.setState({ isLoading: false }, () => {
                     if (e && e.response && e.response.data) {
                         let response = e.response.data;
+                        console.log(response);
                         let message = "";
                         switch (response.type) {
                             case "ValidationError":
