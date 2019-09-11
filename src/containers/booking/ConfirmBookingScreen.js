@@ -523,7 +523,7 @@ class ConfirmBookingScreen extends Component {
                         <Text style={{ fontWeight: 'bold', color: '#000' }}>{'HỒ SƠ: ' + this.state.profile.medicalRecords.name.toUpperCase()}</Text>
                         {this.state.profile.medicalRecords.phone ? <Text style={{ color: 'gray' }}>SĐT: {this.state.profile.medicalRecords.phone}</Text> : <View></View>}
                     </View>
-                    {this.addVoucher()}
+                    {/* {this.addVoucher()} */}
                     <View style={styles.viewDetails}>
                         {this.state.serviceType &&
                             <View style={{ paddingHorizontal: 20, marginTop: 20, flexDirection: 'row', alignItems: 'center' }}>
