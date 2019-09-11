@@ -133,32 +133,38 @@ class SelectHospitalScreen extends Component {
                     this.onRefresh();
                 });
         }
-        else
-            LocationSwitch.isLocationEnabled(() => {
-                getLocation();
-            }, () => {
-                Alert.alert(
-                    '',
-                    constants.booking.location_open,
-                    [
-                        {
-                            text: constants.actionSheet.cancel,
-                            onPress: () => console.log('Cancel Pressed'),
-                        },
-                        {
-                            text: constants.actionSheet.accept,
-                            onPress: () => {
-                                LocationSwitch.enableLocationService(1000, true, () => {
-                                    getLocation();
-                                }, () => {
-                                    this.setState({ locationEnabled: false });
-                                });
+        else {
+            try {
+                LocationSwitch.isLocationEnabled(() => {
+                    getLocation();
+                }, () => {
+                    Alert.alert(
+                        '',
+                        constants.booking.location_open,
+                        [
+                            {
+                                text: constants.actionSheet.cancel,
+                                onPress: () => console.log('Cancel Pressed'),
                             },
-                            style: 'default'
-                        }],
-                    { cancelable: false },
-                );
-            });
+                            {
+                                text: constants.actionSheet.accept,
+                                onPress: () => {
+                                    LocationSwitch.enableLocationService(1000, true, () => {
+                                        getLocation();
+                                    }, () => {
+                                        this.setState({ locationEnabled: false });
+                                    });
+                                },
+                                style: 'default'
+                            }],
+                        { cancelable: false },
+                    );
+                });
+            } catch (error) {
+                this.onRefresh();
+            }
+        }
+
     }
     componentDidMount() {
         locationProvider.getCurrentLocationHasSave().then(s => {
@@ -474,7 +480,7 @@ const styles = StyleSheet.create({
         color: "#02c39a",
         marginLeft: 15,
     },
-    
+
     titleStyle: {
         color: '#FFF',
         marginLeft: 10
