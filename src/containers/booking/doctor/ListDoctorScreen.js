@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import ActivityPanel from '@components/ActivityPanel';
 import StarRating from 'react-native-star-rating';
-import ScaleImage from "mainam-react-native-scaleimage";
 import ImageLoad from "mainam-react-native-image-loader";
 import { Card } from 'native-base'
 import ItemDoctor from '@components/booking/doctor/ItemDoctor';
+import ScaleImage from "mainam-react-native-scaleimage";
 
 const data = [
     {
@@ -32,12 +32,15 @@ class ListDoctorScreen extends Component {
         super(props);
         this.state = {
             isLoading: true,
-            data: []
+            data: [],
+            keyword: '',
         };
+        this.listSearch = []
     }
     componentDidMount = () => {
         setTimeout(() => {
             this.setState({ data, isLoading: false })
+            this.listSearch = data
         }, 1000)
     };
     goDetailDoctor = (item) => () => {
@@ -48,7 +51,7 @@ class ListDoctorScreen extends Component {
     addBookingDoctor = (item) => () => {
         this.props.navigation.navigate('selectTimeDoctor', {
             profileDoctor: item,
-            isNotHaveSchedule:true
+            isNotHaveSchedule: true
         })
     }
     renderItem = ({ item }) => {
@@ -61,17 +64,48 @@ class ListDoctorScreen extends Component {
             />
         )
     }
-    keyExtractor = (item, index) => index.toString()
+    onChangeText = (state) => (value) => {
+        this.setState({ [state]: value })
+        this.search(value)
+
+    }
+    search = (value) => {
+        let keyword = (value || "").trim().toLowerCase().unsignText();
+        let listSearch = this.listSearch.filter(data => {
+            return (data && (
+                !keyword ||
+                ((data.name || "").trim().toLowerCase().unsignText().indexOf(keyword) != -1)))
+        })
+        this.setState({ data: listSearch })
+
+
+    }
+    keyExtractor = (item, index) =>  index.toString()
+    listEmpty = () => !this.state.isLoading && <Text style={styles.none_data}>Không có dữ liệu</Text>
     render() {
         return (
             <ActivityPanel
                 title="CHỌN BÁC SỸ"
                 showFullScreen={true}
                 isLoading={this.state.isLoading}>
+                <View style={styles.groupSearch}>
+                    <TextInput
+                        value={this.state.keyword}
+                        onChangeText={this.onChangeText('keyword')}
+                        onSubmitEditing={this.search}
+                        returnKeyType='search'
+                        style={styles.inputSearch}
+                        placeholder={"Tìm kiếm…"}
+                        underlineColorAndroid={"transparent"} />
+                    <TouchableOpacity style={styles.buttonSearch} onPress={this.search}>
+                        <ScaleImage source={require('@images/new/hospital/ic_search.png')} height={16} />
+                    </TouchableOpacity>
+                </View>
                 <FlatList
                     data={this.state.data}
                     renderItem={this.renderItem}
                     keyExtractor={this.keyExtractor}
+                    ListEmptyComponent={this.listEmpty}
                 />
             </ActivityPanel>
         );
@@ -79,3 +113,39 @@ class ListDoctorScreen extends Component {
 }
 
 export default ListDoctorScreen;
+
+
+const styles = StyleSheet.create({
+    buttonSearch: {
+        marginRight: -2,
+        height: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: 10
+    },
+    inputSearch: {
+        flex: 1,
+        height: 41,
+        marginLeft: -10,
+        fontWeight: 'bold',
+        paddingLeft: 9
+    },
+    groupSearch: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingLeft: 15,
+        paddingRight: 10,
+        borderTopWidth: 0.5,
+        height: 41,
+        borderStyle: "solid",
+        borderBottomWidth: 0.5,
+        borderColor: 'rgba(0,0,0,0.26)',
+        marginVertical: 10
+    },
+    none_data: {
+        fontStyle: 'italic',
+        marginTop: 30,
+        alignSelf: 'center',
+        fontSize: 16
+    },
+})
