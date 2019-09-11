@@ -112,7 +112,7 @@ class EhealthScreen extends Component {
                 style={styles.container}
             >
                 <View style={styles.viewContent} >
-                    {/* <TouchableOpacity onPress={this.onAddEhealth} style={styles.btnAddEhealth}><Text style={styles.txAddEhealth}>Thêm mới kết quả khám</Text></TouchableOpacity> */}
+                    <TouchableOpacity onPress={this.onAddEhealth} style={styles.btnAddEhealth}><Text style={styles.txAddEhealth}>Thêm mới kết quả khám</Text></TouchableOpacity>
                     <Text style={styles.txHeader}>{constants.ehealth.ehealth_location}</Text>
                     <View style={styles.viewFlatList}>
                         <FlatList
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     txLastTime: { color: '#5A5956', marginTop: 5 },
     
     viewContent: {
-        paddingHorizontal: 10, flex: 1, backgroundColor: '#f0f5f9'
+        paddingHorizontal: 10, flex: 1        
     },
     viewFlatList: { flex: 1 },
     viewTxNone: { alignItems: 'center', marginTop: 50 },

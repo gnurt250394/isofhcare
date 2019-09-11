@@ -43,6 +43,7 @@ class ConfirmBookingScreen extends Component {
             paymentMethod: 2,
             contact,
             booking,
+            voucher: {}
         }
     }
     componentDidMount() {
@@ -53,7 +54,7 @@ class ConfirmBookingScreen extends Component {
     }
     _handleAppStateChange = (nextAppState) => {
         if (nextAppState == 'inactive' || nextAppState == 'background') {
-            console.log("1", nextAppState);
+
         } else {
             this.setState({ isLoading: true }, () => {
                 bookingProvider.detail(this.state.booking.book.id).then(s => {
@@ -71,7 +72,8 @@ class ConfirmBookingScreen extends Component {
                                                 screen: "createBookingSuccess",
                                                 params: {
                                                     booking,
-                                                    service: this.state.service
+                                                    service: this.state.service,
+                                                    voucher: this.state.voucher
 
                                                 }
                                             }
@@ -99,7 +101,8 @@ class ConfirmBookingScreen extends Component {
                                 screen: "createBookingSuccess",
                                 params: {
                                     booking,
-                                    service: this.state.service
+                                    service: this.state.service,
+                                    voucher: this.state.voucher
                                 }
                             }
                         });
@@ -156,7 +159,7 @@ class ConfirmBookingScreen extends Component {
         try {
             return this.state.bookingDate.format("yyyy-MM-dd") + " " + (this.state.schedule.timeString || ((this.state.schedule.time || new Date()).format("HH:mm:ss")));
         } catch (error) {
-            console.log(error);
+
         }
         return "";
     }
@@ -200,13 +203,13 @@ class ConfirmBookingScreen extends Component {
                         case 4:
                             booking.online_transactions = data.online_transactions;
                             booking.valid_time = data.valid_time;
-                            console.log(booking, 'bookingbookingbooking');
                             this.props.navigation.navigate("homeTab", {
                                 navigate: {
                                     screen: "createBookingSuccess",
                                     params: {
                                         booking,
-                                        service: this.state.service
+                                        service: this.state.service,
+                                        voucher: this.state.voucher
 
                                     }
                                 }
@@ -249,7 +252,8 @@ class ConfirmBookingScreen extends Component {
                                                 screen: "createBookingSuccess",
                                                 params: {
                                                     booking,
-                                                    service: this.state.service
+                                                    service: this.state.service,
+                                                    voucher: this.state.voucher
 
                                                 }
                                             }
@@ -268,6 +272,7 @@ class ConfirmBookingScreen extends Component {
                 this.setState({ isLoading: false }, () => {
                     if (e && e.response && e.response.data) {
                         let response = e.response.data;
+                        console.log(response);
                         let message = "";
                         switch (response.type) {
                             case "ValidationError":
@@ -320,8 +325,8 @@ class ConfirmBookingScreen extends Component {
                         screen: "createBookingSuccess",
                         params: {
                             booking,
-                            service: this.state.service
-
+                            service: this.state.service,
+                            voucher: this.state.voucher
                         }
                     }
                 });
@@ -354,7 +359,8 @@ class ConfirmBookingScreen extends Component {
                                     screen: "createBookingSuccess",
                                     params: {
                                         booking,
-                                        service: this.state.service
+                                        service: this.state.service,
+                                        voucher: this.state.voucher
 
                                     }
                                 }
@@ -396,7 +402,8 @@ class ConfirmBookingScreen extends Component {
                                                 screen: "createBookingSuccess",
                                                 params: {
                                                     booking,
-                                                    service: this.state.service
+                                                    service: this.state.service,
+                                                    voucher: this.state.voucher
                                                 }
                                             }
                                         });
@@ -464,7 +471,7 @@ class ConfirmBookingScreen extends Component {
                             }
                         }
                     })
-                    // console.log(s.data);
+                    // 
                 }).catch(e => {
                     this.setState({ isLoading: false }, () => {
                     });
@@ -475,15 +482,48 @@ class ConfirmBookingScreen extends Component {
         })
     }
 
+    getVoucher = (voucher) => {
+
+        this.setState({ voucher: voucher })
+    }
+    goToMyVoucher = () => {
+        console.log(this.state.booking)
+        this.props.navigation.navigate('myVoucher', {
+            onSelected: this.getVoucher,
+            booking: this.state.booking.book
+        })
+    }
+    addVoucher = () => {
+        return (
+
+            <TouchableOpacity
+                style={styles.btnGoToVoucher}
+                onPress={this.goToMyVoucher}
+            >
+                <Text numberOfLines={1} style={styles.txtButtonVoucher}>{this.state.voucher && this.state.voucher.price ? `GIẢM ${this.state.voucher.price.formatPrice()} KHI ĐẶT KHÁM` : 'THÊM MÃ ƯU ĐÃI'}</Text>
+                <ScaleImage width={10} source={require("@images/new/booking/ic_next.png")} />
+            </TouchableOpacity>
+        )
+    }
+
+    getPriceSecive = () => {
+        let priceVoucher = this.state.voucher && this.state.voucher.price ? this.state.voucher.price : 0
+        let priceFinal = this.state.service.reduce((start, item) => {
+            return start + parseInt(item.service.price)
+        }, 0)
+        return (priceFinal - priceVoucher).formatPrice()
+    }
     render() {
+
         return (
             <ActivityPanel style={styles.AcPanel} title="Xác nhận lịch khám"
                 isLoading={this.state.isLoading} >
                 <ScrollView keyboardShouldPersistTaps='handled' style={styles.container}>
                     <View style={{ paddingHorizontal: 20, marginVertical: 20 }}>
                         <Text style={{ fontWeight: 'bold', color: '#000' }}>{'HỒ SƠ: ' + this.state.profile.medicalRecords.name.toUpperCase()}</Text>
-                        <Text style={{ color: 'gray' }}>SĐT: {this.state.profile.medicalRecords.phone}</Text>
+                        {this.state.profile.medicalRecords.phone ? <Text style={{ color: 'gray' }}>SĐT: {this.state.profile.medicalRecords.phone}</Text> : <View></View>}
                     </View>
+                    {/* {this.addVoucher()} */}
                     <View style={styles.viewDetails}>
                         {this.state.serviceType &&
                             <View style={{ paddingHorizontal: 20, marginTop: 20, flexDirection: 'row', alignItems: 'center' }}>
@@ -533,7 +573,13 @@ class ConfirmBookingScreen extends Component {
                                                 <Text style={{ color: '#ccc' }}>({parseInt(item.service.price).formatPrice()}đ)</Text>
                                             </View>
                                             )
+
                                         }
+                                        {this.state.voucher && this.state.voucher.price ? <View style={{ flexDirection: 'row', marginTop: 5 }}>
+                                            <Text style={{ flex: 1, fontWeight: 'bold', marginLeft: 20, color: '#000' }} numberOfLines={1}> {''}</Text>
+                                            <Text style={{ color: '#ccc' }}>(-{parseInt(this.state.voucher.price).formatPrice()}đ)</Text>
+                                        </View> : null}
+
                                     </View>
                                 </View> : null
                             }
@@ -541,14 +587,13 @@ class ConfirmBookingScreen extends Component {
                                 <View style={[styles.view2, { alignItems: 'flex-start' }]}>
                                     <ScaleImage style={[styles.ic_Location]} width={20} source={require("@images/new/booking/ic_coin.png")} />
                                     <View style={{ flexDirection: 'row' }}>
-                                        <Text style={[styles.text5]}>Tổng tiền: <Text style={{ fontWeight: 'bold', marginLeft: 20, color: '#d0021b' }} numberOfLines={1}>{this.state.service.reduce((start, item) => {
-                                            return start + parseInt(item.service.price)
-                                        }, 0).formatPrice()}đ</Text></Text>
+                                        <Text style={[styles.text5]}>Tổng tiền: <Text style={{ fontWeight: 'bold', marginLeft: 20, color: '#d0021b' }} numberOfLines={1}>{this.getPriceSecive()}đ</Text></Text>
                                     </View>
                                 </View> : null
                             }
                         </View>
                     </View>
+
                     <View style={{ paddingHorizontal: 20, marginTop: 20, flexDirection: 'row', alignItems: 'center' }}>
                         <Text style={{ fontWeight: 'bold', color: 'rgb(2,195,154)', marginRight: 10 }}>CHỌN PHƯƠNG THỨC THANH TOÁN</Text>
                         <ScaleImage width={20} source={require("@images/new/booking/ic_tick.png")} />
@@ -564,33 +609,33 @@ class ConfirmBookingScreen extends Component {
                         (this.state.service && this.state.service.length) ?
                             <React.Fragment>
                                 <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 1 })}>
-                                    <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
+                                    <View style={styles.containerBtnSelect}>
                                         {this.state.paymentMethod == 1 &&
-                                            <View style={{ backgroundColor: 'rgb(2,195,154)', width: 10, height: 10, borderRadius: 5 }}></View>
+                                            <View style={styles.isSelected}></View>
                                         }
                                     </View>
                                     <Text style={styles.ckeckthanhtoan}>VNPAY</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 3 })}>
-                                    <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
+                                    <View style={styles.containerBtnSelect}>
                                         {this.state.paymentMethod == 3 &&
-                                            <View style={{ backgroundColor: 'rgb(2,195,154)', width: 10, height: 10, borderRadius: 5 }}></View>
+                                            <View style={styles.isSelected}></View>
                                         }
                                     </View>
                                     <Text style={styles.ckeckthanhtoan}>PAYOO</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 5 })}>
-                                    <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
+                                    <View style={styles.containerBtnSelect}>
                                         {this.state.paymentMethod == 5 &&
-                                            <View style={{ backgroundColor: 'rgb(2,195,154)', width: 10, height: 10, borderRadius: 5 }}></View>
+                                            <View style={styles.isSelected}></View>
                                         }
                                     </View>
                                     <Text style={styles.ckeckthanhtoan}>PAYOO - Trả góp 0%</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 4 })}>
-                                    <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
+                                    <View style={styles.containerBtnSelect}>
                                         {this.state.paymentMethod == 4 &&
-                                            <View style={{ backgroundColor: 'rgb(2,195,154)', width: 10, height: 10, borderRadius: 5 }}></View>
+                                            <View style={styles.isSelected}></View>
                                         }
                                     </View>
                                     <Text style={styles.ckeckthanhtoan}>PAYOO - Cửa hàng tiện ích</Text>
@@ -598,9 +643,9 @@ class ConfirmBookingScreen extends Component {
                             </React.Fragment> : null
                     } */}
                     <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 2 })}>
-                        <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
+                        <View style={styles.containerBtnSelect}>
                             {this.state.paymentMethod == 2 &&
-                                <View style={{ backgroundColor: 'rgb(2,195,154)', width: 10, height: 10, borderRadius: 5 }}></View>
+                                <View style={styles.isSelected}></View>
                             }
                         </View>
                         <Text style={styles.ckeckthanhtoan}>Thanh toán sau tại CSYT</Text>
@@ -621,6 +666,36 @@ function mapStateToProps(state) {
     };
 }
 const styles = StyleSheet.create({
+    isSelected: {
+        backgroundColor: 'rgb(2,195,154)',
+        width: 10,
+        height: 10,
+        borderRadius: 5
+    },
+    containerBtnSelect: {
+        width: 20,
+        height: 20,
+        borderRadius: 15,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 1.5,
+        borderColor: 'rgb(2,195,154)'
+    },
+    txtButtonVoucher: {
+        color: 'rgb(2,195,154)',
+        fontSize: 15,
+        fontWeight: 'bold',
+        paddingRight: 15
+    },
+    btnGoToVoucher: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        marginBottom: 15,
+        backgroundColor: '#effbf9'
+    },
     AcPanel: {
         flex: 1,
         backgroundColor: '#cacaca',

@@ -63,7 +63,6 @@ class ProfileInfo extends Component {
 
     return (
       <ActivityPanel
-        statusbarBackgroundColor="#0049B0"
         title={"Hồ sơ cá nhân"}
         isLoading={this.state.isLoading}>
         <ScrollView
@@ -105,7 +104,7 @@ class ProfileInfo extends Component {
               <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginVertical: 20 }}>
                 <Text style={{ fontSize: 18, color: '#000' }}>{this.state.username ? this.state.username : ''}</Text>
                 <Text style={{ color: 'rgb(2,195,154)', marginVertical: 5 }}>{this.state.phone ? this.state.phone : ''}</Text>
-                <Text style={{ marginTop: 15 }}>{this.state.medicalRecords ? `${this.state.medicalRecords.length} ` : '0 '}lượt sử dụng dịch vụ</Text>
+                {/* <Text style={{ marginTop: 15 }}>{this.state.medicalRecords ? `${this.state.medicalRecords.length} ` : '0 '}lượt sử dụng dịch vụ</Text> */}
               </View>
               <View style={styles.container}>
                 <Form ref={ref => (this.form = ref)} style={[{ flex: 1 }]}>
@@ -324,7 +323,6 @@ const styles = StyleSheet.create({
   },
   ktq: {
     flex: 1,
-    fontSize: 12,
     fontWeight: "normal",
     fontStyle: "normal",
     letterSpacing: 0,
