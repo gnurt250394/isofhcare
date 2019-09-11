@@ -73,32 +73,46 @@ class AddNewEhealthScreen extends Component {
     onConfirm = () => {
         let patientHistoryId = this.state.valueCode
         let hospital = this.state.hospital
-
-        ehealthProvider.addEhealthWithCode(hospital.hospital.id, patientHistoryId).then(res => {
-            switch (res.code) {
-                case 2:
-                    snackbar.show('Không lấy được thông tin tài khoản, xin vui lòng thử lại', 'danger')
-                    break
-                case 3:
-                    snackbar.show('Không tìm thấy y bạ', 'danger')
-                    break
-                case 4:
-                    snackbar.show('Tài khoản của bạn không sở hữu y bạ này', 'danger')
-                    break
-                case 0:
-                    this.props.dispatch({ type: constants.action.action_select_hospital_ehealth, value: hospital })
-                    this.props.navigation.replace('listProfile');
-                    snackbar.show('Thêm y bạ thành công', 'success')
-                    break
-            }
-        }).catch(err => {
-            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
-            console.log(err);
-        })
         this.setState({
+            modalLoading: true,
             isVisible: false,
-            valueCode: ''
+
+        }, () => {
+            ehealthProvider.addEhealthWithCode(hospital.hospital.id, patientHistoryId).then(res => {
+
+                switch (res.code) {
+                    case 2:
+                        snackbar.show('Không lấy được thông tin tài khoản, xin vui lòng thử lại', 'danger')
+                        break
+                    case 3:
+                        snackbar.show('Không tìm thấy y bạ', 'danger')
+                        break
+                    case 4:
+                        snackbar.show('Tài khoản của bạn không sở hữu y bạ này', 'danger')
+                        break
+                    case 0:
+                        this.props.dispatch({ type: constants.action.action_select_hospital_ehealth, value: hospital })
+                        this.props.navigation.replace('listProfile');
+                        snackbar.show('Thêm y bạ thành công', 'success')
+                        break
+                }
+                this.setState({
+                    valueCode: '',
+                    modalLoading: false
+                })
+
+            }).catch(err => {
+                snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                console.log(err);
+                this.setState({
+                    isVisible: false,
+                    valueCode: '',
+                    modalLoading: false
+                })
+            })
         })
+
+
     }
     render() {
         return (
@@ -108,6 +122,7 @@ class AddNewEhealthScreen extends Component {
                 
                 
                 style={styles.container}
+                isLoading={this.state.modalLoading}
             >
                 <View style={styles.viewContent}>
                     <View style={styles.viewBtn}>

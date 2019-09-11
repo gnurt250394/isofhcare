@@ -34,10 +34,17 @@ class CreateBookingSuccessScreen extends Component {
         }
         return "";
     }
-
+    getPriceSecive = (service,voucher) => {
+        let priceVoucher = voucher && voucher.price ? voucher.price : 0
+        let priceFinal = service.reduce((start, item) => {
+            return start + parseInt(item.service.price)
+        }, 0)
+        return (priceFinal - priceVoucher).formatPrice()
+    }
     render() {
         let booking = this.props.navigation.state.params.booking;
         let service = this.props.navigation.state.params.service || [];
+        let voucher = this.props.navigation.state.params.voucher || {};
         if (!booking || !booking.profile || !booking.hospital || !booking.hospital.hospital || !booking.book) {
             this.props.navigation.pop();
             return null;
@@ -104,6 +111,12 @@ class CreateBookingSuccessScreen extends Component {
                                                 <Text style={[styles.text, { marginBottom: 5 }]}>({parseInt(item.service.price).formatPrice()}đ)</Text>
                                             </View>
                                         })}
+                                        {voucher && voucher.price ?
+                                            <View style={{ flex: 1 }}>
+                                                <Text numberOfLines={1} style={[styles.text, { flex: 1 }]}>Ưu đãi</Text>
+                                                <Text style={[styles.text, { marginBottom: 5 }]}>(-{parseInt(voucher.price).formatPrice()}đ)</Text>
+                                            </View> : null
+                                        }
                                     </View>
                                 </View> : null
                             }
@@ -115,9 +128,7 @@ class CreateBookingSuccessScreen extends Component {
                                 service && service.length ?
                                     <View style={styles.row}>
                                         <Text style={styles.label}>{"Tổng tiền:"}</Text>
-                                        <Text style={[styles.text, { color: "#d0021b" }]}>{service.reduce((start, item) => {
-                                            return start + parseInt(item.service.price)
-                                        }, 0).formatPrice()}đ</Text>
+                                        <Text style={[styles.text, { color: "#d0021b" }]}>{this.getPriceSecive(service,voucher)}đ</Text>
                                     </View> : null
                             }
                             {
