@@ -20,6 +20,7 @@ import ImageLoad from 'mainam-react-native-image-loader';
 import { Card } from "native-base";
 import constants from '@resources/strings';
 import snackbar from '@utils/snackbar-utils';
+import connectionUtils from '@utils/connection-utils';
 
 class EhealthScreen extends Component {
     constructor(props) {
@@ -68,11 +69,19 @@ class EhealthScreen extends Component {
         snackbar.show('Bạn chưa có lần khám gần nhất tại bệnh viện này', 'danger')
     }
     onAddEhealth = () => {
-        this.props.navigation.navigate('selectLocationEhealth')
-        // let hospitalId = this.props.ehealth.hospital.hospital.id
-        // this.props.navigation.navigate('addNewEhealth', {
-        //     hospitalId: hospitalId
-        // })
+        connectionUtils.isConnected().then(s => {
+            this.props.navigation.navigate("selectHospital", {
+                hospital: this.state.hospital,
+                onSelected: (hospital) => {
+                    // alert(JSON.stringify(hospital))
+                    setTimeout(() => {
+                        this.props.navigation.navigate('addNewEhealth', { hospital: hospital })                        
+                    }, 300);
+                }
+            })
+        }).catch(e => {
+            snackbar.show(constants.msg.app.not_internet, "danger");
+        });        
     }
     renderItem = ({ item, index }) => {
         const source = item.hospital && item.hospital.avatar ? { uri: item.hospital.avatar.absoluteUrl() } : require("@images/new/user.png");
