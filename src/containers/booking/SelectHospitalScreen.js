@@ -253,8 +253,8 @@ class SelectHospitalScreen extends Component {
     selectHospital(item) {
         let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
         if (callback) {
-            callback(item);
             this.props.navigation.pop();
+            callback(item);
         }
     }
     search() {

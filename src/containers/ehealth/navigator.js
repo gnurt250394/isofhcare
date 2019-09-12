@@ -17,7 +17,6 @@ import HistorySharingScreen from '@containers/ehealth/HistorySharingScreen';
 import EhealthSharingScreen from '@containers/ehealth/EhealthSharingScreen';
 import { fromLeft, zoomIn, zoomOut, fromRight } from 'react-navigation-transitions';
 import AddNewEhealthScreen from '@containers/ehealth/AddNewEhealthScreen';
-import SelectLocationEhealthScreen from '@containers/ehealth/SelectLocationEhealthScreen';
 
 
 
@@ -41,7 +40,6 @@ const EHealthNavigator = createStackNavigator({
     viewSurgeryResult: { screen: ViewSurgeryResultScreen },
     searchProfile: { screen: SearchProfileScreen },
     addNewEhealth:{screen:AddNewEhealthScreen},
-    selectLocationEhealth:{screen:SelectLocationEhealthScreen}
 }, {
         headerMode: 'none',
         header: null,
