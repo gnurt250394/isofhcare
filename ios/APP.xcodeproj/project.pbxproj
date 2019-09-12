@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* APPTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* APPTests.m */; };
 		0925F0A5A56A4BF3BF9D899A /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C2A6A8F9F1934F8E90E0D571 /* Ionicons.ttf */; };
-		0C32A8212328FFD5001D5ECC /* libRNReactNativeLocationSwitch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CC782BB230D45F100809AD8 /* libRNReactNativeLocationSwitch.a */; };
 		0C32A876232A305C001D5ECC /* libQBImagePickerController.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C32A875232A305C001D5ECC /* libQBImagePickerController.a */; };
 		0CC780F6230C32FC00809AD8 /* AppCenter-Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0CC780F0230C32FB00809AD8 /* AppCenter-Config.plist */; };
 		0CC780F7230C32FC00809AD8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0CC780F1230C32FB00809AD8 /* GoogleService-Info.plist */; };
@@ -172,13 +171,6 @@
 			remoteGlobalIDString = F60690131CA2766F0003FB26;
 			remoteInfo = RealmReact;
 		};
-		0CC782BA230D45F100809AD8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0CC782B6230D45F000809AD8 /* RNReactNativeLocationSwitch.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 134814201AA4EA6300B7C361;
-			remoteInfo = RNReactNativeLocationSwitch;
-		};
 		2D02E4911E0B4A5D006451C7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
@@ -213,7 +205,6 @@
 		0CC780F0230C32FB00809AD8 /* AppCenter-Config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "AppCenter-Config.plist"; path = "APP/AppCenter-Config.plist"; sourceTree = "<group>"; };
 		0CC780F1230C32FB00809AD8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "APP/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0CC780F4230C32FC00809AD8 /* APP.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; name = APP.entitlements; path = APP/APP.entitlements; sourceTree = "<group>"; };
-		0CC782B6230D45F000809AD8 /* RNReactNativeLocationSwitch.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNReactNativeLocationSwitch.xcodeproj; path = "../node_modules/mainam-react-native-location-switch/ios/RNReactNativeLocationSwitch.xcodeproj"; sourceTree = "<group>"; };
 		0CC782BC230D481800809AD8 /* PayooSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PayooSDK.framework; sourceTree = "<group>"; };
 		0CC782C1230D4A6900809AD8 /* PayooModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PayooModule.h; path = APP/PayooModule.h; sourceTree = "<group>"; };
 		0CC782C2230D4A6900809AD8 /* PayooModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PayooModule.m; path = APP/PayooModule.m; sourceTree = "<group>"; };
@@ -266,7 +257,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				0C32A876232A305C001D5ECC /* libQBImagePickerController.a in Frameworks */,
-				0C32A8212328FFD5001D5ECC /* libRNReactNativeLocationSwitch.a in Frameworks */,
 				0CF2A07223165BB900F2AE0F /* PayooSDK.framework in Frameworks */,
 				F0DD48F1DDD47F2229C1B0E8 /* libPods-APP.a in Frameworks */,
 				EE36E305097545D29780BE35 /* libRealmReact.a in Frameworks */,
@@ -349,14 +339,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		0CC782B7230D45F000809AD8 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				0CC782BB230D45F100809AD8 /* libRNReactNativeLocationSwitch.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		13B07FAE1A68108700A75B9A /* APP */ = {
 			isa = PBXGroup;
 			children = (
@@ -394,7 +376,6 @@
 			isa = PBXGroup;
 			children = (
 				0C53A4DB23151F0800D68E52 /* React.xcodeproj */,
-				0CC782B6230D45F000809AD8 /* RNReactNativeLocationSwitch.xcodeproj */,
 				071F6799564941F7BE3760FA /* RealmReact.xcodeproj */,
 			);
 			name = Libraries;
@@ -594,10 +575,6 @@
 					ProductGroup = 0CC780CC230BF7A200809AD8 /* Products */;
 					ProjectRef = 071F6799564941F7BE3760FA /* RealmReact.xcodeproj */;
 				},
-				{
-					ProductGroup = 0CC782B7230D45F000809AD8 /* Products */;
-					ProjectRef = 0CC782B6230D45F000809AD8 /* RNReactNativeLocationSwitch.xcodeproj */;
-				},
 			);
 			projectRoot = "";
 			targets = (
@@ -727,13 +704,6 @@
 			fileType = archive.ar;
 			path = libRealmReact.a;
 			remoteRef = 0CC780CF230BF7A200809AD8 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0CC782BB230D45F100809AD8 /* libRNReactNativeLocationSwitch.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRNReactNativeLocationSwitch.a;
-			remoteRef = 0CC782BA230D45F100809AD8 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
