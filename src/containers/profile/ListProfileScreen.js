@@ -196,31 +196,27 @@ class ListProfileScreen extends Component {
         return (
             item.medicalRecords.statusConfirm == "NEED_CONFIRM" ?
                 (
-                    <View>
+                    <TouchableOpacity onPress={() => this.onClickItem(item)} >
                         <Text style={{ color: 'red', marginTop: 10, fontSize: 14, marginHorizontal: 12, textAlign: 'center' }}>Tài khoản {item.medicalRecords.name} có số điện thoại {item.medicalRecords.phone} muốn xác nhận mối quan hệ với bạn.</Text>
                         {item.medicalRecords.status == 1 ? (
-                            <Card style={styles.viewProfileUser}>
-                                <TouchableOpacity style={{ flex: 1 }} onPress={() => this.onClickItem(item)}>
-                                    <LinearGradient style={styles.viewGradientUser} colors={['#02C293', '#01bb72', '#01BF88']}>
-                                        <Text style={styles.txProfileUser}>{item.medicalRecords.name}</Text>
-                                    </LinearGradient>
-                                </TouchableOpacity>
-                            </Card>
+                            <TouchableOpacity style={styles.viewProfileUser} onPress={() => this.onClickItem(item)} >
+                                <LinearGradient style={styles.viewGradientUser} colors={['#02C293', '#01BF88', '#02C293']}>
+                                    <Text style={styles.txProfileUser}>{item.medicalRecords.name}</Text>
+                                </LinearGradient>
+                            </TouchableOpacity>
                         ) : (<View style={{
                             marginHorizontal: 10,
                         }}>
                             <Card style={styles.cardView}>
                                 <View style={styles.viewProfileFamily}>
-                                    <TouchableOpacity onPress={() => this.onClickItem(item)} >
-                                        <View>
-                                            <Text style={styles.txName}>{item.medicalRecords.name}</Text>
-                                            {
-                                                item.medicalRecords.relationshipType ?
-                                                    <Text style={{ color: '#02C293', fontSize: 14 }}>Quan hệ: {this.renderRelation(item.medicalRecords.relationshipType)}</Text>
-                                                    : <View></View>
-                                            }
-                                        </View>
-                                    </TouchableOpacity>
+                                    <View>
+                                        <Text style={styles.txName}>{item.medicalRecords.name}</Text>
+                                        {
+                                            item.medicalRecords.relationshipType ?
+                                                <Text style={{ color: '#02C293', fontSize: 14 }}>Quan hệ: {this.renderRelation(item.medicalRecords.relationshipType)}</Text>
+                                                : <View></View>
+                                        }
+                                    </View>
                                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                         {
                                             item.medicalRecords.statusConfirm == "NEED_CONFIRM" ? (
@@ -234,43 +230,43 @@ class ListProfileScreen extends Component {
                                 </View>
                             </Card>
                         </View>)}
-                    </View>
+                    </TouchableOpacity>
                 ) : (
                     item.medicalRecords.status == 1 ? (
-                        <Card style={styles.viewProfileUser}>
-                            <TouchableOpacity style={{ flex: 1 }} onPress={() => this.onClickItem(item)}>
-                                <LinearGradient style={styles.viewGradientUser} colors={['#02C293', '#01bb72', '#01BF88']}>
-                                    <Text style={styles.txProfileUser}>{item.medicalRecords.name}</Text>
-                                </LinearGradient>
-                            </TouchableOpacity>
-                        </Card>
-                    ) : (<View style={{
-                        marginHorizontal: 10,
-                    }}>
-                        <Card style={styles.cardView}>
-                            <View style={styles.viewProfileFamily}>
-                                <TouchableOpacity onPress={() => this.onClickItem(item)} >
-                                    <View>
-                                        <Text style={styles.txName}>{item.medicalRecords.name}</Text>
-                                        {
-                                            item.medicalRecords.relationshipType ?
-                                                <Text style={{ color: '#02C293', fontSize: 14 }}>Quan hệ: {this.renderRelation(item.medicalRecords.relationshipType)}</Text>
-                                                : <View></View>
-                                        }
+                        <TouchableOpacity onPress={() => this.onClickItem(item)} style={styles.viewProfileUser}>
+                                <LinearGradient style={styles.viewGradientUser} colors={['#02C293', '#01BF88', '#02C293']}>
+                                <Text style={styles.txProfileUser}>{item.medicalRecords.name}</Text>
+                            </LinearGradient>
+                        </TouchableOpacity>
+                    ) : (
+                            <Card style={styles.cardView}>
+
+                                <TouchableOpacity onPress={() => this.onClickItem(item)} style={{
+                                    marginHorizontal: 10,
+                                }}>
+                                    <View style={styles.viewProfileFamily}>
+
+                                        <View>
+                                            <Text style={styles.txName}>{item.medicalRecords.name}</Text>
+                                            {
+                                                item.medicalRecords.relationshipType ?
+                                                    <Text style={{ color: '#02C293', fontSize: 14 }}>Quan hệ: {this.renderRelation(item.medicalRecords.relationshipType)}</Text>
+                                                    : <View></View>
+                                            }
+                                        </View>
+
+                                        <View style={{ flexDirection: 'row' }}>
+                                            {
+                                                item.medicalRecords.statusConfirm == "WAIT_CONFIRM" ?
+                                                    (<Text>Chờ xác nhận</Text>) : (<View></View>)
+                                            }
+                                            <TouchableOpacity style={{ padding: 10 }} onPress={() => this.onShowOptions(item.medicalRecords.id, item.medicalRecords.sharePermission, item.medicalRecords.medicalRelatedId ? item.medicalRecords.medicalRelatedId : null)}>
+                                                <ScaledImage height={20} width={20} source={require('@images/new/profile/ic_three_dot.png')}></ScaledImage>
+                                            </TouchableOpacity>
+                                        </View>
                                     </View>
                                 </TouchableOpacity>
-                                <View style={{ flexDirection: 'row' }}>
-                                    {
-                                        item.medicalRecords.statusConfirm == "WAIT_CONFIRM" ?
-                                            (<Text>Chờ xác nhận</Text>) : (<View></View>)
-                                    }
-                                    <TouchableOpacity style={{ padding: 10 }} onPress={() => this.onShowOptions(item.medicalRecords.id, item.medicalRecords.sharePermission, item.medicalRecords.medicalRelatedId ? item.medicalRecords.medicalRelatedId : null)}>
-                                        <ScaledImage height={20} width={20} source={require('@images/new/profile/ic_three_dot.png')}></ScaledImage>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                        </Card>
-                    </View>
+                            </Card>
                         )
                 )
         )
@@ -309,6 +305,7 @@ class ListProfileScreen extends Component {
                         }
                         this.top = e.nativeEvent.contentOffset.y
                     }}
+                    showsVerticalScrollIndicator={false}
                     data={this.state.data}
                     extraData={this.state}
                     keyExtractor={(item, index) => index.toString()}
@@ -317,6 +314,9 @@ class ListProfileScreen extends Component {
                     renderItem={({ item, index }) => {
                         return this.renderItem(item, index)
                     }}
+                    ListFooterComponent={() =>
+                        <View style={{ height: 50 }}></View>
+                    }
                     ListHeaderComponent={() =>
                         !this.state.refreshing &&
                             (!this.state.data || this.state.data.length == 0) ? (
@@ -359,8 +359,8 @@ class ListProfileScreen extends Component {
                             <Icon name="add" style={{ color: '#FFF' }}></Icon>
                         </TouchableOpacity>
                     </Card>
-                </Animatable.View >
-            </ActivityPanel >
+                </Animatable.View>
+            </ActivityPanel>
 
         );
     }
@@ -400,11 +400,10 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 10,
         borderBottomLeftRadius: 10,
         // padding: 10,
-        marginVertical: 20,
-        marginLeft: 10,
+        marginVertical: 5,
+        marginLeft: 12,
         flex: 1,
         minHeight: 50,
-        justifyContent: 'center'
     },
     txProfileUser: {
         fontSize: 14,
