@@ -39,6 +39,10 @@ class AddNewEhealthScreen extends Component {
                                 break
                         }
                         reject(-1);
+                    }).catch(err => {
+                        this.props.navigation.pop()
+                        snackbar.show('Mã không hợp lệ', 'danger')
+
                     });
                 });
             },
