@@ -167,14 +167,10 @@ class HomeScreen extends Component {
           activeDotIndex={activeSlide || 0}
           dotContainerStyle={styles.dotContainer}
           dotStyle={styles.dotStyle}
-          inactiveDotStyle={
-            styles.inactiveDotStyle
-          }
+          inactiveDotStyle={styles.inactiveDotStyle}
           inactiveDotOpacity={0.4}
           inactiveDotScale={0.6}
-          containerStyle={
-            styles.containerPagination
-          }
+          containerStyle={styles.containerPagination}
         />
       </View>
     );
@@ -258,71 +254,72 @@ class HomeScreen extends Component {
     return width - 50;
   }
 
+  renderButton = () => {
+    return (this.state.features || []).map((item, position) => {
+      return (
+        <Animatable.View key={position} delay={100} animation={"swing"} direction="alternate">
+          {
+            item.empty ? <View style={[styles.viewEmpty, { width: this.getItemWidth() }]}
+            ></View> :
+              <TouchableOpacity
+                style={[styles.button, { width: this.getItemWidth() }]}
+                onPress={item.onPress}
+              >
+                <View style={styles.groupImageButton}>
+                  <ScaledImage style={[styles.icon]} source={item.icon} height={48} />
+                </View>
+                <Text style={[styles.label]}>{item.text}</Text>
+              </TouchableOpacity>
+
+          }
+        </Animatable.View>);
+    })
+  }
+  refreshControl = () => {
+    return (
+      <RefreshControl
+        refreshing={this.state.refreshing}
+        onRefresh={this.onRefresh.bind(this)}
+      />
+    )
+  }
+  getUserName = (name) => {
+    if (!name) return "";
+    let x = name.trim().split(" ");
+    name = (x[x.length - 1]).toLowerCase();
+    if (name[0])
+      return name.charAt(0).toUpperCase() + name.slice(1);
+    return name;
+  }
   render() {
     return (
-      <ActivityPanel        
+      <ActivityPanel
         isLoading={this.state.isLoading}
         hideActionbar={true}
       >
-        <View style={{ flex: 1, position: 'relative' }}>
-          <ScaledImage source={require("@images/new/home/bg_home_new.png")} width={DEVICE_WIDTH} style={{ position: 'absolute', top: 72, right: 0, left: 0 }} />
-          <View style={{ height: 75, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10, backgroundColor: '#fff', borderBottomColor: '#7c817f', borderBottomWidth: 0.5 }}>
-            <View style={{ flex: 1, alignItems: 'center' }}>
+        <View style={styles.container}>
+          <ScaledImage source={require("@images/new/home/bg_home_new.png")} width={DEVICE_WIDTH} style={styles.imgHome} />
+          <View style={styles.containerImageLogo}>
+            <View style={styles.ImageCenter}>
               <ScaledImage source={require("@images/new/isofhcare.png")} width={116} />
             </View>
           </View>
           <ScrollView
-            refreshControl={<RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={this.onRefresh.bind(this)}
-            />}
+            refreshControl={this.refreshControl()}
             showsVerticalScrollIndicator={false}
-            style={{
-              flex: 1,
-              paddingTop: 0
-            }}
+            style={styles.scroll}
           >
-            <View style={{ padding: 21 }}>
-              <Card style={{ borderRadius: 6, marginTop: 130 }}>
+            <View style={styles.padding21}>
+              <Card style={styles.card}>
 
                 {this.props.userApp.isLogin &&
-                  <View style={{ alignItems: 'center', flexDirection: 'row', borderBottomColor: 'rgba(151, 151, 151, 0.29)', borderBottomWidth: 1, paddingVertical: 10, marginHorizontal: 20, justifyContent: 'center' }}>
-                    <Text style={{ marginLeft: 5, fontSize: 18, fontWeight: 'bold', color: "#4a4a4a" }} >Xin chào, <Text style={{ color: 'rgb(255,138,21)' }}>{((name) => {
-                      if (!name) return "";
-                      let x = name.trim().split(" ");
-                      name = (x[x.length - 1]).toLowerCase();
-                      if (name[0])
-                        return name.charAt(0).toUpperCase() + name.slice(1);
-                      return name;
-                    }).call(this, this.props.userApp.currentUser.name) + '!'}</Text></Text>
-                  </View>
-                }
-
-                <View style={{
-                  flexDirection: "row", padding: 10, marginVertical: 20, flexWrap: 'wrap',
-                  justifyContent: 'center'
-                }}>
-                  {
-                    (this.state.features || []).map((item, position) => {
-                      return (
-                        <Animatable.View key={position} delay={100} animation={"swing"} direction="alternate">
-                          {
-                            item.empty ? <View style={{ flex: 1, marginLeft: 5, alignItems: 'center', height: 100, width: this.getItemWidth() }}
-                            ></View> :
-                              <TouchableOpacity
-                                style={{ flex: 1, marginLeft: 5, alignItems: 'center', width: this.getItemWidth() }}
-                                onPress={item.onPress}
-                              >
-                                <View style={{ position: 'relative', padding: 5 }}>
-                                  <ScaledImage style={[styles.icon]} source={item.icon} height={48} />
-                                </View>
-                                <Text style={[styles.label]}>{item.text}</Text>
-                              </TouchableOpacity>
-
-                          }
-                        </Animatable.View>);
-                    })
-                  }
+                  <View style={styles.containerHeadertitle}>
+                    <Text
+                      style={styles.txtHeaderTitle}
+                    >Xin chào, <Text style={styles.colorUserName}>{this.getUserName(this.props.userApp.currentUser.name) + '!'}</Text></Text>
+                  </View>}
+                <View style={styles.containerButton}>
+                  {this.renderButton()}
                 </View>
               </Card>
             </View>
@@ -339,6 +336,73 @@ class HomeScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  groupImageButton: {
+    position: 'relative',
+    padding: 5
+  },
+  button: {
+    flex: 1,
+    marginLeft: 5,
+    alignItems: 'center',
+
+  },
+  viewEmpty: {
+    flex: 1,
+    marginLeft: 5,
+    alignItems: 'center',
+    height: 100,
+  },
+  containerButton: {
+    flexDirection: "row",
+    padding: 10,
+    marginVertical: 20,
+    flexWrap: 'wrap',
+    justifyContent: 'center'
+  },
+  colorUserName: { color: 'rgb(255,138,21)' },
+  txtHeaderTitle: {
+    marginLeft: 5,
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: "#4a4a4a"
+  },
+  containerHeadertitle: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    borderBottomColor: 'rgba(151, 151, 151, 0.29)',
+    borderBottomWidth: 1,
+    paddingVertical: 10,
+    marginHorizontal: 20,
+    justifyContent: 'center'
+  },
+  padding21: { padding: 21 },
+  card: { borderRadius: 6, marginTop: 130 },
+  scroll: {
+    flex: 1,
+    paddingTop: 0
+  },
+  ImageCenter: {
+    flex: 1, alignItems: 'center'
+  },
+  container: {
+    flex: 1,
+    position: 'relative'
+  },
+  containerImageLogo: {
+    height: 75,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    backgroundColor: '#fff',
+    borderBottomColor: '#7c817f',
+    borderBottomWidth: 0.5
+  },
+  imgHome: {
+    position: 'absolute',
+    top: 72,
+    right: 0,
+    left: 0
+  },
   icon: {
   },
   label: {

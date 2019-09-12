@@ -132,8 +132,19 @@ module.exports = {
   msg: {
     notification: {
       new_notification: "Bạn có một thông báo mới",
-      confirm_delete_all_notification:
-        "Bạn chắc chắn muốn xóa hết các thông báo?"
+      confirm_delete_all_notification:"Bạn chắc chắn muốn xóa hết các thông báo?",
+      file_not_result:'Hồ sơ này chưa có kết quả',
+      error_retry:'Có lỗi xảy ra, xin vui lòng thử lại',
+      medical_records_not_found:'Y bạ chưa xác định',
+      file_share_expired:'Hồ sơ chia sẻ đến bạn đã hết thời gian',
+      ports_not_found:'Lỗi, bài viết không tồn tại',
+      type:{
+        ask_requests:'Tư vấn - đặt câu hỏi',
+        booking:'Đặt khám',
+        get_quick_number:'Lấy số nhanh',
+        ehealth: "Y bạ điện tử",
+      },
+      notifi:"THÔNG BÁO"
     },
     app: {
       check_connection: "Vui lòng kiểm tra lại kết nối internet",
@@ -142,7 +153,8 @@ module.exports = {
       not_internet: 'Không có kết nối mạng',
       text_without_500: 'Không cho phép nhập quá 500 kí tự',
       err_try_again: 'Có lỗi, xin vui lòng thử lại',
-      dob_must_lesser_150: 'Không cho phép chọn lớn hơn 150 tuổi'
+      dob_must_lesser_150: 'Không cho phép chọn lớn hơn 150 tuổi',
+      check_update:'Đang kiểm tra cập nhật'
     },
     upload: {
       upload_image_error: "Upload ảnh không thành công"
@@ -438,6 +450,24 @@ module.exports = {
     result_ehealth: "KẾT QUẢ KHÁM",
     result_ehealth_image: "KẾT QUẢ CHẨN ĐOÁN HÌNH ẢNH"
   },
+  account_screens: {
+    signin_or_signup: 'Đăng nhập/ Đăng Ký',
+    my_family: 'Thành viên gia đình',
+    medical_records: 'Y bạ điện tử',
+    pay_history: 'Lịch sử giao dịch',
+    drug_odered: 'Thuốc đã đặt mua',
+    examination_schedule: 'Lịch khám',
+    setting: 'Cài đặt',
+    forgot_password: 'Đổi mật khẩu',
+    about_isofh: 'Về iSofH',
+    support: 'Hỗ trợ',
+    report: 'Báo lỗi',
+    terms_of_use: 'Điều khoản sử dụng',
+    logout: 'Đăng xuất'
+  },
+  notification_screenss: {
+    none_data: 'Hiện tại chưa có thông tin'
+  },
   api: {
     notification: {
       search: isofhcare_service + "notification/search",
@@ -591,15 +621,15 @@ module.exports = {
       update_data_user: isofhcare_service + 'patient-history-booking/update-data-note',
       search_profile_user: isofhcare_service + 'user/search',
       share_with_profile: isofhcare_service + 'booking/share-user',
-      add_ehealth_with_code:isofhcare_service + 'patient-history-booking/verify'
+      add_ehealth_with_code: isofhcare_service + 'patient-history-booking/verify'
     },
     home: {
       get_list_drug: isofhcare_service + '/medicine/list-medicine-top',
       get_list_news: isofhcare_service + 'news/list-news-top',
       get_list_hospital_top_rate: isofhcare_service + 'hospital/list-hospital-top-rate'
     },
-    voucher:{
-      get_voucher:isofhcare_service + 'voucher'
+    voucher: {
+      get_voucher: isofhcare_service + 'voucher'
     }
   }
 };
