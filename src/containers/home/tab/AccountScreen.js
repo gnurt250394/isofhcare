@@ -214,7 +214,7 @@ class AccountScreen extends Component {
                 height={24}
               />
             </TouchableOpacity> */}
-              {/* <TouchableOpacity
+              <TouchableOpacity
                 style={[styles.itemMenu, { marginTop: 40 }]}
                 onPress={() => {
                   this.props.navigation.navigate("listProfileUser");
@@ -226,9 +226,9 @@ class AccountScreen extends Component {
                   width={30}
                   height={30}
                 />
-              </TouchableOpacity> */}
+              </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.itemMenu, { marginTop: 40 }]}
+                style={[styles.itemMenu]}
                 onPress={() => {
                   this.props.navigation.navigate("ehealth");
                 }}
