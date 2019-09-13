@@ -3,10 +3,10 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import ActivityPanel from '@components/ActivityPanel';
 import { IndicatorViewPager } from "mainam-react-native-viewpager";
 import { Card } from 'native-base'
-import MyVocherCode from './MyVocherCode';
-import FillMyVocher from './FillMyVocher';
+import FillMyVocherScreen from './FillMyVoucherScreen';
+import MyVoucherCodeScreen from './MyVoucherCodeScreen';
 
-class MyVocherScreen extends Component {
+class MyVoucherScreen extends Component {
     constructor(props) {
         super(props);
         let tabIndex = 0;
@@ -63,11 +63,11 @@ class MyVocherScreen extends Component {
                     }}
                     onPageScroll={this.onPageScroll.bind(this)}>
                     <View style={styles.container}>
-                        <FillMyVocher booking={booking} onPress={this.comfirmVoucher} parrent={this} />
+                        <FillMyVocherScreen booking={booking} onPress={this.comfirmVoucher} parrent={this} />
                     </View>
                     <View style={styles.container}>
 
-                        <MyVocherCode booking={booking} onPress={this.comfirmVoucher} parrent={this} />
+                        <MyVoucherCodeScreen booking={booking} onPress={this.comfirmVoucher} parrent={this} />
                     </View>
 
                 </IndicatorViewPager>
@@ -101,4 +101,4 @@ const styles = StyleSheet.create({
         overflow: 'hidden'
     },
 })
-export default MyVocherScreen;
+export default MyVoucherScreen;

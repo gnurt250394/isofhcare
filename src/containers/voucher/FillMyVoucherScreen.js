@@ -9,7 +9,7 @@ import Form from "mainam-react-native-form-validate/Form";
 import voucherProvider from '@data-access/voucher-provider'
 import snackbar from '@utils/snackbar-utils';
 
-class FillMyVocher extends Component {
+class FillMyVocherScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -144,4 +144,4 @@ const styles = StyleSheet.create({
     },
 
 });
-export default FillMyVocher;
+export default FillMyVocherScreen;

@@ -4,7 +4,7 @@ import voucherProvider from '@data-access/voucher-provider'
 import ItemListVoucher from '@components/voucher/ItemListVoucher';
 import snackbar from '@utils/snackbar-utils';
 
-class MyVocherCode extends Component {
+class MyVoucherCodeScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -84,7 +84,7 @@ class MyVocherCode extends Component {
     }
 }
 
-export default MyVocherCode;
+export default MyVoucherCodeScreen;
 
 
 
