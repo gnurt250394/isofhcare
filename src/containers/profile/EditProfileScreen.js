@@ -301,7 +301,7 @@ class EditProfileScreen extends Component {
                             "districtId": this.state.districts ? this.state.districts.id.toString() : null,
                             "zoneId": this.state.zone ? this.state.zone.id.toString() : null,
                             "village": this.state.address ? this.state.address : ' ',
-                            "relationshipType": this.state.relationShip.type ? this.state.relationShip.type : this.state.relationshipType
+                            "relationshipType": this.state.relationShip && this.state.relationShip.type ? this.state.relationShip.type : (this.state.relationshipType || null)
                         }
                         profileProvider.updateProfile(id, data).then(res => {
                             switch (res.code) {
