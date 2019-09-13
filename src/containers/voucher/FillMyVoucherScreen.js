@@ -9,7 +9,7 @@ import Form from "mainam-react-native-form-validate/Form";
 import voucherProvider from '@data-access/voucher-provider'
 import snackbar from '@utils/snackbar-utils';
 
-class FillMyVocher extends Component {
+class FillMyVocherScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -23,25 +23,43 @@ class FillMyVocher extends Component {
         if (!this.form.isValid()) {
             return;
         }
-        let booking = this.props.booking
-        let services = booking && booking.services ? booking.services : []
-        let priceServices = services.reduce((total, item) => {
-            return total + parseInt(item.price)
-        }, 0)
-        voucherProvider.fillInVoucher(this.state.voucher).then(res => {
-            if (res.data) {
-                if (priceServices < res.data.price) {
-                    snackbar.show('Số tiền ưu đãi không được vượt quá tổng số tiền dịch vụ đã chọn', 'danger')
-                } else {
-                    this.props.onPress && this.props.onPress(res.data)
-                }
-            } else {
-                snackbar.show("Mã ưu đãi không tồn tại hoặc đã hết hạn vui lòng thử mã khác", "danger")
-            }
-        }).catch(err => {
-            console.log('err: ', err.response);
+        let confirm = () => {
 
-        })
+            let booking = this.props.booking
+            let services = booking && booking.services ? booking.services : []
+            let priceServices = services.reduce((total, item) => {
+                return total + parseInt(item.price)
+            }, 0)
+            voucherProvider.fillInVoucher(this.state.voucher).then(res => {
+                if (this.props.parrent) {
+                    this.props.parrent.setState({ isLoading: false });
+                }
+
+                if (res.code == 0) {
+                    if (res.data) {
+                        if (priceServices < res.data.price) {
+                            snackbar.show('Số tiền ưu đãi không được vượt quá tổng số tiền dịch vụ đã chọn', 'danger')
+                        } else {
+                            this.props.onPress && this.props.onPress(res.data)
+                        }
+                        return;
+                    }
+                }
+                snackbar.show("Mã ưu đãi không tồn tại hoặc đã hết hạn vui lòng thử mã khác", "danger")
+            }).catch(err => {
+                if (this.props.parrent)
+                    this.props.parrent.setState({ isLoading: false })
+                console.log('err: ', err.response);
+
+            })
+        }
+
+        if (this.props.parrent)
+            this.props.parrent.setState({ isLoading: true }, () => {
+                confirm();
+            })
+        else
+            confirm();
 
     }
     render() {
@@ -126,4 +144,4 @@ const styles = StyleSheet.create({
     },
 
 });
-export default FillMyVocher;
+export default FillMyVocherScreen;
