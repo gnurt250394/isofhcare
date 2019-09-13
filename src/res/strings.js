@@ -62,8 +62,9 @@ module.exports = {
   update_to_up_case: "CẬP NHẬT",
   login_fail: 'Phiên đăng nhập đã hết hạn, xin vui lòng đăng nhập lại',
   setting: 'Cài đặt',
-  continue:'TIẾP TỤC',
-  setup_password:'Thiết lập mật khẩu',
+  continue: 'TIẾP TỤC',
+  setup_password: 'Thiết lập mật khẩu',
+  enter_email:"Nhập email",
   hospital: {
     BENH_VIEN_DAI_HOC_Y: 1
   },
@@ -140,8 +141,8 @@ module.exports = {
     require_phone: 'Vui lòng nhập số điện thoại',
     require_phone_not_found: 'Nhập SĐT không hợp lệ',
     register: 'Nếu bạn chưa có tài khoản hãy đăng ký ngay',
-    setup_password_success:'Thiết lập mật khẩu mới thành công',
-    phone_not_found:'Số điện thoại không tồn tại trong hệ thống'
+    setup_password_success: 'Thiết lập mật khẩu mới thành công',
+    phone_not_found: 'Số điện thoại không tồn tại trong hệ thống'
   },
   reality_account: {
     title: 'Xác thực tài khoản',
@@ -164,8 +165,8 @@ module.exports = {
     forgot_password: 'Quên mật khẩu?',
     register: 'Nếu chưa có tài khoản có thể đăng ký'
   },
-  register_screens:{
-    verification_fail:'Xác minh email không thành công'
+  register_screens: {
+    verification_fail: 'Xác minh email không thành công'
   },
   msg: {
     notification: {
@@ -297,9 +298,9 @@ module.exports = {
       email_not_null: 'Email không được bỏ trống',
       email_does_not_exits: 'Email không hợp lệ',
       email_apply_with_people_15_old: 'Vui lòng nhập email với người trên 15 tuổi',
-      enter_the_correct_date_format:'Nhập đúng định dạng ngày',
-      date_not_allow_under_15_old:'Không cho phép chọn dưới 15 tuổi',
-      date_not_allow_over_150_old:'Không cho phép chọn trên 150 tuổi'
+      enter_the_correct_date_format: 'Nhập đúng định dạng ngày',
+      date_not_allow_under_15_old: 'Không cho phép chọn dưới 15 tuổi',
+      date_not_allow_over_150_old: 'Không cho phép chọn trên 150 tuổi'
     },
     facility: {
       please_select_value_for_rating: "Vui lòng chọn giá trị đánh giá",
@@ -370,6 +371,14 @@ module.exports = {
       none_image: 'Không có ảnh nào'
     }
   },
+  payment: {
+    direct_transfer: 'Chuyển khoản trực tiếp',
+    VNPAY: 'VNPAY',
+    PAYOO: 'PAYOO',
+    PAYOO_installment: 'PAYOO - Trả góp 0%',
+    PAYOO_convenient_shop: 'PAYOO - Cửa hàng tiện ích',
+    pay_later: 'Thanh toán sau tại CSYT'
+  },
   booking: {
     select_profile: 'Chọn hồ sơ',
     require: 'Yêu cầu',
@@ -409,6 +418,38 @@ module.exports = {
     location_premission_content: "iSofHCare cần quyền truy cập vào vị trí của bạn",
     location_open: 'Bật vị trí trên thiết bị để tìm kiếm địa điểm gần bạn',
     location_around: 'Tìm kiếm gần tôi',
+    select_date_time: 'Chọn ngày và giờ',
+    booking_not_found: 'Không tồn tại đặt khám',
+    payment_not_permission: 'Tài khoản của bạn chưa thể thanh toán trả trước. Vui lòng liên hệ Admin để được giải quyết',
+    vendor_not_found: 'Vendor không tồn tại trong hệ thống',
+    create_payment_fail: 'Tạo thanh toán không thành công',
+    booking_invalid: 'Đặt khám đã tồn tại trong hệ thống',
+    add_voucher: 'THÊM MÃ ƯU ĐÃI',
+    address: "Địa chỉ",
+    symptom: 'Triệu chứng',
+    services: 'Dịch vụ',
+    sum_price: 'Tổng tiền',
+    type_payment: 'CHỌN PHƯƠNG THỨC THANH TOÁN',
+    CSYT:'Cơ sở y tế',
+    voucher:'Ưu đãi',
+    copy_success:'Sao chép thành công',
+    guide:{
+      part_1:'Bước 1: Điền thông tin chuyển khoản thụ hưởng:',
+      bank:'Ngân hàng',
+      bank_name:'TECHCOMBANK',
+      account_number:'Số tài khoản',
+      number:'19134033802010',
+      copy:'SAO CHÉP',
+      owner_name:'Tên chủ thẻ',
+      name_account:'Ngân hàng ISOFHCARE',
+      branch:'Chi nhánh',
+      branch_name:'TCB Ba Đình',
+      enter_content_payment:'Nhập nội dung chuyển khoản',
+      content_payment:'DK19134033802010',
+      part_2:'Bước 2: Thực hiện chuyển khoản:',
+      notifi:'iSofHcare sẽ thông báo cho bạn sau khi bạn chuyển khoản thành công.',
+      notifi2:'Để chắc chắn giao dịch chính xác, bạn hãy làm theo các bước hướng dẫn trên.'
+    },
     status: {
       not_select_payment: 'Chưa chọn hình thức',
       payment_isofh: 'Ví Isofh',
@@ -489,7 +530,8 @@ module.exports = {
     service: 'Dịch vụ',
     change_password: 'Đổi mật khẩu',
     result_ehealth: "KẾT QUẢ KHÁM",
-    result_ehealth_image: "KẾT QUẢ CHẨN ĐOÁN HÌNH ẢNH"
+    result_ehealth_image: "KẾT QUẢ CHẨN ĐOÁN HÌNH ẢNH",
+    verification_booking: 'Xác nhận lịch khám'
   },
   account_screens: {
     signin_or_signup: 'Đăng nhập/ Đăng Ký',
