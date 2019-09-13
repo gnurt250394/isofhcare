@@ -180,6 +180,14 @@ class ConfirmBookingScreen extends Component {
 
         this.setState({ isLoading: true }, () => {
             let memo = `THANH TOÁN ${this.getPaymentMethod()} - Đặt khám - ${booking.book.codeBooking} - ${serviceText} - ${this.state.hospital.hospital.name} - ${this.getBookingTime()} - ${this.state.profile.medicalRecords.name}`;
+            let voucher = null
+            if (this.state.voucher && this.state.voucher.code) {
+                voucher = {
+                    code: this.state.voucher.code,
+                    amount: this.state.voucher.price
+                }
+            }
+
             walletProvider.createOnlinePayment(
                 this.props.userApp.currentUser.id,
                 this.getPaymentMethod(),
@@ -194,7 +202,8 @@ class ConfirmBookingScreen extends Component {
                 booking.book.expireDatePayoo,
                 booking.timeInitBooking,
                 booking.book.createdDate,
-                booking.timeZone
+                booking.timeZone,
+                voucher
             ).then(s => {
                 let data = s.data;
                 let paymentId = data.id;
@@ -342,7 +351,14 @@ class ConfirmBookingScreen extends Component {
     retry(paymentId) {
         let booking = this.state.booking;
         this.setState({ isLoading: true }, () => {
-            walletProvider.retry(paymentId, this.getPaymentReturnUrl(), this.getPaymentMethodUi(), this.getPaymentMethod()).then(s => {
+            let voucher = null
+            if (this.state.voucher &&  this.state.voucher.code) {
+                voucher = {
+                    code: this.state.voucher.code,
+                    amount: this.state.voucher.price
+                }
+            }
+            walletProvider.retry(paymentId, this.getPaymentReturnUrl(), this.getPaymentMethodUi(), this.getPaymentMethod(), voucher).then(s => {
                 this.setState({ isLoading: false }, () => {
                     let data = s.data;
                     if (!data) {
