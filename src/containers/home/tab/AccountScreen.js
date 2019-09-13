@@ -305,7 +305,7 @@ class AccountScreen extends Component {
                       ? { color: "#000", fontWeight: "bold" }
                       : {}
                   ]}
-                >{constants.account_screens.setting}</Text>
+                >{constants.setting}</Text>
                 <ScaledImage style={{ tintColor: '#008D6F' }}
                   source={require("@images/new/ic_menu_setting.png")}
                   width={24}

@@ -40,24 +40,13 @@ class FingerSettingScreen extends Component {
   render() {
     return (
       <ActivityPanel
-        actionbarStyle={{
-          width:'100%',
-          borderBottomColor: "rgba(0,0,0,0.07)",
-          borderBottomWidth: 1
-        }}
-        style={{
-          flex: 1,
-        }}
-        title="Cài đặt"
+        actionbarStyle={styles.actionbar}
+        style={styles.container}
+        title={constants.setting}
         showFullScreen={true}
       >
         <View
-          style={{
-            width: "100%",
-            justifyContent: "center",
-            alignItems: "center",
-            marginVertical: 40
-          }}
+          style={styles.header}
         >
           <ScaledImage
             source={require("@images/new/fingerprint.png")}
@@ -67,15 +56,14 @@ class FingerSettingScreen extends Component {
         <View>
           <View style={styles.itemMenu}>
             <View style={{ width: "80%" }}>
-              <Text style={styles.itemText}>Đăng nhập bằng vân tay</Text>
+              <Text style={styles.itemText}>{constants.touch_id_screens.touch_login}</Text>
               <Text style={styles.itemTextNote}>
-                Lưu ý: Tất cả vân tay đã được đăng ký trong thiết bị đều có thể
-                đăng nhập
+               {constants.touch_id_screens.warning}
               </Text>
             </View>
             <Switch
               value={this.state.value}
-              size = {200}
+              size={200}
               color={"#02C39A"}
               onValueChange={this.onValueChange}
             />
@@ -85,7 +73,7 @@ class FingerSettingScreen extends Component {
           animationType="fade"
           transparent={true}
           isVisible={this.state.checkPass}
-          // onRequestClose={() => {}}
+        // onRequestClose={() => {}}
         >
           <CheckPassword
             onCancelClick={this.onCancelClick}
@@ -97,15 +85,15 @@ class FingerSettingScreen extends Component {
           animationType="fade"
           transparent={true}
           isVisible={this.state.isFinger}
-          // onRequestClose={() => {}}
+        // onRequestClose={() => {}}
         >
           <FingerprintPopup
             isLogin={false}
-            isDismiss = {this.state.isDismissFinger}
+            isDismiss={this.state.isDismissFinger}
             handlePopupDismissed={this.handleFingerprintDismissed}
             handlePopupDismissedDone={this.handlePopupDismissedDone}
             handleCheckFingerFalse={this.handleCheckFingerFalse}
-            isShowPass = {this.handleCheckFingerFalse}
+            isShowPass={this.handleCheckFingerFalse}
             style={styles.popup}
           />
         </Modal>
@@ -113,25 +101,25 @@ class FingerSettingScreen extends Component {
     );
   }
   handleCheckFingerFalse = () => {
-    if(this.state.isDismissFinger){
+    if (this.state.isDismissFinger) {
       this.setState({
         isFinger: false,
         password: "",
         checkPass: true
       });
-    }else{
-return
+    } else {
+      return
     }
   };
   handlePopupDismissedDone = () => {
-    if(this.state.isDismissFinger){
+    if (this.state.isDismissFinger) {
       dataCacheProvider.save("", constants.key.storage.KEY_FINGER, {
         userId: '',
         refreshToken: ''
       });
       NavigationService.navigate('home')
 
-    }else{
+    } else {
       this.setState({
         isFinger: false,
         value: true,
@@ -161,7 +149,7 @@ return
           this.setState({
             checkPass: false,
             isFinger: false,
-            value:false,
+            value: false,
             password: ""
           });
           dataCacheProvider.save("", constants.key.storage.KEY_FINGER, {
@@ -169,14 +157,14 @@ return
             refreshToken: ""
           });
           return
-        } if(this.state.value == true){
-            this.setState({
-              checkPass: false,
-              isFinger: true,
-              password: "",
-              value: true
-            });
-          
+        } if (this.state.value == true) {
+          this.setState({
+            checkPass: false,
+            isFinger: true,
+            password: "",
+            value: true
+          });
+
         }
         this.props.dispatch(redux.userLogin(user));
       } else {
@@ -201,10 +189,10 @@ return
         value: false,
         password: "",
         isFinger: true,
-        isDismissFinger:true,
+        isDismissFinger: true,
 
       });
-    
+
     } else {
       this.setState({
         value: true,
@@ -217,6 +205,20 @@ return
 const DEVICE_WIDTH = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
+  header: {
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 40
+  },
+  container: {
+    flex: 1,
+  },
+  actionbar: {
+    width: '100%',
+    borderBottomColor: "rgba(0,0,0,0.07)",
+    borderBottomWidth: 1
+  },
   itemMenu: {
     flexDirection: "row",
     borderBottomColor: "rgba(0,0,0,0.07)",

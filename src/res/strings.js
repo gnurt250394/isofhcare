@@ -60,7 +60,10 @@ module.exports = {
   none_service: 'Không tìm thấy dịch vụ nào phù hợp',
   none_service_type_match: 'Không tìm thấy loại dịch vụ nào phù hợp ',
   update_to_up_case: "CẬP NHẬT",
-  login_fail:'Phiên đăng nhập đã hết hạn, xin vui lòng đăng nhập lại',
+  login_fail: 'Phiên đăng nhập đã hết hạn, xin vui lòng đăng nhập lại',
+  setting: 'Cài đặt',
+  continue:'TIẾP TỤC',
+  setup_password:'Thiết lập mật khẩu',
   hospital: {
     BENH_VIEN_DAI_HOC_Y: 1
   },
@@ -130,36 +133,56 @@ module.exports = {
       KEY_HAS_UPDATE_NEW_VERSION: "KEY_HAS_UPDATE_NEW_VERSION"
     }
   },
-  change_password_screens:{
-    password_new:'Nhập mật khẩu mới',
-    password_new_2:'Xác nhận mật khẩu mới',
-    confirm_pass:'Xác nhận mật khẩu'
+  change_password_screens: {
+    password_new: 'Nhập mật khẩu mới',
+    password_new_2: 'Xác nhận mật khẩu mới',
+    confirm_pass: 'Xác nhận mật khẩu',
+    require_phone: 'Vui lòng nhập số điện thoại',
+    require_phone_not_found: 'Nhập SĐT không hợp lệ',
+    register: 'Nếu bạn chưa có tài khoản hãy đăng ký ngay',
+    setup_password_success:'Thiết lập mật khẩu mới thành công',
+    phone_not_found:'Số điện thoại không tồn tại trong hệ thống'
   },
-  reality_account:{
-    title:'Xác thực tài khoản',
-    require_otp:'Vui lòng nhập mã OTP',
-    require_length:'Yêu cầu nhập đủ 6 ký tự'
+  reality_account: {
+    title: 'Xác thực tài khoản',
+    require_otp: 'Vui lòng nhập mã OTP',
+    require_length: 'Yêu cầu nhập đủ 6 ký tự'
   },
-  touch_id_screens:{
-    touch_not_found:'Bạn chưa đăng ký vân tay trên tài khoản này',
-    touch_error:'Thử lại \n Sử dụng Touch ID để mở khoá Isofhcare '
+  touch_id_screens: {
+    touch_not_found: 'Bạn chưa đăng ký vân tay trên tài khoản này',
+    touch_error: 'Thử lại \n Sử dụng Touch ID để mở khoá Isofhcare ',
+    header: 'Touch ID cho "IsofHcare"',
+    back: 'Quay lại',
+    details: ' Sử dụng id cảm ứng của bạn để truy cập nhanh hơn,\n dễ dàng đăng nhập vào tài khoản của bạn',
+    touch_login: 'Đăng nhập bằng vân tay',
+    warning: 'Lưu ý: Tất cả vân tay đã được đăng ký trong thiết bị đều có thể đăng nhập'
+  },
+  login_screens: {
+    verification_fail: 'Xác minh số điện thoại không thành công',
+    require_phone: 'Số điện thoại không được bỏ trống',
+    phone_invalid: "SĐT không hợp lệ",
+    forgot_password: 'Quên mật khẩu?',
+    register: 'Nếu chưa có tài khoản có thể đăng ký'
+  },
+  register_screens:{
+    verification_fail:'Xác minh email không thành công'
   },
   msg: {
     notification: {
       new_notification: "Bạn có một thông báo mới",
-      confirm_delete_all_notification:"Bạn chắc chắn muốn xóa hết các thông báo?",
-      file_not_result:'Hồ sơ này chưa có kết quả',
-      error_retry:'Có lỗi xảy ra, xin vui lòng thử lại',
-      medical_records_not_found:'Y bạ chưa xác định',
-      file_share_expired:'Hồ sơ chia sẻ đến bạn đã hết thời gian',
-      ports_not_found:'Lỗi, bài viết không tồn tại',
-      type:{
-        ask_requests:'Tư vấn - đặt câu hỏi',
-        booking:'Đặt khám',
-        get_quick_number:'Lấy số nhanh',
+      confirm_delete_all_notification: "Bạn chắc chắn muốn xóa hết các thông báo?",
+      file_not_result: 'Hồ sơ này chưa có kết quả',
+      error_retry: 'Có lỗi xảy ra, xin vui lòng thử lại',
+      medical_records_not_found: 'Y bạ chưa xác định',
+      file_share_expired: 'Hồ sơ chia sẻ đến bạn đã hết thời gian',
+      ports_not_found: 'Lỗi, bài viết không tồn tại',
+      type: {
+        ask_requests: 'Tư vấn - đặt câu hỏi',
+        booking: 'Đặt khám',
+        get_quick_number: 'Lấy số nhanh',
         ehealth: "Y bạ điện tử",
       },
-      notifi:"THÔNG BÁO"
+      notifi: "THÔNG BÁO"
     },
     app: {
       check_connection: "Vui lòng kiểm tra lại kết nối internet",
@@ -169,7 +192,7 @@ module.exports = {
       text_without_500: 'Không cho phép nhập quá 500 kí tự',
       err_try_again: 'Có lỗi, xin vui lòng thử lại',
       dob_must_lesser_150: 'Không cho phép chọn lớn hơn 150 tuổi',
-      check_update:'Đang kiểm tra cập nhật'
+      check_update: 'Đang kiểm tra cập nhật'
     },
     upload: {
       upload_image_error: "Upload ảnh không thành công"
@@ -273,7 +296,10 @@ module.exports = {
       input_name: "Nhập họ tên",
       email_not_null: 'Email không được bỏ trống',
       email_does_not_exits: 'Email không hợp lệ',
-      email_apply_with_people_15_old: 'Vui lòng nhập email với người trên 15 tuổi'
+      email_apply_with_people_15_old: 'Vui lòng nhập email với người trên 15 tuổi',
+      enter_the_correct_date_format:'Nhập đúng định dạng ngày',
+      date_not_allow_under_15_old:'Không cho phép chọn dưới 15 tuổi',
+      date_not_allow_over_150_old:'Không cho phép chọn trên 150 tuổi'
     },
     facility: {
       please_select_value_for_rating: "Vui lòng chọn giá trị đánh giá",
@@ -472,13 +498,16 @@ module.exports = {
     pay_history: 'Lịch sử giao dịch',
     drug_odered: 'Thuốc đã đặt mua',
     examination_schedule: 'Lịch khám',
-    setting: 'Cài đặt',
     forgot_password: 'Đổi mật khẩu',
     about_isofh: 'Về iSofH',
     support: 'Hỗ trợ',
     report: 'Báo lỗi',
     terms_of_use: 'Điều khoản sử dụng',
-    logout: 'Đăng xuất'
+    logout: 'Đăng xuất',
+    info: 'Thông tin cá nhân',
+    not_email: 'Chưa Có Email',
+    not_phone: 'Chưa Có Số Điện Thoại',
+    warning: 'khi thay đổi email, quý khách cần đăng nhập email mới để kích hoạt lại tài khoản'
   },
   notification_screenss: {
     none_data: 'Hiện tại chưa có thông tin'

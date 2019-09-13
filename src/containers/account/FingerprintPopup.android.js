@@ -14,7 +14,7 @@ import ScaledImage from "mainam-react-native-scaleimage";
 import dataCacheProvider from "../../data-access/datacache-provider";
 import userProvider from "@data-access/user-provider";
 import snackbar from "@utils/snackbar-utils";
-import constants from "../../res/strings";
+import constants from "@resources/strings";
 import redux from "@redux-store";
 import NavigationService from "@navigators/NavigationService";
 
@@ -114,7 +114,7 @@ class FingerprintPopup extends Component {
         .catch(error => {
           console.log(error)
           this.setState({
-            errorMessage: "Thử lại \n Sử dụng Touch ID để mở khoá Isofhcare ",
+            errorMessage:constants.touch_id_screens.touch_error,
             error: true
           });
           this.description.shake();
@@ -134,7 +134,7 @@ class FingerprintPopup extends Component {
       this.description.shake();
     }else{
       console.log('esl',this.props.isDismiss)
-      this.setState({ errorMessage: "Thử lại \n "+"Sử dụng Touch ID để mở khoá Isofhcare ", error: true });
+      this.setState({ errorMessage:constants.touch_id_screens.touch_error, error: true });
       this.description.shake();
     }
       
@@ -153,7 +153,7 @@ class FingerprintPopup extends Component {
             // source={require('./assets/finger_print.png')}
           />
 
-          <Text style={styles.heading}>Touch ID cho "IsofHcare"</Text>
+          <Text style={styles.heading}>{constants.touch_id_screens.header}</Text>
           <ShakingText
             ref={instance => {
               this.description = instance;
@@ -164,7 +164,7 @@ class FingerprintPopup extends Component {
             ]}
           >
             {errorMessage ||
-              "Sử dụng Touch ID để mở khoá Isofhcare"}
+              constants.touch_id_screens.touch_error}
           </ShakingText>
           <ScaledImage
             source={require("@images/new/fingerprint.png")}
@@ -174,7 +174,7 @@ class FingerprintPopup extends Component {
             style={styles.buttonContainer}
             onPress={handlePopupDismissed}
           >
-            <Text style={styles.buttonText}>Quay lại</Text>
+            <Text style={styles.buttonText}>{constants.touch_id_screens.back}</Text>
           </TouchableOpacity>
         </View>
       </View>
