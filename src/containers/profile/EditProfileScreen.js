@@ -362,7 +362,6 @@ class EditProfileScreen extends Component {
         return (
             <ActivityPanel
                 icBack={require('@images/new/left_arrow_white.png')}
-                titleStyle={styles.txTitle}
                 title={'SỬA THÔNG TIN'}
                 iosBarStyle={'light-content'}
                 actionbarStyle={styles.actionbarStyle}
@@ -370,6 +369,7 @@ class EditProfileScreen extends Component {
                 menuButton={<TouchableOpacity style = {{padding:5}} onPress={this.onCreateProfile}>
                     <Text style = {{color:'#fff',marginRight:25,fontSize:14,fontWeight:'800'}}>Lưu</Text>
                 </TouchableOpacity>}
+                 titleStyle={styles.txTitle}
             >
                 <ScrollView keyboardShouldPersistTaps='handled' style={{ flex: 1, paddingVertical: 5 }}>
                     <View style={styles.container}>
