@@ -20,38 +20,31 @@ export default class CheckPassword extends Component {
       password: ""
     };
   }
-
+  getComponent = (value, onChangeText, onFocus, onBlur, isError) => {
+    return (
+      <FloatingLabel
+        placeholderStyle={styles.placeFloat}
+        value={value}
+        underlineColor={"#02C39A"}
+        inputStyle={styles.textInputStyle}
+        labelStyle={styles.labelStyle}
+        placeholder={constants.password}
+        onChangeText={onChangeText}
+        onBlur={onBlur}
+        onFocus={onFocus}
+        secureTextEntry={true}
+      />
+    )
+  }
   render() {
     return (
       <View style={styles.container}>
         <View style={[styles.contentContainer]}>
-        <Text style = {{marginVertical:10,fontSize:20,fontWeight:'bold'}}>{constants.enter_password}</Text>
-          <Form style ={{width:'60%',}} ref={ref => (this.form = ref)}>
+          <Text style={styles.enterPass}>{constants.enter_password}</Text>
+          <Form style={styles.form} ref={ref => (this.form = ref)}>
             <Field clearWhenFocus={true}>
               <TextField
-                getComponent={(
-                  value,
-                  onChangeText,
-                  onFocus,
-                  onBlur,
-                  isError
-                ) => (
-                  <FloatingLabel
-                    placeholderStyle={{
-                      fontSize: 16,
-                      fontWeight: "200"
-                    }}
-                    value={value}
-                    underlineColor={"#02C39A"}
-                    inputStyle={styles.textInputStyle}
-                    labelStyle={styles.labelStyle}
-                    placeholder={constants.password}
-                    onChangeText={onChangeText}
-                    onBlur={onBlur}
-                    onFocus={onFocus}
-                    secureTextEntry={true}
-                  />
-                )}
+                getComponent={this.getComponent}
                 onChangeText={this.props.onChangeText}
                 errorStyle={styles.errorStyle}
                 validate={{
@@ -63,50 +56,68 @@ export default class CheckPassword extends Component {
                   }
                 }}
                 inputStyle={styles.input}
-                placeholder={"Nhập mật khẩu"}
+                placeholder={constants.enter_password}
                 autoCapitalize={"none"}
               />
             </Field>
-            <View style={{ flexDirection: "row", marginVertical: 40,justifyContent:'space-around',backgroundColor:"#fff" }}>
+            <View style={styles.containerButton}>
               <TouchableOpacity
                 onPress={this.props.onCancelClick}
-                style={{ alignItems: "center", justifyContent:'center',flex: 1,width:90,height:35 ,marginHorizontal:10,borderRadius:5}}
+                style={styles.button}
               >
                 <Text
                   numberOfLines={1}
                   ellipsizeMode="tail"
-                  style={{
-                    color: "#rgb(2,195,154)",
-                    paddingRight: 5,
-                    fontSize: 14
-                  }}
-                >
-                  Cancel
-                </Text>
+                  style={[{ color: "rgb(2,195,154)" }, styles.txtButton]}
+                >Cancel</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress ={this.props.onSetFinger} style={{borderRadius:5, alignItems: "center",justifyContent:'center', flex: 1,width:90,height:35,backgroundColor:"rgb(2,195,154)",marginHorizontal:10 }}>
+              <TouchableOpacity onPress={this.props.onSetFinger} style={[styles.button, { backgroundColor: "rgb(2,195,154)", }]}>
                 <Text
                   numberOfLines={1}
                   ellipsizeMode="tail"
-                  style={{
-                    color: "#fff",
-                    paddingRight: 5,
-                    fontSize: 14
-                  }}
-                >
-                  Ok
-                </Text>
+                  style={[{ color: "#fff" }, styles.txtButton]}
+                >Ok</Text>
               </TouchableOpacity>
             </View>
           </Form>
-          </View>
         </View>
+      </View>
     );
   }
 
 }
 const DEVICE_WIDTH = Dimensions.get("window").width;
 const styles = StyleSheet.create({
+  txtButton: {
+
+    paddingRight: 5,
+    fontSize: 14
+  },
+  button: {
+    alignItems: "center",
+    justifyContent: 'center',
+    flex: 1,
+    width: 90,
+    height: 35,
+    marginHorizontal: 10,
+    borderRadius: 5
+  },
+  containerButton: {
+    flexDirection: "row",
+    marginVertical: 40,
+    justifyContent: 'space-around',
+    backgroundColor: "#fff"
+  },
+  placeFloat: {
+    fontSize: 16,
+    fontWeight: "200"
+  },
+  form: { width: '60%', },
+  enterPass: {
+    marginVertical: 10,
+    fontSize: 20,
+    fontWeight: 'bold'
+  },
   container: {
     // position: 'absolute',
     // backgroundColor: "#858585",
@@ -159,7 +170,7 @@ const styles = StyleSheet.create({
     fontSize: 20
   },
   input: {
-      maxWidth:300,
+    maxWidth: 300,
     paddingRight: 30,
     backgroundColor: "#FFF",
     width: DEVICE_WIDTH - 40,
