@@ -60,6 +60,8 @@ import ConfirmBookingScreen from "@containers/booking/ConfirmBookingScreen";
 import CreateBookingSuccessScreen from "@containers/booking/CreateBookingSuccessScreen";
 import PaymentBookingErrorScreen from "@containers/booking/PaymentBookingErrorScreen";
 import DetailsHistoryScreen from "@containers/booking/DetailsHistoryScreen"
+import CreateBookingWithPaymentScreen from "@containers/booking/CreateBookingWithPaymentScreen"
+
 
 import CreateProfileScreen from "@containers/profile/CreateProfileScreen";
 import PaymentWithVNPayScreen from "@containers/payment/PaymentWithVNPayScreen";
@@ -293,6 +295,7 @@ const RootNavigator = createStackNavigator(
     filterSpecialist: { screen: FilterSpecialistScreen },
     selectProfile: { screen: SelectProfileScreen },
     patientHistory: { screen: PatientHistoryScreen },
+    createBookingWithPayment: { screen: CreateBookingWithPaymentScreen },
 
     //get Ticket
     getTicket: GetTicketNavigation,

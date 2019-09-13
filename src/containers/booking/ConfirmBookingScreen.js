@@ -48,23 +48,41 @@ class ConfirmBookingScreen extends Component {
     componentDidMount() {
         console.log(this.state.hospital, 'sssssssss');
     }
-    confirmPayment(booking, bookingId) {
+    confirmPayment(booking, bookingId, paymentMethod) {
         booking.hospital = this.state.hospital;
         booking.profile = this.state.profile;
         booking.payment = this.state.paymentMethod;
         this.setState({ isLoading: true }, () => {
-            bookingProvider.confirmPayment(bookingId).then(s => {
+            bookingProvider.confirmPayment(bookingId, paymentMethod).then(s => {
                 switch (s.code) {
+
                     case 0:
-                        this.props.navigation.navigate("homeTab", {
-                            navigate: {
-                                screen: "createBookingSuccess",
-                                params: {
-                                    booking,
-                                    service: this.state.service
+                        if (paymentMethod) {
+                            this.props.navigation.navigate("homeTab", {
+                                navigate: {
+                                    screen: "createBookingWithPayment",
+                                    params: {
+                                        booking,
+                                        service: this.state.service,
+                                        voucher: this.state.voucher
+
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
+                        else {
+                            this.props.navigation.navigate("homeTab", {
+                                navigate: {
+                                    screen: "createBookingSuccess",
+                                    params: {
+                                        booking,
+                                        service: this.state.service,
+                                        voucher: this.state.voucher
+
+                                    }
+                                }
+                            });
+                        }
                         break;
                     case 5:
                         this.setState({ isLoading: false }, () => {
@@ -78,6 +96,7 @@ class ConfirmBookingScreen extends Component {
             });
         })
     }
+
     getPaymentMethod() {
         switch (this.state.paymentMethod) {
             case 1:
@@ -89,6 +108,8 @@ class ConfirmBookingScreen extends Component {
                 return "PAYOO";
             case 4:
                 return "PAYOO_BILL";
+            case 6:
+                return "";
         }
     }
     getPaymentReturnUrl() {
@@ -403,8 +424,14 @@ class ConfirmBookingScreen extends Component {
     createBooking() {
         connectionUtils.isConnected().then(s => {
             this.setState({ isLoading: true }, () => {
-                if (this.state.paymentMethod == 2)
+                if (this.state.paymentMethod == 2) {
                     this.confirmPayment(this.state.booking, this.state.booking.book.id);
+                    return
+                }
+                if (this.state.paymentMethod == 6) {
+                    this.confirmPayment(this.state.booking, this.state.booking.book.id, this.state.paymentMethod);
+                    return
+                }
                 else {
                     this.getPaymentLink(this.state.booking);
                 }
@@ -502,6 +529,14 @@ class ConfirmBookingScreen extends Component {
                     {
                         (this.state.service && this.state.service.length) ?
                             <React.Fragment>
+                                <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 6 })}>
+                                    <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
+                                        {this.state.paymentMethod == 6 &&
+                                            <View style={{ backgroundColor: 'rgb(2,195,154)', width: 10, height: 10, borderRadius: 5 }}></View>
+                                        }
+                                    </View>
+                                    <Text style={styles.ckeckthanhtoan}>Chuyển khoản trực tiếp</Text>
+                                </TouchableOpacity>
                                 <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 1 })}>
                                     <View style={{ width: 20, height: 20, borderRadius: 15, justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'rgb(2,195,154)' }}>
                                         {this.state.paymentMethod == 1 &&

@@ -80,6 +80,8 @@ class DetailsHistoryScreen extends Component {
         return <Text style={styles.paymentHospital}>{constants.booking.status.payment_payoo}</Text>;
       case 5:
         return <Text style={styles.paymentHospital}>{constants.booking.status.payment_payoo2}</Text>;
+      case 6:
+        return <Text style={styles.paymentHospital}>{'Chuyển khoản trực tiếp'}</Text>;
 
     }
   };
@@ -218,7 +220,7 @@ class DetailsHistoryScreen extends Component {
                   <TouchableOpacity onPress={this.onQrClick} style={{ marginRight: 10 }}>
                     <QRCode
                       value={this.state.booking.codeBooking ? this.state.booking.codeBooking : 0}
-                      logo={require('@images/new/logo.png') }
+                      logo={require('@images/new/logo.png')}
                       logoSize={20}
                       size={80}
                       logoBackgroundColor='transparent'

@@ -515,7 +515,8 @@ module.exports = {
       confirmPay: isofhcare_service + "booking/confirm-pay",
       detail: isofhcare_service + "booking/get-detail",
       getByAuthor: isofhcare_service + "booking/get-by-author",
-      get_list_share_user: isofhcare_service + "booking/list-share-user"
+      get_list_share_user: isofhcare_service + "booking/list-share-user",
+      // pay_tranfer: isofhcare_service + 'booking/payTranfer'
     },
     question: {
       create: isofhcare_service + "post/create",
@@ -591,7 +592,7 @@ module.exports = {
       update_data_user: isofhcare_service + 'patient-history-booking/update-data-note',
       search_profile_user: isofhcare_service + 'user/search',
       share_with_profile: isofhcare_service + 'booking/share-user',
-      add_ehealth_with_code:isofhcare_service + 'patient-history-booking/verify'
+      add_ehealth_with_code: isofhcare_service + 'patient-history-booking/verify'
     },
     home: {
       get_list_drug: isofhcare_service + '/medicine/list-medicine-top',
