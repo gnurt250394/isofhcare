@@ -560,7 +560,8 @@ module.exports = {
       confirmPay: isofhcare_service + "booking/confirm-pay",
       detail: isofhcare_service + "booking/get-detail",
       getByAuthor: isofhcare_service + "booking/get-by-author",
-      get_list_share_user: isofhcare_service + "booking/list-share-user"
+      get_list_share_user: isofhcare_service + "booking/list-share-user",
+      // pay_tranfer: isofhcare_service + 'booking/payTranfer'
     },
     question: {
       create: isofhcare_service + "post/create",
