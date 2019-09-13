@@ -41,13 +41,14 @@ class CreateBookingWithPaymentScreen extends Component {
         Clipboard.setString('22010000749786')
         snackbar.show('Sao chép thành công', 'success')
     }
-    onCopyContents = () => {
-        Clipboard.setString('22010000749786')
+    onCopyContents = (codeBooking) => {
+        Clipboard.setString('DK ' + codeBooking)
         snackbar.show('Sao chép thành công', 'success')
 
     }
     render() {
         let booking = this.props.navigation.state.params.booking;
+        console.log(booking, 'bookingbooking')
         let service = this.props.navigation.state.params.service || [];
         if (!booking || !booking.profile || !booking.hospital || !booking.hospital.hospital || !booking.book) {
             this.props.navigation.pop();
@@ -148,7 +149,7 @@ class CreateBookingWithPaymentScreen extends Component {
                         <View style={styles.paymentInfo}>
                             <Text style={styles.txStep1}>Bước 1: Điền thông tin chuyển khoản thụ hưởng:</Text>
                             <View><View style={styles.viewBank}><View style={styles.viewInfoBank}><Text style={styles.txBank}>Ngân hàng:</Text><Text style={styles.txBankName}>TECHCOMBANK</Text></View>
-                                <Text style={styles.txBank} >Số tài khoản</Text></View>
+                                <Text style={[styles.txBank, { marginTop: 5 }]} >Số tài khoản:</Text></View>
                                 <View style={styles.bankInfo}>
                                     <View style={styles.viewBankNumber}>
                                         <Text style={styles.txNumber}>19134033802010</Text>
@@ -158,16 +159,16 @@ class CreateBookingWithPaymentScreen extends Component {
                                     </TouchableOpacity>
                                 </View>
                                 <View>
-                                    <View style={styles.viewInfoBank}><Text style={styles.txBank}>Tên chủ thẻ:</Text><Text style={styles.txBankName}>Ngân hàng ISOFHCARE</Text></View>
-                                    <View style={styles.viewInfoBank}><Text style={styles.txBank}>Chi nhánh:</Text><Text style={styles.txBankName}>TCB Ba Đình</Text></View>
-                                    <Text style={styles.txBank}>Nhập nội dung chuyển khoản</Text>
+                                    <View style={styles.viewInfoBank}><Text style={styles.txBank}>Tên chủ thẻ:</Text><Text style={styles.txBankName}>CONG TY TNHH MOT THANH VIEN ISOFHCARE</Text></View>
+                                    <View style={styles.viewInfoBank}><Text style={styles.txBank}>Chi nhánh:</Text><Text style={styles.txBankName}>TECHCOMBANK Ba Đình</Text></View>
+                                    <View style={{ marginTop: 5 }}><Text style={styles.txBank}>Nhập nội dung chuyển khoản:</Text></View>
                                 </View>
 
                                 <View style={styles.bankInfo}>
                                     <View style={styles.viewBankNumber}>
-                                        <Text style={styles.txNumber}>DK19134033802010</Text>
+                                        <Text style={styles.txNumber}>DK {booking.book.codeBooking}</Text>
                                     </View>
-                                    <TouchableOpacity onPress={this.onCopyContents} style={styles.btnCopy}>
+                                    <TouchableOpacity onPress={() => this.onCopyContents(booking.book.codeBooking)} style={styles.btnCopy}>
                                         <Text style={styles.txCopy}>SAO CHÉP</Text>
                                     </TouchableOpacity>
                                 </View></View>
@@ -345,7 +346,8 @@ const styles = StyleSheet.create({
     txStep1: {
         color: '#000',
         fontSize: 14,
-        textAlign: 'left'
+        textAlign: 'left',
+        fontWeight:'bold'
     },
     txBank: {
         color: '#000',
@@ -353,7 +355,7 @@ const styles = StyleSheet.create({
     },
     txBankName: {
         fontSize: 14,
-        fontWeight: '800',
+        fontWeight: 'bold',
         color: '#02c39a',
         marginLeft: 5,
 
@@ -362,16 +364,20 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginVertical: 10,
+        flex: 1,
+        justifyContent:'center',
+        paddingHorizontal:10
     },
     viewBankNumber: {
-        height: 41, paddingHorizontal: 5, borderRadius: 5, borderColor: 'gray', borderWidth: 1, justifyContent: 'center', alignItems: 'center', minWidth: '60%'
+        height: 41, paddingHorizontal: 5, borderRadius: 5, borderColor: 'gray', borderWidth: 1, justifyContent: 'center', alignItems: 'center', width: '60%'
     },
     btnCopy: {
-        height: 41, paddingHorizontal: 10, backgroundColor: '#02c39a', marginHorizontal: 10, justifyContent: 'center', alignItems: 'center', borderRadius: 5
+        height: 41, paddingHorizontal: 10, backgroundColor: '#02c39a', marginHorizontal: 10, justifyContent: 'center', alignItems: 'center', borderRadius: 5,width:'40%'
     },
     txNumber: {
         color: '#02c39a',
-        fontSize: 14
+        fontSize: 14,
+        fontWeight: 'bold'
     },
     txCopy: {
         fontSize: 14,
@@ -381,11 +387,11 @@ const styles = StyleSheet.create({
         color: 'red',
         fontSize: 14,
         textAlign: 'left',
-        marginTop: 10,
+        marginTop: 5,
     },
-    viewInfoBank: { flexDirection: 'row', marginVertical: 10 },
-    notePay: { marginTop:5, fontSize: 14, color: 'gray',textAlign: 'left', },
-    viewBank: { justifyContent: 'center',}
+    viewInfoBank: { flexDirection: 'row', marginTop: 5 },
+    notePay: { marginTop: 5, fontSize: 14, color: '#000', textAlign: 'left', },
+    viewBank: { justifyContent: 'center', }
 
 })
 export default connect(mapStateToProps)(CreateBookingWithPaymentScreen);

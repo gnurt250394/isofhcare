@@ -64,7 +64,7 @@ class LoginScreen extends Component {
 			RNAccountKit.loginWithPhone().then(async token => {
 				console.log(token);
 				if (!token) {
-					snackbar.show("Xác minh số điện thoại không thành công", "danger");
+					snackbar.show(constants.login_screens.verification_fail, "danger");
 				} else {
 					let account = await RNAccountKit.getCurrentAccount();
 					if (account && account.phoneNumber) {
@@ -78,7 +78,7 @@ class LoginScreen extends Component {
 							nextScreen: this.nextScreen
 						});
 					} else {
-						snackbar.show("Xác minh số điện thoại không thành công", "danger");
+						snackbar.show(constants.login_screens.verification_fail, "danger");
 					}
 				}
 			});
@@ -145,7 +145,7 @@ class LoginScreen extends Component {
 			RNAccountKit.loginWithPhone().then(async token => {
 				console.log(token);
 				if (!token) {
-					snackbar.show("Xác minh số điện thoại không thành công", "danger");
+					snackbar.show(constants.login_screens.verification_fail, "danger");
 				} else {
 					let account = await RNAccountKit.getCurrentAccount();
 					if (account && account.phoneNumber) {
@@ -157,7 +157,7 @@ class LoginScreen extends Component {
 							}
 						});
 					} else {
-						snackbar.show("Xác minh số điện thoại không thành công", "danger");
+						snackbar.show(constants.login_screens.verification_fail, "danger");
 					}
 				}
 			});
@@ -175,29 +175,35 @@ class LoginScreen extends Component {
 			secureTextEntry: !this.state.secureTextEntry
 		})
 	}
+	onChangeText = (state) => (value) => {
+		this.setState({ [state]: value })
+	}
 	render() {
 		return (
 			<ActivityPanel
-				title="Đăng nhập"
+				title={constants.login}
 				isLoading={this.state.isLoading}
 			>
 				<ScrollView
 					showsVerticalScrollIndicator={false}
-					style={{ flex: 1 }}
+					style={styles.container}
 					keyboardShouldPersistTaps="handled"
 				>
 					<KeyboardAvoidingView behavior="padding">
-						<View style={{ flex: 1 }}>
-							<View style={{ margin: 22 }}>
-								<Card style={{ padding: 22, paddingTop: 10, borderRadius: 5, marginTop: 60 }}>
+						<View style={styles.container}>
+							<View style={styles.margin22}>
+								<Card style={styles.card}>
 									<Form ref={ref => (this.form = ref)}>
 										<Field clearWhenFocus={true}>
 											<TextField
 												getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-													placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'}
+													placeholderStyle={styles.placeFloat}
+													value={value}
+													underlineColor={'#02C39A'}
 													inputStyle={styles.textInputStyle}
-													labelStyle={styles.labelStyle} placeholder={constants.phone} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
-												onChangeText={s => this.setState({ email: s })}
+													labelStyle={styles.labelStyle} placeholder={constants.phone}
+													onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
+												onChangeText={this.onChangeText('email')}
 												errorStyle={styles.errorStyle}
 												validate={{
 													rules: {
@@ -205,8 +211,8 @@ class LoginScreen extends Component {
 														phone: true
 													},
 													messages: {
-														required: "Số điện thoại không được bỏ trống",
-														phone: "SĐT không hợp lệ"
+														required: constants.login_screens.require_phone,
+														phone: constants.login_screens.phone_invalid
 													}
 												}}
 
@@ -216,16 +222,16 @@ class LoginScreen extends Component {
 											<Field style={styles.inputPass}>
 												<TextField
 													getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-														placeholderStyle={{ fontSize: 16, fontWeight: '200' }}
+														placeholderStyle={styles.placeFloat}
 														value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.password} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} secureTextEntry={this.state.secureTextEntry} />}
-													onChangeText={s => this.setState({ password: s })}
+													onChangeText={this.onChangeText('password')}
 													errorStyle={styles.errorStyle}
 													validate={{
 														rules: {
 															required: true,
 														},
 														messages: {
-															required: "Mật khẩu không được bỏ trống"
+															required: constants.password_not_null
 														}
 													}}
 													// inputStyle={styles.input}
@@ -235,45 +241,50 @@ class LoginScreen extends Component {
 
 												</TextField>
 												{
-													this.state.password ? (this.state.secureTextEntry ? (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 40, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 40, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
+													this.state.password ? (this.state.secureTextEntry ? (<TouchableOpacity
+														style={styles.buttonHide}
+														onPress={this.onShowPass}>
+														<ScaleImage
+															style={styles.iconHide}
+															resizeMode={'contain'} height={20}
+															source={require('@images/new/ic_hide_pass.png')}>
+														</ScaleImage>
+													</TouchableOpacity>) : (<TouchableOpacity
+														style={styles.buttonHide}
+														onPress={this.onShowPass}>
+														<ScaleImage
+															style={styles.iconHide} height={20} source={require('@images/new/ic_show_pass.png')}>
+														</ScaleImage>
+													</TouchableOpacity>)) : (<Field></Field>)
 												}
 											</Field>
 										</Field>
-										<View style={{ flexDirection: 'row', marginTop: 15 }}>
+										<View style={styles.containerFooter}>
 											<TouchableOpacity
 												onPress={this.forgotPassword.bind(this)}
-												style={{ alignItems: "flex-start", flex: 1 }}
+												style={styles.buttonForgotPass}
 											>
 												<Text
 													numberOfLines={1}
 													ellipsizeMode="tail"
-													style={{
-														color: '#028090',
-														paddingRight: 5,
-														fontSize: 14
-													}}>
-													Quên mật khẩu?
-													</Text>
+													style={styles.txtForgotPass}>
+													{constants.login_screens.forgot_password}
+												</Text>
 											</TouchableOpacity>
 											<TouchableOpacity
 												onPress={this.login.bind(this)}
-												style={{ alignItems: "center", justifyContent: 'flex-end', flex: 1, flexDirection: 'row' }}
+												style={styles.buttonLogin}
 											>
-												<Text
-													style={{
-														color: "rgb(2,195,154)",
-														fontSize: 14,
-														fontWeight: 'bold',
-														marginRight: 5
-													}}
-												>Đăng nhập</Text><ScaleImage source={require("@images/new/right_arrow.png")} height={10} />
+												<Text style={styles.txtLogin}>{constants.login}</Text>
+												<ScaleImage source={require("@images/new/right_arrow.png")} height={10} />
 											</TouchableOpacity>
 										</View>
 									</Form>
 								</Card>
 							</View>
 							<SocialNetwork />
-							<Text style={{ color: '#000', textAlign: 'center', marginVertical: 20 }}>Nếu chưa có tài khoản có thể đăng ký <Text onPress={this.register.bind(this)} style={{ color: '#1EA3EA' }}>tại đây</Text></Text>
+							<Text style={{ color: '#000', textAlign: 'center', marginVertical: 20 }}>{constants.login_screens.register} <Text
+								onPress={this.register.bind(this)} style={{ color: '#1EA3EA' }}>tại đây</Text></Text>
 							{/* <TouchableOpacity onPress={this.register.bind(this)} style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center' }} >
 								<Text style={{ color: '#FFF', fontSize: 17 }}>{"ĐĂNG KÝ"}</Text>
 							</TouchableOpacity> */}
@@ -289,6 +300,45 @@ const DEVICE_WIDTH = Dimensions.get("window").width;
 const DEVICE_HEIGHT = Dimensions.get("window").height;
 
 const styles = StyleSheet.create({
+	txtLogin: {
+		color: "rgb(2,195,154)",
+		fontSize: 14,
+		fontWeight: 'bold',
+		marginRight: 5
+	},
+	buttonLogin: {
+		alignItems: "center",
+		justifyContent: 'flex-end',
+		flex: 1,
+		flexDirection: 'row'
+	},
+	txtForgotPass: {
+		color: '#028090',
+		paddingRight: 5,
+		fontSize: 14
+	},
+	buttonForgotPass: { alignItems: "flex-start", flex: 1 },
+	containerFooter: { flexDirection: 'row', marginTop: 15 },
+	iconHide: { tintColor: '#7B7C7D' },
+	buttonHide: {
+		position: 'absolute',
+		right: 3,
+		top: 40,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	placeFloat: {
+		fontSize: 16,
+		fontWeight: '200'
+	},
+	card: {
+		padding: 22,
+		paddingTop: 10,
+		borderRadius: 5,
+		marginTop: 60
+	},
+	margin22: { margin: 22 },
+	container: { flex: 1 },
 	form: {
 		marginTop: 80,
 		borderRadius: 10
