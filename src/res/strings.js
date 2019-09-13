@@ -1,4 +1,4 @@
-let isofhcare_service = 'isofhcare-dev/';
+let isofhcare_service = 'isofhcare/';
 // let wallet_services = 'wallet-services-test/'; //test
 let wallet_services = 'wallet-services-dev/'; //dev
 module.exports = {
@@ -441,9 +441,9 @@ module.exports = {
       number:'19134033802010',
       copy:'SAO CHÉP',
       owner_name:'Tên chủ thẻ',
-      name_account:'Ngân hàng ISOFHCARE',
+      name_account:'CONG TY TNHH MOT THANH VIEN ISOFHCARE',
       branch:'Chi nhánh',
-      branch_name:'TCB Ba Đình',
+      branch_name:'TECHCOMBANK Ba Đình',
       enter_content_payment:'Nhập nội dung chuyển khoản',
       content_payment:'DK19134033802010',
       part_2:'Bước 2: Thực hiện chuyển khoản:',

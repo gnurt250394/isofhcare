@@ -41,8 +41,8 @@ class CreateBookingWithPaymentScreen extends Component {
         Clipboard.setString('22010000749786')
         snackbar.show(constants.booking.copy_success, 'success')
     }
-    onCopyContents = () => {
-        Clipboard.setString('22010000749786')
+    onCopyContents = (codeBooking) => () => {
+        Clipboard.setString('DK ' + codeBooking)
         snackbar.show(constants.booking.copy_success, 'success')
 
     }
@@ -150,7 +150,7 @@ class CreateBookingWithPaymentScreen extends Component {
                             <View><View style={styles.viewBank}><View style={styles.viewInfoBank}><Text
                                 style={styles.txBank}>{constants.booking.guide.bank}:</Text><Text
                                     style={styles.txBankName}>{constants.booking.guide.bank_name}</Text></View>
-                                <Text style={styles.txBank} >{constants.booking.guide.account_number}</Text></View>
+                                <Text style={[styles.txBank, { marginTop: 5 }]} >{constants.booking.guide.account_number}</Text></View>
                                 <View style={styles.bankInfo}>
                                     <View style={styles.viewBankNumber}>
                                         <Text style={styles.txNumber}>{constants.booking.guide.number}</Text>
@@ -164,14 +164,14 @@ class CreateBookingWithPaymentScreen extends Component {
                                         <Text style={styles.txBankName}>{constants.booking.guide.name_account}</Text></View>
                                     <View style={styles.viewInfoBank}><Text style={styles.txBank}>{constants.booking.guide.branch}:</Text>
                                         <Text style={styles.txBankName}>{constants.booking.guide.branch_name}</Text></View>
-                                    <Text style={styles.txBank}>{constants.booking.guide.enter_content_payment}</Text>
+                                    <View style={{ marginTop: 5 }}><Text style={styles.txBank}>{constants.booking.guide.enter_content_payment}</Text></View>
                                 </View>
 
                                 <View style={styles.bankInfo}>
                                     <View style={styles.viewBankNumber}>
                                         <Text style={styles.txNumber}>{constants.booking.guide.content_payment}</Text>
                                     </View>
-                                    <TouchableOpacity onPress={this.onCopyContents} style={styles.btnCopy}>
+                                    <TouchableOpacity onPress={this.onCopyContents(booking.book.codeBooking)} style={styles.btnCopy}>
                                         <Text style={styles.txCopy}>{constants.booking.guide.copy}</Text>
                                     </TouchableOpacity>
                                 </View></View>
@@ -378,7 +378,8 @@ const styles = StyleSheet.create({
     txStep1: {
         color: '#000',
         fontSize: 14,
-        textAlign: 'left'
+        textAlign: 'left',
+        fontWeight: 'bold'
     },
     txBank: {
         color: '#000',
@@ -395,12 +396,15 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginVertical: 10,
+        flex: 1,
+        justifyContent: 'center',
+        paddingHorizontal: 10
     },
     viewBankNumber: {
         height: 41, paddingHorizontal: 5, borderRadius: 5, borderColor: 'gray', borderWidth: 1, justifyContent: 'center', alignItems: 'center', minWidth: '60%'
     },
     btnCopy: {
-        height: 41, paddingHorizontal: 10, backgroundColor: '#02c39a', marginHorizontal: 10, justifyContent: 'center', alignItems: 'center', borderRadius: 5
+        height: 41, paddingHorizontal: 10, backgroundColor: '#02c39a', marginHorizontal: 10, justifyContent: 'center', alignItems: 'center', borderRadius: 5, width: '40%'
     },
     txNumber: {
         color: '#02c39a',
