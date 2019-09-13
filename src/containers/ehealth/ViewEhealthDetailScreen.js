@@ -115,8 +115,8 @@ render() {
             iosBarStyle={'light-content'}
             statusbarBackgroundColor="#02C39A"
             actionbarStyle={styles.actionbarStyle}
-            titleStyle={styles.titleStyle}
             isLoading={this.state.isLoading}
+            titleStyle={styles.titleStyle}
             menuButton={<TouchableOpacity style={styles.btnPrint} onPress={this.print}><Icon name='print' style={{ color: '#fff' }} /></TouchableOpacity>}
         >
             {this.renderDetails()}
