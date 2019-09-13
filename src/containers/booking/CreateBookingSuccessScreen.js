@@ -24,23 +24,27 @@ class CreateBookingSuccessScreen extends Component {
     getPaymentMethod(booking) {
         switch (booking.payment) {
             case 1:
-                return "VNPAY";
+                return constants.payment.VNPAY;
             case 2:
-                return constants.booking.payment_csyt;
+                return constants.payment.pay_later;
             case 3:
-                return "PAYOO";
+                return constants.payment.PAYOO;
             case 4:
-                return constants.booking.payment_payoo;
+                return constants.payment.PAYOO_convenient_shop;
         }
         return "";
     }
-    getPriceSecive = (service,voucher) => {
+    getPriceSecive = (service, voucher) => {
         let priceVoucher = voucher && voucher.price ? voucher.price : 0
         let priceFinal = service.reduce((start, item) => {
             return start + parseInt(item.service.price)
         }, 0)
         return (priceFinal - priceVoucher).formatPrice()
     }
+    goHome = () => {
+        this.props.navigation.pop();
+    }
+    onBackdropPress = () => this.setState({ isVisible: false })
     render() {
         let booking = this.props.navigation.state.params.booking;
         let service = this.props.navigation.state.params.service || [];
@@ -54,23 +58,19 @@ class CreateBookingSuccessScreen extends Component {
             <ActivityPanel
                 hideBackButton={true}
                 title={constants.title.create_booking_success}
-                titleStyle={{ color: '#FFF', marginRight: 31 }}
-                
-                
-                containerStyle={{
-                    backgroundColor: "#02C39A"
-                }}
-                actionbarStyle={{
-                    backgroundColor: '#02C39A'
-                }}>
+                titleStyle={styles.txtTitle}
+
+
+                containerStyle={styles.container}
+                actionbarStyle={styles.container}>
                 <View style={styles.container}>
-                    <ScrollView keyboardShouldPersistTaps='handled' style={{ flex: 1 }}>
+                    <ScrollView keyboardShouldPersistTaps='handled' style={styles.flex}>
                         {/* <ScaleImage style={styles.image1} height={80} source={require("@images/new/booking/ic_rating.png")} />
                         <Text style={styles.text1}>{constants.booking.booking_success}</Text> */}
                         <View style={styles.view2}>
                             <View style={styles.col}>
                                 <Text style={styles.col1}>{constants.booking.code}</Text>
-                                <TouchableOpacity onPress={this.onQrClick} style={{ alignItems: 'center', marginTop: 10 }}>
+                                <TouchableOpacity onPress={this.onQrClick} style={styles.buttonQRCode}>
                                     <QRCode
                                         value={booking.book.codeBooking || ""}
                                         logo={require('@images/new/logo.png')}
@@ -79,16 +79,16 @@ class CreateBookingSuccessScreen extends Component {
                                         logoBackgroundColor='transparent'
                                     />
                                 </TouchableOpacity>
-                                <Text style={{ textAlign: 'center', color: '#4a4a4a', marginVertical: 5 }}>{constants.booking.code_booking} {booking.book.codeBooking}</Text>
+                                <Text style={styles.txtCodeBooking}>{constants.booking.code_booking} {booking.book.codeBooking}</Text>
                             </View>
                         </View>
-                        <View style={{ backgroundColor: '#effbf9', padding: 20, marginTop: 20 }}>
+                        <View style={styles.containerBody}>
                             <View style={styles.row}>
-                                <Text style={styles.label}>{"Cơ sở y tế:"}</Text>
+                                <Text style={styles.label}>{constants.booking.CSYT}:</Text>
                                 <Text style={styles.text}>{booking.hospital.hospital.name}</Text>
                             </View>
                             <View style={styles.row}>
-                                <Text style={styles.label}>{"Địa chỉ:"}</Text>
+                                <Text style={styles.label}>{constants.booking.address}:</Text>
                                 <Text style={styles.text}>{booking.hospital.hospital.address}</Text>
                             </View>
 
@@ -103,17 +103,17 @@ class CreateBookingSuccessScreen extends Component {
                             </View>
                             {service && service.length ?
                                 <View style={styles.row}>
-                                    <Text style={styles.label}>{"Dịch vụ:"}</Text>
-                                    <View style={{ flex: 1, marginLeft: 10 }}>
+                                    <Text style={styles.label}>{constants.booking.services}:</Text>
+                                    <View style={styles.containerPrice}>
                                         {service.map((item, index) => {
-                                            return <View key={index} style={{ flex: 1 }}>
-                                                <Text numberOfLines={1} style={[styles.text, { flex: 1 }]}>{item.service.name}</Text>
+                                            return <View key={index} style={styles.flex}>
+                                                <Text numberOfLines={1} style={[styles.text, styles.flex]}>{item.service.name}</Text>
                                                 <Text style={[styles.text, { marginBottom: 5 }]}>({parseInt(item.service.price).formatPrice()}đ)</Text>
                                             </View>
                                         })}
                                         {voucher && voucher.price ?
                                             <View style={{ flex: 1 }}>
-                                                <Text numberOfLines={1} style={[styles.text, { flex: 1 }]}>Ưu đãi</Text>
+                                                <Text numberOfLines={1} style={[styles.text, styles.flex]}>{constants.booking.voucher}</Text>
                                                 <Text style={[styles.text, { marginBottom: 5 }]}>(-{parseInt(voucher.price).formatPrice()}đ)</Text>
                                             </View> : null
                                         }
@@ -127,8 +127,8 @@ class CreateBookingSuccessScreen extends Component {
                             {
                                 service && service.length ?
                                     <View style={styles.row}>
-                                        <Text style={styles.label}>{"Tổng tiền:"}</Text>
-                                        <Text style={[styles.text, { color: "#d0021b" }]}>{this.getPriceSecive(service,voucher)}đ</Text>
+                                        <Text style={styles.label}>{constants.booking.sum_price}:</Text>
+                                        <Text style={[styles.text, { color: "#d0021b" }]}>{this.getPriceSecive(service, voucher)}đ</Text>
                                     </View> : null
                             }
                             {
@@ -148,17 +148,15 @@ class CreateBookingSuccessScreen extends Component {
                             <Text style={styles.text2}>{constants.booking.booking_send}</Text>
                         </View>
                     </ScrollView>
-                    <TouchableOpacity style={styles.btn}><Text style={styles.btntext} onPress={() => {
-                        this.props.navigation.pop();
-                    }}>{constants.booking.go_home}</Text></TouchableOpacity>
+                    <TouchableOpacity style={styles.btn}><Text style={styles.btntext} onPress={this.goHome}>{constants.booking.go_home}</Text></TouchableOpacity>
                 </View>
                 <Modal
                     isVisible={this.state.isVisible}
-                    onBackdropPress={() => this.setState({ isVisible: false })}
+                    onBackdropPress={this.onBackdropPress}
                     backdropOpacity={0.5}
                     animationInTiming={500}
                     animationOutTiming={500}
-                    style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+                    style={styles.modal}
                     backdropTransitionInTiming={1000}
                     backdropTransitionOutTiming={1000}
                 >
@@ -181,6 +179,37 @@ function mapStateToProps(state) {
     };
 }
 const styles = StyleSheet.create({
+    modal: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    containerPrice: {
+        flex: 1,
+        marginLeft: 10
+    },
+    containerBody: {
+        backgroundColor: '#effbf9',
+        padding: 20,
+        marginTop: 20
+    },
+    txtCodeBooking: {
+        textAlign: 'center',
+        color: '#4a4a4a',
+        marginVertical: 5
+    },
+    buttonQRCode: {
+        alignItems: 'center',
+        marginTop: 10
+    },
+    flex: { flex: 1 },
+    container: {
+        backgroundColor: "#02C39A"
+    },
+    txtTitle: {
+        color: '#FFF',
+        marginRight: 31
+    },
     AcPanel: {
         flex: 1,
         backgroundColor: '#cacaca',

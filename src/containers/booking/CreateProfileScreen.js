@@ -29,7 +29,7 @@ import TextField from "mainam-react-native-form-validate/TextField";
 import FloatingLabel from "mainam-react-native-floating-label";
 import { cleanSingle } from "react-native-image-crop-picker";
 import dateUtils from "mainam-react-native-date-utils";
-import constants from "@resources/strings";
+import constants from "../../res/strings";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import ActionSheet from 'react-native-actionsheet'
 
@@ -226,6 +226,54 @@ class createProfile extends Component {
       });
     else this.onUpdate2("");
   };
+  backButton = () => this.props.navigation.pop()
+  defaultImage = () => {
+    return (
+      <ScaleImage
+        resizeMode="cover"
+        source={icSupport}
+        width={70}
+        style={{ width: 70, height: 70, alignSelf: "center" }}
+      />
+    );
+  }
+  onValidate = (valid, messages) => {
+    if (valid) {
+      this.setState({ nameError: "" });
+    } else {
+      this.setState({ nameError: messages });
+    }
+  }
+  onValidateBirthDay = (valid, messages) => {
+    if (valid) {
+      this.setState({ nameError: "" });
+    } else {
+      messages ?
+        (this.setState({ valid: constants.msg.app.dob_must_lesser_150, isMin: false })) : (this.setState({ isMin: true }));
+    }
+  }
+  onValidateMin = (valid, messages) => {
+    if (valid) {
+      this.setState({ dateError: "", });
+    } else {
+      this.setState({ isMin: messages });
+    }
+  }
+  onSelectBirthDay = () => this.setState({ toggelDateTimePickerVisible: true })
+  confirmDate = newDate => {
+    this.setState(
+      {
+        dob: newDate,
+        date: newDate.format("dd/MM/yyyy"),
+        toggelDateTimePickerVisible: false
+      },
+      () => {
+      }
+    );
+  }
+  onCancelDate = () => {
+    this.setState({ toggelDateTimePickerVisible: false });
+  }
   render() {
     let maxDate = new Date();
     maxDate = new Date(
@@ -247,10 +295,10 @@ class createProfile extends Component {
     return (
       <ActivityPanel
         title={this.state.isDataNull ? constants.booking.add_profile : constants.booking.add_relatives}
-        titleStyle={{ marginRight: 0 }}
+        titleStyle={styles.txtTitle}
         isLoading={this.state.isLoading}
         backButton={
-          <TouchableOpacity style={styles.btnCancel} onPress={() => this.props.navigation.pop()}>
+          <TouchableOpacity style={styles.btnCancel} onPress={this.backButton}>
             <Text style={styles.btnhuy}>{constants.actionSheet.cancel}</Text>
           </TouchableOpacity>
         }
@@ -262,57 +310,38 @@ class createProfile extends Component {
         }
 
       >
-        <ScrollView keyboardShouldPersistTaps='handled' style={{ flex: 1, paddingVertical: 5 }}>
+        <ScrollView keyboardShouldPersistTaps='handled' style={styles.scroll}>
           <View style={styles.viewImgUpload}>
             <TouchableOpacity
-              style={{ position: "relative", width: 70, marginTop: 20 }}
+              style={styles.buttonAvatar}
               onPress={this.selectImage.bind(this)}
             >
               <ImageLoad
                 resizeMode="cover"
-                imageStyle={{ borderRadius: 35 }}
+                imageStyle={styles.boderImage}
                 borderRadius={35}
-                customImagePlaceholderDefaultStyle={{
-                  width: 70,
-                  height: 70,
-                  alignSelf: "center"
-                }}
+                customImagePlaceholderDefaultStyle={styles.placeHolderImage}
                 placeholderSource={icSupport}
-                style={{ width: 70, height: 70, alignSelf: "center" }}
+                style={styles.image}
                 resizeMode="cover"
                 loadingStyle={{ size: "small", color: "gray" }}
                 source={source}
-                defaultImage={() => {
-                  return (
-                    <ScaleImage
-                      resizeMode="cover"
-                      source={icSupport}
-                      width={70}
-                      style={{ width: 70, height: 70, alignSelf: "center" }}
-                    />
-                  );
-                }}
+                defaultImage={this.defaultImage}
               />
               <ScaleImage
                 source={require("@images/new/ic_account_add.png")}
                 width={20}
-                style={{ position: "absolute", bottom: 0, right: 0 }}
+                style={styles.iconAdd}
               />
             </TouchableOpacity>
           </View>
           <View style={styles.container}>
-            <Form ref={ref => (this.form = ref)} style={[{ flex: 1 }]}>
-              <Field style={[styles.mucdichkham, { flex: 1 }, , Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
+            <Form ref={ref => (this.form = ref)} style={[styles.flex]}>
+              <Field style={[styles.mucdichkham, styles.flex, , Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
                 <Text style={styles.mdk}>{constants.fullname}</Text>
                 <TextField
                   hideError={true}
-                  onValidate={(valid, messages) => {
-                    if (valid) {
-                      this.setState({ nameError: "" });
-                    } else {
-                      this.setState({ nameError: messages });
-                    }
-                  }}
+                  onValidate={this.onValidate}
                   validate={{
                     rules: {
                       required: true,
@@ -321,15 +350,12 @@ class createProfile extends Component {
                     },
                     messages: {
                       required: constants.msg.user.fullname_not_null,
-                      maxlength:constants.msg.user.text_without_255,
+                      maxlength: constants.msg.user.text_without_255,
                     }
                   }}
                   placeholder={constants.msg.user.input_name}
                   multiline={true}
-                  inputStyle={[
-                    styles.ktq,
-                    { justifyContent: 'center', alignItems: 'flex-end', paddingRight: 10, width: 200 }
-                  ]}
+                  inputStyle={[styles.ktq, styles.txtFeild]}
                   errorStyle={styles.errorStyle}
                   onChangeText={this.onChangeText("name")}
                   value={this.state.name}
@@ -342,10 +368,7 @@ class createProfile extends Component {
               <Text style={[styles.errorStyle]}>{this.state.nameError}</Text>
 
               <TouchableOpacity
-                style={[
-                  styles.mucdichkham,
-                  { marginTop: 20, justifyContent: 'center', alignItems: 'flex-end', paddingVertical: 12 }
-                ]}
+                style={[styles.mucdichkham, styles.buttonGender]}
                 onPress={this.onShowGender}
               >
                 <Text style={styles.mdk}>{constants.gender}</Text>
@@ -363,15 +386,13 @@ class createProfile extends Component {
 
               <Field
 
-                style={[styles.mucdichkham, { justifyContent: 'center', alignItems: 'flex-end', flex: 1, paddingVertical: 12, borderTopWidth: 0, }]}
+                style={[styles.mucdichkham, styles.birthday]}
               >
                 <Text style={styles.mdk}>{constants.dob}</Text>
 
                 <TextField
                   // value={this.state.date || ""}
-                  onPress={() =>
-                    this.setState({ toggelDateTimePickerVisible: true })
-                  }
+                  onPress={this.onSelectBirthDay}
                   dateFormat={"dd/MM/yyyy"}
                   splitDate={"/"}
                   editable={false}
@@ -390,14 +411,7 @@ class createProfile extends Component {
                   value={this.state.date}
                   errorStyle={styles.errorStyle}
                   hideError={true}
-                  onValidate={(valid, messages) => {
-                    if (valid) {
-                      this.setState({ nameError: "" });
-                    } else {
-                      messages ?
-                        (this.setState({ valid: constants.msg.app.dob_must_lesser_150, isMin: false })) : (this.setState({ isMin: true }));
-                    }
-                  }}
+                  onValidate={this.onValidateBirthDay}
                   validate={{
                     rules: {
                       max: maxDate,
@@ -409,13 +423,7 @@ class createProfile extends Component {
                     }
                   }}
                   hideError={true}
-                  onValidate={(valid, messages) => {
-                    if (valid) {
-                      this.setState({ dateError: "", });
-                    } else {
-                      this.setState({ isMin: messages });
-                    }
-                  }}
+                  onValidate={this.onValidateMin}
                   returnKeyType={"next"}
                   autoCapitalize={"none"}
                   autoCorrect={false}
@@ -433,7 +441,7 @@ class createProfile extends Component {
               <Field
                 style={[styles.mucdichkham, { flex: 1, marginTop: 20 }, Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}
               >
-                <Text style={styles.mdk}>Email</Text>
+                <Text style={styles.mdk}>{constants.email}</Text>
 
                 <TextField
                   hideError={true}
@@ -452,17 +460,14 @@ class createProfile extends Component {
                       maxlength: 255,
                     },
                     messages: {
-                      required:constants.msg.user.email_not_null,
+                      required: constants.msg.user.email_not_null,
                       email: constants.msg.user.email_does_not_exits,
                       maxlength: constants.msg.user.text_without_255
 
                     }
                   }}
-                  placeholder={"Nhập email"}
-                  inputStyle={[
-                    styles.ktq,
-                    { justifyContent: 'center', alignItems: 'flex-end', paddingRight: 10, width: 200, }
-                  ]}
+                  placeholder={constants.enter_email}
+                  inputStyle={[styles.ktq, styles.txtFeild,]}
                   errorStyle={styles.errorStyle}
                   onChangeText={this.onChangeText("email")}
                   value={this.state.email}
@@ -475,8 +480,8 @@ class createProfile extends Component {
               <Text style={[styles.errorStyle]}>{this.state.isMin ? (constants.msg.user.email_apply_with_people_15_old) : (this.state.emailError)}</Text>
             </Form>
             <Text style={styles.textbot}>
-             {constants.msg.user.email_apply_with_people_15_old}
-          </Text>
+              {constants.msg.user.email_apply_with_people_15_old}
+            </Text>
           </View>
 
 
@@ -484,20 +489,8 @@ class createProfile extends Component {
         <ImagePicker ref={ref => (this.imagePicker = ref)} />
         <DateTimePicker
           isVisible={this.state.toggelDateTimePickerVisible}
-          onConfirm={newDate => {
-            this.setState(
-              {
-                dob: newDate,
-                date: newDate.format("dd/MM/yyyy"),
-                toggelDateTimePickerVisible: false
-              },
-              () => {
-              }
-            );
-          }}
-          onCancel={() => {
-            this.setState({ toggelDateTimePickerVisible: false });
-          }}
+          onConfirm={this.confirmDate}
+          onCancel={this.onCancelDate}
           date={new Date()}
           minimumDate={minDate}
           maximumDate={new Date()}
@@ -507,7 +500,7 @@ class createProfile extends Component {
         />
         <ActionSheet
           ref={o => this.actionSheetGender = o}
-          options={[constants.actionSheet.male,constants.actionSheet.female,constants.actionSheet.cancel]}
+          options={[constants.actionSheet.male, constants.actionSheet.female, constants.actionSheet.cancel]}
           cancelButtonIndex={2}
           // destructiveButtonIndex={1}
           onPress={this.onSetGender}
@@ -525,6 +518,52 @@ function mapStateToProps(state) {
   };
 }
 const styles = StyleSheet.create({
+  birthday: {
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    flex: 1,
+    paddingVertical: 12,
+    borderTopWidth: 0,
+  },
+  buttonGender: {
+    marginTop: 20,
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    paddingVertical: 12
+  },
+  txtFeild: {
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    paddingRight: 10,
+    width: 200
+  },
+  flex: { flex: 1 },
+  iconAdd: {
+    position: "absolute",
+    bottom: 0,
+    right: 0
+  },
+  image: {
+    width: 70,
+    height: 70,
+    alignSelf: "center"
+  },
+  placeHolderImage: {
+    width: 70,
+    height: 70,
+    alignSelf: "center"
+  },
+  boderImage: { borderRadius: 35 },
+  buttonAvatar: {
+    position: "relative",
+    width: 70,
+    marginTop: 20
+  },
+  scroll: {
+    flex: 1,
+    paddingVertical: 5
+  },
+  txtTitle: { marginRight: 0 },
   AcPanel: {
     flex: 1,
     backgroundColor: "rgb(247,249,251)"

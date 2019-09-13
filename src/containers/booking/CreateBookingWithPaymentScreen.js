@@ -25,27 +25,31 @@ class CreateBookingWithPaymentScreen extends Component {
     getPaymentMethod(booking) {
         switch (booking.payment) {
             case 1:
-                return "VNPAY";
+                return constants.payment.VNPAY;
             case 2:
-                return constants.booking.payment_csyt;
+                return constants.payment.pay_later;
             case 3:
-                return "PAYOO";
+                return constants.payment.PAYOO;
             case 4:
-                return constants.booking.payment_payoo;
+                return constants.payment.PAYOO_convenient_shop;
             case 6:
-                return 'Chuyển khoản trực tiếp';
+                return constants.payment.direct_transfer;
         }
         return "";
     }
     onCopyNumber = () => {
         Clipboard.setString('22010000749786')
-        snackbar.show('Sao chép thành công', 'success')
+        snackbar.show(constants.booking.copy_success, 'success')
     }
-    onCopyContents = (codeBooking) => {
+    onCopyContents = (codeBooking) => () => {
         Clipboard.setString('DK ' + codeBooking)
-        snackbar.show('Sao chép thành công', 'success')
+        snackbar.show(constants.booking.copy_success, 'success')
 
     }
+    goHome = () => {
+        this.props.navigation.pop();
+    }
+    onBackdropPress = () => this.setState({ isVisible: false })
     render() {
         let booking = this.props.navigation.state.params.booking;
         console.log(booking, 'bookingbooking')
@@ -59,23 +63,19 @@ class CreateBookingWithPaymentScreen extends Component {
             <ActivityPanel
                 hideBackButton={true}
                 title={constants.title.create_booking_success}
-                titleStyle={{ color: '#FFF', marginRight: 31 }}
+                titleStyle={styles.txtTitle}
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#02C39A"
-                containerStyle={{
-                    backgroundColor: "#02C39A"
-                }}
-                actionbarStyle={{
-                    backgroundColor: '#02C39A'
-                }}>
+                containerStyle={styles.backgroundContainer}
+                actionbarStyle={styles.backgroundContainer}>
                 <View style={styles.container}>
-                    <ScrollView keyboardShouldPersistTaps='handled' style={{ flex: 1 }}>
+                    <ScrollView keyboardShouldPersistTaps='handled' style={styles.flex}>
                         {/* <ScaleImage style={styles.image1} height={80} source={require("@images/new/booking/ic_rating.png")} />
                         <Text style={styles.text1}>{constants.booking.booking_success}</Text> */}
                         <View style={styles.view2}>
                             <View style={styles.col}>
                                 <Text style={styles.col1}>{constants.booking.code}</Text>
-                                <TouchableOpacity onPress={this.onQrClick} style={{ alignItems: 'center', marginTop: 10 }}>
+                                <TouchableOpacity onPress={this.onQrClick} style={styles.buttonQRCode}>
                                     <QRCode
                                         value={booking.book.codeBooking || ""}
                                         logo={require('@images/new/logo.png')}
@@ -84,16 +84,16 @@ class CreateBookingWithPaymentScreen extends Component {
                                         logoBackgroundColor='transparent'
                                     />
                                 </TouchableOpacity>
-                                <Text style={{ textAlign: 'center', color: '#4a4a4a', marginVertical: 5 }}>{constants.booking.code_booking} {booking.book.codeBooking}</Text>
+                                <Text style={styles.txtCodeBooking}>{constants.booking.code_booking} {booking.book.codeBooking}</Text>
                             </View>
                         </View>
-                        <View style={{ backgroundColor: '#effbf9', padding: 20, marginTop: 20 }}>
+                        <View style={styles.groupBody}>
                             <View style={styles.row}>
-                                <Text style={styles.label}>{"Cơ sở y tế:"}</Text>
+                                <Text style={styles.label}>{constants.booking.CSYT}:</Text>
                                 <Text style={styles.text}>{booking.hospital.hospital.name}</Text>
                             </View>
                             <View style={styles.row}>
-                                <Text style={styles.label}>{"Địa chỉ:"}</Text>
+                                <Text style={styles.label}>{constants.booking.address}:</Text>
                                 <Text style={styles.text}>{booking.hospital.hospital.address}</Text>
                             </View>
 
@@ -108,11 +108,11 @@ class CreateBookingWithPaymentScreen extends Component {
                             </View>
                             {service && service.length ?
                                 <View style={styles.row}>
-                                    <Text style={styles.label}>{"Dịch vụ:"}</Text>
-                                    <View style={{ flex: 1, marginLeft: 10 }}>
+                                    <Text style={styles.label}>{constants.booking.services}:</Text>
+                                    <View style={styles.containerServices}>
                                         {service.map((item, index) => {
-                                            return <View key={index} style={{ flex: 1 }}>
-                                                <Text numberOfLines={1} style={[styles.text, { flex: 1 }]}>{item.service.name}</Text>
+                                            return <View key={index} style={styles.flex}>
+                                                <Text numberOfLines={1} style={[styles.text, styles.flex]}>{item.service.name}</Text>
                                                 <Text style={[styles.text, { marginBottom: 5 }]}>({parseInt(item.service.price).formatPrice()}đ)</Text>
                                             </View>
                                         })}
@@ -126,7 +126,7 @@ class CreateBookingWithPaymentScreen extends Component {
                             {
                                 service && service.length ?
                                     <View style={styles.row}>
-                                        <Text style={styles.label}>{"Tổng tiền:"}</Text>
+                                        <Text style={styles.label}>{constants.booking.sum_price}:</Text>
                                         <Text style={[styles.text, { color: "#d0021b" }]}>{service.reduce((start, item) => {
                                             return start + parseInt(item.service.price)
                                         }, 0).formatPrice()}đ</Text>
@@ -147,49 +147,51 @@ class CreateBookingWithPaymentScreen extends Component {
 
                         </View>
                         <View style={styles.paymentInfo}>
-                            <Text style={styles.txStep1}>Bước 1: Điền thông tin chuyển khoản thụ hưởng:</Text>
-                            <View><View style={styles.viewBank}><View style={styles.viewInfoBank}><Text style={styles.txBank}>Ngân hàng:</Text><Text style={styles.txBankName}>TECHCOMBANK</Text></View>
-                                <Text style={[styles.txBank, { marginTop: 5 }]} >Số tài khoản:</Text></View>
+                            <Text style={styles.txStep1}>{constants.booking.guide.part_1}</Text>
+                            <View><View style={styles.viewBank}><View style={styles.viewInfoBank}><Text
+                                style={styles.txBank}>{constants.booking.guide.bank}:</Text><Text
+                                    style={styles.txBankName}>{constants.booking.guide.bank_name}</Text></View>
+                                <Text style={[styles.txBank, { marginTop: 5 }]} >{constants.booking.guide.account_number}</Text></View>
                                 <View style={styles.bankInfo}>
                                     <View style={styles.viewBankNumber}>
-                                        <Text style={styles.txNumber}>19134033802010</Text>
+                                        <Text style={styles.txNumber}>{constants.booking.guide.number}</Text>
                                     </View>
                                     <TouchableOpacity onPress={this.onCopyNumber} style={styles.btnCopy}>
-                                        <Text style={styles.txCopy}>SAO CHÉP</Text>
+                                        <Text style={styles.txCopy}>{constants.booking.guide.copy}</Text>
                                     </TouchableOpacity>
                                 </View>
                                 <View>
-                                    <View style={styles.viewInfoBank}><Text style={styles.txBank}>Tên chủ thẻ:</Text><Text style={styles.txBankName}>CONG TY TNHH MOT THANH VIEN ISOFHCARE</Text></View>
-                                    <View style={styles.viewInfoBank}><Text style={styles.txBank}>Chi nhánh:</Text><Text style={styles.txBankName}>TECHCOMBANK Ba Đình</Text></View>
-                                    <View style={{ marginTop: 5 }}><Text style={styles.txBank}>Nhập nội dung chuyển khoản:</Text></View>
+                                    <View style={styles.viewInfoBank}><Text style={styles.txBank}>{constants.booking.guide.owner_name}:</Text>
+                                        <Text style={styles.txBankName}>{constants.booking.guide.name_account}</Text></View>
+                                    <View style={styles.viewInfoBank}><Text style={styles.txBank}>{constants.booking.guide.branch}:</Text>
+                                        <Text style={styles.txBankName}>{constants.booking.guide.branch_name}</Text></View>
+                                    <View style={{ marginTop: 5 }}><Text style={styles.txBank}>{constants.booking.guide.enter_content_payment}</Text></View>
                                 </View>
 
                                 <View style={styles.bankInfo}>
                                     <View style={styles.viewBankNumber}>
-                                        <Text style={styles.txNumber}>DK {booking.book.codeBooking}</Text>
+                                        <Text style={styles.txNumber}>{constants.booking.guide.content_payment}</Text>
                                     </View>
-                                    <TouchableOpacity onPress={() => this.onCopyContents(booking.book.codeBooking)} style={styles.btnCopy}>
-                                        <Text style={styles.txCopy}>SAO CHÉP</Text>
+                                    <TouchableOpacity onPress={this.onCopyContents(booking.book.codeBooking)} style={styles.btnCopy}>
+                                        <Text style={styles.txCopy}>{constants.booking.guide.copy}</Text>
                                     </TouchableOpacity>
                                 </View></View>
-                            <Text style={styles.txStep1}>Bước 2: Thực hiện chuyển khoản:</Text>
+                            <Text style={styles.txStep1}>{constants.booking.guide.part_2}</Text>
                             <View style={styles.viewBank}>
-                                <Text style={styles.contentsPay}>iSofHcare sẽ thông báo cho bạn sau khi bạn chuyển khoản thành công.</Text>
-                                <Text style={styles.notePay}>Để chắc chắn giao dịch chính xác, bạn hãy làm theo các bước hướng dẫn trên.</Text>
+                                <Text style={styles.contentsPay}>{constants.booking.guide.notifi}</Text>
+                                <Text style={styles.notePay}>{constants.booking.guide.notifi2}</Text>
                             </View>
                         </View>
                     </ScrollView>
-                    <TouchableOpacity style={styles.btn}><Text style={styles.btntext} onPress={() => {
-                        this.props.navigation.pop();
-                    }}>{constants.booking.go_home}</Text></TouchableOpacity>
+                    <TouchableOpacity style={styles.btn}><Text style={styles.btntext} onPress={this.goHome}>{constants.booking.go_home}</Text></TouchableOpacity>
                 </View>
                 <Modal
                     isVisible={this.state.isVisible}
-                    onBackdropPress={() => this.setState({ isVisible: false })}
+                    onBackdropPress={this.onBackdropPress}
                     backdropOpacity={0.5}
                     animationInTiming={500}
                     animationOutTiming={500}
-                    style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+                    style={styles.modal}
                     backdropTransitionInTiming={1000}
                     backdropTransitionOutTiming={1000}
                 >
@@ -212,6 +214,37 @@ function mapStateToProps(state) {
     };
 }
 const styles = StyleSheet.create({
+    modal: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    containerServices: {
+        flex: 1,
+        marginLeft: 10
+    },
+    groupBody: {
+        backgroundColor: '#effbf9',
+        padding: 20,
+        marginTop: 20
+    },
+    txtCodeBooking: {
+        textAlign: 'center',
+        color: '#4a4a4a',
+        marginVertical: 5
+    },
+    buttonQRCode: {
+        alignItems: 'center',
+        marginTop: 10
+    },
+    flex: { flex: 1 },
+    backgroundContainer: {
+        backgroundColor: "#02C39A"
+    },
+    txtTitle: {
+        color: '#FFF',
+        marginRight: 31
+    },
     AcPanel: {
         flex: 1,
         backgroundColor: '#cacaca',

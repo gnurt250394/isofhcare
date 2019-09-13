@@ -367,11 +367,58 @@ class AddBookingScreen extends Component {
     renderBookingTime() {
         if (this.state.bookingDate && this.state.schedule)
             return <View>
-                <Text style={{ textAlign: 'right', color: '#02C39A', fontWeight: 'bold' }}>{(new Date(this.state.schedule.key)).format("HH:mm tt")}</Text>
-                <Text style={{ textAlign: 'right', color: '#02C39A', fontWeight: 'bold' }}>{(new Date(this.state.schedule.key)).format("thu, ngày dd/MM/yyyy")}</Text>
+                <Text style={styles.dateSelect}>{(new Date(this.state.schedule.key)).format("HH:mm tt")}</Text>
+                <Text style={styles.dateSelect}>{(new Date(this.state.schedule.key)).format("thu, ngày dd/MM/yyyy")}</Text>
             </View>
-        return <Text>Chọn ngày và giờ</Text>;
+        return <Text>{constants.booking.select_date_time}</Text>;
     }
+    onClickMenu = () => {
+        snackbar.show(constants.msg.app.in_development)
+    }
+    onSelectProfile = () => {
+        connectionUtils.isConnected().then(s => {
+            this.props.navigation.navigate("selectProfile", {
+                onSelected: this.selectProfile.bind(this),
+                profile: this.state.profile
+            });
+        }).catch(e => {
+            snackbar.show(constants.msg.app.not_internet, "danger");
+        });
+    }
+    onSelectServiceType = () => {
+        if (!this.state.hospital) {
+            snackbar.show(constants.msg.booking.please_select_location, "danger");
+            return;
+        }
+        connectionUtils.isConnected().then(s => {
+            this.props.navigation.navigate("selectServiceType", {
+                hospital: this.state.hospital,
+                onSelected: this.selectServiceType.bind(this)
+            });
+        }).catch(e => {
+            snackbar.show(constants.msg.app.not_internet, "danger");
+        });
+    }
+    onSelectServices = () => {
+        if (!this.state.hospital) {
+            snackbar.show(constants.msg.booking.please_select_location, "danger");
+            return;
+        }
+        this.props.navigation.navigate("selectService", {
+            hospital: this.state.hospital,
+            serviceType: this.state.serviceType,
+            listServicesSelected: this.state.listServicesSelected,
+            onSelected: this.selectService.bind(this)
+        })
+    }
+    selectDate = () => {
+        console.log(this.state.listServicesSelected);
+        this.props.navigation.navigate("selectTime", {
+            service: this.state.listServicesSelected,
+            onSelected: this.onSelectDateTime
+        });
+    }
+    defaultImage = () => <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={40} height={40} />
     render() {
         let avatar = ((this.state.profile || {}).medicalRecords || {}).avatar;
         const source = avatar ? { uri: avatar.absoluteUrl() } : require("@images/new/user.png");
@@ -379,51 +426,40 @@ class AddBookingScreen extends Component {
         minDate.setDate(minDate.getDate() + 1);
         // minDate.setDate(minDate.getDate());
 
-        return (<ActivityPanel title="Đặt Khám"
+        return (<ActivityPanel title={constants.title.booking}
             isLoading={this.state.isLoading}
-            menuButton={<TouchableOpacity style={styles.menu} onPress={() => snackbar.show(constants.msg.app.in_development)}><ScaleImage style={styles.img} height={20} source={require("@images/new/booking/ic_info.png")} /></TouchableOpacity>}
+            menuButton={<TouchableOpacity
+                style={styles.menu}
+                onPress={this.onClickMenu}>
+                <ScaleImage
+                    style={styles.img}
+                    height={20}
+                    source={require("@images/new/booking/ic_info.png")} />
+            </TouchableOpacity>}
         >
-            <View style={{ backgroundColor: 'transparent', flex: 1 }}>
+            <View style={styles.container}>
                 <KeyboardAwareScrollView>
                     <View style={styles.article}>
-                        <TouchableOpacity style={styles.name} onPress={() => {
-                            connectionUtils.isConnected().then(s => {
-                                this.props.navigation.navigate("selectProfile", {
-                                    onSelected: this.selectProfile.bind(this),
-                                    profile: this.state.profile
-                                });
-                            }).catch(e => {
-                                snackbar.show(constants.msg.app.not_internet, "danger");
-                            });
-                        }}>
-                            <View style={{
-                                flexDirection: 'row', alignItems: 'center', padding: 10, paddingBottom: this.state.profileError ? 0 : 10
-                            }}>
+                        <TouchableOpacity style={styles.name} onPress={this.onSelectProfile}>
+                            <View style={[styles.containerProfile, { paddingBottom: this.state.profileError ? 0 : 10 }]}>
                                 {this.state.profile ?
-                                    <View style={{ flexDirection: 'row', height: 38, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                    <View style={styles.isProfile}>
                                         <ImageLoad
                                             resizeMode="cover"
-                                            imageStyle={{ borderRadius: 20, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
+                                            imageStyle={styles.boderAvatar}
                                             borderRadius={20}
-                                            customImagePlaceholderDefaultStyle={[styles.avatar, { width: 40, height: 40 }]}
+                                            customImagePlaceholderDefaultStyle={[styles.avatar, styles.placeImage]}
                                             placeholderSource={require("@images/new/user.png")}
                                             resizeMode="cover"
                                             loadingStyle={{ size: 'small', color: 'gray' }}
                                             source={source}
-                                            style={{
-                                                alignSelf: 'center',
-                                                borderRadius: 20,
-                                                width: 40,
-                                                height: 40
-                                            }}
-                                            defaultImage={() => {
-                                                return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={40} height={40} />
-                                            }}
+                                            style={styles.Image}
+                                            defaultImage={this.defaultImage}
                                         />
                                         <Text style={styles.txtname}>{this.state.profile.medicalRecords.name}</Text>
                                     </View> :
-                                    <View style={{ flexDirection: 'row', height: 38, flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                        <View style={{ justifyContent: 'center', alignItems: 'center', width: 38, height: 38, borderRadius: 19, borderColor: 'rgba(151, 151, 151, 0.29)', borderWidth: 0.5 }}>
+                                    <View style={styles.isProfile}>
+                                        <View style={styles.containerIconProfile}>
                                             <ScaleImage source={require("@images/new/profile/ic_profile.png")} width={20} />
                                         </View>
                                         <Text style={styles.txtname}>{constants.booking.select_profile}</Text>
@@ -450,20 +486,7 @@ class AddBookingScreen extends Component {
                                 <Text style={[styles.errorStyle]}>{this.state.hospitalError}</Text> : null
                         }
                         <View style={styles.border}></View>
-                        <TouchableOpacity style={styles.mucdichkham} onPress={() => {
-                            if (!this.state.hospital) {
-                                snackbar.show(constants.msg.booking.please_select_location, "danger");
-                                return;
-                            }
-                            connectionUtils.isConnected().then(s => {
-                                this.props.navigation.navigate("selectServiceType", {
-                                    hospital: this.state.hospital,
-                                    onSelected: this.selectServiceType.bind(this)
-                                });
-                            }).catch(e => {
-                                snackbar.show(constants.msg.app.not_internet, "danger");
-                            });
-                        }}
+                        <TouchableOpacity style={styles.mucdichkham} onPress={this.onSelectServiceType}
                         >
                             <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_serviceType.png")} />
                             <Text style={styles.mdk}>{constants.booking.require}</Text>
@@ -476,24 +499,16 @@ class AddBookingScreen extends Component {
                         }
                         <View style={styles.border}></View>
 
-                        <TouchableOpacity style={[styles.mucdichkham, { alignItems: 'flex-start' }]} onPress={() => {
-                            if (!this.state.hospital) {
-                                snackbar.show(constants.msg.booking.please_select_location, "danger");
-                                return;
-                            }
-                            this.props.navigation.navigate("selectService", {
-                                hospital: this.state.hospital,
-                                serviceType: this.state.serviceType,
-                                listServicesSelected: this.state.listServicesSelected,
-                                onSelected: this.selectService.bind(this)
-                            })
-                        }}>
+                        <TouchableOpacity style={[styles.mucdichkham, { alignItems: 'flex-start' }]} onPress={this.onSelectServices}>
                             <ScaleImage style={styles.imgIc} height={15} source={require("@images/new/booking/ic_specialist.png")} />
                             <Text style={styles.mdk}>{constants.booking.service}</Text>
                             {this.state.listServicesSelected && this.state.listServicesSelected.length ?
-                                <View style={{ flex: 1 }}>
+                                <View style={styles.flex}>
                                     {
-                                        this.state.listServicesSelected.map((item, index) => <Text style={{ marginHorizontal: 10, marginBottom: 5, alignSelf: 'flex-end' }} numberOfLines={1} key={index}>{item.service.name}</Text>)
+                                        this.state.listServicesSelected.map((item, index) => <Text
+                                            style={styles.listServices}
+                                            numberOfLines={1}
+                                            key={index}>{item.service.name}</Text>)
                                     }
                                 </View> :
                                 <Text numberOfLines={1} style={styles.ktq}>{constants.booking.select_service}</Text>
@@ -506,13 +521,7 @@ class AddBookingScreen extends Component {
                                 <Text style={[styles.errorStyle]}>{this.state.serviceError}</Text> : null
                         }
                         <View style={styles.border}></View>
-                        <TouchableOpacity style={styles.mucdichkham} onPress={() => {
-                            console.log(this.state.listServicesSelected);
-                            this.props.navigation.navigate("selectTime", {
-                                service: this.state.listServicesSelected,
-                                onSelected: this.onSelectDateTime
-                            });
-                        }}>
+                        <TouchableOpacity style={styles.mucdichkham} onPress={this.selectDate}>
                             <ScaleImage style={styles.imgIc} height={18} source={require("@images/new/booking/ic_bookingTime.png")} />
                             <Text style={styles.mdk}>{constants.booking.date_booking}</Text>
                             <View style={styles.ktq}>{this.renderBookingTime()}</View>
@@ -562,22 +571,24 @@ class AddBookingScreen extends Component {
 
                     <View style={styles.list_image}>
                         {
-                            this.state.imageUris.map((item, index) => <View key={index} style={{ margin: 2, width: 88, height: 88, position: 'relative' }}>
-                                <View style={{ marginTop: 8, width: 80, height: 80 }}>
-                                    <Image source={{ uri: item.uri }} resizeMode="cover" style={{ width: 80, height: 80, borderRadius: 8 }} />
+                            this.state.imageUris.map((item, index) => <View
+                                key={index}
+                                style={styles.containerImagePicker}>
+                                <View style={styles.groupImagePicker}>
+                                    <Image source={{ uri: item.uri }} resizeMode="cover" style={styles.imagePicker} />
                                     {
                                         item.error ?
-                                            <View style={{ position: 'absolute', left: 20, top: 20 }} >
+                                            <View style={styles.groupImageError} >
                                                 <ScaleImage source={require("@images/ic_warning.png")} width={40} />
                                             </View> :
                                             item.loading ?
-                                                < View style={{ position: 'absolute', left: 20, top: 20, backgroundColor: '#FFF', borderRadius: 20 }} >
+                                                < View style={styles.groupImageLoading} >
                                                     <ScaleImage source={require("@images/loading.gif")} width={40} />
                                                 </View>
                                                 : null
                                     }
                                 </View>
-                                <TouchableOpacity onPress={this.removeImage.bind(this, index)} style={{ position: 'absolute', top: 0, right: 0 }} >
+                                <TouchableOpacity onPress={this.removeImage.bind(this, index)} style={styles.buttonClose} >
                                     <ScaleImage source={require("@images/new/ic_close.png")} width={16} />
                                 </TouchableOpacity>
                             </View>)
@@ -587,7 +598,10 @@ class AddBookingScreen extends Component {
                 </KeyboardAwareScrollView>
 
                 <View style={styles.btn}>
-                    <TouchableOpacity onPress={this.addBooking.bind(this)} style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]}><Text style={styles.datkham}>Đặt khám</Text></TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={this.addBooking.bind(this)} style={[styles.button, this.state.allowBooking ? styles.backgroundColorGreen : {}]}>
+                        <Text style={styles.datkham}>{constants.title.booking}</Text>
+                    </TouchableOpacity>
                 </View>
                 <ImagePicker ref={ref => this.imagePicker = ref} />
             </View>
@@ -597,6 +611,90 @@ class AddBookingScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+    backgroundColorGreen: {
+        backgroundColor: "#02c39a"
+    },
+    buttonClose: {
+        position: 'absolute',
+        top: 0,
+        right: 0
+    },
+    groupImageLoading: {
+        position: 'absolute',
+        left: 20,
+        top: 20,
+        backgroundColor: '#FFF',
+        borderRadius: 20
+    },
+    groupImageError: {
+        position: 'absolute',
+        left: 20,
+        top: 20
+    },
+    imagePicker: {
+        width: 80,
+        height: 80,
+        borderRadius: 8
+    },
+    groupImagePicker: {
+        marginTop: 8,
+        width: 80,
+        height: 80
+    },
+    containerImagePicker: {
+        margin: 2,
+        width: 88,
+        height: 88,
+        position: 'relative'
+    },
+    flex: { flex: 1 },
+    listServices: {
+        marginHorizontal: 10,
+        marginBottom: 5,
+        alignSelf: 'flex-end'
+    },
+    containerIconProfile: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 38,
+        height: 38,
+        borderRadius: 19,
+        borderColor: 'rgba(151, 151, 151, 0.29)',
+        borderWidth: 0.5
+    },
+    Image: {
+        alignSelf: 'center',
+        borderRadius: 20,
+        width: 40,
+        height: 40
+    },
+    placeImage: { width: 40, height: 40 },
+    boderAvatar: {
+        borderRadius: 20,
+        borderWidth: 0.5,
+        borderColor: 'rgba(151, 151, 151, 0.29)'
+    },
+    isProfile: {
+        flexDirection: 'row',
+        height: 38,
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    containerProfile: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 10,
+    },
+    container: {
+        backgroundColor: 'transparent',
+        flex: 1
+    },
+    dateSelect: {
+        textAlign: 'right',
+        color: '#02C39A',
+        fontWeight: 'bold'
+    },
     menu: {
         padding: 5,
         paddingRight: 15
