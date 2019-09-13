@@ -119,7 +119,7 @@ class FingerprintPopup extends Component {
       this.props.isShowPass()
       this.description.shake();
     }else{
-      this.setState({ errorMessage: "Thử lại \n "+"Sử dụng Touch ID để mở khoá Isofhcare ", error: true });
+      this.setState({ errorMessage: constants.touch_id_screens.touch_error, error: true });
       this.description.shake();
     }
       

@@ -85,10 +85,10 @@ class MyAccountScreen extends Component {
         this.state.view ? value = DEVICE_WIDTH - 90 : value = 54
         Animated.timing(
             this.animatedValue, {
-                toValue: value,
-                duration: 250,
-                easing: Easing.linear
-            }
+            toValue: value,
+            duration: 250,
+            easing: Easing.linear
+        }
         ).start(() => { console.log("Animated ") })
     }
 
@@ -111,7 +111,10 @@ class MyAccountScreen extends Component {
         }
 
         return (
-            <ActivityPanel style={{ flex: 1 }} title="Thông tin cá nhân" showFullScreen={true}>
+            <ActivityPanel
+                style={styles.container}
+                title={constants.account_screens.info}
+                showFullScreen={true}>
                 {/* <View style={{ position: 'relative', flex: 1 }}>
                     <ScaleImage source={bgImage} width={DEVICE_WIDTH} zIndex={0} />
                     <ScaleImage source={require("@images/rectangle.png")} zIndex={1} width={100} style={{ bottom: 0, left: 80, position: 'absolute' }} /> */}
@@ -205,6 +208,7 @@ class MyAccountScreen extends Component {
 
 
 const styles = StyleSheet.create({
+    container: { flex: 1 },
 
     container2: {
         flex: 1,

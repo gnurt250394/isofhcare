@@ -49,7 +49,7 @@ class ResetPasswordScreen extends Component {
           switch (s.code) {
             case 0:
               snackbar.show(
-                "Thiết lập mật khẩu mới thành công",
+                constants.change_password_screens.setup_password_success,
                 "success"
               );
               this.props.navigation.replace("login", {
@@ -58,7 +58,7 @@ class ResetPasswordScreen extends Component {
               return;
             case 2:
               snackbar.show(
-                "Số điện thoại không tồn tại trong hệ thống",
+                constants.change_password_screens.phone_not_found,
                 "danger"
               );
               return;
@@ -84,29 +84,31 @@ class ResetPasswordScreen extends Component {
       secureTextEntry2: !this.state.secureTextEntry2
     })
   }
+  onChangeText = (state) => (value) => {
+    this.setState({ [state]: value })
+  }
   render() {
     return (
       <ActivityPanel
-        title="Thiết lập mật khẩu"
+        title={constants.setup_password}
         isLoading={this.state.isLoading}
       >
         <ScrollView
           showsVerticalScrollIndicator={false}
-          style={{ flex: 1 }} keyboardShouldPersistTaps="handled">
-          <KeyboardAvoidingView behavior="padding" style={styles.form}>
-            <View style={{ flex: 1, padding: 20 }}>
-              <ScaleImage source={require("@images/new/isofhcare.png")} width={200} style={{ marginTop: 30, alignSelf: 'center' }} />
+          style={styles.container}
+          keyboardShouldPersistTaps="handled">
+          <KeyboardAvoidingView behavior="padding" >
+            <View style={styles.group}>
+              <ScaleImage source={require("@images/new/isofhcare.png")} width={200} style={styles.imgLogo} />
               <Form ref={ref => (this.form = ref)}>
                 <Field style={styles.inputPass}>
                   <TextField
                     getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-                      placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Mật khẩu"}
+                      placeholderStyle={styles.placeFloat} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Mật khẩu"}
                       secureTextEntry={this.state.secureTextEntry}
                       allowFontScaling={false}
                       onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
-                    onChangeText={s => {
-                      this.setState({ password: s });
-                    }}
+                    onChangeText={this.onChangeText('password')}
                     allowFontScaling={false}
                     errorStyle={styles.errorStyle}
                     validate={{
@@ -116,29 +118,44 @@ class ResetPasswordScreen extends Component {
                         minlength: 8
                       },
                       messages: {
-                        required: "Mật khẩu không được bỏ trống",
-                        maxlength: "Không được nhập quá 255 kí tự",
-                        minlength: "Mật khẩu dài ít nhất 8 ký tự"
+                        required: constants.password_not_null,
+                        maxlength: constants.msg.user.text_without_255,
+                        minlength: constants.msg.user.password_must_greater_than_8_character
                       }
                     }}
                     inputStyle={styles.input}
                     autoCapitalize={"none"}
                   />
                   {
-                    this.state.password ? (this.state.secureTextEntry ? (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 30, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 30, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
+                    this.state.password ? (this.state.secureTextEntry ? (<TouchableOpacity
+                      style={styles.buttonHide}
+                      onPress={this.onShowPass}>
+                      <ScaleImage
+                        style={styles.iconHide}
+                        resizeMode={'contain'}
+                        height={20}
+                        source={require('@images/new/ic_hide_pass.png')}>
+                      </ScaleImage></TouchableOpacity>)
+                      :
+                      (<TouchableOpacity
+                        style={styles.buttonHide}
+                        onPress={this.onShowPass}>
+                        <ScaleImage
+                          style={styles.iconHide}
+                          height={20} source={require('@images/new/ic_show_pass.png')}>
+                        </ScaleImage>
+                      </TouchableOpacity>)) : (<Field></Field>)
                   }
                 </Field>
                 <Field style={styles.inputPass}>
 
                   <TextField
                     getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-                      placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.msg.user.confirm_new_password}
+                      placeholderStyle={styles.placeFloat} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.msg.user.confirm_new_password}
                       secureTextEntry={this.state.secureTextEntry2}
                       allowFontScaling={false}
                       onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
-                    onChangeText={s => {
-                      this.setState({ confirm_password: s });
-                    }}
+                    onChangeText={this.onChangeText('confirm_password')}
                     errorStyle={styles.errorStyle}
                     allowFontScaling={false}
                     validate={{
@@ -147,23 +164,43 @@ class ResetPasswordScreen extends Component {
                         equalTo: this.state.password
                       },
                       messages: {
-                        required: "Xác nhận mật khẩu không được bỏ trống",
-                        equalTo: "Mật khẩu và xác nhận mật khẩu không giống nhau"
+                        required: constants.confirm_password_not_null,
+                        equalTo: constants.new_password_not_match
                       }
                     }}
                     inputStyle={styles.input}
                     autoCapitalize={"none"}
                   />
                   {
-                    this.state.confirm_password ? (this.state.secureTextEntry2 ? (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 30, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowPass2}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 30, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowPass2}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
+                    this.state.confirm_password ? (this.state.secureTextEntry2 ?
+                      (<TouchableOpacity
+                        style={styles.buttonHide}
+                        onPress={this.onShowPass2}>
+                        <ScaleImage
+                          style={styles.iconHide}
+                          resizeMode={'contain'}
+                          height={20}
+                          source={require('@images/new/ic_hide_pass.png')}>
+                        </ScaleImage>
+                      </TouchableOpacity>)
+                      :
+                      (<TouchableOpacity
+                        style={styles.buttonHide}
+                        onPress={this.onShowPass2}>
+                        <ScaleImage
+                          style={styles.iconHide}
+                          height={20}
+                          source={require('@images/new/ic_show_pass.png')}>
+                        </ScaleImage>
+                      </TouchableOpacity>)) : (<Field></Field>)
                   }
                 </Field>
               </Form>
             </View>
           </KeyboardAvoidingView>
         </ScrollView>
-        <TouchableOpacity style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center', marginBottom: 20 }} onPress={this.changePassword.bind(this)}>
-          <Text style={{ color: '#FFF', fontSize: 17 }}>{"HOÀN THÀNH"}</Text>
+        <TouchableOpacity style={styles.buttonFinish} onPress={this.changePassword.bind(this)}>
+          <Text style={styles.txtFinish}>{constants.finish}</Text>
         </TouchableOpacity>
       </ActivityPanel >
     );
@@ -173,6 +210,46 @@ const DEVICE_WIDTH = Dimensions.get("window").width;
 const DEVICE_HEIGHT = Dimensions.get("window").height;
 
 const styles = StyleSheet.create({
+  txtFinish: {
+    color: '#FFF',
+    fontSize: 17
+  },
+  buttonFinish: {
+    backgroundColor: 'rgb(2,195,154)',
+    alignSelf: 'center',
+    borderRadius: 6,
+    width: 250,
+    height: 48,
+    marginTop: 34,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20
+  },
+  iconHide: {
+    tintColor: '#7B7C7D'
+  },
+  buttonHide: {
+    position: 'absolute',
+    right: 3,
+    top: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  placeFloat: {
+    fontSize: 16,
+    fontWeight: '200'
+  },
+  imgLogo: {
+    marginTop: 30,
+    alignSelf: 'center'
+  },
+  group: {
+    flex: 1,
+    padding: 20
+  },
+  container: {
+    flex: 1
+  },
   btnEye: {
     position: "absolute",
     right: 25,
@@ -214,7 +291,11 @@ const styles = StyleSheet.create({
     paddingRight: 45,
     fontSize: 20
   },
-  labelStyle: { paddingTop: 10, color: '#53657B', fontSize: 16 }
+  labelStyle: {
+    paddingTop: 10,
+    color: '#53657B',
+    fontSize: 16
+  }
 });
 function mapStateToProps(state) {
   return {
