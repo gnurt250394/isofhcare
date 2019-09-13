@@ -112,6 +112,7 @@ render() {
     return (
         <ActivityPanel style={styles.container} title={constants.title.ehealth_details}
             isLoading={this.state.isLoading}
+            titleStyle={styles.titleStyle}
             menuButton={<TouchableOpacity style={styles.btnPrint} onPress={this.print}><Icon name='print' style={{ color: '#fff' }} /></TouchableOpacity>}
         >
             {this.renderDetails()}
