@@ -18,7 +18,7 @@ import { connect } from "react-redux";
 import eyeImg from "@images/eye_black.png";
 import snackbar from "@utils/snackbar-utils";
 import userProvider from "@data-access/user-provider";
-import constants from "@resources/strings";
+import constants from "../../res/strings";
 import stringUtils from "mainam-react-native-string-utils";
 import redux from "@redux-store";
 import ScaleImage from "mainam-react-native-scaleimage";
@@ -44,7 +44,7 @@ class ConfirmCodeScreen extends Component {
     };
   }
 
-  confirmCode() {
+  confirmCode = () => {
     Keyboard.dismiss();
     if (!this.form.isValid()) {
       this.child.unPress();
@@ -88,24 +88,23 @@ class ConfirmCodeScreen extends Component {
     });
   }
 
+  onChangeText = (state) => (value) => {
+    this.setState({ [state]: value })
+  }
   render() {
     return (
       <ActivityPanel
-        style={{ flex: 1 }}
+        style={styles.container}
         showFullScreen={true}
-        title="Xác thực tài khoản"
+        title={constants.reality_account.title}
       >
         <ScrollView
           showsVerticalScrollIndicator={false}
-          style={{ flex: 1 }}
+          style={styles.container}
           keyboardShouldPersistTaps="handled"
         >
           <View
-            style={{
-              marginTop: 60,
-              justifyContent: "center",
-              alignItems: "center"
-            }}
+            style={styles.logo}
           >
             <ScaleImage source={require("@images/logo.png")} width={120} />
           </View>
@@ -120,15 +119,13 @@ class ConfirmCodeScreen extends Component {
                     maxlength: 6
                   },
                   messages: {
-                    required: "Vui lòng nhập mã OTP",
-                    minlength: "Yêu cầu nhập đủ 6 ký tự",
-                    maxlength: "Yêu cầu nhập đủ 6 ký tự"
+                    required: constants.reality_account.require_otp,
+                    minlength: constants.reality_account.require_length,
+                    maxlength: constants.reality_account.require_length
                   }
                 }}
                 inputStyle={styles.input}
-                onChangeText={s => {
-                  this.setState({ code: s });
-                }}
+                onChangeText={this.onChangeText('code')}
                 placeholder={constants.input_code}
                 autoCapitalize={"none"}
                 returnKeyType={"next"}
@@ -139,9 +136,7 @@ class ConfirmCodeScreen extends Component {
 
             <ButtonSubmit
               onRef={ref => (this.child = ref)}
-              click={() => {
-                this.confirmCode();
-              }}
+              click={this.confirmCode}
               text={constants.confirm}
             />
           </KeyboardAvoidingView>
@@ -153,6 +148,12 @@ class ConfirmCodeScreen extends Component {
 const DEVICE_WIDTH = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
+  logo: {
+    marginTop: 60,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  container: { flex: 1 },
   form: {
     marginTop: 60,
     alignItems: "center"
