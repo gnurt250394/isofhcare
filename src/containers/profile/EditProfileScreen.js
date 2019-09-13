@@ -301,7 +301,7 @@ class EditProfileScreen extends Component {
                             "districtId": this.state.districts ? this.state.districts.id.toString() : null,
                             "zoneId": this.state.zone ? this.state.zone.id.toString() : null,
                             "village": this.state.address ? this.state.address : ' ',
-                            "relationshipType": this.state.relationShip.type ? this.state.relationShip.type :  this.state.relationshipType
+                            "relationshipType": this.state.relationShip && this.state.relationShip.type ? this.state.relationShip.type : (this.state.relationshipType || null)
                         }
                         profileProvider.updateProfile(id, data).then(res => {
                             switch (res.code) {
@@ -366,10 +366,10 @@ class EditProfileScreen extends Component {
                 iosBarStyle={'light-content'}
                 actionbarStyle={styles.actionbarStyle}
                 style={{ flex: 1, backgroundColor: '#fff' }}
-                menuButton={<TouchableOpacity style = {{padding:5}} onPress={this.onCreateProfile}>
-                    <Text style = {{color:'#fff',marginRight:25,fontSize:14,fontWeight:'800'}}>Lưu</Text>
+                menuButton={<TouchableOpacity style={{ padding: 5 }} onPress={this.onCreateProfile}>
+                    <Text style={{ color: '#fff', marginRight: 25, fontSize: 14, fontWeight: '800' }}>Lưu</Text>
                 </TouchableOpacity>}
-                 titleStyle={styles.txTitle}
+                titleStyle={styles.txTitle}
             >
                 <ScrollView keyboardShouldPersistTaps='handled' style={{ flex: 1, paddingVertical: 5 }}>
                     <View style={styles.container}>
@@ -767,7 +767,7 @@ const styles = StyleSheet.create({
         // borderRadius:5,
 
     },
-    txTitle: { color: '#fff',marginLeft: 50,fontSize:16  },
+    txTitle: { color: '#fff', marginLeft: 50, fontSize: 16 },
     mdk: {
         marginLeft: 12,
         flex: 1,
