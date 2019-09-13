@@ -341,8 +341,8 @@ class CreateProfileScreen extends Component {
                 iosBarStyle={'light-content'}
                 actionbarStyle={styles.actionbarStyle}
                 style={{ flex: 1, backgroundColor: '#fff' }}
-                menuButton={<TouchableOpacity onPress={this.onCreateProfile}>
-                    <Text style = {{color:'#fff',marginRight:25,fontSize:14}}>Lưu</Text>
+                menuButton={<TouchableOpacity style = {{padding:5}} onPress={this.onCreateProfile}>
+                    <Text style = {{color:'#fff',marginRight:25,fontSize:14,fontWeight:'800'}}>Lưu</Text>
                 </TouchableOpacity>}
             >
                 <ScrollView keyboardShouldPersistTaps='handled' style={{ flex: 1, paddingVertical: 5 }}>
