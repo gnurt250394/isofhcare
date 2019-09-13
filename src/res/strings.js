@@ -61,6 +61,7 @@ module.exports = {
   none_service: 'Không tìm thấy dịch vụ nào phù hợp',
   none_service_type_match: 'Không tìm thấy loại dịch vụ nào phù hợp ',
   update_to_up_case: "CẬP NHẬT",
+  login_fail:'Phiên đăng nhập đã hết hạn, xin vui lòng đăng nhập lại',
   hospital: {
     BENH_VIEN_DAI_HOC_Y: 1
   },
@@ -129,6 +130,20 @@ module.exports = {
       DATA_TOP_HOSPITAL: 'DATA_TOP_HOSPITAL',
       KEY_HAS_UPDATE_NEW_VERSION: "KEY_HAS_UPDATE_NEW_VERSION"
     }
+  },
+  change_password_screens:{
+    password_new:'Nhập mật khẩu mới',
+    password_new_2:'Xác nhận mật khẩu mới',
+    confirm_pass:'Xác nhận mật khẩu'
+  },
+  reality_account:{
+    title:'Xác thực tài khoản',
+    require_otp:'Vui lòng nhập mã OTP',
+    require_length:'Yêu cầu nhập đủ 6 ký tự'
+  },
+  touch_id_screens:{
+    touch_not_found:'Bạn chưa đăng ký vân tay trên tài khoản này',
+    touch_error:'Thử lại \n Sử dụng Touch ID để mở khoá Isofhcare '
   },
   msg: {
     notification: {
@@ -546,7 +561,8 @@ module.exports = {
       confirmPay: isofhcare_service + "booking/confirm-pay",
       detail: isofhcare_service + "booking/get-detail",
       getByAuthor: isofhcare_service + "booking/get-by-author",
-      get_list_share_user: isofhcare_service + "booking/list-share-user"
+      get_list_share_user: isofhcare_service + "booking/list-share-user",
+      // pay_tranfer: isofhcare_service + 'booking/payTranfer'
     },
     question: {
       create: isofhcare_service + "post/create",

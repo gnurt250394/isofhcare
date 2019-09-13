@@ -80,6 +80,8 @@ class DetailsHistoryScreen extends Component {
         return <Text style={styles.paymentHospital}>{constants.booking.status.payment_payoo}</Text>;
       case 5:
         return <Text style={styles.paymentHospital}>{constants.booking.status.payment_payoo2}</Text>;
+      case 6:
+        return <Text style={styles.paymentHospital}>{'Chuyển khoản trực tiếp'}</Text>;
 
     }
   };
