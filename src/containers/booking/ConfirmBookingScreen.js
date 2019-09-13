@@ -372,7 +372,7 @@ class ConfirmBookingScreen extends Component {
         let booking = this.state.booking;
         this.setState({ isLoading: true }, () => {
             let voucher = null
-            if (this.state.voucher &&  this.state.voucher.code) {
+            if (this.state.voucher && this.state.voucher.code) {
                 voucher = {
                     code: this.state.voucher.code,
                     amount: this.state.voucher.price
@@ -498,8 +498,14 @@ class ConfirmBookingScreen extends Component {
                                     break;
                                 default:
                                     this.setState({ isLoading: true }, () => {
-                                        if (this.state.paymentMethod == 2)
+                                        if (this.state.paymentMethod == 2) {
                                             this.confirmPayment(this.state.booking, this.state.booking.book.id);
+                                            return
+                                        }
+                                        if (this.state.paymentMethod == 6) {
+                                            this.confirmPayment(this.state.booking, this.state.booking.book.id, this.state.paymentMethod);
+                                            return
+                                        }
                                         else {
                                             this.getPaymentLink(this.state.booking);
                                         }
@@ -512,17 +518,7 @@ class ConfirmBookingScreen extends Component {
                     this.setState({ isLoading: false }, () => {
                     });
                 });
-                if (this.state.paymentMethod == 2) {
-                    this.confirmPayment(this.state.booking, this.state.booking.book.id);
-                    return
-                }
-                if (this.state.paymentMethod == 6) {
-                    this.confirmPayment(this.state.booking, this.state.booking.book.id, this.state.paymentMethod);
-                    return
-                }
-                else {
-                    this.getPaymentLink(this.state.booking);
-                }
+
             });
         }).catch(e => {
             snackbar.show(constants.msg.app.not_internet, "danger");
