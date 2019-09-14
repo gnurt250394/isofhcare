@@ -21,15 +21,11 @@ class PaymentBookingErrorScreen extends Component {
             <ActivityPanel
                 // hideBackButton={true}
                 style={styles.AcPanel} title={constants.title.booking}
-                titleStyle={{ color: '#FFF' }}
-                
-                
-                containerStyle={{
-                    backgroundColor: "#02C39A"
-                }}
-                actionbarStyle={{
-                    backgroundColor: '#02C39A'
-                }}
+                titleStyle={styles.colorWhite}
+
+
+                containerStyle={styles.colorGreen}
+                actionbarStyle={styles.colorGreen}
             >
                 <View style={styles.container}>
                     <ScrollView>
@@ -69,6 +65,10 @@ function mapStateToProps(state) {
     };
 }
 const styles = StyleSheet.create({
+    colorGreen: {
+        backgroundColor: "#02C39A"
+    },
+    colorWhite: { color: '#FFF' },
     AcPanel: {
         flex: 1,
         backgroundColor: '#cacaca',

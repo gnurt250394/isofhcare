@@ -38,7 +38,7 @@ class CreateBookingWithPaymentScreen extends Component {
         return "";
     }
     onCopyNumber = () => {
-        Clipboard.setString('22010000749786')
+        Clipboard.setString(constants.booking.guide.number)
         snackbar.show(constants.booking.copy_success, 'success')
     }
     onCopyContents = (codeBooking) => () => {

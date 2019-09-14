@@ -365,7 +365,9 @@ module.exports = {
       create_relatives_success: 'Bạn đã thêm người thân thành công',
       profile_arealy_exist: "Hồ sơ đã tồn tại trong hệ thống",
       cannot_show_details_booking: 'Không thể xem chi tiết đặt khám này',
-
+      please_select_date_and_time:'Vui lòng chọn ngày và khung giờ khám',
+      please_select_schedule:'Vui lòng nhấn để chọn khung giờ khám',
+      date_not_schedule:'Ngày bạn chọn không có lịch khám nào'
     },
     message: {
       none_image: 'Không có ảnh nào'
@@ -402,7 +404,7 @@ module.exports = {
     payment_method: 'Hình thức thanh toán:',
     code_payment: 'Mã thanh toán:',
     payment_duration: 'Hạn thanh toán:',
-    code: 'Mã code:',
+    code: 'Mã code',
     code_booking: 'Mã đặt khám:',
     booking_send: 'Lịch đặt khám của bạn đã được gửi đi. Vui lòng đến trước hẹn 15 phút để thực hiện các thủ tục khác.',
     go_home: 'Về trang chủ',
@@ -433,6 +435,14 @@ module.exports = {
     CSYT:'Cơ sở y tế',
     voucher:'Ưu đãi',
     copy_success:'Sao chép thành công',
+    details_booking:"Chi tiết đặt lịch",
+    note_booking:'Ghi chú',
+    sum_price_services:'Tổng tiền dịch vụ',
+    payment_methods:'Phương thức TT',
+    status_booking:'Trạng thái',
+    specialist_not_found:'Không tìm thấy chuyên khoa nào phù hợp',
+    select_date_color_green:'CHỌN NGÀY GIỜ CÓ MÀU XANH',
+    schedule_booking:'LỊCH KHÁM',
     guide:{
       part_1:'Bước 1: Điền thông tin chuyển khoản thụ hưởng:',
       bank:'Ngân hàng',
@@ -512,8 +522,8 @@ module.exports = {
     save: 'Lưu',
     male: 'Nam',
     female: 'Nữ',
-    accept: 'Đồng ý'
-
+    accept: 'Đồng ý',
+    done:'Xong'
   },
   title: {
     ehealth: 'Y BẠ ĐIỆN TỬ',
@@ -531,7 +541,10 @@ module.exports = {
     change_password: 'Đổi mật khẩu',
     result_ehealth: "KẾT QUẢ KHÁM",
     result_ehealth_image: "KẾT QUẢ CHẨN ĐOÁN HÌNH ẢNH",
-    verification_booking: 'Xác nhận lịch khám'
+    verification_booking: 'Xác nhận lịch khám',
+    filter:'Lọc',
+    select_specialist:'Chọn chuyên khoa',
+    select_time:'Chọn thời gian'
   },
   account_screens: {
     signin_or_signup: 'Đăng nhập/ Đăng Ký',
