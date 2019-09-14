@@ -113,22 +113,24 @@ class DetailsHistoryScreen extends Component {
         <Text style={styles.txStatus} />;
     }
   };
+  showImage = () => {
+    this.props.navigation.navigate("photoViewer", {
+      urls: images.map(item => {
+        return item.absoluteUrl()
+      }), index
+    });
+  }
   renderImages() {
     var image = this.state.booking.images;
     if (image) {
       var images = image.split(",");
       return (<View>
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 10, borderRadius: 10 }}>
+        <View style={styles.containerListImage}>
           {
-            images.map((item, index) => <TouchableOpacity onPress={() => {
-              this.props.navigation.navigate("photoViewer", {
-                urls: images.map(item => {
-                  return item.absoluteUrl()
-                }), index
-              });
-            }} key={index} style={{ marginRight: 10, marginBottom: 10, width: 70, height: 70, borderRadius: 10 }}>
+            images.map((item, index) => <TouchableOpacity onPress={this.showImage}
+              key={index} style={styles.buttonShowImage}>
               <Image
-                style={{ width: 70, height: 70, borderRadius: 10 }}
+                style={styles.ImageViewer}
                 source={{
                   uri: item ? item.absoluteUrl() : ''
                 }}
@@ -162,18 +164,14 @@ class DetailsHistoryScreen extends Component {
       valueHis: this.state.booking.codeBooking ? this.state.booking.codeBooking : 0
     })
   }
+  onBackdropPress = () => this.setState({ isVisible: false })
+  defaultImage = () => <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={20} height={20} />
   render() {
     const avatar = this.state.medicalRecords && this.state.medicalRecords.avatar ? { uri: `${this.state.medicalRecords.avatar.absoluteUrl()}` } : require("@images/new/user.png")
     return (
       <ActivityPanel
         isLoading={this.state.isLoading}
-        
-        
-        
-        
-
-        isLoading={this.state.isLoading}
-        title="Chi tiết đặt lịch"
+        title={constants.booking.details_booking}
       >
 
         {this.state.booking && <ScrollView>
@@ -181,22 +179,15 @@ class DetailsHistoryScreen extends Component {
             <View style={styles.viewName}>
               <ImageLoad
                 resizeMode="cover"
-                imageStyle={{ borderRadius: 20, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
+                imageStyle={styles.borderImage}
                 borderRadius={20}
                 customImagePlaceholderDefaultStyle={[styles.avatar, { width: 40, height: 40 }]}
                 placeholderSource={require("@images/new/user.png")}
                 resizeMode="cover"
                 loadingStyle={{ size: 'small', color: 'gray' }}
                 source={avatar}
-                style={{
-                  alignSelf: 'center',
-                  borderRadius: 20,
-                  width: 40,
-                  height: 40
-                }}
-                defaultImage={() => {
-                  return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={20} height={20} />
-                }}
+                style={styles.image}
+                defaultImage={this.defaultImage}
               />
               <Text style={styles.txName}>{this.state.medicalRecords.name}</Text>
             </View>
@@ -207,7 +198,7 @@ class DetailsHistoryScreen extends Component {
                   height={20}
                   source={require("@images/new/booking/ic_barcode.png")}
                 />
-                <Text style={styles.txLabelBarcode}>Mã code</Text>
+                <Text style={styles.txLabelBarcode}>{constants.booking.code}</Text>
                 <TouchableOpacity style={{ marginRight: 10 }}>
                   <Barcode
                     value={this.state.booking.hisPatientHistoryId ? this.state.booking.hisPatientHistoryId : 0}
@@ -222,7 +213,7 @@ class DetailsHistoryScreen extends Component {
                     height={20}
                     source={require("@images/new/booking/ic_barcode.png")}
                   />
-                  <Text style={styles.txLabelBarcode}>Mã code</Text>
+                  <Text style={styles.txLabelBarcode}>{constants.booking.code}</Text>
                   <TouchableOpacity onPress={this.onQrClick} style={{ marginRight: 10, alignItems: 'center' }}>
                     <QRCode
                       value={this.state.booking.codeBooking || 0}
@@ -242,13 +233,13 @@ class DetailsHistoryScreen extends Component {
                   width={20}
                   source={require("@images/ic_service.png")}
                 />
-                <Text style={styles.txService}>Dịch vụ</Text>
+                <Text style={styles.txService}>{constants.booking.services}</Text>
                 <View>
                   {
                     this.state.services.map((item, index) => {
                       return <View key={index}>
-                        <Text numberOfLines={1} key={index} style={[styles.txInfoService, { alignSelf: 'flex-end', fontWeight: 'bold' }]}>{item.name}</Text>
-                        <Text key={index} style={[styles.txInfoService, { alignSelf: 'flex-end', marginBottom: 5 }]}>({item.price.formatPrice()}đ)</Text>
+                        <Text numberOfLines={1} key={index} style={[styles.txInfoService, styles.txtBold]}>{item.name}</Text>
+                        <Text key={index} style={[styles.txInfoService, styles.price]}>({item.price.formatPrice()}đ)</Text>
                       </View>
                     })
                   }
@@ -257,14 +248,14 @@ class DetailsHistoryScreen extends Component {
             }
 
 
-            <View style={{ backgroundColor: '#EDECED', height: 1, marginLeft: 12 }}></View>
+            <View style={styles.between}></View>
             <View style={[styles.viewLocation, { alignItems: 'flex-start' }]}>
               <ScaledImage
                 height={20}
                 width={20}
                 source={require("@images/ic_location.png")}
               />
-              <Text numberOfLines={5} style={styles.txLocation}>Địa điểm</Text>
+              <Text numberOfLines={5} style={styles.txLocation}>{constants.booking.address}</Text>
               <View style={styles.viewInfoLocation}>
                 <Text style={styles.txClinic}>{this.state.hospital.name}</Text>
                 {this.state.hospital.address ?
@@ -273,14 +264,14 @@ class DetailsHistoryScreen extends Component {
                 }
               </View>
             </View>
-            <View style={{ backgroundColor: '#EDECED', height: 1, marginLeft: 12 }}></View>
+            <View style={styles.between}></View>
             <View style={styles.viewDate}>
               <ScaledImage
                 height={19}
                 width={19}
                 source={require("@images/ic_date.png")}
               />
-              <Text style={styles.txDate}>Ngày khám</Text>
+              <Text style={styles.txDate}>{constants.booking.date_booking}</Text>
               <View style={styles.viewDateTime}>
                 <Text style={styles.txTime}>
                   {this.state.booking.bookingTime.toDateObject("-").format("hh:mm")}
@@ -293,7 +284,7 @@ class DetailsHistoryScreen extends Component {
               </View>
             </View>
             <View style={styles.viewSymptom}>
-              <Text><Text style={{ fontWeight: 'bold' }}>Ghi chú: </Text> {this.state.booking.content}</Text>
+              <Text><Text style={{ fontWeight: 'bold' }}>{constants.booking.note_booking}: </Text> {this.state.booking.content}</Text>
               <View>
                 {this.renderImages()}
                 {/* <ScaledImage
@@ -312,12 +303,12 @@ class DetailsHistoryScreen extends Component {
                       width={20}
                       height={20}
                     />
-                    <Text style={styles.txLabelPrice}>Tổng tiền dịch vụ</Text>
+                    <Text style={styles.txLabelPrice}></Text>
                     <Text style={styles.txPrice}>
                       {this.state.services.reduce((start, item) => start + parseInt(item.price), 0).formatPrice() + 'đ'}
                     </Text>
                   </View>
-                  <View style={{ backgroundColor: '#EDECED', height: 1, marginLeft: 12 }}></View>
+                  <View style={styles.between}></View>
                 </React.Fragment>
                 : null
             }
@@ -327,7 +318,7 @@ class DetailsHistoryScreen extends Component {
                 width={19}
                 source={require("@images/ic_transfer.png")}
               />
-              <Text style={styles.txPayment}>Phương thức TT</Text>
+              <Text style={styles.txPayment}>{constants.booking.payment_methods}</Text>
               {this.renderStatus()}
             </View>
             <View style={styles.viewStatus}>
@@ -336,29 +327,28 @@ class DetailsHistoryScreen extends Component {
                 width={20}
                 source={require("@images/ic_status.png")}
               />
-              <Text style={styles.txStatusLabel}>Trạng thái</Text>
+              <Text style={styles.txStatusLabel}>{constants.booking.status_booking}</Text>
               {this.status()}
             </View>
-            <View style={{ backgroundColor: '#EDECED', height: 1, marginLeft: 12 }}></View>
+            <View style={styles.between}></View>
 
 
           </View>
-          <View style={{ with: '100%', height: 50, backgroundColor: "#f7f9fb" }}></View>
+          <View style={styles.end}></View>
         </ScrollView>}
         <Modal
           isVisible={this.state.isVisible}
-          onBackdropPress={() => this.setState({ isVisible: false })}
+          onBackdropPress={this.onBackdropPress}
           backdropOpacity={0.5}
           animationInTiming={500}
           animationOutTiming={500}
-          style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+          style={styles.modal}
           backdropTransitionInTiming={1000}
           backdropTransitionOutTiming={1000}
         >
           <QRCode
             value={this.state.value}
             size={250}
-
             fgColor='white' />
         </Modal>
         {/* <Modal
@@ -384,6 +374,58 @@ class DetailsHistoryScreen extends Component {
   }
 }
 const styles = StyleSheet.create({
+  modal: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  end: {
+    width: '100%',
+    height: 50,
+    backgroundColor: "#f7f9fb"
+  },
+  between: {
+    backgroundColor: '#EDECED',
+    height: 1,
+    marginLeft: 12
+  },
+  price: {
+    alignSelf: 'flex-end',
+    marginBottom: 5
+  },
+  txtBold: {
+    alignSelf: 'flex-end',
+    fontWeight: 'bold'
+  },
+  image: {
+    alignSelf: 'center',
+    borderRadius: 20,
+    width: 40,
+    height: 40
+  },
+  borderImage: {
+    borderRadius: 20,
+    borderWidth: 0.5,
+    borderColor: 'rgba(151, 151, 151, 0.29)'
+  },
+  ImageViewer: {
+    width: 70,
+    height: 70,
+    borderRadius: 10
+  },
+  buttonShowImage: {
+    marginRight: 10,
+    marginBottom: 10,
+    width: 70,
+    height: 70,
+    borderRadius: 10
+  },
+  containerListImage: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginTop: 10,
+    borderRadius: 10
+  },
   viewName: {
     flexDirection: "row",
     width: "100%",
@@ -576,7 +618,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     flex: 1
   },
-  
+
   titleStyle: {
     color: '#FFF'
   },
