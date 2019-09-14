@@ -23,7 +23,9 @@ class ProfileScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: true
+            loading: true,
+            data: {},
+            location: ''
         };
     }
 
@@ -46,6 +48,8 @@ class ProfileScreen extends Component {
                     imgAvtLocal: res.data.medicalRecords.avatar,
                     data: res.data,
                     loading: false
+                }, () => {
+                    this.renderAddress()
                 })
             }
         }).catch(err => {
@@ -172,8 +176,57 @@ class ProfileScreen extends Component {
         }
     }
     renderAddress = () => {
-        let dataLocaotion = this.state.data && this.state.data.medicalRecords ? this.state.data.medicalRecords : {}
-        return (<Text style={styles.txContent}>{dataLocaotion.address}</Text>)
+        let dataLocaotion = this.state.data
+        let district = dataLocaotion.district ? dataLocaotion.district.name : null
+        let province = dataLocaotion.province ? dataLocaotion.province.countryCode : null
+        let zone = dataLocaotion.zone ? dataLocaotion.zone.name : ''
+        let village = dataLocaotion.medicalRecords.village && dataLocaotion.medicalRecords.village != ' ' ? dataLocaotion.medicalRecords.village : null
+        console.log(district, province, zone, village)
+        if (district && province && zone && village) {
+            this.setState({
+                location: `${village}, ${zone}, ${province}, ${district}`
+            })
+
+        }
+        else if (district && province && zone) {
+            this.setState({
+                location: `${zone}, ${province}, ${district}`
+            })
+
+        }
+        else if (district && province && village) {
+            this.setState({
+                location: `${village}, ${province}, ${district}`
+            })
+
+        }
+        else if (district && province) {
+            this.setState({
+                location: `${province}, ${district}`
+            })
+
+        }
+
+        else if (province && village) {
+            this.setState({
+                location: `${village}, ${province}`
+            })
+
+        }
+        else if (province) {
+            this.setState({
+                location: `${province}`
+            })
+
+        }
+        else if (village) {
+            this.setState({
+                location: `${village}`
+            })
+
+        }
+
+        // return (<Text style={styles.txContent}>{dataLocaotion.address}</Text>)
         // let dataLocaotion = this.state.data && this.state.data.medicalRecords ? this.state.data.medicalRecords : {}
         // if (dataLocaotion) {
         //     if (dataLocaotion.address && dataLocaotion.village) {
@@ -221,6 +274,7 @@ class ProfileScreen extends Component {
     }
     //render profile by statusConfirm
     renderProfile = (details) => {
+        console.log(this.state.location, 'ạdkád')
         switch (details.statusConfirm) {
             case 'ACTIVE': {
                 return (
@@ -254,8 +308,8 @@ class ProfileScreen extends Component {
                             {details && details.phone ? <View style={styles.viewItem}>
                                 <Text><Text style={styles.txLabel}>Số điện thoại: </Text><Text style={styles.txContent}>{details.phone.replace(/(\d\d\d\d)(\d\d\d)(\d\d\d)/, '$1.$2.$3')}</Text></Text>
                             </View> : null}
-                            {details && details.address ? <View style={styles.viewItem}>
-                                <Text><Text style={styles.txLabel}>Địa chỉ: </Text><Text style={{ fontSize: 14, color: '#000' }}><Text style={styles.txContent}>{details.address}</Text></Text></Text>
+                            {this.state.location ? <View style={styles.viewItem}>
+                                <Text><Text style={styles.txLabel}>Địa chỉ: </Text><Text style={{ fontSize: 14, color: '#000' }}><Text style={styles.txContent}>{this.state.location}</Text></Text></Text>
                             </View> : null}
                             {details.status != 1 ? (
                                 details && details.relationshipType ? <View style={styles.viewItem}>
@@ -383,7 +437,7 @@ class ProfileScreen extends Component {
                             </View>
                         </View>
                         {this.renderProfile(details)}
-                                    <View style = {{height:50}}></View>
+                        <View style={{ height: 50 }}></View>
                     </ScrollView>
                 ) : null}
                 <Animatable.View ref={ref => this.buttonAdd = ref} animation={"rotate"} style={{ position: 'absolute', right: 10, bottom: 20 }}>
@@ -418,7 +472,7 @@ const styles = StyleSheet.create({
         position: 'absolute', top: 25,
     },
     scaledImageAvt: { position: "absolute", bottom: 0, right: 0 },
-    txTitle: { color: '#fff',marginLeft:50 },
+    txTitle: { color: '#fff', marginLeft: 50 },
     actionbarStyle: {
         backgroundColor: '#02C39A',
         borderBottomWidth: 0
