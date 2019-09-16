@@ -56,6 +56,7 @@ class EditProfileScreen extends Component {
             dataProfile,
             isReset: 1
         };
+        console.log(dataProfile.id)
     }
     componentWillMount() {
         this.renderRelation()
@@ -196,8 +197,8 @@ class EditProfileScreen extends Component {
                 break
             case 'OTHER':
                 this.setState({
-                    id: 11,
                     relationShip: {
+                        id: 11,
                         name: 'Khác',
                         type: 'OTHER'
                     }
@@ -290,6 +291,7 @@ class EditProfileScreen extends Component {
                     },
                     () => {
                         let id = this.state.id
+                        console.log(id)
                         let data = {
                             'name': this.state.name,
                             "dob": this.state.dob ? this.state.dob.format('yyyy-MM-dd') + ' 00:00:00' : null,
