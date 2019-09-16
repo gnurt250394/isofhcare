@@ -149,6 +149,10 @@ class NotificationScreen extends Component {
           case 7:
             NavigationService.navigate('listProfileUser')
             break
+          case 10: {
+            this.openBooking(data.id);
+            break
+          }
           default:
             this.setState({ isLoading: false });
         }
@@ -313,7 +317,9 @@ class NotificationScreen extends Component {
           case 5:
             return constants.msg.notification.type.get_quick_number;
           case 6:
-            return constants.msg.notification.type.ehealth
+            return constants.msg.notification.type.ehealth;
+          case 10:
+            return 'Thanh toán chuyển khoản'
         }
 
       }
