@@ -161,9 +161,9 @@ class ViewInDateScreen extends Component {
             if (note)
                 return (
                     <View style={{ marginTop: 10 }}>
-                        <Text style={styles.txResultEhealth}>{'KẾT QUẢ KHÁM'}</Text>
+                        <Text style={styles.txResultEhealth}>{constants.title.result_ehealth}</Text>
                         <Card style={styles.card}>
-                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={this.viewCheckupResult}>
+                            <TouchableOpacity style={styles.buttonCheckResult} onPress={this.viewCheckupResult}>
                                 {/* <View style={styles.viewCheckupResult}></View> */}
                                 <ScaledImage height={50} source={require('@images/new/ehealth/img_checkup.png')}></ScaledImage>
                                 <View style={styles.viewNote}>
@@ -210,9 +210,9 @@ class ViewInDateScreen extends Component {
             if (note)
                 return (
                     <View style={{ marginTop: 10 }}>
-                        <Text style={styles.txResultEhealth}>{'KẾT QUẢ CHẨN ĐOÁN HÌNH ẢNH'}</Text>
+                        <Text style={styles.txResultEhealth}>{constants.title.result_ehealth_image}</Text>
                         <Card style={styles.card}>
-                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={this.viewDiagnosticResult}>
+                            <TouchableOpacity style={styles.buttonCheckResult} onPress={this.viewDiagnosticResult}>
                                 <ScaledImage height={50} source={require('@images/new/ehealth/ic_ct_catlop.png')}></ScaledImage>
                                 <View style={styles.viewTx}>
                                     <Text style={styles.txNoteBlue}>{note}</Text>
@@ -268,9 +268,9 @@ class ViewInDateScreen extends Component {
             if (note)
                 return (
                     <View style={{ marginTop: 10 }}>
-                        <Text style={styles.txResultEhealth}>{'KẾT QUẢ GIẢI PHẪU'}</Text>
+                        <Text style={styles.txResultEhealth}>{constants.title.result_anatomy}</Text>
                         <Card style={styles.card}>
-                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={this.viewSurgeryResult}>
+                            <TouchableOpacity style={styles.buttonCheckResult} onPress={this.viewSurgeryResult}>
                                 <ScaledImage height={50} source={require('@images/new/ehealth/img_giaiphau.png')}></ScaledImage>
                                 <View style={styles.viewTxSurgery}>
                                     <Text style={styles.txSurgery}>{note}</Text>
@@ -313,9 +313,9 @@ class ViewInDateScreen extends Component {
             if (note)
                 return (
                     <View style={{ marginTop: 10 }}>
-                        <Text style={styles.txResultEhealth}>{'THUỐC'}</Text>
+                        <Text style={styles.txResultEhealth}>{constants.title.drug}</Text>
                         <Card style={styles.card}>
-                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={this.viewMedicine}>
+                            <TouchableOpacity style={styles.buttonCheckResult} onPress={this.viewMedicine}>
                                 <ScaledImage height={50} source={require('@images/new/ehealth/img_drug2.png')}></ScaledImage>
                                 <View style={styles.viewDrug}>
                                     <Text style={styles.txMedicine}>{note}</Text>
@@ -366,9 +366,9 @@ class ViewInDateScreen extends Component {
             if (note)
                 return (
                     <View>
-                        <Text style={styles.txResultEhealth}>{'KẾT QUẢ XÉT NGHIỆM'}</Text>
+                        <Text style={styles.txResultEhealth}>{constants.title.test_result}</Text>
                         <Card style={styles.card}>
-                            <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }} onPress={this.viewMedicalTestResult}>
+                            <TouchableOpacity style={styles.buttonCheckResult} onPress={this.viewMedicalTestResult}>
                                 <ScaledImage height={50} source={require('@images/new/ehealth/ic_xet_nghiem.png')}></ScaledImage>
                                 <View style={styles.viewTxMedical}>
                                     <Text style={styles.txMedical}>{note}</Text>
@@ -437,10 +437,38 @@ class ViewInDateScreen extends Component {
 
         }
     }
+    showResult = () => {
+        this.props.navigation.navigate("viewDetailEhealth", { result: this.state.result, resultDetail: this.state.resultDetail })
+    }
+    confirmDate = newDate => {
+        this.setState({ toggelMonthPicker: false, result: null, hasResult: null, dateSelected: null }, () => {
+            let month = newDate.format("MM");
+            let year = newDate.format("yyyy");
+            this.renderDayInMonth(month, year, this.selectDate(newDate) || newDate);
+        });
+    }
+    onCancelDate = () => {
+        this.setState({ toggelMonthPicker: false });
+    }
+    onSelectAction = (index) => {
+        switch (index) {
+            case 0:
+                this.onShareEhealth();
+                break;
+            case 1:
+                this.exportPdf();
+                break;
+            case 2:
+                this.openHistorySharing();
+
+
+        }
+    }
+    onEndLoading = () => this.setState({ isLoading: false })
     render() {
         return (
             <ActivityPanel style={styles.container} title={constants.title.ehealth}
-                
+
                 isLoading={this.state.isLoading}
                 menuButton={this.state.dateSelected ?
                     <TouchableOpacity style={styles.btnShare} onPress={this.showShare}><Icon name='share' style={{ color: '#FFF' }} /></TouchableOpacity> :
@@ -448,7 +476,7 @@ class ViewInDateScreen extends Component {
             >
                 <View style={styles.container2}>
                     <TouchableOpacity onPress={this.changeMonth}>
-                        <Text style={{ padding: 20, fontWeight: 'bold', fontSize: 15 }}>{this.state.dateSelected ? "Tháng " + this.state.dateSelected.format("MM/yyyy") : ""}</Text>
+                        <Text style={styles.txtDateSelected}>{this.state.dateSelected ? "Tháng " + this.state.dateSelected.format("MM/yyyy") : ""}</Text>
                     </TouchableOpacity>
                     <View style={styles.viewSpaceTop}>
                         <ScrollView ref={ref => this.flListDate = ref} horizontal={true} showsHorizontalScrollIndicator={false}>
@@ -460,17 +488,17 @@ class ViewInDateScreen extends Component {
                                             <Text style={styles.txDay}>{item.format("dd").toNumber()}</Text>
                                             {
                                                 this.state.histories[item.format("yyyy-MM-dd")] ?
-                                                    <View style={{ height: 4, width: 4, borderRadius: 2, backgroundColor: '#FFF' }}></View>
+                                                    <View style={[styles.dateHistory, { backgroundColor: '#FFF' }]}></View>
                                                     :
-                                                    <View style={{ height: 4, width: 4, borderRadius: 2 }}></View>
+                                                    <View style={styles.dateHistory}></View>
                                             }
                                         </View> :
                                         <View style={styles.viewTxDay}>
                                             <Text style={styles.txDayNotSelect}>{item.format("dd").toNumber()}</Text>
                                             {
-                                                this.state.histories[item.format("yyyy-MM-dd")] ? <View style={{ height: 4, width: 4, borderRadius: 2, backgroundColor: 'blue' }}></View>
+                                                this.state.histories[item.format("yyyy-MM-dd")] ? <View style={[styles.dateHistory, { backgroundColor: 'blue' }]}></View>
                                                     :
-                                                    <View style={{ height: 4, width: 4, borderRadius: 2 }}></View>
+                                                    <View style={styles.dateHistory}></View>
                                             }
                                         </View>
                                     }
@@ -506,13 +534,11 @@ class ViewInDateScreen extends Component {
                                 } */}
                                 <View style={styles.viewSpaceBottom}></View>
                             </ScrollView> :
-                            !this.state.isLoading && <Text>Không có lịch khám nào trong tháng này</Text>
+                            !this.state.isLoading && <Text>{constants.msg.ehealth.not_schedule_month}</Text>
                     }
                     {
                         this.state.hasResult &&
-                        <TouchableOpacity style={styles.btnInfo} onPress={() => {
-                            this.props.navigation.navigate("viewDetailEhealth", { result: this.state.result, resultDetail: this.state.resultDetail })
-                        }}>
+                        <TouchableOpacity style={styles.btnInfo} onPress={this.showResult}>
                             <Text style={styles.txBtnInfo}>{constants.ehealth.full_result}</Text>
                         </TouchableOpacity>
                     }
@@ -520,41 +546,20 @@ class ViewInDateScreen extends Component {
                 <DateTimePicker
                     mode={'date'}
                     isVisible={this.state.toggelMonthPicker}
-                    onConfirm={newDate => {
-                        this.setState({ toggelMonthPicker: false, result: null, hasResult: null, dateSelected: null }, () => {
-                            let month = newDate.format("MM");
-                            let year = newDate.format("yyyy");
-                            this.renderDayInMonth(month, year, this.selectDate(newDate) || newDate);
-                        });
-                    }}
-                    onCancel={() => {
-                        this.setState({ toggelMonthPicker: false });
-                    }}
-                    cancelTextIOS={"Hủy bỏ"}
-                    confirmTextIOS={"Xác nhận"}
+                    onConfirm={this.confirmDate}
+                    onCancel={this.onCancelDate}
+                    cancelTextIOS={constants.actionSheet.cancel2}
+                    confirmTextIOS={constants.actionSheet.confirm}
                     date={this.state.dateSelected || new Date()}
                 />
                 <ActionSheet
                     ref={o => this.actionSheetShare = o}
-                    options={["Chia sẻ trên hồ sơ iSofHCare", "Chia sẻ trên ứng dụng khác", "Lịch sử chia sẻ", constants.actionSheet.cancel]}
+                    options={[constants.ehealth.share_with_isofhcare, constants.ehealth.share_with_app_other, constants.ehealth.history_share, constants.actionSheet.cancel]}
                     cancelButtonIndex={3}
                     destructiveButtonIndex={3}
-                    onPress={(index) => {
-                        switch (index) {
-                            case 0:
-                                this.onShareEhealth();
-                                break;
-                            case 1:
-                                this.exportPdf();
-                                break;
-                            case 2:
-                                this.openHistorySharing();
-
-
-                        }
-                    }}
+                    onPress={this.onSelectAction}
                 />
-                <ExportPDF endLoading={() => this.setState({ isLoading: false })} ref={(element) => this.exportPdfCom = element} />
+                <ExportPDF endLoading={this.onEndLoading} ref={(element) => this.exportPdfCom = element} />
 
             </ActivityPanel>
         );
@@ -562,6 +567,21 @@ class ViewInDateScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+    dateHistory: {
+        height: 4,
+        width: 4,
+        borderRadius: 2,
+
+    },
+    txtDateSelected: {
+        padding: 20,
+        fontWeight: 'bold',
+        fontSize: 15
+    },
+    buttonCheckResult: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
     container: {
         flex: 1,
         backgroundColor: '#4F4F4F'
@@ -699,7 +719,7 @@ const styles = StyleSheet.create({
     viewTxMedical: { flex: 1, padding: 15 },
     txMedical: { paddingTop: 5, color: '#373A3C' },
     footerMedical: { width: 5, height: '100%', backgroundColor: '#0063ff', borderRadius: 2.5 },
-    
+
     titleStyle:
     {
         color: '#FFF', marginLeft: 65
