@@ -184,25 +184,25 @@ class ProfileScreen extends Component {
         console.log(district, province, zone, village)
         if (district && province && zone && village) {
             this.setState({
-                location: `${village}, ${zone}, ${province}, ${district}`
+                location: `${village}, ${zone}, ${district}, ${province}`
             })
 
         }
         else if (district && province && zone) {
             this.setState({
-                location: `${zone}, ${province}, ${district}`
+                location: `${zone}, ${district}, ${province}`
             })
 
         }
         else if (district && province && village) {
             this.setState({
-                location: `${village}, ${province}, ${district}`
+                location: `${village}, ${district}, ${province}`
             })
 
         }
         else if (district && province) {
             this.setState({
-                location: `${province}, ${district}`
+                location: `${district},${province},`
             })
 
         }
