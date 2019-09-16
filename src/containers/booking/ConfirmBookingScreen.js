@@ -270,6 +270,8 @@ class ConfirmBookingScreen extends Component {
                                             }
                                         })
                                     }
+                                    booking.vnPayId = data.id
+                                    booking.vnPayDate = obj["vnp_PayDate"]
                                     walletProvider.onlineTransactionPaid(obj["vnp_TxnRef"], this.getPaymentMethod(), obj);
                                     if (obj["vnp_TransactionNo"] == 0) {
                                         booking.transactionCode = obj["vnp_TxnRef"];
@@ -432,7 +434,9 @@ class ConfirmBookingScreen extends Component {
                                         booking.transactionCode = obj["vnp_TxnRef"];
                                         this.props.navigation.navigate("paymentBookingError", { booking })
                                     }
-                                    else {
+                                    else { 
+                                        booking.vnPayDate = obj["vnp_PayDate"]
+                                        booking.vnPayDate = data.id
                                         this.props.navigation.navigate("homeTab", {
                                             navigate: {
                                                 screen: "createBookingSuccess",
