@@ -67,13 +67,13 @@ class SearchProfileScreen extends Component {
             });
         }
     }
-    showSearch() {
+    showSearch = () => {
         this.setState({
             showSearch: !this.state.showSearch,
             searchValue: ""
         })
     }
-    searchTextChange(s) {
+    searchTextChange = (s) => {
         this.setState({ searchValue: s });
     }
     onRefreshList = () => {
@@ -139,9 +139,9 @@ class SearchProfileScreen extends Component {
         })
 
     }
-    selectProfile = (item) => {
+    selectProfile = (item) => () => {
         let userId = this.props.userApp.currentUser.id;
-        let dataId = item.user.id; 
+        let dataId = item.user.id;
         let name = ''
         const { USER_EHEALTH_HISTORY } = realmModel;
         historyProvider.addHistory(userId, USER_EHEALTH_HISTORY, name, dataId, JSON.stringify(item))
@@ -154,7 +154,7 @@ class SearchProfileScreen extends Component {
     }
     renderSearchButton() {
         return (
-            <TouchableOpacity onPress={() => this.showSearch()} style={{ padding: 10 }}>
+            <TouchableOpacity onPress={this.showSearch} style={{ padding: 10 }}>
                 <ScaleImage source={require("@images/ic_timkiem.png")} width={20} />
             </TouchableOpacity>
         );
@@ -177,7 +177,7 @@ class SearchProfileScreen extends Component {
     renderItem = ({ item }) => {
         const icSupport = require("@images/new/user.png");
         return (
-            <TouchableOpacity onPress={() => this.selectProfile(item)}>
+            <TouchableOpacity onPress={this.selectProfile(item)}>
                 <View style={styles.viewItem}>
                     <View style={styles.viewList}>
                         <View style={styles.viewImage}>
@@ -213,19 +213,39 @@ class SearchProfileScreen extends Component {
                 </View>
             </TouchableOpacity>)
     }
+    goBack = () => this.props.navigation.pop()
+    keyExtractor = (item, index) => index.toString()
+    headerComponent = () => {
+        return (
+            !this.state.refreshing &&
+                (!this.state.listProfileSearch || this.state.listProfileSearch.length == 0) ?
+                <View style={styles.viewHeader}>
+                    <ScaleImage source={require("@images/empty_result.png")} width={120} />
+                    <Text
+                        style={styles.txErr}>{this.state.searchValue ? constants.ehealth.not_result_for_keyword
+                            :
+                            constants.ehealth.not_result_for_last_search}<Text style={styles.txtSearchValue}>{this.state.searchValue}</Text></Text>
+                </View> : null
+        )
+    }
+    footerComponent = () => <View style={styles.viewFooter} />
     render() {
         return (
             <ActivityPanel
-                backButton={<TouchableOpacity style={styles.activity} onPress={() => this.props.navigation.pop()}><Text>{constants.ehealth.cancel}</Text></TouchableOpacity>}
-         title={constants.title.search_profile}
+                backButton={<TouchableOpacity style={styles.activity} onPress={this.goBack}><Text>{constants.ehealth.cancel}</Text></TouchableOpacity>}
+                title={constants.title.search_profile}
                 isLoading={this.state.isLoading} menuButton={this.renderSearchButton()} showFullScreen={true}
             >
                 {
                     this.state.showSearch ?
                         <View style={styles.viewSearch}>
-                            <TextInput autoFocus={true} style={styles.textInput} placeholderTextColor='#dddddd' underlineColorAndroid="transparent" placeholder={constants.ehealth.inputKeyword} onChangeText={(s) => {
-                                this.searchTextChange(s);
-                            }} returnKeyType="search" onSubmitEditing={this.onRefreshList} />
+                            <TextInput autoFocus={true} style={styles.textInput}
+                                placeholderTextColor='#dddddd'
+                                underlineColorAndroid="transparent"
+                                placeholder={constants.ehealth.inputKeyword}
+                                onChangeText={this.searchTextChange}
+                                returnKeyType="search"
+                                onSubmitEditing={this.onRefreshList} />
                             <TouchableOpacity onPress={this.onRefreshList}>
                                 <Text style={styles.txSearch}>{constants.search}</Text>
                             </TouchableOpacity>
@@ -242,19 +262,12 @@ class SearchProfileScreen extends Component {
                     style={styles.flatList}
                     refreshing={this.state.refreshing}
                     onRefresh={this.onRefresh}
-                    keyExtractor={(item, index) => index.toString()}
+                    keyExtractor={this.keyExtractor}
                     extraData={this.state}
-                    ListHeaderComponent={() =>
-                        !this.state.refreshing &&
-                            (!this.state.listProfileSearch || this.state.listProfileSearch.length == 0) ?
-                            <View style={styles.viewHeader}>
-                                <ScaleImage source={require("@images/empty_result.png")} width={120} />
-                                <Text style={styles.txErr}>{this.state.searchValue ? constants.ehealth.not_result_for_keyword : constants.ehealth.not_result_for_last_search}<Text style={{ fontWeight: 'bold', color: constants.colors.actionbar_title_color }}>{this.state.searchValue}</Text></Text>
-                            </View> : null
-                    }
+                    ListHeaderComponent={this.headerComponent}
                     onEndReached={this.state.isSearch ? this.onLoadMore.bind(this) : {}}
                     onEndReachedThreshold={this.state.isSearch ? 1 : -1}
-                    ListFooterComponent={() => <View style={styles.viewFooter} />}
+                    ListFooterComponent={this.footerComponent}
                     data={this.state.listProfileSearch}
                     renderItem={this.renderItem}
                 />
@@ -273,6 +286,10 @@ class SearchProfileScreen extends Component {
     }
 }
 const styles = StyleSheet.create({
+    txtSearchValue: {
+        fontWeight: 'bold',
+        color: constants.colors.actionbar_title_color
+    },
     viewSearch: {
         justifyContent: 'space-between',
         elevation: 5,
@@ -281,11 +298,33 @@ const styles = StyleSheet.create({
         backgroundColor: constants.colors.actionbar_color,
         flexDirection: 'row'
     },
-    textInput: { flex: 1, color: constants.colors.actionbar_title_color, padding: 10 },
-    viewItem: { marginBottom: 2, backgroundColor: '#FFF', padding: 20, flexDirection: 'column', borderBottomColor: '#A5A5A5', borderBottomWidth: 0.7 },
-    viewList: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-    imageStyle: { borderRadius: 15, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' },
-    viewImage: { flexDirection: 'row', alignItems: 'center' },
+    textInput: {
+        flex: 1,
+        color: constants.colors.actionbar_title_color,
+        padding: 10
+    },
+    viewItem: {
+        marginBottom: 2,
+        backgroundColor: '#FFF',
+        padding: 20,
+        flexDirection: 'column',
+        borderBottomColor: '#A5A5A5',
+        borderBottomWidth: 0.7
+    },
+    viewList: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    },
+    imageStyle: {
+        borderRadius: 15,
+        borderWidth: 0.5,
+        borderColor: 'rgba(151, 151, 151, 0.29)'
+    },
+    viewImage: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
     imageCustom: {
         width: 30,
         height: 30,

@@ -2,7 +2,7 @@ import React, { Component, PropTypes, PureComponent } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
 import { View, Text, ScrollView, FlatList, TouchableOpacity, StyleSheet, TextInput, Switch, Dimensions, Platform } from 'react-native';
 import { connect } from 'react-redux';
-import constants from '@resources/strings';
+import constants from '../../res/strings';
 import dateUtils from 'mainam-react-native-date-utils';
 import snackbar from '@utils/snackbar-utils';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
@@ -360,9 +360,9 @@ class ListProfileScreen extends Component {
             case 3: return constants.msg.ehealth.examination_in_date;
             case 4: return constants.msg.ehealth.not_re_examination;
             case 5: return constants.msg.ehealth.not_examination;
-            case 6: return "Bạn chưa có kết quả khám ở ngày này!";
-            case 7: return "Đã chia sẻ Y bạ thành công!";
-            case 8: return "Chưa chia sẻ được!";
+            case 6: return constants.msg.ehealth.not_result_ehealth_in_day;
+            case 7: return constants.msg.ehealth.share_medical_records_success;
+            case 8: return constants.msg.ehealth.share_fail;
             default: return constants.msg.ehealth.not_examination;
         }
     }
@@ -478,9 +478,30 @@ class ListProfileScreen extends Component {
     showShare = () => {
         this.actionSheetShare.show();
     }
+    onMonthChange = (month) => {
+        if (!this.state.latestTime || !this.state.latestTime.format("MMyyyy") != month.month + month.year) {
+            this.setState({ latestTime: new Date(month.dateString), toggelMonthPicker: false }, () => {
+                this.selectDate();
+            })
+        }
+    }
+    onToggelDate = () => {
+        this.setState({ toggelMonthPicker: true })
+    }
+    onChangeText = state => value => {
+        this.setState({ [state]: value })
+    }
+    confirmDate = newDate => {
+        this.setState({ latestTime: newDate, toggelMonthPicker: false }, () => {
+            this.selectDate();
+        })
+    }
+    onCancelDate = () => {
+        this.setState({ toggelMonthPicker: false });
+    }
     render() {
         return (
-            <ActivityPanel style={{ flex: 1 }} title={constants.title.ehealth}                
+            <ActivityPanel style={{ flex: 1 }} title={constants.title.ehealth}
                 isLoading={this.state.isLoading}
                 menuButton={this.state.dateSelected ?
                     <TouchableOpacity style={styles.btnShare} onPress={this.showShare}><Icon name='share' style={{ color: '#FFF' }} /></TouchableOpacity> :
@@ -489,20 +510,14 @@ class ListProfileScreen extends Component {
             >
                 <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
                     <View style={styles.viewCalendar}>
-                        <View style={{ position: 'relative', left: 0, right: 0, width: DEVICE_WIDTH }}>
+                        <View style={styles.containerCalendar}>
                             <Calendar style={styles.calendarStyle}
                                 // markedDates={this.state.listSchedule}
                                 current={this.state.latestTime.format("yyyy-MM-dd")}
                                 // onDayPress={(day) => { console.log('selected day', day) }}
                                 onDayLongPress={(day) => { console.log('selected day', day) }}
                                 monthFormat={'MMMM - yyyy'}
-                                onMonthChange={(month) => {
-                                    if (!this.state.latestTime || !this.state.latestTime.format("MMyyyy") != month.month + month.year) {
-                                        this.setState({ latestTime: new Date(month.dateString), toggelMonthPicker: false }, () => {
-                                            this.selectDate();
-                                        })
-                                    }
-                                }}
+                                onMonthChange={this.onMonthChange}
                                 // hideArrows={true}
                                 hideExtraDays={true}
                                 onDayPress={(day) => { this.onDayPress(day) }}
@@ -512,10 +527,8 @@ class ListProfileScreen extends Component {
                                 markedDates={this.state.histories}
                             />
                             <TouchableOpacity
-                                onPress={() => {
-                                    this.setState({ toggelMonthPicker: true })
-                                }}
-                                style={{ position: 'absolute', top: 0, left: 70, right: 70, height: 60 }}>
+                                onPress={this.onToggelDate}
+                                style={styles.buttonToggelDate}>
                             </TouchableOpacity>
                         </View>
                         {
@@ -548,15 +561,11 @@ class ListProfileScreen extends Component {
                                     </View>
                                     <View>
                                         <Text style={styles.txLabel}>{constants.ehealth.note}</Text>
-                                        <TextInput onBlur={this.onBlur} multiline={true} onChangeText={s => {
-                                            this.setState({ note: s })
-                                        }} value={this.state.note} underlineColorAndroid={'#fff'} style={[styles.txContent,]} placeholder={'Nhập ghi chú'}></TextInput>
+                                        <TextInput onBlur={this.onBlur} multiline={true} onChangeText={this.onChangeText('note')} value={this.state.note} underlineColorAndroid={'#fff'} style={[styles.txContent,]} placeholder={'Nhập ghi chú'}></TextInput>
                                     </View>
                                     <View style={styles.viewSuggest}>
                                         <View style={styles.viewLine}></View>
-                                        <TextInput onBlur={this.onBlur} multiline={true} onChangeText={s => {
-                                            this.setState({ suggestions: s })
-                                        }} value={this.state.suggestions} underlineColorAndroid={'#fff'} style={styles.inputSuggest} placeholder={'Bạn cần làm gì?'}></TextInput>
+                                        <TextInput onBlur={this.onBlur} multiline={true} onChangeText={this.onChangeText('suggestions')} value={this.state.suggestions} underlineColorAndroid={'#fff'} style={styles.inputSuggest} placeholder={'Bạn cần làm gì?'}></TextInput>
                                     </View>
                                 </Card>
                             </React.Fragment>
@@ -567,14 +576,8 @@ class ListProfileScreen extends Component {
                 <DateTimePicker
                     mode={'date'}
                     isVisible={this.state.toggelMonthPicker}
-                    onConfirm={newDate => {
-                        this.setState({ latestTime: newDate, toggelMonthPicker: false }, () => {
-                            this.selectDate();
-                        })
-                    }}
-                    onCancel={() => {
-                        this.setState({ toggelMonthPicker: false });
-                    }}
+                    onConfirm={this.confirmDate}
+                    onCancel={this.onCancelDate}
                     cancelTextIOS={"Hủy bỏ"}
                     confirmTextIOS={"Xác nhận"}
                     date={this.state.latestTime || new Date()}
@@ -617,6 +620,19 @@ class ListProfileScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+    buttonToggelDate: {
+        position: 'absolute',
+        top: 0,
+        left: 70,
+        right: 70,
+        height: 60
+    },
+    containerCalendar: {
+        position: 'relative',
+        left: 0,
+        right: 0,
+        width: DEVICE_WIDTH
+    },
     titleStyle:
     {
         color: '#FFF', marginLeft: 65
@@ -723,7 +739,7 @@ const styles = StyleSheet.create({
     txShareFinish: { textAlign: 'center', marginVertical: 20, marginHorizontal: 10, fontSize: 18 },
     viewShareErr: { flexDirection: 'row', alignItems: 'center', padding: 10 },
     txShareErr: { textAlign: 'center', marginVertical: 20, marginHorizontal: 10, fontSize: 18 },
-    
+
     viewCalendar: { justifyContent: 'center', flex: 1, alignItems: 'center' },
     calendarStyle: { marginBottom: 3, backgroundColor: "#FFF", width: '100%' },
     txCheckResult: { color: '#fff', fontWeight: 'bold', fontSize: 16 },

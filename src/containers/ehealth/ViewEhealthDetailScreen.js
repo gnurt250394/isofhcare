@@ -60,28 +60,28 @@ class ViewEhealthDetailScreen extends Component {
             return (
                 <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
                     <ProfileInfomation hospitalName={this.state.hospitalName} avatar={this.state.user.avatar} patientName={this.state.resultDetail.Profile.PatientName} resultDetail={this.state.resultDetail} />
-                    <View style={{ height: 1, backgroundColor: '#27ae60', }} />
+                    <View style={styles.lineHeader} />
                     <CheckupResult result={this.state.result} />
                     <MedicalTestResult result={this.state.result} />
                     <DiagnosticResult result={this.state.result} />
                     <SurgeryResult result={this.state.result} />
                     <Medicine result={this.state.result} />
                     <TotalMoney result={this.state.result} resultDetail={this.state.resultDetail} />
-                    <View style={{ height: 50 }} />
+                    <View style={styles.end} />
                 </ScrollView>
             )
         } else {
             return (
                 <ScrollView ref={ref => this.flListDate = ref} showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
                     <ProfileInfomation resultDetail={this.state.resultDetail} />
-                    <View style={{ height: 1, backgroundColor: '#27ae60', }} />
+                    <View style={styles.lineHeader} />
                     <CheckupResult result={this.state.result} />
                     <MedicalTestResult result={this.state.result} />
                     <DiagnosticResult result={this.state.result} />
                     <SurgeryResult result={this.state.result} />
                     <Medicine result={this.state.result} />
                     <TotalMoney result={this.state.result} resultDetail={this.state.resultDetail} />
-                    <View style={{ height: 50 }} />
+                    <View style={styles.end} />
                 </ScrollView>
             )
         }
@@ -107,22 +107,27 @@ class ViewEhealthDetailScreen extends Component {
     }
 
 
-render() {
+    render() {
 
-    return (
-        <ActivityPanel style={styles.container} title={constants.title.ehealth_details}
-            isLoading={this.state.isLoading}
-            titleStyle={styles.titleStyle}
-            menuButton={<TouchableOpacity style={styles.btnPrint} onPress={this.print}><Icon name='print' style={{ color: '#fff' }} /></TouchableOpacity>}
-        >
-            {this.renderDetails()}
-            <ExportPDF endLoading = {() => {this.setState({isLoading:false})}} ref={(element) => this.exportPdfCom = element} />
-        </ActivityPanel>
-    );
-}
+        return (
+            <ActivityPanel style={styles.container} title={constants.title.ehealth_details}
+                isLoading={this.state.isLoading}
+                titleStyle={styles.titleStyle}
+                menuButton={<TouchableOpacity style={styles.btnPrint} onPress={this.print}><Icon name='print' style={{ color: '#fff' }} /></TouchableOpacity>}
+            >
+                {this.renderDetails()}
+                <ExportPDF endLoading={() => { this.setState({ isLoading: false }) }} ref={(element) => this.exportPdfCom = element} />
+            </ActivityPanel>
+        );
+    }
 }
 
 const styles = StyleSheet.create({
+    end: { height: 50 },
+    lineHeader: {
+        height: 1,
+        backgroundColor: '#27ae60',
+    },
     container: { flex: 1 },
     round1: { width: 20, height: 20, backgroundColor: '#FFF', borderColor: '#8fa1aa', borderWidth: 1.5, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
     round2: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#7daa3c' },
@@ -132,7 +137,7 @@ const styles = StyleSheet.create({
     item: { marginTop: 10, flexDirection: 'row' },
     viewRenderDetails: { height: 1, backgroundColor: '#27ae60', },
     viewBottomDetails: { height: 50 },
-    
+
     titleStyle: {
         color: '#FFF',
         marginLeft: 50

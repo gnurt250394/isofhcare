@@ -33,7 +33,7 @@ class HistorySharingScreen extends Component {
             return "";
         }
     }
-    viewResult = (item) => {
+    viewResult = (item) => () => {
         console.log(item);
         this.setState({ isLoading: true }, () => {
             resultUtils.getDetail(item.patientHistoryId, this.props.ehealth.hospital.hospital.id, item.id).then(result => {
@@ -133,17 +133,15 @@ class HistorySharingScreen extends Component {
         return (
             <View style={styles.viewItem}>
                 <Card style={styles.cardStyle}>
-                    <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => {
-                        this.viewResult(item)
-                    }}>
-                        <View style={{ width: 150, height: 100, alignItems: 'center' }}>
+                    <TouchableOpacity style={styles.buttonViewResult} onPress={this.viewResult(item)}>
+                        <View style={styles.containerImage}>
                             <ScaledImage style={styles.img} height={100} width={150} source={this.getImage(item)}></ScaledImage>
                         </View>
                         <View style={styles.viewDetails}>
-                            <Text style={{ color: '#479AE3', marginVertical: 10, fontSize: 14 }}>{this.getTime(item.timeGoIn)}</Text>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                            <Text style={styles.txtTimeGoIn}>{this.getTime(item.timeGoIn)}</Text>
+                            <View style={styles.containerImageSmall}>
                                 <ScaledImage style={styles.img} height={20} width={20} source={this.getImageSmall(item)}></ScaledImage>
-                                <Text style={{ marginLeft: 5, fontSize: 14, minHeight: 20, fontWeight: 'bold' }}>{item.serviceName}</Text>
+                                <Text style={styles.txtServicesName}>{item.serviceName}</Text>
                             </View>
                         </View>
                     </TouchableOpacity>
@@ -156,39 +154,36 @@ class HistorySharingScreen extends Component {
         if (!this.state.loading)
             this.onLoad();
     }
-
+    headerComponent = () => {
+        return (
+            !this.state.refreshing &&
+                (!this.state.data || this.state.data.length == 0) ? (
+                    <View style={styles.containerNotFound}>
+                        <Text style={styles.txtNotFound}>{constants.msg.ehealth.share_not_found}</Text>
+                    </View>
+                ) : null
+        )
+    }
+    footerComponent = () => <View style={{ height: 10 }} />
+    keyExtractor = (item, index) => index.toString()
     render() {
         return (
             <ActivityPanel style={styles.container}
                 isLoading={this.state.isLoading}
-                title={"LỊCH SỬ CHIA SẺ"}
-                
-                
-                
-                
-        
+                title={constants.title.history_share}
             >
                 <FlatList
                     numColumns={2}
                     onRefresh={this.onRefresh.bind(this)}
                     refreshing={this.state.refreshing}
                     onEndReachedThreshold={1}
-                    style={{ flex: 1 }}
-                    keyExtractor={(item, index) => index.toString()}
+                    style={styles.flex}
+                    keyExtractor={this.keyExtractor}
                     extraData={this.state}
                     data={this.state.data}
                     renderItem={this.renderItem}
-                    ListHeaderComponent={() =>
-                        !this.state.refreshing &&
-                            (!this.state.data || this.state.data.length == 0) ? (
-                                <View style={{ alignItems: "center", marginTop: 50 }}>
-                                    <Text style={{ fontStyle: "italic" }}>
-                                        Chưa có chia sẻ nào
-                            </Text>
-                                </View>
-                            ) : null
-                    }
-                    ListFooterComponent={() => <View style={{ height: 10 }} />}
+                    ListHeaderComponent={this.headerComponent}
+                    ListFooterComponent={this.footerComponent}
                 ></FlatList>
             </ActivityPanel>
 
@@ -196,6 +191,36 @@ class HistorySharingScreen extends Component {
     }
 }
 const styles = StyleSheet.create({
+    txtNotFound: {
+        fontStyle: "italic"
+    },
+    containerNotFound: {
+        alignItems: "center",
+        marginTop: 50
+    },
+    flex: { flex: 1 },
+    txtServicesName: {
+        marginLeft: 5,
+        fontSize: 14,
+        minHeight: 20,
+        fontWeight: 'bold'
+    },
+    containerImageSmall: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    txtTimeGoIn: {
+        color: '#479AE3',
+        marginVertical: 10,
+        fontSize: 14
+    },
+    containerImage: {
+        width: 150,
+        height: 100,
+        alignItems: 'center'
+    },
+    buttonViewResult: { alignItems: 'center' },
     container: {
         flex: 1,
         backgroundColor: '#F9FAFB'
@@ -225,7 +250,7 @@ const styles = StyleSheet.create({
         // top:-50
 
     },
-    
+
     imageStyle: { borderRadius: 30, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' },
     imgLoad: {
         alignSelf: 'center',
