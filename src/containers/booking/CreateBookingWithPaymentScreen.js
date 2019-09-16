@@ -357,7 +357,8 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: 'bold',
         color: '#02c39a',
-        marginLeft: 5,
+        marginLeft:5,
+        marginRight:10
 
     },
     bankInfo: {
