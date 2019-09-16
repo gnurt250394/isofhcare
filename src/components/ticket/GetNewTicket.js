@@ -109,7 +109,19 @@ class GetNewTicket extends Component {
             }, 500);
         });
     }
-
+    showDialogError = (item) => () => {
+        console.log('item: ', item);
+        this.props.dispatch({ type: constants.action.action_select_hospital_get_ticket, value: item });
+        this.actionSheetErr.show();
+    }
+    showDialog = (item) => () => {
+        console.log('item: ', item);
+        this.props.dispatch({ type: constants.action.action_select_hospital_get_ticket, value: item });
+        this.actionSheetGetTicket.show();
+    }
+    showGetTicket = () => {
+        this.actionSheetGetTicket.show();
+    }
     renderItem = (item, index) => {
         return (
             <View style={[styles.viewItem, index > 0 ? { borderTopWidth: 0 } : { borderTopWidth: 1 }]} key={index}>
@@ -129,28 +141,32 @@ class GetNewTicket extends Component {
                     </View>
                 </View>
                 <View style={styles.viewService}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <Text style={{ fontWeight: 'bold', color: '#000' }}>{item.hospital.name}</Text>
+                    <View style={styles.row}>
+                        <Text style={styles.txtNameHospital}>{item.hospital.name}</Text>
                         <ScaledImage style={{ marginLeft: 8, }} height={12} source={require("@images/new/booking/ic_checked.png")} ></ScaledImage>
                     </View>
-                    <Text style={{ color: '#00000050', marginTop: 5 }}>{item.hospital.address}</Text>
+                    <Text style={styles.txtAddress}>{item.hospital.address}</Text>
                     {item.hospital.defaultBookHospital ? <View style={{ flexDirection: 'row' }}>
-                        <TouchableOpacity onPress={() => {
-                            this.props.dispatch({ type: constants.action.action_select_hospital_get_ticket, value: item });
-                            this.actionSheetErr.show();
-                        }} style={[styles.btnService, { backgroundColor: '#0A9BE1' }]}><Text style={[styles.txService, { color: '#fff' }]}>Khám DV</Text></TouchableOpacity>
-                        <TouchableOpacity onPress={() => {
-                            this.props.dispatch({ type: constants.action.action_select_hospital_get_ticket, value: item });
-                            this.actionSheetGetTicket.show();
-                        }} style={[styles.btnService, { width: 62 }, item.hospital.defaultBookHospital ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, { color: '#fff' }]}>BHYT</Text></TouchableOpacity>
-                        <TouchableOpacity onPress={() => {
-                            this.actionSheetGetTicket.show();
-                        }} style={[styles.btnService, { backgroundColor: '#0A9BE1' }]}><Text style={[styles.txService, { color: '#fff' }]}>BHYT CA</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={this.showDialogError(item)} style={[styles.btnService, { backgroundColor: '#0A9BE1' }]}>
+                            <Text style={[styles.txService, { color: '#fff' }]}>{constants.examination_services}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={this.showDialog(item)} style={[styles.btnService, { width: 62 }, item.hospital.defaultBookHospital ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}>
+                            <Text style={[styles.txService, { color: '#fff' }]}>{constants.BHYT}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={this.showGetTicket} style={[styles.btnService, { backgroundColor: '#0A9BE1' }]}>
+                            <Text style={[styles.txService, { color: '#fff' }]}>{constants.BHYT_CA}</Text>
+                        </TouchableOpacity>
                     </View> :
                         <View style={{ flexDirection: 'row' }}>
-                            <TouchableOpacity disabled={true} style={[styles.btnService, this.state.service && this.state.service == 1 && this.state.index == item.hospital.id ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, { color: '#6B6B6C' }]}>Khám DV</Text></TouchableOpacity>
-                            <TouchableOpacity disabled={true} style={[styles.btnService, { width: 62 }, item.hospital.defaultBookHospital ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, { color: '#6B6B6C' }]}>BHYT</Text></TouchableOpacity>
-                            <TouchableOpacity disabled={true} style={[styles.btnService, { backgroundColor: '#D7D7D9' }]}><Text style={[styles.txService, { color: '#6B6B6C' }]}>BHYT CA</Text></TouchableOpacity>
+                            <TouchableOpacity disabled={true} style={[styles.btnService, this.state.service && this.state.service == 1 && this.state.index == item.hospital.id ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}>
+                                <Text style={[styles.txService, { color: '#6B6B6C' }]}>{constants.examination_services}</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity disabled={true} style={[styles.btnService, { width: 62 }, item.hospital.defaultBookHospital ? { backgroundColor: '#0A9BE1' } : { backgroundColor: '#D7D7D9' }]}>
+                                <Text style={[styles.txService, { color: '#6B6B6C' }]}>{constants.BHYT}</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity disabled={true} style={[styles.btnService, { backgroundColor: '#D7D7D9' }]}>
+                                <Text style={[styles.txService, { color: '#6B6B6C' }]}>{constants.BHYT_CA}</Text>
+                            </TouchableOpacity>
                         </View>
                     }
                 </View>
@@ -215,9 +231,9 @@ class GetNewTicket extends Component {
                     }
                 </ScrollView>)}
                 <ActionSheet
-                    title={"Lấy số tiếp đón"}
+                    title={constants.ehealth.get_ticket}
                     ref={o => this.actionSheetGetTicket = o}
-                    options={["Lấy số cho tôi", "Lấy số hộ", "Hủy"]}
+                    options={[constants.ehealth.get_ticket_for_me, constants.ehealth.get_ticket_other, constants.actionSheet.cancel]}
                     cancelButtonIndex={2}
                     destructiveButtonIndex={2}
                     onPress={(index) => {
@@ -234,9 +250,9 @@ class GetNewTicket extends Component {
                 />
                 <ActionSheet
                     title={"Thông báo"}
-                    message={"Đối tượng dịch vụ tại bệnh viện E không cần có số tiếp đón"}
+                    message={constants.ehealth.service_E_not_get_ticket}
                     ref={o => this.actionSheetErr = o}
-                    options={["OK"]}
+                    options={[constants.actionSheet.ok]}
                     cancelButtonIndex={0}
                     destructiveButtonIndex={0}
                     onPress={(index) => {
@@ -247,6 +263,18 @@ class GetNewTicket extends Component {
     }
 }
 const styles = StyleSheet.create({
+    txtAddress: {
+        color: '#00000050',
+        marginTop: 5
+    },
+    txtNameHospital: {
+        fontWeight: 'bold',
+        color: '#000'
+    },
+    row: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
     txGetTicket: { color: '#fff', fontWeight: 'bold' },
     txAssignTicket: { color: '#4A4A4A', fontWeight: 'bold' },
     viewTx: { flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', width: '100%', borderTopWidth: 0.5, borderStyle: "solid", borderBottomWidth: 0.5, borderColor: 'rgba(0,0,0,0.26)' },

@@ -4,6 +4,7 @@ import ActivityPanel from '@components/ActivityPanel';
 import { IndicatorViewPager } from "mainam-react-native-viewpager";
 import GetNewTicket from '@components/ticket/GetNewTicket'
 import TicketHistory from '@components/ticket/TicketHistory'
+import constants from '@resources/strings';
 
 export default class SelectHealthFacilitiesScreen extends Component {
   constructor(props) {
@@ -62,21 +63,21 @@ export default class SelectHealthFacilitiesScreen extends Component {
         <View style={styles.viewBtn}>
           <View style={styles.separateBackground}></View>
           <TouchableOpacity onPress={this.onGetNewTicket} style={[styles.btnGetNumber, this.state.isGetNewTicket ? { backgroundColor: '#27AE60' } : {}]}>
-            <Text style={this.state.isGetNewTicket ? { color: '#fff', fontWeight: "bold", } : { color: '#27AE60', fontWeight: "bold", }}>Lấy số mới</Text>
+            <Text style={this.state.isGetNewTicket ? styles.unSelected : styles.selected}>{constants.title.get_new_ticket}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={this.onGetHistory} style={[styles.btnGetNumber, , this.state.isGetNewTicket ? {} : { backgroundColor: '#27AE60' }]}>
-            <Text style={this.state.isGetNewTicket ? { color: '#27AE60', fontWeight: "bold", } : { color: '#fff', fontWeight: "bold", }}>Lịch sử lấy số</Text>
+            <Text style={this.state.isGetNewTicket ? styles.selected : styles.unSelected}>{constants.title.history_get_ticket}</Text>
           </TouchableOpacity>
         </View>
-        <IndicatorViewPager style={{ flex: 1 }}
+        <IndicatorViewPager style={styles.flex}
           ref={viewPager => {
             this.viewPager = viewPager;
           }}
           onPageScroll={this.onPageScroll.bind(this)}>
-          <View style={{ flex: 1 }}>
+          <View style={styles.flex}>
             <GetNewTicket></GetNewTicket>
           </View>
-          <View style={{ flex: 1 }}>
+          <View style={styles.flex}>
             <TicketHistory ref={ref => this.history = ref}></TicketHistory>
           </View>
 
@@ -86,6 +87,15 @@ export default class SelectHealthFacilitiesScreen extends Component {
   }
 }
 const styles = StyleSheet.create({
+  flex: { flex: 1 },
+  selected: {
+    color: '#27AE60',
+    fontWeight: "bold",
+  },
+  unSelected: {
+    color: '#fff',
+    fontWeight: "bold",
+  },
   AcPanel: {
     flex: 1,
     backgroundColor: '#cacaca',

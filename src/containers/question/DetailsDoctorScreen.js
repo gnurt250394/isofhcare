@@ -15,6 +15,7 @@ import dateUtils from "mainam-react-native-date-utils";
 import StarRating from 'react-native-star-rating';
 import userProvider from '@data-access/user-provider';
 import questionProvider from '@data-access/question-provider';
+import constants from '@resources/strings';
 
 class DetailsDoctorScreen extends Component {
   constructor() {
@@ -90,28 +91,24 @@ class DetailsDoctorScreen extends Component {
 
     return (
       <ActivityPanel
-        title={"Hồ sơ"}
+        title={constants.title.file}
         isLoading={this.state.isLoading}
       >
         <ScrollView
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode='on-drag'
-          style={{ flex: 1, paddingVertical: 5 }}>
+          style={styles.scroll}>
           <View style={styles.viewImgUpload}>
             <View
-              style={{ position: "relative", width: 70, marginTop: 20, }}
+              style={styles.containerAvatar}
             >
               <ImageLoad
                 resizeMode="cover"
-                imageStyle={{ borderRadius: 35, borderWidth: 1, borderColor: 'rgba(0,0,0,0.07)' }}
+                imageStyle={styles.borderImage}
                 borderRadius={35}
-                customImagePlaceholderDefaultStyle={{
-                  width: 70,
-                  height: 70,
-                  alignSelf: "center"
-                }}
+                customImagePlaceholderDefaultStyle={styles.image}
                 placeholderSource={icSupport}
-                style={{ width: 70, height: 70, alignSelf: "center" }}
+                style={styles.image}
                 resizeMode="cover"
                 loadingStyle={{ size: "small", color: "gray" }}
                 source={source}
@@ -121,20 +118,20 @@ class DetailsDoctorScreen extends Component {
                       resizeMode="cover"
                       source={icSupport}
                       width={70}
-                      style={{ width: 70, height: 70, alignSelf: "center" }}
+                      style={styles.image}
                     />
                   );
                 }}
               />
             </View>
           </View>
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginVertical: 20 }}>
-            <Text style={{ fontSize: 18, color: '#000' }}>BS.{this.state.name}</Text>
-            <Text style={{ marginVertical: 5 }}>Chuyên khoa: {this.state.nameSpecialist}</Text>
-            <Text>Số văn bằng chuyên môn: {this.state.certificateCode}</Text>
+          <View style={styles.groupInfoDoctor}>
+            <Text style={styles.txtNameDoctor}>BS.{this.state.name}</Text>
+            <Text style={styles.txtSpecialist}>{constants.questions.specialist}: {this.state.nameSpecialist}</Text>
+            <Text>{constants.questions.certificate_code}: {this.state.certificateCode}</Text>
           </View>
           <View style={styles.viewRating}>
-            <Text style={{ fontSize: 32, color: 'rgb(2,195,154)' }}>{this.state.rating}</Text>
+            <Text style={styles.txtRating}>{this.state.rating}</Text>
             <StarRating
               disabled={true}
               starSize={18}
@@ -146,8 +143,8 @@ class DetailsDoctorScreen extends Component {
             />
           </View>
           <View style={styles.viewIntro}>
-            <Text style={{ fontSize: 18, paddingVertical: 20, color: '#000', fontWeight: '400' }}>Giới thiệu</Text>
-            <Text style={{ width: '80%', marginTop: -10, marginBottom: 10, textAlign: 'center' }}>{this.state.intro}</Text>
+            <Text style={styles.txtIntroduce}>{constants.about}</Text>
+            <Text style={styles.txtContentIntro}>{this.state.intro}</Text>
             {/* <TouchableOpacity style ={styles.viewBtn}>
               <Text style={{color:'#fff'}}>Đặt khám</Text>
             </TouchableOpacity> */}
@@ -159,6 +156,54 @@ class DetailsDoctorScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  txtContentIntro: {
+    width: '80%',
+    marginTop: -10,
+    marginBottom: 10,
+    textAlign: 'center'
+  },
+  txtIntroduce: {
+    fontSize: 18,
+    paddingVertical: 20,
+    color: '#000',
+    fontWeight: '400'
+  },
+  txtRating: {
+    fontSize: 32,
+    color: 'rgb(2,195,154)'
+  },
+  txtSpecialist: {
+    marginVertical: 5
+  },
+  txtNameDoctor: {
+    fontSize: 18,
+    color: '#000'
+  },
+  groupInfoDoctor: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 20
+  },
+  image: {
+    width: 70,
+    height: 70,
+    alignSelf: "center"
+  },
+  borderImage: {
+    borderRadius: 35,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.07)'
+  },
+  containerAvatar: {
+    position: "relative",
+    width: 70,
+    marginTop: 20,
+  },
+  scroll: {
+    flex: 1,
+    paddingVertical: 5
+  },
   AcPanel: {
     flex: 1,
     backgroundColor: "rgb(247,249,251)"

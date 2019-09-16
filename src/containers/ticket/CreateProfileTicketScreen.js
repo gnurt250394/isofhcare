@@ -160,7 +160,9 @@ class CreateProfileTicketScreen extends Component {
                   this.setState({
                     isLoading: false
                   });
-                  this.state.isDataNull ? snackbar.show("Bạn đã tạo hồ sơ thành công", "success") : snackbar.show("Bạn đã thêm người thân thành công", "success");
+                  this.state.isDataNull ? snackbar.show(constants.msg.booking.create_profile_success, "success")
+                    :
+                    snackbar.show(constants.msg.booking.create_relatives_success, "success");
 
 
                   NavigationService.navigate('selectProfile', { loading: true });
@@ -168,7 +170,7 @@ class CreateProfileTicketScreen extends Component {
                   this.setState({
                     isLoading: false
                   });
-                  this.state.isDataNull ? snackbar.show("Hồ sơ đã tồn tại trong hệ thống", 'danger') : snackbar.show("Hồ sơ đã tồn tại trong hệ thống", 'danger')
+                  this.state.isDataNull ? snackbar.show(constants.msg.booking.profile_arealy_exist, 'danger') : snackbar.show(constants.msg.booking.profile_arealy_exist, 'danger')
                 } else {
                   this.setState({
                     isLoading: false
@@ -179,7 +181,7 @@ class CreateProfileTicketScreen extends Component {
                 this.setState({
                   isLoading: false
                 });
-                snackbar.show("Có lỗi, xin vui lòng thử lại", "danger");
+                snackbar.show(constants.msg.app.err_try_again, "danger");
               });
           }
         )
@@ -209,6 +211,48 @@ class CreateProfileTicketScreen extends Component {
       });
     else this.onUpdate2("");
   };
+  goBack = () => this.props.navigation.pop()
+  defaultImage = () => {
+    const icSupport = require("@images/new/user.png");
+    return (
+      <ScaleImage
+        resizeMode="cover"
+        source={icSupport}
+        width={70}
+        style={{ width: 70, height: 70, alignSelf: "center" }}
+      />
+    );
+  }
+  validateName = (valid, messages) => {
+    if (valid) {
+      this.setState({ nameError: "" });
+    } else {
+      this.setState({ nameError: messages });
+    }
+  }
+  selectDate = () => this.setState({ toggelDateTimePickerVisible: true })
+  validateDateTime = (valid, messages) => {
+    if (valid) {
+      this.setState({ nameError: "" });
+    } else {
+      messages ?
+        (this.setState({ valid: constants.msg.app.dob_must_lesser_150, isMin: false })) : (this.setState({ isMin: true }));
+    }
+  }
+  confirmDate = newDate => {
+    this.setState(
+      {
+        dob: newDate,
+        date: newDate.format("dd/MM/yyyy"),
+        toggelDateTimePickerVisible: false
+      },
+      () => {
+      }
+    );
+  }
+  onCancelDate = () => {
+    this.setState({ toggelDateTimePickerVisible: false });
+  }
   render() {
     let maxDate = new Date();
     maxDate = new Date(
@@ -231,75 +275,56 @@ class CreateProfileTicketScreen extends Component {
       <ActivityPanel
         statusbarBackgroundColor="#0049B0"
         style={styles.AcPanel}
-        title={"Đăng ký tài khoản"}
+        title={constants.title.register_account}
         titleStyle={{ marginRight: 0 }}
         isLoading={this.state.isLoading}
         backButton={
-          <TouchableOpacity style={styles.btnCancel} onPress={() => this.props.navigation.pop()}>
-            <Text style={styles.btnhuy}>Huỷ</Text>
+          <TouchableOpacity style={styles.btnCancel} onPress={this.goBack}>
+            <Text style={styles.btnhuy}>{constants.actionSheet.cancel}</Text>
           </TouchableOpacity>
         }
 
         menuButton={
           <TouchableOpacity onPress={this.onUpdate}>
-            <Text style={styles.btnmenu}>Lưu</Text>
+            <Text style={styles.btnmenu}>{constants.actionSheet.save}</Text>
           </TouchableOpacity>
         }
 
       >
-        <ScrollView keyboardShouldPersistTaps='handled' style={{ flex: 1, paddingVertical: 5 }}>
+        <ScrollView keyboardShouldPersistTaps='handled' style={styles.scroll}>
           <View style={styles.viewImgUpload}>
             <TouchableOpacity
-              style={{ position: "relative", width: 70, marginTop: 20 }}
+              style={styles.buttonSelectAvatar}
               onPress={this.selectImage.bind(this)}
             >
               <ImageLoad
                 resizeMode="cover"
-                imageStyle={{ borderRadius: 35 }}
+                imageStyle={styles.borderImage}
                 borderRadius={35}
-                customImagePlaceholderDefaultStyle={{
-                  width: 70,
-                  height: 70,
-                  alignSelf: "center"
-                }}
+                customImagePlaceholderDefaultStyle={styles.placeHolderImage}
                 placeholderSource={icSupport}
-                style={{ width: 70, height: 70, alignSelf: "center" }}
+                style={styles.imageAvatar}
                 resizeMode="cover"
                 loadingStyle={{ size: "small", color: "gray" }}
                 source={source}
-                defaultImage={() => {
-                  return (
-                    <ScaleImage
-                      resizeMode="cover"
-                      source={icSupport}
-                      width={70}
-                      style={{ width: 70, height: 70, alignSelf: "center" }}
-                    />
-                  );
-                }}
+                defaultImage={this.defaultImage}
               />
               <ScaleImage
                 source={require("@images/new/ic_account_add.png")}
                 width={20}
-                style={{ position: "absolute", bottom: 0, right: 0 }}
+                style={styles.iconAddAccount}
               />
             </TouchableOpacity>
           </View>
 
 
           <View style={styles.container}>
-            <Form ref={ref => (this.form = ref)} style={[{ flex: 1 }]}>
-              <Field style={[styles.mucdichkham, { flex: 1 }, , Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
-                <Text style={styles.mdk}>Họ và Tên(*)</Text>
+            <Form ref={ref => (this.form = ref)} style={[styles.flex]}>
+              <Field style={[styles.mucdichkham, styles.flex, , Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
+                <Text style={styles.mdk}>{constants.fullname}(*)</Text>
                 <TextField
                   hideError={true}
-                  onValidate={(valid, messages) => {
-                    if (valid) {
-                      this.setState({ nameError: "" });
-                    } else {
-                      this.setState({ nameError: messages });
-                    }
-                  }}
+                  onValidate={this.validateName}
                   validate={{
                     rules: {
                       required: true,
@@ -307,15 +332,15 @@ class CreateProfileTicketScreen extends Component {
                       maxlength: 255
                     },
                     messages: {
-                      required: "Họ và tên không được bỏ trống",
-                      maxlength: "Không cho phép nhập quá 255 kí tự"
+                      required: constants.msg.user.fullname_not_null,
+                      maxlength: constants.msg.user.text_without_255
                     }
                   }}
-                  placeholder={"Nhập họ tên"}
+                  placeholder={constants.msg.user.input_name}
                   multiline={true}
                   inputStyle={[
                     styles.ktq,
-                    { justifyContent: 'center', alignItems: 'flex-end', paddingRight: 10, width: 200 }
+                    styles.inputName
                   ]}
                   errorStyle={styles.errorStyle}
                   onChangeText={this.onChangeText("name")}
@@ -330,14 +355,14 @@ class CreateProfileTicketScreen extends Component {
               <TouchableOpacity
                 style={[
                   styles.mucdichkham,
-                  { justifyContent: 'center', alignItems: 'flex-end', paddingVertical: 12, borderTopWidth: 0 }
+                  styles.buttonGender
                 ]}
                 onPress={this.onShowGender}
               >
-                <Text style={styles.mdk}>Giới tính(*)</Text>
+                <Text style={styles.mdk}>{constants.gender}(*)</Text>
                 <Text style={styles.ktq}>
                   {!this.state.txGender
-                    ? "Chọn giới tính"
+                    ? constants.select_gender
                     : this.state.txGender}
                 </Text>
                 <ScaleImage
@@ -349,15 +374,13 @@ class CreateProfileTicketScreen extends Component {
 
               <Field
 
-                style={[styles.mucdichkham, { justifyContent: 'center', alignItems: 'flex-end', flex: 1, paddingVertical: 12, borderTopWidth: 0, }]}
+                style={[styles.mucdichkham, styles.flex, styles.buttonGender]}
               >
-                <Text style={styles.mdk}>Ngày sinh(*)</Text>
+                <Text style={styles.mdk}>{constants.dob}(*)</Text>
 
                 <TextField
                   // value={this.state.date || ""}
-                  onPress={() =>
-                    this.setState({ toggelDateTimePickerVisible: true })
-                  }
+                  onPress={this.selectDate}
                   dateFormat={"dd/MM/yyyy"}
                   splitDate={"/"}
                   editable={false}
@@ -368,7 +391,7 @@ class CreateProfileTicketScreen extends Component {
                     onBlur,
                     isError
                   ) => (
-                      <Text style={styles.ktq}>{value ? (value) : ('Chọn ngày sinh')}</Text>
+                      <Text style={styles.ktq}>{value ? (value) : (constants.select_dob)}</Text>
                     )}
                   // onChangeText={s => {
                   //   this.setState({ date: s });
@@ -376,14 +399,7 @@ class CreateProfileTicketScreen extends Component {
                   value={this.state.date}
                   errorStyle={styles.errorStyle}
                   hideError={true}
-                  onValidate={(valid, messages) => {
-                    if (valid) {
-                      this.setState({ nameError: "" });
-                    } else {
-                      messages ?
-                        (this.setState({ valid: 'Không cho phép chọn lớn hơn 150 tuổi', isMin: false })) : (this.setState({ isMin: true }));
-                    }
-                  }}
+                  onValidate={this.validateDateTime}
                   validate={{
                     rules: {
                       max: maxDate,
@@ -405,9 +421,7 @@ class CreateProfileTicketScreen extends Component {
                   returnKeyType={"next"}
                   autoCapitalize={"none"}
                   autoCorrect={false}
-                  style={{
-                    flex: 1
-                  }}
+                  style={styles.flex}
                 />
                 <ScaleImage
                   style={[styles.imgmdk, { marginBottom: 5, }]}
@@ -418,7 +432,7 @@ class CreateProfileTicketScreen extends Component {
               {this.state.isValid ? <Text style={[styles.errorStyle]}>{this.state.valid}</Text> : (<View></View>)}
 
               <Field style={[styles.mucdichkham, { flex: 1, borderTopWidth: 0 }, , Platform.OS == "ios" ? { paddingVertical: 12, } : {}]}>
-                <Text style={styles.mdk}>Số điện thoại(*)</Text>
+                <Text style={styles.mdk}>{constants.phone}(*)</Text>
                 <TextField
                   hideError={true}
                   onValidate={(valid, messages) => {
@@ -435,15 +449,15 @@ class CreateProfileTicketScreen extends Component {
                       maxlength: 255
                     },
                     messages: {
-                      required: "Số điện thoại không được bỏ trống",
-                      maxlength: "Không cho phép nhập quá 255 kí tự"
+                      required: constants.login_screens.require_phone,
+                      maxlength: constants.msg.user.text_without_255
                     }
                   }}
-                  placeholder={"Nhập số điện thoại"}
+                  placeholder={constants.input_phone}
                   multiline={true}
                   inputStyle={[
                     styles.ktq,
-                    { justifyContent: 'center', alignItems: 'flex-end', paddingRight: 10, width: 200 }
+                    styles.inputName
                   ]}
                   errorStyle={styles.errorStyle}
                   onChangeText={this.onChangeText("name")}
@@ -459,14 +473,14 @@ class CreateProfileTicketScreen extends Component {
               <TouchableOpacity
                 style={[
                   styles.mucdichkham,
-                  { justifyContent: 'center', alignItems: 'flex-end', paddingVertical: 12, borderTopWidth: 0, marginTop: 10 }
+                  styles.buttonGender, { marginTop: 10 }
                 ]}
                 onPress={this.onSelectDistric}
               >
-                <Text style={styles.mdk}>Địa chỉ(*)</Text>
+                <Text style={styles.mdk}>{constants.ehealth.address}(*)</Text>
                 <Text style={styles.ktq}>
-                  Tỉnh/ TP
-            </Text>
+                  {constants.ehealth.city}
+                </Text>
                 <ScaleImage
                   style={[styles.imgmdk, { marginBottom: 3, }]}
                   height={10}
@@ -477,14 +491,14 @@ class CreateProfileTicketScreen extends Component {
               <TouchableOpacity
                 style={[
                   styles.mucdichkham,
-                  { justifyContent: 'center', alignItems: 'flex-end', paddingVertical: 12, borderTopWidth: 0 }
+                  styles.buttonGender
                 ]}
                 onPress={this.onShowGender}
               >
-                <Text style={styles.mdk}>Quận huyện(*)</Text>
+                <Text style={styles.mdk}>{constants.district}(*)</Text>
                 <Text style={styles.ktq}>
-                  Quận/ Huyện
-          </Text>
+                  {constants.ehealth.district}
+                </Text>
                 <ScaleImage
                   style={[styles.imgmdk, { marginBottom: 3, }]}
                   height={10}
@@ -495,14 +509,14 @@ class CreateProfileTicketScreen extends Component {
               <TouchableOpacity
                 style={[
                   styles.mucdichkham,
-                  { justifyContent: 'center', alignItems: 'flex-end', paddingVertical: 12, borderTopWidth: 0 }
+                  styles.buttonGender
                 ]}
                 onPress={this.onShowGender}
               >
-                <Text style={styles.mdk}>Xã phường(*)</Text>
+                <Text style={styles.mdk}>{constants.wards}(*)</Text>
                 <Text style={styles.ktq}>
-                  Xã/ Phường
-        </Text>
+                  {constants.ehealth.wards}
+                </Text>
                 <ScaleImage
                   style={[styles.imgmdk, { marginBottom: 3, }]}
                   height={10}
@@ -513,14 +527,14 @@ class CreateProfileTicketScreen extends Component {
               <TouchableOpacity
                 style={[
                   styles.mucdichkham,
-                  { justifyContent: 'center', alignItems: 'flex-end', paddingVertical: 12, borderTopWidth: 0 }
+                  styles.buttonGender
                 ]}
                 onPress={this.onShowGender}
               >
-                <Text style={styles.mdk}>Thôn xóm(*)</Text>
+                <Text style={styles.mdk}>{constants.village}(*)</Text>
                 <Text style={styles.ktq}>
-                  Thôn xóm
-      </Text>
+                  {constants.village}
+                </Text>
                 <ScaleImage
                   style={[styles.imgmdk, { marginBottom: 3, }]}
                   height={10}
@@ -535,30 +549,18 @@ class CreateProfileTicketScreen extends Component {
         <ImagePicker ref={ref => (this.imagePicker = ref)} />
         <DateTimePicker
           isVisible={this.state.toggelDateTimePickerVisible}
-          onConfirm={newDate => {
-            this.setState(
-              {
-                dob: newDate,
-                date: newDate.format("dd/MM/yyyy"),
-                toggelDateTimePickerVisible: false
-              },
-              () => {
-              }
-            );
-          }}
-          onCancel={() => {
-            this.setState({ toggelDateTimePickerVisible: false });
-          }}
+          onConfirm={this.confirmDate}
+          onCancel={this.onCancelDate}
           date={new Date()}
           minimumDate={minDate}
           maximumDate={new Date()}
-          cancelTextIOS={"Hủy bỏ"}
-          confirmTextIOS={"Xác nhận"}
+          cancelTextIOS={constants.actionSheet.cancel2}
+          confirmTextIOS={constants.actionSheet.confirm}
           date={this.state.dob || new Date()}
         />
         <ActionSheet
           ref={o => this.actionSheetGender = o}
-          options={['Nam', 'Nữ', 'Hủy']}
+          options={[constants.actionSheet.male, constants.actionSheet.female, constants.actionSheet.cancel]}
           cancelButtonIndex={2}
           // destructiveButtonIndex={1}
           onPress={this.onSetGender}
@@ -576,6 +578,46 @@ function mapStateToProps(state) {
   };
 }
 const styles = StyleSheet.create({
+  buttonGender: {
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    paddingVertical: 12,
+    borderTopWidth: 0
+  },
+  inputName: {
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    paddingRight: 10,
+    width: 200
+  },
+  flex: { flex: 1 },
+  iconAddAccount: {
+    position: "absolute",
+    bottom: 0,
+    right: 0
+  },
+  imageAvatar: {
+    width: 70,
+    height: 70,
+    alignSelf: "center"
+  },
+  placeHolderImage: {
+    width: 70,
+    height: 70,
+    alignSelf: "center"
+  },
+  borderImage: {
+    borderRadius: 35
+  },
+  buttonSelectAvatar: {
+    position: "relative",
+    width: 70,
+    marginTop: 20
+  },
+  scroll: {
+    flex: 1,
+    paddingVertical: 5
+  },
   AcPanel: {
     flex: 1,
     backgroundColor: "rgb(247,249,251)"
