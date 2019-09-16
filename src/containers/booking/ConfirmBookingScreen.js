@@ -28,7 +28,7 @@ class ConfirmBookingScreen extends Component {
         let contact = this.props.navigation.state.params.contact;
         let booking = this.props.navigation.state.params.booking;
         if (!booking) {
-            snackbar.show("Không tồn tại đặt khám", "danger");
+            snackbar.show(constants.booking.booking_not_found, "danger");
             this.props.navigation.pop();
         }
         this.state = {
@@ -88,24 +88,41 @@ class ConfirmBookingScreen extends Component {
         }
     };
 
-    confirmPayment(booking, bookingId) {
+    confirmPayment(booking, bookingId, paymentMethod) {
         booking.hospital = this.state.hospital;
         booking.profile = this.state.profile;
         booking.payment = this.state.paymentMethod;
         this.setState({ isLoading: true }, () => {
-            bookingProvider.confirmPayment(bookingId).then(s => {
+            bookingProvider.confirmPayment(bookingId, paymentMethod).then(s => {
                 switch (s.code) {
+
                     case 0:
-                        this.props.navigation.navigate("homeTab", {
-                            navigate: {
-                                screen: "createBookingSuccess",
-                                params: {
-                                    booking,
-                                    service: this.state.service,
-                                    voucher: this.state.voucher
+                        if (paymentMethod) {
+                            this.props.navigation.navigate("homeTab", {
+                                navigate: {
+                                    screen: "createBookingWithPayment",
+                                    params: {
+                                        booking,
+                                        service: this.state.service,
+                                        voucher: this.state.voucher
+
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
+                        else {
+                            this.props.navigation.navigate("homeTab", {
+                                navigate: {
+                                    screen: "createBookingSuccess",
+                                    params: {
+                                        booking,
+                                        service: this.state.service,
+                                        voucher: this.state.voucher
+
+                                    }
+                                }
+                            });
+                        }
                         break;
                     case 5:
                         this.setState({ isLoading: false }, () => {
@@ -119,6 +136,7 @@ class ConfirmBookingScreen extends Component {
             });
         })
     }
+
     getPaymentMethod() {
         switch (this.state.paymentMethod) {
             case 1:
@@ -130,6 +148,8 @@ class ConfirmBookingScreen extends Component {
                 return "PAYOO";
             case 4:
                 return "PAYOO_BILL";
+            case 6:
+                return "";
         }
     }
     getPaymentReturnUrl() {
@@ -180,6 +200,14 @@ class ConfirmBookingScreen extends Component {
 
         this.setState({ isLoading: true }, () => {
             let memo = `THANH TOÁN ${this.getPaymentMethod()} - Đặt khám - ${booking.book.codeBooking} - ${serviceText} - ${this.state.hospital.hospital.name} - ${this.getBookingTime()} - ${this.state.profile.medicalRecords.name}`;
+            let voucher = null
+            if (this.state.voucher && this.state.voucher.code) {
+                voucher = {
+                    code: this.state.voucher.code,
+                    amount: this.state.voucher.price
+                }
+            }
+
             walletProvider.createOnlinePayment(
                 this.props.userApp.currentUser.id,
                 this.getPaymentMethod(),
@@ -194,7 +222,8 @@ class ConfirmBookingScreen extends Component {
                 booking.book.expireDatePayoo,
                 booking.timeInitBooking,
                 booking.book.createdDate,
-                booking.timeZone
+                booking.timeZone,
+                voucher
             ).then(s => {
                 let data = s.data;
                 let paymentId = data.id;
@@ -280,13 +309,13 @@ class ConfirmBookingScreen extends Component {
                                 for (let key in message) {
                                     switch (key) {
                                         case "id":
-                                            snackbar.show("Tài khoản của bạn chưa thể thanh toán trả trước. Vui lòng liên hệ Admin để được giải quyết", "danger");
+                                            snackbar.show(constants.booking.payment_not_permission, "danger");
                                             return;
                                         case "order_ref_id":
                                             this.retry(this.state.paymentId);
                                             return;
                                         case "vendor_id":
-                                            snackbar.show("Vendor không tồn tại trong hệ thống", "danger");
+                                            snackbar.show(constants.booking.vendor_not_found, "danger");
                                             return;
                                     }
                                 }
@@ -304,7 +333,7 @@ class ConfirmBookingScreen extends Component {
                                 }
                         }
                     }
-                    snackbar.show("Tạo thanh toán không thành công", "danger");
+                    snackbar.show(constants.booking.create_payment_fail, "danger");
                     // this.props.navigation.navigate("paymentBookingError", { booking })
                 })
             });
@@ -342,11 +371,18 @@ class ConfirmBookingScreen extends Component {
     retry(paymentId) {
         let booking = this.state.booking;
         this.setState({ isLoading: true }, () => {
-            walletProvider.retry(paymentId, this.getPaymentReturnUrl(), this.getPaymentMethodUi(), this.getPaymentMethod()).then(s => {
+            let voucher = null
+            if (this.state.voucher && this.state.voucher.code) {
+                voucher = {
+                    code: this.state.voucher.code,
+                    amount: this.state.voucher.price
+                }
+            }
+            walletProvider.retry(paymentId, this.getPaymentReturnUrl(), this.getPaymentMethodUi(), this.getPaymentMethod(), voucher).then(s => {
                 this.setState({ isLoading: false }, () => {
                     let data = s.data;
                     if (!data) {
-                        snackbar.show("Tạo thanh toán không thành công", "danger");
+                        snackbar.show(constants.booking.create_payment_fail, "danger");
                         return;
                     }
                     switch (this.state.paymentMethod) {
@@ -427,20 +463,20 @@ class ConfirmBookingScreen extends Component {
                                 for (let key in message) {
                                     switch (key) {
                                         case "id":
-                                            snackbar.show("Tài khoản của bạn chưa thể thanh toán trả trước. Vui lòng liên hệ Admin để được giải quyết", "danger");
+                                            snackbar.show(constants.booking.payment_not_permission, "danger");
                                             return;
                                         case "order_ref_id":
                                             snackbar.show("Đặt khám đã tồn tại trong hệ thống", "danger");
                                             return;
                                         case "vendor_id":
-                                            snackbar.show("Vendor không tồn tại trong hệ thống", "danger");
+                                            snackbar.show(constants.booking.vendor_not_found, "danger");
                                             return;
                                     }
                                 }
                                 break;
                         }
                     }
-                    snackbar.show("Tạo thanh toán không thành công", "danger");
+                    snackbar.show(constants.booking.create_payment_fail, "danger");
                     // this.props.navigation.navigate("paymentBookingError", { booking })
                 })
             });
@@ -462,8 +498,14 @@ class ConfirmBookingScreen extends Component {
                                     break;
                                 default:
                                     this.setState({ isLoading: true }, () => {
-                                        if (this.state.paymentMethod == 2)
+                                        if (this.state.paymentMethod == 2) {
                                             this.confirmPayment(this.state.booking, this.state.booking.book.id);
+                                            return
+                                        }
+                                        if (this.state.paymentMethod == 6) {
+                                            this.confirmPayment(this.state.booking, this.state.booking.book.id, this.state.paymentMethod);
+                                            return
+                                        }
                                         else {
                                             this.getPaymentLink(this.state.booking);
                                         }
@@ -476,6 +518,7 @@ class ConfirmBookingScreen extends Component {
                     this.setState({ isLoading: false }, () => {
                     });
                 });
+
             });
         }).catch(e => {
             snackbar.show(constants.msg.app.not_internet, "danger");
@@ -500,7 +543,8 @@ class ConfirmBookingScreen extends Component {
                 style={styles.btnGoToVoucher}
                 onPress={this.goToMyVoucher}
             >
-                <Text numberOfLines={1} style={styles.txtButtonVoucher}>{this.state.voucher && this.state.voucher.price ? `GIẢM ${this.state.voucher.price.formatPrice()} KHI ĐẶT KHÁM` : 'THÊM MÃ ƯU ĐÃI'}</Text>
+                <Text numberOfLines={1}
+                    style={styles.txtButtonVoucher}>{this.state.voucher && this.state.voucher.price ? `GIẢM ${this.state.voucher.price.formatPrice()} KHI ĐẶT KHÁM` : constants.booking.add_voucher}</Text>
                 <ScaleImage width={10} source={require("@images/new/booking/ic_next.png")} />
             </TouchableOpacity>
         )
@@ -513,30 +557,36 @@ class ConfirmBookingScreen extends Component {
         }, 0)
         return (priceFinal - priceVoucher).formatPrice()
     }
+    selectPaymentmethod = (paymentMethod) => () => {
+        this.setState({ paymentMethod })
+    }
     render() {
 
         return (
-            <ActivityPanel style={styles.AcPanel} title="Xác nhận lịch khám"
+            <ActivityPanel style={styles.AcPanel} title={constants.title.verification_booking}
                 isLoading={this.state.isLoading} >
                 <ScrollView keyboardShouldPersistTaps='handled' style={styles.container}>
-                    <View style={{ paddingHorizontal: 20, marginVertical: 20 }}>
-                        <Text style={{ fontWeight: 'bold', color: '#000' }}>{'HỒ SƠ: ' + this.state.profile.medicalRecords.name.toUpperCase()}</Text>
-                        {this.state.profile.medicalRecords.phone ? <Text style={{ color: 'gray' }}>SĐT: {this.state.profile.medicalRecords.phone}</Text> : <View></View>}
+                    <View style={styles.containerHeader}>
+                        <Text style={styles.txtHeader}>{'HỒ SƠ: ' + this.state.profile.medicalRecords.name.toUpperCase()}</Text>
+                        {this.state.profile.medicalRecords.phone ?
+                            <Text style={styles.colorGray}>SĐT: {this.state.profile.medicalRecords.phone}</Text>
+                            :
+                            <View></View>}
                     </View>
                     {this.addVoucher()}
                     <View style={styles.viewDetails}>
                         {this.state.serviceType &&
-                            <View style={{ paddingHorizontal: 20, marginTop: 20, flexDirection: 'row', alignItems: 'center' }}>
-                                <Text style={{ fontWeight: 'bold', color: 'rgb(2,195,154)', marginRight: 10 }}>{(this.state.serviceType.name || "").toUpperCase()}</Text>
+                            <View style={styles.containerServiceType}>
+                                <Text style={styles.txtservicesType}>{(this.state.serviceType.name || "").toUpperCase()}</Text>
                                 <ScaleImage width={20} source={require("@images/new/booking/ic_tick.png")} />
                             </View>
                         }
                         <View style={styles.view11} >
-                            <View style={[styles.view2, { alignItems: 'flex-start' }]}>
+                            <View style={[styles.view2]}>
                                 <ScaleImage style={styles.ic_Location} width={20} source={require("@images/new/hospital/ic_place.png")} />
                                 <View>
-                                    <Text style={[styles.text5, { fontWeight: 'bold' }]}>{this.state.hospital.hospital.name}</Text>
-                                    <Text style={[styles.text5, { marginTop: 10 }]}>Địa chỉ: <Text>{this.state.hospital.hospital.address}</Text></Text>
+                                    <Text style={[styles.text5, styles.fontBold]}>{this.state.hospital.hospital.name}</Text>
+                                    <Text style={[styles.text5, styles.margin10]}>{constants.booking.address}: <Text>{this.state.hospital.hospital.address}</Text></Text>
                                 </View>
                             </View>
 
@@ -545,57 +595,60 @@ class ConfirmBookingScreen extends Component {
                                 <Text style={[styles.text5]}>Bác sĩ khám: <Text>{this.state.schedule.doctor.name}</Text></Text>
                             </View> */}
 
-                            <View style={[styles.view2, { alignItems: 'flex-start' }]}>
+                            <View style={[styles.view2]}>
                                 <ScaleImage style={styles.ic_Location} width={20} source={require("@images/new/booking/ic_bookingDate2.png")} />
                                 <View>
-                                    <Text style={[styles.text5, {}]}>Thời gian</Text>
-                                    <Text style={[styles.text5, { marginTop: 10 }]}><Text style={{ color: 'rgb(106,1,54)', fontWeight: 'bold' }}>{this.state.schedule.key.toDateObject().format("HH:mm tt")} - {this.state.bookingDate.format("thu")}</Text> ngày {this.state.bookingDate.format("dd/MM/yyyy")} </Text>
+                                    <Text style={[styles.text5, {}]}>{constants.booking.time}</Text>
+                                    <Text style={[styles.text5, styles.marginTop10]}><Text
+                                        style={styles.txtDateTime}>{this.state.schedule.key.toDateObject().format("HH:mm tt")} - {this.state.bookingDate.format("thu")}</Text> ngày {this.state.bookingDate.format("dd/MM/yyyy")} </Text>
                                 </View>
                             </View>
 
                             {(this.state.reason && this.state.reason.trim()) ?
-                                <View style={[styles.view2, { alignItems: 'flex-start' }]}>
+                                <View style={[styles.view2]}>
                                     <ScaleImage style={[styles.ic_Location, { marginRight: 22 }]} width={17} source={require("@images/new/booking/ic_note.png")} />
                                     <View>
-                                        <Text style={styles.text5}>Triệu chứng:</Text>
-                                        <Text style={[styles.text5, { fontWeight: 'bold' }]}>{this.state.reason}</Text>
+                                        <Text style={styles.text5}>{constants.booking.symptom}:</Text>
+                                        <Text style={[styles.text5, styles.fontBold]}>{this.state.reason}</Text>
                                     </View>
                                 </View> : null
                             }
                             {this.state.service && this.state.service.length ?
-                                <View style={[styles.view2, { alignItems: 'flex-start' }]}>
+                                <View style={[styles.view2]}>
                                     <ScaleImage style={[styles.ic_Location]} width={20} source={require("@images/new/booking/ic_coin.png")} />
                                     <View>
-                                        <Text style={styles.text5}>Dịch vụ: </Text>
+                                        <Text style={styles.text5}>{constants.booking.services}: </Text>
                                         {
-                                            this.state.service.map((item, index) => <View key={index} style={{ flexDirection: 'row', marginTop: 5 }}>
-                                                <Text style={{ flex: 1, fontWeight: 'bold', marginLeft: 20, color: '#000' }} numberOfLines={1}>{index + 1}. {item.service.name}</Text>
-                                                <Text style={{ color: '#ccc' }}>({parseInt(item.service.price).formatPrice()}đ)</Text>
+                                            this.state.service.map((item, index) => <View key={index} style={styles.containerListServices}>
+                                                <Text style={styles.txtListServices} numberOfLines={1}>{index + 1}. {item.service.name}</Text>
+                                                <Text style={styles.txtPrice}>({parseInt(item.service.price).formatPrice()}đ)</Text>
                                             </View>
                                             )
 
                                         }
-                                        {this.state.voucher && this.state.voucher.price ? <View style={{ flexDirection: 'row', marginTop: 5 }}>
-                                            <Text style={{ flex: 1, fontWeight: 'bold', marginLeft: 20, color: '#000' }} numberOfLines={1}> {''}</Text>
-                                            <Text style={{ color: '#ccc' }}>(-{parseInt(this.state.voucher.price).formatPrice()}đ)</Text>
+                                        {this.state.voucher && this.state.voucher.price ? <View style={styles.containerListServices}>
+                                            <Text style={styles.txtListServices} numberOfLines={1}> {''}</Text>
+                                            <Text style={styles.txtPrice}>(-{parseInt(this.state.voucher.price).formatPrice()}đ)</Text>
                                         </View> : null}
 
                                     </View>
                                 </View> : null
                             }
                             {this.state.service && this.state.service.length ?
-                                <View style={[styles.view2, { alignItems: 'flex-start' }]}>
+                                <View style={[styles.view2]}>
                                     <ScaleImage style={[styles.ic_Location]} width={20} source={require("@images/new/booking/ic_coin.png")} />
-                                    <View style={{ flexDirection: 'row' }}>
-                                        <Text style={[styles.text5]}>Tổng tiền: <Text style={{ fontWeight: 'bold', marginLeft: 20, color: '#d0021b' }} numberOfLines={1}>{this.getPriceSecive()}đ</Text></Text>
+                                    <View style={styles.row}>
+                                        <Text style={[styles.text5]}>{constants.booking.sum_price}: <Text
+                                            style={styles.txtPriceService}
+                                            numberOfLines={1}>{this.getPriceSecive()}đ</Text></Text>
                                     </View>
                                 </View> : null
                             }
                         </View>
                     </View>
 
-                    <View style={{ paddingHorizontal: 20, marginTop: 20, flexDirection: 'row', alignItems: 'center' }}>
-                        <Text style={{ fontWeight: 'bold', color: 'rgb(2,195,154)', marginRight: 10 }}>CHỌN PHƯƠNG THỨC THANH TOÁN</Text>
+                    <View style={styles.containerTypePayment}>
+                        <Text style={styles.txtTypePayment}>{constants.booking.type_payment}</Text>
                         <ScaleImage width={20} source={require("@images/new/booking/ic_tick.png")} />
                     </View>
                     {/* <View style={styles.ckeck}> */}
@@ -608,52 +661,60 @@ class ConfirmBookingScreen extends Component {
                     {
                         (this.state.service && this.state.service.length) ?
                             <React.Fragment>
-                                <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 1 })}>
+                                <TouchableOpacity style={styles.ckeck} onPress={this.selectPaymentmethod(6)}>
+                                    <View style={styles.containerBtnSelect}>
+                                        {this.state.paymentMethod == 6 &&
+                                            <View style={styles.isSelected}></View>
+                                        }
+                                    </View>
+                                    <Text style={styles.ckeckthanhtoan}>{constants.payment.direct_transfer}</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.ckeck} onPress={this.selectPaymentmethod(1)}>
                                     <View style={styles.containerBtnSelect}>
                                         {this.state.paymentMethod == 1 &&
                                             <View style={styles.isSelected}></View>
                                         }
                                     </View>
-                                    <Text style={styles.ckeckthanhtoan}>VNPAY</Text>
+                                    <Text style={styles.ckeckthanhtoan}>{constants.payment.VNPAY}</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 3 })}>
+                                <TouchableOpacity style={styles.ckeck} onPress={this.selectPaymentmethod(3)}>
                                     <View style={styles.containerBtnSelect}>
                                         {this.state.paymentMethod == 3 &&
                                             <View style={styles.isSelected}></View>
                                         }
                                     </View>
-                                    <Text style={styles.ckeckthanhtoan}>PAYOO</Text>
+                                    <Text style={styles.ckeckthanhtoan}>{constants.payment.PAYOO}</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 5 })}>
+                                <TouchableOpacity style={styles.ckeck} onPress={this.selectPaymentmethod(5)}>
                                     <View style={styles.containerBtnSelect}>
                                         {this.state.paymentMethod == 5 &&
                                             <View style={styles.isSelected}></View>
                                         }
                                     </View>
-                                    <Text style={styles.ckeckthanhtoan}>PAYOO - Trả góp 0%</Text>
+                                    <Text style={styles.ckeckthanhtoan}>{constants.payment.PAYOO_installment}</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 4 })}>
+                                <TouchableOpacity style={styles.ckeck} onPress={this.selectPaymentmethod(4)}>
                                     <View style={styles.containerBtnSelect}>
                                         {this.state.paymentMethod == 4 &&
                                             <View style={styles.isSelected}></View>
                                         }
                                     </View>
-                                    <Text style={styles.ckeckthanhtoan}>PAYOO - Cửa hàng tiện ích</Text>
+                                    <Text style={styles.ckeckthanhtoan}>{constants.payment.PAYOO_convenient_shop}</Text>
                                 </TouchableOpacity>
                             </React.Fragment> : null
                     }
-                    <TouchableOpacity style={styles.ckeck} onPress={() => this.setState({ paymentMethod: 2 })}>
+                    <TouchableOpacity style={styles.ckeck} onPress={this.selectPaymentmethod(2)}>
                         <View style={styles.containerBtnSelect}>
                             {this.state.paymentMethod == 2 &&
                                 <View style={styles.isSelected}></View>
                             }
                         </View>
-                        <Text style={styles.ckeckthanhtoan}>Thanh toán sau tại CSYT</Text>
+                        <Text style={styles.ckeckthanhtoan}>{constants.payment.pay_later}</Text>
                     </TouchableOpacity>
-                    <View style={{ height: 50 }} />
+                    <View style={styles.end} />
                 </ScrollView>
                 <TouchableOpacity style={styles.btn} onPress={this.createBooking.bind(this)}>
-                    <Text style={styles.btntext}>Xác Nhận</Text>
+                    <Text style={styles.btntext}>{constants.actionSheet.confirm}</Text>
                 </TouchableOpacity>
             </ActivityPanel>
         );
@@ -666,6 +727,68 @@ function mapStateToProps(state) {
     };
 }
 const styles = StyleSheet.create({
+    end: { height: 50 },
+    txtTypePayment: {
+        fontWeight: 'bold',
+        color: 'rgb(2,195,154)',
+        marginRight: 10
+    },
+    containerTypePayment: {
+        paddingHorizontal: 20,
+        marginTop: 20,
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    txtPriceService: {
+        fontWeight: 'bold',
+        marginLeft: 20,
+        color: '#d0021b'
+    },
+    row: { flexDirection: 'row' },
+    txtPrice: { color: '#ccc' },
+    containerListServices: {
+        flexDirection: 'row',
+        marginTop: 5
+    },
+    txtListServices: {
+        flex: 1,
+        fontWeight: 'bold',
+        marginLeft: 20,
+        color: '#000'
+    },
+    txtDateTime: {
+        color: 'rgb(106,1,54)',
+        fontWeight: 'bold'
+    },
+    marginTop10: { marginTop: 10 },
+    margin10: {
+        marginTop: 10
+    },
+    fontBold: {
+        fontWeight: 'bold'
+    },
+    flexStart: {
+    },
+    txtservicesType: {
+        fontWeight: 'bold',
+        color: 'rgb(2,195,154)',
+        marginRight: 10
+    },
+    containerServiceType: {
+        paddingHorizontal: 20,
+        marginTop: 20,
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    colorGray: { color: 'gray' },
+    txtHeader: {
+        fontWeight: 'bold',
+        color: '#000'
+    },
+    containerHeader: {
+        paddingHorizontal: 20,
+        marginVertical: 20
+    },
     isSelected: {
         backgroundColor: 'rgb(2,195,154)',
         width: 10,
@@ -735,7 +858,8 @@ const styles = StyleSheet.create({
     view2: {
         flexDirection: 'row',
         marginTop: 13,
-        alignItems: 'center'
+        alignItems: 'center',
+        alignItems: 'flex-start'
     },
 
     text1: {

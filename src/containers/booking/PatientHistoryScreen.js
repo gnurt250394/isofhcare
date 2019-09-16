@@ -164,22 +164,19 @@ class PatientHistoryScreen extends Component {
   renderItem = ({ item }) => {
     return (
       <TouchableOpacity style={styles.listBtn} onPress={() => this.onClickItem(item)}>
-        <View style={{ flexDirection: "row" }}>
+        <View style={styles.row}>
           <View
-            style={{
-              width: "25%",
-              alignItems: "center"
-            }}
+            style={styles.containerDate}
           >
             <View style={{ marginVertical: 10 }}>
               <Text
-                style={{ fontSize: 40, fontWeight: "bold", color: "#C6C6C9", textAlign: 'center' }}
+                style={styles.txtDate}
               >
                 {item.booking.bookingTime
                   ? item.booking.bookingTime.toDateObject("-").format("dd")
                   : ""}
               </Text>
-              <Text style={{ fontWeight: "bold", color: 'rgb(74,74,74)', marginTop: -5 }}>
+              <Text style={styles.txtDate2}>
                 {item.booking.bookingTime
                   ? item.booking.bookingTime
                     .toDateObject("-")
@@ -197,18 +194,13 @@ class PatientHistoryScreen extends Component {
             </Text>
           </View>
           <View
-            style={{
-              width: "75%",
-              borderLeftColor: "#E5E5E5",
-              borderLeftWidth: 1,
-              padding: 10
-            }}
+            style={styles.containerBody}
           >
-            <Text style={{ fontWeight: "bold", color: 'rgb(74,74,74)' }}>{item.serviceType ? item.serviceType.name : ''}</Text>
+            <Text style={styles.txtServiceType}>{item.serviceType ? item.serviceType.name : ''}</Text>
 
             <View style={{ marginVertical: 10 }}>
-              <Text style={{ color: 'rgb(142,142,147)' }}>{item.medicalRecords.name ? item.medicalRecords.name : ''}</Text>
-              <Text style={{ color: 'rgb(142,142,147)' }}>{item.hospital ? item.hospital.name : ""}</Text>
+              <Text style={styles.txtUserName}>{item.medicalRecords.name ? item.medicalRecords.name : ''}</Text>
+              <Text style={styles.txtUserName}>{item.hospital ? item.hospital.name : ""}</Text>
             </View>
             {item.booking.status || item.booking.status == 0 ? this.renderStatus(item.booking.status) : null}
           </View>
@@ -220,65 +212,32 @@ class PatientHistoryScreen extends Component {
     switch (status) {
       case 0:
         return (
-          <Text style={[styles.statusTx, {
-            color: '#FFF', paddingHorizontal: 5,
-            alignSelf: 'flex-start',
-            overflow: 'hidden'
-          }]}>{constants.booking.status.pending}</Text>
+          <Text style={[styles.statusTx, styles.flexStart, styles.colorWhite]}>{constants.booking.status.pending}</Text>
         );
       case 1:
         return (
-          <Text style={[styles.statusReject, {
-            color: 'rgb(208,2,27)', paddingHorizontal: 5,
-            alignSelf: 'flex-start'
-          }]}>{constants.booking.status.cancel}</Text>
+          <Text style={[styles.statusReject, styles.flexStart, styles.colorRed]}>{constants.booking.status.cancel}</Text>
         )
       case 2: return (
-        <Text style={[styles.statusReject, {
-          color: 'rgb(208,2,27)', paddingHorizontal: 5,
-          alignSelf: 'flex-start'
-        }]}>{constants.booking.status.payment_failer}</Text>
+        <Text style={[styles.statusReject, styles.flexStart, styles.colorRed]}>{constants.booking.status.payment_failer}</Text>
       )
       case 3: return (
-        <Text style={[styles.statusTx, {
-          color: '#FFF', paddingHorizontal: 5,
-          alignSelf: 'flex-start',
-          overflow: 'hidden'
-        }]}>{constants.booking.status.paymented}</Text>
+        <Text style={[styles.statusTx, styles.flexStart, styles.colorWhite]}>{constants.booking.status.paymented}</Text>
       )
       case 4: return (
-        <Text style={[styles.statusTx, {
-          color: '#FFF', paddingHorizontal: 5,
-          alignSelf: 'flex-start',
-          overflow: 'hidden'
-        }]}>{constants.booking.status.payment_last}</Text>
+        <Text style={[styles.statusTx, styles.flexStart, styles.colorWhite]}>{constants.booking.status.payment_last}</Text>
       )
       case 5: return (
-        <Text style={[styles.statusTx, {
-          color: '#FFF', paddingHorizontal: 5,
-          alignSelf: 'flex-start',
-          overflow: 'hidden'
-        }]}>{constants.booking.status.payment_pending}</Text>
+        <Text style={[styles.statusTx, styles.flexStart, styles.colorWhite]}>{constants.booking.status.payment_pending}</Text>
       )
       case 6: return (
-        <Text style={[styles.statusTx, {
-          color: '#FFF', paddingHorizontal: 5,
-          alignSelf: 'flex-start',
-          overflow: 'hidden'
-        }]}>{constants.booking.status.confirm}</Text>
+        <Text style={[styles.statusTx, styles.flexStart, styles.colorWhite]}>{constants.booking.status.confirm}</Text>
       )
       case 7: return (
-        <Text style={[styles.statusTx, {
-          color: '#FFF', paddingHorizontal: 5,
-          alignSelf: 'flex-start',
-          overflow: 'hidden'
-        }]}>{constants.booking.status.have_profile}</Text>
+        <Text style={[styles.statusTx, styles.flexStart, styles.colorWhite]}>{constants.booking.status.have_profile}</Text>
       )
       case 8: return (
-        <Text style={[styles.statusReject, {
-          color: 'rgb(208,2,27)', paddingHorizontal: 5,
-          alignSelf: 'flex-start'
-        }]}>{constants.booking.status.rejected}</Text>
+        <Text style={[styles.statusReject, styles.flexStart, styles.colorRed]}>{constants.booking.status.rejected}</Text>
       )
 
 
@@ -289,12 +248,12 @@ class PatientHistoryScreen extends Component {
       <ActivityPanel
         title={constants.title.patient_history_screen}
         isLoading={this.state.isLoading}
-        
-        
-        
-        
 
-        isLoading={this.state.isLoading}        
+
+
+
+
+        isLoading={this.state.isLoading}
       >
         <View style={{ flex: 1 }}>
           <FlatList
@@ -309,7 +268,7 @@ class PatientHistoryScreen extends Component {
             ListHeaderComponent={() =>
               !this.state.refreshing &&
                 (!this.state.data1 || this.state.data1.length == 0) ? (
-                  <View style={{ alignItems: "center", marginTop: 50 }}>
+                  <View style={styles.containerNoneData}>
                     <Text style={{ fontStyle: "italic" }}>{constants.none_data}</Text>
                   </View>
                 ) : null
@@ -320,7 +279,7 @@ class PatientHistoryScreen extends Component {
         </View>
         {
           this.state.loadMore ?
-            <View style={{ alignItems: 'center', padding: 10, position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+            <View style={styles.containerLoadMore}>
               <ActivityIndicator
                 size={'small'}
                 color={'gray'}
@@ -334,21 +293,67 @@ class PatientHistoryScreen extends Component {
   renderFooter() {
     if (this.state.loadMore) {
       return (
-        <View style={{ alignItems: 'center', position: 'absolute' }}>
+        <View style={styles.loadMore}>
           <ActivityIndicator size={16} color={"#000"} />
         </View>
       )
     } else {
-      return (<View style={{
-        padding: 10,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
+      return (<View style={styles.footer}>
       </View>)
     }
   }
 }
 const styles = StyleSheet.create({
+  footer: {
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadMore: { alignItems: 'center', position: 'absolute' },
+  containerLoadMore: {
+    alignItems: 'center',
+    padding: 10,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0
+  },
+  containerNoneData: { alignItems: "center", marginTop: 50 },
+  colorRed: {
+    color: 'rgb(208,2,27)',
+  },
+  colorWhite: {
+    color: '#FFF',
+    overflow: 'hidden'
+  },
+  flexStart: {
+    paddingHorizontal: 5,
+    alignSelf: 'flex-start',
+  },
+  txtUserName: { color: 'rgb(142,142,147)' },
+  txtServiceType: { fontWeight: "bold", color: 'rgb(74,74,74)' },
+  containerBody: {
+    width: "75%",
+    borderLeftColor: "#E5E5E5",
+    borderLeftWidth: 1,
+    padding: 10
+  },
+  txtDate2: {
+    fontWeight: "bold",
+    color: 'rgb(74,74,74)',
+    marginTop: -5
+  },
+  txtDate: {
+    fontSize: 40,
+    fontWeight: "bold",
+    color: "#C6C6C9",
+    textAlign: 'center'
+  },
+  containerDate: {
+    width: "25%",
+    alignItems: "center"
+  },
+  row: { flexDirection: "row" },
   listBtn: {
     backgroundColor: "#fff",
     margin: 5,
@@ -372,7 +377,7 @@ const styles = StyleSheet.create({
     padding: 1,
 
   },
-  
+
   titleStyle: {
     color: '#FFF'
   }

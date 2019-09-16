@@ -55,13 +55,13 @@ class RegisterScreen extends Component {
     let verify = async () => {
       RNAccountKit.loginWithEmail().then(async token => {
         if (!token) {
-          snackbar.show("Xác minh email không thành công", "danger");
+          snackbar.show(constants.register_screens.verification_fail, "danger");
         } else {
           let account = await RNAccountKit.getCurrentAccount();
           if (account && account.email) {
             this.setState({ email: account.email });
           } else {
-            snackbar.show("Xác minh email không thành công", "danger");
+            snackbar.show(constants.register_screens.verification_fail, "danger");
           }
         }
       });
@@ -98,7 +98,20 @@ class RegisterScreen extends Component {
   showDatePicker() {
     this.setState({ toggelDateTimePickerVisible: true });
   }
-
+  onChangeText = (state) => (value) => {
+    this.setState({ [state]: value })
+  }
+  setGender = (gender) => () => {
+    this.setState({ gender, changed: true });
+  }
+  confirmDate = newDate => {
+    this.setState({ dob: newDate, date: newDate.format("dd/MM/yyyy"), toggelDateTimePickerVisible: false }, () => {
+      this.form.isValid();
+    });
+  }
+  onCancelDate = () => {
+    this.setState({ toggelDateTimePickerVisible: false })
+  }
   render() {
     let maxDate = new Date();
     maxDate = new Date(
@@ -115,22 +128,21 @@ class RegisterScreen extends Component {
     return (
       this.state.verified && (
         <ActivityPanel
-          title="Đăng ký"          
+          title={constants.register}
         >
           <ScrollView
             showsVerticalScrollIndicator={false}
-            style={{ flex: 1 }} keyboardShouldPersistTaps="handled">
-            <KeyboardAvoidingView behavior="padding" style={styles.form}>
-              <View style={{ flex: 1, padding: 20 }}>
-                <ScaleImage source={require("@images/new/isofhcare.png")} width={200} style={{ marginTop: 50, alignSelf: 'center' }} />
+            style={styles.container}
+            keyboardShouldPersistTaps="handled">
+            <KeyboardAvoidingView behavior="padding" >
+              <View style={styles.group}>
+                <ScaleImage source={require("@images/new/isofhcare.png")} width={200} style={styles.logo} />
                 <Form ref={ref => (this.form = ref)}>
                   <TextField
                     getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
                       placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Họ tên"}
                       onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
-                    onChangeText={s => {
-                      this.setState({ fullname: s });
-                    }}
+                    onChangeText={this.onChangeText('fullname')}
                     errorStyle={styles.errorStyle}
                     validate={{
                       rules: {
@@ -138,19 +150,15 @@ class RegisterScreen extends Component {
                         maxlength: 255
                       },
                       messages: {
-                        required: "Họ tên không được bỏ trống",
-                        maxlength: "Không được nhập quá 255 kí tự"
+                        required: constants.msg.user.fullname_not_null,
+                        maxlength: constants.msg.user.text_without_255
                       }
                     }}
                     autoCapitalize={"none"}
                   />
 
                   <Field
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: "center",
-                      position: 'relative'
-                    }}
+                    style={styles.fieldDate}
                   >
                     <TextField
                       value={this.state.date || ""}
@@ -162,9 +170,7 @@ class RegisterScreen extends Component {
                         editable={false}
                         placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.dob}
                         onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
-                      onChangeText={s => {
-                        this.setState({ date: s });
-                      }}
+                      onChangeText={this.onChangeText('date')}
                       errorStyle={styles.errorStyle}
                       validate={{
                         rules: {
@@ -173,9 +179,9 @@ class RegisterScreen extends Component {
                           min: minDate
                         },
                         messages: {
-                          date: "Nhập đúng định dạng ngày",
-                          max: "Không cho phép chọn dưới 15 tuổi",
-                          min: "Không cho phép chon trên 150 tuổi"
+                          date: constants.msg.user.enter_the_correct_date_format,
+                          max: constants.msg.user.date_not_allow_under_15_old,
+                          min: constants.msg.user.date_not_allow_over_150_old
                         }
                       }}
                       returnKeyType={"next"}
@@ -185,42 +191,34 @@ class RegisterScreen extends Component {
                         flex: 1
                       }}
                     />
-                    <ScaleImage source={require("@images/new/calendar.png")} width={20} style={{ position: 'absolute', right: 0, top: this.state.date ? 40 : 40 }} />
+                    <ScaleImage source={require("@images/new/calendar.png")} width={20} style={[styles.imgCalendar, { top: this.state.date ? 40 : 40 }]} />
                   </Field>
                   <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: "center",
-                      marginTop: 25
-                    }}
+                    style={styles.containerGender}
                   >
-                    <Text style={[styles.label]}>Giới tính</Text>
-                    <View style={{ flexDirection: "row", justifyContent: 'flex-end', flex: 1 }}>
+                    <Text style={[styles.label]}>{constants.gender}</Text>
+                    <View style={styles.groupButtonGender}>
                       <TouchableOpacity
-                        onPress={() => {
-                          this.setState({ gender: 1, changed: true });
-                        }}
-                        style={{ padding: 10, flexDirection: "row" }}
+                        onPress={this.setGender(1)}
+                        style={styles.buttonSelectGender}
                       >
-                        <View style={{ width: 19, height: 19, borderWidth: 2, borderColor: '#02C39A', borderRadius: 10, alignItems: 'center', justifyContent: 'center' }}>
+                        <View style={styles.selectGender}>
                           {
-                            this.state.gender == 1 && <View style={{ width: 12, height: 12, backgroundColor: '#02C39A', borderRadius: 6 }}></View>
+                            this.state.gender == 1 && <View style={styles.dotSelect}></View>
                           }
                         </View>
-                        <Text style={{ marginLeft: 5 }}>Nam</Text>
+                        <Text style={{ marginLeft: 5 }}>{constants.actionSheet.male}</Text>
                       </TouchableOpacity>
                       <TouchableOpacity
-                        onPress={() => {
-                          this.setState({ gender: 0, changed: true });
-                        }}
-                        style={{ padding: 10, flexDirection: "row" }}
+                        onPress={this.setGender(0)}
+                        style={styles.buttonSelectGender}
                       >
-                        <View style={{ width: 19, height: 19, borderWidth: 2, borderColor: '#02C39A', borderRadius: 10, alignItems: 'center', justifyContent: 'center' }}>
+                        <View style={styles.selectGender}>
                           {
-                            this.state.gender == 0 && <View style={{ width: 12, height: 12, backgroundColor: '#02C39A', borderRadius: 6 }}></View>
+                            this.state.gender == 0 && <View style={styles.dotSelect}></View>
                           }
                         </View>
-                        <Text style={{ marginLeft: 5 }}>Nữ</Text>
+                        <Text style={{ marginLeft: 5 }}>{constants.actionSheet.female}</Text>
                       </TouchableOpacity>
                     </View>
                   </View>
@@ -229,25 +227,19 @@ class RegisterScreen extends Component {
               </View>
             </KeyboardAvoidingView>
           </ScrollView>
-          <TouchableOpacity style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center', marginBottom: 20 }} onPress={this.register.bind(this)}>
-            <Text style={{ color: '#FFF', fontSize: 17 }}>{"TIẾP TỤC"}</Text>
+          <TouchableOpacity style={styles.buttonContinue} onPress={this.register.bind(this)}>
+            <Text style={styles.txtContinue}>{constants.continue}</Text>
           </TouchableOpacity>
 
           <DateTimePicker
             isVisible={this.state.toggelDateTimePickerVisible}
-            onConfirm={newDate => {
-              this.setState({ dob: newDate, date: newDate.format("dd/MM/yyyy"), toggelDateTimePickerVisible: false }, () => {
-                this.form.isValid();
-              });
-            }}
-            onCancel={() => {
-              this.setState({ toggelDateTimePickerVisible: false })
-            }}
+            onConfirm={this.confirmDate}
+            onCancel={this.onCancelDate}
             date={new Date()}
             minimumDate={minDate}
             maximumDate={new Date()}
-            cancelTextIOS={"Hủy bỏ"}
-            confirmTextIOS={"Xác nhận"}
+            cancelTextIOS={constants.actionSheet.cancel2}
+            confirmTextIOS={constants.actionSheet.confirm}
             date={this.state.dob || new Date()}
           />
         </ActivityPanel >
@@ -259,6 +251,65 @@ const DEVICE_WIDTH = Dimensions.get("window").width;
 const DEVICE_HEIGHT = Dimensions.get("window").height;
 
 const styles = StyleSheet.create({
+  txtContinue: {
+    color: '#FFF',
+    fontSize: 17
+  },
+  buttonContinue: {
+    backgroundColor: 'rgb(2,195,154)',
+    alignSelf: 'center',
+    borderRadius: 6,
+    width: 250,
+    height: 48,
+    marginTop: 34,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20
+  },
+  dotSelect: {
+    width: 12,
+    height: 12,
+    backgroundColor: '#02C39A',
+    borderRadius: 6
+  },
+  selectGender: {
+    width: 19,
+    height: 19,
+    borderWidth: 2,
+    borderColor: '#02C39A',
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  buttonSelectGender: {
+    padding: 10,
+    flexDirection: "row"
+  },
+  groupButtonGender: {
+    flexDirection: "row",
+    justifyContent: 'flex-end',
+    flex: 1
+  },
+  containerGender: {
+    flexDirection: 'row',
+    alignItems: "center",
+    marginTop: 25
+  },
+  imgCalendar: {
+    position: 'absolute',
+    right: 0,
+  },
+  fieldDate: {
+    flexDirection: 'row',
+    alignItems: "center",
+    position: 'relative'
+  },
+  logo: {
+    marginTop: 50,
+    alignSelf: 'center'
+  },
+  group: { flex: 1, padding: 20 },
+  container: { flex: 1 },
   btnEye: {
     position: "absolute",
     right: 25,
