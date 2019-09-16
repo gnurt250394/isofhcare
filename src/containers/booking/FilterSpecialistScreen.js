@@ -55,7 +55,7 @@ class FilterSpecialistScreen extends Component {
         var listSearch = this.state.listSpecialist.filter(function (item) {
             return s == null || item.name && item.name.trim().toLowerCase().unsignText().indexOf(s.trim().toLowerCase().unsignText()) != -1;
         });
-        console.log(listSearch,'listSearch');
+        console.log(listSearch, 'listSearch');
         this.setState({ listSpecialistSearch: listSearch });
     }
     onSelected = (item) => {
@@ -71,27 +71,23 @@ class FilterSpecialistScreen extends Component {
             });
         }
     }
-
+    defaultImage = () => {
+        return <ScaleImage resizeMode='cover' source={require("@images/new/booking/ic_default.png")} width={30} height={30} />
+    }
     renderItem = ({ item }) => {
         const source = item.linkImages ? { uri: item.linkImages.absoluteUrl() } : require("@images/new/booking/ic_default.png");
         return (
             <TouchableOpacity onPress={() => this.onSelected(item)} style={styles.viewBtn}>
-            <ImageLoad
+                <ImageLoad
                     resizeMode="cover"
-                    style={{ width: 30, height: 30 }}
+                    style={styles.image}
                     loadingStyle={{ size: 'small', color: 'gray' }}
-                    customImagePlaceholderDefaultStyle={{
-                        width: 30,
-                        height: 30,
-                        alignSelf: "center"
-                    }}
+                    customImagePlaceholderDefaultStyle={styles.placeHolderImage}
                     placeholderSource={require("@images/new/booking/ic_default.png")}
                     source={source}
-                    defaultImage={() => {
-                        return <ScaleImage resizeMode='cover' source={require("@images/new/booking/ic_default.png")} width={30} height={30} />
-                    }}
+                    defaultImage={this.defaultImage}
                 />
-                <Text style={{ fontWeight: 'bold', marginVertical: 10, flex: 1,marginLeft:10 }}>{item.name}</Text>
+                <Text style={styles.txtName}>{item.name}</Text>
                 {item.selected ? (
                     <ScaleImage height={20} source={require('@images/new/ic_question_check_specialist.png')}></ScaleImage>
 
@@ -108,25 +104,28 @@ class FilterSpecialistScreen extends Component {
         }
     }
 
+    listHeader = () => {
+        return (
+            !this.state.refreshing &&
+                (!this.state.listSpecialistSearch || this.state.listSpecialistSearch.length == 0) ?
+                <View style={{ width: '100%', marginTop: 50, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center' }}>
+                    <ScaleImage source={require("@images/empty_result.png")} width={120} />
+                    <Text>Không tìm thấy chuyên khoa nào phù hợp <Text style={{ fontWeight: 'bold', color: constants.colors.actionbar_title_color }}>{this.state.searchValue}</Text></Text>
+                </View> : null
+        )
+    }
     render() {
         return (
             <ActivityPanel
-                title={"Lọc"}
-                titleStyle={{ marginLeft: 55 }}
-                menuButton={<TouchableOpacity style={styles.menu} onPress={this.done.bind(this)}><Text style={{ fontWeight: 'bold' }}>Đồng ý</Text></TouchableOpacity>}
+                title={constants.title.filter}
+                titleStyle={styles.txtTitle}
+                menuButton={<TouchableOpacity style={styles.menu} onPress={this.done.bind(this)}><Text style={styles.txtButtonDone}>{constants.actionSheet.accept}</Text></TouchableOpacity>}
             >
                 <FlatList
-                    style={{ flex: 1, backgroundColor: '#FFF' }}
+                    style={styles.container}
                     keyExtractor={(item, index) => index.toString()}
                     extraData={this.state}
-                    ListHeaderComponent={() =>
-                        !this.state.refreshing &&
-                            (!this.state.listSpecialistSearch || this.state.listSpecialistSearch.length == 0) ?
-                            <View style={{ width: '100%', marginTop: 50, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center' }}>
-                                <ScaleImage source={require("@images/empty_result.png")} width={120} />
-                                <Text>Không tìm thấy chuyên khoa nào phù hợp <Text style={{ fontWeight: 'bold', color: constants.colors.actionbar_title_color }}>{this.state.searchValue}</Text></Text>
-                            </View> : null
-                    }
+                    ListHeaderComponent={this.listHeader}
                     ListFooterComponent={() => <View style={{ height: 10 }} />}
                     data={this.state.listSpecialistSearch}
                     renderItem={this.renderItem}
@@ -138,6 +137,27 @@ class FilterSpecialistScreen extends Component {
     }
 }
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#FFF'
+    },
+    txtButtonDone: { fontWeight: 'bold' },
+    txtTitle: { marginLeft: 55 },
+    txtName: {
+        fontWeight: 'bold',
+        marginVertical: 10,
+        flex: 1,
+        marginLeft: 10
+    },
+    placeHolderImage: {
+        width: 30,
+        height: 30,
+        alignSelf: "center"
+    },
+    image: {
+        width: 30,
+        height: 30
+    },
     viewBtn: { marginBottom: 2, padding: 20, flexDirection: 'row', alignItems: 'center', borderBottomColor: '#00000011', borderBottomWidth: 0.7, justifyContent: 'space-between' },
     menu: {
         marginRight: 10
