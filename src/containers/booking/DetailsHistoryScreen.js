@@ -303,7 +303,7 @@ class DetailsHistoryScreen extends Component {
                       width={20}
                       height={20}
                     />
-                    <Text style={styles.txLabelPrice}></Text>
+                    <Text style={styles.txLabelPrice}>{constants.booking.sum_price_services}</Text>
                     <Text style={styles.txPrice}>
                       {this.state.services.reduce((start, item) => start + parseInt(item.price), 0).formatPrice() + 'đ'}
                     </Text>

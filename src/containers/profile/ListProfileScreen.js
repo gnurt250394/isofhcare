@@ -89,7 +89,7 @@ class ListProfileScreen extends Component {
             });
         })
     }
-    onClickItem = (item) => {
+    onClickItem = (item) => () => {
         NavigationService.navigate('profile', { id: item.medicalRecords.id })
     }
     onDeleteItem = (id) => {
@@ -105,20 +105,20 @@ class ListProfileScreen extends Component {
                 })
                 if (res.code == 0) {
                     this.onRefresh()
-                    snackbar.show('Xóa thành công', 'success')
+                    snackbar.show(constants.msg.user.remove_success, 'success')
                     return
                 } if (res.code == 4) {
-                    snackbar.show('Hồ sơ không thể xóa do đã có đặt khám', 'danger')
+                    snackbar.show(constants.msg.user.profile_can_not_delete, 'danger')
                     return
                 } else {
-                    snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                    snackbar.show(constants.msg.notification.error_retry, 'danger')
                 }
 
             }).catch(err => {
                 this.setState({
                     isVisible: false
                 })
-                snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                snackbar.show(constants.msg.notification.error_retry, 'danger')
             })
     }
     onCloseModal = () => {
@@ -152,14 +152,14 @@ class ListProfileScreen extends Component {
                         disabled: false
 
                     })
-                    snackbar.show('Xác nhận không thành công', 'danger')
+                    snackbar.show(constants.msg.user.confirm_fail, 'danger')
                 }
             }).catch(err => {
                 this.setState({
                     disabled: false
 
                 })
-                snackbar.show('Xác nhận không thành công', 'danger')
+                snackbar.show(constants.msg.user.confirm_fail, 'danger')
             })
         })
 
@@ -167,39 +167,39 @@ class ListProfileScreen extends Component {
     renderRelation = (type) => {
         switch (type) {
             case 'DAD':
-                return <Text style={{ color: '#868686', fontSize: 14 }}>Cha</Text>
+                return <Text style={styles.txtRelationShip}>Cha</Text>
             case 'MOTHER':
-                return <Text style={{ color: '#868686', fontSize: 14 }}>Mẹ</Text>
+                return <Text style={styles.txtRelationShip}>Mẹ</Text>
             case 'BOY':
-                return <Text style={{ color: '#868686', fontSize: 14 }}>Con trai</Text>
+                return <Text style={styles.txtRelationShip}>Con trai</Text>
             case 'DAUGHTER':
-                return <Text style={{ color: '#868686', fontSize: 14 }}>Con gái</Text>
+                return <Text style={styles.txtRelationShip}>Con gái</Text>
             case 'GRANDSON':
-                return <Text style={{ color: '#868686', fontSize: 14 }}>Cháu trai</Text>
+                return <Text style={styles.txtRelationShip}>Cháu trai</Text>
             case 'NIECE':
-                return <Text style={{ color: '#868686', fontSize: 14 }}>Cháu gái</Text>
+                return <Text style={styles.txtRelationShip}>Cháu gái</Text>
             case 'GRANDFATHER':
-                return <Text style={{ color: '#868686', fontSize: 14 }}>Ông</Text>
+                return <Text style={styles.txtRelationShip}>Ông</Text>
             case 'GRANDMOTHER':
-                return <Text style={{ color: '#868686', fontSize: 14 }}>Bà</Text>
+                return <Text style={styles.txtRelationShip}>Bà</Text>
             case 'WIFE':
-                return <Text style={{ color: '#868686', fontSize: 14 }}>Vợ</Text>
+                return <Text style={styles.txtRelationShip}>Vợ</Text>
             case 'HUSBAND':
-                return <Text style={{ color: '#868686', fontSize: 14 }}>Chồng</Text>
+                return <Text style={styles.txtRelationShip}>Chồng</Text>
             case 'OTHER':
-                return <Text style={{ color: '#868686', fontSize: 14 }}>Khác</Text>
+                return <Text style={styles.txtRelationShip}>Khác</Text>
             default:
-                return <Text style={{ color: '#868686', fontSize: 14 }}></Text>
+                return <Text style={styles.txtRelationShip}></Text>
         }
     }
     renderItem = (item, index) => {
         return (
             item.medicalRecords.statusConfirm == "NEED_CONFIRM" ?
                 (
-                    <TouchableOpacity onPress={() => this.onClickItem(item)} >
-                        <Text style={{ color: 'red', marginTop: 10, fontSize: 14, marginHorizontal: 12, textAlign: 'center' }}>Tài khoản {item.medicalRecords.name} có số điện thoại {item.medicalRecords.phone} muốn xác nhận mối quan hệ với bạn.</Text>
+                    <TouchableOpacity onPress={this.onClickItem(item)} >
+                        <Text style={styles.txtmedicalRecords}>Tài khoản {item.medicalRecords.name} có số điện thoại {item.medicalRecords.phone} muốn xác nhận mối quan hệ với bạn.</Text>
                         {item.medicalRecords.status == 1 ? (
-                            <TouchableOpacity style={styles.viewProfileUser} onPress={() => this.onClickItem(item)} >
+                            <TouchableOpacity style={styles.viewProfileUser} onPress={this.onClickItem(item)} >
                                 <LinearGradient style={styles.viewGradientUser} colors={['#02C293', '#01BF88', '#02C293']}>
                                     <Text style={styles.txProfileUser}>{item.medicalRecords.name}</Text>
                                 </LinearGradient>
@@ -213,7 +213,7 @@ class ListProfileScreen extends Component {
                                         <Text style={styles.txName}>{item.medicalRecords.name}</Text>
                                         {
                                             item.medicalRecords.relationshipType ?
-                                                <Text style={{ color: '#02C293', fontSize: 14 }}>Quan hệ: {this.renderRelation(item.medicalRecords.relationshipType)}</Text>
+                                                <Text style={styles.txtRelationshipType}>Quan hệ: {this.renderRelation(item.medicalRecords.relationshipType)}</Text>
                                                 : <View></View>
                                         }
                                     </View>
@@ -233,15 +233,15 @@ class ListProfileScreen extends Component {
                     </TouchableOpacity>
                 ) : (
                     item.medicalRecords.status == 1 ? (
-                        <TouchableOpacity onPress={() => this.onClickItem(item)} style={styles.viewProfileUser}>
-                                <LinearGradient style={styles.viewGradientUser} colors={['#02C293', '#01BF88', '#02C293']}>
+                        <TouchableOpacity onPress={this.onClickItem(item)} style={styles.viewProfileUser}>
+                            <LinearGradient style={styles.viewGradientUser} colors={['#02C293', '#01BF88', '#02C293']}>
                                 <Text style={styles.txProfileUser}>{item.medicalRecords.name}</Text>
                             </LinearGradient>
                         </TouchableOpacity>
                     ) : (
                             <Card style={styles.cardView}>
 
-                                <TouchableOpacity onPress={() => this.onClickItem(item)} style={{
+                                <TouchableOpacity onPress={this.onClickItem(item)} style={{
                                     marginHorizontal: 10,
                                 }}>
                                     <View style={styles.viewProfileFamily}>
@@ -250,7 +250,7 @@ class ListProfileScreen extends Component {
                                             <Text style={styles.txName}>{item.medicalRecords.name}</Text>
                                             {
                                                 item.medicalRecords.relationshipType ?
-                                                    <Text style={{ color: '#02C293', fontSize: 14 }}>Quan hệ: {this.renderRelation(item.medicalRecords.relationshipType)}</Text>
+                                                    <Text style={styles.txtRelationshipType}>Quan hệ: {this.renderRelation(item.medicalRecords.relationshipType)}</Text>
                                                     : <View></View>
                                             }
                                         </View>
@@ -366,6 +366,21 @@ class ListProfileScreen extends Component {
     }
 }
 const styles = StyleSheet.create({
+    txtRelationshipType: {
+        color: '#02C293',
+        fontSize: 14
+    },
+    txtmedicalRecords: {
+        color: 'red',
+        marginTop: 10,
+        fontSize: 14,
+        marginHorizontal: 12,
+        textAlign: 'center'
+    },
+    txtRelationShip: {
+        color: '#868686',
+        fontSize: 14
+    },
     container: {
         flex: 1,
     },

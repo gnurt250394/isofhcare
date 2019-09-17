@@ -76,8 +76,8 @@ class CreateBookingSuccessScreen extends Component {
                 titleStyle={styles.txtTitle}
 
 
-                containerStyle={styles.container}
-                actionbarStyle={styles.container}>
+                containerStyle={styles.container2}
+                actionbarStyle={styles.container2}>
                 <View style={styles.container}>
                     <ScrollView keyboardShouldPersistTaps='handled' style={styles.flex}>
                         {/* <ScaleImage style={styles.image1} height={80} source={require("@images/new/booking/ic_rating.png")} />
@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     flex: { flex: 1 },
-    container: {
+    container2: {
         backgroundColor: "#02C39A"
     },
     txtTitle: {
