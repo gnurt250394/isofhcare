@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, ActivityIndicator, Text, FlatList, TouchableOpacity, TextInput, Keyboard } from 'react-native';
+import { View, ActivityIndicator, Text, FlatList, TouchableOpacity, TextInput, Keyboard, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import specialistProvider from '@data-access/specialist-provider';
@@ -90,8 +90,8 @@ class SpecialistScreen extends Component {
     }
 
     menuButton() {
-        return (<View style={{ flexDirection: 'row' }}>
-            <TouchableOpacity style={{ padding: 10, paddingRight: 10 }} onPress={this.showSearchView.bind(this)}>
+        return (<View style={styles.row}>
+            <TouchableOpacity style={styles.buttonSearch} onPress={this.showSearchView.bind(this)}>
                 <ScaledImage source={require("@images/ic_timkiem.png")} width={20} />
             </TouchableOpacity>
         </View>);
@@ -123,47 +123,68 @@ class SpecialistScreen extends Component {
             console(error);
         }
     }
+    onClose = () => { this.setState({ keyword: "" }, this.search) }
+    onChangeText = (keyword) => {
+        this.setState({ keyword })
+    }
+    keyExtractor = (item, index) => index.toString()
+    headerComponent = () => {
+        return (!this.state.refreshing && (!this.state.data || this.state.data.length == 0) ?
+            <View style={styles.containerNoneData}>
+                <Text style={styles.txtnoneData}>Không tìm chuyên khoa nào</Text>
+            </View> : null
+        )
+    }
+    footerComponent = () => <View style={{ height: 20 }}></View>
+    selectSpecialist = (item) => () => {
+        this.props.navigation.navigate("searchFacilityResult", { specialist: item })
+    }
+    renderItem = ({ item, index }) => {
+        return (
+            // <TouchableOpacity>
+            <Card>
+                <TouchableOpacity onPress={this.selectSpecialist(item)}>
+                    <Text style={{ padding: 15 }}>{item.specialist.name}</Text>
+                </TouchableOpacity>
+            </Card>
+            // </TouchableOpacity>
+        )
+    }
     render() {
         return (
-            <ActivityPanel style={{ flex: 1 }} titleStyle={{ marginLeft: 40 }} title={"CHUYÊN KHOA"} showFullScreen={true} menuButton={this.menuButton()}>
-                <Animatable.View ref={ref => this.searchView = ref} style={{ height: 50, display: this.state.showSearchView ? 'flex' : 'none', alignItems: 'center', flexDirection: 'row', paddingLeft: 10, paddingRight: 10, margin: 5, backgroundColor: '#FFF', shadowColor: '#000000', shadowOpacity: 0.2, shadowOffset: {}, elevation: 5 }} >
-                    <TextInput ref={ref => this.searchInput = ref} placeholder={"Nhập nội dung tìm kiếm"} style={{ flexDirection: 'row', flex: 1 }} returnKeyType="search" underlineColorAndroid="transparent" onSubmitEditing={this.search.bind(this)} onChangeText={(x) => this.setState({ keyword: x })} value={this.state.keyword} />
+            <ActivityPanel style={styles.flex} titleStyle={{ marginLeft: 40 }} title={"CHUYÊN KHOA"} showFullScreen={true} menuButton={this.menuButton()}>
+                <Animatable.View ref={ref => this.searchView = ref} style={[styles.animationSearch, { display: this.state.showSearchView ? 'flex' : 'none', }]} >
+                    <TextInput ref={ref => this.searchInput = ref} placeholder={"Nhập nội dung tìm kiếm"}
+                        style={[styles.flex, styles.row]}
+                        returnKeyType="search"
+                        underlineColorAndroid="transparent"
+                        onSubmitEditing={this.search.bind(this)}
+                        onChangeText={this.onChangeText}
+                        value={this.state.keyword} />
                     {this.state.keyword ?
-                        <TouchableOpacity style={{ padding: 10 }} onPress={() => { this.setState({ keyword: "" }, this.search) }}>
+                        <TouchableOpacity style={{ padding: 10 }} onPress={this.onClose}>
                             <ScaledImage width={20} source={require("@images/ic_close.png")} />
                         </TouchableOpacity> : null
                     }
                 </Animatable.View>
-                <View style={{ flex: 1, padding: 14 }}>
+                <View style={styles.container}>
                     <FlatList
                         onRefresh={this.onRefresh.bind(this)}
                         refreshing={this.state.refreshing}
                         onEndReached={this.onLoadMore.bind(this)}
                         onEndReachedThreshold={1}
-                        style={{ flex: 1 }}
-                        keyExtractor={(item, index) => index.toString()}
+                        style={styles.flex}
+                        keyExtractor={this.keyExtractor}
                         extraData={this.state}
                         data={this.state.data}
-                        ListHeaderComponent={() => !this.state.refreshing && (!this.state.data || this.state.data.length == 0) ?
-                            <View style={{ alignItems: 'center', marginTop: 50 }}>
-                                <Text style={{ fontStyle: 'italic' }}>Không tìm chuyên khoa nào</Text>
-                            </View> : null
-                        }
-                        ListFooterComponent={() => <View style={{ height: 20 }}></View>}
-                        renderItem={({ item, index }) =>
-                            // <TouchableOpacity>
-                            <Card>
-                                <TouchableOpacity onPress={() => { this.props.navigation.navigate("searchFacilityResult", { specialist: item }) }}>
-                                    <Text style={{ padding: 15 }}>{item.specialist.name}</Text>
-                                </TouchableOpacity>
-                            </Card>
-                            // </TouchableOpacity>
-                        }
+                        ListHeaderComponent={this.headerComponent}
+                        ListFooterComponent={this.footerComponent}
+                        renderItem={this.renderItem}
                     />
                 </View>
                 {
                     this.state.loadMore ?
-                        <View style={{ alignItems: 'center', padding: 10, position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+                        <View style={styles.loading}>
                             <ActivityIndicator
                                 size={'small'}
                                 color={'gray'}
@@ -181,3 +202,44 @@ function mapStateToProps(state) {
     };
 }
 export default connect(mapStateToProps)(SpecialistScreen);
+
+const styles = StyleSheet.create({
+    loading: {
+        alignItems: 'center',
+        padding: 10,
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0
+    },
+    txtnoneData: { fontStyle: 'italic' },
+    containerNoneData: {
+        alignItems: 'center',
+        marginTop: 50
+    },
+    container: {
+        flex: 1,
+        padding: 14
+    },
+    animationSearch: {
+        height: 50,
+        alignItems: 'center',
+        flexDirection: 'row',
+        paddingLeft: 10,
+        paddingRight: 10,
+        margin: 5,
+        backgroundColor: '#FFF',
+        shadowColor: '#000000',
+        shadowOpacity: 0.2,
+        shadowOffset: {},
+        elevation: 5
+    },
+    flex: { flex: 1 },
+    buttonSearch: {
+        padding: 10,
+        paddingRight: 10
+    },
+    row: {
+        flexDirection: 'row'
+    },
+})

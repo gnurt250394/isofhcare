@@ -79,6 +79,16 @@ module.exports = {
   begin_use_app:'Bắt đầu sử dụng app',
   skip:'Skip',
   province:'Tỉnh/Thành phố',
+  height:'Chiều cao',
+  weight:'Cân nặng',
+  BMI:'Chỉ số BMI',
+  address:'Địa chỉ',
+  relationship:'Quan hệ',
+  
+  qr_code:{
+    move_camera:'Di chuyển camera đến vùng chứa mã QR để quét',
+    flash_only_behind:'Đèn flash chỉ hoạt động với camera sau'
+  },
   hospital: {
     BENH_VIEN_DAI_HOC_Y: 1
   },
@@ -391,7 +401,9 @@ module.exports = {
       please_select_district:'Bạn chưa chọn Quận/Huyện',
       remove_success:'Xóa thành công',
       profile_can_not_delete:'Hồ sơ không thể xóa do đã có đặt khám',
-      confirm_fail:'Xác nhận không thành công'
+      confirm_fail:'Xác nhận không thành công',
+      setting_share_success:'Cài đặt chia sẻ thành công',
+      select_data_need_share:'CHỌN DỮ LIỆU BẠN MUỐN CHIA SẺ VỚI THÀNH VIÊN NÀY'
     },
     facility: {
       please_select_value_for_rating: "Vui lòng chọn giá trị đánh giá",
@@ -674,7 +686,8 @@ module.exports = {
     patient_code:'Mã bệnh nhân',
     share_with_isofhcare:'Chia sẻ trên hồ sơ iSofHCare',
     share_with_app_other:'Chia sẻ trên ứng dụng khác',
-    history_share:'Lịch sử chia sẻ'
+    history_share:'Lịch sử chia sẻ',
+    my_ehealth:'Y bạ điện tử của tôi'
   },
   actionSheet: {
     orther: 'Khác',
@@ -734,7 +747,9 @@ module.exports = {
     search_drug:'TRA CỨU THUỐC',
     confirm_phone:'Xác nhận số điện thoại',
     add_new_member:'THÊM THÀNH VIÊN MỚI',
-    edit_info:'SỬA THÔNG TIN'
+    edit_info:'SỬA THÔNG TIN',
+    setting_share:'CÀI ĐẶT CHIA SẺ',
+    scan_qr_code:'QUÉT MÃ QRCODE'
   },
   account_screens: {
     signin_or_signup: 'Đăng nhập/ Đăng Ký',
