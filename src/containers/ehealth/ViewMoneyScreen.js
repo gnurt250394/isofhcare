@@ -38,15 +38,15 @@ class ViewCheckupResultScreen extends Component {
             detailsHospital: '',
         }
     }
-
+    goBack = () => {
+        this.props.navigation.pop();
+    }
     renderDetails = () => {
         return (
             <ScrollView ref={ref => this.flListDate = ref} showsVerticalScrollIndicator={false} style={styles.container}>
-                <ProfileInfomation2 title="TIỀN" resultDetail={this.state.resultDetail} />
-                <TotalMoney showTitle={false}  result={this.state.result} resultDetail={this.state.resultDetail} />
-                <TouchableOpacity style={styles.btnViewFinish} onPress={() => {
-                    this.props.navigation.pop();
-                }}><Text style={styles.txViewFinish}>{constants.ehealth.view_finish}</Text>
+                <ProfileInfomation2 title={constants.ehealth.money.toUpperCase()} resultDetail={this.state.resultDetail} />
+                <TotalMoney showTitle={false} result={this.state.result} resultDetail={this.state.resultDetail} />
+                <TouchableOpacity style={styles.btnViewFinish} onPress={this.goBack}><Text style={styles.txViewFinish}>{constants.ehealth.view_finish}</Text>
                 </TouchableOpacity>
                 <View style={styles.viewSpaceBottom} />
             </ScrollView>
@@ -55,7 +55,7 @@ class ViewCheckupResultScreen extends Component {
     render() {
 
         return (
-            <ActivityPanel style={{ flex: 1 }} title={constants.title.ehealth_details}
+            <ActivityPanel style={styles.flex} title={constants.title.ehealth_details}
                 isLoading={this.state.isLoading}>
                 {this.renderDetails()}
             </ActivityPanel>
@@ -64,8 +64,9 @@ class ViewCheckupResultScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-    container:{ flex: 1 },
-    btnViewFinish:{
+    flex: { flex: 1 },
+    container: { flex: 1 },
+    btnViewFinish: {
         alignSelf: 'center',
         width: 252,
         maxWidth: DEVICE_WIDTH,
@@ -75,8 +76,8 @@ const styles = StyleSheet.create({
         marginVertical: 20,
         padding: 10, alignItems: 'center'
     },
-    txViewFinish:{ fontWeight: 'bold', color: '#FFF', fontSize: 17 },
-    viewSpaceBottom:{ height: 50 }
+    txViewFinish: { fontWeight: 'bold', color: '#FFF', fontSize: 17 },
+    viewSpaceBottom: { height: 50 }
 });
 
 function mapStateToProps(state) {

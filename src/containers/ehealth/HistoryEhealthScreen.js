@@ -34,7 +34,7 @@ class HistoryEhealthScreen extends Component {
             return "";
         }
     }
-    viewResult = (item) => {
+    viewResult = (item) => () => {
         console.log(item);
         this.setState({ isLoading: true }, () => {
             resultUtils.getDetail(item.patientHistoryId, this.props.ehealth.hospital.hospital.id, item.id).then(result => {
@@ -98,22 +98,31 @@ class HistoryEhealthScreen extends Component {
         return (
             <View style={styles.viewItem}>
                 <Card style={styles.cardStyle}>
-                    <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => {
-                        this.viewResult(item)
-                    }}>
-                        <View style={{ width: 150, height: 100, alignItems: 'center' }}>
+                    <TouchableOpacity style={styles.buttonImage} onPress={this.viewResult(item)}>
+                        <View style={styles.groupImage}>
                             <ScaledImage style={styles.img} height={100} width={150} source={this.getImage(item)}></ScaledImage>
                         </View>
                         <View style={styles.viewDetails}>
-                            <Text style={{ color: '#479AE3', marginVertical: 10, fontSize: 14 }}>{this.getTime(item.timeGoIn)}</Text>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                            <Text style={styles.txtTimeGoIn}>{this.getTime(item.timeGoIn)}</Text>
+                            <View style={styles.containerImageSmall}>
                                 <ScaledImage style={styles.img} height={20} width={20} source={this.getImageSmall(item)}></ScaledImage>
-                                <Text style={{ marginLeft: 5, fontSize: 14, minHeight: 20, fontWeight: 'bold' }}>{item.serviceName}</Text>
+                                <Text style={styles.txtServiceName}>{item.serviceName}</Text>
                             </View>
                         </View>
                     </TouchableOpacity>
                 </Card>
             </View>
+        )
+    }
+    keyExtractor = (item, index) => index.toString()
+    headerComponent = () => {
+        return (
+            <View style={{ height: 10 }}></View>
+        )
+    }
+    footerComponent = () => {
+        return (
+            <View style={{ height: 50 }}></View>
         )
     }
     render() {
@@ -123,29 +132,21 @@ class HistoryEhealthScreen extends Component {
             <ActivityPanel style={styles.container}
                 // title="HỒ SƠ Y BẠ GIA ĐÌNH"
                 isLoading={this.state.isLoading}
-                title={<Text style={{ color: '#FFF' }}>{'Lịch sử y bạ '}<Text style={{ color: '#b61827' }}>({this.state.countTime} lần)</Text></Text>}
-                
-                
-                
-                
-        >
+                title={<Text style={{ color: '#FFF' }}>{constants.title.history_medical_records}<Text style={{ color: '#b61827' }}>({this.state.countTime} lần)</Text></Text>}
+
+
+
+
+            >
                 <FlatList
                     data={this.state.data}
-                    style={{ flex: 1 }}
-                    keyExtractor={(item, index) => index.toString()}
+                    style={styles.flex}
+                    keyExtractor={this.keyExtractor}
                     renderItem={this.renderItem}
                     extraData={this.state}
                     numColumns={2}
-                    ListHeaderComponent={() => {
-                        return (
-                            <View style={{ height: 10 }}></View>
-                        )
-                    }}
-                    ListFooterComponent={() => {
-                        return (
-                            <View style={{ height: 50 }}></View>
-                        )
-                    }}
+                    ListHeaderComponent={this.headerComponent}
+                    ListFooterComponent={this.footerComponent}
                 ></FlatList>
             </ActivityPanel>
 
@@ -153,6 +154,31 @@ class HistoryEhealthScreen extends Component {
     }
 }
 const styles = StyleSheet.create({
+    flex: { flex: 1 },
+    txtServiceName: {
+        marginLeft: 5,
+        fontSize: 14,
+        minHeight: 20,
+        fontWeight: 'bold'
+    },
+    containerImageSmall: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    txtTimeGoIn: {
+        color: '#479AE3',
+        marginVertical: 10,
+        fontSize: 14
+    },
+    groupImage: {
+        width: 150,
+        height: 100,
+        alignItems: 'center'
+    },
+    buttonImage: {
+        alignItems: 'center'
+    },
     container: {
         flex: 1,
         backgroundColor: '#F9FAFB'
@@ -182,7 +208,7 @@ const styles = StyleSheet.create({
         // top:-50
 
     },
-    
+
     imageStyle: { borderRadius: 30, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' },
     imgLoad: {
         alignSelf: 'center',

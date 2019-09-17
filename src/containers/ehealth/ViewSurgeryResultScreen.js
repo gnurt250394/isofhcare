@@ -6,7 +6,7 @@ import ScaledImage from 'mainam-react-native-scaleimage';
 import Dash from 'mainam-react-native-dash-view';
 import bookingProvider from '@data-access/booking-provider';
 import hospitalProvider from '@data-access/hospital-provider';
-import constants from '@resources/strings';
+import constants from '../../res/strings';
 import dateUtils from 'mainam-react-native-date-utils';
 import stringUtils from 'mainam-react-native-string-utils';
 import profileProvider from '@data-access/profile-provider';
@@ -38,15 +38,15 @@ class ViewSurgeryResultScreen extends Component {
             detailsHospital: '',
         }
     }
-
+    goBack = () => {
+        this.props.navigation.pop();
+    }
     renderDetails = () => {
         return (
             <ScrollView ref={ref => this.flListDate = ref} showsVerticalScrollIndicator={false} style={styles.container}>
-                <ProfileInfomation2 title="KẾT QUẢ GIẢI PHẪU" resultDetail={this.state.resultDetail} />
+                <ProfileInfomation2 title={constants.title.result_anatomy} resultDetail={this.state.resultDetail} />
                 <SurgeryResult showTitle={false} result={this.state.result} />
-                <TouchableOpacity style={styles.btnViewFinish} onPress={() => {
-                    this.props.navigation.pop();
-                }}><Text style={styles.txViewFinish}>{constants.ehealth.view_finish}</Text>
+                <TouchableOpacity style={styles.btnViewFinish} onPress={this.goBack}><Text style={styles.txViewFinish}>{constants.ehealth.view_finish}</Text>
                 </TouchableOpacity>
                 <View style={styles.viewSpaceBottom} />
             </ScrollView>
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     },
     txViewFinish: { fontWeight: 'bold', color: '#FFF', fontSize: 17 },
     viewSpaceBottom: { height: 50 },
-    
+
     titleStyle: {
         color: '#FFF'
     }

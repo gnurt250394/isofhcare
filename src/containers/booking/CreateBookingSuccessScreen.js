@@ -42,12 +42,10 @@ class CreateBookingSuccessScreen extends Component {
         }, 0)
         return (priceFinal - priceVoucher).formatPrice()
     }
-
     goHome = () => {
         this.props.navigation.pop();
     }
     onBackdropPress = () => this.setState({ isVisible: false })
-
     onPressCode = (vnPayId) => {
         Clipboard.setString(vnPayId)
         snackbar.show('Đã sao chép', 'success')
@@ -76,6 +74,8 @@ class CreateBookingSuccessScreen extends Component {
                 hideBackButton={true}
                 title={constants.title.create_booking_success}
                 titleStyle={styles.txtTitle}
+
+
                 containerStyle={styles.container}
                 actionbarStyle={styles.container}>
                 <View style={styles.container}>
