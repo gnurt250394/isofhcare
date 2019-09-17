@@ -11,7 +11,7 @@ import snackbar from '@utils/snackbar-utils';
 import connectionUtils from '@utils/connection-utils';
 import payoo from 'mainam-react-native-payoo';
 import { NativeModules } from 'react-native';
-import constants from '@resources/strings';
+import constants from '../../res/strings';
 var PayooModule = NativeModules.PayooModule;
 
 class ConfirmBookingScreen extends Component {
@@ -470,7 +470,7 @@ class ConfirmBookingScreen extends Component {
                                             snackbar.show(constants.booking.payment_not_permission, "danger");
                                             return;
                                         case "order_ref_id":
-                                            snackbar.show("Đặt khám đã tồn tại trong hệ thống", "danger");
+                                            snackbar.show(constants.booking.booking_invalid, "danger");
                                             return;
                                         case "vendor_id":
                                             snackbar.show(constants.booking.vendor_not_found, "danger");
@@ -495,10 +495,10 @@ class ConfirmBookingScreen extends Component {
                         if (s.code == 0 && s.data && s.data.booking) {
                             switch (s.data.booking.status) {
                                 case 3: //đã thanh toán
-                                    snackbar.show("Đặt khám đã được thanh toán", "danger")
+                                    snackbar.show(constants.booking.booking_paid, "danger")
                                     break;
                                 case 4: //payment_last
-                                    snackbar.show("Đặt khám đã được thanh toán hoặc không tồn tại");
+                                    snackbar.show(constants.booking.booking_paid_or_invalid);
                                     break;
                                 default:
                                     this.setState({ isLoading: true }, () => {

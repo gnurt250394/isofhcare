@@ -58,7 +58,7 @@ export default class SelectHealthFacilitiesScreen extends Component {
   render() {
     return (
       <ActivityPanel
-        title="Chọn CSYT"
+        title={constants.title.select_CSYT}
         showFullScreen={true} isLoading={this.state.isLoading}>
         <View style={styles.viewBtn}>
           <View style={styles.separateBackground}></View>

@@ -280,7 +280,7 @@ class ScanQRCodeScreen extends Component {
     }
     render() {
         return (
-            <ActivityPanel isLoading={this.state.isLoading} style={{ flex: 1 }} title="Quét QR BHYT" >
+            <ActivityPanel isLoading={this.state.isLoading} style={{ flex: 1 }} title={constants.title.scan_code} >
 
                 <QRCodeScanner
                     ref={(node) => { this.scanner = node }}

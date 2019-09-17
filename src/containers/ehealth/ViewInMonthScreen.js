@@ -2,7 +2,7 @@ import React, { Component, PropTypes, PureComponent } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
 import { View, Text, ScrollView, FlatList, TouchableOpacity, StyleSheet, TextInput, Switch, Dimensions, Platform } from 'react-native';
 import { connect } from 'react-redux';
-import constants from '../../res/strings';
+import constants from '@resources/strings';
 import dateUtils from 'mainam-react-native-date-utils';
 import snackbar from '@utils/snackbar-utils';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
@@ -499,6 +499,20 @@ class ListProfileScreen extends Component {
     onCancelDate = () => {
         this.setState({ toggelMonthPicker: false });
     }
+    onSelectActionSheet = (index) => {
+        switch (index) {
+            case 0:
+                this.onShareEhealth();
+                break;
+            case 1:
+                this.exportPdf();
+                break;
+            case 2:
+                this.openHistorySharing();
+
+
+        }
+    }
     render() {
         return (
             <ActivityPanel style={{ flex: 1 }} title={constants.title.ehealth}
@@ -538,7 +552,7 @@ class ListProfileScreen extends Component {
                                     <Text style={styles.txCheckResult}>{constants.ehealth.checkupResult}</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={this.onPressAppointment} style={styles.viewBtn}>
-                                    <Text style={styles.txCheckResult}>{'LỊCH TÁI KHÁM'}</Text>
+                                    <Text style={styles.txCheckResult}>{constants.ehealth.re_examination.toUpperCase()}</Text>
                                 </TouchableOpacity>
 
                                 <Card style={styles.cardView}>
@@ -578,8 +592,8 @@ class ListProfileScreen extends Component {
                     isVisible={this.state.toggelMonthPicker}
                     onConfirm={this.confirmDate}
                     onCancel={this.onCancelDate}
-                    cancelTextIOS={"Hủy bỏ"}
-                    confirmTextIOS={"Xác nhận"}
+                    cancelTextIOS={constants.actionSheet.cancel2}
+                    confirmTextIOS={constants.actionSheet.confirm}
                     date={this.state.latestTime || new Date()}
                 />
                 <DateTimePicker
@@ -589,29 +603,16 @@ class ListProfileScreen extends Component {
                     onCancel={() => {
                         this.setState({ toggelDateTimePickerVisible: false });
                     }}
-                    cancelTextIOS={"Hủy bỏ"}
-                    confirmTextIOS={"Xác nhận"}
+                    cancelTextIOS={constants.actionSheet.cancel2}
+                    confirmTextIOS={constants.actionSheet.confirm}
                     date={(this.state.isTimeAlarm ? this.state.dobAlarm : this.state.dob) || new Date()}
                 />
                 <ActionSheet
                     ref={o => this.actionSheetShare = o}
-                    options={["Chia sẻ trên hồ sơ iSofHCare", "Chia sẻ trên ứng dụng khác", "Lịch sử chia sẻ", constants.actionSheet.cancel]}
+                    options={[constants.ehealth.share_with_isofhcare, constants.ehealth.share_with_app_other, constants.ehealth.history_share, constants.actionSheet.cancel]}
                     cancelButtonIndex={3}
                     destructiveButtonIndex={3}
-                    onPress={(index) => {
-                        switch (index) {
-                            case 0:
-                                this.onShareEhealth();
-                                break;
-                            case 1:
-                                this.exportPdf();
-                                break;
-                            case 2:
-                                this.openHistorySharing();
-
-
-                        }
-                    }}
+                    onPress={this.onSelectActionSheet}
                 />
                 <ExportPDF endLoading={() => this.setState({ isLoading: false })} ref={(element) => this.exportPdfCom = element} />
             </ActivityPanel>

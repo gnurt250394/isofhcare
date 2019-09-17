@@ -518,6 +518,8 @@ module.exports = {
     specialist_not_found: 'Không tìm thấy chuyên khoa nào phù hợp',
     select_date_color_green: 'CHỌN NGÀY GIỜ CÓ MÀU XANH',
     schedule_booking: 'LỊCH KHÁM',
+    booking_paid:'Đặt khám đã được thanh toán',
+    booking_paid_or_invalid:'Đặt khám đã được thanh toán hoặc không tồn tại',
     guide: {
       part_1: 'Bước 1: Điền thông tin chuyển khoản thụ hưởng:',
       bank: 'Ngân hàng',
@@ -676,7 +678,9 @@ module.exports = {
     select_hospital:'CHỌN BỆNH VIỆN',
     result_anatomy:'KẾT QUẢ GIẢI PHẪU',
     drug:'THUỐC',
-    test_result:'KẾT QUẢ XÉT NGHIỆM'
+    test_result:'KẾT QUẢ XÉT NGHIỆM',
+    select_CSYT:'Chọn CSYT',
+    scan_code:'Quét QR BHYT'
   },
   account_screens: {
     signin_or_signup: 'Đăng nhập/ Đăng Ký',
