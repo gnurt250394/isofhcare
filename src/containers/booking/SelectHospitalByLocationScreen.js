@@ -120,76 +120,77 @@ class SelectHospitalScreenLocation extends Component {
         if (item.zone && item.zone.name)
             address += ", " + item.zone.name;
         if (item.district && item.district.name)
-        
+
             address += ", " + item.district.name;
         if (item.province && item.province.countryCode)
             address += ", " + item.province.countryCode;
         return address;
     }
+    keyExtractor = (item, index) => index.toString()
+    listHeader = () => {
+        return (
+            !this.state.refreshing &&
+                (!this.state.data || this.state.data.length == 0) ? (
+                    <View style={{ alignItems: "center", marginTop: 50 }}>
+                        <Text style={{ fontStyle: "italic" }}>
+                            {constants.none_data}</Text>
+                    </View>
+                ) : null
+        )
+    }
+    listFooter = () => <View style={{ height: 10 }} />
+    renderItem = ({ item, index }) => {
+        const source = item.medicalRecords && item.medicalRecords.avatar ? { uri: item.medicalRecords.avatar.absoluteUrl() } : require("@images/new/user.png");
+        if (!item.merge) {
+            let address = this.getAddress(item);
+            item.hospital.address = address;
+            item.merge = true;
+        }
+
+
+        return <TouchableOpacity style={styles.details} onPress={this.selectHospital.bind(this, item)}>
+            <View style={styles.containerItemKM}>
+                <ScaleImage style={styles.plac} height={21} source={require("@images/new/hospital/ic_place.png")} />
+                <Text style={styles.bv1}>{(Math.round(item.hospital.distance * 100) / 100).toFixed(2)} km</Text>
+            </View>
+            <View style={styles.containerContent}>
+                <Text style={styles.bv} numberOfLines={1}>{item.hospital.name}</Text>
+                <Text style={styles.bv1} numberOfLines={2}>{item.hospital.address}</Text>
+            </View>
+            <ScaleImage style={styles.help} height={21} source={require("@images/new/hospital/ic_info.png")} />
+        </TouchableOpacity>
+    }
+    onPressBack = () => this.props.navigation.pop()
     render() {
         return (
             <ActivityPanel
                 isLoading={this.state.isLoading}
                 style={styles.AcPanel} title={constants.title.location_near}
-                backButton={<TouchableOpacity style={{ paddingLeft: 20 }} onPress={() => this.props.navigation.pop()}><Text>Hủy</Text></TouchableOpacity>}
+                backButton={<TouchableOpacity style={{ paddingLeft: 20 }} onPress={this.onPressBack}><Text>{constants.actionSheet.cancel}</Text></TouchableOpacity>}
                 titleStyle={{ marginLeft: 10 }}
-                containerStyle={{
-                    backgroundColor: "rgb(246, 249, 251)"
-                }}
-                actionbarStyle={{
-                    backgroundColor: '#ffffff',
-                    borderBottomWidth: 1,
-                    borderBottomColor: 'rgba(0, 0, 0, 0.06)'
-                }}>
+                containerStyle={styles.containerWhite}
+                actionbarStyle={styles.actionBar}>
 
 
                 <View style={styles.container}>
-                    <View style={{ height: 1, backgroundColor: 'rgba(0, 0, 0, 0.06)' }}></View>
+                    <View style={styles.viewTop}></View>
                     <FlatList
                         onRefresh={this.onRefresh.bind(this)}
                         refreshing={this.state.refreshing}
                         style={styles.sc}
-                        keyExtractor={(item, index) => index.toString()}
+                        keyExtractor={this.keyExtractor}
                         extraData={this.state}
                         data={this.state.data}
                         onEndReached={this.onLoadMore.bind(this)}
                         onEndReachedThreshold={1}
-                        ListHeaderComponent={() =>
-                            !this.state.refreshing &&
-                                (!this.state.data || this.state.data.length == 0) ? (
-                                    <View style={{ alignItems: "center", marginTop: 50 }}>
-                                        <Text style={{ fontStyle: "italic" }}>
-                                            {constants.none_data}</Text>
-                                    </View>
-                                ) : null
-                        }
-                        ListFooterComponent={() => <View style={{ height: 10 }} />}
-                        renderItem={({ item, index }) => {
-                            const source = item.medicalRecords && item.medicalRecords.avatar ? { uri: item.medicalRecords.avatar.absoluteUrl() } : require("@images/new/user.png");
-                            if (!item.merge) {
-                                let address = this.getAddress(item);
-                                item.hospital.address = address;
-                                item.merge = true;
-                            }
-
-
-                            return <TouchableOpacity style={styles.details} onPress={this.selectHospital.bind(this, item)}>
-                                <View style={{ marginLeft: 20, alignItems: 'center', marginTop: 5 }}>
-                                    <ScaleImage style={styles.plac} height={21} source={require("@images/new/hospital/ic_place.png")} />
-                                    <Text style={styles.bv1}>{(Math.round(item.hospital.distance * 100) / 100).toFixed(2)} km</Text>
-                                </View>
-                                <View style={{ flex: 1, marginLeft: 20 }}>
-                                    <Text style={styles.bv} numberOfLines={1}>{item.hospital.name}</Text>
-                                    <Text style={styles.bv1} numberOfLines={2}>{item.hospital.address}</Text>
-                                </View>
-                                <ScaleImage style={styles.help} height={21} source={require("@images/new/hospital/ic_info.png")} />
-                            </TouchableOpacity>
-                        }}
+                        ListHeaderComponent={this.listHeader}
+                        ListFooterComponent={this.listFooter}
+                        renderItem={this.renderItem}
                     />
                 </View>
                 {
                     this.state.loadMore ?
-                        <View style={{ alignItems: 'center', padding: 10, position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+                        <View style={styles.groupLoadmore}>
                             <ActivityIndicator
                                 size={'small'}
                                 color={'gray'}
@@ -207,6 +208,35 @@ function mapStateToProps(state) {
     };
 }
 const styles = StyleSheet.create({
+    groupLoadmore: {
+        alignItems: 'center',
+        padding: 10,
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0
+    },
+    containerContent: {
+        flex: 1,
+        marginLeft: 20
+    },
+    containerItemKM: {
+        marginLeft: 20,
+        alignItems: 'center',
+        marginTop: 5
+    },
+    containerWhite: {
+        backgroundColor: "rgb(246, 249, 251)"
+    },
+    viewTop: {
+        height: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.06)'
+    },
+    actionBar: {
+        backgroundColor: '#ffffff',
+        borderBottomWidth: 1,
+        borderBottomColor: 'rgba(0, 0, 0, 0.06)'
+    },
     AcPanel: {
 
         backgroundColor: 'rgb(246, 249, 251)',

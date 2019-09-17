@@ -62,6 +62,8 @@ import ConfirmBookingScreen from "@containers/booking/ConfirmBookingScreen";
 import CreateBookingSuccessScreen from "@containers/booking/CreateBookingSuccessScreen";
 import PaymentBookingErrorScreen from "@containers/booking/PaymentBookingErrorScreen";
 import DetailsHistoryScreen from "@containers/booking/DetailsHistoryScreen"
+import CreateBookingWithPaymentScreen from "@containers/booking/CreateBookingWithPaymentScreen"
+
 
 import CreateProfileScreen from "@containers/profile/CreateProfileScreen";
 import PaymentWithVNPayScreen from "@containers/payment/PaymentWithVNPayScreen";
@@ -105,7 +107,7 @@ import SpecialistScreen from "@containers/specialist/SpecialistScreen";
 import ConfirmCodeScreen from "@containers/account/ConfirmCodeScreen";
 import ResetPasswordScreen from "@containers/account/ResetPasswordScreen";
 import { fromLeft, zoomIn, zoomOut, fromRight } from 'react-navigation-transitions';
-import MyVoucher from '@containers/vocher'
+import MyVoucherScreen from '@containers/voucher';
 import ListDoctorScreen from '@containers/booking/doctor/ListDoctorScreen';
 import DetailsDoctorScreen from '@containers/booking/doctor/DetailDoctorScreen';
 import AddBookingDoctorScreen from '@containers/booking/doctor/AddBookingDoctorScreen';
@@ -301,6 +303,7 @@ const RootNavigator = createStackNavigator(
     filterSpecialist: { screen: FilterSpecialistScreen },
     selectProfile: { screen: SelectProfileScreen },
     patientHistory: { screen: PatientHistoryScreen },
+    createBookingWithPayment: { screen: CreateBookingWithPaymentScreen },
 
     //get Ticket
     getTicket: GetTicketNavigation,
@@ -317,10 +320,10 @@ const RootNavigator = createStackNavigator(
     drug: { screen: DrugScreen },
     hospitalByLocation: { screen: HospitalByLocationScreen },
     photoViewer: { screen: PhotoViewerScreen },
-    myVoucher:{screen : MyVoucher},
-    listDoctor:{screen:ListDoctorScreen},
-    addBookingDoctor:{screen:AddBookingDoctorScreen},
-    selectTimeDoctor:{screen:SelectDateTimeDoctorScreen}
+    myVoucher: { screen: MyVoucherScreen },
+    listDoctor: { screen: ListDoctorScreen },
+    addBookingDoctor: { screen: AddBookingDoctorScreen },
+    selectTimeDoctor: { screen: SelectDateTimeDoctorScreen }
   },
   {
     headerMode: "none",

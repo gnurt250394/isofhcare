@@ -60,6 +60,22 @@ module.exports = {
   none_service: 'Không tìm thấy dịch vụ nào phù hợp',
   none_service_type_match: 'Không tìm thấy loại dịch vụ nào phù hợp ',
   update_to_up_case: "CẬP NHẬT",
+  login_fail: 'Phiên đăng nhập đã hết hạn, xin vui lòng đăng nhập lại',
+  setting: 'Cài đặt',
+  continue: 'TIẾP TỤC',
+  setup_password: 'Thiết lập mật khẩu',
+  enter_email: "Nhập email",
+  copy_success: 'Sao chép thành công',
+  date_start: 'Ngày bắt đầu',
+  district: 'Quận huyện',
+  wards: 'Xã phường',
+  village: 'Thôn xóm',
+  details: 'Xem chi tiết',
+  examination_services: 'Khám DV',
+  BHYT: 'BHYT',
+  BHYT_CA: 'BHYT CA',
+  upload_image:'Tải ảnh lên',
+  image:'Hình ảnh',
   hospital: {
     BENH_VIEN_DAI_HOC_Y: 1
   },
@@ -129,11 +145,87 @@ module.exports = {
       KEY_HAS_UPDATE_NEW_VERSION: "KEY_HAS_UPDATE_NEW_VERSION"
     }
   },
+  questions:{
+    answered:'Đã trả lời',
+    not_answered:'Chưa trả lời',
+    make_question_now:'Đặt câu hỏi ngay',
+    age:'Tuổi',
+    info_complementary:'Thông tin bổ sung',
+    specialist_asking:'Chuyên khoa đang hỏi',
+    anamnesis:'Tiền sử bệnh',
+    heart:'Tim mạch',
+    diabetes:'Tiểu đường',
+    respiratory:'Hô hấp',
+    osteoarthritis:'Xương khớp',
+    cholesterol:'Mỡ máu',
+    HIV:'HIV',
+    stomach:'Dạ dày',
+    lack_of_substance:'Thiếu chất',
+    other_info:'Thông tin khác',
+    send_question:'Gửi câu hỏi',
+    specialist_not_found:'Không có chuyên khoa nào',
+    input_answer:'Viết trả lời',
+    question_require:'Câu trả lời bắt buộc phải nhập',
+    rating:'Đánh giá',
+    specialist:'Chuyên khoa',
+    status:'Trạng thái',
+    cause_reject:'Lý do từ chối',
+    certificate_code:'Số văn bằng chuyên môn',
+    content_status:{
+      wait:'Chờ trả lời',
+      reject:'Đã bị từ chối'
+    }
+  },
+  change_password_screens: {
+    password_new: 'Nhập mật khẩu mới',
+    password_new_2: 'Xác nhận mật khẩu mới',
+    confirm_pass: 'Xác nhận mật khẩu',
+    require_phone: 'Vui lòng nhập số điện thoại',
+    require_phone_not_found: 'Nhập SĐT không hợp lệ',
+    register: 'Nếu bạn chưa có tài khoản hãy đăng ký ngay',
+    setup_password_success: 'Thiết lập mật khẩu mới thành công',
+    phone_not_found: 'Số điện thoại không tồn tại trong hệ thống'
+  },
+  reality_account: {
+    title: 'Xác thực tài khoản',
+    require_otp: 'Vui lòng nhập mã OTP',
+    require_length: 'Yêu cầu nhập đủ 6 ký tự'
+  },
+  touch_id_screens: {
+    touch_not_found: 'Bạn chưa đăng ký vân tay trên tài khoản này',
+    touch_error: 'Thử lại \n Sử dụng Touch ID để mở khoá Isofhcare ',
+    header: 'Touch ID cho "IsofHcare"',
+    back: 'Quay lại',
+    details: ' Sử dụng id cảm ứng của bạn để truy cập nhanh hơn,\n dễ dàng đăng nhập vào tài khoản của bạn',
+    touch_login: 'Đăng nhập bằng vân tay',
+    warning: 'Lưu ý: Tất cả vân tay đã được đăng ký trong thiết bị đều có thể đăng nhập'
+  },
+  login_screens: {
+    verification_fail: 'Xác minh số điện thoại không thành công',
+    require_phone: 'Số điện thoại không được bỏ trống',
+    phone_invalid: "SĐT không hợp lệ",
+    forgot_password: 'Quên mật khẩu?',
+    register: 'Nếu chưa có tài khoản có thể đăng ký'
+  },
+  register_screens: {
+    verification_fail: 'Xác minh email không thành công'
+  },
   msg: {
     notification: {
       new_notification: "Bạn có một thông báo mới",
-      confirm_delete_all_notification:
-        "Bạn chắc chắn muốn xóa hết các thông báo?"
+      confirm_delete_all_notification: "Bạn chắc chắn muốn xóa hết các thông báo?",
+      file_not_result: 'Hồ sơ này chưa có kết quả',
+      error_retry: 'Có lỗi xảy ra, xin vui lòng thử lại',
+      medical_records_not_found: 'Y bạ chưa xác định',
+      file_share_expired: 'Hồ sơ chia sẻ đến bạn đã hết thời gian',
+      ports_not_found: 'Lỗi, bài viết không tồn tại',
+      type: {
+        ask_requests: 'Tư vấn - đặt câu hỏi',
+        booking: 'Đặt khám',
+        get_quick_number: 'Lấy số nhanh',
+        ehealth: "Y bạ điện tử",
+      },
+      notifi: "THÔNG BÁO"
     },
     app: {
       check_connection: "Vui lòng kiểm tra lại kết nối internet",
@@ -142,7 +234,8 @@ module.exports = {
       not_internet: 'Không có kết nối mạng',
       text_without_500: 'Không cho phép nhập quá 500 kí tự',
       err_try_again: 'Có lỗi, xin vui lòng thử lại',
-      dob_must_lesser_150: 'Không cho phép chọn lớn hơn 150 tuổi'
+      dob_must_lesser_150: 'Không cho phép chọn lớn hơn 150 tuổi',
+      check_update: 'Đang kiểm tra cập nhật'
     },
     upload: {
       upload_image_error: "Upload ảnh không thành công"
@@ -246,7 +339,11 @@ module.exports = {
       input_name: "Nhập họ tên",
       email_not_null: 'Email không được bỏ trống',
       email_does_not_exits: 'Email không hợp lệ',
-      email_apply_with_people_15_old: 'Vui lòng nhập email với người trên 15 tuổi'
+      email_apply_with_people_15_old: 'Vui lòng nhập email với người trên 15 tuổi',
+      enter_the_correct_date_format: 'Nhập đúng định dạng ngày',
+      date_not_allow_under_15_old: 'Không cho phép chọn dưới 15 tuổi',
+      date_not_allow_over_150_old: 'Không cho phép chọn trên 150 tuổi',
+      account_not_connect_please_contact_administrators: 'Tài khoản của bạn chưa được kết nối với bệnh viện này. Vui lòng liên hệ quản trị viên iSofHCare',
     },
     facility: {
       please_select_value_for_rating: "Vui lòng chọn giá trị đánh giá",
@@ -274,15 +371,42 @@ module.exports = {
       not_examination: 'Bạn không có lịch khám lại nào!',
       not_result_ehealth_in_day: 'Bạn chưa có kết quả khám ở ngày này!',
       not_select_time_drug: 'Bạn chưa chọn giờ uống thuốc',
-
-
+      allow_access_camera: 'Bạn cần cho phép iSofHCare truy cập vào camera của bạn để quét mã QRCode?',
+      please_move_camera: 'Di chuyển camera tới vùng có QR của bảo hiểm y tế để quét',
+      QRCode_invalid: 'MÃ QRCODE KHÔNG HỢP LỆ',
+      please_check_QRcode: 'Vui lòng kiểm tra lại mã QR đảm bảo đúng mã của thẻ bảo hiểm, không bị mờ, rách ...',
+      please_wait_minutes_if_no_message: 'Xin chờ ít phút nếu bạn đã gửi tin nhắn mà chưa nhận được số tiếp đón.',
+      not_examination_at_hospital:'Bạn chưa có lần khám gần nhất tại bệnh viện này',
+      move_camera_to_file:'Di chuyển camera đến vùng chứa mã hồ sơ để quét',
+      code_invalid:'Mã không hợp lệ',
+      add_medical_records_success:'Thêm y bạ thành công',
+      not_get_info_account:'Không lấy được thông tin tài khoản, xin vui lòng thử lại',
+      medical_records_not_found:'Không tìm thấy y bạ',
+      account_not_owned_medical_records:'Tài khoản của bạn không sở hữu y bạ này',
+      please_select_people_share:'Vui lòng chọn người cần chia sẻ',
+      please_select_date_start:'Vui lòng chọn ngày bắt đầu',
+      please_select_date_end:'Vui lòng chọn ngày kết thúc',
+      date_start_bigger_than_date_end:'Ngày bắt đầu phải lớn hơn ngày kết thúc',
+      share_success:'Chia sẻ thành công',
+      share_fail:'Chia sẻ không thành công',
+      share_not_found:'Chưa có chia sẻ nào',
+      not_schedule_month:'Không có lịch khám nào trong tháng này',
+      share_medical_records_success:'Đã chia sẻ Y bạ thành công!',
     },
     question: {
       confirm_delete_post: "Bạn có muốn xoá bài viết này",
       please_input_title: "Vui lòng nhập tiêu đề câu hỏi",
       please_input_content: "Vui lòng nhập nội dung câu hỏi",
       create_question_success: "Bạn đã gửi câu hỏi thành công",
-      create_question_failed: "Gửi câu hỏi không thành công"
+      create_question_failed: "Gửi câu hỏi không thành công",
+      not_allow_2000_keyword:'Không cho phép nhập quá 2000 kí tự',
+      age_greater_than_1:'Tuổi bệnh nhân cần lớn hơn 1',
+      age_less_than_150:'Tuổi bệnh nhân cần nhỏ hơn 150',
+      invalid_age:'Tuổi không hợp lệ',
+      send_idea_success:'Bạn đã gửi ý kiến thành công',
+      send_rate_success:'Bạn đã gửi đánh giá thành công',
+      send_rate_fail:'Gửi đánh giá không thành công',
+      you_happy_with_answer:'Bạn có hài lòng với câu trả lời này không?'
     },
     booking: {
       not_result_history_of_this_time: 'Không có lịch trong khung giờ này',
@@ -311,11 +435,21 @@ module.exports = {
       create_relatives_success: 'Bạn đã thêm người thân thành công',
       profile_arealy_exist: "Hồ sơ đã tồn tại trong hệ thống",
       cannot_show_details_booking: 'Không thể xem chi tiết đặt khám này',
-
+      please_select_date_and_time: 'Vui lòng chọn ngày và khung giờ khám',
+      please_select_schedule: 'Vui lòng nhấn để chọn khung giờ khám',
+      date_not_schedule: 'Ngày bạn chọn không có lịch khám nào'
     },
     message: {
       none_image: 'Không có ảnh nào'
     }
+  },
+  payment: {
+    direct_transfer: 'Chuyển khoản trực tiếp',
+    VNPAY: 'VNPAY',
+    PAYOO: 'PAYOO',
+    PAYOO_installment: 'PAYOO - Trả góp 0%',
+    PAYOO_convenient_shop: 'PAYOO - Cửa hàng tiện ích',
+    pay_later: 'Thanh toán sau tại CSYT'
   },
   booking: {
     select_profile: 'Chọn hồ sơ',
@@ -340,6 +474,11 @@ module.exports = {
     payment_method: 'Hình thức thanh toán:',
     code_payment: 'Mã thanh toán:',
     payment_duration: 'Hạn thanh toán:',
+    code: 'Mã code',
+    payment_vnpay_date:'Thời gian giao dịch:',
+    payment_vnpay_no:'Mã đơn hàng\nqua VNPAY:',
+    payment_vnpay_status:'Trạng thái thanh toán:',
+    payment_vnpay_success:'Thanh toán thành công',
     code: 'Mã code:',
     code_booking: 'Mã đặt khám:',
     booking_send: 'Lịch đặt khám của bạn đã được gửi đi. Vui lòng đến trước hẹn 15 phút để thực hiện các thủ tục khác.',
@@ -356,6 +495,48 @@ module.exports = {
     location_premission_content: "iSofHCare cần quyền truy cập vào vị trí của bạn",
     location_open: 'Bật vị trí trên thiết bị để tìm kiếm địa điểm gần bạn',
     location_around: 'Tìm kiếm gần tôi',
+    select_date_time: 'Chọn ngày và giờ',
+    booking_not_found: 'Không tồn tại đặt khám',
+    payment_not_permission: 'Tài khoản của bạn chưa thể thanh toán trả trước. Vui lòng liên hệ Admin để được giải quyết',
+    vendor_not_found: 'Vendor không tồn tại trong hệ thống',
+    create_payment_fail: 'Tạo thanh toán không thành công',
+    booking_invalid: 'Đặt khám đã tồn tại trong hệ thống',
+    add_voucher: 'THÊM MÃ ƯU ĐÃI',
+    address: "Địa chỉ",
+    symptom: 'Triệu chứng',
+    services: 'Dịch vụ',
+    sum_price: 'Tổng tiền',
+    type_payment: 'CHỌN PHƯƠNG THỨC THANH TOÁN',
+    CSYT: 'Cơ sở y tế',
+    voucher: 'Ưu đãi',
+    copy_success: 'Sao chép thành công',
+    details_booking: "Chi tiết đặt lịch",
+    note_booking: 'Ghi chú',
+    sum_price_services: 'Tổng tiền dịch vụ',
+    payment_methods: 'Phương thức TT',
+    status_booking: 'Trạng thái',
+    specialist_not_found: 'Không tìm thấy chuyên khoa nào phù hợp',
+    select_date_color_green: 'CHỌN NGÀY GIỜ CÓ MÀU XANH',
+    schedule_booking: 'LỊCH KHÁM',
+    booking_paid:'Đặt khám đã được thanh toán',
+    booking_paid_or_invalid:'Đặt khám đã được thanh toán hoặc không tồn tại',
+    guide: {
+      part_1: 'Bước 1: Điền thông tin chuyển khoản thụ hưởng:',
+      bank: 'Ngân hàng',
+      bank_name: 'TECHCOMBANK',
+      account_number: 'Số tài khoản',
+      number: '19134033802010',
+      copy: 'SAO CHÉP',
+      owner_name: 'Tên chủ thẻ',
+      name_account: 'CONG TY TNHH MOT THANH VIEN ISOFHCARE',
+      branch: 'Chi nhánh',
+      branch_name: 'TECHCOMBANK Ba Đình',
+      enter_content_payment: 'Nhập nội dung chuyển khoản',
+      content_payment: 'DK19134033802010',
+      part_2: 'Bước 2: Thực hiện chuyển khoản:',
+      notifi: 'iSofHcare sẽ thông báo cho bạn sau khi bạn chuyển khoản thành công.',
+      notifi2: 'Để chắc chắn giao dịch chính xác, bạn hãy làm theo các bước hướng dẫn trên.'
+    },
     status: {
       not_select_payment: 'Chưa chọn hình thức',
       payment_isofh: 'Ví Isofh',
@@ -407,7 +588,45 @@ module.exports = {
     note: 'Ghi chú',
     clock: 'Thời gian',
     redmine_drug: 'Nhắc uống thuốc',
-    view_finish: 'XEM XONG'
+    view_finish: 'XEM XONG',
+    message1: 'Bạn cần nhắn tin tới tổng đài',
+    message2: '8300',
+    message3: '(3.000đ) để lấy số thứ tự tiếp đón.',
+    syntax_sms: 'Cú pháp SMS',
+    info_examination_people: 'THÔNG TIN NGƯỜI KHÁM',
+    code_BHYT: 'Mã thẻ BHYT',
+    address_examination_initial: 'Nơi đăng ký khám \n chữa bệnh ban đầu',
+    address: 'Địa chỉ',
+    send_get_ticket: 'Gửi tin nhắn lấy số',
+    city: 'Tỉnh/ TP',
+    district: 'Quận/ Huyện',
+    wards: 'Xã/ Phường',
+    get_ticket_success: 'Lấy số tiếp đón thành công!',
+    ticket_full_please_go_back_tomorrow: 'Bạn đã lấy quá nhiều số tiếp đón trong ngày. Hãy quay lại vào ngày mai.',
+    see_ticket_history: 'Xem lịch sử lấy số',
+    booking_simple: 'Đặt khám thường',
+    get_ticket_services: 'Lấy số tiếp đón dịch vụ',
+    ticket: 'Số tiếp đón',
+    get_ticket:'Lấy số tiếp đón',
+    get_ticket_for_me:'Lấy số cho tôi',
+    get_ticket_other:'Lấy số hộ',
+    service_E_not_get_ticket:'Đối tượng dịch vụ tại bệnh viện E không cần có số tiếp đón',
+    add_new_result_examination:'Thêm mới kết quả khám',
+    scan_code:'QUÉT MÃ',
+    input_code:'NHẬP MÃ',
+    input_or_scan_code:'NHẬP HOẶC QUÉT MÃ HỒ SƠ ĐỂ XEM KẾT QUẢ KHÁM MỚI',
+    input_profile_code:'NHẬP MÃ HỒ SƠ ĐƯỢC IN TRÊN PHIẾU VÀO Ô DƯỚI',
+    confirm_code:'XÁC NHẬN MÃ',
+    select_date:'Chọn ngày',
+    share:'CHIA SẺ',
+    select_member:'Chọn thành viên',
+    reciver:'Người nhận',
+    validity_from:'Hiệu lực từ',
+    validity_to:'Hiệu lực đến',
+    patient_code:'Mã bệnh nhân',
+    share_with_isofhcare:'Chia sẻ trên hồ sơ iSofHCare',
+    share_with_app_other:'Chia sẻ trên ứng dụng khác',
+    history_share:'Lịch sử chia sẻ'
   },
   actionSheet: {
     orther: 'Khác',
@@ -418,7 +637,11 @@ module.exports = {
     save: 'Lưu',
     male: 'Nam',
     female: 'Nữ',
-    accept: 'Đồng ý'
+    accept: 'Đồng ý',
+    done: 'Xong',
+    no: 'Không',
+    ticket_full: 'SỐ TIẾP ĐÓN ĐÃ VƯỢT ĐỊNH MỨC',
+    ok: 'OK',
 
   },
   title: {
@@ -436,7 +659,49 @@ module.exports = {
     service: 'Dịch vụ',
     change_password: 'Đổi mật khẩu',
     result_ehealth: "KẾT QUẢ KHÁM",
-    result_ehealth_image: "KẾT QUẢ CHẨN ĐOÁN HÌNH ẢNH"
+    result_ehealth_image: "KẾT QUẢ CHẨN ĐOÁN HÌNH ẢNH",
+    verification_booking: 'Xác nhận lịch khám',
+    filter: 'Lọc',
+    select_specialist: 'Chọn chuyên khoa',
+    select_time: 'Chọn thời gian',
+    get_new_ticket: 'Lấy số mới',
+    history_get_ticket: 'Lịch sử lấy số',
+    confirm_info: 'Xác nhận thông tin',
+    register_account: 'Đăng ký tài khoản',
+    advisory_online:'Tư vấn online',
+    content:'Nội dung',
+    info_complementary:"Thông tin bổ sung",
+    file:'Hồ sơ',
+    scan_file:'QUÉT MÃ HỒ SƠ',
+    history_medical_records:'Lịch sử y bạ',
+    history_share:'LỊCH SỬ CHIA SẺ',
+    select_hospital:'CHỌN BỆNH VIỆN',
+    result_anatomy:'KẾT QUẢ GIẢI PHẪU',
+    drug:'THUỐC',
+    test_result:'KẾT QUẢ XÉT NGHIỆM',
+    select_CSYT:'Chọn CSYT',
+    scan_code:'Quét QR BHYT'
+  },
+  account_screens: {
+    signin_or_signup: 'Đăng nhập/ Đăng Ký',
+    my_family: 'Thành viên gia đình',
+    medical_records: 'Y bạ điện tử',
+    pay_history: 'Lịch sử giao dịch',
+    drug_odered: 'Thuốc đã đặt mua',
+    examination_schedule: 'Lịch khám',
+    forgot_password: 'Đổi mật khẩu',
+    about_isofh: 'Về iSofH',
+    support: 'Hỗ trợ',
+    report: 'Báo lỗi',
+    terms_of_use: 'Điều khoản sử dụng',
+    logout: 'Đăng xuất',
+    info: 'Thông tin cá nhân',
+    not_email: 'Chưa Có Email',
+    not_phone: 'Chưa Có Số Điện Thoại',
+    warning: 'khi thay đổi email, quý khách cần đăng nhập email mới để kích hoạt lại tài khoản'
+  },
+  notification_screenss: {
+    none_data: 'Hiện tại chưa có thông tin'
   },
   api: {
     notification: {
@@ -515,7 +780,8 @@ module.exports = {
       confirmPay: isofhcare_service + "booking/confirm-pay",
       detail: isofhcare_service + "booking/get-detail",
       getByAuthor: isofhcare_service + "booking/get-by-author",
-      get_list_share_user: isofhcare_service + "booking/list-share-user"
+      get_list_share_user: isofhcare_service + "booking/list-share-user",
+      // pay_tranfer: isofhcare_service + 'booking/payTranfer'
     },
     question: {
       create: isofhcare_service + "post/create",
@@ -591,15 +857,15 @@ module.exports = {
       update_data_user: isofhcare_service + 'patient-history-booking/update-data-note',
       search_profile_user: isofhcare_service + 'user/search',
       share_with_profile: isofhcare_service + 'booking/share-user',
-      add_ehealth_with_code:isofhcare_service + 'patient-history-booking/verify'
+      add_ehealth_with_code: isofhcare_service + 'patient-history-booking/verify'
     },
     home: {
       get_list_drug: isofhcare_service + '/medicine/list-medicine-top',
       get_list_news: isofhcare_service + 'news/list-news-top',
       get_list_hospital_top_rate: isofhcare_service + 'hospital/list-hospital-top-rate'
     },
-    voucher:{
-      get_voucher:isofhcare_service + 'voucher'
+    voucher: {
+      get_voucher: isofhcare_service + 'voucher'
     }
   }
 };

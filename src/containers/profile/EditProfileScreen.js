@@ -42,7 +42,7 @@ class EditProfileScreen extends Component {
             dobOld: dataProfile.dob ? dataProfile.dob : '',
             height: dataProfile.height ? dataProfile.height.toString() : '',
             weight: dataProfile.weight ? dataProfile.weight.toString() : '',
-            address: dataProfile.village ? dataProfile.village : '',
+            address: dataProfile.village && dataProfile.village != ' ' ? dataProfile.village : '',
             relationshipType: dataProfile.relationshipType ? dataProfile.relationshipType : '',
             profileNo: dataProfile.profileNo ? dataProfile.profileNo : '',
             id: dataProfile.id,
@@ -56,8 +56,9 @@ class EditProfileScreen extends Component {
             dataProfile,
             isReset: 1
         };
+        console.log(dataProfile.id)
     }
-    componentDidMount() {
+    componentWillMount() {
         this.renderRelation()
     }
     onChangeText = type => text => {
@@ -102,7 +103,8 @@ class EditProfileScreen extends Component {
 
     };
     renderRelation = () => {
-        switch (this.props.navigation.state.params.relationshipType) {
+        console.log(this.props.navigation.state.params.relationshipType)
+        switch (this.state.relationshipType) {
             case 'DAD':
                 this.setState({
                     relationShip: {
@@ -195,8 +197,8 @@ class EditProfileScreen extends Component {
                 break
             case 'OTHER':
                 this.setState({
-                    id: 11,
                     relationShip: {
+                        id: 11,
                         name: 'Khác',
                         type: 'OTHER'
                     }
@@ -207,7 +209,7 @@ class EditProfileScreen extends Component {
     selectDistrict = (districts) => {
         let districtsError = districts ? "" : this.state.districtsError;
         if (!districts || !this.state.districts || districts.id != this.state.districts.id) {
-            this.setState({ districts, districtsError, zone: null },() => {
+            this.setState({ districts, districtsError, zone: null }, () => {
                 this.onSelectZone()
             })
         } else {
@@ -227,7 +229,7 @@ class EditProfileScreen extends Component {
     selectprovinces(provinces) {
         let provincesError = provinces ? "" : this.state.provincesError;
         if (!provinces || !this.state.provinces || provinces.id != this.state.provinces.id) {
-            this.setState({ provinces, provincesError, districts: null, zone: null },() =>{
+            this.setState({ provinces, provincesError, districts: null, zone: null }, () => {
                 this.onSelectDistrict()
             })
         } else {
@@ -288,24 +290,25 @@ class EditProfileScreen extends Component {
                         isLoading: true
                     },
                     () => {
-                        let data = this.state.dataProfile
-                        data.dob = this.state.dob ? this.state.dob.format('yyyy-MM-dd') + ' 00:00:00' : this.state.dobOld,
-                            data.gender = this.state.gender
-                        data.height = this.state.height ? Number(this.state.height) : 0,
-                            data.weight = this.state.weight ? Number(parseFloat(this.state.weight).toFixed(1)) : 0
-                        // data.address = this.state.address
                         let id = this.state.id
-                        data.phone = this.state.phone
-                        data.provinceId = this.state.provinces ? this.state.provinces.id.toString() : null
-                        data.districtId = this.state.districts ? this.state.districts.id.toString() : null
-                        data.zoneId = this.state.zone ? this.state.zone.id.toString() : null
-                        data.village = this.state.address ? this.state.address : null
-                        data.relationshipType = this.state.relationshipType
+                        console.log(id)
+                        let data = {
+                            'name': this.state.name,
+                            "dob": this.state.dob ? this.state.dob.format('yyyy-MM-dd') + ' 00:00:00' : null,
+                            "gender": this.state.gender ? this.state.gender : null,
+                            "height": this.state.height ? Number(this.state.height) : 0,
+                            "weight": this.state.weight ? Number(parseFloat(this.state.weight).toFixed(1)) : 0,
+                            "phone": this.state.phone,
+                            "provinceId": this.state.provinces ? this.state.provinces.id.toString() : null,
+                            "districtId": this.state.districts ? this.state.districts.id.toString() : null,
+                            "zoneId": this.state.zone ? this.state.zone.id.toString() : null,
+                            "village": this.state.address ? this.state.address : ' ',
+                            "relationshipType": this.state.relationShip && this.state.relationShip.type ? this.state.relationShip.type : (this.state.relationshipType || null)
+                        }
                         profileProvider.updateProfile(id, data).then(res => {
-
                             switch (res.code) {
                                 case 0:
-                                    NavigationService.navigate('profile',{id:res.data.medicalRecords.id})
+                                    NavigationService.navigate('profile', { id: res.data.medicalRecords.id })
                                     snackbar.show('Cập nhật hồ sơ thành công', "success");
                                     break
                                 case 1:
@@ -360,7 +363,15 @@ class EditProfileScreen extends Component {
 
         return (
             <ActivityPanel
+                icBack={require('@images/new/left_arrow_white.png')}
                 title={'SỬA THÔNG TIN'}
+                iosBarStyle={'light-content'}
+                actionbarStyle={styles.actionbarStyle}
+                style={{ flex: 1, backgroundColor: '#fff' }}
+                menuButton={<TouchableOpacity style={{ padding: 5 }} onPress={this.onCreateProfile}>
+                    <Text style={{ color: '#fff', marginRight: 25, fontSize: 14, fontWeight: '800' }}>Lưu</Text>
+                </TouchableOpacity>}
+                titleStyle={styles.txTitle}
             >
                 <ScrollView keyboardShouldPersistTaps='handled' style={{ flex: 1, paddingVertical: 5 }}>
                     <View style={styles.container}>
@@ -685,8 +696,8 @@ class EditProfileScreen extends Component {
                                             onPress={this.onSelectRelationShip}
                                             editable={false}
                                             inputStyle={[
-                                            styles.ktq, { minHeight: 41 }, this.state.relationShip && this.state.relationShip.name ? {} : { color: '#8d8d8d' }
-                                        ]}
+                                                styles.ktq, { minHeight: 41 }, this.state.relationShip && this.state.relationShip.name ? {} : { color: '#8d8d8d' }
+                                            ]}
                                             errorStyle={styles.errorStyle}
                                             value={this.state.relationShip && this.state.relationShip.name ? this.state.relationShip.name : 'Quan hệ'}
                                             autoCapitalize={"none"}
@@ -700,10 +711,6 @@ class EditProfileScreen extends Component {
                             }
 
                         </Form>
-                        <View style={styles.viewBtn}>
-                            <TouchableOpacity onPress={this.onCreateProfile} style={styles.btnDone}><Text style={styles.txDone}>Lưu</Text></TouchableOpacity>
-                            <TouchableOpacity onPress={() => this.props.navigation.pop()} style={styles.btnReject}><Text style={styles.txDone}>Hủy</Text></TouchableOpacity>
-                        </View>
                     </View>
                 </ScrollView>
                 <ImagePicker ref={ref => (this.imagePicker = ref)} />
@@ -762,7 +769,7 @@ const styles = StyleSheet.create({
         // borderRadius:5,
 
     },
-    txTitle: { color: '#fff', textAlign: 'left', marginHorizontal: 10, fontSize: 14 },
+    txTitle: { color: '#fff', marginLeft: 50, fontSize: 16 },
     mdk: {
         marginLeft: 12,
         flex: 1,
@@ -773,7 +780,7 @@ const styles = StyleSheet.create({
         color: "#000000",
 
     },
-    
+
     ktq: {
         fontSize: 12,
         fontWeight: "normal",

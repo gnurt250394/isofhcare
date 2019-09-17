@@ -337,7 +337,15 @@ class CreateProfileScreen extends Component {
 
         return (
             <ActivityPanel
+                icBack={require('@images/new/left_arrow_white.png')}
                 title={'THÊM THÀNH VIÊN MỚI'}
+                iosBarStyle={'light-content'}
+                actionbarStyle={styles.actionbarStyle}
+                style={{ flex: 1, backgroundColor: '#fff' }}
+                menuButton={<TouchableOpacity style = {{padding:5}} onPress={this.onCreateProfile}>
+                    <Text style = {{color:'#fff',marginRight:25,fontSize:14,fontWeight:'800'}}>Lưu</Text>
+                </TouchableOpacity>}
+                titleStyle={styles.txTitle}
             >
                 <ScrollView keyboardShouldPersistTaps='handled' style={{ flex: 1, paddingVertical: 5 }}>
                     <View style={styles.container}>
@@ -689,13 +697,7 @@ class CreateProfileScreen extends Component {
                                 <Text style={[styles.errorStyle]}>{this.state.relationErr}</Text>
                             </Field>
                         </Form>
-                        <View style={styles.viewBtn}>
-                            <TouchableOpacity onPress={this.onCreateProfile} style={styles.btnDone}><Text style={styles.txDone}>Lưu</Text></TouchableOpacity>
-                            <TouchableOpacity onPress={() => this.props.navigation.pop()} style={styles.btnReject}><Text style={styles.txDone}>Hủy</Text></TouchableOpacity>
-                        </View>
                     </View>
-
-
                 </ScrollView>
                 <ImagePicker ref={ref => (this.imagePicker = ref)} />
                 <DateTimePicker
@@ -782,6 +784,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: 'bold'
     },
+    txTitle: { color: '#fff',marginLeft: 50,fontSize:16  },
     mdk: {
         marginLeft: 12,
         flex: 1,

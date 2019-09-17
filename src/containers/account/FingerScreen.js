@@ -11,6 +11,7 @@ import ScaleImage from "mainam-react-native-scaleimage";
 import Modal from "@components/modal";
 import FingerprintPopup from "./FingerprintPopup";
 import { connect } from "react-redux";
+import constants from "@resources/strings";
 
 const width = Dimensions.get("window").width;
 class FingerScreen extends Component {
@@ -32,10 +33,9 @@ class FingerScreen extends Component {
           source={require("@images/new/fingerprint.png")}
           height={80}
         />
-        <Text style={styles.title}> Touch ID cho "IsofhCare" </Text>
+        <Text style={styles.title}>{constants.touch_id_screens.header}</Text>
         <Text style={styles.details}>
-          Sử dụng id cảm ứng của bạn để truy cập nhanh hơn,{`\n`} dễ dàng đăng
-          nhập vào tài khoản của bạn
+         {constants.touch_id_screens.details}
         </Text>
         <View style={styles.viewBtn}>
           <TouchableOpacity onPress={this.onCancel} style={styles.viewCancel}>

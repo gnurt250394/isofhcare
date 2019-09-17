@@ -9,7 +9,7 @@ import Modal from "@components/modal";
 import constants from '@resources/strings';
 import snackbar from '@utils/snackbar-utils';
 
-class CreateBookingSuccessScreen extends Component {
+class CreateBookingWithPaymentScreen extends Component {
     constructor(props) {
         super(props)
     }
@@ -32,38 +32,28 @@ class CreateBookingSuccessScreen extends Component {
                 return constants.payment.PAYOO;
             case 4:
                 return constants.payment.PAYOO_convenient_shop;
+            case 6:
+                return constants.payment.direct_transfer;
         }
         return "";
     }
-    getPriceSecive = (service, voucher) => {
-        let priceVoucher = voucher && voucher.price ? voucher.price : 0
-        let priceFinal = service.reduce((start, item) => {
-            return start + parseInt(item.service.price)
-        }, 0)
-        return (priceFinal - priceVoucher).formatPrice()
+    onCopyNumber = () => {
+        Clipboard.setString(constants.booking.guide.number)
+        snackbar.show(constants.booking.copy_success, 'success')
+    }
+    onCopyContents = (codeBooking) => () => {
+        Clipboard.setString('DK ' + codeBooking)
+        snackbar.show(constants.booking.copy_success, 'success')
+
     }
     goHome = () => {
         this.props.navigation.pop();
     }
     onBackdropPress = () => this.setState({ isVisible: false })
-    onPressCode = (vnPayId) => {
-        Clipboard.setString(vnPayId)
-        snackbar.show('Đã sao chép', 'success')
-    }
-    renderVnPayDate(vnPayDate) {
-        let year = vnPayDate.substring(0, 4)
-        let month = vnPayDate.substring(4, 6)
-        let day = vnPayDate.substring(6, 8)
-        let hours = vnPayDate.substring(8, 10)
-        let minutes = vnPayDate.substring(10, 12)
-        let secons = vnPayDate.substring(12, 14)
-        return `${day}/${month}/${year} ${hours}:${minutes}:${secons}`
-
-    }
     render() {
         let booking = this.props.navigation.state.params.booking;
+        console.log(booking, 'bookingbooking')
         let service = this.props.navigation.state.params.service || [];
-        let voucher = this.props.navigation.state.params.voucher || {};
         if (!booking || !booking.profile || !booking.hospital || !booking.hospital.hospital || !booking.book) {
             this.props.navigation.pop();
             return null;
@@ -74,10 +64,10 @@ class CreateBookingSuccessScreen extends Component {
                 hideBackButton={true}
                 title={constants.title.create_booking_success}
                 titleStyle={styles.txtTitle}
-
-
-                containerStyle={styles.container}
-                actionbarStyle={styles.container}>
+                iosBarStyle={'light-content'}
+                statusbarBackgroundColor="#02C39A"
+                containerStyle={styles.backgroundContainer}
+                actionbarStyle={styles.backgroundContainer}>
                 <View style={styles.container}>
                     <ScrollView keyboardShouldPersistTaps='handled' style={styles.flex}>
                         {/* <ScaleImage style={styles.image1} height={80} source={require("@images/new/booking/ic_rating.png")} />
@@ -97,7 +87,7 @@ class CreateBookingSuccessScreen extends Component {
                                 <Text style={styles.txtCodeBooking}>{constants.booking.code_booking} {booking.book.codeBooking}</Text>
                             </View>
                         </View>
-                        <View style={styles.containerBody}>
+                        <View style={styles.groupBody}>
                             <View style={styles.row}>
                                 <Text style={styles.label}>{constants.booking.CSYT}:</Text>
                                 <Text style={styles.text}>{booking.hospital.hospital.name}</Text>
@@ -119,19 +109,13 @@ class CreateBookingSuccessScreen extends Component {
                             {service && service.length ?
                                 <View style={styles.row}>
                                     <Text style={styles.label}>{constants.booking.services}:</Text>
-                                    <View style={styles.containerPrice}>
+                                    <View style={styles.containerServices}>
                                         {service.map((item, index) => {
                                             return <View key={index} style={styles.flex}>
                                                 <Text numberOfLines={1} style={[styles.text, styles.flex]}>{item.service.name}</Text>
                                                 <Text style={[styles.text, { marginBottom: 5 }]}>({parseInt(item.service.price).formatPrice()}đ)</Text>
                                             </View>
                                         })}
-                                        {voucher && voucher.price ?
-                                            <View style={{ flex: 1 }}>
-                                                <Text numberOfLines={1} style={[styles.text, styles.flex]}>{constants.booking.voucher}</Text>
-                                                <Text style={[styles.text, { marginBottom: 5 }]}>(-{parseInt(voucher.price).formatPrice()}đ)</Text>
-                                            </View> : null
-                                        }
                                     </View>
                                 </View> : null
                             }
@@ -140,29 +124,15 @@ class CreateBookingSuccessScreen extends Component {
                                 <Text style={styles.text}>{this.getPaymentMethod(booking)}</Text>
                             </View>
                             {
-                                booking.payment == 1 && <View>
-                                    <View style={styles.row}>
-                                        <Text style={styles.label}>{constants.booking.payment_vnpay_no}</Text>
-                                        <TouchableOpacity style={styles.btnCopy} onPress={() => this.onPressCode(booking.vnPayId)}><Text style={styles.text}>{booking.vnPayId ? booking.vnPayId : ""}</Text></TouchableOpacity>
-                                    </View>
-                                    <View style={styles.row}>
-                                        <Text style={styles.label}>{constants.booking.payment_vnpay_date}</Text>
-                                        <Text style={styles.text}>{this.renderVnPayDate(booking.vnPayDate)}</Text>
-                                    </View>
-                                    <View style={styles.row}>
-                                        <Text style={styles.label}>{constants.booking.payment_vnpay_status}</Text>
-                                        <Text style={styles.text}>{constants.booking.payment_vnpay_success}</Text>
-                                    </View>
-                                </View>
-                            }
-                            {
                                 service && service.length ?
                                     <View style={styles.row}>
                                         <Text style={styles.label}>{constants.booking.sum_price}:</Text>
-                                        <Text style={[styles.text, { color: "#d0021b" }]}>{this.getPriceSecive(service, voucher)}đ</Text>
+                                        <Text style={[styles.text, { color: "#d0021b" }]}>{service.reduce((start, item) => {
+                                            return start + parseInt(item.service.price)
+                                        }, 0).formatPrice()}đ</Text>
                                     </View> : null
                             }
-                            {
+                            {/* {
                                 booking.payment == 4 && <View>
                                     <View style={styles.row}>
                                         <Text style={styles.label}>{constants.booking.code_payment}</Text>
@@ -173,11 +143,44 @@ class CreateBookingSuccessScreen extends Component {
                                         <Text style={styles.text}>{booking.book.expireDatePayoo.toDateObject('-').format("dd/MM/yyyy")}</Text>
                                     </View>
                                 </View>
-                            }
+                            } */}
 
                         </View>
-                        <View style={styles.view1}>
-                            <Text style={styles.text2}>{constants.booking.booking_send}</Text>
+                        <View style={styles.paymentInfo}>
+                            <Text style={styles.txStep1}>{constants.booking.guide.part_1}</Text>
+                            <View><View style={styles.viewBank}><View style={styles.viewInfoBank}><Text
+                                style={styles.txBank}>{constants.booking.guide.bank}:</Text><Text
+                                    style={styles.txBankName}>{constants.booking.guide.bank_name}</Text></View>
+                                <Text style={[styles.txBank, { marginTop: 5 }]} >{constants.booking.guide.account_number}</Text></View>
+                                <View style={styles.bankInfo}>
+                                    <View style={styles.viewBankNumber}>
+                                        <Text style={styles.txNumber}>{constants.booking.guide.number}</Text>
+                                    </View>
+                                    <TouchableOpacity onPress={this.onCopyNumber} style={styles.btnCopy}>
+                                        <Text style={styles.txCopy}>{constants.booking.guide.copy}</Text>
+                                    </TouchableOpacity>
+                                </View>
+                                <View>
+                                    <View style={styles.viewInfoBank}><Text style={styles.txBank}>{constants.booking.guide.owner_name}:</Text>
+                                        <Text style={styles.txBankName}>{constants.booking.guide.name_account}</Text></View>
+                                    <View style={styles.viewInfoBank}><Text style={styles.txBank}>{constants.booking.guide.branch}:</Text>
+                                        <Text style={styles.txBankName}>{constants.booking.guide.branch_name}</Text></View>
+                                    <View style={{ marginTop: 5 }}><Text style={styles.txBank}>{constants.booking.guide.enter_content_payment}</Text></View>
+                                </View>
+
+                                <View style={styles.bankInfo}>
+                                    <View style={styles.viewBankNumber}>
+                                        <Text style={styles.txNumber}>{'DK ' + booking.book.codeBooking}</Text>
+                                    </View>
+                                    <TouchableOpacity onPress={this.onCopyContents(booking.book.codeBooking)} style={styles.btnCopy}>
+                                        <Text style={styles.txCopy}>{constants.booking.guide.copy}</Text>
+                                    </TouchableOpacity>
+                                </View></View>
+                            <Text style={styles.txStep1}>{constants.booking.guide.part_2}</Text>
+                            <View style={styles.viewBank}>
+                                <Text style={styles.contentsPay}>{constants.booking.guide.notifi}</Text>
+                                <Text style={styles.notePay}>{constants.booking.guide.notifi2}</Text>
+                            </View>
                         </View>
                     </ScrollView>
                     <TouchableOpacity style={styles.btn}><Text style={styles.btntext} onPress={this.goHome}>{constants.booking.go_home}</Text></TouchableOpacity>
@@ -216,11 +219,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
-    containerPrice: {
+    containerServices: {
         flex: 1,
         marginLeft: 10
     },
-    containerBody: {
+    groupBody: {
         backgroundColor: '#effbf9',
         padding: 20,
         marginTop: 20
@@ -235,7 +238,7 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     flex: { flex: 1 },
-    container: {
+    backgroundContainer: {
         backgroundColor: "#02C39A"
     },
     txtTitle: {
@@ -276,9 +279,6 @@ const styles = StyleSheet.create({
         color: "#4a4a4a90",
         textAlign: 'center',
         fontStyle: 'italic'
-    },
-    btnCopy: {
-        flex:1
     },
     row: {
         marginTop: 10,
@@ -371,6 +371,61 @@ const styles = StyleSheet.create({
     time1: {
         color: '#6a0136',
         fontWeight: 'bold'
-    }
+    },
+    paymentInfo: {
+        padding: 10,
+        justifyContent: 'center',
+    },
+    txStep1: {
+        color: '#000',
+        fontSize: 14,
+        textAlign: 'left',
+        fontWeight:'bold'
+    },
+    txBank: {
+        color: '#000',
+        fontSize: 14
+    },
+    txBankName: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: '#02c39a',
+        marginLeft:5,
+        marginRight:10
+
+    },
+    bankInfo: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginVertical: 10,
+        flex: 1,
+        justifyContent:'center',
+        paddingHorizontal:10
+    },
+    viewBankNumber: {
+        height: 41, paddingHorizontal: 5, borderRadius: 5, borderColor: 'gray', borderWidth: 1, justifyContent: 'center', alignItems: 'center', width: '60%'
+    },
+    btnCopy: {
+        height: 41, paddingHorizontal: 10, backgroundColor: '#02c39a', marginHorizontal: 10, justifyContent: 'center', alignItems: 'center', borderRadius: 5,width:'40%'
+    },
+    txNumber: {
+        color: '#02c39a',
+        fontSize: 14,
+        fontWeight: 'bold'
+    },
+    txCopy: {
+        fontSize: 14,
+        color: '#fff'
+    },
+    contentsPay: {
+        color: 'red',
+        fontSize: 14,
+        textAlign: 'left',
+        marginTop: 5,
+    },
+    viewInfoBank: { flexDirection: 'row', marginTop: 5 },
+    notePay: { marginTop: 5, fontSize: 14, color: '#000', textAlign: 'left', },
+    viewBank: { justifyContent: 'center', }
+
 })
-export default connect(mapStateToProps)(CreateBookingSuccessScreen);
+export default connect(mapStateToProps)(CreateBookingWithPaymentScreen);

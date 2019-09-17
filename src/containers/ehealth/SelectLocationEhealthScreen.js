@@ -249,77 +249,79 @@ class SelectLocationEhealthScreen extends Component {
             this.onLoad();
         })
     }
+    onChangeText = state => value => {
+        this.setState({ [state]: value })
+    }
+    keyExtractor = (item, index) => index.toString()
+    headerComponent = () => {
+        return (
+            !this.state.refreshing &&
+                (!this.state.data || this.state.data.length == 0) ? (
+                    <View style={styles.containerNoneData}>
+                        <Text style={styles.txtNoneData}>
+                            {constants.none_data}</Text>
+                    </View>
+                ) : null
+        )
+    }
+    footerComponent = () => <View style={{ height: 10 }} />
+    renderItem = ({ item, index }) => {
+        const source = item.medicalRecords && item.medicalRecords.avatar ? { uri: item.medicalRecords.avatar.absoluteUrl() } : require("@images/new/user.png");
+        return <TouchableOpacity style={styles.details} onPress={this.selectHospital.bind(this, item)}>
+            {this.state.region &&
+                < View style={styles.containerKM}>
+                    <ScaleImage style={styles.plac} height={21} source={require("@images/new/hospital/ic_place.png")} />
+                    <Text style={styles.bv1}>{(Math.round(item.hospital.distance * 100) / 100).toFixed(2)} km</Text>
+                </View>
+            }
+            <View style={styles.containerInfo}>
+                <Text style={styles.bv} numberOfLines={2}>{item.hospital.name}</Text>
+                <Text style={styles.bv1} numberOfLines={2}>{item.hospital.address}</Text>
+            </View>
+            <ScaleImage style={styles.help} height={21} source={require("@images/new/hospital/ic_info.png")} />
+        </TouchableOpacity>
+    }
 
     render() {
         return (
             <ActivityPanel
-                title={'CHỌN BỆNH VIỆN'}
+                title={constants.title.select_hospital}
                 style={styles.container}
             >
                 <DialogBox ref={dialogbox => { this.dialogbox = dialogbox }} />
-
 
                 <View style={styles.container}>
                     <TouchableOpacity style={styles.search} onPress={this.getLocation.bind(this)}>
                         <ScaleImage style={styles.aa} width={18} source={require("@images/new/hospital/ic_placeholder.png")} />
                         <Text style={styles.tkdiachi}>{constants.booking.location_around}</Text>
                     </TouchableOpacity>
-                    <View style={[styles.search, {
-                        borderBottomWidth: 1,
-                        borderBottomColor: 'rgba(0, 0, 0, 0.06)'
-                    }]} >
+                    <View style={[styles.search, styles.containerSearch]} >
                         <ScaleImage style={styles.aa} width={18} source={require("@images/new/hospital/ic_search.png")} />
                         <TextInput
                             value={this.state.keyword}
-                            onChangeText={s => {
-                                this.setState({ keyword: s })
-                            }}
+                            onChangeText={this.onChangeText('keyword')}
                             onSubmitEditing={this.search.bind(this)}
                             returnKeyType='search'
                             style={styles.tkdiachi1} placeholder={constants.search + '…'} underlineColorAndroid={"transparent"} />
                     </View>
-                    <View style={{ height: 1, backgroundColor: 'rgba(0, 0, 0, 0.06)', marginTop: 27 }}></View>
+                    <View style={styles.lineHeader}></View>
                     <FlatList
                         onRefresh={this.onRefresh.bind(this)}
                         refreshing={this.state.refreshing}
                         style={styles.sc}
-                        keyExtractor={(item, index) => index.toString()}
+                        keyExtractor={this.keyExtractor}
                         extraData={this.state}
                         data={this.state.data}
                         onEndReached={this.onLoadMore.bind(this)}
                         onEndReachedThreshold={1}
-                        ListHeaderComponent={() =>
-                            !this.state.refreshing &&
-                                (!this.state.data || this.state.data.length == 0) ? (
-                                    <View style={{ alignItems: "center", marginTop: 50 }}>
-                                        <Text style={{ fontStyle: "italic" }}>
-                                            {constants.none_data}</Text>
-                                    </View>
-                                ) : null
-                        }
-                        ListFooterComponent={() => <View style={{ height: 10 }} />}
-                        renderItem={({ item, index }) => {
-                            const source = item.medicalRecords && item.medicalRecords.avatar ? { uri: item.medicalRecords.avatar.absoluteUrl() } : require("@images/new/user.png");
-                            return <TouchableOpacity style={styles.details} onPress={this.selectHospital.bind(this, item)}>
-                                {this.state.region &&
-                                    < View style={{ marginLeft: 20, alignItems: 'center', marginTop: 5 }}>
-                                        <ScaleImage style={styles.plac} height={21} source={require("@images/new/hospital/ic_place.png")} />
-                                        <Text style={styles.bv1}>{(Math.round(item.hospital.distance * 100) / 100).toFixed(2)} km</Text>
-                                    </View>
-                                }
-                                <View style={{ flex: 1, marginLeft: 20 }}>
-                                    <Text style={styles.bv} numberOfLines={2}>{item.hospital.name}</Text>
-                                    <Text style={styles.bv1} numberOfLines={2}>{item.hospital.address}</Text>
-                                </View>
-                                <ScaleImage style={styles.help} height={21} source={require("@images/new/hospital/ic_info.png")} />
-                            </TouchableOpacity>
-                        }
-                        }
+                        ListHeaderComponent={this.headerComponent}
+                        ListFooterComponent={this.footerComponent}
+                        renderItem={this.renderItem}
                     />
                 </View>
                 {
                     this.state.loadMore ?
-                        <View style={{ alignItems: 'center', padding: 10, position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+                        <View style={styles.loading}>
                             <ActivityIndicator
                                 size={'small'}
                                 color={'gray'}
@@ -337,6 +339,34 @@ function mapStateToProps(state) {
     };
 }
 const styles = StyleSheet.create({
+    loading: {
+        alignItems: 'center',
+        padding: 10,
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0
+    },
+    containerInfo: {
+        flex: 1,
+        marginLeft: 20
+    },
+    containerKM: {
+        marginLeft: 20,
+        alignItems: 'center',
+        marginTop: 5
+    },
+    txtNoneData: { fontStyle: "italic" },
+    containerNoneData: { alignItems: "center", marginTop: 50 },
+    lineHeader: {
+        height: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.06)',
+        marginTop: 27
+    },
+    containerSearch: {
+        borderBottomWidth: 1,
+        borderBottomColor: 'rgba(0, 0, 0, 0.06)'
+    },
     AcPanel: {
 
         backgroundColor: 'rgb(246, 249, 251)',
@@ -349,7 +379,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#f0f5f9',
         borderStyle: 'solid',
     },
-    
+
     search: {
         backgroundColor: '#ffffff',
         borderStyle: 'solid',

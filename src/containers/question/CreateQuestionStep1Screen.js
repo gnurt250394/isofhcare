@@ -66,15 +66,32 @@ class CreateQuestionStep1Screen extends Component {
       }
     });
   }
-componentWillUnmount(){
-  dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_INFO, '');
+  componentWillUnmount() {
+    dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_INFO, '');
 
-}
+  }
+  onValueChange = () => {
+    this.setState({ changed: true });
+  }
+  onChangeText = (state) => (value) => {
+    this.setState({ [state]: value })
+  }
+  onValidateAge = (valid, messages) => {
+    if (valid) {
+      this.setState({ ageError: "" });
+    }
+    else {
+      this.setState({ ageError: messages });
+    }
+  }
+  setGender = (gender) => () => {
+    this.setState({ gender, changed: true });
+  }
   render() {
     return (
       <ActivityPanel
         style={{ flex: 1 }}
-        title={"Nội dung"}
+        title={constants.title.content}
         showFullScreen={true}
         isLoading={this.state.isLoading}
         titleStyle={{
@@ -84,23 +101,21 @@ componentWillUnmount(){
         <ScrollView
           showsVerticalScrollIndicator={false}
           bounces={false}
-          style={{ flex: 1, position: 'relative' }}
+          style={styles.scroll}
           keyboardShouldPersistTaps="handled"
         // keyboardDismissMode='on-drag' 
         >
-          <View style={{ backgroundColor: '#02C39A', height: 130, position: 'absolute', top: 0, left: 0, right: 0 }}></View>
-          <View style={{ margin: 22, marginTop: 10 }}>
-            <Card style={{ padding: 22 }}>
-              <View style={{ backgroundColor: '#02C39A', width: 20, height: 4, borderRadius: 2, alignSelf: 'center' }}></View>
+          <View style={styles.backgroundHeader}></View>
+          <View style={styles.containerCard}>
+            <Card style={styles.card}>
+              <View style={styles.minus}></View>
               <Form
                 ref={ref => (this.form = ref)}
-                onValueChange={() => {
-                  this.setState({ changed: true });
-                }}
+                onValueChange={this.onValueChange}
               >
                 <Text style={[styles.label, { marginTop: 24 }]}>
-                  Nội dung
-              </Text>
+                  {constants.title.content}
+                </Text>
                 <TextField
                   validate={{
                     rules: {
@@ -109,15 +124,13 @@ componentWillUnmount(){
                       maxlength: 2000
                     },
                     messages: {
-                      required: "Vui lòng nhập nội dung câu hỏi",
-                      maxlength: "Không cho phép nhập quá 2000 kí tự"
+                      required: constants.msg.question.please_input_content,
+                      maxlength: constants.msg.question.not_allow_2000_keyword
                     }
                   }}
-                  inputStyle={[styles.textinput, { lineHeight: 20, marginTop: 6, height: 150, borderRadius: 6, textAlignVertical: 'top', paddingTop: 13, paddingLeft: 10, paddingBottom: 13, paddingRight: 10 }]}
+                  inputStyle={[styles.textinput, styles.inputContent]}
                   errorStyle={styles.errorStyle}
-                  onChangeText={s => {
-                    this.setState({ content: s });
-                  }}
+                  onChangeText={this.onChangeText('content')}
                   value={this.state.content}
                   autoCapitalize={"none"}
                   returnKeyType={"next"}
@@ -126,9 +139,9 @@ componentWillUnmount(){
                   multiline={true}
                   autoCorrect={false}
                 />
-                <Field style={{ flexDirection: 'row', marginTop: 15 }}>
+                <Field style={styles.fieldAge}>
                   <Field>
-                    <Text style={[styles.label]}>Tuổi</Text>
+                    <Text style={[styles.label]}>{constants.questions.age}</Text>
                     <TextField
                       hideError={true}
                       validate={{
@@ -138,58 +151,45 @@ componentWillUnmount(){
                           number: true
                         },
                         messages: {
-                          min: "Tuổi bệnh nhân cần lớn hơn 1",
-                          max: "Tuổi bệnh nhân cần nhỏ hơn 150",
-                          number: "Tuổi không hợp lệ"
+                          min: constants.msg.question.age_greater_than_1,
+                          max: constants.msg.question.age_less_than_150,
+                          number: constants.msg.question.invalid_age
                         }
                       }}
                       value={this.state.age}
                       style={{ marginTop: 6 }}
-                      inputStyle={[styles.textinput, { width: 100, paddingTop: 10, paddingLeft: 17, paddingRight: 17, paddingBottom: Platform.OS == 'ios' ? 8 : 8, fontWeight: '600' }]}
-                      onChangeText={s => {
-                        this.setState({ age: s });
-                      }}
-                      onValidate={(valid, messages) => {
-                        if (valid) {
-                          this.setState({ ageError: "" });
-                        }
-                        else {
-                          this.setState({ ageError: messages });
-                        }
-                      }}
+                      inputStyle={[styles.textinput, { paddingBottom: Platform.OS == 'ios' ? 8 : 8, }, styles.inputAge]}
+                      onChangeText={this.onChangeText('age')}
+                      onValidate={this.onValidateAge}
                       returnKeyType={"next"}
                       keyboardType="numeric"
                       errorStyle={styles.errorStyle}
                     />
                   </Field>
                   <View style={{ marginLeft: 10 }}>
-                    <Text style={[styles.label]}>Giới tính</Text>
-                    <View style={{ flexDirection: "row" }}>
+                    <Text style={[styles.label]}>{constants.gender}</Text>
+                    <View style={styles.row}>
                       <TouchableOpacity
-                        onPress={() => {
-                          this.setState({ gender: 1, changed: true });
-                        }}
-                        style={{ padding: 10, flexDirection: "row" }}
+                        onPress={this.setGender(1)}
+                        style={styles.buttonGender}
                       >
-                        <View style={{ width: 19, height: 19, borderWidth: 2, borderColor: '#02C39A', borderRadius: 10, alignItems: 'center', justifyContent: 'center' }}>
+                        <View style={styles.borderSelected}>
                           {
-                            this.state.gender == 1 && <View style={{ width: 12, height: 12, backgroundColor: '#02C39A', borderRadius: 6 }}></View>
+                            this.state.gender == 1 && <View style={styles.selected}></View>
                           }
                         </View>
-                        <Text style={{ marginLeft: 5 }}>Nam</Text>
+                        <Text style={{ marginLeft: 5 }}>{constants.actionSheet.male}</Text>
                       </TouchableOpacity>
                       <TouchableOpacity
-                        onPress={() => {
-                          this.setState({ gender: 0, changed: true });
-                        }}
-                        style={{ padding: 10, flexDirection: "row" }}
+                        onPress={this.setGender(0)}
+                        style={styles.buttonGender}
                       >
-                        <View style={{ width: 19, height: 19, borderWidth: 2, borderColor: '#02C39A', borderRadius: 10, alignItems: 'center', justifyContent: 'center' }}>
+                        <View style={styles.borderSelected}>
                           {
-                            this.state.gender == 0 && <View style={{ width: 12, height: 12, backgroundColor: '#02C39A', borderRadius: 6 }}></View>
+                            this.state.gender == 0 && <View style={styles.selected}></View>
                           }
                         </View>
-                        <Text style={{ marginLeft: 5 }}>Nữ</Text>
+                        <Text style={{ marginLeft: 5 }}>{constants.actionSheet.female}</Text>
                       </TouchableOpacity>
                     </View>
                   </View>
@@ -200,20 +200,9 @@ componentWillUnmount(){
               <TouchableOpacity
                 disabled={!this.state.changed}
                 onPress={this.createQuestion.bind(this)}
-                style={{
-                  width: 250,
-                  backgroundColor: this.state.changed ? "#58bc91" : "#cacaca",
-                  padding: 15,
-                  borderRadius: 6,
-                  alignSelf: "center",
-                  margin: 36
-                }}
+                style={[styles.buttonInfo, { backgroundColor: this.state.changed ? "#58bc91" : "#cacaca", }]}
               >
-                <Text
-                  style={{ color: "#FFF", textAlign: "center", fontWeight: "bold", fontSize: 16 }}
-                >
-                  Thông tin bổ sung
-          </Text>
+                <Text style={styles.txtInfo}>{constants.questions.info_complementary}</Text>
               </TouchableOpacity>
             </Card>
           </View>
@@ -224,6 +213,85 @@ componentWillUnmount(){
   }
 }
 const styles = StyleSheet.create({
+  txtInfo: {
+    color: "#FFF",
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 16
+  },
+  buttonInfo: {
+    width: 250,
+    padding: 15,
+    borderRadius: 6,
+    alignSelf: "center",
+    margin: 36
+  },
+  buttonGender: {
+    padding: 10,
+    flexDirection: "row"
+  },
+  selected: {
+    width: 12,
+    height: 12,
+    backgroundColor: '#02C39A',
+    borderRadius: 6
+  },
+  borderSelected: {
+    width: 19,
+    height: 19,
+    borderWidth: 2,
+    borderColor: '#02C39A',
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  row: { flexDirection: "row" },
+  inputAge: {
+    width: 100,
+    paddingTop: 10,
+    paddingLeft: 17,
+    paddingRight: 17,
+    fontWeight: '600'
+  },
+  fieldAge: {
+    flexDirection: 'row',
+    marginTop: 15
+  },
+  inputContent: {
+    lineHeight: 20,
+    marginTop: 6,
+    height: 150,
+    borderRadius: 6,
+    textAlignVertical: 'top',
+    paddingTop: 13,
+    paddingLeft: 10,
+    paddingBottom: 13,
+    paddingRight: 10
+  },
+  minus: {
+    backgroundColor: '#02C39A',
+    width: 20,
+    height: 4,
+    borderRadius: 2,
+    alignSelf: 'center'
+  },
+  card: { padding: 22 },
+  containerCard: {
+    margin: 22,
+    marginTop: 10
+  },
+  backgroundHeader: {
+    backgroundColor: '#02C39A',
+    height: 130,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0
+  },
+  scroll: {
+    flex: 1,
+    position: 'relative'
+  },
   label: {
     color: '#00000048', marginLeft: 9
   },

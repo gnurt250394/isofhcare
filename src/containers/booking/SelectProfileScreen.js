@@ -114,73 +114,78 @@ class SelectProfileScreen extends Component {
             this.props.navigation.pop();
         })
     }
+    keyExtractor = (item, index) => index.toString()
+    headerComponent = () => {
+        return (
+            !this.state.refreshing &&
+                (!this.state.data || this.state.data.length == 0) ? (
+                    <View style={{ alignItems: "center", marginTop: 50 }}>
+                        <Text style={{ fontStyle: "italic" }}>
+                            {constants.none_info}
+                        </Text>
+                    </View>
+                ) : null
+        )
+    }
+    defaultImage = () => {
+        return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={40} height={40} />
+    }
+    renderItem = ({ item, index }) => {
+        const source = item.medicalRecords && item.medicalRecords.avatar ? { uri: item.medicalRecords.avatar.absoluteUrl() } : require("@images/new/user.png");
+
+        return (<TouchableOpacity style={styles.bn} disabled={this.state.disable} onPress={this.selectPofile.bind(this, item)}>
+            <ImageLoad
+                resizeMode="cover"
+                imageStyle={styles.borderImage}
+                borderRadius={20}
+                customImagePlaceholderDefaultStyle={[styles.avatar, styles.placeHolderImage]}
+                placeholderSource={require("@images/new/user.png")}
+                resizeMode="cover"
+                loadingStyle={{ size: 'small', color: 'gray' }}
+                source={source}
+                style={styles.image}
+                defaultImage={this.defaultImage}
+            />
+            <Text style={styles.bntext}>{item.medicalRecords.name}</Text>
+            {
+                this.state.profile && this.state.profile.medicalRecords && this.state.profile.medicalRecords.id == item.medicalRecords.id ?
+                    <ScaleImage style={styles.ckeck} height={18} source={require("@images/new/profile/ic_tick.png")} /> : null
+            }
+        </TouchableOpacity>);
+    }
+    footerComponent = () => <View style={{ height: 10 }} />
+    createProfile = () => {
+        this.props.navigation.navigate("createProfile",
+            {
+                isDataNull: !this.state.data || this.state.data.length == 0 ? true : false,
+                onCreate: this.onRefresh.bind(this)
+            })
+    }
     render() {
         return (
             <ActivityPanel
                 title={constants.title.select_profile}
             >
-
                 <FlatList
                     onRefresh={this.onRefresh.bind(this)}
                     refreshing={this.state.refreshing}
                     onEndReached={this.onLoadMore.bind(this)}
                     onEndReachedThreshold={1}
                     style={styles.container}
-                    keyExtractor={(item, index) => index.toString()}
+                    keyExtractor={this.keyExtractor}
                     extraData={this.state}
                     data={this.state.data}
-                    ListHeaderComponent={() =>
-                        !this.state.refreshing &&
-                            (!this.state.data || this.state.data.length == 0) ? (
-                                <View style={{ alignItems: "center", marginTop: 50 }}>
-                                    <Text style={{ fontStyle: "italic" }}>
-                                        {constants.none_info}
-                                    </Text>
-                                </View>
-                            ) : null
-                    }
-                    ListFooterComponent={() => <View style={{ height: 10 }} />}
-                    renderItem={({ item, index }) => {
-                        const source = item.medicalRecords && item.medicalRecords.avatar ? { uri: item.medicalRecords.avatar.absoluteUrl() } : require("@images/new/user.png");
-
-                        return (<TouchableOpacity style={styles.bn} disabled={this.state.disable} onPress={this.selectPofile.bind(this, item)}>
-                            <ImageLoad
-                                resizeMode="cover"
-                                imageStyle={{ borderRadius: 20, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
-                                borderRadius={20}
-                                customImagePlaceholderDefaultStyle={[styles.avatar, { width: 40, height: 40 }]}
-                                placeholderSource={require("@images/new/user.png")}
-                                resizeMode="cover"
-                                loadingStyle={{ size: 'small', color: 'gray' }}
-                                source={source}
-                                style={{
-                                    alignSelf: 'center',
-                                    borderRadius: 20,
-                                    width: 40,
-                                    height: 40
-                                }}
-                                defaultImage={() => {
-                                    return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={40} height={40} />
-                                }}
-                            />
-                            <Text style={styles.bntext}>{item.medicalRecords.name}</Text>
-                            {
-                                this.state.profile && this.state.profile.medicalRecords && this.state.profile.medicalRecords.id == item.medicalRecords.id ?
-                                    <ScaleImage style={styles.ckeck} height={18} source={require("@images/new/profile/ic_tick.png")} /> : null
-                            }
-                        </TouchableOpacity>);
-                    }}
+                    ListHeaderComponent={this.headerComponent}
+                    ListFooterComponent={this.footerComponent}
+                    renderItem={this.renderItem}
                 />
 
                 {this.state.data && this.state.data.length < 10 || !this.state.data ?
                     (
-                        <TouchableOpacity style={{ alignSelf: 'center', marginVertical: 10, marginBottom: 30 }} onPress={() =>
-                            this.props.navigation.navigate("createProfile",
-                                {
-                                    isDataNull: !this.state.data || this.state.data.length == 0 ? true : false,
-                                    onCreate: this.onRefresh.bind(this)
-                                })}>
-                            {!this.state.data || this.state.data.length == 0 ? (<Text style={styles.btntext}>{constants.booking.add_profile}</Text>) : (<Text style={styles.btntext}>{constants.booking.add_relatives}</Text>)}
+                        <TouchableOpacity style={styles.buttonCreateProfile} onPress={this.createProfile}>
+                            {!this.state.data || this.state.data.length == 0 ? (<Text style={styles.btntext}>{constants.booking.add_profile}</Text>)
+                                :
+                                (<Text style={styles.btntext}>{constants.booking.add_relatives}</Text>)}
 
                         </TouchableOpacity>
                     ) : null}
@@ -195,6 +200,23 @@ function mapStateToProps(state) {
     };
 }
 const styles = StyleSheet.create({
+    buttonCreateProfile: {
+        alignSelf: 'center',
+        marginVertical: 10,
+        marginBottom: 30
+    },
+    placeHolderImage: { width: 40, height: 40 },
+    image: {
+        alignSelf: 'center',
+        borderRadius: 20,
+        width: 40,
+        height: 40
+    },
+    borderImage: {
+        borderRadius: 20,
+        borderWidth: 0.5,
+        borderColor: 'rgba(151, 151, 151, 0.29)'
+    },
     AcPanel: {
         flex: 1,
         backgroundColor: '#cacaca',

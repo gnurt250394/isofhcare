@@ -133,32 +133,38 @@ class SelectHospitalScreen extends Component {
                     this.onRefresh();
                 });
         }
-        else
-            LocationSwitch.isLocationEnabled(() => {
-                getLocation();
-            }, () => {
-                Alert.alert(
-                    '',
-                    constants.booking.location_open,
-                    [
-                        {
-                            text: constants.actionSheet.cancel,
-                            onPress: () => console.log('Cancel Pressed'),
-                        },
-                        {
-                            text: constants.actionSheet.accept,
-                            onPress: () => {
-                                LocationSwitch.enableLocationService(1000, true, () => {
-                                    getLocation();
-                                }, () => {
-                                    this.setState({ locationEnabled: false });
-                                });
+        else {
+            try {
+                LocationSwitch.isLocationEnabled(() => {
+                    getLocation();
+                }, () => {
+                    Alert.alert(
+                        '',
+                        constants.booking.location_open,
+                        [
+                            {
+                                text: constants.actionSheet.cancel,
+                                onPress: () => console.log('Cancel Pressed'),
                             },
-                            style: 'default'
-                        }],
-                    { cancelable: false },
-                );
-            });
+                            {
+                                text: constants.actionSheet.accept,
+                                onPress: () => {
+                                    LocationSwitch.enableLocationService(1000, true, () => {
+                                        getLocation();
+                                    }, () => {
+                                        this.setState({ locationEnabled: false });
+                                    });
+                                },
+                                style: 'default'
+                            }],
+                        { cancelable: false },
+                    );
+                });
+            } catch (error) {
+                this.onRefresh();
+            }
+        }
+
     }
     componentDidMount() {
         locationProvider.getCurrentLocationHasSave().then(s => {
@@ -247,8 +253,8 @@ class SelectHospitalScreen extends Component {
     selectHospital(item) {
         let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
         if (callback) {
-            callback(item);
             this.props.navigation.pop();
+            callback(item);
         }
     }
     search() {
@@ -265,7 +271,7 @@ class SelectHospitalScreen extends Component {
                     <Text style={styles.bv1}>{(Math.round(item.hospital.distance * 100) / 100).toFixed(2)} km</Text>
                 </View>
             }
-            <View style={{ flex: 1, marginLeft: 20 }}>
+            <View style={styles.groupContent}>
                 <Text style={styles.bv} numberOfLines={2}>{item.hospital.name}</Text>
                 <Text style={styles.bv1} numberOfLines={2}>{item.hospital.address}</Text>
             </View>
@@ -277,19 +283,25 @@ class SelectHospitalScreen extends Component {
         return (
             !this.state.refreshing &&
                 (!this.state.data || this.state.data.length == 0) ? (
-                    <View style={{ alignItems: "center", marginTop: 50 }}>
+                    <View style={styles.groupNoneData}>
                         <Text style={{ fontStyle: "italic" }}>
                             {constants.none_data}</Text>
                     </View>
                 ) : null
         )
     }
+    onBackPress = () => this.props.navigation.pop()
+    keyExtractor = (item, index) => index.toString()
+    footerComponent = () => <View style={{ height: 10 }} />
+    onChangeText = state => value => {
+        this.setState({ [state]: value })
+    }
     render() {
         return (
             <ActivityPanel
                 isLoading={this.state.isLoading}
                 style={styles.AcPanel} title={constants.title.location}
-                backButton={<TouchableOpacity style={{ paddingLeft: 20 }} onPress={() => this.props.navigation.pop()}><Text style={{ color: '#FFF' }}>Hủy</Text></TouchableOpacity>}
+                backButton={<TouchableOpacity style={{ paddingLeft: 20 }} onPress={this.onBackPress}><Text style={{ color: '#FFF' }}>{constants.actionSheet.cancel}</Text></TouchableOpacity>}
                 isLoading={this.state.isLoading}
             >
                 <DialogBox ref={dialogbox => { this.dialogbox = dialogbox }} />
@@ -300,16 +312,11 @@ class SelectHospitalScreen extends Component {
                         <ScaleImage style={styles.aa} width={18} source={require("@images/new/hospital/ic_placeholder.png")} />
                         <Text style={styles.tkdiachi}>{constants.booking.location_around}</Text>
                     </TouchableOpacity>
-                    <View style={[styles.search, {
-                        borderBottomWidth: 1,
-                        borderBottomColor: 'rgba(0, 0, 0, 0.06)'
-                    }]} >
+                    <View style={[styles.search, styles.containerSearch]} >
                         <ScaleImage style={styles.aa} width={18} source={require("@images/new/hospital/ic_search.png")} />
                         <TextInput
                             value={this.state.keyword}
-                            onChangeText={s => {
-                                this.setState({ keyword: s })
-                            }}
+                            onChangeText={this.onChangeText('keyword')}
                             onSubmitEditing={this.search.bind(this)}
                             returnKeyType='search'
                             style={styles.tkdiachi1} placeholder={constants.search + '…'} underlineColorAndroid={"transparent"} />
@@ -319,13 +326,13 @@ class SelectHospitalScreen extends Component {
                         onRefresh={this.onRefresh.bind(this)}
                         refreshing={this.state.refreshing}
                         style={styles.sc}
-                        keyExtractor={(item, index) => index.toString()}
+                        keyExtractor={this.keyExtractor}
                         extraData={this.state}
                         data={this.state.data}
                         onEndReached={this.onLoadMore.bind(this)}
                         onEndReachedThreshold={1}
                         ListHeaderComponent={this.headerComponent}
-                        ListFooterComponent={() => <View style={{ height: 10 }} />}
+                        ListFooterComponent={this.footerComponent}
                         renderItem={this.renderItem}
                     />
                 </View >
@@ -349,6 +356,12 @@ function mapStateToProps(state) {
     };
 }
 const styles = StyleSheet.create({
+    containerSearch: {
+        borderBottomWidth: 1,
+        borderBottomColor: 'rgba(0, 0, 0, 0.06)'
+    },
+    groupNoneData: { alignItems: "center", marginTop: 50 },
+    groupContent: { flex: 1, marginLeft: 20 },
     containerPlace: {
         marginLeft: 20,
         alignItems: 'center',
@@ -474,7 +487,7 @@ const styles = StyleSheet.create({
         color: "#02c39a",
         marginLeft: 15,
     },
-    
+
     titleStyle: {
         color: '#FFF',
         marginLeft: 10

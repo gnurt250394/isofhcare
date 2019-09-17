@@ -20,6 +20,7 @@ import ImageLoad from 'mainam-react-native-image-loader';
 import { Card } from "native-base";
 import constants from '@resources/strings';
 import snackbar from '@utils/snackbar-utils';
+import connectionUtils from '@utils/connection-utils';
 
 class EhealthScreen extends Component {
     constructor(props) {
@@ -65,14 +66,22 @@ class EhealthScreen extends Component {
         this.props.navigation.navigate('listProfile');
     }
     onDisable = () => {
-        snackbar.show('Bạn chưa có lần khám gần nhất tại bệnh viện này', 'danger')
+        snackbar.show(constants.msg.ehealth.not_examination_at_hospital, 'danger')
     }
     onAddEhealth = () => {
-        this.props.navigation.navigate('selectLocationEhealth')
-        // let hospitalId = this.props.ehealth.hospital.hospital.id
-        // this.props.navigation.navigate('addNewEhealth', {
-        //     hospitalId: hospitalId
-        // })
+        connectionUtils.isConnected().then(s => {
+            this.props.navigation.navigate("selectHospital", {
+                hospital: this.state.hospital,
+                onSelected: (hospital) => {
+                    // alert(JSON.stringify(hospital))
+                    setTimeout(() => {
+                        this.props.navigation.navigate('addNewEhealth', { hospital: hospital })
+                    }, 300);
+                }
+            })
+        }).catch(e => {
+            snackbar.show(constants.msg.app.not_internet, "danger");
+        });
     }
     renderItem = ({ item, index }) => {
         const source = item.hospital && item.hospital.avatar ? { uri: item.hospital.avatar.absoluteUrl() } : require("@images/new/user.png");
@@ -84,7 +93,7 @@ class EhealthScreen extends Component {
                         resizeMode="cover"
                         imageStyle={styles.imageStyle}
                         borderRadius={30}
-                        customImagePlaceholderDefaultStyle={[styles.avatar, { width: 60, height: 60 }]}
+                        customImagePlaceholderDefaultStyle={[styles.avatar, styles.image]}
                         placeholderSource={require("@images/new/user.png")}
                         resizeMode="cover"
                         loadingStyle={{ size: 'small', color: 'gray' }}
@@ -105,6 +114,14 @@ class EhealthScreen extends Component {
     onBackClick = () => {
         this.props.navigation.pop()
     }
+    keyExtractor = (item, index) => index.toString()
+    headerComponent = () => {
+        return (!this.state.refreshing && (!this.state.listHospital || this.state.listHospital.length == 0) ?
+            <View style={styles.viewTxNone}>
+                <Text style={styles.viewTxTime}>{constants.ehealth.not_result_ehealth_location}</Text>
+            </View> : null
+        )
+    }
     render() {
         return (
             <ActivityPanel
@@ -112,7 +129,7 @@ class EhealthScreen extends Component {
                 style={styles.container}
             >
                 <View style={styles.viewContent} >
-                <TouchableOpacity onPress={this.onAddEhealth} style={styles.btnAddEhealth}><Text style={styles.txAddEhealth}>Thêm mới kết quả khám</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={this.onAddEhealth} style={styles.btnAddEhealth}><Text style={styles.txAddEhealth}>{constants.ehealth.add_new_result_examination}</Text></TouchableOpacity>
                     <Text style={styles.txHeader}>{constants.ehealth.ehealth_location}</Text>
                     <View style={styles.viewFlatList}>
                         <FlatList
@@ -121,12 +138,8 @@ class EhealthScreen extends Component {
                             renderItem={this.renderItem}
                             refreshing={this.state.refreshing}
                             onRefresh={this.onRefresh}
-                            keyExtractor={(item, index) => index.toString()}
-                            ListHeaderComponent={() => !this.state.refreshing && (!this.state.listHospital || this.state.listHospital.length == 0) ?
-                                <View style={styles.viewTxNone}>
-                                    <Text style={styles.viewTxTime}>{constants.ehealth.not_result_ehealth_location}</Text>
-                                </View> : null
-                            }
+                            keyExtractor={this.keyExtractor}
+                            ListHeaderComponent={this.headerComponent}
                         > </FlatList></View>
                 </View>
 
@@ -137,6 +150,7 @@ class EhealthScreen extends Component {
 
 }
 const styles = StyleSheet.create({
+    image: { width: 60, height: 60 },
     container: {
         flex: 1,
     },
@@ -159,9 +173,9 @@ const styles = StyleSheet.create({
     viewTx: { marginLeft: 10 },
     txHospitalName: { fontWeight: 'bold', color: '#5A5956', fontSize: 15 },
     txLastTime: { color: '#5A5956', marginTop: 5 },
-    
+
     viewContent: {
-        paddingHorizontal: 10, flex: 1        
+        paddingHorizontal: 10, flex: 1
     },
     viewFlatList: { flex: 1 },
     viewTxNone: { alignItems: 'center', marginTop: 50 },
