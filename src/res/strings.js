@@ -76,8 +76,39 @@ module.exports = {
   BHYT_CA: 'BHYT CA',
   upload_image:'Tải ảnh lên',
   image:'Hình ảnh',
+  begin_use_app:'Bắt đầu sử dụng app',
+  skip:'Skip',
+  province:'Tỉnh/Thành phố',
   hospital: {
     BENH_VIEN_DAI_HOC_Y: 1
+  },
+  disease:{
+    age:'Độ tuổi',
+    over_view:'Tổng quan',
+    cause:'Nguyên nhân',
+    symptom:'Triệu chứng',
+    treatment:'Hướng điều trị',
+    result_search_diseases:'KẾT QUẢ TÌM KIẾM BỆNH',
+    list_disease:'DANH SÁCH BỆNH',
+    result_search:'Kết quả tìm kiếm',
+    result_search_symptom:'Kết quả tìm kiếm theo triệu chứng',
+    see_all_result:'Xem tất cả kết quả tìm kiếm',
+    search_name_disease_or_symptom:'Tìm kiếm tên bệnh, triệu chứng'
+    
+  },
+  drug:{
+    reference_price:'Giá tham khảo',
+    active_substances:'Hoạt chất',
+    method_use:'Đường dùng',
+    standard:'Quy cách đóng gói',
+    manufacturer:'Nhà sản xuất',
+    useness:'Chỉ định',
+    avoid_useness:'Chống chỉ định',
+    sell_in_pharmacies:'CÓ BÁN TẠI CÁC NHÀ THUỐC',
+    result_search_drug:'KẾT QUẢ TÌM KIẾM THUỐC',
+    list_drug:'DANH SÁCH THUỐC',
+    result_search:'Kết quả tìm kiếm',
+    
   },
   action: {
     create_navigation_global: "ACTION_SET_NAVIGATION_GLOBAL",
@@ -201,9 +232,6 @@ module.exports = {
     warning: 'Lưu ý: Tất cả vân tay đã được đăng ký trong thiết bị đều có thể đăng nhập'
   },
   login_screens: {
-    verification_fail: 'Xác minh số điện thoại không thành công',
-    require_phone: 'Số điện thoại không được bỏ trống',
-    phone_invalid: "SĐT không hợp lệ",
     forgot_password: 'Quên mật khẩu?',
     register: 'Nếu chưa có tài khoản có thể đăng ký'
   },
@@ -224,6 +252,7 @@ module.exports = {
         booking: 'Đặt khám',
         get_quick_number: 'Lấy số nhanh',
         ehealth: "Y bạ điện tử",
+        transfer_payments:'Thanh toán chuyển khoản'
       },
       notifi: "THÔNG BÁO"
     },
@@ -344,6 +373,25 @@ module.exports = {
       date_not_allow_under_15_old: 'Không cho phép chọn dưới 15 tuổi',
       date_not_allow_over_150_old: 'Không cho phép chọn trên 150 tuổi',
       account_not_connect_please_contact_administrators: 'Tài khoản của bạn chưa được kết nối với bệnh viện này. Vui lòng liên hệ quản trị viên iSofHCare',
+      code_expired:'Mã bạn nhập đã hết hạn',
+      code_invalid:'Mã bạn nhập không đúng',
+      weight_invalid:'Cân nặng không hợp lệ',
+      height_invalid:'Chiều cao không hợp lệ',
+      please_select_relationship:'Bạn chưa chọn mối quan hệ',
+      add_member_success:'Thêm thành viên thành công',
+      add_member_fail:'Thêm thành viên không thành công',
+      not_permission_edit_file:'Bạn không có quyền chỉnh sửa hồ sơ này',
+      not_login_with_app_patient:'Bạn đang không đăng nhập với ứng dụng bệnh nhân',
+      phone_not_null:'Số điện thoại không được bỏ trống',
+      phone_invalid:'Số điện thoại sai định dạng',
+      gender_not_null:'Giới tính không được để trống',
+      relationShip_not_null:'Mối quan hệ không được để trống',
+      phone_exits_in_list_profile:'Số điện thoại đã tồn tại trong danh sách hồ sơ của bạn',
+      please_select_address:'Bạn chưa chọn Tỉnh/Thành phố',
+      please_select_district:'Bạn chưa chọn Quận/Huyện',
+      remove_success:'Xóa thành công',
+      profile_can_not_delete:'Hồ sơ không thể xóa do đã có đặt khám',
+      confirm_fail:'Xác nhận không thành công'
     },
     facility: {
       please_select_value_for_rating: "Vui lòng chọn giá trị đánh giá",
@@ -680,7 +728,13 @@ module.exports = {
     drug:'THUỐC',
     test_result:'KẾT QUẢ XÉT NGHIỆM',
     select_CSYT:'Chọn CSYT',
-    scan_code:'Quét QR BHYT'
+    scan_code:'Quét QR BHYT',
+    search_disease:'TÌM KIẾM BỆNH',
+    detail_drug:'CHI TIẾT THUỐC',
+    search_drug:'TRA CỨU THUỐC',
+    confirm_phone:'Xác nhận số điện thoại',
+    add_new_member:'THÊM THÀNH VIÊN MỚI',
+    edit_info:'SỬA THÔNG TIN'
   },
   account_screens: {
     signin_or_signup: 'Đăng nhập/ Đăng Ký',

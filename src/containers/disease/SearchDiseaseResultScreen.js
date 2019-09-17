@@ -1,11 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, ActivityIndicator, Text, FlatList, TouchableOpacity } from 'react-native';
+import { View, ActivityIndicator, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import diseaseProvider from '@data-access/disease-provider';
 // import ItemFacility from '@components/facility/ItemFacility';
 import ItemDisease from '@components/disease/ItemDisease';
+import constants from '@resources/strings';
 
 class SearchDiseaseResultScreen extends Component {
     constructor(props) {
@@ -94,16 +95,36 @@ class SearchDiseaseResultScreen extends Component {
                 this.onLoad(this.state.page)
             });
     }
+    onClickSeeMore = () => {
+        this.setState({ keyword: "", symptom: null }, this.onRefresh)
+    }
+    keyExtractor = (item, index) => index.toString()
+    headerComponent = () => {
+        return (!this.state.refreshing && (!this.state.data || this.state.data.length == 0) ?
+            <View style={{ alignItems: 'center', marginTop: 50 }}>
+                <ScaledImage source={require("@images/search/noresult.png")} width={136} />
+                <TouchableOpacity onPress={this.onClickSeeMore}>
+                    <Text style={styles.txtSeeMore}>Chúng tôi không tìm thấy kết quả nào phù hợp, bạn có thể xem thêm <Text style={{ color: "#000", fontWeight: 'bold' }}>Bệnh được tìm nhiều</Text></Text>
+                </TouchableOpacity>
+
+            </View> : null
+        )
+    }
+    footerComponent = () => <View style={{ height: 20 }}></View>
+    _renderItem = ({ item, index }) => <ItemDisease key={index} disease={item} />
 
     render() {
         return (
-            <ActivityPanel style={{ flex: 1 }} title={this.state.keyword || this.state.symptom ? "KẾT QUẢ TÌM KIẾM BỆNH" : "DANH SÁCH BỆNH"} showFullScreen={true}>
-                <View style={{ flex: 1, padding: 14 }}>
+            <ActivityPanel style={styles.flex}
+                title={this.state.keyword || this.state.symptom ? constants.disease.result_search_diseases : constants.disease.list_disease}
+                showFullScreen={true}>
+                <View style={styles.container}>
                     {
                         this.state.keyword ?
-                            <Text style={{ marginTop: 13, fontSize: 14 }}>Kết quả tìm kiếm "<Text style={{ fontWeight: 'bold' }}>{this.state.keyword.length > 50 ? this.state.keyword.substring(0, 49) + "..." : this.state.keyword}</Text>"</Text> :
+                            <Text style={styles.txtResult}>{constants.disease.result_search} "<Text style={{ fontWeight: 'bold' }}>{this.state.keyword.length > 50 ? this.state.keyword.substring(0, 49) + "..." : this.state.keyword}</Text>"</Text> :
                             this.state.symptom ?
-                                <Text style={{ marginTop: 13, fontSize: 14 }}>Kết quả tìm kiếm theo triệu chứng "<Text style={{ fontWeight: 'bold' }}>{this.state.symptom.symptom.name}</Text>"</Text> :
+                                <Text
+                                    style={styles.txtResult}>{constants.disease.result_search_symptom} "<Text style={{ fontWeight: 'bold' }}>{this.state.symptom.symptom.name}</Text>"</Text> :
                                 null
                     }
                     <FlatList
@@ -111,28 +132,18 @@ class SearchDiseaseResultScreen extends Component {
                         refreshing={this.state.refreshing}
                         onEndReached={this.onLoadMore.bind(this)}
                         onEndReachedThreshold={1}
-                        style={{ flex: 1, marginTop: 10 }}
-                        keyExtractor={(item, index) => index.toString()}
+                        style={styles.flatList}
+                        keyExtractor={this.keyExtractor}
                         extraData={this.state}
                         data={this.state.data}
-                        ListHeaderComponent={() => !this.state.refreshing && (!this.state.data || this.state.data.length == 0) ?
-                            <View style={{ alignItems: 'center', marginTop: 50 }}>
-                                <ScaledImage source={require("@images/search/noresult.png")} width={136} />
-                                <TouchableOpacity onPress={() => { this.setState({ keyword: "", symptom: null }, this.onRefresh) }}>
-                                    <Text style={{ marginTop: 20, padding: 20, textAlign: 'center', lineHeight: 30 }}>Chúng tôi không tìm thấy kết quả nào phù hợp, bạn có thể xem thêm <Text style={{ color: "#000", fontWeight: 'bold' }}>Bệnh được tìm nhiều</Text></Text>
-                                </TouchableOpacity>
-
-                            </View> : null
-                        }
-                        ListFooterComponent={() => <View style={{ height: 20 }}></View>}
-                        renderItem={({ item, index }) =>
-                            <ItemDisease key={index} disease={item} />
-                        }
+                        ListHeaderComponent={this.headerComponent}
+                        ListFooterComponent={this.footerComponent}
+                        renderItem={this._renderItem}
                     />
                 </View>
                 {
                     this.state.loadMore ?
-                        <View style={{ alignItems: 'center', padding: 10, position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+                        <View style={styles.containerLoadMore}>
                             <ActivityIndicator
                                 size={'small'}
                                 color={'gray'}
@@ -150,3 +161,33 @@ function mapStateToProps(state) {
     };
 }
 export default connect(mapStateToProps)(SearchDiseaseResultScreen);
+
+const styles = StyleSheet.create({
+    containerLoadMore: {
+        alignItems: 'center',
+        padding: 10,
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0
+    },
+    txtSeeMore: {
+        marginTop: 20,
+        padding: 20,
+        textAlign: 'center',
+        lineHeight: 30
+    },
+    flatList: {
+        flex: 1,
+        marginTop: 10
+    },
+    txtResult: {
+        marginTop: 13,
+        fontSize: 14
+    },
+    container: {
+        flex: 1,
+        padding: 14
+    },
+    flex: { flex: 1 },
+})

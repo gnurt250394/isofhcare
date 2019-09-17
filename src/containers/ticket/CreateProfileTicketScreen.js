@@ -449,7 +449,7 @@ class CreateProfileTicketScreen extends Component {
                       maxlength: 255
                     },
                     messages: {
-                      required: constants.login_screens.require_phone,
+                      required: constants.msg.user.phone_not_null,
                       maxlength: constants.msg.user.text_without_255
                     }
                   }}

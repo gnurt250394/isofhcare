@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { View, StyleSheet, TouchableOpacity, Image, Dimensions, ScrollView, Text, StatusBar } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image, Dimensions, ScrollView, Text } from 'react-native';
 import { connect } from 'react-redux';
 import Swiper from 'react-native-swiper';
 import ActivityPanel from '@components/ActivityPanel';
@@ -51,22 +51,20 @@ class IntroScreen extends Component {
         return (
             <ActivityPanel hideActionbar={true} hideStatusbar={true} showFullScreen={true}>
                 <View style={styles.container}>
-                    <View style={{ alignItems: 'center' }}>
+                    <View style={styles.containerSkip}>
                         <Image
-                            style={{ width: 120, height: 45 }}
+                            style={styles.imageLogo}
                             source={require('@images/logotext.png')}
                             resizeMode='contain'
                         />
                         <TouchableOpacity style={styles.skip} onPress={this.skip}>
-                            <Text>Skip</Text>
+                            <Text>{constants.skip}</Text>
                         </TouchableOpacity>
                     </View>
                     <Swiper style={styles.wrapper}
                         dot={<View style={styles.dot} />}
                         activeDot={<View style={styles.activeDot} />}
-                        paginationStyle={{
-                            bottom: 30
-                        }}
+                        paginationStyle={styles.pagination}
                         loop={false}>
                         {
                             slides.map((item, index) => {
@@ -82,7 +80,7 @@ class IntroScreen extends Component {
                                         {
                                             index == 3 ?
                                                 <TouchableOpacity style={styles.startNow} onPress={this.skip}>
-                                                    <Text style={{ color: 'rgb(74, 144, 226)', fontSize: 18 }}>Bắt đầu sử dụng app</Text>
+                                                    <Text style={styles.txtFirstApp}>{constants.begin_use_app}</Text>
                                                 </TouchableOpacity>
                                                 : null
                                         }
@@ -100,7 +98,29 @@ class IntroScreen extends Component {
 }
 
 
-const styles = {
+
+function mapStateToProps(state) {
+    return {
+        userApp: state.userApp
+    };
+}
+export default connect(mapStateToProps)(IntroScreen);
+
+const styles = StyleSheet.create({
+    txtFirstApp: {
+        color: 'rgb(74, 144, 226)',
+        fontSize: 18
+    },
+    pagination: {
+        bottom: 30
+    },
+    imageLogo: {
+        width: 120,
+        height: 45
+    },
+    containerSkip: {
+        alignItems: 'center'
+    },
     wrapper: {
         // backgroundColor: '#f00'
     },
@@ -167,12 +187,4 @@ const styles = {
     startNow: {
         marginTop: 30
     }
-}
-
-
-function mapStateToProps(state) {
-    return {
-        userApp: state.userApp
-    };
-}
-export default connect(mapStateToProps)(IntroScreen);
+})
