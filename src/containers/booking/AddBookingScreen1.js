@@ -176,14 +176,14 @@ class AddBookingScreen extends Component {
     selectProfile(profile) {
         this.setState({ profile, allowBooking: true });
     }
-    selectServiceType(serviceType) {
-        let serviceTypeError = serviceType ? "" : this.state.serviceTypeError;
-        if (!serviceType || !this.state.serviceType || serviceType.id != this.state.serviceType.id) {
-            this.setState({ serviceType, listServicesSelected: [], allowBooking: true, serviceTypeError })
-        } else {
-            this.setState({ serviceType, allowBooking: true, serviceTypeError: "", serviceTypeError });
-        }
-    }
+    // selectServiceType(serviceType) {
+    //     let serviceTypeError = serviceType ? "" : this.state.serviceTypeError;
+    //     if (!serviceType || !this.state.serviceType || serviceType.id != this.state.serviceType.id) {
+    //         this.setState({ serviceType, listServicesSelected: [], allowBooking: true, serviceTypeError })
+    //     } else {
+    //         this.setState({ serviceType, allowBooking: true, serviceTypeError: "", serviceTypeError });
+    //     }
+    // }
     selectHospital = () => {
         connectionUtils.isConnected().then(s => {
             this.props.navigation.navigate("selectHospital", {
@@ -205,7 +205,15 @@ class AddBookingScreen extends Component {
     }
 
     selectService(services) {
-        this.setState({ listServicesSelected: services });
+        let servicesError = services ? "" : this.state.servicesError;
+        if (!services || !this.state.services || services.id != this.state.services.id) {
+            this.setState({ listServicesSelected: services, allowBooking: true, servicesError })
+            console.log('if')
+        } else {
+            this.setState({ listServicesSelected: [], allowBooking: true, servicesError: "", servicesError });
+            console.log('else')
+
+        }
     }
 
     addBooking = () => {
@@ -234,9 +242,9 @@ class AddBookingScreen extends Component {
         //     error = true;
         // }
         if (this.state.listServicesSelected && this.state.listServicesSelected.length) {
-            this.setState({ serviceError: "" })
+            this.setState({ servicesError: "" })
         } else {
-            this.setState({ serviceError: constants.msg.booking.service_not_null })
+            this.setState({ servicesError: constants.msg.booking.service_not_null })
             error = true;
         }
         if (this.state.bookingDate) {
@@ -371,7 +379,67 @@ class AddBookingScreen extends Component {
                 <Text style={{ textAlign: 'right', color: '#02C39A', fontWeight: 'bold' }}>{(new Date(this.state.schedule.key)).format("HH:mm tt")}</Text>
                 <Text style={{ textAlign: 'right', color: '#02C39A', fontWeight: 'bold' }}>{(new Date(this.state.schedule.key)).format("thu, ngày dd/MM/yyyy")}</Text>
             </View>
-        return <Text style={{ textAlign: 'right' }}>Chọn ngày và giờ</Text>;
+        return <Text style={{ textAlign: 'right' }}>{constants.booking.select_date_time}</Text>;
+    }
+    onSelectProfile = () => {
+        connectionUtils.isConnected().then(s => {
+            this.props.navigation.navigate("selectProfile", {
+                onSelected: this.selectProfile.bind(this),
+                profile: this.state.profile
+            });
+        }).catch(e => {
+            snackbar.show(constants.msg.app.not_internet, "danger");
+        });
+    }
+    defaultImage = () => <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={40} height={40} />
+    onSelectServices = () => {
+        if (!this.state.hospital) {
+            snackbar.show(constants.msg.booking.please_select_location, "danger");
+            return;
+        }
+        this.props.navigation.navigate("selectService", {
+            hospital: this.state.hospital,
+            // serviceType: this.state.serviceType,
+            listServicesSelected: this.state.listServicesSelected,
+            onSelected: this.selectService.bind(this)
+        })
+    }
+    selectDateTime = () => {
+        console.log(this.state.listServicesSelected);
+        this.props.navigation.navigate("selectTime", {
+            service: this.state.listServicesSelected,
+            isNotHaveSchedule: true,
+            onSelected: this.onSelectDateTime
+        });
+    }
+    onChangeText = s => {
+        this.setState({ reason: s, allowBooking: true })
+    }
+    onValidate = (valid, messages) => {
+        if (valid) {
+            this.setState({ symptonError: "" });
+        }
+        else {
+            this.setState({ symptonError: messages });
+        }
+    }
+    confirmDate = newDate => {
+        this.setState({
+            toggelDateTimePickerVisible: false,
+        }, () => {
+            if (newDate && this.state.bookingDate && newDate.ddmmyyyy() == this.state.bookingDate.ddmmyyyy())
+                return;
+            this.setState({
+                bookingDate: newDate,
+                date: newDate.format("thu, dd tháng MM").replaceAll(" 0", " "),
+                allowBooking: true,
+                servicesError: "",
+                scheduleError: ""
+            });
+        })
+    }
+    onCancelDate = () => {
+        this.setState({ toggelDateTimePickerVisible: false })
     }
     render() {
         let avatar = ((this.state.profile || {}).medicalRecords || {}).avatar;
@@ -482,56 +550,47 @@ class AddBookingScreen extends Component {
                     }
                     <View style={styles.border}></View> */}
 
-                        <TouchableOpacity style={[styles.mucdichkham]} onPress={() => {
-                            if (!this.state.hospital) {
-                                snackbar.show(constants.msg.booking.please_select_location, "danger");
-                                return;
+                            <TouchableOpacity style={[styles.mucdichkham]} onPress={this.onSelectServices}>
+                                <ScaleImage style={styles.imgIc} height={15} source={require("@images/new/booking/ic_specialist.png")} />
+                                <Text style={styles.mdk}>{constants.booking.service}</Text>
+                                {/* <Text>{JSON.stringify(this.state.listServicesSelected)}</Text> */}
+                                {this.state.listServicesSelected && this.state.listServicesSelected.length ?
+                                    <View style={styles.flex}>
+                                        {
+                                            this.state.listServicesSelected.map((item, index) => <Text
+                                                style={styles.txtListServices}
+                                                numberOfLines={1}
+                                                key={index}>{item.service.name}</Text>)
+                                        }
+                                        {/* <Text numberOfLines={1} style={styles.ktq}>{this.state.service.name}</Text> */}
+                                        {/* <Text numberOfLines={1} style={styles.ktq}>{this.state.service.price.formatPrice() + 'đ'}</Text> */}
+                                    </View> :
+                                    <Text numberOfLines={1} style={styles.ktq}>{constants.booking.select_service}</Text>
+                                }
+
+                                <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
+                            </TouchableOpacity>
+                            {
+                                this.state.servicesError ?
+                                    <Text style={[styles.errorStyle]}>{this.state.servicesError}</Text> : null
                             }
-                            this.props.navigation.navigate("selectService", {
-                                hospital: this.state.hospital,
-                                // serviceType: this.state.serviceType,
-                                listServicesSelected: this.state.listServicesSelected,
-                                onSelected: this.selectService.bind(this)
-                            })
-                        }}>
-                            <ScaleImage style={styles.imgIc} height={15} source={require("@images/new/booking/ic_specialist.png")} />
-                            <Text style={styles.mdk}>{constants.booking.service}</Text>
-                            {/* <Text>{JSON.stringify(this.state.listServicesSelected)}</Text> */}
-                            {this.state.listServicesSelected && this.state.listServicesSelected.length ?
-                                <View style={{ flex: 1 }}>
-                                    {
-                                        this.state.listServicesSelected.map((item, index) => <Text style={{ marginHorizontal: 10, marginBottom: 5, alignSelf: 'flex-end' }} numberOfLines={1} key={index}>{item.service.name}</Text>)
-                                    }
-                                    {/* <Text numberOfLines={1} style={styles.ktq}>{this.state.service.name}</Text> */}
-                                    {/* <Text numberOfLines={1} style={styles.ktq}>{this.state.service.price.formatPrice() + 'đ'}</Text> */}
-                                </View> :
-                                <Text numberOfLines={1} style={styles.ktq}>{constants.booking.select_service}</Text>
+                            <View style={styles.border}></View>
+                            <TouchableOpacity style={styles.mucdichkham} onPress={this.selectDateTime}>
+                                <ScaleImage style={styles.imgIc} height={18} source={require("@images/new/booking/ic_bookingTime.png")} />
+                                <Text style={styles.mdk}>{constants.booking.date_booking}</Text>
+                                <View style={styles.ktq}>{this.renderBookingTime()}</View>
+                                <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
+                            </TouchableOpacity>
+                            {
+                                this.state.scheduleError ?
+                                    <Text style={[styles.errorStyle]}>{this.state.scheduleError}</Text> : null
                             }
 
                             <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
-                        </TouchableOpacity>
                         {
                         this.state.serviceError ?
                             <Text style={[styles.errorStyle]}>{this.state.serviceError}</Text> : null
                     }
-                        <View style={styles.border}></View>
-                        <TouchableOpacity style={styles.mucdichkham} onPress={() => {
-                            console.log(this.state.listServicesSelected);
-                            this.props.navigation.navigate("selectTime", {
-                                service: this.state.listServicesSelected,
-                                isNotHaveSchedule: true,
-                                onSelected: this.onSelectDateTime
-                            });
-                        }}>
-                            <ScaleImage style={styles.imgIc} height={18} source={require("@images/new/booking/ic_bookingTime.png")} />
-                            <Text style={styles.mdk}>{constants.booking.date_booking}</Text>
-                            <View style={styles.ktq}>{this.renderBookingTime()}</View>
-                            <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
-                        </TouchableOpacity>
-                        {
-                            this.state.bookingError ?
-                                <Text style={[styles.errorStyle]}>{this.state.bookingError}</Text> : null
-                        }
                     </View>
                     <View style={styles.article}>
                         <Form
