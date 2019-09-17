@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, TextInput, Dimensions, ScrollView } from 'react-native';
 import ActivityPanel from '@components/ActivityPanel';
 import StarRating from 'react-native-star-rating';
 import ImageLoad from "mainam-react-native-image-loader";
 import { Card } from 'native-base'
 import ItemDoctor from '@components/booking/doctor/ItemDoctor';
 import ScaleImage from "mainam-react-native-scaleimage";
-
+import Carousel, { Pagination } from 'react-native-snap-carousel'
+import LinearGradient from 'react-native-linear-gradient'
+const { width, height } = Dimensions.get('window')
 const data = [
     {
         id: 1,
@@ -23,6 +25,42 @@ const data = [
         rating: 4.7,
         quantity: 2098,
         avatar: 'https://icdn.dantri.com.vn/thumb_w/640/2019/08/14/nu-sinh-lao-cai-xinh-dep-duoc-vi-nhu-thien-than-anh-thedocx-1565795558127.jpeg',
+        position: ['Tai mũi họng', 'Mắt'],
+        address: ['Phòng khám Y Khoa Hà Nội', 'Bệnh viện Đại học Y', 'Bệnh viện E']
+    },
+    {
+        id: 3,
+        name: 'Nguyễn Văn C',
+        rating: 3.5,
+        quantity: 1024,
+        avatar: 'http://www.dangcongsan.vn/DATA/0/2019/09/file76xog5oc70i1g0dp219_156748_9282_7304_1567581048-20_11_49_618.jpg',
+        position: ['Tai mũi họng', 'Răng hàm mặt', 'Mắt'],
+        address: ['Phòng khám Y Khoa Hà Nội', 'Bệnh viện Đại học Y', 'Bệnh viện E']
+    },
+    {
+        id: 4,
+        name: 'Nguyễn Văn D',
+        rating: 4.7,
+        quantity: 2098,
+        avatar: 'https://icdn.dantri.com.vn/thumb_w/640/2019/08/14/nu-sinh-lao-cai-xinh-dep-duoc-vi-nhu-thien-than-anh-thedocx-1565795558127.jpeg',
+        position: ['Răng hàm mặt', 'Tai mũi họng', 'Mắt'],
+        address: ['Phòng khám Y Khoa Hà Nội', 'Bệnh viện Đại học Y', 'Bệnh viện E']
+    },
+    {
+        id: 5,
+        name: 'Nguyễn Văn E',
+        rating: 3.5,
+        quantity: 1024,
+        avatar: 'http://www.dangcongsan.vn/DATA/0/2019/09/file76xog5oc70i1g0dp219_156748_9282_7304_1567581048-20_11_49_618.jpg',
+        position: ['Răng hàm mặt', 'Tai mũi họng', 'Mắt'],
+        address: ['Phòng khám Y Khoa Hà Nội', 'Bệnh viện Đại học Y', 'Bệnh viện E']
+    },
+    {
+        id: 6,
+        name: 'Nguyễn Văn F',
+        rating: 4.7,
+        quantity: 2098,
+        avatar: 'https://icdn.dantri.com.vn/thumb_w/640/2019/08/14/nu-sinh-lao-cai-xinh-dep-duoc-vi-nhu-thien-than-anh-thedocx-1565795558127.jpeg',
         position: ['Răng hàm mặt', 'Tai mũi họng', 'Mắt'],
         address: ['Phòng khám Y Khoa Hà Nội', 'Bệnh viện Đại học Y', 'Bệnh viện E']
     },
@@ -34,12 +72,13 @@ class ListDoctorScreen extends Component {
             isLoading: true,
             data: [],
             keyword: '',
+            infoDoctor: {}
         };
         this.listSearch = []
     }
     componentDidMount = () => {
         setTimeout(() => {
-            this.setState({ data, isLoading: false })
+            this.setState({ data, infoDoctor: data[0], isLoading: false })
             this.listSearch = data
         }, 1000)
     };
@@ -80,34 +119,95 @@ class ListDoctorScreen extends Component {
 
 
     }
-    keyExtractor = (item, index) =>  index.toString()
+    keyExtractor = (item, index) => index.toString()
     listEmpty = () => !this.state.isLoading && <Text style={styles.none_data}>Không có dữ liệu</Text>
     render() {
+        const { infoDoctor } = this.state
         return (
             <ActivityPanel
                 title="CHỌN BÁC SỸ"
                 showFullScreen={true}
                 isLoading={this.state.isLoading}>
-                <View style={styles.groupSearch}>
-                    <TextInput
-                        value={this.state.keyword}
-                        onChangeText={this.onChangeText('keyword')}
-                        onSubmitEditing={this.search}
-                        returnKeyType='search'
-                        style={styles.inputSearch}
-                        placeholder={"Tìm kiếm…"}
-                        underlineColorAndroid={"transparent"} />
-                    <TouchableOpacity style={styles.buttonSearch} onPress={this.search}>
-                        <ScaleImage source={require('@images/new/hospital/ic_search.png')} height={16} />
-                    </TouchableOpacity>
-                </View>
-                <FlatList
+                <ScrollView>
+                    <View style={{ flex: 1 }}>
+                        <View style={styles.groupSearch}>
+                            <TextInput
+                                value={this.state.keyword}
+                                onChangeText={this.onChangeText('keyword')}
+                                onSubmitEditing={this.search}
+                                returnKeyType='search'
+                                style={styles.inputSearch}
+                                placeholder={"Tìm kiếm…"}
+                                underlineColorAndroid={"transparent"} />
+                            <TouchableOpacity style={styles.buttonSearch} onPress={this.search}>
+                                <ScaleImage source={require('@images/new/hospital/ic_search.png')} height={16} />
+                            </TouchableOpacity>
+                        </View>
+                        {/* <FlatList
                     data={this.state.data}
                     renderItem={this.renderItem}
                     keyExtractor={this.keyExtractor}
                     ListEmptyComponent={this.listEmpty}
-                />
-            </ActivityPanel>
+                /> */}
+                        <View style={{
+                            flex: 1
+                        }}>
+                            <LinearGradient
+                                colors={['#02C39A', '#00B96C']}
+                                locations={[0, 1]}
+                                style={styles.linear}>
+                                <Carousel
+                                    ref={(c) => { this._carousel = c; }}
+                                    data={this.state.data}
+                                    renderItem={this.renderItem}
+                                    sliderWidth={width}
+                                    itemWidth={width - 100}
+                                    layout={"default"}
+                                    sliderHeight={height / 3}
+                                    layoutCardOffset={9}
+                                    itemHeight={height / 3}
+                                    onSnapToItem={(index) => {
+                                        let data = [...this.state.data]
+                                        let obj = data[index]
+                                        this.setState({ infoDoctor: obj })
+                                    }}
+                                />
+                            </LinearGradient>
+                            <View
+                                style={[styles.groupProfile, { paddingRight: 10 }]}
+                            >
+                                <Text style={styles.Specialist}>Chuyên khoa</Text>
+                                <View style={{ flex: 1 }}>
+                                    {infoDoctor.position && infoDoctor.position.length > 0 ?
+                                        infoDoctor.position.map((e, i) => {
+
+                                            return (
+                                                <Text key={i}>{e}</Text>
+                                            )
+                                        }) :
+                                        null
+                                    }
+                                </View>
+
+                            </View>
+                            <View style={styles.between} />
+                            <View style={[styles.groupProfile, { paddingRight: 10 }]} >
+                                <Text style={styles.Specialist}>Địa điểm làm việc</Text>
+                                <View style={{ flex: 1 }}>
+                                    {infoDoctor.address && infoDoctor.address.length > 0 ?
+                                        infoDoctor.address.map((e, i) => {
+                                            return (
+                                                <Text key={i}>{e}</Text>
+                                            )
+                                        }) :
+                                        null
+                                    }
+                                </View>
+                            </View>
+                        </View>
+                    </View>
+                </ScrollView>
+            </ActivityPanel >
         );
     }
 }
@@ -116,6 +216,12 @@ export default ListDoctorScreen;
 
 
 const styles = StyleSheet.create({
+    linear: {
+        width: '100%',
+        height: height / 3,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
     buttonSearch: {
         marginRight: -2,
         height: '100%',
@@ -148,4 +254,28 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         fontSize: 16
     },
+    Specialist: {
+        fontSize: 15,
+        fontWeight: 'bold',
+        color: '#111111',
+        width: '40%',
+        paddingLeft:10
+    },
+    between: {
+        backgroundColor: '#02c39a',
+        height: 1,
+        marginVertical: 9,
+        width: '100%',
+        alignSelf: 'center'
+    },
+
+
+
+
+    groupProfile: {
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        justifyContent: 'space-between'
+    },
+
 })

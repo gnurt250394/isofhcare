@@ -57,53 +57,22 @@ class ItemDoctor extends Component {
                                 </View>
                             </View>
                         </View>
-                        <LinearGradient
-                            colors={['#FFB800', '#FF8A00']}
-                            locations={[0,  1]}
-                            style={styles.linear}>
-                            <TouchableOpacity
-                                style={styles.buttonBooking}
-                                onPress={onPress}
-                            >
-                                <Text style={styles.txtbooking}>ĐẶT KHÁM</Text>
-                            </TouchableOpacity>
-                        </LinearGradient>
-                    </View>
 
+                    </View>
                     <Text style={styles.detailDoctor} onPress={onPressDoctor}>XEM THÔNG TIN BS</Text>
-                    <View style={styles.between} />
+                    <LinearGradient
+                        colors={['#FFB800', '#FF8A00']}
+                        locations={[0, 1]}
+                        style={styles.linear}>
+                        <TouchableOpacity
+                            style={styles.buttonBooking}
+                            onPress={onPress}
+                        >
+                            <Text style={styles.txtbooking}>ĐẶT KHÁM</Text>
+                        </TouchableOpacity>
+                    </LinearGradient>
                     {/** view 2 */}
-                    <View
-                        style={[styles.groupProfile, { paddingRight: 10 }]}
-                    >
-                        <Text style={styles.Specialist}>Chuyên khoa</Text>
-                        <View style={{ flex: 1 }}>
-                            {item.position && item.position.length > 0 ?
-                                item.position.map((e, i) => {
-                                    
-                                    return (
-                                        <Text key={i}>{e}</Text>
-                                    )
-                                }) :
-                                null
-                            }
-                        </View>
 
-                    </View>
-                    <View style={styles.between} />
-                    <View style={[styles.groupProfile, { paddingRight: 10 }]} >
-                        <Text style={styles.Specialist}>Địa điểm làm việc</Text>
-                        <View style={{ flex: 1 }}>
-                            {item.address && item.address.length > 0 ?
-                                item.address.map((e, i) => {
-                                    return (
-                                        <Text key={i}>{e}</Text>
-                                    )
-                                }) :
-                                null
-                            }
-                        </View>
-                    </View>
                 </Card>
             </View>
         );
@@ -126,10 +95,10 @@ const styles = StyleSheet.create({
     },
     detailDoctor: {
         color: '#02c39a',
-        paddingLeft: 30,
         paddingTop: 7,
         textDecorationLine: 'underline',
         fontStyle: 'italic',
+        textAlign: 'center'
     },
     txtbooking: {
         color: '#fff',
@@ -144,6 +113,7 @@ const styles = StyleSheet.create({
     },
     linear: {
         height: 40,
+        marginTop: 10,
         borderRadius: 7,
         elevation: 3,
         shadowColor: 'black',
@@ -171,38 +141,41 @@ const styles = StyleSheet.create({
     },
     txtNameDoctor: {
         color: '#02c39a',
-        fontSize: 16,
+        fontSize: 18,
+        paddingTop:8,
+        paddingBottom:4,
         fontWeight: 'bold'
     },
     paddingLeft5: {
         paddingLeft: 5
     },
     groupImgProfile: {
-        flexDirection: 'row',
-        alignItems: 'flex-start',
+        alignItems: 'center',
+        width: '100%'
     },
     groupProfile: {
         flexDirection: 'row',
+        flex: 1,
         alignItems: 'flex-start',
         justifyContent: 'space-between'
     },
     card: {
         padding: 10,
+        height: '95%',
         borderRadius: 10,
         backgroundColor: '#FEFDE9'
     },
     containerItem: {
-        flex: 1,
-        padding: 5
+        flex: 1
     },
     customImagePlace: {
-        height: 50,
-        width: 50,
-        borderRadius: 25,
+        height: 100,
+        width: 100,
+        borderRadius: 50,
     },
     styleImgLoad: {
-        width: 50,
-        height: 50,
+        width: 100,
+        height: 100,
         paddingRight: 5,
     },
 
