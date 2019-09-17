@@ -30,7 +30,7 @@ class HospitalNearYou extends Component {
     onRefresh() {
         if (!this.state.loading)
             this.setState(
-                { refreshing: true, page: 1, finish: false, loading: true,  },
+                { refreshing: true, page: 1, finish: false, loading: true, },
                 () => {
                     this.onLoad();
                 }
@@ -237,13 +237,13 @@ class HospitalNearYou extends Component {
 
         });
     }
-    renderItem = (item, index) => {
+    renderItem = ({ item, index }) => {
         return (
             <HospitalItem isHopitalNear={true} widthImg={180} widthCard={170} index={index} item={item}></HospitalItem>
 
         )
     }
-
+    keyExtractor = (item, index) => index.toString()
     render() {
         return (
             <View style={{ backgroundColor: '#fff' }}>
@@ -256,12 +256,10 @@ class HospitalNearYou extends Component {
                             <FlatList
                                 showsHorizontalScrollIndicator={false}
                                 horizontal={true}
-                                keyExtractor={(item, index) => index.toString()}
+                                keyExtractor={this.keyExtractor}
                                 extraData={this.state}
                                 data={this.state.data}
-                                renderItem={({ item, index }) =>
-                                    this.renderItem(item, index)
-                                }
+                                renderItem={this.renderItem}
                             />
                         ) : (<ActivityIndicator></ActivityIndicator>)
 
@@ -269,7 +267,7 @@ class HospitalNearYou extends Component {
                         <ImageBackground style={styles.imgNotLocation} source={require('@images/new/home/ic_img_location.png')}>
                             <View style={styles.viewBtn}>
                                 <Text style={styles.txOpenLocation}>Vui lòng bật vị trí để sử dụng tính năng này</Text>
-                                <TouchableOpacity  onPress={this.getLocation} style={styles.btnOpenLocation}><ScaledImage height={20} source={require('@images/new/home/ic_location.png')}></ScaledImage><Text style={{ color: '#fff', marginLeft: 5 }}>Bật ngay</Text></TouchableOpacity>
+                                <TouchableOpacity onPress={this.getLocation} style={styles.btnOpenLocation}><ScaledImage height={20} source={require('@images/new/home/ic_location.png')}></ScaledImage><Text style={{ color: '#fff', marginLeft: 5 }}>Bật ngay</Text></TouchableOpacity>
                             </View>
                         </ImageBackground>
                     </View>)

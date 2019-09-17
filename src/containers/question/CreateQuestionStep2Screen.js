@@ -292,6 +292,12 @@ class CreateQuestionStep2Screen extends Component {
         this.setState({ [state]: value })
     }
     onSwipe = () => this.setState({ toggleModalSpecialize: false })
+    renderItem = ({ item }) => <TouchableOpacity onPress={this.selectSpecialist.bind(this, item)}>
+        <Text style={styles.txtSpecialistName}>
+            {item.specialist.name}
+        </Text>
+    </TouchableOpacity>
+    keyExtractor = (item, index) => index.toString()
     render() {
         return (
             <ActivityPanel
@@ -444,18 +450,11 @@ class CreateQuestionStep2Screen extends Component {
                             <Text style={styles.notSpecialist}>{constants.questions.specialist_not_found}</Text></View> : null}
 
                         <FlatList
-                            data={
-                                this.state.specialist
-                            }
+                            data={this.state.specialist}
                             extraData={this.state}
-                            keyExtractor={(item, index) => index}
+                            keyExtractor={this.keyExtractor}
 
-                            renderItem={({ item }) => <TouchableOpacity onPress={this.selectSpecialist.bind(this, item)}>
-                                <Text style={styles.txtSpecialistName}>
-                                    {item.specialist.name}
-                                </Text>
-                            </TouchableOpacity>
-                            }
+                            renderItem={this.renderItem}
                         />
                     </View>
                 </Modal>

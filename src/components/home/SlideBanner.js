@@ -128,25 +128,10 @@ class SlideBanner extends Component {
                 <Slide
                     style={{ position: 'relative' }}
                     indicatorStyle={
-                        {
-                            position: 'absolute',
-                            bottom: 100, left: 0, right: 0,
-                        }
+                        styles.indicator
                     }
-                    indicatorItemActive={{
-                        width: 8,
-                        height: 8,
-                        backgroundColor: 'transparent',
-                        borderRadius: 4,
-                        borderWidth: 1,
-                        borderColor: '#FFF',
-                    }}
-                    indicatorItem={{
-                        width: 8,
-                        height: 8,
-                        backgroundColor: '#FFF',
-                        borderRadius: 4,
-                    }}
+                    indicatorItemActive={styles.indicatorItemActive}
+                    indicatorItem={styles.indicatorItem}
                     // autoPlay={true} inteval={5000}
                     dataArray={this.state.ads} renderItemPager={(item, index) => {
                         return <View style={{ width: width, height: height }} >
@@ -174,6 +159,26 @@ class SlideBanner extends Component {
     }
 }
 const styles = StyleSheet.create({
+    indicatorItem: {
+        width: 8,
+        height: 8,
+        backgroundColor: '#FFF',
+        borderRadius: 4,
+    },
+    indicatorItemActive: {
+        width: 8,
+        height: 8,
+        backgroundColor: 'transparent',
+        borderRadius: 4,
+        borderWidth: 1,
+        borderColor: '#FFF',
+    },
+    indicator: {
+        position: 'absolute',
+        bottom: 100,
+        left: 0,
+        right: 0,
+    },
     containner:
     {
         position: "relative",
