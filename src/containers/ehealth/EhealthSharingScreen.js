@@ -36,7 +36,7 @@ class EhealthSharingScreen extends Component {
             return "";
         }
     }
-    viewResult = (item) => {
+    viewResult = (item) => () => {
         console.log(item);
         this.setState({ isLoading: true }, () => {
             resultUtils.getDetail(item.patientHistoryId, this.props.ehealth.hospital.hospital.id, item.id).then(result => {
@@ -104,19 +104,19 @@ class EhealthSharingScreen extends Component {
     }
     onShare = () => {
         if (!this.state.user) {
-            snackbar.show("Vui lòng chọn người cần chia sẻ", "danger");
+            snackbar.show(constants.msg.ehealth.please_select_people_share, "danger");
             return;
         }
         if (!this.state.fromDate) {
-            snackbar.show("Vui lòng chọn ngày bắt đầu", "danger");
+            snackbar.show(constants.msg.ehealth.please_select_date_start, "danger");
             return;
         }
         if (!this.state.toDate) {
-            snackbar.show("Vui lòng chọn ngày kết thúc", "danger");
+            snackbar.show(constants.msg.ehealth.please_select_date_end, "danger");
             return;
         }
         if (this.state.toDate < this.state.fromDate) {
-            snackbar.show("Ngày bắt đầu phải lớn hơn ngày kết thúc", "danger");
+            snackbar.show(constants.msg.ehealth.date_start_bigger_than_date_end, "danger");
             return;
         }
         connectionUtils.isConnected().then(s => {
@@ -126,15 +126,15 @@ class EhealthSharingScreen extends Component {
                 ehealthProvider.shareWithProfile(this.state.user.id, hospitalId, patientHistoryId, this.state.fromDate.format("yyyy-MM-dd HH:mm:ss"), this.state.toDate.format("yyyy-MM-dd HH:mm:ss")).then(res => {
                     this.setState({ isLoading: false }, () => {
                         if (res.code == 0 && res.data.status == 1) {
-                            snackbar.show("Chia sẻ thành công", "success");
+                            snackbar.show(constants.msg.ehealth.share_success, "success");
                             this.props.navigation.pop();
                         } else {
-                            snackbar.show("Chia sẻ không thành công", "danger");
+                            snackbar.show(constants.msg.ehealth.share_fail, "danger");
                         }
                     })
                 }).catch(err => {
                     this.setState({ isLoading: false }, () => {
-                        snackbar.show("Chia sẻ không thành công", "danger");
+                        snackbar.show(constants.msg.ehealth.share_fail, "danger");
                     });
                 })
             })
@@ -143,105 +143,129 @@ class EhealthSharingScreen extends Component {
         })
 
     }
+    onClickPickFormDate = (pickFromDate) => () => {
+        this.setState({
+            pickFromDate,
+            mode: "date",
+            toggelDateTimePickerVisible: true
+        })
+    }
+    onClickSearchProfile = () => {
+        this.props.navigation.navigate('searchProfile', {
+            onSelected: this.onSelectProfile
+        });
+    }
+    onConfirmDate = newDate => {
+        if (this.state.pickFromDate) {
+            if (this.state.mode == 'date' && this.state.fromDate) {
+                newDate.setHours(this.state.fromDate.getHours())
+                newDate.setMinutes(this.state.fromDate.getMinutes())
+                newDate.setSeconds(this.state.fromDate.getSeconds())
+            }
+            this.setState(
+                {
+                    toggelDateTimePickerVisible: false,
+                    fromDate: newDate
+                }, () => {
+                    if (this.state.mode == "date") {
+                        this.setState({
+                            mode: 'time',
+                            toggelDateTimePickerVisible: true
+                        })
+                    }
+                });
+        } else {
+            if (this.state.mode == 'date' && this.state.toDate) {
+                newDate.setHours(this.state.toDate.getHours())
+                newDate.setMinutes(this.state.toDate.getMinutes())
+                newDate.setSeconds(this.state.toDate.getSeconds())
+            }
+            this.setState(
+                {
+                    toggelDateTimePickerVisible: false,
+                    toDate: newDate
+                }, () => {
+                    if (this.state.mode == "date") {
+                        this.setState({
+                            mode: 'time',
+                            toggelDateTimePickerVisible: true
+                        })
+                    }
+                });
+        }
+    }
+    onCancelDate = () => {
+        this.setState({ toggelDateTimePickerVisible: false });
+    }
     render() {
         let item = this.state.history;
         return (
             <ActivityPanel style={styles.container}
                 // title="HỒ SƠ Y BẠ GIA ĐÌNH"
                 isLoading={this.state.isLoading}
-                title={"Chia sẻ y bạ"}
-                
-                
-                
-                
-        
+                title={constants.ehealth.share_ehealth}
             >
                 <ScrollView>
-                    <View style={{ margin: 10 }}>
+                    <View style={styles.group}>
                         <Card style={styles.cardStyle}>
-                            <TouchableOpacity style={{ alignItems: 'center' }} onPress={() => {
-                                this.viewResult(item)
-                            }}>
-                                <View style={{ width: 150, height: 100, alignItems: 'center' }}>
+                            <TouchableOpacity style={{ alignItems: 'center' }} onPress={this.viewResult(item)}>
+                                <View style={styles.containerImage}>
                                     <ScaledImage style={styles.img} height={100} width={150} source={this.getImage(item)}></ScaledImage>
                                 </View>
                                 <View style={styles.viewDetails}>
-                                    <Text style={{ color: '#479AE3', marginVertical: 10, fontSize: 14 }}>{this.getTime(item.timeGoIn)}</Text>
-                                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                    <Text style={styles.txtTimeGoIn}>{this.getTime(item.timeGoIn)}</Text>
+                                    <View style={styles.containerImageSmall}>
                                         <ScaledImage style={styles.img} height={20} width={20} source={this.getImageSmall(item)}></ScaledImage>
-                                        <Text style={{ marginLeft: 5, fontSize: 14, minHeight: 20, fontWeight: 'bold' }}>{item.serviceName}</Text>
+                                        <Text style={styles.txtServicesName}>{item.serviceName}</Text>
                                     </View>
                                 </View>
                             </TouchableOpacity>
                         </Card>
                         <Card>
-                            <TouchableOpacity onPress={() => {
-                                this.setState({
-                                    pickFromDate: true,
-                                    mode: "date",
-                                    toggelDateTimePickerVisible: true
-                                })
-                            }} style={{ flexDirection: 'row', alignItems: 'center', margin: 10 }}>
-                                <Icon name='calendar' style={{ color: '#00000080' }} />
-                                <Text style={{ marginHorizontal: 10 }}>
-                                    Hiệu lực từ:
-                                </Text>
+                            <TouchableOpacity onPress={this.onClickPickFormDate(true)} style={styles.buttonPickDate}>
+                                <Icon name='calendar' style={styles.iconCalendar} />
+                                <Text style={{ marginHorizontal: 10 }}>{constants.ehealth.validity_from}:</Text>
                                 {
                                     !this.state.fromDate ?
-                                        <Text style={{ fontStyle: 'italic', color: '#00000080', textAlign: 'right', flex: 1 }}>
-                                            Chọn ngày
-                                </Text> :
-                                        <Text style={{ fontWeight: 'bold', color: 'red', textAlign: 'right', flex: 1 }}>
+                                        <Text style={styles.txtSelectDate}>
+                                            {constants.ehealth.select_date}
+                                        </Text> :
+                                        <Text style={styles.txtDateFormat}>
                                             {this.state.fromDate.format("dd/MM/yyyy HH:mm")}
                                         </Text>
                                 }
                             </TouchableOpacity>
-                            <View style={{ height: 1, backgroundColor: '#caccac50' }} />
-                            <TouchableOpacity onPress={() => {
-                                this.setState({
-                                    pickFromDate: false,
-                                    mode: "date",
-                                    toggelDateTimePickerVisible: true
-                                })
-                            }} style={{ flexDirection: 'row', alignItems: 'center', margin: 10 }}>
-                                <Icon name='calendar' style={{ color: '#00000080' }} />
-                                <Text style={{ marginLeft: 10 }}>
-                                    Hiệu lực đến:
-                                </Text>
+                            <View style={styles.between} />
+                            <TouchableOpacity onPress={this.onClickPickFormDate(false)} style={styles.buttonPickDate}>
+                                <Icon name='calendar' style={styles.iconCalendar} />
+                                <Text style={{ marginLeft: 10 }}>{constants.ehealth.validity_to}:</Text>
                                 {
                                     !this.state.toDate ?
-                                        <Text style={{ fontStyle: 'italic', color: '#00000080', textAlign: 'right', flex: 1 }}>
-                                            Chọn ngày
-                                    </Text> :
-                                        <Text style={{ fontWeight: 'bold', color: 'red', textAlign: 'right', flex: 1 }}>
+                                        <Text style={styles.txtSelectDate}>
+                                            {constants.ehealth.select_date}
+                                        </Text> :
+                                        <Text style={styles.txtDateFormat}>
                                             {this.state.toDate.format("dd/MM/yyyy HH:mm")}
                                         </Text>
 
                                 }
                             </TouchableOpacity>
-                            <View style={{ height: 1, backgroundColor: '#caccac50' }} />
-                            <TouchableOpacity onPress={() => {
-                                this.props.navigation.navigate('searchProfile', {
-                                    onSelected: this.onSelectProfile
-                                });
-                            }} style={{ flexDirection: 'row', alignItems: 'center', margin: 10 }}>
-                                <Icon name='person' style={{ color: '#00000080' }} />
-                                <Text style={{ marginLeft: 10 }}>
-                                    Người nhận:
-                                </Text>
+                            <View style={styles.between} />
+                            <TouchableOpacity onPress={this.onClickSearchProfile} style={styles.buttonPickDate}>
+                                <Icon name='person' style={styles.iconCalendar} />
+                                <Text style={{ marginLeft: 10 }}>{constants.ehealth.reciver}:</Text>
                                 {
                                     !this.state.user ?
-                                        <Text style={{ fontStyle: 'italic', color: '#00000080', textAlign: 'right', flex: 1 }}>
-                                            Chọn thành viên
-                                    </Text> :
-                                        <Text style={{ fontWeight: 'bold', color: 'red', textAlign: 'right', flex: 1 }}>
+                                        <Text style={styles.txtSelectDate}>{constants.ehealth.select_member}</Text>
+                                        :
+                                        <Text style={styles.txtDateFormat}>
                                             {this.state.user.name}
                                         </Text>
                                 }
                             </TouchableOpacity>
                         </Card>
                         <TouchableOpacity onPress={this.onShare} style={styles.viewBtn}>
-                            <Text style={styles.txCheckResult}>{'CHIA SẺ'}</Text>
+                            <Text style={styles.txCheckResult}>{constants.ehealth.share}</Text>
                         </TouchableOpacity>
 
                     </View>
@@ -250,50 +274,10 @@ class EhealthSharingScreen extends Component {
                 <DateTimePicker
                     mode={this.state.mode}
                     isVisible={this.state.toggelDateTimePickerVisible}
-                    onConfirm={newDate => {
-                        if (this.state.pickFromDate) {
-                            if (this.state.mode == 'date' && this.state.fromDate) {
-                                newDate.setHours(this.state.fromDate.getHours())
-                                newDate.setMinutes(this.state.fromDate.getMinutes())
-                                newDate.setSeconds(this.state.fromDate.getSeconds())
-                            }
-                            this.setState(
-                                {
-                                    toggelDateTimePickerVisible: false,
-                                    fromDate: newDate
-                                }, () => {
-                                    if (this.state.mode == "date") {
-                                        this.setState({
-                                            mode: 'time',
-                                            toggelDateTimePickerVisible: true
-                                        })
-                                    }
-                                });
-                        } else {
-                            if (this.state.mode == 'date' && this.state.toDate) {
-                                newDate.setHours(this.state.toDate.getHours())
-                                newDate.setMinutes(this.state.toDate.getMinutes())
-                                newDate.setSeconds(this.state.toDate.getSeconds())
-                            }
-                            this.setState(
-                                {
-                                    toggelDateTimePickerVisible: false,
-                                    toDate: newDate
-                                }, () => {
-                                    if (this.state.mode == "date") {
-                                        this.setState({
-                                            mode: 'time',
-                                            toggelDateTimePickerVisible: true
-                                        })
-                                    }
-                                });
-                        }
-                    }}
-                    onCancel={() => {
-                        this.setState({ toggelDateTimePickerVisible: false });
-                    }}
-                    cancelTextIOS={"Hủy bỏ"}
-                    confirmTextIOS={"Xác nhận"}
+                    onConfirm={this.onConfirmDate}
+                    onCancel={this.onCancelDate}
+                    cancelTextIOS={constants.actionSheet.cancel2}
+                    confirmTextIOS={constants.actionSheet.confirm}
                     minimumDate={
                         this.state.pickFromDate ? null : this.state.fromDate
                     }
@@ -309,6 +293,52 @@ class EhealthSharingScreen extends Component {
     }
 }
 const styles = StyleSheet.create({
+    between: {
+        height: 1,
+        backgroundColor: '#caccac50'
+    },
+    txtDateFormat: {
+        fontWeight: 'bold',
+        color: 'red',
+        textAlign: 'right',
+        flex: 1
+    },
+    txtSelectDate: {
+        fontStyle: 'italic',
+        color: '#00000080',
+        textAlign: 'right',
+        flex: 1
+    },
+    iconCalendar: { color: '#00000080' },
+    buttonPickDate: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        margin: 10
+    },
+    txtServicesName: {
+        marginLeft: 5,
+        fontSize: 14,
+        minHeight: 20,
+        fontWeight: 'bold'
+    },
+    containerImageSmall: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    txtTimeGoIn: {
+        color: '#479AE3',
+        marginVertical: 10,
+        fontSize: 14
+    },
+    containerImage: {
+        width: 150,
+        height: 100,
+        alignItems: 'center'
+    },
+    group: {
+        margin: 10
+    },
     container: {
         flex: 1,
         backgroundColor: '#F9FAFB'
@@ -339,7 +369,7 @@ const styles = StyleSheet.create({
         // top:-50
 
     },
-    
+
     imageStyle: { borderRadius: 30, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' },
     imgLoad: {
         alignSelf: 'center',

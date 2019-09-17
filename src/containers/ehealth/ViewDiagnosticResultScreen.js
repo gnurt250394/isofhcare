@@ -38,15 +38,15 @@ class ViewCheckupResultScreen extends Component {
             detailsHospital: '',
         }
     }
-
+    goBack = () => {
+        this.props.navigation.pop();
+    }
     renderDetails = () => {
         return (
             <ScrollView ref={ref => this.flListDate = ref} showsVerticalScrollIndicator={false} style={styles.container}>
                 <ProfileInfomation2 title={constants.title.result_ehealth_image} resultDetail={this.state.resultDetail} />
                 <DiagnosticResult showTitle={false} result={this.state.result} />
-                <TouchableOpacity style={styles.btnFinish} onPress={() => {
-                    this.props.navigation.pop();
-                }}><Text style={styles.txFinish}>{constants.ehealth.view_finish}</Text>
+                <TouchableOpacity style={styles.btnFinish} onPress={this.goBack}><Text style={styles.txFinish}>{constants.ehealth.view_finish}</Text>
                 </TouchableOpacity>
                 <View style={styles.viewFooter} />
             </ScrollView>
@@ -55,7 +55,7 @@ class ViewCheckupResultScreen extends Component {
     render() {
 
         return (
-            <ActivityPanel style={styles.container} title={constants.title.ehealth_details}isLoading={this.state.isLoading}>
+            <ActivityPanel style={styles.container} title={constants.title.ehealth_details} isLoading={this.state.isLoading}>
                 {this.renderDetails()}
             </ActivityPanel>
         );
@@ -63,10 +63,10 @@ class ViewCheckupResultScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-    container:{
-        flex:1
+    container: {
+        flex: 1
     },
-    btnFinish:{
+    btnFinish: {
         alignSelf: 'center',
         width: 252,
         maxWidth: DEVICE_WIDTH,
@@ -76,8 +76,8 @@ const styles = StyleSheet.create({
         marginVertical: 20,
         padding: 10, alignItems: 'center'
     },
-    txFinish:{ fontWeight: 'bold', color: '#FFF', fontSize: 17 },
-    viewFooter:{ fontWeight: 'bold', color: '#FFF', fontSize: 17 }
+    txFinish: { fontWeight: 'bold', color: '#FFF', fontSize: 17 },
+    viewFooter: { fontWeight: 'bold', color: '#FFF', fontSize: 17 }
 });
 
 function mapStateToProps(state) {

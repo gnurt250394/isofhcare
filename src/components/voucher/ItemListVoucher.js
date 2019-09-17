@@ -26,6 +26,7 @@ class ItemListVoucher extends Component {
         }
     }
     defaultImage = () => {
+        const icSupport = require("@images/new/user.png");
         return (
             <ScaleImage source={icSupport} width={100} />
         );

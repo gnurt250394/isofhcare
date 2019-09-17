@@ -63,22 +63,24 @@ class DetailQuestionScreen extends Component {
     componentDidMount() {
         this.onRefresh();
     }
+    showImage = (index) => () => {
+        this.props.navigation.navigate("photoViewer", {
+            urls: images.map(item => {
+                return item.absoluteUrl()
+            }), index
+        });
+    }
     renderImages(post) {
         var image = post.images;
         if (image) {
             var images = image.split(",");
-            return (<View><Text style={[styles.moreInfo, { marginTop: 20 }]}>Hình ảnh:</Text>
-                <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 10 }}>
+            return (<View>
+                <Text style={[styles.moreInfo, { marginTop: 20 }]}>{constants.image}:</Text>
+                <View style={styles.containerListImage}>
                     {
-                        images.map((item, index) => <TouchableOpacity onPress={() => {
-                            this.props.navigation.navigate("photoViewer", {
-                                urls: images.map(item => {
-                                    return item.absoluteUrl()
-                                }), index
-                            });
-                        }} key={index} style={{ marginRight: 10, borderRadius: 10, marginBottom: 10, width: 70, height: 70 }}>
+                        images.map((item, index) => <TouchableOpacity onPress={this.showImage(item)} key={index} style={styles.buttonShowImage}>
                             <Image
-                                style={{ width: 70, height: 70, borderRadius: 10 }}
+                                style={styles.image}
                                 source={{
                                     uri: item.absoluteUrl()
                                 }}
@@ -111,7 +113,7 @@ class DetailQuestionScreen extends Component {
                             userCommentCount: this.state.userCommentCount + 1,
                             dataComment: [...listComment]
                         });
-                        snackbar.show("Bạn đã gửi ý kiến thành công", "success");
+                        snackbar.show(constants.msg.question.send_idea_success, "success");
                     }
                 }).catch(e => {
                     this.setState({ isLoading: false });
@@ -142,9 +144,9 @@ class DetailQuestionScreen extends Component {
                         let post = this.state.post;
                         post.post.status = 6;
                         this.setState({ isLoading: false, post })
-                        snackbar.show("Bạn đã gửi đánh giá thành công", "success");
+                        snackbar.show(constants.msg.question.send_rate_success, "success");
                     }).catch(e => {
-                        snackbar.show("Gửi đánh giá không thành công", "danger");
+                        snackbar.show(constants.msg.question.send_rate_fail, "danger");
                         this.setState({ isLoading: false })
                     });
                 });
@@ -183,12 +185,12 @@ class DetailQuestionScreen extends Component {
         const source = item.user && item.user.avatar ? { uri: item.user.avatar.absoluteUrl() } : require("@images/new/user.png");
         return <View key={key}>
             {item.user &&
-                <TouchableOpacity onPress={() => this.onNavigateDetails(item)} style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Image source={source} style={{ width: 50, height: 50, borderRadius: 25, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }} resizeMode="cover" />
+                <TouchableOpacity onPress={() => this.onNavigateDetails(item)} style={styles.buttonShowDetails}>
+                    <Image source={source} style={styles.imgDetails} resizeMode="cover" />
                     <View style={{ marginLeft: 10 }}>
-                        <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 5 }}>{item.user.name}</Text>
+                        <Text style={styles.txtName}>{item.user.name}</Text>
                         {item.user && item.user.id != this.props.userApp.currentUser.id ?
-                            <View style={{ width:120  }}>
+                            <View style={{ width: 120 }}>
                                 <StarRating
                                     disabled={true}
                                     starSize={20}
@@ -203,67 +205,67 @@ class DetailQuestionScreen extends Component {
                     </View>
                 </TouchableOpacity>
             }
-            <View style={{ position: 'relative', marginTop: 10 }}>
+            <View style={styles.containerComment}>
                 {
                     ((key != -1 || (key == -1 && this.state.commentCount > 0)) && key != size - 1) &&
-                    <Dash style={{ width: 1, position: 'absolute', top: 0, bottom: 7, flexDirection: 'column', marginLeft: 25 }} dashStyle={{ backgroundColor: '#cacaca' }} />
+                    <Dash style={styles.dash} dashStyle={{ backgroundColor: '#cacaca' }} />
                 }
-                <View style={{ marginLeft: 37, marginBottom: 20 }}>
-                    <Text style={{ color: '#00000038' }}>
+                <View style={styles.contentComment}>
+                    <Text style={styles.txtTime}>
                         {this.getTime(item.comment.createdDate)}
                     </Text>
-                    <Text style={{ marginTop: 15, fontSize: 16 }}>{item.comment.content}</Text>
+                    <Text style={styles.txtComment}>{item.comment.content}</Text>
                 </View>
             </View>
         </View>
     }
-    
+    onChangeText = state => value => {
+        this.setState({ [state]: value })
+    }
+    onValidateQuestion = (valid, messages) => {
+        if (valid) {
+            this.setState({ contentError: "" });
+        }
+        else {
+            this.setState({ contentError: messages });
+        }
+    }
     renderFormSendWithoutDiagnostic() {
         return (
-            
+
             <View style={{ marginTop: 20 }}>
-            <Text style={{ color: 'rgb(155,155,155)' }}>Bạn còn {(num => { let x = 3 - num; if (x < 0) return 0; return x }).call(this, this.state.post.post.numberCommentUser)} lượt hỏi</Text>
-            <View style={{
-                marginTop: 5,
-                flexDirection: 'row', borderRadius: 6, borderColor: "#cacaca", borderWidth: 1
-            }}>
-                <Form ref={ref => this.form = ref} style={{ flex: 1, marginTop: 10 }}>
-                    <TextField placeholder={"Viết trả lời"}
-                        inputStyle={[{ maxHeight: 200, textAlignVertical: 'top', paddingLeft: 10, paddingBottom: 5, paddingRight: 10 }]}
-                        errorStyle={[styles.errorStyle, { marginLeft: 10, marginBottom: 10 }]}
-                        onChangeText={(s) => this.setState({ content: s })}
-                        value={this.state.content}
-                        multiline={true}
-                        hideError={true}
-                        validate={{
-                            rules: {
-                                required: true,
-                                maxlength: 2000
-                            },
-                            messages:
-                            {
-                                required: "Câu trả lời bắt buộc phải nhập",
-                                maxlength: "Không cho phép nhập quá 2000 ký tự"
-                            }
-                        }}
-                        onValidate={(valid, messages) => {
-                            if (valid) {
-                                this.setState({ contentError: "" });
-                            }
-                            else {
-                                this.setState({ contentError: messages });
-                            }
-                        }}
-                    />
-                </Form>
-                
-                <TouchableOpacity style={{ padding: 20 }} onPress={this.userSend.bind(this)}>
-                    <ScaleImage width={22} source={this.state.content && this.state.content.trim().length > 0 ? require("@images/new/send2.png") : require("@images/new/send.png")} />
-                </TouchableOpacity>
+                <Text style={{ color: 'rgb(155,155,155)' }}>Bạn còn {(num => { let x = 3 - num; if (x < 0) return 0; return x }).call(this, this.state.post.post.numberCommentUser)} lượt hỏi</Text>
+                <View style={styles.containerFormReply}>
+                    <Form ref={ref => this.form = ref} style={styles.form}>
+                        <TextField placeholder={constants.questions.input_answer}
+                            inputStyle={[styles.inputAnswer]}
+                            errorStyle={[styles.errorStyle, styles.errorInput]}
+                            onChangeText={this.onChangeText('content')}
+                            value={this.state.content}
+                            multiline={true}
+                            hideError={true}
+                            validate={{
+                                rules: {
+                                    required: true,
+                                    maxlength: 2000
+                                },
+                                messages:
+                                {
+                                    required: constants.questions.question_require,
+                                    maxlength: constants.msg.question.not_allow_2000_keyword
+                                }
+                            }}
+                            onValidate={this.onValidateQuestion}
+                        />
+                    </Form>
+
+                    <TouchableOpacity style={{ padding: 20 }} onPress={this.userSend.bind(this)}>
+                        <ScaleImage width={22} source={this.state.content && this.state.content.trim().length > 0 ? require("@images/new/send2.png") : require("@images/new/send.png")} />
+                    </TouchableOpacity>
+                </View>
+                <Text style={[styles.errorStyle]}>{this.state.contentError}</Text>
+
             </View>
-            <Text style={[styles.errorStyle]}>{this.state.contentError}</Text>
-         
-        </View>
         );
     }
 
@@ -277,6 +279,13 @@ class DetailQuestionScreen extends Component {
         totalTime = new Date() - lastInteractive;
         return totalTime > 2 * 24 * 60 * 60 * 1000;
     }
+    confirmAnswer = (state) => () => {
+        connectionUtils.isConnected().then(s => {
+            this.setState({ confirmed: true, [state]: true })
+        }).catch(e => {
+            snackbar.show(constants.msg.app.not_internet, "danger");
+        })
+    }
     renderViewReview() {
         if (this.state.post.post.status == 3) {
             if (this.state.userCommentCount == 3 || this.isFinish())
@@ -286,27 +295,19 @@ class DetailQuestionScreen extends Component {
                     {
                         !this.state.confirmed &&
                         <View>
-                            <Text style={{ textAlign: 'center', marginTop: 39, fontSize: 16 }}>Bạn có hài lòng với câu trả lời này không?</Text>
-                            <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 20 }}>
-                                <TouchableOpacity onPress={() => {
-                                    connectionUtils.isConnected().then(s => {
-                                        this.setState({ confirmed: true, writeQuestion: true })
-                                    }).catch(e => {
-                                        snackbar.show(constants.msg.app.not_internet, "danger");
-                                    })
-                                }} style={{ width: 130, borderWidth: 1, borderColor: '#00000044', borderRadius: 6, alignItems: 'center', paddingTop: 5, paddingBottom: 5 }}><Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 5 }}>Không</Text><Text style={{ color: '#cacaca' }}>muốn hỏi thêm</Text></TouchableOpacity>
-                                <TouchableOpacity onPress={() => {
-                                    connectionUtils.isConnected().then(s => {
-                                        this.setState({ confirmed: true, rating: true })
-                                    }).catch(e => {
-                                        snackbar.show(constants.msg.app.not_internet, "danger");
-                                    })
-                                }} style={{ width: 130, backgroundColor: 'rgb(2,195,154)', borderRadius: 6, marginLeft: 10, alignItems: 'center', paddingTop: 5, paddingBottom: 5 }}><Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 5, color: '#FFF' }}>Có</Text><Text style={{ color: '#fff' }}>cảm ơn bác sĩ</Text></TouchableOpacity>
+                            <Text style={styles.txtAskAnswer}>{constants.msg.question.you_happy_with_answer}</Text>
+                            <View style={styles.containerButtonConfirm}>
+                                <TouchableOpacity onPress={this.confirmAnswer('writeQuestion')} style={styles.buttonNotAnswer}>
+                                    <Text style={styles.txtNotAnswer}>Không</Text><Text style={{ color: '#cacaca' }}>muốn hỏi thêm</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={this.confirmAnswer('rating')} style={styles.buttonAnswer}>
+                                    <Text style={[styles.txtNotAnswer, { color: '#FFF' }]}>Có</Text><Text style={{ color: '#fff' }}>cảm ơn bác sĩ</Text>
+                                </TouchableOpacity>
                             </View>
                         </View>
                     }
                     {
-                     this.state.writeQuestion && this.renderFormSendWithoutDiagnostic()
+                        this.state.writeQuestion && this.renderFormSendWithoutDiagnostic()
                     }
                 </View>);
         }
@@ -319,14 +320,14 @@ class DetailQuestionScreen extends Component {
             (this.state.post.post.status == 3
                 && (this.state.userCommentCount >= 3 ||
                     this.isFinish())))
-            return (<View style={{ flexDirection: 'row', padding: 20, borderTopColor: '#cacaca', borderTopWidth: 0.5}}>
-                <Text style={{ flex: 1,fontWeight:'bold' }}>Đánh giá</Text>
+            return (<View style={styles.containerRating}>
+                <Text style={styles.txtRating}>{constants.questions.rating}</Text>
                 <StarRating
                     disabled={this.state.post.post.status == 6 ? true : false}
                     starSize={30}
                     maxStars={5}
                     rating={this.state.star}
-                    starStyle={{ marginLeft:5 }}
+                    starStyle={{ marginLeft: 5 }}
                     fullStarColor={"#fbbd04"}
                     emptyStarColor={"#fbbd04"}
                     selectedStar={(rating) => this.onStarRatingPress(rating)}
@@ -335,10 +336,11 @@ class DetailQuestionScreen extends Component {
             </View>);
         return null;
     }
+    onShowMore = () => { this.setState({ showMore: !this.state.showMore }) }
     showMoreInfo() {
-        return <View style={{ backgroundColor: 'rgb(231,241,239)', borderRadius: 6, marginTop: 26, paddingTop: 13, paddingBottom: 13, paddingLeft: 20, paddingRight: 20 }}>
-            <TouchableOpacity onPress={() => { this.setState({ showMore: !this.state.showMore }) }} style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Text style={{ color: 'rgba(0,141,111,0.70)', fontWeight: 'bold', fontSize: 16, flex: 1 }}>Thông tin bổ sung</Text>
+        return <View style={styles.containerShowMore}>
+            <TouchableOpacity onPress={this.onShowMore} style={styles.buttonShowMore}>
+                <Text style={styles.txtShowMore}>{constants.questions.info_complementary}</Text>
                 <ScaleImage width={12} source={this.state.showMore ? require("@images/new/down.png") : require("@images/new/up.png")} />
             </TouchableOpacity>
             {
@@ -346,27 +348,27 @@ class DetailQuestionScreen extends Component {
                 <View style={{ marginTop: 15 }}>
                     {this.state.post.specialist &&
                         <Text style={styles.moreInfo}>
-                            Chuyên khoa: {this.state.post.specialist.name}
+                            {constants.questions.specialist}: {this.state.post.specialist.name}
                         </Text>
                     }
                     {this.state.post.post.age ?
                         <Text style={styles.moreInfo}>
-                            Tuổi: {this.state.post.post.age}
+                            {constants.questions.age}: {this.state.post.post.age}
                         </Text> : null
                     }
                     <Text style={styles.moreInfo}>
-                        Giới tính: {this.state.post.post.gender == 1 ? "Nam" : "Nữ"}
+                        {constants.gender}: {this.state.post.post.gender == 1 ? "Nam" : "Nữ"}
                     </Text>
                     {
                         this.state.post.post.diseaseHistory != 0 ?
                             <Text style={[styles.moreInfo, { lineHeight: 25 }]}>
-                                Tiền sử bệnh: {disease.filter(x => (x.value & this.state.post.post.diseaseHistory) == x.value).map((item, index) => { return item.text }).join(", ")}
+                                {constants.questions.anamnesis}: {disease.filter(x => (x.value & this.state.post.post.diseaseHistory) == x.value).map((item, index) => { return item.text }).join(", ")}
                             </Text> : null
                     }
                     {
                         this.state.post.post.otherContent ? <View>
-                            <Text style={styles.moreInfo}>Thông tin khác:</Text>
-                            <Text style={{ fontSize: 16, marginTop: 6, color: '#00000064' }}>
+                            <Text style={styles.moreInfo}>{constants.questions.other_info}:</Text>
+                            <Text style={styles.txtOtherContent}>
                                 {this.state.post.post.otherContent}
                             </Text>
                         </View> : null
@@ -388,19 +390,19 @@ class DetailQuestionScreen extends Component {
     renderStatusPost() {
         if (this.state.post.post.status == 1 || this.state.post.post.status == 2 || this.state.post.post.status == 5) {
             return (<View style={{ marginTop: 25 }}>
-                <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'rgb(0,141,111)' }}>Trạng thái: Chờ trả lời</Text>
+                <Text style={styles.txtStatus}>{constants.questions.status}: {constants.questions.content_status.wait}</Text>
             </View>);
         }
 
         if (this.state.post.post.status == 4) {
             return <View>
                 <View style={{ marginTop: 25 }}>
-                    <Text style={{ fontSize: 15, color: 'rgb(106,1,54)' }}>Trạng thái: Đã bị từ chối</Text>
+                    <Text style={styles.txtStatusReject}>{constants.questions.status}: {constants.questions.content_status.reject}</Text>
                 </View>
                 {
                     this.state.post.post.reject ?
-                        <View style={{ backgroundColor: 'rgba(106,1,54,0.11)', padding: 17, marginTop: 13 }}>
-                            <Text style={{ fontWeight: 'bold', color: 'rgb(106,1,54)' }}>Lý do từ chối: {this.state.post.post.reject}</Text>
+                        <View style={styles.containerReject}>
+                            <Text style={styles.txtContentReject}>{constants.questions.cause_reject}: {this.state.post.post.reject}</Text>
                         </View> : null
                 }
             </View>
@@ -410,15 +412,11 @@ class DetailQuestionScreen extends Component {
     }
     renderDiagnosticView() {
         return this.state.post.post.diagnose ?
-            <View style={{
-                marginTop: 16,
-                flexDirection: 'row',
-                backgroundColor: 'rgb(239,240,241)', paddingTop: 14, paddingBottom: 14, paddingLeft: 18, paddingRight: 10
-            }}>
-                <View style={{ width: 16, height: 16, backgroundColor: 'rgb(2,195,154)', borderRadius: 8, marginTop: 2 }} />
-                <View style={{ flex: 1, marginLeft: 10 }}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 5 }}>
-                        <Text style={{ fontWeight: 'bold', fontSize: 16, flex: 1 }}>Chẩn đoán ban đầu</Text>
+            <View style={styles.containerDiagnose}>
+                <View style={styles.viewHeader} />
+                <View style={styles.contentDiagnose}>
+                    <View style={styles.groupDiagnose}>
+                        <Text style={styles.txtDiagnoseInitial}>Chẩn đoán ban đầu</Text>
                     </View>
                     <Text>{this.state.post.post.diagnose}</Text>
                 </View>
@@ -426,7 +424,7 @@ class DetailQuestionScreen extends Component {
     }
     renderShowMoreComment() {
         return this.state.loadingComment ?
-            <View style={{ alignItems: 'center', padding: 10 }}>
+            <View style={styles.loading}>
                 <ActivityIndicator
                     size={'small'}
                     color={'gray'}
@@ -434,10 +432,10 @@ class DetailQuestionScreen extends Component {
             </View> :
             !this.state.showComment ?
                 this.state.commentCount != 0 ?
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <View style={{ width: 12, height: 12, borderRadius: 6, backgroundColor: 'rgb(155,155,155)', marginLeft: 20 }} />
+                    <View style={styles.groupComment}>
+                        <View style={styles.lineTopComment} />
                         <TouchableOpacity onPress={this.showAllComment.bind(this)}>
-                            <Text style={{ color: 'rgb(10,155,225)', marginLeft: 10 }} > Xem thêm {this.state.commentCount} trả lời ></Text>
+                            <Text style={styles.txtSeeMore} > Xem thêm {this.state.commentCount} trả lời ></Text>
                         </TouchableOpacity>
                     </View> :
                     null
@@ -497,16 +495,16 @@ class DetailQuestionScreen extends Component {
         // const post = this.props.navigation.getParam("post", null);
         let { post } = this.state;
         if (!post.post) {
-            snackbar.show("Bài viết không tồn tại", "danger");
+            snackbar.show(constants.msg.notification.ports_not_found, "danger");
             this.props.navigation.pop();
         }
 
         return (
-            <ActivityPanel style={{ flex: 1 }} title="Tư vấn online" showFullScreen={true} isLoading={this.state.isLoading}>
+            <ActivityPanel style={styles.flex} title={constants.title.advisory_online} showFullScreen={true} isLoading={this.state.isLoading}>
                 {
                     post.post &&
-                    <KeyboardAwareScrollView style={{ flex: 1 }}>
-                        <View style={{ padding: 20, flex: 1 }}>
+                    <KeyboardAwareScrollView style={styles.flex}>
+                        <View style={styles.container}>
                             <ScrollView
                                 refreshControl={<RefreshControl
                                     refreshing={this.state.refreshing}
@@ -517,11 +515,11 @@ class DetailQuestionScreen extends Component {
                                 keyboardShouldPersistTaps="handled"
                                 keyboardDismissMode='on-drag'
                             >
-                                <View style={{ flexDirection: "row", alignItems: 'center' }}>
-                                    <View style={{ flex: 1 }} ><Text style={{ fontSize: 18, fontWeight: 'bold' }}>{post.author ? post.author.name : ""}</Text></View>
-                                    <View><Text style={{ color: '#00000038' }}>{this.getTime(post.post.createdDate)}</Text></View>
+                                <View style={styles.containerPost}>
+                                    <View style={styles.flex} ><Text style={styles.txtAuthor}>{post.author ? post.author.name : ""}</Text></View>
+                                    <View><Text style={styles.txtTime}>{this.getTime(post.post.createdDate)}</Text></View>
                                 </View>
-                                <Text style={{ color: '#00000064', marginTop: 7 }}>
+                                <Text style={styles.txtContentPost}>
                                     {this.state.post.post.content}
                                 </Text>
                                 {
@@ -573,6 +571,235 @@ class DetailQuestionScreen extends Component {
 
 
 const styles = StyleSheet.create({
+    txtContentPost: {
+        color: '#00000064',
+        marginTop: 7
+    },
+    txtAuthor: {
+        fontSize: 18,
+        fontWeight: 'bold'
+    },
+    containerPost: {
+        flexDirection: "row",
+        alignItems: 'center'
+    },
+    container: {
+        padding: 20,
+        flex: 1
+    },
+    flex: { flex: 1 },
+    txtSeeMore: {
+        color: 'rgb(10,155,225)',
+        marginLeft: 10
+    },
+    lineTopComment: {
+        width: 12,
+        height: 12,
+        borderRadius: 6,
+        backgroundColor: 'rgb(155,155,155)',
+        marginLeft: 20
+    },
+    groupComment: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    loading: {
+        alignItems: 'center',
+        padding: 10
+    },
+    txtDiagnoseInitial: {
+        fontWeight: 'bold',
+        fontSize: 16,
+        flex: 1
+    },
+    groupDiagnose: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 5
+    },
+    contentDiagnose: {
+        flex: 1,
+        marginLeft: 10
+    },
+    viewHeader: {
+        width: 16,
+        height: 16,
+        backgroundColor: 'rgb(2,195,154)',
+        borderRadius: 8,
+        marginTop: 2
+    },
+    containerDiagnose: {
+        marginTop: 16,
+        flexDirection: 'row',
+        backgroundColor: 'rgb(239,240,241)',
+        paddingTop: 14,
+        paddingBottom: 14,
+        paddingLeft: 18,
+        paddingRight: 10
+    },
+    txtContentReject: {
+        fontWeight: 'bold',
+        color: 'rgb(106,1,54)'
+    },
+    containerReject: {
+        backgroundColor: 'rgba(106,1,54,0.11)',
+        padding: 17,
+        marginTop: 13
+    },
+    txtStatusReject: {
+        fontSize: 15,
+        color: 'rgb(106,1,54)'
+    },
+    txtStatus: {
+        fontSize: 15,
+        fontWeight: 'bold',
+        color: 'rgb(0,141,111)'
+    },
+    txtOtherContent: {
+        fontSize: 16,
+        marginTop: 6,
+        color: '#00000064'
+    },
+    txtShowMore: {
+        color: 'rgba(0,141,111,0.70)',
+        fontWeight: 'bold',
+        fontSize: 16,
+        flex: 1
+    },
+    buttonShowMore: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    containerShowMore: {
+        backgroundColor: 'rgb(231,241,239)',
+        borderRadius: 6,
+        marginTop: 26,
+        paddingTop: 13,
+        paddingBottom: 13,
+        paddingLeft: 20,
+        paddingRight: 20
+    },
+    txtRating: {
+        flex: 1,
+        fontWeight: 'bold'
+    },
+    containerRating: {
+        flexDirection: 'row',
+        padding: 20,
+        borderTopColor: '#cacaca',
+        borderTopWidth: 0.5
+    },
+    txtNotAnswer: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 5
+    },
+    buttonAnswer: {
+        width: 130,
+        backgroundColor: 'rgb(2,195,154)',
+        borderRadius: 6,
+        marginLeft: 10,
+        alignItems: 'center',
+        paddingTop: 5,
+        paddingBottom: 5
+    },
+    buttonNotAnswer: {
+        width: 130,
+        borderWidth: 1,
+        borderColor: '#00000044',
+        borderRadius: 6,
+        alignItems: 'center',
+        paddingTop: 5,
+        paddingBottom: 5
+    },
+    containerButtonConfirm: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginTop: 20
+    },
+    txtAskAnswer: {
+        textAlign: 'center',
+        marginTop: 39,
+        fontSize: 16
+    },
+    errorInput: {
+        marginLeft: 10,
+        marginBottom: 10
+    },
+    inputAnswer: {
+        maxHeight: 200,
+        textAlignVertical: 'top',
+        paddingLeft: 10,
+        paddingBottom: 5,
+        paddingRight: 10
+    },
+    form: {
+        flex: 1,
+        marginTop: 10
+    },
+    containerFormReply: {
+        marginTop: 5,
+        flexDirection: 'row',
+        borderRadius: 6,
+        borderColor: "#cacaca",
+        borderWidth: 1
+    },
+    txtComment: {
+        marginTop: 15,
+        fontSize: 16
+    },
+    txtTime: {
+        color: '#00000038'
+    },
+    contentComment: {
+        marginLeft: 37,
+        marginBottom: 20
+    },
+    dash: {
+        width: 1,
+        position: 'absolute',
+        top: 0,
+        bottom: 7,
+        flexDirection: 'column',
+        marginLeft: 25
+    },
+    containerComment: {
+        position: 'relative',
+        marginTop: 10
+    },
+    txtName: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 5
+    },
+    imgDetails: {
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        borderWidth: 0.5,
+        borderColor: 'rgba(151, 151, 151, 0.29)'
+    },
+    buttonShowDetails: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    image: {
+        width: 70,
+        height: 70,
+        borderRadius: 10
+    },
+    buttonShowImage: {
+        marginRight: 10,
+        borderRadius: 10,
+        marginBottom: 10,
+        width: 70,
+        height: 70
+    },
+    containerListImage: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        marginTop: 10
+    },
     moreInfo:
     {
         color: '#00000080', fontSize: 15, fontWeight: 'bold', marginTop: 7
