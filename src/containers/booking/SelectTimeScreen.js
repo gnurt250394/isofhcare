@@ -53,6 +53,9 @@ class SelectTimeScreen extends Component {
     selectDay(day) {
         let data = this.state.schedules[day].schedules || [];
         let listTime = [];
+        this.setState({
+            allowBooking:false
+        })
         if (this.state.schedules[day].noSchedule) {
             let date = new Date(new Date(day).format("yyyy-MM-dd"));
             // console.log(date);
@@ -250,6 +253,9 @@ class SelectTimeScreen extends Component {
                 })
             }
         }
+        this.setState({
+            allowBooking: false
+        })
     }
 
     selectTime = (item) => () => {
@@ -287,6 +293,8 @@ class SelectTimeScreen extends Component {
     }
 
     renderTimePicker(fromHour, toHour, label) {
+        console.log(this.state.schedule, this.state.listTime, 'this.state.listTime')
+
         return (
             (this.state.listTime.filter(item => new Date(item.time).format("HH") >= fromHour && new Date(item.time).format("HH") < toHour).length) ?
                 <View style={{ marginTop: 10 }}>
@@ -323,6 +331,8 @@ class SelectTimeScreen extends Component {
                 this.selectDay(this.state.dateString);
             })
         }
+        this.setState({ allowBooking: false })
+
     }
     onChangeMonth = (month) => {
         this.setState({ latestTime: new Date(month.dateString) }, () => {
