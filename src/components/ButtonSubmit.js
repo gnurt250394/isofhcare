@@ -91,7 +91,7 @@ export default class ButtonSubmit extends Component {
 						onPress={this.onPress}
 						activeOpacity={1} >
 						{this.state.isLoading ?
-							<View style={{ paddingLeft: 15, paddingRight: 15 }}>
+							<View style={styles.containerImage}>
 								<Image source={spinner} style={styles.image} />
 							</View>
 							:
@@ -110,6 +110,10 @@ ButtonSubmit.propTypes = {
 }
 
 const styles = StyleSheet.create({
+	containerImage: {
+		paddingLeft: 15,
+		paddingRight: 15
+	},
 	container: {
 		marginTop: 20,
 		alignItems: 'center',

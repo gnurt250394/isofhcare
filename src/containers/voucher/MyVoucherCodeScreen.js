@@ -3,6 +3,7 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native
 import voucherProvider from '@data-access/voucher-provider'
 import ItemListVoucher from '@components/voucher/ItemListVoucher';
 import snackbar from '@utils/snackbar-utils';
+import constants from '@resources/strings';
 
 class MyVoucherCodeScreen extends Component {
     constructor(props) {
@@ -24,18 +25,18 @@ class MyVoucherCodeScreen extends Component {
             return total + parseInt(item.price)
         }, 0)
         if (priceServices < item.price) {
-            snackbar.show('Số tiền ưu đãi không được vượt quá tổng số tiền dịch vụ đã chọn', 'danger')
+            snackbar.show(constants.voucher.money_not_bigger_sum_price, 'danger')
             return
         }
         if (item.quantity == 0) {
-            snackbar.show('Đã hết số lần ưu đãi vui lòng chọn gói khác', 'danger')
+            snackbar.show(constants.voucher.please_select_other_package, 'danger')
             return
         }
         voucherProvider.selectVoucher(item.id, idBooking).then(res => {
             if (res.code == 0) {
                 this.props.onPress && this.props.onPress(item)
             } else {
-                snackbar.show("Mã Voucher không tồn tại", "danger")
+                snackbar.show(constants.voucher.voucher_invalid, "danger")
             }
         }).catch(err => {
             // snackbar.show('','danger')
@@ -68,7 +69,7 @@ class MyVoucherCodeScreen extends Component {
         )
     }
 
-    listEmpty = () => !this.state.refreshing && <Text style={styles.none_data}>Hiện tại chưa có dữ liệu</Text>
+    listEmpty = () => !this.state.refreshing && <Text style={styles.none_data}>{constants.not_found}</Text>
     keyExtractor = (item, index) => index.toString()
     render() {
         return (
