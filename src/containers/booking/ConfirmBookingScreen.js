@@ -512,7 +512,15 @@ class ConfirmBookingScreen extends Component {
             snackbar.show(constants.msg.app.not_internet, "danger");
         })
     }
+    componentWillReceiveProps = (props) => {
 
+        if (props && props.navigation && props.navigation.getParam("voucher")) {
+            this.setState({
+                voucher: props.navigation.getParam("voucher")
+            })
+        }
+
+    }
     getVoucher = (voucher) => {
 
         this.setState({ voucher: voucher })
