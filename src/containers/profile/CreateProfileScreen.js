@@ -100,19 +100,19 @@ class CreateProfileScreen extends Component {
         }
         if (this.state.weight && isNaN(this.state.weight) || this.state.weight && Number(this.state.weight) < 0) {
             this.setState({
-                weightError: 'Cân nặng không hợp lệ'
+                weightError: constants.msg.user.weight_invalid
             })
             return
         }
         if (this.state.height && isNaN(this.state.height) || this.state.height && Number(this.state.height) < 0) {
             this.setState({
-                heightError: 'Chiều cao không hợp lệ'
+                heightError: constants.msg.user.height_invalid
             })
             return
         }
         if (!this.state.relationShip) {
             this.setState({
-                relationErr: 'Bạn chưa chọn mối quan hệ'
+                relationErr: constants.msg.user.please_select_relationship
             })
             return
         }
@@ -157,7 +157,7 @@ class CreateProfileScreen extends Component {
                                     switch (res.data.TYPE) {
                                         case 'PHONE_VALID':
                                             NavigationService.navigate('listProfileUser', { reset: this.state.reset + 1 })
-                                            snackbar.show('Thêm thành viên thành công', 'success')
+                                            snackbar.show(constants.msg.user.add_member_success, 'success')
                                             break
                                         case 'NOT_EXIST_ACCOUNT':
                                             NavigationService.navigate('checkOtp', {
@@ -174,32 +174,32 @@ class CreateProfileScreen extends Component {
                                     }
                                     break
                                 case 1:
-                                    snackbar.show('Bạn không có quyền chỉnh sửa hồ sơ này', "danger");
+                                    snackbar.show(constants.msg.user.not_permission_edit_file, "danger");
                                     break
                                 case 2:
-                                    snackbar.show('Bạn đang không đăng nhập với ứng dụng bệnh nhân', "danger");
+                                    snackbar.show(constants.msg.user.not_login_with_app_patient, "danger");
                                     break
                                 case 3:
-                                    snackbar.show('Họ tên không được để trống', "danger");
+                                    snackbar.show(constants.msg.user.fullname_not_null, "danger");
                                     break
                                 case 4:
-                                    snackbar.show('Số điện thoại không được để trống', "danger");
+                                    snackbar.show(constants.msg.user.phone_not_null, "danger");
                                     break
                                 case 5:
-                                    snackbar.show('Số điện thoại sai định dạng', "danger");
+                                    snackbar.show(constants.msg.user.phone_invalid, "danger");
                                     break
                                 case 6:
-                                    snackbar.show('Giới tính không được để trống', "danger");
+                                    snackbar.show(constants.msg.user.gender_not_null, "danger");
                                     break
                                 case 7:
-                                    snackbar.show('Mối quan hệ không được để trống', "danger");
+                                    snackbar.show(constants.msg.user.relationShip_not_null, "danger");
                                     break
                                 case 8:
-                                    snackbar.show('Số điện thoại đã tồn tại trong danh sách hồ sơ của bạn', "danger");
+                                    snackbar.show(constants.msg.user.phone_exits_in_list_profile, "danger");
                                     break
                             }
                         }).catch(err => {
-                            snackbar.show('Thêm thành viên không thành công', 'danger')
+                            snackbar.show(constants.msg.user.add_member_fail, 'danger')
                             console.log(err);
                         })
                     });
@@ -225,7 +225,7 @@ class CreateProfileScreen extends Component {
                 id: this.state.provinces.id
             })
         } else {
-            snackbar.show('Bạn chưa chọn Tỉnh/Thành phố')
+            snackbar.show(constants.msg.user.please_select_address)
         }
     }
     selectprovinces(provinces) {
@@ -254,11 +254,11 @@ class CreateProfileScreen extends Component {
     }
     onSelectZone = () => {
         if (!this.state.provinces) {
-            snackbar.show("Bạn chưa chọn Tỉnh/Thành phố")
+            snackbar.show(constants.msg.user.please_select_address)
             return
         }
         if (!this.state.districts) {
-            snackbar.show("Bạn chưa chọn Quận/Huyện")
+            snackbar.show(constants.msg.user.please_select_district)
             return
         }
         if (this.state.provinces.id && this.state.districts.id) {
@@ -300,22 +300,44 @@ class CreateProfileScreen extends Component {
                 NavigationService.navigate('shareDataProfile', { id: res.data.record.id, shareId: res.data.shareRecord.id })
 
             } else {
-                snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                snackbar.show(constants.msg.notification.error_retry, 'danger')
 
             }
         }).catch(err => {
             this.setState({
                 isVisible: false
             })
-            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+            snackbar.show(constants.msg.notification.error_retry, 'danger')
         })
     }
     renderItem = ({ item }) => {
         return (
-            <View style={{ margin: 5, borderRadius: 1, borderColor: '#A4A4A4', padding: 5 }}>
-                <Text style={{ color: '#02C39A', textAlign: 'left' }}>{item.countryCode}</Text>
+            <View style={styles.containerItem}>
+                <Text style={styles.txtCountryCode}>{item.countryCode}</Text>
             </View>
         )
+    }
+    onValidateName = (valid, messages) => {
+        if (valid) {
+            this.setState({ nameError: "" });
+        } else {
+            this.setState({ nameError: messages });
+        }
+    }
+    onSelectDate = () => this.setState({ toggelDateTimePickerVisible: true })
+    onConfirmDate = newDate => {
+        this.setState(
+            {
+                dob: newDate,
+                date: newDate.format("dd/MM/yyyy"),
+                toggelDateTimePickerVisible: false
+            },
+            () => {
+            }
+        );
+    }
+    onCancelDate = () => {
+        this.setState({ toggelDateTimePickerVisible: false });
     }
     render() {
         let maxDate = new Date();
@@ -338,29 +360,23 @@ class CreateProfileScreen extends Component {
         return (
             <ActivityPanel
                 icBack={require('@images/new/left_arrow_white.png')}
-                title={'THÊM THÀNH VIÊN MỚI'}
+                title={constants.title.add_new_member}
                 iosBarStyle={'light-content'}
                 actionbarStyle={styles.actionbarStyle}
-                style={{ flex: 1, backgroundColor: '#fff' }}
-                menuButton={<TouchableOpacity style = {{padding:5}} onPress={this.onCreateProfile}>
-                    <Text style = {{color:'#fff',marginRight:25,fontSize:14,fontWeight:'800'}}>Lưu</Text>
+                style={styles.activityPanel}
+                menuButton={<TouchableOpacity style={{ padding: 5 }} onPress={this.onCreateProfile}>
+                    <Text style={styles.txtSave}>{constants.actionSheet.save}</Text>
                 </TouchableOpacity>}
                 titleStyle={styles.txTitle}
             >
-                <ScrollView keyboardShouldPersistTaps='handled' style={{ flex: 1, paddingVertical: 5 }}>
+                <ScrollView keyboardShouldPersistTaps='handled' style={styles.scroll}>
                     <View style={styles.container}>
-                        <Form ref={ref => (this.form = ref)} style={[{ flex: 1 }]}>
+                        <Form ref={ref => (this.form = ref)} style={[styles.flex]}>
                             <Field style={[styles.mucdichkham,]}>
                                 <Text style={styles.mdk}>{constants.fullname} <Text style={{ color: 'red' }}>(*)</Text></Text>
                                 <TextField
                                     hideError={true}
-                                    onValidate={(valid, messages) => {
-                                        if (valid) {
-                                            this.setState({ nameError: "" });
-                                        } else {
-                                            this.setState({ nameError: messages });
-                                        }
-                                    }}
+                                    onValidate={this.onValidateName}
                                     validate={{
                                         rules: {
                                             required: true,
@@ -391,13 +407,11 @@ class CreateProfileScreen extends Component {
                                 style={[styles.mucdichkham, { flexDirection: 'row' }]}
                             >
                                 <Field style={{ width: '60%' }}>
-                                    <Text style={styles.mdk}>{'Ngày sinh'}</Text>
+                                    <Text style={styles.mdk}>{constants.dob}</Text>
 
                                     <TextField
                                         // value={this.state.date || ""}
-                                        onPress={() =>
-                                            this.setState({ toggelDateTimePickerVisible: true })
-                                        }
+                                        onPress={this.onSelectDate}
                                         dateFormat={"dd/MM/yyyy"}
                                         splitDate={"/"}
                                         editable={false}
@@ -408,7 +422,7 @@ class CreateProfileScreen extends Component {
                                             onBlur,
                                             isError
                                         ) => (
-                                                <Text style={[styles.ktq, { paddingVertical: 12 }]}>{value ? (value) : ('Ngày sinh')}</Text>
+                                                <Text style={[styles.ktq, { paddingVertical: 12 }]}>{value ? (value) : (constants.dob)}</Text>
                                             )}
                                         // onChangeText={s => {
                                         //   this.setState({ date: s });
@@ -480,7 +494,7 @@ class CreateProfileScreen extends Component {
                                                     number: true
                                                 },
                                                 messages: {
-                                                    number: 'Chiều cao không hợp lệ',
+                                                    number: constants.msg.user.height_invalid,
                                                 }
                                             }}
                                             placeholder={'Chiều cao'}
@@ -522,7 +536,7 @@ class CreateProfileScreen extends Component {
                                 </Field>
                             </Field>
                             <Field style={[styles.mucdichkham,]}>
-                                <Text style={styles.mdk}>{'Số điện thoại'}  <Text style={{ color: 'red' }}>(*)</Text></Text>
+                                <Text style={styles.mdk}>{constants.phone}  <Text style={{ color: 'red' }}>(*)</Text></Text>
                                 <TextField
                                     hideError={true}
                                     onValidate={(valid, messages) => {
@@ -538,12 +552,12 @@ class CreateProfileScreen extends Component {
                                             phone: true
                                         },
                                         messages: {
-                                            required: "Số điện thoại không được bỏ trống",
-                                            phone: "SĐT không hợp lệ"
+                                            required: constants.msg.user.phone_not_null,
+                                            phone: constants.msg.user.phone_invalid
                                         }
                                     }}
                                     keyboardType="numeric"
-                                    placeholder={'Số điện thoại'}
+                                    placeholder={constants.phone}
                                     multiline={true}
                                     inputStyle={[
                                         styles.ktq,
@@ -592,7 +606,7 @@ class CreateProfileScreen extends Component {
                             </Field>
                             <Text style={[styles.errorStyle]}>{this.state.addressError}</Text> */}
                             <Field style={[styles.mucdichkham,]}>
-                                <Text style={styles.mdk}>{'Tỉnh/Thành phố'}</Text>
+                                <Text style={styles.mdk}>{constants.province}</Text>
                                 <Field>
                                     <TextField
                                         hideError={true}
@@ -603,7 +617,7 @@ class CreateProfileScreen extends Component {
                                             styles.ktq, { minHeight: 41 }, this.state.provinces && this.state.provinces.countryCode ? {} : { color: '#8d8d8d' }
                                         ]}
                                         errorStyle={styles.errorStyle}
-                                        value={this.state.provinces && this.state.provinces.countryCode ? this.state.provinces.countryCode : 'Tỉnh/Thành phố'}
+                                        value={this.state.provinces && this.state.provinces.countryCode ? this.state.provinces.countryCode : constants.province}
                                         autoCapitalize={"none"}
                                         // underlineColorAndroid="transparent"
                                         autoCorrect={false}
@@ -702,20 +716,8 @@ class CreateProfileScreen extends Component {
                 <ImagePicker ref={ref => (this.imagePicker = ref)} />
                 <DateTimePicker
                     isVisible={this.state.toggelDateTimePickerVisible}
-                    onConfirm={newDate => {
-                        this.setState(
-                            {
-                                dob: newDate,
-                                date: newDate.format("dd/MM/yyyy"),
-                                toggelDateTimePickerVisible: false
-                            },
-                            () => {
-                            }
-                        );
-                    }}
-                    onCancel={() => {
-                        this.setState({ toggelDateTimePickerVisible: false });
-                    }}
+                    onConfirm={this.onConfirmDate}
+                    onCancel={this.onCancelDate}
                     date={new Date()}
                     minimumDate={minDate}
                     maximumDate={new Date()}
@@ -754,6 +756,31 @@ class CreateProfileScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+    flex: { flex: 1 },
+    scroll: {
+        flex: 1,
+        paddingVertical: 5
+    },
+    txtSave: {
+        color: '#fff',
+        marginRight: 25,
+        fontSize: 14,
+        fontWeight: '800'
+    },
+    activityPanel: {
+        flex: 1,
+        backgroundColor: '#fff'
+    },
+    txtCountryCode: {
+        color: '#02C39A',
+        textAlign: 'left'
+    },
+    containerItem: {
+        margin: 5,
+        borderRadius: 1,
+        borderColor: '#A4A4A4',
+        padding: 5
+    },
     AcPanel: {
         flex: 1,
         backgroundColor: "rgb(247,249,251)"
@@ -784,7 +811,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: 'bold'
     },
-    txTitle: { color: '#fff',marginLeft: 50,fontSize:16  },
+    txTitle: { color: '#fff', marginLeft: 50, fontSize: 16 },
     mdk: {
         marginLeft: 12,
         flex: 1,
@@ -824,7 +851,7 @@ const styles = StyleSheet.create({
 
         // borderColor: "rgba(0, 0, 0, 0.07)"
     },
-    
+
     btnhuy: {
         fontSize: 18,
         fontWeight: "normal",

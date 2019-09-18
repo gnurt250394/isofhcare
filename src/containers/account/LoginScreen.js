@@ -64,7 +64,7 @@ class LoginScreen extends Component {
 			RNAccountKit.loginWithPhone().then(async token => {
 				console.log(token);
 				if (!token) {
-					snackbar.show(constants.login_screens.verification_fail, "danger");
+					snackbar.show(constants.msg.user.phone_number_not_found, "danger");
 				} else {
 					let account = await RNAccountKit.getCurrentAccount();
 					if (account && account.phoneNumber) {
@@ -78,7 +78,7 @@ class LoginScreen extends Component {
 							nextScreen: this.nextScreen
 						});
 					} else {
-						snackbar.show(constants.login_screens.verification_fail, "danger");
+						snackbar.show(constants.msg.user.phone_number_not_found, "danger");
 					}
 				}
 			});
@@ -145,7 +145,7 @@ class LoginScreen extends Component {
 			RNAccountKit.loginWithPhone().then(async token => {
 				console.log(token);
 				if (!token) {
-					snackbar.show(constants.login_screens.verification_fail, "danger");
+					snackbar.show(constants.msg.user.phone_number_not_found, "danger");
 				} else {
 					let account = await RNAccountKit.getCurrentAccount();
 					if (account && account.phoneNumber) {
@@ -157,7 +157,7 @@ class LoginScreen extends Component {
 							}
 						});
 					} else {
-						snackbar.show(constants.login_screens.verification_fail, "danger");
+						snackbar.show(constants.msg.user.phone_number_not_found, "danger");
 					}
 				}
 			});
@@ -211,8 +211,8 @@ class LoginScreen extends Component {
 														phone: true
 													},
 													messages: {
-														required: constants.login_screens.require_phone,
-														phone: constants.login_screens.phone_invalid
+														required: constants.msg.user.phone_not_null,
+														phone: constants.msg.user.phone_invalid
 													}
 												}}
 

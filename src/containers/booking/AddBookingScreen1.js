@@ -176,14 +176,14 @@ class AddBookingScreen extends Component {
     selectProfile(profile) {
         this.setState({ profile, allowBooking: true });
     }
-    selectServiceType(serviceType) {
-        let serviceTypeError = serviceType ? "" : this.state.serviceTypeError;
-        if (!serviceType || !this.state.serviceType || serviceType.id != this.state.serviceType.id) {
-            this.setState({ serviceType, listServicesSelected: [], allowBooking: true, serviceTypeError })
-        } else {
-            this.setState({ serviceType, allowBooking: true, serviceTypeError: "", serviceTypeError });
-        }
-    }
+    // selectServiceType(serviceType) {
+    //     let serviceTypeError = serviceType ? "" : this.state.serviceTypeError;
+    //     if (!serviceType || !this.state.serviceType || serviceType.id != this.state.serviceType.id) {
+    //         this.setState({ serviceType, listServicesSelected: [], allowBooking: true, serviceTypeError })
+    //     } else {
+    //         this.setState({ serviceType, allowBooking: true, serviceTypeError: "", serviceTypeError });
+    //     }
+    // }
     selectHospital = () => {
         connectionUtils.isConnected().then(s => {
             this.props.navigation.navigate("selectHospital", {
@@ -205,7 +205,15 @@ class AddBookingScreen extends Component {
     }
 
     selectService(services) {
-        this.setState({ listServicesSelected: services });
+        let servicesError = services ? "" : this.state.servicesError;
+        if (!services || !this.state.services || services.id != this.state.services.id) {
+            this.setState({ listServicesSelected: services, allowBooking: true, servicesError })
+            console.log('if')
+        } else {
+            this.setState({ listServicesSelected: [], allowBooking: true, servicesError: "", servicesError });
+            console.log('else')
+
+        }
     }
 
     addBooking = () => {
@@ -234,9 +242,9 @@ class AddBookingScreen extends Component {
         //     error = true;
         // }
         if (this.state.listServicesSelected && this.state.listServicesSelected.length) {
-            this.setState({ serviceError: "" })
+            this.setState({ servicesError: "" })
         } else {
-            this.setState({ serviceError: constants.msg.booking.service_not_null })
+            this.setState({ servicesError: constants.msg.booking.service_not_null })
             error = true;
         }
         if (this.state.bookingDate) {
@@ -425,7 +433,7 @@ class AddBookingScreen extends Component {
                 bookingDate: newDate,
                 date: newDate.format("thu, dd tháng MM").replaceAll(" 0", " "),
                 allowBooking: true,
-                serviceError: "",
+                servicesError: "",
                 scheduleError: ""
             });
         })
@@ -541,8 +549,8 @@ class AddBookingScreen extends Component {
                                 <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
                             </TouchableOpacity>
                             {
-                                this.state.serviceError ?
-                                    <Text style={[styles.errorStyle]}>{this.state.serviceError}</Text> : null
+                                this.state.servicesError ?
+                                    <Text style={[styles.errorStyle]}>{this.state.servicesError}</Text> : null
                             }
                             <View style={styles.border}></View>
                             <TouchableOpacity style={styles.mucdichkham} onPress={this.selectDateTime}>
@@ -552,8 +560,8 @@ class AddBookingScreen extends Component {
                                 <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
                             </TouchableOpacity>
                             {
-                                this.state.bookingError ?
-                                    <Text style={[styles.errorStyle]}>{this.state.bookingError}</Text> : null
+                                this.state.scheduleError ?
+                                    <Text style={[styles.errorStyle]}>{this.state.scheduleError}</Text> : null
                             }
                         </View>
                         <View style={styles.article}>

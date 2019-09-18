@@ -293,6 +293,9 @@ class SelectHospitalScreen extends Component {
     onBackPress = () => this.props.navigation.pop()
     keyExtractor = (item, index) => index.toString()
     footerComponent = () => <View style={{ height: 10 }} />
+    onChangeText = state => value => {
+        this.setState({ [state]: value })
+    }
     render() {
         return (
             <ActivityPanel
@@ -313,9 +316,7 @@ class SelectHospitalScreen extends Component {
                         <ScaleImage style={styles.aa} width={18} source={require("@images/new/hospital/ic_search.png")} />
                         <TextInput
                             value={this.state.keyword}
-                            onChangeText={s => {
-                                this.setState({ keyword: s })
-                            }}
+                            onChangeText={this.onChangeText('keyword')}
                             onSubmitEditing={this.search.bind(this)}
                             returnKeyType='search'
                             style={styles.tkdiachi1} placeholder={constants.search + '…'} underlineColorAndroid={"transparent"} />

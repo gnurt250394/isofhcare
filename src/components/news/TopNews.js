@@ -35,9 +35,10 @@ class TopNews extends Component {
             this.getData()
         }
     }
+    keyExtractor = (item, index) => index.toString()
     render() {
         return (
-            <View style={{ flex: 1,backgroundColor:'#fff' }}>
+            <View style={{ flex: 1, backgroundColor: '#fff' }}>
                 {/* <View style={styles.viewTitle}><View> */}
                 <HeaderLine title={'TIN TỨC'} />
                 {/* <Text style={{ color: '#000', fontWeight: '600' }}>{'Sản phẩm thuốc bán chạy'.toUpperCase()}</Text>
@@ -48,7 +49,7 @@ class TopNews extends Component {
                         data={this.state.dataNews}
                         extraData={this.state}
                         renderItem={this.renderItem}
-                        keyExtractor={(item, index) => index.toString()}
+                        keyExtractor={this.keyExtractor}
                     ></FlatList>
                 ) :
                     (<ActivityIndicator></ActivityIndicator>)}

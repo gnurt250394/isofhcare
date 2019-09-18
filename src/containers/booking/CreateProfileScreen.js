@@ -228,6 +228,7 @@ class createProfile extends Component {
   };
   backButton = () => this.props.navigation.pop()
   defaultImage = () => {
+    const icSupport = require("@images/new/user.png");
     return (
       <ScaleImage
         resizeMode="cover"

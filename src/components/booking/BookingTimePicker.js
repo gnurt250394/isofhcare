@@ -24,7 +24,7 @@ class SelectTimeScreen extends Component {
             type: 3,
             time: date1,
             label: "08:00",
-            label2: "08:00"       
+            label2: "08:00"
         })
         date1 = new Date(date.setMinutes(date.getMinutes() + 30));
         listTime.push({
@@ -79,7 +79,7 @@ class SelectTimeScreen extends Component {
             type: 3,
             time: date1,
             label: "13:30",
-            label2: "1:30"            
+            label2: "1:30"
         })
         date1 = new Date(date.setMinutes(date.getMinutes() + 30));
         listTime.push({
@@ -302,7 +302,7 @@ class SelectTimeScreen extends Component {
         }
         margin += 7;
         if (index == 0 || index == this.state.listTime.length - 1 || item.left || item.right)
-            return (<Text key={index} style={{ fontSize: 9, position: 'absolute', left: item.marginLeft + margin, top: 50 }}>{label}</Text>)
+            return (<Text key={index} style={[styles.txtLabel, { left: item.marginLeft + margin, }]}>{label}</Text>)
         return null;
     }
     renderIgnoreTime(item, index) {
@@ -311,43 +311,36 @@ class SelectTimeScreen extends Component {
                 snackbar.show(constants.msg.booking.not_result_history_of_this_time, "danger");
                 return;
             }}
-            style={{
-                position: 'absolute', left: this.state.itemWidth - 0, flexDirection: 'row', alignItems: 'center', paddingVertical: 20,
-            }}>
-            <View style={{ width: this.state.widthIgnore + 10, height: 5, backgroundColor: '#cacaca' }}>
+            style={[styles.buttonIgnoreTime, { left: this.state.itemWidth - 0, }]}>
+            <View style={[{ width: this.state.widthIgnore + 10 }, styles.viewHeader]}>
             </View>
-            <View style={{
-                position: 'absolute',
-                width: 8, height: 8,
-                borderRadius: 4,
-                backgroundColor: '#cacaca', justifyContent: 'center', alignItems: 'center'
-            }}>
-                <View style={{ width: 2, height: 2, backgroundColor: '#FFF', borderRadius: 1 }}></View>
+            <View style={styles.view2}>
+                <View style={styles.view3}></View>
             </View>
         </TouchableOpacity>
     }
     renderPointer(item, time) {
-        return <View style={{
-            top: 18.7, position: 'absolute', width: 8, height: 8,
-            borderRadius: 4,
-            backgroundColor: this.getColor(item), justifyContent: 'center', alignItems: 'center'
-        }}>
-            <View style={{ width: 2, height: 2, backgroundColor: '#FFF', borderRadius: 1 }}></View>
+        return <View style={[styles.containerViewPointer, { backgroundColor: this.getColor(item), }]}>
+            <View style={styles.childViewPointer}></View>
         </View>
     }
+    onClickTime = (item) => () => {
+        if (item.type == 0) {
+            snackbar.show(constants.msg.booking.full_slot_on_this_time, "danger");
+            return;
+        }
+        this.setState({ schedule: item, index }, () => {
+            if (this.props.onChange)
+                this.props.onChange(item);
+        })
+    }
     renderTime(item, index) {
-        return <TouchableOpacity key={index} onPress={() => {
-            if (item.type == 0) {
-                snackbar.show(constants.msg.booking.full_slot_on_this_time, "danger");
-                return;
-            }
-            this.setState({ schedule: item, index }, () => {
-                if (this.props.onChange)
-                    this.props.onChange(item);
-            })
-        }}
-            style={[{ flexDirection: 'row', position: 'absolute', paddingVertical: 20, left: item.marginLeft + 7, alignItems: 'center', marginTop: 20 }, item.right ? { width: this.state.itemWidth + this.state.widthIgnore + 1 } : {}]}>
-            <View style={[{ width: this.state.itemWidth + 1, height: 5, backgroundColor: this.getColor(item), marginLeft: 0, borderTopLeftRadius: 2.5, borderBottomLeftRadius: 2.5 }, index == this.state.listTime.length - 1 ? { borderTopRightRadius: 2.5, borderBottomRightRadius: 2.5 } : {}]}>
+        return <TouchableOpacity key={index} onPress={this.onClickTime(item)}
+            style={[, { left: item.marginLeft + 7, }, styles.buttonOnClickTime, item.right ? { width: this.state.itemWidth + this.state.widthIgnore + 1 } : {}]}>
+            <View style={[{
+                width: this.state.itemWidth + 1,
+                backgroundColor: this.getColor(item)
+            }, styles.groupOnClickTime, index == this.state.listTime.length - 1 ? { borderTopRightRadius: 2.5, borderBottomRightRadius: 2.5 } : {}]}>
             </View>
             {
                 item.right && this.renderIgnoreTime(item, index)
@@ -416,18 +409,17 @@ class SelectTimeScreen extends Component {
 
     render() {
         if (this.state.listTime && this.state.listTime.length > 0)
-            return <View style={{
-                position: 'relative',
-                marginTop: 20, height: 100, paddingTop: 40, marginLeft: 20
-            }}>
+            return <View style={styles.containerListTime}>
                 {
                     this.state.listTime.map((item, index) =>
                         this.renderTime(item, index))
                 }
                 {this.state.schedule &&
-                    <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', left: this.state.schedule.marginLeft - 1, top: 10 }}>
+                    <View style={[styles.groupLabel, {
+                        left: this.state.schedule.marginLeft - 1,
+                    }]}>
                         <ScaleImage height={30} source={this.getIcon(this.state.schedule)} />
-                        <Text style={{ fontSize: 11, marginLeft: 2, fontWeight: 'bold' }}>{this.state.schedule.label}</Text>
+                        <Text style={styles.label}>{this.state.schedule.label}</Text>
                     </View>
                 }
                 {
@@ -437,8 +429,8 @@ class SelectTimeScreen extends Component {
             </View>
         else {
             return (
-                <View style={{ alignItems: 'center', paddingVertical: 20, height: 100, justifyContent: 'center' }}>
-                    <View style={{ width: DEVICE_WIDTH - 80, height: 5, backgroundColor: '#cacaca', borderRadius: 2.5 }}></View>
+                <View style={styles.containerOther}>
+                    <View style={styles.other}></View>
                 </View>
             );
         }
@@ -452,6 +444,94 @@ function mapStateToProps(state) {
     };
 }
 const styles = StyleSheet.create({
+    other: {
+        width: DEVICE_WIDTH - 80,
+        height: 5,
+        backgroundColor: '#cacaca',
+        borderRadius: 2.5
+    },
+    containerOther: {
+        alignItems: 'center',
+        paddingVertical: 20,
+        height: 100,
+        justifyContent: 'center'
+    },
+    label: {
+        fontSize: 11,
+        marginLeft: 2,
+        fontWeight: 'bold'
+    },
+    groupLabel: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        position: 'absolute',
+        top: 10,
+    },
+    containerListTime: {
+        position: 'relative',
+        marginTop: 20,
+        height: 100,
+        paddingTop: 40,
+        marginLeft: 20
+    },
+    groupOnClickTime: {
+        height: 5,
+        marginLeft: 0,
+        borderTopLeftRadius: 2.5,
+        borderBottomLeftRadius: 2.5
+    },
+    buttonOnClickTime: {
+        flexDirection: 'row',
+        position: 'absolute',
+        paddingVertical: 20,
+        alignItems: 'center',
+        marginTop: 20
+    },
+    childViewPointer: {
+        width: 2,
+        height: 2,
+        backgroundColor: '#FFF',
+        borderRadius: 1
+    },
+    containerViewPointer: {
+        top: 18.7,
+        position: 'absolute',
+        width: 8,
+        height: 8,
+        borderRadius: 4,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    view3: {
+        width: 2,
+        height: 2,
+        backgroundColor: '#FFF',
+        borderRadius: 1
+    },
+    view2: {
+        position: 'absolute',
+        width: 8,
+        height: 8,
+        borderRadius: 4,
+        backgroundColor: '#cacaca',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    viewHeader: {
+        height: 5,
+        backgroundColor: '#cacaca'
+    },
+    buttonIgnoreTime: {
+        position: 'absolute',
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 20,
+    },
+    txtLabel: {
+        fontSize: 9,
+        position: 'absolute',
+        top: 50
+    },
     container: {
         flex: 1,
         backgroundColor: "#f7f9fb",

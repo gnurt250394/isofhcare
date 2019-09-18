@@ -60,7 +60,7 @@ class ProfileScreen extends Component {
     }
     selectImageAvt = () => {
         if (this.state.data.medicalRecords.status == 2 && this.state.data.medicalRecords.alreadyHaveAccount) {
-            snackbar.show('Bạn không có quyền chỉnh sửa hồ sơ này', 'danger')
+            snackbar.show(constants.msg.user.not_permission_edit_file, 'danger')
 
         } else {
             connectionUtils
@@ -168,7 +168,7 @@ class ProfileScreen extends Component {
     }
     onEdit = () => {
         if (this.state.data.medicalRecords.status == 2 && this.state.data.medicalRecords.alreadyHaveAccount) {
-            snackbar.show('Bạn không có quyền chỉnh sửa hồ sơ này', 'danger')
+            snackbar.show(constants.msg.user.not_permission_edit_file, 'danger')
         } else {
             this.props.navigation.navigate('editProfile', {
                 data: this.state.data,
@@ -278,42 +278,42 @@ class ProfileScreen extends Component {
         switch (details.statusConfirm) {
             case 'ACTIVE': {
                 return (
-                    <View style={{ flex: 1 }} >
+                    <View style={styles.flex} >
                         <View style={styles.btnFeature}>
-                            <View><ScaledImage height={20} style={{ tintColor: '#fff', marginLeft: -28 }} source={require('@images/new/profile/ic_account.png')}></ScaledImage></View>
-                            <Text style={[styles.txFeature]} >Thông tin cá nhân</Text>
+                            <View><ScaledImage height={20} style={styles.imageAccount} source={require('@images/new/profile/ic_account.png')}></ScaledImage></View>
+                            <Text style={[styles.txFeature]} >{constants.account_screens.info}</Text>
                             <View></View>
                         </View>
                         <View style={styles.containerInfo}>
                             {details && details.name ? <View style={styles.viewItem}>
-                                <Text><Text style={styles.txLabel}>Họ và tên: </Text><Text style={styles.txContent}>{details.name}</Text></Text>
+                                <Text><Text style={styles.txLabel}>{constants.fullname}: </Text><Text style={styles.txContent}>{details.name}</Text></Text>
                             </View> : null}
                             {details && details.dob ? <View style={styles.viewItem}>
-                                <Text><Text style={styles.txLabel}>Ngày sinh: </Text><Text style={styles.txContent}>{details.dob.toDateObject('-').format('dd/MM/yyyy')}</Text></Text>
+                                <Text><Text style={styles.txLabel}>{constants.dob}: </Text><Text style={styles.txContent}>{details.dob.toDateObject('-').format('dd/MM/yyyy')}</Text></Text>
                             </View> : null}
                             {/* <View style={styles.viewItem}>
                     <Text><Text style={styles.txLabel}>ID: </Text><Text style={styles.txContent}>{details && details.profileNoID ? details.profileNoID : ''}</Text></Text>
                 </View> */}
                             {details && details.gender || details.gender == 0 ? <View style={styles.viewItem}>
-                                <Text><Text style={styles.txLabel}>Giới tính: </Text><Text style={styles.txContent}>{details.gender == 0 ? 'Nữ' : 'Nam'}</Text></Text>
+                                <Text><Text style={styles.txLabel}>{constants.gender}: </Text><Text style={styles.txContent}>{details.gender == 0 ? 'Nữ' : 'Nam'}</Text></Text>
                             </View> : null}
                             {details.weight || details.height ? <View style={[styles.viewItem, {}]}>
-                                <Text><Text style={styles.txLabel}>Chiều cao: </Text><Text style={styles.txContent}>{details.height + 'cm'} </Text></Text>
-                                <Text style={[styles.txLabel]}>Cân nặng: <Text style={{ color: '#000', fontWeight: 'normal' }}>{details.weight + 'kg'} </Text></Text>
+                                <Text><Text style={styles.txLabel}>{constants.height}: </Text><Text style={styles.txContent}>{details.height + 'cm'} </Text></Text>
+                                <Text style={[styles.txLabel]}>{constants.weight}: <Text style={{ color: '#000', fontWeight: 'normal' }}>{details.weight + 'kg'} </Text></Text>
                                 <View style={{ width: 20 }}></View>
                             </View> : null}
                             {details && details.height && details.weight ? <View style={styles.viewItem}>
-                                <Text><Text style={styles.txLabel}>Chỉ số BMI: </Text><Text style={styles.txContent}>{parseFloat(details.weight / (Math.pow(details.height / 100, 2))).toFixed(1)}</Text></Text>
+                                <Text><Text style={styles.txLabel}>{constants.BMI}: </Text><Text style={styles.txContent}>{parseFloat(details.weight / (Math.pow(details.height / 100, 2))).toFixed(1)}</Text></Text>
                             </View> : null}
                             {details && details.phone ? <View style={styles.viewItem}>
-                                <Text><Text style={styles.txLabel}>Số điện thoại: </Text><Text style={styles.txContent}>{details.phone.replace(/(\d\d\d\d)(\d\d\d)(\d\d\d)/, '$1.$2.$3')}</Text></Text>
+                                <Text><Text style={styles.txLabel}>{constants.phone}: </Text><Text style={styles.txContent}>{details.phone.replace(/(\d\d\d\d)(\d\d\d)(\d\d\d)/, '$1.$2.$3')}</Text></Text>
                             </View> : null}
                             {this.state.location ? <View style={styles.viewItem}>
-                                <Text><Text style={styles.txLabel}>Địa chỉ: </Text><Text style={{ fontSize: 14, color: '#000' }}><Text style={styles.txContent}>{this.state.location}</Text></Text></Text>
+                                <Text><Text style={styles.txLabel}>{constants.address}: </Text><Text style={{ fontSize: 14, color: '#000' }}><Text style={styles.txContent}>{this.state.location}</Text></Text></Text>
                             </View> : null}
                             {details.status != 1 ? (
                                 details && details.relationshipType ? <View style={styles.viewItem}>
-                                    <Text><Text style={styles.txLabel}>Quan hệ: </Text>{this.renderRelation()}</Text>
+                                    <Text><Text style={styles.txLabel}>{constants.relationship}: </Text>{this.renderRelation()}</Text>
                                 </View> : null
                             ) : (null)}
 
@@ -328,19 +328,19 @@ class ProfileScreen extends Component {
                     <View style={{ flex: 1 }} >
                         <View style={styles.btnFeature}>
                             <View><ScaledImage height={20} style={{ tintColor: '#fff', marginLeft: -28 }} source={require('@images/new/profile/ic_account.png')}></ScaledImage></View>
-                            <Text style={[styles.txFeature]} >Thông tin cá nhân</Text>
+                            <Text style={[styles.txFeature]} >{constants.account_screens.info}</Text>
                             <View></View>
                         </View>
                         <View style={styles.containerInfo}>
                             {details && details.name ? <View style={styles.viewItem}>
-                                <Text><Text style={styles.txLabel}>Họ và tên: </Text><Text style={styles.txContent}>{details.name}</Text></Text>
+                                <Text><Text style={styles.txLabel}>{constants.fullname}: </Text><Text style={styles.txContent}>{details.name}</Text></Text>
                             </View> : null}
                             {details && details.phone ? <View style={styles.viewItem}>
-                                <Text><Text style={styles.txLabel}>Số điện thoại: </Text><Text style={styles.txContent}>{details.phone.replace(/(\d\d\d\d)(\d\d\d)(\d\d\d)/, '$1.$2.$3')}</Text></Text>
+                                <Text><Text style={styles.txLabel}>{constants.phone}: </Text><Text style={styles.txContent}>{details.phone.replace(/(\d\d\d\d)(\d\d\d)(\d\d\d)/, '$1.$2.$3')}</Text></Text>
                             </View> : null}
                             {details.status != 1 ? (
                                 details && details.relationshipType ? <View style={styles.viewItem}>
-                                    <Text><Text style={styles.txLabel}>Quan hệ: </Text>{this.renderRelation()}</Text>
+                                    <Text><Text style={styles.txLabel}>{constants.relationship}: </Text>{this.renderRelation()}</Text>
                                 </View> : null
                             ) : (null)}
 
@@ -354,19 +354,19 @@ class ProfileScreen extends Component {
 
                         <View style={styles.btnFeature}>
                             <View><ScaledImage height={20} style={{ tintColor: '#fff', marginLeft: -28 }} source={require('@images/new/profile/ic_account.png')}></ScaledImage></View>
-                            <Text style={[styles.txFeature]} >Thông tin cá nhân</Text>
+                            <Text style={[styles.txFeature]} >{constants.account_screens.info}</Text>
                             <View></View>
                         </View>
                         <View style={styles.containerInfo}>
                             {details && details.name ? <View style={styles.viewItem}>
-                                <Text><Text style={styles.txLabel}>Họ và tên: </Text><Text style={styles.txContent}>{details.name}</Text></Text>
+                                <Text><Text style={styles.txLabel}>{constants.fullname}: </Text><Text style={styles.txContent}>{details.name}</Text></Text>
                             </View> : null}
                             {details && details.phone ? <View style={styles.viewItem}>
-                                <Text><Text style={styles.txLabel}>Số điện thoại: </Text><Text style={styles.txContent}>{details.phone.replace(/(\d\d\d\d)(\d\d\d)(\d\d\d)/, '$1.$2.$3')}</Text></Text>
+                                <Text><Text style={styles.txLabel}>{constants.phone}: </Text><Text style={styles.txContent}>{details.phone.replace(/(\d\d\d\d)(\d\d\d)(\d\d\d)/, '$1.$2.$3')}</Text></Text>
                             </View> : null}
                             {details.status != 1 ? (
                                 <View style={styles.viewItem}>
-                                    {details && details.relationshipType ? <Text><Text style={styles.txLabel}>Quan hệ: </Text>{this.renderRelation()}</Text> : null}
+                                    {details && details.relationshipType ? <Text><Text style={styles.txLabel}>{constants.relationship}: </Text>{this.renderRelation()}</Text> : null}
                                 </View>
                             ) : (null)}
                         </View>
@@ -375,6 +375,7 @@ class ProfileScreen extends Component {
             }
         }
     }
+    createProfile = () => NavigationService.navigate('createProfile')
     render() {
         const icSupport = require("@images/new/user.png");
         const details = this.state.data && this.state.data.medicalRecords ? this.state.data.medicalRecords : {}
@@ -382,13 +383,15 @@ class ProfileScreen extends Component {
             ? { uri: this.state.imgAvtLocal.absoluteUrl() }
             : icSupport
         return (
-            <ActivityPanel                
+            <ActivityPanel
                 titleStyle={styles.txTitle}
                 title={'PROFILE'}
                 iosBarStyle={'light-content'}
                 actionbarStyle={styles.actionbarStyle}
                 style={styles.container}
-                menuButton={<TouchableOpacity onPress={this.onEdit}><ScaledImage style={{ tintColor: '#fff', marginRight: 10 }} height={20} source={require('@images/new/profile/ic_edit.png')}></ScaledImage></TouchableOpacity>}
+                menuButton={<TouchableOpacity onPress={this.onEdit}>
+                    <ScaledImage style={styles.iconEdit} height={20} source={require('@images/new/profile/ic_edit.png')}></ScaledImage>
+                </TouchableOpacity>}
                 isLoading={this.state.loading}
             >
                 {!this.state.loading ? (
@@ -440,9 +443,9 @@ class ProfileScreen extends Component {
                         <View style={{ height: 50 }}></View>
                     </ScrollView>
                 ) : null}
-                <Animatable.View ref={ref => this.buttonAdd = ref} animation={"rotate"} style={{ position: 'absolute', right: 10, bottom: 20 }}>
-                    <Card style={{ backgroundColor: '#02C39A', borderRadius: 30 }}>
-                        <TouchableOpacity onPress={() => NavigationService.navigate('createProfile')} style={{ backgroundColor: '#02C39A', borderRadius: 30, width: 60, margin: -1, height: 60, justifyContent: 'center', alignItems: 'center' }}>
+                <Animatable.View ref={ref => this.buttonAdd = ref} animation={"rotate"} style={styles.containerAdd}>
+                    <Card style={styles.card}>
+                        <TouchableOpacity onPress={this.createProfile} style={styles.buttonAdd}>
                             <Icon name="add" style={{ color: '#FFF' }}></Icon>
                         </TouchableOpacity>
                     </Card>
@@ -453,6 +456,35 @@ class ProfileScreen extends Component {
     }
 }
 const styles = StyleSheet.create({
+    buttonAdd: {
+        backgroundColor: '#02C39A',
+        borderRadius: 30,
+        width: 60,
+        margin: -1,
+        height: 60,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    card: {
+        backgroundColor: '#02C39A',
+        borderRadius: 30
+    },
+    containerAdd: {
+        position: 'absolute',
+        right: 10,
+        bottom: 20
+    },
+    iconEdit: {
+        tintColor: '#fff',
+        marginRight: 10
+    },
+    imageAccount: {
+        tintColor: '#fff',
+        marginLeft: -28
+    },
+    flex: {
+        flex: 1
+    },
     container: {
         flex: 1,
     },

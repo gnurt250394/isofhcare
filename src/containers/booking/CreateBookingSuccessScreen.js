@@ -1,12 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Clipboard } from 'react-native';
 import { connect } from 'react-redux';
 import dateUtils from 'mainam-react-native-date-utils';
 import ScaleImage from "mainam-react-native-scaleimage";
 import QRCode from 'react-native-qrcode-svg';
 import Modal from "@components/modal";
 import constants from '@resources/strings';
+import snackbar from '@utils/snackbar-utils';
 
 class CreateBookingSuccessScreen extends Component {
     constructor(props) {
@@ -45,6 +46,20 @@ class CreateBookingSuccessScreen extends Component {
         this.props.navigation.pop();
     }
     onBackdropPress = () => this.setState({ isVisible: false })
+    onPressCode = (vnPayId) => {
+        Clipboard.setString(vnPayId)
+        snackbar.show('Đã sao chép', 'success')
+    }
+    renderVnPayDate(vnPayDate) {
+        let year = vnPayDate.substring(0, 4)
+        let month = vnPayDate.substring(4, 6)
+        let day = vnPayDate.substring(6, 8)
+        let hours = vnPayDate.substring(8, 10)
+        let minutes = vnPayDate.substring(10, 12)
+        let secons = vnPayDate.substring(12, 14)
+        return `${day}/${month}/${year} ${hours}:${minutes}:${secons}`
+
+    }
     render() {
         let booking = this.props.navigation.state.params.booking;
         let service = this.props.navigation.state.params.service || [];
@@ -61,8 +76,8 @@ class CreateBookingSuccessScreen extends Component {
                 titleStyle={styles.txtTitle}
 
 
-                containerStyle={styles.container}
-                actionbarStyle={styles.container}>
+                containerStyle={styles.container2}
+                actionbarStyle={styles.container2}>
                 <View style={styles.container}>
                     <ScrollView keyboardShouldPersistTaps='handled' style={styles.flex}>
                         {/* <ScaleImage style={styles.image1} height={80} source={require("@images/new/booking/ic_rating.png")} />
@@ -125,6 +140,22 @@ class CreateBookingSuccessScreen extends Component {
                                 <Text style={styles.text}>{this.getPaymentMethod(booking)}</Text>
                             </View>
                             {
+                                booking.payment == 1 && <View>
+                                    <View style={styles.row}>
+                                        <Text style={styles.label}>{constants.booking.payment_vnpay_no}</Text>
+                                        <TouchableOpacity style={styles.btnCopy} onPress={() => this.onPressCode(booking.vnPayId)}><Text style={styles.text}>{booking.vnPayId ? booking.vnPayId : ""}</Text></TouchableOpacity>
+                                    </View>
+                                    <View style={styles.row}>
+                                        <Text style={styles.label}>{constants.booking.payment_vnpay_date}</Text>
+                                        <Text style={styles.text}>{this.renderVnPayDate(booking.vnPayDate)}</Text>
+                                    </View>
+                                    <View style={styles.row}>
+                                        <Text style={styles.label}>{constants.booking.payment_vnpay_status}</Text>
+                                        <Text style={styles.text}>{constants.booking.payment_vnpay_success}</Text>
+                                    </View>
+                                </View>
+                            }
+                            {
                                 service && service.length ?
                                     <View style={styles.row}>
                                         <Text style={styles.label}>{constants.booking.sum_price}:</Text>
@@ -143,6 +174,7 @@ class CreateBookingSuccessScreen extends Component {
                                     </View>
                                 </View>
                             }
+
                         </View>
                         <View style={styles.view1}>
                             <Text style={styles.text2}>{constants.booking.booking_send}</Text>
@@ -203,7 +235,7 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     flex: { flex: 1 },
-    container: {
+    container2: {
         backgroundColor: "#02C39A"
     },
     txtTitle: {
@@ -244,6 +276,9 @@ const styles = StyleSheet.create({
         color: "#4a4a4a90",
         textAlign: 'center',
         fontStyle: 'italic'
+    },
+    btnCopy: {
+        flex:1
     },
     row: {
         marginTop: 10,

@@ -5,6 +5,7 @@ import ActivityPanel from '@components/ActivityPanel';
 import profileProvider from '@data-access/profile-provider'
 import NavigationService from "@navigators/NavigationService";
 import snackbar from "@utils/snackbar-utils";
+import constants from '../../res/strings';
 
 export default class ShareDataProfileScreen extends Component {
   constructor(props) {
@@ -43,13 +44,13 @@ export default class ShareDataProfileScreen extends Component {
     }
     profileProvider.sharePermission(data).then(res => {
       if (res.code == 0 && res.data) {
-        snackbar.show('Cài đặt chia sẻ thành công', 'success')
+        snackbar.show(constants.msg.user.setting_share_success, 'success')
         NavigationService.navigate('listProfileUser', { reset: this.state.reset + 1 })
       } else {
-        snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+        snackbar.show(constants.msg.notification.error_retry, 'danger')
       }
     }).catch(err => {
-      snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+      snackbar.show(constants.msg.notification.error_retry, 'danger')
       console.log(err);
     })
 
@@ -58,13 +59,15 @@ export default class ShareDataProfileScreen extends Component {
     return (
       <ActivityPanel style={{ flex: 1 }}
         // title="HỒ SƠ Y BẠ GIA ĐÌNH"
-        title={'CÀI ĐẶT CHIA SẺ'}
+        title={constants.title.setting_share}
         showFullScreen={true} isLoading={this.state.isLoading}>
         <View style={styles.viewConfirm}>
-          <Text style={styles.txContent}>CHỌN DỮ LIỆU BẠN MUỐN CHIA SẺ VỚI THÀNH VIÊN NÀY</Text>
-          <View style={styles.viewSelected}><CheckBox onPress={this.shareEhealth} checked={this.state.ehealth} color="#02C39A"></CheckBox><Text style={styles.txSelected}>Y bạ điện tử của tôi</Text></View>
+          <Text style={styles.txContent}>{constants.msg.user.select_data_need_share}</Text>
+          <View style={styles.viewSelected}>
+            <CheckBox onPress={this.shareEhealth} checked={this.state.ehealth} color="#02C39A"></CheckBox>
+            <Text style={styles.txSelected}>{constants.ehealth.my_ehealth}</Text></View>
           {/* <View style={styles.viewSelected}><CheckBox onPress={this.shareBookingDate} checked={this.state.bookingDate} color="#02C39A"></CheckBox><Text style={styles.txSelected}>Lịch khám của tôi</Text></View> */}
-          <View style={styles.viewBtn}><TouchableOpacity onPress={this.updatePermission} style={styles.btnConfirm}><Text style={styles.txConfirm}>XÁC NHẬN</Text></TouchableOpacity></View>
+          <View style={styles.viewBtn}><TouchableOpacity onPress={this.updatePermission} style={styles.btnConfirm}><Text style={styles.txConfirm}>{constants.actionSheet.confirm.toUpperCase()}</Text></TouchableOpacity></View>
         </View>
       </ActivityPanel>
     );
@@ -74,7 +77,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1
   },
-  viewBtn: { justifyContent: 'center', alignItems: 'center', marginTop: 30, marginBottom: 20 },
+  viewBtn: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 30,
+    marginBottom: 20
+  },
   btnConfirm: {
     backgroundColor: '#01BF88',
     justifyContent: 'center',

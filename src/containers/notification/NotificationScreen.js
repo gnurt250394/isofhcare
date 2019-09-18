@@ -319,7 +319,7 @@ class NotificationScreen extends Component {
           case 6:
             return constants.msg.notification.type.ehealth;
           case 10:
-            return 'Thanh toán chuyển khoản'
+            return constants.msg.notification.type.transfer_payments
         }
 
       }

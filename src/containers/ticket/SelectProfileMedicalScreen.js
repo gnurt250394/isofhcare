@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import ActivityPanel from '@components/ActivityPanel';
 import ScaledImage from 'mainam-react-native-scaleimage';
+import constants from '../../res/strings';
 
 export default class SelectProfileMedical extends Component {
     constructor(props) {
@@ -12,19 +13,22 @@ export default class SelectProfileMedical extends Component {
     renderItems = () => {
         return (
             <TouchableOpacity style={styles.itemView}>
-                <View style={{
-                    flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 1, alignItems: 'center', borderBottomColor: "rgba(0, 0, 0, 0.06)", paddingVertical: 5, paddingHorizontal: 10
-                }}>
-                    <View style={{ flexDirection: 'row' }}>
-                        <Text style={{ textAlign: 'left', fontWeight: 'bold', color: '#000000', fontSize: 14 }}>MAI NGỌC NAM</Text>
+                <View style={styles.containerProfile}>
+                    <View style={styles.row}>
+                        <Text style={styles.txtName}>MAI NGỌC NAM</Text>
                         <ScaledImage style={{ marginLeft: 10, }} height={18} source={require("@images/new/profile/ic_tick.png")} ></ScaledImage>
                     </View>
-                    <TouchableOpacity style={{ borderRadius: 12, backgroundColor: '#27AE60', paddingVertical: 2, paddingHorizontal: 8, justifyContent: 'center', alignItems: 'center' }}>
-                        <Text style={{ color: '#fff', fontSize: 11 }}>Chọn hồ sơ</Text>
+                    <TouchableOpacity style={styles.buttonSelectFile}>
+                        <Text style={styles.txtSelectFile}>Chọn hồ sơ</Text>
                     </TouchableOpacity>
                 </View>
-                <View style={{ flexDirection: 'row' }}>
-                    <View style={{ flex: 1 / 4, justifyContent: 'center', alignItems: 'center', padding: 10 }}>
+                <View style={styles.row}>
+                    <View style={{
+                        flex: 1 / 4,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        padding: 10
+                    }}>
                         <ScaledImage style={{ borderRadius: 30, height: 60, width: 60, borderWidth: 1, borderColor: 'rgba(0, 0, 0, 0.06)' }} source={{ uri: 'https://kenh14cdn.com/2018/9/25/hnn6110-15378732210561772501979.jpg' }}></ScaledImage>
                         <Text style={{ fontWeight: 'bold', color: '#27AE60', marginTop: 5 }}>1231243</Text>
                     </View>
@@ -57,6 +61,34 @@ export default class SelectProfileMedical extends Component {
     }
 }
 const styles = StyleSheet.create({
+    txtSelectFile: {
+        color: '#fff',
+        fontSize: 11
+    },
+    buttonSelectFile: {
+        borderRadius: 12,
+        backgroundColor: '#27AE60',
+        paddingVertical: 2,
+        paddingHorizontal: 8,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    txtName: {
+        textAlign: 'left',
+        fontWeight: 'bold',
+        color: '#000000',
+        fontSize: 14
+    },
+    row: { flexDirection: 'row' },
+    containerProfile: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        borderBottomWidth: 1,
+        alignItems: 'center',
+        borderBottomColor: "rgba(0, 0, 0, 0.06)",
+        paddingVertical: 5,
+        paddingHorizontal: 10
+    },
     AcPanel: {
         flex: 1,
         backgroundColor: '#cacaca',
