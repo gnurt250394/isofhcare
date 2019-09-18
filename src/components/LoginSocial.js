@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ScaleImage from 'mainam-react-native-scaleimage';
-import { View, TouchableOpacity, Text } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import snackbar from '@utils/snackbar-utils';
 import userProvider from '@data-access/user-provider';
@@ -51,7 +51,7 @@ class LoginSocial extends Component {
         props = this.props;
         GoogleSignin.signOut();
         GoogleSignin.signIn().then(this.googleSignInCallBack.bind(this)).catch((err) => {
-            snackbar.show(constants.msg.user.canot_get_user_info_in_account_google,"danger");
+            snackbar.show(constants.msg.user.canot_get_user_info_in_account_google, "danger");
         }).done();
     }
 
@@ -158,7 +158,7 @@ class LoginSocial extends Component {
     }
     render() {
         return (
-            <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 10 }}>
+            <View style={styles.container}>
                 {/* <LoginButton
                     onLoginFinished={
                         (error, result) => {
@@ -186,13 +186,13 @@ class LoginSocial extends Component {
                         }
                     }
                     onLogoutFinished={() => console.log("logout.")} /> */}
-                <TouchableOpacity style={{ flexDirection: 'row', marginRight: 50 }} onPress={this.handleSigninFacebook.bind(this)}>
-                    <ScaleImage source={require("@images/new/facebook.png")} height={20} style={{ marginRight: 10 }} />
-                    <Text>Facebook</Text>
+                <TouchableOpacity style={styles.buttonFaceBook} onPress={this.handleSigninFacebook.bind(this)}>
+                    <ScaleImage source={require("@images/new/facebook.png")} height={20} style={styles.image} />
+                    <Text>{constants.facebook}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center' }} onPress={this.handleSigninGoogle.bind(this)}>
-                    <ScaleImage source={require("@images/new/google.png")} height={20} style={{ marginRight: 10 }} />
-                    <Text>Gmail</Text>
+                <TouchableOpacity style={styles.buttonGmail} onPress={this.handleSigninGoogle.bind(this)}>
+                    <ScaleImage source={require("@images/new/google.png")} height={20} style={styles.image} />
+                    <Text>{constants.gmail}</Text>
                 </TouchableOpacity>
             </View>
         );
@@ -205,3 +205,22 @@ function mapStateToProps(state) {
     };
 }
 export default connect(mapStateToProps)(LoginSocial);
+
+const styles = StyleSheet.create({
+    buttonGmail: {
+        flexDirection: 'row',
+        justifyContent: 'center'
+    },
+    image: {
+        marginRight: 10
+    },
+    buttonFaceBook: {
+        flexDirection: 'row',
+        marginRight: 50
+    },
+    container: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginTop: 10
+    },
+})

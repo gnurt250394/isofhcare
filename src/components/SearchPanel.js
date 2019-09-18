@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import Dimensions from 'Dimensions';
-import { Text, StatusBar, TouchableOpacity, TextInput, FlatList, View } from 'react-native';
+import { Text, StatusBar, TouchableOpacity, TextInput, FlatList, View, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
-import constants from '@resources/strings'
+import constants from '../res/strings'
 import { isIphoneX } from 'react-native-iphone-x-helper'
 import Activity from 'mainam-react-native-activity-panel';
 import ActionBar from '@components/Actionbar';
@@ -30,7 +30,7 @@ class SearchPanel extends Component {
 
         }
     }
-    onClickItemHistory(keyword) {
+    onClickItemHistory = (keyword) => () => {
         this.setState({ keyword }, () => {
             this.search();
         })
@@ -116,51 +116,66 @@ class SearchPanel extends Component {
             });
         }
     }
-
+    keyExtractor = (item, index) => index.toString()
+    renderItemHistory = ({ item, index }) => {
+        return (
+            this.props.renderItemHistory ?
+                this.props.renderItemHistory(item, index) :
+                <TouchableOpacity style={styles.buttonItemSearch} onPress={this.onClickItemHistory(item.name)}>
+                    <View style={styles.containerItemSearch}>
+                        <ScaledImage source={require("@images/search/time-left.png")} width={15} />
+                        <Text style={styles.txtSearchItem}>{item.name}</Text>
+                    </View>
+                    <View style={styles.end} />
+                </TouchableOpacity>
+        )
+    }
     render() {
         return (
             <View {...this.props}>
-                <View style={{ borderColor: 'rgba(151,151,151,0.55)', borderRadius: 5, borderWidth: 1.5, zIndex: 1001, flexDirection: 'row', alignItems: 'center', paddingLeft: 10, margin: 3, backgroundColor: '#FFF' }}>
-                    <TextInput numberOfLines={1} place onFocus={this.onFocus.bind(this)} ref={ref => this.searchInput = ref} placeholder={this.props.placeholder ? this.props.placeholder : "Tìm kiếm"} style={{ flexDirection: 'row', flex: 1, padding: 8, fontSize: 14, overflow: 'hidden', flexWrap: 'nowrap' }} returnKeyType="search" underlineColorAndroid="transparent" onSubmitEditing={this.search.bind(this)} onChangeText={this.onChangeText.bind(this)} value={this.state.keyword} />
+                <View style={styles.containerSearch}>
+                    <TextInput
+                        numberOfLines={1}
+                        onFocus={this.onFocus.bind(this)}
+                        ref={ref => this.searchInput = ref}
+                        placeholder={this.props.placeholder ? this.props.placeholder : "Tìm kiếm"}
+                        style={styles.inputSearch}
+                        returnKeyType="search"
+                        underlineColorAndroid="transparent"
+                        onSubmitEditing={this.search.bind(this)}
+                        onChangeText={this.onChangeText.bind(this)}
+                        value={this.state.keyword} />
                     {
                         this.state.keyword ?
-                            <TouchableOpacity style={{ padding: 10 }} onPress={this.clear.bind(this)}>
-                                <ScaledImage width={12} style={{ margin: 4 }} source={require("@images/ic_close.png")} />
+                            <TouchableOpacity style={styles.buttonClose} onPress={this.clear.bind(this)}>
+                                <ScaledImage
+                                    width={12}
+                                    style={styles.imageClose} source={require("@images/ic_close.png")} />
                             </TouchableOpacity> : <ScaledImage width={20} style={{ margin: 10 }} source={require("@images/ic_timkiem.png")} />
                     }
                 </View>
                 {
                     (this.state.history && this.state.history.length > 0 && !this.state.keyword) || (this.state.keyword && this.state.showSuggesh) ?
-                        <View style={{ borderColor: 'rgba(151,151,151,0.55)', paddingTop: 50, right: 0, left: 0, position: 'absolute', backgroundColor: '#FFF', zIndex: 1000, borderRadius: 6, borderWidth: 1, margin: 3, padding: 10 }}>
+                        <View style={styles.containerListItem}>
                             {
                                 (this.state.keyword) ?
                                     this.state.data && this.state.data.length != 0 ?
                                         <FlatList
-                                            style={{ zIndex: 1010, marginTop: 10 }}
-                                            keyExtractor={(item, index) => index.toString()}
+                                            style={styles.flatlist}
+                                            keyExtractor={this.keyExtractor}
                                             extraData={this.state}
                                             data={this.state.data}
                                             ListFooterComponent={this.renderFooter.bind(this)}
                                             renderItem={this.renderItem.bind(this)}
                                         /> :
-                                        <Text style={{ textAlign: 'center', margin: 10 }}>Không tìm thấy kết quả nào</Text>
+                                        <Text style={styles.txtnotFound}>Không tìm thấy kết quả nào</Text>
                                     : this.state.history && this.state.history.length > 0 ?
                                         <FlatList
-                                            style={{ zIndex: 1011, marginTop: 10 }}
-                                            keyExtractor={(item, index) => index.toString()}
+                                            style={styles.flatlist}
+                                            keyExtractor={this.keyExtractor}
                                             extraData={this.state}
                                             data={this.state.history}
-                                            renderItem={({ item, index }) =>
-                                                this.props.renderItemHistory ?
-                                                    this.props.renderItemHistory(item, index) :
-                                                    <TouchableOpacity style={{ padding: 5 }} onPress={() => { this.onClickItemHistory(item.name) }}>
-                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                                            <ScaledImage source={require("@images/search/time-left.png")} width={15} />
-                                                            <Text style={{ marginLeft: 5 }}>{item.name}</Text>
-                                                        </View>
-                                                        <View style={{ height: 0.5, backgroundColor: '#00000040', marginTop: 12 }} />
-                                                    </TouchableOpacity>
-                                            }
+                                            renderItem={this.renderItemHistory}
                                         /> : null
                             }
 
@@ -178,3 +193,63 @@ function mapStateToProps(state) {
     }
 }
 export default connect(mapStateToProps, null, null, { forwardRef: true })(SearchPanel);
+
+const styles = StyleSheet.create({
+    txtnotFound: {
+        textAlign: 'center',
+        margin: 10
+    },
+    txtSearchItem: {
+        marginLeft: 5
+    },
+    buttonItemSearch: { padding: 5 },
+    containerItemSearch: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    end: {
+        height: 0.5,
+        backgroundColor: '#00000040',
+        marginTop: 12
+    },
+    flatlist: {
+        zIndex: 1010,
+        marginTop: 10
+    },
+    containerListItem: {
+        borderColor: 'rgba(151,151,151,0.55)',
+        paddingTop: 50,
+        right: 0,
+        left: 0,
+        position: 'absolute',
+        backgroundColor: '#FFF',
+        zIndex: 1000,
+        borderRadius: 6,
+        borderWidth: 1,
+        margin: 3,
+        padding: 10
+    },
+    imageClose: {
+        margin: 4
+    },
+    buttonClose: { padding: 10 },
+    inputSearch: {
+        flexDirection: 'row',
+        flex: 1,
+        padding: 8,
+        fontSize: 14,
+        overflow: 'hidden',
+        flexWrap: 'nowrap'
+    },
+    containerSearch: {
+        borderColor: 'rgba(151,151,151,0.55)',
+        borderRadius: 5,
+        borderWidth: 1.5,
+        zIndex: 1001,
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingLeft: 10,
+        margin: 3,
+        backgroundColor: '#FFF'
+    },
+})

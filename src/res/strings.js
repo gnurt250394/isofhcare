@@ -84,7 +84,19 @@ module.exports = {
   BMI:'Chỉ số BMI',
   address:'Địa chỉ',
   relationship:'Quan hệ',
-  
+  facebook:'Facebook',
+  gmail:'Gmail',
+  not_found:'Hiện tại chưa có dữ liệu',
+  voucher:{
+    use_now:'SỬ DỤNG NGAY',
+    input_voucher:'NHẬP MÃ ƯU ĐÃI',
+    my_voucher:'MÃ ƯU ĐÃI CỦA TÔI',
+    money_not_bigger_sum_price:'Số tiền ưu đãi không được vượt quá tổng số tiền dịch vụ đã chọn',
+    voucher_not_found_or_expired:'Mã ưu đãi không tồn tại hoặc đã hết hạn vui lòng thử mã khác',
+    voucher_not_null:'Mã ưu đãi không được bỏ trống',
+    please_select_other_package:'Đã hết số lần ưu đãi vui lòng chọn gói khác',
+    voucher_invalid:'Mã Voucher không tồn tại'
+  },
   qr_code:{
     move_camera:'Di chuyển camera đến vùng chứa mã QR để quét',
     flash_only_behind:'Đèn flash chỉ hoạt động với camera sau'
@@ -687,7 +699,10 @@ module.exports = {
     share_with_isofhcare:'Chia sẻ trên hồ sơ iSofHCare',
     share_with_app_other:'Chia sẻ trên ứng dụng khác',
     history_share:'Lịch sử chia sẻ',
-    my_ehealth:'Y bạ điện tử của tôi'
+    my_ehealth:'Y bạ điện tử của tôi',
+    specialist_searched:'Chuyên khoa được tìm kiếm',
+    see_all:'Xem tất cả',
+    symptom_searched:'Triệu chứng được tìm nhiều'
   },
   actionSheet: {
     orther: 'Khác',
@@ -749,7 +764,8 @@ module.exports = {
     add_new_member:'THÊM THÀNH VIÊN MỚI',
     edit_info:'SỬA THÔNG TIN',
     setting_share:'CÀI ĐẶT CHIA SẺ',
-    scan_qr_code:'QUÉT MÃ QRCODE'
+    scan_qr_code:'QUÉT MÃ QRCODE',
+    voucher:'NHẬP MÃ ƯU ĐÃI'
   },
   account_screens: {
     signin_or_signup: 'Đăng nhập/ Đăng Ký',
