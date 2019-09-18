@@ -95,7 +95,12 @@ module.exports = {
     voucher_not_found_or_expired:'Mã ưu đãi không tồn tại hoặc đã hết hạn vui lòng thử mã khác',
     voucher_not_null:'Mã ưu đãi không được bỏ trống',
     please_select_other_package:'Đã hết số lần ưu đãi vui lòng chọn gói khác',
-    voucher_invalid:'Mã Voucher không tồn tại'
+    voucher_invalid:'Mã Voucher không tồn tại',
+    info_voucher:'Thông tin mã ưu đãi',
+    price_voucher:'Giá ưu đãi',
+    expired_voucher:'Hạn sử dụng',
+    quantity_voucher:'Số lần sử dụng',
+    use_voucher:'Bạn có muốn sử dụng mã ưu đãi này?'
   },
   qr_code:{
     move_camera:'Di chuyển camera đến vùng chứa mã QR để quét',

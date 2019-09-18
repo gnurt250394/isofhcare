@@ -6,6 +6,7 @@ import { Card } from 'native-base'
 import FillMyVocherScreen from './FillMyVoucherScreen';
 import MyVoucherCodeScreen from './MyVoucherCodeScreen';
 import constants from '@resources/strings';
+import Modal from '@components/modal';
 
 class MyVoucherScreen extends Component {
     constructor(props) {
@@ -16,9 +17,16 @@ class MyVoucherScreen extends Component {
         this.state = {
             isMyVocher: true,
             tabIndex,
+            isVisible: false,
+            voucher: {}
         };
     }
 
+    onCloseModal = () => {
+        this.setState({
+            isVisible: false
+        })
+    }
     onSelectMyVocher = () => {
         if (this.viewPager) this.viewPager.setPage(0);
     }
@@ -39,8 +47,11 @@ class MyVoucherScreen extends Component {
     }
 
     comfirmVoucher = (voucher) => {
+        this.setState({ voucher, isVisible: true })
+    }
+    onClickDone = () => {
         let onSelected = ((this.props.navigation.state || {}).params || {}).onSelected;
-        if (onSelected) onSelected(voucher)
+        if (onSelected && this.state.voucher) onSelected(this.state.voucher)
         this.props.navigation.pop()
     }
     render() {
@@ -72,6 +83,24 @@ class MyVoucherScreen extends Component {
                     </View>
 
                 </IndicatorViewPager>
+                <Modal
+                    isVisible={this.state.isVisible}
+                    onBackdropPress={this.onCloseModal}
+                    backdropOpacity={0.5}
+                    animationInTiming={500}
+                    animationOutTiming={500}
+                    style={styles.viewModal}
+                    backdropTransitionInTiming={1000}
+                    backdropTransitionOutTiming={1000}
+                >
+                    <View style={styles.viewPopup}>
+                        <Text style={styles.txNotifi}>{constants.voucher.use_voucher}</Text>
+                        <View style={styles.viewBtn}>
+                            <TouchableOpacity onPress={this.onClickDone} style={styles.btnDone}><Text style={styles.txDone}>{constants.actionSheet.accept}</Text></TouchableOpacity>
+                            <TouchableOpacity onPress={this.onCloseModal} style={styles.btnReject}><Text style={styles.txDone}>{constants.actionSheet.cancel}</Text></TouchableOpacity>
+                        </View>
+                    </View>
+                </Modal>
             </ActivityPanel>
         );
     }
@@ -109,6 +138,41 @@ const styles = StyleSheet.create({
         flex: 1,
         borderRadius: 6,
         overflow: 'hidden'
+    },
+    viewPopup: {
+        backgroundColor: '#fff',
+        marginHorizontal: 20,
+        paddingVertical: 40,
+        borderRadius: 5
+    },
+    txNotifi: {
+        fontSize: 18,
+        color: '#000',
+        textAlign: 'center',
+        marginHorizontal: 40
+    },
+    viewBtn: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 20
+    },
+    btnDone: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 30,
+        width: 78,
+        backgroundColor: '#359A60',
+        borderRadius: 5,
+    },
+    btnReject: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 30,
+        width: 78,
+        marginLeft: 10,
+        borderRadius: 5,
+        backgroundColor: '#FFB800',
     },
 })
 export default MyVoucherScreen;
