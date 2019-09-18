@@ -306,7 +306,40 @@ class SelectTimeScreen extends Component {
                 </View> : null
         )
     }
-
+    onSelectDay = (day) => {
+        let schedules = JSON.parse(JSON.stringify(this.state.schedules));
+        if (schedules.hasOwnProperty(day.dateString)) {
+            if (this.state.dateString) {
+                delete schedules[this.state.dateString].selected;
+                this.setState({allowBooking:false})
+            }
+            schedules[day.dateString].selected = true;
+            schedules[day.dateString].selectedColor = '#27ae60';
+            this.setState({
+                dateString: day.dateString,
+                bookingDate: day.dateString.toDateObject(),
+                schedules: schedules
+            }, () => {
+                this.selectDay(this.state.dateString);
+            })
+        }
+    }
+    onChangeMonth = (month) => {
+        this.setState({ latestTime: new Date(month.dateString) }, () => {
+            this.selectMonth(month.dateString.toDateObject())
+        })
+    }
+    toggelDate = () => {
+        this.setState({ toggelMonthPicker: true })
+    }
+    confirmDate = newDate => {
+        this.setState({ latestTime: newDate, toggelMonthPicker: false }, () => {
+            this.selectMonth(newDate);
+        })
+    }
+    onCancelDate = () => {
+        this.setState({ toggelMonthPicker: false });
+    }
     render() {
         console.log(this.state.listTime);
         return (<ActivityPanel
