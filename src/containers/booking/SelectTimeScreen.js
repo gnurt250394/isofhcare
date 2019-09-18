@@ -312,6 +312,7 @@ class SelectTimeScreen extends Component {
         if (schedules.hasOwnProperty(day.dateString)) {
             if (this.state.dateString) {
                 delete schedules[this.state.dateString].selected;
+                this.setState({allowBooking:false})
             }
             schedules[day.dateString].selected = true;
             schedules[day.dateString].selectedColor = '#27ae60';
