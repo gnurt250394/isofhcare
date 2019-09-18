@@ -45,7 +45,11 @@ class FillMyVocherScreen extends Component {
                         //     snackbar.show(constants.voucher.money_not_bigger_sum_price, 'danger')
                         // } else {
                         // this.props.onPress && this.props.onPress(res.data)
-                        this.setState({ item: res.data })
+                        // this.setState({ item: res.data })
+                        this.props.parrent.props.navigation.navigate('detailsVoucher', {
+                            item: res.data,
+                            booking
+                        })
                         // }
                         return;
                     }
@@ -68,21 +72,7 @@ class FillMyVocherScreen extends Component {
 
     }
 
-    confirmVoucher = () => {
-        let booking = this.props.booking
-        let idBooking = booking && booking.id ? booking.id : null
-        let item = this.state.item || {}
-        voucherProvider.selectVoucher(item.id, idBooking).then(res => {
-            if (res.code == 0) {
-                this.props.onPress && this.props.onPress(item)
-            } else {
-                snackbar.show(constants.voucher.voucher_invalid, "danger")
-            }
-        }).catch(err => {
-            // snackbar.show('','danger')
-        })
-
-    }
+    
     render() {
         const icSupport = require("@images/new/user.png");
         const { item } = this.state
@@ -122,25 +112,6 @@ class FillMyVocherScreen extends Component {
                             </TouchableOpacity>
                         </LinearGradient>
                     </View>
-                    {
-                        item && item.price ?
-                            <View style={styles.container2}>
-                                <Text style={styles.titleInfoVoucher}>{constants.voucher.info_voucher}:</Text>
-                                <View style={styles.groupInfo}>
-                                    <Text style={styles.txtTitle}>{constants.voucher.price_voucher}: <Text numberOfLines={2} style={[styles.containerText, { fontWeight: 'bold', fontSize: 16 }]}>GIẢM {item.price.formatPrice()}đ KHI ĐẶT KHÁM</Text></Text>
-                                    <Text style={styles.txtTitle}>{constants.voucher.expired_voucher}: <Text style={styles.containerText}>{`SỬ DỤNG ĐẾN ${item.endTime.toDateObject('-').format("hh:mm, dd/MM/yyyy")}`}</Text></Text>
-                                    <Text style={styles.txtTitle}>{constants.voucher.quantity_voucher}:  <Text style={styles.quality}>{`CÒN ${item.quantity} LẦN`}</Text></Text>
-                                    <TouchableOpacity
-                                        onPress={this.confirmVoucher}
-                                        style={[styles.btn]}
-                                    >
-                                        <Text style={styles.txtButton}>{constants.voucher.use_now}</Text>
-                                    </TouchableOpacity>
-                                </View>
-                                {/* </Card> */}
-                            </View>
-                            : null
-                    }
 
                 </View>
             </TouchableWithoutFeedback>

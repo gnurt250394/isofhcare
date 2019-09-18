@@ -17,16 +17,10 @@ class MyVoucherScreen extends Component {
         this.state = {
             isMyVocher: true,
             tabIndex,
-            isVisible: false,
-            voucher: {}
         };
     }
 
-    onCloseModal = () => {
-        this.setState({
-            isVisible: false
-        })
-    }
+
     onSelectMyVocher = () => {
         if (this.viewPager) this.viewPager.setPage(0);
     }
@@ -47,12 +41,13 @@ class MyVoucherScreen extends Component {
     }
 
     comfirmVoucher = (voucher) => {
-        this.setState({ voucher, isVisible: true })
+        this.setState({ voucher, })
+        let onSelected = ((this.props.navigation.state || {}).params || {}).onSelected;
+        if (onSelected) onSelected(voucher)
+        this.props.navigation.pop()
     }
     onClickDone = () => {
-        let onSelected = ((this.props.navigation.state || {}).params || {}).onSelected;
-        if (onSelected && this.state.voucher) onSelected(this.state.voucher)
-        this.props.navigation.pop()
+
     }
     render() {
         let booking = this.props.navigation.getParam('booking', null)
@@ -83,7 +78,7 @@ class MyVoucherScreen extends Component {
                     </View>
 
                 </IndicatorViewPager>
-                <Modal
+                {/* <Modal
                     isVisible={this.state.isVisible}
                     onBackdropPress={this.onCloseModal}
                     backdropOpacity={0.5}
@@ -100,7 +95,7 @@ class MyVoucherScreen extends Component {
                             <TouchableOpacity onPress={this.onCloseModal} style={styles.btnReject}><Text style={styles.txDone}>{constants.actionSheet.cancel}</Text></TouchableOpacity>
                         </View>
                     </View>
-                </Modal>
+                </Modal> */}
             </ActivityPanel>
         );
     }
