@@ -140,7 +140,7 @@ class RegisterScreen extends Component {
                 <Form ref={ref => (this.form = ref)}>
                   <TextField
                     getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-                      placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Họ tên"}
+                      placeholderStyle={styles.placeFloat} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Họ tên"}
                       onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
                     onChangeText={this.onChangeText('fullname')}
                     errorStyle={styles.errorStyle}
@@ -251,6 +251,10 @@ const DEVICE_WIDTH = Dimensions.get("window").width;
 const DEVICE_HEIGHT = Dimensions.get("window").height;
 
 const styles = StyleSheet.create({
+  placeFloat: {
+    fontSize: 16,
+    fontWeight: '200'
+  },
   txtContinue: {
     color: '#FFF',
     fontSize: 17

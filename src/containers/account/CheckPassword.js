@@ -76,7 +76,7 @@ export default class CheckPassword extends Component {
                   numberOfLines={1}
                   ellipsizeMode="tail"
                   style={[{ color: "#fff" }, styles.txtButton]}
-                >Ok</Text>
+                >{constants.actionSheet.ok}</Text>
               </TouchableOpacity>
             </View>
           </Form>

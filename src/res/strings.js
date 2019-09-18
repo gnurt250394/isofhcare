@@ -239,10 +239,15 @@ module.exports = {
     setup_password_success: 'Thiết lập mật khẩu mới thành công',
     phone_not_found: 'Số điện thoại không tồn tại trong hệ thống'
   },
-  reality_account: {
+  confirm_account: {
     title: 'Xác thực tài khoản',
     require_otp: 'Vui lòng nhập mã OTP',
-    require_length: 'Yêu cầu nhập đủ 6 ký tự'
+    require_length: 'Yêu cầu nhập đủ 6 ký tự',
+    please_enter_otp_send_devices:'Vui lòng nhập mã xác thực được gửi tới số điện thoại',
+    otp_expied:'Mã xác thực hiệu lực trong',
+    not_recive_code:'Nếu bạn cho rằng mình chưa nhập được mã hãy chọn',
+    resend_otp:'Gửi lại mã',
+    finish:'HOÀN TẤT'
   },
   touch_id_screens: {
     touch_not_found: 'Bạn chưa đăng ký vân tay trên tài khoản này',
@@ -415,7 +420,8 @@ module.exports = {
       profile_can_not_delete:'Hồ sơ không thể xóa do đã có đặt khám',
       confirm_fail:'Xác nhận không thành công',
       setting_share_success:'Cài đặt chia sẻ thành công',
-      select_data_need_share:'CHỌN DỮ LIỆU BẠN MUỐN CHIA SẺ VỚI THÀNH VIÊN NÀY'
+      select_data_need_share:'CHỌN DỮ LIỆU BẠN MUỐN CHIA SẺ VỚI THÀNH VIÊN NÀY',
+      want_delete_member:'Bạn có chắc chắn muốn xóa thành viên này?'
     },
     facility: {
       please_select_value_for_rating: "Vui lòng chọn giá trị đánh giá",
@@ -765,7 +771,8 @@ module.exports = {
     edit_info:'SỬA THÔNG TIN',
     setting_share:'CÀI ĐẶT CHIA SẺ',
     scan_qr_code:'QUÉT MÃ QRCODE',
-    voucher:'NHẬP MÃ ƯU ĐÃI'
+    voucher:'NHẬP MÃ ƯU ĐÃI',
+    profile:'Hồ sơ cá nhân'
   },
   account_screens: {
     signin_or_signup: 'Đăng nhập/ Đăng Ký',
