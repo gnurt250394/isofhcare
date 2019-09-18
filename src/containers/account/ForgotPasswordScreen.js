@@ -92,6 +92,9 @@ class ForgotPasswordScreen extends Component {
       nextScreen: this.nextScreen
     });
   }
+  onChangeText = s => {
+    this.setState({ email: s });
+  }
   render() {
     return (
       <ActivityPanel
@@ -123,9 +126,7 @@ class ForgotPasswordScreen extends Component {
                   }
                 }}
                 inputStyle={styles.input}
-                onChangeText={s => {
-                  this.setState({ email: s });
-                }}
+                onChangeText={this.onChangeText}
                 placeholder={constants.input_phone}
                 autoCapitalize={"none"}
               />

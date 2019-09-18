@@ -83,13 +83,13 @@ class ChangePasswordScreen extends Component {
                 showFullScreen={true} isLoading={this.state.isLoading}>
                 <ScrollView
                     showsVerticalScrollIndicator={false}
-                    style={{ flex: 1 }}
+                    style={styles.flex}
                     keyboardShouldPersistTaps="handled"
                 >
-                    <KeyboardAvoidingView behavior="padding" style={styles.form}>
-                        <ScaleImage source={require("@images/new/isofhcare.png")} width={200} style={{ marginTop: 50, alignSelf: 'center' }} />
-                        <View style={{ flex: 1, padding: 30 }}>
-                            <Form ref={ref => (this.form = ref)} style={{ marginTop: 10 }}>
+                    <KeyboardAvoidingView behavior="padding" >
+                        <ScaleImage source={require("@images/new/isofhcare.png")} width={200} style={styles.imageLogo} />
+                        <View style={styles.container}>
+                            <Form ref={ref => (this.form = ref)} style={styles.form}>
                                 <Field style={styles.inputPass}>
                                     <TextField
                                         getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
@@ -119,7 +119,24 @@ class ChangePasswordScreen extends Component {
                                         autoCapitalize={"none"}
                                     />
                                     {
-                                        this.state.passwordOld ? (this.state.secureTextOldEntry ? (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 30, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowOldPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 30, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowOldPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
+                                        this.state.passwordOld ? (this.state.secureTextOldEntry ?
+                                            (<TouchableOpacity
+                                                style={styles.buttonPassNew}
+                                                onPress={this.onShowOldPass}>
+                                                <ScaleImage
+                                                    style={styles.iconPassNew}
+                                                    resizeMode={'contain'}
+                                                    height={20}
+                                                    source={require('@images/new/ic_hide_pass.png')}></ScaleImage>
+                                            </TouchableOpacity>)
+                                            :
+                                            (<TouchableOpacity
+                                                style={styles.buttonPassNew}
+                                                onPress={this.onShowOldPass}>
+                                                <ScaleImage style={styles.iconPassNew}
+                                                    height={20}
+                                                    source={require('@images/new/ic_show_pass.png')}></ScaleImage>
+                                            </TouchableOpacity>)) : (<Field></Field>)
                                     }
                                 </Field>
                                 <Field style={styles.inputPass}>
@@ -135,9 +152,7 @@ class ChangePasswordScreen extends Component {
                                             secureTextEntry={this.state.secureTextNewEntry}
                                             allowFontScaling={false}
                                             onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
-                                        onChangeText={s => {
-                                            this.setState({ passwordNew: s });
-                                        }}
+                                        onChangeText={this.onChangeText('passwordNew')}
                                         allowFontScaling={false}
                                         errorStyle={styles.errorStyle}
                                         validate={{
@@ -239,6 +254,20 @@ class ChangePasswordScreen extends Component {
 }
 const DEVICE_WIDTH = Dimensions.get('window').width;
 const styles = StyleSheet.create({
+    form: {
+        marginTop: 10
+    },
+    flex: {
+        flex: 1
+    },
+    container: {
+        flex: 1,
+        padding: 30
+    },
+    imageLogo: {
+        marginTop: 50,
+        alignSelf: 'center'
+    },
     txtUpdate: {
         color: '#FFF',
         fontSize: 17
