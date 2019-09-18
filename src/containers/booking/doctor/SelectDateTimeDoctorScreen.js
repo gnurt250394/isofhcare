@@ -53,7 +53,7 @@ class SelectDateTimeDoctorScreen extends Component {
         super(props);
         let service = this.props.navigation.state.params.service;
         let isNotHaveSchedule = this.props.navigation.state.params.isNotHaveSchedule;
-        let profileDoctor = this.props.navigation.getParam('profileDoctor',{})
+        let profileDoctor = this.props.navigation.getParam('profileDoctor', {})
         this.state = {
             service,
             listTime: [],
@@ -306,16 +306,16 @@ class SelectDateTimeDoctorScreen extends Component {
         if (this.state.bookingDate && this.state.schedule) {
             // let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
             // if (callback) {
-                let data = this.state.listHospital
-                let listFinal = data.find(e => e.checked = true)
-                // callback(this.state.bookingDate, this.state.schedule, listFinal);
+
+            let listFinal = this.state.listHospital.find(e => e.checked == true)
+            // callback(this.state.bookingDate, this.state.schedule, listFinal);
             //     this.props.navigation.pop();
             // }
-            this.props.navigation.navigate('addBookingDoctor',{
-                profileDoctor:this.state.profileDoctor,
-                bookingDate:this.state.bookingDate,
-                schedule:this.state.schedule,
-                hospital:listFinal
+            this.props.navigation.navigate('addBookingDoctor', {
+                profileDoctor: this.state.profileDoctor,
+                bookingDate: this.state.bookingDate,
+                schedule: this.state.schedule,
+                hospital: listFinal
             })
         } else {
             this.setState({ scheduleError: "Vui lòng chọn ngày và khung giờ khám" });
@@ -325,16 +325,20 @@ class SelectDateTimeDoctorScreen extends Component {
     renderTimePicker(fromHour, toHour, label) {
         return (
             (this.state.listTime.filter(item => new Date(item.time).format("HH") >= fromHour && new Date(item.time).format("HH") < toHour).length) ?
-                <View style={{ marginTop: 10 }}>
-                    <Text style={{ color: '#00c088', fontWeight: 'bold', marginLeft: 5, fontSize: 16 }}>{label}</Text>
-                    <View style={{ flexWrap: 'wrap', flexDirection: 'row', alignItems: 'center', alignContent: 'center' }}>
+                <View style={styles.containerTimePicker}>
+                    <Text style={styles.txtlabel}>{label}</Text>
+                    <View style={styles.containerButtonTimePicker}>
                         {
                             this.state.listTime.filter(item => new Date(item.time).format("HH") >= fromHour && new Date(item.time).format("HH") < toHour).map((item, index) => {
-                                return <TouchableOpacity onPress={this.selectTime(item)} key={index} style={[{ paddingHorizontal: 5, alignSelf: 'center', minWidth: 60, borderRadius: 8, paddingVertical: 3, borderWidth: 1, borderColor: '#cacaca', margin: 5 },
-                                {
-                                    borderColor: this.getColor(item)
-                                }, this.state.schedule == item ? styles.item_selected : {}]}>
-                                    <Text style={[{ fontWeight: 'bold', color: '#00c088', textAlign: 'center', color: this.getColor(item) },
+                                return <TouchableOpacity
+                                    onPress={this.selectTime(item)}
+                                    key={index} style={[styles.buttonTimePicker,
+                                    {
+                                        borderColor: this.getColor(item)
+                                    }, this.state.schedule == item ? styles.item_selected : {}]}>
+                                    <Text style={[styles.txtTimePicker, {
+                                        color: this.getColor(item)
+                                    },
                                     this.state.schedule == item ? styles.item_label_selected : {}]}>{item.label}</Text>
                                 </TouchableOpacity>
                             })
@@ -345,15 +349,17 @@ class SelectDateTimeDoctorScreen extends Component {
     }
 
     onCheck = (item) => () => {
-        let data = [...this.state.listHospital]
-        data.forEach(e => {
+        let data2 = [...this.state.listHospital]
+        data2.forEach(e => {
             if (e.id == item.id) {
                 e.checked = true
             } else {
                 e.checked = false
             }
         })
-        this.setState({ listHospital: data })
+        this.setState({ listHospital: data2 }, () => {
+            console.log(this.state.listHospital, 'gggggg')
+        })
     }
     renderItem = ({ item }) => {
         return (
@@ -371,62 +377,75 @@ class SelectDateTimeDoctorScreen extends Component {
         )
     }
     keyExtractor = (item, index) => item.id.toString() || index.toString()
+    onSelectDay = (day) => {
+        let schedules = JSON.parse(JSON.stringify(this.state.schedules));
+        if (schedules.hasOwnProperty(day.dateString)) {
+            if (this.state.dateString) {
+                delete schedules[this.state.dateString].selected;
+            }
+            schedules[day.dateString].selected = true;
+            schedules[day.dateString].selectedColor = '#27ae60';
+            this.setState({
+                dateString: day.dateString,
+                bookingDate: day.dateString.toDateObject(),
+                schedules: schedules,
+                allowBooking: false,
+                listHospital: []
+            }, () => {
+                this.selectDay(this.state.dateString);
+            })
+        }
+    }
+    onMonthChange = (month) => {
+        this.setState({ latestTime: new Date(month.dateString) }, () => {
+            this.selectMonth(month.dateString.toDateObject())
+        })
+    }
+    onClickToggleDay = () => {
+        this.setState({ toggelMonthPicker: true })
+    }
+    onConfirmDate = newDate => {
+        this.setState({ latestTime: newDate, toggelMonthPicker: false }, () => {
+            this.selectMonth(newDate);
+        })
+    }
+    onCancelDate = () => {
+        this.setState({ toggelMonthPicker: false });
+    }
     render() {
 
         return (<ActivityPanel
             isLoading={this.state.isLoading}
             title="Chọn thời gian">
-            <View style={{ flex: 1 }}>
+            <View style={styles.flex}>
                 <View style={styles.container}>
                     <ScrollView keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
-                        <Text style={{ color: '#00c088', fontWeight: 'bold', fontSize: 16, margin: 10 }}>CHỌN NGÀY GIỜ CÓ MÀU XANH</Text>
-                        <View style={{ position: 'relative', left: 0, right: 0, width: DEVICE_WIDTH }}>
-                            <Calendar style={{ width: '100%' }}
+                        <Text style={styles.txtTitleHeader}>CHỌN NGÀY GIỜ CÓ MÀU XANH</Text>
+                        <View style={styles.containerCalendar}>
+                            <Calendar style={styles.calendar}
                                 markedDates={this.state.schedules}
                                 current={(this.state.latestTime || new Date()).format("yyyy-MM-dd")}
-                                onDayPress={(day) => {
-                                    let schedules = JSON.parse(JSON.stringify(this.state.schedules));
-                                    if (schedules.hasOwnProperty(day.dateString)) {
-                                        if (this.state.dateString) {
-                                            delete schedules[this.state.dateString].selected;
-                                        }
-                                        schedules[day.dateString].selected = true;
-                                        schedules[day.dateString].selectedColor = '#27ae60';
-                                        this.setState({
-                                            dateString: day.dateString,
-                                            bookingDate: day.dateString.toDateObject(),
-                                            schedules: schedules
-                                        }, () => {
-                                            this.selectDay(this.state.dateString);
-                                        })
-                                    }
-                                }}
+                                onDayPress={this.onSelectDay}
                                 monthFormat={'MMMM - yyyy'}
-                                onMonthChange={(month) => {
-                                    this.setState({ latestTime: new Date(month.dateString) }, () => {
-                                        this.selectMonth(month.dateString.toDateObject())
-                                    })
-                                }}
+                                onMonthChange={this.onMonthChange}
                                 // hideArrows={true}
                                 hideExtraDays={true}
                                 firstDay={1}
                             />
                             <TouchableOpacity
-                                onPress={() => {
-                                    this.setState({ toggelMonthPicker: true })
-                                }}
-                                style={{ position: 'absolute', top: 0, left: 70, right: 70, height: 60 }}>
+                                onPress={this.onClickToggleDay}
+                                style={styles.buttonToggleDay}>
                             </TouchableOpacity>
                         </View>
                         {
                             this.state.dateString ?
                                 this.state.listTime && this.state.listTime.length ?
-                                    <View style={{ margin: 10 }}>
-                                        <Text style={{ color: '#00c088', fontWeight: 'bold', fontSize: 16 }}>LỊCH KHÁM {this.state.dateString.toDateObject().format("thu, dd/MM/yyyy").toUpperCase()}</Text>
+                                    <View style={styles.containerListTime}>
+                                        <Text style={styles.txtSchedule}>LỊCH KHÁM {this.state.dateString.toDateObject().format("thu, dd/MM/yyyy").toUpperCase()}</Text>
                                         {
                                             this.state.scheduleError ?
                                                 <Text style={[styles.errorStyle]}>{this.state.scheduleError}</Text> :
-                                                <Text style={{ fontStyle: 'italic', marginVertical: 20, textAlign: 'center' }}>Vui lòng nhấn để chọn khung giờ khám</Text>
+                                                <Text style={styles.txtHelp}>Vui lòng nhấn để chọn khung giờ khám</Text>
                                         }
 
                                         {this.renderTimePicker(0, 12, "Sáng")}
@@ -434,9 +453,9 @@ class SelectDateTimeDoctorScreen extends Component {
                                     </View>
                                     : !this.state.isLoading ? <Text style={[styles.errorStyle]}>{"Ngày bạn chọn không có lịch khám nào"}</Text> : null
                                 :
-                                <Text style={{ fontStyle: 'italic', marginVertical: 20, textAlign: 'center' }}>Vui lòng chọn khung giờ khám</Text>
+                                <Text style={styles.txtHelp}>Vui lòng chọn khung giờ khám</Text>
                         }
-                        <View style={{padding: 10}}>
+                        <View style={{ padding: 10 }}>
                             <Text style={styles.address}>Địa điểm khám</Text>
                             <FlatList
                                 data={this.state.listHospital}
@@ -453,14 +472,8 @@ class SelectDateTimeDoctorScreen extends Component {
                 <DateTimePicker
                     mode={'date'}
                     isVisible={this.state.toggelMonthPicker}
-                    onConfirm={newDate => {
-                        this.setState({ latestTime: newDate, toggelMonthPicker: false }, () => {
-                            this.selectMonth(newDate);
-                        })
-                    }}
-                    onCancel={() => {
-                        this.setState({ toggelMonthPicker: false });
-                    }}
+                    onConfirm={this.onConfirmDate}
+                    onCancel={this.onCancelDate}
                     cancelTextIOS={"Hủy bỏ"}
                     confirmTextIOS={"Xác nhận"}
                     date={this.state.latestTime || new Date()}
@@ -477,6 +490,72 @@ function mapStateToProps(state) {
     };
 }
 const styles = StyleSheet.create({
+    txtHelp: {
+        fontStyle: 'italic',
+        marginVertical: 20,
+        textAlign: 'center'
+    },
+    txtSchedule: {
+        color: '#00c088',
+        fontWeight: 'bold',
+        fontSize: 16
+    },
+    containerListTime: {
+        margin: 10
+    },
+    buttonToggleDay: {
+        position: 'absolute',
+        top: 0,
+        left: 70,
+        right: 70,
+        height: 60
+    },
+    calendar: {
+        width: '100%'
+    },
+    containerCalendar: {
+        position: 'relative',
+        left: 0,
+        right: 0,
+        width: DEVICE_WIDTH
+    },
+    txtTitleHeader: {
+        color: '#00c088',
+        fontWeight: 'bold',
+        fontSize: 16,
+        margin: 10
+    },
+    flex: { flex: 1 },
+    txtTimePicker: {
+        fontWeight: 'bold',
+        color: '#00c088',
+        textAlign: 'center',
+    },
+    buttonTimePicker: {
+        paddingHorizontal: 5,
+        alignSelf: 'center',
+        minWidth: 60,
+        borderRadius: 8,
+        paddingVertical: 3,
+        borderWidth: 1,
+        borderColor: '#cacaca',
+        margin: 5
+    },
+    containerButtonTimePicker: {
+        flexWrap: 'wrap',
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignContent: 'center'
+    },
+    txtlabel: {
+        color: '#00c088',
+        fontWeight: 'bold',
+        marginLeft: 5,
+        fontSize: 16
+    },
+    containerTimePicker: {
+        marginTop: 10
+    },
     address: {
         color: '#02c39a',
         fontSize: 16,

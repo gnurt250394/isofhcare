@@ -115,12 +115,18 @@ class ListDoctorScreen extends Component {
                 !keyword ||
                 ((data.name || "").trim().toLowerCase().unsignText().indexOf(keyword) != -1)))
         })
-        this.setState({ data: listSearch })
+        let obj = listSearch[0] || {}
+        this.setState({ data: listSearch, infoDoctor: obj })
 
 
     }
     keyExtractor = (item, index) => index.toString()
     listEmpty = () => !this.state.isLoading && <Text style={styles.none_data}>Không có dữ liệu</Text>
+    onSnapToItem = (index) => {
+        let data = [...this.state.data]
+        let obj = data[index]
+        this.setState({ infoDoctor: obj })
+    }
     render() {
         const { infoDoctor } = this.state
         return (
@@ -149,9 +155,7 @@ class ListDoctorScreen extends Component {
                     keyExtractor={this.keyExtractor}
                     ListEmptyComponent={this.listEmpty}
                 /> */}
-                        <View style={{
-                            flex: 1
-                        }}>
+                        <View style={styles.flex}>
                             <LinearGradient
                                 colors={['#02C39A', '#00B96C']}
                                 locations={[0, 1]}
@@ -166,18 +170,14 @@ class ListDoctorScreen extends Component {
                                     sliderHeight={height / 3}
                                     layoutCardOffset={9}
                                     itemHeight={height / 3}
-                                    onSnapToItem={(index) => {
-                                        let data = [...this.state.data]
-                                        let obj = data[index]
-                                        this.setState({ infoDoctor: obj })
-                                    }}
+                                    onSnapToItem={this.onSnapToItem}
                                 />
                             </LinearGradient>
                             <View
                                 style={[styles.groupProfile, { paddingRight: 10 }]}
                             >
                                 <Text style={styles.Specialist}>Chuyên khoa</Text>
-                                <View style={{ flex: 1 }}>
+                                <View style={styles.flex}>
                                     {infoDoctor.position && infoDoctor.position.length > 0 ?
                                         infoDoctor.position.map((e, i) => {
 
@@ -193,7 +193,7 @@ class ListDoctorScreen extends Component {
                             <View style={styles.between} />
                             <View style={[styles.groupProfile, { paddingRight: 10 }]} >
                                 <Text style={styles.Specialist}>Địa điểm làm việc</Text>
-                                <View style={{ flex: 1 }}>
+                                <View style={styles.flex}>
                                     {infoDoctor.address && infoDoctor.address.length > 0 ?
                                         infoDoctor.address.map((e, i) => {
                                             return (
@@ -216,6 +216,9 @@ export default ListDoctorScreen;
 
 
 const styles = StyleSheet.create({
+    flex: {
+        flex: 1
+    },
     linear: {
         width: '100%',
         height: height / 3,
@@ -259,7 +262,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#111111',
         width: '40%',
-        paddingLeft:10
+        paddingLeft: 10
     },
     between: {
         backgroundColor: '#02c39a',

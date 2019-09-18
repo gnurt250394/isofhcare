@@ -88,11 +88,14 @@ class DetailsDoctorScreen extends Component {
     })
   }
 
-  addBooking=()=>{
-    this.props.navigation.navigate('selectTimeDoctor',{
+  addBooking = () => {
+    this.props.navigation.navigate('selectTimeDoctor', {
       profileDoctor: this.state.profileDoctor,
-      isNotHaveSchedule:true
+      isNotHaveSchedule: true
     })
+  }
+  onSeeDetails=()=>{
+    alert('hello')
   }
   render() {
     const icSupport = require("@images/new/user.png");
@@ -104,11 +107,12 @@ class DetailsDoctorScreen extends Component {
       <ActivityPanel
         title={"HỒ SƠ BÁC SỸ"}
         isLoading={this.state.isLoading}
+
       >
         <ScrollView
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode='on-drag'
-          style={{ flex: 1, paddingVertical: 5 }}>
+          style={styles.scroll}>
           <View style={styles.viewImgUpload}>
             <ImageLoad
               resizeMode="cover"
@@ -147,7 +151,17 @@ class DetailsDoctorScreen extends Component {
                 />
                 <Text style={styles.rating}>{profileDoctor.rating}</Text>
               </View>
-              <Text style={styles.fontItalic}>{this.state.name} nhận xét, {this.state.name} đánh giá</Text>
+              <View style={styles.containerSeeDetails}>
+                <TouchableOpacity
+                  style={styles.buttonSeeDetail}
+                  hitSlop={styles.hitSlopButton}
+                  onPress={this.onSeeDetails}
+                >
+                  <Text style={styles.txtSeeDetails}>Xem chi tiết</Text>
+                </TouchableOpacity>
+                <Text style={styles.fontItalic}>{this.state.name} nhận xét, {this.state.name} đánh giá</Text>
+
+              </View>
 
             </View>
           </View>
@@ -158,7 +172,7 @@ class DetailsDoctorScreen extends Component {
           >
             <Text style={styles.txtButtonBooking}>Đặt khám</Text>
           </TouchableOpacity>
-          <View style={{ flex: 1, marginVertical: 20, paddingLeft: 10 }}>
+          <View style={styles.containerInfo}>
             <Text style={styles.colorBold}>Đơn vị công tác:</Text>
 
             <Text style={styles.colorBold}>Chuyên khoa:</Text>
@@ -175,6 +189,35 @@ class DetailsDoctorScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  containerInfo: {
+    flex: 1,
+    marginVertical: 20,
+    paddingLeft: 10
+  },
+  containerSeeDetails: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  txtSeeDetails: {
+    color: 'rgb(2,195,154)',
+    textDecorationLine: 'underline',
+
+  },
+  hitSlopButton: {
+    top: 10,
+    bottom: 10,
+    right: 10
+  },
+  buttonSeeDetail: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 3,
+    paddingRight: 10
+  },
+  scroll: {
+    flex: 1,
+    paddingVertical: 5
+  },
   txtButtonBooking: {
     color: '#fff',
     fontSize: 15,
