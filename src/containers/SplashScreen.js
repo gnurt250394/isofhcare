@@ -63,17 +63,13 @@ class SplashScreen extends Component {
 
 	render() {
 		return (
-			<ActivityPanel style={{ flex: 1 }} hideActionbar={true} hideStatusbar={true} showFullScreen={true}>
-				<View style={{ position: 'relative', flex: 1 }}>
-					<View style={[{ justifyContent: 'center', alignItems: 'center', flex: 1 }]}>
+			<ActivityPanel style={styles.flex} hideActionbar={true} hideStatusbar={true} showFullScreen={true}>
+				<View style={styles.container}>
+					<View style={[styles.containerLogo]}>
 						<MyScaleImage animation="rubberBand" delay={500} duration={3000} source={require("@images/logo.png")} width={120} />
 					</View>
 
-					<View style={{
-						margin: 10, justifyContent: 'center',
-						alignItems: 'center',
-						padding: 10
-					}}>
+					<View style={styles.containerCopyRight}>
 						<ScaleImage source={require("@images/new/copyright.png")} height={20} style={{
 						}} />
 					</View>
@@ -85,6 +81,24 @@ class SplashScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+	containerCopyRight: {
+		margin: 10,
+		justifyContent: 'center',
+		alignItems: 'center',
+		padding: 10
+	},
+	containerLogo: {
+		justifyContent: 'center',
+		alignItems: 'center',
+		flex: 1
+	},
+	container: {
+		position: 'relative',
+		flex: 1
+	},
+	flex: {
+		flex: 1
+	},
 	picture: {
 		position: 'absolute',
 		top: 0,

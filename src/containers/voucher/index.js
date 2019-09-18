@@ -5,6 +5,7 @@ import { IndicatorViewPager } from "mainam-react-native-viewpager";
 import { Card } from 'native-base'
 import FillMyVocherScreen from './FillMyVoucherScreen';
 import MyVoucherCodeScreen from './MyVoucherCodeScreen';
+import constants from '@resources/strings';
 
 class MyVoucherScreen extends Component {
     constructor(props) {
@@ -46,15 +47,15 @@ class MyVoucherScreen extends Component {
         let booking = this.props.navigation.getParam('booking', null)
         return (
             <ActivityPanel
-                title="NHẬP MÃ ƯU ĐÃI"
+                title={constants.title.voucher}
                 showFullScreen={true} isLoading={this.state.isLoading}>
                 <View style={styles.viewBtn}>
                     <View style={styles.separateBackground}></View>
-                    <TouchableOpacity onPress={this.onSelectMyVocher} style={[styles.btnGetNumber, this.state.isMyVocher ? { backgroundColor: '#27AE60' } : {}]}>
-                        <Text style={this.state.isMyVocher ? { color: '#fff', fontWeight: "bold", } : { color: '#27AE60', fontWeight: "bold", }}>NHẬP MÃ ƯU ĐÃI</Text>
+                    <TouchableOpacity onPress={this.onSelectMyVocher} style={[styles.btnGetNumber, this.state.isMyVocher ? styles.buttonSelected : {}]}>
+                        <Text style={this.state.isMyVocher ? styles.unSelected : styles.selected}>{constants.voucher.input_voucher}</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={this.onMyVocher} style={[styles.btnGetNumber, , this.state.isMyVocher ? {} : { backgroundColor: '#27AE60' }]}>
-                        <Text style={this.state.isMyVocher ? { color: '#27AE60', fontWeight: "bold", } : { color: '#fff', fontWeight: "bold", }}>MÃ ƯU ĐÃI CỦA TÔI</Text>
+                    <TouchableOpacity onPress={this.onMyVocher} style={[styles.btnGetNumber, , this.state.isMyVocher ? {} : styles.buttonSelected]}>
+                        <Text style={this.state.isMyVocher ? styles.selected : styles.unSelected}>{constants.voucher.my_voucher}</Text>
                     </TouchableOpacity>
                 </View>
                 <IndicatorViewPager style={styles.container}
@@ -76,6 +77,15 @@ class MyVoucherScreen extends Component {
     }
 }
 const styles = StyleSheet.create({
+    buttonSelected: { backgroundColor: '#27AE60' },
+    selected: {
+        color: '#27AE60',
+        fontWeight: "bold",
+    },
+    unSelected: {
+        color: '#fff',
+        fontWeight: "bold",
+    },
     container: { flex: 1 },
     viewBtn: {
         flexDirection: 'row',

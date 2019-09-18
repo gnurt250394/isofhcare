@@ -38,14 +38,14 @@ class FillMyVocherScreen extends Component {
                 if (res.code == 0) {
                     if (res.data) {
                         if (priceServices < res.data.price) {
-                            snackbar.show('Số tiền ưu đãi không được vượt quá tổng số tiền dịch vụ đã chọn', 'danger')
+                            snackbar.show(constants.voucher.money_not_bigger_sum_price, 'danger')
                         } else {
                             this.props.onPress && this.props.onPress(res.data)
                         }
                         return;
                     }
                 }
-                snackbar.show("Mã ưu đãi không tồn tại hoặc đã hết hạn vui lòng thử mã khác", "danger")
+                snackbar.show(constants.voucher.voucher_not_found_or_expired, "danger")
             }).catch(err => {
                 if (this.props.parrent)
                     this.props.parrent.setState({ isLoading: false })
@@ -76,7 +76,7 @@ class FillMyVocherScreen extends Component {
                                     required: true,
                                 },
                                 messages: {
-                                    required: "Mã ưu đãi không được bỏ trống",
+                                    required: constants.voucher.voucher_not_null,
                                 }
                             }}
                             placeholder={'Nhập mã ưu đãi'}
@@ -91,7 +91,7 @@ class FillMyVocherScreen extends Component {
                             onPress={this.comfirmVoucher}
                             style={styles.button}
                         >
-                            <Text style={styles.txtButton}>XÁC NHẬN</Text>
+                            <Text style={styles.txtButton}>{constants.actionSheet.confirm.toUpperCase()}</Text>
                         </TouchableOpacity>
                     </LinearGradient>
                 </View>

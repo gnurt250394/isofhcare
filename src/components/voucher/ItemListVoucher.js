@@ -5,6 +5,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import ImageLoad from "mainam-react-native-image-loader";
 import { Card } from 'native-base'
 import stringUtils from 'mainam-react-native-string-utils' 
+import constants from '@resources/strings';
 class ItemListVoucher extends Component {
     constructor(props) {
         super(props);
@@ -61,7 +62,7 @@ class ItemListVoucher extends Component {
                                     onPress={onPress}
                                     style={[styles.button]}
                                 >
-                                    <Text style={styles.txtButton}>SỬ DỤNG NGAY</Text>
+                                    <Text style={styles.txtButton}>{constants.voucher.use_now}</Text>
                                 </TouchableOpacity>
                             </LinearGradient>
                         </View>
