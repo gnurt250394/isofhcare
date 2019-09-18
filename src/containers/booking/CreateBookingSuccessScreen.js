@@ -42,8 +42,12 @@ class CreateBookingSuccessScreen extends Component {
         }, 0)
         return (priceFinal - priceVoucher).formatPrice()
     }
-    onPressCode = (vnPayId) => {
-        Clipboard.setString(vnPayId)
+    goHome = () => {
+        this.props.navigation.pop();
+    }
+    onBackdropPress = () => this.setState({ isVisible: false })
+    onPressCode = (transactionCode) => {
+        Clipboard.setString(transactionCode)
         snackbar.show('Đã sao chép', 'success')
     }
     renderVnPayDate(vnPayDate) {
@@ -143,7 +147,7 @@ class CreateBookingSuccessScreen extends Component {
                                 booking.payment == 1 && <View>
                                     <View style={styles.row}>
                                         <Text style={styles.label}>{constants.booking.payment_vnpay_no}</Text>
-                                        <TouchableOpacity style={styles.btnCopy} onPress={() => this.onPressCode(booking.vnPayId)}><Text style={styles.text}>{booking.vnPayId ? booking.vnPayId : ""}</Text></TouchableOpacity>
+                                        <TouchableOpacity style={styles.btnCopy} onPress={() => this.onPressCode(booking.transactionCode)}><Text style={styles.text}>{booking.transactionCode ? booking.transactionCode : ""}</Text></TouchableOpacity>
                                     </View>
                                     <View style={styles.row}>
                                         <Text style={styles.label}>{constants.booking.payment_vnpay_date}</Text>

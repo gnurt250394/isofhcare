@@ -5,18 +5,38 @@ import { connect } from 'react-redux';
 import ScaleImage from "mainam-react-native-scaleimage";
 import stringUtils from 'mainam-react-native-string-utils';
 import constants from '@resources/strings';
+import dateUtils from 'mainam-react-native-date-utils';
 
 class PaymentBookingErrorScreen extends Component {
     constructor(props) {
         super(props)
     }
 
+    renderVnPayDate(vnPayDate) {
+        let year = vnPayDate.substring(0, 4)
+        let month = vnPayDate.substring(4, 6)
+        let day = vnPayDate.substring(6, 8)
+        let hours = vnPayDate.substring(8, 10)
+        let minutes = vnPayDate.substring(10, 12)
+        let secons = vnPayDate.substring(12, 14)
+        return `${day}/${month}/${year} ${hours}:${minutes}:${secons}`
 
+    }
+    getPriceSecive = (service, voucher) => {
+        let priceVoucher = voucher && voucher.price ? voucher.price : 0
+        let priceFinal = service.reduce((start, item) => {
+            return start + parseInt(item.service.price)
+        }, 0)
+        return (priceFinal - priceVoucher).formatPrice()
+    }
     render() {
         console.log(this.props.navigation.state.params)
         let booking = (this.props.navigation.state.params || {}).booking;
         if (!booking)
             return null;
+        let service = this.props.navigation.state.params.service || [];
+        let voucher = this.props.navigation.state.params.voucher || {};
+
         return (
             <ActivityPanel
                 // hideBackButton={true}
@@ -39,20 +59,31 @@ class PaymentBookingErrorScreen extends Component {
 
                         <View style={styles.view2}>
                             {
-                                booking.transactionCode &&
-                                <View style={styles.colt}>
-                                    <Text style={styles.col1}>{constants.booking.payment_code}</Text>
-                                    <Text style={styles.col2}>{booking.transactionCode}</Text>
-                                </View>
+                                booking.payment == 1 ?
+                                    <View>
+                                        <View style={styles.colt}>
+                                            <Text style={styles.col1}>{constants.booking.payment_vnpay_no}</Text>
+                                            <Text style={styles.col2}>{booking.transactionCode}</Text>
+                                        </View>
+                                        <View style={styles.colt}>
+                                            <Text style={styles.col1}>{constants.booking.payment_vnpay_date}</Text>
+                                            <Text style={styles.col2}>{this.renderVnPayDate(booking.vnPayDate)}</Text>
+                                        </View>
+                                    </View> :
+                                    booking.transactionCode &&
+                                    <View style={styles.colt}>
+                                        <Text style={styles.col1}>{constants.booking.payment_code}</Text>
+                                        <Text style={styles.col2}>{booking.transactionCode}</Text>
+                                    </View>
                             }
-                            <View style={styles.colb}>
-                                <Text style={styles.col1}>{constants.booking.service}</Text>
-                                <Text style={styles.col2}>{booking.service.name}</Text>
-                            </View>
-                            <View style={styles.colb}>
-                                <Text style={styles.col1}>{constants.booking.payment_price}</Text>
-                                <Text style={styles.col2}>{booking.service.price.formatPrice()} đ</Text>
-                            </View>
+                            {
+                                service && service.length ?
+                                    <View style={styles.colt}>
+                                        <Text style={styles.col1}>{constants.booking.sum_price}:</Text>
+                                        <Text style={[styles.col2, { color: "#d0021b" }]}>{this.getPriceSecive(service, voucher)}đ</Text>
+                                    </View> : null
+                            }
+
                         </View>
 
                     </ScrollView>
