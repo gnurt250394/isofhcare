@@ -63,28 +63,24 @@ class ProfileInfo extends Component {
 
     return (
       <ActivityPanel
-        title={"Hồ sơ cá nhân"}
+        title={constants.title.profile}
         isLoading={this.state.isLoading}>
         <ScrollView
-          style={{ flex: 1, paddingVertical: 5 }}
+          style={styles.scroll}
           keyboardShouldPersistTaps="handled">
           {this.state.username ?
             <View>
               <View style={styles.viewImgUpload}>
                 <View
-                  style={{ position: "relative", width: 70, marginTop: 20, }}
+                  style={styles.containerAvatar}
                 >
                   <ImageLoad
                     resizeMode="cover"
-                    imageStyle={{ borderRadius: 35, borderWidth: 1, borderColor: 'rgba(0,0,0,0.07)' }}
+                    imageStyle={styles.borderImage}
                     borderRadius={35}
-                    customImagePlaceholderDefaultStyle={{
-                      width: 70,
-                      height: 70,
-                      alignSelf: "center"
-                    }}
+                    customImagePlaceholderDefaultStyle={styles.image}
                     placeholderSource={icSupport}
-                    style={{ width: 70, height: 70, alignSelf: "center" }}
+                    style={styles.image}
                     resizeMode="cover"
                     loadingStyle={{ size: "small", color: "gray" }}
                     source={source}
@@ -94,29 +90,29 @@ class ProfileInfo extends Component {
                           resizeMode="cover"
                           source={icSupport}
                           width={70}
-                          style={{ width: 70, height: 70, alignSelf: "center" }}
+                          style={styles.image}
                         />
                       );
                     }}
                   />
                 </View>
               </View>
-              <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginVertical: 20 }}>
-                <Text style={{ fontSize: 18, color: '#000' }}>{this.state.username ? this.state.username : ''}</Text>
-                <Text style={{ color: 'rgb(2,195,154)', marginVertical: 5 }}>{this.state.phone ? this.state.phone : ''}</Text>
+              <View style={styles.containerName}>
+                <Text style={styles.txtUsername}>{this.state.username ? this.state.username : ''}</Text>
+                <Text style={styles.txtPhone}>{this.state.phone ? this.state.phone : ''}</Text>
                 {/* <Text style={{ marginTop: 15 }}>{this.state.medicalRecords ? `${this.state.medicalRecords.length} ` : '0 '}lượt sử dụng dịch vụ</Text> */}
               </View>
               <View style={styles.container}>
-                <Form ref={ref => (this.form = ref)} style={[{ flex: 1 }]}>
+                <Form ref={ref => (this.form = ref)} style={[styles.flex]}>
                   <Text style={[styles.errorStyle]}>{this.state.nameError}</Text>
 
                   <View
                     style={[
                       styles.mucdichkham,
-                      { marginTop: 5, justifyContent: 'center', alignItems: 'flex-end', paddingVertical: 12, borderBottomWidth: 0 }
+                      styles.gender
                     ]}
                   >
-                    <Text style={styles.mdk}>Giới tính</Text>
+                    <Text style={styles.mdk}>{constants.gender}</Text>
                     <Text style={styles.ktq}>
                       {this.state.gender && this.state.gender == 1
                         ? 'Nam'
@@ -127,17 +123,17 @@ class ProfileInfo extends Component {
 
                   <Field
 
-                    style={[styles.mucdichkham, { justifyContent: 'center', alignItems: 'flex-end', flex: 1, paddingVertical: 12, borderBottomWidth: 0 }]}
+                    style={[styles.mucdichkham, styles.containerGender]}
                   >
-                    <Text style={styles.mdk}>Ngày sinh</Text>
+                    <Text style={styles.mdk}>{constants.dob}</Text>
 
                     <Text style={styles.ktq}> {this.state.dob ? this.state.dob.toDateObject('-').format('dd-MM-yyyy') : ('')}
                     </Text>
                   </Field>
                   <Field
-                    style={[styles.mucdichkham, { flex: 1 }]}
+                    style={[styles.mucdichkham, styles.flex]}
                   >
-                    <Text style={styles.mdk}>Email</Text>
+                    <Text style={styles.mdk}>{constants.email}</Text>
                     <TextField
                       hideError={true}
                       editable={false}
@@ -145,7 +141,7 @@ class ProfileInfo extends Component {
                       inputStyle={[
                         styles.ktq,
                         Platform.OS == "ios" ? { paddingVertical: 12, } : {},
-                        { justifyContent: 'center', alignItems: 'flex-end', width: 200, }
+                        styles.inputEmail
                       ]}
                       value={this.state.email}
                     // underlineColorAndroid="transparent"
@@ -292,6 +288,59 @@ class ProfileInfo extends Component {
 }
 
 const styles = StyleSheet.create({
+  inputEmail: {
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    width: 200,
+  },
+  containerGender: {
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    flex: 1,
+    paddingVertical: 12,
+    borderBottomWidth: 0
+  },
+  gender: {
+    marginTop: 5,
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    paddingVertical: 12,
+    borderBottomWidth: 0
+  },
+  flex: { flex: 1 },
+  txtPhone: {
+    color: 'rgb(2,195,154)',
+    marginVertical: 5
+  },
+  txtUsername: {
+    fontSize: 18,
+    color: '#000'
+  },
+  containerName: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 20
+  },
+  image: {
+    width: 70,
+    height: 70,
+    alignSelf: "center"
+  },
+  borderImage: {
+    borderRadius: 35,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.07)'
+  },
+  containerAvatar: {
+    position: "relative",
+    width: 70,
+    marginTop: 20,
+  },
+  scroll: {
+    flex: 1,
+    paddingVertical: 5
+  },
   AcPanel: {
     flex: 1,
     backgroundColor: "rgb(247,249,251)"

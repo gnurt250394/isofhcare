@@ -27,20 +27,21 @@ class OtpPhoneNumberScreen extends React.PureComponent {
         }, 1000);
     }
     onReSendPhone = () => {
-        let details = this.props.navigation.state.params && this.props.navigation.state.params.details ? this.props.navigation.state.params.details :''
+        let details = this.props.navigation.state.params && this.props.navigation.state.params.details ? this.props.navigation.state.params.details : ''
         details && userProvider.reSendOtp(details).then(res => {
             // if (res.code == 'OK') {
             //     console.log('thanh cong')
             // } else {
             //     console.log('that bai');
             // }
-            if(res.code == 'OK')
-            {this.setState({
-                seconds:90
-            })}else{
-                snackbar.show(res.message,'danger')
+            if (res.code == 'OK') {
+                this.setState({
+                    seconds: 90
+                })
+            } else {
+                snackbar.show(res.message, 'danger')
             }
-            
+
         })
     }
     onCheckToken = () => {
@@ -65,49 +66,56 @@ class OtpPhoneNumberScreen extends React.PureComponent {
                     // } else this.props.navigation.navigate("home", { showDraw: false });
                     return;
                 } else {
-                    snackbar.show(res.message,'danger')
+                    snackbar.show(res.message, 'danger')
 
                 }
             })
         }
     }
+    handleTextChange = text => this.setState({ text1: text })
     render() {
         return (
             <ActivityPanel
-                style={{ flex: 1 }}
-                title="Xác nhận số điện thoại"
-        
+                style={styles.flex}
+                title={constants.title.confirm_phone}
+
                 showFullScreen={true}
             >
                 <ScrollView
                     showsVerticalScrollIndicator={false}
-                    style={{ flex: 1 }} keyboardShouldPersistTaps="handled">
-                    <View style={{ flex: 1, padding: 20 }}>
+                    style={styles.flex}
+                    keyboardShouldPersistTaps="handled">
+                    <View style={styles.group}>
                         <ScaleImage source={require("@images/new/isofhcare.png")} width={180} style={styles.logo} />
-                        <Text style={styles.txContents}>Vui lòng nhập mã xác thực được gửi tới số điện thoại</Text>
+                        <Text style={styles.txContents}>{constants.confirm_account.please_enter_otp_send_devices}</Text>
                         <OTPTextView
                             containerStyle={styles.textInputContainer}
-                            handleTextChange={text => this.setState({ text1: text })}
+                            handleTextChange={this.handleTextChange}
                             inputCount={6}
                             keyboardType="numeric"
                             underlineColorAndroid={'#fff'}
                             tintColor={'#03C39A'}
                             textInputStyle={styles.textInputStyle}
                         />
-                        <Text style={styles.txTime}>Mã xác thực hiệu lực trong   <Text style={styles.txCountTime}>{this.state.seconds > 9 ? this.state.seconds : '0' + this.state.seconds}</Text>   giây</Text>
-                        <Text style={styles.txReSent}>Nếu bạn cho rằng mình chưa nhập được mã hãy chọn</Text>
-                        <TouchableOpacity onPress={this.onReSendPhone} style={styles.btnReSend}><Text style={styles.txBtnReSend}>Gửi lại mã</Text></TouchableOpacity>
+                        <Text style={styles.txTime}>{constants.confirm_account.otp_expied}   <Text style={styles.txCountTime}>{this.state.seconds > 9 ? this.state.seconds : '0' + this.state.seconds}</Text>   giây</Text>
+                        <Text style={styles.txReSent}>{constants.confirm_account.not_recive_code}</Text>
+                        <TouchableOpacity onPress={this.onReSendPhone} style={styles.btnReSend}><Text style={styles.txBtnReSend}>{constants.confirm_account.resend_otp}</Text></TouchableOpacity>
                         {this.state.txErr ? <Text style={styles.txErr}>{this.state.txErr}</Text> : null}
                     </View>
                 </ScrollView>
                 <TouchableOpacity onPress={this.onCheckToken} style={styles.btnFinish} >
-                    <Text style={styles.txFinish}>{"HOÀN TẤT"}</Text>
+                    <Text style={styles.txFinish}>{constants.confirm_account.finish}</Text>
                 </TouchableOpacity>
             </ActivityPanel>
         )
     }
 }
 const styles = StyleSheet.create({
+    group: {
+        flex: 1,
+        padding: 20
+    },
+    flex: { flex: 1 },
     container: {
         flex: 1,
         justifyContent: 'center',
@@ -134,8 +142,8 @@ const styles = StyleSheet.create({
 
 });
 function mapStateToProps(state) {
-	return {
-		userApp: state.userApp
-	};
+    return {
+        userApp: state.userApp
+    };
 }
 export default connect(mapStateToProps)(OtpPhoneNumberScreen);
