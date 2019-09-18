@@ -27,6 +27,7 @@ import userProvider from "@data-access/user-provider";
 import DeviceInfo from 'react-native-device-info';
 import codePushUtils from '@utils/codepush-utils';
 import constants from "@resources/strings";
+import dataCacheProvider from '@data-access/datacache-provider';
 
 class AccountScreen extends Component {
   constructor(props) {
@@ -184,6 +185,7 @@ class AccountScreen extends Component {
     );
   }
   logout = () => {
+    dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, null);
     this.props.dispatch(redux.userLogout());
     if (this.props.onLogout) this.props.onLogout();
   }
