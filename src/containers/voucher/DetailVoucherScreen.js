@@ -20,17 +20,17 @@ class DetailVoucherScreen extends Component {
         let idBooking = booking && booking.id ? booking.id : null
         let item = this.state.item || {}
         this.setState({ isLoading: true }, () => {
-            voucherProvider.selectVoucher(item.id, idBooking).then(res => {
-                this.setState({ isLoading: false })
-                if (res.code == 0) {
+            // voucherProvider.selectVoucher(item.id, idBooking).then(res => {
+            //     this.setState({ isLoading: false })
+            //     if (res.code == 0) {
                     this.props.navigation.navigate('confirmBooking', { voucher: this.state.item })
-                } else {
-                    snackbar.show(constants.voucher.voucher_invalid, "danger")
-                }
-            }).catch(err => {
-                this.setState({ isLoading: false })
-                // snackbar.show('','danger')
-            })
+            //     } else {
+            //         snackbar.show(constants.voucher.voucher_invalid, "danger")
+            //     }
+            // }).catch(err => {
+            //     this.setState({ isLoading: false })
+            //     // snackbar.show('','danger')
+            // })
         })
 
 
