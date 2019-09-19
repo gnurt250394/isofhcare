@@ -58,7 +58,7 @@ class FillMyVocherScreen extends Component {
             }).catch(err => {
                 if (this.props.parrent)
                     this.props.parrent.setState({ isLoading: false })
-                console.log('err: ', err.response);
+                
 
             })
         }
@@ -76,7 +76,7 @@ class FillMyVocherScreen extends Component {
     render() {
         const icSupport = require("@images/new/user.png");
         const { item } = this.state
-        console.log('item: ', item);
+        
         return (
             <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
                 <View style={styles.container}>

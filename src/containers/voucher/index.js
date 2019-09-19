@@ -51,6 +51,7 @@ class MyVoucherScreen extends Component {
     }
     render() {
         let booking = this.props.navigation.getParam('booking', null)
+        let voucher = this.props.navigation.getParam('voucher', null)
         return (
             <ActivityPanel
                 title={constants.title.voucher}
@@ -70,11 +71,11 @@ class MyVoucherScreen extends Component {
                     }}
                     onPageScroll={this.onPageScroll.bind(this)}>
                     <View style={styles.container}>
-                        <FillMyVocherScreen booking={booking} onPress={this.comfirmVoucher} parrent={this} />
+                        <FillMyVocherScreen booking={booking} voucher={voucher} onPress={this.comfirmVoucher} parrent={this} />
                     </View>
                     <View style={styles.container}>
 
-                        <MyVoucherCodeScreen booking={booking} onPress={this.comfirmVoucher} parrent={this} />
+                        <MyVoucherCodeScreen booking={booking} voucher={voucher} onPress={this.comfirmVoucher} parrent={this} />
                     </View>
 
                 </IndicatorViewPager>
