@@ -40,6 +40,9 @@ class CreateBookingSuccessScreen extends Component {
         let priceFinal = service.reduce((start, item) => {
             return start + parseInt(item.service.price)
         }, 0)
+        if (priceVoucher > priceFinal) {
+            return 0
+        }
         return (priceFinal - priceVoucher).formatPrice()
     }
     goHome = () => {
@@ -253,7 +256,7 @@ const styles = StyleSheet.create({
         fontStyle: 'italic'
     },
     btnCopy: {
-        flex:1
+        flex: 1
     },
     row: {
         marginTop: 10,
