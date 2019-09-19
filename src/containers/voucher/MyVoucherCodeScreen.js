@@ -32,28 +32,41 @@ class MyVoucherCodeScreen extends Component {
             snackbar.show(constants.voucher.please_select_other_package, 'danger')
             return
         }
-        voucherProvider.selectVoucher(item.id, idBooking).then(res => {
-            if (res.code == 0) {
-                this.props.onPress && this.props.onPress(item)
-            } else {
-                snackbar.show(constants.voucher.voucher_invalid, "danger")
-            }
-        }).catch(err => {
-            // snackbar.show('','danger')
-        })
+        item.status = true
+        // voucherProvider.selectVoucher(item.id, idBooking).then(res => {
+        //     if (res.code == 0) {
+        this.props.onPress && this.props.onPress(item)
+        //     } else {
+        //         snackbar.show(constants.voucher.voucher_invalid, "danger")
+        //     }
+        // }).catch(err => {
+        //     // snackbar.show('','danger')
+        // })
     }
     onRefresh = () => this.setState({ refreshing: true }, this.getListVoucher)
 
     getListVoucher = () => {
         voucherProvider.getListVoucher().then(res => {
+
             switch (res.code) {
-                case 0: this.setState({ refreshing: false, data: res.data })
+                case 0:
+                    let voucher = this.props.voucher
+                    let data = res.data
+                    if (voucher) {
+                        data.forEach(e => {
+                            if (e.id == voucher.id) {
+                                e.status = voucher.status
+                            }
+                        })
+                    }
+
+                    this.setState({ refreshing: false, data })
                     break;
                 default: this.setState({ refreshing: false })
                     break;
             }
         }).catch(err => {
-            console.log('err: ', err.response);
+
             this.setState({ refreshing: false })
         })
 
@@ -62,10 +75,15 @@ class MyVoucherCodeScreen extends Component {
     componentDidMount = () => {
         this.getListVoucher()
     };
+    onPressLater = () => {
+        let item = {}
+        item.status = false
+        this.props.onPress && this.props.onPress(item)
 
+    }
     renderItem = ({ item, index }) => {
         return (
-            <ItemListVoucher item={item} onPress={this.comfirmVoucher(item)} />
+            <ItemListVoucher item={item} onPress={this.comfirmVoucher(item)} onPressLater={this.onPressLater} />
         )
     }
 

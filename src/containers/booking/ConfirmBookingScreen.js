@@ -12,6 +12,8 @@ import connectionUtils from '@utils/connection-utils';
 import payoo from 'mainam-react-native-payoo';
 import { NativeModules } from 'react-native';
 import constants from '../../res/strings';
+import voucherProvider from '@data-access/voucher-provider'
+
 var PayooModule = NativeModules.PayooModule;
 
 class ConfirmBookingScreen extends Component {
@@ -88,11 +90,24 @@ class ConfirmBookingScreen extends Component {
         }
     };
 
+    confirmVoucher = (voucher, idBooking) => {
+        voucherProvider.selectVoucher(voucher.id, idBooking).then(res => {
+            if (res.code == 0) {
+
+            } else {
+                snackbar.show(constants.voucher.voucher_invalid, "danger")
+            }
+        }).catch(err => {
+
+        })
+    }
     confirmPayment(booking, bookingId, paymentMethod) {
         booking.hospital = this.state.hospital;
         booking.profile = this.state.profile;
         booking.payment = this.state.paymentMethod;
+
         this.setState({ isLoading: true }, () => {
+            if (this.state.voucher && this.state.voucher.code) this.confirmVoucher(this.state.voucher, bookingId)
             bookingProvider.confirmPayment(bookingId, paymentMethod).then(s => {
                 switch (s.code) {
 
@@ -206,6 +221,7 @@ class ConfirmBookingScreen extends Component {
                     code: this.state.voucher.code,
                     amount: this.state.voucher.price
                 }
+                this.confirmVoucher(this.state.voucher,booking.book.id)
             }
 
             walletProvider.createOnlinePayment(
@@ -273,7 +289,7 @@ class ConfirmBookingScreen extends Component {
                 this.setState({ isLoading: false }, () => {
                     if (e && e.response && e.response.data) {
                         let response = e.response.data;
-                        console.log(response);
+                        
                         let message = "";
                         switch (response.type) {
                             case "ValidationError":
@@ -522,14 +538,16 @@ class ConfirmBookingScreen extends Component {
 
     }
     getVoucher = (voucher) => {
+        
 
         this.setState({ voucher: voucher })
     }
     goToMyVoucher = () => {
-        console.log(this.state.booking)
+        
         this.props.navigation.navigate('myVoucher', {
             onSelected: this.getVoucher,
-            booking: this.state.booking.book
+            booking: this.state.booking.book,
+            voucher:this.state.voucher
         })
     }
     addVoucher = () => {
