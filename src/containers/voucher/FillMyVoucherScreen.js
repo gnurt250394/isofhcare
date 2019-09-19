@@ -16,10 +16,16 @@ class FillMyVocherScreen extends Component {
         super(props);
         this.state = {
             voucher: '',
-            item: {}
+            item: {},
+            isVisible: false
         };
     }
-    onChangeText = (s) => this.setState({ voucher: s })
+    onChangeText = (s) => {
+        if (s) {
+            this.setState({ isVisible: true })
+        }
+        this.setState({ voucher: s })
+    }
 
     checkVoucher = () => {
         Keyboard.dismiss();
@@ -39,22 +45,17 @@ class FillMyVocherScreen extends Component {
                     this.props.parrent.setState({ isLoading: false });
                 }
 
-                if (res.code == 0) {
-                    if (res.data) {
-                        // if (priceServices < res.data.price) {
-                        //     snackbar.show(constants.voucher.money_not_bigger_sum_price, 'danger')
-                        // } else {
-                        // this.props.onPress && this.props.onPress(res.data)
-                        this.setState({ item: res.data })
-                        // this.props.parrent.props.navigation.navigate('detailsVoucher', {
-                        //     item: res.data,
-                        //     booking
-                        // })
-                        // }
-                        return;
+                if (res.code == 0 && res.data) {
+                    if (this.props.voucher && res.data.id == this.props.voucher.id) {
+                        this.setState({ isVisible: false })
+
+                    } else {
+                        this.setState({ item: res.data, isVisible: false })
                     }
+                } else {
+                    snackbar.show(constants.voucher.voucher_not_found_or_expired, "danger")
+
                 }
-                snackbar.show(constants.voucher.voucher_not_found_or_expired, "danger")
             }).catch(err => {
                 if (this.props.parrent)
                     this.props.parrent.setState({ isLoading: false })
@@ -71,11 +72,14 @@ class FillMyVocherScreen extends Component {
             confirm();
 
     }
-
+    onClickLater = () => {
+        this.props.onPress && this.props.onPress({})
+    }
     confirmVoucher = () => {
         let booking = this.state.booking
         let idBooking = booking && booking.id ? booking.id : null
         let item = this.state.item || {}
+
         this.props.onPress && this.props.onPress(item)
 
         // voucherProvider.selectVoucher(item.id, idBooking).then(res => {
@@ -94,7 +98,7 @@ class FillMyVocherScreen extends Component {
     }
     render() {
         const icSupport = require("@images/new/user.png");
-        const { item } = this.state
+        const { item, isVisible } = this.state
         const { voucher } = this.props
 
         return (
@@ -118,17 +122,23 @@ class FillMyVocherScreen extends Component {
                                 autoCapitalize={"none"}
                             />
                         </Form>
-                        <LinearGradient
-                            colors={['rgb(255, 214, 51)', 'rgb(204, 163, 0)', 'rgb(179, 143, 0)']}
-                            locations={[0, 0.7, 1]}
-                            style={styles.containerButton}>
-                            <TouchableOpacity
-                                onPress={this.checkVoucher}
-                                style={styles.button}
-                            >
-                                <Text style={styles.txtButtonConfirm}>{constants.actionSheet.confirm.toUpperCase()}</Text>
-                            </TouchableOpacity>
-                        </LinearGradient>
+                        {isVisible ?
+                            <LinearGradient
+                                colors={['rgb(255, 214, 51)', 'rgb(204, 163, 0)', 'rgb(179, 143, 0)']}
+                                locations={[0, 0.7, 1]}
+                                style={styles.containerButton}>
+                                <TouchableOpacity
+                                    onPress={this.checkVoucher}
+                                    style={styles.button}
+                                >
+                                    <Text style={styles.txtButtonConfirm}>{constants.actionSheet.confirm.toUpperCase()}</Text>
+                                </TouchableOpacity>
+                            </LinearGradient> :
+                            <View
+                                style={styles.containerButton}
+                            />
+                        }
+
                     </View>
 
                     {(item && item.code) &&
@@ -152,7 +162,7 @@ class FillMyVocherScreen extends Component {
                             </View>
                         </View>
                     }
-                    {(voucher && voucher.code && voucher.type != 1) &&
+                    {(voucher && voucher.code && (voucher.type == 2)) &&
                         <View style={styles.container2}>
                             {/* <Text style={styles.titleInfoVoucher}>{constants.voucher.info_voucher}:</Text> */}
                             <View style={styles.groupInfo}>
@@ -164,7 +174,7 @@ class FillMyVocherScreen extends Component {
                                     locations={[0, 0.7, 1]}
                                     style={styles.containerButton}>
                                     <TouchableOpacity
-                                        onPress={this.confirmVoucher}
+                                        onPress={this.onClickLater}
                                         style={[styles.button]}
                                     >
                                         <Text style={[styles.txtButton]}>{'DÙNG SAU'}</Text>
