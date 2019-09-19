@@ -53,7 +53,7 @@ class ItemListVoucher extends Component {
                         <Text numberOfLines={2} style={[styles.containerText, { fontWeight: 'bold', fontSize: 16 }]}>GIẢM {item.price.formatPrice()}đ KHI ĐẶT KHÁM</Text>
                         <Text style={styles.containerText}>{`HẠN SỬ DỤNG ĐẾN ${item.endTime.toDateObject('-').format("hh:mm, dd/MM/yyyy")}`}</Text>
                         <View style={styles.containerRow}>
-                            <Text style={styles.quality}>{`CÒN X${item.validate || 1} LẦN`}</Text>
+                            <Text numberOfLines={1} style={styles.quality}>{`CÒN ${item.quantity} LẦN`}</Text>
                             <LinearGradient
                                 colors={this.getColor(item)}
                                 locations={[0, 0.7, 1]}
@@ -105,18 +105,18 @@ const styles = StyleSheet.create({
     quality: {
         color: '#27AE60',
         fontWeight: '500',
-        paddingVertical: 3
+        paddingVertical: 3,
     },
     btn: {
         backgroundColor: '#27AE60',
         height: 38,
-        width: '55%',
         borderRadius: 7,
     },
     containerRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
+        flexWrap:'wrap'
     },
     container: {
         flex: 1
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     containerText: {
         padding: 4,
         // backgroundColor: '#FFFFFF',
-        width: '100%',
+        // width: '100%',
         marginBottom: 10,
         color: '#27AE60'
     },
