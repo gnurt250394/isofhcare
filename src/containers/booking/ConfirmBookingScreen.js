@@ -90,24 +90,34 @@ class ConfirmBookingScreen extends Component {
         }
     };
 
-    confirmVoucher = (voucher, idBooking) => {
-        voucherProvider.selectVoucher(voucher.id, idBooking).then(res => {
+    confirmVoucher = async (voucher, idBooking) => {
+        let data = await voucherProvider.selectVoucher(voucher.id, idBooking).then(res => {
             if (res.code == 0) {
-
+                return true
             } else {
-                snackbar.show(constants.voucher.voucher_invalid, "danger")
+                this.setState({ isLoading: false })
+                return false
             }
         }).catch(err => {
-
+            this.setState({ isLoading: false })
+            return false
         })
+        return data
     }
     confirmPayment(booking, bookingId, paymentMethod) {
         booking.hospital = this.state.hospital;
         booking.profile = this.state.profile;
         booking.payment = this.state.paymentMethod;
 
-        this.setState({ isLoading: true }, () => {
-            if (this.state.voucher && this.state.voucher.code) this.confirmVoucher(this.state.voucher, bookingId)
+        this.setState({ isLoading: true }, async () => {
+            if (this.state.voucher && this.state.voucher.code) {
+                let dataVoucher = await this.confirmVoucher(this.state.voucher, bookingId)
+                if (!dataVoucher) {
+                    snackbar.show(constants.voucher.voucher_not_found_or_expired, "danger")
+                    return
+                }
+            }
+            
             bookingProvider.confirmPayment(bookingId, paymentMethod).then(s => {
                 switch (s.code) {
 
@@ -213,7 +223,7 @@ class ConfirmBookingScreen extends Component {
             serviceText = this.state.service.map(item => (item && item.service ? item.service.id + " - " + item.service.name : "")).join(', ');
         }
 
-        this.setState({ isLoading: true }, () => {
+        this.setState({ isLoading: true }, async () => {
             let memo = `THANH TOÁN ${this.getPaymentMethod()} - Đặt khám - ${booking.book.codeBooking} - ${serviceText} - ${this.state.hospital.hospital.name} - ${this.getBookingTime()} - ${this.state.profile.medicalRecords.name}`;
             let voucher = null
             if (this.state.voucher && this.state.voucher.code) {
@@ -221,8 +231,13 @@ class ConfirmBookingScreen extends Component {
                     code: this.state.voucher.code,
                     amount: this.state.voucher.price
                 }
-                this.confirmVoucher(this.state.voucher,booking.book.id)
+                let dataVoucher = await this.confirmVoucher(this.state.voucher, booking.book.id)
+                if (!dataVoucher) {
+                    snackbar.show(constants.voucher.voucher_not_found_or_expired, "danger")
+                    return
+                }
             }
+            
 
             walletProvider.createOnlinePayment(
                 this.props.userApp.currentUser.id,
@@ -289,7 +304,6 @@ class ConfirmBookingScreen extends Component {
                 this.setState({ isLoading: false }, () => {
                     if (e && e.response && e.response.data) {
                         let response = e.response.data;
-                        
                         let message = "";
                         switch (response.type) {
                             case "ValidationError":
@@ -543,11 +557,11 @@ class ConfirmBookingScreen extends Component {
         this.setState({ voucher: voucher })
     }
     goToMyVoucher = () => {
-        
+
         this.props.navigation.navigate('myVoucher', {
             onSelected: this.getVoucher,
             booking: this.state.booking.book,
-            voucher:this.state.voucher
+            voucher: this.state.voucher
         })
     }
     addVoucher = () => {
@@ -569,6 +583,9 @@ class ConfirmBookingScreen extends Component {
         let priceFinal = this.state.service.reduce((start, item) => {
             return start + parseInt(item.service.price)
         }, 0)
+        if (priceFinal < priceVoucher) {
+            return 0
+        }
         return (priceFinal - priceVoucher).formatPrice()
     }
     selectPaymentmethod = (paymentMethod) => () => {
