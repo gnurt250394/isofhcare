@@ -19,7 +19,7 @@ class ItemListVoucher extends Component {
         return 'SỬ DỤNG NGAY'
     }
     getColor = (item) => {
-        console.log('item: ', item);
+        
         if (item.status) {
             return ['rgba(230, 51, 51, 0.70)', 'rgba(230, 51, 51, 0.90)', 'rgba(230, 51, 51, 1)']
         }
@@ -53,7 +53,7 @@ class ItemListVoucher extends Component {
                         <Text numberOfLines={2} style={[styles.containerText, { fontWeight: 'bold', fontSize: 16 }]}>GIẢM {item.price.formatPrice()}đ KHI ĐẶT KHÁM</Text>
                         <Text style={styles.containerText}>{`HẠN SỬ DỤNG ĐẾN ${item.endTime.toDateObject('-').format("hh:mm, dd/MM/yyyy")}`}</Text>
                         <View style={styles.containerRow}>
-                            <Text style={styles.quality}>{`CÒN ${item.quantity} LẦN`}</Text>
+                            <Text style={styles.quality}>{`CÒN X${item.validate || 1} LẦN`}</Text>
                             <LinearGradient
                                 colors={this.getColor(item)}
                                 locations={[0, 0.7, 1]}

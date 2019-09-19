@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Keyboard, ScrollView } from 'react-native';
 import TextField from "mainam-react-native-form-validate/TextField";
 import FloatingLabel from 'mainam-react-native-floating-label';
 import constants from "../../res/strings";
@@ -45,11 +45,11 @@ class FillMyVocherScreen extends Component {
                         //     snackbar.show(constants.voucher.money_not_bigger_sum_price, 'danger')
                         // } else {
                         // this.props.onPress && this.props.onPress(res.data)
-                        // this.setState({ item: res.data })
-                        this.props.parrent.props.navigation.navigate('detailsVoucher', {
-                            item: res.data,
-                            booking
-                        })
+                        this.setState({ item: res.data })
+                        // this.props.parrent.props.navigation.navigate('detailsVoucher', {
+                        //     item: res.data,
+                        //     booking
+                        // })
                         // }
                         return;
                     }
@@ -58,7 +58,7 @@ class FillMyVocherScreen extends Component {
             }).catch(err => {
                 if (this.props.parrent)
                     this.props.parrent.setState({ isLoading: false })
-                
+
 
             })
         }
@@ -72,17 +72,35 @@ class FillMyVocherScreen extends Component {
 
     }
 
-    
+    confirmVoucher = () => {
+        let booking = this.state.booking
+        let idBooking = booking && booking.id ? booking.id : null
+        let item = this.state.item || {}
+        this.props.onPress && this.props.onPress(item)
+
+        // voucherProvider.selectVoucher(item.id, idBooking).then(res => {
+        //     this.setState({ isLoading: false })
+        //     if (res.code == 0) {
+
+        //     } else {
+        //         snackbar.show(constants.voucher.voucher_invalid, "danger")
+        //     }
+        // }).catch(err => {
+        //     this.setState({ isLoading: false })
+        //     // snackbar.show('','danger')
+        // })
+
+
+    }
     render() {
         const icSupport = require("@images/new/user.png");
         const { item } = this.state
-        
+        const { voucher } = this.props
+
         return (
-            <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+            <ScrollView keyboardShouldPersistTaps="handled">
                 <View style={styles.container}>
-                    <View style={{
-                        flex: 1
-                    }}>
+                    <View style={styles.flex}>
                         <Form ref={ref => (this.form = ref)}>
                             <TextField
                                 onChangeText={this.onChangeText}
@@ -108,17 +126,63 @@ class FillMyVocherScreen extends Component {
                                 onPress={this.checkVoucher}
                                 style={styles.button}
                             >
-                                <Text style={styles.txtButton}>{constants.actionSheet.confirm.toUpperCase()}</Text>
+                                <Text style={styles.txtButtonConfirm}>{constants.actionSheet.confirm.toUpperCase()}</Text>
                             </TouchableOpacity>
                         </LinearGradient>
                     </View>
 
+                    {(item && item.code) &&
+                        <View style={styles.container2}>
+                            {/* <Text style={styles.titleInfoVoucher}>{constants.voucher.info_voucher}:</Text> */}
+                            <View style={styles.groupInfo}>
+                                <Text style={styles.txtTitle}>{constants.voucher.price_voucher}: <Text numberOfLines={2} style={[styles.containerText, { fontWeight: 'bold', fontSize: 16 }]}>GIẢM {item.price.formatPrice()}đ KHI ĐẶT KHÁM</Text></Text>
+                                <Text style={styles.txtTitle}>{constants.voucher.expired_voucher}: <Text style={styles.containerText}>{`SỬ DỤNG ĐẾN ${item.endTime.toDateObject('-').format("hh:mm, dd/MM/yyyy")}`}</Text></Text>
+                                <Text style={styles.txtTitle}>{constants.voucher.quantity_voucher}:  <Text style={styles.quality}>{`CÒN ${item.quantity} LẦN`}</Text></Text>
+                                <LinearGradient
+                                    colors={['#02C39A', '#01BF86', '#00B96C']}
+                                    locations={[0, 0.7, 1]}
+                                    style={styles.containerButton}>
+                                    <TouchableOpacity
+                                        onPress={this.confirmVoucher}
+                                        style={[styles.button]}
+                                    >
+                                        <Text style={[styles.txtButton]}>{constants.voucher.use_now}</Text>
+                                    </TouchableOpacity>
+                                </LinearGradient>
+                            </View>
+                        </View>
+                    }
+                    {(voucher && voucher.code && voucher.type != 1) &&
+                        <View style={styles.container2}>
+                            {/* <Text style={styles.titleInfoVoucher}>{constants.voucher.info_voucher}:</Text> */}
+                            <View style={styles.groupInfo}>
+                                <Text style={styles.txtTitle}>{constants.voucher.price_voucher}: <Text numberOfLines={2} style={[styles.containerText, { fontWeight: 'bold', fontSize: 16 }]}>GIẢM {voucher.price.formatPrice()}đ KHI ĐẶT KHÁM</Text></Text>
+                                <Text style={styles.txtTitle}>{constants.voucher.expired_voucher}: <Text style={styles.containerText}>{`SỬ DỤNG ĐẾN ${voucher.endTime.toDateObject('-').format("hh:mm, dd/MM/yyyy")}`}</Text></Text>
+                                <Text style={styles.txtTitle}>{constants.voucher.quantity_voucher}:  <Text style={styles.quality}>{`CÒN ${voucher.quantity} LẦN`}</Text></Text>
+                                <LinearGradient
+                                    colors={['rgba(230, 51, 51, 0.70)', 'rgba(230, 51, 51, 0.90)', 'rgba(230, 51, 51, 1)']}
+                                    locations={[0, 0.7, 1]}
+                                    style={styles.containerButton}>
+                                    <TouchableOpacity
+                                        onPress={this.confirmVoucher}
+                                        style={[styles.button]}
+                                    >
+                                        <Text style={[styles.txtButton]}>{'DÙNG SAU'}</Text>
+                                    </TouchableOpacity>
+                                </LinearGradient>
+                            </View>
+                        </View>
+                    }
+
                 </View>
-            </TouchableWithoutFeedback>
+            </ScrollView>
         );
     }
 }
 const styles = StyleSheet.create({
+    flex: {
+        flex: 1
+    },
     groupPrice: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -140,6 +204,7 @@ const styles = StyleSheet.create({
     },
     container2: {
         padding: 10,
+        marginTop: 15,
         flex: 2,
     },
     txtTitle: {
@@ -154,7 +219,7 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
 
     },
-    txtButton: {
+    txtButtonConfirm: {
         color: '#fff',
         fontSize: 16,
         fontWeight: 'bold'
@@ -189,24 +254,8 @@ const styles = StyleSheet.create({
         marginTop: 25,
         marginBottom: 5
     },
-    customImagePlace: {
-        height: 100,
-        width: 100,
-        borderRadius: 50
-    },
 
-    styleImgLoad: {
-        width: 100,
-        height: 100,
-        paddingRight: 5
-    },
-    shadow: {
-        elevation: 3,
-        shadowColor: '#111111',
-        shadowOffset: { width: 2, height: 2 },
-        shadowOpacity: 0.6,
-        shadowRadius: 2
-    },
+
     txtButton: {
         color: '#FFFFFF',
         fontWeight: '700',
@@ -228,25 +277,18 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginBottom: 10
     },
-    containerRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        flexWrap: 'wrap',
 
-    },
 
-    containerItem: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 10,
-        borderRadius: 5,
-        backgroundColor: '#FFFFFF'
-    },
     containerText: {
         // backgroundColor: '#FFFFFF',
         width: '100%',
         color: '#27AE60',
         paddingLeft: 10
     },
+
+
+
+
+
 });
 export default FillMyVocherScreen;

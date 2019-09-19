@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
         textAlign: 'left',
         paddingBottom: 10
     },
-    container: {
+    container2: {
         padding: 10,
         flex: 1,
     },

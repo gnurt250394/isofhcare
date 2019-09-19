@@ -24,10 +24,10 @@ class MyVoucherCodeScreen extends Component {
         let priceServices = services.reduce((total, item) => {
             return total + parseInt(item.price)
         }, 0)
-        if (priceServices < item.price) {
-            snackbar.show(constants.voucher.money_not_bigger_sum_price, 'danger')
-            return
-        }
+        // if (priceServices < item.price) {
+        //     snackbar.show(constants.voucher.money_not_bigger_sum_price, 'danger')
+        //     return
+        // }
         if (item.quantity == 0) {
             snackbar.show(constants.voucher.please_select_other_package, 'danger')
             return
@@ -44,7 +44,24 @@ class MyVoucherCodeScreen extends Component {
         // })
     }
     onRefresh = () => this.setState({ refreshing: true }, this.getListVoucher)
-
+    duplicateArray(arr) {
+        const filteredArr = arr.reduce((acc, current, currentIndex) => {
+            let i = 1
+            const x = acc.find(item => {
+                if (item.id === current.id) {
+                    i++
+                    item.validate = i
+                    return item
+                }
+            });
+            if (!x) {
+                return acc.concat([current]);
+            } else {
+                return acc;
+            }
+        }, []);
+        return filteredArr
+    }
     getListVoucher = () => {
         voucherProvider.getListVoucher().then(res => {
 
@@ -52,15 +69,17 @@ class MyVoucherCodeScreen extends Component {
                 case 0:
                     let voucher = this.props.voucher
                     let data = res.data
+                    let arr = this.duplicateArray(data)
+                    
                     if (voucher) {
-                        data.forEach(e => {
+                        arr.forEach(e => {
                             if (e.id == voucher.id) {
                                 e.status = voucher.status
                             }
                         })
                     }
 
-                    this.setState({ refreshing: false, data })
+                    this.setState({ refreshing: false, data: arr })
                     break;
                 default: this.setState({ refreshing: false })
                     break;
