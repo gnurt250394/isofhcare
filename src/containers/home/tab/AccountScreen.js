@@ -376,7 +376,7 @@ class AccountScreen extends Component {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.itemMenu]}
-            onPress={this.openLink("mailto:support@isofhcare.vn?subject=Hỗ trợ sử dụng app ISofhCare&body=")}
+            onPress={this.openLink("mailto:support@isofhcare.vn?subject=Hỗ trợ sử dụng app iSofHcare&body=")}
           >
             <Text style={styles.itemText}>{constants.account_screens.support}</Text>
             <ScaledImage style={{ tintColor: '#008D6F' }}
@@ -387,7 +387,7 @@ class AccountScreen extends Component {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.itemMenu]}
-            onPress={this.openLink("mailto:support@isofhcare.vn?subject=Báo lỗi quá trình sử dụng app ISofhCare&body=")}
+            onPress={this.openLink("mailto:support@isofhcare.vn?subject=Báo lỗi quá trình sử dụng app iSofHcare&body=")}
           >
             <Text style={styles.itemText}>{constants.account_screens.report}</Text>
             <ScaledImage style={{ tintColor: '#008D6F' }}

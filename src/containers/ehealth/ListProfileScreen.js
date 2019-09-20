@@ -37,7 +37,7 @@ class ListProfileScreen extends PureComponent {
         this.props.navigation.navigate('historyEhealth', { countTime: item.countTime, item })
     }
     renderItemProfile = ({ item, index }) => {
-        const source = this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar.absoluteUrl() } : require("@images/new/user.png");
+        const source = item.avatar ? { uri: item.avatar.absoluteUrl() } : require("@images/new/user.png");
         return (
             <View style={styles.containerItem}>
                 <Card style={styles.card}>
