@@ -376,7 +376,7 @@ class AccountScreen extends Component {
             style={[styles.itemMenu]}
             onPress={() => {
               Linking.openURL(
-                "mailto:support@isofhcare.vn?subject=Hỗ trợ sử dụng app ISofhCare&body="
+                "mailto:support@isofhcare.vn?subject=Hỗ trợ sử dụng app iSofHcare&body="
               );
             }}
           >
@@ -391,7 +391,7 @@ class AccountScreen extends Component {
             style={[styles.itemMenu]}
             onPress={() => {
               Linking.openURL(
-                "mailto:support@isofhcare.vn?subject=Báo lỗi quá trình sử dụng app ISofhCare&body="
+                "mailto:support@isofhcare.vn?subject=Báo lỗi quá trình sử dụng app iSofHcare&body="
               );
             }}
           >
