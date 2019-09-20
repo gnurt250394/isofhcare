@@ -51,7 +51,7 @@ class ItemListVoucher extends Component {
                     />
                     <View style={styles.container}>
                         <Text numberOfLines={2} style={[styles.containerText, { fontWeight: 'bold', fontSize: 16 }]}>GIẢM {item.price.formatPrice()}đ KHI ĐẶT KHÁM</Text>
-                        <Text style={styles.containerText}>{`HẠN SỬ DỤNG ĐẾN ${item.endTime.toDateObject('-').format("hh:mm, dd/MM/yyyy")}`}</Text>
+                        <Text style={styles.containerText}>{`HẠN SỬ DỤNG ĐẾN ${item.endTime.toDateObject('-').format("HH:mm, dd/MM/yyyy")}`}</Text>
                         <View style={styles.containerRow}>
                             <Text numberOfLines={1} style={styles.quality}>{`CÒN ${item.quantity} LẦN`}</Text>
                             <LinearGradient
@@ -116,7 +116,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        flexWrap:'wrap'
+        flexWrap:'wrap',
+        paddingLeft:4
     },
     container: {
         flex: 1
