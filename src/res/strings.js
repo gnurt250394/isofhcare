@@ -358,13 +358,13 @@ module.exports = {
       username_or_email_existed:
         "SĐT đã được sử dụng trong hệ thống. Vui lòng sử dụng SĐT khác",
       username_or_email_empty: "Tên đăng nhập hoặc email trống",
-      account_blocked: "Tài khoản đã bị khóa. Vui lòng liên hệ với Admin của Isofhcare",
+      account_blocked: "Tài khoản đã bị khóa. Vui lòng liên hệ với Admin của iSofHcare",
       username_or_password_incorrect:
         "Số điện thoại hoặc mặt khẩu không đúng. Vui lòng thử lại",
       send_mail_recovery_success:
         "Link xác nhận mật khẩu mới đã được gửi về email bạn đăng ký",
       send_sms_recovery_success:
-        "iSofHCare đã gửi mã xác thực tới Email/SĐT của bạn",
+        "iSofHcare đã gửi mã xác thực tới Email/SĐT của bạn",
       send_mail_recovery_failed:
         "Không tìm thấy thông tin tài khoản với email bạn nhập",
       canot_get_user_info_in_account_facebook:
@@ -404,7 +404,7 @@ module.exports = {
       enter_the_correct_date_format: 'Nhập đúng định dạng ngày',
       date_not_allow_under_15_old: 'Không cho phép chọn dưới 15 tuổi',
       date_not_allow_over_150_old: 'Không cho phép chọn trên 150 tuổi',
-      account_not_connect_please_contact_administrators: 'Tài khoản của bạn chưa được kết nối với bệnh viện này. Vui lòng liên hệ quản trị viên iSofHCare',
+      account_not_connect_please_contact_administrators: 'Tài khoản của bạn chưa được kết nối với bệnh viện này. Vui lòng liên hệ quản trị viên iSofHcare',
       code_expired:'Mã bạn nhập đã hết hạn',
       code_invalid:'Mã bạn nhập không đúng',
       weight_invalid:'Cân nặng không hợp lệ',
@@ -454,7 +454,7 @@ module.exports = {
       not_examination: 'Bạn không có lịch khám lại nào!',
       not_result_ehealth_in_day: 'Bạn chưa có kết quả khám ở ngày này!',
       not_select_time_drug: 'Bạn chưa chọn giờ uống thuốc',
-      allow_access_camera: 'Bạn cần cho phép iSofHCare truy cập vào camera của bạn để quét mã QRCode?',
+      allow_access_camera: 'Bạn cần cho phép iSofHcare truy cập vào camera của bạn để quét mã QRCode?',
       please_move_camera: 'Di chuyển camera tới vùng có QR của bảo hiểm y tế để quét',
       QRCode_invalid: 'MÃ QRCODE KHÔNG HỢP LỆ',
       please_check_QRcode: 'Vui lòng kiểm tra lại mã QR đảm bảo đúng mã của thẻ bảo hiểm, không bị mờ, rách ...',
@@ -575,7 +575,7 @@ module.exports = {
     payment_price: 'Số tiền thanh toán:',
     change_payment_method: 'Đổi phương thức thanh toán',
     location_premmission: 'Quyền truy cập vị trí',
-    location_premission_content: "iSofHCare cần quyền truy cập vào vị trí của bạn",
+    location_premission_content: "iSofHcare cần quyền truy cập vào vị trí của bạn",
     location_open: 'Bật vị trí trên thiết bị để tìm kiếm địa điểm gần bạn',
     location_around: 'Tìm kiếm gần tôi',
     select_date_time: 'Chọn ngày và giờ',
@@ -707,7 +707,7 @@ module.exports = {
     validity_from:'Hiệu lực từ',
     validity_to:'Hiệu lực đến',
     patient_code:'Mã bệnh nhân',
-    share_with_isofhcare:'Chia sẻ trên hồ sơ iSofHCare',
+    share_with_isofhcare:'Chia sẻ trên hồ sơ iSofHcare',
     share_with_app_other:'Chia sẻ trên ứng dụng khác',
     history_share:'Lịch sử chia sẻ',
     my_ehealth:'Y bạ điện tử của tôi',
