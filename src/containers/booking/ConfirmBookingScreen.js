@@ -91,18 +91,12 @@ class ConfirmBookingScreen extends Component {
     };
 
     confirmVoucher = async (voucher, idBooking) => {
-        let data = await voucherProvider.selectVoucher(voucher.id, idBooking).then(res => {
-            if (res.code == 0) {
-                return true
-            } else {
-                this.setState({ isLoading: false })
-                return false
-            }
-        }).catch(err => {
-            this.setState({ isLoading: false })
-            return false
-        })
-        return data
+        try {
+            let data = await voucherProvider.selectVoucher(voucher.id, idBooking);
+            return data.code == 0;
+        } catch (error) {
+            return false;
+        }
     }
     confirmPayment(booking, bookingId, paymentMethod) {
         booking.hospital = this.state.hospital;
@@ -111,49 +105,48 @@ class ConfirmBookingScreen extends Component {
 
         this.setState({ isLoading: true }, async () => {
             if (this.state.voucher && this.state.voucher.code) {
-                let dataVoucher = await this.confirmVoucher(this.state.voucher, bookingId)
+                let dataVoucher = await this.confirmVoucher(this.state.voucher, bookingId);
                 if (!dataVoucher) {
-                    snackbar.show(constants.voucher.voucher_not_found_or_expired, "danger")
+                    this.setState({ isLoading: false }, () => {
+                        snackbar.show(constants.voucher.voucher_not_found_or_expired, "danger");
+                    });
                     return
                 }
             }
-            
+
             bookingProvider.confirmPayment(bookingId, paymentMethod).then(s => {
-                switch (s.code) {
-
-                    case 0:
-                        if (paymentMethod) {
-                            this.props.navigation.navigate("homeTab", {
-                                navigate: {
-                                    screen: "createBookingWithPayment",
-                                    params: {
-                                        booking,
-                                        service: this.state.service,
-                                        voucher: this.state.voucher
-
+                this.setState({ isLoading: false }, () => {
+                    switch (s.code) {
+                        case 0:
+                            if (paymentMethod) {
+                                this.props.navigation.navigate("homeTab", {
+                                    navigate: {
+                                        screen: "createBookingWithPayment",
+                                        params: {
+                                            booking,
+                                            service: this.state.service,
+                                            voucher: this.state.voucher
+                                        }
                                     }
-                                }
-                            });
-                        }
-                        else {
-                            this.props.navigation.navigate("homeTab", {
-                                navigate: {
-                                    screen: "createBookingSuccess",
-                                    params: {
-                                        booking,
-                                        service: this.state.service,
-                                        voucher: this.state.voucher
-
+                                });
+                            }
+                            else {
+                                this.props.navigation.navigate("homeTab", {
+                                    navigate: {
+                                        screen: "createBookingSuccess",
+                                        params: {
+                                            booking,
+                                            service: this.state.service,
+                                            voucher: this.state.voucher
+                                        }
                                     }
-                                }
-                            });
-                        }
-                        break;
-                    case 5:
-                        this.setState({ isLoading: false }, () => {
+                                });
+                            }
+                            break;
+                        case 5:
                             snackbar.show(constants.msg.booking.booking_expired, "danger");
-                        });
-                }
+                    }
+                });
             }).catch(e => {
                 this.setState({ isLoading: false }, () => {
                     snackbar.show(constants.msg.booking.booking_err2, "danger");
@@ -233,11 +226,13 @@ class ConfirmBookingScreen extends Component {
                 }
                 let dataVoucher = await this.confirmVoucher(this.state.voucher, booking.book.id)
                 if (!dataVoucher) {
-                    snackbar.show(constants.voucher.voucher_not_found_or_expired, "danger")
+                    this.setState({ isLoading: false }, () => {
+                        snackbar.show(constants.voucher.voucher_not_found_or_expired, "danger")
+                    })
                     return
                 }
             }
-            
+
 
             walletProvider.createOnlinePayment(
                 this.props.userApp.currentUser.id,
@@ -552,7 +547,7 @@ class ConfirmBookingScreen extends Component {
 
     }
     getVoucher = (voucher) => {
-        
+
 
         this.setState({ voucher: voucher })
     }
