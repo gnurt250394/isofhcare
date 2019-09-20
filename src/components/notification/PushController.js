@@ -156,6 +156,9 @@ class PushController extends Component {
                     case 6:
                         this.openDetailsEhealth(notificationOpen.notification.data);
                         break;
+                    case 7:
+                        this.openListProfile()
+                        break
                     case 10:
                         this.openBooking(id);
                         break;
@@ -167,6 +170,9 @@ class PushController extends Component {
         } catch (error) {
             console.log(error);
         }
+    }
+    openListProfile = () => {
+        NavigationService.navigate('listProfileUser')
     }
     openDetailsEhealth(data) {
         if (!this.props.userApp.isLogin)
@@ -273,6 +279,9 @@ class PushController extends Component {
                     case 6:
                         this.openDetailsEhealth(notificationOpen.notification.data);
                         break;
+                    case 7:
+                        this.openListProfile()
+                        break
                     case 10:
                         this.openBooking(id);
                         break;
