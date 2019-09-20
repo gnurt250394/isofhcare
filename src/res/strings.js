@@ -636,7 +636,8 @@ module.exports = {
       payment_pending: 'Chờ thanh toán',
       confirm: 'Đã xác nhận',
       have_profile: 'Đã có hồ sơ',
-      rejected: 'Đã hủy (không phục vụ)'
+      rejected: 'Đã hủy (không phục vụ)',
+      payment_payoo3:'PAYOO - Trả góp 0%'
     },
 
   },

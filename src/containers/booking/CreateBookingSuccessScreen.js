@@ -23,15 +23,18 @@ class CreateBookingSuccessScreen extends Component {
     }
 
     getPaymentMethod(booking) {
+        console.log('booking: ', booking);
         switch (booking.payment) {
             case 1:
                 return constants.payment.VNPAY;
             case 2:
-                return constants.payment.pay_later;
+                return constants.booking.payment_csyt; // thanh toán tại CSYT
             case 3:
                 return constants.payment.PAYOO;
             case 4:
-                return constants.payment.PAYOO_convenient_shop;
+                return constants.booking.status.payment_payoo2; // payoo cửa hàng tiện ích
+            case 5:
+                return constants.booking.status.payment_payoo3 // payoo trả góp 0%
         }
         return "";
     }
