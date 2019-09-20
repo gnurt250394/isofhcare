@@ -3,7 +3,8 @@ import ActivityPanel from '@components/ActivityPanel';
 import {
     View, StyleSheet, Text, TouchableOpacity,
     FlatList, ActivityIndicator, TextInput, Platform,
-    Alert
+    Alert,
+    PermissionsAndroid
 } from 'react-native';
 import { connect } from 'react-redux';
 import ScaleImage from "mainam-react-native-scaleimage";
@@ -12,7 +13,7 @@ import ImageLoad from 'mainam-react-native-image-loader';
 import snackbar from '@utils/snackbar-utils';
 import DialogBox from 'react-native-dialogbox';
 import locationProvider from '@data-access/location-provider';
-import RNLocation from 'react-native-location';
+import RNLocation, { checkPermission } from 'react-native-location';
 import clientUtils from '@utils/client-utils';
 import LocationSwitch from 'mainam-react-native-location-switch';
 import constants from '@resources/strings';
@@ -129,7 +130,10 @@ class SelectHospitalScreen extends Component {
                         this.onRefresh();
                     });
                 })
-                .catch(error => {
+                .catch((error) => {
+                    if (error.code == 'UNAVAILABLE') {
+                        GetLocation.openGpsSettings()
+                    }
                     this.onRefresh();
                 });
         }

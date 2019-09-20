@@ -44,7 +44,7 @@ class DetailsHistoryScreen extends Component {
           // if (s.data.province && s.data.province.countryCode )
           //     address += ", " + s.data.province.countryCode
 
-          console.log(s.data, 's.data.province');
+
           this.setState({
             address: s.data.hospital.address,
             booking: s.data.booking || {},
@@ -52,7 +52,8 @@ class DetailsHistoryScreen extends Component {
             services: s.data.services || [],
             hospital: s.data.hospital || {},
             medicalRecords: s.data.medicalRecords || {},
-            isLoading: false
+            isLoading: false,
+            discount: s.data.discount || 0
           })
         } else {
           snackbar.show(constants.msg.booking.cannot_show_details_booking, "danger");
@@ -162,15 +163,23 @@ class DetailsHistoryScreen extends Component {
       valueHis: this.state.booking.codeBooking ? this.state.booking.codeBooking : 0
     })
   }
+  getSumPrice = () => {
+    let discount = this.state.discount || 0
+    let price = this.state.services.reduce((start, item) => start + parseInt(item.price), 0)
+    if (discount > price) {
+      return 0
+    }
+    return (price - discount).formatPrice()
+  }
   render() {
     const avatar = this.state.medicalRecords && this.state.medicalRecords.avatar ? { uri: `${this.state.medicalRecords.avatar.absoluteUrl()}` } : require("@images/new/user.png")
     return (
       <ActivityPanel
         isLoading={this.state.isLoading}
-        
-        
-        
-        
+
+
+
+
 
         isLoading={this.state.isLoading}
         title="Chi tiết đặt lịch"
@@ -247,11 +256,20 @@ class DetailsHistoryScreen extends Component {
                   {
                     this.state.services.map((item, index) => {
                       return <View key={index}>
-                        <Text numberOfLines={1} key={index} style={[styles.txInfoService, { alignSelf: 'flex-end', fontWeight: 'bold' }]}>{item.name}</Text>
-                        <Text key={index} style={[styles.txInfoService, { alignSelf: 'flex-end', marginBottom: 5 }]}>({item.price.formatPrice()}đ)</Text>
+                        <Text numberOfLines={1} style={[styles.txInfoService, { alignSelf: 'flex-end', fontWeight: 'bold' }]}>{item.name}</Text>
+                        <Text style={[styles.txInfoService, { alignSelf: 'flex-end', marginBottom: 5 }]}>({item.price.formatPrice()}đ)</Text>
                       </View>
                     })
                   }
+                  {this.state.discount ?
+                    <View >
+                      <Text numberOfLines={1} style={[styles.txInfoService, { alignSelf: 'flex-end', fontWeight: 'bold' }]}>{'Ưu đãi'}</Text>
+                      <Text style={[styles.txInfoService, { alignSelf: 'flex-end', marginBottom: 5 }]}>(-{this.state.discount.formatPrice()}đ)</Text>
+                    </View>
+                    :
+                    null
+                  }
+
                 </View>
               </View> : null
             }
@@ -314,7 +332,7 @@ class DetailsHistoryScreen extends Component {
                     />
                     <Text style={styles.txLabelPrice}>Tổng tiền dịch vụ</Text>
                     <Text style={styles.txPrice}>
-                      {this.state.services.reduce((start, item) => start + parseInt(item.price), 0).formatPrice() + 'đ'}
+                      {this.getSumPrice() + 'đ'}
                     </Text>
                   </View>
                   <View style={{ backgroundColor: '#EDECED', height: 1, marginLeft: 12 }}></View>
@@ -576,7 +594,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     flex: 1
   },
-  
+
   titleStyle: {
     color: '#FFF'
   },
