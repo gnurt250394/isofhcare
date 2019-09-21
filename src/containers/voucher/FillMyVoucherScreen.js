@@ -149,7 +149,7 @@ class FillMyVocherScreen extends Component {
                                 />
                                 <View style={styles.flex}>
                                     <Text numberOfLines={2} style={[styles.containerText, { fontWeight: 'bold', fontSize: 16 }]}>GIẢM {item.price.formatPrice()}đ KHI ĐẶT KHÁM</Text>
-                                    <Text style={styles.containerText}>{`HẠN SỬ DỤNG ĐẾN ${item.endTime.toDateObject('-').format("hh:mm, dd/MM/yyyy")}`}</Text>
+                                    <Text style={styles.containerText}>{`HẠN SỬ DỤNG ĐẾN ${item.endTime.toDateObject('-').format("HH:mm, dd/MM/yyyy")}`}</Text>
                                     <View style={styles.containerRow}>
                                         <Text numberOfLines={1} style={styles.quality}>{`CÒN ${item.quantity} LẦN`}</Text>
                                         <LinearGradient
@@ -184,7 +184,7 @@ class FillMyVocherScreen extends Component {
                                 />
                                 <View style={styles.flex}>
                                     <Text numberOfLines={2} style={[styles.containerText, { fontWeight: 'bold', fontSize: 16 }]}>GIẢM {voucher.price.formatPrice()}đ KHI ĐẶT KHÁM</Text>
-                                    <Text style={styles.containerText}>{`HẠN SỬ DỤNG ĐẾN ${voucher.endTime.toDateObject('-').format("hh:mm, dd/MM/yyyy")}`}</Text>
+                                    <Text style={styles.containerText}>{`HẠN SỬ DỤNG ĐẾN ${voucher.endTime.toDateObject('-').format("HH:mm, dd/MM/yyyy")}`}</Text>
                                     <View style={styles.containerRow}>
                                         <Text numberOfLines={1} style={styles.quality}>{`CÒN ${voucher.quantity} LẦN`}</Text>
                                         <LinearGradient
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         flexWrap:'wrap',
-        paddingTop:5
+        paddingLeft:4
     },
     customImagePlace: {
         height: 100,
@@ -271,7 +271,6 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        paddingVertical: 8,
         paddingHorizontal: 12,
 
     },
@@ -320,7 +319,6 @@ const styles = StyleSheet.create({
     quality: {
         color: '#27AE60',
         fontWeight: '500',
-        paddingLeft: 10,
     },
     btn: {
             // backgroundColor: '#27AE60',
@@ -330,11 +328,11 @@ const styles = StyleSheet.create({
 
 
     containerText: {
+        padding: 4,
         // backgroundColor: '#FFFFFF',
-        width: '100%',
-        color: '#27AE60',
-        paddingLeft: 10,
-        paddingVertical:6
+        // width: '100%',
+        marginBottom: 7,
+        color: '#27AE60'
     },
 
 
