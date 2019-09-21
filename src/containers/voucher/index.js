@@ -147,12 +147,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginHorizontal: 40
     },
-    viewBtn: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 20
-    },
     btnDone: {
         justifyContent: 'center',
         alignItems: 'center',
