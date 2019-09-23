@@ -58,7 +58,7 @@ import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
     @Override
     protected String getJSBundleFile(){
-      if (BuildConfig.DEBUG) {
+      if (!BuildConfig.DEBUG) {
         return CodePush.getJSBundleFile();
       }else{
         return super.getJSBundleFile();
