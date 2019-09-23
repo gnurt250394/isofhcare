@@ -45,34 +45,22 @@ class MyVoucherCodeScreen extends Component {
     }
     onRefresh = () => this.setState({ refreshing: true }, this.getListVoucher)
     duplicateArray(arr) {
-
-        var newArr = [];
-        var copyArr = arr.slice(0);
-
-        for (var i = 0; i < arr.length; i++) {
-            var myCount = 0;
-            for (var w = 0; w < copyArr.length; w++) {
-                if (arr[i].id == copyArr[w].id) {
-                    myCount++;
-                }
-            }
-
-            if (myCount > 0) {
-                let a = {};
-                a = arr[i];
-                a.count = myCount;
-                newArr.push(a);
-            }
-        }
-        const listFinal = newArr.reduce((acc, current) => {
-            const x = acc.find(item => item.id == current.id);
-            if (!x) {
-                return acc.concat([current]);
+        var obj = {}
+        var result = [];
+        let newArr = [...arr]
+        newArr.forEach((item) => {
+            var id = item["id"];
+            if (obj[id]) {
+                obj[id].count++;
             } else {
-                return acc;
+                obj[id] = {
+                    count: 1,
+                    ...item
+                }
+                result.push(obj[id]);
             }
-        }, []);
-        return listFinal
+        });
+        return result
     }
 
     getListVoucher = () => {
@@ -83,7 +71,7 @@ class MyVoucherCodeScreen extends Component {
                     let voucher = this.props.voucher
                     let data = res.data
                     let arr = this.duplicateArray(data)
-                    console.log('arr: ', arr);
+                    
                     if (voucher) {
                         arr.forEach(e => {
                             if (e.id == voucher.id) {
