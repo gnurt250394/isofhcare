@@ -53,7 +53,7 @@ class ItemListVoucher extends Component {
                         <Text numberOfLines={2} style={[styles.containerText, { fontWeight: 'bold', fontSize: 16 }]}>GIẢM {item.price.formatPrice()}đ KHI ĐẶT KHÁM</Text>
                         <Text style={styles.containerText}>{`HẠN SỬ DỤNG ĐẾN ${item.endTime.toDateObject('-').format("HH:mm, dd/MM/yyyy")}`}</Text>
                         <View style={styles.containerRow}>
-                            <Text numberOfLines={1} style={styles.quality}>{`CÒN ${item.count || '1'} LẦN`}</Text>
+                            <Text numberOfLines={1} style={styles.quality}>{`CÒN ${item.type == 0 ? item.quantity - item.counter : item.count} LẦN`}</Text>
                             <LinearGradient
                                 colors={this.getColor(item)}
                                 locations={[0, 0.7, 1]}
