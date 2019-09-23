@@ -45,15 +45,30 @@ class MyVoucherCodeScreen extends Component {
     }
     onRefresh = () => this.setState({ refreshing: true }, this.getListVoucher)
     duplicateArray(arr) {
-        const filteredArr = arr.reduce((acc, current, currentIndex) => {
-            let i = 1
-            const x = acc.find(item => {
-                if (item.id === current.id) {
-                    i++
-                    item.validate = i
-                    return item
+
+        var compressed = [];
+        // make a copy of the input array
+        var copy = arr.slice(0);
+
+        // first loop goes over every element
+        for (var i = 0; i < arr.length; i++) {
+            var myCount = 0;
+            // loop over every element in the copy and see if it's the same
+            for (var w = 0; w < copy.length; w++) {
+                if (arr[i].id == copy[w].id) {
+                    myCount++;
                 }
-            });
+            }
+
+            if (myCount > 0) {
+                let a = {};
+                a = arr[i];
+                a.count = myCount;
+                compressed.push(a);
+            }
+        }
+        const filteredArr = arr.reduce((acc, current) => {
+            const x = acc.find(item => item.id == current.id);
             if (!x) {
                 return acc.concat([current]);
             } else {
@@ -62,6 +77,7 @@ class MyVoucherCodeScreen extends Component {
         }, []);
         return filteredArr
     }
+
     getListVoucher = () => {
         voucherProvider.getListVoucher().then(res => {
 
@@ -70,7 +86,6 @@ class MyVoucherCodeScreen extends Component {
                     let voucher = this.props.voucher
                     let data = res.data
                     let arr = this.duplicateArray(data)
-                    
                     if (voucher) {
                         arr.forEach(e => {
                             if (e.id == voucher.id) {
