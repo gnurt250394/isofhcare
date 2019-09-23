@@ -769,7 +769,7 @@ class AddBookingDoctorScreen extends Component {
         return (
             <ActivityPanel title="Đặt Khám"
                 isLoading={this.state.isLoading} >
-                <View>
+                <View style={{backgroundColor: '#fff',}}>
                     <KeyboardAwareScrollView>
                         {this.renderProfile(profileDoctor)}
                         <View style={styles.article}>
@@ -802,8 +802,11 @@ class AddBookingDoctorScreen extends Component {
                                 services.map((e, i) => {
                                     return (
                                         <View key={i} style={styles.groupServices}>
-                                            <Text style={{ flex: 1 }}>{e.name}</Text>
-                                            <Text>({e.price.formatPrice()}đ)</Text>
+                                            <Text style={{ flex: 1 ,color:'#111'}}>{e.name}</Text>
+                                            <Text style={{
+                                                color:'#ddd',
+                                                fontStyle:'italic'
+                                            }}>({e.price.formatPrice()}đ)</Text>
                                         </View>
                                     )
                                 })
@@ -819,7 +822,7 @@ class AddBookingDoctorScreen extends Component {
                             </TouchableOpacity>
                             <View style={styles.groupSumPrice}>
                                 <Text style={styles.txtSumPrice}>Tổng tiền: </Text>
-                                <Text style={{ color: '#111' }}>{this.getPrice()}đ</Text>
+                                <Text style={{ color: '#FF0000',fontSize:15 }}>{this.getPrice()}đ</Text>
                             </View>
 
 
@@ -868,6 +871,11 @@ class AddBookingDoctorScreen extends Component {
                                     <ScaleImage height={15} source={require("@images/new/booking/ic_image.png")} />
                                 </TouchableOpacity>
                             </Form>
+                            <View style={{
+                                height:1,
+                                width:'100%',
+                                backgroundColor: '#ccc',
+                            }}/>
                         </View>
                         <Text style={[styles.errorStyle]}>{this.state.symptonError}</Text>
 
@@ -942,7 +950,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'flex-start',
         paddingLeft: 10,
-        paddingTop: 5
+        paddingTop: 5,
+        paddingBottom:12
     },
     imgLoading: {
         position: 'absolute',
@@ -975,17 +984,19 @@ const styles = StyleSheet.create({
     txtSumPrice: {
         color: '#111',
         fontWeight: '500',
-        width: '40%'
+        fontSize:15,
+        flex:1
     },
     groupSumPrice: {
         flexDirection: 'row',
         alignItems: 'center',
-        paddingLeft: 10
+        paddingHorizontal: 10
     },
     txtVoucher: {
         color: '#02c39a',
         fontWeight: 'bold',
-        width: '40%'
+        width: '40%',
+        fontSize:15
     },
     btnVoucher: {
         flexDirection: 'row',
@@ -998,18 +1009,20 @@ const styles = StyleSheet.create({
     groupServices: {
         flexDirection: 'row',
         alignItems: 'center',
-        paddingHorizontal: 10
+        paddingHorizontal: 10,
+        paddingTop:5
     },
     txtServices: {
         color: '#02c39a',
         fontSize: 15,
         fontWeight: '700',
-        paddingLeft: 10
+        paddingLeft: 10,
+        paddingBottom:5
     },
     rowAddress: {
         flexDirection: 'row',
         alignItems: 'flex-start',
-        paddingTop: 7
+        paddingTop: 12
     },
     txtAddress: {
         width: '40%',
@@ -1021,7 +1034,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#02C39A',
         height: 1,
         width: '95%',
-        marginVertical: 7,
+        marginVertical: 12,
         alignSelf: 'center'
     },
     containerRating: {
@@ -1075,15 +1088,15 @@ const styles = StyleSheet.create({
     article: {
         // marginTop: 12,
         backgroundColor: "#ffffff",
-        borderStyle: "solid",
-        borderWidth: 0.5,
-        borderColor: "rgba(0, 0, 0, 0.06)",
+        // borderStyle: "solid",
+        // borderWidth: 0.5,
+        // borderColor: "rgba(0, 0, 0, 0.06)",
     },
     mucdichkham: {
         flexDirection: 'row',
         alignItems: 'center',
         padding: 10,
-        // backgroundColor: '#02c39a'
+        backgroundColor: '#FFFFDD'
     },
     mdk: {
         fontSize: 15,

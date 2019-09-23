@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, } from 'react-native';
 import ScaleImage from "mainam-react-native-scaleimage";
+import constants from '@resources/strings';
 
-class SelectPaymentDoctor extends Component {
+class SelectPaymentDoctor extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -18,52 +19,60 @@ class SelectPaymentDoctor extends Component {
                 flex: 1
             }}>
                 <View style={styles.header}>
-                    <Text style={styles.txtHeader}>CHỌN PHƯƠNG THỨC THANH TOÁN</Text>
-                    <ScaleImage width={20} source={require("@images/new/booking/ic_tick.png")} />
-                </View>
+                        <Text style={styles.txtHeader}>{constants.booking.type_payment}</Text>
+                        <ScaleImage width={20} source={require("@images/new/booking/ic_tick.png")} />
+                    </View>
 
                 <React.Fragment>
+                    <TouchableOpacity style={styles.ckeck} onPress={this.selectPaymentMethod(6)}>
+                        <View style={styles.containerPayment}>
+                            {this.state.paymentMethod == 6 &&
+                                <View style={styles.dot}></View>
+                            }
+                        </View>
+                        <Text style={styles.ckeckthanhtoan}>{constants.payment.direct_transfer}</Text>
+                    </TouchableOpacity>
                     <TouchableOpacity style={styles.ckeck} onPress={this.selectPaymentMethod(1)}>
-                        <View style={styles.containerPayment}>
-                            {this.state.paymentMethod == 1 &&
-                                <View style={styles.dot}></View>
-                            }
-                        </View>
-                        <Text style={styles.ckeckthanhtoan}>VNPAY</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.ckeck} onPress={this.selectPaymentMethod(3)}>
-                        <View style={styles.containerPayment}>
-                            {this.state.paymentMethod == 3 &&
-                                <View style={styles.dot}></View>
-                            }
-                        </View>
-                        <Text style={styles.ckeckthanhtoan}>PAYOO</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.ckeck} onPress={this.selectPaymentMethod(5)}>
-                        <View style={styles.containerPayment}>
-                            {this.state.paymentMethod == 5 &&
-                                <View style={styles.dot}></View>
-                            }
-                        </View>
-                        <Text style={styles.ckeckthanhtoan}>PAYOO - Trả góp 0%</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.ckeck} onPress={this.selectPaymentMethod(4)}>
-                        <View style={styles.containerPayment}>
-                            {this.state.paymentMethod == 4 &&
-                                <View style={styles.dot}></View>
-                            }
-                        </View>
-                        <Text style={styles.ckeckthanhtoan}>PAYOO - Cửa hàng tiện ích</Text>
-                    </TouchableOpacity>
+                                    <View style={styles.containerPayment}>
+                                        {this.state.paymentMethod == 1 &&
+                                            <View style={styles.dot}></View>
+                                        }
+                                    </View>
+                                    <Text style={styles.ckeckthanhtoan}>{constants.payment.VNPAY}</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.ckeck} onPress={this.selectPaymentMethod(3)}>
+                                    <View style={styles.containerPayment}>
+                                        {this.state.paymentMethod == 3 &&
+                                            <View style={styles.dot}></View>
+                                        }
+                                    </View>
+                                    <Text style={styles.ckeckthanhtoan}>{constants.payment.PAYOO}</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.ckeck} onPress={this.selectPaymentMethod(5)}>
+                                    <View style={styles.containerPayment}>
+                                        {this.state.paymentMethod == 5 &&
+                                            <View style={styles.dot}></View>
+                                        }
+                                    </View>
+                                    <Text style={styles.ckeckthanhtoan}>{constants.payment.PAYOO_installment}</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.ckeck} onPress={this.selectPaymentMethod(4)}>
+                                    <View style={styles.containerPayment}>
+                                        {this.state.paymentMethod == 4 &&
+                                            <View style={styles.dot}></View>
+                                        }
+                                    </View>
+                                    <Text style={styles.ckeckthanhtoan}>{constants.payment.PAYOO_convenient_shop}</Text>
+                                </TouchableOpacity>
                 </React.Fragment>
                 <TouchableOpacity style={styles.ckeck} onPress={this.selectPaymentMethod(2)}>
-                    <View style={styles.containerPayment}>
-                        {this.state.paymentMethod == 2 &&
-                            <View style={styles.dot}></View>
-                        }
-                    </View>
-                    <Text style={styles.ckeckthanhtoan}>Thanh toán sau tại CSYT</Text>
-                </TouchableOpacity>
+                        <View style={styles.containerPayment}>
+                            {this.state.paymentMethod == 2 &&
+                                <View style={styles.dot}></View>
+                            }
+                        </View>
+                        <Text style={styles.ckeckthanhtoan}>{constants.payment.pay_later}</Text>
+                    </TouchableOpacity>
             </View>
         );
     }
