@@ -217,7 +217,9 @@ class ConfirmBookingScreen extends Component {
         }
 
         this.setState({ isLoading: true }, async () => {
-            let memo = `THANH TOÁN ${this.getPaymentMethod()} - Đặt khám - ${booking.book.codeBooking} - ${serviceText} - ${this.state.hospital.hospital.name} - ${this.getBookingTime()} - ${this.state.profile.medicalRecords.name}`;
+            // let memo = `THANH TOÁN ${this.getPaymentMethod()} - Đặt khám - ${booking.book.codeBooking} - ${serviceText} - ${this.state.hospital.hospital.name} - ${this.getBookingTime()} - ${this.state.profile.medicalRecords.name}`;
+            let memo = `Thanh toan ${price.formatPrice()} vnd cho dịch vụ dat kham tren ung dung iSofHcare thong qua ${this.getPaymentMethod()}`;
+
             let voucher = null
             if (this.state.voucher && this.state.voucher.code) {
                 voucher = {
