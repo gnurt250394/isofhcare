@@ -408,7 +408,7 @@ const styles = StyleSheet.create({
         textAlign: 'left',
         marginTop: 5,
     },
-    viewInfoBank: { flexDirection: 'row', marginTop: 5 },
+    viewInfoBank: { flexDirection: 'row', marginTop: 5,paddingRight:10 },
     notePay: { marginTop: 5, fontSize: 14, color: '#000', textAlign: 'left', },
     viewBank: { justifyContent: 'center', }
 
