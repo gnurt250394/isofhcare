@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { View, FlatList, TouchableOpacity, Text, TextInput } from 'react-native'
+import { View, FlatList, TouchableOpacity, Text, TextInput, StyleSheet } from 'react-native'
 import { connect } from 'react-redux';
 import ActivityPanel from '@components/ActivityPanel'
 import specialistProvider from '@data-access/specialist-provider';
@@ -55,16 +55,16 @@ class SelectSpecialistScreen extends Component {
         });
     }
 
-    showSearch() {
+    showSearch = () => {
         this.setState({
             showSearch: !this.state.showSearch,
             searchValue: ""
         })
     }
-    searchTextChange(s) {
+    searchTextChange = (s) => {
         this.setState({ searchValue: s });
     }
-    onSearch() {
+    onSearch = () => {
         var s = this.state.searchValue;
         var listSearch = this.state.listSpecialist.filter(function (item) {
             return s == null || item.name && item.name.trim().toLowerCase().unsignText().indexOf(s.trim().toLowerCase().unsignText()) != -1;
@@ -73,34 +73,53 @@ class SelectSpecialistScreen extends Component {
     }
     renderSearchButton() {
         return (
-            <TouchableOpacity onPress={() => this.showSearch()} style={{ padding: 10 }}>
+            <TouchableOpacity onPress={this.showSearch} style={{ padding: 10 }}>
                 <ScaleImage source={require("@images/ic_timkiem.png")} width={20} />
             </TouchableOpacity>
         );
     }
-
+    goBack = () => this.props.navigation.pop()
+    keyExtractor = (item, index) => index.toString()
+    headerComponent = () => {
+        return (
+            !this.state.refreshing &&
+                (!this.state.listSpecialistSearch || this.state.listSpecialistSearch.length == 0) ?
+                <View style={styles.containerHeaderSearch}>
+                    <ScaleImage source={require("@images/empty_result.png")} width={120} />
+                    <Text>{constants.booking.specialist_not_found} <Text style={styles.txtValueSearch}>{this.state.searchValue}</Text></Text>
+                </View> : null
+        )
+    }
+    footerComponent = () => <View style={{ height: 10 }} />
+    renderItem = ({ item }) => {
+        return (
+            <TouchableOpacity onPress={this.selectSpecilist.bind(this, item)}>
+                <View style={styles.containerItem}>
+                    <Text style={styles.txtItemName}>{item.name}</Text>
+                </View>
+            </TouchableOpacity>
+        )
+    }
     render() {
         return (
             <ActivityPanel
-                backButton={<TouchableOpacity style={{ paddingLeft: 20 }} onPress={() => this.props.navigation.pop()}><Text>Hủy</Text></TouchableOpacity>}
-                titleStyle={{ marginRight: 0 }} title={"Chọn chuyên khoa"}
+                backButton={<TouchableOpacity style={{ paddingLeft: 20 }} onPress={this.goBack}><Text>{constants.actionSheet.cancel}</Text></TouchableOpacity>}
+                titleStyle={{ marginRight: 0 }}
+                title={constants.title.select_specialist}
                 isLoading={this.state.isLoading} menuButton={this.renderSearchButton()} showFullScreen={true}
             >
                 {
                     this.state.showSearch ?
-                        <View style={{
-                            justifyContent: 'space-between',
-                            elevation: 5,
-                            height: 55,
-                            justifyContent: 'center', alignItems: 'center',
-                            backgroundColor: constants.colors.actionbar_color,
-                            flexDirection: 'row'
-                        }}>
-                            <TextInput autoFocus={true} style={{ flex: 1, color: constants.colors.actionbar_title_color, padding: 10 }} placeholderTextColor='#dddddd' underlineColorAndroid="transparent" placeholder={"Nhập từ khóa tìm kiếm"} onChangeText={(s) => {
-                                this.searchTextChange(s);
-                            }} returnKeyType="search" onSubmitEditing={() => { this.onSearch() }} />
-                            <TouchableOpacity onPress={() => this.onSearch()}>
-                                <Text style={{ backgroundColor: constants.colors.actionbar_title_color, padding: 7, borderRadius: 20, marginRight: 10, paddingLeft: 15, paddingRight: 15, fontWeight: 'bold', color: '#FFF' }}>{constants.search}</Text>
+                        <View style={styles.containerSearch}>
+                            <TextInput autoFocus={true} style={styles.inputSearch}
+                                placeholderTextColor='#dddddd'
+                                underlineColorAndroid="transparent"
+                                placeholder={constants.ehealth.inputKeyword}
+                                onChangeText={this.searchTextChange}
+                                returnKeyType="search"
+                                onSubmitEditing={this.onSearch} />
+                            <TouchableOpacity onPress={this.onSearch}>
+                                <Text style={styles.txtSearch}>{constants.search}</Text>
                             </TouchableOpacity>
                         </View>
                         : null
@@ -108,30 +127,15 @@ class SelectSpecialistScreen extends Component {
                 }
 
                 <FlatList
-                    style={{ flex: 1, backgroundColor: '#FFF' }}
+                    style={styles.flatlit}
                     refreshing={this.state.refreshing}
                     onRefresh={this.onRefresh}
-                    keyExtractor={(item, index) => index.toString()}
+                    keyExtractor={this.keyExtractor}
                     extraData={this.state}
-                    ListHeaderComponent={() =>
-                        !this.state.refreshing &&
-                            (!this.state.listSpecialistSearch || this.state.listSpecialistSearch.length == 0) ?
-                            <View style={{ width: '100%', marginTop: 50, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center' }}>
-                                <ScaleImage source={require("@images/empty_result.png")} width={120} />
-                                <Text>Không tìm thấy chuyên khoa nào phù hợp <Text style={{ fontWeight: 'bold', color: constants.colors.actionbar_title_color }}>{this.state.searchValue}</Text></Text>
-                            </View> : null
-                    }
-                    ListFooterComponent={() => <View style={{ height: 10 }} />}
+                    ListHeaderComponent={this.headerComponent}
+                    ListFooterComponent={this.footerComponent}
                     data={this.state.listSpecialistSearch}
-                    renderItem={({ item }) =>
-                        <TouchableOpacity onPress={this.selectSpecilist.bind(this, item)}>
-                            <View style={{ marginBottom: 2, backgroundColor: '#FFF', padding: 20, flexDirection: 'column', borderBottomColor: '#00000011', borderBottomWidth: 0.7 }}>
-                                <Text style={{ fontWeight: 'bold' }}>
-                                    {item.name}
-                                </Text>
-                            </View>
-                        </TouchableOpacity>
-                    }
+                    renderItem={this.renderItem}
                 />
 
 
@@ -146,3 +150,49 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps)(SelectSpecialistScreen);
+
+
+const styles = StyleSheet.create({
+    txtItemName: { fontWeight: 'bold' },
+    containerItem: {
+        marginBottom: 2,
+        backgroundColor: '#FFF',
+        padding: 20,
+        flexDirection: 'column',
+        borderBottomColor: '#00000011',
+        borderBottomWidth: 0.7
+    },
+    txtValueSearch: { fontWeight: 'bold', color: constants.colors.actionbar_title_color },
+    containerHeaderSearch: {
+        width: '100%',
+        marginTop: 50,
+        backgroundColor: '#fff',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    flatlit: { flex: 1, backgroundColor: '#FFF' },
+    txtSearch: {
+        backgroundColor: constants.colors.actionbar_title_color,
+        padding: 7,
+        borderRadius: 20,
+        marginRight: 10,
+        paddingLeft: 15,
+        paddingRight: 15,
+        fontWeight: 'bold',
+        color: '#FFF'
+    },
+    inputSearch: {
+        flex: 1,
+        color: constants.colors.actionbar_title_color,
+        padding: 10
+    },
+    containerSearch: {
+        justifyContent: 'space-between',
+        elevation: 5,
+        height: 55,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: constants.colors.actionbar_color,
+        flexDirection: 'row'
+    },
+})

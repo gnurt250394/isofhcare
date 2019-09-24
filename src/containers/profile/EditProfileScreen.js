@@ -42,7 +42,7 @@ class EditProfileScreen extends Component {
             dobOld: dataProfile.dob ? dataProfile.dob : '',
             height: dataProfile.height ? dataProfile.height.toString() : '',
             weight: dataProfile.weight ? dataProfile.weight.toString() : '',
-            address: dataProfile.village ? dataProfile.village : '',
+            address: dataProfile.village && dataProfile.village != ' ' ? dataProfile.village : '',
             relationshipType: dataProfile.relationshipType ? dataProfile.relationshipType : '',
             profileNo: dataProfile.profileNo ? dataProfile.profileNo : '',
             id: dataProfile.id,
@@ -56,8 +56,9 @@ class EditProfileScreen extends Component {
             dataProfile,
             isReset: 1
         };
+        console.log(dataProfile.id)
     }
-    componentDidMount() {
+    componentWillMount() {
         this.renderRelation()
     }
     onChangeText = type => text => {
@@ -102,7 +103,8 @@ class EditProfileScreen extends Component {
 
     };
     renderRelation = () => {
-        switch (this.props.navigation.state.params.relationshipType) {
+        console.log(this.props.navigation.state.params.relationshipType)
+        switch (this.state.relationshipType) {
             case 'DAD':
                 this.setState({
                     relationShip: {
@@ -195,8 +197,8 @@ class EditProfileScreen extends Component {
                 break
             case 'OTHER':
                 this.setState({
-                    id: 11,
                     relationShip: {
+                        id: 11,
                         name: 'Khác',
                         type: 'OTHER'
                     }
@@ -207,7 +209,7 @@ class EditProfileScreen extends Component {
     selectDistrict = (districts) => {
         let districtsError = districts ? "" : this.state.districtsError;
         if (!districts || !this.state.districts || districts.id != this.state.districts.id) {
-            this.setState({ districts, districtsError, zone: null },() => {
+            this.setState({ districts, districtsError, zone: null }, () => {
                 this.onSelectZone()
             })
         } else {
@@ -221,13 +223,13 @@ class EditProfileScreen extends Component {
                 id: this.state.provinces.id
             })
         } else {
-            snackbar.show('Bạn chưa chọn Tỉnh/Thành phố')
+            snackbar.show(constants.msg.user.please_select_address)
         }
     }
     selectprovinces(provinces) {
         let provincesError = provinces ? "" : this.state.provincesError;
         if (!provinces || !this.state.provinces || provinces.id != this.state.provinces.id) {
-            this.setState({ provinces, provincesError, districts: null, zone: null },() =>{
+            this.setState({ provinces, provincesError, districts: null, zone: null }, () => {
                 this.onSelectDistrict()
             })
         } else {
@@ -247,11 +249,11 @@ class EditProfileScreen extends Component {
     }
     onSelectZone = () => {
         if (!this.state.provinces) {
-            snackbar.show("Bạn chưa chọn Tỉnh/Thành phố")
+            snackbar.show(constants.msg.user.please_select_address)
             return
         }
         if (!this.state.districts) {
-            snackbar.show("Bạn chưa chọn Quận/Huyện")
+            snackbar.show(constants.msg.user.please_select_district)
             return
         }
         if (this.state.provinces.id && this.state.districts.id) {
@@ -270,13 +272,13 @@ class EditProfileScreen extends Component {
         }
         if (this.state.weight && isNaN(this.state.weight) || this.state.weight && Number(this.state.weight) < 0) {
             this.setState({
-                weightError: 'Cân nặng không hợp lệ'
+                weightError: constants.msg.user.weight_invalid
             })
             return
         }
         if (this.state.height && isNaN(this.state.height) || this.state.height && Number(this.state.height) < 0) {
             this.setState({
-                heightError: 'Chiều cao không hợp lệ'
+                heightError: constants.msg.user.height_invalid
             })
             return
         }
@@ -288,31 +290,32 @@ class EditProfileScreen extends Component {
                         isLoading: true
                     },
                     () => {
-                        let data = this.state.dataProfile
-                        data.dob = this.state.dob ? this.state.dob.format('yyyy-MM-dd') + ' 00:00:00' : this.state.dobOld,
-                            data.gender = this.state.gender
-                        data.height = this.state.height ? Number(this.state.height) : 0,
-                            data.weight = this.state.weight ? Number(parseFloat(this.state.weight).toFixed(1)) : 0
-                        // data.address = this.state.address
                         let id = this.state.id
-                        data.phone = this.state.phone
-                        data.provinceId = this.state.provinces ? this.state.provinces.id.toString() : null
-                        data.districtId = this.state.districts ? this.state.districts.id.toString() : null
-                        data.zoneId = this.state.zone ? this.state.zone.id.toString() : null
-                        data.village = this.state.address ? this.state.address : null
-                        data.relationshipType = this.state.relationshipType
+                        console.log(id)
+                        let data = {
+                            'name': this.state.name,
+                            "dob": this.state.dob ? this.state.dob.format('yyyy-MM-dd') + ' 00:00:00' : null,
+                            "gender": this.state.gender ? this.state.gender : null,
+                            "height": this.state.height ? Number(this.state.height) : 0,
+                            "weight": this.state.weight ? Number(parseFloat(this.state.weight).toFixed(1)) : 0,
+                            "phone": this.state.phone,
+                            "provinceId": this.state.provinces ? this.state.provinces.id.toString() : null,
+                            "districtId": this.state.districts ? this.state.districts.id.toString() : null,
+                            "zoneId": this.state.zone ? this.state.zone.id.toString() : null,
+                            "village": this.state.address ? this.state.address : ' ',
+                            "relationshipType": this.state.relationShip && this.state.relationShip.type ? this.state.relationShip.type : (this.state.relationshipType || null)
+                        }
                         profileProvider.updateProfile(id, data).then(res => {
-
                             switch (res.code) {
                                 case 0:
-                                    NavigationService.navigate('profile',{id:res.data.medicalRecords.id})
+                                    NavigationService.navigate('profile', { id: res.data.medicalRecords.id })
                                     snackbar.show('Cập nhật hồ sơ thành công', "success");
                                     break
                                 case 1:
-                                    snackbar.show('Bạn không có quyền chỉnh sửa hồ sơ này', "danger");
+                                    snackbar.show(constants.msg.user.not_permission_edit_file, "danger");
                                     break
                                 case 2:
-                                    snackbar.show('Bạn đang không đăng nhập với ứng dụng bệnh nhân', "danger");
+                                    snackbar.show(constants.msg.user.not_login_with_app_patient, "danger");
                                     break
                             }
                         }).catch(err => {
@@ -340,6 +343,17 @@ class EditProfileScreen extends Component {
             this.setState({ relationShip, relationShipError });
         }
     }
+    onSelectDate = () => this.setState({ toggelDateTimePickerVisible: true })
+    onConfirmDate = newDate => {
+        this.setState({
+            dob: newDate,
+            date: newDate.format("dd/MM/yyyy"),
+            toggelDateTimePickerVisible: false
+        });
+    }
+    onCancelDate = () => {
+        this.setState({ toggelDateTimePickerVisible: false });
+    }
     render() {
         let maxDate = new Date();
         maxDate = new Date(
@@ -360,9 +374,17 @@ class EditProfileScreen extends Component {
 
         return (
             <ActivityPanel
-                title={'SỬA THÔNG TIN'}
+                icBack={require('@images/new/left_arrow_white.png')}
+                title={constants.title.edit_info}
+                iosBarStyle={'light-content'}
+                actionbarStyle={styles.actionbarStyle}
+                style={styles.activityPanel}
+                menuButton={<TouchableOpacity style={{ padding: 5 }} onPress={this.onCreateProfile}>
+                    <Text style={styles.txtSave}>{constants.actionSheet.save}</Text>
+                </TouchableOpacity>}
+                titleStyle={styles.txTitle}
             >
-                <ScrollView keyboardShouldPersistTaps='handled' style={{ flex: 1, paddingVertical: 5 }}>
+                <ScrollView keyboardShouldPersistTaps='handled' style={styles.scroll}>
                     <View style={styles.container}>
                         <Form ref={ref => (this.form = ref)} style={[{ flex: 1 }]}>
                             <Field style={[styles.mucdichkham]}>
@@ -406,20 +428,18 @@ class EditProfileScreen extends Component {
                                 style={[styles.mucdichkham, { flexDirection: 'row' }]}
                             >
                                 <Field style={{ width: '60%' }}>
-                                    <Text style={styles.mdk}>{'Ngày sinh'}</Text>
+                                    <Text style={styles.mdk}>{constants.dob}</Text>
 
                                     <TextField
                                         // value={this.state.date || ""}
-                                        onPress={() =>
-                                            this.setState({ toggelDateTimePickerVisible: true })
-                                        }
+                                        onPress={this.onSelectDate}
                                         dateFormat={"dd/MM/yyyy"}
                                         splitDate={"/"}
                                         editable={false}
                                         getComponent={(
                                             value,
                                         ) => (
-                                                <Text style={[styles.ktq, { paddingVertical: 12 }]}>{value ? (value) : ('Ngày sinh')}</Text>
+                                                <Text style={[styles.ktq, { paddingVertical: 12 }]}>{value ? (value) : (constants.dob)}</Text>
                                             )}
                                         // onChangeText={s => {
                                         //   this.setState({ date: s });
@@ -487,7 +507,7 @@ class EditProfileScreen extends Component {
                                                     number: true
                                                 },
                                                 messages: {
-                                                    number: 'Chiều cao không hợp lệ',
+                                                    number: constants.msg.user.height_invalid,
                                                 }
                                             }}
                                             keyboardType="numeric"
@@ -546,7 +566,7 @@ class EditProfileScreen extends Component {
                                 </Field>
                             </Field>
                             {this.state.type == "FAMILY" ? (<Field style={[styles.mucdichkham,]}>
-                                <Field style={{ marginTop: 10 }}><Text style={styles.mdk}>{'Số điện thoại'}</Text>
+                                <Field style={{ marginTop: 10 }}><Text style={styles.mdk}>{constants.phone}</Text>
                                     <TextField
                                         hideError={true}
                                         onValidate={(valid, messages) => {
@@ -562,12 +582,12 @@ class EditProfileScreen extends Component {
                                                 phone: true
                                             },
                                             messages: {
-                                                required: "Số điện thoại không được bỏ trống",
-                                                phone: "SĐT không hợp lệ"
+                                                required: constants.msg.user.phone_not_null,
+                                                phone: constants.msg.user.phone_invalid
                                             }
                                         }}
                                         keyboardType="numeric"
-                                        placeholder={'Số điện thoại'}
+                                        placeholder={constants.phone}
                                         multiline={true}
                                         inputStyle={[
                                             styles.ktq,
@@ -584,7 +604,7 @@ class EditProfileScreen extends Component {
                                 <Text style={[styles.errorStyle]}>{this.state.phoneError}</Text></Field>) : (<Field></Field>)}
 
                             <Field style={[styles.mucdichkham,]}>
-                                <Text style={styles.mdk}>{'Tỉnh/Thành phố'}</Text>
+                                <Text style={styles.mdk}>{constants.province}</Text>
                                 <Field>
                                     <TextField
                                         hideError={true}
@@ -595,7 +615,7 @@ class EditProfileScreen extends Component {
                                             styles.ktq, { minHeight: 41 }, this.state.provinces && this.state.provinces.countryCode ? {} : { color: '#8d8d8d' }
                                         ]}
                                         errorStyle={styles.errorStyle}
-                                        value={this.state.provinces && this.state.provinces.countryCode ? this.state.provinces.countryCode : 'Tỉnh/Thành phố'}
+                                        value={this.state.provinces && this.state.provinces.countryCode ? this.state.provinces.countryCode : constants.province}
                                         autoCapitalize={"none"}
                                         // underlineColorAndroid="transparent"
                                         autoCorrect={false}
@@ -685,8 +705,8 @@ class EditProfileScreen extends Component {
                                             onPress={this.onSelectRelationShip}
                                             editable={false}
                                             inputStyle={[
-                                            styles.ktq, { minHeight: 41 }, this.state.relationShip && this.state.relationShip.name ? {} : { color: '#8d8d8d' }
-                                        ]}
+                                                styles.ktq, { minHeight: 41 }, this.state.relationShip && this.state.relationShip.name ? {} : { color: '#8d8d8d' }
+                                            ]}
                                             errorStyle={styles.errorStyle}
                                             value={this.state.relationShip && this.state.relationShip.name ? this.state.relationShip.name : 'Quan hệ'}
                                             autoCapitalize={"none"}
@@ -700,29 +720,13 @@ class EditProfileScreen extends Component {
                             }
 
                         </Form>
-                        <View style={styles.viewBtn}>
-                            <TouchableOpacity onPress={this.onCreateProfile} style={styles.btnDone}><Text style={styles.txDone}>Lưu</Text></TouchableOpacity>
-                            <TouchableOpacity onPress={() => this.props.navigation.pop()} style={styles.btnReject}><Text style={styles.txDone}>Hủy</Text></TouchableOpacity>
-                        </View>
                     </View>
                 </ScrollView>
                 <ImagePicker ref={ref => (this.imagePicker = ref)} />
                 <DateTimePicker
                     isVisible={this.state.toggelDateTimePickerVisible}
-                    onConfirm={newDate => {
-                        this.setState(
-                            {
-                                dob: newDate,
-                                date: newDate.format("dd/MM/yyyy"),
-                                toggelDateTimePickerVisible: false
-                            },
-                            () => {
-                            }
-                        );
-                    }}
-                    onCancel={() => {
-                        this.setState({ toggelDateTimePickerVisible: false });
-                    }}
+                    onConfirm={this.onConfirmDate}
+                    onCancel={this.onCancelDate}
                     minimumDate={minDate}
                     maximumDate={new Date()}
                     cancelTextIOS={constants.actionSheet.cancel2}
@@ -744,6 +748,20 @@ class EditProfileScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+    scroll: {
+        flex: 1,
+        paddingVertical: 5
+    },
+    txtSave: {
+        color: '#fff',
+        marginRight: 25,
+        fontSize: 14,
+        fontWeight: '800'
+    },
+    activityPanel: {
+        flex: 1,
+        backgroundColor: '#fff'
+    },
     AcPanel: {
         flex: 1,
         backgroundColor: "rgb(247,249,251)"
@@ -762,7 +780,7 @@ const styles = StyleSheet.create({
         // borderRadius:5,
 
     },
-    txTitle: { color: '#fff', textAlign: 'left', marginHorizontal: 10, fontSize: 14 },
+    txTitle: { color: '#fff', marginLeft: 50, fontSize: 16 },
     mdk: {
         marginLeft: 12,
         flex: 1,
@@ -773,7 +791,7 @@ const styles = StyleSheet.create({
         color: "#000000",
 
     },
-    
+
     ktq: {
         fontSize: 12,
         fontWeight: "normal",

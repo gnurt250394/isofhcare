@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, TextInput, TouchableWithoutFeedback, Text, FlatList, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
+import { View, TextInput, TouchableWithoutFeedback, Text, FlatList, StyleSheet, Dimensions, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import drugProvider from '@data-access/drug-provider';
 import facilityProvider from '@data-access/facility-provider';
@@ -10,6 +10,7 @@ import stringUtils from 'mainam-react-native-string-utils';
 import Dash from 'mainam-react-native-dash-view';
 import ImageLoad from 'mainam-react-native-image-loader';
 import ItemFacility from '@components/facility/ItemFacility';
+import constants from '@resources/strings';
 class DrugDetailScreen extends Component {
     constructor(props) {
         super(props)
@@ -18,14 +19,7 @@ class DrugDetailScreen extends Component {
         }
     }
     renderItemPager(item, index) {
-        return <View style={{
-            flex: 1,
-            elevation: 5,
-            backgroundColor: 'white',
-            marginBottom: 10,
-            borderColor: 'rgb(204, 204, 204)',
-            flexDirection: 'row', alignItems: 'center', justifyContent: 'center'
-        }} shadowColor='#000000' shadowOpacity={0.2} shadowOffset={{}}>
+        return <View style={styles.containerItemPaper} shadowColor='#000000' shadowOpacity={0.2} shadowOffset={{}}>
             <ImageLoad
                 resizeMode="contain"
                 source={{ uri: item ? item.absoluteUrl() : "undefined" }} style={{ width: Dimensions.get('window').width, height: 135 }} />
@@ -137,7 +131,7 @@ class DrugDetailScreen extends Component {
         console.log(arr);
 
         return (
-            <ActivityPanel style={{ flex: 1 }} title="CHI TIẾT THUỐC" showFullScreen={true}>
+            <ActivityPanel style={styles.flex} title={constants.title.detail_drug} showFullScreen={true}>
                 <ScrollView
                     showsVerticalScrollIndicator={false}
                 >
@@ -147,67 +141,67 @@ class DrugDetailScreen extends Component {
                             : null
                     }
                     <View style={{ padding: 20 }}>
-                        <View style={{ flexDirection: 'row', marginBottom: 20 }}>
+                        <View style={[styles.row, { marginBottom: 20 }]}>
                             <View style={{ flex: 1 }}>
-                                <Text style={{ color: 'rgb(74,74,74)', fontWeight: 'bold', fontSize: 20 }}>{drug.drug.name}</Text>
-                                <Text style={{ color: 'rgb(74,144,226)', fontSize: 14, marginTop: 5 }}>{this.getType(drug.drug.category)}</Text>
+                                <Text style={styles.txtDrugName}>{drug.drug.name}</Text>
+                                <Text style={styles.txtCategory}>{this.getType(drug.drug.category)}</Text>
                             </View>
                             {
                                 drug.drug.price ?
-                                    <View style={{ flex: 1, alignItems: 'flex-end' }}>
-                                        <Text style={{ color: 'rgb(74,74,74)', marginTop: 2, fontSize: 14 }}>Giá tham khảo</Text>
-                                        <Text style={{ color: 'rgb(208,2,27)', fontWeight: 'bold', fontSize: 18, marginTop: 5 }}>{drug.drug.price.formatPrice()} đ</Text>
+                                    <View style={styles.containerPrice}>
+                                        <Text style={styles.txtReferencePrice}>{constants.drug.reference_price}</Text>
+                                        <Text style={styles.txtPriceDrug}>{drug.drug.price.formatPrice()} đ</Text>
                                     </View> : null
                             }
                         </View>
                         {drug.drug.activeSubstances ?
                             <View>
-                                <View style={{ flexDirection: 'row' }}>
-                                    <Text>Hoạt chất: {drug.drug.activeSubstances}</Text>
+                                <View style={styles.row}>
+                                    <Text>{constants.drug.active_substances}: {drug.drug.activeSubstances}</Text>
                                 </View>
-                                <Dash style={{ height: 1, flexDirection: 'row', marginTop: 7, marginBottom: 7 }} dashStyle={{ backgroundColor: 'rgb(131,147,202)' }} />
+                                <Dash style={styles.dash} dashStyle={styles.backgroundDash} />
                             </View> : null
                         }
                         {drug.drug.methodUse ?
                             <View>
-                                <View style={{ flexDirection: 'row' }}>
-                                    <Text>Đường dùng: {this.getMethodUse(drug.drug.methodUse)}</Text>
+                                <View style={styles.row}>
+                                    <Text>{constants.drug.method_use}: {this.getMethodUse(drug.drug.methodUse)}</Text>
                                 </View>
-                                <Dash style={{ height: 1, flexDirection: 'row', marginTop: 7, marginBottom: 7 }} dashStyle={{ backgroundColor: 'rgb(131,147,202)' }} />
+                                <Dash style={styles.dash} dashStyle={styles.backgroundDash} />
                             </View> : null
                         }
                         {drug.drug.standard ?
                             <View>
-                                <View style={{ flexDirection: 'row' }}>
-                                    <Text>Quy cách đóng gói: {drug.drug.standard}</Text>
+                                <View style={styles.row}>
+                                    <Text>{constants.drug.standard}: {drug.drug.standard}</Text>
                                 </View>
-                                <Dash style={{ height: 1, flexDirection: 'row', marginTop: 7, marginBottom: 7 }} dashStyle={{ backgroundColor: 'rgb(131,147,202)' }} />
+                                <Dash style={styles.dash} dashStyle={styles.backgroundDash} />
                             </View> : null
                         }
                         {drug.drug.manufacturer ?
                             <View>
-                                <View style={{ flexDirection: 'row' }}>
-                                    <Text>Nhà sản xuất: {drug.drug.manufacturer}</Text>
+                                <View style={styles.row}>
+                                    <Text>{constants.drug.manufacturer}: {drug.drug.manufacturer}</Text>
                                 </View>
-                                <Dash style={{ height: 1, flexDirection: 'row', marginTop: 7, marginBottom: 7 }} dashStyle={{ backgroundColor: 'rgb(131,147,202)' }} />
+                                <Dash style={styles.dash} dashStyle={styles.backgroundDash} />
                             </View> : null
                         }
                         {drug.drug.useness ?
-                            <Text style={{ fontWeight: 'bold', marginTop: 23 }}><Text style={{ color: 'rgb(0,151,124)' }}>Chỉ định: </Text>{drug.drug.useness}</Text>
+                            <Text style={styles.txtUseness}><Text style={styles.colorUseness}>{constants.drug.useness}: </Text>{drug.drug.useness}</Text>
                             : null
                         }
                         {drug.drug.avoidUseness ?
-                            <Text style={{ fontWeight: 'bold', marginTop: 23 }}><Text style={{ color: 'rgb(0,151,124)' }}>Chống chỉ định: </Text>{drug.drug.avoidUseness}</Text>
+                            <Text style={styles.txtUseness}><Text style={styles.colorUseness}>{constants.drug.avoid_useness}: </Text>{drug.drug.avoidUseness}</Text>
                             : null
                         }
                     </View>
                     {
                         (this.state.listFacilities && this.state.listFacilities.length > 0) &&
                         <View>
-                            <Text style={{ margin: 20, color: 'rgb(47,94,172)', fontWeight: '500' }}>CÓ BÁN TẠI CÁC NHÀ THUỐC</Text>
+                            <Text style={styles.txtInfo}>{constants.drug.sell_in_pharmacies}</Text>
                             {
                                 this.state.listFacilities.map((item, index) => {
-                                    return <ItemFacility facility={item} key={index} style={{ marginLeft: 14, marginRight: 14 }} />
+                                    return <ItemFacility facility={item} key={index} style={styles.itemFacility} />
                                 })
                             }
                         </View>
@@ -225,3 +219,68 @@ function mapStateToProps(state) {
     };
 }
 export default connect(mapStateToProps)(DrugDetailScreen);
+
+const styles = StyleSheet.create({
+    itemFacility: {
+        marginLeft: 14,
+        marginRight: 14
+    },
+    txtInfo: {
+        margin: 20,
+        color: 'rgb(47,94,172)',
+        fontWeight: '500'
+    },
+    colorUseness: { color: 'rgb(0,151,124)' },
+    txtUseness: {
+        fontWeight: 'bold',
+        marginTop: 23
+    },
+    backgroundDash: {
+        backgroundColor: 'rgb(131,147,202)'
+    },
+    dash: {
+        height: 1,
+        flexDirection: 'row',
+        marginTop: 7,
+        marginBottom: 7
+    },
+    txtPriceDrug: {
+        color: 'rgb(208,2,27)',
+        fontWeight: 'bold',
+        fontSize: 18,
+        marginTop: 5
+    },
+    txtReferencePrice: {
+        color: 'rgb(74,74,74)',
+        marginTop: 2,
+        fontSize: 14
+    },
+    containerPrice: {
+        flex: 1,
+        alignItems: 'flex-end'
+    },
+    txtCategory: {
+        color: 'rgb(74,144,226)',
+        fontSize: 14,
+        marginTop: 5
+    },
+    txtDrugName: {
+        color: 'rgb(74,74,74)',
+        fontWeight: 'bold',
+        fontSize: 20
+    },
+    row: {
+        flexDirection: 'row'
+    },
+    flex: { flex: 1 },
+    containerItemPaper: {
+        flex: 1,
+        elevation: 5,
+        backgroundColor: 'white',
+        marginBottom: 10,
+        borderColor: 'rgb(204, 204, 204)',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+})

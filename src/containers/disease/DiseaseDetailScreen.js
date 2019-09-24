@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import diseaseProvider from '@data-access/disease-provider'
 import ImageLoad from 'mainam-react-native-image-loader';
 import TopSearch from '@components/facility/TopFacility'
+import constants from '@resources/strings';
 class DiseaseDetailScreen extends Component {
     constructor(props) {
         super(props)
@@ -27,14 +28,7 @@ class DiseaseDetailScreen extends Component {
     }
 
     renderItemPager(item, index) {
-        return <View style={{
-            flex: 1,
-            elevation: 5,
-            backgroundColor: 'white',
-            marginBottom: 10,
-            borderColor: 'rgb(204, 204, 204)',
-            flexDirection: 'row', alignItems: 'center', justifyContent: 'center'
-        }} shadowColor='#000000' shadowOpacity={0.2} shadowOffset={{}}>
+        return <View style={styles.containerItemPaper} >
             <ImageLoad
                 resizeMode="contain"
                 source={{ uri: item && item.url ? item.url.absoluteUrl() : "undefined" }} style={{ width: Dimensions.get('window').width, height: 135 }} />
@@ -44,7 +38,7 @@ class DiseaseDetailScreen extends Component {
     render() {
         const disease = this.props.navigation.getParam("disease", null);
         return (
-            <ActivityPanel style={{ flex: 1 }} title="CHI TIẾT" showFullScreen={true}>
+            <ActivityPanel style={styles.flex} title="CHI TIẾT" showFullScreen={true}>
                 <ScrollView
                     showsVerticalScrollIndicator={false}
                 >
@@ -56,24 +50,24 @@ class DiseaseDetailScreen extends Component {
                     <View style={styles.box}>
                         <Text style={styles.name}>{disease.disease.name}</Text>
                         <View style={styles.card}>
-                            <Text style={styles.title}>Độ tuổi: <Text style={styles.value}>{disease.disease.fromAge}-{disease.disease.toAge}</Text></Text>
+                            <Text style={styles.title}>{constants.disease.age}: <Text style={styles.value}>{disease.disease.fromAge}-{disease.disease.toAge}</Text></Text>
 
                         </View>
                         {disease.disease.generalInfo ?
                             <View style={styles.card}>
-                                <Text style={styles.title}>Tổng quan:</Text>
+                                <Text style={styles.title}>{constants.disease.over_view}:</Text>
                                 <Text style={styles.value}>{disease.disease.generalInfo}</Text>
                             </View>
                             : <View />}
                         {disease.disease.reason ?
                             <View style={styles.card}>
-                                <Text style={styles.title}>Nguyên nhân:</Text>
+                                <Text style={styles.title}>{constants.disease.cause}:</Text>
                                 <Text style={styles.value}>{disease.disease.reason}</Text>
                             </View>
                             : <View />}
                         {disease.symptoms && disease.symptoms.length > 0 ?
                             <View style={styles.card}>
-                                <Text style={styles.title}>Triệu chứng:</Text>
+                                <Text style={styles.title}>{constants.disease.symptom}:</Text>
                                 {
                                     disease.symptoms.map((item, index) => {
                                         return <Text key={index} style={styles.value}>{item.name}</Text>
@@ -84,7 +78,7 @@ class DiseaseDetailScreen extends Component {
                             : <View />}
                         {disease.disease.treatment ?
                             <View style={styles.card}>
-                                <Text style={styles.title}>Hướng điều trị:</Text>
+                                <Text style={styles.title}>{constants.disease.treatment}:</Text>
                                 <Text style={styles.value}>{disease.disease.treatment}</Text>
                             </View>
                             : <View />}
@@ -135,3 +129,15 @@ function mapStateToProps(state) {
     };
 }
 export default connect(mapStateToProps)(DiseaseDetailScreen);
+
+const styles = StyleSheet.create({
+    flex: { flex: 1 },
+    containerItemPaper: {
+        flex: 1,
+        elevation: 5,
+        backgroundColor: 'white',
+        marginBottom: 10,
+        borderColor: 'rgb(204, 204, 204)',
+        flexDirection: 'row', alignItems: 'center', justifyContent: 'center'
+    },
+})

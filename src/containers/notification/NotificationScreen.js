@@ -149,6 +149,10 @@ class NotificationScreen extends Component {
           case 7:
             NavigationService.navigate('listProfileUser')
             break
+          case 10: {
+            this.openBooking(data.id);
+            break
+          }
           default:
             this.setState({ isLoading: false });
         }
@@ -172,7 +176,7 @@ class NotificationScreen extends Component {
                     NavigationService.navigate('viewDetailEhealth', { result, resultDetail });
                   }
                 } else {
-                  snackbar.show('Hồ sơ này chưa có kết quả', 'danger')
+                  snackbar.show(constants.msg.notification.file_not_result, 'danger')
                 }
               })
             }).catch(e => {
@@ -180,7 +184,7 @@ class NotificationScreen extends Component {
                 isLoading: false
               }, () => {
                 console.log(e)
-                snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                snackbar.show(constants.msg.notification.error_retry, 'danger')
               })
             });
             break;
@@ -188,13 +192,13 @@ class NotificationScreen extends Component {
             this.setState({
               isLoading: false
             }, () => {
-              snackbar.show('Y bạ chưa xác định', 'danger')
+              snackbar.show(constants.msg.notification.medical_records_not_found, 'danger')
             })
           case 7:
             this.setState({
               isLoading: false
             }, () => {
-              snackbar.show('Hồ sơ chia sẻ đến bạn đã hết thời gian', 'danger')
+              snackbar.show(constants.msg.notification.file_share_expired, 'danger')
             })
         }
       }).catch(e => {
@@ -202,7 +206,7 @@ class NotificationScreen extends Component {
           isLoading: false
         }, () => {
           console.log(e)
-          snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+          snackbar.show(constants.msg.notification.error_retry, 'danger')
         })
       });
     })
@@ -233,12 +237,12 @@ class NotificationScreen extends Component {
           if (s && s.data) {
             NavigationService.navigate("detailQuestion", { post: s.data });
           } else {
-            snackbar.show("Lỗi, bài viết không tồn tại", "danger");
+            snackbar.show(constants.msg.notification.ports_not_found, "danger");
           }
         });
       }).catch(e => {
         this.setState({ isLoading: true }, () => {
-          snackbar.show("Lỗi, vui lòng thử lại", "danger");
+          snackbar.show(constants.msg.error_occur, "danger");
         });
       });
     });
@@ -250,48 +254,48 @@ class NotificationScreen extends Component {
       });
     });
   }
-
+  removeNoti = () => {
+    this.dialogbox.confirm({
+      title: constants.alert,
+      content: [
+        constants.msg.notification.confirm_delete_all_notification
+      ],
+      ok: {
+        text: "Đồng ý",
+        style: {
+          color: "red"
+        },
+        callback: () => {
+          this.setState({ isLoading: true });
+          notificationProvider
+            .deleteAll()
+            .then(s => {
+              firebase.notifications().setBadge(0);
+              this.props.dispatch(redux.getUnreadNotificationCount());
+              this.setState({ isLoading: false });
+              this.onRefresh();
+            })
+            .catch(e => {
+              this.setState({ isLoading: false });
+              this.onRefresh();
+            });
+        }
+      },
+      cancel: {
+        text: "Hủy",
+        style: {
+          color: "blue"
+        },
+        callback: () => { }
+      }
+    });
+  }
   menuCreate() {
     return (
       <View>
         <TouchableOpacity
           style={{ padding: 10 }}
-          onPress={() => {
-            this.dialogbox.confirm({
-              title: constants.alert,
-              content: [
-                constants.msg.notification.confirm_delete_all_notification
-              ],
-              ok: {
-                text: "Đồng ý",
-                style: {
-                  color: "red"
-                },
-                callback: () => {
-                  this.setState({ isLoading: true });
-                  notificationProvider
-                    .deleteAll()
-                    .then(s => {
-                      firebase.notifications().setBadge(0);
-                      this.props.dispatch(redux.getUnreadNotificationCount());
-                      this.setState({ isLoading: false });
-                      this.onRefresh();
-                    })
-                    .catch(e => {
-                      this.setState({ isLoading: false });
-                      this.onRefresh();
-                    });
-                }
-              },
-              cancel: {
-                text: "Hủy",
-                style: {
-                  color: "blue"
-                },
-                callback: () => { }
-              }
-            });
-          }}
+          onPress={this.removeNoti}
         >
           <ScaleImage source={require("@images/new/ic_remove.png")} width={20} style={{ tintColor: '#FFF' }} />
         </TouchableOpacity>
@@ -307,13 +311,15 @@ class NotificationScreen extends Component {
         let value = JSON.parse(item.notification.value);
         switch (value.type) {
           case 2:
-            return "Tư vấn - đặt câu hỏi";
+            return constants.msg.notification.type.ask_requests;
           case 4:
-            return "Đặt khám";
+            return constants.msg.notification.type.booking;
           case 5:
-            return "Lấy số nhanh";
+            return constants.msg.notification.type.get_quick_number;
           case 6:
-            return 'Y bạ điện tử'
+            return constants.msg.notification.type.ehealth;
+          case 10:
+            return constants.msg.notification.type.transfer_payments
         }
 
       }
@@ -323,62 +329,52 @@ class NotificationScreen extends Component {
     }
     return "Thông báo";
   }
-
-  renderItem(item, index) {
+  getDate = (item, index) => {
+    let notiTime = item.notification.createdDate.toDateObject('-');
+    if (index == 0) {
+      let date = new Date();
+      if (date.ddmmyyyy() == notiTime.ddmmyyyy())
+        return <Text style={styles.txtDate}>Hôm nay</Text>
+      else
+        return <Text style={styles.txtDate}>Ngày {notiTime.format('dd/MM/yyyy')}</Text>
+    }
+    else {
+      let preNoti = this.state.data[index - 1];
+      let preNotiDate = preNoti.notification.createdDate.toDateObject('-');
+      if (preNotiDate.ddmmyyyy() != notiTime.ddmmyyyy())
+        return <Text style={styles.txtDate}>Ngày {notiTime.format('dd/MM/yyyy')}</Text>
+    }
+    return null
+  }
+  defaultImage = () => <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={50} height={50} style={styles.avatar} />
+  renderItem = ({ item, index }) => {
     const source = item.user && item.user.avatar ? { uri: item.user.avatar.absoluteUrl() } : require("@images/new/user.png");
 
     return (
       <View>
         {
-          ((item, index) => {
-            let notiTime = item.notification.createdDate.toDateObject('-');
-            if (index == 0) {
-              let date = new Date();
-              if (date.ddmmyyyy() == notiTime.ddmmyyyy())
-                return <Text style={{ marginLeft: 20, marginRight: 20, marginBottom: 10, marginTop: 20 }}>Hôm nay</Text>
-              else
-                return <Text style={{ marginLeft: 20, marginRight: 20, marginBottom: 10, marginTop: 20 }}>Ngày {notiTime.format('dd/MM/yyyy')}</Text>
-            }
-            else {
-              let preNoti = this.state.data[index - 1];
-              let preNotiDate = preNoti.notification.createdDate.toDateObject('-');
-              if (preNotiDate.ddmmyyyy() != notiTime.ddmmyyyy())
-                return <Text style={{ marginLeft: 20, marginRight: 20, marginBottom: 10, marginTop: 20 }}>Ngày {notiTime.format('dd/MM/yyyy')}</Text>
-            }
-            return null
-          }).call(this, item, index)
+          this.getDate(item, index)
         }
 
         <TouchableOpacity
-          style={{
-            marginLeft: 20, marginRight: 20
-          }}
+          style={styles.buttonNoti}
           onPress={this.viewNotification.bind(this, item)}
         >
-          <View
-            style={{
-              flexDirection: "row",
-              padding: 11,
-              paddingLeft: 13,
-              paddingRight: 13
-            }}
-          >
+          <View style={styles.containerItem}>
             <ImageLoad
               resizeMode="cover"
-              imageStyle={{ borderRadius: 25, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
+              imageStyle={styles.boderImage}
               borderRadius={25}
-              customImagePlaceholderDefaultStyle={[styles.avatar, { width: 50, height: 50 }]}
+              customImagePlaceholderDefaultStyle={[styles.avatar, styles.placeHoderImage]}
               placeholderSource={require("@images/new/user.png")}
               style={styles.avatar}
               resizeMode="cover"
               loadingStyle={{ size: 'small', color: 'gray' }}
               source={source}
-              defaultImage={() => {
-                return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={50} height={50} style={styles.avatar} />
-              }}
+              defaultImage={this.defaultImage}
             />
-            <View style={{ paddingTop: 4, marginLeft: 19, flex: 1 }}>
-              <Text style={[{ fontSize: 14, fontWeight: 'bold' }, item.notification.watched == 1 ? styles.title_watch : styles.title]}>{this.getNotificationType(item)}</Text>
+            <View style={styles.containerTitle}>
+              <Text style={[styles.txtTitle, item.notification.watched == 1 ? styles.title_watch : styles.title]}>{this.getNotificationType(item)}</Text>
               <Text
                 style={item.notification.watched == 1 ? styles.title_watch : styles.title}
                 ellipsizeMode="tail">
@@ -386,24 +382,27 @@ class NotificationScreen extends Component {
               </Text>
               {
                 this.isToday(item) &&
-                <Text
-                  style={{ fontSize: 12, color: "#00000060", marginTop: 8 }}
-                >
-                  {
-                    item.notification.createdDate.toDateObject('-').getPostTime()
-                  }
-                </Text>
+                <Text style={styles.txtTime}>{item.notification.createdDate.toDateObject('-').getPostTime()} </Text>
               }
             </View>
           </View>
-          <View
-            style={{ height: 0.5, backgroundColor: "rgb(204,204,204)" }}
-          />
+          <View style={styles.end} />
         </TouchableOpacity>
       </View>
     )
   }
-
+  keyExtractor = (item, index) => index.toString()
+  listHeader = () => {
+    return (!this.state.refreshing &&
+      (!this.state.data || this.state.data.length == 0) ? (
+        <View style={{ alignItems: "center", marginTop: 50 }}>
+          <Text style={{ fontStyle: "italic" }}>
+            {constants.none_info}
+          </Text>
+        </View>
+      ) : null)
+  }
+  listFooter = () => <View style={{ height: 10 }} />
   render() {
     if (!this.props.userApp.isLogin)
       return null;
@@ -411,7 +410,7 @@ class NotificationScreen extends Component {
       <ActivityPanel
         style={{ flex: 1 }}
         titleStyle={{ marginRight: 0 }}
-        title="THÔNG BÁO"
+        title={constants.msg.notification.notifi}
         showFullScreen={true}
         menuButton={this.menuCreate()}
         isLoading={this.state.isLoading}
@@ -424,21 +423,12 @@ class NotificationScreen extends Component {
           onEndReached={this.onLoadMore.bind(this)}
           onEndReachedThreshold={1}
           style={{ flex: 1 }}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={this.keyExtractor}
           extraData={this.state}
           data={this.state.data}
-          ListHeaderComponent={() =>
-            !this.state.refreshing &&
-              (!this.state.data || this.state.data.length == 0) ? (
-                <View style={{ alignItems: "center", marginTop: 50 }}>
-                  <Text style={{ fontStyle: "italic" }}>
-                    Hiện tại chưa có thông tin
-                </Text>
-                </View>
-              ) : null
-          }
-          ListFooterComponent={() => <View style={{ height: 10 }} />}
-          renderItem={({ item, index }) => this.renderItem(item, index)}
+          ListHeaderComponent={this.listHeader}
+          ListFooterComponent={this.listFooter}
+          renderItem={this.renderItem}
         />
 
         <DialogBox
@@ -451,6 +441,43 @@ class NotificationScreen extends Component {
   }
 }
 const styles = StyleSheet.create({
+  placeHoderImage: { width: 50, height: 50 },
+  txtDate: {
+    marginLeft: 20,
+    marginRight: 20,
+    marginBottom: 10,
+    marginTop: 20
+  },
+  end: {
+    height: 0.5,
+    backgroundColor: "rgb(204,204,204)"
+  },
+  txtTime: {
+    fontSize: 12,
+    color: "#00000060",
+    marginTop: 8
+  },
+  txtTitle: { fontSize: 14, fontWeight: 'bold' },
+  containerTitle: {
+    paddingTop: 4,
+    marginLeft: 19,
+    flex: 1
+  },
+  boderImage: {
+    borderRadius: 25,
+    borderWidth: 0.5,
+    borderColor: 'rgba(151, 151, 151, 0.29)'
+  },
+  containerItem: {
+    flexDirection: "row",
+    padding: 11,
+    paddingLeft: 13,
+    paddingRight: 13
+  },
+  buttonNoti: {
+    marginLeft: 20,
+    marginRight: 20
+  },
   title: { fontSize: 14, color: '#000000' },
   title_watch: { fontSize: 14, color: '#00000070' },
   avatar: {
@@ -459,7 +486,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50
   },
-  
+
   titleStyle: {
     color: '#fff',
     marginLeft: 65

@@ -156,6 +156,12 @@ class PushController extends Component {
                     case 6:
                         this.openDetailsEhealth(notificationOpen.notification.data);
                         break;
+                    case 7:
+                        this.openListProfile()
+                        break
+                    case 10:
+                        this.openBooking(id);
+                        break;
                     case -1:
                         break;
 
@@ -164,6 +170,9 @@ class PushController extends Component {
         } catch (error) {
             console.log(error);
         }
+    }
+    openListProfile = () => {
+        NavigationService.navigate('listProfileUser')
     }
     openDetailsEhealth(data) {
         if (!this.props.userApp.isLogin)
@@ -250,8 +259,6 @@ class PushController extends Component {
     }
     getInitialNotification(notificationOpen) {
         if (notificationOpen) {
-
-            console.log(notificationOpen)
             try {
                 firebase.notifications().removeDeliveredNotification(notificationOpen.notification.notificationId);
                 const id = notificationOpen.notification.data.id;
@@ -271,6 +278,12 @@ class PushController extends Component {
                         break;
                     case 6:
                         this.openDetailsEhealth(notificationOpen.notification.data);
+                        break;
+                    case 7:
+                        this.openListProfile()
+                        break
+                    case 10:
+                        this.openBooking(id);
                         break;
                 }
             } catch (error) {

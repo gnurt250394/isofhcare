@@ -37,7 +37,7 @@ class CheckOtpScreen extends React.PureComponent {
             })
 
         }).catch(err => {
-            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+            snackbar.show(constants.msg.notification.error_retry, 'danger')
         })
     }
     onCheckToken = () => {
@@ -51,36 +51,37 @@ class CheckOtpScreen extends React.PureComponent {
                     NavigationService.navigate('shareDataProfile', { id: res.data.record.id })
                     return;
                 }
-                if(res.code == 4){
-                    snackbar.show('Mã bạn nhập đã hết hạn','danger')
+                if (res.code == 4) {
+                    snackbar.show(constants.msg.user.code_expired, 'danger')
                     return
                 }
-                if(res.code == 5){
-                    snackbar.show('Mã bạn nhập không đúng','danger')
+                if (res.code == 5) {
+                    snackbar.show(constants.msg.user.code_invalid, 'danger')
                     return
                 }
                 else {
-                    snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                    snackbar.show(constants.msg.notification.error_retry, 'danger')
 
                 }
             })
         }
     }
+    handleTextChange = text => this.setState({ text1: text })
     render() {
         return (
             <ActivityPanel
                 style={{ flex: 1 }}
-                title="Xác nhận số điện thoại"  
+                title={constants.title.confirm_phone}
             >
                 <ScrollView
                     showsVerticalScrollIndicator={false}
-                    style={{ flex: 1 }} keyboardShouldPersistTaps="handled">
-                    <View style={{ flex: 1, padding: 20 }}>
+                    style={styles.flex} keyboardShouldPersistTaps="handled">
+                    <View style={styles.container}>
                         <ScaleImage source={require("@images/new/isofhcare.png")} width={180} style={styles.logo} />
                         <Text style={styles.txContents}>Một mã xác nhận 6 chữ số vừa được gửi đến số điện thoại {this.state.phone}. Vui lòng điền mã số và hoàn tất thêm thành viên</Text>
                         <OTPTextView
                             containerStyle={styles.textInputContainer}
-                            handleTextChange={text => this.setState({ text1: text })}
+                            handleTextChange={this.handleTextChange}
                             inputCount={6}
                             keyboardType="numeric"
                             underlineColorAndroid={'#fff'}
@@ -102,6 +103,11 @@ class CheckOtpScreen extends React.PureComponent {
     }
 }
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        padding: 20
+    },
+    flex: { flex: 1 },
     container: {
         flex: 1,
         justifyContent: 'center',

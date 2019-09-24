@@ -28,21 +28,25 @@ class ListProfileScreen extends PureComponent {
     componentDidMount() {
         this.onRefresh();
     }
-    onPress = (item) => {
+    onPress = (item) => () => {
         this.props.dispatch({ type: constants.action.action_select_patient_group_ehealth, value: item })
         this.props.navigation.navigate('viewInMonth');
     }
+    goToEhealth = (item) => () => {
+        this.props.dispatch({ type: constants.action.action_select_patient_group_ehealth, value: item })
+        this.props.navigation.navigate('historyEhealth', { countTime: item.countTime, item })
+    }
     renderItemProfile = ({ item, index }) => {
-        const source = this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar.absoluteUrl() } : require("@images/new/user.png");
+        const source = item.avatar ? { uri: item.avatar.absoluteUrl() } : require("@images/new/user.png");
         return (
-            <View style={{ marginHorizontal: 5 }}>
-                <Card style={{ flexDirection: 'row' }}>
-                    <TouchableOpacity style={[styles.viewItem]} onPress={() => this.onPress(item)}>
+            <View style={styles.containerItem}>
+                <Card style={styles.card}>
+                    <TouchableOpacity style={[styles.viewItem]} onPress={this.onPress(item)}>
                         <ImageLoad
                             resizeMode="cover"
                             imageStyle={styles.imageStyle}
                             borderRadius={30}
-                            customImagePlaceholderDefaultStyle={[styles.avatar, { width: 60, height: 60 }]}
+                            customImagePlaceholderDefaultStyle={[styles.avatar, styles.image]}
                             placeholderSource={require("@images/new/user.png")}
                             resizeMode="cover"
                             loadingStyle={{ size: 'small', color: 'gray' }}
@@ -57,17 +61,14 @@ class ListProfileScreen extends PureComponent {
                             <Text style={[styles.txPatientName]}>{item.patientName}</Text>
                             <Text style={styles.txHospitalEntityName}>{item.hospitalEntity.name}</Text>
 
-                            <Text style={styles.txHospitalEntityName}>Mã bệnh nhân: <Text style={{ fontWeight: 'bold' }}>{item.patientValue}</Text></Text>
+                            <Text style={styles.txHospitalEntityName}>{constants.ehealth.patient_code}: <Text style={styles.txtPatient}>{item.patientValue}</Text></Text>
                             <View style={styles.viewTime}>
                                 <ScaleImage resizeMode='cover' source={require("@images/new/ehealth/ic_timer.png")} width={15} tintColor={'#8fa1aa'} />
                                 <Text style={styles.txLastTime}>{constants.ehealth.lastTime2}{item.latestTime ? item.latestTime.toDateObject('-').format('dd/MM/yyyy') : ''}</Text>
                             </View>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => {
-                        this.props.dispatch({ type: constants.action.action_select_patient_group_ehealth, value: item })
-                        this.props.navigation.navigate('historyEhealth', { countTime: item.countTime, item })
-                    }} style={styles.txCountTime}>
+                    <TouchableOpacity onPress={this.goToEhealth(item)} style={styles.txCountTime}>
                         <Text style={styles.txCount}>{item.countTime}</Text>
                         <Text>{constants.ehealth.time}</Text>
                     </TouchableOpacity>
@@ -111,7 +112,8 @@ class ListProfileScreen extends PureComponent {
             this.onRefresh()
         }
     }
-   
+    footerComponent = () => <View style={{ height: 10 }}></View>
+    keyExtractor = (item, index) => index.toString()
     render() {
         return (
             <ActivityPanel style={{ flex: 1 }}
@@ -123,10 +125,10 @@ class ListProfileScreen extends PureComponent {
                     onRefresh={this.onRefresh.bind(this)}
                     refreshing={this.state.refreshing}
                     onEndReachedThreshold={1}
-                    keyExtractor={(item, index) => index.toString()}
+                    keyExtractor={this.keyExtractor}
                     extraData={this.state}
                     data={this.state.listData}
-                    ListFooterComponent={() => <View style={{ height: 10 }}></View>}
+                    ListFooterComponent={this.footerComponent}
                     renderItem={this.renderItemProfile}
                 />
             </ActivityPanel>
@@ -135,6 +137,10 @@ class ListProfileScreen extends PureComponent {
 }
 
 const styles = StyleSheet.create({
+    txtPatient: { fontWeight: 'bold' },
+    image: { width: 60, height: 60 },
+    card: { flexDirection: 'row' },
+    containerItem: { marginHorizontal: 5 },
     style1: {
         flexDirection: 'row', alignItems: 'center', marginTop: 10, marginLeft: 20
     },
@@ -224,7 +230,7 @@ const styles = StyleSheet.create({
     txCountTime: { justifyContent: 'center', alignItems: 'center', width: 80, borderLeftColor: '#c8d1d6', borderLeftWidth: 1 },
     txCount: { color: '#f36819', fontSize: 30 },
     borderBottom: { height: 1, backgroundColor: '#00000050' },
-    
+
 
 });
 

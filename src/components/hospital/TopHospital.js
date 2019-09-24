@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { View, StyleSheet, ScrollView, Text, FlatList, Dimensions,ActivityIndicator } from 'react-native';
+import { View, StyleSheet, ScrollView, Text, FlatList, Dimensions, ActivityIndicator } from 'react-native';
 import hospitalProvider from '@data-access/hospital-provider'
 import HeaderLine from '@components/home/HeaderLine'
 import HospitalItem from './HospitalItem'
@@ -25,7 +25,7 @@ class TopHospital extends Component {
             console.log(err)
         })
     }
-    renderItem = (item, index) => {
+    renderItem = ({ item, index }) => {
         return (
             <HospitalItem widthImg={180} widthCard={170} index={index} item={item}></HospitalItem>
 
@@ -41,7 +41,7 @@ class TopHospital extends Component {
     }
     render() {
         return (
-            <View style = {{backgroundColor:'#fff'}}>
+            <View style={{ backgroundColor: '#fff' }}>
                 <HeaderLine onPress={this.onShowInfo} isShowViewAll={true} title={Dimensions.get("window").width <= 375 ? 'PHÒNG KHÁM,\nBỆNH VIỆN HÀNG ĐẦU' : 'PHÒNG KHÁM, BỆNH VIỆN HÀNG ĐẦU'} />
                 {
                     this.state.listData ? (
@@ -51,9 +51,7 @@ class TopHospital extends Component {
                             keyExtractor={(item, index) => index.toString()}
                             extraData={this.state}
                             data={this.state.listData}
-                            renderItem={({ item, index }) => {
-                                return this.renderItem(item, index)
-                            }}
+                            renderItem={this.renderItem}
                         />
                     ) : (<ActivityIndicator></ActivityIndicator>)
                 }

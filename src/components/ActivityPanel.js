@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, StatusBar, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native';
+import { Text, StatusBar, TouchableOpacity, Dimensions, ActivityIndicator, StyleSheet, View } from 'react-native';
 import PropTypes from 'prop-types';
 const DEVICE_WIDTH = Dimensions.get("window").width;
 import constants from '@resources/strings'
@@ -7,12 +7,6 @@ import { isIphoneX } from 'react-native-iphone-x-helper'
 import Activity from 'mainam-react-native-activity-panel';
 import ActionBar from '@components/Actionbar';
 import { connect } from 'react-redux';
-import {
-    Platform,
-    StyleSheet,
-    Image,
-    View
-} from 'react-native';
 import ScaledImage from 'mainam-react-native-scaleimage';
 
 
@@ -31,12 +25,12 @@ class ActivityPanel extends Component {
             paddingTop: paddingTop
         }
     }
-    backPress() {
+    backPress = () => {
         if (this.props.navigation)
             this.props.navigation.pop();
     }
 
-    msgPress() {
+    msgPress = () => {
         if (this.props.navigation)
             this.props.navigation.navigate("groupChat")
     }
@@ -45,8 +39,8 @@ class ActivityPanel extends Component {
         return (
             <ActionBar
                 actionbarTextColor={[{ color: constants.colors.actionbar_title_color }, this.props.actionbarTextColor]}
-                backButtonClick={() => this.backPress()}
-                showMessengerClicked={() => this.msgPress()}
+                backButtonClick={this.backPress}
+                showMessengerClicked={this.msgPress}
                 {...this.props}
                 icBack={require('@images/new/left_arrow_white.png')}
                 titleStyle={[styles.titleStyle, this.props.titleStyle]}
@@ -57,17 +51,7 @@ class ActivityPanel extends Component {
 
     getLoadingView() {
         return (
-            <View style={{
-                position: "absolute",
-                backgroundColor: "#bfeaff94",
-                flex: 1,
-                top: 0,
-                right: 0,
-                left: 0,
-                bottom: 0,
-                alignItems: 'center',
-                justifyContent: "center"
-            }}
+            <View style={styles.containerLoading}
             >
                 <ActivityIndicator size={'large'} color={'#02C39A'} />
             </View>
@@ -81,9 +65,7 @@ class ActivityPanel extends Component {
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
                 {...this.props}
-                containerStyle={[{
-                    backgroundColor: "#f7f9fb"
-                }, this.props.containerStyle]}
+                containerStyle={[styles.container, this.props.containerStyle]}
                 actionbar={this.props.actionbar ? this.props.actionbar : this.getActionbar.bind(this)}
                 loadingView={this.getLoadingView()}
                 paddingTop={this.state.paddingTop}
@@ -91,7 +73,11 @@ class ActivityPanel extends Component {
             >
                 {this.showBackground === false ?
                     null :
-                    <ScaledImage source={require("@images/new/background.png")} height={200} width={DEVICE_WIDTH} style={{ position: 'absolute', bottom: 10, right: 10 }} />
+                    <ScaledImage
+                        source={require("@images/new/background.png")}
+                        height={200}
+                        width={DEVICE_WIDTH}
+                        style={styles.imageBackground} />
                 }
                 {this.props.children}
             </Activity>
@@ -99,6 +85,25 @@ class ActivityPanel extends Component {
     }
 }
 const styles = StyleSheet.create({
+    imageBackground: {
+        position: 'absolute',
+        bottom: 10,
+        right: 10
+    },
+    container: {
+        backgroundColor: "#f7f9fb"
+    },
+    containerLoading: {
+        position: "absolute",
+        backgroundColor: "#bfeaff94",
+        flex: 1,
+        top: 0,
+        right: 0,
+        left: 0,
+        bottom: 0,
+        alignItems: 'center',
+        justifyContent: "center"
+    },
     actionbarStyle: {
         backgroundColor: '#02C39A',
         borderBottomWidth: 0

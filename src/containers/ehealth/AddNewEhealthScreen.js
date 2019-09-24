@@ -19,8 +19,8 @@ class AddNewEhealthScreen extends Component {
     }
     onScanQr = () => {
         this.props.navigation.navigate("qrcodeScanner", {
-            title: "QUÉT MÃ HỒ SƠ",
-            textHelp: "Di chuyển camera đến vùng chứa mã hồ sơ để quét",
+            title: constants.title.scan_file,
+            textHelp: constants.msg.ehealth.move_camera_to_file,
             onCheckData: data => {
                 return new Promise((resolve, reject) => {
                     ehealthProvider.addEhealthWithCode(this.state.hospital.hospital.id, data).then(res => {
@@ -39,27 +39,31 @@ class AddNewEhealthScreen extends Component {
                                 break
                         }
                         reject(-1);
+                    }).catch(err => {
+                        this.props.navigation.pop()
+                        snackbar.show(constants.msg.ehealth.code_invalid, 'danger')
+
                     });
                 });
             },
             onSuccess: data => {
                 this.props.dispatch({ type: constants.action.action_select_hospital_ehealth, value: this.state.hospital })
                 this.props.navigation.replace('listProfile');
-                snackbar.show('Thêm y bạ thành công', 'success')
+                snackbar.show(constants.msg.ehealth.add_medical_records_success, 'success')
             },
             onError: error => {
                 switch (error) {
                     case 2:
-                        snackbar.show('Không lấy được thông tin tài khoản, xin vui lòng thử lại', 'danger');
+                        snackbar.show(constants.msg.ehealth.not_get_info_account, 'danger');
                         break;
                     case 3:
-                        snackbar.show('Không tìm thấy y bạ', 'danger')
+                        snackbar.show(constants.msg.ehealth.medical_records_not_found, 'danger')
                         break;
                     case 4:
-                        snackbar.show('Tài khoản của bạn không sở hữu y bạ này', 'danger')
+                        snackbar.show(constants.msg.ehealth.account_not_owned_medical_records, 'danger')
                         break;
                     default:
-                        snackbar.show('Xác thực không thành công', 'danger')
+                        snackbar.show(constants.msg.user.confirm_code_not_success, 'danger')
                         break;
                 }
             }
@@ -82,18 +86,18 @@ class AddNewEhealthScreen extends Component {
 
                 switch (res.code) {
                     case 2:
-                        snackbar.show('Không lấy được thông tin tài khoản, xin vui lòng thử lại', 'danger')
+                        snackbar.show(constants.msg.ehealth.not_get_info_account, 'danger')
                         break
                     case 3:
-                        snackbar.show('Không tìm thấy y bạ', 'danger')
+                        snackbar.show(constants.msg.ehealth.medical_records_not_found, 'danger')
                         break
                     case 4:
-                        snackbar.show('Tài khoản của bạn không sở hữu y bạ này', 'danger')
+                        snackbar.show(constants.msg.ehealth.account_not_owned_medical_records, 'danger')
                         break
                     case 0:
                         this.props.dispatch({ type: constants.action.action_select_hospital_ehealth, value: hospital })
                         this.props.navigation.replace('listProfile');
-                        snackbar.show('Thêm y bạ thành công', 'success')
+                        snackbar.show(constants.msg.ehealth.add_medical_records_success, 'success')
                         break
                 }
                 this.setState({
@@ -102,7 +106,7 @@ class AddNewEhealthScreen extends Component {
                 })
 
             }).catch(err => {
-                snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                snackbar.show(constants.msg.notification.error_retry, 'danger')
                 console.log(err);
                 this.setState({
                     isVisible: false,
@@ -114,44 +118,50 @@ class AddNewEhealthScreen extends Component {
 
 
     }
+    onBackdropPress = () => this.setState({ isVisible: false })
+
+    onChangeText = state => value => {
+        this.setState({ [state]: value })
+    }
     render() {
         return (
             <ActivityPanel
                 title={constants.title.ehealth}
-                
-                
-                
                 style={styles.container}
                 isLoading={this.state.modalLoading}
             >
                 <View style={styles.viewContent}>
                     <View style={styles.viewBtn}>
-                        <TouchableOpacity onPress={this.onScanQr} style={styles.btnAddEhealth}><Text style={styles.txAddEhealth}>QUÉT  MÃ</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={this.onScanQr} style={styles.btnAddEhealth}><Text style={styles.txAddEhealth}>{constants.ehealth.scan_code}</Text></TouchableOpacity>
                         <View style={{ width: 10 }}></View>
-                        <TouchableOpacity onPress={this.onInsertCode} style={styles.btnAddEhealth}><Text style={styles.txAddEhealth}>NHẬP MÃ</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={this.onInsertCode} style={styles.btnAddEhealth}><Text style={styles.txAddEhealth}>{constants.ehealth.input_code}</Text></TouchableOpacity>
                     </View>
-                    <View style={{ maxWidth: '95%', marginTop: 20 }}><Text style={{ color: '#02C39A', fontSize: 14, fontWeight: 'bold', textAlign: 'center', marginTop: 20 }}>NHẬP HOẶC QUÉT MÃ HỒ SƠ ĐỂ XEM KẾT QUẢ KHÁM MỚI</Text></View>
-                    <ScaledImage height={400} style={{ marginTop: 20 }} source={require('@images/new/ehealth/img_demo_scan.jpg')}></ScaledImage>
+                    <View style={styles.containerHeaderTitle}>
+                        <Text style={styles.txtContentTitle}>{constants.ehealth.input_or_scan_code}</Text>
+                    </View>
+                    <ScaledImage height={400} style={styles.imgScanDemo} source={require('@images/new/ehealth/img_demo_scan.jpg')}></ScaledImage>
                 </View>
                 <Modal
                     isVisible={this.state.isVisible}
-                    onBackdropPress={() => this.setState({ isVisible: false })}
+                    onBackdropPress={this.onBackdropPress}
                     backdropOpacity={0.5}
                     animationInTiming={500}
                     animationOutTiming={500}
-                    style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+                    style={styles.modal}
                     backdropTransitionInTiming={1000}
                     backdropTransitionOutTiming={1000}
                 >
                     <View style={styles.viewModal}>
-                        <Text style={styles.titleModal}>NHẬP MÃ HỒ SƠ ĐƯỢC IN TRÊN PHIẾU VÀO Ô DƯỚI</Text>
+                        <Text style={styles.titleModal}>{constants.ehealth.input_profile_code}</Text>
                         <TextInput
                             multiline={true}
-                            onChangeText={text => this.setState({ valueCode: text })}
+                            onChangeText={this.onChangeText('valueCode')}
                             value={this.state.valueCode}
                             style={styles.textInputCode}
                         ></TextInput>
-                        <TouchableOpacity onPress={this.onConfirm} style={styles.btnConfirm}><Text style={{ fontSize: 14, color: '#fff', fontWeight: 'bold' }}>XÁC NHẬN MÃ</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={this.onConfirm} style={styles.btnConfirm}>
+                            <Text style={styles.txtConfirmCode}>{constants.ehealth.confirm_code}</Text>
+                        </TouchableOpacity>
                     </View>
                 </Modal>
             </ActivityPanel>
@@ -159,6 +169,28 @@ class AddNewEhealthScreen extends Component {
     }
 }
 const styles = StyleSheet.create({
+    txtConfirmCode: {
+        fontSize: 14,
+        color: '#fff',
+        fontWeight: 'bold'
+    },
+    modal: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    imgScanDemo: { marginTop: 20 },
+    txtContentTitle: {
+        color: '#02C39A',
+        fontSize: 14,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginTop: 20
+    },
+    containerHeaderTitle: {
+        maxWidth: '95%',
+        marginTop: 20
+    },
     container: {
         flex: 1,
     },

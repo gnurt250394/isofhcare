@@ -53,11 +53,11 @@ module.exports = {
                 }
             } else {
                 if (!silent)
-                    snackbar.show("Bạn đang sử dụng phiên bản iSofHCare mới nhất", "success");
+                    snackbar.show("Bạn đang sử dụng phiên bản iSofHcare mới nhất", "success");
             }
         }).catch(e => {
             if (!silent)
-                snackbar.show("Bạn đang sử dụng phiên bản iSofHCare mới nhất", "success");
+                snackbar.show("Bạn đang sử dụng phiên bản iSofHcare mới nhất", "success");
         })
     }
 }

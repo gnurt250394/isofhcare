@@ -127,17 +127,29 @@ module.exports = {
       );
     });
   },
-  confirmPayment(bookingId) {
+  confirmPayment(bookingId, paymentMethod) {
     return new Promise((resolve, reject) => {
+      let body = { pay: paymentMethod }
       client.requestApi(
         "put",
         `${constants.api.booking.confirmPay}/${bookingId}`
-        , {
-        }, (s, e) => {
+        , body, (s, e) => {
           if (s) resolve(s);
           else reject(e);
         }
       );
     });
-  }
+  },
+  // payTranfer(bookingId) {
+  //   return new Promise((resolve, reject) => {
+  //     client.requestApi(
+  //       'get', `${constants.api.booking.pay_tranfer}/${bookingId}`, {}, (s, e) => {
+  //         if (s)
+  //           resolve(s)
+  //         else
+  //           reject(e)
+  //       }
+  //     )
+  //   })
+  // }
 };

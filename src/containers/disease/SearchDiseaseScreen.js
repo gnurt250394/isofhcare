@@ -10,6 +10,7 @@ import historyProvider from '@data-access/history-provider';
 import diseaseProvider from '@data-access/disease-provider';
 import TopSymptom from '@components/symptom/TopSearch';
 import ListDisease from '@components/disease/ListDisease';
+import constants from '@resources/strings';
 
 class SearchDiseaseScreen extends Component {
     constructor(props) {
@@ -59,14 +60,14 @@ class SearchDiseaseScreen extends Component {
             <View style={{ height: 0.5, backgroundColor: '#00000040', marginTop: 12 }} />
         </TouchableOpacity>
     }
-
+    onClickSeeAllResult = () => this.props.navigation.navigate("searchDiseaseResult", { keyword })
     renderFooter(keyword, data) {
         if (keyword)
             return <TouchableOpacity
                 style={{ padding: 5, paddingLeft: 15, flexDirection: 'row', alignItems: 'center', paddingTop: 10 }}
-                onPress={() => this.props.navigation.navigate("searchDiseaseResult", { keyword })}>
+                onPress={this.onClickSeeAllResult}>
                 <ScaledImage source={require("@images/search/icsearch2.png")} width={15} />
-                <Text style={{ paddingLeft: 10, color: 'rgb(74,144,226)' }}>Xem tất cả kết quả tìm kiếm</Text>
+                <Text style={styles.txtSeeMore}>{constants.disease.see_all_result}</Text>
             </TouchableOpacity>
         return <View />
     }
@@ -79,29 +80,29 @@ class SearchDiseaseScreen extends Component {
 
     render() {
         return (
-            <ActivityPanel style={{ flex: 1 }} title="TÌM KIẾM BỆNH" showFullScreen={true}>
-                <View style={{ flex: 1, padding: 14, position: 'relative' }}>
+            <ActivityPanel style={styles.flex} title={constants.title.search_disease} showFullScreen={true}>
+                <View style={styles.container}>
                     <ScrollView
                         showsVerticalScrollIndicator={false}
-                        style={{
-                            marginTop: 43
-                        }}>
-                        <View style={{ flex: 1 }}>
+                        style={styles.scroll}>
+                        <View style={styles.flex}>
                             <TopSymptom onItemClick={this.onSymptomClick.bind(this)} />
                             <ListDisease />
                         </View>
                     </ScrollView>
                     {
                         this.state.showOverlay ?
-                            <TouchableWithoutFeedback onPress={this.overlayClick.bind(this)} style={{}}><View style={{ position: 'absolute', top: 0, right: 0, left: 0, bottom: 0, backgroundColor: '#37a3ff59' }} /></TouchableWithoutFeedback> : null
+                            <TouchableWithoutFeedback onPress={this.overlayClick.bind(this)} style={{}}>
+                                <View style={styles.containerOverLay} />
+                            </TouchableWithoutFeedback> : null
                     }
                     <SearchPanel
-                        style={{ position: 'absolute', top: 12, left: 12, right: 12 }}
+                        style={styles.searchPanel}
                         searchTypeId={realmModel.DISEASE_HISTORY}
                         resultPage="searchDiseaseResult"
                         ref={ref => this.searchPanel = ref}
                         onFocus={this.searchFocus.bind(this)}
-                        placeholder="Tìm kiếm tên bệnh, triệu chứng"
+                        placeholder={constants.disease.search_name_disease_or_symptom}
                         onSearch={this.onSearch.bind(this)}
                         renderItem={this.renderSearchItem.bind(this)}
                         renderFooter={this.renderFooter.bind(this)} />
@@ -118,3 +119,33 @@ function mapStateToProps(state) {
     };
 }
 export default connect(mapStateToProps)(SearchDiseaseScreen);
+
+const styles = StyleSheet.create({
+    searchPanel: {
+        position: 'absolute',
+        top: 12,
+        left: 12,
+        right: 12
+    },
+    containerOverLay: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        left: 0,
+        bottom: 0,
+        backgroundColor: '#37a3ff59'
+    },
+    scroll: {
+        marginTop: 43
+    },
+    container: {
+        flex: 1,
+        padding: 14,
+        position: 'relative'
+    },
+    flex: { flex: 1 },
+    txtSeeMore: {
+        paddingLeft: 10,
+        color: 'rgb(74,144,226)'
+    },
+})

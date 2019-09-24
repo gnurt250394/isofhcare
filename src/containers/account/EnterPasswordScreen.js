@@ -134,6 +134,22 @@ class EnterPasswordScreen extends Component {
 
   }
 
+  getComponent = (value, onChangeText, onFocus, onBlur, isError) => {
+    return (
+      <FloatingLabel
+        placeholderStyle={styles.placeFloat}
+        value={value}
+        underlineColor={'#02C39A'}
+        inputStyle={styles.textInputStyle}
+        labelStyle={styles.labelStyle}
+        placeholder={constants.input_password}
+        secureTextEntry={this.state.secureTextPassEntry}
+        onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />
+    )
+  }
+  onChangeText = (state) => (value) => {
+    this.setState({ [state]: value })
+  }
   render() {
     return (
       <ActivityPanel
@@ -141,22 +157,17 @@ class EnterPasswordScreen extends Component {
       >
         <ScrollView
           showsVerticalScrollIndicator={false}
-          style={{ flex: 1 }}
+          style={styles.container}
           keyboardShouldPersistTaps="handled"
         >
-          <KeyboardAvoidingView behavior="padding" style={styles.form}>
-            <View style={{ flex: 1, padding: 20 }}>
-              <ScaleImage source={require("@images/new/isofhcare.png")} width={200} style={{ marginTop: 50, alignSelf: 'center' }} />
-              <Form ref={ref => (this.form = ref)} style={{ marginTop: 10 }}>
+          <KeyboardAvoidingView behavior="padding" >
+            <View style={styles.group}>
+              <ScaleImage source={require("@images/new/isofhcare.png")} width={200} style={styles.imageLogo} />
+              <Form ref={ref => (this.form = ref)} style={styles.form}>
                 <Field style={styles.inputPass}>
                   <TextField
-                    getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-                      placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.input_password}
-                      secureTextEntry={this.state.secureTextPassEntry}
-                      onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
-                    onChangeText={s => {
-                      this.setState({ password: s });
-                    }}
+                    getComponent={this.getComponent}
+                    onChangeText={this.onChangeText('password')}
                     errorStyle={styles.errorStyle}
                     validate={{
                       rules: {
@@ -171,19 +182,35 @@ class EnterPasswordScreen extends Component {
                     autoCapitalize={"none"}
                   />
                   {
-                    this.state.password ? (this.state.secureTextPassEntry ? (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 40, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 40, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
+                    this.state.password ? (this.state.secureTextPassEntry ? (
+                      <TouchableOpacity
+                        style={styles.buttonHidePass}
+                        onPress={this.onShowPass}
+                      >
+                        <ScaleImage
+                          style={styles.iconHide}
+                          resizeMode={'contain'}
+                          height={20}
+                          source={require('@images/new/ic_hide_pass.png')}>
+                        </ScaleImage>
+                      </TouchableOpacity>) : (<TouchableOpacity
+                        style={styles.buttonHidePass}
+                        onPress={this.onShowPass}>
+                        <ScaleImage style={styles.iconHide}
+                          height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
                   }
                 </Field>
                 <Field style={styles.inputPass}>
                   <TextField
                     getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-                      placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={'Xác nhận mật khẩu'}
+                      placeholderStyle={styles.placeFloat}
+                      value={value}
+                      underlineColor={'#02C39A'}
+                      inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.change_password_screens.confirm_pass}
 
                       secureTextEntry={this.state.secureTextPass2Entry}
                       onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
-                    onChangeText={s => {
-                      this.setState({ confirm_password: s });
-                    }}
+                    onChangeText={this.onChangeText('confirm_password')}
                     errorStyle={styles.errorStyle}
                     validate={{
                       rules: {
@@ -198,15 +225,30 @@ class EnterPasswordScreen extends Component {
                     autoCapitalize={"none"}
                   />
                   {
-                    this.state.confirm_password ? (this.state.secureTextPass2Entry ? (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 40, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowPass2}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 40, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowPass2}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
+                    this.state.confirm_password ? (this.state.secureTextPass2Entry ? (<TouchableOpacity
+                      style={styles.buttonHidePass} onPress={this.onShowPass2}>
+                      <ScaleImage
+                        style={styles.iconHide}
+                        resizeMode={'contain'}
+                        height={20}
+                        source={require('@images/new/ic_hide_pass.png')}>
+                      </ScaleImage>
+                    </TouchableOpacity>) : (<TouchableOpacity
+                      style={styles.buttonHidePass}
+                      onPress={this.onShowPass2}>
+                      <ScaleImage
+                        style={styles.iconHide}
+                        height={20}
+                        source={require('@images/new/ic_show_pass.png')}></ScaleImage>
+                    </TouchableOpacity>)) : (<Field></Field>)
                   }
                 </Field>
               </Form>
             </View>
           </KeyboardAvoidingView>
         </ScrollView>
-        <TouchableOpacity style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center', marginBottom: 20 }} onPress={this.register.bind(this)}>
-          <Text style={{ color: '#FFF', fontSize: 17 }}>{constants.finish}</Text>
+        <TouchableOpacity style={styles.buttonFinish} onPress={this.register.bind(this)}>
+          <Text style={styles.txtFinish}>{constants.finish}</Text>
         </TouchableOpacity>
       </ActivityPanel>
 
@@ -217,6 +259,47 @@ const DEVICE_WIDTH = Dimensions.get("window").width;
 const DEVICE_HEIGHT = Dimensions.get("window").height;
 
 const styles = StyleSheet.create({
+  txtFinish: {
+    color: '#FFF',
+    fontSize: 17
+  },
+  buttonFinish: {
+    backgroundColor: 'rgb(2,195,154)',
+    alignSelf: 'center',
+    borderRadius: 6,
+    width: 250,
+    height: 48,
+    marginTop: 34,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20
+  },
+  iconHide: {
+    tintColor: '#7B7C7D'
+  },
+  buttonHidePass: {
+    position: 'absolute',
+    right: 3,
+    top: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  placeFloat: {
+    fontSize: 16,
+    fontWeight: '200'
+  },
+  form: {
+    marginTop: 10
+  },
+  imageLogo: {
+    marginTop: 50,
+    alignSelf: 'center'
+  },
+  group: {
+    flex: 1,
+    padding: 20
+  },
+  container: { flex: 1 },
   btnEye: {
     position: "absolute",
     right: 25,

@@ -38,15 +38,15 @@ class ViewCheckupResultScreen extends Component {
             detailsHospital: '',
         }
     }
-
+    goBack = () => {
+        this.props.navigation.pop();
+    }
     renderDetails = () => {
         return (
             <ScrollView ref={ref => this.flListDate = ref} showsVerticalScrollIndicator={false} style={styles.container}>
                 <ProfileInfomation2 title={constants.title.result_ehealth} resultDetail={this.state.resultDetail} />
                 <CheckupResult showTitle={false} result={this.state.result} />
-                <TouchableOpacity style={styles.btnFinish} onPress={() => {
-                    this.props.navigation.pop();
-                }}><Text style={styles.txFinish}>{constants.ehealth.view_finish}</Text>
+                <TouchableOpacity style={styles.btnFinish} onPress={this.goBack}><Text style={styles.txFinish}>{constants.ehealth.view_finish}</Text>
                 </TouchableOpacity>
                 <View style={styles.viewFooter} />
             </ScrollView>
@@ -56,11 +56,11 @@ class ViewCheckupResultScreen extends Component {
 
         return (
             <ActivityPanel style={styles.container} title={constants.title.ehealth_details}
-                
-                
-                
-                
-        
+
+
+
+
+
                 isLoading={this.state.isLoading}>
                 {this.renderDetails()}
             </ActivityPanel>

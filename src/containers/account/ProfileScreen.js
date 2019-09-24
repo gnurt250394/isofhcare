@@ -78,10 +78,10 @@ class ProfileScreen extends Component {
         !this.state.editMode ? value = 300 : value = 54
         Animated.timing(
             this.animatedValueBtn, {
-                toValue: value,
-                duration: 250,
-                easing: Easing.linear
-            }
+            toValue: value,
+            duration: 250,
+            easing: Easing.linear
+        }
         ).start(() => { console.log("Animated ") })
     }
 
@@ -126,6 +126,12 @@ class ProfileScreen extends Component {
     senData() {
     }
 
+    defaultImage = () => {
+        return <ScaleImage resizeMode='cover' source={icSupport} width={80} style={styles.avatar} />
+    }
+    onChangeText = (state) => (value) => {
+        this.setState({ [state]: value })
+    }
     render() {
         const animatedSizeFrom = { width: this.animatedValueBtn }
         const animatedSizeTo = { width: this.animatedValueBtn }
@@ -141,8 +147,8 @@ class ProfileScreen extends Component {
         }
         const source = this.state.avatar ? { uri: this.state.avatar.absoluteUrl() } : icSupport;
         return (
-            <ActivityPanel style={{ flex: 1 }} title="Thông tin cá nhân" showFullScreen={true} isLoading={this.state.isLoading}>
-                <ImageBackground source={bgImage} style={{ width: '100%', height: '100%' }}>
+            <ActivityPanel style={styles.container} title={constants.account_screens.info} showFullScreen={true} isLoading={this.state.isLoading}>
+                <ImageBackground source={bgImage} style={styles.imgBackground}>
 
                     <ScrollView
                         showsVerticalScrollIndicator={false}
@@ -152,17 +158,15 @@ class ProfileScreen extends Component {
                             <TouchableOpacity style={styles.boxAvatar} onPress={this.selectAvatar}>
                                 <ImageLoad
                                     resizeMode="cover"
-                                    imageStyle={{ borderRadius: 40 }}
+                                    imageStyle={styles.imgBorder}
                                     borderRadius={40}
-                                    customImagePlaceholderDefaultStyle={[styles.avatar, { width: 70, height: 70 }]}
+                                    customImagePlaceholderDefaultStyle={[styles.avatar, styles.imgPlace]}
                                     placeholderSource={icSupport}
                                     style={styles.avatar}
                                     resizeMode="cover"
                                     loadingStyle={{ size: 'small', color: 'gray' }}
                                     source={source}
-                                    defaultImage={() => {
-                                        return <ScaleImage resizeMode='cover' source={icSupport} width={80} style={styles.avatar} />
-                                    }}
+                                    defaultImage={this.defaultImage}
                                 />
                                 {/* <ScaleImage source={icCamera} width={20} style={styles.iconChangeAvatar} /> */}
                             </TouchableOpacity>
@@ -173,12 +177,12 @@ class ProfileScreen extends Component {
                                     <Text style={styles.name}>{this.state.name.toUpperCase()}</Text>
                                     <View style={styles.content}>
                                         <View style={styles.item}>
-                                            <Text style={styles.lable}>Số điện thoại:</Text>
-                                            <Text style={styles.value}>{this.state.phone ? this.state.phone : 'Chưa Có Số Điện Thoại'}</Text>
+                                            <Text style={styles.lable}>{constants.phone}:</Text>
+                                            <Text style={styles.value}>{this.state.phone ? this.state.phone : constants.account_screens.not_phone}</Text>
                                         </View>
                                         <View style={styles.item}>
-                                            <Text style={styles.lable}>Email:</Text>
-                                            <Text style={styles.value}>{this.state.email ? this.state.email : 'Chưa Có Email'}</Text>
+                                            <Text style={styles.lable}>{constants.email}:</Text>
+                                            <Text style={styles.value}>{this.state.email ? this.state.email : constants.account_screens.not_email}</Text>
                                         </View>
                                     </View>
                                 </View>
@@ -186,12 +190,12 @@ class ProfileScreen extends Component {
                             <Animated.View style={[styles.flipCard2, styles.flipCardBack, backAnimatedStyle, Platform.OS == "android" ? { opacity: this.backOpacity } : null]}>
                                 <TextInput
                                     editable={false}
-                                    placeholder={"Số điện thoại"}
+                                    placeholder={constants.phone}
                                     value={this.state.phone}
                                     autoCapitalize={'none'}
                                     returnKeyType={'next'}
                                     autoCorrect={false}
-                                    onChangeText={(s) => this.setState({ phone: s })}
+                                    onChangeText={this.onChangeText('phone')}
                                     underlineColorAndroid="transparent"
                                     onSubmitEditing={this.senData}
                                     style={[styles.inputText, { backgroundColor: '#cacaca' }]}
@@ -199,26 +203,26 @@ class ProfileScreen extends Component {
                                 <TextInput
                                     editable={false}
                                     underlineColorAndroid="transparent"
-                                    placeholder={"Email"}
+                                    placeholder={constants.email}
                                     value={this.state.email}
                                     autoCapitalize={'none'}
                                     returnKeyType={'next'}
                                     autoCorrect={false}
-                                    onTextChange={(s) => this.setState({ email: s })}
+                                    onTextChange={this.onChangeText('email')}
                                     style={[styles.inputText, { backgroundColor: '#cacaca' }]}
                                 />
                                 <TextInput
-                                    placeholder={"Họ và tên"}
+                                    placeholder={constants.fullname}
                                     value={this.state.name}
                                     autoCapitalize={'none'}
                                     returnKeyType={'next'}
                                     autoCorrect={false}
-                                    onTextChange={(s) => this.setState({ name: s })}
+                                    onTextChange={this.onChangeText('name')}
                                     style={styles.inputText}
                                 />
 
-                                <Text style={{ color: "#000000", marginTop: 20 }}>
-                                    <Text style={{ fontWeight: "bold", color: "#00977c" }}>Lưu ý</Text> : khi thay đổi email, quý khách cần đăng nhập email mới để kích hoạt lại tài khoản
+                                <Text style={styles.containerWarning}>
+                                    <Text style={styles.warning}>Lưu ý</Text> : {constants.account_screens.warning}
                                 </Text>
 
                             </Animated.View>
@@ -227,9 +231,9 @@ class ProfileScreen extends Component {
                                     <TouchableOpacity style={styles.fab} onPress={this.onChange} >
                                         {
                                             !this.state.editMode ?
-                                                <ScaleImage source={icEdit} width={24} style={{ position: 'absolute', left: 15, top: 15 }} />
+                                                <ScaleImage source={icEdit} width={24} style={styles.imageUpdate} />
                                                 :
-                                                <Text style={styles.btnUpdate}>CẬP NHẬT</Text>
+                                                <Text style={styles.btnUpdate}>{constants.update_to_up_case}</Text>
                                         }
                                     </TouchableOpacity>
                                 </Animated.View>
@@ -244,6 +248,13 @@ class ProfileScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+    imageUpdate: { position: 'absolute', left: 15, top: 15 },
+    warning: { fontWeight: "bold", color: "#00977c" },
+    containerWarning: { color: "#000000", marginTop: 20 },
+    imgBorder: { borderRadius: 40 },
+    imgPlace: { width: 70, height: 70 },
+    imgBackground: { width: '100%', height: '100%' },
+    container: { flex: 1 },
 
     container: {
         flex: 1

@@ -35,15 +35,15 @@ class ViewCheckupResultScreen extends Component {
             detailsHospital: '',
         }
     }
-
+    goBack = () => {
+        this.props.navigation.pop();
+    }
     renderDetails = () => {
         return (
             <ScrollView ref={ref => this.flListDate = ref} showsVerticalScrollIndicator={false} style={styles.container}>
-                <ProfileInfomation2 title="KẾT QUẢ XÉT NGHIỆM" resultDetail={this.state.resultDetail} />
+                <ProfileInfomation2 title={constants.title.test_result} resultDetail={this.state.resultDetail} />
                 <MedicalTestResult showTitle={false} result={this.state.result} />
-                <TouchableOpacity style={styles.btnViewFinish} onPress={() => {
-                    this.props.navigation.pop();
-                }}><Text style={styles.txDone}>{constants.ehealth.view_finish}</Text>
+                <TouchableOpacity style={styles.btnViewFinish} onPress={this.goBack}><Text style={styles.txDone}>{constants.ehealth.view_finish}</Text>
                 </TouchableOpacity>
                 <View style={styles.viewBottomSpace} />
             </ScrollView>
@@ -61,8 +61,8 @@ class ViewCheckupResultScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-    container:{ flex: 1 },
-    btnViewFinish:{
+    container: { flex: 1 },
+    btnViewFinish: {
         alignSelf: 'center',
         width: 252,
         maxWidth: DEVICE_WIDTH,
@@ -72,9 +72,9 @@ const styles = StyleSheet.create({
         marginVertical: 20,
         padding: 10, alignItems: 'center'
     },
-    txDone:{ fontWeight: 'bold', color: '#FFF', fontSize: 17 },
-    viewBottomSpace:{ height: 50 }
-}); 
+    txDone: { fontWeight: 'bold', color: '#FFF', fontSize: 17 },
+    viewBottomSpace: { height: 50 }
+});
 
 function mapStateToProps(state) {
     return {

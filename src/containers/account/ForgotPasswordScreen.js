@@ -34,7 +34,7 @@ class ForgotPasswordScreen extends Component {
     };
   }
 
-  forgotPassword() {
+  forgotPassword = () => {
     Keyboard.dismiss();
     if (!this.form.isValid()) {
       this.child.unPress();
@@ -87,23 +87,27 @@ class ForgotPasswordScreen extends Component {
     });
   }
 
+  gotoRegister = () => {
+    this.props.navigation.replace("register", {
+      nextScreen: this.nextScreen
+    });
+  }
+  onChangeText = s => {
+    this.setState({ email: s });
+  }
   render() {
     return (
       <ActivityPanel
-        style={{ flex: 1 }}
-        title="Quên mật khẩu"
+        style={styles.container}
+        title={constants.forgot_password}
       >
         <ScrollView
           showsVerticalScrollIndicator={false}
-          style={{ flex: 1 }}
+          style={styles.container}
           keyboardShouldPersistTaps="handled"
         >
           <View
-            style={{
-              marginTop: 60,
-              justifyContent: "center",
-              alignItems: "center"
-            }}
+            style={styles.logo}
           >
             <ScaleImage source={require("@images/logo.png")} width={120} />
           </View>
@@ -117,43 +121,30 @@ class ForgotPasswordScreen extends Component {
                     phone: true
                   },
                   messages: {
-                    required: "Vui lòng nhập số điện thoại",
-                    phone: "Nhập SĐT không hợp lệ"
+                    required: constants.change_password_screens.require_phone,
+                    phone: constants.change_password_screens.require_phone_not_found
                   }
                 }}
                 inputStyle={styles.input}
-                onChangeText={s => {
-                  this.setState({ email: s });
-                }}
+                onChangeText={this.onChangeText}
                 placeholder={constants.input_phone}
                 autoCapitalize={"none"}
               />
             </Form>
             <ButtonSubmit
               onRef={ref => (this.child = ref)}
-              click={() => {
-                this.forgotPassword();
-              }}
+              click={this.forgotPassword}
               text={constants.send}
             />
-            <View style={{ width: DEVICE_WIDTH, maxWidth: 300 }}>
+            <View style={styles.buttonRegister}>
               <TouchableOpacity
-                onPress={() => {
-                  this.props.navigation.replace("register", {
-                    nextScreen: this.nextScreen
-                  });
-                }}
-                style={{ alignItems: "flex-end" }}
+                onPress={this.gotoRegister}
+                style={styles.button}
               >
                 <Text
-                  style={{
-                    marginTop: 15,
-                    color: "rgb(155,155,155)",
-                    lineHeight: 20,
-                    fontSize: 16
-                  }}
+                  style={styles.txtRegister}
                 >
-                  Nếu bạn chưa có tài khoản hãy đăng ký ngay{" "}
+                  {constants.change_password_screens.register}{" "}
                   <Text style={{ fontWeight: "bold", color: "rgb(0,151,124)" }}>
                     tại đây
                   </Text>
@@ -170,6 +161,20 @@ const DEVICE_WIDTH = Dimensions.get("window").width;
 const DEVICE_HEIGHT = Dimensions.get("window").height;
 
 const styles = StyleSheet.create({
+  txtRegister: {
+    marginTop: 15,
+    color: "rgb(155,155,155)",
+    lineHeight: 20,
+    fontSize: 16
+  },
+  button: { alignItems: "flex-end" },
+  buttonRegister: { width: DEVICE_WIDTH, maxWidth: 300 },
+  container: { flex: 1 },
+  logo: {
+    marginTop: 60,
+    justifyContent: "center",
+    alignItems: "center"
+  },
   form: {
     marginTop: 60,
     alignItems: "center"

@@ -12,7 +12,7 @@ class Actionbar extends Component {
         super(props)
     }
 
-    backButtonClick() {
+    backButtonClick = () => {
         if (this.props.backButtonClick)
             this.props.backButtonClick();
     }
@@ -30,11 +30,11 @@ class Actionbar extends Component {
                         this.props.backButton ?
                             this.props.backButton :
                             !this.props.hideBackButton ?
-                                <TouchableOpacity onPress={() => this.backButtonClick()} style={{ width: 50, paddingTop: 12, paddingBottom: 12, paddingLeft: 15 }}>
+                                <TouchableOpacity onPress={this.backButtonClick} style={styles.buttonBack}>
                                     <ScaleImage source={this.props.icBack ? this.props.icBack : ic_back} style={[styles.ic_back, this.props.styleBackButton]} height={14}></ScaleImage>
                                 </TouchableOpacity>
                                 :
-                                <View style={{ paddingTop: 12, paddingBottom: 12 }}>
+                                <View style={styles.containerBack}>
                                     <View style={[styles.ic_back, { height: 20 }]} />
                                 </View>
                     }
@@ -47,7 +47,7 @@ class Actionbar extends Component {
                                 </Text>
                                 :
                                 this.props.image &&
-                                <View style={[{ height: 45, flex: 1, justifyContent: 'center', alignItems: 'center' }, this.props.imageStyle]}>
+                                <View style={[styles.containerImage, this.props.imageStyle]}>
                                     <ScaleImage source={this.props.image} height={32} />
                                 </View>
                     }
@@ -62,6 +62,22 @@ class Actionbar extends Component {
     }
 }
 const styles = StyleSheet.create({
+    containerImage: {
+        height: 45,
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    containerBack: {
+        paddingTop: 12,
+        paddingBottom: 12
+    },
+    buttonBack: {
+        width: 50,
+        paddingTop: 12,
+        paddingBottom: 12,
+        paddingLeft: 15
+    },
     notifi: {
         width: 35,
         height: 40,

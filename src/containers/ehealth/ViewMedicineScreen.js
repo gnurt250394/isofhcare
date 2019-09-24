@@ -38,15 +38,15 @@ class ViewCheckupResultScreen extends Component {
             detailsHospital: '',
         }
     }
-
+    goBack = () => {
+        this.props.navigation.pop();
+    }
     renderDetails = () => {
         return (
             <ScrollView ref={ref => this.flListDate = ref} showsVerticalScrollIndicator={false} style={styles.container}>
-                <ProfileInfomation2 title="THUỐC" resultDetail={this.state.resultDetail} />
+                <ProfileInfomation2 title={constants.title.drug} resultDetail={this.state.resultDetail} />
                 <Medicine showTitle={false} result={this.state.result} />
-                <TouchableOpacity style={styles.btnViewFinish} onPress={() => {
-                    this.props.navigation.pop();
-                }}><Text style={styles.txViewFinish}>{constants.ehealth.view_finish}</Text>
+                <TouchableOpacity style={styles.btnViewFinish} onPress={this.goBack}><Text style={styles.txViewFinish}>{constants.ehealth.view_finish}</Text>
                 </TouchableOpacity>
                 <View style={styles.viewSpaceBottom} />
             </ScrollView>
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     },
     txViewFinish: { fontWeight: 'bold', color: '#FFF', fontSize: 17 },
     viewSpaceBottom: { height: 50 },
-    
+
     titleStyle: {
         color: '#FFF'
     }
