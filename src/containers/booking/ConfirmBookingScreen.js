@@ -347,7 +347,6 @@ class ConfirmBookingScreen extends Component {
         })
     }
     vnPaySuccess(url, booking, data) {
-        debugger;
         let obj = {};
         let arr = url.split('?');
         if (arr.length == 2) {
@@ -378,7 +377,8 @@ class ConfirmBookingScreen extends Component {
             obj["vnp_Amount"] = (obj["vnp_Amount"] || 0) / 100;
         }
         if (data.amount || this.amount) {
-            let amount = this.amount || data.amount;
+            let voucher = (this.state.voucher || {}).price || 0
+            let amount = (this.amount || data.amount) - voucher;
             if (obj["vnp_Amount"] != amount) {
                 booking.amountError = obj["vnp_Amount"];
                 booking.reasonError = "Số tiền không hợp lệ";
