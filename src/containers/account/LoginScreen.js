@@ -201,6 +201,7 @@ class LoginScreen extends Component {
 													value={value}
 													underlineColor={'#02C39A'}
 													inputStyle={styles.textInputStyle}
+													keyboardType="numeric"
 													labelStyle={styles.labelStyle} placeholder={constants.phone}
 													onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
 												onChangeText={this.onChangeText('email')}
@@ -223,7 +224,15 @@ class LoginScreen extends Component {
 												<TextField
 													getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
 														placeholderStyle={styles.placeFloat}
-														value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.password} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} secureTextEntry={this.state.secureTextEntry} />}
+														value={value}
+														underlineColor={'#02C39A'}
+														inputStyle={styles.textInputStyle}
+														labelStyle={styles.labelStyle}
+														placeholder={constants.password}
+														onChangeText={onChangeText}
+														onBlur={onBlur}
+														onFocus={onFocus}
+														secureTextEntry={this.state.secureTextEntry} />}
 													onChangeText={this.onChangeText('password')}
 													errorStyle={styles.errorStyle}
 													validate={{
@@ -283,7 +292,7 @@ class LoginScreen extends Component {
 								</Card>
 							</View>
 							<SocialNetwork />
-							<Text style={{ color: '#000', textAlign: 'center', marginVertical: 20 }}>{constants.login_screens.register} <Text
+							<Text style={styles.txtRegister}>{constants.login_screens.register} <Text
 								onPress={this.register.bind(this)} style={{ color: '#1EA3EA' }}>tại đây</Text></Text>
 							{/* <TouchableOpacity onPress={this.register.bind(this)} style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center' }} >
 								<Text style={{ color: '#FFF', fontSize: 17 }}>{"ĐĂNG KÝ"}</Text>
@@ -300,6 +309,11 @@ const DEVICE_WIDTH = Dimensions.get("window").width;
 const DEVICE_HEIGHT = Dimensions.get("window").height;
 
 const styles = StyleSheet.create({
+	txtRegister: {
+		color: '#000',
+		textAlign: 'center',
+		marginVertical: 20
+	},
 	txtLogin: {
 		color: "rgb(2,195,154)",
 		fontSize: 14,

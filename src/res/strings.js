@@ -93,10 +93,15 @@ module.exports = {
     input_voucher:'NHẬP MÃ ƯU ĐÃI',
     my_voucher:'MÃ ƯU ĐÃI CỦA TÔI',
     money_not_bigger_sum_price:'Số tiền ưu đãi không được vượt quá tổng số tiền dịch vụ đã chọn',
-    voucher_not_found_or_expired:'Mã ưu đãi không tồn tại hoặc đã hết hạn vui lòng thử mã khác',
+    voucher_not_found_or_expired:'Mã ưu đãi không tồn tại hoặc đã hết hạn vui lòng sử dụng mã ưu đãi khác',
     voucher_not_null:'Mã ưu đãi không được bỏ trống',
     please_select_other_package:'Đã hết số lần ưu đãi vui lòng chọn gói khác',
-    voucher_invalid:'Mã Voucher không tồn tại'
+    voucher_invalid:'Mã ưu đãi không tồn tại',
+    info_voucher:'Thông tin mã ưu đãi',
+    price_voucher:'Giá ưu đãi',
+    expired_voucher:'Hạn sử dụng',
+    quantity_voucher:'Số lần sử dụng',
+    use_voucher:'Bạn có muốn sử dụng mã ưu đãi này?'
   },
   qr_code:{
     move_camera:'Di chuyển camera đến vùng chứa mã QR để quét',
@@ -240,10 +245,15 @@ module.exports = {
     setup_password_success: 'Thiết lập mật khẩu mới thành công',
     phone_not_found: 'Số điện thoại không tồn tại trong hệ thống'
   },
-  reality_account: {
+  confirm_account: {
     title: 'Xác thực tài khoản',
     require_otp: 'Vui lòng nhập mã OTP',
-    require_length: 'Yêu cầu nhập đủ 6 ký tự'
+    require_length: 'Yêu cầu nhập đủ 6 ký tự',
+    please_enter_otp_send_devices:'Vui lòng nhập mã xác thực được gửi tới số điện thoại',
+    otp_expied:'Mã xác thực hiệu lực trong',
+    not_recive_code:'Nếu bạn cho rằng mình chưa nhập được mã hãy chọn',
+    resend_otp:'Gửi lại mã',
+    finish:'HOÀN TẤT'
   },
   touch_id_screens: {
     touch_not_found: 'Bạn chưa đăng ký vân tay trên tài khoản này',
@@ -349,13 +359,13 @@ module.exports = {
       username_or_email_existed:
         "SĐT đã được sử dụng trong hệ thống. Vui lòng sử dụng SĐT khác",
       username_or_email_empty: "Tên đăng nhập hoặc email trống",
-      account_blocked: "Tài khoản đã bị khóa. Vui lòng liên hệ với Admin của Isofhcare",
+      account_blocked: "Tài khoản đã bị khóa. Vui lòng liên hệ với Admin của iSofHcare",
       username_or_password_incorrect:
         "Số điện thoại hoặc mặt khẩu không đúng. Vui lòng thử lại",
       send_mail_recovery_success:
         "Link xác nhận mật khẩu mới đã được gửi về email bạn đăng ký",
       send_sms_recovery_success:
-        "iSofHCare đã gửi mã xác thực tới Email/SĐT của bạn",
+        "iSofHcare đã gửi mã xác thực tới Email/SĐT của bạn",
       send_mail_recovery_failed:
         "Không tìm thấy thông tin tài khoản với email bạn nhập",
       canot_get_user_info_in_account_facebook:
@@ -395,7 +405,7 @@ module.exports = {
       enter_the_correct_date_format: 'Nhập đúng định dạng ngày',
       date_not_allow_under_15_old: 'Không cho phép chọn dưới 15 tuổi',
       date_not_allow_over_150_old: 'Không cho phép chọn trên 150 tuổi',
-      account_not_connect_please_contact_administrators: 'Tài khoản của bạn chưa được kết nối với bệnh viện này. Vui lòng liên hệ quản trị viên iSofHCare',
+      account_not_connect_please_contact_administrators: 'Tài khoản của bạn chưa được kết nối với bệnh viện này. Vui lòng liên hệ quản trị viên iSofHcare',
       code_expired:'Mã bạn nhập đã hết hạn',
       code_invalid:'Mã bạn nhập không đúng',
       weight_invalid:'Cân nặng không hợp lệ',
@@ -416,7 +426,8 @@ module.exports = {
       profile_can_not_delete:'Hồ sơ không thể xóa do đã có đặt khám',
       confirm_fail:'Xác nhận không thành công',
       setting_share_success:'Cài đặt chia sẻ thành công',
-      select_data_need_share:'CHỌN DỮ LIỆU BẠN MUỐN CHIA SẺ VỚI THÀNH VIÊN NÀY'
+      select_data_need_share:'CHỌN DỮ LIỆU BẠN MUỐN CHIA SẺ VỚI THÀNH VIÊN NÀY',
+      want_delete_member:'Bạn có chắc chắn muốn xóa thành viên này?'
     },
     facility: {
       please_select_value_for_rating: "Vui lòng chọn giá trị đánh giá",
@@ -444,7 +455,7 @@ module.exports = {
       not_examination: 'Bạn không có lịch khám lại nào!',
       not_result_ehealth_in_day: 'Bạn chưa có kết quả khám ở ngày này!',
       not_select_time_drug: 'Bạn chưa chọn giờ uống thuốc',
-      allow_access_camera: 'Bạn cần cho phép iSofHCare truy cập vào camera của bạn để quét mã QRCode?',
+      allow_access_camera: 'Bạn cần cho phép iSofHcare truy cập vào camera của bạn để quét mã QRCode?',
       please_move_camera: 'Di chuyển camera tới vùng có QR của bảo hiểm y tế để quét',
       QRCode_invalid: 'MÃ QRCODE KHÔNG HỢP LỆ',
       please_check_QRcode: 'Vui lòng kiểm tra lại mã QR đảm bảo đúng mã của thẻ bảo hiểm, không bị mờ, rách ...',
@@ -561,11 +572,12 @@ module.exports = {
     payment_error: 'Thanh toán không thành công!',
     payment_error_message: 'Chúng tôi gặp khó khăn trong quá trình kết nối với đối tác. Vui lòng gọi tới số hotline 0923678905 nếu như bạn đã bị trừ tiền.',
     payment_code: 'Mã giao dịch',
+    payment_error: 'Lý do',
     service: 'Dịch vụ khám',
     payment_price: 'Số tiền thanh toán:',
     change_payment_method: 'Đổi phương thức thanh toán',
     location_premmission: 'Quyền truy cập vị trí',
-    location_premission_content: "iSofHCare cần quyền truy cập vào vị trí của bạn",
+    location_premission_content: "iSofHcare cần quyền truy cập vào vị trí của bạn",
     location_open: 'Bật vị trí trên thiết bị để tìm kiếm địa điểm gần bạn',
     location_around: 'Tìm kiếm gần tôi',
     select_date_time: 'Chọn ngày và giờ',
@@ -625,7 +637,8 @@ module.exports = {
       payment_pending: 'Chờ thanh toán',
       confirm: 'Đã xác nhận',
       have_profile: 'Đã có hồ sơ',
-      rejected: 'Đã hủy (không phục vụ)'
+      rejected: 'Đã hủy (không phục vụ)',
+      payment_payoo3:'PAYOO - Trả góp 0%'
     },
 
   },
@@ -697,7 +710,7 @@ module.exports = {
     validity_from:'Hiệu lực từ',
     validity_to:'Hiệu lực đến',
     patient_code:'Mã bệnh nhân',
-    share_with_isofhcare:'Chia sẻ trên hồ sơ iSofHCare',
+    share_with_isofhcare:'Chia sẻ trên hồ sơ iSofHcare',
     share_with_app_other:'Chia sẻ trên ứng dụng khác',
     history_share:'Lịch sử chia sẻ',
     my_ehealth:'Y bạ điện tử của tôi',
@@ -726,7 +739,7 @@ module.exports = {
     list_profile_ehealth: 'HỒ SƠ Y BẠ GIA ĐÌNH',
     search_profile: 'Chọn hồ sơ',
     ehealth_details: 'CHI TIẾT Y BẠ',
-    create_booking_success: 'Đặt lịch khám',
+    create_booking_success: 'Đặt khám thành công',
     patient_history_screen: 'Lịch sử đặt lịch',
     booking: "Đặt khám",
     location_near: 'Địa điểm gần bạn',
@@ -766,7 +779,8 @@ module.exports = {
     edit_info:'SỬA THÔNG TIN',
     setting_share:'CÀI ĐẶT CHIA SẺ',
     scan_qr_code:'QUÉT MÃ QRCODE',
-    voucher:'NHẬP MÃ ƯU ĐÃI'
+    voucher:'NHẬP MÃ ƯU ĐÃI',
+    profile:'Hồ sơ cá nhân'
   },
   account_screens: {
     signin_or_signup: 'Đăng nhập/ Đăng Ký',

@@ -96,7 +96,7 @@ class ConfirmCodeScreen extends Component {
       <ActivityPanel
         style={styles.container}
         showFullScreen={true}
-        title={constants.reality_account.title}
+        title={constants.confirm_account.title}
       >
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -119,9 +119,9 @@ class ConfirmCodeScreen extends Component {
                     maxlength: 6
                   },
                   messages: {
-                    required: constants.reality_account.require_otp,
-                    minlength: constants.reality_account.require_length,
-                    maxlength: constants.reality_account.require_length
+                    required: constants.confirm_account.require_otp,
+                    minlength: constants.confirm_account.require_length,
+                    maxlength: constants.confirm_account.require_length
                   }
                 }}
                 inputStyle={styles.input}

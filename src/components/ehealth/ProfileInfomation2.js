@@ -33,8 +33,8 @@ class ProfileInfomation extends Component {
         console.log(serviceCheckup);
         console.log(this.props.ehealth);
         const icSupport = require("@images/new/user.png");
-        const source = this.props.userApp.currentUser.avatar
-            ? { uri: this.props.avatar ? this.props.avatar.absoluteUrl() : this.props.userApp.currentUser.avatar.absoluteUrl() }
+        const source = this.props.ehealth.patient.avatar
+            ? { uri: this.props.ehealth.patient.avatar.absoluteUrl() }
             : icSupport;
         return <View style={styles.container}>
             <View style={styles.viewInfo}>
@@ -44,7 +44,7 @@ class ProfileInfomation extends Component {
                         <Text style={[styles.itemlabel, { color: '#626263' }]}>Ngày Khám: <Text style={[styles.itemcontent, { color: '#626263' }]}>{resultDetail.Profile.TimeGoIn.toDateObject().format("dd/MM/yyyy")}</Text></Text>
                     </View>
                     <View style={[styles.item, { marginTop: 10 }]}>
-                        <Text style={[styles.itemlabel,styles.txName]}>{this.props.patientName ? this.props.patientName : this.props.ehealth.patient.patientName}</Text>
+                        <Text style={[styles.itemlabel, styles.txName]}>{this.props.patientName ? this.props.patientName : this.props.ehealth.patient.patientName}</Text>
                     </View>
                 </View>
             </View>
@@ -85,18 +85,18 @@ const styles = StyleSheet.create({
     round3: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#c74444' },
     itemlabel: { marginLeft: 5, flex: 1, marginTop: 2 },
     item: { marginTop: 10, flexDirection: 'row' },
-    container:{ flexDirection: 'row', flex: 1, padding: 8 },
-    viewInfo:{ flex: 1 },
-    txTitle:{ fontWeight: 'bold', fontSize: 18, marginTop: 0, color: '#172957' },
-    viewDate:{ flex: 1, marginLeft: 0 },
+    container: { flexDirection: 'row', flex: 1, padding: 8 },
+    viewInfo: { flex: 1 },
+    txTitle: { fontWeight: 'bold', fontSize: 18, marginTop: 0, color: '#172957' },
+    viewDate: { flex: 1, marginLeft: 0 },
     txName: { fontSize: 16, marginTop: 0, color: '#192a58' },
-    imgStyle:{ borderRadius: 35, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' },
-    imgCustom:{
+    imgStyle: { borderRadius: 35, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' },
+    imgCustom: {
         width: 70,
         height: 70,
         alignSelf: "center"
     },
-    imgLoad:{ width: 70, height: 70 },
+    imgLoad: { width: 70, height: 70 },
 
 })
 export default connect(mapStateToProps)(ProfileInfomation);

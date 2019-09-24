@@ -192,7 +192,7 @@ class ListProfileScreen extends Component {
                 return <Text style={styles.txtRelationShip}></Text>
         }
     }
-    renderItem = (item, index) => {
+    renderItem = ({ item, index }) => {
         return (
             item.medicalRecords.statusConfirm == "NEED_CONFIRM" ?
                 (
@@ -272,6 +272,21 @@ class ListProfileScreen extends Component {
         )
     }
     buttonAddShow = true;
+    keyExtractor = (item, index) => index.toString()
+    footerComponent = () => <View style={{ height: 50 }}></View>
+    headerComponent = () => {
+        return (
+            !this.state.refreshing &&
+                (!this.state.data || this.state.data.length == 0) ? (
+                    <View style={styles.containerNotfound}>
+                        <Text style={styles.txtNotfound}>
+                            {constants.none_info}
+                        </Text>
+                    </View>
+                ) : null
+        )
+    }
+    createProfile = () => NavigationService.navigate('createProfile')
     render() {
         return (
             <ActivityPanel
@@ -308,25 +323,12 @@ class ListProfileScreen extends Component {
                     showsVerticalScrollIndicator={false}
                     data={this.state.data}
                     extraData={this.state}
-                    keyExtractor={(item, index) => index.toString()}
+                    keyExtractor={this.keyExtractor}
                     onRefresh={this.onRefresh}
                     refreshing={this.state.refreshing}
-                    renderItem={({ item, index }) => {
-                        return this.renderItem(item, index)
-                    }}
-                    ListFooterComponent={() =>
-                        <View style={{ height: 50 }}></View>
-                    }
-                    ListHeaderComponent={() =>
-                        !this.state.refreshing &&
-                            (!this.state.data || this.state.data.length == 0) ? (
-                                <View style={{ alignItems: "center", marginTop: 50 }}>
-                                    <Text style={{ fontStyle: "italic" }}>
-                                        {constants.none_info}
-                                    </Text>
-                                </View>
-                            ) : null
-                    }
+                    renderItem={this.renderItem}
+                    ListFooterComponent={this.footerComponent}
+                    ListHeaderComponent={this.headerComponent}
                 ></FlatList>
                 <Modal
                     isVisible={this.state.isVisible}
@@ -339,10 +341,10 @@ class ListProfileScreen extends Component {
                     backdropTransitionOutTiming={1000}
                 >
                     <View style={styles.viewPopup}>
-                        <Text style={styles.txNotifi}>{'Bạn có chắc chắn muốn xóa thành viên này?'}</Text>
+                        <Text style={styles.txNotifi}>{constants.msg.user.want_delete_member}</Text>
                         <View style={styles.viewBtn}>
-                            <TouchableOpacity onPress={this.onClickDone} style={styles.btnDone}><Text style={styles.txDone}>Đồng ý</Text></TouchableOpacity>
-                            <TouchableOpacity onPress={this.onCloseModal} style={styles.btnReject}><Text style={styles.txDone}>Hủy</Text></TouchableOpacity>
+                            <TouchableOpacity onPress={this.onClickDone} style={styles.btnDone}><Text style={styles.txDone}>{constants.actionSheet.accept}</Text></TouchableOpacity>
+                            <TouchableOpacity onPress={this.onCloseModal} style={styles.btnReject}><Text style={styles.txDone}>{constants.actionSheet.cancel}</Text></TouchableOpacity>
                         </View>
                     </View>
                 </Modal>
@@ -353,10 +355,10 @@ class ListProfileScreen extends Component {
                     // destructiveButtonIndex={1}
                     onPress={this.onSetOptions}
                 />
-                <Animatable.View ref={ref => this.buttonAdd = ref} animation={"rotate"} style={{ position: 'absolute', right: 20, bottom: 20 }}>
-                    <Card style={{ backgroundColor: '#02C39A', borderRadius: 30 }}>
-                        <TouchableOpacity onPress={() => NavigationService.navigate('createProfile')} style={{ backgroundColor: '#02C39A', borderRadius: 30, width: 60, margin: -1, height: 60, justifyContent: 'center', alignItems: 'center' }}>
-                            <Icon name="add" style={{ color: '#FFF' }}></Icon>
+                <Animatable.View ref={ref => this.buttonAdd = ref} animation={"rotate"} style={styles.containerButtonAdd}>
+                    <Card style={styles.card}>
+                        <TouchableOpacity onPress={this.createProfile} style={styles.buttonAdd}>
+                            <Icon name="add" style={styles.iconAdd}></Icon>
                         </TouchableOpacity>
                     </Card>
                 </Animatable.View>
@@ -366,6 +368,30 @@ class ListProfileScreen extends Component {
     }
 }
 const styles = StyleSheet.create({
+    containerButtonAdd: {
+        position: 'absolute',
+        right: 20,
+        bottom: 20
+    },
+    iconAdd: { color: '#FFF' },
+    buttonAdd: {
+        backgroundColor: '#02C39A',
+        borderRadius: 30,
+        width: 60,
+        margin: -1,
+        height: 60,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    card: {
+        backgroundColor: '#02C39A',
+        borderRadius: 30
+    },
+    txtNotfound: { fontStyle: "italic" },
+    containerNotfound: {
+        alignItems: "center",
+        marginTop: 50
+    },
     txtRelationshipType: {
         color: '#02C293',
         fontSize: 14

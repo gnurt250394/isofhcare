@@ -152,11 +152,20 @@ class CreateProfileScreen extends Component {
                         }
                         profileProvider.createProfile(data).then(res => {
                             console.log(res.code, 'dasdasd');
+                            let onCreate = this.props.navigation.state.params && this.props.navigation.state.params.onCreate ? this.props.navigation.state.params.onCreate : null
                             switch (res.code) {
                                 case 0:
                                     switch (res.data.TYPE) {
                                         case 'PHONE_VALID':
-                                            NavigationService.navigate('listProfileUser', { reset: this.state.reset + 1 })
+                                            if (onCreate) {
+                                                let callback = ((this.props.navigation.state || {}).params || {}).onCreate;
+                                                if (callback) {
+                                                    callback(false);
+                                                    this.props.navigation.pop();
+                                                }
+                                            } else {
+                                                NavigationService.navigate('listProfileUser', { reset: this.state.reset + 1 })
+                                            }
                                             snackbar.show(constants.msg.user.add_member_success, 'success')
                                             break
                                         case 'NOT_EXIST_ACCOUNT':

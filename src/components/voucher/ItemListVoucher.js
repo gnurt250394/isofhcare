@@ -4,7 +4,7 @@ import ScaleImage from 'mainam-react-native-scaleimage';
 import LinearGradient from 'react-native-linear-gradient'
 import ImageLoad from "mainam-react-native-image-loader";
 import { Card } from 'native-base'
-import stringUtils from 'mainam-react-native-string-utils' 
+import stringUtils from 'mainam-react-native-string-utils'
 import constants from '@resources/strings';
 class ItemListVoucher extends Component {
     constructor(props) {
@@ -12,19 +12,19 @@ class ItemListVoucher extends Component {
         this.state = {
         };
     }
-    getLabelButton = (type) => {
-        switch (type) {
-            case 1: return 'SỬ DỤNG NGAY'
-            case 2: return ' DÙNG SAU'
-            default: return ''
+    getLabelButton = (item) => {
+        if (item.status) {
+            return 'DÙNG SAU'
         }
+        return 'SỬ DỤNG NGAY'
     }
-    getColor = (type) => {
-        switch (type) {
-            case 2: return ['rgba(230, 51, 51, 0.70)', 'rgba(230, 51, 51, 0.90)', 'rgba(230, 51, 51, 1)']
-            case 1: return ['rgb(255, 214, 51)', 'rgb(204, 163, 0)', 'rgb(179, 143, 0)']
-            default: return ''
+    getColor = (item) => {
+
+        if (item.status) {
+            return ['rgba(230, 51, 51, 0.70)', 'rgba(230, 51, 51, 0.90)', 'rgba(230, 51, 51, 1)']
         }
+        return ['rgb(255, 214, 51)', 'rgb(204, 163, 0)', 'rgb(179, 143, 0)']
+
     }
     defaultImage = () => {
         const icSupport = require("@images/new/user.png");
@@ -34,7 +34,7 @@ class ItemListVoucher extends Component {
     }
     render() {
         const icSupport = require("@images/new/user.png");
-        const { item, onPress } = this.props
+        const { item, onPress, onPressLater } = this.props
         return (
             <View style={{ padding: 10 }}>
                 <Card style={styles.containerItem} >
@@ -51,18 +51,18 @@ class ItemListVoucher extends Component {
                     />
                     <View style={styles.container}>
                         <Text numberOfLines={2} style={[styles.containerText, { fontWeight: 'bold', fontSize: 16 }]}>GIẢM {item.price.formatPrice()}đ KHI ĐẶT KHÁM</Text>
-                        <Text style={styles.containerText}>{`HẠN SỬ DỤNG ĐẾN ${item.endTime.toDateObject('-').format("hh:mm, dd/MM/yyyy")}`}</Text>
+                        <Text style={styles.containerText}>{`HẠN SỬ DỤNG ĐẾN ${item.endTime.toDateObject('-').format("HH:mm, dd/MM/yyyy")}`}</Text>
                         <View style={styles.containerRow}>
-                            <Text style={styles.quality}>{`CÒN ${item.quantity} LẦN`}</Text>
+                            <Text numberOfLines={1} style={styles.quality}>{`CÒN ${item.type == 0 ? item.quantity - item.counter : item.count} LẦN`}</Text>
                             <LinearGradient
-                                colors={['rgb(255, 214, 51)', 'rgb(204, 163, 0)', 'rgb(179, 143, 0)']}
+                                colors={this.getColor(item)}
                                 locations={[0, 0.7, 1]}
                                 style={styles.btn}>
                                 <TouchableOpacity
-                                    onPress={onPress}
+                                    onPress={item.status ? onPressLater : onPress}
                                     style={[styles.button]}
                                 >
-                                    <Text style={styles.txtButton}>{constants.voucher.use_now}</Text>
+                                    <Text style={styles.txtButton}>{this.getLabelButton(item)}</Text>
                                 </TouchableOpacity>
                             </LinearGradient>
                         </View>
@@ -74,10 +74,10 @@ class ItemListVoucher extends Component {
 }
 
 const styles = StyleSheet.create({
-    customImagePlace:{
-        height:100,
-        width:100,
-        borderRadius:50
+    customImagePlace: {
+        height: 100,
+        width: 100,
+        borderRadius: 50
     },
     button: {
         flex: 1,
@@ -105,18 +105,19 @@ const styles = StyleSheet.create({
     quality: {
         color: '#27AE60',
         fontWeight: '500',
-        paddingVertical: 3
+        paddingVertical: 3,
     },
     btn: {
         backgroundColor: '#27AE60',
         height: 38,
-        width: '55%',
         borderRadius: 7,
     },
     containerRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        paddingLeft: 4
     },
     container: {
         flex: 1
@@ -132,8 +133,8 @@ const styles = StyleSheet.create({
     containerText: {
         padding: 4,
         // backgroundColor: '#FFFFFF',
-        width: '100%',
-        marginBottom: 10,
+        // width: '100%',
+        marginBottom: 7,
         color: '#27AE60'
     },
 })
