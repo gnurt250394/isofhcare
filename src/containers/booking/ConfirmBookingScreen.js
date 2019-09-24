@@ -255,6 +255,7 @@ class ConfirmBookingScreen extends Component {
             ).then(s => {
                 let data = s.data;
                 let paymentId = data.id;
+                this.amount = data.amount;
                 this.setState({ isLoading: false, paymentId }, () => {
                     switch (this.state.paymentMethod) {
                         case 4:
@@ -287,7 +288,7 @@ class ConfirmBookingScreen extends Component {
                             this.props.navigation.navigate("paymentVNPay", {
                                 urlPayment: s.payment_url,
                                 onSuccess: url => {
-                                    this.vnPaySuccess(url, booking);
+                                    this.vnPaySuccess(url, booking, data);
                                 },
                                 onError: url => {
                                     this.vnPayError(url, booking);
@@ -345,7 +346,8 @@ class ConfirmBookingScreen extends Component {
             voucher: this.state.voucher
         })
     }
-    vnPaySuccess(url, booking) {
+    vnPaySuccess(url, booking, data) {
+        debugger;
         let obj = {};
         let arr = url.split('?');
         if (arr.length == 2) {
@@ -358,9 +360,38 @@ class ConfirmBookingScreen extends Component {
             })
         }
         booking.transactionCode = obj["vnp_TxnRef"];
-        booking.vnPayDate = obj["vnp_PayDate"]
+        let transactionId = data.id;
+        if (data.online_transactions && data.online_transactions.length)
+            transactionId = data.online_transactions[0].id;
+
+        booking.vnPayDate = obj["vnp_PayDate"];
+        if (transactionId != booking.transactionCode) {
+            booking.reasonError = "Đơn hàng không tồn tại";
+            this.props.navigation.navigate("paymentBookingError", {
+                booking,
+                service: this.state.service,
+                voucher: this.state.voucher
+            })
+            return;
+        }
+        if (obj["vnp_Amount"]) {
+            obj["vnp_Amount"] = (obj["vnp_Amount"] || 0) / 100;
+        }
+        if (data.amount || this.amount) {
+            let amount = this.amount || data.amount;
+            if (obj["vnp_Amount"] != amount) {
+                booking.amountError = obj["vnp_Amount"];
+                booking.reasonError = "Số tiền không hợp lệ";
+                this.props.navigation.navigate("paymentBookingError", {
+                    booking,
+                    service: this.state.service,
+                    voucher: this.state.voucher
+                })
+                return;
+            }
+        }
         // walletProvider.onlineTransactionPaid(obj["vnp_TxnRef"], this.getPaymentMethod(), obj);
-        if (obj["vnp_TransactionNo"] == 0 || obj["vnp_ResponseCode"] == 24) {
+        if (transactionId != booking.transactionCode || obj["vnp_TransactionNo"] == 0 || obj["vnp_ResponseCode"] == 24) {
             this.props.navigation.navigate("paymentBookingError", {
                 booking,
                 service: this.state.service,
@@ -458,10 +489,10 @@ class ConfirmBookingScreen extends Component {
                             this.props.navigation.navigate("paymentVNPay", {
                                 urlPayment: s.payment_url,
                                 onSuccess: url => {
-                                    this.vnPaySuccess(url, booking);
+                                    this.vnPaySuccess(url, booking, data);
                                 },
                                 onError: url => {
-                                    this.vnPayError(url, booking);
+                                    this.vnPayError(url, booking, data);
                                 }
                             });
                             break;

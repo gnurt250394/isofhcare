@@ -380,6 +380,7 @@ module.exports = {
     payment_error: 'Thanh toán không thành công!',
     payment_error_message: 'Chúng tôi gặp khó khăn trong quá trình kết nối với đối tác. Vui lòng gọi tới số hotline 0923678905 nếu như bạn đã bị trừ tiền.',
     payment_code: 'Mã giao dịch',
+    payment_error: 'Lý do',
     service: 'Dịch vụ khám',
     payment_price: 'Số tiền thanh toán:',
     change_payment_method: 'Đổi phương thức thanh toán',

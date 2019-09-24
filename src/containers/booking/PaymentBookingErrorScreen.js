@@ -77,12 +77,20 @@ class PaymentBookingErrorScreen extends Component {
                                     </View>
                             }
                             {
+                                booking.reasonError &&
+                                <View style={styles.colt}>
+                                    <Text style={styles.col1}>{constants.booking.payment_error}</Text>
+                                    <Text style={styles.col2}>{booking.reasonError}</Text>
+                                </View>
+                            }
+                            {
                                 service && service.length ?
                                     <View style={styles.colt}>
                                         <Text style={styles.col1}>{constants.booking.sum_price}:</Text>
-                                        <Text style={[styles.col2, { color: "#d0021b" }]}>{this.getPriceSecive(service, voucher)}đ</Text>
+                                        <Text style={[styles.col2, { color: "#d0021b" }]}>{booking.amountError ? booking.amountError : this.getPriceSecive(service, voucher)}đ</Text>
                                     </View> : null
                             }
+
 
                         </View>
 
