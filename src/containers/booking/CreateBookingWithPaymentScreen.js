@@ -49,10 +49,20 @@ class CreateBookingWithPaymentScreen extends Component {
     goHome = () => {
         this.props.navigation.pop();
     }
+    getPriceSecive = (service, voucher) => {
+        let priceVoucher = voucher && voucher.price ? voucher.price : 0
+        let priceFinal = service.reduce((start, item) => {
+            return start + parseInt(item.service.price)
+        }, 0)
+        if (priceVoucher > priceFinal) {
+            return 0
+        }
+        return (priceFinal - priceVoucher).formatPrice()
+    }
     onBackdropPress = () => this.setState({ isVisible: false })
     render() {
         let booking = this.props.navigation.state.params.booking;
-        console.log(booking, 'bookingbooking')
+        let voucher = this.props.navigation.state.params.voucher || {};
         let service = this.props.navigation.state.params.service || [];
         if (!booking || !booking.profile || !booking.hospital || !booking.hospital.hospital || !booking.book) {
             this.props.navigation.pop();
@@ -116,6 +126,12 @@ class CreateBookingWithPaymentScreen extends Component {
                                                 <Text style={[styles.text, { marginBottom: 5 }]}>({parseInt(item.service.price).formatPrice()}đ)</Text>
                                             </View>
                                         })}
+                                        {voucher && voucher.price ?
+                                            <View style={{ flex: 1 }}>
+                                                <Text numberOfLines={1} style={[styles.text, styles.flex]}>{constants.booking.voucher}</Text>
+                                                <Text style={[styles.text, { marginBottom: 5 }]}>(-{parseInt(voucher.price).formatPrice()}đ)</Text>
+                                            </View> : null
+                                        }
                                     </View>
                                 </View> : null
                             }
@@ -127,9 +143,7 @@ class CreateBookingWithPaymentScreen extends Component {
                                 service && service.length ?
                                     <View style={styles.row}>
                                         <Text style={styles.label}>{constants.booking.sum_price}:</Text>
-                                        <Text style={[styles.text, { color: "#d0021b" }]}>{service.reduce((start, item) => {
-                                            return start + parseInt(item.service.price)
-                                        }, 0).formatPrice()}đ</Text>
+                                        <Text style={[styles.text, { color: "#d0021b" }]}>{this.getPriceSecive(service, voucher)}đ</Text>
                                     </View> : null
                             }
                             {/* {
@@ -380,7 +394,7 @@ const styles = StyleSheet.create({
         color: '#000',
         fontSize: 14,
         textAlign: 'left',
-        fontWeight:'bold'
+        fontWeight: 'bold'
     },
     txBank: {
         color: '#000',
@@ -390,8 +404,8 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: 'bold',
         color: '#02c39a',
-        marginLeft:5,
-        marginRight:10
+        marginLeft: 5,
+        marginRight: 10
 
     },
     bankInfo: {
@@ -399,14 +413,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginVertical: 10,
         flex: 1,
-        justifyContent:'center',
-        paddingHorizontal:10
+        justifyContent: 'center',
+        paddingHorizontal: 10
     },
     viewBankNumber: {
         height: 41, paddingHorizontal: 5, borderRadius: 5, borderColor: 'gray', borderWidth: 1, justifyContent: 'center', alignItems: 'center', width: '60%'
     },
     btnCopy: {
-        height: 41, paddingHorizontal: 10, backgroundColor: '#02c39a', marginHorizontal: 10, justifyContent: 'center', alignItems: 'center', borderRadius: 5,width:'40%'
+        height: 41, paddingHorizontal: 10, backgroundColor: '#02c39a', marginHorizontal: 10, justifyContent: 'center', alignItems: 'center', borderRadius: 5, width: '40%'
     },
     txNumber: {
         color: '#02c39a',
