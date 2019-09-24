@@ -737,7 +737,7 @@ module.exports = {
     list_profile_ehealth: 'HỒ SƠ Y BẠ GIA ĐÌNH',
     search_profile: 'Chọn hồ sơ',
     ehealth_details: 'CHI TIẾT Y BẠ',
-    create_booking_success: 'Đặt lịch khám',
+    create_booking_success: 'Đặt khám thành công',
     patient_history_screen: 'Lịch sử đặt lịch',
     booking: "Đặt khám",
     location_near: 'Địa điểm gần bạn',
