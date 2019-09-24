@@ -132,7 +132,7 @@ android {
         applicationId "com.isofh.isofhcare"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 77
+        versionCode 78
         versionName "5.1"
         ndk {
             // abiFilters "armeabi-v7a", "x86", "arm64-v8a"
