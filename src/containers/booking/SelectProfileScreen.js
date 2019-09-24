@@ -23,17 +23,17 @@ class SelectProfileScreen extends Component {
             profile
         }
     }
-    onRefresh() {
-        if (!this.state.loading)
+    onRefresh(refreshing) {
+        if (!refreshing)
             this.setState(
-                { refreshing: true, page: 1, finish: false, loading: true },
+                { refreshing: true},
                 () => {
                     this.onLoad();
                 }
             );
     }
     componentDidMount() {
-        this.onRefresh();
+        this.onRefresh(this.state.refreshing);
     }
     componentWillReceiveProps(nextProps) {
         if (nextProps.navigation.state.params && nextProps.navigation.state.params.loading) {
