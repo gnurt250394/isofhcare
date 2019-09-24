@@ -6,6 +6,7 @@ import ScaledImage from 'mainam-react-native-scaleimage';
 import { connect } from 'react-redux';
 import ImageLoad from "mainam-react-native-image-loader";
 import dateUtils from "mainam-react-native-date-utils";
+import constants from '@resources/strings';
 
 class TicketHistory extends Component {
     state = {
@@ -90,7 +91,41 @@ class TicketHistory extends Component {
             })
         })
     }
-    renderItems = (item, index) => {
+    renderTime = (item, index) => {
+        if (!item.informationUserHospital)
+            return null;
+        let notiTime = item.informationUserHospital.createdDate.toDateObject('-');
+        if (index == 0) {
+            let date = new Date();
+            if (date.ddmmyyyy() == notiTime.ddmmyyyy())
+                return <Text style={styles.txtNotiTime}>Hôm nay</Text>
+            else
+                return <Text style={styles.txtNotiTime}>{notiTime.format('dd/MM/yyyy')}</Text>
+        }
+        else {
+            let preNoti = this.state.data[index - 1];
+
+            if (!preNoti || !preNoti.informationUserHospital)
+                return null;
+
+            let preNotiDate = preNoti.informationUserHospital.createdDate.toDateObject('-');
+            if (preNotiDate.ddmmyyyy() != notiTime.ddmmyyyy())
+                return <Text style={styles.txtNotiTime}>{notiTime.format('dd/MM/yyyy')}</Text>
+        }
+        return null
+    }
+    defaultImage = () => {
+        const icSupport = require("@images/new/user.png");
+        return (
+            <ScaledImage
+                resizeMode="cover"
+                source={icSupport}
+                width={60}
+                style={styles.placeHolderImage}
+            />
+        );
+    }
+    renderItems = ({ item, index }) => {
         if (!item.hospital || !item.numberHospital || !item.informationUserHospital)
             return null;
         let hospital = item.hospital;
@@ -102,112 +137,76 @@ class TicketHistory extends Component {
 
         return (
             <View>
-                {
-                    ((item, index) => {
-                        if (!item.informationUserHospital)
-                            return null;
-                        let notiTime = item.informationUserHospital.createdDate.toDateObject('-');
-                        if (index == 0) {
-                            let date = new Date();
-                            if (date.ddmmyyyy() == notiTime.ddmmyyyy())
-                                return <Text style={{ marginTop: 10, color: "#4a4a4a" }}>Hôm nay</Text>
-                            else
-                                return <Text style={{ marginTop: 10, color: "#4a4a4a" }}>{notiTime.format('dd/MM/yyyy')}</Text>
-                        }
-                        else {
-                            let preNoti = this.state.data[index - 1];
-
-                            if (!preNoti || !preNoti.informationUserHospital)
-                                return null;
-
-                            let preNotiDate = preNoti.informationUserHospital.createdDate.toDateObject('-');
-                            if (preNotiDate.ddmmyyyy() != notiTime.ddmmyyyy())
-                                return <Text style={{ marginTop: 10, color: "#4a4a4a" }}>{notiTime.format('dd/MM/yyyy')}</Text>
-                        }
-                        return null
-                    }).call(this, item, index)
-                }
+                {this.renderTime(item, index)}
                 <TouchableOpacity style={styles.itemView}>
-                    <View style={{
-                        flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 1, alignItems: 'center', borderBottomColor: "rgba(0, 0, 0, 0.06)", paddingVertical: 5, paddingHorizontal: 10
-                    }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={{ textAlign: 'left', fontWeight: 'bold', color: '#000000', fontSize: 14 }}>{info.fullname}</Text>
+                    <View style={styles.containerHeader}>
+                        <View style={styles.row}>
+                            <Text style={styles.txtFullName}>{info.fullname}</Text>
                             <ScaledImage style={{ marginLeft: 10, }} height={18} source={require("@images/new/ticket/ic_verified.png")} ></ScaledImage>
                         </View>
                         {numberHospital.number ?
-                            <TouchableOpacity style={{ borderRadius: 12, backgroundColor: '#0A9BE1', paddingVertical: 3, paddingHorizontal: 10, justifyContent: 'center', alignItems: 'center' }}>
-                                <Text style={{ color: '#fff', fontSize: 14 }}>Số tiếp đón: {numberHospital.number}</Text>
+                            <TouchableOpacity style={styles.buttonNumberHospital}>
+                                <Text style={styles.txtNumberHospital}>{constants.ehealth.ticket}: {numberHospital.number}</Text>
                             </TouchableOpacity> : null
                         }
                     </View>
-                    <View style={{ flexDirection: 'row' }}>
-                        <View style={{ alignItems: 'center', padding: 20, paddingTop: 15, paddingRight: 10 }}>
+                    <View style={styles.row}>
+                        <View style={styles.containerImage}>
                             <ImageLoad
                                 resizeMode="cover"
-                                imageStyle={{ borderRadius: 30, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' }}
+                                imageStyle={styles.borderImage}
                                 borderRadius={30}
-                                customImagePlaceholderDefaultStyle={{
-                                    width: 60,
-                                    height: 60,
-                                    alignSelf: "center"
-                                }}
+                                customImagePlaceholderDefaultStyle={styles.placeHolderImage}
                                 placeholderSource={icSupport}
-                                style={{ width: 60, height: 60, alignSelf: "center" }}
+                                style={styles.placeHolderImage}
                                 resizeMode="cover"
                                 loadingStyle={{ size: "small", color: "gray" }}
                                 source={source}
-                                defaultImage={() => {
-                                    return (
-                                        <ScaledImage
-                                            resizeMode="cover"
-                                            source={icSupport}
-                                            width={60}
-                                            style={{ width: 60, height: 60, alignSelf: "center" }}
-                                        />
-                                    );
-                                }}
+                                defaultImage={this.defaultImage}
                             />
-                            <Text style={{ fontWeight: 'bold', color: '#27AE60', marginTop: 5, maxWidth: 50 }}>{informationUserHospital.isofhCareValue}</Text>
+                            <Text style={styles.txtInfoUserHospital}>{informationUserHospital.isofhCareValue}</Text>
                         </View>
-                        <View style={{ justifyContent: 'center', padding: 10, flex: 1 }}>
-                            <Text style={{ fontSize: 14 }}>{hospital.name}</Text>
-                            <Text style={{ fontSize: 14, marginTop: 5 }}>SĐT: <Text style={{ color: '#F05673', fontWeight: 'bold' }}>{this.props.userApp.currentUser.phone}</Text></Text>
-                            <Text style={{ fontSize: 14, marginTop: 5 }}>Ngày sinh: <Text style={{ fontWeight: 'bold', color: '#4A4A4A' }}>{info.bod}</Text></Text>
-                            <Text numberOfLines={2} style={{ fontSize: 14, marginTop: 5, flex: 1 }}>Địa chỉ: {info.address}</Text>
+                        <View style={styles.containerInfo}>
+                            <Text style={styles.txtName}>{hospital.name}</Text>
+                            <Text style={styles.txtPhone}>SĐT: <Text style={styles.txtPhoneUser}>{this.props.userApp.currentUser.phone}</Text></Text>
+                            <Text style={styles.txtPhone}>Ngày sinh: <Text style={styles.txtDateUser}>{info.bod}</Text></Text>
+                            <Text numberOfLines={2} style={styles.txtAddress}>Địa chỉ: {info.address}</Text>
                         </View>
                     </View>
                 </TouchableOpacity>
             </View>
         )
     }
+    headerComponent = () => {
+        return (
+            !this.state.loading && (!this.state.data || this.state.data.length == 0) ?
+                <View style={styles.containerNoneData}>
+                    <Text style={styles.txtNoneData}>{constants.none_data}</Text>
+                </View> : null
+        )
+    }
+    keyExtractor = (item, index) => index.toString()
     render() {
         return (
             <View style={{ flex: 1 }}>
                 {this.state.isShowContent ? (
-                    <View style={{ width: '100%', marginBottom: 10, backgroundColor: "rgba(39, 174, 96, 0.18)", alignItems: 'center', justifyContent: 'center', paddingVertical: 20, paddingHorizontal: 20 }}>
-                        <Text style={{ textAlign: 'center', color: '#000', fontSize: 14 }}>Xin chờ ít phút nếu bạn đã gửi tin nhắn mà chưa nhận được số tiếp đón.</Text>
+                    <View style={styles.containerContent}>
+                        <Text style={styles.txtContent}>{constants.msg.ehealth.please_wait_minutes_if_no_message}</Text>
                     </View>
                 ) : null}
-                <View style={{ flex: 1, padding: 14 }}>
+                <View style={styles.containerFlatlist}>
 
 
                     <FlatList
                         showsVerticalScrollIndicator={false}
-                        style={{ flex: 1 }}
+                        style={styles.flex}
                         onRefresh={this.onRefresh}
                         refreshing={this.state.loading}
                         data={this.state.data}
                         extraData={this.state}
-                        ListHeaderComponent={() => !this.state.loading && (!this.state.data || this.state.data.length == 0) ?
-                            <View style={{ alignItems: 'center', marginTop: 50 }}>
-                                <Text style={{ fontStyle: 'italic' }}>Hiện tại chưa có dữ liệu</Text>
-                            </View> : null
-                        }
-                        keyExtractor={(item, index) => index.toString()}
-                        renderItem={({ item, index }) => {
-                            return this.renderItems(item, index)
-                        }}
+                        ListHeaderComponent={this.headerComponent}
+                        keyExtractor={this.keyExtractor}
+                        renderItem={this.renderItems}
                     ></FlatList>
                 </View>
             </View>
@@ -216,6 +215,107 @@ class TicketHistory extends Component {
 }
 
 const styles = StyleSheet.create({
+    txtNoneData: { fontStyle: 'italic' },
+    containerNoneData: {
+        alignItems: 'center',
+        marginTop: 50
+    },
+    flex: { flex: 1 },
+    containerFlatlist: {
+        flex: 1,
+        padding: 14
+    },
+    txtContent: {
+        textAlign: 'center',
+        color: '#000',
+        fontSize: 14
+    },
+    containerContent: {
+        width: '100%',
+        marginBottom: 10,
+        backgroundColor: "rgba(39, 174, 96, 0.18)",
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 20,
+        paddingHorizontal: 20
+    },
+    txtAddress: {
+        fontSize: 14,
+        marginTop: 5,
+        flex: 1
+    },
+    txtDateUser: {
+        fontWeight: 'bold',
+        color: '#4A4A4A'
+    },
+    txtPhoneUser: {
+        color: '#F05673',
+        fontWeight: 'bold'
+    },
+    txtPhone: {
+        fontSize: 14,
+        marginTop: 5
+    },
+    txtName: { fontSize: 14 },
+    containerInfo: {
+        justifyContent: 'center',
+        padding: 10,
+        flex: 1
+    },
+    txtInfoUserHospital: {
+        fontWeight: 'bold',
+        color: '#27AE60',
+        marginTop: 5,
+        maxWidth: 50
+    },
+    placeHolderImage: {
+        width: 60,
+        height: 60,
+        alignSelf: "center"
+    },
+    borderImage: {
+        borderRadius: 30,
+        borderWidth: 0.5,
+        borderColor: 'rgba(151, 151, 151, 0.29)'
+    },
+    containerImage: {
+        alignItems: 'center',
+        padding: 20,
+        paddingTop: 15,
+        paddingRight: 10
+    },
+    txtNumberHospital: {
+        color: '#fff',
+        fontSize: 14
+    },
+    buttonNumberHospital: {
+        borderRadius: 12,
+        backgroundColor: '#0A9BE1',
+        paddingVertical: 3,
+        paddingHorizontal: 10,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    txtFullName: {
+        textAlign: 'left',
+        fontWeight: 'bold',
+        color: '#000000',
+        fontSize: 14
+    },
+    row: { flexDirection: 'row' },
+    containerHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        borderBottomWidth: 1,
+        alignItems: 'center',
+        borderBottomColor: "rgba(0, 0, 0, 0.06)",
+        paddingVertical: 5,
+        paddingHorizontal: 10
+    },
+    txtNotiTime: {
+        marginTop: 10,
+        color: "#4a4a4a"
+    },
     AcPanel: {
         flex: 1,
         backgroundColor: '#cacaca',

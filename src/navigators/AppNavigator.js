@@ -62,6 +62,8 @@ import ConfirmBookingScreen from "@containers/booking/ConfirmBookingScreen";
 import CreateBookingSuccessScreen from "@containers/booking/CreateBookingSuccessScreen";
 import PaymentBookingErrorScreen from "@containers/booking/PaymentBookingErrorScreen";
 import DetailsHistoryScreen from "@containers/booking/DetailsHistoryScreen"
+import CreateBookingWithPaymentScreen from "@containers/booking/CreateBookingWithPaymentScreen"
+
 
 import CreateProfileScreen from "@containers/profile/CreateProfileScreen";
 import PaymentWithVNPayScreen from "@containers/payment/PaymentWithVNPayScreen";
@@ -105,7 +107,8 @@ import SpecialistScreen from "@containers/specialist/SpecialistScreen";
 import ConfirmCodeScreen from "@containers/account/ConfirmCodeScreen";
 import ResetPasswordScreen from "@containers/account/ResetPasswordScreen";
 import { fromLeft, zoomIn, zoomOut, fromRight } from 'react-navigation-transitions';
-import MyVoucher from '@containers/vocher'
+import MyVoucherScreen from '@containers/voucher';
+import DetailVoucherScreen from '../containers/voucher/DetailVoucherScreen';
 
 const ProfileNavigation = createStackNavigator({
   selectProfile: SelectProfileScreen,
@@ -296,6 +299,7 @@ const RootNavigator = createStackNavigator(
     filterSpecialist: { screen: FilterSpecialistScreen },
     selectProfile: { screen: SelectProfileScreen },
     patientHistory: { screen: PatientHistoryScreen },
+    createBookingWithPayment: { screen: CreateBookingWithPaymentScreen },
 
     //get Ticket
     getTicket: GetTicketNavigation,
@@ -306,13 +310,12 @@ const RootNavigator = createStackNavigator(
     //
     specialist: { screen: SpecialistScreen },
 
-
-
+    detailsVoucher: { screen: DetailVoucherScreen },
     hospital: { screen: HospitalScreen },
     drug: { screen: DrugScreen },
     hospitalByLocation: { screen: HospitalByLocationScreen },
     photoViewer: { screen: PhotoViewerScreen },
-    myVoucher:{screen : MyVoucher}
+    myVoucher: { screen: MyVoucherScreen }
   },
   {
     headerMode: "none",

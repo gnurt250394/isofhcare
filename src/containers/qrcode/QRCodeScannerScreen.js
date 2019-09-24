@@ -2,7 +2,7 @@
 import snackbar from '@utils/snackbar-utils';
 import ActivityPanel from '@components/ActivityPanel';
 import userProvider from '@data-access/user-provider';
-import constants from '@resources/strings';
+import constants from '../../res/strings';
 import redux from '@redux-store';
 import { connect } from 'react-redux';
 import ImagePicker from 'mainam-react-native-select-image';
@@ -74,7 +74,7 @@ class QRCodeScannerScreen extends Component {
                 flashOn: !this.state.flashOn
             })
         else {
-            snackbar.show("Đèn flash chỉ hoạt động với camera sau", "danger")
+            snackbar.show(constants.qr_code.flash_only_behind, "danger")
         }
     }
     onSelectImage = () => {
@@ -191,7 +191,7 @@ class QRCodeScannerScreen extends Component {
     }
     render() {
         return (
-            <ActivityPanel isLoading={this.state.isLoading} title={this.state.title || "QUÉT MÃ QRCODE"}
+            <ActivityPanel isLoading={this.state.isLoading} title={this.state.title || constants.title.scan_qr_code}
             >
                 <QRCodeScanner
                     // reactivate={true}
@@ -204,23 +204,23 @@ class QRCodeScannerScreen extends Component {
                     topContent={
 
                         <Text style={styles.centerText}>
-                            {this.state.textHelp || "Di chuyển camera đến vùng chứa mã QR để quét"}</Text>
+                            {this.state.textHelp || constants.qr_code.move_camera}</Text>
 
                     }
                     bottomContent={
-                        <View style={{ flexDirection: 'row', marginBottom: 30 }}>
+                        <View style={styles.containerBottom}>
                             {/* <View style={{ flex: 1, alignItems: 'center' }}>
                                 <TouchableOpacity onPress={this.onSelectImage} style={{ width: 50, height: 50, backgroundColor: '#00000030', borderRadius: 25, justifyContent: 'center', alignItems: 'center' }}>
                                     <Icon type="MaterialIcons" name="image" style={{ color: '#FFF' }}></Icon>
                                 </TouchableOpacity>
                             </View> */}
-                            <View style={{ flex: 1, alignItems: 'center' }}>
-                                <TouchableOpacity onPress={this.onTurnOnFlash} style={{ width: 50, height: 50, backgroundColor: '#00000030', borderRadius: 25, justifyContent: 'center', alignItems: 'center' }}>
+                            <View style={styles.containerFlash}>
+                                <TouchableOpacity onPress={this.onTurnOnFlash} style={styles.buttonFlash}>
                                     <Icon name="flashlight" style={{ color: this.state.flashOn ? '#FFF' : '#00000030' }}></Icon>
                                 </TouchableOpacity>
                             </View>
-                            <View style={{ flex: 1, alignItems: 'center' }}>
-                                <TouchableOpacity onPress={this.onChangeCamreraType} style={{ width: 50, height: 50, backgroundColor: '#00000030', borderRadius: 25, justifyContent: 'center', alignItems: 'center' }}>
+                            <View style={styles.containerFlash}>
+                                <TouchableOpacity onPress={this.onChangeCamreraType} style={styles.buttonFlash}>
                                     <Icon type="MaterialCommunityIcons" name="camera" style={{ color: this.state.front ? '#FFF' : '#00000030' }}></Icon>
                                 </TouchableOpacity>
                             </View>
@@ -234,6 +234,22 @@ class QRCodeScannerScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+    buttonFlash: {
+        width: 50,
+        height: 50,
+        backgroundColor: '#00000030',
+        borderRadius: 25,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    containerFlash: {
+        flex: 1,
+        alignItems: 'center'
+    },
+    containerBottom: {
+        flexDirection: 'row',
+        marginBottom: 30
+    },
     centerText: {
         flex: 1,
         textAlign: 'center',

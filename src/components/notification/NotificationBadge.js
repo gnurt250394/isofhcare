@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { View, TouchableOpacity, Text } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import snackbar from '@utils/snackbar-utils';
@@ -13,16 +13,23 @@ class NotificationBadge extends Component {
         super(props)
     }
 
+    selectNoti = () => {
+        if (this.props.userApp.isLogin) {
+            NavigationService.navigate("notificationTab");
+        } else {
+            NavigationService.navigate("login");
+        }
+    }
     render() {
         if (this.props.touchable == false) {
             return (
                 <View
-                    style={{ padding: 10, paddingRight: 15, position: 'relative' }}
+                    style={styles.containerItem}
                 >
                     <ScaleImage source={require("@images/new/bell_news.png")} width={22} style={{ tintColor: this.props.tintColor }} />
                     {
                         this.props.userApp.isLogin && (this.props.userApp.unReadNotificationCount || 0) ?
-                            <Text numberOfLines={1} style={{ overflow: 'hidden', position: 'absolute', right: 11, top: 12, backgroundColor: '#ff8f1f', borderRadius: 6, color: '#FFF', fontSize: 10, paddingHorizontal: 3, textAlign: 'center' }}>{(this.props.userApp.unReadNotificationCount || 0) > 99 ? "99+" : this.props.userApp.unReadNotificationCount}</Text>
+                            <Text numberOfLines={1} style={styles.txtNotiActive}>{(this.props.userApp.unReadNotificationCount || 0) > 99 ? "99+" : this.props.userApp.unReadNotificationCount}</Text>
                             : null
                     }
                 </View>
@@ -31,19 +38,13 @@ class NotificationBadge extends Component {
         else
             return (
                 <TouchableOpacity
-                    style={{ padding: 10, paddingRight: 15, position: 'relative' }}
-                    onPress={() => {
-                        if (this.props.userApp.isLogin) {
-                            NavigationService.navigate("notificationTab");
-                        } else {
-                            NavigationService.navigate("login");
-                        }
-                    }}
+                    style={styles.containerItem}
+                    onPress={this.selectNoti}
                 >
                     <ScaleImage source={require("@images/new/bell_news.png")} width={22} style={{ tintColor: this.props.tintColor }} />
                     {
                         this.props.userApp.isLogin && (this.props.userApp.unReadNotificationCount || 0) ?
-                            <Text numberOfLines={1} style={{ overflow: 'hidden', position: 'absolute', right: 11, top: 12, backgroundColor: '#ff8f1f', borderRadius: 6, color: '#FFF', fontSize: 10, paddingHorizontal: 3, textAlign: 'center' }}>{(this.props.userApp.unReadNotificationCount || 0) > 99 ? "99+" : this.props.userApp.unReadNotificationCount}</Text>
+                            <Text numberOfLines={1} style={styles.txtNotiActive}>{(this.props.userApp.unReadNotificationCount || 0) > 99 ? "99+" : this.props.userApp.unReadNotificationCount}</Text>
                             : null
                     }
                 </TouchableOpacity>
@@ -58,3 +59,23 @@ function mapStateToProps(state) {
     };
 }
 export default connect(mapStateToProps)(NotificationBadge);
+
+const styles = StyleSheet.create({
+    txtNotiActive: {
+        overflow: 'hidden',
+        position: 'absolute',
+        right: 11,
+        top: 12,
+        backgroundColor: '#ff8f1f',
+        borderRadius: 6,
+        color: '#FFF',
+        fontSize: 10,
+        paddingHorizontal: 3,
+        textAlign: 'center'
+    },
+    containerItem: {
+        padding: 10,
+        paddingRight: 15,
+        position: 'relative'
+    },
+})

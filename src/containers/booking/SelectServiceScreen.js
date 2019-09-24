@@ -15,11 +15,11 @@ class SelectServiceScreen extends Component {
         this.listServicesSelected = this.props.navigation.state.params.listServicesSelected || [];
         if (!hospital) {
             this.props.navigation.pop();
-            snackbar.show("Vui lòng chọn địa điểm khám", "danger");
+            snackbar.show(constants.msg.booking.please_select_location, "danger");
         }
         if (!serviceType) {
             this.props.navigation.pop();
-            snackbar.show("Vui lòng chọn yêu cầu", "danger");
+            snackbar.show(constants.msg.booking.please_select_require, "danger");
         }
         this.state = {
             listService: [],
@@ -75,16 +75,16 @@ class SelectServiceScreen extends Component {
         });
     }
 
-    showSearch() {
+    showSearch = () => {
         this.setState({
             showSearch: !this.state.showSearch,
             searchValue: ""
         })
     }
-    searchTextChange(s) {
+    searchTextChange = (s) => {
         this.setState({ searchValue: s });
     }
-    onSearch() {
+    onSearch = () => {
         var s = this.state.searchValue;
         var listSearch = this.state.listService.filter(item => {
             return s == null || item.service.name && item.service.name.trim().toLowerCase().unsignText().indexOf(s.trim().toLowerCase().unsignText()) != -1;
@@ -98,7 +98,7 @@ class SelectServiceScreen extends Component {
     }
     renderSearchButton() {
         return (
-            <TouchableOpacity onPress={() => this.showSearch()} style={{ padding: 10 }}>
+            <TouchableOpacity onPress={this.showSearch} style={{ padding: 10 }}>
                 <ScaleImage source={require("@images/ic_timkiem.png")} style={{ tintColor: '#FFF' }} width={20} />
             </TouchableOpacity>
         );
@@ -129,76 +129,89 @@ class SelectServiceScreen extends Component {
             this.props.navigation.pop();
         }
     }
-
+    goBack = () => this.props.navigation.pop()
+    keyExtractor = (item, index) => index.toString()
+    headerComponent = () => {
+        return (
+            !this.state.refreshing &&
+                (!this.state.listServiceSearch || this.state.listServiceSearch.length == 0) ?
+                <View style={styles.headerSearch}>
+                    <ScaleImage source={require("@images/empty_result.png")} width={120} />
+                    <Text>{constants.none_service}<Text style={styles.txtHeaderSearch}>{this.state.searchValue}</Text></Text>
+                </View> : null
+        )
+    }
+    footerComponent = () => <View style={{ height: 10 }} />
+    renderItem = ({ item }) => {
+        return (
+            <TouchableOpacity onPress={this.onPressItem1.bind(this, item)}>
+                <View style={[styles.containerItem, item.checked ? { backgroundColor: 'rgba(240, 243, 189, 0.2)' } : { backgroundColor: '#FFF' }]}>
+                    <View style={styles.groupContentItem}>
+                        <Text style={styles.txtServices}>
+                            {item.service.name}
+                        </Text>
+                        {item.checked &&
+                            <ScaleImage source={require("@images/new/ic_verified.png")} width={20} />
+                        }
+                        {/* <Text>{item.service.price.formatPrice() + 'đ'}</Text> */}
+                    </View>
+                    {/* <Text numberOfLines={2}>
+                {item.service.describe}
+            </Text> */}
+                </View>
+            </TouchableOpacity>
+        )
+    }
     render() {
         return (
             <ActivityPanel
-                backButton={<TouchableOpacity style={{ paddingLeft: 20 }} onPress={() => this.props.navigation.pop()}><Text style={{ color: '#FFF' }}>Hủy</Text></TouchableOpacity>}
+                backButton={<TouchableOpacity
+                    style={{ paddingLeft: 20 }}
+                    onPress={this.goBack}>
+                    <Text style={{ color: '#FFF' }}>{constants.actionSheet.cancel}</Text>
+                </TouchableOpacity>}
                 title={constants.title.service}
                 isLoading={this.state.isLoading}
-                menuButton={<View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                menuButton={<View style={styles.menuButton}>
                     {this.renderSearchButton()}
                 </View>}
-                titleStyle={{ marginLeft: 50 }}
+                titleStyle={styles.titleHeader}
                 showFullScreen={true}
             >
 
                 {
                     this.state.showSearch ?
-                        <View style={{
-                            justifyContent: 'space-between',
-                            elevation: 5,
-                            height: 55,
-                            justifyContent: 'center', alignItems: 'center',
-                            backgroundColor: constants.colors.actionbar_color,
-                            flexDirection: 'row'
-                        }}>
-                            <TextInput autoFocus={true} style={{ flex: 1, color: constants.colors.actionbar_title_color, padding: 10 }} placeholderTextColor='#dddddd' underlineColorAndroid="transparent" placeholder={constants.ehealth.inputKeyword} onChangeText={(s) => {
-                                this.searchTextChange(s);
-                            }} returnKeyType="search" onSubmitEditing={() => { this.onSearch() }} />
-                            <TouchableOpacity onPress={() => this.onSearch()}>
-                                <Text style={{ backgroundColor: constants.colors.actionbar_title_color, padding: 7, borderRadius: 20, marginRight: 10, paddingLeft: 15, paddingRight: 15, fontWeight: 'bold', color: '#FFF' }}>{constants.search}</Text>
+                        <View style={styles.containerSearch}>
+                            <TextInput autoFocus={true} style={styles.inputSearch}
+                                placeholderTextColor='#dddddd'
+                                underlineColorAndroid="transparent"
+                                placeholder={constants.ehealth.inputKeyword}
+                                onChangeText={this.searchTextChange}
+                                returnKeyType="search"
+                                onSubmitEditing={this.onSearch} />
+                            <TouchableOpacity onPress={this.onSearch}>
+                                <Text style={styles.txtSearch}>{constants.search}</Text>
                             </TouchableOpacity>
                         </View>
                         : null
                 }
                 <View style={{ borderBottomColor: '#ccc', borderBottomWidth: 1, backgroundColor: '#FFF' }}>
-                    <TouchableOpacity style={{ alignSelf: 'flex-end', paddingVertical: 15, marginRight: 20, flexDirection: 'row' }} onPress={this.ok}><ScaleImage source={require("@images/new/ic_question_check_specialist.png")} width={20} /><Text style={{ color: "#02c39a", fontWeight: 'bold', marginLeft: 10 }}>Xong</Text></TouchableOpacity>
+                    <TouchableOpacity style={styles.buttonCheck}
+                        onPress={this.ok}>
+                        <ScaleImage source={require("@images/new/ic_question_check_specialist.png")} width={20} />
+                        <Text style={styles.txtDone}>{constants.actionSheet.done}</Text>
+                    </TouchableOpacity>
                 </View>
                 <FlatList
-                    style={{ flex: 1 }}
+                    style={styles.flex}
                     refreshing={this.state.refreshing}
                     onRefresh={this.onRefresh}
-                    keyExtractor={(item, index) => index.toString()}
+                    keyExtractor={this.keyExtractor}
                     extraData={this.state}
-                    ListHeaderComponent={() =>
-                        !this.state.refreshing &&
-                            (!this.state.listServiceSearch || this.state.listServiceSearch.length == 0) ?
-                            <View style={{ width: '100%', marginTop: 50, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center' }}>
-                                <ScaleImage source={require("@images/empty_result.png")} width={120} />
-                                <Text>{constants.none_service}<Text style={{ fontWeight: 'bold', color: constants.colors.actionbar_title_color }}>{this.state.searchValue}</Text></Text>
-                            </View> : null
-                    }
-                    ListFooterComponent={() => <View style={{ height: 10 }} />}
+                    ListHeaderComponent={this.headerComponent}
+                    ListFooterComponent={this.footerComponent}
                     data={this.state.listServiceSearch}
-                    renderItem={({ item }) =>
-                        <TouchableOpacity onPress={this.onPressItem1.bind(this, item)}>
-                            <View style={[{ marginBottom: 2, padding: 20, flexDirection: 'column', borderBottomColor: '#00000011', borderBottomWidth: 0.7 }, item.checked ? { backgroundColor: 'rgba(240, 243, 189, 0.2)' } : { backgroundColor: '#FFF' }]}>
-                                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <Text style={{ fontWeight: 'bold', flex: 1 }}>
-                                        {item.service.name}
-                                    </Text>
-                                    {item.checked &&
-                                        <ScaleImage source={require("@images/new/ic_verified.png")} width={20} />
-                                    }
-                                    {/* <Text>{item.service.price.formatPrice() + 'đ'}</Text> */}
-                                </View>
-                                {/* <Text numberOfLines={2}>
-                                    {item.service.describe}
-                                </Text> */}
-                            </View>
-                        </TouchableOpacity>
-                    }
+                    renderItem={this.renderItem}
                 />
 
 
@@ -208,6 +221,69 @@ class SelectServiceScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+    txtServices: {
+        fontWeight: 'bold',
+        flex: 1
+    },
+    groupContentItem: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    containerItem: {
+        marginBottom: 2,
+        padding: 20,
+        flexDirection: 'column',
+        borderBottomColor: '#00000011',
+        borderBottomWidth: 0.7
+    },
+    txtHeaderSearch: {
+        fontWeight: 'bold',
+        color: constants.colors.actionbar_title_color
+    },
+    headerSearch: {
+        width: '100%',
+        marginTop: 50,
+        backgroundColor: '#fff',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    flex: { flex: 1 },
+    txtDone: {
+        color: "#02c39a",
+        fontWeight: 'bold',
+        marginLeft: 10
+    },
+    buttonCheck: {
+        alignSelf: 'flex-end',
+        paddingVertical: 15,
+        marginRight: 20,
+        flexDirection: 'row'
+    },
+    txtSearch: {
+        backgroundColor: constants.colors.actionbar_title_color,
+        padding: 7,
+        borderRadius: 20,
+        marginRight: 10,
+        paddingLeft: 15,
+        paddingRight: 15,
+        fontWeight: 'bold',
+        color: '#FFF'
+    },
+    inputSearch: {
+        flex: 1,
+        color: constants.colors.actionbar_title_color,
+        padding: 10
+    },
+    containerSearch: {
+        justifyContent: 'space-between',
+        elevation: 5,
+        height: 55,
+        justifyContent: 'center', alignItems: 'center',
+        backgroundColor: constants.colors.actionbar_color,
+        flexDirection: 'row'
+    },
+    titleHeader: { marginLeft: 50 },
+    menuButton: { flexDirection: 'row', alignItems: 'center' },
     menu: {
         padding: 5,
         paddingRight: 15

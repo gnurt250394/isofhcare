@@ -26,6 +26,8 @@ import imageProvider from "@data-access/image-provider";
 import userProvider from "@data-access/user-provider";
 import DeviceInfo from 'react-native-device-info';
 import codePushUtils from '@utils/codepush-utils';
+import constants from "@resources/strings";
+import dataCacheProvider from '@data-access/datacache-provider';
 
 class AccountScreen extends Component {
   constructor(props) {
@@ -146,6 +148,18 @@ class AccountScreen extends Component {
       </View>
     );
   }
+
+  navigate_to = (router, params) => () => {
+    if (router) {
+      this.props.navigation.navigate(router, params);
+    } else {
+      snackbar.show(constants.msg.app.in_development);
+    }
+
+  }
+  showSetting = () => {
+    this.setState({ showSetting: !this.state.showSetting });
+  }
   renderViewUserNotLogin() {
     return (
       <View style={styles.viewUserNotLogin}>
@@ -157,19 +171,27 @@ class AccountScreen extends Component {
           />
         </View>
         <TouchableOpacity
-          onPress={() => {
-            this.props.navigation.navigate("login");
-          }}
+          onPress={this.navigate_to("login")}
           style={styles.btnLogin}
         >
-          <Text
-            style={styles.txLogin}
-          >
-            Đăng nhập/ Đăng Ký
-          </Text>
+          <Text style={styles.txLogin}>{constants.account_screens.signin_or_signup}</Text>
         </TouchableOpacity>
       </View>
     );
+  }
+  openLink = (link) => () => {
+    Linking.openURL(
+      link
+    );
+  }
+  logout = () => {
+    dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, null);
+    this.props.dispatch(redux.userLogout());
+    if (this.props.onLogout) this.props.onLogout();
+  }
+  checkUpdate = () => {
+    snackbar.show(constants.msg.app.check_update, "success");
+    codePushUtils.checkupDate();
   }
   render() {
     return (
@@ -216,11 +238,9 @@ class AccountScreen extends Component {
             </TouchableOpacity> */}
               <TouchableOpacity
                 style={[styles.itemMenu, { marginTop: 40 }]}
-                onPress={() => {
-                  this.props.navigation.navigate("listProfileUser");
-                }}
+                onPress={this.navigate_to('listProfileUser')}
               >
-                <Text style={styles.itemText}>Thành viên gia đình</Text>
+                <Text style={styles.itemText}>{constants.account_screens.my_family}</Text>
                 <ScaledImage style={{ tintColor: '#008D6F' }}
                   source={require("@images/new/profile/ic_family.png")}
                   width={30}
@@ -229,11 +249,9 @@ class AccountScreen extends Component {
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.itemMenu]}
-                onPress={() => {
-                  this.props.navigation.navigate("ehealth");
-                }}
+                onPress={this.navigate_to('ehealth')}
               >
-                <Text style={styles.itemText}>Y bạ điện tử</Text>
+                <Text style={styles.itemText}>{constants.account_screens.medical_records}</Text>
                 <ScaledImage style={{ tintColor: '#008D6F' }}
                   source={require("@images/new/ic_menu_ehealth.png")}
                   width={24}
@@ -242,11 +260,9 @@ class AccountScreen extends Component {
               </TouchableOpacity>
               {/* <TouchableOpacity
                 style={[styles.itemMenu]}
-                onPress={() => {
-                  snackbar.show("Chức năng đang phát triển");
-                }}
+                onPress={this.navigate_to()}
               >
-                <Text style={styles.itemText}>Lịch sử giao dịch</Text>
+                <Text style={styles.itemText}>{constants.account_screens.pay_history}</Text>
                 <ScaledImage style={{ tintColor: '#008D6F' }}
                   source={require("@images/new/profile/ic_history.png")}
                   width={24}
@@ -255,11 +271,9 @@ class AccountScreen extends Component {
               </TouchableOpacity> */}
               {/* <TouchableOpacity
                 style={[styles.itemMenu]}
-                onPress={() => {
-                  snackbar.show("Chức năng đang phát triển");
-                }}
+                onPress={this.navigate_to()}
               >
-                <Text style={styles.itemText}>Thuốc đã đặt mua</Text>
+                <Text style={styles.itemText}>{constants.account_screens.drug_odered}</Text>
                 <ScaledImage style={{ tintColor: '#008D6F' }}
                   source={require("@images/new/profile/ic_drug.png")}
                   width={24}
@@ -268,13 +282,9 @@ class AccountScreen extends Component {
               </TouchableOpacity> */}
               <TouchableOpacity
                 style={[styles.itemMenu]}
-                onPress={() => {
-                  this.props.navigation.navigate("patientHistory", {
-                    title: "Lịch khám"
-                  });
-                }}
+                onPress={this.navigate_to("patientHistory", { title: "Lịch khám" })}
               >
-                <Text style={styles.itemText}>Lịch khám</Text>
+                <Text style={styles.itemText}>{constants.account_screens.examination_schedule}</Text>
                 <ScaledImage style={{ tintColor: '#008D6F' }}
                   source={require("@images/new/ic_menu_list_booking.png")}
                   width={24}
@@ -288,9 +298,7 @@ class AccountScreen extends Component {
                     ? { backgroundColor: "rgb(230,249,245)" }
                     : {}
                 ]}
-                onPress={() => {
-                  this.setState({ showSetting: !this.state.showSetting });
-                }}
+                onPress={this.showSetting}
               >
                 <Text
                   style={[
@@ -299,9 +307,7 @@ class AccountScreen extends Component {
                       ? { color: "#000", fontWeight: "bold" }
                       : {}
                   ]}
-                >
-                  Cài đặt
-              </Text>
+                >{constants.setting}</Text>
                 <ScaledImage style={{ tintColor: '#008D6F' }}
                   source={require("@images/new/ic_menu_setting.png")}
                   width={24}
@@ -314,11 +320,9 @@ class AccountScreen extends Component {
             <View>
               <TouchableOpacity
                 style={[styles.itemMenu, { paddingLeft: 40 }]}
-                onPress={() => {
-                  this.props.navigation.navigate("changePassword");
-                }}
+                onPress={this.navigate_to('changePassword')}
               >
-                <Text style={styles.itemText}>Đổi mật khẩu</Text>
+                <Text style={styles.itemText}>{constants.account_screens.forgot_password}</Text>
                 <ScaledImage style={{ tintColor: '#008D6F' }}
                   source={require("@images/new/ic_menu_change_password.png")}
                   width={24}
@@ -361,11 +365,9 @@ class AccountScreen extends Component {
         } */}
           <TouchableOpacity
             style={[styles.itemMenu]}
-            onPress={() => {
-              this.props.navigation.navigate("about");
-            }}
+            onPress={this.navigate_to('about')}
           >
-            <Text style={styles.itemText}>Về iSofH</Text>
+            <Text style={styles.itemText}>{constants.account_screens.about_isofh}</Text>
             <ScaledImage style={{ tintColor: '#008D6F' }}
               source={require("@images/new/ic_menu_aboutus.png")}
               width={24}
@@ -374,13 +376,9 @@ class AccountScreen extends Component {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.itemMenu]}
-            onPress={() => {
-              Linking.openURL(
-                "mailto:support@isofhcare.vn?subject=Hỗ trợ sử dụng app ISofhCare&body="
-              );
-            }}
+            onPress={this.openLink("mailto:support@isofhcare.vn?subject=Hỗ trợ sử dụng app iSofHcare&body=")}
           >
-            <Text style={styles.itemText}>Hỗ trợ</Text>
+            <Text style={styles.itemText}>{constants.account_screens.support}</Text>
             <ScaledImage style={{ tintColor: '#008D6F' }}
               source={require("@images/new/ic_menu_support.png")}
               width={24}
@@ -389,13 +387,9 @@ class AccountScreen extends Component {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.itemMenu]}
-            onPress={() => {
-              Linking.openURL(
-                "mailto:support@isofhcare.vn?subject=Báo lỗi quá trình sử dụng app ISofhCare&body="
-              );
-            }}
+            onPress={this.openLink("mailto:support@isofhcare.vn?subject=Báo lỗi quá trình sử dụng app iSofHcare&body=")}
           >
-            <Text style={styles.itemText}>Báo lỗi</Text>
+            <Text style={styles.itemText}>{constants.account_screens.report}</Text>
             <ScaledImage style={{ tintColor: '#008D6F' }}
               source={require("@images/new/ic_menu_feedback.png")}
               width={24}
@@ -404,11 +398,9 @@ class AccountScreen extends Component {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.itemMenu]}
-            onPress={() => {
-              this.props.navigation.navigate("terms");
-            }}
+            onPress={this.navigate_to('terms')}
           >
-            <Text style={styles.itemText}>Điều khoản sử dụng</Text>
+            <Text style={styles.itemText}>{constants.account_screens.terms_of_use}</Text>
             <ScaledImage style={{ tintColor: '#008D6F' }}
               source={require("@images/new/ic_menu_terms.png")}
               width={24}
@@ -418,12 +410,9 @@ class AccountScreen extends Component {
           {this.props.userApp.isLogin && (
             <TouchableOpacity
               style={[styles.itemMenu]}
-              onPress={() => {
-                this.props.dispatch(redux.userLogout());
-                if (this.props.onLogout) this.props.onLogout();
-              }}
+              onPress={this.logout}
             >
-              <Text style={styles.itemText}>Đăng xuất</Text>
+              <Text style={styles.itemText}>{constants.account_screens.logout}</Text>
               <ScaledImage style={{ tintColor: '#008D6F' }}
                 source={require("@images/new/ic_menu_logout.png")}
                 width={24}
@@ -431,10 +420,7 @@ class AccountScreen extends Component {
               />
             </TouchableOpacity>
           )}
-          <TouchableOpacity style={[styles.itemMenu, { borderBottomWidth: 0 }]} onPress={() => {
-            snackbar.show("Đang kiểm tra cập nhật", "success");
-            codePushUtils.checkupDate();
-          }}>
+          <TouchableOpacity style={[styles.itemMenu, { borderBottomWidth: 0 }]} onPress={this.checkUpdate}>
             <Text style={[styles.itemText, { color: '#00000080' }]}>{'Phiên bản ' + DeviceInfo.getVersion() + '.' + DeviceInfo.getBuildNumber()}</Text>
           </TouchableOpacity>
           <View style={styles.viewSpaceBottom} />
