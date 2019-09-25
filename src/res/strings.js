@@ -598,6 +598,8 @@ module.exports = {
     details_booking: "Chi tiết đặt lịch",
     note_booking: 'Ghi chú',
     sum_price_services: 'Tổng tiền dịch vụ',
+    syntax_tranfer:'Nội dung chuyển khoản',
+    number_bank:'Số tài khoản',
     payment_methods: 'Phương thức TT',
     status_booking: 'Trạng thái',
     specialist_not_found: 'Không tìm thấy chuyên khoa nào phù hợp',
