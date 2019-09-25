@@ -162,6 +162,9 @@ class PatientHistoryScreen extends Component {
     });
   };
   renderItem = ({ item }) => {
+    if (item.booking.statusPay == 0) {
+      return null
+    }
     return (
       <TouchableOpacity style={styles.listBtn} onPress={() => this.onClickItem(item)}>
         <View style={styles.row}>
