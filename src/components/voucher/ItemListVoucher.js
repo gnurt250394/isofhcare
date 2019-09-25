@@ -81,9 +81,9 @@ const styles = StyleSheet.create({
     },
     button: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
         paddingHorizontal: 12,
+        paddingVertical:8,
+        paddingTop:10
     },
     styleImgLoad: {
         width: 100,
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     txtButton: {
         color: '#FFFFFF',
         fontWeight: '700',
-        fontSize: 15
+        textAlign:'center'
     },
     quality: {
         color: '#27AE60',

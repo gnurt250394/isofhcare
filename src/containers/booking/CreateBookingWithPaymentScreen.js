@@ -163,7 +163,7 @@ class CreateBookingWithPaymentScreen extends Component {
                         <View style={styles.paymentInfo}>
                             <Text style={styles.txStep1}>{constants.booking.guide.part_1}</Text>
                             <View><View style={styles.viewBank}><View style={styles.viewInfoBank}><Text
-                                style={styles.txBank}>{constants.booking.guide.bank}:</Text><View style = {styles.viewTxBank}><Text style={styles.txBankName}>{constants.booking.guide.bank_name}</Text></View></View>
+                                style={styles.txBank}>{constants.booking.guide.bank}:</Text><View style={styles.viewTxBank}><Text style={styles.txBankName}>{constants.booking.guide.bank_name}</Text></View></View>
                                 <Text style={[styles.txBank, { marginTop: 5 }]} >{constants.booking.guide.account_number}</Text></View>
                                 <View style={styles.bankInfo}>
                                     <View style={styles.viewBankNumber}>
@@ -175,17 +175,17 @@ class CreateBookingWithPaymentScreen extends Component {
                                 </View>
                                 <View>
                                     <View style={styles.viewInfoBank}><Text style={styles.txBank}>{constants.booking.guide.owner_name}:</Text>
-                                        <View style = {styles.viewTxBank}><Text style={styles.txBankName}>{constants.booking.guide.name_account}</Text>
+                                        <View style={styles.viewTxBank}><Text style={styles.txBankName}>{constants.booking.guide.name_account}</Text>
                                         </View>
-                                        </View>
+                                    </View>
                                     <View style={styles.viewInfoBank}><Text style={styles.txBank}>{constants.booking.guide.branch}:</Text>
-                                    <View style = {styles.viewTxBank}><Text style={styles.txBankName}>{constants.booking.guide.branch_name}</Text></View></View>
+                                        <View style={styles.viewTxBank}><Text style={styles.txBankName}>{constants.booking.guide.branch_name}</Text></View></View>
                                     <View style={{ marginTop: 5 }}><Text style={styles.txBank}>{constants.booking.guide.enter_content_payment}</Text></View>
                                 </View>
 
                                 <View style={styles.bankInfo}>
                                     <View style={styles.viewBankNumber}>
-                                        <Text style={styles.txNumber}>{'DK ' + booking.book.codeBooking}</Text>
+                                        <Text style={styles.txNumber}>{`DK ${booking.book.codeBooking}`}</Text>
                                     </View>
                                     <TouchableOpacity onPress={() => this.onCopyContents(booking.book.codeBooking)} style={styles.btnCopy}>
                                         <Text style={styles.txCopy}>{constants.booking.guide.copy}</Text>
@@ -321,9 +321,9 @@ const styles = StyleSheet.create({
     },
     view2: {
     },
-    viewTxBank:{
-    flex:1,
-    paddingRight:5,
+    viewTxBank: {
+        flex: 1,
+        paddingRight: 5,
 
     },
     col1: {
@@ -405,7 +405,7 @@ const styles = StyleSheet.create({
     txBank: {
         color: '#000',
         fontSize: 14,
-        marginRight:5
+        marginRight: 5
     },
     txBankName: {
         fontSize: 14,
@@ -422,7 +422,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10
     },
     viewBankNumber: {
-        height: 41, paddingHorizontal: 5, borderRadius: 5, borderColor: 'gray', borderWidth: 1, justifyContent: 'center', alignItems: 'center', width: '60%'
+        height: 41,
+        paddingHorizontal: 5,
+        borderRadius: 5,
+        borderColor: 'gray',
+        borderWidth: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '60%',
     },
     btnCopy: {
         height: 41, paddingHorizontal: 10, backgroundColor: '#02c39a', marginHorizontal: 10, justifyContent: 'center', alignItems: 'center', borderRadius: 5, width: '40%'
@@ -442,7 +449,7 @@ const styles = StyleSheet.create({
         textAlign: 'left',
         marginTop: 5,
     },
-    viewInfoBank: { flexDirection: 'row', marginTop: 5,},
+    viewInfoBank: { flexDirection: 'row', marginTop: 5, },
     notePay: { marginTop: 5, fontSize: 14, color: '#000', textAlign: 'left', },
     viewBank: { justifyContent: 'center', }
 
