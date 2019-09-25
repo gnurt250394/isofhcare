@@ -5,7 +5,8 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
-  StyleSheet
+  StyleSheet,
+  Clipboard
 } from "react-native";
 import bookingProvider from "@data-access/booking-provider";
 import { connect } from "react-redux";
@@ -176,6 +177,15 @@ class DetailsHistoryScreen extends Component {
     }
     return (price - discount).formatPrice()
   }
+  onCopyNumber = () => {
+    Clipboard.setString(constants.booking.guide.number)
+    snackbar.show(constants.booking.copy_success, 'success')
+  }
+  onCopyContents = (codeBooking) => {
+    Clipboard.setString('DK ' + codeBooking)
+    snackbar.show(constants.booking.copy_success, 'success')
+
+  }
   render() {
     const avatar = this.state.medicalRecords && this.state.medicalRecords.avatar ? { uri: `${this.state.medicalRecords.avatar.absoluteUrl()}` } : require("@images/new/user.png")
     return (
@@ -340,6 +350,37 @@ class DetailsHistoryScreen extends Component {
               <Text style={styles.txPayment}>{constants.booking.payment_methods}</Text>
               {this.renderStatus()}
             </View>
+            {
+              this.state.booking && this.state.booking.statusPay == 6 ?
+                <React.Fragment>
+                  <View style={styles.viewPrice}>
+                    <ScaledImage
+                      source={require("@images/ic_price.png")}
+                      width={20}
+                      height={20}
+                    />
+                    <Text style={styles.txLabelPrice}>{constants.booking.number_bank}</Text>
+                    <TouchableOpacity onPress={this.onCopyNumber}><Text style={[styles.txPrice, { color: 'red' }]}>
+                      {constants.booking.guide.number}
+                    </Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={styles.between}></View>
+                  <View style={styles.viewPrice}>
+                    <ScaledImage
+                      source={require("@images/ic_price.png")}
+                      width={20}
+                      height={20}
+                    />
+                    <Text style={styles.txLabelPrice}>{constants.booking.syntax_tranfer}</Text>
+                    <TouchableOpacity onPress={() => this.onCopyContents(this.state.booking.codeBooking)}><Text style={[styles.txPrice, { color: 'red' }]}>
+                      DK {this.state.booking.codeBooking}
+                    </Text></TouchableOpacity>
+                  </View>
+                  <View style={styles.between}></View>
+                </React.Fragment>
+                : null
+            }
             <View style={styles.viewStatus}>
               <ScaledImage
                 height={20}
