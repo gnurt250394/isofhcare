@@ -316,7 +316,8 @@ class HomeScreen extends Component {
                   <View style={styles.containerHeadertitle}>
                     <Text
                       style={styles.txtHeaderTitle}
-                    >Xin chào, <Text style={styles.colorUserName}>{this.getUserName(this.props.userApp.currentUser.name) + '!'}</Text></Text>
+                    >Xin chào, </Text>
+                    <Text style={styles.colorUserName}>{this.getUserName(this.props.userApp.currentUser.name) + '!'}</Text>
                   </View>}
                 <View style={styles.containerButton}>
                   {this.renderButton()}
@@ -359,7 +360,11 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'center'
   },
-  colorUserName: { color: 'rgb(255,138,21)' },
+  colorUserName: {
+    color: 'rgb(255,138,21)',
+    paddingLeft:4,
+    fontSize:18
+  },
   txtHeaderTitle: {
     marginLeft: 5,
     fontSize: 18,

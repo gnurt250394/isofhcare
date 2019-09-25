@@ -269,15 +269,15 @@ const styles = StyleSheet.create({
     },
     button: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
         paddingHorizontal: 12,
-
+        paddingVertical:8,
+        paddingTop:10
     },
     txtButtonConfirm: {
         color: '#fff',
         fontSize: 16,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        textAlign:'center'
     },
     errorStyle: {
         color: "red",
@@ -314,7 +314,8 @@ const styles = StyleSheet.create({
     txtButton: {
         color: '#FFFFFF',
         fontWeight: '700',
-        fontSize: 15
+        fontSize: 15,
+        textAlign:'center'
     },
     quality: {
         color: '#27AE60',
