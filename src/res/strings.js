@@ -615,6 +615,7 @@ module.exports = {
       copy: 'SAO CHÉP',
       owner_name: 'Tên chủ thẻ',
       name_account: 'CONG TY TNHH MOT THANH VIEN ISOFHCARE',
+      name_account2: 'CONG TY TNHH\nMOT THANH VIEN ISOFHCARE',
       branch: 'Chi nhánh',
       branch_name: 'TECHCOMBANK Ba Đình',
       enter_content_payment: 'Nhập nội dung chuyển khoản',
