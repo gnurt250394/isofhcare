@@ -353,29 +353,31 @@ class DetailsHistoryScreen extends Component {
             {
               this.state.booking && this.state.booking.statusPay == 6 ?
                 <React.Fragment>
-                  <View style={styles.viewPrice}>
-                    <ScaledImage
-                      source={require("@images/ic_price.png")}
-                      width={20}
-                      height={20}
-                    />
+                  <View style={[styles.viewPrice,{borderTopWidth:0,paddingHorizontal:7}]}>
                     <Text style={styles.txLabelPrice}>{constants.booking.number_bank}</Text>
-                    <TouchableOpacity onPress={this.onCopyNumber}><Text style={[styles.txPrice, { color: 'red' }]}>
+                    <TouchableOpacity style={{ flexDirection: 'row' }} onPress={this.onCopyNumber}><Text style={[styles.txPrice, { color: 'red' }]}>
                       {constants.booking.guide.number}
                     </Text>
+                      <ScaledImage height={20} style={{ tintColor: 'red' }} source={require('@images/new/booking/ic_coppy.png')}></ScaledImage>
                     </TouchableOpacity>
                   </View>
-                  <View style={styles.between}></View>
-                  <View style={styles.viewPrice}>
-                    <ScaledImage
-                      source={require("@images/ic_price.png")}
-                      width={20}
-                      height={20}
-                    />
+                  <View style={[styles.viewPrice,{borderTopWidth:0,paddingHorizontal:7}]}>
+                    <Text style={styles.txLabelPrice}>{constants.booking.guide.branch}</Text>
+                    <Text style={[styles.txPrice, { color: 'red' }]}>
+                      {constants.booking.guide.branch_name}
+                    </Text>
+                  </View>
+                  <View style={[styles.viewPrice,{borderTopWidth:0,paddingHorizontal:7}]}>
+                    <Text style={styles.txLabelPrice}>{constants.booking.guide.owner_name}</Text>
+                    <Text style={[styles.txPrice, { color: 'red', textAlign: 'center' }]}>
+                      {constants.booking.guide.name_account2}
+                    </Text>
+                  </View>
+                  <View style={[styles.viewPrice,{borderTopWidth:0,paddingHorizontal:7}]}>
                     <Text style={styles.txLabelPrice}>{constants.booking.syntax_tranfer}</Text>
-                    <TouchableOpacity onPress={() => this.onCopyContents(this.state.booking.codeBooking)}><Text style={[styles.txPrice, { color: 'red' }]}>
+                    <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => this.onCopyContents(this.state.booking.codeBooking)}><Text style={[styles.txPrice, { color: 'red' }]}>
                       DK {this.state.booking.codeBooking}
-                    </Text></TouchableOpacity>
+                    </Text><ScaledImage height={20} style={{ tintColor: 'red' }} source={require('@images/new/booking/ic_coppy.png')}></ScaledImage></TouchableOpacity>
                   </View>
                   <View style={styles.between}></View>
                 </React.Fragment>
