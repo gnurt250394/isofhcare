@@ -187,7 +187,7 @@ class CreateBookingWithPaymentScreen extends Component {
                                     <View style={styles.viewBankNumber}>
                                         <Text style={styles.txNumber}>{'DK ' + booking.book.codeBooking}</Text>
                                     </View>
-                                    <TouchableOpacity onPress={this.onCopyContents(booking.book.codeBooking)} style={styles.btnCopy}>
+                                    <TouchableOpacity onPress={() => this.onCopyContents(booking.book.codeBooking)} style={styles.btnCopy}>
                                         <Text style={styles.txCopy}>{constants.booking.guide.copy}</Text>
                                     </TouchableOpacity>
                                 </View></View>
