@@ -201,6 +201,7 @@ class LoginScreen extends Component {
 													value={value}
 													underlineColor={'#02C39A'}
 													inputStyle={styles.textInputStyle}
+													keyboardType="numeric"
 													labelStyle={styles.labelStyle} placeholder={constants.phone}
 													onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
 												onChangeText={this.onChangeText('email')}

@@ -5,7 +5,8 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
-  StyleSheet
+  StyleSheet,
+  Clipboard
 } from "react-native";
 import bookingProvider from "@data-access/booking-provider";
 import { connect } from "react-redux";
@@ -44,7 +45,7 @@ class DetailsHistoryScreen extends Component {
           // if (s.data.province && s.data.province.countryCode )
           //     address += ", " + s.data.province.countryCode
 
-          console.log(s.data, 's.data.province');
+
           this.setState({
             address: s.data.hospital.address,
             booking: s.data.booking || {},
@@ -52,7 +53,8 @@ class DetailsHistoryScreen extends Component {
             services: s.data.services || [],
             hospital: s.data.hospital || {},
             medicalRecords: s.data.medicalRecords || {},
-            isLoading: false
+            isLoading: false,
+            discount: s.data.discount || 0
           })
         } else {
           snackbar.show(constants.msg.booking.cannot_show_details_booking, "danger");
@@ -164,8 +166,26 @@ class DetailsHistoryScreen extends Component {
       valueHis: this.state.booking.codeBooking ? this.state.booking.codeBooking : 0
     })
   }
+
   onBackdropPress = () => this.setState({ isVisible: false })
   defaultImage = () => <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={20} height={20} />
+  getSumPrice = () => {
+    let discount = this.state.discount || 0
+    let price = this.state.services.reduce((start, item) => start + parseInt(item.price), 0)
+    if (discount > price) {
+      return 0
+    }
+    return (price - discount).formatPrice()
+  }
+  onCopyNumber = () => {
+    Clipboard.setString(constants.booking.guide.number)
+    snackbar.show(constants.booking.copy_success, 'success')
+  }
+  onCopyContents = (codeBooking) => {
+    Clipboard.setString('DK ' + codeBooking)
+    snackbar.show(constants.booking.copy_success, 'success')
+
+  }
   render() {
     const avatar = this.state.medicalRecords && this.state.medicalRecords.avatar ? { uri: `${this.state.medicalRecords.avatar.absoluteUrl()}` } : require("@images/new/user.png")
     return (
@@ -238,11 +258,20 @@ class DetailsHistoryScreen extends Component {
                   {
                     this.state.services.map((item, index) => {
                       return <View key={index}>
-                        <Text numberOfLines={1} key={index} style={[styles.txInfoService, styles.txtBold]}>{item.name}</Text>
-                        <Text key={index} style={[styles.txInfoService, styles.price]}>({item.price.formatPrice()}đ)</Text>
+                        <Text numberOfLines={1} style={[styles.txInfoService, styles.txtBold]}>{item.name}</Text>
+                        <Text style={[styles.txInfoService, styles.price]}>({item.price.formatPrice()}đ)</Text>
                       </View>
                     })
                   }
+                  {this.state.discount ?
+                    <View >
+                      <Text numberOfLines={1} style={[styles.txInfoService, styles.txtBold]}>{'Ưu đãi'}</Text>
+                      <Text style={[styles.txInfoService, styles.price]}>(-{this.state.discount.formatPrice()}đ)</Text>
+                    </View>
+                    :
+                    null
+                  }
+
                 </View>
               </View> : null
             }
@@ -305,7 +334,7 @@ class DetailsHistoryScreen extends Component {
                     />
                     <Text style={styles.txLabelPrice}>{constants.booking.sum_price_services}</Text>
                     <Text style={styles.txPrice}>
-                      {this.state.services.reduce((start, item) => start + parseInt(item.price), 0).formatPrice() + 'đ'}
+                      {this.getSumPrice() + 'đ'}
                     </Text>
                   </View>
                   <View style={styles.between}></View>
@@ -321,6 +350,39 @@ class DetailsHistoryScreen extends Component {
               <Text style={styles.txPayment}>{constants.booking.payment_methods}</Text>
               {this.renderStatus()}
             </View>
+            {
+              this.state.booking && this.state.booking.statusPay == 6 ?
+                <React.Fragment>
+                  <View style={[styles.viewPrice,{borderTopWidth:0,paddingHorizontal:7}]}>
+                    <Text style={styles.txLabelPrice}>{constants.booking.number_bank}</Text>
+                    <TouchableOpacity style={{ flexDirection: 'row' }} onPress={this.onCopyNumber}><Text style={[styles.txPrice, { color: 'red' }]}>
+                      {constants.booking.guide.number}
+                    </Text>
+                      <ScaledImage height={20} style={{ tintColor: 'red' }} source={require('@images/new/booking/ic_coppy.png')}></ScaledImage>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={[styles.viewPrice,{borderTopWidth:0,paddingHorizontal:7}]}>
+                    <Text style={styles.txLabelPrice}>{constants.booking.guide.branch}</Text>
+                    <Text style={[styles.txPrice, { color: 'red' }]}>
+                      {constants.booking.guide.branch_name}
+                    </Text>
+                  </View>
+                  <View style={[styles.viewPrice,{borderTopWidth:0,paddingHorizontal:7}]}>
+                    <Text style={styles.txLabelPrice}>{constants.booking.guide.owner_name}</Text>
+                    <Text style={[styles.txPrice, { color: 'red', textAlign: 'center' }]}>
+                      {constants.booking.guide.name_account2}
+                    </Text>
+                  </View>
+                  <View style={[styles.viewPrice,{borderTopWidth:0,paddingHorizontal:7}]}>
+                    <Text style={styles.txLabelPrice}>{constants.booking.syntax_tranfer}</Text>
+                    <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => this.onCopyContents(this.state.booking.codeBooking)}><Text style={[styles.txPrice, { color: 'red' }]}>
+                      DK {this.state.booking.codeBooking}
+                    </Text><ScaledImage height={20} style={{ tintColor: 'red' }} source={require('@images/new/booking/ic_coppy.png')}></ScaledImage></TouchableOpacity>
+                  </View>
+                  <View style={styles.between}></View>
+                </React.Fragment>
+                : null
+            }
             <View style={styles.viewStatus}>
               <ScaledImage
                 height={20}

@@ -27,6 +27,7 @@ import userProvider from "@data-access/user-provider";
 import DeviceInfo from 'react-native-device-info';
 import codePushUtils from '@utils/codepush-utils';
 import constants from "@resources/strings";
+import dataCacheProvider from '@data-access/datacache-provider';
 
 class AccountScreen extends Component {
   constructor(props) {
@@ -184,6 +185,7 @@ class AccountScreen extends Component {
     );
   }
   logout = () => {
+    dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, null);
     this.props.dispatch(redux.userLogout());
     if (this.props.onLogout) this.props.onLogout();
   }
@@ -374,7 +376,7 @@ class AccountScreen extends Component {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.itemMenu]}
-            onPress={this.openLink("mailto:support@isofhcare.vn?subject=Hỗ trợ sử dụng app ISofhCare&body=")}
+            onPress={this.openLink("mailto:support@isofhcare.vn?subject=Hỗ trợ sử dụng app iSofHcare&body=")}
           >
             <Text style={styles.itemText}>{constants.account_screens.support}</Text>
             <ScaledImage style={{ tintColor: '#008D6F' }}
@@ -385,7 +387,7 @@ class AccountScreen extends Component {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.itemMenu]}
-            onPress={this.openLink("mailto:support@isofhcare.vn?subject=Báo lỗi quá trình sử dụng app ISofhCare&body=")}
+            onPress={this.openLink("mailto:support@isofhcare.vn?subject=Báo lỗi quá trình sử dụng app iSofHcare&body=")}
           >
             <Text style={styles.itemText}>{constants.account_screens.report}</Text>
             <ScaledImage style={{ tintColor: '#008D6F' }}

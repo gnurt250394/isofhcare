@@ -41,7 +41,7 @@ class CreateBookingWithPaymentScreen extends Component {
         Clipboard.setString(constants.booking.guide.number)
         snackbar.show(constants.booking.copy_success, 'success')
     }
-    onCopyContents = (codeBooking) => () => {
+    onCopyContents = (codeBooking) => {
         Clipboard.setString('DK ' + codeBooking)
         snackbar.show(constants.booking.copy_success, 'success')
 
@@ -49,10 +49,20 @@ class CreateBookingWithPaymentScreen extends Component {
     goHome = () => {
         this.props.navigation.pop();
     }
+    getPriceSecive = (service, voucher) => {
+        let priceVoucher = voucher && voucher.price ? voucher.price : 0
+        let priceFinal = service.reduce((start, item) => {
+            return start + parseInt(item.service.price)
+        }, 0)
+        if (priceVoucher > priceFinal) {
+            return 0
+        }
+        return (priceFinal - priceVoucher).formatPrice()
+    }
     onBackdropPress = () => this.setState({ isVisible: false })
     render() {
         let booking = this.props.navigation.state.params.booking;
-        console.log(booking, 'bookingbooking')
+        let voucher = this.props.navigation.state.params.voucher || {};
         let service = this.props.navigation.state.params.service || [];
         if (!booking || !booking.profile || !booking.hospital || !booking.hospital.hospital || !booking.book) {
             this.props.navigation.pop();
@@ -116,6 +126,12 @@ class CreateBookingWithPaymentScreen extends Component {
                                                 <Text style={[styles.text, { marginBottom: 5 }]}>({parseInt(item.service.price).formatPrice()}đ)</Text>
                                             </View>
                                         })}
+                                        {voucher && voucher.price ?
+                                            <View style={{ flex: 1 }}>
+                                                <Text numberOfLines={1} style={[styles.text, styles.flex]}>{constants.booking.voucher}</Text>
+                                                <Text style={[styles.text, { marginBottom: 5 }]}>(-{parseInt(voucher.price).formatPrice()}đ)</Text>
+                                            </View> : null
+                                        }
                                     </View>
                                 </View> : null
                             }
@@ -127,9 +143,7 @@ class CreateBookingWithPaymentScreen extends Component {
                                 service && service.length ?
                                     <View style={styles.row}>
                                         <Text style={styles.label}>{constants.booking.sum_price}:</Text>
-                                        <Text style={[styles.text, { color: "#d0021b" }]}>{service.reduce((start, item) => {
-                                            return start + parseInt(item.service.price)
-                                        }, 0).formatPrice()}đ</Text>
+                                        <Text style={[styles.text, { color: "#d0021b" }]}>{this.getPriceSecive(service, voucher)}đ</Text>
                                     </View> : null
                             }
                             {/* {
@@ -149,8 +163,7 @@ class CreateBookingWithPaymentScreen extends Component {
                         <View style={styles.paymentInfo}>
                             <Text style={styles.txStep1}>{constants.booking.guide.part_1}</Text>
                             <View><View style={styles.viewBank}><View style={styles.viewInfoBank}><Text
-                                style={styles.txBank}>{constants.booking.guide.bank}:</Text><Text
-                                    style={styles.txBankName}>{constants.booking.guide.bank_name}</Text></View>
+                                style={styles.txBank}>{constants.booking.guide.bank}:</Text><View style={styles.viewTxBank}><Text style={styles.txBankName}>{constants.booking.guide.bank_name}</Text></View></View>
                                 <Text style={[styles.txBank, { marginTop: 5 }]} >{constants.booking.guide.account_number}</Text></View>
                                 <View style={styles.bankInfo}>
                                     <View style={styles.viewBankNumber}>
@@ -162,17 +175,19 @@ class CreateBookingWithPaymentScreen extends Component {
                                 </View>
                                 <View>
                                     <View style={styles.viewInfoBank}><Text style={styles.txBank}>{constants.booking.guide.owner_name}:</Text>
-                                        <Text style={styles.txBankName}>{constants.booking.guide.name_account}</Text></View>
+                                        <View style={styles.viewTxBank}><Text style={styles.txBankName}>{constants.booking.guide.name_account}</Text>
+                                        </View>
+                                    </View>
                                     <View style={styles.viewInfoBank}><Text style={styles.txBank}>{constants.booking.guide.branch}:</Text>
-                                        <Text style={styles.txBankName}>{constants.booking.guide.branch_name}</Text></View>
+                                        <View style={styles.viewTxBank}><Text style={styles.txBankName}>{constants.booking.guide.branch_name}</Text></View></View>
                                     <View style={{ marginTop: 5 }}><Text style={styles.txBank}>{constants.booking.guide.enter_content_payment}</Text></View>
                                 </View>
 
                                 <View style={styles.bankInfo}>
                                     <View style={styles.viewBankNumber}>
-                                        <Text style={styles.txNumber}>{'DK ' + booking.book.codeBooking}</Text>
+                                        <Text style={styles.txNumber}>{`DK ${booking.book.codeBooking}`}</Text>
                                     </View>
-                                    <TouchableOpacity onPress={this.onCopyContents(booking.book.codeBooking)} style={styles.btnCopy}>
+                                    <TouchableOpacity onPress={() => this.onCopyContents(booking.book.codeBooking)} style={styles.btnCopy}>
                                         <Text style={styles.txCopy}>{constants.booking.guide.copy}</Text>
                                     </TouchableOpacity>
                                 </View></View>
@@ -306,6 +321,11 @@ const styles = StyleSheet.create({
     },
     view2: {
     },
+    viewTxBank: {
+        flex: 1,
+        paddingRight: 5,
+
+    },
     col1: {
         textAlign: 'center',
         fontSize: 14,
@@ -380,33 +400,39 @@ const styles = StyleSheet.create({
         color: '#000',
         fontSize: 14,
         textAlign: 'left',
-        fontWeight:'bold'
+        fontWeight: 'bold'
     },
     txBank: {
         color: '#000',
-        fontSize: 14
+        fontSize: 14,
+        marginRight: 5
     },
     txBankName: {
         fontSize: 14,
         fontWeight: 'bold',
         color: '#02c39a',
-        marginLeft:5,
-        marginRight:10
-
+        // marginLeft: 5,
     },
     bankInfo: {
         flexDirection: 'row',
         alignItems: 'center',
         marginVertical: 10,
         flex: 1,
-        justifyContent:'center',
-        paddingHorizontal:10
+        justifyContent: 'center',
+        paddingHorizontal: 10
     },
     viewBankNumber: {
-        height: 41, paddingHorizontal: 5, borderRadius: 5, borderColor: 'gray', borderWidth: 1, justifyContent: 'center', alignItems: 'center', width: '60%'
+        height: 41,
+        paddingHorizontal: 5,
+        borderRadius: 5,
+        borderColor: 'gray',
+        borderWidth: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '60%',
     },
     btnCopy: {
-        height: 41, paddingHorizontal: 10, backgroundColor: '#02c39a', marginHorizontal: 10, justifyContent: 'center', alignItems: 'center', borderRadius: 5,width:'40%'
+        height: 41, paddingHorizontal: 10, backgroundColor: '#02c39a', marginHorizontal: 10, justifyContent: 'center', alignItems: 'center', borderRadius: 5, width: '40%'
     },
     txNumber: {
         color: '#02c39a',
@@ -423,7 +449,7 @@ const styles = StyleSheet.create({
         textAlign: 'left',
         marginTop: 5,
     },
-    viewInfoBank: { flexDirection: 'row', marginTop: 5 },
+    viewInfoBank: { flexDirection: 'row', marginTop: 5, },
     notePay: { marginTop: 5, fontSize: 14, color: '#000', textAlign: 'left', },
     viewBank: { justifyContent: 'center', }
 
