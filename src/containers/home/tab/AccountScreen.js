@@ -184,6 +184,11 @@ class AccountScreen extends Component {
       link
     );
   }
+  openLinkHotline = () => {
+    Linking.openURL(
+      'tel:1900299983'
+    );
+  }
   logout = () => {
     dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, null);
     this.props.dispatch(redux.userLogout());
@@ -376,9 +381,9 @@ class AccountScreen extends Component {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.itemMenu]}
-            onPress={this.openLink("mailto:support@isofhcare.vn?subject=Hỗ trợ sử dụng app iSofHcare&body=")}
+            onPress={this.openLinkHotline}
           >
-            <Text style={styles.itemText}>{constants.account_screens.support}</Text>
+            <Text style={styles.itemText}>{constants.account_screens.support} (1900299983)</Text>
             <ScaledImage style={{ tintColor: '#008D6F' }}
               source={require("@images/new/ic_menu_support.png")}
               width={24}

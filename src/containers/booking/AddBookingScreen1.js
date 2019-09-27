@@ -616,11 +616,12 @@ class AddBookingScreen extends Component {
                             }
                         </View>
                         <Text style={styles.des}>{constants.booking.simptom_note}</Text>
+                        <View style={styles.btn}>
+                            <TouchableOpacity onPress={this.addBooking} style={[styles.button, this.state.allowBooking ? styles.backgroundGreen : {}]}><Text style={styles.datkham}>Đặt khám</Text></TouchableOpacity>
+                        </View>
                     </KeyboardAwareScrollView>
 
-                    <View style={styles.btn}>
-                        <TouchableOpacity onPress={this.addBooking} style={[styles.button, this.state.allowBooking ? styles.backgroundGreen : {}]}><Text style={styles.datkham}>Đặt khám</Text></TouchableOpacity>
-                    </View>
+
                     <ImagePicker ref={ref => this.imagePicker = ref} />
 
                     <DateTimePicker
