@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Clipboard } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Clipboard,Linking } from 'react-native';
 import { connect } from 'react-redux';
 import dateUtils from 'mainam-react-native-date-utils';
 import ScaleImage from "mainam-react-native-scaleimage";
@@ -21,7 +21,9 @@ class CreateBookingWithPaymentScreen extends Component {
             isVisible: true,
         })
     }
-
+    onCallHotline = () => {
+        Linking.openURL('tel:1900299983')
+    }
     getPaymentMethod(booking) {
         switch (booking.payment) {
             case 1:
@@ -106,7 +108,10 @@ class CreateBookingWithPaymentScreen extends Component {
                                 <Text style={styles.label}>{constants.booking.address}:</Text>
                                 <Text style={styles.text}>{booking.hospital.hospital.address}</Text>
                             </View>
-
+                            <View style={styles.row}>
+                                <Text style={styles.label}>{constants.booking.hotline}:</Text>
+                                <Text onPress={this.onCallHotline} style={styles.text}>{constants.booking.hotline_number}</Text>
+                            </View>
                             {/* Ho ten <View style={styles.row}>
                                 <Text style={styles.label}>{constants.booking.name}</Text>
                                 <Text style={styles.text}>{(booking.profile.medicalRecords.name || "").toUpperCase()}</Text>

@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Clipboard } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Clipboard, Linking } from 'react-native';
 import { connect } from 'react-redux';
 import dateUtils from 'mainam-react-native-date-utils';
 import ScaleImage from "mainam-react-native-scaleimage";
@@ -66,6 +66,9 @@ class CreateBookingSuccessScreen extends Component {
         return `${day}/${month}/${year} ${hours}:${minutes}:${secons}`
 
     }
+    onCallHotline = () => {
+        Linking.openURL('tel:1900299983')
+    }
     render() {
         let booking = this.props.navigation.state.params.booking;
         let service = this.props.navigation.state.params.service || [];
@@ -112,7 +115,10 @@ class CreateBookingSuccessScreen extends Component {
                                 <Text style={styles.label}>{constants.booking.address}:</Text>
                                 <Text style={styles.text}>{booking.hospital.hospital.address}</Text>
                             </View>
-
+                            <View style={styles.row}>
+                                <Text style={styles.label}>{constants.booking.hotline}:</Text>
+                                <Text onPress={this.onCallHotline} style={styles.text}>{constants.booking.hotline_number}</Text>
+                            </View>
                             {/* Ho ten <View style={styles.row}>
                                 <Text style={styles.label}>{constants.booking.name}</Text>
                                 <Text style={styles.text}>{(booking.profile.medicalRecords.name || "").toUpperCase()}</Text>
