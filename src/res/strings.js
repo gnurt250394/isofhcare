@@ -680,7 +680,8 @@ module.exports = {
     drug:'THUỐC',
     test_result:'KẾT QUẢ XÉT NGHIỆM',
     select_CSYT:'Chọn CSYT',
-    scan_code:'Quét QR BHYT'
+    scan_code:'Quét QR BHYT',
+    list_booking:'Chọn hình thức đặt khám'
   },
   account_screens: {
     signin_or_signup: 'Đăng nhập/ Đăng Ký',
