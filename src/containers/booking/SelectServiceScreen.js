@@ -251,13 +251,15 @@ const styles = StyleSheet.create({
     txtDone: {
         color: "#02c39a",
         fontWeight: 'bold',
-        marginLeft: 10
+        marginLeft: 10,
+        width:'15%'
     },
     buttonCheck: {
         alignSelf: 'flex-end',
         paddingVertical: 15,
-        marginRight: 20,
-        flexDirection: 'row'
+        // marginRight: 20,
+        flexDirection: 'row',
+
     },
     txtSearch: {
         backgroundColor: constants.colors.actionbar_title_color,

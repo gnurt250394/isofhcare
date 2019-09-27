@@ -369,7 +369,7 @@ class DetailsHistoryScreen extends Component {
                   </View>
                   <View style={[styles.viewPrice,{borderTopWidth:0,paddingHorizontal:7}]}>
                     <Text style={styles.txLabelPrice}>{constants.booking.guide.owner_name}</Text>
-                    <Text style={[styles.txPrice, { color: 'red', textAlign: 'center' }]}>
+                    <Text style={[styles.txPrice, { color: 'red', textAlign: 'right' }]}>
                       {constants.booking.guide.name_account2}
                     </Text>
                   </View>
