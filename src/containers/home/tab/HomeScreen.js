@@ -105,7 +105,9 @@ class HomeScreen extends Component {
       }
     });
   }
-
+  onCallHotline = () => {
+    Linking.openURL('tel:1900299983')
+  }
   componentDidMount() {
     appProvider.setActiveApp();
     DeviceEventEmitter.removeAllListeners("hardwareBackPress");
@@ -119,6 +121,7 @@ class HomeScreen extends Component {
   renderAds() {
     return (<View>
       <ScaledImage source={require("@images/new/slogan.jpg")} width={DEVICE_WIDTH} />
+      <TouchableOpacity onPress={this.onCallHotline} style={{ alignItems: 'center', justifyContent: 'center' }}><Text style={{ fontSize: 18, color: '#02c39a',fontWeight:'bold' }}>Tổng đài hỗ trợ: 1900299983</Text></TouchableOpacity>
       {/* <View style={styles.viewAds}>
         <Text style={styles.txAds}>Ưu đãi</Text>
         <ScaledImage source={require("@images/new/ic_more.png")} width={20} style={styles.imgMore} />
@@ -359,7 +362,11 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'center'
   },
-  colorUserName: { color: 'rgb(255,138,21)' },
+  colorUserName: {
+    color: 'rgb(255,138,21)',
+    paddingLeft: 4,
+    fontSize: 18
+  },
   txtHeaderTitle: {
     marginLeft: 5,
     fontSize: 18,
