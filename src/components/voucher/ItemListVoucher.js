@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, Dimensions } from 'react-native';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import LinearGradient from 'react-native-linear-gradient'
 import ImageLoad from "mainam-react-native-image-loader";
 import { Card } from 'native-base'
 import stringUtils from 'mainam-react-native-string-utils'
 import constants from '@resources/strings';
+const { width } = Dimensions.get('window')
 class ItemListVoucher extends Component {
     constructor(props) {
         super(props);
@@ -37,43 +38,50 @@ class ItemListVoucher extends Component {
         const { item, onPress, onPressLater } = this.props
         return (
             <View style={{ padding: 10 }}>
+
                 <Card style={styles.containerItem} >
-                    <ImageLoad
-                        source={icSupport}
-                        imageStyle={styles.imageStyle}
-                        borderRadius={50}
-                        customImagePlaceholderDefaultStyle={styles.customImagePlace}
-                        style={styles.styleImgLoad}
-                        resizeMode="cover"
-                        placeholderSource={icSupport}
-                        loadingStyle={{ size: "small", color: "gray" }}
-                        defaultImage={this.defaultImage}
-                    />
-                    <View style={styles.container}>
-                        <Text numberOfLines={2} style={[styles.containerText, { fontWeight: 'bold', fontSize: 16 }]}>GIẢM {item.price.formatPrice()}đ KHI ĐẶT KHÁM</Text>
-                        <Text style={styles.containerText}>{`HẠN SỬ DỤNG ĐẾN ${item.endTime.toDateObject('-').format("HH:mm, dd/MM/yyyy")}`}</Text>
-                        <View style={styles.containerRow}>
-                            <Text numberOfLines={1} style={styles.quality}>{`CÒN ${item.type == 0 ? item.quantity - item.counter : item.count} LẦN`}</Text>
-                            <LinearGradient
-                                colors={this.getColor(item)}
-                                locations={[0, 0.7, 1]}
-                                style={styles.btn}>
-                                <TouchableOpacity
-                                    onPress={item.status ? onPressLater : onPress}
-                                    style={[styles.button]}
-                                >
-                                    <Text style={styles.txtButton}>{this.getLabelButton(item)}</Text>
-                                </TouchableOpacity>
-                            </LinearGradient>
+                    <ImageBackground source={require('@images/new/profile/img_cover_profile.png')} style={styles.containerImageBackground}
+                        imageStyle={{ borderRadius: 5 }}
+                    >
+                        <View style={styles.container}>
+                            <Text numberOfLines={2}
+                                style={[styles.containerText, styles.txtPriceVoucher]}>GIẢM <Text style={{
+                                    fontStyle: 'italic'
+                                }}>{item.price.formatPrice()}đ</Text> KHI ĐẶT KHÁM</Text>
+                            <Text style={styles.containerText}>{`HẠN SỬ DỤNG ĐẾN ${item.endTime.toDateObject('-').format("HH:mm, dd/MM/yyyy")}`}</Text>
+                            <View style={styles.containerRow}>
+                                <Text numberOfLines={1} style={styles.quality}>{`CÒN ${item.type == 0 ? item.quantity - item.counter : item.count} LẦN`}</Text>
+                                <LinearGradient
+                                    colors={this.getColor(item)}
+                                    locations={[0, 0.7, 1]}
+                                    style={styles.btn}>
+                                    <TouchableOpacity
+                                        onPress={item.status ? onPressLater : onPress}
+                                        style={[styles.button]}
+                                    >
+                                        <Text style={styles.txtButton}>{this.getLabelButton(item)}</Text>
+                                    </TouchableOpacity>
+                                </LinearGradient>
+                            </View>
                         </View>
-                    </View>
+                    </ImageBackground>
+
                 </Card>
+
             </View>
         );
     }
 }
 
 const styles = StyleSheet.create({
+    txtPriceVoucher: { fontWeight: 'bold', fontSize: 16, color: '#005CAA' },
+    containerImageBackground: {
+        width: null,
+        height: null,
+        flex: 1,
+        padding: 15,
+        paddingTop: 20
+    },
     customImagePlace: {
         height: 100,
         width: 100,
@@ -82,8 +90,8 @@ const styles = StyleSheet.create({
     button: {
         flex: 1,
         paddingHorizontal: 12,
-        paddingVertical:8,
-        paddingTop:10
+        paddingVertical: 8,
+        paddingTop: 10
     },
     styleImgLoad: {
         width: 100,
@@ -100,12 +108,14 @@ const styles = StyleSheet.create({
     txtButton: {
         color: '#FFFFFF',
         fontWeight: '700',
-        textAlign:'center'
+        textAlign: 'center'
     },
     quality: {
-        color: '#27AE60',
+        color: '#005CAA',
         fontWeight: '500',
         paddingVertical: 3,
+        paddingTop: 7,
+        // transform: [{ rotate: '-15deg' }]
     },
     btn: {
         backgroundColor: '#27AE60',
@@ -126,7 +136,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
-        padding: 10,
+        // padding: 5,
         borderRadius: 5,
         backgroundColor: '#FFFFFF'
     },
@@ -135,7 +145,9 @@ const styles = StyleSheet.create({
         // backgroundColor: '#FFFFFF',
         // width: '100%',
         marginBottom: 7,
-        color: '#27AE60'
+        // color: '#27AE60'
+        color: '#FF0000',
+        // transform: [{ rotate: '-10deg' }]
     },
 })
 
