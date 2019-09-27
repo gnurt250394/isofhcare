@@ -106,10 +106,12 @@ const styles = StyleSheet.create({
     selected: {
         color: '#27AE60',
         fontWeight: "bold",
+        textAlign:'center'
     },
     unSelected: {
         color: '#fff',
         fontWeight: "bold",
+        textAlign:'center'
     },
     container: { flex: 1 },
     viewBtn: {
@@ -128,9 +130,8 @@ const styles = StyleSheet.create({
         top: 0, left: 0, right: 0, bottom: 0
     },
     btnGetNumber: {
-        alignItems: 'center',
         paddingVertical: 8,
-        justifyContent: 'center',
+        paddingTop:10,
         flex: 1,
         borderRadius: 6,
         overflow: 'hidden'

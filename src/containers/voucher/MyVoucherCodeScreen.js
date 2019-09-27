@@ -71,7 +71,7 @@ class MyVoucherCodeScreen extends Component {
                     let voucher = this.props.voucher
                     let data = res.data
                     let arr = this.duplicateArray(data)
-                    
+
                     if (voucher) {
                         arr.forEach(e => {
                             if (e.id == voucher.id) {
@@ -134,5 +134,5 @@ const styles = StyleSheet.create({
         marginTop: 30,
         alignSelf: 'center',
         fontSize: 16
-    },
+    }  
 })
