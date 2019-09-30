@@ -40,31 +40,42 @@ class ItemListVoucher extends Component {
             <View style={{ padding: 10 }}>
 
                 <Card style={styles.containerItem} >
-                    <ImageBackground source={require('@images/new/profile/img_cover_profile.png')} style={styles.containerImageBackground}
+                    {/* <ImageBackground source={require('@images/new/profile/img_cover_profile.png')} style={styles.containerImageBackground}
                         imageStyle={{ borderRadius: 5 }}
-                    >
-                        <View style={styles.container}>
-                            <Text numberOfLines={2}
-                                style={[styles.containerText, styles.txtPriceVoucher]}>GIẢM <Text style={{
-                                    fontStyle: 'italic'
-                                }}>{item.price.formatPrice()}đ</Text> KHI ĐẶT KHÁM</Text>
-                            <Text style={styles.containerText}>{`HẠN SỬ DỤNG ĐẾN ${item.endTime.toDateObject('-').format("HH:mm, dd/MM/yyyy")}`}</Text>
-                            <View style={styles.containerRow}>
-                                <Text numberOfLines={1} style={styles.quality}>{`CÒN ${item.type == 0 ? item.quantity - item.counter : item.count} LẦN`}</Text>
-                                <LinearGradient
-                                    colors={this.getColor(item)}
-                                    locations={[0, 0.7, 1]}
-                                    style={styles.btn}>
-                                    <TouchableOpacity
-                                        onPress={item.status ? onPressLater : onPress}
-                                        style={[styles.button]}
-                                    >
-                                        <Text style={styles.txtButton}>{this.getLabelButton(item)}</Text>
-                                    </TouchableOpacity>
-                                </LinearGradient>
-                            </View>
+                    > */}
+                    <ImageLoad
+                        source={icSupport}
+                        imageStyle={styles.imageStyle}
+                        borderRadius={50}
+                        customImagePlaceholderDefaultStyle={styles.customImagePlace}
+                        style={styles.styleImgLoad}
+                        resizeMode="cover"
+                        placeholderSource={icSupport}
+                        loadingStyle={{ size: "small", color: "gray" }}
+                        defaultImage={this.defaultImage}
+                    />
+                    <View style={styles.container}>
+                        <Text numberOfLines={2}
+                            style={[styles.containerText, styles.txtPriceVoucher]}>GIẢM <Text style={{
+                                fontStyle: 'italic'
+                            }}>{item.price.formatPrice()}đ</Text> KHI ĐẶT KHÁM</Text>
+                        <Text style={styles.containerText}>{`HẠN SỬ DỤNG ĐẾN ${item.endTime.toDateObject('-').format("HH:mm, dd/MM/yyyy")}`}</Text>
+                        <View style={styles.containerRow}>
+                            <Text numberOfLines={1} style={styles.quality}>{`CÒN ${item.type == 0 ? item.quantity - item.counter : item.count} LẦN`}</Text>
+                            <LinearGradient
+                                colors={this.getColor(item)}
+                                locations={[0, 0.7, 1]}
+                                style={styles.btn}>
+                                <TouchableOpacity
+                                    onPress={item.status ? onPressLater : onPress}
+                                    style={[styles.button]}
+                                >
+                                    <Text style={styles.txtButton}>{this.getLabelButton(item)}</Text>
+                                </TouchableOpacity>
+                            </LinearGradient>
                         </View>
-                    </ImageBackground>
+                    </View>
+                    {/* </ImageBackground> */}
 
                 </Card>
 
@@ -74,7 +85,7 @@ class ItemListVoucher extends Component {
 }
 
 const styles = StyleSheet.create({
-    txtPriceVoucher: { fontWeight: 'bold', fontSize: 16, color: '#005CAA' },
+    txtPriceVoucher: { fontWeight: 'bold', fontSize: 16 },
     containerImageBackground: {
         width: null,
         height: null,
@@ -111,7 +122,7 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     quality: {
-        color: '#005CAA',
+        color: '#27AE60',
         fontWeight: '500',
         paddingVertical: 3,
         paddingTop: 7,
@@ -136,7 +147,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
-        // padding: 5,
+        padding: 10,
         borderRadius: 5,
         backgroundColor: '#FFFFFF'
     },
@@ -145,8 +156,8 @@ const styles = StyleSheet.create({
         // backgroundColor: '#FFFFFF',
         // width: '100%',
         marginBottom: 7,
-        // color: '#27AE60'
-        color: '#FF0000',
+        color: '#27AE60'
+        // color: '#FF0000',
         // transform: [{ rotate: '-10deg' }]
     },
 })

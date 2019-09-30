@@ -31,8 +31,8 @@ class ProfileInfomation extends Component {
             return null;
         let serviceCheckup = (resultDetail.ListService || []).find(item => item.ServiceType == "CheckUp");
         const icSupport = require("@images/new/user.png");
-        const source = this.props.userApp.currentUser.avatar
-            ? { uri: this.props.avatar ? this.props.avatar.absoluteUrl() : this.props.userApp.currentUser.avatar.absoluteUrl() }
+        const source = this.props.ehealth.patient.avatar
+            ? { uri: this.props.ehealth.patient.avatar.absoluteUrl() }
             : icSupport;
         return <View style={styles.viewInfoProfile}>
             <View style={styles.viewItem}></View>
@@ -41,13 +41,13 @@ class ProfileInfomation extends Component {
                     <View style={styles.round1}>
                         <View style={styles.round2} />
                     </View>
-                    <Text style={[styles.itemlabel, styles.txLabel]}>{this.props.patientName ?this.props.patientName: this.props.ehealth.patient.patientName}</Text>
+                    <Text style={[styles.itemlabel, styles.txLabel]}>{this.props.patientName ? this.props.patientName : this.props.ehealth.patient.patientName}</Text>
                 </View>
                 <View style={styles.item}>
                     <View style={styles.round1}>
                         <View style={styles.round3} />
                     </View>
-                   <Text style={styles.itemlabel}>{this.props.hospitalName ? this.props.hospitalName : this.props.ehealth.hospital.hospital.name}</Text>
+                    <Text style={styles.itemlabel}>{this.props.hospitalName ? this.props.hospitalName : this.props.ehealth.hospital.hospital.name}</Text>
                 </View>
                 <View style={styles.item}>
                     <View style={styles.round1}>
@@ -80,7 +80,7 @@ class ProfileInfomation extends Component {
                             <View style={styles.round1}>
                                 <View style={styles.round2} />
                             </View>
-                            <Text style={styles.itemlabel}>Bác sĩ: <Text style={styles.itemcontent}>{serviceCheckup.DoctorFullName}</Text></Text>
+                            <Text style={styles.itemlabel}>Bác sĩ: <Text style={styles.itemcontent}>{serviceCheckup.DoctorFullName == 'System' ? '' : serviceCheckup.DoctorFullName}</Text></Text>
                         </View>
                         <View style={styles.item}>
                             <View style={styles.round1}>
@@ -129,17 +129,17 @@ const styles = StyleSheet.create({
     itemlabel: { marginLeft: 5, flex: 1, marginTop: 2 },
     itemcontent: { color: '#0076ff' },
     item: { marginTop: 10, flexDirection: 'row' },
-    viewInfoProfile:{ flexDirection: 'row', position: 'relative', flex: 1, padding: 8 },
-    viewItem:{ width: 1.5, top: 10, bottom: 10, left: 17.5, backgroundColor: '#8fa1aa', position: 'absolute' },
-    viewLabel:{ flex: 1, marginLeft: 0 },
-    txLabel:{ fontWeight: 'bold', fontSize: 18, marginTop: 0 },
-    imageStyle:{ borderRadius: 35, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' },
-    customImage:{
+    viewInfoProfile: { flexDirection: 'row', position: 'relative', flex: 1, padding: 8 },
+    viewItem: { width: 1.5, top: 10, bottom: 10, left: 17.5, backgroundColor: '#8fa1aa', position: 'absolute' },
+    viewLabel: { flex: 1, marginLeft: 0 },
+    txLabel: { fontWeight: 'bold', fontSize: 18, marginTop: 0 },
+    imageStyle: { borderRadius: 35, borderWidth: 0.5, borderColor: 'rgba(151, 151, 151, 0.29)' },
+    customImage: {
         width: 70,
         height: 70,
         alignSelf: "center"
     },
-    imgLoad:{ width: 70, height: 70 },
+    imgLoad: { width: 70, height: 70 },
 
 })
 export default connect(mapStateToProps)(ProfileInfomation);
