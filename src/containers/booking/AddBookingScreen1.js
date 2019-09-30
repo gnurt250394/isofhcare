@@ -84,10 +84,10 @@ class AddBookingScreen extends Component {
         //         });
         //     }
         // })
-        dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, (s, e) => {
-            if (s) {
-                this.setState({ profile: s })
-            } else {
+        // dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, (s, e) => {
+        //     if (s) {
+        //         this.setState({ profile: s })
+        //     } else {
                 medicalRecordProvider.getByUser(this.props.userApp.currentUser.id, 1, 100).then(s => {
                     switch (s.code) {
                         case 0:
@@ -105,8 +105,8 @@ class AddBookingScreen extends Component {
                             break;
                     }
                 });
-            }
-        });
+        //     }
+        // });
 
 
     }
