@@ -136,58 +136,80 @@ class FillMyVocherScreen extends Component {
                     {(item && item.code) &&
                         <View style={styles.container2}>
                             <Card style={styles.containerItem} >
-                                <ImageBackground source={require('@images/new/profile/img_cover_profile.png')} style={styles.containerImageBackground}
+                                {/* <ImageBackground source={require('@images/new/profile/img_cover_profile.png')} style={styles.containerImageBackground}
                                     imageStyle={{ borderRadius: 5 }}
-                                >
-                                    <View style={styles.flex}>
-                                        <Text numberOfLines={2}
-                                            style={[styles.containerText, styles.txtPriceVoucher]}>GIẢM <Text style={{ fontStyle: 'italic' }}>{item.price.formatPrice()}đ</Text> KHI ĐẶT KHÁM</Text>
-                                        <Text style={styles.containerText}>{`HẠN SỬ DỤNG ĐẾN ${item.endTime.toDateObject('-').format("HH:mm, dd/MM/yyyy")}`}</Text>
-                                        <View style={styles.containerRow}>
-                                            <Text numberOfLines={1} style={styles.quality}>{`CÒN ${item.quantity} LẦN`}</Text>
-                                            <LinearGradient
-                                                colors={['rgb(255, 214, 51)', 'rgb(204, 163, 0)', 'rgb(179, 143, 0)']}
-                                                locations={[0, 0.7, 1]}
-                                                style={styles.btn}>
-                                                <TouchableOpacity
-                                                    onPress={this.confirmVoucher}
-                                                    style={[styles.button]}
-                                                >
-                                                    <Text style={styles.txtButton}>{constants.voucher.use_now}</Text>
-                                                </TouchableOpacity>
-                                            </LinearGradient>
-                                        </View>
+                                > */}
+                                <ImageLoad
+                                    source={icSupport}
+                                    imageStyle={styles.imageStyle}
+                                    borderRadius={50}
+                                    customImagePlaceholderDefaultStyle={styles.customImagePlace}
+                                    style={styles.styleImgLoad}
+                                    resizeMode="cover"
+                                    placeholderSource={icSupport}
+                                    loadingStyle={{ size: "small", color: "gray" }}
+                                    defaultImage={this.defaultImage}
+                                />
+                                <View style={styles.flex}>
+                                    <Text numberOfLines={2}
+                                        style={[styles.containerText, styles.txtPriceVoucher]}>GIẢM <Text style={{ fontStyle: 'italic' }}>{item.price.formatPrice()}đ</Text> KHI ĐẶT KHÁM</Text>
+                                    <Text style={styles.containerText}>{`HẠN SỬ DỤNG ĐẾN ${item.endTime.toDateObject('-').format("HH:mm, dd/MM/yyyy")}`}</Text>
+                                    <View style={styles.containerRow}>
+                                        <Text numberOfLines={1} style={styles.quality}>{`CÒN ${item.quantity} LẦN`}</Text>
+                                        <LinearGradient
+                                            colors={['rgb(255, 214, 51)', 'rgb(204, 163, 0)', 'rgb(179, 143, 0)']}
+                                            locations={[0, 0.7, 1]}
+                                            style={styles.btn}>
+                                            <TouchableOpacity
+                                                onPress={this.confirmVoucher}
+                                                style={[styles.button]}
+                                            >
+                                                <Text style={styles.txtButton}>{constants.voucher.use_now}</Text>
+                                            </TouchableOpacity>
+                                        </LinearGradient>
                                     </View>
-                                </ImageBackground>
+                                </View>
+                                {/* </ImageBackground> */}
                             </Card>
                         </View>
                     }
                     {(voucher && voucher.code && (voucher.type == 2)) &&
                         <View style={styles.container2}>
                             <Card style={styles.containerItem} >
-                                <ImageBackground source={require('@images/new/profile/img_cover_profile.png')} style={styles.containerImageBackground}
+                                {/* <ImageBackground source={require('@images/new/profile/img_cover_profile.png')} style={styles.containerImageBackground}
                                     imageStyle={{ borderRadius: 5 }}
-                                >
-                                    <View style={styles.flex}>
-                                        <Text numberOfLines={2}
-                                            style={[styles.containerText, styles.txtPriceVoucher]}>GIẢM <Text style={{ fontStyle: 'italic' }}>{voucher.price.formatPrice()}đ</Text> KHI ĐẶT KHÁM</Text>
-                                        <Text style={styles.containerText}>{`HẠN SỬ DỤNG ĐẾN ${voucher.endTime.toDateObject('-').format("HH:mm, dd/MM/yyyy")}`}</Text>
-                                        <View style={styles.containerRow}>
-                                            <Text numberOfLines={1} style={styles.quality}>{`CÒN ${voucher.quantity} LẦN`}</Text>
-                                            <LinearGradient
-                                                colors={['rgba(230, 51, 51, 0.70)', 'rgba(230, 51, 51, 0.90)', 'rgba(230, 51, 51, 1)']}
-                                                locations={[0, 0.7, 1]}
-                                                style={styles.btn}>
-                                                <TouchableOpacity
-                                                    onPress={this.onClickLater}
-                                                    style={[styles.button]}
-                                                >
-                                                    <Text style={styles.txtButton}>DÙNG SAU</Text>
-                                                </TouchableOpacity>
-                                            </LinearGradient>
-                                        </View>
+                                > */}
+                                <ImageLoad
+                                    source={icSupport}
+                                    imageStyle={styles.imageStyle}
+                                    borderRadius={50}
+                                    customImagePlaceholderDefaultStyle={styles.customImagePlace}
+                                    style={styles.styleImgLoad}
+                                    resizeMode="cover"
+                                    placeholderSource={icSupport}
+                                    loadingStyle={{ size: "small", color: "gray" }}
+                                    defaultImage={this.defaultImage}
+                                />
+                                <View style={styles.flex}>
+                                    <Text numberOfLines={2}
+                                        style={[styles.containerText, styles.txtPriceVoucher]}>GIẢM <Text style={{ fontStyle: 'italic' }}>{voucher.price.formatPrice()}đ</Text> KHI ĐẶT KHÁM</Text>
+                                    <Text style={styles.containerText}>{`HẠN SỬ DỤNG ĐẾN ${voucher.endTime.toDateObject('-').format("HH:mm, dd/MM/yyyy")}`}</Text>
+                                    <View style={styles.containerRow}>
+                                        <Text numberOfLines={1} style={styles.quality}>{`CÒN ${voucher.quantity} LẦN`}</Text>
+                                        <LinearGradient
+                                            colors={['rgba(230, 51, 51, 0.70)', 'rgba(230, 51, 51, 0.90)', 'rgba(230, 51, 51, 1)']}
+                                            locations={[0, 0.7, 1]}
+                                            style={styles.btn}>
+                                            <TouchableOpacity
+                                                onPress={this.onClickLater}
+                                                style={[styles.button]}
+                                            >
+                                                <Text style={styles.txtButton}>DÙNG SAU</Text>
+                                            </TouchableOpacity>
+                                        </LinearGradient>
                                     </View>
-                                </ImageBackground>
+                                </View>
+                                {/* </ImageBackground> */}
                             </Card>
                         </View>
                     }
@@ -198,7 +220,7 @@ class FillMyVocherScreen extends Component {
     }
 }
 const styles = StyleSheet.create({
-    txtPriceVoucher: { fontWeight: 'bold', fontSize: 16, color: '#005CAA' },
+    txtPriceVoucher: { fontWeight: 'bold', fontSize: 16 },
     containerImageBackground: {
         width: null,
         height: null,
@@ -227,7 +249,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
-        // padding: 10,
+        padding: 10,
         borderRadius: 5,
         backgroundColor: '#FFFFFF'
     },
@@ -314,7 +336,7 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     quality: {
-        color: '#005CAA',
+        color: '#27AE60',
         fontWeight: '500',
     },
     btn: {
@@ -329,8 +351,8 @@ const styles = StyleSheet.create({
         // backgroundColor: '#FFFFFF',
         // width: '100%',
         marginBottom: 7,
-        // color: '#27AE60'
-        color: '#FF0000',
+        color: '#27AE60'
+        // color: '#FF0000',
     },
 
 
