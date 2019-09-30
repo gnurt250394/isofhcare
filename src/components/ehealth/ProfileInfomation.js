@@ -80,7 +80,7 @@ class ProfileInfomation extends Component {
                             <View style={styles.round1}>
                                 <View style={styles.round2} />
                             </View>
-                            <Text style={styles.itemlabel}>Bác sĩ: <Text style={styles.itemcontent}>{serviceCheckup.DoctorFullName}</Text></Text>
+                            <Text style={styles.itemlabel}>Bác sĩ: <Text style={styles.itemcontent}>{serviceCheckup.DoctorFullName == 'System' ? '' : serviceCheckup.DoctorFullName}</Text></Text>
                         </View>
                         <View style={styles.item}>
                             <View style={styles.round1}>
