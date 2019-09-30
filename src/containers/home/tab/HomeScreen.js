@@ -53,7 +53,7 @@ class HomeScreen extends Component {
           text: "Đặt khám",
           onPress: () => {
             if (this.props.userApp.isLogin)
-              this.props.navigation.navigate("addBooking1");
+              this.props.navigation.navigate("listBooking");
             else
               this.props.navigation.navigate("login", {
                 nextScreen: { screen: "addBooking1", param: {} }

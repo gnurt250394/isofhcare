@@ -109,14 +109,23 @@ class ListDoctorScreen extends Component {
 
     }
     search = (value) => {
-        let keyword = (value || "").trim().toLowerCase().unsignText();
-        let listSearch = this.listSearch.filter(data => {
-            return (data && (
-                !keyword ||
-                ((data.name || "").trim().toLowerCase().unsignText().indexOf(keyword) != -1)))
-        })
-        let obj = listSearch[0] || {}
-        this.setState({ data: listSearch, infoDoctor: obj })
+        if (this.timeOut) {
+            try {
+                clearTimeout(this.timeOut)
+            } catch (error) {
+
+            }
+        }
+        this.timeOut = setTimeout(() => {
+            let keyword = (value || "").trim().toLowerCase().unsignText();
+            let listSearch = this.listSearch.filter(data => {
+                return (data && (
+                    !keyword ||
+                    ((data.name || "").trim().toLowerCase().unsignText().indexOf(keyword) != -1)))
+            })
+            let obj = listSearch[0] || {}
+            this.setState({ data: listSearch, infoDoctor: obj })
+        }, 100)
 
 
     }

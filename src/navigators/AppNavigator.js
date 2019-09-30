@@ -112,7 +112,7 @@ import ListDoctorScreen from '@containers/booking/doctor/ListDoctorScreen';
 import DetailsDoctorScreen from '@containers/booking/doctor/DetailDoctorScreen';
 import AddBookingDoctorScreen from '@containers/booking/doctor/AddBookingDoctorScreen';
 import SelectDateTimeDoctorScreen from '@containers/booking/doctor/SelectDateTimeDoctorScreen';
-
+import ListBookingScreen from '@containers/booking/ListBookingScreens'
 
 const ProfileNavigation = createStackNavigator({
   selectProfile: SelectProfileScreen,
@@ -323,7 +323,8 @@ const RootNavigator = createStackNavigator(
     myVoucher: { screen: MyVoucherScreen },
     listDoctor: { screen: ListDoctorScreen },
     addBookingDoctor: { screen: AddBookingDoctorScreen },
-    selectTimeDoctor: { screen: SelectDateTimeDoctorScreen }
+    selectTimeDoctor: { screen: SelectDateTimeDoctorScreen },
+    listBooking:{screen:ListBookingScreen}
   },
   {
     headerMode: "none",
