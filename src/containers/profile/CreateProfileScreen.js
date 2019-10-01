@@ -26,7 +26,7 @@ import locationProvider from '@data-access/location-provider';
 import Modal from "@components/modal";
 import NavigationService from "@navigators/NavigationService";
 import ActivityPanel from "@components/ActivityPanel";
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 class CreateProfileScreen extends Component {
     constructor(props) {
         super(props);
@@ -347,7 +347,7 @@ class CreateProfileScreen extends Component {
                 </TouchableOpacity>}
                 titleStyle={styles.txTitle}
             >
-                <ScrollView keyboardShouldPersistTaps='handled' style={{ flex: 1, paddingVertical: 5 }}>
+                <KeyboardAwareScrollView keyboardShouldPersistTaps='handled' style={styles.scroll}>
                     <View style={styles.container}>
                         <Form ref={ref => (this.form = ref)} style={[{ flex: 1 }]}>
                             <Field style={[styles.mucdichkham,]}>
@@ -698,7 +698,7 @@ class CreateProfileScreen extends Component {
                             </Field>
                         </Form>
                     </View>
-                </ScrollView>
+                </KeyboardAwareScrollView>
                 <ImagePicker ref={ref => (this.imagePicker = ref)} />
                 <DateTimePicker
                     isVisible={this.state.toggelDateTimePickerVisible}
