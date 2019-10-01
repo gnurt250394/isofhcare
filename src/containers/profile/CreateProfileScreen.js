@@ -347,7 +347,7 @@ class CreateProfileScreen extends Component {
                 </TouchableOpacity>}
                 titleStyle={styles.txTitle}
             >
-                <KeyboardAwareScrollView keyboardShouldPersistTaps='handled' style={styles.scroll}>
+                <KeyboardAwareScrollView keyboardShouldPersistTaps='handled' enableResetScrollToCoords={false} extraHeight={100}>
                     <View style={styles.container}>
                         <Form ref={ref => (this.form = ref)} style={[{ flex: 1 }]}>
                             <Field style={[styles.mucdichkham,]}>
