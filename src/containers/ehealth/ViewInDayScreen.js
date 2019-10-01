@@ -69,6 +69,8 @@ class ViewInDateScreen extends Component {
         let patient = this.props.ehealth.patient;
         let obj2 = {};
         patient.history.forEach(item => {
+            console.log('patient: ', patient);
+
             let key = item.timeGoIn.toDateObject('-').ddmmyyyy();
             if (!obj2[key])
                 obj2[key] = item;
@@ -97,6 +99,7 @@ class ViewInDateScreen extends Component {
             dayInMonth: obj,
             dateSelected
         }, () => {
+
             if (index != -1 && this.flListDate) {
                 setTimeout(() => {
                     try {
@@ -124,12 +127,25 @@ class ViewInDateScreen extends Component {
         { length: data.length, offset: 70 * index, index }
     )
     dayPress(item) {
+        let patient = this.props.ehealth.patient;
+        let day2 = item.ddmmyyyy()
+        let id 
+        patient.history.forEach(item2 => {
+            console.log('item2: ', item2);
+            console.log('patient: ', patient);
+            let day = item2.timeGoIn.toDateObject('-').ddmmyyyy();
+            if(day == day2){
+                id = item2.id
+            }
+        });
+
+
         if (!item.patientHistory) {
             snackbar.show(constants.msg.ehealth.not_result_of_this_date, "danger");
             return;
         };
         this.setState({ dateSelected: item }, () => {
-            this.getDetailPatientHistory(item.patientHistory.patientHistoryId)
+            this.getDetailPatientHistory(item.patientHistory.patientHistoryId,id)
         })
     }
     viewCheckupResult() {

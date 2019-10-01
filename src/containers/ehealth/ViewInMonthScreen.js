@@ -35,12 +35,14 @@ class ListProfileScreen extends Component {
         super(props)
         console.log(this.props, 'view in month')
         let patient = this.props.ehealth.patient;
+        console.log('patient: ', patient);
         patient.history = (patient.history || []).sort((a, b) => {
             a.timeGoIn && b.timeGoIn ? a.timeGoIn.toDateObject("-") - b.timeGoIn.toDateObject("-") : ''
         });
 
         let latestTime = patient.latestTime ? patient.latestTime.toDateObject("-") : new Date()
         let histories = this.groupHistory(patient.history, latestTime);
+        console.log('histories: ', histories);
         let dateSelected = "";
         if (latestTime) {
             dateSelected = latestTime.format("yyyy-MM-dd");
@@ -141,28 +143,32 @@ class ListProfileScreen extends Component {
     onGetDetails = () => {
         let patientHistoryId = this.state.patient.patientHistoryId;
         let hospitalId = this.state.patient.hospitalEntity.id;
-        bookingProvider.detailPatientHistory(patientHistoryId, hospitalId).then(res => {
-            let medicineTime = res.data.data.medicineTime ? (new Date().format("yyyy/MM/dd") + " " + res.data.data.medicineTime).toDateObject('/') : ''
-            console.log(medicineTime, 'medicineTime')
-            let time = res.data.data.time ? (new Date().format("yyyy/MM/dd") + " " + res.data.data.time).toDateObject('/') : ''
-            this.setState({
-                note: res.data.data.note,
-                switchValue: res.data.data.isMedicineTime ? true : false,
-                timeAlarm: res.data.data.medicineTime,
-                suggestions: res.data.data.suggestions,
-                date: res.data.data.time,
-                dob: time,
-                dataPatient: res.data.data,
-                dobAlarm: medicineTime,
-                appointmentDate: res.data.data.appointmentDate,
-            })
-            // let date = new Date().getDate()
-            // let month = new Date().getMonth() + 1
-            // let year = new Date().getFullYear()
-            // let fire_date = medicineTime ? `${date}-${month}-${year} ${medicineTime.format('HH:mm:ss')}` : ''
-            medicineTime && medicineTime.setMinutes(medicineTime.getMinutes());
-            res.data.data.isMedicineTime && this.onAlarm(medicineTime.getTime(), patientHistoryId, hospitalId)
+        console.log('hospitalId: ', hospitalId);
 
+        bookingProvider.detailPatientHistory(patientHistoryId, hospitalId).then(res => {
+            if (res.data) {
+                let medicineTime = res.data.data.medicineTime ? (new Date().format("yyyy/MM/dd") + " " + res.data.data.medicineTime).toDateObject('/') : ''
+                console.log(medicineTime, 'medicineTime')
+                let time = res.data.data.time ? (new Date().format("yyyy/MM/dd") + " " + res.data.data.time).toDateObject('/') : ''
+                this.setState({
+                    note: res.data.data.note,
+                    switchValue: res.data.data.isMedicineTime ? true : false,
+                    timeAlarm: res.data.data.medicineTime,
+                    suggestions: res.data.data.suggestions,
+                    date: res.data.data.time,
+                    dob: time,
+                    dataPatient: res.data.data,
+                    dobAlarm: medicineTime,
+                    appointmentDate: res.data.data.appointmentDate,
+                })
+                // let date = new Date().getDate()
+                // let month = new Date().getMonth() + 1
+                // let year = new Date().getFullYear()
+                // let fire_date = medicineTime ? `${date}-${month}-${year} ${medicineTime.format('HH:mm:ss')}` : ''
+                medicineTime && medicineTime.setMinutes(medicineTime.getMinutes());
+                res.data.data.isMedicineTime && this.onAlarm(medicineTime.getTime(), patientHistoryId, hospitalId)
+
+            }
         }).catch(err => {
             console.log(err);
         })
@@ -183,7 +189,7 @@ class ListProfileScreen extends Component {
             histories[day.dateString].selectedColor = '#27ae60'
             let patientHistoryId = histories[day.dateString].history.patientHistoryId
             let hospitalId = this.state.patient.hospitalEntity.id
-            bookingProvider.detailPatientHistory(patientHistoryId, hospitalId).then(res => {
+            bookingProvider.detailPatientHistory(patientHistoryId, hospitalId, this.state.histories[day.dateString].history.id).then(res => {
                 let medicineTime = res.data.data.medicineTime ? (new Date().format("yyyy/MM/dd") + " " + res.data.data.medicineTime).toDateObject('/') : ''
                 let time = res.data.data.time ? (new Date().format("yyyy/MM/dd") + " " + res.data.data.time).toDateObject('/') : ''
                 this.setState({
