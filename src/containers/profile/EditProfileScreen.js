@@ -24,6 +24,7 @@ import ActionSheet from 'react-native-actionsheet'
 import profileProvider from '@data-access/profile-provider'
 import NavigationService from "@navigators/NavigationService";
 import ActivityPanel from "@components/ActivityPanel";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 class EditProfileScreen extends Component {
     constructor(props) {
@@ -384,7 +385,7 @@ class EditProfileScreen extends Component {
                 </TouchableOpacity>}
                 titleStyle={styles.txTitle}
             >
-                <ScrollView keyboardShouldPersistTaps='handled' style={styles.scroll}>
+                <KeyboardAwareScrollView keyboardShouldPersistTaps='handled' enableResetScrollToCoords={false} extraHeight={100}>
                     <View style={styles.container}>
                         <Form ref={ref => (this.form = ref)} style={[{ flex: 1 }]}>
                             <Field style={[styles.mucdichkham]}>
@@ -721,7 +722,7 @@ class EditProfileScreen extends Component {
 
                         </Form>
                     </View>
-                </ScrollView>
+                </KeyboardAwareScrollView>
                 <ImagePicker ref={ref => (this.imagePicker = ref)} />
                 <DateTimePicker
                     isVisible={this.state.toggelDateTimePickerVisible}
