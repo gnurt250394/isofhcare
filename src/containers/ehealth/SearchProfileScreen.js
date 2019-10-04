@@ -141,7 +141,7 @@ class SearchProfileScreen extends Component {
     }
     selectProfile = (item) => {
         let userId = this.props.userApp.currentUser.id;
-        let dataId = item.user.id; 
+        let dataId = item.user.id;
         let name = ''
         const { USER_EHEALTH_HISTORY } = realmModel;
         historyProvider.addHistory(userId, USER_EHEALTH_HISTORY, name, dataId, JSON.stringify(item))
@@ -155,7 +155,7 @@ class SearchProfileScreen extends Component {
     renderSearchButton() {
         return (
             <TouchableOpacity onPress={() => this.showSearch()} style={{ padding: 10 }}>
-                <ScaleImage source={require("@images/ictimkiem.png")} width={20} />
+                <ScaleImage style={styles.imgSearch} source={require("@images/ictimkiem.png")} width={20} />
             </TouchableOpacity>
         );
     }
@@ -216,8 +216,13 @@ class SearchProfileScreen extends Component {
     render() {
         return (
             <ActivityPanel
-                backButton={<TouchableOpacity style={styles.activity} onPress={() => this.props.navigation.pop()}><Text>{constants.ehealth.cancel}</Text></TouchableOpacity>}
+                backButton={<TouchableOpacity style={styles.activity} onPress={() => this.props.navigation.pop()}><Text style={styles.cancelEhealth}>{constants.ehealth.cancel}</Text></TouchableOpacity>}
                 titleStyle={styles.titleStyle} title={constants.title.search_profile}
+                statusbarBackgroundColor="#02C39A"
+                actionbarStyle={{
+                    backgroundColor: '#02C39A',
+                    borderBottomWidth: 0
+                }}
                 isLoading={this.state.isLoading} menuButton={this.renderSearchButton()} showFullScreen={true}
             >
                 {
@@ -291,11 +296,14 @@ const styles = StyleSheet.create({
         height: 30,
         alignSelf: "center"
     },
+    cancelEhealth: {
+        color: '#fff'
+    },
     image: { width: 30, height: 30 },
     scaledImage: { width: 30, height: 30 },
     textName: { fontWeight: '200', fontSize: 15, marginLeft: 10 },
     activity: { paddingLeft: 20 },
-    titleStyle: { marginRight: 0 },
+    titleStyle: { marginRight: 0,color:'#fff' },
     txSearch: { backgroundColor: constants.colors.actionbar_title_color, padding: 7, borderRadius: 20, marginRight: 10, paddingLeft: 15, paddingRight: 15, fontWeight: 'bold', color: '#FFF' },
     viewTxSearch: { paddingLeft: 20, paddingVertical: 10, marginTop: 10, backgroundColor: '#fff', borderColor: '#A5A5A5', borderBottomWidth: 0.7 },
     txtSearch: { fontSize: 15, color: '#000', },
@@ -303,7 +311,8 @@ const styles = StyleSheet.create({
     viewHeader: { width: '100%', marginTop: 50, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center' },
     txErr: { textAlign: 'center' },
     viewLoading: { alignItems: 'center', padding: 10, position: 'absolute', bottom: 0, left: 0, right: 0 },
-    viewFooter: { height: 10 }
+    viewFooter: { height: 10 },
+    imgSearch: { tintColor: '#fff' }
 
 })
 function mapStateToProps(state) {
