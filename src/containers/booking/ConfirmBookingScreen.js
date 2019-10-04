@@ -632,7 +632,7 @@ class ConfirmBookingScreen extends Component {
                             :
                             <View></View>}
                     </View>
-                    {/* {this.addVoucher()} */}
+                    {this.addVoucher()}
                     <View style={styles.viewDetails}>
                         {this.state.serviceType &&
                             <View style={styles.containerServiceType}>
