@@ -206,7 +206,7 @@ class ScanQRCodeScreen extends Component {
                         isLoading: false,
                         showError: true, dialog: {
                             title: 'Đã quá giờ lấy số tiếp đón hôm nay',
-                            content: 'Xin vui lòng trở lại vào ngày mai !',
+                            content: `Thời gian lấy số tiếp đón tại ${s.data.hospital.name} chỉ áp dụng từ ${s.data.hospital.timeCombin}`,
                             button: 'Quay lại',
                             onPress: () => {
                                 this.setState({ showError: false }, () => {
