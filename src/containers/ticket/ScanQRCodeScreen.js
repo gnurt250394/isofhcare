@@ -202,11 +202,12 @@ class ScanQRCodeScreen extends Component {
                     });
                     return;
                 case 4: {
+                    let data = JSON.parse(s.message)
                     this.setState({
                         isLoading: false,
                         showError: true, dialog: {
                             title: 'Đã quá giờ lấy số tiếp đón hôm nay',
-                            content: 'Xin vui lòng trở lại vào ngày mai !',
+                            content: `Thời gian lấy số tiếp đón tại ${data.name} chỉ áp dụng từ ${data.timeCombin}`,
                             button: 'Quay lại',
                             onPress: () => {
                                 this.setState({ showError: false }, () => {
