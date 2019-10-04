@@ -137,7 +137,7 @@ class AddNewEhealthScreen extends Component {
                         <TouchableOpacity onPress={this.onInsertCode} style={styles.btnAddEhealth}><Text style={styles.txAddEhealth}>NHẬP MÃ</Text></TouchableOpacity>
                     </View>
                     <View style={{ maxWidth: '95%', marginTop: 20 }}><Text style={{ color: '#02C39A', fontSize: 14, fontWeight: 'bold', textAlign: 'center', marginTop: 20 }}>NHẬP HOẶC QUÉT MÃ HỒ SƠ ĐỂ XEM KẾT QUẢ KHÁM MỚI</Text></View>
-                    <ScaledImage height={400} style={{ marginTop: 20 }} source={require('@images/new/ehealth/img_demo_scan.jpg')}></ScaledImage>
+                    <ScaledImage height={400} resizemode='contain' style={{ marginTop: 20 }} source={require('@images/new/ehealth/img_demo_scan.jpg')}></ScaledImage>
                 </View>
                 <Modal
                     isVisible={this.state.isVisible}
