@@ -28,6 +28,8 @@ import TextField from "mainam-react-native-form-validate/TextField";
 import FloatingLabel from 'mainam-react-native-floating-label';
 import DeviceInfo from 'react-native-device-info';
 import firebase from 'react-native-firebase';
+import connectionUtils from "@utils/connection-utils";
+
 class LoginScreen extends Component {
 	constructor(props) {
 		super(props);
@@ -98,46 +100,55 @@ class LoginScreen extends Component {
 		if (!this.form.isValid()) {
 			return;
 		}
-
-		this.setState({ isLoading: true }, () => {
-			userProvider.login(this.state.email.trim(), this.state.password).then(s => {
-				this.setState({ isLoading: false });
-				switch (s.code) {
-					case 0:
-						var user = s.data.user;
-						user.bookingNumberHospital = s.data.bookingNumberHospital;
-						user.bookingStatus = s.data.bookingStatus;
-						if (s.data.profile && s.data.profile.uid)
-							user.uid = s.data.profile.uid;
-						snackbar.show(constants.msg.user.login_success, "success");
-						this.props.dispatch(redux.userLogin(user));
-						if (this.nextScreen) {
-							this.props.navigation.replace(
-								this.nextScreen.screen,
-								this.nextScreen.param
-							);
-						} else {
-							this.props.navigation.navigate("home", { showDraw: false });
-						}
-						return;
-					case 4:
-						snackbar.show(constants.msg.user.this_account_not_active, "danger");
-						return;
-					case 3:
-						snackbar.show(constants.msg.user.username_or_password_incorrect, "danger");
-						return;
-					case 2:
-					case 1:
-						snackbar.show(constants.msg.user.account_blocked, "danger");
-						return;
-					case 500:
-						snackbar.show(constants.msg.error_occur, "danger");
-				}
+		connectionUtils
+			.isConnected()
+			.then(s => {
+				this.setState(
+					{
+						isLoading: true
+					},
+					() => {
+						userProvider.login(this.state.email.trim(), this.state.password).then(s => {
+							this.setState({ isLoading: false });
+							switch (s.code) {
+								case 0:
+									var user = s.data.user;
+									user.bookingNumberHospital = s.data.bookingNumberHospital;
+									user.bookingStatus = s.data.bookingStatus;
+									if (s.data.profile && s.data.profile.uid)
+										user.uid = s.data.profile.uid;
+									snackbar.show(constants.msg.user.login_success, "success");
+									this.props.dispatch(redux.userLogin(user));
+									if (this.nextScreen) {
+										this.props.navigation.replace(
+											this.nextScreen.screen,
+											this.nextScreen.param
+										);
+									} else {
+										this.props.navigation.navigate("home", { showDraw: false });
+									}
+									return;
+								case 4:
+									snackbar.show(constants.msg.user.this_account_not_active, "danger");
+									return;
+								case 3:
+									snackbar.show(constants.msg.user.username_or_password_incorrect, "danger");
+									return;
+								case 2:
+								case 1:
+									snackbar.show(constants.msg.user.account_blocked, "danger");
+									return;
+								case 500:
+									snackbar.show(constants.msg.error_occur, "danger");
+							}
+						}).catch(e => {
+							this.setState({ isLoading: false });
+							snackbar.show(constants.msg.error_occur, "danger");
+						});
+					})
 			}).catch(e => {
-				this.setState({ isLoading: false });
-				snackbar.show(constants.msg.error_occur, "danger");
+				snackbar.show(constants.msg.app.not_internet, "danger");
 			});
-		})
 
 	}
 
