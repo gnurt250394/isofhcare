@@ -112,6 +112,7 @@ class MedicalTestResult extends Component {
         })
     }
     renderMedicalTestLine(item, index) {
+        // let borderBottomWidth = index == ,
         return (
             <View key={index}>
                 <Cell data={item.ServiceName} textStyle={[styles.textValue, { fontWeight: 'bold' }]} style={{ backgroundColor: '#DFF5F2' }}></Cell>
@@ -120,20 +121,20 @@ class MedicalTestResult extends Component {
                         var range = resultUtils.getRangeMedicalTest(item2);
 
                         var isHighlight = resultUtils.showHighlight(item2);
-
+                        let borderBottomWidth = i == item.ServiceMedicTestLine.length - 1 ? 0.6 : 0;
 
                         return (
                             this.state.currentGroup.type == 'Vi Sinh' ?
                                 <TableWrapper style={{ flexDirection: 'row' }} key={i}>
-                                    <Cell data={item2.NameLine.trim()} textStyle={[styles.textValue]}></Cell>
-                                    <Cell data={resultUtils.getResult(item2)} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
+                                    <Cell style={[styles.LineCell, { borderBottomWidth }]} data={item2.NameLine.trim()} borderStyle={{ borderWidth: 0.6 }} textStyle={[styles.textValue]}></Cell>
+                                    <Cell data={resultUtils.getResult(item2)} style={[styles.flex, { borderBottomWidth }]} borderStyle={{ borderWidth: 0.6 }} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
                                 </TableWrapper>
                                 :
                                 <TableWrapper style={{ flexDirection: 'row' }} key={i}>
-                                    <Cell data={item2.NameLine.trim()} textStyle={[styles.textValue]}></Cell>
-                                    <Cell data={resultUtils.getResult(item2)} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
-                                    <Cell data={range} textStyle={[styles.textValue]}></Cell>
-                                    <Cell data={item2.Unit} textStyle={[styles.textValue,]}></Cell>
+                                    <Cell style={[styles.LineCell, { borderBottomWidth }]} data={item2.NameLine.trim()} borderStyle={{ borderWidth: 0.6 }} textStyle={[styles.textValue]}></Cell>
+                                    <Cell data={resultUtils.getResult(item2)} style={[styles.flex, { borderBottomWidth }]} borderStyle={{ borderWidth: 0.6 }} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
+                                    <Cell data={range} borderStyle={{ borderWidth: 0.6, }} style={[styles.flex, { borderBottomWidth }]} textStyle={[styles.textValue]}></Cell>
+                                    <Cell data={item2.Unit} borderStyle={{ borderWidth: 0.6 }} style={[styles.flex, { borderBottomWidth }]} textStyle={[styles.textValue,]}></Cell>
                                 </TableWrapper>
                         )
                     })
@@ -144,6 +145,7 @@ class MedicalTestResult extends Component {
     }
 
     renderMedical(item, index) {
+        let borderBottomWidth = index == this.state.currentGroup.value.ListMedical.length - 1 ? 0.6 : 0;
         if (item.ServiceMedicTestLine && item.ServiceMedicTestLine.length > 0 && item.ServiceMedicTestLine[0].NameLine != 0) {
             return (this.renderMedicalTestLine(item, index));
         }
@@ -154,15 +156,16 @@ class MedicalTestResult extends Component {
             var data =
                 this.state.currentGroup.type == 'Vi Sinh' ?
                     <TableWrapper style={{ flexDirection: 'row' }} key={index}>
-                        <Cell data={item.ServiceName.trim()} textStyle={[styles.textValue]}></Cell>
-                        <Cell data={resultUtils.getResult(item.ServiceMedicTestLine[0])} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
+                        <Cell data={item.ServiceName.trim()} borderStyle={{ borderWidth: 0.6 }} style={[styles.LineCell, { borderBottomWidth }]} textStyle={[styles.textValue]}></Cell>
+
+                        <Cell data={resultUtils.getResult(item.ServiceMedicTestLine[0])} style={[styles.flex, { borderBottomWidth }]} borderStyle={{ borderWidth: 0.6 }} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
                     </TableWrapper>
                     :
                     <TableWrapper style={{ flexDirection: 'row' }} key={index}>
-                        <Cell data={item.ServiceName.trim()} textStyle={[styles.textValue]}></Cell>
-                        <Cell data={resultUtils.getResult(item.ServiceMedicTestLine[0])} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
-                        <Cell data={irange} textStyle={[styles.textValue]}></Cell>
-                        <Cell data={item.ServiceMedicTestLine[0].Unit} textStyle={[styles.textValue,]}></Cell>
+                        <Cell data={item.ServiceName.trim()} borderStyle={{ borderWidth: 0.6 }} style={{ borderLeftWidth: 0.6, flex: 1 }} textStyle={[styles.textValue]}></Cell>
+                        <Cell data={resultUtils.getResult(item.ServiceMedicTestLine[0])} style={[styles.flex, { borderBottomWidth }]} borderStyle={{ borderWidth: 0.6 }} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
+                        <Cell data={irange} borderStyle={{ borderWidth: 0.6 }} style={[styles.flex, { borderBottomWidth }]} textStyle={[styles.textValue]}></Cell>
+                        <Cell data={item.ServiceMedicTestLine[0].Unit} style={[styles.flex, { borderBottomWidth }]} borderStyle={{ borderWidth: 0.6 }} textStyle={[styles.textValue,]}></Cell>
                     </TableWrapper>
             return data;
         }
@@ -170,15 +173,15 @@ class MedicalTestResult extends Component {
         var isHighlight = resultUtils.showHighlight(item);
         var data = this.state.currentGroup.type == 'Vi Sinh' ?
             <TableWrapper style={{ flexDirection: 'row' }} key={index}>
-                <Cell data={item.ServiceName.trim()} textStyle={[styles.textValue, { fontWeight: 'bold' }]}></Cell>
-                <Cell data={resultUtils.getResult(item)} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
+                <Cell data={item.ServiceName.trim()} style={[styles.LineCell, { borderBottomWidth }]} borderStyle={{ borderWidth: 0.6 }} textStyle={[styles.textValue, { fontWeight: 'bold' }]}></Cell>
+                <Cell data={resultUtils.getResult(item)} borderStyle={{ borderWidth: 0.6 }} style={[styles.flex, { borderBottomWidth }]} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
             </TableWrapper>
             :
             <TableWrapper style={{ flexDirection: 'row' }} key={index}>
-                <Cell data={item.ServiceName.trim()} textStyle={[styles.textValue, { fontWeight: 'bold' }]}></Cell>
-                <Cell data={resultUtils.getResult(item)} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
-                <Cell data={range} textStyle={[styles.textValue]}></Cell>
-                <Cell data={item.Unit} textStyle={[styles.textValue,]}></Cell>
+                <Cell data={item.ServiceName.trim()} style={[styles.LineCell, { borderBottomWidth }]} borderStyle={{ borderWidth: 0.6 }} textStyle={[styles.textValue, { fontWeight: 'bold' }]}></Cell>
+                <Cell data={resultUtils.getResult(item)} borderStyle={{ borderWidth: 0.6 }} style={[styles.flex, { borderBottomWidth }]} textStyle={[styles.textValue, isHighlight ? { fontWeight: 'bold', color: 'red' } : {}]}></Cell>
+                <Cell data={range} borderStyle={{ borderWidth: 0.6 }} style={[styles.flex, { borderBottomWidth }]} textStyle={[styles.textValue]}></Cell>
+                <Cell data={item.Unit} borderStyle={{ borderWidth: 0.6 }} style={[styles.flex, { borderBottomWidth }]} textStyle={[styles.textValue,]}></Cell>
             </TableWrapper>
         return data;
     }
@@ -246,6 +249,8 @@ function mapStateToProps(state) {
     };
 }
 const styles = StyleSheet.create({
+    flex: { flex: 1 },
+    LineCell: { borderLeftWidth: 0.6, flex: 1, },
     round1: { width: 20, height: 20, backgroundColor: '#FFF', borderColor: '#8fa1aa', borderWidth: 1.5, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
     round2: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#7daa3c' },
     round3: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#c74444' },
@@ -272,10 +277,10 @@ const styles = StyleSheet.create({
     groupSelected: {
         color: constants.colors.primary_bold
     },
-    cellStyle:{ backgroundColor: '#DFF5F2' },
-    tableWrappe:{ flexDirection: 'row' },
-    viewCurrentGroup:{ alignItems: 'flex-end', marginVertical: 10 },
-    btnCurrentGroup:{ flexDirection: 'row', alignItems: 'center' },
-    txCurrent:{ marginRight: 10 }
+    cellStyle: { backgroundColor: '#DFF5F2' },
+    tableWrappe: { flexDirection: 'row' },
+    viewCurrentGroup: { alignItems: 'flex-end', marginVertical: 10 },
+    btnCurrentGroup: { flexDirection: 'row', alignItems: 'center' },
+    txCurrent: { marginRight: 10 }
 })
 export default connect(mapStateToProps)(MedicalTestResult);
