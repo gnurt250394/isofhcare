@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, TextInput,Dimensions } from 'react-native';
 import Modal from "@components/modal";
 import ActivityPanel from "@components/ActivityPanel";
 import constants from '@resources/strings';
@@ -7,7 +7,7 @@ import snackbar from '@utils/snackbar-utils';
 import ehealthProvider from '@data-access/ehealth-provider'
 import ScaledImage from 'mainam-react-native-scaleimage';
 import { connect } from "react-redux";
-
+const device_width = Dimensions.get('window').width
 class AddNewEhealthScreen extends Component {
     constructor(props) {
         super(props);
@@ -139,7 +139,7 @@ class AddNewEhealthScreen extends Component {
                     <View style={styles.containerHeaderTitle}>
                         <Text style={styles.txtContentTitle}>{constants.ehealth.input_or_scan_code}</Text>
                     </View>
-                    <ScaledImage height={400} resizemode='contain' style={{ marginTop: 20,marginHozizontal:10 }} source={require('@images/new/ehealth/img_demo_scan.jpg')}></ScaledImage>
+                    <ScaledImage height={400} width = {device_width} style={{ marginTop: 20}} source={require('@images/new/ehealth/img_demo_scan.jpg')}></ScaledImage>
                 </View>
                 <Modal
                     isVisible={this.state.isVisible}
