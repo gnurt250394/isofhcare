@@ -31,29 +31,29 @@ module.exports = {
 
                                         )
                                     ) {
-                                        console.log(result);
-                                        console.log(resultDetail);
+                                        
+                                        
                                         resolve({ data: s.data.data, result, resultDetail, hasResult: false });
                                     } else {
-                                        console.log(result);
-                                        console.log(resultDetail);
+                                        
+                                        
                                         resolve({ data: s.data.data, result, resultDetail, hasResult: true });
                                     }
                                 } catch (error) {
-                                    console.log(result);
-                                    console.log(resultDetail);
+                                    
+                                    
                                     resolve({ data: s.data.data, result, resultDetail, hasResult: false });
                                 }
                             } else {
-                                console.log(result);
-                                console.log(resultDetail);
+                                
+                                
                                 resolve({ data: s.data.data, result, resultDetail, hasResult: false });
                             }
                         }
                         break;
                 }
-                console.log(result);
-                console.log(resultDetail);
+                
+                
                 resolve({ result, resultDetail, hasResult: false });
             }).catch(e => {
                 reject(e);
@@ -61,6 +61,8 @@ module.exports = {
         })
     },
     checkHighlight(result, min, max) {
+        
+        
         try {
             if (result && result.toLowerCase() == "dương tính")
                 return true;
@@ -75,6 +77,9 @@ module.exports = {
         }
     },
     showHighlight(item) {
+        if(this.checkHighlight(this.getResult(item), item.LowerIndicator, item.HigherIndicator)) {
+            return this.checkHighlight(this.getResult(item),  item.LowerIndicator, item.HigherIndicator)
+        }
         if (item.NormalRange) {
             if (!item.ResultState)
                 return false;
@@ -84,7 +89,6 @@ module.exports = {
             }
             return false;
         }
-        return this.checkHighlight(this.getResult(item), item.Conclusion, item.LowerIndicator, item.HigherIndicator);
     },
     getResult(item) {
         return item.Result ? item.Result : item.Conclusion;
