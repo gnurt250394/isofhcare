@@ -477,7 +477,8 @@ module.exports = {
       //new api
       check_otp_phone: isofhcare_service + 'user/verify-sms-code',
       re_send_otp: isofhcare_service + 'user/registration',
-      get_user_details: isofhcare_service + '/user'
+      get_user_details: isofhcare_service + '/user',
+
 
     },
     keyvalue: {

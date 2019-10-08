@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, Text, View, Keyboard, ScrollView, KeyboardAvoidingView, Dimensions } from 'react-native';
 import { Content, Item, Input } from 'native-base';
 // import { Grid, Col } from 'react-native-easy-grid';
 import OTPTextView from 'react-native-otp-textinput'
@@ -14,6 +14,10 @@ import NavigationService from "@navigators/NavigationService";
 import redux from "@redux-store";
 import client from '@utils/client-utils';
 import connectionUtils from "@utils/connection-utils";
+import Form from "mainam-react-native-form-validate/Form";
+import TextField from "mainam-react-native-form-validate/TextField";
+import ButtonSubmit from "@components/ButtonSubmit";
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 //props: verify
 //case 1 : regiter
@@ -44,18 +48,36 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
         }, 1000);
     }
     onReSendPhone = () => {
-        let id = this.props.navigation.state.params && this.props.navigation.state.params.id ? this.props.navigation.state.params.id : null
-        userProvider.reSendOtp(id).then(res => {
-            if (res.code == 0)
-                this.setState({
-                    seconds: 90
+        this.setState({
+            disabled: true
+        }, () => {
+            connectionUtils
+                .isConnected()
+                .then(s => {
+                    let id = this.props.navigation.state.params && this.props.navigation.state.params.id ? this.props.navigation.state.params.id : null
+                    userProvider.reSendOtp(id).then(res => {
+                        if (res.code == 0)
+                            this.setState({
+                                seconds: 90,
+
+                            })
+                        else {
+                            snackbar.show(res.mesage, 'danger')
+                        }
+                    }).catch(err => {
+                        snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                    })
+                    this.setState({
+                        disabled: false
+                    })
+                }).catch(e => {
+                    this.setState({
+                        disabled: false
+                    })
+                    snackbar.show(constants.msg.app.not_internet, "danger");
                 })
-            else {
-                snackbar.show(res.mesage, 'danger')
-            }
-        }).catch(err => {
-            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
         })
+
     }
     // getDetails = (token) => {
     //     userProvider.getDetailsUser().then(res => {
@@ -69,11 +91,18 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
     //     })
 
     // }
-    handleTextChange = (text) => {
-        if (text && text.length == 6 && this.state.verify) {
+    onCheckOtp = () => {
+        Keyboard.dismiss();
+        if (!this.form.isValid()) {
+            this.child.unPress();
+            return;
+        }
+        let text = this.state.text
+        if (this.state.verify) {
             connectionUtils
                 .isConnected()
                 .then(s => {
+                    this.child.unPress();
                     switch (this.state.verify) {
                         case 1:
                             userProvider.checkOtpPhone(this.state.id, text).then(res => {
@@ -105,6 +134,27 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                                 }
                             })
                             break
+                        case 2:
+                            userProvider.confirmCode(this.state.phone, text, (s, e) => {
+                                if (s) {
+                                    switch (s.code) {
+                                        case 0:
+                                            console.log(s, 'asdasdasd')
+                                            snackbar.show(constants.msg.user.confirm_code_success, "success");
+                                            this.props.navigation.replace("resetPassword", {
+                                                user: s.data.user,
+                                                id: s.data.user.id,
+                                                nextScreen: this.nextScreen
+                                            });
+                                            return;
+                                    }
+                                }
+                                if (e) {
+                                    console.log(e);
+                                }
+                                snackbar.show(constants.msg.user.confirm_code_not_success, "danger");
+                            });
+                            break
                         case 3:
                             let data = {
                                 'otp': text
@@ -112,7 +162,7 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                             if (data && this.state.id) {
                                 profileProvider.checkOtp(data, this.state.id).then(res => {
                                     if (res.code == 0) {
-                                        NavigationService.navigate('shareDataProfile', { id: res.data.record.id })
+                                        this.props.navigation.replace('shareDataProfile', { id: res.data.record.id })
                                         return;
                                     }
                                     if (res.code == 4) {
@@ -138,41 +188,75 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
 
         }
     }
+    handleTextChange = (text) => {
+        this.setState({
+            text
+        })
+    }
     render() {
         return (
             <ActivityPanel
                 style={{ flex: 1 }}
-                title="Xác nhận số điện thoại"
-                titleStyle={styles.titleStyle}
                 showFullScreen={true}
+                title="Xác thực tài khoản"
             >
                 <ScrollView
                     showsVerticalScrollIndicator={false}
-                    style={{ flex: 1 }} keyboardShouldPersistTaps="handled">
-                    <View style={{ flex: 1, padding: 20 }}>
-                        <ScaleImage source={require("@images/new/isofhcare.png")} width={180} style={styles.logo} />
-                        <Text style={styles.txContents}>Một mã xác nhận 6 chữ số vừa được gửi đến số điện thoại {this.state.phone}. Vui lòng điền mã số để hoàn tất</Text>
-                        <OTPTextView
-                            containerStyle={styles.textInputContainer}
-                            handleTextChange={text => this.handleTextChange(text)}
-                            inputCount={6}
-                            keyboardType="numeric"
-                            underlineColorAndroid={'#fff'}
-                            tintColor={'#03C39A'}
-                            textInputStyle={styles.textInputStyle}
-                        />
-                        <Text style={styles.txTime}>Mã xác thực hiệu lực trong   <Text style={styles.txCountTime}>{this.state.seconds > 9 ? this.state.seconds : '0' + this.state.seconds}</Text>   giây</Text>
-                        {this.state.txErr ? <Text style={styles.txErr}>{this.state.txErr}</Text> : null}
-                        <Text style={styles.txReSent}>Nếu bạn cho rằng mình chưa nhập được mã hãy chọn</Text>
+                    style={{ flex: 1 }}
+                    keyboardShouldPersistTaps="handled"
+                >
+                    <View
+                        style={{
+                            marginTop: 60,
+                            justifyContent: "center",
+                            alignItems: "center"
+                        }}
+                    >
+                        <ScaleImage source={require("@images/logo.png")} width={120} />
                     </View>
-                    <TouchableOpacity onPress={this.onReSendPhone} style={styles.btnFinish} >
-                        <Text style={styles.txFinish}>{"Gửi lại mã"}</Text>
-                    </TouchableOpacity>
+                    <KeyboardAvoidingView behavior="padding" style={styles.form}>
+                        <Form ref={ref => (this.form = ref)}>
+                            <TextField
+                                errorStyle={styles.errorStyle}
+                                validate={{
+                                    rules: {
+                                        required: true,
+                                        minlength: 6,
+                                        maxlength: 6
+                                    },
+                                    messages: {
+                                        required: "Vui lòng nhập mã OTP",
+                                        minlength: "Yêu cầu nhập đủ 6 ký tự",
+                                        maxlength: "Yêu cầu nhập đủ 6 ký tự"
+                                    }
+                                }}
+                                inputStyle={styles.input}
+                                onChangeText={text =>
+                                    this.handleTextChange(text)
+                                }
+                                placeholder={constants.input_code}
+                                autoCapitalize={"none"}
+                                returnKeyType={"next"}
+                                keyboardType="numeric"
+                                autoCorrect={false}
+                            />
+                        </Form>
+                        <Text style={styles.txTime}>Mã xác thực hiệu lực trong   <Text style={styles.txCountTime}>{this.state.seconds > 9 ? this.state.seconds : '0' + this.state.seconds}</Text>   giây</Text>
+                        <Text style={styles.txReSent}>Nếu bạn cho rằng mình chưa nhập được mã hãy chọn</Text>
+                        <TouchableOpacity disabled={this.state.disabled} onPress={this.onReSendPhone}><Text style={[styles.txReSent, { color: 'red' }]}>Gửi lại mã</Text></TouchableOpacity>
+                        <ButtonSubmit
+                            onRef={ref => (this.child = ref)}
+                            click={this.onCheckOtp}
+                            text={'Xác nhận'}
+                        />
+                    </KeyboardAvoidingView>
                 </ScrollView>
             </ActivityPanel>
         )
     }
 }
+const DEVICE_WIDTH = Dimensions.get("window").width;
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -196,7 +280,60 @@ const styles = StyleSheet.create({
     btnReSend: { alignSelf: 'flex-end', padding: 2, backgroundColor: '#A3D29C', marginTop: 15, paddingHorizontal: 10, marginRight: 5 },
     txBtnReSend: { color: '#000', fontStyle: 'italic', fontWeight: '500', fontSize: 13 },
     txErr: { textAlign: 'center', color: 'red', fontSize: 14, fontStyle: 'italic', fontWeight: '700', marginTop: 20 },
-
+    input: {
+        maxWidth: 300,
+        paddingRight: 30,
+        backgroundColor: "#FFF",
+        width: DEVICE_WIDTH - 40,
+        height: 42,
+        marginHorizontal: 20,
+        paddingLeft: 15,
+        borderRadius: 6,
+        color: "#006ac6",
+        borderWidth: 1,
+        borderColor: "rgba(155,155,155,0.7)"
+    },
+    picture: {
+        position: "absolute",
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        justifyContent: "center",
+        alignItems: "center",
+        flex: 1,
+        width: null,
+        height: null,
+        resizeMode: "cover"
+    },
+    form: {
+        marginTop: 60,
+        alignItems: "center"
+    },
+    text: {
+        backgroundColor: "transparent"
+    },
+    signup_section: {
+        marginTop: 30,
+        flex: 1,
+        width: DEVICE_WIDTH,
+        flexDirection: "row",
+        justifyContent: "space-around"
+    },
+    btnEye: {
+        position: "absolute",
+        right: 25,
+        top: 10
+    },
+    iconEye: {
+        width: 25,
+        height: 25,
+        tintColor: "rgba(0,0,0,0.2)"
+    },
+    errorStyle: {
+        color: "red",
+        marginLeft: 20
+    }
 });
 function mapStateToProps(state) {
     return {
