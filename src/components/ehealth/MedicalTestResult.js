@@ -115,7 +115,7 @@ class MedicalTestResult extends Component {
         // let borderBottomWidth = index == ,
         return (
             <View key={index}>
-                <Cell data={item.ServiceName} textStyle={[styles.textValue, { fontWeight: 'bold' }]} style={{ backgroundColor: '#DFF5F2' }}></Cell>
+                <Cell data={item.ServiceName} textStyle={[styles.textValue, { fontWeight: 'bold' }]} style={styles.containerValue}></Cell>
                 {
                     item.ServiceMedicTestLine.map((item2, i) => {
                         var range = resultUtils.getRangeMedicalTest(item2);
@@ -249,6 +249,12 @@ function mapStateToProps(state) {
     };
 }
 const styles = StyleSheet.create({
+    containerValue: {
+        backgroundColor: '#DFF5F2',
+        borderLeftWidth: 0.6,
+        borderRightWidth: 0.6,
+        borderColor: '#111'
+    },
     flex: { flex: 1 },
     LineCell: { borderLeftWidth: 0.6, flex: 1, },
     round1: { width: 20, height: 20, backgroundColor: '#FFF', borderColor: '#8fa1aa', borderWidth: 1.5, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
@@ -259,10 +265,20 @@ const styles = StyleSheet.create({
     item: { marginTop: 10, flexDirection: 'row' },
     head: {
         backgroundColor: '#c8e1ff',
+        borderColor: '#111',
+        borderTopWidth: 0.6,
+        borderLeftWidth: 0.6,
     },
     text: {
-        marginRight: 6, textAlign: 'center', fontWeight: 'bold',
-        fontSize: 12
+        marginRight: 6,
+        textAlign: 'center',
+        fontWeight: 'bold',
+        fontSize: 12,
+        paddingTop: 7,
+        borderRightWidth: 0.6,
+        borderRightColor: '#111',
+        width: '100%',
+        flex: 1
     },
     textValue: {
         marginRight: 6,
