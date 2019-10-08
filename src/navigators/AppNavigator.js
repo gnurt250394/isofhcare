@@ -20,7 +20,7 @@ import QRCodeScannerScreen from "@containers/qrcode/QRCodeScannerScreen";
 import HomeScreen from "@containers/home/tab/HomeScreen";
 import AccountScreen from "@containers/home/tab/AccountScreen";
 import NotificationScreen from "@containers/notification/NotificationScreen";
-
+import VerifyPhoneNumberScreen from "@containers/account/VerifyPhoneNumberScreen";
 import CustomDrawer from '@components/navigators/CustomDrawer'
 import ScaledImage from 'mainam-react-native-scaleimage';
 import snackbar from '@utils/snackbar-utils';
@@ -249,6 +249,7 @@ const RootNavigator = createStackNavigator(
     about: { screen: AboutScreen },
     terms: { screen: TermsScreen },
     policy: { screen: PolicyScreen },
+    verifyPhone:{screen:VerifyPhoneNumberScreen},
     //profile
     selectProfile: { screen: SelectProfileScreen },
     createProfile: { screen: CreateProfileScreen },

@@ -29,6 +29,7 @@ import Field from "mainam-react-native-form-validate/Field";
 import TextField from "mainam-react-native-form-validate/TextField";
 import FloatingLabel from 'mainam-react-native-floating-label';
 import DateTimePicker from 'mainam-react-native-date-picker';
+import connectionUtils from "@utils/connection-utils";
 
 class RegisterScreen extends Component {
   constructor(props) {
@@ -115,14 +116,39 @@ class RegisterScreen extends Component {
     let name = this.state.fullname
     let phone = this.state.phone
     let password = this.state.password
+    connectionUtils.isConnected().then(s => {
+      userProvider.register(dateBirth, gender, name, phone, password).then(res => {
+        if (res.code == 'OK') {
+          this.props.navigation.navigate("verifyPhone", {
+            user: this.state.user,
+            id: res.details,
+            phone: phone,
+            verify:1,
+            onSelected: (user) => {
+              if (!user || !this.state.user || user.id != this.state.user.id) {
+                this.props.dispatch(redux.userLogin(user));
+                if (this.nextScreen) {
+                  this.props.navigation.replace(
+                    this.nextScreen.screen,
+                    this.nextScreen.param
+                  );
+                } else this.props.navigation.navigate("home", { showDraw: false });
+              } else {
+                this.setState({ user, userError });
+              }
 
-    userProvider.register(dateBirth, gender, name, phone, password).then(res => {
-      if (res.code == 'OK')
-        this.props.navigation.navigate('otpPhoneNumber', { user: this.state.user, id: res.details, phone: this.state.phone })
-      else {
-        snackbar.show(res.message, 'danger')
-      }
-    })
+            }
+          })
+        } else {
+          snackbar.show(res.message, 'danger')
+        }
+
+      }).catch(e => {
+        snackbar.show(constants.msg.app.not_internet, "danger");
+      });
+    }
+
+    )
 
   }
 

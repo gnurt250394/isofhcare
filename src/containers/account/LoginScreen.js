@@ -32,9 +32,10 @@ class LoginScreen extends Component {
 		super(props);
 		this.state = {
 			press: false,
-			email: "",
+			phone: "",
 			password: "",
 			secureTextEntry: true,
+			requirePass: true,
 		};
 		this.nextScreen = this.props.navigation.getParam("nextScreen", null);
 
@@ -111,7 +112,7 @@ class LoginScreen extends Component {
 			return;
 		}
 		this.setState({ isLoading: true }, () => {
-			userProvider.loginV2(this.state.email.trim(), this.state.password).then(s => {
+			userProvider.loginV2(this.state.phone.trim(), this.state.password).then(s => {
 				this.setState({ isLoading: false });
 				if (s.code == 'OK') {
 					this.getDetails(s.id, s.jws)
@@ -132,7 +133,7 @@ class LoginScreen extends Component {
 		}
 
 		this.setState({ isLoading: true }, () => {
-			userProvider.login(this.state.email.trim(), this.state.password).then(s => {
+			userProvider.login(this.state.phone.trim(), this.state.password).then(s => {
 				this.setState({ isLoading: false });
 				switch (s.code) {
 					case 0:
@@ -174,34 +175,47 @@ class LoginScreen extends Component {
 	}
 
 	forgotPassword() {
-		let verify = async () => {
-			RNAccountKit.loginWithPhone().then(async token => {
-				console.log(token);
-				if (!token) {
-					snackbar.show("Xác minh số điện thoại không thành công", "danger");
-				} else {
-					let account = await RNAccountKit.getCurrentAccount();
-					if (account && account.phoneNumber) {
-						this.props.navigation.replace("resetPassword", {
-							user: {
-								phone: "0" + account.phoneNumber.number,
-								token: token.token,
-								applicationId: constants.fbApplicationId,
-							}
-						});
-					} else {
-						snackbar.show("Xác minh số điện thoại không thành công", "danger");
-					}
-				}
-			});
-		};
-		RNAccountKit.logout()
-			.then(() => {
-				verify();
+		this.setState({
+			requirePass: false
+		}, () => {
+			Keyboard.dismiss();
+			if (!this.form.isValid()) {
+				return;
+			}
+			this.props.navigation.navigate('verifyPhone', {
+				phone: this.state.phone,
+				verify:1
 			})
-			.catch(x => {
-				verify();
-			});
+		})
+
+		// let verify = async () => {
+		// 	RNAccountKit.loginWithPhone().then(async token => {
+		// 		console.log(token);
+		// 		if (!token) {
+		// 			snackbar.show("Xác minh số điện thoại không thành công", "danger");
+		// 		} else {
+		// 			let account = await RNAccountKit.getCurrentAccount();
+		// 			if (account && account.phoneNumber) {
+		// 				this.props.navigation.replace("resetPassword", {
+		// 					user: {
+		// 						phone: "0" + account.phoneNumber.number,
+		// 						token: token.token,
+		// 						applicationId: constants.fbApplicationId,
+		// 					}
+		// 				});
+		// 			} else {
+		// 				snackbar.show("Xác minh số điện thoại không thành công", "danger");
+		// 			}
+		// 		}
+		// 	});
+		// };
+		// RNAccountKit.logout()
+		// 	.then(() => {
+		// 		verify();
+		// 	})
+		// 	.catch(x => {
+		// 		verify();
+		// 	});
 	}
 	onShowPass = () => {
 		this.setState({
@@ -233,7 +247,7 @@ class LoginScreen extends Component {
 													placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'}
 													inputStyle={styles.textInputStyle}
 													labelStyle={styles.labelStyle} placeholder={constants.phone} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
-												onChangeText={s => this.setState({ email: s })}
+												onChangeText={s => this.setState({ phone: s })}
 												errorStyle={styles.errorStyle}
 												validate={{
 													rules: {
@@ -258,7 +272,7 @@ class LoginScreen extends Component {
 													errorStyle={styles.errorStyle}
 													validate={{
 														rules: {
-															required: true,
+															required: this.state.requirePass,
 														},
 														messages: {
 															required: "Mật khẩu không được bỏ trống"
