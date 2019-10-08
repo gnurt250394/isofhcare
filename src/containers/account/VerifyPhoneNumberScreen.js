@@ -46,27 +46,29 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
     onReSendPhone = () => {
         let id = this.props.navigation.state.params && this.props.navigation.state.params.id ? this.props.navigation.state.params.id : null
         userProvider.reSendOtp(id).then(res => {
-            if (res.code == 'OK')
+            if (res.code == 0)
                 this.setState({
                     seconds: 90
                 })
-
+            else {
+                snackbar.show(res.mesage, 'danger')
+            }
         }).catch(err => {
             snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
         })
     }
-    getDetails = (id, token) => {
-        userProvider.getDetailsUser(id).then(res => {
-            let user = res.details
-            user.loginToken = token
-            let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
-            if (callback) {
-                callback(user);
-                this.props.navigation.pop();
-            }
-        })
+    // getDetails = (token) => {
+    //     userProvider.getDetailsUser().then(res => {
+    //         let user = res.details
+    //         user.loginToken = token
+    //         let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
+    //         if (callback) {
+    //             callback(user);
+    //             this.props.navigation.pop();
+    //         }
+    //     })
 
-    }
+    // }
     handleTextChange = (text) => {
         if (text && text.length == 6 && this.state.verify) {
             connectionUtils
@@ -75,11 +77,16 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                     switch (this.state.verify) {
                         case 1:
                             userProvider.checkOtpPhone(this.state.id, text).then(res => {
-                                if (res.code == 'OK') {
+                                if (res.code == 0) {
                                     client.auth = res.details
                                     snackbar.show(res.mesage, 'success')
-                                    let token = res.details
-                                    this.getDetails(this.state.id, token)
+                                    let user = res.data.user
+                                    let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
+                                    if (callback) {
+                                        callback(user);
+                                        this.props.navigation.pop();
+                                    }
+                                    // this.getDetails(this.state.id, token)
                                     // var user = s.data.user;
                                     // user.bookingNumberHospital = s.data.bookingNumberHospital;
                                     // user.bookingStatus = s.data.bookingStatus;
@@ -93,16 +100,8 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                                     //         this.nextScreen.param
                                     //     );
                                     // } else this.props.navigation.navigate("home", { showDraw: false });
-                                    return;
-                                }
-                                if (res.code == 'NOK') {
-                                    let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
-                                    if (callback) {
-                                        callback();
-                                        this.props.navigation.pop();
-                                    }
-                                    snackbar.show(res.mesage, 'danger')
-                                    return
+                                } else {
+                                    snackbar.show(res.message, 'danger')
                                 }
                             })
                             break
@@ -182,7 +181,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#F5FCFF',
     },
     textInputStyle: {
-        width: 30
     },
     textInputContainer: {
         marginTop: 10

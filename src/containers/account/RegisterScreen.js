@@ -39,7 +39,7 @@ class RegisterScreen extends Component {
     this.nextScreen = this.props.navigation.getParam("nextScreen", null);
     // var phone = this.props.navigation.getParam("phone", null);
     // var token = this.props.navigation.getParam("token", null);
-
+    let phone = this.props.navigation.state.params && this.props.navigation.state.params.phone ? this.props.navigation.state.params.phone : ''
     let verified = true;
     if (!user) user = {};
     user.verified = verified;
@@ -52,13 +52,13 @@ class RegisterScreen extends Component {
     user.pressConfirm = false;
     user.secureTextPassEntry = true
     user.secureTextPass2Entry = true
-    this.state = user;
+    user.phone = phone
+    this.state = user
     this.showPass = this.showPass.bind(this);
     this.showPassConfirm = this.showPassConfirm.bind(this);
   }
   setDate(newDate) {
     this.setState({ dob: newDate, date: newDate.format("dd/MM/yyyy") }, () => {
-      this.form.isValid();
     });
   }
 
@@ -111,41 +111,53 @@ class RegisterScreen extends Component {
       return;
     }
     Keyboard.dismiss();
-    let dateBirth = this.state.dob
+    let dateBirth = this.state.dob.format('yyyy-MM-dd HH:mm:ss')
     let gender = this.state.gender
     let name = this.state.fullname
     let phone = this.state.phone
     let password = this.state.password
     connectionUtils.isConnected().then(s => {
-      userProvider.register(dateBirth, gender, name, phone, password).then(res => {
-        if (res.code == 'OK') {
-          this.props.navigation.navigate("verifyPhone", {
-            user: this.state.user,
-            id: res.details,
-            phone: phone,
-            verify:1,
-            onSelected: (user) => {
-              if (!user || !this.state.user || user.id != this.state.user.id) {
-                this.props.dispatch(redux.userLogin(user));
-                if (this.nextScreen) {
-                  this.props.navigation.replace(
-                    this.nextScreen.screen,
-                    this.nextScreen.param
-                  );
-                } else this.props.navigation.navigate("home", { showDraw: false });
-              } else {
-                this.setState({ user, userError });
+      this.setState({
+        isLoading: true
+      }, () => {
+        userProvider.register(name, phone, password, dateBirth, gender).then(res => {
+          if (res.code == 0) {
+            this.setState({
+              isLoading: false
+            })
+            this.props.navigation.navigate("verifyPhone", {
+              user: res.data.user,
+              id: res.data.user.id,
+              phone: phone,
+              verify: 1,
+              onSelected: (user) => {
+                if (!user || !this.state.user || user.id != this.state.user.id) {
+                  this.props.dispatch(redux.userLogin(user));
+                  if (this.nextScreen) {
+                    this.props.navigation.replace(
+                      this.nextScreen.screen,
+                      this.nextScreen.param
+                    );
+                  } else this.props.navigation.navigate("home", { showDraw: false });
+                } else {
+                  this.setState({ user, userError });
+                }
+
               }
+            })
+          } else {
+            this.setState({
+              isLoading: false
+            })
+            snackbar.show(res.message, 'danger')
+          }
 
-            }
-          })
-        } else {
-          snackbar.show(res.message, 'danger')
-        }
+        }).catch(e => {
+          console.log(e, 'đâsđâsd')
+          snackbar.show(constants.msg.app.not_internet, "danger");
+        });
+      })
 
-      }).catch(e => {
-        snackbar.show(constants.msg.app.not_internet, "danger");
-      });
     }
 
     )
@@ -198,6 +210,7 @@ class RegisterScreen extends Component {
           title="Đăng ký"
           titleStyle={{ textAlign: 'left', marginLeft: 20 }}
           showFullScreen={true}
+          isLoading={this.state.isLoading}
         >
           <ScrollView
             showsVerticalScrollIndicator={false}
@@ -265,7 +278,8 @@ class RegisterScreen extends Component {
                   </View>
                   <TextField
                     getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-                      placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'}
+                      keyboardType='numeric'
+                      placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={this.state.phone || value} underlineColor={'#02C39A'}
                       inputStyle={styles.textInputStyle}
                       labelStyle={styles.labelStyle} placeholder={constants.phone} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
                     onChangeText={s => this.setState({ phone: s })}
@@ -396,7 +410,6 @@ class RegisterScreen extends Component {
             isVisible={this.state.toggelDateTimePickerVisible}
             onConfirm={newDate => {
               this.setState({ dob: newDate, date: newDate.format("dd/MM/yyyy"), toggelDateTimePickerVisible: false }, () => {
-                this.form.isValid();
               });
             }}
             onCancel={() => {

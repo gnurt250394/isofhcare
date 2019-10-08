@@ -121,32 +121,35 @@ module.exports = {
       );
     });
   },
-  register(dateBirth, gender, name, phone, password) {
-    return new Promise((resolve, reject) => {
-      let body = {
-        "username": phone,
-        "dateBirth": dateBirth,
-        "gender": gender,
-        "name": name,
-        "telephone": phone,
-        "password": password,
-        "email": null,
-        "isUsing2FA": null,
-        "roles": [
-          {
-            "id": 1
-          }
-        ]
-      }
-      client.requestApi("post", constants.api.user.registerV2, body, (s, e) => {
-        if (s) resolve(s);
-        else reject(e);
-      });
-    })
-  },
+  // register(dateBirth, gender, name, phone, password) {
+  //   return new Promise((resolve, reject) => {
+  //     let body = {
+  //       "username": phone,
+  //       "dateBirth": dateBirth,
+  //       "gender": gender,
+  //       "name": name,
+  //       "telephone": phone,
+  //       "password": password,
+  //       "email": null,
+  //       "isUsing2FA": null,
+  //       "roles": [
+  //         {
+  //           "id": 1
+  //         }
+  //       ]
+  //     }
+  //     client.requestApi("post", constants.api.user.registerV2, body, (s, e) => {
+  //       if (s) resolve(s);
+  //       else reject(e);
+  //     });
+  //   })
+  // },
   checkOtpPhone(id, otp) {
+    let data = {
+      verifyCode: otp
+    }
     return new Promise((resolve, reject) => {
-      client.requestApi('get', `${constants.api.user.check_otp_phone}/${id}/confirm/${otp}`, {}, (s, e) => {
+      client.requestApi('put', `${constants.api.user.check_otp_phone}/${id}`, data, (s, e) => {
         if (s)
           resolve(s)
         else reject(e)
@@ -163,9 +166,9 @@ module.exports = {
       })
     })
   },
-  getDetailsUser(id) {
+  getDetailsUser() {
     return new Promise((resolve, reject) => {
-      client.requestApi('get', `${constants.api.user.get_user_details}/${id}`, {}, (s, e) => {
+      client.requestApi('get', `${constants.api.user.get_user_details}`, {}, (s, e) => {
         if (s)
           resolve(s)
         else
@@ -173,54 +176,44 @@ module.exports = {
       })
     })
   },
-  loginV2(phone, password) {
-    return new Promise((resolve, reject) => {
-      client.requestApi('post', `${constants.api.user.loginV2}?username=${phone}&password=${password}`, {}, (s, e) => {
-        if (s)
-          resolve(s)
-        else
-          reject(e)
-      })
-    })
-  },
-  // register(
-  //   name,
-  //   avatar,
-  //   email,
-  //   phone,
-  //   password,
-  //   dob,
-  //   gender,
-  //   accessToken,
-  //   socialType,
-  //   socialId
-  // ) {
+  // loginV2(phone, password) {
   //   return new Promise((resolve, reject) => {
-  //     // reject({});
-  //     var body = {
-  //       user: {
-  //         email,
-  //         avatar,
-  //         password: password.toMd5(),
-  //         name,
-  //         gender: 1,
-  //         phone: phone,
-  //         dob,
-  //         role: 1,
-  //         gender
-  //       },
-  //       applicationId: "457683741386685",
-  //       accessToken,
-  //       socialId,
-  //       socialType: socialType ? socialType : 1,
-  //       device: { os: os, deviceId: this.deviceId, token: this.deviceToken }
-  //     };
-  //     client.requestApi("post", constants.api.user.register, body, (s, e) => {
-  //       if (s) resolve(s);
-  //       else reject(e);
-  //     });
-  //   });
+  //     client.requestApi('post', `${constants.api.user.loginV2}?username=${phone}&password=${password}`, {}, (s, e) => {
+  //       if (s)
+  //         resolve(s)
+  //       else
+  //         reject(e)
+  //     })
+  //   })
   // },
+  register(
+    name,
+    phone,
+    password,
+    dob,
+    gender,
+  ) {
+    return new Promise((resolve, reject) => {
+      // reject({});
+      var body = {
+        user: {
+          password: password.toMd5(),
+          name,
+          gender: gender,
+          phone: phone,
+          dob,
+          role: 1,
+        },
+        applicationId: "457683741386685",
+        socialType: 1,
+        device: { os: os, deviceId: this.deviceId, token: this.deviceToken }
+      };
+      client.requestApi("post", constants.api.user.register, body, (s, e) => {
+        if (s) resolve(s);
+        else reject(e);
+      });
+    });
+  },
   update(userId, user) {
     return new Promise((resolve, reject) => {
       var body = {

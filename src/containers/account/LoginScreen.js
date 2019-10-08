@@ -27,6 +27,8 @@ import TextField from "mainam-react-native-form-validate/TextField";
 import FloatingLabel from 'mainam-react-native-floating-label';
 import DeviceInfo from 'react-native-device-info';
 import firebase from 'react-native-firebase';
+import client from '@utils/client-utils';
+
 class LoginScreen extends Component {
 	constructor(props) {
 		super(props);
@@ -59,7 +61,9 @@ class LoginScreen extends Component {
 
 
 	register() {
-		this.props.navigation.navigate("register", {})
+		this.props.navigation.navigate("register", {
+			phone: this.state.phone
+		})
 		// return;
 		// let verify = async () => {
 		// 	RNAccountKit.loginWithPhone().then(async token => {
@@ -92,8 +96,10 @@ class LoginScreen extends Component {
 		// 		verify();
 		// 	});
 	}
-	getDetails = (id, token) => {
-		userProvider.getDetailsUser(id).then(res => {
+	getDetails = (token) => {
+		console.log(client.auth)
+		userProvider.getDetailsUser().then(res => {
+			console.log(res, 'sssssss')
 			let user = res.details
 			user.loginToken = token
 			this.props.dispatch(redux.userLogin(user));
@@ -114,8 +120,8 @@ class LoginScreen extends Component {
 		this.setState({ isLoading: true }, () => {
 			userProvider.loginV2(this.state.phone.trim(), this.state.password).then(s => {
 				this.setState({ isLoading: false });
-				if (s.code == 'OK') {
-					this.getDetails(s.id, s.jws)
+				if (s.code == 0) {
+					this.getDetails()
 				} else {
 					snackbar.show(s.message, "danger");
 				}
@@ -182,10 +188,18 @@ class LoginScreen extends Component {
 			if (!this.form.isValid()) {
 				return;
 			}
-			this.props.navigation.navigate('verifyPhone', {
-				phone: this.state.phone,
-				verify:1
+			userProvider.forgotPassword(this.state.phone.trim(), 2, (s, e) => {
+				if (s.code == 0)
+					this.props.navigation.navigate('verifyPhone', {
+						phone: this.state.phone,
+						verify: 1
+					})
+
 			})
+			this.setState({
+				requirePass: true
+			})
+
 		})
 
 		// let verify = async () => {
@@ -244,6 +258,7 @@ class LoginScreen extends Component {
 										<Field clearWhenFocus={true}>
 											<TextField
 												getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
+													keyboardType='numeric'
 													placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'}
 													inputStyle={styles.textInputStyle}
 													labelStyle={styles.labelStyle} placeholder={constants.phone} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
@@ -326,7 +341,7 @@ class LoginScreen extends Component {
 							</View>
 							{/* <SocialNetwork /> */}
 							{/* <Text style={{ color: '#000', textAlign: 'center', marginVertical: 20 }}>Nếu chưa có tài khoản có thể đăng ký <Text onPress={this.register.bind(this)} style={{ color: '#1EA3EA' }}>tại đây</Text></Text> */}
-							<TouchableOpacity onPress={this.loginV2.bind(this)} style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center' }} >
+							<TouchableOpacity onPress={this.login.bind(this)} style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center' }} >
 								<Text style={{ color: '#FFF', fontSize: 17 }}>{"ĐĂNG NHẬP"}</Text>
 							</TouchableOpacity>
 						</View>

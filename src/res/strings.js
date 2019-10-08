@@ -475,11 +475,9 @@ module.exports = {
       check_used_phone: isofhcare_service + "user/check-used-phone",
       use_app: isofhcare_service + "user/use-app",
       //new api
-      registerV2: isofhcare_service + 'v3.0/user/registration',
-      check_otp_phone: isofhcare_service + 'v3.0/user/registration',
-      re_send_otp: isofhcare_service + 'v3.0/user/registration',
-      loginV2: isofhcare_service + 'v3.0/login',
-      get_user_details: isofhcare_service + 'v3.0/user'
+      check_otp_phone: isofhcare_service + 'user/verify-sms-code',
+      re_send_otp: isofhcare_service + 'user/registration',
+      get_user_details: isofhcare_service + '/user'
 
     },
     keyvalue: {
