@@ -27,6 +27,7 @@ import TextField from "mainam-react-native-form-validate/TextField";
 import FloatingLabel from 'mainam-react-native-floating-label';
 import DeviceInfo from 'react-native-device-info';
 import firebase from 'react-native-firebase';
+import client from '@utils/client-utils';
 import connectionUtils from "@utils/connection-utils";
 
 class LoginScreen extends Component {
@@ -34,9 +35,10 @@ class LoginScreen extends Component {
 		super(props);
 		this.state = {
 			press: false,
-			email: "",
+			phone: "",
 			password: "",
 			secureTextEntry: true,
+			requirePass: true,
 		};
 		this.nextScreen = this.props.navigation.getParam("nextScreen", null);
 
@@ -60,126 +62,193 @@ class LoginScreen extends Component {
 
 
 	register() {
-		// this.props.navigation.navigate("register", {  })
+		this.props.navigation.navigate("register", {
+			phone: this.state.phone
+		})
 		// return;
-		let verify = async () => {
-			RNAccountKit.loginWithPhone().then(async token => {
-				console.log(token);
-				if (!token) {
-					snackbar.show(constants.msg.user.phone_number_not_found, "danger");
-				} else {
-					let account = await RNAccountKit.getCurrentAccount();
-					if (account && account.phoneNumber) {
-						this.props.navigation.navigate("register", {
-							user: {
-								phone: "0" + account.phoneNumber.number,
-								token: token.token,
-								socialType: 1,
-								socialId: "0"
-							},
-							nextScreen: this.nextScreen
-						});
-					} else {
-						snackbar.show(constants.msg.user.phone_number_not_found, "danger");
-					}
-				}
-			});
-		};
-		RNAccountKit.logout()
-			.then(() => {
-				verify();
-			})
-			.catch(x => {
-				verify();
-			});
+		// let verify = async () => {
+		// 	RNAccountKit.loginWithPhone().then(async token => {
+		// 		console.log(token);
+		// 		if (!token) {
+		// 			snackbar.show("Xác minh số điện thoại không thành công", "danger");
+		// 		} else {
+		// 			let account = await RNAccountKit.getCurrentAccount();
+		// 			if (account && account.phoneNumber) {
+		// 				this.props.navigation.navigate("register", {
+		// 					user: {
+		// 						phone: "0" + account.phoneNumber.number,
+		// 						token: token.token,
+		// 						socialType: 1,
+		// 						socialId: "0"
+		// 					},
+		// 					nextScreen: this.nextScreen
+		// 				});
+		// 			} else {
+		// 				snackbar.show("Xác minh số điện thoại không thành công", "danger");
+		// 			}
+		// 		}
+		// 	});
+		// };
+		// RNAccountKit.logout()
+		// 	.then(() => {
+		// 		verify();
+		// 	})
+		// 	.catch(x => {
+		// 		verify();
+		// 	});
+	}
+	getDetails = (token) => {
+		console.log(client.auth)
+		userProvider.getDetailsUser().then(res => {
+			console.log(res, 'sssssss')
+			let user = res.details
+			user.loginToken = token
+			this.props.dispatch(redux.userLogin(user));
+		})
+		if (this.nextScreen) {
+			this.props.navigation.replace(
+				this.nextScreen.screen,
+				this.nextScreen.param
+			);
+		} else this.props.navigation.navigate("home", { showDraw: false });
 	}
 
+	loginV2() {
+		Keyboard.dismiss();
+		if (!this.form.isValid()) {
+			return;
+		}
+		this.setState({ isLoading: true }, () => {
+			userProvider.loginV2(this.state.phone.trim(), this.state.password).then(s => {
+				this.setState({ isLoading: false });
+				if (s.code == 0) {
+					this.getDetails()
+				} else {
+					snackbar.show(s.message, "danger");
+				}
+			}).catch(e => {
+				console.log(e)
+				this.setState({ isLoading: false });
+				snackbar.show(constants.msg.error_occur, "danger");
+			});
+		})
+	}
 	login() {
 		Keyboard.dismiss();
 		if (!this.form.isValid()) {
 			return;
 		}
-		connectionUtils
-			.isConnected()
-			.then(s => {
-				this.setState(
-					{
-						isLoading: true
-					},
-					() => {
-						userProvider.login(this.state.email.trim(), this.state.password).then(s => {
-							this.setState({ isLoading: false });
-							switch (s.code) {
-								case 0:
-									var user = s.data.user;
-									user.bookingNumberHospital = s.data.bookingNumberHospital;
-									user.bookingStatus = s.data.bookingStatus;
-									if (s.data.profile && s.data.profile.uid)
-										user.uid = s.data.profile.uid;
-									snackbar.show(constants.msg.user.login_success, "success");
-									this.props.dispatch(redux.userLogin(user));
-									if (this.nextScreen) {
-										this.props.navigation.replace(
-											this.nextScreen.screen,
-											this.nextScreen.param
-										);
-									} else {
-										this.props.navigation.navigate("home", { showDraw: false });
-									}
-									return;
-								case 4:
-									snackbar.show(constants.msg.user.this_account_not_active, "danger");
-									return;
-								case 3:
-									snackbar.show(constants.msg.user.username_or_password_incorrect, "danger");
-									return;
-								case 2:
-								case 1:
-									snackbar.show(constants.msg.user.account_blocked, "danger");
-									return;
-								case 500:
-									snackbar.show(constants.msg.error_occur, "danger");
-							}
-						}).catch(e => {
-							this.setState({ isLoading: false });
-							snackbar.show(constants.msg.error_occur, "danger");
-						});
-					})
-			}).catch(e => {
-				snackbar.show(constants.msg.app.not_internet, "danger");
-			});
 
+		connectionUtils.isConnected().then(s => {
+			this.setState({ isLoading: true }, () => {
+				userProvider.login(this.state.phone.trim(), this.state.password).then(s => {
+					this.setState({ isLoading: false });
+					switch (s.code) {
+						case 0:
+							var user = s.data.user;
+							user.bookingNumberHospital = s.data.bookingNumberHospital;
+							user.bookingStatus = s.data.bookingStatus;
+							if (s.data.profile && s.data.profile.uid)
+								user.uid = s.data.profile.uid;
+							snackbar.show(constants.msg.user.login_success, "success");
+							this.props.dispatch(redux.userLogin(user));
+							if (this.nextScreen) {
+								this.props.navigation.replace(
+									this.nextScreen.screen,
+									this.nextScreen.param
+								);
+							} else {
+								this.props.navigation.navigate("home", { showDraw: false });
+							}
+							return;
+						case 4:
+							snackbar.show(constants.msg.user.this_account_not_active, "danger");
+							return;
+						case 3:
+							snackbar.show(constants.msg.user.username_or_password_incorrect, "danger");
+							return;
+						case 2:
+						case 1:
+							snackbar.show(constants.msg.user.account_blocked, "danger");
+							return;
+						case 500:
+							snackbar.show(constants.msg.error_occur, "danger");
+					}
+				}).catch(e => {
+					this.setState({ isLoading: false });
+					snackbar.show(constants.msg.error_occur, "danger");
+				});
+			})
+		}).catch(e => {
+			this.setState({
+				isLoading: false,
+			})
+			snackbar.show(constants.msg.app.not_internet, "danger");
+		})
 	}
 
 	forgotPassword() {
-		let verify = async () => {
-			RNAccountKit.loginWithPhone().then(async token => {
-				console.log(token);
-				if (!token) {
-					snackbar.show(constants.msg.user.phone_number_not_found, "danger");
-				} else {
-					let account = await RNAccountKit.getCurrentAccount();
-					if (account && account.phoneNumber) {
-						this.props.navigation.replace("resetPassword", {
-							user: {
-								phone: "0" + account.phoneNumber.number,
-								token: token.token,
-								applicationId: constants.fbApplicationId,
-							}
-						});
-					} else {
-						snackbar.show(constants.msg.user.phone_number_not_found, "danger");
-					}
-				}
-			});
-		};
-		RNAccountKit.logout()
-			.then(() => {
-				verify();
+		this.setState({
+			requirePass: false
+		}, () => {
+			Keyboard.dismiss();
+			if (!this.form.isValid()) {
+				return;
+			}
+			connectionUtils.isConnected().then(s => {
+				this.setState({
+					isLoading: true
+				}, () => {
+					userProvider.forgotPassword(this.state.phone.trim(), 2, (s, e) => {
+						if (s.code == 0)
+							this.props.navigation.navigate('verifyPhone', {
+								phone: this.state.phone,
+								verify: 2
+							})
+
+					})
+					this.setState({
+						isLoading: false,
+						requirePass: true
+					})
+				})
+			}).catch(e => {
+				this.setState({
+					isLoading: false,
+					requirePass: true
+				})
+				snackbar.show(constants.msg.app.not_internet, "danger");
 			})
-			.catch(x => {
-				verify();
-			});
+		})
+
+		// let verify = async () => {
+		// 	RNAccountKit.loginWithPhone().then(async token => {
+		// 		console.log(token);
+		// 		if (!token) {
+		// 			snackbar.show("Xác minh số điện thoại không thành công", "danger");
+		// 		} else {
+		// 			let account = await RNAccountKit.getCurrentAccount();
+		// 			if (account && account.phoneNumber) {
+		// 				this.props.navigation.replace("resetPassword", {
+		// 					user: {
+		// 						phone: "0" + account.phoneNumber.number,
+		// 						token: token.token,
+		// 						applicationId: constants.fbApplicationId,
+		// 					}
+		// 				});
+		// 			} else {
+		// 				snackbar.show("Xác minh số điện thoại không thành công", "danger");
+		// 			}
+		// 		}
+		// 	});
+		// };
+		// RNAccountKit.logout()
+		// 	.then(() => {
+		// 		verify();
+		// 	})
+		// 	.catch(x => {
+		// 		verify();
+		// 	});
 	}
 	onShowPass = () => {
 		this.setState({
@@ -201,21 +270,18 @@ class LoginScreen extends Component {
 					keyboardShouldPersistTaps="handled"
 				>
 					<KeyboardAvoidingView behavior="padding">
-						<View style={styles.container}>
-							<View style={styles.margin22}>
-								<Card style={styles.card}>
+						<View style={{ flex: 1 }}>
+							<View style={{ margin: 22 }}>
+								<Card style={{ padding: 22, paddingTop: 10, borderRadius: 8, marginTop: 60, borderColor: '#02C39A', borderWidth: 1 }}>
 									<Form ref={ref => (this.form = ref)}>
 										<Field clearWhenFocus={true}>
 											<TextField
 												getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-													placeholderStyle={styles.placeFloat}
-													value={value}
-													underlineColor={'#02C39A'}
+													keyboardType='numeric'
+													placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'}
 													inputStyle={styles.textInputStyle}
-													keyboardType="numeric"
-													labelStyle={styles.labelStyle} placeholder={constants.phone}
-													onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
-												onChangeText={this.onChangeText('email')}
+													labelStyle={styles.labelStyle} placeholder={constants.phone} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
+												onChangeText={s => this.setState({ phone: s })}
 												errorStyle={styles.errorStyle}
 												validate={{
 													rules: {
@@ -248,7 +314,7 @@ class LoginScreen extends Component {
 													errorStyle={styles.errorStyle}
 													validate={{
 														rules: {
-															required: true,
+															required: this.state.requirePass,
 														},
 														messages: {
 															required: constants.password_not_null
@@ -281,36 +347,46 @@ class LoginScreen extends Component {
 										</Field>
 										<View style={styles.containerFooter}>
 											<TouchableOpacity
-												onPress={this.forgotPassword.bind(this)}
-												style={styles.buttonForgotPass}
+												onPress={this.register.bind(this)}
+												style={{ alignItems: "flex-start", flex: 1 }}
 											>
 												<Text
 													numberOfLines={1}
 													ellipsizeMode="tail"
-													style={styles.txtForgotPass}>
-													{constants.login_screens.forgot_password}
-												</Text>
+													style={{
+														color: '#028090',
+														paddingRight: 5,
+														fontSize: 14
+													}}>
+													Tạo tài khoản
+													</Text>
 											</TouchableOpacity>
 											<TouchableOpacity
-												onPress={this.login.bind(this)}
-												style={styles.buttonLogin}
+												onPress={this.forgotPassword.bind(this)}
+												style={{ alignItems: "flex-end", flex: 1 }}
 											>
-												<Text style={styles.txtLogin}>{constants.login}</Text>
-												<ScaleImage source={require("@images/new/right_arrow.png")} height={10} />
+												<Text
+													numberOfLines={1}
+													ellipsizeMode="tail"
+													style={{
+														color: '#028090',
+														paddingRight: 5,
+														fontSize: 14
+													}}>
+													Quên mật khẩu?
+													</Text>
 											</TouchableOpacity>
 										</View>
 									</Form>
 								</Card>
 							</View>
-							<SocialNetwork />
-							<Text style={styles.txtRegister}>{constants.login_screens.register} <Text
-								onPress={this.register.bind(this)} style={{ color: '#1EA3EA' }}>tại đây</Text></Text>
-							{/* <TouchableOpacity onPress={this.register.bind(this)} style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center' }} >
-								<Text style={{ color: '#FFF', fontSize: 17 }}>{"ĐĂNG KÝ"}</Text>
-							</TouchableOpacity> */}
+							{/* <SocialNetwork /> */}
+							{/* <Text style={{ color: '#000', textAlign: 'center', marginVertical: 20 }}>Nếu chưa có tài khoản có thể đăng ký <Text onPress={this.register.bind(this)} style={{ color: '#1EA3EA' }}>tại đây</Text></Text> */}
+							<TouchableOpacity onPress={this.login.bind(this)} style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center' }} >
+								<Text style={{ color: '#FFF', fontSize: 17 }}>{"ĐĂNG NHẬP"}</Text>
+							</TouchableOpacity>
 						</View>
 					</KeyboardAvoidingView>
-
 				</ScrollView>
 			</ActivityPanel>
 		);

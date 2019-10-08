@@ -169,8 +169,9 @@ class CreateProfileScreen extends Component {
                                             snackbar.show(constants.msg.user.add_member_success, 'success')
                                             break
                                         case 'NOT_EXIST_ACCOUNT':
-                                            NavigationService.navigate('checkOtp', {
-                                                id: res.data.medicalRecords.id
+                                            NavigationService.navigate('verifyPhone', {
+                                                id: res.data.medicalRecords.id,
+                                                verify: 3
                                             })
                                             break
                                         case 'EXIST_ACCOUNT':

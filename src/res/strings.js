@@ -1,4 +1,4 @@
-let isofhcare_service = 'isofhcare-dev/';
+let isofhcare_service = '';
 // let wallet_services = 'wallet-services-test/'; //test
 let wallet_services = 'wallet-services-dev/'; //dev
 module.exports = {
@@ -844,6 +844,12 @@ module.exports = {
       refresh_password_by_token: isofhcare_service + "user/refresh-password-by-token",
       check_used_phone: isofhcare_service + "user/check-used-phone",
       use_app: isofhcare_service + "user/use-app",
+      //new api
+      check_otp_phone: isofhcare_service + 'user/verify-sms-code',
+      re_send_otp: isofhcare_service + 'user/registration',
+      get_user_details: isofhcare_service + '/user',
+
+
     },
     keyvalue: {
       get: isofhcare_service + "key-value/get-value",
