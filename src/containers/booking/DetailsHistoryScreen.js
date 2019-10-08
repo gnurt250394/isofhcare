@@ -36,6 +36,7 @@ class DetailsHistoryScreen extends Component {
   componentDidMount() {
     this.setState({ isLoading: true }, () => {
       bookingProvider.detail(this.state.id).then(s => {
+        console.log(s,'áđâsđâsđá')
         if (s.code == 0 && s.data) {
           // let address = s.data.hospital.address;
           // if (s.data.zone && s.data.zone.name)

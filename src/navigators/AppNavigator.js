@@ -20,7 +20,7 @@ import QRCodeScannerScreen from "@containers/qrcode/QRCodeScannerScreen";
 import HomeScreen from "@containers/home/tab/HomeScreen";
 import AccountScreen from "@containers/home/tab/AccountScreen";
 import NotificationScreen from "@containers/notification/NotificationScreen";
-
+import VerifyPhoneNumberScreen from "@containers/account/VerifyPhoneNumberScreen";
 import CustomDrawer from '@components/navigators/CustomDrawer'
 import ScaledImage from 'mainam-react-native-scaleimage';
 import snackbar from '@utils/snackbar-utils';
@@ -38,6 +38,9 @@ import RegisterScreen from "@containers/account/RegisterScreen";
 import EnterPasswordScreen from "@containers/account/EnterPasswordScreen";
 import ForgotPasswordScreen from "@containers/account/ForgotPasswordScreen";
 import ChangePasswordScreen from "@containers/account/ChangePasswordScreen";
+import OtpPhoneNumberScreen from "@containers/account/OtpPhoneNumberScreen";
+
+
 
 //question
 import ListQuestionScreen from "@containers/question/ListQuestionScreen";
@@ -87,7 +90,6 @@ import SelectProvinceScreen from "@containers/profile/SelectProvinceScreen";
 import SelectZoneScreen from "@containers/profile/SelectZoneScreen";
 import SelectDistrictScreen from "@containers/profile/SelectDistrictScreen";
 import SelectRelationshipScreen from "@containers/profile/SelectRelationshipScreen";
-import CheckOtpScreen from "@containers/profile/CheckOtpScreen";
 import SendConfirmProfileScreen from "@containers/profile/SendConfirmProfileScreen";
 import ShareDataProfileScreen from '@containers/profile/ShareDataProfileScreen'
 
@@ -249,13 +251,13 @@ const RootNavigator = createStackNavigator(
     about: { screen: AboutScreen },
     terms: { screen: TermsScreen },
     policy: { screen: PolicyScreen },
+    verifyPhone: { screen: VerifyPhoneNumberScreen },
     //profile
     selectProfile: { screen: SelectProfileScreen },
     createProfile: { screen: CreateProfileScreen },
     listProfileUser: { screen: ListProfileScreen },
     editProfile: { screen: EditProfileScreen },
     shareDataProfile: { screen: ShareDataProfileScreen },
-    checkOtp: { screen: CheckOtpScreen },
     selectProvince: { screen: SelectProvinceScreen },
     selectDistrict: { screen: SelectDistrictScreen },
     selectRelationship: { screen: SelectRelationshipScreen },
@@ -269,12 +271,15 @@ const RootNavigator = createStackNavigator(
     notificationTab: NotificationScreen,
     ehealth: EHealthNavigator,
     viewDetailEhealth: { screen: ViewEhealthDetailScreen },
+    //
     login: { screen: LoginScreen },
     forgotPassword: { screen: ForgotPasswordScreen },
     confirmCode: { screen: ConfirmCodeScreen },
     resetPassword: { screen: ResetPasswordScreen },
     enterPassword: { screen: EnterPasswordScreen },
     register: { screen: RegisterScreen },
+    otpPhoneNumber: { screen: OtpPhoneNumberScreen },
+    //
     listQuestion: ListQuestionScreen,
     createQuestionStep1: { screen: CreateQuestionStep1Screen },
     createQuestionStep2: { screen: CreateQuestionStep2Screen },

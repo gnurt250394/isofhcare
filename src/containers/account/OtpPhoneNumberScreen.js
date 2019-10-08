@@ -9,13 +9,24 @@ import ActivityPanel from "@components/ActivityPanel";
 import userProvider from '@data-access/user-provider'
 import snackbar from '@utils/snackbar-utils';
 import { connect } from "react-redux";
+import profileProvider from '@data-access/profile-provider'
+import NavigationService from "@navigators/NavigationService";
+import redux from "@redux-store";
+import client from '@utils/client-utils';
 
 class OtpPhoneNumberScreen extends React.PureComponent {
     constructor(props) {
         super(props)
+        let user = this.props.navigation.state.params && this.props.navigation.state.params.user ? this.props.navigation.state.params.user : null
+        let phone = this.props.navigation.state.params && this.props.navigation.state.params.phone ? this.props.navigation.state.params.phone : null
+        this.nextScreen = this.props.navigation.getParam("nextScreen", null);
+
         this.state = {
             seconds: 90,
-            txErr: ''
+            txErr: '',
+            reset: 2,
+            user,
+            phone,
         }
     }
     componentDidMount() {
@@ -27,50 +38,63 @@ class OtpPhoneNumberScreen extends React.PureComponent {
         }, 1000);
     }
     onReSendPhone = () => {
-        let details = this.props.navigation.state.params && this.props.navigation.state.params.details ? this.props.navigation.state.params.details : ''
-        details && userProvider.reSendOtp(details).then(res => {
-            // if (res.code == 'OK') {
-            //     console.log('thanh cong')
-            // } else {
-            //     console.log('that bai');
-            // }
-            if (res.code == 'OK') {
+        let id = this.props.navigation.state.params && this.props.navigation.state.params.id ? this.props.navigation.state.params.id : null
+        userProvider.reSendOtp(id).then(res => {
+            if (res.code == 'OK')
                 this.setState({
                     seconds: 90
                 })
-            } else {
-                snackbar.show(res.message, 'danger')
-            }
 
+        }).catch(err => {
+            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
         })
     }
-    onCheckToken = () => {
-        let token = this.state.text1
-        if (token) {
-            userProvider.checkOtpSignup(token).then(res => {
-                if (res.code == 'OK') {
-                    this.props.userApp.loginToken = res.details
-                    // let data = this.props.navigation.state.params ? this.props.navigation.state.params.data : ''
-                    // let user = data ? data.user : ''
-                    // user.loginToken = res.details
-                    // user.bookingNumberHospital = data.bookingNumberHospital;
-                    // user.bookingStatus = data.bookingStatus;
-                    // if (data.profile && data.profile.uid)
-                    //     user.uid = data.profile.uid;
-                    // this.props.dispatch(redux.userLogin(user));
-                    // if (this.nextScreen) {
-                    //     this.props.navigation.replace(
-                    //         this.nextScreen.screen,
-                    //         this.nextScreen.param
-                    //     );
-                    // } else this.props.navigation.navigate("home", { showDraw: false });
-                    return;
-                } else {
-                    snackbar.show(res.message, 'danger')
+    getDetails = (id, token) => {
+        userProvider.getDetailsUser(id).then(res => {
+            let user = res.details
+            user.loginToken = token
+            this.props.dispatch(redux.userLogin(user));
+        })
+        if (this.nextScreen) {
+            this.props.navigation.replace(
+                this.nextScreen.screen,
+                this.nextScreen.param
+            );
+        } else this.props.navigation.navigate("home", { showDraw: false });
+    }
 
-                }
-            })
+    onCheckToken = () => {
+        let otp = this.state.text1
+        let id = this.props.navigation.state.params && this.props.navigation.state.params.id ? this.props.navigation.state.params.id : null
+        if (!otp) {
+            snackbar.show('Bạn chưa nhập mã xác thực', 'danger')
+            return
         }
+        userProvider.checkOtpPhone(id, otp).then(res => {
+            if (res.code == 'OK') {
+                client.auth = res.details
+                snackbar.show(res.mesage, 'success')
+                this.getDetails(id, res.details)
+                // var user = s.data.user;
+                // user.bookingNumberHospital = s.data.bookingNumberHospital;
+                // user.bookingStatus = s.data.bookingStatus;
+                // if (s.data.profile && s.data.profile.uid)
+                //     user.uid = s.data.profile.uid;
+                //     user.loginToken = res.details
+                // this.props.dispatch(redux.userLogin(user));
+                // if (this.nextScreen) {
+                //     this.props.navigation.replace(
+                //         this.nextScreen.screen,
+                //         this.nextScreen.param
+                //     );
+                // } else this.props.navigation.navigate("home", { showDraw: false });
+                return;
+            }
+            if (res.code == 'NOK') {
+                snackbar.show(res.mesage, 'danger')
+                return
+            }
+        })
     }
     handleTextChange = text => this.setState({ text1: text })
     render() {
@@ -87,7 +111,7 @@ class OtpPhoneNumberScreen extends React.PureComponent {
                     keyboardShouldPersistTaps="handled">
                     <View style={styles.group}>
                         <ScaleImage source={require("@images/new/isofhcare.png")} width={180} style={styles.logo} />
-                        <Text style={styles.txContents}>{constants.confirm_account.please_enter_otp_send_devices}</Text>
+                        <Text style={styles.txContents}>Một mã xác nhận 6 chữ số vừa được gửi đến số điện thoại {this.state.phone}. Vui lòng điền mã số để hoàn tất đăng ký</Text>
                         <OTPTextView
                             containerStyle={styles.textInputContainer}
                             handleTextChange={this.handleTextChange}
@@ -102,10 +126,10 @@ class OtpPhoneNumberScreen extends React.PureComponent {
                         <TouchableOpacity onPress={this.onReSendPhone} style={styles.btnReSend}><Text style={styles.txBtnReSend}>{constants.confirm_account.resend_otp}</Text></TouchableOpacity>
                         {this.state.txErr ? <Text style={styles.txErr}>{this.state.txErr}</Text> : null}
                     </View>
+                    <TouchableOpacity onPress={this.onCheckToken} style={styles.btnFinish} >
+                        <Text style={styles.txFinish}>{"HOÀN TẤT"}</Text>
+                    </TouchableOpacity>
                 </ScrollView>
-                <TouchableOpacity onPress={this.onCheckToken} style={styles.btnFinish} >
-                    <Text style={styles.txFinish}>{constants.confirm_account.finish}</Text>
-                </TouchableOpacity>
             </ActivityPanel>
         )
     }
