@@ -190,9 +190,14 @@ class AccountScreen extends Component {
     );
   }
   logout = () => {
-    dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, null);
-    this.props.dispatch(redux.userLogout());
-    if (this.props.onLogout) this.props.onLogout();
+    this.setState({
+      showSetting: false
+    }, () => {
+      dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, null);
+      this.props.dispatch(redux.userLogout());
+      if (this.props.onLogout) this.props.onLogout();
+    })
+
   }
   checkUpdate = () => {
     snackbar.show(constants.msg.app.check_update, "success");
