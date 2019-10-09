@@ -55,14 +55,23 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                 .isConnected()
                 .then(s => {
                     let id = this.props.navigation.state.params && this.props.navigation.state.params.id ? this.props.navigation.state.params.id : null
-                    userProvider.reSendOtp(id).then(res => {
-                        if (res.code == 0)
+                    userProvider.forgotPassword(this.state.phone.trim(), 2, (s, e) => {
+                        if (s.code == 0)
+                            this.props.navigation.navigate('verifyPhone', {
+                                phone: this.state.phone,
+                                verify: 2
+                            })
+
+                    })
+                    userProvider.forgotPassword(this.state.phone.trim(), 2, (s, e) => {
+                        if (s.code == 0) {
                             this.setState({
                                 seconds: 90,
-
                             })
+                            snackbar.show('Mã xác thực đã được gửi lại')
+                        }
                         else {
-                            snackbar.show(res.mesage, 'danger')
+                            snackbar.show(s.mesage, 'danger')
                         }
                     }).catch(err => {
                         snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
@@ -243,7 +252,7 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                         </Form>
                         <Text style={styles.txTime}>Mã xác thực hiệu lực trong   <Text style={styles.txCountTime}>{this.state.seconds > 9 ? this.state.seconds : '0' + this.state.seconds}</Text>   giây</Text>
                         <Text style={styles.txReSent}>Nếu bạn cho rằng mình chưa nhập được mã hãy chọn</Text>
-                        <TouchableOpacity disabled={this.state.disabled} onPress={this.onReSendPhone}><Text style={[styles.txReSent, { color: 'red' }]}>Gửi lại mã</Text></TouchableOpacity>
+                        <TouchableOpacity style = {{padding:5,marginVertical:10}} disabled={this.state.disabled} onPress={this.onReSendPhone}><Text style={[styles.txReSent, { color: 'red' }]}>Gửi lại mã</Text></TouchableOpacity>
                         <ButtonSubmit
                             onRef={ref => (this.child = ref)}
                             click={this.onCheckOtp}
@@ -272,9 +281,9 @@ const styles = StyleSheet.create({
     titleStyle: { textAlign: 'left', marginLeft: 20 },
     txContents: { color: '#333335', textAlign: 'center', fontSize: 14, marginTop: 20 },
     logo: { marginTop: 20, alignSelf: 'center' },
-    txTime: { color: '#000', fontStyle: 'italic', fontWeight: '700', marginVertical: 20, textAlign: 'center', fontSize: 14 },
-    txCountTime: { color: 'red', fontStyle: 'italic', fontSize: 14 },
-    txReSent: { color: '#000', fontStyle: 'italic', fontWeight: '700', textAlign: 'center', fontSize: 12 },
+    txTime: { color: '#000', fontStyle: 'italic', fontWeight: '700', marginVertical: 20, textAlign: 'center', fontSize: 16 },
+    txCountTime: { color: 'red', fontStyle: 'italic', fontSize: 16 },
+    txReSent: { color: '#000', fontStyle: 'italic', fontWeight: '700', textAlign: 'center', fontSize: 14 },
     btnFinish: { backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 40, alignItems: 'center', justifyContent: 'center', marginBottom: 20 },
     txFinish: { color: '#FFF', fontSize: 17 },
     btnReSend: { alignSelf: 'flex-end', padding: 2, backgroundColor: '#A3D29C', marginTop: 15, paddingHorizontal: 10, marginRight: 5 },
