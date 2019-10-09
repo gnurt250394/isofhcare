@@ -279,10 +279,11 @@ class RegisterScreen extends Component {
                   <TextField
                     getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
                       keyboardType='numeric'
-                      placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={this.state.phone || value} underlineColor={'#02C39A'}
+                      placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={this.state.phone} underlineColor={'#02C39A'}
                       inputStyle={styles.textInputStyle}
                       labelStyle={styles.labelStyle} placeholder={constants.phone} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
                     onChangeText={s => this.setState({ phone: s })}
+                    value={this.state.phone}
                     errorStyle={styles.errorStyle}
                     validate={{
                       rules: {
