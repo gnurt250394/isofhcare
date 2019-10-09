@@ -16,6 +16,8 @@ import dateUtils from "mainam-react-native-date-utils";
 import StarRating from 'react-native-star-rating';
 import userProvider from '@data-access/user-provider';
 import questionProvider from '@data-access/question-provider';
+import { Card } from 'native-base'
+import Button from "../../../components/booking/doctor/Button";
 
 class DetailsDoctorScreen extends Component {
   constructor() {
@@ -94,8 +96,21 @@ class DetailsDoctorScreen extends Component {
       isNotHaveSchedule: true
     })
   }
-  onSeeDetails=()=>{
-    alert('hello')
+  goToAdvisory = () => {
+    this.props.navigation.navigate("listQuestion");
+  }
+
+  renderText = (data) => {
+    return <View style={styles.flex}>
+      {data && data.length > 0 ?
+        data.map((e, i) => {
+          return (
+            <Text style={styles.txtPosition} key={i}>{e}</Text>
+          )
+        }) :
+        null
+      }
+    </View>
   }
   render() {
     const icSupport = require("@images/new/user.png");
@@ -103,82 +118,161 @@ class DetailsDoctorScreen extends Component {
     const source = profileDoctor && profileDoctor.avatar
       ? { uri: profileDoctor.avatar.absoluteUrl() }
       : icSupport;
+
     return (
       <ActivityPanel
-        title={"HỒ SƠ BÁC SỸ"}
+        title={"Thông tin bác sỹ"}
         isLoading={this.state.isLoading}
 
       >
+        <View style={styles.backgroundHeader}></View>
+
         <ScrollView
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode='on-drag'
           style={styles.scroll}>
-          <View style={styles.viewImgUpload}>
-            <ImageLoad
-              resizeMode="cover"
-              imageStyle={styles.boderImage}
-              borderRadius={35}
-              customImagePlaceholderDefaultStyle={styles.imgPlaceHoder}
-              placeholderSource={icSupport}
-              style={styles.avatar}
-              loadingStyle={{ size: "small", color: "gray" }}
-              source={source}
-              defaultImage={() => {
-                return (
-                  <ScaleImage
-                    resizeMode="cover"
-                    source={icSupport}
-                    width={70}
-                    style={styles.imgDefault}
-                  />
-                );
-              }}
-            />
-            <View style={{ paddingLeft: 7 }}>
-              <Text style={styles.nameDoctor}>BS.{profileDoctor.name}</Text>
-              <Text style={styles.fontItalic}>{profileDoctor.quantity} lượt đặt khám</Text>
+          <View style={{
+            padding: 10,
+          }}>
+            <Card style={styles.viewImgUpload}>
+              <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+                <ImageLoad
+                  resizeMode="cover"
+                  imageStyle={styles.boderImage}
+                  borderRadius={35}
+                  customImagePlaceholderDefaultStyle={styles.imgPlaceHoder}
+                  placeholderSource={icSupport}
+                  style={styles.avatar}
+                  loadingStyle={{ size: "small", color: "gray" }}
+                  source={source}
+                  defaultImage={() => {
+                    return (
+                      <ScaleImage
+                        resizeMode="cover"
+                        source={icSupport}
+                        width={70}
+                        style={styles.imgDefault}
+                      />
+                    );
+                  }}
+                />
+                <View style={{ paddingLeft: 10, flex: 1 }}>
+                  <Text style={styles.nameDoctor}>BS.{profileDoctor.name}</Text>
+                  <View >
+                    {profileDoctor.address && profileDoctor.address.length > 0 ?
+                      <Text >{profileDoctor.address[0]}</Text>
+                      :
+                      null
+                    }
+                  </View>
+                  <View style={styles.containerButton}>
+                    <Button label="Tư vấn" style={styles.txtAdvisory} onPress={this.goToAdvisory} source={require("@images/ic_star.png")} />
+                    <Button label="Đặt khám" style={styles.txtBooking} onPress={this.addBooking} source={require("@images/ic_service.png")} />
+                  </View>
+
+
+
+                </View>
+
+              </View>
               <View
                 style={styles.row}
               >
-                <StarRating
-                  disabled={true}
-                  starSize={15}
-                  maxStars={5}
-                  rating={profileDoctor.rating}
-                  starStyle={{ margin: 2 }}
-                  fullStarColor={"#fbbd04"}
-                  emptyStarColor={"#fbbd04"}
-                />
-                <Text style={styles.rating}>{profileDoctor.rating}</Text>
+                <View style={{
+                  alignItems: 'center',
+                  borderRightColor: '#ccc',
+                  borderRightWidth: 1,
+                  paddingRight: 5,
+                  flex: 1
+                }}>
+                  <Text>Lượt đặt khám</Text>
+                  <Text style={styles.rating}>{profileDoctor.rating}</Text>
+                </View>
+                <View style={{
+                  alignItems: 'center',
+                  borderRightColor: '#ccc',
+                  borderRightWidth: 1,
+                  paddingRight: 5,
+                  flex: 1
+                }}>
+                  <Text>Lượt tư vấn</Text>
+                  <Text style={styles.rating}>{profileDoctor.rating}</Text>
+                </View>
+                <View style={{
+                  alignItems: 'center',
+                  paddingRight: 5,
+                  flex: 1
+                }}>
+                  <Text>Đánh giá</Text>
+                  <Text style={styles.rating}>{profileDoctor.rating}</Text>
+                </View>
               </View>
-              <View style={styles.containerSeeDetails}>
-                <TouchableOpacity
-                  style={styles.buttonSeeDetail}
-                  hitSlop={styles.hitSlopButton}
-                  onPress={this.onSeeDetails}
-                >
-                  <Text style={styles.txtSeeDetails}>Xem chi tiết</Text>
-                </TouchableOpacity>
-                <Text style={styles.fontItalic}>{this.state.name} nhận xét, {this.state.name} đánh giá</Text>
+            </Card>
+            {/** */}
 
+            <Card style={styles.containerInfo}>
+              <Text style={styles.colorBold}>Đơn vị công tác:</Text>
+              {this.renderText(profileDoctor.address)}
+
+              <Text style={styles.colorBold}>Chuyên khoa:</Text>
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                {profileDoctor.position && profileDoctor.position.length > 0 ?
+                  profileDoctor.position.map((e, i) => {
+                    return (
+                      <Text style={styles.txtPosition} key={i}>{e}{i == profileDoctor.position.length - 1 ? '.' : ', '}</Text>
+                    )
+                  }) :
+                  null
+                }
               </View>
+              <Text style={styles.colorBold}>Quá trình công tác:</Text>
+              <View style={styles.flex}>
+                {profileDoctor.time && profileDoctor.time.length > 0 ?
+                  profileDoctor.time.map((e, i) => {
+                    return (
+                      <View key={i} style={styles.flexRow}>
+                        <View style={styles.dots} />
+                        <View style={{
+                          paddingLeft: 5,
+                        }}>
+                          <Text style={styles.txtPosition}>{e.time}</Text>
+                          <Text style={{
+                            paddingBottom: 5,
+                          }}>{e.name}</Text>
+                        </View>
+                      </View>
+                    )
+                  }) :
+                  null
+                }
+              </View>
+            </Card>
+            {/** */}
 
-            </View>
-          </View>
-          {/** */}
-          <TouchableOpacity
-            style={styles.btnBooking}
-            onPress={this.addBooking}
-          >
-            <Text style={styles.txtButtonBooking}>Đặt khám</Text>
-          </TouchableOpacity>
-          <View style={styles.containerInfo}>
-            <Text style={styles.colorBold}>Đơn vị công tác:</Text>
-
-            <Text style={styles.colorBold}>Chuyên khoa:</Text>
-
-            <Text style={styles.colorBold}>Quá trình công tác: {this.state.certificateCode}</Text>
-            <Text style={styles.colorBold}>Giới thiệu chung: {this.state.certificateCode}</Text>
+            <Card style={{
+              borderRadius: 10
+            }}>
+              <Text style={{
+                color: '#00CBA7',
+                fontWeight: 'bold',
+                fontSize: 16,
+                paddingLeft: 10,
+                paddingTop: 9,
+                paddingBottom: 7,
+              }}>ĐÁNH GIÁ</Text>
+              <View style={{
+                backgroundColor: '#ccc',
+                height: 0.6,
+                width: '100%'
+              }} />
+              <Text>aaa</Text>
+              <Text>aaa</Text>
+              <Text>aaa</Text>
+              <Text>aaa</Text>
+              <Text>aaa</Text>
+              <Text>aaa</Text>
+              <Text>aaa</Text>
+            </Card>
           </View>
 
 
@@ -189,10 +283,49 @@ class DetailsDoctorScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  dots: {
+    backgroundColor: '#00CBA7',
+    height: 10,
+    width: 10,
+    borderRadius: 5,
+    marginRight: 5,
+    marginTop: 7
+  },
+  flexRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  txtPosition: {
+    color: '#000000',
+    fontWeight: '700'
+  },
+  txtBooking: {
+    backgroundColor: '#00CBA7',
+    marginLeft: 6
+  },
+  txtAdvisory: {
+    backgroundColor: '#3161AD',
+  },
+  containerButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    marginTop: 10,
+    marginBottom: 10
+  },
+  backgroundHeader: {
+    backgroundColor: '#02C39A',
+    height: '13%',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0
+  },
   containerInfo: {
     flex: 1,
     marginVertical: 20,
-    paddingLeft: 10
+    paddingLeft: 10,
+    borderRadius: 10
   },
   containerSeeDetails: {
     flexDirection: 'row',
@@ -234,21 +367,24 @@ const styles = StyleSheet.create({
     marginTop: 13
   },
   colorBold: {
-    color: 'rgb(2,195,154)',
+    color: '#b3b3b3',
     fontSize: 15,
     fontWeight: 'bold',
-    paddingVertical: 8
+    paddingVertical: 8,
+    fontStyle: 'italic'
   },
   fontItalic: { fontStyle: 'italic' },
   rating: { color: '#000', paddingLeft: 10 },
   row: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 10
   },
-  nameDoctor: { fontSize: 16, color: 'rgb(2,195,154)' },
+  nameDoctor: { fontSize: 16, color: '#000000', fontWeight: 'bold', paddingBottom: 5, },
   imgDefault: { width: 70, height: 70, alignSelf: "center" },
-  boderImage: { borderRadius: 35, borderWidth: 1, borderColor: 'rgba(0,0,0,0.07)' },
-  avatar: { width: 70, height: 70, alignSelf: "center" },
+  boderImage: { borderRadius: 35, borderWidth: 2, borderColor: '#00CBA7' },
+  avatar: { width: 70, height: 70, alignSelf: "flex-start", },
   imgPlaceHoder: {
     width: 70,
     height: 70,
@@ -280,10 +416,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   viewImgUpload: {
-    width: "100%",
-    alignItems: "center",
-    flexDirection: 'row',
-    paddingHorizontal: 10
+    padding: 10,
+    borderRadius: 10
   },
 });
 function mapStateToProps(state) {

@@ -34,8 +34,12 @@ const data = [
         rating: 3.5,
         quantity: 1024,
         avatar: 'http://www.dangcongsan.vn/DATA/0/2019/09/file76xog5oc70i1g0dp219_156748_9282_7304_1567581048-20_11_49_618.jpg',
-        position: ['Tai mũi họng', 'Răng hàm mặt', 'Mắt'],
-        address: ['Phòng khám Y Khoa Hà Nội', 'Bệnh viện Đại học Y', 'Bệnh viện E']
+        position: ['Tai mũi họng', 'Răng hàm mặt', 'Mắt','Tai mũi họng', 'Răng mặt'],
+        address: ['Phòng khám Y Khoa Hà Nội', 'Bệnh viện Đại học Y', 'Bệnh viện E'],
+        time: [
+            { time: '07/2011', name: 'Chức vụ bác sỹ đa khoa - Bệnh viện K Hà Nội' },
+            { time: '09/2019', name: 'Chức vụ bác sỹ đa khoa - Bệnh viện E Hà Nội' },
+        ]
     },
     {
         id: 4,
@@ -44,7 +48,11 @@ const data = [
         quantity: 2098,
         avatar: 'https://icdn.dantri.com.vn/thumb_w/640/2019/08/14/nu-sinh-lao-cai-xinh-dep-duoc-vi-nhu-thien-than-anh-thedocx-1565795558127.jpeg',
         position: ['Răng hàm mặt', 'Tai mũi họng', 'Mắt'],
-        address: ['Phòng khám Y Khoa Hà Nội', 'Bệnh viện Đại học Y', 'Bệnh viện E']
+        address: ['Phòng khám Y Khoa Hà Nội', 'Bệnh viện Đại học Y', 'Bệnh viện E'],
+        time: [
+            { time: '07/2011', name: 'Chức vụ bác sỹ đa khoa - Bệnh viện K Hà Nội' },
+            { time: '09/2019', name: 'Chức vụ bác sỹ đa khoa - Bệnh viện E Hà Nội' },
+        ]
     },
     {
         id: 5,
@@ -53,7 +61,11 @@ const data = [
         quantity: 1024,
         avatar: 'http://www.dangcongsan.vn/DATA/0/2019/09/file76xog5oc70i1g0dp219_156748_9282_7304_1567581048-20_11_49_618.jpg',
         position: ['Răng hàm mặt', 'Tai mũi họng', 'Mắt'],
-        address: ['Phòng khám Y Khoa Hà Nội', 'Bệnh viện Đại học Y', 'Bệnh viện E']
+        address: ['Phòng khám Y Khoa Hà Nội', 'Bệnh viện Đại học Y', 'Bệnh viện E'],
+        time: [
+            { time: '07/2011', name: 'Chức vụ bác sỹ đa khoa - Bệnh viện K Hà Nội' },
+            { time: '09/2019', name: 'Chức vụ bác sỹ đa khoa - Bệnh viện E Hà Nội' },
+        ]
     },
     {
         id: 6,
@@ -62,7 +74,11 @@ const data = [
         quantity: 2098,
         avatar: 'https://icdn.dantri.com.vn/thumb_w/640/2019/08/14/nu-sinh-lao-cai-xinh-dep-duoc-vi-nhu-thien-than-anh-thedocx-1565795558127.jpeg',
         position: ['Răng hàm mặt', 'Tai mũi họng', 'Mắt'],
-        address: ['Phòng khám Y Khoa Hà Nội', 'Bệnh viện Đại học Y', 'Bệnh viện E']
+        address: ['Phòng khám Y Khoa Hà Nội', 'Bệnh viện Đại học Y', 'Bệnh viện E'],
+        time: [
+            { time: '07/2011', name: 'Chức vụ bác sỹ đa khoa - Bệnh viện K Hà Nội' },
+            { time: '09/2019', name: 'Chức vụ bác sỹ đa khoa - Bệnh viện E Hà Nội' },
+        ]
     },
 ]
 class ListDoctorScreen extends Component {
@@ -93,13 +109,17 @@ class ListDoctorScreen extends Component {
             isNotHaveSchedule: true
         })
     }
+    goToAdvisory=()=>{
+        this.props.navigation.navigate("listQuestion");
+    }
     renderItem = ({ item }) => {
 
         return (
             <ItemDoctor
                 item={item}
                 onPressDoctor={this.goDetailDoctor(item)}
-                onPress={this.addBookingDoctor(item)}
+                onPressBooking={this.addBookingDoctor(item)}
+                onPressAdvisory={this.goToAdvisory}
             />
         )
     }
@@ -144,6 +164,7 @@ class ListDoctorScreen extends Component {
                 showFullScreen={true}
                 isLoading={this.state.isLoading}>
                 <ScrollView>
+                    <View style={styles.backgroundHeader}></View>
                     <View style={{ flex: 1 }}>
                         <View style={styles.groupSearch}>
                             <TextInput
@@ -158,62 +179,12 @@ class ListDoctorScreen extends Component {
                                 <ScaleImage source={require('@images/new/hospital/ic_search.png')} height={16} />
                             </TouchableOpacity>
                         </View>
-                        {/* <FlatList
-                    data={this.state.data}
-                    renderItem={this.renderItem}
-                    keyExtractor={this.keyExtractor}
-                    ListEmptyComponent={this.listEmpty}
-                /> */}
-                        <View style={styles.flex}>
-                            <LinearGradient
-                                colors={['#02C39A', '#00B96C']}
-                                locations={[0, 1]}
-                                style={styles.linear}>
-                                <Carousel
-                                    ref={(c) => { this._carousel = c; }}
-                                    data={this.state.data}
-                                    renderItem={this.renderItem}
-                                    sliderWidth={width}
-                                    itemWidth={width - 100}
-                                    layout={"default"}
-                                    sliderHeight={height / 3}
-                                    layoutCardOffset={9}
-                                    itemHeight={height / 3}
-                                    onSnapToItem={this.onSnapToItem}
-                                />
-                            </LinearGradient>
-                            <View
-                                style={[styles.groupProfile, { paddingRight: 10 }]}
-                            >
-                                <Text style={styles.Specialist}>Chuyên khoa</Text>
-                                <View style={styles.flex}>
-                                    {infoDoctor.position && infoDoctor.position.length > 0 ?
-                                        infoDoctor.position.map((e, i) => {
-
-                                            return (
-                                                <Text key={i}>{e}</Text>
-                                            )
-                                        }) :
-                                        null
-                                    }
-                                </View>
-
-                            </View>
-                            <View style={styles.between} />
-                            <View style={[styles.groupProfile, { paddingRight: 10 }]} >
-                                <Text style={styles.Specialist}>Địa điểm làm việc</Text>
-                                <View style={styles.flex}>
-                                    {infoDoctor.address && infoDoctor.address.length > 0 ?
-                                        infoDoctor.address.map((e, i) => {
-                                            return (
-                                                <Text key={i}>{e}</Text>
-                                            )
-                                        }) :
-                                        null
-                                    }
-                                </View>
-                            </View>
-                        </View>
+                        <FlatList
+                            data={this.state.data}
+                            renderItem={this.renderItem}
+                            keyExtractor={this.keyExtractor}
+                            ListEmptyComponent={this.listEmpty}
+                        />
                     </View>
                 </ScrollView>
             </ActivityPanel >
@@ -225,6 +196,14 @@ export default ListDoctorScreen;
 
 
 const styles = StyleSheet.create({
+    backgroundHeader: {
+        backgroundColor: '#02C39A',
+        height: '13%',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0
+    },
     flex: {
         flex: 1
     },
@@ -246,19 +225,22 @@ const styles = StyleSheet.create({
         height: 41,
         marginLeft: -10,
         fontWeight: 'bold',
-        paddingLeft: 9
+        paddingLeft: 9,
     },
     groupSearch: {
         flexDirection: 'row',
         alignItems: 'center',
         paddingLeft: 15,
-        paddingRight: 10,
+        paddingRight: 7,
         borderTopWidth: 0.5,
         height: 41,
         borderStyle: "solid",
         borderBottomWidth: 0.5,
         borderColor: 'rgba(0,0,0,0.26)',
-        marginVertical: 10
+        backgroundColor: '#fff',
+        marginVertical: 10,
+        marginHorizontal: 10,
+        borderRadius: 7
     },
     none_data: {
         fontStyle: 'italic',

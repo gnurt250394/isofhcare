@@ -25,6 +25,7 @@ import StarRating from 'react-native-star-rating';
 
 import scheduleProvider from '@data-access/schedule-provider';
 import SelectPaymentDoctor from '@components/booking/doctor/SelectPaymentDoctor';
+import ViewHeader from '../../../components/booking/doctor/ViewHeader';
 class AddBookingDoctorScreen extends Component {
     constructor(props) {
         super(props);
@@ -409,7 +410,7 @@ class AddBookingDoctorScreen extends Component {
                 this.setState({ isLoading: false }, () => {
                     if (e && e.response && e.response.data) {
                         let response = e.response.data;
-                        
+
                         let message = "";
                         switch (response.type) {
                             case "ValidationError":
@@ -598,7 +599,7 @@ class AddBookingDoctorScreen extends Component {
 
     createBooking() {
         let paymentMethod = this.paymentSelect.state.paymentMethod || 2
-        
+
         connectionUtils.isConnected().then(s => {
             this.setState({ isLoading: true }, () => {
                 bookingProvider.detail(this.state.booking.book.id).then(s => {
@@ -759,6 +760,26 @@ class AddBookingDoctorScreen extends Component {
             booking: this.state.hospital
         })
     }
+    renderButton = () => {
+        return <TouchableOpacity style={styles.btnVoucher}
+            onPress={this.onSelectProfile}
+        >
+            <View style={{ flex: 1, flexDirection: 'row', alignItems: 'flex-start' }}>
+                <ScaleImage style={styles.imgmdk} height={11} source={require("@images/new/booking/ic_next.png")} />
+                <View style={{ flex: 1 }}>
+                    <Text style={styles.txtVoucher}>Đặt khám cho: </Text>
+                    {profile ?
+                        <Text style={{ color: '#000000', fontSize: 15 }}>{profile.medicalRecords.name}</Text>
+                        :
+                        <Text style={styles.txtname}>{constants.booking.select_profile}</Text>
+
+                    }
+                </View>
+            </View>
+
+            <ScaleImage style={styles.imgmdk} height={11} source={require("@images/new/booking/ic_next.png")} />
+        </TouchableOpacity>
+    }
     render() {
 
         let minDate = new Date();
@@ -769,10 +790,52 @@ class AddBookingDoctorScreen extends Component {
         return (
             <ActivityPanel title="Đặt Khám"
                 isLoading={this.state.isLoading} >
-                <View style={{backgroundColor: '#fff',}}>
+                <View style={{ backgroundColor: '#fff', }}>
                     <KeyboardAwareScrollView>
-                        {this.renderProfile(profileDoctor)}
-                        <View style={styles.article}>
+                        {/** */}
+
+                        <ViewHeader
+                            iconRight={true}
+                            onPress={this.onSelectProfile}
+                            button={true}
+                            source={require("@images/new/booking/ic_image.png")}
+                            name={profile ? profile.medicalRecords.name : null}
+                            subName={constants.booking.select_profile}
+                            label={'Người tới khám'}
+                        />
+
+                        <ViewHeader
+                            source={require("@images/new/booking/ic_image.png")}
+                            name={profileDoctor ? profileDoctor.name : null}
+                            subName={''}
+                            label={'Bác sĩ'}
+                        />
+                        <ViewHeader
+                            source={require("@images/new/booking/ic_image.png")}
+                            name={profileDoctor && profileDoctor.address && profileDoctor.address.length > 0 ? profileDoctor.address[0] : null}
+                            subName={''}
+                            label={'Cơ sở y tế'}
+                        />
+                        <ViewHeader
+                            source={require("@images/new/booking/ic_image.png")}
+                            name={profileDoctor && profileDoctor.address && profileDoctor.address.length > 0 ? profileDoctor.address[0] : null}
+                            subName={''}
+                            label={'Dịch vụ'}
+
+                        />
+
+                        <ViewHeader
+                            button={true}
+                            source={require("@images/new/booking/ic_image.png")}
+                            name={profileDoctor && profileDoctor.address && profileDoctor.address.length > 0 ? profileDoctor.address[0] : null}
+                            subName={constants.booking.select_profile}
+                            label={'Thời gian khám'}
+                            iconRight={true}
+                            onPress={this.selectTime}
+
+                        />
+
+                        {/* <View style={styles.article}>
                             <TouchableOpacity style={styles.mucdichkham} onPress={this.selectTime}>
                                 <Text style={styles.mdk}>Thời gian khám</Text>
                                 <View style={styles.ktq}>{this.renderBookingTime()}</View>
@@ -795,17 +858,17 @@ class AddBookingDoctorScreen extends Component {
                                 </View>
                             </View>
                         </View>
-                        <View style={styles.between} />
+                        <View style={styles.between} /> */}
                         <View style={[styles.article,]}>
-                            <Text style={styles.txtServices}>Dịch vụ khám</Text>
+                            {/* <Text style={styles.txtServices}>Dịch vụ khám</Text>
                             {services && services.length > 0 ?
                                 services.map((e, i) => {
                                     return (
                                         <View key={i} style={styles.groupServices}>
-                                            <Text style={{ flex: 1 ,color:'#111'}}>{e.name}</Text>
+                                            <Text style={{ flex: 1, color: '#111' }}>{e.name}</Text>
                                             <Text style={{
-                                                color:'#ddd',
-                                                fontStyle:'italic'
+                                                color: '#ddd',
+                                                fontStyle: 'italic'
                                             }}>({e.price.formatPrice()}đ)</Text>
                                         </View>
                                     )
@@ -822,22 +885,15 @@ class AddBookingDoctorScreen extends Component {
                             </TouchableOpacity>
                             <View style={styles.groupSumPrice}>
                                 <Text style={styles.txtSumPrice}>Tổng tiền: </Text>
-                                <Text style={{ color: '#FF0000',fontSize:15 }}>{this.getPrice()}đ</Text>
-                            </View>
+                                <Text style={{ color: '#FF0000', fontSize: 15 }}>{this.getPrice()}đ</Text>
+                            </View> */}
 
 
-                            <TouchableOpacity style={styles.btnVoucher}
-                                onPress={this.onSelectProfile}
-                            >
-                                <Text style={styles.txtVoucher}>Đặt khám cho: </Text>
-                                {this.state.profile ?
-                                    <Text style={{ color: '#111', flex: 1 }}>{this.state.profile.medicalRecords.name}</Text>
-                                    :
-                                    <Text style={styles.txtname}>{constants.booking.select_profile}</Text>
-
-                                }
-                                <ScaleImage style={styles.imgmdk} height={11} source={require("@images/new/booking/ic_next.png")} />
-                            </TouchableOpacity>
+                            <View style={{
+                                height: 12,
+                                backgroundColor: '#ccc',
+                                width: '100%'
+                            }} />
                             <Form
                                 ref={ref => (this.form = ref)} style={styles.mota}>
                                 <TextField
@@ -872,13 +928,36 @@ class AddBookingDoctorScreen extends Component {
                                 </TouchableOpacity>
                             </Form>
                             <View style={{
-                                height:1,
-                                width:'100%',
+                                height: 1,
+                                width: '100%',
                                 backgroundColor: '#ccc',
-                            }}/>
+                            }} />
                         </View>
                         <Text style={[styles.errorStyle]}>{this.state.symptonError}</Text>
+                        <TouchableOpacity
+                            onPress={this.goVoucher}
+                            style={styles.btnVoucher}
+                        >
+                            <View style={{ flex: 1 }}>
+                                <Text style={{
+                                    color: '#111'
+                                }}>Mã ưu đãi</Text>
+                                {this.state.voucher && this.state.voucher.price ?
+                                    <Text style={[styles.txtVoucher, { flex: 1 }]}>{`GIẢM ${this.state.voucher.price.formatPrice()} KHI ĐẶT KHÁM`}</Text>
+                                    : null
+                                }
 
+                            </View>
+                            <View style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                            }}>
+                                <Text style={{ fontWeight: '700', paddingRight: 7, }}>Thay đổi</Text>
+                                <ScaleImage style={styles.imgmdk} height={11} source={require("@images/new/booking/ic_next.png")} />
+
+                            </View>
+
+                        </TouchableOpacity>
                         <View style={styles.list_image}>
                             {
                                 this.state.imageUris.map((item, index) => <View key={index} style={styles.containerImagepicker}>
@@ -951,7 +1030,7 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         paddingLeft: 10,
         paddingTop: 5,
-        paddingBottom:12
+        paddingBottom: 12
     },
     imgLoading: {
         position: 'absolute',
@@ -984,8 +1063,8 @@ const styles = StyleSheet.create({
     txtSumPrice: {
         color: '#111',
         fontWeight: '500',
-        fontSize:15,
-        flex:1
+        fontSize: 15,
+        flex: 1
     },
     groupSumPrice: {
         flexDirection: 'row',
@@ -993,31 +1072,26 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10
     },
     txtVoucher: {
-        color: '#02c39a',
-        fontWeight: 'bold',
-        width: '40%',
-        fontSize:15
     },
     btnVoucher: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#FFFFDD',
-        paddingVertical: 10,
+        backgroundColor: 'rgba(128, 255, 232,0.3)',
+        paddingVertical: 20,
         paddingHorizontal: 10,
-        marginVertical: 10
     },
     groupServices: {
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: 10,
-        paddingTop:5
+        paddingTop: 5
     },
     txtServices: {
         color: '#02c39a',
         fontSize: 15,
         fontWeight: '700',
         paddingLeft: 10,
-        paddingBottom:5
+        paddingBottom: 5
     },
     rowAddress: {
         flexDirection: 'row',
@@ -1079,8 +1153,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         fontStyle: "normal",
         letterSpacing: 0,
-        color: "#02c39a",
-        flex: 1,
+        color: "#000000",
     },
     img: {
         marginRight: 5
@@ -1125,6 +1198,8 @@ const styles = StyleSheet.create({
         backgroundColor: "#ffffff",
         borderColor: "rgba(0, 0, 0, 0.06)",
         alignItems: 'center',
+        borderTopColor: '#555',
+        borderTopWidth: 0.3
     },
     mtTr: {
         flex: 1,

@@ -327,6 +327,7 @@ const RootNavigator = createStackNavigator(
     listBooking:{screen:ListBookingScreen}
   },
   {
+    initialRouteName:'listDoctor',
     headerMode: "none",
     // cardStyle: {
     //   backgroundColor: 'transparent', opacity: 1,

@@ -8,6 +8,7 @@ import clientUtils from '@utils/client-utils';
 import scheduleProvider from '@data-access/schedule-provider';
 import snackbar from '@utils/snackbar-utils';
 import dateUtils from "mainam-react-native-date-utils";
+import {Card} from 'native-base';
 const DEVICE_WIDTH = Dimensions.get('window').width;
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import DateTimePicker from "mainam-react-native-date-picker";
@@ -188,7 +189,7 @@ class SelectDateTimeDoctorScreen extends Component {
                 obj[key].schedules = [];
                 obj[key].marked = true;
                 obj[key].color = 'green';
-                obj[key].selectedColor = '#27ae60';
+                obj[key].selectedColor = '#FC4A5F';
             }
             // return;
             firstDay.setDate(firstDay.getDate() + 1)
@@ -228,7 +229,7 @@ class SelectDateTimeDoctorScreen extends Component {
                         schedules: [],
                         marked: true,
                         color: 'green',
-                        selectedColor: '#27ae60'
+                        selectedColor: '#FC4A5F'
                     }
                 } else {
                     obj[tgi].schedules.push(item);
@@ -384,7 +385,7 @@ class SelectDateTimeDoctorScreen extends Component {
                 delete schedules[this.state.dateString].selected;
             }
             schedules[day.dateString].selected = true;
-            schedules[day.dateString].selectedColor = '#27ae60';
+            schedules[day.dateString].selectedColor = '#FC4A5F';
             this.setState({
                 dateString: day.dateString,
                 bookingDate: day.dateString.toDateObject(),
@@ -421,7 +422,7 @@ class SelectDateTimeDoctorScreen extends Component {
                 <View style={styles.container}>
                     <ScrollView keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
                         <Text style={styles.txtTitleHeader}>CHỌN NGÀY GIỜ CÓ MÀU XANH</Text>
-                        <View style={styles.containerCalendar}>
+                        <Card style={styles.containerCalendar}>
                             <Calendar style={styles.calendar}
                                 markedDates={this.state.schedules}
                                 current={(this.state.latestTime || new Date()).format("yyyy-MM-dd")}
@@ -436,7 +437,7 @@ class SelectDateTimeDoctorScreen extends Component {
                                 onPress={this.onClickToggleDay}
                                 style={styles.buttonToggleDay}>
                             </TouchableOpacity>
-                        </View>
+                        </Card>
                         {
                             this.state.dateString ?
                                 this.state.listTime && this.state.listTime.length ?
@@ -511,13 +512,17 @@ const styles = StyleSheet.create({
         height: 60
     },
     calendar: {
-        width: '100%'
+        width: '100%',
+        borderRadius:10
     },
     containerCalendar: {
         position: 'relative',
         left: 0,
         right: 0,
-        width: DEVICE_WIDTH
+        width: DEVICE_WIDTH-20,
+        alignSelf:'center',
+        borderRadius:10,
+        paddingBottom: 10,
     },
     txtTitleHeader: {
         color: '#00c088',
