@@ -419,8 +419,12 @@ class AccountScreen extends Component {
             <TouchableOpacity
               style={[styles.itemMenu]}
               onPress={() => {
-                this.props.dispatch(redux.userLogout());
-                if (this.props.onLogout) this.props.onLogout();
+                this.setState({
+                  showSetting: false
+                }, () => {
+                  this.props.dispatch(redux.userLogout());
+                  if (this.props.onLogout) this.props.onLogout();
+                })
               }}
             >
               <Text style={styles.itemText}>Đăng xuất</Text>
