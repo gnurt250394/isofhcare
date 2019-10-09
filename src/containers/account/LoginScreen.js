@@ -200,11 +200,18 @@ class LoginScreen extends Component {
 					isLoading: true
 				}, () => {
 					userProvider.forgotPassword(this.state.phone.trim(), 2, (s, e) => {
-						if (s.code == 0)
-							this.props.navigation.navigate('verifyPhone', {
-								phone: this.state.phone,
-								verify: 2
-							})
+						switch (s.code) {
+							case 0:
+								this.props.navigation.navigate('verifyPhone', {
+									phone: this.state.phone,
+									verify: 2
+								})
+								break
+							case 2:
+								snackbar.show('Số điện thoại chưa được đăng ký', "danger");
+								break
+						}
+
 
 					})
 					this.setState({
