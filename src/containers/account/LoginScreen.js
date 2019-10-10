@@ -210,6 +210,12 @@ class LoginScreen extends Component {
 							case 2:
 								snackbar.show('Số điện thoại chưa được đăng ký', "danger");
 								break
+							case 6:
+								this.props.navigation.navigate('verifyPhone', {
+									phone: this.state.phone,
+									verify: 2
+								})
+								break
 						}
 
 
