@@ -157,7 +157,6 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
     onCheckOtp = () => {
         Keyboard.dismiss();
         if (!this.form.isValid()) {
-            this.child.unPress();
             return;
         }
         let text = this.state.text
@@ -165,86 +164,104 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
             connectionUtils
                 .isConnected()
                 .then(s => {
-                    this.child.unPress();
-                    switch (this.state.verify) {
-                        case 1:
-                            userProvider.checkOtpPhone(this.state.id, text).then(res => {
-                                if (res.code == 0) {
-                                    snackbar.show(res.mesage, 'success')
-                                    let user = res.data.user
-                                    let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
-                                    if (callback) {
-                                        callback(user);
-                                        this.props.navigation.pop();
-                                    }
-                                    // this.getDetails(this.state.id, token)
-                                    // var user = s.data.user;
-                                    // user.bookingNumberHospital = s.data.bookingNumberHospital;
-                                    // user.bookingStatus = s.data.bookingStatus;
-                                    // if (s.data.profile && s.data.profile.uid)
-                                    //     user.uid = s.data.profile.uid;
-                                    //     user.loginToken = res.details
-                                    // this.props.dispatch(redux.userLogin(user));
-                                    // if (this.nextScreen) {
-                                    //     this.props.navigation.replace(
-                                    //         this.nextScreen.screen,
-                                    //         this.nextScreen.param
-                                    //     );
-                                    // } else this.props.navigation.navigate("home", { showDraw: false });
-                                } else {
-                                    snackbar.show(res.message, 'danger')
-                                }
-                            })
-                            break
-                        case 2:
-                            userProvider.confirmCode(this.state.phone, text, (s, e) => {
-                                if (s) {
-                                    switch (s.code) {
-                                        case 0:
-                                            console.log(s, 'asdasdasd')
-                                            snackbar.show(constants.msg.user.confirm_code_success, "success");
-                                            this.props.navigation.replace("resetPassword", {
-                                                user: s.data.user,
-                                                id: s.data.user.id,
-                                                nextScreen: this.nextScreen
-                                            });
-                                            return;
-                                    }
-                                }
-                                if (e) {
-                                    console.log(e);
-                                }
-                                snackbar.show(constants.msg.user.confirm_code_not_success, "danger");
-                            });
-                            break
-                        case 3:
-                            let data = {
-                                'otp': text
-                            }
-                            if (data && this.state.id) {
-                                profileProvider.checkOtp(data, this.state.id).then(res => {
-                                    if (res.code == 0) {
-                                        this.props.navigation.replace('shareDataProfile', { id: res.data.record.id })
-                                        return;
-                                    }
-                                    if (res.code == 4) {
-                                        snackbar.show('Mã bạn nhập đã hết hạn', 'danger')
-                                        return
-                                    }
-                                    if (res.code == 5) {
-                                        snackbar.show('Mã bạn nhập không đúng', 'danger')
-                                        return
-                                    }
-                                    else {
-                                        snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                    this.setState({
+                        disabledConfirm: true
+                    }, () => {
+                        switch (this.state.verify) {
+                            case 1:
+                                userProvider.checkOtpPhone(this.state.id, text).then(res => {
+                                    switch (res.code) {
+                                        case 0: {
+                                            snackbar.show('Đăng ký thành công', 'success')
+                                            let user = res.data.user
+                                            let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
+                                            if (callback) {
+                                                callback(user);
+                                                this.props.navigation.pop();
+                                            }
+                                        }
+                                            break
+                                        case 3:
+                                            snackbar.show('Mã xác thực không đúng', 'danger')
+                                            break
+                                        case 4:
+                                            snackbar.show('Mã xác thực hết hạn', 'danger')
+                                            break
+                                        default:
+                                            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                                            break
 
                                     }
+                                    this.setState({
+                                        disabledConfirm: false
+                                    })
                                 })
-                            }
-                            break
-                    }
+                                break
+                            case 2:
+                                userProvider.confirmCode(this.state.phone, text, (s, e) => {
+                                    if (s) {
+                                        switch (s.code) {
+                                            case 0:
+                                                console.log(s, 'asdasdasd')
+                                                snackbar.show(constants.msg.user.confirm_code_success, "success");
+                                                this.props.navigation.replace("resetPassword", {
+                                                    user: s.data.user,
+                                                    id: s.data.user.id,
+                                                    nextScreen: this.nextScreen
+                                                });
+                                                break;
+                                            case 2:
+                                                snackbar.show('Mã xác thực không đúng', 'danger')
+                                                break
+                                            case 4:
+                                                snackbar.show('Mã xác thực hết hạn', 'danger')
+                                                break
+                                        }
+                                    }
+                                    if (e) {
+                                        snackbar.show(constants.msg.user.confirm_code_not_success, "danger");
+                                    }
+                                    this.setState({
+                                        disabledConfirm: false
+                                    })
+                                });
+                                break
+                            case 3:
+                                let data = {
+                                    'otp': text
+                                }
+                                if (data && this.state.id) {
+                                    profileProvider.checkOtp(data, this.state.id).then(res => {
+                                        if (res.code == 0) {
+                                            this.props.navigation.replace('shareDataProfile', { id: res.data.record.id })
+                                            return;
+                                        }
+                                        if (res.code == 4) {
+                                            snackbar.show('Mã bạn nhập đã hết hạn', 'danger')
+                                            return
+                                        }
+                                        if (res.code == 5) {
+                                            snackbar.show('Mã bạn nhập không đúng', 'danger')
+                                            return
+                                        }
+                                        else {
+                                            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+
+                                        }
+                                        this.setState({
+                                            disabledConfirm: false
+                                        })
+                                    })
+                                }
+                                break
+                        }
+                    })
+
                 }).catch(e => {
                     console.log(e, 'eeee')
+                    this.setState({
+                        disabledConfirm: false
+                    })
                     snackbar.show(constants.msg.app.not_internet, "danger");
                 });
 
@@ -304,18 +321,14 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                                 autoCorrect={false}
                             />
                         </Form>
-                        <Text style={styles.txTime}>Mã xác thực hiệu lực trong   <Text style={styles.txCountTime}>{this.state.seconds > 9 ? this.state.seconds : '0' + this.state.seconds}</Text>   giây</Text>
-
-
                         {
-                            this.state.countResend ? (<Text style={[styles.txReSent, { color: 'red' }]}>Bạn chỉ được chọn gửi lại mã tối đa 5 lần, xin vui lòng thử lại sau 60 phút</Text>) : <View><Text style={styles.txReSent}>Nếu bạn cho rằng mình chưa nhập được mã hãy chọn</Text>
-                                <TouchableOpacity style={{ padding: 5, marginVertical: 10 }} disabled={this.state.disabled} onPress={this.onReSendPhone}><Text style={[styles.txReSent, { color: 'red' }]}>Gửi lại mã</Text></TouchableOpacity></View>
+                            this.state.countResend ? (<Text style={[styles.txReSent, { color: 'red', marginTop: 10 }]}>Bạn chỉ được chọn gửi lại mã tối đa 5 lần, xin vui lòng thử lại sau 60 phút</Text>) :
+                                <TouchableOpacity style={styles.btnReSend} disabled={this.state.disabled} onPress={this.onReSendPhone}><Text style={styles.txBtnReSend}>Gửi lại mã</Text></TouchableOpacity>
                         }
-                        <ButtonSubmit
-                            onRef={ref => (this.child = ref)}
-                            click={this.onCheckOtp}
-                            text={'Xác nhận'}
-                        />
+                        <Text style={styles.txTime}>Mã xác thực hiệu lực trong   <Text style={styles.txCountTime}>{this.state.seconds > 9 ? this.state.seconds : '0' + this.state.seconds}</Text>   giây</Text>
+                        <TouchableOpacity disabled={this.state.disabledConfirm} onPress={this.onCheckOtp} style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center' }} >
+                            <Text style={{ color: '#FFF', fontSize: 17 }}>{"XÁC NHẬN"}</Text>
+                        </TouchableOpacity>
                     </KeyboardAvoidingView>
                 </ScrollView>
             </ActivityPanel>
@@ -400,7 +413,9 @@ const styles = StyleSheet.create({
     errorStyle: {
         color: "red",
         marginLeft: 20
-    }
+    },
+    btnReSend: { alignSelf: 'flex-end', padding: 2, backgroundColor: '#A3D29C', marginTop: 15, paddingHorizontal: 10 },
+
 });
 function mapStateToProps(state) {
     return {
