@@ -172,7 +172,7 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                                 userProvider.checkOtpPhone(this.state.id, text).then(res => {
                                     switch (res.code) {
                                         case 0: {
-                                            snackbar.show(res.mesage, 'success')
+                                            snackbar.show('Đăng ký thành công', 'success')
                                             let user = res.data.user
                                             let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
                                             if (callback) {
