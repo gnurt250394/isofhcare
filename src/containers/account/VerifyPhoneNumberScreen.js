@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Keyboard, ScrollView, KeyboardAvoidingView, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Keyboard, ScrollView, KeyboardAvoidingView, Dimensions, AppState } from 'react-native';
 import { Content, Item, Input } from 'native-base';
 // import { Grid, Col } from 'react-native-easy-grid';
 import OTPTextView from 'react-native-otp-textinput'
@@ -36,17 +36,49 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
             reset: 2,
             phone,
             id,
-            verify
+            verify,
+            appState: AppState.currentState,
         }
     }
     componentDidMount() {
-        setInterval(() => {
-            if (this.state.seconds > 0)
-                this.setState({
-                    seconds: this.state.seconds - 1
+        this.interval = setInterval(() => {
+            let { seconds } = this.state
+            console.log(seconds, '1111111')
+            if (seconds > 0)
+                this.setState(preState => {
+                    return {
+                        seconds: preState.seconds - 1
+                    }
                 })
         }, 1000);
+        AppState.addEventListener('change', this._handleAppStateChange);
     }
+
+    // componentWillUnmount() {
+    //     AppState.removeEventListener('change', this._handleAppStateChange);
+    // }
+
+    _handleAppStateChange = (nextAppState) => {
+        console.log('nextAppState: ', nextAppState);
+        if (
+            nextAppState === 'background'
+        ) {
+            this.a = setInterval(() => {
+                let { seconds } = this.state
+                console.log(seconds, '22222222')
+                if (seconds > 0)
+                    this.setState(preState => {
+                        return {
+                            seconds: preState.seconds - 1
+                        }
+                    })
+            }, 1000);
+        } else {
+            clearInterval(this.a)
+        }
+        this.setState({ appState: nextAppState });
+    };
+
     onReSendPhone = () => {
         this.setState({
             disabled: true
