@@ -126,7 +126,6 @@ class RegisterScreen extends Component {
               isLoading: false
             })
             this.props.navigation.navigate("verifyPhone", {
-              user: res.data.user,
               id: res.data.user.id,
               phone: phone,
               verify: 1,
@@ -145,7 +144,33 @@ class RegisterScreen extends Component {
 
               }
             })
-          } else {
+            return
+          } if (res.code == 13) {
+            this.setState({
+              isLoading: false
+            })
+            this.props.navigation.navigate("verifyPhone", {
+              id: res.message,
+              phone: phone,
+              verify: 1,
+              onSelected: (user) => {
+                if (!user || !this.state.user || user.id != this.state.user.id) {
+                  this.props.dispatch(redux.userLogin(user));
+                  if (this.nextScreen) {
+                    this.props.navigation.replace(
+                      this.nextScreen.screen,
+                      this.nextScreen.param
+                    );
+                  } else this.props.navigation.navigate("home", { showDraw: false });
+                } else {
+                  this.setState({ user, userError });
+                }
+
+              }
+            })
+            return
+          }
+          else {
             this.setState({
               isLoading: false
             })

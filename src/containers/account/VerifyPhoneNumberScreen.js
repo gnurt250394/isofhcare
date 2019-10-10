@@ -56,6 +56,34 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                 .then(s => {
                     switch (this.state.verify) {
                         case 1:
+                            {
+                                userProvider.forgotPassword(this.state.phone.trim(), 4, (s, e) => {
+                                    if (s.code == 0) {
+                                        this.setState({
+                                            seconds: 90,
+                                        })
+                                        snackbar.show('Mã xác thực đã được gửi lại', 'success')
+                                        return
+                                    }
+                                    if (s.code == 6) {
+                                        this.setState({
+                                            countResend: true
+                                        })
+                                        return
+                                    }
+                                    else {
+                                        snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                                    }
+                                    if (e) {
+                                        snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                                        return
+                                    }
+                                })
+                                this.setState({
+                                    disabled: false
+                                })
+                            }
+                            break
                         case 2:
                             {
                                 userProvider.forgotPassword(this.state.phone.trim(), 2, (s, e) => {
@@ -64,13 +92,22 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                                         this.setState({
                                             seconds: 90,
                                         })
-                                        snackbar.show('Mã xác thực đã được gửi lại')
+                                        snackbar.show('Mã xác thực đã được gửi lại', 'success')
+                                        return
+                                    }
+                                    if (s.code == 6) {
+                                        this.setState({
+                                            countResend: true
+                                        })
+                                        return
                                     }
                                     else {
-                                        snackbar.show(s.mesage, 'danger')
+                                        snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
                                     }
-                                }).catch(err => {
-                                    snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                                    if (e) {
+                                        snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                                        return
+                                    }
                                 })
                                 this.setState({
                                     disabled: false
@@ -96,6 +133,7 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                             break
                     }
                 }).catch(e => {
+                    console.log(e)
                     this.setState({
                         disabled: false
                     })
@@ -132,7 +170,6 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                         case 1:
                             userProvider.checkOtpPhone(this.state.id, text).then(res => {
                                 if (res.code == 0) {
-                                    client.auth = res.details
                                     snackbar.show(res.mesage, 'success')
                                     let user = res.data.user
                                     let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
@@ -268,8 +305,12 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                             />
                         </Form>
                         <Text style={styles.txTime}>Mã xác thực hiệu lực trong   <Text style={styles.txCountTime}>{this.state.seconds > 9 ? this.state.seconds : '0' + this.state.seconds}</Text>   giây</Text>
-                        <Text style={styles.txReSent}>Nếu bạn cho rằng mình chưa nhập được mã hãy chọn</Text>
-                        <TouchableOpacity style={{ padding: 5, marginVertical: 10 }} disabled={this.state.disabled} onPress={this.onReSendPhone}><Text style={[styles.txReSent, { color: 'red' }]}>Gửi lại mã</Text></TouchableOpacity>
+
+
+                        {
+                            this.state.countResend ? (<Text style={[styles.txReSent, { color: 'red' }]}>Bạn chỉ được chọn gửi lại mã tối đa 5 lần, xin vui lòng thử lại sau 60 phút</Text>) : <View><Text style={styles.txReSent}>Nếu bạn cho rằng mình chưa nhập được mã hãy chọn</Text>
+                                <TouchableOpacity style={{ padding: 5, marginVertical: 10 }} disabled={this.state.disabled} onPress={this.onReSendPhone}><Text style={[styles.txReSent, { color: 'red' }]}>Gửi lại mã</Text></TouchableOpacity></View>
+                        }
                         <ButtonSubmit
                             onRef={ref => (this.child = ref)}
                             click={this.onCheckOtp}
