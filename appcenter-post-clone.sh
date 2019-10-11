@@ -14,5 +14,5 @@
 echo running post-clone scripts
 echo uninstalling all cocoapods versions
 sudo gem uninstall cocoapods -ax
-echo installing cocoapods version 1.5.3
-sudo gem install cocoapods -v 1.5.3
+echo installing cocoapods version 1.7.5
+sudo gem install cocoapods -v 1.7.5
