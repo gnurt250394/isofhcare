@@ -404,11 +404,12 @@ class HomeScreen extends Component {
       >
         <View style={styles.container}>
           <ScaledImage source={require("@images/new/homev2/ic_bg_home.png")} width={DEVICE_WIDTH} style={styles.imgHome} />
-          <View style={styles.containerImageLogo}>
-            {/* <View style={styles.ImageCenter}>
+          {/*   <View style={styles.containerImageLogo}>
+        <View style={styles.ImageCenter}>
               <ScaledImage source={require("@images/new/isofhcare.png")} width={116} />
-            </View> */}
-          </View>
+            </View> 
+          </View>*/}
+          <View style={{ height: 150, backgroundColor: '#fff', position: "absolute", top: 140, left: 0, right: 0 }}></View>
           <ScrollView
             refreshControl={this.refreshControl()}
             showsVerticalScrollIndicator={false}
@@ -492,17 +493,17 @@ const styles = StyleSheet.create({
   },
   padding21: { padding: 21 },
   card: { borderRadius: 6, marginTop: 30 },
-  viewMenu: { borderRadius: 6 },
+  viewMenu: {backgroundColor:'#F8F8F8',flex:1 },
   scroll: {
     flex: 1,
-    paddingTop: 0
+    paddingTop: 0,
   },
   ImageCenter: {
     flex: 1, alignItems: 'center'
   },
   container: {
     flex: 1,
-    position: 'relative'
+    // position: 'relative'
   },
   containerImageLogo: {
     height: 75,
