@@ -26,7 +26,7 @@ class NotificationBadge extends Component {
                 <View
                     style={styles.containerItem}
                 >
-                    <ScaleImage source={require("@images/new/bell_news.png")} width={22} style={{ tintColor: this.props.tintColor }} />
+                    <ScaleImage source={require("@images/new/homev2/ic_notification_menu.png")} width={22} style={{ tintColor: this.props.tintColor }} />
                     {
                         this.props.userApp.isLogin && (this.props.userApp.unReadNotificationCount || 0) ?
                             <Text numberOfLines={1} style={styles.txtNotiActive}>{(this.props.userApp.unReadNotificationCount || 0) > 99 ? "99+" : this.props.userApp.unReadNotificationCount}</Text>
@@ -41,7 +41,7 @@ class NotificationBadge extends Component {
                     style={styles.containerItem}
                     onPress={this.selectNoti}
                 >
-                    <ScaleImage source={require("@images/new/bell_news.png")} width={22} style={{ tintColor: this.props.tintColor }} />
+                    <ScaleImage source={require("@images/new/homev2/ic_notification_menu.png")} width={22} style={{ tintColor: this.props.tintColor }} />
                     {
                         this.props.userApp.isLogin && (this.props.userApp.unReadNotificationCount || 0) ?
                             <Text numberOfLines={1} style={styles.txtNotiActive}>{(this.props.userApp.unReadNotificationCount || 0) > 99 ? "99+" : this.props.userApp.unReadNotificationCount}</Text>
