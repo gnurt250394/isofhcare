@@ -35,9 +35,54 @@ class HomeScreen extends Component {
       ads: [],
       refreshing: false,
       ads0: [],
+      featuresBooking: [
+        {
+          icon: require("@images/new/homev2/ic_hospital.png"),
+          text: "CSYT",
+          onPress: () => {
+            if (this.props.userApp.isLogin)
+              this.props.navigation.navigate("selectHealthFacilitiesScreen");
+            else
+              this.props.navigation.navigate("login", {
+                nextScreen: { screen: "selectHealthFacilitiesScreen", param: {} }
+              });
+          }
+        },
+        {
+          icon: require("@images/new/homev2/ic_doctor.png"),
+          text: "Bác sĩ",
+          onPress: () => {
+            if (this.props.userApp.isLogin)
+              this.props.navigation.navigate("addBooking1");
+            else
+              this.props.navigation.navigate("login", {
+                nextScreen: { screen: "addBooking1", param: {} }
+              });
+          }
+        },
+        {
+          icon: require("@images/new/homev2/ic_specialist.png"),
+          text: "Chuyên khoa",
+          onPress: () => {
+            this.props.navigation.navigate("listQuestion");
+          }
+        },
+        {
+          icon: require("@images/new/homev2/ic_symptom.png"),
+          text: "Triệu chứng",
+          onPress: () => {
+            if (this.props.userApp.isLogin)
+              this.props.navigation.navigate("ehealth");
+            else
+              this.props.navigation.navigate("login", {
+                nextScreen: { screen: 'ehealth' }
+              });
+          }
+        }
+      ],
       features: [
         {
-          icon: require("@images/new/home/ic_ticket_news.png"),
+          icon: require("@images/new/homev2/ic_get_ticket.png"),
           text: "Lấy số",
           onPress: () => {
             if (this.props.userApp.isLogin)
@@ -49,8 +94,8 @@ class HomeScreen extends Component {
           }
         },
         {
-          icon: require("@images/new/home/ic_booking_news.png"),
-          text: "Đặt khám",
+          icon: require("@images/new/homev2/ic_advisory.png"),
+          text: "Tư vấn",
           onPress: () => {
             if (this.props.userApp.isLogin)
               this.props.navigation.navigate("addBooking1");
@@ -61,15 +106,38 @@ class HomeScreen extends Component {
           }
         },
         {
-          icon: require("@images/new/home/ic_question_news.png"),
-          text: "Tư vấn",
+          icon: require("@images/new/homev2/ic_ehealth.png"),
+          text: "Y bạ điện tử",
           onPress: () => {
             this.props.navigation.navigate("listQuestion");
           }
         },
         {
-          icon: require("@images/new/home/ic_ehealth_news.png"),
-          text: "Y bạ",
+          icon: require("@images/new/homev2/ic_voucher.png"),
+          text: "Mã ưu đãi",
+          onPress: () => {
+            if (this.props.userApp.isLogin)
+              this.props.navigation.navigate("ehealth");
+            else
+              this.props.navigation.navigate("login", {
+                nextScreen: { screen: 'ehealth' }
+              });
+          }
+        },
+        {
+          icon: require("@images/new/homev2/ic_drug.png"),
+          text: "Thuốc",
+          onPress: () => {
+            if (this.props.userApp.isLogin) { }  // this.props.navigation.navigate("ehealth");
+            else
+              this.props.navigation.navigate("login", {
+                nextScreen: { screen: 'ehealth' }
+              });
+          }
+        },
+        {
+          icon: require("@images/new/homev2/ic_more_info.png"),
+          text: "Nhiều hơn",
           onPress: () => {
             if (this.props.userApp.isLogin)
               this.props.navigation.navigate("ehealth");
@@ -121,7 +189,7 @@ class HomeScreen extends Component {
   renderAds() {
     return (<View>
       <ScaledImage source={require("@images/new/slogan.jpg")} width={DEVICE_WIDTH} />
-      <TouchableOpacity onPress={this.onCallHotline} style={{ alignItems: 'center', justifyContent: 'center' }}><Text style={{ fontSize: 18, color: '#02c39a',fontWeight:'bold' }}>Tổng đài hỗ trợ: 1900299983</Text></TouchableOpacity>
+      <TouchableOpacity onPress={this.onCallHotline} style={{ alignItems: 'center', justifyContent: 'center' }}><Text style={{ fontSize: 18, color: '#02c39a', fontWeight: 'bold' }}>Tổng đài hỗ trợ: 1900299983</Text></TouchableOpacity>
       {/* <View style={styles.viewAds}>
         <Text style={styles.txAds}>Ưu đãi</Text>
         <ScaledImage source={require("@images/new/ic_more.png")} width={20} style={styles.imgMore} />
@@ -242,7 +310,7 @@ class HomeScreen extends Component {
     })
   }
 
-  getItemWidth() {
+  getItemBookingWidth() {
     const width = DEVICE_WIDTH - 40;
     if (width >= 320) {
       return Platform.OS == 'ios' ? 70 : 75;
@@ -256,7 +324,41 @@ class HomeScreen extends Component {
       return 70;
     return width - 50;
   }
+  getItemWidth() {
+    const width = DEVICE_WIDTH - 40;
+    if (width >= 320) {
+      return Platform.OS == 'ios' ? 82 : 85;
+    }
 
+    if (width > 300) {
+      return Platform.OS == 'ios' ? 110 : 120;
+    }
+
+    if (width > 250)
+      return 80;
+    return width - 60;
+  }
+  renderButtonBooking = () => {
+    return (this.state.featuresBooking || []).map((item, position) => {
+      return (
+        <Animatable.View key={position} delay={100} animation={"swing"} direction="alternate">
+          {
+            item.empty ? <View style={[styles.viewEmpty, { width: this.getItemBookingWidth() }]}
+            ></View> :
+              <TouchableOpacity
+                style={[styles.button, { width: this.getItemBookingWidth() }]}
+                onPress={item.onPress}
+              >
+                <View style={styles.groupImageButton}>
+                  <ScaledImage style={[styles.icon]} source={item.icon} height={35} />
+                </View>
+                <Text style={[styles.label]}>{item.text}</Text>
+              </TouchableOpacity>
+
+          }
+        </Animatable.View>);
+    })
+  }
   renderButton = () => {
     return (this.state.features || []).map((item, position) => {
       return (
@@ -301,11 +403,11 @@ class HomeScreen extends Component {
         hideActionbar={true}
       >
         <View style={styles.container}>
-          <ScaledImage source={require("@images/new/home/bg_home_new.png")} width={DEVICE_WIDTH} style={styles.imgHome} />
+          <ScaledImage source={require("@images/new/homev2/ic_bg_home.png")} width={DEVICE_WIDTH} style={styles.imgHome} />
           <View style={styles.containerImageLogo}>
-            <View style={styles.ImageCenter}>
+            {/* <View style={styles.ImageCenter}>
               <ScaledImage source={require("@images/new/isofhcare.png")} width={116} />
-            </View>
+            </View> */}
           </View>
           <ScrollView
             refreshControl={this.refreshControl()}
@@ -323,9 +425,14 @@ class HomeScreen extends Component {
                     <Text style={styles.colorUserName}>{this.getUserName(this.props.userApp.currentUser.name) + '!'}</Text>
                   </View>}
                 <View style={styles.containerButton}>
-                  {this.renderButton()}
+                  {this.renderButtonBooking()}
                 </View>
               </Card>
+              <View style={styles.viewMenu}>
+                <View style={styles.containerButton}>
+                  {this.renderButton()}
+                </View>
+              </View>
             </View>
             {
               this.renderAds()
@@ -365,8 +472,8 @@ const styles = StyleSheet.create({
   },
   colorUserName: {
     color: 'rgb(255,138,21)',
-    paddingLeft:4,
-    fontSize:18
+    paddingLeft: 4,
+    fontSize: 18
   },
   txtHeaderTitle: {
     marginLeft: 5,
@@ -384,7 +491,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   padding21: { padding: 21 },
-  card: { borderRadius: 6, marginTop: 130 },
+  card: { borderRadius: 6, marginTop: 30 },
+  viewMenu: { borderRadius: 6 },
   scroll: {
     flex: 1,
     paddingTop: 0
@@ -407,14 +515,14 @@ const styles = StyleSheet.create({
   },
   imgHome: {
     position: 'absolute',
-    top: 72,
+    // top: 72,
     right: 0,
     left: 0
   },
   icon: {
   },
   label: {
-    marginTop: 2, color: '#4A4A4A', fontSize: 15, fontWeight: '600', lineHeight: 20
+    marginTop: 2, color: '#4A4A4A', fontSize: 12, fontWeight: '600', lineHeight: 20
   },
   subLabel: {
     color: '#9B9B9B', fontSize: 12, textAlign: 'center', marginTop: 5
