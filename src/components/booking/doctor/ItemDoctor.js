@@ -67,13 +67,13 @@ class ItemDoctor extends Component {
                             </View>
                             <View style={styles.flex}>
                                 {item.address && item.address.length > 0 ?
-                                    <Text >{item.address[0]}</Text>
+                                    <Text >{item.address[0].name}</Text>
                                     :
                                     null
                                 }
                             </View>
                             <View style={styles.containerButton}>
-                                <Button label="Tư vấn" style={styles.txtAdvisory} onPress={onPressAdvisory} source={require("@images/ic_star.png")} />
+                                <Button label="Tư vấn" style={styles.txtAdvisory} onPress={onPressAdvisory} source={require("@images/new/booking/ic_chat.png")} />
                                 <Button label="Đặt khám" style={styles.txtBooking} onPress={onPressBooking} source={require("@images/ic_service.png")} />
                             </View>
                         </View>
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     flexRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        flexWrap:'wrap'
+        flexWrap: 'wrap'
     },
     Specialist: {
         fontSize: 15,

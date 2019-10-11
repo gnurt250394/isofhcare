@@ -19,11 +19,12 @@ class ViewHeader extends Component {
                 <View style={styles.container}>
                     <ScaleImage style={{
                         marginTop: 4,
-                    }} height={13} source={source} />
+                        tintColor:'#FC4A5F'
+                    }} height={18} source={source} />
                     <View style={styles.flex}>
                         <Text >{label}</Text>
                         {name ?
-                            <Text style={styles.txtname}>BS {name}</Text>
+                            <Text style={styles.txtname}>{name}</Text>
                             :
                             <Text style={styles.txtname}>{subName}</Text>
 

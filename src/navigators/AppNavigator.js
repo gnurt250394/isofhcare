@@ -113,6 +113,8 @@ import DetailsDoctorScreen from '@containers/booking/doctor/DetailDoctorScreen';
 import AddBookingDoctorScreen from '@containers/booking/doctor/AddBookingDoctorScreen';
 import SelectDateTimeDoctorScreen from '@containers/booking/doctor/SelectDateTimeDoctorScreen';
 import ListBookingScreen from '@containers/booking/ListBookingScreens'
+import ListHospital from '@containers/booking/doctor/ListHospitalScreen';
+import ListPaymentMethodScreen from '@containers/booking/doctor/ListPaymentMethodScreen';
 
 const ProfileNavigation = createStackNavigator({
   selectProfile: SelectProfileScreen,
@@ -324,10 +326,11 @@ const RootNavigator = createStackNavigator(
     listDoctor: { screen: ListDoctorScreen },
     addBookingDoctor: { screen: AddBookingDoctorScreen },
     selectTimeDoctor: { screen: SelectDateTimeDoctorScreen },
-    listBooking:{screen:ListBookingScreen}
+    listBooking: { screen: ListBookingScreen },
+    listHospital: { screen: ListHospital },
+    listPaymentMethod: { screen: ListPaymentMethodScreen }
   },
   {
-    initialRouteName:'listDoctor',
     headerMode: "none",
     // cardStyle: {
     //   backgroundColor: 'transparent', opacity: 1,

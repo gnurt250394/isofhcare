@@ -17,7 +17,10 @@ const data = [
         quantity: 1024,
         avatar: 'http://www.dangcongsan.vn/DATA/0/2019/09/file76xog5oc70i1g0dp219_156748_9282_7304_1567581048-20_11_49_618.jpg',
         position: ['Răng hàm mặt', 'Tai mũi họng', 'Mắt'],
-        address: ['Phòng khám Y Khoa Hà Nội', 'Bệnh viện Đại học Y', 'Bệnh viện E']
+        address: [
+            { name: 'Phòng khám Y Khoa Hà Nội', service: 'Khám tổng quát', price: 100000 },
+            { name: 'Bệnh viện Đại học Y', service: 'Khám tổng quát', price: 100000 },
+            { name: 'Bệnh viện E', service: 'Khám tổng quát', price: 100000 }],
     },
     {
         id: 2,
@@ -26,7 +29,10 @@ const data = [
         quantity: 2098,
         avatar: 'https://icdn.dantri.com.vn/thumb_w/640/2019/08/14/nu-sinh-lao-cai-xinh-dep-duoc-vi-nhu-thien-than-anh-thedocx-1565795558127.jpeg',
         position: ['Tai mũi họng', 'Mắt'],
-        address: ['Phòng khám Y Khoa Hà Nội', 'Bệnh viện Đại học Y', 'Bệnh viện E']
+        address: [
+            { name: 'Phòng khám Y Khoa Hà Nội', service: 'Khám tổng quát', price: 100000 },
+            { name: 'Bệnh viện Đại học Y', service: 'Khám tổng quát', price: 100000 },
+            { name: 'Bệnh viện E', service: 'Khám tổng quát', price: 100000 }],
     },
     {
         id: 3,
@@ -34,8 +40,11 @@ const data = [
         rating: 3.5,
         quantity: 1024,
         avatar: 'http://www.dangcongsan.vn/DATA/0/2019/09/file76xog5oc70i1g0dp219_156748_9282_7304_1567581048-20_11_49_618.jpg',
-        position: ['Tai mũi họng', 'Răng hàm mặt', 'Mắt','Tai mũi họng', 'Răng mặt'],
-        address: ['Phòng khám Y Khoa Hà Nội', 'Bệnh viện Đại học Y', 'Bệnh viện E'],
+        position: ['Tai mũi họng', 'Răng hàm mặt', 'Mắt', 'Tai mũi họng', 'Răng mặt'],
+        address: [
+            { name: 'Phòng khám Y Khoa Hà Nội', service: 'Khám tổng quát', price: 100000 },
+            { name: 'Bệnh viện Đại học Y', service: 'Khám tổng quát', price: 100000 },
+            { name: 'Bệnh viện E', service: 'Khám tổng quát', price: 100000 }],
         time: [
             { time: '07/2011', name: 'Chức vụ bác sỹ đa khoa - Bệnh viện K Hà Nội' },
             { time: '09/2019', name: 'Chức vụ bác sỹ đa khoa - Bệnh viện E Hà Nội' },
@@ -48,7 +57,10 @@ const data = [
         quantity: 2098,
         avatar: 'https://icdn.dantri.com.vn/thumb_w/640/2019/08/14/nu-sinh-lao-cai-xinh-dep-duoc-vi-nhu-thien-than-anh-thedocx-1565795558127.jpeg',
         position: ['Răng hàm mặt', 'Tai mũi họng', 'Mắt'],
-        address: ['Phòng khám Y Khoa Hà Nội', 'Bệnh viện Đại học Y', 'Bệnh viện E'],
+        address: [
+            { name: 'Phòng khám Y Khoa Hà Nội', service: 'Khám tổng quát', price: 100000 },
+            { name: 'Bệnh viện Đại học Y', service: 'Khám tổng quát', price: 100000 },
+            { name: 'Bệnh viện E', service: 'Khám tổng quát', price: 100000 }],
         time: [
             { time: '07/2011', name: 'Chức vụ bác sỹ đa khoa - Bệnh viện K Hà Nội' },
             { time: '09/2019', name: 'Chức vụ bác sỹ đa khoa - Bệnh viện E Hà Nội' },
@@ -61,7 +73,11 @@ const data = [
         quantity: 1024,
         avatar: 'http://www.dangcongsan.vn/DATA/0/2019/09/file76xog5oc70i1g0dp219_156748_9282_7304_1567581048-20_11_49_618.jpg',
         position: ['Răng hàm mặt', 'Tai mũi họng', 'Mắt'],
-        address: ['Phòng khám Y Khoa Hà Nội', 'Bệnh viện Đại học Y', 'Bệnh viện E'],
+
+        address: [
+            { name: 'Phòng khám Y Khoa Hà Nội', service: 'Khám tổng quát', price: 100000 },
+            { name: 'Bệnh viện Đại học Y', service: 'Khám tổng quát', price: 100000 },
+            { name: 'Bệnh viện E', service: 'Khám tổng quát', price: 100000 }],
         time: [
             { time: '07/2011', name: 'Chức vụ bác sỹ đa khoa - Bệnh viện K Hà Nội' },
             { time: '09/2019', name: 'Chức vụ bác sỹ đa khoa - Bệnh viện E Hà Nội' },
@@ -74,7 +90,10 @@ const data = [
         quantity: 2098,
         avatar: 'https://icdn.dantri.com.vn/thumb_w/640/2019/08/14/nu-sinh-lao-cai-xinh-dep-duoc-vi-nhu-thien-than-anh-thedocx-1565795558127.jpeg',
         position: ['Răng hàm mặt', 'Tai mũi họng', 'Mắt'],
-        address: ['Phòng khám Y Khoa Hà Nội', 'Bệnh viện Đại học Y', 'Bệnh viện E'],
+        address: [
+            { name: 'Phòng khám Y Khoa Hà Nội', service: 'Khám tổng quát', price: 100000 },
+            { name: 'Bệnh viện Đại học Y', service: 'Khám tổng quát', price: 100000 },
+            { name: 'Bệnh viện E', service: 'Khám tổng quát', price: 100000 }],
         time: [
             { time: '07/2011', name: 'Chức vụ bác sỹ đa khoa - Bệnh viện K Hà Nội' },
             { time: '09/2019', name: 'Chức vụ bác sỹ đa khoa - Bệnh viện E Hà Nội' },
@@ -109,7 +128,7 @@ class ListDoctorScreen extends Component {
             isNotHaveSchedule: true
         })
     }
-    goToAdvisory=()=>{
+    goToAdvisory = () => {
         this.props.navigation.navigate("listQuestion");
     }
     renderItem = ({ item }) => {

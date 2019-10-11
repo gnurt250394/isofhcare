@@ -33,6 +33,8 @@ class AddBookingDoctorScreen extends Component {
         let bookingDate = this.props.navigation.getParam('bookingDate', {})
         let schedule = this.props.navigation.getParam('schedule', {})
         let hospital = this.props.navigation.getParam('hospital', {})
+
+
         this.state = {
             colorButton: 'red',
             imageUris: [],
@@ -42,7 +44,8 @@ class AddBookingDoctorScreen extends Component {
             contact: 2,
             listServicesSelected: [],
             profileDoctor,
-            hospital
+            hospital,
+            paymentMethod: 2
         }
     }
     _changeColor = () => {
@@ -158,7 +161,7 @@ class AddBookingDoctorScreen extends Component {
         if (nextAppState == 'inactive' || nextAppState == 'background') {
 
         } else {
-            let paymentMethod = this.paymentSelect.state.paymentMethod || 2
+            let { paymentMethod } = this.state
             this.setState({ isLoading: true }, () => {
                 bookingProvider.detail(this.state.booking.book.id).then(s => {
                     this.setState({ isLoading: false }, () => {
@@ -192,10 +195,10 @@ class AddBookingDoctorScreen extends Component {
     };
 
     confirmPayment(booking, bookingId, paymentMethod) {
-        let paymentMethod2 = this.paymentSelect.state.paymentMethod || 2
+
         booking.hospital = this.state.hospital;
         booking.profile = this.state.profile;
-        booking.payment = paymentMethod2;
+        booking.payment = this.state.paymentMethod;
         this.setState({ isLoading: true }, () => {
             bookingProvider.confirmPayment(bookingId, paymentMethod).then(s => {
                 switch (s.code) {
@@ -241,7 +244,7 @@ class AddBookingDoctorScreen extends Component {
         })
     }
     getPaymentMethod() {
-        let paymentMethod = this.paymentSelect.state.paymentMethod || 2
+        let { paymentMethod } = this.state
         switch (paymentMethod) {
             case 1:
                 return "VNPAY";
@@ -257,7 +260,7 @@ class AddBookingDoctorScreen extends Component {
         }
     }
     getPaymentReturnUrl() {
-        let paymentMethod = this.paymentSelect.state.paymentMethod || 2
+        let { paymentMethod } = this.state
         switch (paymentMethod) {
             case 1:
                 return constants.key.payment_return_url.vnpay;
@@ -271,7 +274,7 @@ class AddBookingDoctorScreen extends Component {
         }
     }
     getPaymentMethodUi() {
-        let paymentMethod = this.paymentSelect.state.paymentMethod || 2
+        let { paymentMethod } = this.state
         switch (paymentMethod) {
             case 3:
             case 5:
@@ -292,7 +295,7 @@ class AddBookingDoctorScreen extends Component {
 
 
     getPaymentLink(booking) {
-        let paymentMethod = this.paymentSelect.state.paymentMethod || 2
+        let { paymentMethod } = this.state
         booking.hospital = this.state.hospital;
         booking.profile = this.state.profile;
         booking.payment = paymentMethod;
@@ -451,7 +454,7 @@ class AddBookingDoctorScreen extends Component {
 
     payment(payment_order, vnp_TxnRef, booking, data) {
         let payooSDK = payoo;
-        let paymentMethod = this.paymentSelect.state.paymentMethod || 2
+        let { paymentMethod } = this.state
         if (Platform.OS == 'ios') {
             payooSDK = PayooModule;
         }
@@ -480,7 +483,7 @@ class AddBookingDoctorScreen extends Component {
 
     retry(paymentId) {
         let booking = this.state.booking;
-        let paymentMethod = this.paymentSelect.state.paymentMethod || 2
+        let { paymentMethod } = this.state
 
         this.setState({ isLoading: true }, () => {
             let voucher = null
@@ -598,7 +601,7 @@ class AddBookingDoctorScreen extends Component {
     }
 
     createBooking() {
-        let paymentMethod = this.paymentSelect.state.paymentMethod || 2
+        let { paymentMethod } = this.state
 
         connectionUtils.isConnected().then(s => {
             this.setState({ isLoading: true }, () => {
@@ -673,64 +676,12 @@ class AddBookingDoctorScreen extends Component {
     renderBookingTime() {
         if (this.state.bookingDate && this.state.schedule)
             return <View>
-                <Text style={{ textAlign: 'right', color: '#02c39a', fontWeight: 'bold' }}>{(new Date(this.state.schedule.key)).format("HH:mm tt")}</Text>
-                <Text style={{ textAlign: 'right', color: '#02c39a', fontWeight: 'bold' }}>{(new Date(this.state.schedule.key)).format("thu, ngày dd/MM/yyyy")}</Text>
+                <Text style={{ textAlign: 'left', color: '#02c39a', fontWeight: 'bold' }}>{(new Date(this.state.schedule.key)).format("HH:mm tt")}</Text>
+                <Text style={{ textAlign: 'left', color: '#02c39a', fontWeight: 'bold' }}>{(new Date(this.state.schedule.key)).format("thu, ngày dd/MM/yyyy")}</Text>
             </View>
-        return <Text style={{ textAlign: 'right' }}>Chọn ngày và giờ</Text>;
+        return <Text style={{ textAlign: 'left' }}>Chọn ngày và giờ</Text>;
     }
-    renderProfile = (profileDoctor) => {
-        let avatar = (this.state.profileDoctor || {}).avatar;
-        const source = avatar ? { uri: avatar.absoluteUrl() } : require("@images/new/user.png");
-        return (
-            <View style={styles.article}>
-                <View style={styles.containerProfile}>
-                    <ImageLoad
-                        resizeMode="cover"
-                        imageStyle={styles.imgProfile}
-                        borderRadius={20}
-                        customImagePlaceholderDefaultStyle={[styles.avatar, { width: 40, height: 40 }]}
-                        placeholderSource={require("@images/new/user.png")}
-                        resizeMode="cover"
-                        loadingStyle={{ size: 'small', color: 'gray' }}
-                        source={source}
-                        style={styles.imgDoctor}
-                        defaultImage={() => {
-                            return <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={40} height={40} />
-                        }}
-                    />
-                    <View style={{ flex: 1, paddingLeft: 5 }}>
-                        <Text style={styles.txtname}>BS.{profileDoctor.name}</Text>
-                        <View style={styles.containerRating}>
-                            <StarRating
-                                disabled={true}
-                                starSize={12}
-                                maxStars={5}
-                                rating={profileDoctor.rating}
-                                starStyle={{ margin: 1 }}
-                                fullStarColor={"#fbbd04"}
-                                emptyStarColor={"#fbbd04"}
-                            />
-                            <Text style={styles.txtRating}>{profileDoctor.rating}</Text>
-                        </View>
-                    </View>
-                </View>
-                <View style={styles.between} />
 
-                <View style={styles.positionDoctor}>
-                    <Text style={styles.txtAddress}>Chuyên khoa</Text>
-                    <View>
-                        {profileDoctor.position && profileDoctor.position.length > 0 ?
-                            profileDoctor.position.map((e, i) => {
-                                return (
-                                    <Text key={i}>{e}</Text>
-                                )
-                            }) : null
-                        }
-                    </View>
-                </View>
-            </View>
-        )
-    }
     getPrice = () => {
         const { hospital } = this.state
 
@@ -760,25 +711,75 @@ class AddBookingDoctorScreen extends Component {
             booking: this.state.hospital
         })
     }
-    renderButton = () => {
-        return <TouchableOpacity style={styles.btnVoucher}
-            onPress={this.onSelectProfile}
-        >
-            <View style={{ flex: 1, flexDirection: 'row', alignItems: 'flex-start' }}>
-                <ScaleImage style={styles.imgmdk} height={11} source={require("@images/new/booking/ic_next.png")} />
-                <View style={{ flex: 1 }}>
-                    <Text style={styles.txtVoucher}>Đặt khám cho: </Text>
-                    {profile ?
-                        <Text style={{ color: '#000000', fontSize: 15 }}>{profile.medicalRecords.name}</Text>
-                        :
-                        <Text style={styles.txtname}>{constants.booking.select_profile}</Text>
+    renderServices = (hospital) => {
+        return (
+            <View style={styles.containerService} >
+                <View style={styles.flexRow}>
+                    <ScaleImage style={styles.image} height={13} source={require("@images/new/booking/ic_specialist.png")} />
+                    <View style={styles.groupService}>
+                        <Text >Dịch vụ</Text>
+                        {hospital.services && hospital.services.length > 0 ?
+                            hospital.services.map((e, i) => {
+                                return <View key={i} style={styles.containerPrice}>
+                                    <Text style={styles.txtService} >{e.name}</Text>
+                                    <Text style={styles.txtPrice}>{e.price.formatPrice()}đ </Text>
+                                </View>
+                            }) : null}
 
-                    }
+                    </View>
                 </View>
+
+
             </View>
 
-            <ScaleImage style={styles.imgmdk} height={11} source={require("@images/new/booking/ic_next.png")} />
+        )
+    }
+    renderSelectTime = () => {
+        return <TouchableOpacity style={styles.containerService}
+            onPress={this.selectTime} >
+            <View style={styles.flexRow}>
+                <ScaleImage style={styles.image} height={15} source={require("@images/new/booking/ic_bookingTime.png")} />
+                <View style={styles.groupService}>
+                    <Text >Thời gian khám</Text>
+                    {this.renderBookingTime()}
+                </View>
+                <ScaleImage style={styles.imgmdk} height={11} source={require("@images/new/booking/ic_next.png")} />
+
+            </View>
+
+
         </TouchableOpacity>
+    }
+    selectHospital = (hospital) => {
+        this.setState({ hospital })
+    }
+    onSelectServices = () => {
+        let listHospital = this.props.navigation.getParam('listHospital', [])
+        this.props.navigation.navigate('listHospital', {
+            listHospital,
+            onItemSelected: this.selectHospital
+        })
+    }
+    renderPaymentMethod = () => {
+        const { paymentMethod } = this.state
+        console.log('paymentMethod: ', paymentMethod);
+        switch (paymentMethod) {
+            case 1: return 'VNPAY'
+            case 2: return 'Thanh toán sau tại CSYT'
+            case 3: return 'PAYOO'
+            case 4: return 'PAYOO - cửa hàng tiện ích'
+            case 5: return 'PAYOO - trả góp 0%'
+            case 6: return 'Chuyển khoản trực tiếp'
+            default:
+        }
+    }
+    onSelectPaymentMethod = (paymentMethod) => {
+        this.setState({ paymentMethod })
+    }
+    setlectPaymentMethod = () => {
+        this.props.navigation.navigate('listPaymentMethod', {
+            onItemSelected: this.onSelectPaymentMethod
+        })
     }
     render() {
 
@@ -790,7 +791,7 @@ class AddBookingDoctorScreen extends Component {
         return (
             <ActivityPanel title="Đặt Khám"
                 isLoading={this.state.isLoading} >
-                <View style={{ backgroundColor: '#fff', }}>
+                <View style={{ backgroundColor: 'rgba(225,225,225,0.3)', flex: 1 }}>
                     <KeyboardAwareScrollView>
                         {/** */}
 
@@ -798,102 +799,38 @@ class AddBookingDoctorScreen extends Component {
                             iconRight={true}
                             onPress={this.onSelectProfile}
                             button={true}
-                            source={require("@images/new/booking/ic_image.png")}
+                            source={require("@images/new/booking/ic_people.png")}
                             name={profile ? profile.medicalRecords.name : null}
                             subName={constants.booking.select_profile}
                             label={'Người tới khám'}
                         />
 
                         <ViewHeader
-                            source={require("@images/new/booking/ic_image.png")}
-                            name={profileDoctor ? profileDoctor.name : null}
+                            source={require("@images/new/booking/ic_serviceType.png")}
+                            name={profileDoctor ? 'BS. ' + profileDoctor.name : null}
                             subName={''}
                             label={'Bác sĩ'}
                         />
                         <ViewHeader
-                            source={require("@images/new/booking/ic_image.png")}
-                            name={profileDoctor && profileDoctor.address && profileDoctor.address.length > 0 ? profileDoctor.address[0] : null}
+                            iconRight={true}
+                            onPress={this.onSelectServices}
+                            button={true}
+                            source={require("@images/new/booking/ic_placeholder.png")}
+                            name={hospital && hospital.name ? hospital.name : null}
                             subName={''}
                             label={'Cơ sở y tế'}
                         />
-                        <ViewHeader
-                            source={require("@images/new/booking/ic_image.png")}
-                            name={profileDoctor && profileDoctor.address && profileDoctor.address.length > 0 ? profileDoctor.address[0] : null}
-                            subName={''}
-                            label={'Dịch vụ'}
 
-                        />
+                        {this.renderServices(hospital)}
+                        {this.renderSelectTime()}
+                        {
+                            this.state.bookingError ?
+                                <Text style={[styles.errorStyle]}>{this.state.bookingError}</Text> : null
+                        }
 
-                        <ViewHeader
-                            button={true}
-                            source={require("@images/new/booking/ic_image.png")}
-                            name={profileDoctor && profileDoctor.address && profileDoctor.address.length > 0 ? profileDoctor.address[0] : null}
-                            subName={constants.booking.select_profile}
-                            label={'Thời gian khám'}
-                            iconRight={true}
-                            onPress={this.selectTime}
 
-                        />
-
-                        {/* <View style={styles.article}>
-                            <TouchableOpacity style={styles.mucdichkham} onPress={this.selectTime}>
-                                <Text style={styles.mdk}>Thời gian khám</Text>
-                                <View style={styles.ktq}>{this.renderBookingTime()}</View>
-                                <ScaleImage style={styles.imgmdk} height={11} source={require("@images/new/booking/ic_next.png")} />
-                            </TouchableOpacity>
-                            {
-                                this.state.bookingError ?
-                                    <Text style={[styles.errorStyle]}>{this.state.bookingError}</Text> : null
-                            }
-                            <View style={{
-                                paddingLeft: 10
-                            }}>
-                                <View style={styles.rowAddress}>
-                                    <Text style={styles.txtAddress}>Địa điểm khám</Text>
-                                    <Text>{hospital && hospital.name ? hospital.name : ''}</Text>
-                                </View>
-                                <View style={styles.rowAddress}>
-                                    <Text style={styles.txtAddress}>Nơi làm thủ tục</Text>
-                                    <Text>{hospital && hospital.location ? hospital.location : ''}</Text>
-                                </View>
-                            </View>
-                        </View>
-                        <View style={styles.between} /> */}
                         <View style={[styles.article,]}>
-                            {/* <Text style={styles.txtServices}>Dịch vụ khám</Text>
-                            {services && services.length > 0 ?
-                                services.map((e, i) => {
-                                    return (
-                                        <View key={i} style={styles.groupServices}>
-                                            <Text style={{ flex: 1, color: '#111' }}>{e.name}</Text>
-                                            <Text style={{
-                                                color: '#ddd',
-                                                fontStyle: 'italic'
-                                            }}>({e.price.formatPrice()}đ)</Text>
-                                        </View>
-                                    )
-                                })
-                                : null
-                            }
-                            <TouchableOpacity
-                                onPress={this.goVoucher}
-                                style={styles.btnVoucher}
-                            >
-                                <Text style={[styles.txtVoucher, { flex: 1 }]}>{this.state.voucher && this.state.voucher.price ? `GIẢM ${this.state.voucher.price.formatPrice()} KHI ĐẶT KHÁM` : 'Thêm mã ưu đãi'}</Text>
-                                <ScaleImage style={styles.imgmdk} height={11} source={require("@images/new/booking/ic_next.png")} />
-
-                            </TouchableOpacity>
-                            <View style={styles.groupSumPrice}>
-                                <Text style={styles.txtSumPrice}>Tổng tiền: </Text>
-                                <Text style={{ color: '#FF0000', fontSize: 15 }}>{this.getPrice()}đ</Text>
-                            </View> */}
-
-
-                            <View style={{
-                                height: 12,
-                                backgroundColor: '#ccc',
-                                width: '100%'
-                            }} />
+                            <View style={styles.lineBetween} />
                             <Form
                                 ref={ref => (this.form = ref)} style={styles.mota}>
                                 <TextField
@@ -927,63 +864,83 @@ class AddBookingDoctorScreen extends Component {
                                     <ScaleImage height={15} source={require("@images/new/booking/ic_image.png")} />
                                 </TouchableOpacity>
                             </Form>
-                            <View style={{
-                                height: 1,
-                                width: '100%',
-                                backgroundColor: '#ccc',
-                            }} />
+
                         </View>
-                        <Text style={[styles.errorStyle]}>{this.state.symptonError}</Text>
+                        {this.state.symptonError ?
+                            <Text style={[styles.errorStyle]}>{this.state.symptonError}</Text>
+                            :
+                            null
+                        }
+                        {/**Voucher */}
                         <TouchableOpacity
                             onPress={this.goVoucher}
                             style={styles.btnVoucher}
                         >
-                            <View style={{ flex: 1 }}>
-                                <Text style={{
-                                    color: '#111'
-                                }}>Mã ưu đãi</Text>
+                            <View style={styles.flex}>
+                                <Text style={styles.txtLabelVoucher}>Mã ưu đãi</Text>
                                 {this.state.voucher && this.state.voucher.price ?
-                                    <Text style={[styles.txtVoucher, { flex: 1 }]}>{`GIẢM ${this.state.voucher.price.formatPrice()} KHI ĐẶT KHÁM`}</Text>
+                                    <Text style={[{
+                                        color: '#00CBA7',
+                                        fontWeight: 'bold'
+                                    }, styles.flex]}>{`GIẢM ${this.state.voucher.price.formatPrice()}đ KHI ĐẶT KHÁM`}</Text>
                                     : null
                                 }
 
                             </View>
-                            <View style={{
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                            }}>
-                                <Text style={{ fontWeight: '700', paddingRight: 7, }}>Thay đổi</Text>
+                            <View style={styles.flexRowCenter}>
+                                <Text style={styles.txtChange}>Chọn hoặc nhập mã</Text>
                                 <ScaleImage style={styles.imgmdk} height={11} source={require("@images/new/booking/ic_next.png")} />
 
                             </View>
-
                         </TouchableOpacity>
-                        <View style={styles.list_image}>
-                            {
-                                this.state.imageUris.map((item, index) => <View key={index} style={styles.containerImagepicker}>
-                                    <View style={styles.groupImagePicker}>
-                                        <Image source={{ uri: item.uri }} resizeMode="cover" style={styles.imagePicker} />
-                                        {
-                                            item.error ?
-                                                <View style={styles.error} >
-                                                    <ScaleImage source={require("@images/ic_warning.png")} width={40} />
-                                                </View> :
-                                                item.loading ?
-                                                    < View style={styles.imgLoading} >
-                                                        <ScaleImage source={require("@images/loading.gif")} width={40} />
-                                                    </View>
-                                                    : null
-                                        }
-                                    </View>
-                                    <TouchableOpacity onPress={this.removeImage.bind(this, index)} style={{ position: 'absolute', top: 0, right: 0 }} >
-                                        <ScaleImage source={require("@images/new/ic_close.png")} width={16} />
-                                    </TouchableOpacity>
-                                </View>)
-                            }
+                        {/** sum Price */}
+                        <View style={styles.containerVoucher}>
+                            <Text style={styles.txtSumPrice}>Tổng tiền</Text>
+                            <Text style={styles.sumPrice}>{this.getPrice()}đ</Text>
                         </View>
 
-                        <SelectPaymentDoctor service={services} ref={ref => this.paymentSelect = ref} />
-
+                        {/** Payment Method */}
+                        <View>
+                            <TouchableOpacity style={styles.buttonPayment}
+                                onPress={this.setlectPaymentMethod}
+                            >
+                                <ScaleImage style={styles.image} source={require("@images/new/booking/ic_price.png")} width={18} />
+                                <View style={styles.groupService}>
+                                    <Text>Phương thức thanh toán</Text>
+                                    <Text style={styles.txtPaymentMethod}>{this.renderPaymentMethod()}</Text>
+                                </View>
+                                <ScaleImage style={styles.imgmdk} height={11} source={require("@images/new/booking/ic_next.png")} />
+                            </TouchableOpacity>
+                        </View>
+                        {this.state.imageUris && this.state.imageUris.length > 0 ?
+                            <View style={styles.list_image}>
+                                {
+                                    this.state.imageUris.map((item, index) => <View key={index} style={styles.containerImagepicker}>
+                                        <View style={styles.groupImagePicker}>
+                                            <Image source={{ uri: item.uri }} resizeMode="cover" style={styles.imagePicker} />
+                                            {
+                                                item.error ?
+                                                    <View style={styles.error} >
+                                                        <ScaleImage source={require("@images/ic_warning.png")} width={40} />
+                                                    </View> :
+                                                    item.loading ?
+                                                        < View style={styles.imgLoading} >
+                                                            <ScaleImage source={require("@images/loading.gif")} width={40} />
+                                                        </View>
+                                                        : null
+                                            }
+                                        </View>
+                                        <TouchableOpacity onPress={this.removeImage.bind(this, index)} style={{ position: 'absolute', top: 0, right: 0 }} >
+                                            <ScaleImage source={require("@images/new/ic_close.png")} width={16} />
+                                        </TouchableOpacity>
+                                    </View>)
+                                }
+                            </View>
+                            :
+                            null
+                        }
+                        {/* <SelectPaymentDoctor service={services} ref={ref => this = ref} /> */}
+                        <Text style={styles.txtHelper}>Nếu số tiền thanh toán trước cao hơn thực tế, quý khách sẽ nhận lại tiền thừa tại CSYT khám bệnh</Text>
                         <View style={styles.btn}>
                             <TouchableOpacity onPress={this.createBooking.bind(this)} style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]}>
                                 <Text style={styles.datkham}>Đặt khám</Text>
@@ -1020,11 +977,110 @@ class AddBookingDoctorScreen extends Component {
                         date={this.state.bookingDate || minDate}
                     />
                 </View>
-            </ActivityPanel>);
+            </ActivityPanel >);
     }
 }
 
 const styles = StyleSheet.create({
+    txtPaymentMethod: {
+        fontSize: 15,
+        fontWeight: "bold",
+        color: "#000000",
+    },
+    buttonPayment: {
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        paddingHorizontal: 10,
+        borderColor: '#ccc',
+        borderBottomWidth: 0.7,
+        borderTopWidth: 0.7,
+        paddingVertical: 10,
+        backgroundColor: '#fff',
+    },
+    image: {
+        marginTop: 4,
+        tintColor: '#FC4A5F'
+    },
+    txtHelper: {
+        color: '#b3b3b3',
+        textAlign: 'center',
+        paddingHorizontal: 25,
+        paddingTop: 15,
+        fontStyle: 'italic'
+    },
+    sumPrice: {
+        color: '#FC4A5F',
+        fontWeight: 'bold',
+    },
+    txtSumPrice: {
+        color: '#000',
+        fontSize: 15,
+        fontWeight: '800',
+        flex: 1
+    },
+    containerVoucher: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 10,
+        backgroundColor: 'rgba(225,225,225,0.3)',
+        paddingVertical: 20,
+    },
+    txtChange: {
+        fontWeight: '700',
+        paddingHorizontal: 7,
+        backgroundColor: '#fff',
+        marginRight:5,
+        paddingVertical:6,
+        borderRadius:5
+    },
+    flexRowCenter: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    flex: { flex: 1 },
+    txtLabelVoucher: {
+        color: '#111',
+        fontWeight: 'bold'
+    },
+    lineBetween: {
+        height: 12,
+        backgroundColor: 'rgba(225,225,225,0.3)',
+        width: '100%'
+    },
+    txtPrice: {
+        fontSize: 15,
+        fontWeight: "600",
+        color: "#ccc",
+        fontStyle: 'italic',
+    },
+    txtService: {
+        fontSize: 15,
+        fontWeight: "bold",
+        color: "#000000",
+        flex: 1
+    },
+    containerPrice: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingBottom: 5,
+        flex: 1,
+        paddingRight: 10,
+    },
+    groupService: {
+        flex: 1,
+        paddingLeft: 7,
+    },
+    flexRow: {
+        flexDirection: 'row',
+        alignItems: 'flex-start'
+    },
+    containerService: {
+        paddingHorizontal: 10,
+        borderBottomWidth: 0.7,
+        borderBottomColor: '#ccc',
+        paddingVertical: 10,
+        backgroundColor: '#fff',
+    },
     positionDoctor: {
         flexDirection: 'row',
         alignItems: 'flex-start',
@@ -1060,146 +1116,32 @@ const styles = StyleSheet.create({
         height: 88,
         position: 'relative'
     },
-    txtSumPrice: {
-        color: '#111',
-        fontWeight: '500',
-        fontSize: 15,
-        flex: 1
-    },
-    groupSumPrice: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingHorizontal: 10
-    },
-    txtVoucher: {
-    },
+
     btnVoucher: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: 'rgba(128, 255, 232,0.3)',
+        backgroundColor: '#e6fffa',
         paddingVertical: 20,
         paddingHorizontal: 10,
+        borderBottomWidth: 0.7,
+        borderBottomColor: '#ccc',
     },
-    groupServices: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingHorizontal: 10,
-        paddingTop: 5
-    },
-    txtServices: {
-        color: '#02c39a',
-        fontSize: 15,
-        fontWeight: '700',
-        paddingLeft: 10,
-        paddingBottom: 5
-    },
-    rowAddress: {
-        flexDirection: 'row',
-        alignItems: 'flex-start',
-        paddingTop: 12
-    },
-    txtAddress: {
-        width: '40%',
-        fontSize: 15,
-        color: '#02C39A',
-        fontWeight: '700'
-    },
-    between: {
-        backgroundColor: '#02C39A',
-        height: 1,
-        width: '95%',
-        marginVertical: 12,
-        alignSelf: 'center'
-    },
-    containerRating: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    imgDoctor: {
-        alignSelf: 'center',
-        borderRadius: 20,
-        width: 40,
-        height: 40
-    },
-    imgProfile: {
-        borderRadius: 20,
-        borderWidth: 0.5,
-        borderColor: 'rgba(151, 151, 151, 0.29)'
-    },
-    containerProfile: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 10
-    },
-    txtRating: {
-        paddingLeft: 7
-    },
-    menu: {
-        padding: 5,
-        paddingRight: 15
-    },
-    container: {
-        flex: 1,
-        backgroundColor: "#f7f9fb",
-        paddingTop: 20,
-        borderTopWidth: 1,
-        borderTopColor: "rgba(0, 0, 0, 0.06)"
-    },
-    imgName: {
-        marginLeft: 5,
-    },
-    txtname: {
-        fontSize: 15,
-        fontWeight: "bold",
-        fontStyle: "normal",
-        letterSpacing: 0,
-        color: "#000000",
-    },
-    img: {
-        marginRight: 5
-    },
+
     article: {
-        // marginTop: 12,
         backgroundColor: "#ffffff",
-        // borderStyle: "solid",
-        // borderWidth: 0.5,
-        // borderColor: "rgba(0, 0, 0, 0.06)",
-    },
-    mucdichkham: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 10,
-        backgroundColor: '#FFFFDD'
-    },
-    mdk: {
-        fontSize: 15,
-        fontWeight: "700",
-        fontStyle: "normal",
-        letterSpacing: 0,
-        color: "#111111"
-    },
-    ktq: {
-        flex: 1,
-        fontSize: 14,
-        fontWeight: "normal",
-        fontStyle: "normal",
-        letterSpacing: 0,
-        textAlign: "right",
-        color: "#8e8e93",
-        marginRight: 10,
-        marginLeft: 20
     },
     imgmdk: {
-        marginRight: 5
+        marginRight: 5,
+        alignSelf: 'center'
     },
     mota: {
         flexDirection: 'row',
         padding: 15,
         backgroundColor: "#ffffff",
-        borderColor: "rgba(0, 0, 0, 0.06)",
+        borderColor: "#ccc",
         alignItems: 'center',
-        borderTopColor: '#555',
-        borderTopWidth: 0.3
+        borderTopWidth: 0.3,
+        borderBottomWidth: 0.7
     },
     mtTr: {
         flex: 1,
@@ -1241,7 +1183,12 @@ const styles = StyleSheet.create({
         padding: 15,
         textAlign: 'center'
     },
-    list_image: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 10, marginHorizontal: 20 },
+    list_image: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        marginTop: 10,
+        marginHorizontal: 20
+    },
     errorStyle: {
         color: 'red',
         marginTop: 10,

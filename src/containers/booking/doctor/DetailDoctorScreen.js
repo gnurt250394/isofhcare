@@ -105,7 +105,7 @@ class DetailsDoctorScreen extends Component {
       {data && data.length > 0 ?
         data.map((e, i) => {
           return (
-            <Text style={styles.txtPosition} key={i}>{e}</Text>
+            <Text style={styles.txtPosition} key={i}>{e.name}</Text>
           )
         }) :
         null
@@ -160,13 +160,13 @@ class DetailsDoctorScreen extends Component {
                   <Text style={styles.nameDoctor}>BS.{profileDoctor.name}</Text>
                   <View >
                     {profileDoctor.address && profileDoctor.address.length > 0 ?
-                      <Text >{profileDoctor.address[0]}</Text>
+                      <Text >{profileDoctor.address[0].name}</Text>
                       :
                       null
                     }
                   </View>
                   <View style={styles.containerButton}>
-                    <Button label="Tư vấn" style={styles.txtAdvisory} onPress={this.goToAdvisory} source={require("@images/ic_star.png")} />
+                    <Button label="Tư vấn" style={styles.txtAdvisory} onPress={this.goToAdvisory} source={require("@images/new/booking/ic_chat.png")} />
                     <Button label="Đặt khám" style={styles.txtBooking} onPress={this.addBooking} source={require("@images/ic_service.png")} />
                   </View>
 

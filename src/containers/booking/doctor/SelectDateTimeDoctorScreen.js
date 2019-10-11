@@ -8,7 +8,7 @@ import clientUtils from '@utils/client-utils';
 import scheduleProvider from '@data-access/schedule-provider';
 import snackbar from '@utils/snackbar-utils';
 import dateUtils from "mainam-react-native-date-utils";
-import {Card} from 'native-base';
+import { Card } from 'native-base';
 const DEVICE_WIDTH = Dimensions.get('window').width;
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import DateTimePicker from "mainam-react-native-date-picker";
@@ -23,7 +23,15 @@ const data = [
         },
         {
             name: 'Khám bệnh theo yêu cầu',
-            price: 1000000
+            price: 100000
+        },
+        {
+            name: 'Khám bệnh theo yêu cầu',
+            price: 2000000
+        },
+        {
+            name: 'Khám bệnh theo yêu cầu',
+            price: 1050000
         },
         ]
     },
@@ -284,14 +292,14 @@ class SelectDateTimeDoctorScreen extends Component {
             snackbar.show("Đã kín lịch trong khung giờ này", "danger");
             return;
         }
-        let list = data
-        list[0].checked = true
-        this.setState({ schedule: item, allowBooking: true, listHospital: list })
+
+        this.setState({ schedule: item, listHospital: data }, () => {
+            this.confirm()
+        })
     }
 
     confirm = () => {
-        if (!this.state.allowBooking)
-            return;
+
         let error = false;
 
         if (this.state.schedule) {
@@ -308,7 +316,6 @@ class SelectDateTimeDoctorScreen extends Component {
             // let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
             // if (callback) {
 
-            let listFinal = this.state.listHospital.find(e => e.checked == true)
             // callback(this.state.bookingDate, this.state.schedule, listFinal);
             //     this.props.navigation.pop();
             // }
@@ -316,7 +323,8 @@ class SelectDateTimeDoctorScreen extends Component {
                 profileDoctor: this.state.profileDoctor,
                 bookingDate: this.state.bookingDate,
                 schedule: this.state.schedule,
-                hospital: listFinal
+                hospital: this.state.listHospital && this.state.listHospital.length > 0 ? this.state.listHospital[0] : null,
+                listHospital: this.state.listHospital
             })
         } else {
             this.setState({ scheduleError: "Vui lòng chọn ngày và khung giờ khám" });
@@ -420,7 +428,10 @@ class SelectDateTimeDoctorScreen extends Component {
             title="Chọn thời gian">
             <View style={styles.flex}>
                 <View style={styles.container}>
-                    <ScrollView keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag">
+                    <ScrollView
+                        ref={ref => this.scroll = ref}
+                        keyboardShouldPersistTaps="handled"
+                        keyboardDismissMode="on-drag">
                         <Text style={styles.txtTitleHeader}>CHỌN NGÀY GIỜ CÓ MÀU XANH</Text>
                         <Card style={styles.containerCalendar}>
                             <Calendar style={styles.calendar}
@@ -456,7 +467,7 @@ class SelectDateTimeDoctorScreen extends Component {
                                 :
                                 <Text style={styles.txtHelp}>Vui lòng chọn khung giờ khám</Text>
                         }
-                        <View style={{ padding: 10 }}>
+                        {/* <View style={{ padding: 10 }}>
                             <Text style={styles.address}>Địa điểm khám</Text>
                             <FlatList
                                 data={this.state.listHospital}
@@ -464,11 +475,11 @@ class SelectDateTimeDoctorScreen extends Component {
                                 extraData={this.state}
                                 keyExtractor={this.keyExtractor}
                             />
-                        </View>
+                        </View> */}
                     </ScrollView>
-                    <TouchableOpacity style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]} onPress={this.confirm}>
+                    {/* <TouchableOpacity style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]} onPress={this.confirm}>
                         <Text style={styles.btntext}>Xác nhận</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
                 <DateTimePicker
                     mode={'date'}
@@ -513,15 +524,15 @@ const styles = StyleSheet.create({
     },
     calendar: {
         width: '100%',
-        borderRadius:10
+        borderRadius: 10
     },
     containerCalendar: {
         position: 'relative',
         left: 0,
         right: 0,
-        width: DEVICE_WIDTH-20,
-        alignSelf:'center',
-        borderRadius:10,
+        width: DEVICE_WIDTH - 20,
+        alignSelf: 'center',
+        borderRadius: 10,
         paddingBottom: 10,
     },
     txtTitleHeader: {
