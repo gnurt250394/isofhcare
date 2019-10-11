@@ -9,8 +9,8 @@ import constants from '@resources/strings';
 const slides = [
     {
         key: 'slide1',
-        title: 'iSofH Care, sổ tay y bạ cho cả nhà',
-        text: 'iSofH Care giúp bạn lưu trữ hồ sơ y tế và theo dõi sức khoẻ cho cả gia đình.',
+        title: 'iSofHcare, sổ tay y bạ cho cả nhà',
+        text: 'iSofHcare giúp bạn lưu trữ hồ sơ y tế và theo dõi sức khoẻ cho cả gia đình.',
         image: require('@images/intro/slide1.png'),
     },
     {
@@ -22,7 +22,7 @@ const slides = [
     {
         key: 'slide3',
         title: 'Nhận tư vấn dễ dàng',
-        text: 'iSofH Care kết nối trực tuyến dễ dàng với các chuyên gia đầu ngành',
+        text: 'iSofHcare kết nối trực tuyến dễ dàng với các chuyên gia đầu ngành',
         image: require('@images/intro/slide3.png'),
     },
     {
