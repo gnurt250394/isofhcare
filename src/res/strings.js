@@ -784,7 +784,7 @@ module.exports = {
     edit_info: 'SỬA THÔNG TIN',
     setting_share: 'CÀI ĐẶT CHIA SẺ',
     scan_qr_code: 'QUÉT MÃ QRCODE',
-    voucher: 'NHẬP MÃ ƯU ĐÃI',
+    voucher: 'Mã ưu đãi',
     profile: 'Hồ sơ cá nhân'
   },
   account_screens: {
