@@ -107,10 +107,10 @@ class RegisterScreen extends Component {
   // }
   ////
   onRegiter = () => {
+    Keyboard.dismiss();
     if (!this.form.isValid()) {
       return;
     }
-    Keyboard.dismiss();
     let dateBirth = this.state.dob.format('yyyy-MM-dd HH:mm:ss')
     let gender = this.state.gender
     let name = this.state.fullname

@@ -105,7 +105,7 @@ class PushController extends Component {
                 fbNotification = new firebase.notifications.Notification()
                     .setNotificationId(StringUtils.guid())
                     .setBody("Đã đến giờ uống thuốc")
-                    .setTitle("Isofh Care")
+                    .setTitle("iSofHcare")
                     .android.setChannelId("isofh-care-channel")
                     .android.setSmallIcon("ic_launcher")
                     .android.setPriority(2)

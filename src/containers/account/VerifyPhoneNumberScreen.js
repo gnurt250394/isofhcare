@@ -37,47 +37,45 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
             phone,
             id,
             verify,
-            appState: AppState.currentState,
+            // appState: AppState.currentState,
         }
     }
     componentDidMount() {
-        this.interval = setInterval(() => {
-            let { seconds } = this.state
-            console.log(seconds, '1111111')
-            if (seconds > 0)
+        setInterval(() => {
+            if (this.state.seconds > 0)
                 this.setState(preState => {
                     return {
                         seconds: preState.seconds - 1
                     }
                 })
         }, 1000);
-        AppState.addEventListener('change', this._handleAppStateChange);
+        // AppState.addEventListener('change', this._handleAppStateChange);
     }
 
     // componentWillUnmount() {
     //     AppState.removeEventListener('change', this._handleAppStateChange);
     // }
 
-    _handleAppStateChange = (nextAppState) => {
-        console.log('nextAppState: ', nextAppState);
-        if (
-            nextAppState === 'background'
-        ) {
-            this.a = setInterval(() => {
-                let { seconds } = this.state
-                console.log(seconds, '22222222')
-                if (seconds > 0)
-                    this.setState(preState => {
-                        return {
-                            seconds: preState.seconds - 1
-                        }
-                    })
-            }, 1000);
-        } else {
-            clearInterval(this.a)
-        }
-        this.setState({ appState: nextAppState });
-    };
+    // _handleAppStateChange = (nextAppState) => {
+    //     console.log('nextAppState: ', nextAppState);
+    //     if (
+    //         nextAppState === 'background'
+    //     ) {
+    //         this.a = setInterval(() => {
+    //             let { seconds } = this.state
+    //             console.log(seconds, '22222222')
+    //             if (seconds > 0)
+    //                 this.setState(preState => {
+    //                     return {
+    //                         seconds: preState.seconds - 1
+    //                     }
+    //                 })
+    //         }, 1000);
+    //     } else {
+    //         clearInterval(this.a)
+    //     }
+    //     this.setState({ appState: nextAppState });
+    // };
 
     onReSendPhone = () => {
         this.setState({
@@ -119,7 +117,7 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                         case 2:
                             {
                                 userProvider.forgotPassword(this.state.phone.trim(), 2, (s, e) => {
-                                    console.log(s, 'sasdasdasd')
+
                                     if (s.code == 0) {
                                         this.setState({
                                             seconds: 90,
@@ -153,6 +151,14 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                                     this.setState({
                                         seconds: 90
                                     })
+                                    snackbar.show('Mã xác thực đã được gửi lại', 'success')
+                                    return
+                                }
+                                if (s.code == 6) {
+                                    this.setState({
+                                        countResend: true
+                                    })
+                                    return
                                 } else {
                                     snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
                                 }
@@ -165,7 +171,6 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                             break
                     }
                 }).catch(e => {
-                    console.log(e)
                     this.setState({
                         disabled: false
                     })
@@ -234,7 +239,7 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                                     if (s) {
                                         switch (s.code) {
                                             case 0:
-                                                console.log(s, 'asdasdasd')
+
                                                 snackbar.show(constants.msg.user.confirm_code_success, "success");
                                                 this.props.navigation.replace("resetPassword", {
                                                     user: s.data.user,
@@ -290,7 +295,7 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                     })
 
                 }).catch(e => {
-                    console.log(e, 'eeee')
+
                     this.setState({
                         disabledConfirm: false
                     })
@@ -389,7 +394,7 @@ const styles = StyleSheet.create({
     txReSent: { color: '#000', fontStyle: 'italic', fontWeight: '700', textAlign: 'center', fontSize: 14 },
     btnFinish: { backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 40, alignItems: 'center', justifyContent: 'center', marginBottom: 20 },
     txFinish: { color: '#FFF', fontSize: 17 },
-    btnReSend: { alignSelf: 'flex-end', padding: 2, backgroundColor: '#A3D29C', marginTop: 15, paddingHorizontal: 10, marginRight: 5 },
+    btnReSend: { alignSelf: 'flex-end', padding: 2, backgroundColor: '#A3D29C', marginTop: 15, paddingHorizontal: 10, marginRight: 5, borderRadius: 5 },
     txBtnReSend: { color: '#000', fontStyle: 'italic', fontWeight: '500', fontSize: 13 },
     txErr: { textAlign: 'center', color: 'red', fontSize: 14, fontStyle: 'italic', fontWeight: '700', marginTop: 20 },
     input: {
