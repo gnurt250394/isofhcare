@@ -51,7 +51,16 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
         }, 1000);
         // AppState.addEventListener('change', this._handleAppStateChange);
     }
-
+    // setInterval = () => {
+    //     setInterval(() => {
+    //         if (this.state.seconds > 0)
+    //             this.setState(preState => {
+    //                 return {
+    //                     seconds: preState.seconds - 1
+    //                 }
+    //             })
+    //     }, 1000);
+    // }
     // componentWillUnmount() {
     //     AppState.removeEventListener('change', this._handleAppStateChange);
     // }
@@ -88,6 +97,9 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                         case 1:
                             {
                                 userProvider.forgotPassword(this.state.phone.trim(), 4, (s, e) => {
+                                    this.setState({
+                                        disabled: false
+                                    })
                                     if (s.code == 0) {
                                         this.setState({
                                             seconds: 90,
@@ -108,16 +120,15 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                                         snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
                                         return
                                     }
-                                })
-                                this.setState({
-                                    disabled: false
                                 })
                             }
                             break
                         case 2:
                             {
                                 userProvider.forgotPassword(this.state.phone.trim(), 2, (s, e) => {
-
+                                    this.setState({
+                                        disabled: false
+                                    })
                                     if (s.code == 0) {
                                         this.setState({
                                             seconds: 90,
@@ -139,14 +150,14 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                                         return
                                     }
                                 })
-                                this.setState({
-                                    disabled: false
-                                })
                             }
                             break
                         case 3:
                             let id = this.props.navigation.state.params && this.props.navigation.state.params.id ? this.props.navigation.state.params.id : null
                             profileProvider.resendOtp(id).then(res => {
+                                this.setState({
+                                    disabled: false
+                                })
                                 if (res.code == 0) {
                                     this.setState({
                                         seconds: 90
@@ -164,9 +175,6 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                                 }
                             }).catch(err => {
                                 snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
-                            })
-                            this.setState({
-                                disabled: false
                             })
                             break
                     }
@@ -207,6 +215,9 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                         switch (this.state.verify) {
                             case 1:
                                 userProvider.checkOtpPhone(this.state.id, text).then(res => {
+                                    this.setState({
+                                        disabledConfirm: false
+                                    })
                                     switch (res.code) {
                                         case 0: {
                                             snackbar.show('Đăng ký thành công', 'success')
@@ -229,17 +240,17 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                                             break
 
                                     }
-                                    this.setState({
-                                        disabledConfirm: false
-                                    })
+
                                 })
                                 break
                             case 2:
                                 userProvider.confirmCode(this.state.phone, text, (s, e) => {
+                                    this.setState({
+                                        disabledConfirm: false
+                                    })
                                     if (s) {
                                         switch (s.code) {
                                             case 0:
-
                                                 snackbar.show(constants.msg.user.confirm_code_success, "success");
                                                 this.props.navigation.replace("resetPassword", {
                                                     user: s.data.user,
@@ -258,9 +269,7 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                                     if (e) {
                                         snackbar.show(constants.msg.user.confirm_code_not_success, "danger");
                                     }
-                                    this.setState({
-                                        disabledConfirm: false
-                                    })
+
                                 });
                                 break
                             case 3:
@@ -269,6 +278,9 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                                 }
                                 if (data && this.state.id) {
                                     profileProvider.checkOtp(data, this.state.id).then(res => {
+                                        this.setState({
+                                            disabledConfirm: false
+                                        })
                                         if (res.code == 0) {
                                             this.props.navigation.replace('shareDataProfile', { id: res.data.record.id })
                                             return;
@@ -285,9 +297,6 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                                             snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
 
                                         }
-                                        this.setState({
-                                            disabledConfirm: false
-                                        })
                                     })
                                 }
                                 break
@@ -343,8 +352,8 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                                     },
                                     messages: {
                                         required: "Vui lòng nhập mã OTP",
-                                        minlength: "Yêu cầu nhập đủ 6 ký tự",
-                                        maxlength: "Yêu cầu nhập đủ 6 ký tự"
+                                        minlength: "Yêu cầu nhập đúng 6 ký tự",
+                                        maxlength: "Yêu cầu nhập đúng 6 ký tự"
                                     }
                                 }}
                                 inputStyle={styles.input}
@@ -394,8 +403,8 @@ const styles = StyleSheet.create({
     txReSent: { color: '#000', fontStyle: 'italic', fontWeight: '700', textAlign: 'center', fontSize: 14 },
     btnFinish: { backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 40, alignItems: 'center', justifyContent: 'center', marginBottom: 20 },
     txFinish: { color: '#FFF', fontSize: 17 },
-    btnReSend: { alignSelf: 'flex-end', padding: 2, backgroundColor: '#A3D29C', marginTop: 15, paddingHorizontal: 10, marginRight: 5, borderRadius: 5 },
-    txBtnReSend: { color: '#000', fontStyle: 'italic', fontWeight: '500', fontSize: 13 },
+    btnReSend: { alignSelf: 'center', padding: 2, backgroundColor: 'rgb(2,195,154)', marginTop: 15, borderRadius: 5, height: 28, width: 100, justifyContent: 'center', alignItems: 'center' },
+    txBtnReSend: { color: '#fff', fontStyle: 'italic', fontWeight: '500', fontSize: 13 },
     txErr: { textAlign: 'center', color: 'red', fontSize: 14, fontStyle: 'italic', fontWeight: '700', marginTop: 20 },
     input: {
         maxWidth: 300,
@@ -451,7 +460,6 @@ const styles = StyleSheet.create({
         color: "red",
         marginLeft: 20
     },
-    btnReSend: { alignSelf: 'flex-end', padding: 2, backgroundColor: '#A3D29C', marginTop: 15, paddingHorizontal: 10 },
 
 });
 function mapStateToProps(state) {
