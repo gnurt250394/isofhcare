@@ -241,12 +241,12 @@ class HomeScreen extends Component {
         data={hospital}
         ListFooterComponent={<View style={styles.viewFooter}></View>}
         renderItem={({ item, index }) => {
-          if (!item || !item.hospital || !item.hospital.imageHome)
+          if (!item || !item.imageHome)
             return (
               <View style={styles.cardViewNone}>
                 <TouchableOpacity>
                   <View style={styles.imgNone}></View>
-                  <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensAds}>{item.hospital ? item.hospital.name : ""}</Text>
+                  <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensAds}>{item ? item.name : ""}</Text>
                 </TouchableOpacity>
               </View>
             );
@@ -254,12 +254,12 @@ class HomeScreen extends Component {
             <View style={styles.cardView}>
               <TouchableOpacity>
                 <ScaledImage
-                  uri={item.hospital.imageHome.absoluteUrl()}
+                  uri={item.imageHome.absoluteUrl()}
                   width={DEVICE_WIDTH - 140}
                   height={140}
                   style={{ borderRadius: 6 }}
                 />
-                <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensAds}>{item.hospital ? item.hospital.name : ""}</Text>
+                <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensAds}>{item ? item.name : ""}</Text>
               </TouchableOpacity>
             </View>
           );
@@ -420,13 +420,20 @@ class HomeScreen extends Component {
     })
   }
   onGetHospital = () => {
-    hospitalProvider.getBySearch(1, 10, '', -1).then(res => {
-      if (res.code == 0) {
-        this.setState({
-          hospital: res.data.data
-        })
-      }
-      console.log(res, 'hospital')
+    // hospitalProvider.getBySearch(1, 10, '', -1).then(res => {
+    //   if (res.code == 0) {
+    //     this.setState({
+    //       hospital: res.data.data
+    //     })
+    //   }
+    //   console.log(res, 'hospital')
+    // })
+    hospitalProvider.getListTopRateHospital().then(res => {
+      this.setState({
+        listData: res.slice(0, 10)
+      })
+    }).catch(err => {
+      console.log(err)
     })
   }
   refreshControl = () => {
