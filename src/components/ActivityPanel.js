@@ -71,14 +71,14 @@ class ActivityPanel extends Component {
                 paddingTop={this.state.paddingTop}
             // translucent={true}
             >
-                {this.showBackground === false ?
+                {/* {this.showBackground === false ?
                     null :
                     <ScaledImage
                         source={require("@images/new/background.png")}
                         height={200}
                         width={DEVICE_WIDTH}
                         style={styles.imageBackground} />
-                }
+                } */}
                 {this.props.children}
             </Activity>
         );
