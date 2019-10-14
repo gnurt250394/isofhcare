@@ -37,7 +37,7 @@ class HomeScreen extends Component {
       ads: [],
       refreshing: false,
       ads0: [],
-      hospital: [],
+      listDataHospital: [],
       featuresBooking: [
         {
           icon: require("@images/new/homev2/ic_hospital.png"),
@@ -224,7 +224,7 @@ class HomeScreen extends Component {
     </View>)
   }
   renderHospital() {
-    let { hospital } = this.state
+    let { listDataHospital } = this.state
     return (<View>
       {/* <ScaledImage source={require("@images/new/slogan.jpg")} width={DEVICE_WIDTH} />
       <TouchableOpacity onPress={this.onCallHotline} style={{ alignItems: 'center', justifyContent: 'center' }}><Text style={{ fontSize: 18, color: '#02c39a', fontWeight: 'bold' }}>Tổng đài hỗ trợ: 1900299983</Text></TouchableOpacity> */}
@@ -238,7 +238,7 @@ class HomeScreen extends Component {
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
         extraData={this.state}
-        data={hospital}
+        data={listDataHospital}
         ListFooterComponent={<View style={styles.viewFooter}></View>}
         renderItem={({ item, index }) => {
           if (!item || !item.imageHome)
@@ -251,16 +251,16 @@ class HomeScreen extends Component {
               </View>
             );
           return (
-            <View style={styles.cardView}>
-              <TouchableOpacity>
+            <View>
+              <TouchableOpacity style={styles.cardView}>
                 <ScaledImage
                   uri={item.imageHome.absoluteUrl()}
                   width={DEVICE_WIDTH - 140}
                   height={140}
-                  style={{ borderRadius: 6 }}
+                  style={{ borderRadius: 6, }}
                 />
-                <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensAds}>{item ? item.name : ""}</Text>
               </TouchableOpacity>
+              <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensAds}>{item ? item.name : ""}</Text>
             </View>
           );
         }}
@@ -430,7 +430,7 @@ class HomeScreen extends Component {
     // })
     hospitalProvider.getListTopRateHospital().then(res => {
       this.setState({
-        listData: res.slice(0, 10)
+        listDataHospital: res.slice(0, 10)
       })
     }).catch(err => {
       console.log(err)
@@ -615,8 +615,8 @@ const styles = StyleSheet.create({
   imgMore: { marginTop: 10, marginRight: 20 },
   listAds: { paddingHorizontal: 20 },
   viewFooter: { width: 35 },
-  cardView: { width: DEVICE_WIDTH - 140, borderRadius: 6, marginRight: 10 },
-  cardViewNone: { width: DEVICE_WIDTH - 140, borderRadius: 6, marginRight: 10 },
+  cardView: { width: DEVICE_WIDTH - 140, borderRadius: 6, marginRight: 10, borderColor: '#9B9B9B', borderWidth: 0.5 },
+  cardViewNone: { width: DEVICE_WIDTH - 140, borderRadius: 6, marginRight: 10, },
   imgNone: { width: DEVICE_WIDTH - 140, borderRadius: 6, height: 140, borderColor: '#9B9B9B', borderWidth: 0.5 },
   cardViewDoctor: { width: DEVICE_WIDTH / 3, borderRadius: 6, marginRight: 10 },
   txContensAds: { color: '#000', margin: 13 },
