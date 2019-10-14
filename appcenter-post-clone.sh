@@ -1,4 +1,4 @@
-Z#!/usr/bin/env bash
+#!/usr/bin/env bash
 
 # Force the 1.7.5 version of cocoapods, as opposed to the version installed by AppCenter
 echo "Uninstalling all cocoapods versions"
