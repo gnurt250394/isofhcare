@@ -182,7 +182,7 @@ class HomeScreen extends Component {
     this.onGetHospital()
   }
   renderDoctor() {
-    return (<View>
+    return (<View style={{ backgroundColor: '#fff', marginTop: 10 }}>
       {/* <ScaledImage source={require("@images/new/slogan.jpg")} width={DEVICE_WIDTH} />
       <TouchableOpacity onPress={this.onCallHotline} style={{ alignItems: 'center', justifyContent: 'center' }}><Text style={{ fontSize: 18, color: '#02c39a', fontWeight: 'bold' }}>Tổng đài hỗ trợ: 1900299983</Text></TouchableOpacity> */}
       <View style={styles.viewAds}>
@@ -201,23 +201,18 @@ class HomeScreen extends Component {
           if (!item || !item.advertise || !item.advertise.images)
             return null;
           return (
-            <Card style={styles.cardViewDoctor}>
-              <TouchableOpacity
-                onPress={() => {
-                  if (item.advertise && item.advertise.value) {
-                    Linking.openURL(item.advertise.value);
-                  } else {
-                    snackbar.show("Url không tồn tại", "danger");
-                  }
-                }}
-              >
+            <View style={styles.cardViewDoctor}>
+              <Card style={{ borderRadius: 5 }}>
                 <ScaledImage
-                  uri={item.advertise.images.absoluteUrl()}
+                  // uri={item.advertise.images.absoluteUrl()}
+                  style={{ borderRadius: 5 }}
+                  source={require('@images/new/homev2/doctor_demo.png')}
                   width={DEVICE_WIDTH / 3}
                 />
-                <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensAds}>{item.advertise ? item.advertise.title : ""}</Text>
-              </TouchableOpacity>
-            </Card>
+              </Card>
+              <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensAds}>{item.advertise ? item.advertise.title : ""}</Text>
+
+            </View>
           );
         }}
       />
@@ -225,7 +220,7 @@ class HomeScreen extends Component {
   }
   renderHospital() {
     let { listDataHospital } = this.state
-    return (<View>
+    return (<View style={{ backgroundColor: '#fff', marginTop: 10 }}>
       {/* <ScaledImage source={require("@images/new/slogan.jpg")} width={DEVICE_WIDTH} />
       <TouchableOpacity onPress={this.onCallHotline} style={{ alignItems: 'center', justifyContent: 'center' }}><Text style={{ fontSize: 18, color: '#02c39a', fontWeight: 'bold' }}>Tổng đài hỗ trợ: 1900299983</Text></TouchableOpacity> */}
       <View style={styles.viewAds}>
@@ -457,6 +452,7 @@ class HomeScreen extends Component {
       <ActivityPanel
         isLoading={this.state.isLoading}
         hideActionbar={true}
+        containerStyle={{ backgroundColor: '#f2f2f2' }}
         style={styles.activityPanel}
       >
         <View style={styles.container}>
@@ -474,7 +470,6 @@ class HomeScreen extends Component {
               >Xin chào, </Text>
               <Text style={styles.colorUserName}>{this.getUserName(this.props.userApp.currentUser.name) + '!'}</Text>
             </View>}
-          <View style={{ height: 150, backgroundColor: '#f7f9fb', position: "absolute", top: 170, left: 0, right: 0 }}></View>
           <ScrollView
             refreshControl={this.refreshControl()}
             showsVerticalScrollIndicator={false}
@@ -487,11 +482,12 @@ class HomeScreen extends Component {
                   {this.renderButtonBooking()}
                 </View>
               </Card>
-              <View style={styles.viewMenu}>
-                <View style={styles.containerButton}>
-                  {this.renderButton()}
-                </View>
-              </View>
+              {/* <View style={styles.viewMenu}> */}
+
+              {/* </View> */}
+            </View>
+            <View style={styles.containerButton}>
+              {this.renderButton()}
             </View>
             {
               this.renderDoctor()
@@ -527,6 +523,7 @@ const styles = StyleSheet.create({
   },
   activityPanel: {
     flex: 1,
+    backgroundColor: '#f2f2f2'
   },
   containerButtonBooking: {
     flexDirection: "row",
@@ -538,8 +535,9 @@ const styles = StyleSheet.create({
   },
   containerButton: {
     flexDirection: "row",
-    padding: 10,
+    padding: 30,
     marginTop: 10,
+    flex: 1,
     flexWrap: 'wrap',
     justifyContent: 'center',
     borderRadius: 5,
@@ -615,8 +613,8 @@ const styles = StyleSheet.create({
   imgMore: { marginTop: 10, marginRight: 20 },
   listAds: { paddingHorizontal: 20 },
   viewFooter: { width: 35 },
-  cardView: { width: DEVICE_WIDTH - 140, borderRadius: 6, marginRight: 10, borderColor: '#9B9B9B', borderWidth: 0.5 },
-  cardViewNone: { width: DEVICE_WIDTH - 140, borderRadius: 6, marginRight: 10, },
+  cardView: { width: DEVICE_WIDTH - 140, borderRadius: 6, marginRight: 10, borderColor: '#9B9B9B', borderWidth: 0.5, backgroundColor: '#fff' },
+  cardViewNone: { width: DEVICE_WIDTH - 140, borderRadius: 6, marginRight: 10, backgroundColor: '#fff' },
   imgNone: { width: DEVICE_WIDTH - 140, borderRadius: 6, height: 140, borderColor: '#9B9B9B', borderWidth: 0.5 },
   cardViewDoctor: { width: DEVICE_WIDTH / 3, borderRadius: 6, marginRight: 10 },
   txContensAds: { color: '#000', margin: 13 },
