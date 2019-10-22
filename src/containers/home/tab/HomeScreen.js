@@ -319,7 +319,6 @@ class HomeScreen extends Component {
                                 </View>
                                 <Text style={[styles.label]}>{item.text}</Text>
                               </TouchableOpacity>
-
                           }
                         </Animatable.View>);
                     })

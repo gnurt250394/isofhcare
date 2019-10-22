@@ -249,7 +249,7 @@ const RootNavigator = createStackNavigator(
     about: { screen: AboutScreen },
     terms: { screen: TermsScreen },
     policy: { screen: PolicyScreen },
-    verifyPhone:{screen:VerifyPhoneNumberScreen},
+    verifyPhone: { screen: VerifyPhoneNumberScreen },
     //profile
     selectProfile: { screen: SelectProfileScreen },
     createProfile: { screen: CreateProfileScreen },
@@ -277,7 +277,7 @@ const RootNavigator = createStackNavigator(
     resetPassword: { screen: ResetPasswordScreen },
     enterPassword: { screen: EnterPasswordScreen },
     register: { screen: RegisterScreen },
-    otpPhoneNumber:{screen:OtpPhoneNumberScreen},
+    otpPhoneNumber: { screen: OtpPhoneNumberScreen },
     //
     listQuestion: ListQuestionScreen,
     createQuestionStep1: { screen: CreateQuestionStep1Screen },
