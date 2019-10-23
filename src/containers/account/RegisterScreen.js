@@ -367,7 +367,7 @@ class RegisterScreen extends Component {
                         flex: 1
                       }}
                     />
-                    <ScaleImage source={require("@images/new/calendar.png")} width={20} style={{ position: 'absolute', right: 0, top: this.state.date ? 40 : 40 }} />
+                    <ScaleImage source={require("@images/new/calendar.png")} width={20} style={{ position: 'absolute', right: 5, top: 45 }} />
                   </Field>
 
                   <Field style={styles.inputPass}>
