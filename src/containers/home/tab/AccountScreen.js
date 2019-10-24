@@ -27,6 +27,7 @@ import userProvider from "@data-access/user-provider";
 import DeviceInfo from 'react-native-device-info';
 import codePushUtils from '@utils/codepush-utils';
 import { red } from "ansi-colors";
+import constants from '@resources/strings';
 
 class AccountScreen extends Component {
   constructor(props) {
