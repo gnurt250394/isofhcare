@@ -167,14 +167,20 @@ const TabNavigatorComponent = createBottomTabNavigator(
         },
       }
     },
-    videoTab: {
-      screen: AccountScreen,
+    drugTab: {
+      screen: DrugScreen,
       navigationOptions: {
         tabBarLabel: "Thuốc",
         tabBarIcon: ({ tintColor }) => <ScaledImage height={23} source={require('@images/new/homev2/ic_drug_menu.png')} style={{ tintColor: tintColor }} />,
-        tabBarOnPress: ({ navigation, defaultHandler }) => {
-          snackbar.show("Chức năng đang phát triển");
-        },
+        // tabBarOnPress: ({ navigation, defaultHandler }) => {
+        //   if (userProvider.isLogin) {
+        //     defaultHandler();
+        //   } else {
+        //     NavigationService.navigate("login", {
+        //       // nextScreen: { screen: "notificationTab", param: {} }
+        //     });
+        //   }
+        // },
       }
     },
     notificationTab: {

@@ -1,100 +1,76 @@
-import React, { Component } from 'react';
-import { View, Text, FlatList, StyleSheet, Dimensions,TouchableOpacity,SafeAreaView,StatusBar,Platform } from 'react-native';
-import drugProvider from '@data-access/drug-provider'
-import DrugItem from '@components/drug/DrugItem'
-import HeaderLine from '@components/home/HeaderLine'
-import Actionbar from '@components/home/Actionbar';
-import NavigationService from "@navigators/NavigationService";
-
-export default class DrugScreen extends Component {
+import React, { Component, PropTypes } from "react";
+import {
+    TouchableOpacity,
+    ScrollView,
+    View,
+    Text,
+    StyleSheet,
+    Platform,
+    Dimensions,
+} from "react-native";
+import { Card } from 'native-base';
+import ActivityPanel from "@components/ActivityPanel";
+import { connect } from "react-redux";
+import constants from "@resources/strings";
+import KeyboardSpacer from "react-native-keyboard-spacer";
+import Form from "mainam-react-native-form-validate/Form";
+import TextField from "mainam-react-native-form-validate/TextField";
+import dataCacheProvider from '@data-access/datacache-provider';
+import Field from "mainam-react-native-form-validate/Field";
+import ScaleImage from 'mainam-react-native-scaleimage';
+const devices_width = Dimensions.get('window').width
+const padding = Platform.select({
+    ios: 7,
+    android: 2
+});
+class drugScreen extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            listData: [],
-            refreshing:false
-        }
+
     }
-    componentDidMount() {
-        this.onRefresh()
-    }
-    onRefresh = () => {
-        this.setState({
-            refreshing:true
-        },() => {
-            this.getList()
-        })
-    }
-    getList = () => {
-        drugProvider.getListDrug().then(res => {
-            this.setState({
-                listData: res,
-                refreshing:false
-            })
-        }).catch(err => {
-            this.setState({
-            refreshing:false
-            })
-            console.log(err)
-        })
-    }
-    getWidth = () => {
-        let width = Dimensions.get("window").width;
-        if (width < 375) {
-            return width - 50
-        }
-        return width / 2 - 10;
-    }
-    renderItem = (item) => {
-        return (
-            <DrugItem widthImg={this.getWidth()} index={item.index} item={item.item}></DrugItem>
-        )
-    }
+
     render() {
         return (
-            <SafeAreaView style={styles.container}>
-                <Actionbar />
-                <StatusBar barStyle = {Platform.OS == 'ios'?'dark-content':'light-content'} backgroundColor={'#02C39A'}></StatusBar>
+            // <ActivityPanel
+            //     style={{ flex: 1 }}
+            //     title={constants.title.content}
+            //     showFullScreen={true}
+            //     // isLoading={this.state.isLoading}
+            //     titleStyle={{
+            //         color: '#FFF'
+            //     }}
+            // >
+            <ScrollView
+                showsVerticalScrollIndicator={false}
+                bounces={false}
+                style={styles.scroll}
+                keyboardShouldPersistTaps="handled"
+            // keyboardDismissMode='on-drag' 
+            >
+                <ScaleImage width={devices_width} source={require('@images/new/drug/ic_bg_drug.png')}></ScaleImage>
+                <View style={styles.containerCard}>
 
-                <HeaderLine onPress={this.onShowInfo} isShowViewAll={false} title={'SẢN PHẨM THUỐC BÁN CHẠY'} />
-                <View style={styles.viewFlatList}>
-                    <FlatList
-                        style={{ flex: 1 }}
-                        data={this.state.listData}
-                        keyExtractor={(item, index) => index.toString()}
-                        extraData={this.state}
-                        onRefresh = {this.onRefresh}
-                        refreshing = {this.state.refreshing}
-                        numColumns={Dimensions.get("window").width < 375 ? 1 : 2}
-                        renderItem={this.renderItem}
-                        showsVerticalScrollIndicator={false}
-                    >
-
-                    </FlatList>
                 </View>
-                <View style={styles.viewBtn}>
-                    <TouchableOpacity onPress={() => NavigationService.pop()} style={styles.btnBack}>
-                        <Text allowFontScaling = {false} style={styles.txBtn}>Trở lại</Text>
-                    </TouchableOpacity>
-                </View>
-            </SafeAreaView>
+            </ScrollView>
+            // {Platform.OS == "ios" && <KeyboardSpacer />}
+            // </ActivityPanel>
         );
     }
 }
 const styles = StyleSheet.create({
-    btnBack: {
-        width: 115,
-        height: 30,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: "#02C39A",
-        marginRight: 10,
-        borderRadius: 5,
+    scroll: {
+        flex: 1,
+        position: 'relative',
     },
-    container:{ flex: 1, backgroundColor: '#fff'},
-    viewFlatList:{ alignItems: 'center', width: '100%', flex: 1 },
-    viewBtn:{ height: 50, alignItems: 'flex-end', backgroundColor: '#fff', justifyContent: 'center' },
-    txBtn:{ color: '#fff', textAlign: 'center' }
-
-
-
-})
+    containerCard: {
+        margin: 22,
+        marginTop: 10,
+        backgroundColor: 'red'
+    },
+});
+function mapStateToProps(state) {
+    return {
+        userApp: state.userApp
+    };
+}
+export default connect(mapStateToProps)(drugScreen);
