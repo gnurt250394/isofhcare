@@ -456,7 +456,7 @@ class HomeScreen extends Component {
         style={styles.activityPanel}
       >
         <View style={styles.container}>
-
+          {/* <View style={{ height: 150, backgroundColor: '#f2f2f2', position: "absolute", top: 300, left: 0, right: 0 }}></View> */}
           <ScaledImage source={require("@images/new/homev2/ic_bg_home.png")} width={DEVICE_WIDTH} style={styles.imgHome} />
           {/*   <View style={styles.containerImageLogo}>
         <View style={styles.ImageCenter}>
@@ -583,7 +583,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    // position: 'relative'
+    position: 'relative'
   },
   containerImageLogo: {
     height: 75,
