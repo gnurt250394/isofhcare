@@ -7,12 +7,11 @@ import {
 	StyleSheet,
 	Text,
 	TouchableOpacity,
-	Image,
-	Easing,
+	ImageBackground,
+	Dimensions,
 	Keyboard
 } from "react-native";
 import { Card, Item, Label, Input } from 'native-base';
-import Dimensions from "Dimensions";
 import { connect } from "react-redux";
 import snackbar from "@utils/snackbar-utils";
 import userProvider from "@data-access/user-provider";
@@ -29,7 +28,6 @@ import DeviceInfo from 'react-native-device-info';
 import firebase from 'react-native-firebase';
 import client from '@utils/client-utils';
 import connectionUtils from "@utils/connection-utils";
-
 class LoginScreen extends Component {
 	constructor(props) {
 		super(props);
@@ -273,6 +271,7 @@ class LoginScreen extends Component {
 	}
 	render() {
 		return (
+<<<<<<< HEAD
 			<ActivityPanel
 				title={constants.login}
 				isLoading={this.state.isLoading}
@@ -281,34 +280,76 @@ class LoginScreen extends Component {
 					showsVerticalScrollIndicator={false}
 					style={styles.container}
 					keyboardShouldPersistTaps="handled"
+=======
+
+			<ScrollView
+				showsVerticalScrollIndicator={false}
+				keyboardShouldPersistTaps="handled"
+
+			>
+				<ImageBackground
+					style={{ flex: 1, backgroundColor: '#000', height: DEVICE_HEIGHT }}
+					source={require('@images/new/account/img_bg_login.png')}
+					resizeMode={'cover'}
+					resizeMethod="resize"
+				// image={require("@images/new/isofhcare.png")}
+				// imageStyle={{ marginRight: 50 }}
+				// showFullScreen={true}
+				// isLoading={this.state.isLoading}
+>>>>>>> user/feature/change-login-signup-v2
 				>
-					<KeyboardAvoidingView behavior="padding">
-						<View style={{ flex: 1 }}>
-							<View style={{ margin: 22 }}>
-								<Card style={{ padding: 22, paddingTop: 10, borderRadius: 8, marginTop: 60, borderColor: '#02C39A', borderWidth: 1 }}>
-									<Form ref={ref => (this.form = ref)}>
-										<Field clearWhenFocus={true}>
+					{/* <KeyboardAvoidingView behavior=""> */}
+					<Text style={{ color: '#fff', fontSize: 22, alignSelf: 'center', marginTop: 100 }}>ĐĂNG NHẬP</Text>
+					<View style={{ flex: 1, justifyContent: 'center', }}>
+						<View style={{ marginHorizontal: 22 }}>
+							<Card style={{ padding: 22, paddingTop: 10, borderRadius: 8, marginTop: 50, borderColor: '#02C39A', borderWidth: 1 }}>
+								<ScaleImage style={{ alignSelf: 'center', }} source={require("@images/new/account/ic_login_isc.png")} height={60}></ScaleImage>
+								<Form ref={ref => (this.form = ref)}>
+									<Field clearWhenFocus={true}>
+										<TextField
+											getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
+												keyboardType='numeric'
+												placeholderStyle={{ fontSize: 16, }} value={value} underlineColor={'#CCCCCC'}
+												inputStyle={styles.textInputStyle}
+												labelStyle={styles.labelStyle} placeholder={constants.phone} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
+											onChangeText={s => this.setState({ phone: s })}
+											errorStyle={styles.errorStyle}
+											validate={{
+												rules: {
+													required: true,
+													phone: true
+												},
+												messages: {
+													required: "Số điện thoại không được bỏ trống",
+													phone: "SĐT không hợp lệ"
+												}
+											}}
+
+											autoCapitalize={"none"}
+										/>
+										<Field style={styles.inputPass}>
 											<TextField
 												getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-													keyboardType='numeric'
-													placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'}
-													inputStyle={styles.textInputStyle}
-													labelStyle={styles.labelStyle} placeholder={constants.phone} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
-												onChangeText={s => this.setState({ phone: s })}
+													placeholderStyle={{ fontSize: 16 }}
+													value={value} underlineColor={'#CCCCCC'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.password} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} secureTextEntry={this.state.secureTextEntry} />}
+												onChangeText={s => this.setState({ password: s })}
 												errorStyle={styles.errorStyle}
 												validate={{
 													rules: {
-														required: true,
-														phone: true
+														required: this.state.requirePass,
 													},
 													messages: {
+<<<<<<< HEAD
 														required: constants.msg.user.phone_not_null,
 														phone: constants.msg.user.phone_invalid
+=======
+														required: "Mật khẩu không được bỏ trống"
+>>>>>>> user/feature/change-login-signup-v2
 													}
 												}}
-
-												placeholder={constants.input_password}
+												// inputStyle={styles.input}
 												autoCapitalize={"none"}
+<<<<<<< HEAD
 											/>
 											<Field style={styles.inputPass}>
 												<TextField
@@ -360,6 +401,18 @@ class LoginScreen extends Component {
 										</Field>
 										<View style={styles.containerFooter}>
 											<TouchableOpacity
+=======
+											>
+
+											</TextField>
+											{
+												this.state.password ? (this.state.secureTextEntry ? (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 45, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 45, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
+											}
+										</Field>
+									</Field>
+									<View style={{ flexDirection: 'row', marginTop: 15 }}>
+										{/* <TouchableOpacity
+>>>>>>> user/feature/change-login-signup-v2
 												onPress={this.register.bind(this)}
 												style={{ alignItems: "flex-start", flex: 1 }}
 											>
@@ -373,35 +426,42 @@ class LoginScreen extends Component {
 													}}>
 													Tạo tài khoản
 													</Text>
-											</TouchableOpacity>
-											<TouchableOpacity
-												onPress={this.forgotPassword.bind(this)}
-												style={{ alignItems: "flex-end", flex: 1 }}
-											>
-												<Text
-													numberOfLines={1}
-													ellipsizeMode="tail"
-													style={{
-														color: '#028090',
-														paddingRight: 5,
-														fontSize: 14
-													}}>
-													Quên mật khẩu?
+											</TouchableOpacity> */}
+										<TouchableOpacity
+											onPress={this.forgotPassword.bind(this)}
+											style={{ alignItems: "flex-end", flex: 1 }}
+										>
+											<Text
+												numberOfLines={1}
+												ellipsizeMode="tail"
+												style={{
+													color: '#00A3FF',
+													paddingRight: 5,
+													fontSize: 14
+												}}>
+												Quên mật khẩu?
 													</Text>
-											</TouchableOpacity>
-										</View>
-									</Form>
-								</Card>
-							</View>
-							{/* <SocialNetwork /> */}
-							{/* <Text style={{ color: '#000', textAlign: 'center', marginVertical: 20 }}>Nếu chưa có tài khoản có thể đăng ký <Text onPress={this.register.bind(this)} style={{ color: '#1EA3EA' }}>tại đây</Text></Text> */}
-							<TouchableOpacity onPress={this.login.bind(this)} style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center' }} >
-								<Text style={{ color: '#FFF', fontSize: 17 }}>{"ĐĂNG NHẬP"}</Text>
-							</TouchableOpacity>
+										</TouchableOpacity>
+									</View>
+								</Form>
+								<TouchableOpacity onPress={this.login.bind(this)} style={{ backgroundColor: '#00CBA7', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 10, alignItems: 'center', justifyContent: 'center' }} >
+									<Text style={{ color: '#FFF', fontSize: 17 }}>{"ĐĂNG NHẬP"}</Text>
+								</TouchableOpacity>
+							</Card>
 						</View>
-					</KeyboardAvoidingView>
-				</ScrollView>
-			</ActivityPanel>
+						{/* <SocialNetwork /> */}
+						{/* <Text style={{ color: '#000', textAlign: 'center', marginVertical: 20 }}>Nếu chưa có tài khoản có thể đăng ký <Text onPress={this.register.bind(this)} style={{ color: '#1EA3EA' }}>tại đây</Text></Text> */}
+
+					</View>
+					{/* </KeyboardAvoidingView> */}
+					<TouchableOpacity onPress={this.register.bind(this)} style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', borderColor: '#fff', borderWidth: 1, alignSelf: 'center', borderRadius: 50, width: 250, height: 48, alignItems: 'center', justifyContent: 'center', marginTop: 100 }} >
+						<Text style={{ color: '#FFF', fontSize: 17 }}>{"ĐĂNG KÝ"}</Text>
+					</TouchableOpacity>
+					<View style={{ height: 50 }}></View>
+				</ImageBackground>
+
+			</ScrollView>
+
 		);
 	}
 }
@@ -492,10 +552,15 @@ const styles = StyleSheet.create({
 	textInputStyle: {
 		color: "#53657B",
 		fontWeight: "600",
-		height: 45,
+		height: 51,
 		marginLeft: 0,
-		alignSelf: 'stretch',
+		borderWidth: 1,
+		padding: 10,
+		paddingHorizontal: 20,
+		borderRadius: 6,
+		borderColor: '#CCCCCC',
 		fontSize: 20,
+		paddingLeft: 15,
 		paddingRight: 45,
 
 	},

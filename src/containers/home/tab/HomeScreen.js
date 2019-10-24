@@ -475,11 +475,54 @@ class HomeScreen extends Component {
             showsVerticalScrollIndicator={false}
             style={styles.scroll}
           >
+<<<<<<< HEAD
             <View style={styles.padding21}>
               <Card style={styles.card}>
                 <Text style={styles.txBooking}>ĐẶT KHÁM ONLINE</Text>
                 <View style={styles.containerButtonBooking}>
                   {this.renderButtonBooking()}
+=======
+            <View style={{ padding: 21 }}>
+              <Card style={{ borderRadius: 6, marginTop: 130 }}>
+
+                {this.props.userApp.isLogin &&
+                  <View style={{ alignItems: 'center', flexDirection: 'row', borderBottomColor: 'rgba(151, 151, 151, 0.29)', borderBottomWidth: 1, paddingVertical: 10, marginHorizontal: 20, justifyContent: 'center' }}>
+                    <Text style={{ marginLeft: 5, fontSize: 18, fontWeight: 'bold', color: "#4a4a4a" }} >Xin chào, <Text style={{ color: 'rgb(255,138,21)' }}>{((name) => {
+                      if (!name) return "";
+                      let x = name.trim().split(" ");
+                      name = (x[x.length - 1]).toLowerCase();
+                      if (name[0])
+                        return name.charAt(0).toUpperCase() + name.slice(1);
+                      return name;
+                    }).call(this, this.props.userApp.currentUser.name) + '!'}</Text></Text>
+                  </View>
+                }
+
+                <View style={{
+                  flexDirection: "row", padding: 10, marginVertical: 20, flexWrap: 'wrap',
+                  justifyContent: 'center'
+                }}>
+                  {
+                    (this.state.features || []).map((item, position) => {
+                      return (
+                        <Animatable.View key={position} delay={100} animation={"swing"} direction="alternate">
+                          {
+                            item.empty ? <View style={{ flex: 1, marginLeft: 5, alignItems: 'center', height: 100, width: this.getItemWidth() }}
+                            ></View> :
+                              <TouchableOpacity
+                                style={{ flex: 1, marginLeft: 5, alignItems: 'center', width: this.getItemWidth() }}
+                                onPress={item.onPress}
+                              >
+                                <View style={{ position: 'relative', padding: 5 }}>
+                                  <ScaledImage style={[styles.icon]} source={item.icon} height={48} />
+                                </View>
+                                <Text style={[styles.label]}>{item.text}</Text>
+                              </TouchableOpacity>
+                          }
+                        </Animatable.View>);
+                    })
+                  }
+>>>>>>> user/feature/change-login-signup-v2
                 </View>
               </Card>
               {/* <View style={styles.viewMenu}> */}

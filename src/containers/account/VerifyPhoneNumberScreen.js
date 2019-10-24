@@ -317,14 +317,19 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
     handleTextChange = (text) => {
         this.setState({
             text
+        }, () => {
+            if (this.state.text.length == 6) {
+                this.onCheckOtp()
+            }
         })
+
     }
     render() {
         return (
             <ActivityPanel
                 style={{ flex: 1 }}
                 showFullScreen={true}
-                title="Xác thực tài khoản"
+                title={<ScaleImage source={require('@images/new/account/ic_login_isc.png')} height={50} style={{ alignSelf: 'center' }} />}
             >
                 <ScrollView
                     showsVerticalScrollIndicator={false}
@@ -338,46 +343,53 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                             alignItems: "center"
                         }}
                     >
-                        <ScaleImage source={require("@images/logo.png")} width={120} />
+                        <Text style={{ fontSize: 16, fontWeight: '800', color: '#00BA99', alignSelf: 'center' }}>XÁC NHẬN SỐ ĐIỆN THOẠI</Text>
+                        {/* <ScaleImage source={require("@images/logo.png")} width={120} /> */}
                     </View>
                     <KeyboardAvoidingView behavior="padding" style={styles.form}>
-                        <Form ref={ref => (this.form = ref)}>
-                            <TextField
-                                errorStyle={styles.errorStyle}
-                                validate={{
-                                    rules: {
-                                        required: true,
-                                        minlength: 6,
-                                        maxlength: 6
-                                    },
-                                    messages: {
-                                        required: "Vui lòng nhập mã OTP",
-                                        minlength: "Yêu cầu nhập đúng 6 ký tự",
-                                        maxlength: "Yêu cầu nhập đúng 6 ký tự"
+                        <View style={{ borderWidth: 0.5, borderStyle: 'solid', borderColor: '#808080', borderRadius: 10, paddingTop: 30, alignSelf: 'center' }}>
+                            <Text style={{ fontSize: 14, textAlign: 'center', marginBottom: 50, color: '#000000' }}>Vui lòng nhập mã xác thực được gửi tới {`\n`} số điện thoại {this.state.phone}</Text>
+                            <Form ref={ref => (this.form = ref)}>
+                                <TextField
+                                    errorStyle={styles.errorStyle}
+                                    validate={{
+                                        rules: {
+                                            required: true,
+                                            minlength: 6,
+                                            maxlength: 6
+                                        },
+                                        messages: {
+                                            required: "Vui lòng nhập mã OTP",
+                                            minlength: "Yêu cầu nhập đúng 6 ký tự",
+                                            maxlength: "Yêu cầu nhập đúng 6 ký tự"
+                                        }
+                                    }}
+                                    inputStyle={styles.input}
+                                    onChangeText={text =>
+                                        this.handleTextChange(text)
                                     }
-                                }}
-                                inputStyle={styles.input}
-                                onChangeText={text =>
-                                    this.handleTextChange(text)
-                                }
-                                placeholder={constants.input_code}
-                                autoCapitalize={"none"}
-                                returnKeyType={"next"}
-                                keyboardType="numeric"
-                                autoCorrect={false}
-                            />
-                        </Form>
+                                    placeholder={constants.input_code}
+                                    autoCapitalize={"none"}
+                                    returnKeyType={"next"}
+                                    keyboardType="numeric"
+                                    autoCorrect={false}
+                                />
+                            </Form>
+                            <Text style={styles.txTime}>Mã xác thực hiệu lực trong: <Text style={styles.txCountTime}>{this.state.seconds > 9 ? this.state.seconds : '0' + this.state.seconds}s</Text></Text>
+                        </View>
                         {
                             this.state.countResend ? (<Text style={[styles.txReSent, { color: 'red', marginTop: 10 }]}>Bạn chỉ được chọn gửi lại mã tối đa 5 lần, xin vui lòng thử lại sau 60 phút</Text>) :
-                                <TouchableOpacity style={styles.btnReSend} disabled={this.state.disabled} onPress={this.onReSendPhone}><Text style={styles.txBtnReSend}>Gửi lại mã</Text></TouchableOpacity>
+                                <View>
+                                    <Text style={{ fontStyle: 'italic', color: '#000', marginTop: 100 }}>Bạn cho rằng mình chưa nhận được mã ?</Text>
+                                    <TouchableOpacity style={styles.btnReSend} disabled={this.state.disabled} onPress={this.onReSendPhone}><Text style={styles.txBtnReSend}>Gửi lại mã</Text></TouchableOpacity>
+                                </View>
                         }
-                        <Text style={styles.txTime}>Mã xác thực hiệu lực trong   <Text style={styles.txCountTime}>{this.state.seconds > 9 ? this.state.seconds : '0' + this.state.seconds}</Text>   giây</Text>
-                        <TouchableOpacity disabled={this.state.disabledConfirm} onPress={this.onCheckOtp} style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center' }} >
+                        {/* <TouchableOpacity disabled={this.state.disabledConfirm} onPress={this.onCheckOtp} style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center' }} >
                             <Text style={{ color: '#FFF', fontSize: 17 }}>{"XÁC NHẬN"}</Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </KeyboardAvoidingView>
                 </ScrollView>
-            </ActivityPanel>
+            </ActivityPanel >
         )
     }
 }
@@ -398,21 +410,24 @@ const styles = StyleSheet.create({
     titleStyle: { textAlign: 'left', marginLeft: 20 },
     txContents: { color: '#333335', textAlign: 'center', fontSize: 14, marginTop: 20 },
     logo: { marginTop: 20, alignSelf: 'center' },
-    txTime: { color: '#000', fontStyle: 'italic', fontWeight: '700', marginVertical: 20, textAlign: 'center', fontSize: 16 },
-    txCountTime: { color: 'red', fontStyle: 'italic', fontSize: 16 },
+    txTime: { color: '#808080', fontStyle: 'italic', marginVertical: 20, textAlign: 'center', fontSize: 16, },
+    txCountTime: { color: '#808080', fontStyle: 'italic', fontWeight: 'bold', fontSize: 16 },
     txReSent: { color: '#000', fontStyle: 'italic', fontWeight: '700', textAlign: 'center', fontSize: 14 },
     btnFinish: { backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 40, alignItems: 'center', justifyContent: 'center', marginBottom: 20 },
     txFinish: { color: '#FFF', fontSize: 17 },
-    btnReSend: { alignSelf: 'center', padding: 2, backgroundColor: 'rgb(2,195,154)', marginTop: 15, borderRadius: 5, height: 28, width: 100, justifyContent: 'center', alignItems: 'center' },
-    txBtnReSend: { color: '#fff', fontStyle: 'italic', fontWeight: '500', fontSize: 13 },
-    txErr: { textAlign: 'center', color: 'red', fontSize: 14, fontStyle: 'italic', fontWeight: '700', marginTop: 20 },
+    btnReSend: { alignSelf: 'center', padding: 2, marginTop: 15, borderRadius: 5, height: 28, width: 100, justifyContent: 'center', alignItems: 'center' },
+    txBtnReSend: { color: '#3161AD', fontStyle: 'italic', fontWeight: 'bold', fontSize: 14, textDecorationLine: 'underline' },
+    txErr: {
+        textAlign: 'center', color: 'red', fontSize: 14, fontStyle: 'italic', fontWeight: '700', marginTop: 20
+    },
     input: {
         maxWidth: 300,
         paddingRight: 30,
         backgroundColor: "#FFF",
         width: DEVICE_WIDTH - 40,
         height: 42,
-        marginHorizontal: 20,
+        textAlign: "center",
+        marginHorizontal: 40,
         paddingLeft: 15,
         borderRadius: 6,
         color: "#006ac6",
@@ -458,7 +473,7 @@ const styles = StyleSheet.create({
     },
     errorStyle: {
         color: "red",
-        marginLeft: 20
+        marginLeft: 40
     },
 
 });
