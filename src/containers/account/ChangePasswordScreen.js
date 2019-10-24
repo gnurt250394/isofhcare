@@ -73,13 +73,6 @@ class ChangePasswordScreen extends Component {
             snackbar.show(constants.msg.app.not_internet, "danger");
         })
     }
-<<<<<<< HEAD
-    onChangeText = (state) => (value) => {
-        this.setState({ [state]: value })
-    }
-=======
-
->>>>>>> user/feature/change-login-signup-v2
     render() {
         return (
             <ActivityPanel
@@ -97,18 +90,6 @@ class ChangePasswordScreen extends Component {
                                 <Field style={styles.inputPass}>
                                     <TextField
                                         getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-<<<<<<< HEAD
-                                            placeholderStyle={styles.placeInput}
-                                            value={value}
-                                            underlineColor={'#02C39A'}
-                                            inputStyle={styles.textInputStyle}
-                                            labelStyle={styles.labelStyle}
-                                            placeholder={constants.enter_old_password}
-                                            secureTextEntry={this.state.secureTextOldEntry}
-                                            allowFontScaling={false}
-                                            onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
-                                        onChangeText={this.onChangeText('passwordOld')}
-=======
                                             placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.enter_old_password}
                                             secureTextEntry={this.state.secureTextOldEntry}
                                             allowFontScaling={false}
@@ -116,7 +97,6 @@ class ChangePasswordScreen extends Component {
                                         onChangeText={s => {
                                             this.setState({ passwordOld: s });
                                         }}
->>>>>>> user/feature/change-login-signup-v2
                                         allowFontScaling={false}
                                         errorStyle={styles.errorStyle}
                                         validate={{
@@ -133,46 +113,13 @@ class ChangePasswordScreen extends Component {
                                         autoCapitalize={"none"}
                                     />
                                     {
-<<<<<<< HEAD
-                                        this.state.passwordOld ? (this.state.secureTextOldEntry ?
-                                            (<TouchableOpacity
-                                                style={styles.buttonPassNew}
-                                                onPress={this.onShowOldPass}>
-                                                <ScaleImage
-                                                    style={styles.iconPassNew}
-                                                    resizeMode={'contain'}
-                                                    height={20}
-                                                    source={require('@images/new/ic_hide_pass.png')}></ScaleImage>
-                                            </TouchableOpacity>)
-                                            :
-                                            (<TouchableOpacity
-                                                style={styles.buttonPassNew}
-                                                onPress={this.onShowOldPass}>
-                                                <ScaleImage style={styles.iconPassNew}
-                                                    height={20}
-                                                    source={require('@images/new/ic_show_pass.png')}></ScaleImage>
-                                            </TouchableOpacity>)) : (<Field></Field>)
-=======
                                         this.state.passwordOld ? (this.state.secureTextOldEntry ? (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 30, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowOldPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 30, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowOldPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
->>>>>>> user/feature/change-login-signup-v2
                                     }
                                 </Field>
                                 <Field style={styles.inputPass}>
 
                                     <TextField
                                         getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-<<<<<<< HEAD
-                                            placeholderStyle={styles.placeInput}
-                                            value={value}
-                                            underlineColor={'#02C39A'}
-                                            inputStyle={styles.textInputStyle}
-                                            labelStyle={styles.labelStyle}
-                                            placeholder={constants.change_password_screens.password_new}
-                                            secureTextEntry={this.state.secureTextNewEntry}
-                                            allowFontScaling={false}
-                                            onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
-                                        onChangeText={this.onChangeText('passwordNew')}
-=======
                                             placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Nhập mật khẩu mới"}
                                             secureTextEntry={this.state.secureTextNewEntry}
                                             allowFontScaling={false}
@@ -180,7 +127,6 @@ class ChangePasswordScreen extends Component {
                                         onChangeText={s => {
                                             this.setState({ passwordNew: s });
                                         }}
->>>>>>> user/feature/change-login-signup-v2
                                         allowFontScaling={false}
                                         errorStyle={styles.errorStyle}
                                         validate={{
@@ -197,46 +143,12 @@ class ChangePasswordScreen extends Component {
                                         autoCapitalize={"none"}
                                     />
                                     {
-<<<<<<< HEAD
-                                        this.state.passwordNew ? (this.state.secureTextNewEntry ? (
-                                            <TouchableOpacity style={styles.buttonPassNew} onPress={this.onShowNewPass}>
-                                                <ScaleImage
-                                                    style={styles.iconPassNew}
-                                                    resizeMode={'contain'}
-                                                    height={20}
-                                                    source={require('@images/new/ic_hide_pass.png')}>
-                                                </ScaleImage>
-                                            </TouchableOpacity>)
-                                            :
-                                            (<TouchableOpacity
-                                                style={styles.buttonPassNew}
-                                                onPress={this.onShowNewPass}>
-                                                <ScaleImage
-                                                    style={styles.iconPassNew}
-                                                    height={20}
-                                                    source={require('@images/new/ic_show_pass.png')}>
-                                                </ScaleImage>
-                                            </TouchableOpacity>)) : (<Field></Field>)
-=======
                                         this.state.passwordNew ? (this.state.secureTextNewEntry ? (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 30, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowNewPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 30, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowNewPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
->>>>>>> user/feature/change-login-signup-v2
                                     }
                                 </Field>
                                 <Field style={styles.inputPass}>
                                     <TextField
                                         getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-<<<<<<< HEAD
-                                            placeholderStyle={styles.placeInput}
-                                            value={value}
-                                            underlineColor={'#02C39A'}
-                                            inputStyle={styles.textInputStyle}
-                                            labelStyle={styles.labelStyle}
-                                            placeholder={constants.change_password_screens.password_new_2}
-                                            secureTextEntry={this.state.secureTextNew2Entry}
-                                            allowFontScaling={false}
-                                            onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
-                                        onChangeText={this.onChangeText('confirm_password')}
-=======
                                             placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Xác nhận mật khẩu mới"}
                                             secureTextEntry={this.state.secureTextNew2Entry}
                                             allowFontScaling={false}
@@ -244,7 +156,6 @@ class ChangePasswordScreen extends Component {
                                         onChangeText={s => {
                                             this.setState({ confirm_password: s });
                                         }}
->>>>>>> user/feature/change-login-signup-v2
                                         errorStyle={styles.errorStyle}
                                         allowFontScaling={false}
                                         validate={{
@@ -263,26 +174,7 @@ class ChangePasswordScreen extends Component {
                                         autoCapitalize={"none"}
                                     />
                                     {
-<<<<<<< HEAD
-                                        this.state.confirm_password ? (this.state.secureTextNew2Entry ?
-                                            (<TouchableOpacity
-                                                style={styles.buttonPassNew} onPress={this.onShowNewPass2}>
-                                                <ScaleImage style={styles.iconPassNew}
-                                                    resizeMode={'contain'}
-                                                    height={20}
-                                                    source={require('@images/new/ic_hide_pass.png')}>
-                                                </ScaleImage>
-                                            </TouchableOpacity>) : (<TouchableOpacity
-                                                style={styles.buttonPassNew}
-                                                onPress={this.onShowNewPass2}>
-                                                <ScaleImage
-                                                    style={styles.iconPassNew}
-                                                    height={20}
-                                                    source={require('@images/new/ic_show_pass.png')}>
-                                                </ScaleImage></TouchableOpacity>)) : (<Field></Field>)
-=======
                                         this.state.confirm_password ? (this.state.secureTextNew2Entry ? (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 30, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowNewPass2}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 30, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowNewPass2}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
->>>>>>> user/feature/change-login-signup-v2
                                     }
                                 </Field>
                             </Form>
@@ -376,9 +268,6 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     textInputStyle: {
-<<<<<<< HEAD
-        alignSelf: 'stretch',
-=======
         color: "#53657B",
         fontWeight: "600",
         height: 51,
@@ -390,7 +279,6 @@ const styles = StyleSheet.create({
         borderColor: '#CCCCCC',
         fontSize: 20,
         paddingLeft: 15,
->>>>>>> user/feature/change-login-signup-v2
         paddingRight: 45,
 
     },

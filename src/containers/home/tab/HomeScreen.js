@@ -475,13 +475,6 @@ class HomeScreen extends Component {
             showsVerticalScrollIndicator={false}
             style={styles.scroll}
           >
-<<<<<<< HEAD
-            <View style={styles.padding21}>
-              <Card style={styles.card}>
-                <Text style={styles.txBooking}>ĐẶT KHÁM ONLINE</Text>
-                <View style={styles.containerButtonBooking}>
-                  {this.renderButtonBooking()}
-=======
             <View style={{ padding: 21 }}>
               <Card style={{ borderRadius: 6, marginTop: 130 }}>
 
@@ -522,7 +515,6 @@ class HomeScreen extends Component {
                         </Animatable.View>);
                     })
                   }
->>>>>>> user/feature/change-login-signup-v2
                 </View>
               </Card>
               {/* <View style={styles.viewMenu}> */}

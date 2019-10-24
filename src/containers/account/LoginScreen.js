@@ -271,16 +271,6 @@ class LoginScreen extends Component {
 	}
 	render() {
 		return (
-<<<<<<< HEAD
-			<ActivityPanel
-				title={constants.login}
-				isLoading={this.state.isLoading}
-			>
-				<ScrollView
-					showsVerticalScrollIndicator={false}
-					style={styles.container}
-					keyboardShouldPersistTaps="handled"
-=======
 
 			<ScrollView
 				showsVerticalScrollIndicator={false}
@@ -296,7 +286,6 @@ class LoginScreen extends Component {
 				// imageStyle={{ marginRight: 50 }}
 				// showFullScreen={true}
 				// isLoading={this.state.isLoading}
->>>>>>> user/feature/change-login-signup-v2
 				>
 					{/* <KeyboardAvoidingView behavior=""> */}
 					<Text style={{ color: '#fff', fontSize: 22, alignSelf: 'center', marginTop: 100 }}>ĐĂNG NHẬP</Text>
@@ -339,69 +328,11 @@ class LoginScreen extends Component {
 														required: this.state.requirePass,
 													},
 													messages: {
-<<<<<<< HEAD
-														required: constants.msg.user.phone_not_null,
-														phone: constants.msg.user.phone_invalid
-=======
 														required: "Mật khẩu không được bỏ trống"
->>>>>>> user/feature/change-login-signup-v2
 													}
 												}}
 												// inputStyle={styles.input}
 												autoCapitalize={"none"}
-<<<<<<< HEAD
-											/>
-											<Field style={styles.inputPass}>
-												<TextField
-													getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-														placeholderStyle={styles.placeFloat}
-														value={value}
-														underlineColor={'#02C39A'}
-														inputStyle={styles.textInputStyle}
-														labelStyle={styles.labelStyle}
-														placeholder={constants.password}
-														onChangeText={onChangeText}
-														onBlur={onBlur}
-														onFocus={onFocus}
-														secureTextEntry={this.state.secureTextEntry} />}
-													onChangeText={this.onChangeText('password')}
-													errorStyle={styles.errorStyle}
-													validate={{
-														rules: {
-															required: this.state.requirePass,
-														},
-														messages: {
-															required: constants.password_not_null
-														}
-													}}
-													// inputStyle={styles.input}
-													placeholder={constants.input_password}
-													autoCapitalize={"none"}
-												>
-
-												</TextField>
-												{
-													this.state.password ? (this.state.secureTextEntry ? (<TouchableOpacity
-														style={styles.buttonHide}
-														onPress={this.onShowPass}>
-														<ScaleImage
-															style={styles.iconHide}
-															resizeMode={'contain'} height={20}
-															source={require('@images/new/ic_hide_pass.png')}>
-														</ScaleImage>
-													</TouchableOpacity>) : (<TouchableOpacity
-														style={styles.buttonHide}
-														onPress={this.onShowPass}>
-														<ScaleImage
-															style={styles.iconHide} height={20} source={require('@images/new/ic_show_pass.png')}>
-														</ScaleImage>
-													</TouchableOpacity>)) : (<Field></Field>)
-												}
-											</Field>
-										</Field>
-										<View style={styles.containerFooter}>
-											<TouchableOpacity
-=======
 											>
 
 											</TextField>
@@ -412,7 +343,6 @@ class LoginScreen extends Component {
 									</Field>
 									<View style={{ flexDirection: 'row', marginTop: 15 }}>
 										{/* <TouchableOpacity
->>>>>>> user/feature/change-login-signup-v2
 												onPress={this.register.bind(this)}
 												style={{ alignItems: "flex-start", flex: 1 }}
 											>
