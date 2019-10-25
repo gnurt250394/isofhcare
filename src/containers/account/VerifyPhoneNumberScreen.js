@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Keyboard, ScrollView, KeyboardAvoidingView, Dimensions, AppState } from 'react-native';
+import { StyleSheet, Text, View, Keyboard, ScrollView, KeyboardAvoidingView, Dimensions, ImageBackground, TouchableOpacity } from 'react-native';
 import { Content, Item, Input } from 'native-base';
 // import { Grid, Col } from 'react-native-easy-grid';
 import OTPTextView from 'react-native-otp-textinput'
@@ -17,8 +17,9 @@ import connectionUtils from "@utils/connection-utils";
 import Form from "mainam-react-native-form-validate/Form";
 import TextField from "mainam-react-native-form-validate/TextField";
 import ButtonSubmit from "@components/ButtonSubmit";
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import HeaderBar from '@components/account/HeaderBar'
 
+const DEVICE_HEIGHT = Dimensions.get("window").height;
 //props: verify
 //case 1 : regiter
 //case 2 : fogot password
@@ -326,16 +327,17 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
     }
     render() {
         return (
-            <ActivityPanel
-                style={{ flex: 1 }}
-                showFullScreen={true}
-                title={<ScaleImage source={require('@images/new/account/ic_login_isc.png')} height={50} style={{ alignSelf: 'center' }} />}
-            >
+            <ImageBackground
+                style={{ flex: 1, backgroundColor: '#000', height: DEVICE_HEIGHT }}
+                source={require('@images/new/account/img_bg_login.png')}
+                resizeMode={'cover'}
+                resizeMethod="resize">
                 <ScrollView
                     showsVerticalScrollIndicator={false}
-                    style={{ flex: 1 }}
+                    style={styles.scroll}
                     keyboardShouldPersistTaps="handled"
                 >
+                    <HeaderBar></HeaderBar>
                     <View
                         style={{
                             marginTop: 60,
@@ -343,7 +345,7 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                             alignItems: "center"
                         }}
                     >
-                        <Text style={{ fontSize: 16, fontWeight: '800', color: '#00BA99', alignSelf: 'center' }}>XÁC NHẬN SỐ ĐIỆN THOẠI</Text>
+                        <Text style={{ fontSize: 24, fontWeight: '800', color: '#00BA99', alignSelf: 'center' }}>XÁC NHẬN SỐ ĐIỆN THOẠI</Text>
                         {/* <ScaleImage source={require("@images/logo.png")} width={120} /> */}
                     </View>
                     <KeyboardAvoidingView behavior="padding" style={styles.form}>
@@ -389,7 +391,7 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                         </TouchableOpacity> */}
                     </KeyboardAvoidingView>
                 </ScrollView>
-            </ActivityPanel >
+            </ImageBackground>
         )
     }
 }
@@ -475,6 +477,7 @@ const styles = StyleSheet.create({
         color: "red",
         marginLeft: 40
     },
+    scroll: { flex: 1, borderTopLeftRadius: 20, borderTopRightRadius: 20, marginTop: 20, backgroundColor: '#fff' }
 
 });
 function mapStateToProps(state) {

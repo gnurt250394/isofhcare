@@ -505,6 +505,11 @@ class HomeScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+<<<<<<< HEAD
+=======
+<<<<<<< Updated upstream
+=======
+>>>>>>> user/feature/change-login-signup-v2
   groupImageButton: {
     position: 'relative',
     padding: 5
@@ -536,12 +541,18 @@ const styles = StyleSheet.create({
   containerButton: {
     flexDirection: "row",
     padding: 30,
+<<<<<<< HEAD
     marginTop: 10,
+=======
+>>>>>>> user/feature/change-login-signup-v2
     flex: 1,
     flexWrap: 'wrap',
     justifyContent: 'center',
     borderRadius: 5,
+<<<<<<< HEAD
     backgroundColor: '#F8F8F8'
+=======
+>>>>>>> user/feature/change-login-signup-v2
   },
   colorUserName: {
     color: '#fff',
@@ -571,7 +582,11 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: 'bold'
   },
+<<<<<<< HEAD
   padding21: { padding: 21 },
+=======
+  padding21: { padding: 21,paddingBottom:0 },
+>>>>>>> user/feature/change-login-signup-v2
   card: { borderRadius: 6, marginTop: 30 },
   viewMenu: { backgroundColor: '#F8F8F8', flex: 1, borderRadius: 5 },
   scroll: {
@@ -600,6 +615,10 @@ const styles = StyleSheet.create({
     right: 0,
     left: 0
   },
+<<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
+>>>>>>> user/feature/change-login-signup-v2
   icon: {
   },
   label: {
