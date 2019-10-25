@@ -57,7 +57,7 @@ class ItemDoctor extends Component {
                             <Text style={styles.txtNameDoctor}>BS {item.name}</Text>
                             <View style={styles.flexRow}>
                                 {item.position && item.position.length > 0 ?
-                                    item.position.map((e, i) => {
+                                    item.position.slice(0,3).map((e, i) => {
                                         return (
                                             <Text style={styles.txtPosition} key={i}>{e}</Text>
                                         )
@@ -73,7 +73,7 @@ class ItemDoctor extends Component {
                                 }
                             </View>
                             <View style={styles.containerButton}>
-                                <Button label="Tư vấn" style={styles.txtAdvisory} onPress={onPressAdvisory} source={require("@images/new/booking/ic_chat.png")} />
+                                {/* <Button label="Tư vấn" style={styles.txtAdvisory} onPress={onPressAdvisory} source={require("@images/new/booking/ic_chat.png")} /> */}
                                 <Button label="Đặt khám" style={styles.txtBooking} onPress={onPressBooking} source={require("@images/ic_service.png")} />
                             </View>
                         </View>

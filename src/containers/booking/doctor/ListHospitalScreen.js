@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import ActivityPanel from '@components/ActivityPanel';
+import constants from '@resources/strings'
 
 class ListHospitalScreen extends Component {
     constructor(props) {
@@ -27,7 +28,7 @@ class ListHospitalScreen extends Component {
     render() {
         const { listHospital } = this.state
         return (
-            <ActivityPanel title="Chọn cơ sở y tế"
+            <ActivityPanel title={constants.title.select_CSYT}
                 isLoading={this.state.isLoading} >
                 <FlatList
                     data={listHospital}

@@ -520,6 +520,13 @@ module.exports = {
     schedule_booking: 'LỊCH KHÁM',
     booking_paid:'Đặt khám đã được thanh toán',
     booking_paid_or_invalid:'Đặt khám đã được thanh toán hoặc không tồn tại',
+    quantity_booking:'Lượt đặt khám',
+    quantity_advisory:'Lượt tư vấn',
+    rating:'Đánh giá',
+    work:'Đơn vị công tác',
+    specialist:'Chuyên khoa',
+    time_work:'Quá trình công tác',
+    select_payment_method:'Chọn phương thức thanh toán',
     guide: {
       part_1: 'Bước 1: Điền thông tin chuyển khoản thụ hưởng:',
       bank: 'Ngân hàng',
@@ -681,7 +688,9 @@ module.exports = {
     test_result:'KẾT QUẢ XÉT NGHIỆM',
     select_CSYT:'Chọn CSYT',
     scan_code:'Quét QR BHYT',
-    list_booking:'Chọn hình thức đặt khám'
+    list_booking:'Chọn hình thức đặt khám',
+    select_doctor:'Chọn bác sĩ',
+    info_doctor:'Thông tin bác sỹ',
   },
   account_screens: {
     signin_or_signup: 'Đăng nhập/ Đăng Ký',

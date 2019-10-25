@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, FlatList,TouchableOpacity } from 'react-native';
 import ActivityPanel from '@components/ActivityPanel';
+import constants from '@resources/strings'
 
 class ListPaymentMethodScreen extends Component {
     constructor(props) {
@@ -34,7 +35,7 @@ class ListPaymentMethodScreen extends Component {
     render() {
         const { data } = this.state
         return (
-            <ActivityPanel title="Chọn phương thức thanh toán"
+            <ActivityPanel title={constants.booking.select_payment_method}
                 isLoading={this.state.isLoading} >
                 <FlatList
                     data={data}

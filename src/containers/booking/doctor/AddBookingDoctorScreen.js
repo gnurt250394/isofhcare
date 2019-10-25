@@ -25,7 +25,7 @@ import StarRating from 'react-native-star-rating';
 
 import scheduleProvider from '@data-access/schedule-provider';
 import SelectPaymentDoctor from '@components/booking/doctor/SelectPaymentDoctor';
-import ViewHeader from '../../../components/booking/doctor/ViewHeader';
+import ViewHeader from '@components/booking/doctor/ViewHeader';
 class AddBookingDoctorScreen extends Component {
     constructor(props) {
         super(props);

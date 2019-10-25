@@ -17,8 +17,15 @@ import StarRating from 'react-native-star-rating';
 import userProvider from '@data-access/user-provider';
 import questionProvider from '@data-access/question-provider';
 import { Card } from 'native-base'
-import Button from "../../../components/booking/doctor/Button";
-
+import Button from "@components/booking/doctor/Button";
+import constants from '@resources/strings'
+import { FlatList } from "react-native-gesture-handler";
+const dataRate = [
+  { id: 1, name: 'Lê Hùng', rate: 4, message: 'Bác sĩ rất ...' },
+  { id: 2, name: 'Lê Hùng', rate: 4.5, message: 'Bác sĩ rất ...' },
+  { id: 3, name: 'Lê Hùng', rate: 3, message: 'Bác sĩ rất ...' },
+  { id: 4, name: 'Lê Hùng', rate: 5, message: 'Bác sĩ rất ...' },
+]
 class DetailsDoctorScreen extends Component {
   constructor() {
     super();
@@ -112,6 +119,27 @@ class DetailsDoctorScreen extends Component {
       }
     </View>
   }
+  _renderItem = ({ item, index }) => {
+    return (
+      <View style={[styles.containerItem, { borderBottomWidth: index == dataRate.length - 1 ? 0 : 0.7 }]}>
+        <Text style={styles.txtName}>{item.name}</Text>
+        <StarRating
+          disabled={true}
+          starSize={11}
+          containerStyle={{ width: '20%' }}
+          maxStars={5}
+          rating={item.rate}
+          starStyle={{ margin: 1, marginVertical: 7 }}
+          fullStarColor={"#fbbd04"}
+          emptyStarColor={"#fbbd04"}
+          fullStar={require("@images/ic_star.png")}
+          emptyStar={require("@images/ic_empty_star.png")}
+        />
+        <Text numberOfLines={2}>{item.message}</Text>
+      </View>
+    )
+  }
+  _keyExtractor = (item, index) => `${item.id || index}`
   render() {
     const icSupport = require("@images/new/user.png");
     const { profileDoctor } = this.state
@@ -121,7 +149,7 @@ class DetailsDoctorScreen extends Component {
 
     return (
       <ActivityPanel
-        title={"Thông tin bác sỹ"}
+        title={constants.title.info_doctor}
         isLoading={this.state.isLoading}
 
       >
@@ -134,6 +162,7 @@ class DetailsDoctorScreen extends Component {
           <View style={{
             padding: 10,
           }}>
+            {/** profile doctor */}
             <Card style={styles.viewImgUpload}>
               <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
                 <ImageLoad
@@ -158,15 +187,15 @@ class DetailsDoctorScreen extends Component {
                 />
                 <View style={{ paddingLeft: 10, flex: 1 }}>
                   <Text style={styles.nameDoctor}>BS.{profileDoctor.name}</Text>
-                  <View >
+                  {/* <View >
                     {profileDoctor.address && profileDoctor.address.length > 0 ?
                       <Text >{profileDoctor.address[0].name}</Text>
                       :
                       null
                     }
-                  </View>
+                  </View> */}
                   <View style={styles.containerButton}>
-                    <Button label="Tư vấn" style={styles.txtAdvisory} onPress={this.goToAdvisory} source={require("@images/new/booking/ic_chat.png")} />
+                    {/* <Button label="Tư vấn" style={styles.txtAdvisory} onPress={this.goToAdvisory} source={require("@images/new/booking/ic_chat.png")} /> */}
                     <Button label="Đặt khám" style={styles.txtBooking} onPress={this.addBooking} source={require("@images/ic_service.png")} />
                   </View>
 
@@ -178,43 +207,27 @@ class DetailsDoctorScreen extends Component {
               <View
                 style={styles.row}
               >
-                <View style={{
-                  alignItems: 'center',
-                  borderRightColor: '#ccc',
-                  borderRightWidth: 1,
-                  paddingRight: 5,
-                  flex: 1
-                }}>
-                  <Text>Lượt đặt khám</Text>
+                <View style={styles.groupQuantityBooking}>
+                  <Text>{constants.booking.quantity_booking}</Text>
                   <Text style={styles.rating}>{profileDoctor.rating}</Text>
                 </View>
-                <View style={{
-                  alignItems: 'center',
-                  borderRightColor: '#ccc',
-                  borderRightWidth: 1,
-                  paddingRight: 5,
-                  flex: 1
-                }}>
-                  <Text>Lượt tư vấn</Text>
+                <View style={styles.groupQuantityBooking}>
+                  <Text>{constants.booking.quantity_advisory}</Text>
                   <Text style={styles.rating}>{profileDoctor.rating}</Text>
                 </View>
-                <View style={{
-                  alignItems: 'center',
-                  paddingRight: 5,
-                  flex: 1
-                }}>
-                  <Text>Đánh giá</Text>
-                  <Text style={styles.rating}>{profileDoctor.rating}</Text>
+                <View style={styles.groupRating}>
+                  <Text>{constants.booking.rating}</Text>
+                  <Text style={[styles.rating, { color: '#00CBA7' }]}>{profileDoctor.rating}</Text>
                 </View>
               </View>
             </Card>
             {/** */}
 
             <Card style={styles.containerInfo}>
-              <Text style={styles.colorBold}>Đơn vị công tác:</Text>
+              <Text style={styles.colorBold}>{constants.booking.work}:</Text>
               {this.renderText(profileDoctor.address)}
 
-              <Text style={styles.colorBold}>Chuyên khoa:</Text>
+              <Text style={styles.colorBold}>{constants.booking.specialist}:</Text>
               <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                 {profileDoctor.position && profileDoctor.position.length > 0 ?
                   profileDoctor.position.map((e, i) => {
@@ -225,7 +238,7 @@ class DetailsDoctorScreen extends Component {
                   null
                 }
               </View>
-              <Text style={styles.colorBold}>Quá trình công tác:</Text>
+              <Text style={styles.colorBold}>{constants.booking.time_work}:</Text>
               <View style={styles.flex}>
                 {profileDoctor.time && profileDoctor.time.length > 0 ?
                   profileDoctor.time.map((e, i) => {
@@ -252,26 +265,13 @@ class DetailsDoctorScreen extends Component {
             <Card style={{
               borderRadius: 10
             }}>
-              <Text style={{
-                color: '#00CBA7',
-                fontWeight: 'bold',
-                fontSize: 16,
-                paddingLeft: 10,
-                paddingTop: 9,
-                paddingBottom: 7,
-              }}>ĐÁNH GIÁ</Text>
-              <View style={{
-                backgroundColor: '#ccc',
-                height: 0.6,
-                width: '100%'
-              }} />
-              <Text>aaa</Text>
-              <Text>aaa</Text>
-              <Text>aaa</Text>
-              <Text>aaa</Text>
-              <Text>aaa</Text>
-              <Text>aaa</Text>
-              <Text>aaa</Text>
+              <Text style={styles.txtRate}>ĐÁNH GIÁ</Text>
+              <View style={styles.end} />
+              <FlatList
+                data={dataRate}
+                renderItem={this._renderItem}
+                keyExtractor={this._keyExtractor}
+              />
             </Card>
           </View>
 
@@ -283,6 +283,40 @@ class DetailsDoctorScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  groupRating: {
+    alignItems: 'center',
+    paddingRight: 5,
+    flex: 1
+  },
+  groupQuantityBooking: {
+    alignItems: 'center',
+    borderRightColor: '#ccc',
+    borderRightWidth: 1,
+    paddingRight: 5,
+    flex: 1
+  },
+  txtName: {
+    color: '#000',
+    fontWeight: 'bold',
+    fontSize: 16
+  },
+  containerItem: {
+    padding: 10,
+    borderBottomColor: '#ccc',
+  },
+  txtRate: {
+    color: '#00CBA7',
+    fontWeight: 'bold',
+    fontSize: 16,
+    paddingLeft: 10,
+    paddingTop: 9,
+    paddingBottom: 7,
+  },
+  end: {
+    backgroundColor: '#ccc',
+    height: 0.6,
+    width: '100%'
+  },
   dots: {
     backgroundColor: '#00CBA7',
     height: 10,
@@ -325,7 +359,8 @@ const styles = StyleSheet.create({
     flex: 1,
     marginVertical: 20,
     paddingLeft: 10,
-    borderRadius: 10
+    borderRadius: 10,
+    paddingBottom:10
   },
   containerSeeDetails: {
     flexDirection: 'row',
@@ -374,7 +409,7 @@ const styles = StyleSheet.create({
     fontStyle: 'italic'
   },
   fontItalic: { fontStyle: 'italic' },
-  rating: { color: '#000', paddingLeft: 10 },
+  rating: { color: '#000', fontWeight: 'bold' },
   row: {
     flexDirection: 'row',
     alignItems: 'center',

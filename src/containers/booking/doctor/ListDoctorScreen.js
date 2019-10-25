@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, TextInput, Dimensions, ScrollView } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, TextInput, Dimensions, ScrollView, Animated } from 'react-native';
 import ActivityPanel from '@components/ActivityPanel';
 import StarRating from 'react-native-star-rating';
 import ImageLoad from "mainam-react-native-image-loader";
@@ -8,6 +8,10 @@ import ItemDoctor from '@components/booking/doctor/ItemDoctor';
 import ScaleImage from "mainam-react-native-scaleimage";
 import Carousel, { Pagination } from 'react-native-snap-carousel'
 import LinearGradient from 'react-native-linear-gradient'
+import ActionBar from '@components/Actionbar';
+import constants from '@resources/strings'
+
+
 const { width, height } = Dimensions.get('window')
 const data = [
     {
@@ -39,7 +43,7 @@ const data = [
         name: 'Nguyễn Văn C',
         rating: 3.5,
         quantity: 1024,
-        avatar: 'http://www.dangcongsan.vn/DATA/0/2019/09/file76xog5oc70i1g0dp219_156748_9282_7304_1567581048-20_11_49_618.jpg',
+        avatar: 'https://lh3.googleusercontent.com/-owjXePebdEk/WqHli8rgihI/AAAAAAAABQQ/tXgbapuQrmw8iaxG3XfXx5ZJstkm6NIRwCHMYCw/s0/5aa1e5850d188.jpg',
         position: ['Tai mũi họng', 'Răng hàm mặt', 'Mắt', 'Tai mũi họng', 'Răng mặt'],
         address: [
             { name: 'Phòng khám Y Khoa Hà Nội', service: 'Khám tổng quát', price: 100000 },
@@ -55,7 +59,7 @@ const data = [
         name: 'Nguyễn Văn D',
         rating: 4.7,
         quantity: 2098,
-        avatar: 'https://icdn.dantri.com.vn/thumb_w/640/2019/08/14/nu-sinh-lao-cai-xinh-dep-duoc-vi-nhu-thien-than-anh-thedocx-1565795558127.jpeg',
+        avatar: 'https://imgur.com/vuggCtC.gif',
         position: ['Răng hàm mặt', 'Tai mũi họng', 'Mắt'],
         address: [
             { name: 'Phòng khám Y Khoa Hà Nội', service: 'Khám tổng quát', price: 100000 },
@@ -71,7 +75,7 @@ const data = [
         name: 'Nguyễn Văn E',
         rating: 3.5,
         quantity: 1024,
-        avatar: 'http://www.dangcongsan.vn/DATA/0/2019/09/file76xog5oc70i1g0dp219_156748_9282_7304_1567581048-20_11_49_618.jpg',
+        avatar: 'https://gonhub.com/wp-content/uploads/2018/11/cach-tao-anh-gif.gif',
         position: ['Răng hàm mặt', 'Tai mũi họng', 'Mắt'],
 
         address: [
@@ -88,7 +92,7 @@ const data = [
         name: 'Nguyễn Văn F',
         rating: 4.7,
         quantity: 2098,
-        avatar: 'https://icdn.dantri.com.vn/thumb_w/640/2019/08/14/nu-sinh-lao-cai-xinh-dep-duoc-vi-nhu-thien-than-anh-thedocx-1565795558127.jpeg',
+        avatar: 'http://static2.yan.vn/photo/2017/08/15/fce65d76-f337-4ee2-b459-34e68b7b2c46.gif',
         position: ['Răng hàm mặt', 'Tai mũi họng', 'Mắt'],
         address: [
             { name: 'Phòng khám Y Khoa Hà Nội', service: 'Khám tổng quát', price: 100000 },
@@ -110,6 +114,8 @@ class ListDoctorScreen extends Component {
             infoDoctor: {}
         };
         this.listSearch = []
+        this.onScroll = new Animated.Value(0)
+        this.header = Animated.multiply(Animated.diffClamp(this.onScroll, 0, 60), -1)
     }
     componentDidMount = () => {
         setTimeout(() => {
@@ -170,34 +176,54 @@ class ListDoctorScreen extends Component {
     }
     keyExtractor = (item, index) => index.toString()
     listEmpty = () => !this.state.isLoading && <Text style={styles.none_data}>Không có dữ liệu</Text>
-    onSnapToItem = (index) => {
-        let data = [...this.state.data]
-        let obj = data[index]
-        this.setState({ infoDoctor: obj })
+   
+    backPress = () => this.props.navigation && this.props.navigation.pop()
+    renderHeader = () => {
+        return (
+            <Animated.View style={[styles.containerHeader, { transform: [{ translateY: this.header }] }]}
+                onLayout={(event) => {
+                    this.height = event.nativeEvent.layout.height
+                }}
+            >
+                <ActionBar
+                    actionbarTextColor={[{ color: constants.colors.actionbar_title_color }]}
+                    backButtonClick={this.backPress}
+                    title={constants.title.select_doctor}
+                    icBack={require('@images/new/left_arrow_white.png')}
+                    titleStyle={[styles.titleStyle]}
+                    actionbarStyle={[{ backgroundColor: constants.colors.actionbar_color }, styles.actionbarStyle]}
+                />
+                <View style={styles.groupSearch}>
+                    <TextInput
+                        value={this.state.keyword}
+                        onChangeText={this.onChangeText('keyword')}
+                        onSubmitEditing={this.search}
+                        returnKeyType='search'
+                        style={styles.inputSearch}
+                        placeholder={"Tìm kiếm…"}
+                        underlineColorAndroid={"transparent"} />
+                    <TouchableOpacity style={styles.buttonSearch} onPress={this.search}>
+                        <ScaleImage source={require('@images/new/hospital/ic_search.png')} height={16} />
+                    </TouchableOpacity>
+                </View>
+            </Animated.View>
+        )
     }
     render() {
         const { infoDoctor } = this.state
         return (
             <ActivityPanel
-                title="CHỌN BÁC SỸ"
-                showFullScreen={true}
+                actionbar={this.renderHeader}
                 isLoading={this.state.isLoading}>
-                <ScrollView>
-                    <View style={styles.backgroundHeader}></View>
-                    <View style={{ flex: 1 }}>
-                        <View style={styles.groupSearch}>
-                            <TextInput
-                                value={this.state.keyword}
-                                onChangeText={this.onChangeText('keyword')}
-                                onSubmitEditing={this.search}
-                                returnKeyType='search'
-                                style={styles.inputSearch}
-                                placeholder={"Tìm kiếm…"}
-                                underlineColorAndroid={"transparent"} />
-                            <TouchableOpacity style={styles.buttonSearch} onPress={this.search}>
-                                <ScaleImage source={require('@images/new/hospital/ic_search.png')} height={16} />
-                            </TouchableOpacity>
-                        </View>
+                <Animated.ScrollView
+                    onScroll={Animated.event(
+                        [{ nativeEvent: { contentOffset: { y: this.onScroll } } }],
+                        { useNativeDriver: true },
+                    )}
+                >
+                    <View style={[styles.backgroundHeader,]}></View>
+                    <View style={{ flex: 1, paddingTop: this.height }}>
+
                         <FlatList
                             data={this.state.data}
                             renderItem={this.renderItem}
@@ -205,7 +231,7 @@ class ListDoctorScreen extends Component {
                             ListEmptyComponent={this.listEmpty}
                         />
                     </View>
-                </ScrollView>
+                </Animated.ScrollView>
             </ActivityPanel >
         );
     }
@@ -215,12 +241,27 @@ export default ListDoctorScreen;
 
 
 const styles = StyleSheet.create({
+    containerHeader: {
+        position: 'absolute',
+        zIndex: 100,
+        left: 0,
+        right: 0,
+        backgroundColor: '#02C39A'
+    },
+    actionbarStyle: {
+        backgroundColor: '#02C39A',
+        borderBottomWidth: 0
+    },
+    titleStyle: {
+        color: '#FFF',
+        marginLeft: 10
+    },
     backgroundHeader: {
         backgroundColor: '#02C39A',
-        height: '13%',
+        height: '15%',
         position: 'absolute',
-        top: 0,
         left: 0,
+        top: 0,
         right: 0
     },
     flex: {

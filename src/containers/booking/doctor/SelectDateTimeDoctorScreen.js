@@ -22,15 +22,15 @@ const data = [
             price: 1000000
         },
         {
-            name: 'Khám bệnh theo yêu cầu',
+            name: 'Khám lâm sàng',
             price: 100000
         },
         {
-            name: 'Khám bệnh theo yêu cầu',
+            name: 'Khám tổng quát',
             price: 2000000
         },
         {
-            name: 'Khám bệnh theo yêu cầu',
+            name: 'Khám chữa bệnh',
             price: 1050000
         },
         ]
@@ -197,7 +197,7 @@ class SelectDateTimeDoctorScreen extends Component {
                 obj[key].schedules = [];
                 obj[key].marked = true;
                 obj[key].color = 'green';
-                obj[key].selectedColor = '#FC4A5F';
+                obj[key].selectedColor = '#02c39a';
             }
             // return;
             firstDay.setDate(firstDay.getDate() + 1)
@@ -237,7 +237,7 @@ class SelectDateTimeDoctorScreen extends Component {
                         schedules: [],
                         marked: true,
                         color: 'green',
-                        selectedColor: '#FC4A5F'
+                        selectedColor: '#02c39a'
                     }
                 } else {
                     obj[tgi].schedules.push(item);
@@ -393,7 +393,7 @@ class SelectDateTimeDoctorScreen extends Component {
                 delete schedules[this.state.dateString].selected;
             }
             schedules[day.dateString].selected = true;
-            schedules[day.dateString].selectedColor = '#FC4A5F';
+            schedules[day.dateString].selectedColor = '#02c39a';
             this.setState({
                 dateString: day.dateString,
                 bookingDate: day.dateString.toDateObject(),
