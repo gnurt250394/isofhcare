@@ -475,7 +475,7 @@ class AccountScreen extends Component {
             <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
           </TouchableOpacity>
         )}
-        <TouchableOpacity style={{ backgroundColor: '#f8f8f8',top:10 }} onPress={() => {
+        <TouchableOpacity style={[{ backgroundColor: '#f8f8f8', }, this.props.userApp.isLogin ? {} : { top: 10 }]} onPress={() => {
           snackbar.show("Đang kiểm tra cập nhật", "success");
           codePushUtils.checkupDate();
         }}>
@@ -534,7 +534,7 @@ const styles = StyleSheet.create({
     color: '#008D6F',
     marginLeft: 20
   },
-  viewCurrentUser: { flexDirection: "row", alignItems: "center", marginTop: 30, borderTopColor: "#00000011", borderTopWidth: 1, borderBottomWidth: 1, borderBottomColor: '#00000011', paddingVertical: 20, paddingLeft: 25, paddingRight: 15,backgroundColor:'#fff' },
+  viewCurrentUser: { flexDirection: "row", alignItems: "center", marginTop: 30, borderTopColor: "#00000011", borderTopWidth: 1, borderBottomWidth: 1, borderBottomColor: '#00000011', paddingVertical: 20, paddingLeft: 25, paddingRight: 15, backgroundColor: '#fff' },
   txUserName: { color: "#000000", fontSize: 18, fontWeight: 'bold' },
   viewInfo: { flex: 1, marginLeft: 20 },
   txViewProfile: { color: 'gray', marginTop: 5 },
