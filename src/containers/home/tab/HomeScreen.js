@@ -339,6 +339,102 @@ class HomeScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+<<<<<<< Updated upstream
+=======
+  groupImageButton: {
+    position: 'relative',
+    padding: 5
+  },
+  button: {
+    flex: 1,
+    marginLeft: 5,
+    alignItems: 'center',
+
+  },
+  viewEmpty: {
+    flex: 1,
+    marginLeft: 5,
+    alignItems: 'center',
+    height: 100,
+  },
+  activityPanel: {
+    flex: 1,
+    backgroundColor: '#f2f2f2'
+  },
+  containerButtonBooking: {
+    flexDirection: "row",
+    padding: 10,
+    marginTop: 10,
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    borderRadius: 5,
+  },
+  containerButton: {
+    flexDirection: "row",
+    padding: 30,
+    flex: 1,
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    borderRadius: 5,
+  },
+  colorUserName: {
+    color: '#fff',
+    paddingLeft: 4,
+    fontSize: 18,
+    fontWeight: 'bold',
+
+  },
+  txtHeaderTitle: {
+    marginLeft: 5,
+    fontSize: 18,
+    color: "#fff"
+  },
+  containerHeadertitle: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    borderBottomColor: 'rgba(151, 151, 151, 0.29)',
+    // borderBottomColor: '#fff',
+    borderBottomWidth: 1,
+    paddingVertical: 10,
+    marginHorizontal: 20,
+    justifyContent: 'center'
+  },
+  txBooking: {
+    margin: 5,
+    marginLeft: 39,
+    color: '#000',
+    fontWeight: 'bold'
+  },
+  padding21: { padding: 21,paddingBottom:0 },
+  card: { borderRadius: 6, marginTop: 30 },
+  viewMenu: { backgroundColor: '#F8F8F8', flex: 1, borderRadius: 5 },
+  scroll: {
+    flex: 1,
+    paddingTop: 0,
+  },
+  ImageCenter: {
+    flex: 1, alignItems: 'center'
+  },
+  container: {
+    flex: 1,
+    position: 'relative'
+  },
+  containerImageLogo: {
+    height: 75,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    backgroundColor: '#fff',
+    borderBottomColor: '#7c817f',
+    borderBottomWidth: 0.5
+  },
+  imgHome: {
+    position: 'absolute',
+    // top: 72,
+    right: 0,
+    left: 0
+  },
+>>>>>>> Stashed changes
   icon: {
   },
   label: {

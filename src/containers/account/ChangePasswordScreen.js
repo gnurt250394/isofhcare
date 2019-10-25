@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import ActivityPanel from '@components/ActivityPanel';
 import Dimensions from 'Dimensions';
-import { View, Text, KeyboardAvoidingView, ScrollView, TouchableOpacity, StyleSheet, TextInput, Animated, Easing, Platform, Image, ImageBackground, Keyboard } from 'react-native';
+import { View, Text, KeyboardAvoidingView, ScrollView, TouchableOpacity, StyleSheet, ImageBackground, Animated, Easing, Platform, Image, Keyboard } from 'react-native';
 import { connect } from 'react-redux';
 import snackbar from '@utils/snackbar-utils';
 import Form from 'mainam-react-native-form-validate/Form';
@@ -13,6 +13,8 @@ import FloatingLabel from 'mainam-react-native-floating-label';
 import connectionUtils from '@utils/connection-utils';
 import ScaleImage from 'mainam-react-native-scaleimage';
 import Field from "mainam-react-native-form-validate/Field";
+import HeaderBar from '@components/account/HeaderBar'
+const DEVICE_HEIGHT = Dimensions.get("window").height;
 
 class ChangePasswordScreen extends Component {
     constructor(props) {
@@ -76,6 +78,7 @@ class ChangePasswordScreen extends Component {
 
     render() {
         return (
+<<<<<<< Updated upstream
             <ActivityPanel
                 style={{ flex: 1 }} title={constants.title.change_password}
                 titleStyle={{ textAlign: 'left', marginLeft: 20 }}
@@ -89,6 +92,33 @@ class ChangePasswordScreen extends Component {
                         <ScaleImage source={require("@images/new/isofhcare.png")} width={200} style={{ marginTop: 50, alignSelf: 'center' }} />
                         <View style={{ flex: 1, padding: 30 }}>
                             <Form ref={ref => (this.form = ref)} style={{ marginTop: 10 }}>
+=======
+            <ImageBackground
+                style={{ flex: 1, backgroundColor: '#000', height: DEVICE_HEIGHT }}
+                source={require('@images/new/account/img_bg_login.png')}
+                resizeMode={'cover'}
+                resizeMethod="resize">
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    style={styles.scroll}
+                    keyboardShouldPersistTaps="handled"
+                >
+                    <HeaderBar></HeaderBar>
+                    <View
+                        style={{
+                            marginTop: 60,
+                            justifyContent: "center",
+                            alignItems: "center"
+                        }}
+                    >
+                        <Text style={{ fontSize: 24, fontWeight: '800', color: '#00BA99', alignSelf: 'center' }}>ĐỔI MẬT KHẨU</Text>
+                        {/* <ScaleImage source={require("@images/logo.png")} width={120} /> */}
+                    </View>
+                    <KeyboardAvoidingView behavior="padding" >
+                        <ScaleImage source={require("@images/new/isofhcare.png")} width={200} style={styles.imageLogo} />
+                        <View style={styles.container}>
+                            <Form ref={ref => (this.form = ref)} style={styles.form}>
+>>>>>>> Stashed changes
                                 <Field style={styles.inputPass}>
                                     <TextField
                                         getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
@@ -183,10 +213,21 @@ class ChangePasswordScreen extends Component {
                         </View>
                     </KeyboardAvoidingView>
                 </ScrollView>
+<<<<<<< Updated upstream
                 <TouchableOpacity onPress={this.change.bind(this)} style={{ backgroundColor: 'rgb(2,195,154)', marginBottom: 30, alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center' }}>
                     <Text style={{ color: '#FFF', fontSize: 17 }}>{constants.update_to_up_case}</Text>
                 </TouchableOpacity>
             </ActivityPanel>
+=======
+                <View style={{ backgroundColor: '#fff' }}>
+                    <TouchableOpacity
+                        onPress={this.change.bind(this)}
+                        style={styles.updatePass}>
+                        <Text style={styles.txtUpdate}>{constants.update_to_up_case}</Text>
+                    </TouchableOpacity>
+                </View>
+            </ImageBackground>
+>>>>>>> Stashed changes
         )
     }
 }
@@ -239,6 +280,8 @@ const styles = StyleSheet.create({
         paddingRight: 45,
 
     },
+    scroll: { flex: 1, borderTopLeftRadius: 20, borderTopRightRadius: 20, marginTop: 20, backgroundColor: '#fff' }
+
 });
 
 function mapStateToProps(state) {
