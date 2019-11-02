@@ -97,8 +97,9 @@ import ShareDataProfileScreen from '@containers/profile/ShareDataProfileScreen'
 //
 import HospitalByLocationScreen from '@containers/home/HospitalByLocationScreen'
 import HospitalScreen from '@containers/home/HospitalScreen'
+//drug
 import DrugScreen from '@containers/home/DrugScreen'
-
+import FindDrugScreen from '@containers/drug/FindDrugScreen'
 
 //
 import PatientHistoryScreen from "@containers/booking/PatientHistoryScreen";
@@ -318,7 +319,8 @@ const RootNavigator = createStackNavigator(
     //menu profile
     setting: { screen: SettingScreen },
     changePassword: { screen: ChangePasswordScreen },
-    //
+    //drug
+    findDrug:{screen:FindDrugScreen},
     //
     specialist: { screen: SpecialistScreen },
 
