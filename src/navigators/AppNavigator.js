@@ -103,6 +103,7 @@ import FindDrugScreen from '@containers/drug/FindDrugScreen'
 import InputLocationScreen from '@containers/drug/InputLocationScreen'
 import SelectLocationScreen from '@containers/drug/SelectLocationScreen'
 import DetailsDrugScreen from '@containers/drug/DetailsDrugScreen'
+import DrugStoreScreen from '@containers/drug/DrugStoreScreen'
 
 //
 import PatientHistoryScreen from "@containers/booking/PatientHistoryScreen";
@@ -327,7 +328,8 @@ const RootNavigator = createStackNavigator(
     selectLocation:{screen:SelectLocationScreen},
     inputLocation:{screen:InputLocationScreen},
     detailsDrug:{screen:DetailsDrugScreen},
-
+    drugStore:{screen:DrugStoreScreen},
+    
     //
     specialist: { screen: SpecialistScreen },
 

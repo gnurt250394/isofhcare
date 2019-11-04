@@ -81,7 +81,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: '#3161ad'
+        borderColor: '#3161ad',
+        borderRightWidth:0
     },
     btnTabInput: {
         borderBottomRightRadius: 25,
@@ -91,7 +92,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: '#3161ad'
-
+        borderColor: '#3161ad',
+        borderLeftWidth:0
     },
 })
