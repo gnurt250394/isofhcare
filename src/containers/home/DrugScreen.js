@@ -76,11 +76,14 @@ class drugScreen extends Component {
             index: index
         })
     }
+    onSelectDetails = () => {
+        this.props.navigation.navigate('detailsDrug')
+    }
     renderItem = ({ item, index }) => {
         return (
             <View style={styles.viewItem}>
-                <Card onPress={() => alert('x')} style={styles.cardItem}>
-                    <TouchableOpacity style={styles.cardItem}>
+                <Card style={styles.cardItem}>
+                    <TouchableOpacity onPress = {this.onSelectDetails} style={styles.cardItem}>
                         <View style={styles.viewImg}><ScaleImage height={30} source={require('@images/new/drug/ic_drug_item.png')}></ScaleImage></View>
                         <View style={styles.viewContentsItem}>
                             <View style={styles.viewMenuDrug}><Text style={styles.txName}>{item.name}</Text><TouchableOpacity onPress={() => this.showDropdown(index)} style={styles.btnImage}><ScaleImage style={styles.imgDot} height={12} source={require('@images/new/drug/ic_dot.png')}></ScaleImage></TouchableOpacity></View>

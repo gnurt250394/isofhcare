@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import { ScrollView } from 'react-native-gesture-handler';
+import NavigationService from "@navigators/NavigationService";
 
 export default class InsertInfoDrug extends Component {
     constructor(props) {
@@ -9,21 +10,23 @@ export default class InsertInfoDrug extends Component {
         this.state = {
         };
     }
-
+    selectLocation = () => {
+        NavigationService.navigate('selectLocation')
+    }
     render() {
         return (
             <View style={styles.container}>
                 <View style={styles.viewInput}>
                     <Text style={styles.txNameDrug}>Tên đơn thuốc</Text>
-                    <TextInput underlineColorAndroid={'#fff'} style={styles.inputNameDrug} placeholder={'Nhập tên đơn thuốc'}></TextInput>
+                    <TextInput underlineColorAndroid={'#fff'} style={styles.inputNameDrug} multiline ={true} placeholder={'Nhập tên đơn thuốc'}></TextInput>
                 </View>
                 <View style={styles.viewInput}>
                     <Text style={styles.txNameDrug}>Ghi chú</Text>
-                    <TextInput placeholder={'Viết ghi chú cho đơn thuốc'} style={styles.inputNote}></TextInput>
+                    <TextInput placeholder={'Viết ghi chú cho đơn thuốc'} multiline ={true} style={styles.inputNote}></TextInput>
                 </View>
                 <View style={styles.viewInput}>
                     <Text style={styles.txNameDrug}>Vị trí của bạn</Text>
-                    <TouchableOpacity style={styles.btnLocation}>
+                    <TouchableOpacity onPress={this.selectLocation} style={styles.btnLocation}>
                         <View style={styles.inputLocation}>
                             <ScaledImage source={require('@images/new/drug/ic_location.png')} height={20}></ScaledImage>
                             <Text style={styles.txLabelLocation}>Nhập địa chỉ</Text>
@@ -40,7 +43,7 @@ export default class InsertInfoDrug extends Component {
 }
 const styles = StyleSheet.create({
     container: {
-        flex:1
+        flex: 1
     },
     btnSave: {
         padding: 5
@@ -77,7 +80,7 @@ const styles = StyleSheet.create({
         fontStyle: 'italic',
     },
     inputNameDrug: {
-        height: 48,
+        minHeight: 48,
         width: '100%',
         padding: 10,
         borderRadius: 6,
@@ -89,11 +92,11 @@ const styles = StyleSheet.create({
         borderRadius: 6,
         borderWidth: 1,
         borderColor: '#cccccc',
-        height: 71,
+        minHeight: 71,
         padding: 10,
     },
     btnLocation: {
-        height: 41,
+        minHeight: 41,
         width: '100%',
         borderRadius: 6,
         borderWidth: 1,
@@ -105,7 +108,8 @@ const styles = StyleSheet.create({
     },
     inputLocation: {
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        padding:5
     },
     txLabelLocation: {
         color: '#00A3FF',

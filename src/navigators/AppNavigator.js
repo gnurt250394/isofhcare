@@ -100,6 +100,9 @@ import HospitalScreen from '@containers/home/HospitalScreen'
 //drug
 import DrugScreen from '@containers/home/DrugScreen'
 import FindDrugScreen from '@containers/drug/FindDrugScreen'
+import InputLocationScreen from '@containers/drug/InputLocationScreen'
+import SelectLocationScreen from '@containers/drug/SelectLocationScreen'
+import DetailsDrugScreen from '@containers/drug/DetailsDrugScreen'
 
 //
 import PatientHistoryScreen from "@containers/booking/PatientHistoryScreen";
@@ -321,6 +324,10 @@ const RootNavigator = createStackNavigator(
     changePassword: { screen: ChangePasswordScreen },
     //drug
     findDrug:{screen:FindDrugScreen},
+    selectLocation:{screen:SelectLocationScreen},
+    inputLocation:{screen:InputLocationScreen},
+    detailsDrug:{screen:DetailsDrugScreen},
+
     //
     specialist: { screen: SpecialistScreen },
 
