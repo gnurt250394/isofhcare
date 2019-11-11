@@ -79,7 +79,7 @@ class ChangePasswordScreen extends Component {
     render() {
         return (
             <ImageBackground
-                style={{ flex: 1, backgroundColor: '#000', height: DEVICE_HEIGHT }}
+                style={styles.container}
                 source={require('@images/new/account/img_bg_login.png')}
                 resizeMode={'cover'}
                 resizeMethod="resize">
@@ -88,7 +88,7 @@ class ChangePasswordScreen extends Component {
                     style={styles.scroll}
                     keyboardShouldPersistTaps="handled"
                 >
-                    <HeaderBar></HeaderBar>
+                    <HeaderBar style = {styles.header}></HeaderBar>
                     <View
                         style={{
                             marginTop: 60,
@@ -100,7 +100,7 @@ class ChangePasswordScreen extends Component {
                         {/* <ScaleImage source={require("@images/logo.png")} width={120} /> */}
                     </View>
                     <KeyboardAvoidingView behavior="padding" >
-                        <View style={styles.container}>
+                        <View>
                             <Form ref={ref => (this.form = ref)} style={styles.form}>
                                 <Field style={styles.inputPass}>
                                     <TextField
@@ -200,7 +200,7 @@ class ChangePasswordScreen extends Component {
                     <TouchableOpacity
                         onPress={this.change.bind(this)}
                         style={styles.updatePass}>
-                        <Text style={styles.txtUpdate}>{constants.update_to_up_case}</Text>
+                        <Text style={styles.txbtnUpdate}>{constants.update_to_up_case}</Text>
                     </TouchableOpacity>
                 </View>
             </ImageBackground>
@@ -209,8 +209,10 @@ class ChangePasswordScreen extends Component {
 }
 const DEVICE_WIDTH = Dimensions.get('window').width;
 const styles = StyleSheet.create({
-    container:{paddingHorizontal:20},
-    txtUpdate: { color: '#FFF', fontSize: 17 },
+    header:{paddingHorizontal:0},
+    txbtnUpdate: { color: '#FFF', fontSize: 17 },
+    updatePass: { backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center', marginBottom: 20 },
+    container: { flex: 1, backgroundColor: '#000', height: DEVICE_HEIGHT },
     btnEye: {
         position: 'absolute',
         right: 25,
@@ -258,11 +260,17 @@ const styles = StyleSheet.create({
         paddingRight: 45,
 
     },
+<<<<<<< HEAD
     scroll: { flex: 1, borderTopLeftRadius: 20, borderTopRightRadius: 20, marginTop: 20, backgroundColor: '#fff' },
     updatePass: { backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center', marginBottom: 20 }
+=======
+    scroll: { flex: 1, borderTopLeftRadius: 20, borderTopRightRadius: 20, marginTop: 20, backgroundColor: '#fff', paddingHorizontal: 20 }
+
+>>>>>>> user/feature/change-login-signup-v2
 });
 
 function mapStateToProps(state) {
+
     return {
         userApp: state.userApp,
         navigation: state.navigation
