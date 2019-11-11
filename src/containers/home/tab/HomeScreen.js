@@ -339,8 +339,6 @@ class HomeScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-<<<<<<< Updated upstream
-=======
   groupImageButton: {
     position: 'relative',
     padding: 5
@@ -434,7 +432,6 @@ const styles = StyleSheet.create({
     right: 0,
     left: 0
   },
->>>>>>> Stashed changes
   icon: {
   },
   label: {

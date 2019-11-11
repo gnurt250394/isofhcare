@@ -78,23 +78,8 @@ class ChangePasswordScreen extends Component {
 
     render() {
         return (
-<<<<<<< Updated upstream
-            <ActivityPanel
-                style={{ flex: 1 }} title={constants.title.change_password}
-                titleStyle={{ textAlign: 'left', marginLeft: 20 }}
-                showFullScreen={true} isLoading={this.state.isLoading}>
-                <ScrollView
-                    showsVerticalScrollIndicator={false}
-                    style={{ flex: 1 }}
-                    keyboardShouldPersistTaps="handled"
-                >
-                    <KeyboardAvoidingView behavior="padding" style={styles.form}>
-                        <ScaleImage source={require("@images/new/isofhcare.png")} width={200} style={{ marginTop: 50, alignSelf: 'center' }} />
-                        <View style={{ flex: 1, padding: 30 }}>
-                            <Form ref={ref => (this.form = ref)} style={{ marginTop: 10 }}>
-=======
             <ImageBackground
-                style={{ flex: 1, backgroundColor: '#000', height: DEVICE_HEIGHT }}
+                style={styles.container}
                 source={require('@images/new/account/img_bg_login.png')}
                 resizeMode={'cover'}
                 resizeMethod="resize">
@@ -103,7 +88,7 @@ class ChangePasswordScreen extends Component {
                     style={styles.scroll}
                     keyboardShouldPersistTaps="handled"
                 >
-                    <HeaderBar></HeaderBar>
+                    <HeaderBar style = {styles.header}></HeaderBar>
                     <View
                         style={{
                             marginTop: 60,
@@ -115,10 +100,8 @@ class ChangePasswordScreen extends Component {
                         {/* <ScaleImage source={require("@images/logo.png")} width={120} /> */}
                     </View>
                     <KeyboardAvoidingView behavior="padding" >
-                        <ScaleImage source={require("@images/new/isofhcare.png")} width={200} style={styles.imageLogo} />
-                        <View style={styles.container}>
+                        <View>
                             <Form ref={ref => (this.form = ref)} style={styles.form}>
->>>>>>> Stashed changes
                                 <Field style={styles.inputPass}>
                                     <TextField
                                         getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
@@ -213,26 +196,23 @@ class ChangePasswordScreen extends Component {
                         </View>
                     </KeyboardAvoidingView>
                 </ScrollView>
-<<<<<<< Updated upstream
-                <TouchableOpacity onPress={this.change.bind(this)} style={{ backgroundColor: 'rgb(2,195,154)', marginBottom: 30, alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center' }}>
-                    <Text style={{ color: '#FFF', fontSize: 17 }}>{constants.update_to_up_case}</Text>
-                </TouchableOpacity>
-            </ActivityPanel>
-=======
                 <View style={{ backgroundColor: '#fff' }}>
                     <TouchableOpacity
                         onPress={this.change.bind(this)}
                         style={styles.updatePass}>
-                        <Text style={styles.txtUpdate}>{constants.update_to_up_case}</Text>
+                        <Text style={styles.txbtnUpdate}>{constants.update_to_up_case}</Text>
                     </TouchableOpacity>
                 </View>
             </ImageBackground>
->>>>>>> Stashed changes
         )
     }
 }
 const DEVICE_WIDTH = Dimensions.get('window').width;
 const styles = StyleSheet.create({
+    header:{paddingHorizontal:0},
+    txbtnUpdate: { color: '#FFF', fontSize: 17 },
+    updatePass: { backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center', marginBottom: 20 },
+    container: { flex: 1, backgroundColor: '#000', height: DEVICE_HEIGHT },
     btnEye: {
         position: 'absolute',
         right: 25,
@@ -280,11 +260,12 @@ const styles = StyleSheet.create({
         paddingRight: 45,
 
     },
-    scroll: { flex: 1, borderTopLeftRadius: 20, borderTopRightRadius: 20, marginTop: 20, backgroundColor: '#fff' }
+    scroll: { flex: 1, borderTopLeftRadius: 20, borderTopRightRadius: 20, marginTop: 20, backgroundColor: '#fff', paddingHorizontal: 20 }
 
 });
 
 function mapStateToProps(state) {
+
     return {
         userApp: state.userApp,
         navigation: state.navigation

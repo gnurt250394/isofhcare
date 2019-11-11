@@ -445,8 +445,8 @@ class RegisterScreen extends Component {
             </KeyboardAvoidingView>
           </ScrollView>
           <View style={{ backgroundColor: '#fff' }}>
-            <TouchableOpacity onPress={this.onRegiter} style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center', marginBottom: 20 }} >
-              <Text style={{ color: '#FFF', fontSize: 17 }}>{"TIẾP TỤC"}</Text>
+            <TouchableOpacity onPress={this.onRegiter} style={this.btnSignup} >
+              <Text style={styles.txSignUp}>{"TIẾP TỤC"}</Text>
             </TouchableOpacity>
           </View>
           <DateTimePicker
@@ -474,6 +474,8 @@ const DEVICE_WIDTH = Dimensions.get("window").width;
 const DEVICE_HEIGHT = Dimensions.get("window").height;
 
 const styles = StyleSheet.create({
+  btnSignup:{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center', marginBottom: 20 },
+  txSignUp:{ color: '#FFF', fontSize: 17 },
   btnEye: {
     position: "absolute",
     right: 25,
