@@ -260,13 +260,8 @@ const styles = StyleSheet.create({
         paddingRight: 45,
 
     },
-<<<<<<< HEAD
-    scroll: { flex: 1, borderTopLeftRadius: 20, borderTopRightRadius: 20, marginTop: 20, backgroundColor: '#fff' },
-    updatePass: { backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center', marginBottom: 20 }
-=======
     scroll: { flex: 1, borderTopLeftRadius: 20, borderTopRightRadius: 20, marginTop: 20, backgroundColor: '#fff', paddingHorizontal: 20 }
 
->>>>>>> user/feature/change-login-signup-v2
 });
 
 function mapStateToProps(state) {
