@@ -69,11 +69,16 @@ class drugScreen extends Component {
         }
     }
     showDropdown = (index) => {
-        let dropDown = this.state.dropDown
+        let dropDown = this.state.dropDown   
         console.log('dropDown: ', dropDown);
         this.setState({
             dropDown: !dropDown,
             index: index
+        })
+    }
+    hideDrop = () => {
+        this.setState({
+            dropDown: false,
         })
     }
     onSelectDetails = () => {
@@ -83,7 +88,7 @@ class drugScreen extends Component {
         return (
             <View style={styles.viewItem}>
                 <Card style={styles.cardItem}>
-                    <TouchableOpacity onPress = {this.onSelectDetails} style={styles.cardItem}>
+                    <TouchableOpacity onPress={this.onSelectDetails} style={styles.cardItem}>
                         <View style={styles.viewImg}><ScaleImage height={30} source={require('@images/new/drug/ic_drug_item.png')}></ScaleImage></View>
                         <View style={styles.viewContentsItem}>
                             <View style={styles.viewMenuDrug}><Text style={styles.txName}>{item.name}</Text><TouchableOpacity onPress={() => this.showDropdown(index)} style={styles.btnImage}><ScaleImage style={styles.imgDot} height={12} source={require('@images/new/drug/ic_dot.png')}></ScaleImage></TouchableOpacity></View>
@@ -92,14 +97,20 @@ class drugScreen extends Component {
                     </TouchableOpacity>
                     {
                         this.state.dropDown && index == this.state.index ? <View style={styles.dropDown}>
-                            <TouchableOpacity><Text>Chỉnh sửa</Text></TouchableOpacity>
-                            <TouchableOpacity><Text>Xóa</Text></TouchableOpacity>
+                            <TouchableOpacity onPress = {this.onEdit} style={styles.btnEdit}><Text style={styles.txEdit}>Chỉnh sửa</Text></TouchableOpacity>
+                            <TouchableOpacity onPress = {this.onDelete} style={styles.btnEdit}><Text style={styles.txEdit}>Xóa</Text></TouchableOpacity>
                         </View> : null
                     }
                 </Card>
 
             </View>
         )
+    }
+    onEdit = () => {
+        alert('edit')
+    }
+    onDelete = () => {
+        alert('delete')
     }
     onFindDrug = () => {
         this.props.navigation.navigate('findDrug')
@@ -124,7 +135,7 @@ class drugScreen extends Component {
             >
                 <ScaleImage width={devices_width} source={require('@images/new/drug/ic_bg_drug2.png')}></ScaleImage>
                 <View style={styles.containerCard}>
-                    <TouchableOpacity onPress = {this.onFindDrug} style={styles.btnAdd}>
+                    <TouchableOpacity onPress={this.onFindDrug} style={styles.btnAdd}>
                         <ScaleImage style={styles.imgBtn} height={30} source={require('@images/new/drug/ic_drug_btn.png')}></ScaleImage>
                         <View style={styles.viewContentBtn}>
                             <Text style={styles.txSearchDrug}>Tìm nhà thuốc</Text>
@@ -145,7 +156,7 @@ class drugScreen extends Component {
                     />
 
                 </View>
-                <View style = {styles.viewBottom}></View>
+                <View style={styles.viewBottom}></View>
             </ScrollView>
             // {Platform.OS == "ios" && <KeyboardSpacer />}
             // </ActivityPanel>
@@ -153,8 +164,8 @@ class drugScreen extends Component {
     }
 }
 const styles = StyleSheet.create({
-    viewBottom:{
-        height:50
+    viewBottom: {
+        height: 50
     },
     scroll: {
         flex: 1,
@@ -169,8 +180,8 @@ const styles = StyleSheet.create({
     viewHeadFlat: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop:50,
-        marginBottom:10
+        marginTop: 50,
+        marginBottom: 10
     },
     btnAdd: {
         flexDirection: 'row',
@@ -190,19 +201,17 @@ const styles = StyleSheet.create({
     },
     dropDown: {
         backgroundColor: '#fff',
-        borderRadius: 5,
-        paddingVertical: 10,
         alignSelf: 'flex-end',
         borderWidth: 0.5,
         borderColor: 'gray',
         flex: 1,
         top: 30,
+        right: 0,
+        elevation: 1,
         position: 'absolute',
         zIndex: 5,
     },
-    viewItem: {
-        flex: 1
-    },
+
     imgBtn: {
         alignSelf: 'center'
     },
@@ -216,7 +225,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 20
     },
     btnImage: {
-        padding: 5
+        padding: 10
     },
     viewFlatlish: {
 
@@ -287,6 +296,17 @@ const styles = StyleSheet.create({
         fontStyle: 'italic',
         textAlign: 'right',
         fontWeight: '800',
+    },
+    txEdit: {
+        color: '#000'
+    },
+    btnEdit: {
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        alignItems: 'flex-end',
+        justifyContent: 'center',
+        height: 31,
+        width: '100%'
     }
 
 

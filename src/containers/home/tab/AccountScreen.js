@@ -570,7 +570,7 @@ const styles = StyleSheet.create({
   },
   txVersion: { marginLeft: 10, marginTop: 10 },
   viewSpaceBottom: { height: 100 },
-  borderMenu: { width: '85%', height: 1, backgroundColor: '#00000011', alignSelf: 'flex-end' }
+  borderMenu: {height: 1, backgroundColor: '#00000011', alignSelf: 'flex-end' }
 
 });
 
