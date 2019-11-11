@@ -129,28 +129,7 @@ class ResetPasswordScreen extends Component {
                     autoCapitalize={"none"}
                   />
                   {
-<<<<<<< HEAD
-                    this.state.password ? (this.state.secureTextEntry ? (<TouchableOpacity
-                      style={styles.buttonHide}
-                      onPress={this.onShowPass}>
-                      <ScaleImage
-                        style={styles.iconHide}
-                        resizeMode={'contain'}
-                        height={20}
-                        source={require('@images/new/ic_hide_pass.png')}>
-                      </ScaleImage></TouchableOpacity>)
-                      :
-                      (<TouchableOpacity
-                        style={styles.buttonHide}
-                        onPress={this.onShowPass}>
-                        <ScaleImage
-                          style={styles.iconHide}
-                          height={20} source={require('@images/new/ic_show_pass.png')}>
-                        </ScaleImage>
-                      </TouchableOpacity>)) : (<Field></Field>)
-=======
                     this.state.password ? (this.state.secureTextEntry ? (<TouchableOpacity style={styles.showPass} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 30, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
->>>>>>> user/feature/change-login-signup-v2
                   }
                 </Field>
                 <Field style={styles.inputPass}>
@@ -185,13 +164,8 @@ class ResetPasswordScreen extends Component {
             </View>
           </KeyboardAvoidingView>
         </ScrollView>
-<<<<<<< HEAD
-        <TouchableOpacity style={styles.buttonFinish} onPress={this.changePassword.bind(this)}>
-          <Text style={styles.txtFinish}>{constants.finish}</Text>
-=======
         <TouchableOpacity style={styles.updatePass} onPress={this.changePassword.bind(this)}>
           <Text style={styles.txbtnUpdate}>{"HOÀN THÀNH"}</Text>
->>>>>>> user/feature/change-login-signup-v2
         </TouchableOpacity>
       </ActivityPanel >
     );
@@ -201,52 +175,9 @@ const DEVICE_WIDTH = Dimensions.get("window").width;
 const DEVICE_HEIGHT = Dimensions.get("window").height;
 
 const styles = StyleSheet.create({
-<<<<<<< HEAD
-  txtFinish: {
-    color: '#FFF',
-    fontSize: 17
-  },
-  buttonFinish: {
-    backgroundColor: 'rgb(2,195,154)',
-    alignSelf: 'center',
-    borderRadius: 6,
-    width: 250,
-    height: 48,
-    marginTop: 34,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 20
-  },
-  iconHide: {
-    tintColor: '#7B7C7D'
-  },
-  buttonHide: {
-    position: 'absolute',
-    right: 3,
-    top: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  placeFloat: {
-    fontSize: 16,
-    fontWeight: '200'
-  },
-  imgLogo: {
-    marginTop: 30,
-    alignSelf: 'center'
-  },
-  group: {
-    flex: 1,
-    padding: 20
-  },
-  container: {
-    flex: 1
-  },
-=======
   showPass:{ position: 'absolute', right: 3, top: 30, justifyContent: 'center', alignItems: 'center', },
   txbtnUpdate:{ color: '#FFF', fontSize: 17 },
   updatePass:{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center', marginBottom: 20 },
->>>>>>> user/feature/change-login-signup-v2
   btnEye: {
     position: "absolute",
     right: 25,
