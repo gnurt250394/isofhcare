@@ -135,19 +135,13 @@ class AccountScreen extends Component {
           <Text style={styles.txUserName}>
             {this.props.userApp.currentUser.name}
           </Text>
-          <TouchableOpacity
-            onPress={() => {
-              this.props.navigation.navigate('detailsProfile')
-            }}
+          <View
           >
             <Text style={styles.txViewProfile}>
               {this.props.userApp.currentUser.phone}
             </Text>
-          </TouchableOpacity>
+          </View>
         </View>
-
-        <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
-
       </View>
     );
   }
