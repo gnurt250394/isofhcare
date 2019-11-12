@@ -1,18 +1,17 @@
-!/usr/bin/env bash
-#
-# Removes the latest version of CocoaPods  which may have lack of backward compatibilities
-# Installs version 1.5.3 which has no compatibility issues
-# 1.5.3 can be changed to another version you'd prefer
+#!/usr/bin/env bash
 
-# echo running install node8
-# set -ex
-# brew uninstall node@6
-# NODE_VERSION="8.9.4"
-# curl "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}.pkg" > "$HOME/Downloads/node-installer.pkg"
-# sudo installer -store -pkg "$HOME/Downloads/node-installer.pkg" -target "/"
-
-echo running post-clone scripts
-echo uninstalling all cocoapods versions
-sudo gem uninstall cocoapods -ax
-echo installing cocoapods version 1.7.5
+# Force the 1.7.5 version of cocoapods, as opposed to the version installed by AppCenter
+echo "Uninstalling all cocoapods versions"
+sudo gem uninstall cocoapods --all
+echo "Installing cocoapods version 1.7.5"
 sudo gem install cocoapods -v 1.7.5
+
+# Upgrade Node to a version expected by React Native 0.60
+set -ex
+brew uninstall node@6
+NODE_VERSION="8.10.0"
+curl "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}.pkg" > "$HOME/Downloads/node-installer.pkg"
+sudo installer -store -pkg "$HOME/Downloads/node-installer.pkg" -target "/"
+
+# Run Yarn
+yarn

@@ -10,7 +10,8 @@ import {
   TouchableOpacity,
   Image,
   Platform,
-  Keyboard
+  Keyboard,
+  ImageBackground
 } from "react-native";
 import Dimensions from "Dimensions";
 import { connect } from "react-redux";
@@ -30,7 +31,7 @@ import TextField from "mainam-react-native-form-validate/TextField";
 import FloatingLabel from 'mainam-react-native-floating-label';
 import DateTimePicker from 'mainam-react-native-date-picker';
 import connectionUtils from "@utils/connection-utils";
-
+import HeaderBar from '@components/account/HeaderBar'
 class RegisterScreen extends Component {
   constructor(props) {
     super(props);
@@ -230,23 +231,38 @@ class RegisterScreen extends Component {
     );
     return (
       this.state.verified && (
-        <ActivityPanel
-          style={{ flex: 1 }}
-          title="Đăng ký"
-          titleStyle={{ textAlign: 'left', marginLeft: 20 }}
-          showFullScreen={true}
-          isLoading={this.state.isLoading}
-        >
+        // <ActivityPanel
+        //   style={{ flex: 1 }}
+        //   title="Đăng ký"
+        //   titleStyle={{ textAlign: 'left', marginLeft: 20 }}
+        //   showFullScreen={true}
+        //   isLoading={this.state.isLoading}
+        // >
+        <ImageBackground
+          style={{ flex: 1, backgroundColor: '#000', height: DEVICE_HEIGHT }}
+          source={require('@images/new/account/img_bg_login.png')}
+          resizeMode={'cover'}
+          resizeMethod="resize">
           <ScrollView
             showsVerticalScrollIndicator={false}
-            style={{ flex: 1 }} keyboardShouldPersistTaps="handled">
+            style={styles.scroll} keyboardShouldPersistTaps="handled">
             <KeyboardAvoidingView behavior="padding" style={styles.form}>
+              <HeaderBar></HeaderBar>
               <View style={{ flex: 1, padding: 20 }}>
-                <ScaleImage source={require("@images/new/isofhcare.png")} width={200} style={{ marginTop: 50, alignSelf: 'center' }} />
+                <View
+                  style={{
+                    marginTop: 60,
+                    justifyContent: "center",
+                    alignItems: "center"
+                  }}
+                >
+                  <Text style={{ fontSize: 24, fontWeight: '800', color: '#00BA99', alignSelf: 'center', }}>ĐĂNG KÝ</Text>
+                  {/* <ScaleImage source={require("@images/logo.png")} width={120} /> */}
+                </View>
                 <Form ref={ref => (this.form = ref)}>
                   <TextField
                     getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-                      placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Họ tên"}
+                      placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Họ tên"}
                       onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
                     onChangeText={s => {
                       this.setState({ fullname: s });
@@ -304,7 +320,7 @@ class RegisterScreen extends Component {
                   <TextField
                     getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
                       keyboardType='numeric'
-                      placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={this.state.phone} underlineColor={'#02C39A'}
+                      placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={this.state.phone}
                       inputStyle={styles.textInputStyle}
                       labelStyle={styles.labelStyle} placeholder={constants.phone} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
                     onChangeText={s => this.setState({ phone: s })}
@@ -340,7 +356,7 @@ class RegisterScreen extends Component {
                       editable={false}
                       getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
                         editable={false}
-                        placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.dob}
+                        placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.dob}
                         onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
                       onChangeText={s => {
                         this.setState({ date: s });
@@ -367,13 +383,13 @@ class RegisterScreen extends Component {
                         flex: 1
                       }}
                     />
-                    <ScaleImage source={require("@images/new/calendar.png")} width={20} style={{ position: 'absolute', right: 0, top: this.state.date ? 40 : 40 }} />
+                    <ScaleImage source={require("@images/new/calendar.png")} width={20} style={{ position: 'absolute', right: 5, top: 45 }} />
                   </Field>
 
                   <Field style={styles.inputPass}>
                     <TextField
                       getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-                        placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.input_password}
+                        placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.input_password}
                         secureTextEntry={this.state.secureTextPassEntry}
                         onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
                       onChangeText={s => {
@@ -393,13 +409,13 @@ class RegisterScreen extends Component {
                       autoCapitalize={"none"}
                     />
                     {
-                      this.state.password ? (this.state.secureTextPassEntry ? (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 40, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 40, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
+                      this.state.password ? (this.state.secureTextPassEntry ? (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 45, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 40, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
                     }
                   </Field>
                   <Field style={styles.inputPass}>
                     <TextField
                       getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-                        placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} underlineColor={'#02C39A'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={'Xác nhận mật khẩu'}
+                        placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={'Xác nhận mật khẩu'}
 
                         secureTextEntry={this.state.secureTextPass2Entry}
                         onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
@@ -420,7 +436,7 @@ class RegisterScreen extends Component {
                       autoCapitalize={"none"}
                     />
                     {
-                      this.state.confirm_password ? (this.state.secureTextPass2Entry ? (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 40, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowPass2}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 40, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowPass2}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
+                      this.state.confirm_password ? (this.state.secureTextPass2Entry ? (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 45, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowPass2}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 40, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowPass2}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
                     }
                   </Field>
                 </Form>
@@ -428,10 +444,11 @@ class RegisterScreen extends Component {
               </View>
             </KeyboardAvoidingView>
           </ScrollView>
-          <TouchableOpacity onPress={this.onRegiter} style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center', marginBottom: 20 }} >
-            <Text style={{ color: '#FFF', fontSize: 17 }}>{"TIẾP TỤC"}</Text>
-          </TouchableOpacity>
-
+          <View style={{ backgroundColor: '#fff' }}>
+            <TouchableOpacity onPress={this.onRegiter} style={this.btnSignup} >
+              <Text style={styles.txSignUp}>{"TIẾP TỤC"}</Text>
+            </TouchableOpacity>
+          </View>
           <DateTimePicker
             isVisible={this.state.toggelDateTimePickerVisible}
             onConfirm={newDate => {
@@ -448,7 +465,7 @@ class RegisterScreen extends Component {
             confirmTextIOS={"Xác nhận"}
             date={this.state.dob || new Date()}
           />
-        </ActivityPanel>
+        </ImageBackground>
       )
     );
   }
@@ -457,6 +474,8 @@ const DEVICE_WIDTH = Dimensions.get("window").width;
 const DEVICE_HEIGHT = Dimensions.get("window").height;
 
 const styles = StyleSheet.create({
+  btnSignup:{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center', marginBottom: 20 },
+  txSignUp:{ color: '#FFF', fontSize: 17 },
   btnEye: {
     position: "absolute",
     right: 25,
@@ -487,9 +506,16 @@ const styles = StyleSheet.create({
   textInputStyle: {
     color: "#53657B",
     fontWeight: "600",
-    height: 45,
+    height: 51,
     marginLeft: 0,
-    fontSize: 20
+    borderWidth: 1,
+    padding: 10,
+    paddingHorizontal: 20,
+    borderRadius: 6,
+    borderColor: '#CCCCCC',
+    fontSize: 20,
+    paddingLeft: 15,
+    paddingRight: 45,
   },
   labelStyle: { paddingTop: 10, color: '#53657B', fontSize: 16 },
   btnEye: {
@@ -518,7 +544,7 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     justifyContent: 'center'
   },
-
+  scroll: { flex: 1, borderTopLeftRadius: 20, borderTopRightRadius: 20, marginTop: 20, backgroundColor: '#fff' }
 });
 function mapStateToProps(state) {
   return {

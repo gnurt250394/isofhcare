@@ -218,17 +218,19 @@ const styles = StyleSheet.create({
     resizeMode: "cover"
   },
   input: {
-    maxWidth: 300,
-    paddingRight: 30,
-    backgroundColor: "#FFF",
-    width: DEVICE_WIDTH - 40,
-    height: 42,
-    marginHorizontal: 20,
-    paddingLeft: 15,
-    borderRadius: 6,
-    color: "#006ac6",
+    color: "#53657B",
+    fontWeight: "600",
+    height: 51,
+    marginLeft: 0,
     borderWidth: 1,
-    borderColor: "rgba(155,155,155,0.7)"
+    padding: 10,
+    paddingHorizontal: 20,
+    borderRadius: 6,
+    borderColor: '#CCCCCC',
+    fontSize: 20,
+    paddingLeft: 15,
+    paddingRight: 45,
+
   },
   errorStyle: {
     color: "red",

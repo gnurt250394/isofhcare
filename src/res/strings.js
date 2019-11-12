@@ -414,7 +414,7 @@ module.exports = {
       please_select_relationship: 'Bạn chưa chọn mối quan hệ',
       add_member_success: 'Thêm thành viên thành công',
       add_member_fail: 'Thêm thành viên không thành công',
-      not_permission_edit_file: 'Bạn không có quyền chỉnh sửa hồ sơ này',
+      not_permission_edit_file: 'Bạn không có quyền chỉnh sửa hồ sơ thành viên',
       not_login_with_app_patient: 'Bạn đang không đăng nhập với ứng dụng bệnh nhân',
       phone_not_null: 'Số điện thoại không được bỏ trống',
       phone_invalid: 'Số điện thoại sai định dạng',

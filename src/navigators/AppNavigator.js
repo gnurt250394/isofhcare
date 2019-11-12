@@ -153,15 +153,15 @@ const TabNavigatorComponent = createBottomTabNavigator(
     homeTab: {
       screen: HomeScreen,
       navigationOptions: {
-        tabBarLabel: "Home",
-        tabBarIcon: ({ tintColor }) => <ScaledImage height={25} source={require('@images/new/home/ic_home.png')} style={{ tintColor: tintColor }} />,
+        tabBarLabel: "Trang chủ",
+        tabBarIcon: ({ tintColor }) => <ScaledImage height={20} source={require('@images/new/homev2/ic_home_menu.png')} style={{ tintColor: tintColor }} />,
       }
     },
     communityTab: {
       screen: AccountScreen,
       navigationOptions: {
         tabBarLabel: "Cộng đồng",
-        tabBarIcon: ({ tintColor }) => <ScaledImage touchable={false} height={20} source={require('@images/new/home/ic_community.png')} style={{ tintColor: tintColor }} />,
+        tabBarIcon: ({ tintColor }) => <ScaledImage touchable={false} height={20} source={require('@images/new/homev2/ic_community_menu.png')} style={{ tintColor: tintColor }} />,
         tabBarOnPress: ({ navigation, defaultHandler }) => {
           snackbar.show("Chức năng đang phát triển");
         },
@@ -170,25 +170,11 @@ const TabNavigatorComponent = createBottomTabNavigator(
     videoTab: {
       screen: AccountScreen,
       navigationOptions: {
-        tabBarLabel: "Video",
-        tabBarIcon: ({ tintColor }) => <ScaledImage height={25} source={require('@images/new/home/ic_videos.png')} style={{ tintColor: tintColor }} />,
+        tabBarLabel: "Thuốc",
+        tabBarIcon: ({ tintColor }) => <ScaledImage height={23} source={require('@images/new/homev2/ic_drug_menu.png')} style={{ tintColor: tintColor }} />,
         tabBarOnPress: ({ navigation, defaultHandler }) => {
           snackbar.show("Chức năng đang phát triển");
         },
-      }
-    },
-    accountTab: {
-      screen: AccountScreen,
-      navigationOptions: {
-        // tabBarOnPress: ({ navigation, defaultHandler }) => {
-        //   if (userProvider.isLogin) {
-        //     defaultHandler();
-        //   } else {
-        //     NavigationService.navigate("login");
-        //   }
-        // },
-        tabBarLabel: "Account",
-        tabBarIcon: ({ tintColor }) => <ScaledImage height={22} source={require('@images/new/home/ic_account.png')} style={{ tintColor: tintColor }} />,
       }
     },
     notificationTab: {
@@ -204,20 +190,35 @@ const TabNavigatorComponent = createBottomTabNavigator(
           }
         },
         tabBarLabel: "Thông báo",
-        tabBarIcon: ({ tintColor }) => <NotificationBadge height={25} tintColor={tintColor} />
+        tabBarIcon: ({ tintColor }) => <NotificationBadge height={20} tintColor={tintColor} />
       }
-    }
+    },
+    accountTab: {
+      screen: AccountScreen,
+      navigationOptions: {
+        // tabBarOnPress: ({ navigation, defaultHandler }) => {
+        //   if (userProvider.isLogin) {
+        //     defaultHandler();
+        //   } else {
+        //     NavigationService.navigate("login");
+        //   }
+        // },
+        tabBarLabel: "Cá nhân",
+        tabBarIcon: ({ tintColor }) => <ScaledImage height={20} source={require('@images/new/homev2/ic_profile_menu.png')} style={{ tintColor: tintColor }} />,
+      }
+    },
+
   },
   {
     swipeEnabled: true,
     animationEnabled: true,
     tabBarPosition: 'bottom',
     tabBarOptions: {
-      showLabel: false,
-      activeTintColor: 'blue',
-      inactiveTintColor: 'white',
+      showLabel: true,
+      activeTintColor: '#00CBA7',
+      inactiveTintColor: '#b3b3b3',
       style: {
-        backgroundColor: "#02C39A",
+        backgroundColor: "#fff",
       },
     }
   }

@@ -105,9 +105,7 @@ class HomeScreen extends Component {
       }
     });
   }
-  onCallHotline = () => {
-    Linking.openURL('tel:1900299983')
-  }
+
   componentDidMount() {
     appProvider.setActiveApp();
     DeviceEventEmitter.removeAllListeners("hardwareBackPress");
@@ -121,7 +119,6 @@ class HomeScreen extends Component {
   renderAds() {
     return (<View>
       <ScaledImage source={require("@images/new/slogan.jpg")} width={DEVICE_WIDTH} />
-      <TouchableOpacity onPress={this.onCallHotline} style={{ alignItems: 'center', justifyContent: 'center' }}><Text style={{ fontSize: 18, color: '#02c39a',fontWeight:'bold' }}>Tổng đài hỗ trợ: 1900299983</Text></TouchableOpacity>
       {/* <View style={styles.viewAds}>
         <Text style={styles.txAds}>Ưu đãi</Text>
         <ScaledImage source={require("@images/new/ic_more.png")} width={20} style={styles.imgMore} />
@@ -170,10 +167,14 @@ class HomeScreen extends Component {
           activeDotIndex={activeSlide || 0}
           dotContainerStyle={styles.dotContainer}
           dotStyle={styles.dotStyle}
-          inactiveDotStyle={styles.inactiveDotStyle}
+          inactiveDotStyle={
+            styles.inactiveDotStyle
+          }
           inactiveDotOpacity={0.4}
           inactiveDotScale={0.6}
-          containerStyle={styles.containerPagination}
+          containerStyle={
+            styles.containerPagination
+          }
         />
       </View>
     );
@@ -257,73 +258,71 @@ class HomeScreen extends Component {
     return width - 50;
   }
 
-  renderButton = () => {
-    return (this.state.features || []).map((item, position) => {
-      return (
-        <Animatable.View key={position} delay={100} animation={"swing"} direction="alternate">
-          {
-            item.empty ? <View style={[styles.viewEmpty, { width: this.getItemWidth() }]}
-            ></View> :
-              <TouchableOpacity
-                style={[styles.button, { width: this.getItemWidth() }]}
-                onPress={item.onPress}
-              >
-                <View style={styles.groupImageButton}>
-                  <ScaledImage style={[styles.icon]} source={item.icon} height={48} />
-                </View>
-                <Text style={[styles.label]}>{item.text}</Text>
-              </TouchableOpacity>
-
-          }
-        </Animatable.View>);
-    })
-  }
-  refreshControl = () => {
-    return (
-      <RefreshControl
-        refreshing={this.state.refreshing}
-        onRefresh={this.onRefresh.bind(this)}
-      />
-    )
-  }
-  getUserName = (name) => {
-    if (!name) return "";
-    let x = name.trim().split(" ");
-    name = (x[x.length - 1]).toLowerCase();
-    if (name[0])
-      return name.charAt(0).toUpperCase() + name.slice(1);
-    return name;
-  }
   render() {
     return (
       <ActivityPanel
+        statusbarBackgroundColor="#02C39A"
         isLoading={this.state.isLoading}
         hideActionbar={true}
       >
-        <View style={styles.container}>
-          <ScaledImage source={require("@images/new/home/bg_home_new.png")} width={DEVICE_WIDTH} style={styles.imgHome} />
-          <View style={styles.containerImageLogo}>
-            <View style={styles.ImageCenter}>
+        <View style={{ flex: 1, position: 'relative' }}>
+          <ScaledImage source={require("@images/new/home/bg_home_new.png")} width={DEVICE_WIDTH} style={{ position: 'absolute', top: 72, right: 0, left: 0 }} />
+          <View style={{ height: 75, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10, backgroundColor: '#fff', borderBottomColor: '#7c817f', borderBottomWidth: 0.5 }}>
+            <View style={{ flex: 1, alignItems: 'center' }}>
               <ScaledImage source={require("@images/new/isofhcare.png")} width={116} />
             </View>
           </View>
           <ScrollView
-            refreshControl={this.refreshControl()}
+            refreshControl={<RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this.onRefresh.bind(this)}
+            />}
             showsVerticalScrollIndicator={false}
-            style={styles.scroll}
+            style={{
+              flex: 1,
+              paddingTop: 0
+            }}
           >
-            <View style={styles.padding21}>
-              <Card style={styles.card}>
+            <View style={{ padding: 21 }}>
+              <Card style={{ borderRadius: 6, marginTop: 130 }}>
 
                 {this.props.userApp.isLogin &&
-                  <View style={styles.containerHeadertitle}>
-                    <Text
-                      style={styles.txtHeaderTitle}
-                    >Xin chào, </Text>
-                    <Text style={styles.colorUserName}>{this.getUserName(this.props.userApp.currentUser.name) + '!'}</Text>
-                  </View>}
-                <View style={styles.containerButton}>
-                  {this.renderButton()}
+                  <View style={{ alignItems: 'center', flexDirection: 'row', borderBottomColor: 'rgba(151, 151, 151, 0.29)', borderBottomWidth: 1, paddingVertical: 10, marginHorizontal: 20, justifyContent: 'center' }}>
+                    <Text style={{ marginLeft: 5, fontSize: 18, fontWeight: 'bold', color: "#4a4a4a" }} >Xin chào, <Text style={{ color: 'rgb(255,138,21)' }}>{((name) => {
+                      if (!name) return "";
+                      let x = name.trim().split(" ");
+                      name = (x[x.length - 1]).toLowerCase();
+                      if (name[0])
+                        return name.charAt(0).toUpperCase() + name.slice(1);
+                      return name;
+                    }).call(this, this.props.userApp.currentUser.name) + '!'}</Text></Text>
+                  </View>
+                }
+
+                <View style={{
+                  flexDirection: "row", padding: 10, marginVertical: 20, flexWrap: 'wrap',
+                  justifyContent: 'center'
+                }}>
+                  {
+                    (this.state.features || []).map((item, position) => {
+                      return (
+                        <Animatable.View key={position} delay={100} animation={"swing"} direction="alternate">
+                          {
+                            item.empty ? <View style={{ flex: 1, marginLeft: 5, alignItems: 'center', height: 100, width: this.getItemWidth() }}
+                            ></View> :
+                              <TouchableOpacity
+                                style={{ flex: 1, marginLeft: 5, alignItems: 'center', width: this.getItemWidth() }}
+                                onPress={item.onPress}
+                              >
+                                <View style={{ position: 'relative', padding: 5 }}>
+                                  <ScaledImage style={[styles.icon]} source={item.icon} height={48} />
+                                </View>
+                                <Text style={[styles.label]}>{item.text}</Text>
+                              </TouchableOpacity>
+                          }
+                        </Animatable.View>);
+                    })
+                  }
                 </View>
               </Card>
             </View>
@@ -356,38 +355,60 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 100,
   },
-  containerButton: {
+  activityPanel: {
+    flex: 1,
+    backgroundColor: '#f2f2f2'
+  },
+  containerButtonBooking: {
     flexDirection: "row",
     padding: 10,
-    marginVertical: 20,
+    marginTop: 10,
     flexWrap: 'wrap',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    borderRadius: 5,
+  },
+  containerButton: {
+    flexDirection: "row",
+    padding: 30,
+    flex: 1,
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    borderRadius: 5,
   },
   colorUserName: {
-    color: 'rgb(255,138,21)',
-    paddingLeft:4,
-    fontSize:18
+    color: '#fff',
+    paddingLeft: 4,
+    fontSize: 18,
+    fontWeight: 'bold',
+
   },
   txtHeaderTitle: {
     marginLeft: 5,
     fontSize: 18,
-    fontWeight: 'bold',
-    color: "#4a4a4a"
+    color: "#fff"
   },
   containerHeadertitle: {
     alignItems: 'center',
     flexDirection: 'row',
     borderBottomColor: 'rgba(151, 151, 151, 0.29)',
+    // borderBottomColor: '#fff',
     borderBottomWidth: 1,
     paddingVertical: 10,
     marginHorizontal: 20,
     justifyContent: 'center'
   },
-  padding21: { padding: 21 },
-  card: { borderRadius: 6, marginTop: 130 },
+  txBooking: {
+    margin: 5,
+    marginLeft: 39,
+    color: '#000',
+    fontWeight: 'bold'
+  },
+  padding21: { padding: 21,paddingBottom:0 },
+  card: { borderRadius: 6, marginTop: 30 },
+  viewMenu: { backgroundColor: '#F8F8F8', flex: 1, borderRadius: 5 },
   scroll: {
     flex: 1,
-    paddingTop: 0
+    paddingTop: 0,
   },
   ImageCenter: {
     flex: 1, alignItems: 'center'
@@ -407,7 +428,7 @@ const styles = StyleSheet.create({
   },
   imgHome: {
     position: 'absolute',
-    top: 72,
+    // top: 72,
     right: 0,
     left: 0
   },
