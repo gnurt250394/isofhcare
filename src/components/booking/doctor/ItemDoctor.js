@@ -16,13 +16,14 @@ class ItemDoctor extends Component {
     defaultImage = () => {
         const icSupport = require("@images/new/user.png");
         return (
-            <ScaleImage source={icSupport} width={100} />
+            <ScaleImage source={icSupport} width={90} />
         );
     }
 
     render() {
         const icSupport = require("@images/new/user.png");
         const { item, onPressDoctor, onPressBooking, onPressAdvisory } = this.props
+        const avatar = item && item.imagePath ? { uri: item.imagePath.absoluteUrl() } : icSupport
         return (
             <TouchableHighlight onPress={onPressDoctor} underlayColor={'#fff'} style={styles.containerItem}>
                 <Card style={styles.card}>
@@ -31,49 +32,51 @@ class ItemDoctor extends Component {
                             paddingRight: 10
                         }}>
                             <ImageLoad
-                                source={{ uri: item.avatar }}
-                                imageStyle={styles.customImagePlace}
-                                borderRadius={25}
-                                customImagePlaceholderDefaultStyle={styles.customImagePlace}
-                                style={styles.styleImgLoad}
                                 resizeMode="cover"
+                                imageStyle={styles.boderImage}
+                                borderRadius={45}
+                                customImagePlaceholderDefaultStyle={styles.imgPlaceHoder}
                                 placeholderSource={icSupport}
+                                style={styles.avatar}
                                 loadingStyle={{ size: "small", color: "gray" }}
-                                defaultImage={this.defaultImage}
+                                source={avatar}
+                                defaultImage={() => {
+                                    return (
+                                        <ScaleImage
+                                            resizeMode="cover"
+                                            source={icSupport}
+                                            width={90}
+                                            style={styles.imgDefault}
+                                        />
+                                    );
+                                }}
                             />
-                            <StarRating
-                                disabled={true}
-                                starSize={11}
-                                maxStars={5}
-                                rating={item.rating}
-                                starStyle={{ margin: 1, marginTop: 20 }}
-                                fullStarColor={"#fbbd04"}
-                                emptyStarColor={"#fbbd04"}
-                                fullStar={require("@images/ic_star.png")}
-                                emptyStar={require("@images/ic_empty_star.png")}
-                            />
+                            <Text style={{
+                                textAlign: 'center',
+                                paddingTop: 10,
+                            }}>{item.appointments ? item.appointments + ' lượt ĐK' : ''} </Text>
                         </View>
                         <View style={styles.paddingLeft5}>
-                            <Text style={styles.txtNameDoctor}>BS {item.name}</Text>
+                            <Text style={styles.txtNameDoctor}>{item.academicDegree} {item.name}</Text>
                             <View style={styles.flexRow}>
-                                {item.position && item.position.length > 0 ?
-                                    item.position.slice(0,3).map((e, i) => {
+                                {item.specializations && item.specializations.length > 0 ?
+                                    item.specializations.slice(0, 3).map((e, i) => {
                                         return (
-                                            <Text style={styles.txtPosition} key={i}>{e}</Text>
+                                            <Text style={styles.txtPosition} key={i}>{e.name}{item.specializations.slice(0, 3).length - 1 == i ? ' ' : ','}</Text>
                                         )
                                     }) :
                                     null
                                 }
                             </View>
                             <View style={styles.flex}>
-                                {item.address && item.address.length > 0 ?
-                                    <Text >{item.address[0].name}</Text>
+                                {item.hospital && item.hospital.name ?
+                                    <Text style={styles.txtHospitalName} >{item.hospital.name}</Text>
                                     :
                                     null
                                 }
                             </View>
                             <View style={styles.containerButton}>
-                                {/* <Button label="Tư vấn" style={styles.txtAdvisory} onPress={onPressAdvisory} source={require("@images/new/booking/ic_chat.png")} /> */}
+                                <Button label="Tư vấn" style={styles.txtAdvisory} onPress={onPressAdvisory} source={require("@images/new/booking/ic_chat.png")} />
                                 <Button label="Đặt khám" style={styles.txtBooking} onPress={onPressBooking} source={require("@images/ic_service.png")} />
                             </View>
                         </View>
@@ -85,12 +88,15 @@ class ItemDoctor extends Component {
 }
 
 const styles = StyleSheet.create({
+    txtHospitalName: {
+        color: '#111'
+    },
     txtBooking: {
         backgroundColor: '#00CBA7',
         marginLeft: 6
     },
     txtAdvisory: {
-        backgroundColor: '#3161AD',
+        backgroundColor: '#FF8A00',
     },
     containerButton: {
         flexDirection: 'row',
@@ -100,13 +106,12 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     txtPosition: {
-        backgroundColor: '#ffe6e9',
-        color: '#FC4A5F',
-        paddingVertical: 3,
-        paddingHorizontal: 5,
-        marginRight: 5,
+        // backgroundColor: '#ffe6e9',
+        color: '#3161AD',
+        paddingRight: 3,
+        fontStyle: 'italic',
         marginVertical: 5,
-        borderRadius: 4
+        fontWeight: 'bold'
     },
     flexRow: {
         flexDirection: 'row',
@@ -203,18 +208,12 @@ const styles = StyleSheet.create({
         padding: 10,
         paddingBottom: 0
     },
-    customImagePlace: {
-        height: 90,
-        width: 90,
-        borderRadius: 45,
-        borderColor: '#00CBA7',
-        borderWidth: 2
-    },
-    styleImgLoad: {
+    boderImage: { borderRadius: 45, borderWidth: 2, borderColor: '#00CBA7' },
+    avatar: { width: 90, height: 90, alignSelf: "flex-start", },
+    imgPlaceHoder: {
         width: 90,
         height: 90,
-        paddingRight: 5,
-        alignSelf: 'flex-start'
+        alignSelf: "center"
     },
 
 });

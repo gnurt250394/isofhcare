@@ -10,100 +10,97 @@ import Carousel, { Pagination } from 'react-native-snap-carousel'
 import LinearGradient from 'react-native-linear-gradient'
 import ActionBar from '@components/Actionbar';
 import constants from '@resources/strings'
-
-
-const { width, height } = Dimensions.get('window')
+import bookingDoctorProvider from '@data-access/booking-doctor-provider'
 const data = [
     {
-        id: 1,
-        name: 'Nguyễn Văn A',
-        rating: 3.5,
-        quantity: 1024,
-        avatar: 'http://www.dangcongsan.vn/DATA/0/2019/09/file76xog5oc70i1g0dp219_156748_9282_7304_1567581048-20_11_49_618.jpg',
-        position: ['Răng hàm mặt', 'Tai mũi họng', 'Mắt'],
-        address: [
-            { name: 'Phòng khám Y Khoa Hà Nội', service: 'Khám tổng quát', price: 100000 },
-            { name: 'Bệnh viện Đại học Y', service: 'Khám tổng quát', price: 100000 },
-            { name: 'Bệnh viện E', service: 'Khám tổng quát', price: 100000 }],
+        "id": 3,
+        "name": "Lê Văn A",
+        "imagePath": "/tb.image",
+        "hospital": {
+            "id": 1,
+            "name": "string",
+            "imagePath": "string"
+        },
+        "specializations": [
+            {
+                "id": 1,
+                "name": "Khoa Nội",
+                "ordinalNumbers": 6
+            }
+        ],
+        "academicDegree": "ThS",
+        "telephone": "0937812343",
+        "experiences": "string",
+        "overview": "string",
+        "numberOfTurnCheckup": 0,
+        "average": 0.0,
+        "appointments": 0
     },
     {
-        id: 2,
-        name: 'Nguyễn Văn B',
-        rating: 4.7,
-        quantity: 2098,
-        avatar: 'https://icdn.dantri.com.vn/thumb_w/640/2019/08/14/nu-sinh-lao-cai-xinh-dep-duoc-vi-nhu-thien-than-anh-thedocx-1565795558127.jpeg',
-        position: ['Tai mũi họng', 'Mắt'],
-        address: [
-            { name: 'Phòng khám Y Khoa Hà Nội', service: 'Khám tổng quát', price: 100000 },
-            { name: 'Bệnh viện Đại học Y', service: 'Khám tổng quát', price: 100000 },
-            { name: 'Bệnh viện E', service: 'Khám tổng quát', price: 100000 }],
+        "id": 6,
+        "name": "Lê Văn B",
+        "imagePath": "/tb.image",
+        "hospital": {
+            "id": 1,
+            "name": "Bệnh viện K",
+            "imagePath": "string"
+        },
+        "specializations": [
+            {
+                "id": 31,
+                "name": "Y học cổ truyền",
+                "ordinalNumbers": 31
+            },
+            {
+                "id": 1,
+                "name": "Khoa Nội",
+                "ordinalNumbers": 6
+            }
+        ],
+        "academicDegree": "TS",
+        "telephone": "0979654845",
+        "experiences": "3 năm",
+        "overview": "string",
+        "numberOfTurnCheckup": 0,
+        "average": 0.0,
+        "appointments": 0
     },
     {
-        id: 3,
-        name: 'Nguyễn Văn C',
-        rating: 3.5,
-        quantity: 1024,
-        avatar: 'https://lh3.googleusercontent.com/-owjXePebdEk/WqHli8rgihI/AAAAAAAABQQ/tXgbapuQrmw8iaxG3XfXx5ZJstkm6NIRwCHMYCw/s0/5aa1e5850d188.jpg',
-        position: ['Tai mũi họng', 'Răng hàm mặt', 'Mắt', 'Tai mũi họng', 'Răng mặt'],
-        address: [
-            { name: 'Phòng khám Y Khoa Hà Nội', service: 'Khám tổng quát', price: 100000 },
-            { name: 'Bệnh viện Đại học Y', service: 'Khám tổng quát', price: 100000 },
-            { name: 'Bệnh viện E', service: 'Khám tổng quát', price: 100000 }],
-        time: [
-            { time: '07/2011', name: 'Chức vụ bác sỹ đa khoa - Bệnh viện K Hà Nội' },
-            { time: '09/2019', name: 'Chức vụ bác sỹ đa khoa - Bệnh viện E Hà Nội' },
-        ]
-    },
-    {
-        id: 4,
-        name: 'Nguyễn Văn D',
-        rating: 4.7,
-        quantity: 2098,
-        avatar: 'https://imgur.com/vuggCtC.gif',
-        position: ['Răng hàm mặt', 'Tai mũi họng', 'Mắt'],
-        address: [
-            { name: 'Phòng khám Y Khoa Hà Nội', service: 'Khám tổng quát', price: 100000 },
-            { name: 'Bệnh viện Đại học Y', service: 'Khám tổng quát', price: 100000 },
-            { name: 'Bệnh viện E', service: 'Khám tổng quát', price: 100000 }],
-        time: [
-            { time: '07/2011', name: 'Chức vụ bác sỹ đa khoa - Bệnh viện K Hà Nội' },
-            { time: '09/2019', name: 'Chức vụ bác sỹ đa khoa - Bệnh viện E Hà Nội' },
-        ]
-    },
-    {
-        id: 5,
-        name: 'Nguyễn Văn E',
-        rating: 3.5,
-        quantity: 1024,
-        avatar: 'https://gonhub.com/wp-content/uploads/2018/11/cach-tao-anh-gif.gif',
-        position: ['Răng hàm mặt', 'Tai mũi họng', 'Mắt'],
-
-        address: [
-            { name: 'Phòng khám Y Khoa Hà Nội', service: 'Khám tổng quát', price: 100000 },
-            { name: 'Bệnh viện Đại học Y', service: 'Khám tổng quát', price: 100000 },
-            { name: 'Bệnh viện E', service: 'Khám tổng quát', price: 100000 }],
-        time: [
-            { time: '07/2011', name: 'Chức vụ bác sỹ đa khoa - Bệnh viện K Hà Nội' },
-            { time: '09/2019', name: 'Chức vụ bác sỹ đa khoa - Bệnh viện E Hà Nội' },
-        ]
-    },
-    {
-        id: 6,
-        name: 'Nguyễn Văn F',
-        rating: 4.7,
-        quantity: 2098,
-        avatar: 'http://static2.yan.vn/photo/2017/08/15/fce65d76-f337-4ee2-b459-34e68b7b2c46.gif',
-        position: ['Răng hàm mặt', 'Tai mũi họng', 'Mắt'],
-        address: [
-            { name: 'Phòng khám Y Khoa Hà Nội', service: 'Khám tổng quát', price: 100000 },
-            { name: 'Bệnh viện Đại học Y', service: 'Khám tổng quát', price: 100000 },
-            { name: 'Bệnh viện E', service: 'Khám tổng quát', price: 100000 }],
-        time: [
-            { time: '07/2011', name: 'Chức vụ bác sỹ đa khoa - Bệnh viện K Hà Nội' },
-            { time: '09/2019', name: 'Chức vụ bác sỹ đa khoa - Bệnh viện E Hà Nội' },
-        ]
-    },
+        "id": 12,
+        "name": "bsi Hoa súng",
+        "imagePath": "/tb.image",
+        "hospital": {
+            "id": 1,
+            "name": "Bệnh viện E",
+            "imagePath": "string"
+        },
+        "specializations": [
+            {
+                "id": 26,
+                "name": "Xét nghiệm khác",
+                "ordinalNumbers": 26
+            },
+            {
+                "id": 27,
+                "name": "Chụp X quang",
+                "ordinalNumbers": 27
+            }
+        ],
+        "academicDegree": "ThS",
+        "telephone": "0354689613",
+        "experiences": "haha",
+        "overview": "hihi",
+        "numberOfTurnCheckup": 0,
+        "average": 0.0,
+        "appointments": 0
+    }
 ]
+const { width, height } = Dimensions.get('window')
+const TYPE = {
+    SEARCH: 'SEARCH',
+    HOSPITAL: 'HOSPITAL',
+    SPECIALIST: 'SPECIALIST'
+}
 class ListDoctorScreen extends Component {
     constructor(props) {
         super(props);
@@ -111,26 +108,89 @@ class ListDoctorScreen extends Component {
             isLoading: true,
             data: [],
             keyword: '',
-            infoDoctor: {}
+            infoDoctor: {},
+            page: 0,
+            size: 20,
+            refreshing: false,
+            item: {},
+            type: ''
         };
         this.listSearch = []
         this.onScroll = new Animated.Value(0)
         this.header = Animated.multiply(Animated.diffClamp(this.onScroll, 0, 60), -1)
     }
     componentDidMount = () => {
-        setTimeout(() => {
-            this.setState({ data, infoDoctor: data[0], isLoading: false })
-            this.listSearch = data
-        }, 1000)
+        this.getData()
+        // setTimeout(()=>{
+        //     this.setState({ data, isLoading: false, refreshing: false })
+
+        // },1000)
     };
+    getData = () => {
+        const { page, size } = this.state
+        console.log('getData')
+
+        bookingDoctorProvider.getListDoctor(page, size).then(res => {
+            this.setState({ isLoading: false, refreshing: false })
+            if (res && res.length > 0) {
+                this.formatData(res)
+            } else {
+                this.formatData(data)
+            }
+        }).catch(err => {
+            this.formatData([])
+            this.setState({ isLoading: false, refreshing: false })
+
+        })
+    }
+    formatData = (data) => {
+        if (data.length == 0) {
+            if (this.state.page == 0) {
+                this.setState({ data })
+            }
+        } else {
+            if (this.state.page == 0) {
+                this.setState({ data })
+            } else {
+                this.setState(preState => {
+                    return { data: [...preState.data, ...data] }
+                })
+            }
+        }
+    }
+    loadMore = () => {
+        const { page, size, data, keyword } = this.state
+        if (data.length >= (page + 1) * size) {
+            this.setState(preState => {
+                return {
+                    page: preState.page + 1
+                }
+            }, () => {
+                switch (this.state.type) {
+                    case TYPE.SEARCH:
+                        this.search()
+                        break;
+                    case TYPE.HOSPITAL:
+                        this.getDoctorHospitals()
+                        break;
+                    case TYPE.SPECIALIST:
+                        this.getDoctorSpecialists()
+                        break;
+                    default:
+                        this.getData()
+                        break;
+                }
+            })
+        }
+    }
     goDetailDoctor = (item) => () => {
         this.props.navigation.navigate('detailsDoctor', {
-            profileDoctor: item
+            item
         })
     }
     addBookingDoctor = (item) => () => {
         this.props.navigation.navigate('selectTimeDoctor', {
-            profileDoctor: item,
+            item,
             isNotHaveSchedule: true
         })
     }
@@ -150,33 +210,91 @@ class ListDoctorScreen extends Component {
     }
     onChangeText = (state) => (value) => {
         this.setState({ [state]: value })
-        this.search(value)
+        if (value.length == 0) {
+            this.getData()
+        }
+    }
+    search = async () => {
+        try {
+            let { keyword, page, size } = this.state
+            console.log('keyword: ', keyword);
+            let res = await bookingDoctorProvider.searchDoctor(keyword, 'vn', page + 1, size)
+            this.setState({ refreshing: false })
+            if (res && res.length > 0) {
+                this.formatData(res)
+            } else {
+                this.formatData([])
+            }
+        } catch (error) {
+            this.formatData([])
+            this.setState({ refreshing: false })
+
+        }
 
     }
-    search = (value) => {
-        if (this.timeOut) {
-            try {
-                clearTimeout(this.timeOut)
-            } catch (error) {
-
-            }
-        }
-        this.timeOut = setTimeout(() => {
-            let keyword = (value || "").trim().toLowerCase().unsignText();
-            let listSearch = this.listSearch.filter(data => {
-                return (data && (
-                    !keyword ||
-                    ((data.name || "").trim().toLowerCase().unsignText().indexOf(keyword) != -1)))
-            })
-            let obj = listSearch[0] || {}
-            this.setState({ data: listSearch, infoDoctor: obj })
-        }, 100)
-
-
+    onSearch = () => {
+        this.setState({
+            page: 0,
+            refreshing: true,
+            type: TYPE.SEARCH
+        }, this.search)
+    }
+    onRefress = () => {
+        this.setState({
+            page: 0,
+            refreshing: true,
+            keyword: '',
+            item: {},
+            type: ''
+        }, this.getData)
     }
     keyExtractor = (item, index) => index.toString()
     listEmpty = () => !this.state.isLoading && <Text style={styles.none_data}>Không có dữ liệu</Text>
-   
+
+    getDoctorHospitals = () => {
+        const { item } = this.state
+        bookingDoctorProvider.get_doctor_hospitals(item.id, this.state.page, this.state.size).then(res => {
+            if (res && res.length > 0) {
+                this.formatData(res)
+            } else {
+                this.formatData([])
+            }
+        }).catch(err => {
+            this.formatData([])
+        })
+    }
+    getDoctorSpecialists = () => {
+        const { item } = this.state
+        bookingDoctorProvider.get_doctor_specialists(item.id, this.state.page, this.state.size).then(res => {
+            if (res && res.length > 0) {
+                this.formatData(res)
+            } else {
+                this.formatData([])
+            }
+        }).catch(err => {
+            this.formatData([])
+        })
+    }
+    onSelectHospitals = (item) => {
+        this.setState({ item, type: TYPE.HOSPITAL, page: 0 }, () => {
+            this.getDoctorHospitals(item)
+        })
+    }
+    onSelectSpecialist = (item) => {
+        this.setState({ item, type: TYPE.SPECIALIST, page: 0 }, () => {
+            this.getDoctorSpecialists(item)
+        })
+    }
+    filterCSYT = () => {
+        this.props.navigation.navigate('listHospital', {
+            onSelected: this.onSelectHospitals
+        })
+    }
+    filterSpecialist = () => {
+        this.props.navigation.navigate('listSpecialist', {
+            onSelected: this.onSelectSpecialist
+        })
+    }
     backPress = () => this.props.navigation && this.props.navigation.pop()
     renderHeader = () => {
         return (
@@ -197,20 +315,26 @@ class ListDoctorScreen extends Component {
                     <TextInput
                         value={this.state.keyword}
                         onChangeText={this.onChangeText('keyword')}
-                        onSubmitEditing={this.search}
+                        onSubmitEditing={this.onSearch}
                         returnKeyType='search'
                         style={styles.inputSearch}
                         placeholder={"Tìm kiếm…"}
                         underlineColorAndroid={"transparent"} />
-                    <TouchableOpacity style={styles.buttonSearch} onPress={this.search}>
+                    <TouchableOpacity style={styles.buttonSearch} onPress={this.onSearch}>
                         <ScaleImage source={require('@images/new/hospital/ic_search.png')} height={16} />
                     </TouchableOpacity>
+                </View>
+                <View style={styles.containerFilte}>
+                    <Text
+                        onPress={this.filterCSYT}
+                        style={styles.txtFilter}>Cơ sở y tế</Text>
+                    <Text onPress={this.filterSpecialist} style={styles.txtFilter}>Chuyên khoa</Text>
                 </View>
             </Animated.View>
         )
     }
     render() {
-        const { infoDoctor } = this.state
+        const { refreshing, data } = this.state
         return (
             <ActivityPanel
                 actionbar={this.renderHeader}
@@ -225,10 +349,14 @@ class ListDoctorScreen extends Component {
                     <View style={{ flex: 1, paddingTop: this.height }}>
 
                         <FlatList
-                            data={this.state.data}
+                            data={data}
                             renderItem={this.renderItem}
                             keyExtractor={this.keyExtractor}
                             ListEmptyComponent={this.listEmpty}
+                            onEndReached={this.loadMore}
+                            onEndReachedThreshold={0.6}
+                            onRefresh={this.onRefress}
+                            refreshing={refreshing}
                         />
                     </View>
                 </Animated.ScrollView>
@@ -241,6 +369,18 @@ export default ListDoctorScreen;
 
 
 const styles = StyleSheet.create({
+    containerFilte: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingLeft: 20,
+    },
+    txtFilter: {
+        color: '#FFF',
+        textDecorationLine: 'underline',
+        paddingRight: 20,
+        paddingBottom: 15,
+        fontWeight: '700'
+    },
     containerHeader: {
         position: 'absolute',
         zIndex: 100,

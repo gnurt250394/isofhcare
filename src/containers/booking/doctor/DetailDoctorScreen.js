@@ -20,6 +20,9 @@ import { Card } from 'native-base'
 import Button from "@components/booking/doctor/Button";
 import constants from '@resources/strings'
 import { FlatList } from "react-native-gesture-handler";
+import bookingDoctorProvider from '@data-access/booking-doctor-provider'
+import Modal from "@components/modal";
+
 const dataRate = [
   { id: 1, name: 'Lê Hùng', rate: 4, message: 'Bác sĩ rất ...' },
   { id: 2, name: 'Lê Hùng', rate: 4.5, message: 'Bác sĩ rất ...' },
@@ -38,86 +41,60 @@ class DetailsDoctorScreen extends Component {
       isLoading: true,
       avatar: '',
       id: '',
-      profileDoctor: {}
+      profileDoctor: {},
+      item: {},
+      isVisible: false
     };
   }
   componentDidMount() {
-    let profileDoctor = this.props.navigation.getParam('profileDoctor', {})
-    setTimeout(() => {
-      this.setState({ profileDoctor, isLoading: false })
-    }, 1000)
-    // var id = this.props.navigation.state.params ? this.props.navigation.state.params.id : ''
-    // this.setState({
-    //   id: id
-    // })
-    // this.getDetails()
+    this.getDetails()
   }
   getDetails = () => {
-    connectionUtils
-      .isConnected()
-      .then(s => {
-        this.setState(
-          {
-            isLoading: true
-          },
-          () => {
-            userProvider.detail(this.state.id).then(s => {
-              if (s) {
-
-
-                this.setState({
-                  name: s.data.user.name,
-                  nameSpecialist: s.data.specialist.name,
-                  certificateCode: s.data.user.certificateCode,
-                  intro: s.data.user.introduce,
-                  avatar: s.data.user.avatar,
-                  isLoading: false
-                })
-                this.getRatting()
-              }
-            }).catch(e => {
-              if (e) {
-                this.setState({
-                  isLoading: false
-                })
-              }
-            })
-          })
-      })
-  }
-  getRatting = () => {
-    questionProvider.getResultReview(this.state.id).then(res => {
-      if (res.code == 0) {
+    const item = this.props.navigation.getParam('item', {})
+    let id = item && item.id
+    bookingDoctorProvider.detailDoctor(id).then(s => {
+      if (s) {
+        this.setState({ profileDoctor: s, isLoading: false })
+      }
+    }).catch(e => {
+      if (e) {
         this.setState({
-          rating: res.data.ratingCount
+          isLoading: false
         })
       }
-    }).catch(err => {
-
     })
   }
 
   addBooking = () => {
     this.props.navigation.navigate('selectTimeDoctor', {
-      profileDoctor: this.state.profileDoctor,
-      isNotHaveSchedule: true
+      item: this.state.profileDoctor,
+      isNotHaveSchedule: true,
+      schedules: this.state.profileDoctor.schedules
     })
   }
   goToAdvisory = () => {
-    this.props.navigation.navigate("listQuestion");
+    // this.props.navigation.navigate("listQuestion");
+    this.setState({ isVisible: true })
   }
 
   renderText = (data) => {
-    return <View style={styles.flex}>
-      {data && data.length > 0 ?
-        data.map((e, i) => {
-          return (
-            <Text style={styles.txtPosition} key={i}>{e.name}</Text>
-          )
-        }) :
-        null
-      }
-    </View>
+    console.log('data: ', data);
+    if (Array.isArray(data)) {
+      return <View style={styles.flex}>
+        {data && data.length > 0 ?
+          data.map((e, i) => {
+            return (
+              <Text style={styles.txtPosition} key={i}>{e.name}</Text>
+            )
+          }) :
+          null
+        }
+      </View>
+    } else if (data && data.name) {
+      return <View style={styles.flex}>
+        <Text style={styles.txtPosition} >{data.name}</Text>
+      </View>
+    }
   }
   _renderItem = ({ item, index }) => {
     return (
@@ -135,16 +112,20 @@ class DetailsDoctorScreen extends Component {
           fullStar={require("@images/ic_star.png")}
           emptyStar={require("@images/ic_empty_star.png")}
         />
-        <Text numberOfLines={2}>{item.message}</Text>
+        {/* <Text numberOfLines={2}>{item.message}</Text> */}
       </View>
     )
   }
+  ratingDoctor = () => {
+    this.props.navigation.navigate('ratingDoctor')
+  }
   _keyExtractor = (item, index) => `${item.id || index}`
+  onBackdropPress = () => { this.setState({ isVisible: false }) }
   render() {
     const icSupport = require("@images/new/user.png");
     const { profileDoctor } = this.state
-    const source = profileDoctor && profileDoctor.avatar
-      ? { uri: profileDoctor.avatar.absoluteUrl() }
+    const source = profileDoctor && profileDoctor.imagePath
+      ? { uri: profileDoctor.imagePath.absoluteUrl() }
       : icSupport;
 
     return (
@@ -186,7 +167,7 @@ class DetailsDoctorScreen extends Component {
                   }}
                 />
                 <View style={{ paddingLeft: 10, flex: 1 }}>
-                  <Text style={styles.nameDoctor}>BS.{profileDoctor.name}</Text>
+                  <Text style={styles.nameDoctor}>{profileDoctor.academicDegree}.{profileDoctor.name}</Text>
                   {/* <View >
                     {profileDoctor.address && profileDoctor.address.length > 0 ?
                       <Text >{profileDoctor.address[0].name}</Text>
@@ -195,7 +176,7 @@ class DetailsDoctorScreen extends Component {
                     }
                   </View> */}
                   <View style={styles.containerButton}>
-                    {/* <Button label="Tư vấn" style={styles.txtAdvisory} onPress={this.goToAdvisory} source={require("@images/new/booking/ic_chat.png")} /> */}
+                    <Button label="Tư vấn" style={styles.txtAdvisory} onPress={this.goToAdvisory} source={require("@images/new/booking/ic_chat.png")} />
                     <Button label="Đặt khám" style={styles.txtBooking} onPress={this.addBooking} source={require("@images/ic_service.png")} />
                   </View>
 
@@ -209,55 +190,78 @@ class DetailsDoctorScreen extends Component {
               >
                 <View style={styles.groupQuantityBooking}>
                   <Text>{constants.booking.quantity_booking}</Text>
-                  <Text style={styles.rating}>{profileDoctor.rating}</Text>
+                  <Text style={styles.rating}>{profileDoctor.appointments}</Text>
                 </View>
                 <View style={styles.groupQuantityBooking}>
                   <Text>{constants.booking.quantity_advisory}</Text>
-                  <Text style={styles.rating}>{profileDoctor.rating}</Text>
+                  <Text style={styles.rating}>{profileDoctor.advices}</Text>
                 </View>
-                <View style={styles.groupRating}>
+                <TouchableOpacity onPress={this.ratingDoctor} style={styles.groupRating}>
                   <Text>{constants.booking.rating}</Text>
-                  <Text style={[styles.rating, { color: '#00CBA7' }]}>{profileDoctor.rating}</Text>
-                </View>
+                  <Text style={[styles.rating, { color: '#00CBA7' }]}>{profileDoctor.average}</Text>
+                </TouchableOpacity>
               </View>
             </Card>
             {/** */}
 
             <Card style={styles.containerInfo}>
-              <Text style={styles.colorBold}>{constants.booking.work}:</Text>
-              {this.renderText(profileDoctor.address)}
+              <Text style={{
+                color: '#00BA99',
+                fontWeight: 'bold',
+                paddingVertical: 10,
+                borderBottomWidth: 0.7,
+                borderBottomColor: '#BBB',
+                paddingLeft: 10,
+              }}>THÔNG TIN BÁC SĨ</Text>
+              <View style={{
+                paddingLeft: 10,
+              }}>
+                <Text style={styles.colorBold}>{constants.booking.work}:</Text>
+                {this.renderText(profileDoctor.hospital)}
 
-              <Text style={styles.colorBold}>{constants.booking.specialist}:</Text>
-              <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                {profileDoctor.position && profileDoctor.position.length > 0 ?
-                  profileDoctor.position.map((e, i) => {
-                    return (
-                      <Text style={styles.txtPosition} key={i}>{e}{i == profileDoctor.position.length - 1 ? '.' : ', '}</Text>
-                    )
-                  }) :
-                  null
-                }
-              </View>
-              <Text style={styles.colorBold}>{constants.booking.time_work}:</Text>
-              <View style={styles.flex}>
-                {profileDoctor.time && profileDoctor.time.length > 0 ?
-                  profileDoctor.time.map((e, i) => {
+                <Text style={styles.colorBold}>{constants.booking.specialist}:</Text>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                  {profileDoctor.specializations && profileDoctor.specializations.length > 0 ?
+                    profileDoctor.specializations.map((e, i) => {
+                      return (
+                        <Text style={styles.txtPosition} key={i}>{e.name}{i == profileDoctor.specializations.length - 1 ? '.' : ', '}</Text>
+                      )
+                    }) :
+                    null
+                  }
+                </View>
+                <Text style={styles.colorBold}>{constants.booking.time_work}:</Text>
+                <View style={styles.flex}>
+                  <View style={styles.flexRow}>
+                    {/* <View style={styles.dots} /> */}
+                    <View style={{
+                      paddingLeft: 5,
+                    }}>
+                      <Text style={styles.txtPosition}>{profileDoctor.experiences}</Text>
+                      {/* <Text style={{
+                      paddingBottom: 5,
+                    }}>{e.note}</Text> */}
+                    </View>
+                  </View>
+                  {/* {profileDoctor.schedules && profileDoctor.schedules.length > 0 ?
+                  profileDoctor.schedules.map((e, i) => {
                     return (
                       <View key={i} style={styles.flexRow}>
                         <View style={styles.dots} />
                         <View style={{
                           paddingLeft: 5,
                         }}>
-                          <Text style={styles.txtPosition}>{e.time}</Text>
+                          <Text style={styles.txtPosition}>{e.workTime.start}</Text>
                           <Text style={{
                             paddingBottom: 5,
-                          }}>{e.name}</Text>
+                          }}>{e.note}</Text>
                         </View>
                       </View>
                     )
                   }) :
                   null
-                }
+                } */}
+                </View>
               </View>
             </Card>
             {/** */}
@@ -265,7 +269,17 @@ class DetailsDoctorScreen extends Component {
             <Card style={{
               borderRadius: 10
             }}>
-              <Text style={styles.txtRate}>ĐÁNH GIÁ</Text>
+              <View style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingHorizontal: 10,
+              }}>
+                <Text style={styles.txtRate}>ĐÁNH GIÁ</Text>
+                <Text style={{
+                  fontStyle: 'italic'
+                }}>22 lượt đánh giá</Text>
+              </View>
               <View style={styles.end} />
               <FlatList
                 data={dataRate}
@@ -277,12 +291,77 @@ class DetailsDoctorScreen extends Component {
 
 
         </ScrollView>
+        <Modal
+          isVisible={this.state.isVisible}
+          onBackdropPress={this.onBackdropPress}
+          backdropOpacity={0.5}
+          animationInTiming={500}
+          animationOutTiming={500}
+          style={styles.modal}
+          backdropTransitionInTiming={1000}
+          backdropTransitionOutTiming={1000}
+        >
+          <View style={styles.containerModal}>
+            <View >
+              <TouchableOpacity style={[styles.buttonMessage, { backgroundColor: '#e6fffa', }]}>
+                <ScaleImage source={require('@images/new/booking/ic_message.png')} height={50} />
+                <Text style={styles.txtPrice}>50k/ Phiên</Text>
+                <Text style={styles.txtname}>Tư vấn qua tin nhắn</Text>
+              </TouchableOpacity>
+              <Text style={styles.txtDetail}>Xem chi tiết</Text>
+            </View>
+            <View>
+              <TouchableOpacity style={[styles.buttonMessage,]}>
+                <ScaleImage source={require('@images/new/booking/ic_video_call.png')} height={50} />
+                <Text style={styles.txtPrice}>35k/ Phiên</Text>
+                <Text style={styles.txtname}>Tư vấn qua video call</Text>
+              </TouchableOpacity>
+              <Text style={[styles.txtDetail]}>Xem chi tiết</Text>
+            </View>
+          </View>
+        </Modal>
       </ActivityPanel>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  containerModal: {
+    backgroundColor: '#FFF',
+    padding: 15,
+    borderRadius: 10,
+    elevation: 3,
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  txtDetail: {
+    textDecorationLine: 'underline',
+    textAlign: 'center',
+    paddingTop: 5,
+    paddingBottom: 10
+  },
+  txtname: {
+    color: '#000',
+    fontWeight: 'bold'
+  },
+  txtPrice: {
+    color: '#3161AD',
+    paddingVertical: 5,
+    fontWeight: '700'
+  },
+  buttonMessage: {
+    padding: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center'
+
+  },
+  modal: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
   groupRating: {
     alignItems: 'center',
     paddingRight: 5,
@@ -308,7 +387,6 @@ const styles = StyleSheet.create({
     color: '#00CBA7',
     fontWeight: 'bold',
     fontSize: 16,
-    paddingLeft: 10,
     paddingTop: 9,
     paddingBottom: 7,
   },
@@ -338,7 +416,7 @@ const styles = StyleSheet.create({
     marginLeft: 6
   },
   txtAdvisory: {
-    backgroundColor: '#3161AD',
+    backgroundColor: '#FF8A00',
   },
   containerButton: {
     flexDirection: 'row',
@@ -358,9 +436,8 @@ const styles = StyleSheet.create({
   containerInfo: {
     flex: 1,
     marginVertical: 20,
-    paddingLeft: 10,
     borderRadius: 10,
-    paddingBottom:10
+    paddingBottom: 10
   },
   containerSeeDetails: {
     flexDirection: 'row',

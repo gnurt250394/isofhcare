@@ -22,9 +22,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import bookingProvider from '@data-access/booking-provider';
 import walletProvider from '@data-access/wallet-provider';
 import StarRating from 'react-native-star-rating';
-
-import scheduleProvider from '@data-access/schedule-provider';
-import SelectPaymentDoctor from '@components/booking/doctor/SelectPaymentDoctor';
+import bookingDoctorProvider from '@data-access/booking-doctor-provider'
 import ViewHeader from '@components/booking/doctor/ViewHeader';
 class AddBookingDoctorScreen extends Component {
     constructor(props) {
@@ -45,7 +43,8 @@ class AddBookingDoctorScreen extends Component {
             listServicesSelected: [],
             profileDoctor,
             hospital,
-            paymentMethod: 2
+            paymentMethod: 2,
+            detailSchedule: this.props.navigation.getParam('detailSchedule', {})
         }
     }
     _changeColor = () => {
@@ -57,7 +56,7 @@ class AddBookingDoctorScreen extends Component {
         this.setState({ imageUris });
     }
     componentDidMount() {
-        AppState.addEventListener('change', this._handleAppStateChange);
+        // AppState.addEventListener('change', this._handleAppStateChange);
         dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, (s, e) => {
             if (s) {
                 this.setState({ profile: s })
@@ -155,44 +154,44 @@ class AddBookingDoctorScreen extends Component {
         this.setState({ listServicesSelected: services });
     }
     componentWillUnmount() {
-        AppState.removeEventListener('change', this._handleAppStateChange);
+        // AppState.removeEventListener('change', this._handleAppStateChange);
     }
-    _handleAppStateChange = (nextAppState) => {
-        if (nextAppState == 'inactive' || nextAppState == 'background') {
+    // _handleAppStateChange = (nextAppState) => {
+    //     if (nextAppState == 'inactive' || nextAppState == 'background') {
 
-        } else {
-            let { paymentMethod } = this.state
-            this.setState({ isLoading: true }, () => {
-                bookingProvider.detail(this.state.booking.book.id).then(s => {
-                    this.setState({ isLoading: false }, () => {
-                        if (s.code == 0 && s.data && s.data.booking) {
-                            if (s.code == 0 && s.data && s.data.booking) {
-                                switch (s.data.booking.status) {
-                                    case 3: //đã thanh toán
-                                        let booking = this.state.booking;
-                                        booking.hospital = this.state.hospital;
-                                        booking.profile = this.state.profile;
-                                        booking.payment = paymentMethod;
-                                        this.props.navigation.navigate("homeTab", {
-                                            navigate: {
-                                                screen: "createBookingSuccess",
-                                                params: {
-                                                    booking,
-                                                    service: this.state.service,
-                                                    voucher: this.state.voucher
+    //     } else {
+    //         let { paymentMethod } = this.state
+    //         this.setState({ isLoading: true }, () => {
+    //             bookingProvider.detail(this.state.booking.book.id).then(s => {
+    //                 this.setState({ isLoading: false }, () => {
+    //                     if (s.code == 0 && s.data && s.data.booking) {
+    //                         if (s.code == 0 && s.data && s.data.booking) {
+    //                             switch (s.data.booking.status) {
+    //                                 case 3: //đã thanh toán
+    //                                     let booking = this.state.booking;
+    //                                     booking.hospital = this.state.hospital;
+    //                                     booking.profile = this.state.profile;
+    //                                     booking.payment = paymentMethod;
+    //                                     this.props.navigation.navigate("homeTab", {
+    //                                         navigate: {
+    //                                             screen: "createBookingSuccess",
+    //                                             params: {
+    //                                                 booking,
+    //                                                 service: this.state.service,
+    //                                                 voucher: this.state.voucher
 
-                                                }
-                                            }
-                                        });
-                                        break;
-                                }
-                            }
-                        }
-                    });
-                });
-            });
-        }
-    };
+    //                                             }
+    //                                         }
+    //                                     });
+    //                                     break;
+    //                             }
+    //                         }
+    //                     }
+    //                 });
+    //             });
+    //         });
+    //     }
+    // };
 
     confirmPayment(booking, bookingId, paymentMethod) {
 
@@ -249,14 +248,14 @@ class AddBookingDoctorScreen extends Component {
             case 1:
                 return "VNPAY";
             case 2:
-                return "";
+                return "CASH";
             case 3:
             case 5:
                 return "PAYOO";
             case 4:
-                return "PAYOO_BILL";
+                return "PAYOO";
             case 6:
-                return "";
+                return "CASH";
         }
     }
     getPaymentReturnUrl() {
@@ -602,34 +601,36 @@ class AddBookingDoctorScreen extends Component {
 
     createBooking() {
         let { paymentMethod } = this.state
-
+        let date = new Date(this.state.schedule.key).format("yyyy-MM-dd")
+        let { reason, voucher, detailSchedule, profile, schedule } = this.state
+        let patitent = profile && profile.medicalRecords
         connectionUtils.isConnected().then(s => {
             this.setState({ isLoading: true }, () => {
-                bookingProvider.detail(this.state.booking.book.id).then(s => {
+                bookingDoctorProvider.create(
+                    date,
+                    reason,
+                    voucher,
+                    detailSchedule.doctor,
+                    detailSchedule.hospital,
+                    detailSchedule.medicalService,
+                    patitent,
+                    this.getPaymentMethod(),
+                    detailSchedule.id,
+                    schedule.label
+                ).then(s => {
                     this.setState({ isLoading: false }, () => {
-                        if (s.code == 0 && s.data && s.data.booking) {
-                            switch (s.data.booking.status) {
-                                case 3: //đã thanh toán
-                                    snackbar.show(constants.booking.booking_paid, "danger")
-                                    break;
-                                case 4: //payment_last
-                                    snackbar.show(constants.booking.booking_paid_or_invalid);
-                                    break;
-                                default:
-                                    this.setState({ isLoading: true }, () => {
-                                        if (paymentMethod == 2) {
-                                            this.confirmPayment(this.state.booking, this.state.booking.book.id);
-                                            return
-                                        }
-                                        if (paymentMethod == 6) {
-                                            this.confirmPayment(this.state.booking, this.state.booking.book.id, paymentMethod);
-                                            return
-                                        }
-                                        else {
-                                            this.getPaymentLink(this.state.booking);
-                                        }
-                                    });
-                            }
+                        if (s && s.codeBook) {
+                            s.payment = this.state.paymentMethod
+                            this.props.navigation.navigate("homeTab", {
+                                navigate: {
+                                    screen: "createBookingDoctorSuccess",
+                                    params: {
+                                        detailSchedule,
+                                        voucher: this.state.voucher,
+                                        booking: s
+                                    }
+                                }
+                            });
                         }
                     })
                     // 
@@ -675,25 +676,32 @@ class AddBookingDoctorScreen extends Component {
     }
     renderBookingTime() {
         if (this.state.bookingDate && this.state.schedule)
-            return <View>
+            return <View style={{
+                flexDirection: 'row',
+                alignItems: 'center'
+            }}>
+                <Text style={{ textAlign: 'left', color: '#000', fontWeight: 'bold', paddingRight: 10, }}>{(new Date(this.state.schedule.key)).format("dd/MM/yyyy")}</Text>
                 <Text style={{ textAlign: 'left', color: '#02c39a', fontWeight: 'bold' }}>{(new Date(this.state.schedule.key)).format("HH:mm tt")}</Text>
-                <Text style={{ textAlign: 'left', color: '#02c39a', fontWeight: 'bold' }}>{(new Date(this.state.schedule.key)).format("thu, ngày dd/MM/yyyy")}</Text>
             </View>
         return <Text style={{ textAlign: 'left' }}>Chọn ngày và giờ</Text>;
     }
 
     getPrice = () => {
-        const { hospital } = this.state
+        const { detailSchedule } = this.state
 
         let priceVoucher = this.state.voucher && this.state.voucher.price ? this.state.voucher.price : 0
-        let services = hospital.services || []
+        // let services = detailSchedule.detailSchedule || []
+        let services = detailSchedule.medicalService || {}
 
-        let priceFinal = services.reduce((start, item) => {
 
-            return start + parseInt(item.price)
-        }, 0)
 
-        return (priceFinal - priceVoucher).formatPrice()
+        // let priceFinal = services.reduce((start, item) => {
+
+        //     return start + parseInt(item.monetaryAmount.value)
+        // }, 0)
+
+        // return (priceFinal - priceVoucher).formatPrice()
+        return services.monetaryAmount.value.formatPrice()
 
     }
     componentWillReceiveProps = (props) => {
@@ -712,27 +720,48 @@ class AddBookingDoctorScreen extends Component {
         })
     }
     renderServices = (hospital) => {
-        return (
-            <View style={styles.containerService} >
-                <View style={styles.flexRow}>
-                    <ScaleImage style={styles.image} height={13} source={require("@images/new/booking/ic_specialist.png")} />
-                    <View style={styles.groupService}>
-                        <Text >Dịch vụ</Text>
-                        {hospital.services && hospital.services.length > 0 ?
-                            hospital.services.map((e, i) => {
-                                return <View key={i} style={styles.containerPrice}>
-                                    <Text style={styles.txtService} >{e.name}</Text>
-                                    <Text style={styles.txtPrice}>{e.price.formatPrice()}đ </Text>
-                                </View>
-                            }) : null}
+        if (Array.isArray(hospital))
+            return (
+                <View style={styles.containerService} >
+                    <View style={styles.flexRow}>
+                        <ScaleImage style={styles.image} height={13} source={require("@images/new/booking/ic_specialist.png")} />
+                        <View style={styles.groupService}>
+                            <Text >Dịch vụ</Text>
+                            {hospital.services && hospital.services.length > 0 ?
+                                hospital.services.map((e, i) => {
+                                    return <View key={i} style={styles.containerPrice}>
+                                        <Text style={styles.txtService} >{e.name}</Text>
+                                        <Text style={styles.txtPrice}>{e.price.formatPrice()}đ </Text>
+                                    </View>
+                                }) : null}
 
+                        </View>
                     </View>
+
+
                 </View>
 
+            )
+        else
+            return (
+                <View style={styles.containerService} >
+                    <View style={styles.flexRow}>
+                        <ScaleImage style={styles.image} height={13} source={require("@images/new/booking/ic_specialist.png")} />
+                        <View style={styles.groupService}>
+                            <Text >Dịch vụ</Text>
+                            {hospital.name ?
+                                <View style={styles.containerPrice}>
+                                    <Text style={styles.txtService} >{hospital.name}</Text>
+                                    <Text style={styles.txtPrice}>{hospital.monetaryAmount.value.formatPrice()}đ </Text>
+                                </View>
+                                : null}
 
-            </View>
+                        </View>
+                    </View>
 
-        )
+
+                </View>
+            )
     }
     renderSelectTime = () => {
         return <TouchableOpacity style={styles.containerService}
@@ -762,7 +791,7 @@ class AddBookingDoctorScreen extends Component {
     }
     renderPaymentMethod = () => {
         const { paymentMethod } = this.state
-        console.log('paymentMethod: ', paymentMethod);
+
         switch (paymentMethod) {
             case 1: return 'VNPAY'
             case 2: return 'Thanh toán sau tại CSYT'
@@ -786,7 +815,7 @@ class AddBookingDoctorScreen extends Component {
         let minDate = new Date();
         minDate.setDate(minDate.getDate() + 1);
         // minDate.setDate(minDate.getDate());
-        const { profileDoctor, profile, hospital } = this.state
+        const { profileDoctor, profile, hospital, detailSchedule } = this.state
         const services = hospital.services || []
         return (
             <ActivityPanel title="Đặt Khám"
@@ -807,21 +836,18 @@ class AddBookingDoctorScreen extends Component {
 
                         <ViewHeader
                             source={require("@images/new/booking/ic_serviceType.png")}
-                            name={profileDoctor ? 'BS. ' + profileDoctor.name : null}
+                            name={profileDoctor ? profileDoctor.academicDegree + ' ' + profileDoctor.name : null}
                             subName={''}
                             label={'Bác sĩ'}
                         />
                         <ViewHeader
-                            iconRight={true}
-                            onPress={this.onSelectServices}
-                            button={true}
                             source={require("@images/new/booking/ic_placeholder.png")}
-                            name={hospital && hospital.name ? hospital.name : null}
+                            name={detailSchedule && detailSchedule.hospital.name}
                             subName={''}
                             label={'Cơ sở y tế'}
                         />
 
-                        {this.renderServices(hospital)}
+                        {this.renderServices(detailSchedule.medicalService)}
                         {this.renderSelectTime()}
                         {
                             this.state.bookingError ?
@@ -1029,9 +1055,9 @@ const styles = StyleSheet.create({
         fontWeight: '700',
         paddingHorizontal: 7,
         backgroundColor: '#fff',
-        marginRight:5,
-        paddingVertical:6,
-        borderRadius:5
+        marginRight: 5,
+        paddingVertical: 6,
+        borderRadius: 5
     },
     flexRowCenter: {
         flexDirection: 'row',

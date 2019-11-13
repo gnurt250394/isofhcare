@@ -67,7 +67,7 @@ import CreateBookingWithPaymentScreen from "@containers/booking/CreateBookingWit
 
 import CreateProfileScreen from "@containers/profile/CreateProfileScreen";
 import PaymentWithVNPayScreen from "@containers/payment/PaymentWithVNPayScreen";
-import SelectProfileScreen from "@containers/booking/SelectProfileScreen";
+import SelectProfileScreen from "@containers/booking/SelectProfileScreen1";
 
 //-------get ticket----------------
 import SelectProfileMedicalScreen from "@containers/ticket/SelectProfileMedicalScreen";
@@ -113,8 +113,13 @@ import DetailsDoctorScreen from '@containers/booking/doctor/DetailDoctorScreen';
 import AddBookingDoctorScreen from '@containers/booking/doctor/AddBookingDoctorScreen';
 import SelectDateTimeDoctorScreen from '@containers/booking/doctor/SelectDateTimeDoctorScreen';
 import ListBookingScreen from '@containers/booking/ListBookingScreens'
-import ListHospital from '@containers/booking/doctor/ListHospitalScreen';
 import ListPaymentMethodScreen from '@containers/booking/doctor/ListPaymentMethodScreen';
+import CreateBookingDoctorSuccessScreen from '@containers/booking/doctor/CreateBookingDoctorSuccessScreen';
+import EditProfileScreen1 from '@containers/booking/EditProfileScreen';
+import SelectAddressScreen from '@containers/booking/SelectAddressScreen';
+import ListSpecialistScreen from '@containers/booking/doctor/ListSpecialistScreen';
+import ListHospitalScreen from '../containers/booking/doctor/ListHospitalScreen';
+import RatingDoctorScreen from '../containers/booking/doctor/RatingDoctorScreen';
 
 const ProfileNavigation = createStackNavigator({
   selectProfile: SelectProfileScreen,
@@ -327,8 +332,13 @@ const RootNavigator = createStackNavigator(
     addBookingDoctor: { screen: AddBookingDoctorScreen },
     selectTimeDoctor: { screen: SelectDateTimeDoctorScreen },
     listBooking: { screen: ListBookingScreen },
-    listHospital: { screen: ListHospital },
-    listPaymentMethod: { screen: ListPaymentMethodScreen }
+    listHospital: { screen: ListHospitalScreen },
+    listPaymentMethod: { screen: ListPaymentMethodScreen },
+    createBookingDoctorSuccess: { screen: CreateBookingDoctorSuccessScreen },
+    editProfile1: { screen: EditProfileScreen1 },
+    selectAddress: { screen: SelectAddressScreen },
+    listSpecialist: { screen: ListSpecialistScreen },
+    ratingDoctor: { screen: RatingDoctorScreen },
   },
   {
     headerMode: "none",

@@ -12,39 +12,8 @@ import { Card } from 'native-base';
 const DEVICE_WIDTH = Dimensions.get('window').width;
 import { Calendar, LocaleConfig } from 'react-native-calendars';
 import DateTimePicker from "mainam-react-native-date-picker";
-const data = [
-    {
-        id: 1,
-        name: 'Bệnh viện E',
-        location: 'Tòa nhà A1',
-        services: [{
-            name: 'Khám bệnh theo yêu cầu',
-            price: 1000000
-        },
-        {
-            name: 'Khám lâm sàng',
-            price: 100000
-        },
-        {
-            name: 'Khám tổng quát',
-            price: 2000000
-        },
-        {
-            name: 'Khám chữa bệnh',
-            price: 1050000
-        },
-        ]
-    },
-    {
-        id: 2,
-        name: 'Bệnh viện đại học Y',
-        location: 'Tòa nhà A2',
-        services: [{
-            name: 'Khám bệnh theo yêu cầu',
-            price: 200000
-        }]
-    },
-]
+import bookingDoctorProvider from '@data-access/booking-doctor-provider'
+
 LocaleConfig.locales['en'] = {
     monthNames: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
     monthNamesShort: ['Th 1', 'Th 2', 'Th 3', 'Th 4', 'Th 5', 'Th 6', 'Th 7', 'Th 8', 'Th 9', 'Th 10', 'Th 11', 'Th 12'],
@@ -62,13 +31,12 @@ class SelectDateTimeDoctorScreen extends Component {
         super(props);
         let service = this.props.navigation.state.params.service;
         let isNotHaveSchedule = this.props.navigation.state.params.isNotHaveSchedule;
-        let profileDoctor = this.props.navigation.getParam('profileDoctor', {})
         this.state = {
             service,
             listTime: [],
             isNotHaveSchedule,
             listHospital: [],
-            profileDoctor
+            profileDoctor: {}
         }
     }
     getTime(yourDateString) {
@@ -83,9 +51,20 @@ class SelectDateTimeDoctorScreen extends Component {
         }
         return yourDate;
     }
+    getDayOfWeek = (dateSelect) => {
+        let days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
+        let date = new Date(dateSelect)
+        let dayOfWeek = days[date.getDay()];
+
+        return dayOfWeek
+    }
 
     selectDay(day) {
         let data = this.state.schedules[day].schedules || [];
+        let listSchedules = this.state.profileDoctor.schedules || []
+
+
+        let dateOfWeek = this.getDayOfWeek(day)
         let listTime = [];
         if (this.state.schedules[day].noSchedule) {
             let date = new Date(new Date(day).format("yyyy-MM-dd"));
@@ -97,19 +76,36 @@ class SelectDateTimeDoctorScreen extends Component {
                     break;
 
                 if (date.format("HH:mm") < "11:30" || date.format("HH:mm") >= "13:30") {
+                    let disabled = true;
+                    let id ;
+                    for (let i = 0; i <= listSchedules.length; i++) {
+                        if (listSchedules[i] && listSchedules[i].workTime.dayOfTheWeek == dateOfWeek) {
+                            if (listSchedules[i].workTime.start <= date.format('HH:mm') && listSchedules[i].workTime.end >= date.format('HH:mm')) {
+                                disabled = false
+                                id = listSchedules[i].id
+                                break;
+                            }
+                        }
+                    }
+
                     listTime.push({
                         key: date.getTime(),
                         schedule: {
                         },
+                        id,
                         time: date.getTime(),
                         type: 3,
                         label: date.format("HH:mm"),
+                        disabled,
                         timeString: date.format("HH:mm:ss"),
                     });
+
                 }
                 date.setMinutes(date.getMinutes() + 30);
+
             }
             this.setState({ listTime })
+
         }
         else {
             data.forEach((item, index) => {
@@ -168,21 +164,53 @@ class SelectDateTimeDoctorScreen extends Component {
     }
 
     getColor(item) {
-        if (item.type == 0)
-            return "#d0021b";
-        if (item.type == 1)
-            return "#ffa500";
-        if (item.type == 2)
-            return "#efd100";
-        return "#02c39a";
+        if (!item.disabled)
+            return "#3161AD";
+        else
+            return "#BBBBBB"
+        // if (item.type == 1)
+        //     return "#ffa500";
+        // if (item.type == 2)
+        //     return "#efd100";
+        // return "#3161AD";
     }
+    getDetailDoctor = () => {
+        try {
+            this.setState({ isLoading: true }, () => {
+                const item = this.props.navigation.getParam('item', {})
+                let id = item && item.id
+                bookingDoctorProvider.detailDoctor(id).then(s => {
+                    this.setState({ isLoading: false })
+                    if (s) {
+                        this.setState({ profileDoctor: s, isLoading: false }, () => {
+                            this.selectMonth(new Date());
+                        })
+                    }
+                }).catch(e => {
+                    this.setState({ isLoading: false })
+                    if (e) {
+                        this.setState({
+                            isLoading: false
+                        })
+                    }
+                })
+            })
 
+        } catch (error) {
+            this.setState({ isLoading: false })
+
+        }
+
+    }
     componentDidMount() {
-        this.selectMonth(new Date());
+        this.getDetailDoctor()
+
     }
     generateSchedule(month) {
         let firstDay = month.getFirstDateOfMonth();
+
         let lastDay = month.getLastDateOfMonth();
+
         let obj = {};
         while (firstDay <= lastDay) {
             let key = firstDay.format("yyyy-MM-dd");;
@@ -197,7 +225,7 @@ class SelectDateTimeDoctorScreen extends Component {
                 obj[key].schedules = [];
                 obj[key].marked = true;
                 obj[key].color = 'green';
-                obj[key].selectedColor = '#02c39a';
+                obj[key].selectedColor = '#3161AD';
             }
             // return;
             firstDay.setDate(firstDay.getDate() + 1)
@@ -214,6 +242,7 @@ class SelectDateTimeDoctorScreen extends Component {
         if (selected) {
             (obj[selected.format("yyyy-MM-dd")] || {}).selected = true;
         }
+
         this.setState({
             dateString: selected ? selected.format("yyyy-MM-dd") : null,
             bookingDate: selected,
@@ -237,7 +266,7 @@ class SelectDateTimeDoctorScreen extends Component {
                         schedules: [],
                         marked: true,
                         color: 'green',
-                        selectedColor: '#02c39a'
+                        selectedColor: '#3161AD'
                     }
                 } else {
                     obj[tgi].schedules.push(item);
@@ -293,13 +322,13 @@ class SelectDateTimeDoctorScreen extends Component {
             return;
         }
 
-        this.setState({ schedule: item, listHospital: data }, () => {
-            this.confirm()
+        this.setState({ schedule: item, allowBooking: true }, () => {
         })
     }
 
     confirm = () => {
-
+        if (!this.state.allowBooking)
+            return;
         let error = false;
 
         if (this.state.schedule) {
@@ -319,13 +348,23 @@ class SelectDateTimeDoctorScreen extends Component {
             // callback(this.state.bookingDate, this.state.schedule, listFinal);
             //     this.props.navigation.pop();
             // }
-            this.props.navigation.navigate('addBookingDoctor', {
-                profileDoctor: this.state.profileDoctor,
-                bookingDate: this.state.bookingDate,
-                schedule: this.state.schedule,
-                hospital: this.state.listHospital && this.state.listHospital.length > 0 ? this.state.listHospital[0] : null,
-                listHospital: this.state.listHospital
+            console.log('this.state.schedule.id: ', this.state.schedule.id);
+            console.log('this.state.bookingDate,: ', this.state.bookingDate);
+            this.setState({ isLoading: true }, () => {
+                bookingDoctorProvider.get_detail_schedules(this.state.schedule.id).then(res => {
+                    this.setState({ isLoading: false })
+                    this.props.navigation.navigate('addBookingDoctor', {
+                        profileDoctor: this.state.profileDoctor,
+                        bookingDate: this.state.bookingDate,
+                        detailSchedule: res,
+                        schedule: this.state.schedule,
+                    })
+                }).catch(err => {
+
+                })
+
             })
+
         } else {
             this.setState({ scheduleError: "Vui lòng chọn ngày và khung giờ khám" });
         }
@@ -341,6 +380,7 @@ class SelectDateTimeDoctorScreen extends Component {
                             this.state.listTime.filter(item => new Date(item.time).format("HH") >= fromHour && new Date(item.time).format("HH") < toHour).map((item, index) => {
                                 return <TouchableOpacity
                                     onPress={this.selectTime(item)}
+                                    disabled={item.disabled}
                                     key={index} style={[styles.buttonTimePicker,
                                     {
                                         borderColor: this.getColor(item)
@@ -367,7 +407,7 @@ class SelectDateTimeDoctorScreen extends Component {
             }
         })
         this.setState({ listHospital: data2 }, () => {
-            console.log(this.state.listHospital, 'gggggg')
+
         })
     }
     renderItem = ({ item }) => {
@@ -393,7 +433,7 @@ class SelectDateTimeDoctorScreen extends Component {
                 delete schedules[this.state.dateString].selected;
             }
             schedules[day.dateString].selected = true;
-            schedules[day.dateString].selectedColor = '#02c39a';
+            schedules[day.dateString].selectedColor = '#3161AD';
             this.setState({
                 dateString: day.dateString,
                 bookingDate: day.dateString.toDateObject(),
@@ -422,7 +462,7 @@ class SelectDateTimeDoctorScreen extends Component {
         this.setState({ toggelMonthPicker: false });
     }
     render() {
-
+        const { profileDoctor } = this.state
         return (<ActivityPanel
             isLoading={this.state.isLoading}
             title="Chọn thời gian">
@@ -432,36 +472,50 @@ class SelectDateTimeDoctorScreen extends Component {
                         ref={ref => this.scroll = ref}
                         keyboardShouldPersistTaps="handled"
                         keyboardDismissMode="on-drag">
-                        <Text style={styles.txtTitleHeader}>CHỌN NGÀY GIỜ CÓ MÀU XANH</Text>
+
                         <Card style={styles.containerCalendar}>
-                            <Calendar style={styles.calendar}
-                                markedDates={this.state.schedules}
-                                current={(this.state.latestTime || new Date()).format("yyyy-MM-dd")}
-                                onDayPress={this.onSelectDay}
-                                monthFormat={'MMMM - yyyy'}
-                                onMonthChange={this.onMonthChange}
-                                // hideArrows={true}
-                                hideExtraDays={true}
-                                firstDay={1}
-                            />
-                            <TouchableOpacity
-                                onPress={this.onClickToggleDay}
-                                style={styles.buttonToggleDay}>
-                            </TouchableOpacity>
+                            <Text style={styles.txtTitleHeader}>{profileDoctor.academicDegree} {profileDoctor.name}</Text>
+                            <Text style={{
+                                paddingLeft: 15,
+                                color: '#000',
+                                fontWeight: 'bold'
+                            }}>NGÀY KHÁM</Text>
+                            <View style={{
+                                borderColor: '#ccc',
+                                borderWidth: 1,
+                                margin: 10,
+                                borderRadius: 10,
+                                padding: 10,
+                            }}>
+                                <Calendar style={styles.calendar}
+                                    markedDates={this.state.schedules}
+                                    current={(this.state.latestTime || new Date()).format("yyyy-MM-dd")}
+                                    onDayPress={this.onSelectDay}
+                                    monthFormat={'MMMM - yyyy'}
+                                    onMonthChange={this.onMonthChange}
+                                    // hideArrows={true}
+                                    hideExtraDays={true}
+                                    firstDay={1}
+                                />
+                                <TouchableOpacity
+                                    onPress={this.onClickToggleDay}
+                                    style={styles.buttonToggleDay}>
+                                </TouchableOpacity>
+                            </View>
                         </Card>
                         {
                             this.state.dateString ?
                                 this.state.listTime && this.state.listTime.length ?
                                     <View style={styles.containerListTime}>
-                                        <Text style={styles.txtSchedule}>LỊCH KHÁM {this.state.dateString.toDateObject().format("thu, dd/MM/yyyy").toUpperCase()}</Text>
+                                        <Text style={styles.txtSchedule}>GIỜ KHÁM</Text>
                                         {
                                             this.state.scheduleError ?
                                                 <Text style={[styles.errorStyle]}>{this.state.scheduleError}</Text> :
-                                                <Text style={styles.txtHelp}>Vui lòng nhấn để chọn khung giờ khám</Text>
+                                                null
                                         }
 
-                                        {this.renderTimePicker(0, 12, "Sáng")}
-                                        {this.renderTimePicker(12, 24, "Chiều")}
+                                        {this.renderTimePicker(0, 12, "Buổi sáng")}
+                                        {this.renderTimePicker(12, 24, "Buổi chiều")}
                                     </View>
                                     : !this.state.isLoading ? <Text style={[styles.errorStyle]}>{"Ngày bạn chọn không có lịch khám nào"}</Text> : null
                                 :
@@ -477,9 +531,9 @@ class SelectDateTimeDoctorScreen extends Component {
                             />
                         </View> */}
                     </ScrollView>
-                    {/* <TouchableOpacity style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]} onPress={this.confirm}>
+                    <TouchableOpacity style={[styles.button, this.state.allowBooking ? { backgroundColor: "#00CBA7" } : {}]} onPress={this.confirm}>
                         <Text style={styles.btntext}>Xác nhận</Text>
-                    </TouchableOpacity> */}
+                    </TouchableOpacity>
                 </View>
                 <DateTimePicker
                     mode={'date'}
@@ -508,7 +562,7 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     txtSchedule: {
-        color: '#00c088',
+        color: '#000',
         fontWeight: 'bold',
         fontSize: 16
     },
@@ -533,18 +587,18 @@ const styles = StyleSheet.create({
         width: DEVICE_WIDTH - 20,
         alignSelf: 'center',
         borderRadius: 10,
-        paddingBottom: 10,
     },
     txtTitleHeader: {
-        color: '#00c088',
+        color: '#3161AD',
         fontWeight: 'bold',
         fontSize: 16,
-        margin: 10
+        textAlign: 'center',
+        paddingVertical: 10,
     },
     flex: { flex: 1 },
     txtTimePicker: {
         fontWeight: 'bold',
-        color: '#00c088',
+        color: '#3161AD',
         textAlign: 'center',
     },
     buttonTimePicker: {
@@ -564,8 +618,8 @@ const styles = StyleSheet.create({
         alignContent: 'center'
     },
     txtlabel: {
-        color: '#00c088',
-        fontWeight: 'bold',
+        color: '#999',
+        fontStyle: 'italic',
         marginLeft: 5,
         fontSize: 16
     },
@@ -573,7 +627,7 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     address: {
-        color: '#02c39a',
+        color: '#3161AD',
         fontSize: 16,
         fontWeight: 'bold',
         paddingVertical: 10
@@ -735,7 +789,7 @@ const styles = StyleSheet.create({
         color: '#FFF'
     },
     item_selected: {
-        backgroundColor: '#00c088'
+        backgroundColor: '#3161AD'
     }
 })
 export default connect(mapStateToProps)(SelectDateTimeDoctorScreen);

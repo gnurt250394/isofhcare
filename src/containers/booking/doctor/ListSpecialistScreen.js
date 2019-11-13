@@ -3,7 +3,7 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator }
 import ActivityPanel from '@components/ActivityPanel';
 import bookingDoctorProvider from '@data-access/booking-doctor-provider'
 
-class ListHospitalScreen extends Component {
+class ListSpecialistScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -18,14 +18,14 @@ class ListHospitalScreen extends Component {
     };
 
     getData = () => {
-        bookingDoctorProvider.get_list_hospitals(this.state.page, this.state.size).then(res => {
+        bookingDoctorProvider.get_list_specialists(this.state.page, this.state.size).then(res => {
             this.setState({ isLoading: false })
             if (res && res.length > 0) {
                 this.formatData(res)
             } else {
                 this.formatData([])
             }
-        }).catch(err => {
+        }).catch(er => {
             this.setState({ isLoading: false })
             this.formatData([])
         })
@@ -34,16 +34,6 @@ class ListHospitalScreen extends Component {
         this.props.navigation.pop()
         let onSelected = this.props.navigation.getParam('onSelected')
         if (onSelected) onSelected(item)
-    }
-    renderItem = ({ item, index }) => {
-        return (
-            <TouchableOpacity
-                onPress={this.onFilter(item)}
-                style={styles.containerItem}
-            >
-                <Text style={styles.txtName}>{item.name}</Text>
-            </TouchableOpacity>
-        )
     }
     formatData = (data) => {
         if (data.length == 0) {
@@ -80,12 +70,22 @@ class ListHospitalScreen extends Component {
             return null
         }
     }
+    renderItem = ({ item, index }) => {
+        return (
+            <TouchableOpacity
+                onPress={this.onFilter(item)}
+                style={styles.containerItem}
+            >
+                <Text style={styles.txtName}>{item.name}</Text>
+            </TouchableOpacity>
+        )
+    }
     keyExtractor = (item, index) => `${item.id || index}`
     render() {
         const { data } = this.state
         return (
             <ActivityPanel
-                title="Danh sách cơ sở y tế"
+                title="Danh sách chuyên khoa"
                 isLoading={this.state.isLoading}>
                 <FlatList
                     data={data}
@@ -101,7 +101,7 @@ class ListHospitalScreen extends Component {
     }
 }
 
-export default ListHospitalScreen;
+export default ListSpecialistScreen;
 
 
 const styles = StyleSheet.create({
