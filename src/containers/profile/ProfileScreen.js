@@ -225,7 +225,7 @@ class ProfileScreen extends Component {
                 location: `${village}`
             })
 
-        } else {
+        } else if (!village && !district && !province && !zone) {
             this.setState({
                 location: null
             })
