@@ -170,7 +170,7 @@ class ResetPasswordScreen extends Component {
                     <TouchableOpacity
                         onPress={this.changePassword.bind(this)}
                         style={styles.updatePass}>
-                        <Text style={styles.txbtnUpdate}>{constants.update_to_up_case}</Text>
+                        <Text style={styles.txbtnUpdate}>{constants.confirm_account.finish}</Text>
                     </TouchableOpacity>
                 </View>
             </ImageBackground>

@@ -186,51 +186,52 @@ class LoginScreen extends Component {
 	}
 
 	forgotPassword() {
-		this.setState({
-			requirePass: false
-		}, () => {
-			Keyboard.dismiss();
-			if (!this.form.isValid()) {
-				return;
-			}
-			connectionUtils.isConnected().then(s => {
-				this.setState({
-					isLoading: true
-				}, () => {
-					userProvider.forgotPassword(this.state.phone.trim(), 2, (s, e) => {
-						switch (s.code) {
-							case 0:
-								this.props.navigation.navigate('verifyPhone', {
-									phone: this.state.phone,
-									verify: 2
-								})
-								break
-							case 2:
-								snackbar.show('Số điện thoại chưa được đăng ký', "danger");
-								break
-							case 6:
-								this.props.navigation.navigate('verifyPhone', {
-									phone: this.state.phone,
-									verify: 2
-								})
-								break
-						}
+		this.props.navigation.navigate('inputPhone')
+		// this.setState({
+		// 	requirePass: false
+		// }, () => {
+		// 	Keyboard.dismiss();
+		// 	if (!this.form.isValid()) {
+		// 		return;
+		// 	}
+		// 	connectionUtils.isConnected().then(s => {
+		// 		this.setState({
+		// 			isLoading: true
+		// 		}, () => {
+		// 			userProvider.forgotPassword(this.state.phone.trim(), 2, (s, e) => {
+		// 				switch (s.code) {
+		// 					case 0:
+		// 						this.props.navigation.navigate('verifyPhone', {
+		// 							phone: this.state.phone,
+		// 							verify: 2
+		// 						})
+		// 						break
+		// 					case 2:
+		// 						snackbar.show('Số điện thoại chưa được đăng ký', "danger");
+		// 						break
+		// 					case 6:
+		// 						this.props.navigation.navigate('verifyPhone', {
+		// 							phone: this.state.phone,
+		// 							verify: 2
+		// 						})
+		// 						break
+		// 				}
 
 
-					})
-					this.setState({
-						isLoading: false,
-						requirePass: true
-					})
-				})
-			}).catch(e => {
-				this.setState({
-					isLoading: false,
-					requirePass: true
-				})
-				snackbar.show(constants.msg.app.not_internet, "danger");
-			})
-		})
+		// 			})
+		// 			this.setState({
+		// 				isLoading: false,
+		// 				requirePass: true
+		// 			})
+		// 		})
+		// 	}).catch(e => {
+		// 		this.setState({
+		// 			isLoading: false,
+		// 			requirePass: true
+		// 		})
+		// 		snackbar.show(constants.msg.app.not_internet, "danger");
+		// 	})
+		// })
 
 		// let verify = async () => {
 		// 	RNAccountKit.loginWithPhone().then(async token => {
