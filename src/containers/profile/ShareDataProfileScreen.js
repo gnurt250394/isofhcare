@@ -13,10 +13,8 @@ export default class ShareDataProfileScreen extends Component {
     let shareId = this.props.navigation.state.params && this.props.navigation.state.params.shareId ? this.props.navigation.state.params.shareId : null
     let id = this.props.navigation.state.params && this.props.navigation.state.params.id ? this.props.navigation.state.params.id : null
     let permissionsOld = this.props.navigation.state.params && this.props.navigation.state.params.permission ? this.props.navigation.state.params.permission : ''
-    console.log(this.props)
-    console.log('permissionsOld: ', permissionsOld);
     this.state = {
-      ehealth: permissionsOld == 'YBDT'  ? true : false,
+      ehealth: permissionsOld.indexOf('YBDT') >= 0 ? true : false,
       permissionsOld,
       id,
       shareId,
