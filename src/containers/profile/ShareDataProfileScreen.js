@@ -12,9 +12,11 @@ export default class ShareDataProfileScreen extends Component {
     super(props);
     let shareId = this.props.navigation.state.params && this.props.navigation.state.params.shareId ? this.props.navigation.state.params.shareId : null
     let id = this.props.navigation.state.params && this.props.navigation.state.params.id ? this.props.navigation.state.params.id : null
-    let permissionsOld = this.props.navigation.state.params && this.props.navigation.state.params.sharePermission ? this.props.navigation.state.params.sharePermission : ''
+    let permissionsOld = this.props.navigation.state.params && this.props.navigation.state.params.permission ? this.props.navigation.state.params.permission : ''
+    console.log(this.props)
+    console.log('permissionsOld: ', permissionsOld);
     this.state = {
-      ehealth: permissionsOld == 'YBDT' ? true : false,
+      ehealth: permissionsOld == 'YBDT'  ? true : false,
       permissionsOld,
       id,
       shareId,
@@ -42,6 +44,7 @@ export default class ShareDataProfileScreen extends Component {
       "shareId": shareId,
       "permissions": permissions
     }
+    console.log(data,'datadatadata')
     profileProvider.sharePermission(data).then(res => {
       if (res.code == 0 && res.data) {
         snackbar.show(constants.msg.user.setting_share_success, 'success')

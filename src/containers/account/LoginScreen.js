@@ -3,7 +3,7 @@ import ActivityPanel from "@components/ActivityPanel";
 import {
 	View,
 	ScrollView,
-	KeyboardAvoidingView,
+	Linking,
 	StyleSheet,
 	Text,
 	TouchableOpacity,
@@ -270,6 +270,11 @@ class LoginScreen extends Component {
 	onChangeText = (state) => (value) => {
 		this.setState({ [state]: value })
 	}
+	openLinkHotline = () => {
+		Linking.openURL(
+			'tel:1900299983'
+		);
+	}
 	render() {
 		return (
 
@@ -379,9 +384,9 @@ class LoginScreen extends Component {
 									<Text style={{ color: '#FFF', fontSize: 17 }}>{"ĐĂNG NHẬP"}</Text>
 								</TouchableOpacity>
 							</Card>
+							<TouchableOpacity style={styles.btnCall} onPress={this.openLinkHotline}><ScaleImage height={20} source={require('@images/new/account/ic_phone.png')}></ScaleImage><Text style={styles.txCall}>Hotline: <Text style={styles.txNumber}>1900299983</Text></Text></TouchableOpacity>
 						</View>
-						{/* <SocialNetwork /> */}
-						{/* <Text style={{ color: '#000', textAlign: 'center', marginVertical: 20 }}>Nếu chưa có tài khoản có thể đăng ký <Text onPress={this.register.bind(this)} style={{ color: '#1EA3EA' }}>tại đây</Text></Text> */}
+
 
 					</View>
 					{/* </KeyboardAvoidingView> */}
@@ -400,10 +405,26 @@ const DEVICE_WIDTH = Dimensions.get("window").width;
 const DEVICE_HEIGHT = Dimensions.get("window").height;
 
 const styles = StyleSheet.create({
+	txNumber: {
+		fontWeight: 'bold',
+		color: '#fff',
+		fontSize: 14
+	},
 	txtRegister: {
 		color: '#000',
 		textAlign: 'center',
 		marginVertical: 20
+	},
+	btnCall: {
+		padding: 5,
+		flexDirection: 'row',
+		alignItems: 'center',
+		alignSelf: 'center',
+	},
+	txCall: {
+		color: '#fff',
+		fontSize: 14,
+		marginLeft: 10,
 	},
 	txtLogin: {
 		color: "rgb(2,195,154)",
