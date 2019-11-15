@@ -26,55 +26,59 @@ class ResetPasswordScreen extends Component {
         }
     }
     componentDidMount() {
-
+console.log(this.props,'hihihi')
     }
     onShowPass = () => {
         this.setState({
-          secureTextEntry: !this.state.secureTextEntry
+            secureTextEntry: !this.state.secureTextEntry
         })
-      }
+    }
     changePassword() {
         Keyboard.dismiss();
         if (!this.form.isValid()) {
-          return;
+            return;
         }
         connectionUtils.isConnected().then(s => {
-          this.setState({ isLoading: true }, () => {
-            userProvider.refreshPasswordByToken(this.state.phone, this.state.loginToken, this.state.applicationId, this.state.password).then(s => {
-              this.setState({ isLoading: false })
-              switch (s.code) {
-                case 0:
-                  snackbar.show(
-                    "Thiết lập mật khẩu mới thành công",
-                    "success"
-                  );
-                  this.props.navigation.replace("login", {
-                    nextScreen: this.nextScreen
-                  });
-                  return;
-                case 2:
-                  snackbar.show(
-                    "Số điện thoại không tồn tại trong hệ thống",
-                    "danger"
-                  );
-                  return;
-              }
-            }).catch(e => {
-              this.setState({ isLoading: false })
-              snackbar.show(constants.msg.user.change_password_not_success, "danger");
+            this.setState({ isLoading: true }, () => {
+                let passwordNew = this.state.password
+                let id = this.props.navigation.getParam('id', '')
+                console.log('this.props:21342 ', this.props);
+                userProvider.changePassword(id, passwordNew).then(s => {
+                    console.log('s: ', s);
+                    this.setState({ isLoading: false })
+                    switch (s.code) {
+                        case 0:
+                            snackbar.show(
+                                "Thiết lập mật khẩu mới thành công",
+                                "success"
+                            );
+                            this.props.navigation.replace("login", {
+                                nextScreen: this.nextScreen
+                            });
+                            return;
+                        default :
+                            snackbar.show(
+                                "Có lỗi xảy ra, xin vui lòng thử lại",
+                                "danger"
+                            );
+                            return;
+                    }
+                }).catch(e => {
+                    this.setState({ isLoading: false })
+                    snackbar.show(constants.msg.user.change_password_not_success, "danger");
+                });
             });
-          });
-    
+
         }).catch(e => {
-          snackbar.show(constants.msg.app.not_internet, "danger");
+            snackbar.show(constants.msg.app.not_internet, "danger");
         })
-    
-      }
-      onShowPass2 = () => {
+
+    }
+    onShowPass2 = () => {
         this.setState({
-          secureTextEntry2: !this.state.secureTextEntry2
+            secureTextEntry2: !this.state.secureTextEntry2
         })
-      }
+    }
     render() {
         return (
             <ImageBackground
@@ -170,7 +174,7 @@ class ResetPasswordScreen extends Component {
                     <TouchableOpacity
                         onPress={this.changePassword.bind(this)}
                         style={styles.updatePass}>
-                        <Text style={styles.txbtnUpdate}>{constants.update_to_up_case}</Text>
+                        <Text style={styles.txbtnUpdate}>{constants.confirm_account.finish}</Text>
                     </TouchableOpacity>
                 </View>
             </ImageBackground>
@@ -235,10 +239,11 @@ const styles = StyleSheet.create({
 });
 
 function mapStateToProps(state) {
+    console.log('state: ', state);
 
     return {
         userApp: state.userApp,
-        navigation: state.navigation
+        // navigation: state.navigation
     };
 }
 export default connect(mapStateToProps)(ResetPasswordScreen);

@@ -200,12 +200,11 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
     //     })
 
     // }
-    onCheckOtp = () => {
+    onCheckOtp = (text) => {
         Keyboard.dismiss();
         if (!this.form.isValid()) {
             return;
         }
-        let text = this.state.text
         if (this.state.verify) {
             connectionUtils
                 .isConnected()
@@ -253,10 +252,12 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                                         switch (s.code) {
                                             case 0:
                                                 snackbar.show(constants.msg.user.confirm_code_success, "success");
-                                                this.props.navigation.replace("resetPassword", {
+                                                console.log(s.data.user.id,'s.data.user.id')
+                                                console.log(this.props,'props 00000')
+                                                this.props.navigation.navigate("resetPassword", {
                                                     user: s.data.user,
                                                     id: s.data.user.id,
-                                                    nextScreen: this.nextScreen
+                                                    // nextScreen: this.nextScreen
                                                 });
                                                 break;
                                             case 2:
@@ -266,6 +267,7 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                                                 snackbar.show('Mã xác thực hết hạn', 'danger')
                                                 break
                                         }
+                                        return
                                     }
                                     if (e) {
                                         snackbar.show(constants.msg.user.confirm_code_not_success, "danger");
@@ -316,14 +318,11 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
         }
     }
     handleTextChange = (text) => {
-        this.setState({
-            text
-        }, () => {
-            if (this.state.text.length == 6) {
-                this.onCheckOtp()
-            }
-        })
-
+        if (text.length == 6) {
+            console.log('ififififif')
+            this.onCheckOtp(text)
+            return
+        }
     }
     render() {
         return (
