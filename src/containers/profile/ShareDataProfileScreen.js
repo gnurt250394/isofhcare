@@ -37,11 +37,13 @@ export default class ShareDataProfileScreen extends Component {
     if (this.state.ehealth) {
       permissions = 'YBDT'
     }
+    let isCreate = this.props.navigation.getParam('isCreate', '')
     let data = {
-      "recordId": id,
-      "shareId": shareId,
+      "recordId": isCreate ? id : shareId,
+      "shareId": isCreate ? shareId : id,
       "permissions": permissions
     }
+    console.log(data, 'datadatadata')
     profileProvider.sharePermission(data).then(res => {
       if (res.code == 0 && res.data) {
         snackbar.show(constants.msg.user.setting_share_success, 'success')
