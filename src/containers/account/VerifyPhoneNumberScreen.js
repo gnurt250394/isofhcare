@@ -1,22 +1,11 @@
 import React from 'react';
-import { StyleSheet, Text, View, Keyboard, ScrollView, KeyboardAvoidingView, Dimensions, ImageBackground, TouchableOpacity } from 'react-native';
-import { Content, Item, Input } from 'native-base';
-// import { Grid, Col } from 'react-native-easy-grid';
-import OTPTextView from 'react-native-otp-textinput'
-import ScaleImage from "mainam-react-native-scaleimage";
+import { StyleSheet, Text, View, Keyboard, ScrollView, KeyboardAvoidingView, Dimensions, ImageBackground, TouchableOpacity, TextInput } from 'react-native';
 import constants from "@resources/strings";
-import ActivityPanel from "@components/ActivityPanel";
 import userProvider from '@data-access/user-provider'
 import snackbar from '@utils/snackbar-utils';
 import { connect } from "react-redux";
 import profileProvider from '@data-access/profile-provider'
-import NavigationService from "@navigators/NavigationService";
-import redux from "@redux-store";
-import client from '@utils/client-utils';
 import connectionUtils from "@utils/connection-utils";
-import Form from "mainam-react-native-form-validate/Form";
-import TextField from "mainam-react-native-form-validate/TextField";
-import ButtonSubmit from "@components/ButtonSubmit";
 import HeaderBar from '@components/account/HeaderBar'
 
 const DEVICE_HEIGHT = Dimensions.get("window").height;
@@ -200,48 +189,76 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
     //     })
 
     // }
+<<<<<<< Updated upstream
     onCheckOtp = () => {
         Keyboard.dismiss();
         if (!this.form.isValid()) {
             return;
         }
         let text = this.state.text
+=======
+    onCheckOtp = (text) => {
+        console.log('chayyyy')
+        Keyboard.dismiss();
+>>>>>>> Stashed changes
         if (this.state.verify) {
             connectionUtils
                 .isConnected()
                 .then(s => {
-                    this.setState({
-                        disabledConfirm: true
-                    }, () => {
-                        switch (this.state.verify) {
-                            case 1:
-                                userProvider.checkOtpPhone(this.state.id, text).then(res => {
-                                    this.setState({
-                                        disabledConfirm: false
-                                    })
-                                    switch (res.code) {
-                                        case 0: {
-                                            snackbar.show('Đăng ký thành công', 'success')
-                                            let user = res.data.user
-                                            let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
-                                            if (callback) {
-                                                callback(user);
-                                                this.props.navigation.pop();
-                                            }
+                    switch (this.state.verify) {
+                        case 1:
+                            userProvider.checkOtpPhone(this.state.id, text).then(res => {
+                                switch (res.code) {
+                                    case 0: {
+                                        snackbar.show('Đăng ký thành công', 'success')
+                                        let user = res.data.user
+                                        let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
+                                        if (callback) {
+                                            callback(user);
+                                            this.props.navigation.pop();
                                         }
-                                            break
-                                        case 3:
+                                    }
+                                        break
+                                    case 3:
+                                        snackbar.show('Mã xác thực không đúng', 'danger')
+                                        break
+                                    case 4:
+                                        snackbar.show('Mã xác thực hết hạn', 'danger')
+                                        break
+                                    default:
+                                        snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                                        break
+
+                                }
+
+                            })
+                            break
+                        case 2:
+                            userProvider.confirmCode(this.state.phone, text, (s, e) => {
+                                if (s) {
+                                    switch (s.code) {
+                                        case 0:
+                                            snackbar.show(constants.msg.user.confirm_code_success, "success");
+                                            this.props.navigation.navigate("resetPassword", {
+                                                user: s.data.user,
+                                                id: s.data.user.id,
+                                                // nextScreen: this.nextScreen
+                                            });
+                                            break;
+                                        case 2:
                                             snackbar.show('Mã xác thực không đúng', 'danger')
                                             break
                                         case 4:
                                             snackbar.show('Mã xác thực hết hạn', 'danger')
                                             break
-                                        default:
-                                            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
-                                            break
-
                                     }
+                                    return
+                                }
+                                if (e) {
+                                    snackbar.show(constants.msg.user.confirm_code_not_success, "danger");
+                                }
 
+<<<<<<< Updated upstream
                                 })
                                 break
                             case 2:
@@ -266,49 +283,39 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                                                 snackbar.show('Mã xác thực hết hạn', 'danger')
                                                 break
                                         }
+=======
+                            });
+                            break
+                        case 3:
+                            let data = {
+                                'otp': text
+                            }
+                            if (data && this.state.id) {
+                                profileProvider.checkOtp(data, this.state.id).then(res => {
+                                    if (res.code == 0) {
+                                        this.props.navigation.replace('shareDataProfile', { id: res.data.record.id })
+                                        return;
                                     }
-                                    if (e) {
-                                        snackbar.show(constants.msg.user.confirm_code_not_success, "danger");
+                                    if (res.code == 4) {
+                                        snackbar.show('Mã bạn nhập đã hết hạn', 'danger')
+                                        return
+>>>>>>> Stashed changes
                                     }
+                                    if (res.code == 5) {
+                                        snackbar.show('Mã bạn nhập không đúng', 'danger')
+                                        return
+                                    }
+                                    else {
+                                        snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
 
-                                });
-                                break
-                            case 3:
-                                let data = {
-                                    'otp': text
-                                }
-                                if (data && this.state.id) {
-                                    profileProvider.checkOtp(data, this.state.id).then(res => {
-                                        this.setState({
-                                            disabledConfirm: false
-                                        })
-                                        if (res.code == 0) {
-                                            this.props.navigation.replace('shareDataProfile', { id: res.data.record.id })
-                                            return;
-                                        }
-                                        if (res.code == 4) {
-                                            snackbar.show('Mã bạn nhập đã hết hạn', 'danger')
-                                            return
-                                        }
-                                        if (res.code == 5) {
-                                            snackbar.show('Mã bạn nhập không đúng', 'danger')
-                                            return
-                                        }
-                                        else {
-                                            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                                    }
+                                })
+                            }
+                            break
+                    }
 
-                                        }
-                                    })
-                                }
-                                break
-                        }
-                    })
 
                 }).catch(e => {
-
-                    this.setState({
-                        disabledConfirm: false
-                    })
                     snackbar.show(constants.msg.app.not_internet, "danger");
                 });
 
@@ -316,6 +323,7 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
         }
     }
     handleTextChange = (text) => {
+<<<<<<< Updated upstream
         this.setState({
             text
         }, () => {
@@ -324,6 +332,11 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
             }
         })
 
+=======
+        if (text.length == 6) {
+            this.onCheckOtp(text)
+        }
+>>>>>>> Stashed changes
     }
     render() {
         return (
@@ -351,8 +364,8 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                     <KeyboardAvoidingView behavior="padding" style={styles.form}>
                         <View style={{ borderWidth: 0.5, borderStyle: 'solid', borderColor: '#808080', borderRadius: 10, paddingTop: 30, alignSelf: 'center' }}>
                             <Text style={{ fontSize: 14, textAlign: 'center', marginBottom: 50, color: '#000000' }}>Vui lòng nhập mã xác thực được gửi tới {`\n`} số điện thoại {this.state.phone}</Text>
-                            <Form ref={ref => (this.form = ref)}>
-                                <TextField
+                            {/* <Form ref={ref => (this.form = ref)}>
+                                <TextInput
                                     errorStyle={styles.errorStyle}
                                     validate={{
                                         rules: {
@@ -367,16 +380,27 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                                         }
                                     }}
                                     inputStyle={styles.input}
-                                    onChangeText={text =>
+                                    onChangeText={(text) => {
+                                        debugger;
                                         this.handleTextChange(text)
-                                    }
+                                    }}
                                     placeholder={constants.input_code}
                                     autoCapitalize={"none"}
-                                    returnKeyType={"next"}
                                     keyboardType="numeric"
                                     autoCorrect={false}
                                 />
-                            </Form>
+                            </Form> */}
+                            <TextInput
+                                style={styles.input}
+                                onChangeText={(text) => {
+                                    this.handleTextChange(text)
+                                }}
+                                placeholder={constants.input_code}
+                                autoCapitalize={"none"}
+                                keyboardType="numeric"
+                                autoCorrect={false}
+                                maxLength={6}
+                            ></TextInput>
                             <Text style={styles.txTime}>Mã xác thực hiệu lực trong: <Text style={styles.txCountTime}>{this.state.seconds > 9 ? this.state.seconds : '0' + this.state.seconds}s</Text></Text>
                         </View>
                         {
@@ -386,9 +410,7 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                                     <TouchableOpacity style={styles.btnReSend} disabled={this.state.disabled} onPress={this.onReSendPhone}><Text style={styles.txBtnReSend}>Gửi lại mã</Text></TouchableOpacity>
                                 </View>
                         }
-                        {/* <TouchableOpacity disabled={this.state.disabledConfirm} onPress={this.onCheckOtp} style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center' }} >
-                            <Text style={{ color: '#FFF', fontSize: 17 }}>{"XÁC NHẬN"}</Text>
-                        </TouchableOpacity> */}
+
                     </KeyboardAvoidingView>
                 </ScrollView>
             </ImageBackground>
