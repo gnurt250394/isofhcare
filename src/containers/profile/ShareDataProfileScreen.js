@@ -12,9 +12,9 @@ export default class ShareDataProfileScreen extends Component {
     super(props);
     let shareId = this.props.navigation.state.params && this.props.navigation.state.params.shareId ? this.props.navigation.state.params.shareId : null
     let id = this.props.navigation.state.params && this.props.navigation.state.params.id ? this.props.navigation.state.params.id : null
-    let permissionsOld = this.props.navigation.state.params && this.props.navigation.state.params.sharePermission ? this.props.navigation.state.params.sharePermission : ''
+    let permissionsOld = this.props.navigation.state.params && this.props.navigation.state.params.permission ? this.props.navigation.state.params.permission : ''
     this.state = {
-      ehealth: permissionsOld == 'YBDT' ? true : false,
+      ehealth: permissionsOld.indexOf('YBDT') >= 0 ? true : false,
       permissionsOld,
       id,
       shareId,
@@ -37,10 +37,9 @@ export default class ShareDataProfileScreen extends Component {
     if (this.state.ehealth) {
       permissions = 'YBDT'
     }
-    let isCreate = this.props.navigation.getParam('isCreate', '')
     let data = {
-      "recordId": isCreate ? id : shareId,
-      "shareId": isCreate ? shareId : id,
+      "recordId": id ? id : shareId,
+      "shareId": id ? shareId : null,
       "permissions": permissions
     }
     console.log(data, 'datadatadata')
