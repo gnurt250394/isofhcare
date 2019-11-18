@@ -37,10 +37,9 @@ export default class ShareDataProfileScreen extends Component {
     if (this.state.ehealth) {
       permissions = 'YBDT'
     }
-    let isCreate = this.props.navigation.getParam('isCreate', '')
     let data = {
-      "recordId": isCreate ? id : shareId,
-      "shareId": isCreate ? shareId : id,
+      "recordId": id ? id : shareId,
+      "shareId": id ? shareId : null,
       "permissions": permissions
     }
     console.log(data, 'datadatadata')

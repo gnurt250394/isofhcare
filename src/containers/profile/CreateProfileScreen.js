@@ -307,7 +307,7 @@ class CreateProfileScreen extends Component {
                 isVisible: false
             })
             if (res.code == 0) {
-                NavigationService.navigate('shareDataProfile', { id: res.data.record.id, shareId: res.data.shareRecord.id,isCreate:true })
+                NavigationService.navigate('shareDataProfile', { id: res.data.shareRecord.id, shareId: res.data.record.id, })
 
             } else {
                 snackbar.show(constants.msg.notification.error_retry, 'danger')
