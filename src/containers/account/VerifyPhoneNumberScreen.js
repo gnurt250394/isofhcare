@@ -189,18 +189,9 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
     //     })
 
     // }
-<<<<<<< Updated upstream
-    onCheckOtp = () => {
-        Keyboard.dismiss();
-        if (!this.form.isValid()) {
-            return;
-        }
-        let text = this.state.text
-=======
     onCheckOtp = (text) => {
         console.log('chayyyy')
         Keyboard.dismiss();
->>>>>>> Stashed changes
         if (this.state.verify) {
             connectionUtils
                 .isConnected()
@@ -258,32 +249,6 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                                     snackbar.show(constants.msg.user.confirm_code_not_success, "danger");
                                 }
 
-<<<<<<< Updated upstream
-                                })
-                                break
-                            case 2:
-                                userProvider.confirmCode(this.state.phone, text, (s, e) => {
-                                    this.setState({
-                                        disabledConfirm: false
-                                    })
-                                    if (s) {
-                                        switch (s.code) {
-                                            case 0:
-                                                snackbar.show(constants.msg.user.confirm_code_success, "success");
-                                                this.props.navigation.replace("resetPassword", {
-                                                    user: s.data.user,
-                                                    id: s.data.user.id,
-                                                    nextScreen: this.nextScreen
-                                                });
-                                                break;
-                                            case 2:
-                                                snackbar.show('Mã xác thực không đúng', 'danger')
-                                                break
-                                            case 4:
-                                                snackbar.show('Mã xác thực hết hạn', 'danger')
-                                                break
-                                        }
-=======
                             });
                             break
                         case 3:
@@ -299,7 +264,6 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                                     if (res.code == 4) {
                                         snackbar.show('Mã bạn nhập đã hết hạn', 'danger')
                                         return
->>>>>>> Stashed changes
                                     }
                                     if (res.code == 5) {
                                         snackbar.show('Mã bạn nhập không đúng', 'danger')
@@ -323,20 +287,9 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
         }
     }
     handleTextChange = (text) => {
-<<<<<<< Updated upstream
-        this.setState({
-            text
-        }, () => {
-            if (this.state.text.length == 6) {
-                this.onCheckOtp()
-            }
-        })
-
-=======
         if (text.length == 6) {
             this.onCheckOtp(text)
         }
->>>>>>> Stashed changes
     }
     render() {
         return (
