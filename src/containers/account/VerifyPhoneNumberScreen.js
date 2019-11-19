@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import profileProvider from '@data-access/profile-provider'
 import connectionUtils from "@utils/connection-utils";
 import HeaderBar from '@components/account/HeaderBar'
-
+import InputOtp from '@components/account/InputOtp'
 const DEVICE_HEIGHT = Dimensions.get("window").height;
 //props: verify
 //case 1 : regiter
@@ -189,10 +189,16 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
     //     })
 
     // }
-    onCheckOtp = (text) => {
-        console.log('chayyyy')
-        Keyboard.dismiss();
-        if (this.state.verify) {
+    onCheckOtp = () => {
+        let data = this.props.otpPhone.data
+        let text1 = data && (data.text1 || data.text1 == 0) ? data.text1.toString() : ''
+        let text2 = data && (data.text2 || data.text2 == 0) ? data.text2.toString() : ''
+        let text3 = data && (data.text3 || data.text3 == 0) ? data.text3.toString() : ''
+        let text4 = data && (data.text4 || data.text4 == 0) ? data.text4.toString() : ''
+        let text5 = data && (data.text5 || data.text5 == 0) ? data.text5.toString() : ''
+        let text6 = data && (data.text6 || data.text6 == 0) ? data.text6.toString() : ''
+        let text = text1.concat(text2).concat(text3).concat(text4).concat(text5).concat(text6)
+        if (text.length == 6 && this.state.verify) {
             connectionUtils
                 .isConnected()
                 .then(s => {
@@ -230,7 +236,7 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                                     switch (s.code) {
                                         case 0:
                                             snackbar.show(constants.msg.user.confirm_code_success, "success");
-                                            this.props.navigation.navigate("resetPassword", {
+                                            this.props.navigation.replace("resetPassword", {
                                                 user: s.data.user,
                                                 id: s.data.user.id,
                                                 // nextScreen: this.nextScreen
@@ -283,8 +289,9 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                     snackbar.show(constants.msg.app.not_internet, "danger");
                 });
 
-
+            return
         }
+
     }
     handleTextChange = (text) => {
         if (text.length == 6) {
@@ -343,7 +350,8 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                                     autoCorrect={false}
                                 />
                             </Form> */}
-                            <TextInput
+                            <InputOtp onCheckOtp={this.onCheckOtp} style={styles.input}></InputOtp>
+                            {/* <TextInput
                                 style={styles.input}
                                 onChangeText={(text) => {
                                     this.handleTextChange(text)
@@ -353,7 +361,7 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                                 keyboardType="numeric"
                                 autoCorrect={false}
                                 maxLength={6}
-                            ></TextInput>
+                            ></TextInput> */}
                             <Text style={styles.txTime}>Mã xác thực hiệu lực trong: <Text style={styles.txCountTime}>{this.state.seconds > 9 ? this.state.seconds : '0' + this.state.seconds}s</Text></Text>
                         </View>
                         {
@@ -399,17 +407,13 @@ const styles = StyleSheet.create({
     },
     input: {
         maxWidth: 300,
-        paddingRight: 30,
         backgroundColor: "#FFF",
         width: DEVICE_WIDTH - 40,
         height: 42,
-        textAlign: "center",
-        marginHorizontal: 40,
-        paddingLeft: 15,
-        borderRadius: 6,
-        color: "#006ac6",
-        borderWidth: 1,
-        borderColor: "rgba(155,155,155,0.7)"
+        marginHorizontal: 20,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-around',
     },
     picture: {
         position: "absolute",
@@ -457,7 +461,9 @@ const styles = StyleSheet.create({
 });
 function mapStateToProps(state) {
     return {
-        userApp: state.userApp
+        userApp: state.userApp,
+        otpPhone: state.otpPhone
+
     };
 }
 export default connect(mapStateToProps)(VerifyPhoneNumberScreen);

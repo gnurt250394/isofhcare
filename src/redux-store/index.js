@@ -13,7 +13,12 @@ function _userLogin(user) {
         return Promise.resolve();
     }
 }
-
+function _getOtpPhone(data) {
+    return (dispatch) => {
+        dispatch({ type: constants.action.action_otp_phone, value: data })
+        return Promise.resolve();
+    }
+}
 function _getUnreadNotificationCount() {
     return function (dispatch) {
         notificationProvider.getUnReadCount().then(s => {
@@ -67,5 +72,12 @@ module.exports = {
             dispatch(_getUnreadNotificationCount());
         }
     },
-  
+    getOtpPhone(data) {
+        return function (dispatch, getState) {
+            if (data) {
+                dispatch(_getOtpPhone(data))
+            }
+        }
+    },
+
 }
