@@ -75,7 +75,7 @@ const reducer = (state = defaultState, action) => {
             newState.ehealth.patient = action.value;
             return newState;
         case constants.action.action_otp_phone:
-            newState.otpPhone.data = action.value
+            newState.otpPhone.otp = action.value
             return newState;
     }
     return newState;

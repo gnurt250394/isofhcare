@@ -6,8 +6,6 @@ var data = {}
 class InputOtp extends PureComponent {
     constructor(props) {
         super(props);
-        this.state = {
-        };
     }
     onChangeText1 = (text) => {
         text.length && this.input2.focus()
@@ -43,8 +41,16 @@ class InputOtp extends PureComponent {
 
     }
     onPassData = () => {
-        this.props.dispatch(redux.getOtpPhone(data));
-        this.props.onCheckOtp()
+        let text1 = data && (data.text1 || data.text1 == 0) ? data.text1.toString() : ''
+        let text2 = data && (data.text2 || data.text2 == 0) ? data.text2.toString() : ''
+        let text3 = data && (data.text3 || data.text3 == 0) ? data.text3.toString() : ''
+        let text4 = data && (data.text4 || data.text4 == 0) ? data.text4.toString() : ''
+        let text5 = data && (data.text5 || data.text5 == 0) ? data.text5.toString() : ''
+        let text6 = data && (data.text6 || data.text6 == 0) ? data.text6.toString() : ''
+        let otp = text1.concat(text2).concat(text3).concat(text4).concat(text5).concat(text6)
+        if (otp.length == 6) {
+            this.props.dispatch(redux.getOtpPhone(otp));
+        }
     }
     // onChangeText = (text, value) => {
     //     console.log('text: ', text);

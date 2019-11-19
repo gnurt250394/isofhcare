@@ -59,7 +59,6 @@ export default class ShareDataProfileScreen extends Component {
   render() {
     return (
       <ActivityPanel style={{ flex: 1 }}
-        // title="HỒ SƠ Y BẠ GIA ĐÌNH"
         title={constants.title.setting_share}
         showFullScreen={true} isLoading={this.state.isLoading}>
         <View style={styles.viewConfirm}>

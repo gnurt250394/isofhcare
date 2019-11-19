@@ -14,7 +14,7 @@ const DEVICE_HEIGHT = Dimensions.get("window").height;
 //case 2 : fogot password
 //case 3 : create profile
 
-class VerifyPhoneNumberScreen extends React.PureComponent {
+class VerifyPhoneNumberScreen extends React.Component {
     constructor(props) {
         super(props)
         let phone = this.props.navigation.state.params && this.props.navigation.state.params.phone ? this.props.navigation.state.params.phone : null
@@ -28,6 +28,11 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
             id,
             verify,
             // appState: AppState.currentState,
+        }
+    }
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.otpPhone && nextProps.otpPhone.otp) {
+            this.onCheckOtp(nextProps.otpPhone.otp)
         }
     }
     componentDidMount() {
@@ -189,16 +194,15 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
     //     })
 
     // }
-    onCheckOtp = () => {
-        let data = this.props.otpPhone.data
-        let text1 = data && (data.text1 || data.text1 == 0) ? data.text1.toString() : ''
-        let text2 = data && (data.text2 || data.text2 == 0) ? data.text2.toString() : ''
-        let text3 = data && (data.text3 || data.text3 == 0) ? data.text3.toString() : ''
-        let text4 = data && (data.text4 || data.text4 == 0) ? data.text4.toString() : ''
-        let text5 = data && (data.text5 || data.text5 == 0) ? data.text5.toString() : ''
-        let text6 = data && (data.text6 || data.text6 == 0) ? data.text6.toString() : ''
-        let text = text1.concat(text2).concat(text3).concat(text4).concat(text5).concat(text6)
-        if (text.length == 6 && this.state.verify) {
+    onCheckOtp = (text) => {
+        // let text1 = data && (data.text1 || data.text1 == 0) ? data.text1.toString() : ''
+        // let text2 = data && (data.text2 || data.text2 == 0) ? data.text2.toString() : ''
+        // let text3 = data && (data.text3 || data.text3 == 0) ? data.text3.toString() : ''
+        // let text4 = data && (data.text4 || data.text4 == 0) ? data.text4.toString() : ''
+        // let text5 = data && (data.text5 || data.text5 == 0) ? data.text5.toString() : ''
+        // let text6 = data && (data.text6 || data.text6 == 0) ? data.text6.toString() : ''
+        // let text = text1.concat(text2).concat(text3).concat(text4).concat(text5).concat(text6)
+        if (text && this.state.verify) {
             connectionUtils
                 .isConnected()
                 .then(s => {
@@ -293,11 +297,6 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
         }
 
     }
-    handleTextChange = (text) => {
-        if (text.length == 6) {
-            this.onCheckOtp(text)
-        }
-    }
     render() {
         return (
             <ImageBackground
@@ -350,7 +349,7 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                                     autoCorrect={false}
                                 />
                             </Form> */}
-                            <InputOtp onCheckOtp={this.onCheckOtp} style={styles.input}></InputOtp>
+                            <InputOtp  style={styles.input}></InputOtp>
                             {/* <TextInput
                                 style={styles.input}
                                 onChangeText={(text) => {

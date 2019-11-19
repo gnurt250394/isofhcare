@@ -13,9 +13,9 @@ function _userLogin(user) {
         return Promise.resolve();
     }
 }
-function _getOtpPhone(data) {
+function _getOtpPhone(otp) {
     return (dispatch) => {
-        dispatch({ type: constants.action.action_otp_phone, value: data })
+        dispatch({ type: constants.action.action_otp_phone, value: otp })
         return Promise.resolve();
     }
 }
@@ -72,10 +72,10 @@ module.exports = {
             dispatch(_getUnreadNotificationCount());
         }
     },
-    getOtpPhone(data) {
+    getOtpPhone(otp) {
         return function (dispatch, getState) {
-            if (data) {
-                dispatch(_getOtpPhone(data))
+            if (otp) {
+                dispatch(_getOtpPhone(otp))
             }
         }
     },
