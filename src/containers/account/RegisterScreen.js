@@ -112,8 +112,8 @@ class RegisterScreen extends Component {
     if (!this.form.isValid()) {
       return;
     }
-    let dateBirth = this.state.dob.format('yyyy-MM-dd HH:mm:ss')
-    let gender = this.state.gender
+    let dateBirth = null
+    let gender = null
     let name = this.state.fullname
     let phone = this.state.phone
     let password = this.state.password
@@ -279,43 +279,6 @@ class RegisterScreen extends Component {
                   }}
                   autoCapitalize={"none"}
                 />
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: "center",
-                    marginTop: 25
-                  }}
-                >
-                  <Text style={[{ fontSize: 16, fontWeight: '200' }]}>Giới tính</Text>
-                  <View style={{ flexDirection: "row", justifyContent: 'flex-end', flex: 1 }}>
-                    <TouchableOpacity
-                      onPress={() => {
-                        this.setState({ gender: 1, changed: true });
-                      }}
-                      style={{ padding: 10, flexDirection: "row" }}
-                    >
-                      <View style={{ width: 19, height: 19, borderWidth: 2, borderColor: '#02C39A', borderRadius: 10, alignItems: 'center', justifyContent: 'center' }}>
-                        {
-                          this.state.gender == 1 && <View style={{ width: 12, height: 12, backgroundColor: '#02C39A', borderRadius: 6 }}></View>
-                        }
-                      </View>
-                      <Text style={{ marginLeft: 5 }}>Nam</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => {
-                        this.setState({ gender: 0, changed: true });
-                      }}
-                      style={{ padding: 10, flexDirection: "row" }}
-                    >
-                      <View style={{ width: 19, height: 19, borderWidth: 2, borderColor: '#02C39A', borderRadius: 10, alignItems: 'center', justifyContent: 'center' }}>
-                        {
-                          this.state.gender == 0 && <View style={{ width: 12, height: 12, backgroundColor: '#02C39A', borderRadius: 6 }}></View>
-                        }
-                      </View>
-                      <Text style={{ marginLeft: 5 }}>Nữ</Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
                 <TextField
                   getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
                     keyboardType='numeric'
@@ -339,52 +302,6 @@ class RegisterScreen extends Component {
                   placeholder={constants.input_password}
                   autoCapitalize={"none"}
                 />
-                <Field
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: "center",
-                    position: 'relative'
-                  }}
-                >
-
-                  <TextField
-                    value={this.state.date || ""}
-                    onPress={this.showDatePicker.bind(this)}
-                    dateFormat={"dd/MM/yyyy"}
-                    splitDate={"/"}
-                    editable={false}
-                    getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-                      editable={false}
-                      placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.dob}
-                      onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
-                    onChangeText={s => {
-                      this.setState({ date: s });
-                    }}
-                    errorStyle={styles.errorStyle}
-                    validate={{
-                      rules: {
-                        date: true,
-                        required: true,
-                        max: maxDate,
-                        min: minDate
-                      },
-                      messages: {
-                        date: "Nhập đúng định dạng ngày",
-                        required: 'Ngày sinh không được bỏ trống',
-                        max: "Không cho phép chọn dưới 15 tuổi",
-                        min: "Không cho phép chọn trên 150 tuổi"
-                      }
-                    }}
-                    returnKeyType={"next"}
-                    autoCapitalize={"none"}
-                    autoCorrect={false}
-                    style={{
-                      flex: 1
-                    }}
-                  />
-                  <ScaleImage source={require("@images/new/calendar.png")} width={20} style={{ position: 'absolute', right: 5, top: 45 }} />
-                </Field>
-
                 <Field style={styles.inputPass}>
                   <TextField
                     getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
@@ -447,23 +364,6 @@ class RegisterScreen extends Component {
               <View style={{ height: 50 }}></View>
             </View>
           </ScrollView>
-
-          <DateTimePicker
-            isVisible={this.state.toggelDateTimePickerVisible}
-            onConfirm={newDate => {
-              this.setState({ dob: newDate, date: newDate.format("dd/MM/yyyy"), toggelDateTimePickerVisible: false }, () => {
-              });
-            }}
-            onCancel={() => {
-              this.setState({ toggelDateTimePickerVisible: false })
-            }}
-            date={new Date()}
-            minimumDate={minDate}
-            maximumDate={new Date()}
-            cancelTextIOS={"Hủy bỏ"}
-            confirmTextIOS={"Xác nhận"}
-            date={this.state.dob || new Date()}
-          />
         </ImageBackground>
       )
     );
