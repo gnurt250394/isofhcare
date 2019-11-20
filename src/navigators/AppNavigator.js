@@ -39,6 +39,7 @@ import EnterPasswordScreen from "@containers/account/EnterPasswordScreen";
 import ForgotPasswordScreen from "@containers/account/ForgotPasswordScreen";
 import ChangePasswordScreen from "@containers/account/ChangePasswordScreen";
 import OtpPhoneNumberScreen from "@containers/account/OtpPhoneNumberScreen";
+import InputPhoneScreen from "@containers/account/InputPhoneScreen";
 
 
 
@@ -291,6 +292,7 @@ const RootNavigator = createStackNavigator(
     enterPassword: { screen: EnterPasswordScreen },
     register: { screen: RegisterScreen },
     otpPhoneNumber: { screen: OtpPhoneNumberScreen },
+    inputPhone: { screen: InputPhoneScreen },
     //
     listQuestion: ListQuestionScreen,
     createQuestionStep1: { screen: CreateQuestionStep1Screen },

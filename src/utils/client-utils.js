@@ -101,7 +101,7 @@ module.exports = {
       {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",
-        Authorization: this.auth,
+        Authorization: this.auth ? this.auth : '',
         MobileMode: "user",
         deviceType: "mobile",
         deviceOs: Platform.OS + " " + deviceOS,
@@ -124,10 +124,10 @@ module.exports = {
       });
   },
   requestApi(methodType, url, body, funRes) {
-    this.requestApiWithAuthorization(methodType, url, body, this.auth, funRes);
+    this.requestApiWithAuthorization(methodType, url, body, this.auth ? this.auth : '', funRes);
   },
   requestApiWithHeaderBear(methodType, url, body, funRes) {
-    this.requestApiWithAuthorizationBear(methodType, url, body, this.auth, funRes);
+    this.requestApiWithAuthorizationBear(methodType, url, body, this.auth ? this.auth : '', funRes);
   },
   requestApiWithAuthorizationBear(methodType, url, body, auth, funRes) {
     var dataBody = "";
@@ -200,7 +200,7 @@ module.exports = {
     let headers = {
       Accept: "application/json",
       "Content-Type": "application/json",
-      Authorization: this.auth,
+      Authorization: this.auth ? this.auth : '',
       MobileMode: "user",
       deviceType: "mobile",
       deviceOs: Platform.OS + " " + deviceOS,
