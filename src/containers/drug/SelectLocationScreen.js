@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, StyleSheet,Dimensions } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Dimensions } from 'react-native';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 const devices_width = Dimensions.get('window').width
+import drugProvider from '@data-access/drug-provider'
+import { connect } from "react-redux";
 
-export default class SelectLocationScreen extends Component {
+class SelectLocationScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -29,6 +31,21 @@ export default class SelectLocationScreen extends Component {
                 }
             ]
         };
+    }
+    componentDidMount() {
+        this.onGetLocation()
+    }
+    onGetLocation = () => {
+        let id = this.props.userApp.currentUser.id
+        let page = 1
+        let size = 50
+        if (id) {
+            drugProvider.getLocation(id, page, size).then(res => {
+                console.log(res, 'location')
+            }).catch(e => {
+                console.log(e)
+            })
+        }
     }
     onAdd = () => {
         this.props.navigation.navigate('inputLocation')
@@ -137,3 +154,10 @@ const styles = StyleSheet.create({
     }
 
 })
+function mapStateToProps(state) {
+    return {
+        userApp: state.userApp,
+        booking: state.booking
+    };
+}
+export default connect(mapStateToProps)(SelectLocationScreen);
