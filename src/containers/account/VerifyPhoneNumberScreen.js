@@ -8,6 +8,8 @@ import profileProvider from '@data-access/profile-provider'
 import connectionUtils from "@utils/connection-utils";
 import HeaderBar from '@components/account/HeaderBar'
 import InputOtp from '@components/account/InputOtp'
+import redux from "@redux-store";
+
 const DEVICE_HEIGHT = Dimensions.get("window").height;
 //props: verify
 //case 1 : regiter
@@ -20,6 +22,7 @@ class VerifyPhoneNumberScreen extends React.Component {
         let phone = this.props.navigation.state.params && this.props.navigation.state.params.phone ? this.props.navigation.state.params.phone : null
         let id = this.props.navigation.state.params && this.props.navigation.state.params.id ? this.props.navigation.state.params.id : null
         let verify = this.props.navigation.state.params && this.props.navigation.state.params.verify ? this.props.navigation.state.params.verify : null
+
         this.state = {
             seconds: 90,
             txErr: '',
@@ -31,6 +34,7 @@ class VerifyPhoneNumberScreen extends React.Component {
         }
     }
     componentWillReceiveProps(nextProps) {
+
         if (nextProps.otpPhone && nextProps.otpPhone.otp) {
             this.onCheckOtp(nextProps.otpPhone.otp)
         }
@@ -61,13 +65,13 @@ class VerifyPhoneNumberScreen extends React.Component {
     // }
 
     // _handleAppStateChange = (nextAppState) => {
-    //     console.log('nextAppState: ', nextAppState);
+    //     
     //     if (
     //         nextAppState === 'background'
     //     ) {
     //         this.a = setInterval(() => {
     //             let { seconds } = this.state
-    //             console.log(seconds, '22222222')
+    //             
     //             if (seconds > 0)
     //                 this.setState(preState => {
     //                     return {
@@ -195,6 +199,7 @@ class VerifyPhoneNumberScreen extends React.Component {
 
     // }
     onCheckOtp = (text) => {
+
         // let text1 = data && (data.text1 || data.text1 == 0) ? data.text1.toString() : ''
         // let text2 = data && (data.text2 || data.text2 == 0) ? data.text2.toString() : ''
         // let text3 = data && (data.text3 || data.text3 == 0) ? data.text3.toString() : ''
@@ -208,6 +213,7 @@ class VerifyPhoneNumberScreen extends React.Component {
                 .then(s => {
                     switch (this.state.verify) {
                         case 1:
+
                             userProvider.checkOtpPhone(this.state.id, text).then(res => {
                                 switch (res.code) {
                                     case 0: {
@@ -235,8 +241,10 @@ class VerifyPhoneNumberScreen extends React.Component {
                             })
                             break
                         case 2:
+
                             userProvider.confirmCode(this.state.phone, text, (s, e) => {
                                 if (s) {
+
                                     switch (s.code) {
                                         case 0:
                                             snackbar.show(constants.msg.user.confirm_code_success, "success");
@@ -262,12 +270,14 @@ class VerifyPhoneNumberScreen extends React.Component {
                             });
                             break
                         case 3:
+
                             let data = {
                                 'otp': text
                             }
                             if (data && this.state.id) {
                                 profileProvider.checkOtp(data, this.state.id).then(res => {
                                     if (res.code == 0) {
+
                                         this.props.navigation.replace('shareDataProfile', { id: res.data.record.id })
                                         return;
                                     }
@@ -296,6 +306,10 @@ class VerifyPhoneNumberScreen extends React.Component {
             return
         }
 
+    }
+    componentWillUnmount() {
+        let otp = ''
+        this.props.dispatch(redux.getOtpPhone(otp));
     }
     render() {
         return (
@@ -349,7 +363,7 @@ class VerifyPhoneNumberScreen extends React.Component {
                                     autoCorrect={false}
                                 />
                             </Form> */}
-                            <InputOtp  style={styles.input}></InputOtp>
+                            <InputOtp style={styles.input}></InputOtp>
                             {/* <TextInput
                                 style={styles.input}
                                 onChangeText={(text) => {

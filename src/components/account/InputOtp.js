@@ -2,58 +2,61 @@ import React, { PureComponent } from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 import redux from "@redux-store";
 import { connect } from "react-redux";
-var data = {}
 class InputOtp extends PureComponent {
     constructor(props) {
         super(props);
+        
+        this.data = {}
     }
     onChangeText1 = (text) => {
         text.length && this.input2.focus()
-        data.text1 = text
+        this.data.text1 = text
         this.onPassData()
     }
     onChangeText2 = (text) => {
         text.length && this.input3.focus()
-        data.text2 = text
+        this.data.text2 = text
         this.onPassData()
 
     }
     onChangeText3 = (text) => {
         text.length && this.input4.focus()
-        data.text3 = text
+        this.data.text3 = text
         this.onPassData()
     }
     onChangeText4 = (text) => {
         text.length && this.input5.focus()
-        data.text4 = text
+        this.data.text4 = text
         this.onPassData()
 
     }
     onChangeText5 = (text) => {
         text.length && this.input6.focus()
-        data.text5 = text
+        this.data.text5 = text
         this.onPassData()
 
     }
     onChangeText6 = (text) => {
-        data.text6 = text
+        this.data.text6 = text
         this.onPassData()
 
     }
     onPassData = () => {
-        let text1 = data && (data.text1 || data.text1 == 0) ? data.text1.toString() : ''
-        let text2 = data && (data.text2 || data.text2 == 0) ? data.text2.toString() : ''
-        let text3 = data && (data.text3 || data.text3 == 0) ? data.text3.toString() : ''
-        let text4 = data && (data.text4 || data.text4 == 0) ? data.text4.toString() : ''
-        let text5 = data && (data.text5 || data.text5 == 0) ? data.text5.toString() : ''
-        let text6 = data && (data.text6 || data.text6 == 0) ? data.text6.toString() : ''
+        let text1 = this.data && (this.data.text1 || this.data.text1 == 0) ? this.data.text1.toString() : ''
+        let text2 = this.data && (this.data.text2 || this.data.text2 == 0) ? this.data.text2.toString() : ''
+        let text3 = this.data && (this.data.text3 || this.data.text3 == 0) ? this.data.text3.toString() : ''
+        let text4 = this.data && (this.data.text4 || this.data.text4 == 0) ? this.data.text4.toString() : ''
+        let text5 = this.data && (this.data.text5 || this.data.text5 == 0) ? this.data.text5.toString() : ''
+        let text6 = this.data && (this.data.text6 || this.data.text6 == 0) ? this.data.text6.toString() : ''
+        
         let otp = text1.concat(text2).concat(text3).concat(text4).concat(text5).concat(text6)
         if (otp.length == 6) {
+            
             this.props.dispatch(redux.getOtpPhone(otp));
         }
     }
     // onChangeText = (text, value) => {
-    //     console.log('text: ', text);
+    //     
     //     var data = []
     //     if (text.length == 1) {
     //         if (value == 1) {
