@@ -22,6 +22,7 @@ class VerifyPhoneNumberScreen extends React.Component {
         let phone = this.props.navigation.state.params && this.props.navigation.state.params.phone ? this.props.navigation.state.params.phone : null
         let id = this.props.navigation.state.params && this.props.navigation.state.params.id ? this.props.navigation.state.params.id : null
         this.nextScreen = this.props.navigation.getParam("nextScreen", null);
+        console.log('this.nextScreen: ', this.nextScreen);
         this.state = {
             seconds: 90,
             txErr: '',
@@ -260,7 +261,7 @@ class VerifyPhoneNumberScreen extends React.Component {
                                             this.props.navigation.replace("resetPassword", {
                                                 user: s.data.user,
                                                 id: s.data.user.id,
-                                                // nextScreen: this.nextScreen
+                                                nextScreen: this.nextScreen
                                             });
                                         }
                                         break;
