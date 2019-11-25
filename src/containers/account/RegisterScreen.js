@@ -38,6 +38,7 @@ class RegisterScreen extends Component {
     let user
     //  = this.props.navigation.getParam("user", null);
     this.nextScreen = this.props.navigation.getParam("nextScreen", null);
+    console.log('this.nextScreen: ', this.nextScreen);
     // var phone = this.props.navigation.getParam("phone", null);
     // var token = this.props.navigation.getParam("token", null);
     let phone = this.props.navigation.state.params && this.props.navigation.state.params.phone ? this.props.navigation.state.params.phone : ''
@@ -129,7 +130,7 @@ class RegisterScreen extends Component {
               isLoading: false,
               disabled: false
             })
-            this.props.navigation.navigate("verifyPhone", {
+            this.props.navigation.replace("verifyPhone", {
               id: res.data.user.id,
               phone: phone,
               verify: 1,
@@ -141,7 +142,7 @@ class RegisterScreen extends Component {
               isLoading: false,
               disabled: false
             })
-            this.props.navigation.navigate("verifyPhone", {
+            this.props.navigation.replace("verifyPhone", {
               id: res.message,
               phone: phone,
               verify: 1,
