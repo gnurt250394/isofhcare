@@ -981,9 +981,10 @@ module.exports = {
       get_voucher: isofhcare_service + 'voucher'
     },
     drug:{
-      create_drug : isofhcare_service + 'orders/v1',
-      get_location:isofhcare_service + 'orders/v1/owner',
-      add_location:isofhcare_service + 'orders/v1/address'
+      create_drug : isofhcare_service + 'orders/v1/prescriptions',
+      get_location:isofhcare_service + 'orders/v1/addresses/search',
+      add_location:isofhcare_service + 'orders/v1/address',
+      get_list_menu_drug:isofhcare_service + 'isofhcare/orders/v1',
     }
   }
 };

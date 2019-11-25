@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     txName:{
         fontSize:14,
         fontWeight:'bold',
-        color:'#000',
+        color:'#00B090',
         textAlign:'left',
         maxWidth:'80%'
     },

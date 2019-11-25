@@ -19,6 +19,7 @@ import dataCacheProvider from '@data-access/datacache-provider';
 import Field from "mainam-react-native-form-validate/Field";
 import ScaleImage from 'mainam-react-native-scaleimage';
 import { FlatList } from "react-native-gesture-handler";
+import drugProvider from '@data-access/drug-provider'
 const devices_width = Dimensions.get('window').width
 const padding = Platform.select({
     ios: 7,
@@ -47,6 +48,11 @@ class drugScreen extends Component {
                 }
             ]
         }
+    }
+    getListDrug = () =>{
+        drugProvider.getListMenu(1,50).then(res => {
+            console.log(res,'list menu drug')
+        })
     }
     renderStatus = (item) => {
         switch (Number(item.status)) {

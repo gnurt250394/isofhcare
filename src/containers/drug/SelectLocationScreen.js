@@ -46,9 +46,18 @@ class SelectLocationScreen extends Component {
                 console.log(e)
             })
         }
+        ///
+
     }
     onAdd = () => {
         this.props.navigation.navigate('inputLocation')
+    }
+    selectLocation(data) {
+        let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
+        if (callback) {
+            callback(data);
+            this.props.navigation.pop();
+        }
     }
     renderStatus = (item) => {
         switch (item.status) {
@@ -62,12 +71,12 @@ class SelectLocationScreen extends Component {
     }
     renderItem = ({ item, index }) => {
         return (
-            <View style={styles.viewItem}>
+            <TouchableOpacity onPress={this.selectLocation} style={styles.viewItem}>
                 <View style={styles.viewName}><Text style={styles.txName}>{item.name}</Text><TouchableOpacity style={styles.btnDot}><ScaledImage height={15} source={require('@images/new/drug/ic_dot.png')}></ScaledImage></TouchableOpacity></View>
                 <Text style={styles.txPhone}>{item.phone}</Text>
                 <Text style={styles.txLocation}>{item.location}</Text>
                 {this.renderStatus(item)}
-            </View>
+            </TouchableOpacity>
         )
     }
     renderFooter = () => {
@@ -157,7 +166,6 @@ const styles = StyleSheet.create({
 function mapStateToProps(state) {
     return {
         userApp: state.userApp,
-        booking: state.booking
     };
 }
 export default connect(mapStateToProps)(SelectLocationScreen);

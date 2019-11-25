@@ -7,6 +7,8 @@ import ImageLoad from 'mainam-react-native-image-loader';
 import ImagePicker from 'mainam-react-native-select-image';
 import imageProvider from '@data-access/image-provider';
 import connectionUtils from '@utils/connection-utils';
+import snackbar from '@utils/snackbar-utils';
+import constants from '@resources/strings';
 
 export default class DrugScan extends Component {
     constructor(props) {
@@ -78,6 +80,7 @@ export default class DrugScan extends Component {
                         }
                     })
                     this.setState({ imageUris: [...imageUris] });
+                    console.log('imageUris: ', [...imageUris]);
                 });
 
             }
@@ -90,6 +93,7 @@ export default class DrugScan extends Component {
         imageUris.splice(index, 1);
         this.setState({ imageUris });
     }
+   
     render() {
         return (
             <View style={styles.container}>
@@ -119,7 +123,7 @@ export default class DrugScan extends Component {
                         </View>)
                     }
                 </View>
-                <InsertInfoDrug></InsertInfoDrug>
+                <InsertInfoDrug imageUris = {this.state.imageUris} ></InsertInfoDrug>
                 <ImagePicker ref={ref => this.imagePicker = ref} />
             </View>
         );
