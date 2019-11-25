@@ -79,14 +79,14 @@ class CreateBookingDoctorSuccessScreen extends Component {
                                 <Text style={styles.col1}>{constants.booking.code}</Text>
                                 <TouchableOpacity onPress={this.onQrClick} style={styles.buttonQRCode}>
                                     <QRCode
-                                        value={booking.codeBook || ""}
+                                        value={booking.reference || ""}
                                         logo={require('@images/new/logo.png')}
                                         logoSize={20}
                                         size={100}
                                         logoBackgroundColor='transparent'
                                     />
                                 </TouchableOpacity>
-                                <Text style={styles.txtCodeBooking}>{constants.booking.code_booking} {booking.codeBook}</Text>
+                                <Text style={styles.txtCodeBooking}>{constants.booking.code_booking} {booking.reference}</Text>
                             </View>
                         </View>
                         <View style={styles.groupBody}>
@@ -184,9 +184,9 @@ class CreateBookingDoctorSuccessScreen extends Component {
 
                                         <View style={styles.bankInfo}>
                                             <View style={styles.viewBankNumber}>
-                                                <Text style={styles.txNumber}>{'DK ' + booking.codeBook}</Text>
+                                                <Text style={styles.txNumber}>{'DK ' + booking.reference}</Text>
                                             </View>
-                                            <TouchableOpacity onPress={this.onCopyContents(booking.codeBook)} style={styles.btnCopy}>
+                                            <TouchableOpacity onPress={this.onCopyContents(booking.reference)} style={styles.btnCopy}>
                                                 <Text style={styles.txCopy}>{constants.booking.guide.copy}</Text>
                                             </TouchableOpacity>
                                         </View></View>
@@ -218,7 +218,7 @@ class CreateBookingDoctorSuccessScreen extends Component {
                     backdropTransitionOutTiming={1000}
                 >
                     <QRCode
-                        value={booking.codeBook || ""}
+                        value={booking.reference || ""}
                         logo={require('@images/new/logo.png')}
                         logoSize={40}
                         size={250}

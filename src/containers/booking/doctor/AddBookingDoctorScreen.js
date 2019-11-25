@@ -59,6 +59,7 @@ class AddBookingDoctorScreen extends Component {
         // AppState.addEventListener('change', this._handleAppStateChange);
         dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, (s, e) => {
             if (s) {
+                
                 this.setState({ profile: s })
             } else {
                 medicalRecordProvider.getByUser(this.props.userApp.currentUser.id, 1, 100).then(s => {
@@ -251,7 +252,7 @@ class AddBookingDoctorScreen extends Component {
                 return "CASH";
             case 3:
             case 5:
-                return "PAYOO";
+            // return "PAYOO";
             case 4:
                 return "PAYOO";
             case 6:
@@ -602,7 +603,11 @@ class AddBookingDoctorScreen extends Component {
     createBooking() {
         let { paymentMethod } = this.state
         let date = new Date(this.state.schedule.key).format("yyyy-MM-dd")
-        let { reason, voucher, detailSchedule, profile, schedule } = this.state
+        let { reason, voucher, detailSchedule, profile, schedule, profileDoctor } = this.state
+        
+        
+        
+        
         let patitent = profile && profile.medicalRecords
         connectionUtils.isConnected().then(s => {
             this.setState({ isLoading: true }, () => {
@@ -611,16 +616,18 @@ class AddBookingDoctorScreen extends Component {
                     reason,
                     voucher,
                     detailSchedule.doctor,
-                    detailSchedule.hospital,
+                    profileDoctor.hospital,
                     detailSchedule.medicalService,
                     patitent,
                     this.getPaymentMethod(),
                     detailSchedule.id,
-                    schedule.label
+                    schedule.label,
+                    detailSchedule.room
                 ).then(s => {
                     this.setState({ isLoading: false }, () => {
-                        if (s && s.codeBook) {
+                        if (s && s.reference) {
                             s.payment = this.state.paymentMethod
+                            snackbar.show('Đặt khám thành công', 'success')
                             this.props.navigation.navigate("homeTab", {
                                 navigate: {
                                     screen: "createBookingDoctorSuccess",
@@ -635,8 +642,12 @@ class AddBookingDoctorScreen extends Component {
                     })
                     // 
                 }).catch(e => {
-                    this.setState({ isLoading: false }, () => {
-                    });
+                    this.setState({ isLoading: false });
+                    if (e.response && e.response.data.error == 'Locked') {
+                        snackbar.show(e.response.data.message, 'danger')
+                    } else {
+                        snackbar.show('Đặt khám không thành công', 'danger')
+                    }
                 });
 
             });
@@ -701,7 +712,8 @@ class AddBookingDoctorScreen extends Component {
         // }, 0)
 
         // return (priceFinal - priceVoucher).formatPrice()
-        return services.monetaryAmount.value.formatPrice()
+        let price = services && services.monetaryAmount && services.monetaryAmount.value ? services.monetaryAmount.value.formatPrice() : 0
+        return price
 
     }
     componentWillReceiveProps = (props) => {
@@ -749,7 +761,7 @@ class AddBookingDoctorScreen extends Component {
                         <ScaleImage style={styles.image} height={13} source={require("@images/new/booking/ic_specialist.png")} />
                         <View style={styles.groupService}>
                             <Text >Dịch vụ</Text>
-                            {hospital.name ?
+                            {hospital && hospital.name ?
                                 <View style={styles.containerPrice}>
                                     <Text style={styles.txtService} >{hospital.name}</Text>
                                     <Text style={styles.txtPrice}>{hospital.monetaryAmount.value.formatPrice()}đ </Text>
@@ -829,7 +841,7 @@ class AddBookingDoctorScreen extends Component {
                             onPress={this.onSelectProfile}
                             button={true}
                             source={require("@images/new/booking/ic_people.png")}
-                            name={profile ? profile.medicalRecords.name : null}
+                            name={profile && profile.medicalRecords ? profile.medicalRecords.name : null}
                             subName={constants.booking.select_profile}
                             label={'Người tới khám'}
                         />
@@ -842,7 +854,7 @@ class AddBookingDoctorScreen extends Component {
                         />
                         <ViewHeader
                             source={require("@images/new/booking/ic_placeholder.png")}
-                            name={detailSchedule && detailSchedule.hospital.name}
+                            name={profileDoctor && profileDoctor.hospital ? profileDoctor.hospital.name : null}
                             subName={''}
                             label={'Cơ sở y tế'}
                         />

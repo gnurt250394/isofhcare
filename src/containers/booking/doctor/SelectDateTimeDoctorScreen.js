@@ -77,7 +77,7 @@ class SelectDateTimeDoctorScreen extends Component {
 
                 if (date.format("HH:mm") < "11:30" || date.format("HH:mm") >= "13:30") {
                     let disabled = true;
-                    let id ;
+                    let id;
                     for (let i = 0; i <= listSchedules.length; i++) {
                         if (listSchedules[i] && listSchedules[i].workTime.dayOfTheWeek == dateOfWeek) {
                             if (listSchedules[i].workTime.start <= date.format('HH:mm') && listSchedules[i].workTime.end >= date.format('HH:mm')) {
@@ -207,51 +207,63 @@ class SelectDateTimeDoctorScreen extends Component {
 
     }
     generateSchedule(month) {
-        let firstDay = month.getFirstDateOfMonth();
+        try {
+            let firstDay = month.getFirstDateOfMonth();
 
-        let lastDay = month.getLastDateOfMonth();
+            let lastDay = month.getLastDateOfMonth();
 
-        let obj = {};
-        while (firstDay <= lastDay) {
-            let key = firstDay.format("yyyy-MM-dd");;
-            obj[key] = {}
-            if (new Date(key) <= new Date()
-                // || firstDay.getDay() == 6 
-                || firstDay.getDay() == 0) {
-                obj[key].disabled = true;
-                obj[key].disableTouchEvent = true;
-            } else {
-                obj[key].noSchedule = true;
-                obj[key].schedules = [];
-                obj[key].marked = true;
-                obj[key].color = 'green';
-                obj[key].selectedColor = '#3161AD';
+            let obj = {};
+            while (firstDay <= lastDay) {
+                let key = firstDay.format("yyyy-MM-dd");;
+
+                obj[key] = {}
+                if (new Date(key) <= new Date()
+                    // || firstDay.getDay() == 6 
+                    || firstDay.getDay() == 0) {
+                    obj[key].disabled = true;
+                    obj[key].disableTouchEvent = true;
+                } else {
+                    obj[key].noSchedule = true;
+                    obj[key].schedules = [];
+                    obj[key].marked = true;
+                    obj[key].color = 'green';
+                    obj[key].selectedColor = '#3161AD';
+                }
+                // return;
+                firstDay.setDate(firstDay.getDate() + 1)
             }
-            // return;
-            firstDay.setDate(firstDay.getDate() + 1)
-        }
-        let selected = null;
-        for (let key in obj) {
-            if (obj[key].disabled)
-                continue;
-            let keyDate = new Date(key);
-            if (keyDate > new Date() && (selected == null || keyDate < selected)) {
-                selected = keyDate;
+            let selected = null;
+            for (let key in obj) {
+                if (obj[key].disabled)
+                    continue;
+                let keyDate = new Date(key);
+                let dayOfWeek = this.getDayOfWeek(key)
+                if (!this.state.profileDoctor.schedules) {
+                    snackbar.show('Bác sĩ hiện tại không có lịch làm việc trong thời gian này', 'danger')
+                    return
+                }
+                if ((this.state.profileDoctor && this.state.profileDoctor.schedules
+                    && dayOfWeek == this.state.profileDoctor.schedules[0].workTime.dayOfTheWeek)) {
+                    selected = keyDate;
+                }
             }
-        }
-        if (selected) {
-            (obj[selected.format("yyyy-MM-dd")] || {}).selected = true;
+            if (selected) {
+                (obj[selected.format("yyyy-MM-dd")] || {}).selected = true;
+            }
+
+            this.setState({
+                dateString: selected ? selected.format("yyyy-MM-dd") : null,
+                bookingDate: selected,
+                schedules: obj
+            }, () => {
+                if (this.state.dateString)
+                    this.selectDay(this.state.dateString);
+            })
+            return obj;
+        } catch (error) {
+
         }
 
-        this.setState({
-            dateString: selected ? selected.format("yyyy-MM-dd") : null,
-            bookingDate: selected,
-            schedules: obj
-        }, () => {
-            if (this.state.dateString)
-                this.selectDay(this.state.dateString);
-        })
-        return obj;
     }
     groupSchedule(schedules) {
         let obj = {};
@@ -348,8 +360,8 @@ class SelectDateTimeDoctorScreen extends Component {
             // callback(this.state.bookingDate, this.state.schedule, listFinal);
             //     this.props.navigation.pop();
             // }
-            console.log('this.state.schedule.id: ', this.state.schedule.id);
-            console.log('this.state.bookingDate,: ', this.state.bookingDate);
+
+
             this.setState({ isLoading: true }, () => {
                 bookingDoctorProvider.get_detail_schedules(this.state.schedule.id).then(res => {
                     this.setState({ isLoading: false })

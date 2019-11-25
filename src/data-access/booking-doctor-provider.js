@@ -1,7 +1,7 @@
 import client from "@utils/client-utils";
 import string from "mainam-react-native-string-utils";
 import constants from "../res/strings";
-const URL = 'http://10.0.50.111:8080/'
+const URL = 'http://10.0.0.98:8080/'
 const URL2 = 'http://10.0.50.111:8082/'
 module.exports = {
     getListDoctor(page, size) {
@@ -82,14 +82,21 @@ module.exports = {
      * @param {object} room 
      */
     create(date, description, discount, doctor, hospitals, items, patient, payment, scheduleId, time, room) {
+        console.log('hospitals: ', hospitals);
         return new Promise((resolve, reject) => {
-            let hospital = { id: hospitals.id, name: hospitals.name, address: hospitals.contact.address }
-            let services = [{ id: items.id, name: items.name, price: items.monetaryAmount.value }]
+            let doctors = { id: doctor.id, name: doctor.name }
+            let hospital = { id: hospitals && hospitals.id || '', name: hospitals && hospitals.name || '', address: hospitals && hospitals.contact.address || '' }
+            let services = [{ id: items.id || '', name: items.name || '', price: items.monetaryAmount.value || '' }]
             room = {
-                "id": 1,
-                "name": "P301"
+                "id": room.id,
+                "name": room.name
             },
-                console.log('room: ', room);
+                patient = {
+                    id: patient.id,
+                    name: patient.name,
+                    phone: patient.phone
+                }
+            //     console.log('room: ', room);
             client.requestApi(
                 "post",
                 URL2 +
@@ -102,7 +109,7 @@ module.exports = {
                     // mã voucher
                     discount: discount ? discount : 0,
                     // thông tin bác sỹ 
-                    doctor,
+                    doctor: doctors,
                     // thông tin bệnh viện đặt khám 
                     hospital,
                     // danh sách dịch vụ

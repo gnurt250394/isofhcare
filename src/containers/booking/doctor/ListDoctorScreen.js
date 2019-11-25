@@ -11,90 +11,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import ActionBar from '@components/Actionbar';
 import constants from '@resources/strings'
 import bookingDoctorProvider from '@data-access/booking-doctor-provider'
-const data = [
-    {
-        "id": 3,
-        "name": "Lê Văn A",
-        "imagePath": "/tb.image",
-        "hospital": {
-            "id": 1,
-            "name": "string",
-            "imagePath": "string"
-        },
-        "specializations": [
-            {
-                "id": 1,
-                "name": "Khoa Nội",
-                "ordinalNumbers": 6
-            }
-        ],
-        "academicDegree": "ThS",
-        "telephone": "0937812343",
-        "experiences": "string",
-        "overview": "string",
-        "numberOfTurnCheckup": 0,
-        "average": 0.0,
-        "appointments": 0
-    },
-    {
-        "id": 6,
-        "name": "Lê Văn B",
-        "imagePath": "/tb.image",
-        "hospital": {
-            "id": 1,
-            "name": "Bệnh viện K",
-            "imagePath": "string"
-        },
-        "specializations": [
-            {
-                "id": 31,
-                "name": "Y học cổ truyền",
-                "ordinalNumbers": 31
-            },
-            {
-                "id": 1,
-                "name": "Khoa Nội",
-                "ordinalNumbers": 6
-            }
-        ],
-        "academicDegree": "TS",
-        "telephone": "0979654845",
-        "experiences": "3 năm",
-        "overview": "string",
-        "numberOfTurnCheckup": 0,
-        "average": 0.0,
-        "appointments": 0
-    },
-    {
-        "id": 12,
-        "name": "bsi Hoa súng",
-        "imagePath": "/tb.image",
-        "hospital": {
-            "id": 1,
-            "name": "Bệnh viện E",
-            "imagePath": "string"
-        },
-        "specializations": [
-            {
-                "id": 26,
-                "name": "Xét nghiệm khác",
-                "ordinalNumbers": 26
-            },
-            {
-                "id": 27,
-                "name": "Chụp X quang",
-                "ordinalNumbers": 27
-            }
-        ],
-        "academicDegree": "ThS",
-        "telephone": "0354689613",
-        "experiences": "haha",
-        "overview": "hihi",
-        "numberOfTurnCheckup": 0,
-        "average": 0.0,
-        "appointments": 0
-    }
-]
+
 const { width, height } = Dimensions.get('window')
 const TYPE = {
     SEARCH: 'SEARCH',
@@ -135,7 +52,7 @@ class ListDoctorScreen extends Component {
             if (res && res.length > 0) {
                 this.formatData(res)
             } else {
-                this.formatData(data)
+                this.formatData([])
             }
         }).catch(err => {
             this.formatData([])
@@ -300,7 +217,8 @@ class ListDoctorScreen extends Component {
         return (
             <Animated.View style={[styles.containerHeader, { transform: [{ translateY: this.header }] }]}
                 onLayout={(event) => {
-                    this.height = event.nativeEvent.layout.height
+                    this.setState({height:event.nativeEvent.layout.height})
+                    // this.height = event.nativeEvent.layout.height
                 }}
             >
                 <ActionBar
@@ -346,19 +264,24 @@ class ListDoctorScreen extends Component {
                     )}
                 >
                     <View style={[styles.backgroundHeader,]}></View>
-                    <View style={{ flex: 1, paddingTop: this.height }}>
+                    {
+                        this.state.height ?
+                            <View style={{ flex: 1, marginTop: this.state.height }}>
 
-                        <FlatList
-                            data={data}
-                            renderItem={this.renderItem}
-                            keyExtractor={this.keyExtractor}
-                            ListEmptyComponent={this.listEmpty}
-                            onEndReached={this.loadMore}
-                            onEndReachedThreshold={0.6}
-                            onRefresh={this.onRefress}
-                            refreshing={refreshing}
-                        />
-                    </View>
+                                <FlatList
+                                    data={data}
+                                    renderItem={this.renderItem}
+                                    // style={{paddingTop:height/4}}
+                                    keyExtractor={this.keyExtractor}
+                                    ListEmptyComponent={this.listEmpty}
+                                    onEndReached={this.loadMore}
+                                    onEndReachedThreshold={0.6}
+                                    onRefresh={this.onRefress}
+                                    refreshing={refreshing}
+                                />
+                            </View>
+                            : null
+                    }
                 </Animated.ScrollView>
             </ActivityPanel >
         );
@@ -398,7 +321,7 @@ const styles = StyleSheet.create({
     },
     backgroundHeader: {
         backgroundColor: '#02C39A',
-        height: '15%',
+        height: height / 4,
         position: 'absolute',
         left: 0,
         top: 0,
