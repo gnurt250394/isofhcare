@@ -3,7 +3,7 @@ import ActivityPanel from "@components/ActivityPanel";
 import {
 	View,
 	ScrollView,
-	KeyboardAvoidingView,
+	Linking,
 	StyleSheet,
 	Text,
 	TouchableOpacity,
@@ -37,6 +37,7 @@ class LoginScreen extends Component {
 			password: "",
 			secureTextEntry: true,
 			requirePass: true,
+			disabled: false
 		};
 		this.nextScreen = this.props.navigation.getParam("nextScreen", null);
 
@@ -61,7 +62,8 @@ class LoginScreen extends Component {
 
 	register() {
 		this.props.navigation.navigate("register", {
-			phone: this.state.phone
+			phone: this.state.phone,
+			nextScreen: this.nextScreen
 		})
 		// return;
 		// let verify = async () => {
@@ -138,9 +140,9 @@ class LoginScreen extends Component {
 		}
 
 		connectionUtils.isConnected().then(s => {
-			this.setState({ isLoading: true }, () => {
+			this.setState({ isLoading: true, disabled: false }, () => {
 				userProvider.login(this.state.phone.trim(), this.state.password).then(s => {
-					this.setState({ isLoading: false });
+					this.setState({ isLoading: false, disabled: false });
 					switch (s.code) {
 						case 0:
 							var user = s.data.user;
@@ -173,64 +175,66 @@ class LoginScreen extends Component {
 							snackbar.show(constants.msg.error_occur, "danger");
 					}
 				}).catch(e => {
-					this.setState({ isLoading: false });
+					this.setState({ isLoading: false, disabled: false });
 					snackbar.show(constants.msg.error_occur, "danger");
 				});
 			})
 		}).catch(e => {
 			this.setState({
 				isLoading: false,
+				disabled: false
 			})
 			snackbar.show(constants.msg.app.not_internet, "danger");
 		})
 	}
 
 	forgotPassword() {
-		this.setState({
-			requirePass: false
-		}, () => {
-			Keyboard.dismiss();
-			if (!this.form.isValid()) {
-				return;
-			}
-			connectionUtils.isConnected().then(s => {
-				this.setState({
-					isLoading: true
-				}, () => {
-					userProvider.forgotPassword(this.state.phone.trim(), 2, (s, e) => {
-						switch (s.code) {
-							case 0:
-								this.props.navigation.navigate('verifyPhone', {
-									phone: this.state.phone,
-									verify: 2
-								})
-								break
-							case 2:
-								snackbar.show('Số điện thoại chưa được đăng ký', "danger");
-								break
-							case 6:
-								this.props.navigation.navigate('verifyPhone', {
-									phone: this.state.phone,
-									verify: 2
-								})
-								break
-						}
+		this.props.navigation.navigate('inputPhone')
+		// this.setState({
+		// 	requirePass: false
+		// }, () => {
+		// 	Keyboard.dismiss();
+		// 	if (!this.form.isValid()) {
+		// 		return;
+		// 	}
+		// 	connectionUtils.isConnected().then(s => {
+		// 		this.setState({
+		// 			isLoading: true
+		// 		}, () => {
+		// 			userProvider.forgotPassword(this.state.phone.trim(), 2, (s, e) => {
+		// 				switch (s.code) {
+		// 					case 0:
+		// 						this.props.navigation.navigate('verifyPhone', {
+		// 							phone: this.state.phone,
+		// 							verify: 2
+		// 						})
+		// 						break
+		// 					case 2:
+		// 						snackbar.show('Số điện thoại chưa được đăng ký', "danger");
+		// 						break
+		// 					case 6:
+		// 						this.props.navigation.navigate('verifyPhone', {
+		// 							phone: this.state.phone,
+		// 							verify: 2
+		// 						})
+		// 						break
+		// 				}
 
 
-					})
-					this.setState({
-						isLoading: false,
-						requirePass: true
-					})
-				})
-			}).catch(e => {
-				this.setState({
-					isLoading: false,
-					requirePass: true
-				})
-				snackbar.show(constants.msg.app.not_internet, "danger");
-			})
-		})
+		// 			})
+		// 			this.setState({
+		// 				isLoading: false,
+		// 				requirePass: true
+		// 			})
+		// 		})
+		// 	}).catch(e => {
+		// 		this.setState({
+		// 			isLoading: false,
+		// 			requirePass: true
+		// 		})
+		// 		snackbar.show(constants.msg.app.not_internet, "danger");
+		// 	})
+		// })
 
 		// let verify = async () => {
 		// 	RNAccountKit.loginWithPhone().then(async token => {
@@ -269,6 +273,11 @@ class LoginScreen extends Component {
 	onChangeText = (state) => (value) => {
 		this.setState({ [state]: value })
 	}
+	openLinkHotline = () => {
+		Linking.openURL(
+			'tel:1900299983'
+		);
+	}
 	render() {
 		return (
 
@@ -278,7 +287,7 @@ class LoginScreen extends Component {
 
 			>
 				<ImageBackground
-					style={{ flex: 1, backgroundColor: '#000', height: DEVICE_HEIGHT }}
+					style={styles.imgBg}
 					source={require('@images/new/account/img_bg_login.png')}
 					resizeMode={'cover'}
 					resizeMethod="resize"
@@ -288,17 +297,17 @@ class LoginScreen extends Component {
 				// isLoading={this.state.isLoading}
 				>
 					{/* <KeyboardAvoidingView behavior=""> */}
-					<Text style={{ color: '#fff', fontSize: 22, alignSelf: 'center', marginTop: 100 }}>ĐĂNG NHẬP</Text>
-					<View style={{ flex: 1, justifyContent: 'center', }}>
-						<View style={{ marginHorizontal: 22 }}>
-							<Card style={{ padding: 22, paddingTop: 10, borderRadius: 8, marginTop: 50, borderColor: '#02C39A', borderWidth: 1 }}>
-								<ScaleImage style={{ alignSelf: 'center', }} source={require("@images/new/account/ic_login_isc.png")} height={60}></ScaleImage>
+					<Text style={styles.txLogin}>ĐĂNG NHẬP</Text>
+					<View style={styles.viewCard}>
+						<View style={styles.viewLogin}>
+							<Card style={styles.cardLogin}>
+								<ScaleImage style={styles.imgIsc} source={require("@images/new/account/ic_login_isc.png")} height={60}></ScaleImage>
 								<Form ref={ref => (this.form = ref)}>
 									<Field clearWhenFocus={true}>
 										<TextField
 											getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
 												keyboardType='numeric'
-												placeholderStyle={{ fontSize: 16, }} value={value} underlineColor={'#CCCCCC'}
+												placeholderStyle={styles.placeholder} value={value} underlineColor={'#CCCCCC'}
 												inputStyle={styles.textInputStyle}
 												labelStyle={styles.labelStyle} placeholder={constants.phone} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
 											onChangeText={s => this.setState({ phone: s })}
@@ -319,7 +328,7 @@ class LoginScreen extends Component {
 										<Field style={styles.inputPass}>
 											<TextField
 												getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-													placeholderStyle={{ fontSize: 16 }}
+													placeholderStyle={styles.placeholder}
 													value={value} underlineColor={'#CCCCCC'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.password} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} secureTextEntry={this.state.secureTextEntry} />}
 												onChangeText={s => this.setState({ password: s })}
 												errorStyle={styles.errorStyle}
@@ -341,7 +350,7 @@ class LoginScreen extends Component {
 											}
 										</Field>
 									</Field>
-									<View style={{ flexDirection: 'row', marginTop: 15 }}>
+									<View style={styles.viewFogot}>
 										{/* <TouchableOpacity
 												onPress={this.register.bind(this)}
 												style={{ alignItems: "flex-start", flex: 1 }}
@@ -359,35 +368,31 @@ class LoginScreen extends Component {
 											</TouchableOpacity> */}
 										<TouchableOpacity
 											onPress={this.forgotPassword.bind(this)}
-											style={{ alignItems: "flex-end", flex: 1 }}
+											style={styles.btnFogot}
 										>
 											<Text
 												numberOfLines={1}
 												ellipsizeMode="tail"
-												style={{
-													color: '#00A3FF',
-													paddingRight: 5,
-													fontSize: 14
-												}}>
+												style={styles.txFogot}>
 												Quên mật khẩu?
 													</Text>
 										</TouchableOpacity>
 									</View>
 								</Form>
-								<TouchableOpacity onPress={this.login.bind(this)} style={{ backgroundColor: '#00CBA7', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 10, alignItems: 'center', justifyContent: 'center' }} >
-									<Text style={{ color: '#FFF', fontSize: 17 }}>{"ĐĂNG NHẬP"}</Text>
+								<TouchableOpacity disabled={this.state.disabled} onPress={this.login.bind(this)} style={styles.btnLogin} >
+									<Text style={styles.txlg}>{"ĐĂNG NHẬP"}</Text>
 								</TouchableOpacity>
 							</Card>
+							<TouchableOpacity style={styles.btnCall} onPress={this.openLinkHotline}><ScaleImage height={20} source={require('@images/new/account/ic_phone.png')}></ScaleImage><Text style={styles.txCall}>Hotline: <Text style={styles.txNumber}>1900299983</Text></Text></TouchableOpacity>
 						</View>
-						{/* <SocialNetwork /> */}
-						{/* <Text style={{ color: '#000', textAlign: 'center', marginVertical: 20 }}>Nếu chưa có tài khoản có thể đăng ký <Text onPress={this.register.bind(this)} style={{ color: '#1EA3EA' }}>tại đây</Text></Text> */}
+
 
 					</View>
 					{/* </KeyboardAvoidingView> */}
-					<TouchableOpacity onPress={this.register.bind(this)} style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', borderColor: '#fff', borderWidth: 1, alignSelf: 'center', borderRadius: 50, width: 250, height: 48, alignItems: 'center', justifyContent: 'center', marginTop: 100 }} >
-						<Text style={{ color: '#FFF', fontSize: 17 }}>{"ĐĂNG KÝ"}</Text>
+					<TouchableOpacity onPress={this.register.bind(this)} style={styles.btnSignUp} >
+						<Text style={styles.txSignUp}>{"ĐĂNG KÝ"}</Text>
 					</TouchableOpacity>
-					<View style={{ height: 50 }}></View>
+					<View style={styles.viewBottom}></View>
 				</ImageBackground>
 
 			</ScrollView>
@@ -399,10 +404,26 @@ const DEVICE_WIDTH = Dimensions.get("window").width;
 const DEVICE_HEIGHT = Dimensions.get("window").height;
 
 const styles = StyleSheet.create({
+	txNumber: {
+		fontWeight: 'bold',
+		color: '#fff',
+		fontSize: 14
+	},
 	txtRegister: {
 		color: '#000',
 		textAlign: 'center',
 		marginVertical: 20
+	},
+	btnCall: {
+		padding: 5,
+		flexDirection: 'row',
+		alignItems: 'center',
+		alignSelf: 'center',
+	},
+	txCall: {
+		color: '#fff',
+		fontSize: 14,
+		marginLeft: 10,
 	},
 	txtLogin: {
 		color: "rgb(2,195,154)",
@@ -494,7 +515,26 @@ const styles = StyleSheet.create({
 		paddingRight: 45,
 
 	},
-	labelStyle: { paddingTop: 10, color: '#53657B', fontSize: 16 }
+	labelStyle: { paddingTop: 10, color: '#53657B', fontSize: 16 },
+	imgBg: { flex: 1, backgroundColor: '#000', height: DEVICE_HEIGHT },
+	txLogin: { color: '#fff', fontSize: 22, alignSelf: 'center', marginTop: 100 },
+	viewCard: { flex: 1, justifyContent: 'center', },
+	viewLogin: { marginHorizontal: 22 },
+	cardLogin: { padding: 22, paddingTop: 10, borderRadius: 8, marginTop: 50, borderColor: '#02C39A', borderWidth: 1 },
+	imgIsc: { alignSelf: 'center', },
+	placeholder: { fontSize: 16, },
+	viewFogot: { flexDirection: 'row', marginTop: 15 },
+	btnFogot: { alignItems: "flex-end", flex: 1 },
+	txFogot: {
+		color: '#00A3FF',
+		paddingRight: 5,
+		fontSize: 14
+	},
+	btnLogin: { backgroundColor: '#00CBA7', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 10, alignItems: 'center', justifyContent: 'center' },
+	txlg: { color: '#FFF', fontSize: 17 },
+	btnSignUp: { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderColor: '#fff', borderWidth: 1, alignSelf: 'center', borderRadius: 50, width: 250, height: 48, alignItems: 'center', justifyContent: 'center', marginTop: 100 },
+	txSignUp: { color: '#FFF', fontSize: 17 },
+	viewBottom: { height: 50 }
 });
 function mapStateToProps(state) {
 	return {

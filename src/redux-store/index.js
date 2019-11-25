@@ -13,7 +13,12 @@ function _userLogin(user) {
         return Promise.resolve();
     }
 }
-
+function _getOtpPhone(otp) {
+    return (dispatch) => {
+        dispatch({ type: constants.action.action_otp_phone, value: otp })
+        return Promise.resolve();
+    }
+}
 function _getUnreadNotificationCount() {
     return function (dispatch) {
         notificationProvider.getUnReadCount().then(s => {
@@ -27,14 +32,14 @@ function _getUnreadNotificationCount() {
                             dispatch({ type: constants.action.action_change_notification_count, value: total })
                             return;
                         } catch (error) {
-                            console.log(error);
+                            
                         }
                     }
                     dispatch({ type: constants.action.action_change_notification_count, value: 0 })
                     break;
             }
         }).catch(e => {
-            console.log(e);
+            
         });
     }
 }
@@ -67,5 +72,11 @@ module.exports = {
             dispatch(_getUnreadNotificationCount());
         }
     },
-  
+    getOtpPhone(otp) {
+        return function (dispatch, getState) {
+            
+            dispatch(_getOtpPhone(otp))
+        }
+    },
+
 }

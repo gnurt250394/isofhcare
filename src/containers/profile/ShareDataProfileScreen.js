@@ -12,9 +12,9 @@ export default class ShareDataProfileScreen extends Component {
     super(props);
     let shareId = this.props.navigation.state.params && this.props.navigation.state.params.shareId ? this.props.navigation.state.params.shareId : null
     let id = this.props.navigation.state.params && this.props.navigation.state.params.id ? this.props.navigation.state.params.id : null
-    let permissionsOld = this.props.navigation.state.params && this.props.navigation.state.params.sharePermission ? this.props.navigation.state.params.sharePermission : ''
+    let permissionsOld = this.props.navigation.state.params && this.props.navigation.state.params.permission ? this.props.navigation.state.params.permission : ''
     this.state = {
-      ehealth: permissionsOld == 'YBDT' ? true : false,
+      ehealth: permissionsOld.indexOf('YBDT') >= 0 ? true : false,
       permissionsOld,
       id,
       shareId,
@@ -38,10 +38,11 @@ export default class ShareDataProfileScreen extends Component {
       permissions = 'YBDT'
     }
     let data = {
-      "recordId": id,
-      "shareId": shareId,
+      "recordId": id ? id : shareId,
+      "shareId": id ? shareId : null,
       "permissions": permissions
     }
+    console.log(data, 'datadatadata')
     profileProvider.sharePermission(data).then(res => {
       if (res.code == 0 && res.data) {
         snackbar.show(constants.msg.user.setting_share_success, 'success')
@@ -58,7 +59,6 @@ export default class ShareDataProfileScreen extends Component {
   render() {
     return (
       <ActivityPanel style={{ flex: 1 }}
-        // title="HỒ SƠ Y BẠ GIA ĐÌNH"
         title={constants.title.setting_share}
         showFullScreen={true} isLoading={this.state.isLoading}>
         <View style={styles.viewConfirm}>

@@ -22,7 +22,8 @@ class ResetPasswordScreen extends Component {
         this.state = {
             isLoading: false,
             secureTextEntry: true,
-            secureTextEntry2: true
+            secureTextEntry2: true,
+            disabled: false
         }
     }
     componentDidMount() {
@@ -30,51 +31,54 @@ class ResetPasswordScreen extends Component {
     }
     onShowPass = () => {
         this.setState({
-          secureTextEntry: !this.state.secureTextEntry
+            secureTextEntry: !this.state.secureTextEntry
         })
-      }
+    }
     changePassword() {
         Keyboard.dismiss();
         if (!this.form.isValid()) {
-          return;
+            return;
         }
         connectionUtils.isConnected().then(s => {
-          this.setState({ isLoading: true }, () => {
-            userProvider.refreshPasswordByToken(this.state.phone, this.state.loginToken, this.state.applicationId, this.state.password).then(s => {
-              this.setState({ isLoading: false })
-              switch (s.code) {
-                case 0:
-                  snackbar.show(
-                    "Thiết lập mật khẩu mới thành công",
-                    "success"
-                  );
-                  this.props.navigation.replace("login", {
-                    nextScreen: this.nextScreen
-                  });
-                  return;
-                case 2:
-                  snackbar.show(
-                    "Số điện thoại không tồn tại trong hệ thống",
-                    "danger"
-                  );
-                  return;
-              }
-            }).catch(e => {
-              this.setState({ isLoading: false })
-              snackbar.show(constants.msg.user.change_password_not_success, "danger");
+            this.setState({ isLoading: true, disabled: true }, () => {
+                let passwordNew = this.state.password
+                let id = this.props.navigation.getParam('id', '')
+                userProvider.resetPassword(id, passwordNew).then(s => {
+
+                    this.setState({ isLoading: false, disabled: false })
+                    switch (s.code) {
+                        case 0:
+                            snackbar.show(
+                                "Thiết lập mật khẩu mới thành công",
+                                "success"
+                            );
+                            this.props.navigation.replace("login", {
+                                nextScreen: this.nextScreen
+                            });
+                            return;
+                        default:
+                            snackbar.show(
+                                "Có lỗi xảy ra, xin vui lòng thử lại",
+                                "danger"
+                            );
+                            return;
+                    }
+                }).catch(e => {
+                    this.setState({ isLoading: false, disabled: false })
+                    snackbar.show(constants.msg.user.change_password_not_success, "danger");
+                });
             });
-          });
-    
+
         }).catch(e => {
-          snackbar.show(constants.msg.app.not_internet, "danger");
+            snackbar.show(constants.msg.app.not_internet, "danger");
         })
-    
-      }
-      onShowPass2 = () => {
+
+    }
+    onShowPass2 = () => {
         this.setState({
-          secureTextEntry2: !this.state.secureTextEntry2
+            secureTextEntry2: !this.state.secureTextEntry2
         })
-      }
+    }
     render() {
         return (
             <ImageBackground
@@ -117,11 +121,13 @@ class ResetPasswordScreen extends Component {
                                         validate={{
                                             rules: {
                                                 required: true,
-                                                minlength: 8
+                                                minlength: 6,
+                                                maxlength: 20
                                             },
                                             messages: {
                                                 required: constants.new_password_not_null,
-                                                minlength: constants.password_length_8
+                                                minlength: constants.password_length_8,
+                                                maxlength: constants.password_length_20
                                             }
                                         }}
                                         placeholder={constants.input_password}
@@ -146,13 +152,11 @@ class ResetPasswordScreen extends Component {
                                         validate={{
                                             rules: {
                                                 required: true,
-                                                equalTo: this.state.passwordNew,
-                                                minlength: 8
+                                                equalTo: this.state.password,
                                             },
                                             messages: {
                                                 required: constants.confirm_new_password_not_null,
-                                                minlength: constants.confirm_password_length_8,
-                                                equalTo: constants.new_password_not_match
+                                                equalTo: constants.new_password_not_match,
                                             }
                                         }}
                                         placeholder={constants.input_password}
@@ -168,9 +172,10 @@ class ResetPasswordScreen extends Component {
                 </ScrollView>
                 <View style={{ backgroundColor: '#fff' }}>
                     <TouchableOpacity
+                        disabled={this.state.disabled}
                         onPress={this.changePassword.bind(this)}
                         style={styles.updatePass}>
-                        <Text style={styles.txbtnUpdate}>{constants.update_to_up_case}</Text>
+                        <Text style={styles.txbtnUpdate}>{constants.confirm_account.finish}</Text>
                     </TouchableOpacity>
                 </View>
             </ImageBackground>
@@ -236,9 +241,10 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
 
+
     return {
         userApp: state.userApp,
-        navigation: state.navigation
+        // navigation: state.navigation
     };
 }
 export default connect(mapStateToProps)(ResetPasswordScreen);

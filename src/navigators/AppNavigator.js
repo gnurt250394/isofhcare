@@ -39,6 +39,7 @@ import EnterPasswordScreen from "@containers/account/EnterPasswordScreen";
 import ForgotPasswordScreen from "@containers/account/ForgotPasswordScreen";
 import ChangePasswordScreen from "@containers/account/ChangePasswordScreen";
 import OtpPhoneNumberScreen from "@containers/account/OtpPhoneNumberScreen";
+import InputPhoneScreen from "@containers/account/InputPhoneScreen";
 
 
 
@@ -48,7 +49,7 @@ import CreateQuestionStep1Screen from "@containers/question/CreateQuestionStep1S
 import CreateQuestionStep2Screen from "@containers/question/CreateQuestionStep2Screen";
 import DetailQuestionScreen from "@containers/question/DetailQuestionScreen";
 import ProfileInfo from '@containers/account/ProfileInfo'
-import DetailsDoctorScreen from "@containers/question/DetailsDoctorScreen";
+// import DetailsDoctorScreen from "@containers/question/DetailsDoctorScreen";
 
 
 //booking
@@ -70,7 +71,7 @@ import CreateBookingWithPaymentScreen from "@containers/booking/CreateBookingWit
 
 import CreateProfileScreen from "@containers/profile/CreateProfileScreen";
 import PaymentWithVNPayScreen from "@containers/payment/PaymentWithVNPayScreen";
-import SelectProfileScreen from "@containers/booking/SelectProfileScreen";
+import SelectProfileScreen from "@containers/booking/SelectProfileScreen1";
 
 //-------get ticket----------------
 import SelectProfileMedicalScreen from "@containers/ticket/SelectProfileMedicalScreen";
@@ -110,7 +111,21 @@ import ConfirmCodeScreen from "@containers/account/ConfirmCodeScreen";
 import ResetPasswordScreen from "@containers/account/ResetPasswordScreen";
 import { fromLeft, zoomIn, zoomOut, fromRight } from 'react-navigation-transitions';
 import MyVoucherScreen from '@containers/voucher';
-import DetailVoucherScreen from '../containers/voucher/DetailVoucherScreen';
+
+import DetailVoucherScreen from '@containers/voucher/DetailVoucherScreen';
+
+import ListDoctorScreen from '@containers/booking/doctor/ListDoctorScreen';
+import DetailsDoctorScreen from '@containers/booking/doctor/DetailDoctorScreen';
+import AddBookingDoctorScreen from '@containers/booking/doctor/AddBookingDoctorScreen';
+import SelectDateTimeDoctorScreen from '@containers/booking/doctor/SelectDateTimeDoctorScreen';
+import ListBookingScreen from '@containers/booking/ListBookingScreens'
+import ListPaymentMethodScreen from '@containers/booking/doctor/ListPaymentMethodScreen';
+import CreateBookingDoctorSuccessScreen from '@containers/booking/doctor/CreateBookingDoctorSuccessScreen';
+import EditProfileScreen1 from '@containers/booking/EditProfileScreen';
+import SelectAddressScreen from '@containers/booking/SelectAddressScreen';
+import ListSpecialistScreen from '@containers/booking/doctor/ListSpecialistScreen';
+import ListHospitalScreen from '@containers/booking/doctor/ListHospitalScreen';
+import RatingDoctorScreen from '@containers/booking/doctor/RatingDoctorScreen';
 
 const ProfileNavigation = createStackNavigator({
   selectProfile: SelectProfileScreen,
@@ -280,6 +295,7 @@ const RootNavigator = createStackNavigator(
     enterPassword: { screen: EnterPasswordScreen },
     register: { screen: RegisterScreen },
     otpPhoneNumber: { screen: OtpPhoneNumberScreen },
+    inputPhone: { screen: InputPhoneScreen },
     //
     listQuestion: ListQuestionScreen,
     createQuestionStep1: { screen: CreateQuestionStep1Screen },
@@ -321,7 +337,18 @@ const RootNavigator = createStackNavigator(
     drug: { screen: DrugScreen },
     hospitalByLocation: { screen: HospitalByLocationScreen },
     photoViewer: { screen: PhotoViewerScreen },
-    myVoucher: { screen: MyVoucherScreen }
+    myVoucher: { screen: MyVoucherScreen },
+    listDoctor: { screen: ListDoctorScreen },
+    addBookingDoctor: { screen: AddBookingDoctorScreen },
+    selectTimeDoctor: { screen: SelectDateTimeDoctorScreen },
+    listBooking: { screen: ListBookingScreen },
+    listHospital: { screen: ListHospitalScreen },
+    listPaymentMethod: { screen: ListPaymentMethodScreen },
+    createBookingDoctorSuccess: { screen: CreateBookingDoctorSuccessScreen },
+    editProfile1: { screen: EditProfileScreen1 },
+    selectAddress: { screen: SelectAddressScreen },
+    listSpecialist: { screen: ListSpecialistScreen },
+    ratingDoctor: { screen: RatingDoctorScreen },
   },
   {
     headerMode: "none",

@@ -1,23 +1,14 @@
 import React from 'react';
-import { StyleSheet, Text, View, Keyboard, ScrollView, KeyboardAvoidingView, Dimensions, ImageBackground, TouchableOpacity } from 'react-native';
-import { Content, Item, Input } from 'native-base';
-// import { Grid, Col } from 'react-native-easy-grid';
-import OTPTextView from 'react-native-otp-textinput'
-import ScaleImage from "mainam-react-native-scaleimage";
+import { StyleSheet, Text, View, Keyboard, ScrollView, KeyboardAvoidingView, Dimensions, ImageBackground, TouchableOpacity, TextInput } from 'react-native';
 import constants from "@resources/strings";
-import ActivityPanel from "@components/ActivityPanel";
 import userProvider from '@data-access/user-provider'
 import snackbar from '@utils/snackbar-utils';
 import { connect } from "react-redux";
 import profileProvider from '@data-access/profile-provider'
-import NavigationService from "@navigators/NavigationService";
-import redux from "@redux-store";
-import client from '@utils/client-utils';
 import connectionUtils from "@utils/connection-utils";
-import Form from "mainam-react-native-form-validate/Form";
-import TextField from "mainam-react-native-form-validate/TextField";
-import ButtonSubmit from "@components/ButtonSubmit";
 import HeaderBar from '@components/account/HeaderBar'
+import InputOtp from '@components/account/InputOtp'
+import redux from "@redux-store";
 
 const DEVICE_HEIGHT = Dimensions.get("window").height;
 //props: verify
@@ -25,20 +16,28 @@ const DEVICE_HEIGHT = Dimensions.get("window").height;
 //case 2 : fogot password
 //case 3 : create profile
 
-class VerifyPhoneNumberScreen extends React.PureComponent {
+class VerifyPhoneNumberScreen extends React.Component {
     constructor(props) {
         super(props)
         let phone = this.props.navigation.state.params && this.props.navigation.state.params.phone ? this.props.navigation.state.params.phone : null
         let id = this.props.navigation.state.params && this.props.navigation.state.params.id ? this.props.navigation.state.params.id : null
-        let verify = this.props.navigation.state.params && this.props.navigation.state.params.verify ? this.props.navigation.state.params.verify : null
+        this.nextScreen = this.props.navigation.getParam("nextScreen", null);
         this.state = {
             seconds: 90,
             txErr: '',
             reset: 2,
             phone,
             id,
-            verify,
+            verify: this.props.navigation.state.params && this.props.navigation.state.params.verify ? this.props.navigation.state.params.verify : null,
+            isCheck: true
             // appState: AppState.currentState,
+        }
+    }
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.otpPhone && this.state.isCheck) {
+            console.log('nextProps.otpPhone: ', nextProps.otpPhone);
+            this.onCheckOtp(nextProps.otpPhone)
+            return
         }
     }
     componentDidMount() {
@@ -67,13 +66,13 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
     // }
 
     // _handleAppStateChange = (nextAppState) => {
-    //     console.log('nextAppState: ', nextAppState);
+    //     
     //     if (
     //         nextAppState === 'background'
     //     ) {
     //         this.a = setInterval(() => {
     //             let { seconds } = this.state
-    //             console.log(seconds, '22222222')
+    //             
     //             if (seconds > 0)
     //                 this.setState(preState => {
     //                     return {
@@ -88,13 +87,14 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
     // };
 
     onReSendPhone = () => {
+        let verify = this.state.verify
         this.setState({
             disabled: true
         }, () => {
             connectionUtils
                 .isConnected()
                 .then(s => {
-                    switch (this.state.verify) {
+                    switch (verify) {
                         case 1:
                             {
                                 userProvider.forgotPassword(this.state.phone.trim(), 4, (s, e) => {
@@ -154,29 +154,31 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                             }
                             break
                         case 3:
-                            let id = this.props.navigation.state.params && this.props.navigation.state.params.id ? this.props.navigation.state.params.id : null
-                            profileProvider.resendOtp(id).then(res => {
-                                this.setState({
-                                    disabled: false
-                                })
-                                if (res.code == 0) {
+                            {
+                                let id = this.props.navigation.state.params && this.props.navigation.state.params.id ? this.props.navigation.state.params.id : null
+                                profileProvider.resendOtp(id).then(res => {
                                     this.setState({
-                                        seconds: 90
+                                        disabled: false
                                     })
-                                    snackbar.show('Mã xác thực đã được gửi lại', 'success')
-                                    return
-                                }
-                                if (s.code == 6) {
-                                    this.setState({
-                                        countResend: true
-                                    })
-                                    return
-                                } else {
+                                    if (res.code == 0) {
+                                        this.setState({
+                                            seconds: 90
+                                        })
+                                        snackbar.show('Mã xác thực đã được gửi lại', 'success')
+                                        return
+                                    }
+                                    if (s.code == 6) {
+                                        this.setState({
+                                            countResend: true
+                                        })
+                                        return
+                                    } else {
+                                        snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                                    }
+                                }).catch(err => {
                                     snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
-                                }
-                            }).catch(err => {
-                                snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
-                            })
+                                })
+                            }
                             break
                     }
                 }).catch(e => {
@@ -200,130 +202,126 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
     //     })
 
     // }
-    onCheckOtp = () => {
-        Keyboard.dismiss();
-        if (!this.form.isValid()) {
-            return;
-        }
-        let text = this.state.text
-        if (this.state.verify) {
+    onCheckOtp = (text) => {
+        let verify = this.state.verify
+        // let text1 = data && (data.text1 || data.text1 == 0) ? data.text1.toString() : ''
+        // let text2 = data && (data.text2 || data.text2 == 0) ? data.text2.toString() : ''
+        // let text3 = data && (data.text3 || data.text3 == 0) ? data.text3.toString() : ''
+        // let text4 = data && (data.text4 || data.text4 == 0) ? data.text4.toString() : ''
+        // let text5 = data && (data.text5 || data.text5 == 0) ? data.text5.toString() : ''
+        // let text6 = data && (data.text6 || data.text6 == 0) ? data.text6.toString() : ''
+        // let text = text1.concat(text2).concat(text3).concat(text4).concat(text5).concat(text6)
+        if (text && verify) {
             connectionUtils
                 .isConnected()
                 .then(s => {
-                    this.setState({
-                        disabledConfirm: true
-                    }, () => {
-                        switch (this.state.verify) {
-                            case 1:
-                                userProvider.checkOtpPhone(this.state.id, text).then(res => {
-                                    this.setState({
-                                        disabledConfirm: false
-                                    })
-                                    switch (res.code) {
-                                        case 0: {
-                                            snackbar.show('Đăng ký thành công', 'success')
-                                            let user = res.data.user
-                                            let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
-                                            if (callback) {
-                                                callback(user);
-                                                this.props.navigation.pop();
-                                            }
-                                        }
-                                            break
-                                        case 3:
-                                            snackbar.show('Mã xác thực không đúng', 'danger')
-                                            break
-                                        case 4:
-                                            snackbar.show('Mã xác thực hết hạn', 'danger')
-                                            break
-                                        default:
-                                            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
-                                            break
-
-                                    }
-
+                    if (this.state.verify == 1) {
+                        userProvider.checkOtpPhone(this.state.id, text).then(res => {
+                            if (res.code == 0) {
+                                snackbar.show('Đăng ký thành công', 'success')
+                                let user = res.data.user
+                                this.setState({
+                                    isCheck: false
                                 })
-                                break
-                            case 2:
-                                userProvider.confirmCode(this.state.phone, text, (s, e) => {
-                                    this.setState({
-                                        disabledConfirm: false
-                                    })
-                                    if (s) {
-                                        switch (s.code) {
-                                            case 0:
-                                                snackbar.show(constants.msg.user.confirm_code_success, "success");
-                                                this.props.navigation.replace("resetPassword", {
-                                                    user: s.data.user,
-                                                    id: s.data.user.id,
-                                                    nextScreen: this.nextScreen
-                                                });
-                                                break;
-                                            case 2:
-                                                snackbar.show('Mã xác thực không đúng', 'danger')
-                                                break
-                                            case 4:
-                                                snackbar.show('Mã xác thực hết hạn', 'danger')
-                                                break
-                                        }
-                                    }
-                                    if (e) {
-                                        snackbar.show(constants.msg.user.confirm_code_not_success, "danger");
-                                    }
+                                if (this.nextScreen) {
+                                    this.props.navigation.replace(
+                                        this.nextScreen.screen,
+                                        this.nextScreen.param
+                                    );
+                                } else this.props.navigation.navigate("home", { showDraw: false });
+                                this.props.dispatch(redux.userLogin(user));
+                                return
+                            }
+                            if (res.code == 3) {
+                                snackbar.show('Mã xác thực không đúng', 'danger')
+                                return
+                            }
+                            if (res.code == 4) {
+                                snackbar.show('Mã xác thực hết hạn', 'danger')
+                                return
+                            } else {
+                                snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                            }
 
-                                });
-                                break
-                            case 3:
-                                let data = {
-                                    'otp': text
-                                }
-                                if (data && this.state.id) {
-                                    profileProvider.checkOtp(data, this.state.id).then(res => {
-                                        this.setState({
-                                            disabledConfirm: false
-                                        })
-                                        if (res.code == 0) {
-                                            this.props.navigation.replace('shareDataProfile', { id: res.data.record.id })
-                                            return;
-                                        }
-                                        if (res.code == 4) {
-                                            snackbar.show('Mã bạn nhập đã hết hạn', 'danger')
-                                            return
-                                        }
-                                        if (res.code == 5) {
-                                            snackbar.show('Mã bạn nhập không đúng', 'danger')
-                                            return
-                                        }
-                                        else {
-                                            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                        }).catch(err => {
+                            console.log('err: ', err);
+                            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                        })
+                        return
+                    }
 
+                    if (this.state.verify == 2) {
+                        userProvider.confirmCode(this.state.phone, text, (s, e) => {
+                            if (s) {
+                                switch (s.code) {
+                                    case 0:
+                                        {
+                                            snackbar.show(constants.msg.user.confirm_code_success, "success");
+                                            this.props.navigation.replace("resetPassword", {
+                                                user: s.data.user,
+                                                id: s.data.user.id,
+                                                // nextScreen: this.nextScreen
+                                            });
                                         }
-                                    })
+                                        break;
+                                    case 2:
+                                        snackbar.show('Mã xác thực không đúng', 'danger')
+                                        break
+                                    case 4:
+                                        snackbar.show('Mã xác thực hết hạn', 'danger')
+                                        break
                                 }
-                                break
+                                return
+                            }
+                            if (e) {
+                                snackbar.show(constants.msg.user.confirm_code_not_success, "danger");
+                            }
+
+                        });
+                        return
+                    }
+                    if (this.state.verify == 3) {
+
+                        let data = {
+                            'otp': text
                         }
-                    })
+                        if (data && this.state.id) {
+                            profileProvider.checkOtp(data, this.state.id).then(res => {
+                                if (res.code == 0) {
 
+                                    this.props.navigation.replace('shareDataProfile', { id: res.data.record.id })
+                                    return;
+                                }
+                                if (res.code == 4) {
+                                    snackbar.show('Mã bạn nhập đã hết hạn', 'danger')
+                                    return
+                                }
+                                if (res.code == 5) {
+                                    snackbar.show('Mã bạn nhập không đúng', 'danger')
+                                    return
+                                }
+                                else {
+                                    snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+
+                                }
+                            }).catch(err => {
+                                console.log(err, 'errr')
+                            })
+                            return
+                        }
+                    }
                 }).catch(e => {
+                    snackbar.show('Không có kết nối mạng', 'danger')
 
-                    this.setState({
-                        disabledConfirm: false
-                    })
-                    snackbar.show(constants.msg.app.not_internet, "danger");
-                });
-
-
+                })
+            return
         }
     }
-    handleTextChange = (text) => {
-        this.setState({
-            text
-        }, () => {
-            if (this.state.text.length == 6) {
-                this.onCheckOtp()
-            }
-        })
 
+
+    componentWillUnmount() {
+        let otp = null
+        this.props.dispatch(redux.getOtpPhone(otp));
     }
     render() {
         return (
@@ -331,7 +329,7 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                 style={{ flex: 1, backgroundColor: '#000', height: DEVICE_HEIGHT }}
                 source={require('@images/new/account/img_bg_login.png')}
                 resizeMode={'cover'}
-                resizeMethod="resize">
+                resizeMethod="resize" >
                 <ScrollView
                     showsVerticalScrollIndicator={false}
                     style={styles.scroll}
@@ -351,8 +349,8 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                     <KeyboardAvoidingView behavior="padding" style={styles.form}>
                         <View style={{ borderWidth: 0.5, borderStyle: 'solid', borderColor: '#808080', borderRadius: 10, paddingTop: 30, alignSelf: 'center' }}>
                             <Text style={{ fontSize: 14, textAlign: 'center', marginBottom: 50, color: '#000000' }}>Vui lòng nhập mã xác thực được gửi tới {`\n`} số điện thoại {this.state.phone}</Text>
-                            <Form ref={ref => (this.form = ref)}>
-                                <TextField
+                            {/* <Form ref={ref => (this.form = ref)}>
+                                <TextInput
                                     errorStyle={styles.errorStyle}
                                     validate={{
                                         rules: {
@@ -367,16 +365,28 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                                         }
                                     }}
                                     inputStyle={styles.input}
-                                    onChangeText={text =>
+                                    onChangeText={(text) => {
+                                        debugger;
                                         this.handleTextChange(text)
-                                    }
+                                    }}
                                     placeholder={constants.input_code}
                                     autoCapitalize={"none"}
-                                    returnKeyType={"next"}
                                     keyboardType="numeric"
                                     autoCorrect={false}
                                 />
-                            </Form>
+                            </Form> */}
+                            <InputOtp style={styles.input}></InputOtp>
+                            {/* <TextInput
+                                style={styles.input}
+                                onChangeText={(text) => {
+                                    this.handleTextChange(text)
+                                }}
+                                placeholder={constants.input_code}
+                                autoCapitalize={"none"}
+                                keyboardType="numeric"
+                                autoCorrect={false}
+                                maxLength={6}
+                            ></TextInput> */}
                             <Text style={styles.txTime}>Mã xác thực hiệu lực trong: <Text style={styles.txCountTime}>{this.state.seconds > 9 ? this.state.seconds : '0' + this.state.seconds}s</Text></Text>
                         </View>
                         {
@@ -386,12 +396,10 @@ class VerifyPhoneNumberScreen extends React.PureComponent {
                                     <TouchableOpacity style={styles.btnReSend} disabled={this.state.disabled} onPress={this.onReSendPhone}><Text style={styles.txBtnReSend}>Gửi lại mã</Text></TouchableOpacity>
                                 </View>
                         }
-                        {/* <TouchableOpacity disabled={this.state.disabledConfirm} onPress={this.onCheckOtp} style={{ backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center' }} >
-                            <Text style={{ color: '#FFF', fontSize: 17 }}>{"XÁC NHẬN"}</Text>
-                        </TouchableOpacity> */}
+
                     </KeyboardAvoidingView>
                 </ScrollView>
-            </ImageBackground>
+            </ImageBackground >
         )
     }
 }
@@ -424,17 +432,13 @@ const styles = StyleSheet.create({
     },
     input: {
         maxWidth: 300,
-        paddingRight: 30,
         backgroundColor: "#FFF",
         width: DEVICE_WIDTH - 40,
         height: 42,
-        textAlign: "center",
-        marginHorizontal: 40,
-        paddingLeft: 15,
-        borderRadius: 6,
-        color: "#006ac6",
-        borderWidth: 1,
-        borderColor: "rgba(155,155,155,0.7)"
+        marginHorizontal: 20,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-around',
     },
     picture: {
         position: "absolute",
@@ -482,7 +486,9 @@ const styles = StyleSheet.create({
 });
 function mapStateToProps(state) {
     return {
-        userApp: state.userApp
+        userApp: state.userApp,
+        otpPhone: state.otpPhone
+
     };
 }
 export default connect(mapStateToProps)(VerifyPhoneNumberScreen);

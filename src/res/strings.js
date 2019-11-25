@@ -41,11 +41,12 @@ module.exports = {
   password_not_null: 'Mật khẩu không được bỏ trống',
   old_password_not_null: 'Mật khẩu cũ không được bỏ trống',
   new_password_not_null: '"Mật khẩu mới không được bỏ trống"',
-  confirm_new_password_not_null: "Xác nhận mật khẩu mới không được bỏ trống",
-  confirm_password_not_null: 'Xác nhận mật khẩu không được bỏ trống',
-  password_length_8: 'Mật khẩu dài ít nhất 8 ký tự',
-  confirm_password_length_8: "Xác nhận mật khẩu dài ít nhất 8 kí tự",
-  new_password_not_match: 'Mật khẩu và xác nhận mật khẩu không giống nhau',
+  confirm_new_password_not_null: "Bạn không được để trống trường này",
+  confirm_password_not_null: 'Bạn không được để trống trường này',
+  password_length_8: 'Mật khẩu dài ít nhất 6 ký tự',
+  password_length_20:'Mật khẩu dài tối đa 20 ký tự',
+  confirm_password_length_8: "Xác nhận mật khẩu dài ít nhất 6 kí tự",
+  new_password_not_match: 'Mật khẩu nhập lại không khớp',
   search: "Tìm kiếm",
   share: "Chia sẻ",
   update: "Cập nhật",
@@ -149,7 +150,8 @@ module.exports = {
     action_set_my_facility: "ACTION_SET_MY_FACILITY",
     action_select_hospital_get_ticket: "ACTION_SELECT_HOSPITAL_GET_TICKET",
     action_select_hospital_ehealth: "ACTION_SELECT_HOSPITAL_EHEALTH",
-    action_select_patient_group_ehealth: "ACTION_SELECT_PATIENT_GROUP_EHEALTH"
+    action_select_patient_group_ehealth: "ACTION_SELECT_PATIENT_GROUP_EHEALTH",
+    action_otp_phone:"ACTION_OTP_PHONE"
   },
   colors: {
     breakline: "#c0c0c0",
@@ -610,6 +612,13 @@ module.exports = {
     schedule_booking: 'LỊCH KHÁM',
     booking_paid: 'Đặt khám đã được thanh toán',
     booking_paid_or_invalid: 'Đặt khám đã được thanh toán hoặc không tồn tại',
+    quantity_booking: 'Lượt đặt khám',
+    quantity_advisory: 'Lượt tư vấn',
+    rating: 'Đánh giá',
+    work: 'Đơn vị công tác',
+    specialist: 'Chuyên khoa',
+    time_work: 'Quá trình công tác',
+    select_payment_method: 'Chọn phương thức thanh toán',
     guide: {
       part_1: 'Bước 1: Điền thông tin chuyển khoản thụ hưởng:',
       bank: 'Ngân hàng',
@@ -786,7 +795,11 @@ module.exports = {
     setting_share: 'CÀI ĐẶT CHIA SẺ',
     scan_qr_code: 'QUÉT MÃ QRCODE',
     voucher: 'Mã ưu đãi',
-    profile: 'Hồ sơ cá nhân'
+    profile: 'Hồ sơ cá nhân',
+    list_booking: 'Chọn hình thức đặt khám',
+    select_doctor: 'Chọn bác sĩ',
+    info_doctor: 'Thông tin bác sỹ',
+    edit_profile: 'Hoàn thành hồ sơ'
   },
   account_screens: {
     signin_or_signup: 'Đăng nhập/ Đăng Ký',
@@ -850,6 +863,7 @@ module.exports = {
       check_otp_phone: isofhcare_service + 'user/verify-sms-code',
       re_send_otp: isofhcare_service + 'user/registration',
       get_user_details: isofhcare_service + '/user',
+      resetPw: isofhcare_service + 'user/replace-password'
 
 
     },
@@ -894,7 +908,18 @@ module.exports = {
       detail: isofhcare_service + "booking/get-detail",
       getByAuthor: isofhcare_service + "booking/get-by-author",
       get_list_share_user: isofhcare_service + "booking/list-share-user",
-      // pay_tranfer: isofhcare_service + 'booking/payTranfer'
+      // pay_tranfer: isofhcare_service + 'booking/payTranfer',
+      doctor: {
+        get_list_doctor: isofhcare_service + 'catalog/v1/doctors',
+        get_detail_doctor: isofhcare_service + 'catalog/v1/doctor',
+        search_list_doctor: isofhcare_service + 'catalog/v1/doctors/search',
+        get_detail_schedules: isofhcare_service + 'catalog/v1/schedule',
+        create_booking: isofhcare_service + 'appointment/v1/doctor',
+        get_list_hospitals: isofhcare_service + 'catalog/v1/hospitals',
+        get_list_specialists: isofhcare_service + 'catalog/v1/specializations',
+        get_doctor_hospitals: isofhcare_service + 'catalog/v1/doctor/hospitalId/hospital',
+        get_doctor_specialists: isofhcare_service + 'catalog/v1/doctor/specialistId/specialization'
+      }
     },
     question: {
       create: isofhcare_service + "post/create",
