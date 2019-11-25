@@ -271,7 +271,14 @@ module.exports = {
           } else resolve(json);
         })
         .catch(e => {
-          console.log(e);
+          if (e.response) {
+            console.log('e.response: ', e.response);
+          } else if (e.request) {
+            console.log('e.request: ', e.request);
+
+          } else {
+            console.log(e, 'err')
+          }
           reject(e);
         });
     });
