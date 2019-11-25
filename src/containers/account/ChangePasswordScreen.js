@@ -119,7 +119,7 @@ class ChangePasswordScreen extends Component {
                                         validate={{
                                             rules: {
                                                 required: true,
-                                                minlength: 8
+                                                minlength: 6
                                             },
                                             messages: {
                                                 required: constants.old_password_not_null,
@@ -149,7 +149,7 @@ class ChangePasswordScreen extends Component {
                                         validate={{
                                             rules: {
                                                 required: true,
-                                                minlength: 8
+                                                minlength: 6
                                             },
                                             messages: {
                                                 required: constants.new_password_not_null,
@@ -179,7 +179,7 @@ class ChangePasswordScreen extends Component {
                                             rules: {
                                                 required: true,
                                                 equalTo: this.state.passwordNew,
-                                                minlength: 8
+                                                minlength: 6
                                             },
                                             messages: {
                                                 required: constants.confirm_new_password_not_null,
