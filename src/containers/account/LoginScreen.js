@@ -61,7 +61,8 @@ class LoginScreen extends Component {
 
 
 	register() {
-		this.props.navigation.navigate("register", {
+		console.log(this.nextScreen)
+		this.props.navigation.replace("register", {
 			phone: this.state.phone,
 			nextScreen: this.nextScreen
 		})
