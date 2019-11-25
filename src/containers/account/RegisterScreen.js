@@ -54,6 +54,7 @@ class RegisterScreen extends Component {
     user.secureTextPassEntry = true
     user.secureTextPass2Entry = true
     user.phone = phone
+    user.disabled = false
     this.state = user
     this.showPass = this.showPass.bind(this);
     this.showPassConfirm = this.showPassConfirm.bind(this);
@@ -119,67 +120,51 @@ class RegisterScreen extends Component {
     let password = this.state.password
     connectionUtils.isConnected().then(s => {
       this.setState({
-        isLoading: true
+        isLoading: true,
+        disabled: true
       }, () => {
         userProvider.register(name, phone, password, dateBirth, gender).then(res => {
           if (res.code == 0) {
             this.setState({
-              isLoading: false
+              isLoading: false,
+              disabled: false
             })
             this.props.navigation.navigate("verifyPhone", {
               id: res.data.user.id,
               phone: phone,
               verify: 1,
-              onSelected: (user) => {
-                if (!user || !this.state.user || user.id != this.state.user.id) {
-                  this.props.dispatch(redux.userLogin(user));
-                  if (this.nextScreen) {
-                    this.props.navigation.replace(
-                      this.nextScreen.screen,
-                      this.nextScreen.param
-                    );
-                  } else this.props.navigation.navigate("home", { showDraw: false });
-                } else {
-                  this.setState({ user, userError });
-                }
-
-              }
+              nextScreen: this.nextScreen
             })
             return
           } if (res.code == 13) {
             this.setState({
-              isLoading: false
+              isLoading: false,
+              disabled: false
             })
             this.props.navigation.navigate("verifyPhone", {
               id: res.message,
               phone: phone,
               verify: 1,
-              onSelected: (user) => {
-                if (!user || !this.state.user || user.id != this.state.user.id) {
-                  this.props.dispatch(redux.userLogin(user));
-                  if (this.nextScreen) {
-                    this.props.navigation.replace(
-                      this.nextScreen.screen,
-                      this.nextScreen.param
-                    );
-                  } else this.props.navigation.navigate("home", { showDraw: false });
-                } else {
-                  this.setState({ user, userError });
-                }
-
-              }
+              nextScreen: this.nextScreen
             })
             return
           }
           else {
             this.setState({
-              isLoading: false
+              isLoading: false,
+              disabled: false
             })
-            snackbar.show(res.message, 'danger')
+            switch (res.code) {
+              case 2: snackbar.show('Số điện thoại đã được đăng ký', 'danger')
+                break
+              default: snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+
+            }
+
           }
 
         }).catch(e => {
-          console.log(e, 'đâsđâsd')
+
           snackbar.show(constants.msg.app.not_internet, "danger");
         });
       })
@@ -261,7 +246,7 @@ class RegisterScreen extends Component {
               <Form ref={ref => (this.form = ref)}>
                 <TextField
                   getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-                    placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Họ tên"}
+                    placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Họ và tên"}
                     onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
                   onChangeText={s => {
                     this.setState({ fullname: s });
@@ -273,7 +258,7 @@ class RegisterScreen extends Component {
                       maxlength: 255
                     },
                     messages: {
-                      required: "Họ tên không được bỏ trống",
+                      required: "Họ và tên không được bỏ trống",
                       maxlength: "Không được nhập quá 255 kí tự"
                     }
                   }}
@@ -315,11 +300,13 @@ class RegisterScreen extends Component {
                     validate={{
                       rules: {
                         required: true,
-                        minlength: 8
+                        minlength: 6,
+                        maxlength: 20
                       },
                       messages: {
                         required: constants.password_not_null,
-                        minlength: constants.password_length_8
+                        minlength: constants.password_length_8,
+                        maxlength: constants.password_length_20
                       }
                     }}
                     autoCapitalize={"none"}
@@ -331,7 +318,7 @@ class RegisterScreen extends Component {
                 <Field style={styles.inputPass}>
                   <TextField
                     getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
-                      placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={'Xác nhận mật khẩu'}
+                      placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={'Nhập lại mật khẩu'}
 
                       secureTextEntry={this.state.secureTextPass2Entry}
                       onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
@@ -357,7 +344,7 @@ class RegisterScreen extends Component {
                 </Field>
               </Form>
               <View style={{ backgroundColor: '#fff' }}>
-                <TouchableOpacity onPress={this.onRegiter} style={styles.btnSignup} >
+                <TouchableOpacity disabled={this.state.disabled} onPress={this.onRegiter} style={styles.btnSignup} >
                   <Text style={styles.txSignUp}>{"TIẾP TỤC"}</Text>
                 </TouchableOpacity>
               </View>

@@ -17,9 +17,7 @@ const defaultState = {
     ehealth: {
 
     },
-    otpPhone:{
-        
-    }
+    otpPhone: null
 }
 const reducer = (state = defaultState, action) => {
     var newState = JSON.parse(JSON.stringify(state));
@@ -75,7 +73,7 @@ const reducer = (state = defaultState, action) => {
             newState.ehealth.patient = action.value;
             return newState;
         case constants.action.action_otp_phone:
-            newState.otpPhone.otp = action.value
+            newState.otpPhone = action.value
             return newState;
     }
     return newState;

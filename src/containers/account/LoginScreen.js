@@ -37,6 +37,7 @@ class LoginScreen extends Component {
 			password: "",
 			secureTextEntry: true,
 			requirePass: true,
+			disabled: false
 		};
 		this.nextScreen = this.props.navigation.getParam("nextScreen", null);
 
@@ -61,7 +62,8 @@ class LoginScreen extends Component {
 
 	register() {
 		this.props.navigation.navigate("register", {
-			phone: this.state.phone
+			phone: this.state.phone,
+			nextScreen: this.nextScreen
 		})
 		// return;
 		// let verify = async () => {
@@ -138,9 +140,9 @@ class LoginScreen extends Component {
 		}
 
 		connectionUtils.isConnected().then(s => {
-			this.setState({ isLoading: true }, () => {
+			this.setState({ isLoading: true, disabled: false }, () => {
 				userProvider.login(this.state.phone.trim(), this.state.password).then(s => {
-					this.setState({ isLoading: false });
+					this.setState({ isLoading: false, disabled: false });
 					switch (s.code) {
 						case 0:
 							var user = s.data.user;
@@ -173,13 +175,14 @@ class LoginScreen extends Component {
 							snackbar.show(constants.msg.error_occur, "danger");
 					}
 				}).catch(e => {
-					this.setState({ isLoading: false });
+					this.setState({ isLoading: false, disabled: false });
 					snackbar.show(constants.msg.error_occur, "danger");
 				});
 			})
 		}).catch(e => {
 			this.setState({
 				isLoading: false,
+				disabled: false
 			})
 			snackbar.show(constants.msg.app.not_internet, "danger");
 		})
@@ -376,7 +379,7 @@ class LoginScreen extends Component {
 										</TouchableOpacity>
 									</View>
 								</Form>
-								<TouchableOpacity onPress={this.login.bind(this)} style={styles.btnLogin} >
+								<TouchableOpacity disabled={this.state.disabled} onPress={this.login.bind(this)} style={styles.btnLogin} >
 									<Text style={styles.txlg}>{"ĐĂNG NHẬP"}</Text>
 								</TouchableOpacity>
 							</Card>
@@ -513,25 +516,25 @@ const styles = StyleSheet.create({
 
 	},
 	labelStyle: { paddingTop: 10, color: '#53657B', fontSize: 16 },
-	imgBg:{ flex: 1, backgroundColor: '#000', height: DEVICE_HEIGHT },
-	txLogin:{ color: '#fff', fontSize: 22, alignSelf: 'center', marginTop: 100 },
-	viewCard:{ flex: 1, justifyContent: 'center', },
-	viewLogin:{ marginHorizontal: 22 },
-	cardLogin:{ padding: 22, paddingTop: 10, borderRadius: 8, marginTop: 50, borderColor: '#02C39A', borderWidth: 1 },
-	imgIsc:{ alignSelf: 'center', },
-	placeholder:{ fontSize: 16, },
-	viewFogot:{ flexDirection: 'row', marginTop: 15 },
-	btnFogot:{ alignItems: "flex-end", flex: 1 },
-	txFogot:{
+	imgBg: { flex: 1, backgroundColor: '#000', height: DEVICE_HEIGHT },
+	txLogin: { color: '#fff', fontSize: 22, alignSelf: 'center', marginTop: 100 },
+	viewCard: { flex: 1, justifyContent: 'center', },
+	viewLogin: { marginHorizontal: 22 },
+	cardLogin: { padding: 22, paddingTop: 10, borderRadius: 8, marginTop: 50, borderColor: '#02C39A', borderWidth: 1 },
+	imgIsc: { alignSelf: 'center', },
+	placeholder: { fontSize: 16, },
+	viewFogot: { flexDirection: 'row', marginTop: 15 },
+	btnFogot: { alignItems: "flex-end", flex: 1 },
+	txFogot: {
 		color: '#00A3FF',
 		paddingRight: 5,
 		fontSize: 14
 	},
-	btnLogin:{ backgroundColor: '#00CBA7', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 10, alignItems: 'center', justifyContent: 'center' },
-	txlg:{ color: '#FFF', fontSize: 17 },
-	btnSignUp:{ backgroundColor: 'rgba(255, 255, 255, 0.2)', borderColor: '#fff', borderWidth: 1, alignSelf: 'center', borderRadius: 50, width: 250, height: 48, alignItems: 'center', justifyContent: 'center', marginTop: 100 },
-	txSignUp:{ color: '#FFF', fontSize: 17 },
-	viewBottom:{ height: 50 }
+	btnLogin: { backgroundColor: '#00CBA7', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 10, alignItems: 'center', justifyContent: 'center' },
+	txlg: { color: '#FFF', fontSize: 17 },
+	btnSignUp: { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderColor: '#fff', borderWidth: 1, alignSelf: 'center', borderRadius: 50, width: 250, height: 48, alignItems: 'center', justifyContent: 'center', marginTop: 100 },
+	txSignUp: { color: '#FFF', fontSize: 17 },
+	viewBottom: { height: 50 }
 });
 function mapStateToProps(state) {
 	return {
