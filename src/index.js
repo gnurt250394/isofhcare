@@ -36,7 +36,7 @@ class Kernel extends Component {
   }
 
   componentDidMount() {
-    codePushUtils.checkupDate(true);
+    // codePushUtils.checkupDate(true);
   }
   render() {
     return (
