@@ -68,7 +68,6 @@ class SelectDateTimeDoctorScreen extends Component {
         let listTime = [];
         if (this.state.schedules[day].noSchedule) {
             let date = new Date(new Date(day).format("yyyy-MM-dd"));
-            // 
             date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
             date.setMinutes(date.getMinutes() + (8 * 60));
             while (true) {
@@ -76,13 +75,13 @@ class SelectDateTimeDoctorScreen extends Component {
                     break;
 
                 if (date.format("HH:mm") < "11:30" || date.format("HH:mm") >= "13:30") {
-                    
+
                     let disabled = true;
                     let id;
                     for (let i = 0; i <= listSchedules.length; i++) {
                         if (listSchedules[i] && listSchedules[i].workTime.dayOfTheWeek == dateOfWeek) {
 
-                            if (listSchedules[i].workTime.start < date.format('HH:mm')
+                            if (listSchedules[i].workTime.start <= date.format('HH:mm')
                                 && listSchedules[i].workTime.end > date.format('HH:mm')) {
                                 disabled = false
                                 id = listSchedules[i].id

@@ -10,7 +10,6 @@ class Button extends Component {
     }
 
     render() {
-        console.log(PixelRatio.get())
         const { source, label, style, onPress } = this.props
         return (
             <TouchableOpacity onPress={onPress} style={[styles.button, style]}>
