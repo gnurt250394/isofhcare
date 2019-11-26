@@ -21,6 +21,7 @@ class ChangePasswordScreen extends Component {
         super(props)
         this.state = {
             isLoading: false,
+            disabled: false,
             secureTextOldEntry: true,
             secureTextNewEntry: true,
             secureTextNew2Entry: true
@@ -50,9 +51,10 @@ class ChangePasswordScreen extends Component {
             return;
         }
         connectionUtils.isConnected().then(s => {
-            this.setState({ isLoading: true }, () => {
+            this.setState({ isLoading: true, disabled: true }, () => {
                 userProvider.changePassword(this.props.userApp.currentUser.id, this.state.passwordOld, this.state.passwordNew).then(s => {
-                    this.setState({ isLoading: false });
+                    console.log('s: ', s);
+                    this.setState({ isLoading: false, disabled: false });
                     switch (s.code) {
                         case 0:
                             snackbar.show(constants.msg.user.change_password_success, 'success');
@@ -66,7 +68,7 @@ class ChangePasswordScreen extends Component {
                             break
                     }
                 }).catch(e => {
-                    this.setState({ isLoading: false });
+                    this.setState({ isLoading: false, disabled: false });
                     snackbar.show(constants.msg.user.change_password_not_success, 'danger');
                 });
             })
@@ -88,7 +90,7 @@ class ChangePasswordScreen extends Component {
                     style={styles.scroll}
                     keyboardShouldPersistTaps="handled"
                 >
-                    <HeaderBar style = {styles.header}></HeaderBar>
+                    <HeaderBar style={styles.header}></HeaderBar>
                     <View
                         style={{
                             marginTop: 60,
@@ -96,7 +98,7 @@ class ChangePasswordScreen extends Component {
                             alignItems: "center"
                         }}
                     >
-                        <Text style={{ fontSize: 24, fontWeight: '800', color: '#00BA99', alignSelf: 'center' }}>ĐỔI MẬT KHẨU</Text>
+                        <Text style={{ fontSize: 24, fontWeight: '800', color: '#00BA99', alignSelf: 'center' }}>ĐẶT LẠI MẬT KHẨU</Text>
                         {/* <ScaleImage source={require("@images/logo.png")} width={120} /> */}
                     </View>
                     <KeyboardAvoidingView behavior="padding" >
@@ -117,7 +119,7 @@ class ChangePasswordScreen extends Component {
                                         validate={{
                                             rules: {
                                                 required: true,
-                                                minlength: 8
+                                                minlength: 6
                                             },
                                             messages: {
                                                 required: constants.old_password_not_null,
@@ -147,7 +149,7 @@ class ChangePasswordScreen extends Component {
                                         validate={{
                                             rules: {
                                                 required: true,
-                                                minlength: 8
+                                                minlength: 6
                                             },
                                             messages: {
                                                 required: constants.new_password_not_null,
@@ -177,7 +179,7 @@ class ChangePasswordScreen extends Component {
                                             rules: {
                                                 required: true,
                                                 equalTo: this.state.passwordNew,
-                                                minlength: 8
+                                                minlength: 6
                                             },
                                             messages: {
                                                 required: constants.confirm_new_password_not_null,
@@ -198,6 +200,7 @@ class ChangePasswordScreen extends Component {
                 </ScrollView>
                 <View style={{ backgroundColor: '#fff' }}>
                     <TouchableOpacity
+                        disabled={this.state.disabled}
                         onPress={this.change.bind(this)}
                         style={styles.updatePass}>
                         <Text style={styles.txbtnUpdate}>{constants.update_to_up_case}</Text>
@@ -209,7 +212,7 @@ class ChangePasswordScreen extends Component {
 }
 const DEVICE_WIDTH = Dimensions.get('window').width;
 const styles = StyleSheet.create({
-    header:{paddingHorizontal:0},
+    header: { paddingHorizontal: 0 },
     txbtnUpdate: { color: '#FFF', fontSize: 17 },
     updatePass: { backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center', marginBottom: 20 },
     container: { flex: 1, backgroundColor: '#000', height: DEVICE_HEIGHT },

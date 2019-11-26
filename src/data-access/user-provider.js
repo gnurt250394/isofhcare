@@ -53,7 +53,24 @@ module.exports = {
       if (callback) callback(s, e);
     });
   },
-  changePassword(id, passwordNew) {
+  changePassword(id, passwordOld, passwordNew, ) {
+    return new Promise((resolve, reject) => {
+      var body = {
+        passwordOld: passwordOld.toMd5(),
+        passwordNew: passwordNew.toMd5()
+      };
+      client.requestApi(
+        "put",
+        constants.api.user.change_password + "/" + id,
+        body,
+        (s, e) => {
+          if (s) resolve(s);
+          reject(e);
+        }
+      );
+    });
+  },
+  resetPassword(id, passwordNew, ) {
     return new Promise((resolve, reject) => {
       var body = {
         passwordNew: passwordNew.toMd5()

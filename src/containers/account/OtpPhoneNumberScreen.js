@@ -46,7 +46,7 @@ class OtpPhoneNumberScreen extends React.PureComponent {
                 })
 
         }).catch(err => {
-            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+            snackbar.show(constants.msg.notification.error_retry, 'danger')
         })
     }
     getDetails = (id, token) => {
@@ -136,6 +136,11 @@ class OtpPhoneNumberScreen extends React.PureComponent {
 }
 const styles = StyleSheet.create({
     group: {
+        flex: 1,
+        padding: 20
+    },
+    flex: { flex: 1 },
+    container: {
         flex: 1,
         padding: 20
     },

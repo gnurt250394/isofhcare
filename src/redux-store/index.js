@@ -32,14 +32,14 @@ function _getUnreadNotificationCount() {
                             dispatch({ type: constants.action.action_change_notification_count, value: total })
                             return;
                         } catch (error) {
-                            console.log(error);
+                            
                         }
                     }
                     dispatch({ type: constants.action.action_change_notification_count, value: 0 })
                     break;
             }
         }).catch(e => {
-            console.log(e);
+            
         });
     }
 }
@@ -74,9 +74,8 @@ module.exports = {
     },
     getOtpPhone(otp) {
         return function (dispatch, getState) {
-            if (otp) {
-                dispatch(_getOtpPhone(otp))
-            }
+            
+            dispatch(_getOtpPhone(otp))
         }
     },
 

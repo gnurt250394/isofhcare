@@ -306,7 +306,7 @@ dependencies {
       implementation jscFlavor
     }
     implementation 'com.facebook.fresco:animated-base-support:1.3.0'
-    implementation 'com.facebook.fresco:animated-gif:1.3.0'
+    implementation 'com.facebook.fresco:animated-gif:2.0.0'
     compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-common', version: '1.3.11'
 }
 

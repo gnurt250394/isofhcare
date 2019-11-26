@@ -913,6 +913,25 @@
 			shellScript = "export RCT_METRO_PORT=\"${RCT_METRO_PORT:=8081}\"\necho \"export RCT_METRO_PORT=${RCT_METRO_PORT}\" > \"${SRCROOT}/../node_modules/react-native/scripts/.packager.env\"\nif [ -z \"${RCT_NO_LAUNCH_PACKAGER+xxx}\" ] ; then\n  if nc -w 5 -z localhost ${RCT_METRO_PORT} ; then\n    if ! curl -s \"http://localhost:${RCT_METRO_PORT}/status\" | grep -q \"packager-status:running\" ; then\n      echo \"Port ${RCT_METRO_PORT} already in use, packager is either not running or not running correctly\"\n      exit 2\n    fi\n  else\n    open \"$SRCROOT/../node_modules/react-native/scripts/launchPackager.command\" || echo \"Can't start packager automatically\"\n  fi\nfi\n";
 			showEnvVarsInLog = 0;
 		};
+		AB12483FCFEA75B681FFD8C1 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-APP/Pods-APP-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -1074,10 +1093,10 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.isofh.appisofhcaredev;
+				PRODUCT_BUNDLE_IDENTIFIER = com.isofh.appisofhcaretest;
 				PRODUCT_NAME = APP;
 				PROVISIONING_PROFILE = "0f5fbbc4-4172-466c-97bb-95964499866b";
-				PROVISIONING_PROFILE_SPECIFIER = "isofhcare for user development develop branch";
+				PROVISIONING_PROFILE_SPECIFIER = "isofhcare for user development dev branch";
 				SWIFT_OBJC_BRIDGING_HEADER = "APP-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -1119,7 +1138,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.isofh.appisofhcaredev;
+				PRODUCT_BUNDLE_IDENTIFIER = com.isofh.appisofhcaretest;
 				PRODUCT_NAME = APP;
 				PROVISIONING_PROFILE = "a85727cc-7f0e-4e39-81ab-abf948e917c6";
 				PROVISIONING_PROFILE_SPECIFIER = "isofhcare for use distribution develop branch";

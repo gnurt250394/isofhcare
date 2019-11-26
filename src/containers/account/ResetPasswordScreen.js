@@ -22,11 +22,12 @@ class ResetPasswordScreen extends Component {
         this.state = {
             isLoading: false,
             secureTextEntry: true,
-            secureTextEntry2: true
+            secureTextEntry2: true,
+            disabled: false
         }
     }
     componentDidMount() {
-console.log(this.props,'hihihi')
+
     }
     onShowPass = () => {
         this.setState({
@@ -39,13 +40,12 @@ console.log(this.props,'hihihi')
             return;
         }
         connectionUtils.isConnected().then(s => {
-            this.setState({ isLoading: true }, () => {
+            this.setState({ isLoading: true, disabled: true }, () => {
                 let passwordNew = this.state.password
                 let id = this.props.navigation.getParam('id', '')
-                console.log('this.props:21342 ', this.props);
-                userProvider.changePassword(id, passwordNew).then(s => {
-                    console.log('s: ', s);
-                    this.setState({ isLoading: false })
+                userProvider.resetPassword(id, passwordNew).then(s => {
+
+                    this.setState({ isLoading: false, disabled: false })
                     switch (s.code) {
                         case 0:
                             snackbar.show(
@@ -56,7 +56,7 @@ console.log(this.props,'hihihi')
                                 nextScreen: this.nextScreen
                             });
                             return;
-                        default :
+                        default:
                             snackbar.show(
                                 "Có lỗi xảy ra, xin vui lòng thử lại",
                                 "danger"
@@ -64,7 +64,7 @@ console.log(this.props,'hihihi')
                             return;
                     }
                 }).catch(e => {
-                    this.setState({ isLoading: false })
+                    this.setState({ isLoading: false, disabled: false })
                     snackbar.show(constants.msg.user.change_password_not_success, "danger");
                 });
             });
@@ -121,11 +121,13 @@ console.log(this.props,'hihihi')
                                         validate={{
                                             rules: {
                                                 required: true,
-                                                minlength: 8
+                                                minlength: 6,
+                                                maxlength: 20
                                             },
                                             messages: {
                                                 required: constants.new_password_not_null,
-                                                minlength: constants.password_length_8
+                                                minlength: constants.password_length_8,
+                                                maxlength: constants.password_length_20
                                             }
                                         }}
                                         placeholder={constants.input_password}
@@ -150,13 +152,11 @@ console.log(this.props,'hihihi')
                                         validate={{
                                             rules: {
                                                 required: true,
-                                                equalTo: this.state.passwordNew,
-                                                minlength: 8
+                                                equalTo: this.state.password,
                                             },
                                             messages: {
                                                 required: constants.confirm_new_password_not_null,
-                                                minlength: constants.confirm_password_length_8,
-                                                equalTo: constants.new_password_not_match
+                                                equalTo: constants.new_password_not_match,
                                             }
                                         }}
                                         placeholder={constants.input_password}
@@ -172,6 +172,7 @@ console.log(this.props,'hihihi')
                 </ScrollView>
                 <View style={{ backgroundColor: '#fff' }}>
                     <TouchableOpacity
+                        disabled={this.state.disabled}
                         onPress={this.changePassword.bind(this)}
                         style={styles.updatePass}>
                         <Text style={styles.txbtnUpdate}>{constants.confirm_account.finish}</Text>
@@ -239,7 +240,7 @@ const styles = StyleSheet.create({
 });
 
 function mapStateToProps(state) {
-    console.log('state: ', state);
+
 
     return {
         userApp: state.userApp,

@@ -75,4 +75,7 @@ ios/APP.xcworkspace/xcuserdata/socoboy.xcuserdatad/UserInterfaceState.xcuserstat
 .idea
 ios/Pods
 ios/Podfile.lock
+<<<<<<< HEAD
 yarn-error.log
+=======
+>>>>>>> Update gitignore ignore .idea
