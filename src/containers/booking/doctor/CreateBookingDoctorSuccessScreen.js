@@ -52,6 +52,8 @@ class CreateBookingDoctorSuccessScreen extends Component {
     onBackdropPress = () => this.setState({ isVisible: false })
     render() {
         let detailSchedule = this.props.navigation.getParam('detailSchedule');
+        let bookingDate = this.props.navigation.getParam('bookingDate');
+        console.log('bookingDate: ', bookingDate);
         console.log('detailSchedule: ', detailSchedule);
         let booking = this.props.navigation.getParam('booking');
         console.log(booking, 'bookingbooking')
@@ -60,7 +62,7 @@ class CreateBookingDoctorSuccessScreen extends Component {
         //     this.props.navigation.pop();
         //     return null;
         // }
-        let bookingTime = booking.date.toDateObject("-");
+        let bookingTime = new Date(bookingDate)
         return (
             <ActivityPanel
                 hideBackButton={true}
@@ -203,7 +205,7 @@ class CreateBookingDoctorSuccessScreen extends Component {
                             textAlign: 'center',
                             paddingHorizontal: 40,
                             paddingTop: 20
-                        }}>Lịch đặt khám của bạn đã được gửi đi. Vui lòng đợi iSofhCare xác nhận, bạn sẽ nhận được thông báo ngay khi xác nhận thành công!</Text>
+                        }}>Lịch đặt khám của bạn đã được gửi đi. Vui lòng đợi iSofHcare xác nhận, bạn sẽ nhận được thông báo ngay khi xác nhận thành công!</Text>
                         <TouchableOpacity style={styles.btn}><Text style={styles.btntext} onPress={this.goHome}>{constants.booking.go_home}</Text></TouchableOpacity>
                     </ScrollView>
                 </View>

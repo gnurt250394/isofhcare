@@ -59,7 +59,7 @@ class AddBookingDoctorScreen extends Component {
         // AppState.addEventListener('change', this._handleAppStateChange);
         dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, (s, e) => {
             if (s) {
-                
+
                 this.setState({ profile: s })
             } else {
                 medicalRecordProvider.getByUser(this.props.userApp.currentUser.id, 1, 100).then(s => {
@@ -294,16 +294,16 @@ class AddBookingDoctorScreen extends Component {
     }
 
 
-    
+
 
     createBooking() {
         let { paymentMethod } = this.state
         let date = new Date(this.state.schedule.key).format("yyyy-MM-dd")
         let { reason, voucher, detailSchedule, profile, schedule, profileDoctor } = this.state
-        
-        
-        
-        
+
+
+
+
         let patitent = profile && profile.medicalRecords
         connectionUtils.isConnected().then(s => {
             this.setState({ isLoading: true }, () => {
@@ -330,7 +330,8 @@ class AddBookingDoctorScreen extends Component {
                                     params: {
                                         detailSchedule,
                                         voucher: this.state.voucher,
-                                        booking: s
+                                        booking: s,
+                                        bookingDate: this.state.bookingDate
                                     }
                                 }
                             });

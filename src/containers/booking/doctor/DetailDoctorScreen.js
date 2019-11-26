@@ -5,7 +5,8 @@ import {
   StyleSheet,
   ScrollView,
   Text,
-  TouchableOpacity
+  TouchableOpacity,
+  FlatList
 } from "react-native";
 import { connect } from "react-redux";
 import ScaleImage from "mainam-react-native-scaleimage";
@@ -19,7 +20,6 @@ import questionProvider from '@data-access/question-provider';
 import { Card } from 'native-base'
 import Button from "@components/booking/doctor/Button";
 import constants from '@resources/strings'
-import { FlatList } from "react-native-gesture-handler";
 import bookingDoctorProvider from '@data-access/booking-doctor-provider'
 import Modal from "@components/modal";
 
@@ -132,7 +132,7 @@ class DetailsDoctorScreen extends Component {
     }
   }
   ratingDoctor = () => {
-    this.props.navigation.navigate('ratingDoctor')
+    this.props.navigation.navigate('listRatingDoctor')
   }
   _keyExtractor = (item, index) => `${item.id || index}`
   onBackdropPress = () => { this.setState({ isVisible: false }) }
@@ -276,7 +276,7 @@ class DetailsDoctorScreen extends Component {
             </Card>
             {/** */}
 
-            <Card style={{
+            {/* <Card style={{
               borderRadius: 10
             }}>
               <View style={{
@@ -296,7 +296,7 @@ class DetailsDoctorScreen extends Component {
                 renderItem={this._renderItem}
                 keyExtractor={this._keyExtractor}
               />
-            </Card>
+            </Card> */}
           </View>
 
 
