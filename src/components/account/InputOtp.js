@@ -5,41 +5,51 @@ import { connect } from "react-redux";
 class InputOtp extends PureComponent {
     constructor(props) {
         super(props);
-        
+
         this.data = {}
     }
-    onChangeText1 = (text) => {
-        text.length && this.input2.focus()
-        this.data.text1 = text
-        this.onPassData()
-    }
-    onChangeText2 = (text) => {
-        text.length && this.input3.focus()
-        this.data.text2 = text
-        this.onPassData()
+    onChangeText = (text, key) => {
+        switch (key) {
+            case 1: {
+                text.length && this.input2.focus()
+                this.data.text1 = text
+                this.onPassData()
+            }
+                break
+            case 2: {
+                text.length && this.input3.focus()
+                this.data.text2 = text
+                this.onPassData()
+            }
+                break
+            case 3: {
+                text.length && this.input4.focus()
+                this.data.text3 = text
+                this.onPassData()
+            }
+                break
+            case 4: {
+                text.length && this.input5.focus()
+                this.data.text4 = text
+                this.onPassData()
+            }
+                break
+            case 5: {
+                text.length && this.input6.focus()
+                this.data.text5 = text
+                this.onPassData()
+            }
+                break
+            case 6: {
+                if (text.length) {
+                    this.data.text6 = text
+                    this.onPassData()
+                }
 
-    }
-    onChangeText3 = (text) => {
-        text.length && this.input4.focus()
-        this.data.text3 = text
-        this.onPassData()
-    }
-    onChangeText4 = (text) => {
-        text.length && this.input5.focus()
-        this.data.text4 = text
-        this.onPassData()
+            }
+                break
 
-    }
-    onChangeText5 = (text) => {
-        text.length && this.input6.focus()
-        this.data.text5 = text
-        this.onPassData()
-
-    }
-    onChangeText6 = (text) => {
-        this.data.text6 = text
-        this.onPassData()
-
+        }
     }
     onPassData = () => {
         let text1 = this.data && (this.data.text1 || this.data.text1 == 0) ? this.data.text1.toString() : ''
@@ -48,10 +58,9 @@ class InputOtp extends PureComponent {
         let text4 = this.data && (this.data.text4 || this.data.text4 == 0) ? this.data.text4.toString() : ''
         let text5 = this.data && (this.data.text5 || this.data.text5 == 0) ? this.data.text5.toString() : ''
         let text6 = this.data && (this.data.text6 || this.data.text6 == 0) ? this.data.text6.toString() : ''
-        
+
         let otp = text1.concat(text2).concat(text3).concat(text4).concat(text5).concat(text6)
         if (otp.length == 6) {
-            
             this.props.dispatch(redux.getOtpPhone(otp));
         }
     }
@@ -85,7 +94,73 @@ class InputOtp extends PureComponent {
     //         this.props.onCheckOtp()
     //     }
     // }
+    onKeyHander = (nativeEvent, position) => {
+        if (nativeEvent.key == 'Backspace') {
+            switch (position) {
+                case 1: {
+                    this.data.text1 = ''
+                    this.onPassData()
+                }
+                    break
+                case 2: {
+                    this.data.text2 = ''
+                    this.input1.focus()
+                    this.onPassData()
 
+                }
+                    break
+                case 3: {
+                    this.data.text3 = ''
+                    this.input2.focus()
+                    this.onPassData()
+
+                }
+                    break
+                case 4: {
+                    this.data.text4 = ''
+                    this.input3.focus()
+                    this.onPassData()
+                }
+                    break
+                case 5: {
+                    this.data.text5 = ''
+                    this.input4.focus()
+                    this.onPassData()
+                }
+                    break
+                case 6: {
+                    this.data.text6 = ''
+                    this.input5.focus()
+                    this.onPassData()
+
+                }
+                    break
+            }
+        }
+        // if (!this.data.text1 && nativeEvent.key == 'Backspace ') {
+        //     return
+        // }
+        // if (!this.data.text2 && nativeEvent.key == 'Backspace ') {
+        //     this.input1.focus()
+        //     return
+        // }
+        // if (!this.data.text3 && nativeEvent.key == 'Backspace ') {
+        //     this.input2.focus()
+        //     return
+        // }
+        // if (!this.data.text4 && nativeEvent.key == 'Backspace ') {
+        //     this.input3.focus()
+        //     return
+        // }
+        // if (!this.data.text5 && nativeEvent.key == 'Backspace ') {
+        //     this.input4.focus()
+        //     return
+        // }
+        // if (!this.data.text6 && nativeEvent.key == 'Backspace ') {
+        //     this.input5.focus()
+        //     return
+        // }
+    }
     render() {
         return (
             <View style={this.props.style}>
@@ -93,9 +168,10 @@ class InputOtp extends PureComponent {
                     <TextInput
                         ref={ref => this.input1 = ref}
                         maxLength={1}
-                        onChangeText={text => this.onChangeText1(text)}
+                        onChangeText={text => this.onChangeText(text, 1)}
                         keyboardType={'numeric'}
                         style={styles.input}
+                        onKeyPress={({ nativeEvent }) => this.onKeyHander(nativeEvent, 1)}
                         underlineColorAndroid={'#fff'}
                     ></TextInput>
                 </View>
@@ -103,8 +179,9 @@ class InputOtp extends PureComponent {
                     <TextInput
                         ref={ref => this.input2 = ref}
                         maxLength={1}
-                        onChangeText={text => this.onChangeText2(text, 2)}
+                        onChangeText={text => this.onChangeText(text, 2)}
                         keyboardType={'numeric'}
+                        onKeyPress={({ nativeEvent }) => this.onKeyHander(nativeEvent, 2)}
                         style={styles.input}
                         underlineColorAndroid={'#fff'}
                     ></TextInput>
@@ -113,7 +190,8 @@ class InputOtp extends PureComponent {
                     <TextInput
                         ref={ref => this.input3 = ref}
                         maxLength={1}
-                        onChangeText={text => this.onChangeText3(text, 3)}
+                        onChangeText={text => this.onChangeText(text, 3)}
+                        onKeyPress={({ nativeEvent }) => this.onKeyHander(nativeEvent, 3)}
                         keyboardType={'numeric'}
                         style={styles.input}
                         underlineColorAndroid={'#fff'}
@@ -123,8 +201,9 @@ class InputOtp extends PureComponent {
                     <TextInput
                         ref={ref => this.input4 = ref}
                         maxLength={1}
-                        onChangeText={text => this.onChangeText4(text, 4)}
+                        onChangeText={text => this.onChangeText(text, 4)}
                         keyboardType={'numeric'}
+                        onKeyPress={({ nativeEvent }) => this.onKeyHander(nativeEvent, 4)}
                         style={styles.input}
                         underlineColorAndroid={'#fff'}
                     ></TextInput>
@@ -133,19 +212,21 @@ class InputOtp extends PureComponent {
                     <TextInput
                         ref={ref => this.input5 = ref}
                         maxLength={1}
-                        onChangeText={text => this.onChangeText5(text, 5)}
+                        onChangeText={text => this.onChangeText(text, 5)}
                         keyboardType={'numeric'}
                         style={styles.input}
+                        onKeyPress={({ nativeEvent }) => this.onKeyHander(nativeEvent, 5)}
                         underlineColorAndroid={'#fff'}
                     ></TextInput>
                 </View>
                 <View style={styles.viewComponents}>
                     <TextInput
-                        onChangeText={text => this.onChangeText6(text, 6)}
+                        onChangeText={text => this.onChangeText(text, 6)}
                         ref={ref => this.input6 = ref}
                         maxLength={1}
                         keyboardType={'numeric'}
                         style={styles.input}
+                        onKeyPress={({ nativeEvent }) => this.onKeyHander(nativeEvent, 6)}
                         underlineColorAndroid={'#fff'}
                     ></TextInput>
                 </View>
