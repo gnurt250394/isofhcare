@@ -912,7 +912,7 @@ module.exports = {
       doctor: {
         get_list_doctor: isofhcare_service + 'catalog/v1/doctors',
         get_detail_doctor: isofhcare_service + 'catalog/v1/doctor',
-        search_list_doctor: isofhcare_service + 'catalog/v1/doctors/search',
+        search_list_doctor: isofhcare_service + 'catalog/v1/doctor/search',
         get_detail_schedules: isofhcare_service + 'catalog/v1/schedule',
         create_booking: isofhcare_service + 'appointment/v1/doctor',
         get_list_hospitals: isofhcare_service + 'catalog/v1/hospitals',
