@@ -187,6 +187,7 @@ class SelectDateTimeDoctorScreen extends Component {
                         })
                     }
                 }).catch(e => {
+                    // this.selectMonth(new Date());
                     this.setState({ isLoading: false })
                     if (e) {
                         this.setState({
@@ -238,14 +239,14 @@ class SelectDateTimeDoctorScreen extends Component {
                     continue;
                 let keyDate = new Date(key);
                 let dayOfWeek = this.getDayOfWeek(key)
-                if (!this.state.profileDoctor.schedules) {
+                if (this.state.profileDoctor.schedules && this.state.profileDoctor.schedules.length == 0) {
                     snackbar.show('Bác sĩ hiện tại không có lịch làm việc trong thời gian này', 'danger')
-                    return
                 }
-                if ((this.state.profileDoctor && this.state.profileDoctor.schedules
-                    && dayOfWeek == this.state.profileDoctor.schedules[0].workTime.dayOfTheWeek)) {
+                if ((this.state.profileDoctor && this.state.profileDoctor.schedules && this.state.profileDoctor.schedules.length > 0
+                    && dayOfWeek == this.state.profileDoctor.schedules[0].workTime.dayOfTheWeek) && keyDate > new Date() && (selected == null || keyDate < selected)) {
+
                     selected = keyDate;
-                }
+                } 
             }
             if (selected) {
                 (obj[selected.format("yyyy-MM-dd")] || {}).selected = true;
@@ -261,6 +262,7 @@ class SelectDateTimeDoctorScreen extends Component {
             })
             return obj;
         } catch (error) {
+            
 
         }
 
