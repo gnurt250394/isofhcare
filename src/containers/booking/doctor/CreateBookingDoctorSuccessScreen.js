@@ -125,7 +125,7 @@ class CreateBookingDoctorSuccessScreen extends Component {
                             }
                             <View style={styles.row}>
                                 <Text style={styles.label}>{constants.booking.time}</Text>
-                                <Text style={styles.text}> <Text style={{ color: '#00BA99' }}>{bookingTime.format("hh:mm") + " " + (bookingTime.format("HH") < 12 ? "AM" : "PM")} </Text>{" - " + bookingTime.format("thu, dd/MM/yyyy")}</Text>
+                                <Text style={styles.text}> <Text style={{ color: '#00BA99' }}>{booking.time} </Text>{" - " + bookingTime.format("thu, dd/MM/yyyy")}</Text>
                             </View>
 
                             <View style={styles.row}>

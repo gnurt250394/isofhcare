@@ -116,6 +116,21 @@ class DetailsDoctorScreen extends Component {
       </View>
     )
   }
+  renderPosition = (item) => {
+    switch (item.position) {
+      case 'Director': return 'Giám đốc'
+      case 'ViceDirector': return 'Phó Giám đốc'
+      case 'Manager': return 'Trưởng phòng'
+      case 'DeputyManager': return 'Phó phòng'
+      case 'HeadOfDepartment': return 'Trưởng khoa'
+      case 'DeputyOfDepartment': return 'Phó khoa'
+      case 'DepartmentChief': return 'Phụ trách khoa'
+      case 'HeadNurse': return 'Điều dưỡng trưởng'
+      case 'Nursing': return 'Y tá'
+      case 'ChiefMedicalTechnician': return 'Kỹ thuật y trưởng'
+      default: return ''
+    }
+  }
   ratingDoctor = () => {
     this.props.navigation.navigate('ratingDoctor')
   }
@@ -168,13 +183,8 @@ class DetailsDoctorScreen extends Component {
                 />
                 <View style={{ paddingLeft: 10, flex: 1 }}>
                   <Text style={styles.nameDoctor}>{profileDoctor.academicDegree}.{profileDoctor.name}</Text>
-                  {/* <View >
-                    {profileDoctor.address && profileDoctor.address.length > 0 ?
-                      <Text >{profileDoctor.address[0].name}</Text>
-                      :
-                      null
-                    }
-                  </View> */}
+
+                  <Text style={{ paddingBottom: 10 }}>{this.renderPosition(profileDoctor)}</Text>
                   <View style={styles.containerButton}>
                     <Button label="Tư vấn" style={styles.txtAdvisory} onPress={this.goToAdvisory} source={require("@images/new/booking/ic_chat.png")} />
                     <Button label="Đặt khám" style={styles.txtBooking} onPress={this.addBooking} source={require("@images/ic_service.png")} />

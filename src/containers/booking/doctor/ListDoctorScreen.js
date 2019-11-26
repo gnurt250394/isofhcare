@@ -135,7 +135,7 @@ class ListDoctorScreen extends Component {
         try {
             let { keyword, page, size } = this.state
             console.log('keyword: ', keyword);
-            let res = await bookingDoctorProvider.searchDoctor(keyword, 'vn', page + 1, size)
+            let res = await bookingDoctorProvider.searchDoctor(keyword, 'en', page + 1, size)
             this.setState({ refreshing: false })
             if (res && res.length > 0) {
                 this.formatData(res)
@@ -217,7 +217,7 @@ class ListDoctorScreen extends Component {
         return (
             <Animated.View style={[styles.containerHeader, { transform: [{ translateY: this.header }] }]}
                 onLayout={(event) => {
-                    this.setState({height:event.nativeEvent.layout.height})
+                    this.setState({ height: event.nativeEvent.layout.height })
                     // this.height = event.nativeEvent.layout.height
                 }}
             >
@@ -238,16 +238,34 @@ class ListDoctorScreen extends Component {
                         style={styles.inputSearch}
                         placeholder={"Tìm kiếm…"}
                         underlineColorAndroid={"transparent"} />
-                    <TouchableOpacity style={styles.buttonSearch} onPress={this.onSearch}>
-                        <ScaleImage source={require('@images/new/hospital/ic_search.png')} height={16} />
-                    </TouchableOpacity>
+                    {
+                        this.state.type == TYPE.SEARCH ?
+                            <TouchableOpacity style={[styles.buttonSearch, { borderLeftColor: '#BBB', borderLeftWidth: 0.7 }]} onPress={this.onRefress}>
+                                <ScaleImage source={require('@images/ic_close.png')} height={16} />
+                            </TouchableOpacity>
+                            :
+                            <TouchableOpacity style={[styles.buttonSearch,]} onPress={this.onSearch}>
+                                <ScaleImage source={require('@images/new/hospital/ic_search.png')} height={16} />
+                            </TouchableOpacity>
+
+                    }
+
                 </View>
-                <View style={styles.containerFilte}>
-                    <Text
-                        onPress={this.filterCSYT}
-                        style={styles.txtFilter}>Cơ sở y tế</Text>
-                    <Text onPress={this.filterSpecialist} style={styles.txtFilter}>Chuyên khoa</Text>
-                </View>
+                {/* <View style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                }}>
+                    <View style={styles.containerFilte}>
+                        <Text
+                            onPress={this.filterCSYT}
+                            style={styles.txtFilter}>Cơ sở y tế</Text>
+                        <Text onPress={this.filterSpecialist} style={styles.txtFilter}>Chuyên khoa</Text>
+                    </View>
+                    <Text 
+                    onPress={this.onRefress}
+                    style={styles.txtFilter}>Hiển thị tất cả</Text>
+                </View> */}
             </Animated.View>
         )
     }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TouchableHighlight } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TouchableHighlight, PixelRatio } from 'react-native';
 import StarRating from 'react-native-star-rating';
 import ScaleImage from "mainam-react-native-scaleimage";
 import ImageLoad from "mainam-react-native-image-loader";
@@ -174,7 +174,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     txtHospitalName: {
-        color: '#111'
+        color: '#111',
+        fontSize:PixelRatio.get() <= 2 ? 12 : 14
     },
     txtBooking: {
         backgroundColor: '#00CBA7',
@@ -196,6 +197,7 @@ const styles = StyleSheet.create({
         paddingRight: 3,
         fontStyle: 'italic',
         marginVertical: 5,
+        fontSize:PixelRatio.get() <= 2 ? 12 : 14,
         fontWeight: 'bold'
     },
     flexRow: {
@@ -264,7 +266,7 @@ const styles = StyleSheet.create({
     },
     txtNameDoctor: {
         color: '#000000',
-        fontSize: 18,
+        fontSize: PixelRatio.get() <= 2 ? 16 : 18,
         paddingTop: 8,
         paddingBottom: 4,
         fontWeight: 'bold'
