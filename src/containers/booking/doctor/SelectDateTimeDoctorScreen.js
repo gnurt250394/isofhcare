@@ -76,11 +76,14 @@ class SelectDateTimeDoctorScreen extends Component {
                     break;
 
                 if (date.format("HH:mm") < "11:30" || date.format("HH:mm") >= "13:30") {
+                    
                     let disabled = true;
                     let id;
                     for (let i = 0; i <= listSchedules.length; i++) {
                         if (listSchedules[i] && listSchedules[i].workTime.dayOfTheWeek == dateOfWeek) {
-                            if (listSchedules[i].workTime.start <= date.format('HH:mm') && listSchedules[i].workTime.end >= date.format('HH:mm')) {
+
+                            if (listSchedules[i].workTime.start < date.format('HH:mm')
+                                && listSchedules[i].workTime.end > date.format('HH:mm')) {
                                 disabled = false
                                 id = listSchedules[i].id
                                 break;
@@ -246,7 +249,7 @@ class SelectDateTimeDoctorScreen extends Component {
                     && dayOfWeek == this.state.profileDoctor.schedules[0].workTime.dayOfTheWeek) && keyDate > new Date() && (selected == null || keyDate < selected)) {
 
                     selected = keyDate;
-                } 
+                }
             }
             if (selected) {
                 (obj[selected.format("yyyy-MM-dd")] || {}).selected = true;
@@ -262,7 +265,7 @@ class SelectDateTimeDoctorScreen extends Component {
             })
             return obj;
         } catch (error) {
-            
+
 
         }
 
