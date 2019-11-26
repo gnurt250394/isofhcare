@@ -33,6 +33,15 @@ class ItemDoctor extends Component {
     showModal = (item) => () => {
         this.setState({ isVisible: true, item })
     }
+    renderDots = (item, i) => {
+        if (item.specializations.slice(0, 2).length - 1 == i && item.specializations.length > 2) {
+            return '...'
+        } else if(item.specializations.slice(0, 2).length - 1 == i){
+            return ' '
+        }else{
+            return ', '
+        }
+    }
     onBackdropPress = () => { this.setState({ isVisible: false }) }
     render() {
         const icSupport = require("@images/new/user.png");
@@ -75,9 +84,9 @@ class ItemDoctor extends Component {
                                 <Text style={styles.txtNameDoctor}>{item.academicDegree} {item.name}</Text>
                                 <View style={styles.flexRow}>
                                     {item.specializations && item.specializations.length > 0 ?
-                                        item.specializations.slice(0, 3).map((e, i) => {
+                                        item.specializations.slice(0, 2).map((e, i) => {
                                             return (
-                                                <Text style={styles.txtPosition} key={i}>{e.name}{item.specializations.slice(0, 3).length - 1 == i ? ' ' : ','}</Text>
+                                                <Text style={styles.txtPosition} numberOfLines={1} key={i}>{e.name}{this.renderDots(item, i)}</Text>
                                             )
                                         }) :
                                         null
@@ -175,7 +184,7 @@ const styles = StyleSheet.create({
     },
     txtHospitalName: {
         color: '#111',
-        fontSize:PixelRatio.get() <= 2 ? 12 : 14
+        fontSize: PixelRatio.get() <= 2 ? 12 : 14
     },
     txtBooking: {
         backgroundColor: '#00CBA7',
@@ -197,7 +206,7 @@ const styles = StyleSheet.create({
         paddingRight: 3,
         fontStyle: 'italic',
         marginVertical: 5,
-        fontSize:PixelRatio.get() <= 2 ? 12 : 14,
+        fontSize: PixelRatio.get() <= 2 ? 12 : 14,
         fontWeight: 'bold'
     },
     flexRow: {

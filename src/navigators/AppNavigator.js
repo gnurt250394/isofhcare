@@ -126,7 +126,7 @@ import SelectAddressScreen from '@containers/booking/SelectAddressScreen';
 import ListSpecialistScreen from '@containers/booking/doctor/ListSpecialistScreen';
 import ListHospitalScreen from '@containers/booking/doctor/ListHospitalScreen';
 import RatingDoctorScreen from '@containers/booking/doctor/RatingDoctorScreen';
-
+import ListRatingDoctorScreen from '@containers/booking/doctor/ListRatingDoctorScreen';
 const ProfileNavigation = createStackNavigator({
   selectProfile: SelectProfileScreen,
   createProfile: CreateProfileScreen,
@@ -349,6 +349,7 @@ const RootNavigator = createStackNavigator(
     selectAddress: { screen: SelectAddressScreen },
     listSpecialist: { screen: ListSpecialistScreen },
     ratingDoctor: { screen: RatingDoctorScreen },
+    listRatingDoctor: { screen: ListRatingDoctorScreen },
   },
   {
     headerMode: "none",
