@@ -41,10 +41,10 @@ class HomeScreen extends Component {
           text: "Lấy số",
           onPress: () => {
             if (this.props.userApp.isLogin)
-              this.props.navigation.navigate("selectHealthFacilitiesScreen");
+              this.props.navigation.navigate("getTicket");
             else
               this.props.navigation.navigate("login", {
-                nextScreen: { screen: "selectHealthFacilitiesScreen", param: {} }
+                nextScreen: { screen: "getTicket", param: {} }
               });
           }
         },
