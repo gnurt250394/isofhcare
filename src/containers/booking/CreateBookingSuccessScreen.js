@@ -188,7 +188,7 @@ class CreateBookingSuccessScreen extends Component {
                             }
 
                         </View>
-                        <View style={styles.view2}>
+                        {/* <View style={styles.view2}>
                         <View style={styles.col}>
                             <Text style={styles.col1}>Mã code:</Text>
                             <TouchableOpacity onPress={this.onQrClick} style={{ alignItems: 'center', marginTop: 10 }}>
@@ -201,7 +201,7 @@ class CreateBookingSuccessScreen extends Component {
                             <Text style={{textAlign:'center',color:'#4a4a4a',marginVertical:5}}>Mã đặt khám: {booking.book.codeBooking}</Text>
 
                         </View>
-                    </View>
+                    </View> */}
                         <View style={styles.view1}>
                             <Text style={styles.text2}>{constants.booking.booking_send}</Text>
                         </View>
