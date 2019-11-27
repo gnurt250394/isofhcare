@@ -71,7 +71,8 @@ import CreateBookingWithPaymentScreen from "@containers/booking/CreateBookingWit
 
 import CreateProfileScreen from "@containers/profile/CreateProfileScreen";
 import PaymentWithVNPayScreen from "@containers/payment/PaymentWithVNPayScreen";
-import SelectProfileScreen from "@containers/booking/SelectProfileScreen1";
+import SelectProfileScreen from "@containers/booking/SelectProfileScreen";
+// import SelectProfileScreen from "@containers/booking/SelectProfileScreen1";
 
 //-------get ticket----------------
 import SelectProfileMedicalScreen from "@containers/ticket/SelectProfileMedicalScreen";
@@ -319,7 +320,7 @@ const RootNavigator = createStackNavigator(
     createProfile: { screen: CreateProfileScreen },
     paymentVNPay: { screen: PaymentWithVNPayScreen },
     filterSpecialist: { screen: FilterSpecialistScreen },
-    selectProfile: { screen: SelectProfileScreen },
+    // selectProfile: { screen: SelectProfileScreen },
     patientHistory: { screen: PatientHistoryScreen },
     createBookingWithPayment: { screen: CreateBookingWithPaymentScreen },
 

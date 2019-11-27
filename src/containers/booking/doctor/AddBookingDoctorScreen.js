@@ -105,8 +105,10 @@ class AddBookingDoctorScreen extends Component {
                         listImages.push(images);
                     let imageUris = this.state.imageUris;
                     listImages.forEach(image => {
-                        if (imageUris.length >= 5)
+                        if (imageUris.length >= 5) {
+                            snackbar.show('Chỉ cho phép tối đa 5 ảnh', 'danger')
                             return;
+                        }
                         let temp = null;
                         imageUris.forEach((item) => {
                             if (item.uri == image.path)
@@ -606,6 +608,33 @@ class AddBookingDoctorScreen extends Component {
                             :
                             null
                         }
+                        {this.state.imageUris && this.state.imageUris.length > 0 ?
+                            <View style={styles.list_image}>
+                                {
+                                    this.state.imageUris.map((item, index) => <View key={index} style={styles.containerImagepicker}>
+                                        <View style={styles.groupImagePicker}>
+                                            <Image source={{ uri: item.uri }} resizeMode="cover" style={styles.imagePicker} />
+                                            {
+                                                item.error ?
+                                                    <View style={styles.error} >
+                                                        <ScaleImage source={require("@images/ic_warning.png")} width={40} />
+                                                    </View> :
+                                                    item.loading ?
+                                                        < View style={styles.imgLoading} >
+                                                            <ScaleImage source={require("@images/loading.gif")} width={40} />
+                                                        </View>
+                                                        : null
+                                            }
+                                        </View>
+                                        <TouchableOpacity onPress={this.removeImage.bind(this, index)} style={{ position: 'absolute', top: 0, right: 0 }} >
+                                            <ScaleImage source={require("@images/new/ic_close.png")} width={16} />
+                                        </TouchableOpacity>
+                                    </View>)
+                                }
+                            </View>
+                            :
+                            null
+                        }
                         {/**Voucher */}
                         <TouchableOpacity
                             onPress={this.goVoucher}
@@ -647,33 +676,7 @@ class AddBookingDoctorScreen extends Component {
                                 <ScaleImage style={styles.imgmdk} height={11} source={require("@images/new/booking/ic_next.png")} />
                             </TouchableOpacity>
                         </View>
-                        {this.state.imageUris && this.state.imageUris.length > 0 ?
-                            <View style={styles.list_image}>
-                                {
-                                    this.state.imageUris.map((item, index) => <View key={index} style={styles.containerImagepicker}>
-                                        <View style={styles.groupImagePicker}>
-                                            <Image source={{ uri: item.uri }} resizeMode="cover" style={styles.imagePicker} />
-                                            {
-                                                item.error ?
-                                                    <View style={styles.error} >
-                                                        <ScaleImage source={require("@images/ic_warning.png")} width={40} />
-                                                    </View> :
-                                                    item.loading ?
-                                                        < View style={styles.imgLoading} >
-                                                            <ScaleImage source={require("@images/loading.gif")} width={40} />
-                                                        </View>
-                                                        : null
-                                            }
-                                        </View>
-                                        <TouchableOpacity onPress={this.removeImage.bind(this, index)} style={{ position: 'absolute', top: 0, right: 0 }} >
-                                            <ScaleImage source={require("@images/new/ic_close.png")} width={16} />
-                                        </TouchableOpacity>
-                                    </View>)
-                                }
-                            </View>
-                            :
-                            null
-                        }
+
                         {/* <SelectPaymentDoctor service={services} ref={ref => this = ref} /> */}
                         <Text style={styles.txtHelper}>Nếu số tiền thanh toán trước cao hơn thực tế, quý khách sẽ nhận lại tiền thừa tại CSYT khám bệnh</Text>
                         <View style={styles.btn}>
@@ -922,7 +925,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
         marginTop: 10,
-        marginHorizontal: 20
+        marginHorizontal: 20,
+        paddingBottom: 10
     },
     errorStyle: {
         color: 'red',
