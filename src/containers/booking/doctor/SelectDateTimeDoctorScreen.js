@@ -217,18 +217,24 @@ class SelectDateTimeDoctorScreen extends Component {
 
             let obj = {};
             while (firstDay <= lastDay) {
-                let key = firstDay.format("yyyy-MM-dd");;
+                let key = firstDay.format("yyyy-MM-dd");
+                let dayOfWeek = this.getDayOfWeek(key)
+
 
                 obj[key] = {}
+
                 if (new Date(key) <= new Date()
                     // || firstDay.getDay() == 6 
                     || firstDay.getDay() == 0) {
                     obj[key].disabled = true;
                     obj[key].disableTouchEvent = true;
+
                 } else {
-                    obj[key].noSchedule = true;
+                    obj[key].disabled = true;
+                    obj[key].disableTouchEvent = true;
+                    obj[key].noSchedule = false;
                     obj[key].schedules = [];
-                    obj[key].marked = true;
+                    obj[key].marked = false;
                     obj[key].color = 'green';
                     obj[key].selectedColor = '#3161AD';
                 }
@@ -237,10 +243,23 @@ class SelectDateTimeDoctorScreen extends Component {
             }
             let selected = null;
             for (let key in obj) {
-                if (obj[key].disabled)
+
+                if (new Date(key) <= new Date())
                     continue;
                 let keyDate = new Date(key);
+                
                 let dayOfWeek = this.getDayOfWeek(key)
+                for (let i = 0; i < this.state.profileDoctor.schedules.length; i++) {
+                    if (this.state.profileDoctor.schedules[i].workTime.dayOfTheWeek == dayOfWeek) {
+                        obj[key].marked = true;
+                        obj[key].noSchedule = true;
+                        obj[key].disabled = false;
+                        obj[key].disableTouchEvent = false;
+                        break;
+                    }
+                    console.log('i: ', i);
+
+                }
                 if (this.state.profileDoctor.schedules && this.state.profileDoctor.schedules.length == 0) {
                     snackbar.show('Bác sĩ hiện tại không có lịch làm việc trong thời gian này', 'danger')
                 }

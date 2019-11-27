@@ -385,9 +385,9 @@ const styles = StyleSheet.create({
     },
     none_data: {
         fontStyle: 'italic',
-        marginTop: 30,
+        marginTop: '50%',
         alignSelf: 'center',
-        fontSize: 16
+        fontSize: 17
     },
     Specialist: {
         fontSize: 15,
