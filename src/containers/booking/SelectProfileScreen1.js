@@ -12,6 +12,7 @@ import clientUtils from '@utils/client-utils';
 import constants from '@resources/strings';
 import profileProvider from '@data-access/profile-provider'
 class SelectProfileScreen extends Component {
+    disable = false;
     constructor(props) {
         super(props);
         let profile = this.props.navigation.state.params.profile;
@@ -104,15 +105,15 @@ class SelectProfileScreen extends Component {
             );
     }
     selectPofile(profile) {
-        this.setState({
-            disable: true
-        }, () => {
+        if (!this.disable) {
+            this.disable = true
             let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
             if (callback) {
                 callback(profile);
             }
             this.props.navigation.pop();
-        })
+        }
+
     }
     keyExtractor = (item, index) => index.toString()
     headerComponent = () => {
@@ -136,7 +137,7 @@ class SelectProfileScreen extends Component {
         })
     }
     renderRelation = (item) => {
-        
+
         switch (item.medicalRecords.relationshipType) {
             case 'DAD':
                 return 'Cha'
@@ -214,7 +215,7 @@ class SelectProfileScreen extends Component {
                             source={require("@images/new/profile/ic_plus.png")}
                             width={12}
                             style={{
-                                tintColor:'#00BA99'
+                                tintColor: '#00BA99'
                             }}
                         />
                     </TouchableOpacity>
@@ -300,9 +301,9 @@ const styles = StyleSheet.create({
         marginBottom: 30,
         backgroundColor: 'rgb(255, 255, 255)',
         width: '100%',
-        flexDirection:'row',
-        alignItems:'center',
-        justifyContent:'space-between',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
         paddingHorizontal: 10,
         paddingVertical: 10,
     },
@@ -352,7 +353,7 @@ const styles = StyleSheet.create({
         color: "#02c39a",
         textAlign: 'center',
         margin: 10,
-        fontWeight:'bold'
+        fontWeight: 'bold'
     },
     btntext2: {
         fontSize: 18,
