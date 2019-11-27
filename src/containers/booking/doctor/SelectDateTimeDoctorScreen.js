@@ -257,7 +257,6 @@ class SelectDateTimeDoctorScreen extends Component {
                         obj[key].disableTouchEvent = false;
                         break;
                     }
-                    console.log('i: ', i);
 
                 }
                 if (this.state.profileDoctor.schedules && this.state.profileDoctor.schedules.length == 0) {
