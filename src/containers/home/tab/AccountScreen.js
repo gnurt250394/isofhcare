@@ -280,7 +280,7 @@ class AccountScreen extends Component {
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.itemMenu]}
-                onPress={this.navigate_to("patientHistory", { title: "Lịch khám" })}
+                onPress={this.navigate_to("listBookingHistory", { title: "Lịch khám" })}
               >
                 <Text style={styles.itemText}>{constants.account_screens.examination_schedule}</Text>
                 <ScaledImage style={{ tintColor: '#008D6F' }}
