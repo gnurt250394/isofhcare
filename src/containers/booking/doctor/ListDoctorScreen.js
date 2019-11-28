@@ -284,9 +284,6 @@ class ListDoctorScreen extends Component {
                     // )}
                 >
                     <View style={[styles.backgroundHeader,]}></View>
-                    {
-                        this.state.height ?
-                            <View style={{ flex: 1, }}>
 
                                 <FlatList
                                     data={data}
@@ -299,9 +296,6 @@ class ListDoctorScreen extends Component {
                                     onRefresh={this.onRefress}
                                     refreshing={refreshing}
                                 />
-                            </View>
-                            : null
-                    }
                 </ScrollView>
             </ActivityPanel >
         );
