@@ -90,12 +90,12 @@ module.exports = {
             room = {
                 "id": room.id,
                 "name": room.name
-            },
-                patient = {
-                    id: patient.id,
-                    name: patient.name,
-                    phone: patient.phone
-                }
+            }
+            patient = {
+                id: patient.id,
+                name: patient.name,
+                phone: patient.phone
+            }
             //     console.log('room: ', room);
             client.requestApi(
                 "post",
@@ -179,6 +179,33 @@ module.exports = {
                 "get",
                 URL +
                 `${url}?page=${page}&size=${size}`
+                , {}, (s, e) => {
+                    if (s) resolve(s);
+                    else reject(e);
+                }
+            );
+        });
+    },
+    getListBooking(patientId, page, size) {
+        return new Promise((resolve, reject) => {
+            let url = constants.api.booking.doctor.get_list_booking.replace('patientId', patientId)
+            client.requestApi(
+                "get",
+                URL2 +
+                `${url}?page=${page}&size=${size}&sort=desc&properties=created`
+                , {}, (s, e) => {
+                    if (s) resolve(s);
+                    else reject(e);
+                }
+            );
+        });
+    },
+    getDetailBooking(id) {
+        return new Promise((resolve, reject) => {
+            client.requestApi(
+                "get",
+                URL2 +
+                `${constants.api.booking.doctor.get_detail_booking}/${id}`
                 , {}, (s, e) => {
                     if (s) resolve(s);
                     else reject(e);

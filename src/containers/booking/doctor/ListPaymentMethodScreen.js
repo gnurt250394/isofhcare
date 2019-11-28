@@ -8,11 +8,11 @@ class ListPaymentMethodScreen extends Component {
         super(props);
         this.state = {
             data: [
-                { id: 1, value: 1, name: 'VNPAY' },
+                // { id: 1, value: 1, name: 'VNPAY' },
                 { id: 2, value: 2, name: 'Thanh toán sau tại CSYT' },
-                { id: 3, value: 3, name: 'PAYOO' },
-                { id: 4, value: 4, name: 'PAYOO - cửa hàng tiện ích' },
-                { id: 5, value: 5, name: 'PAYOO - trả góp 0%' },
+                // { id: 3, value: 3, name: 'PAYOO' },
+                // { id: 4, value: 4, name: 'PAYOO - cửa hàng tiện ích' },
+                // { id: 5, value: 5, name: 'PAYOO - trả góp 0%' },
                 { id: 6, value: 6, name: 'Chuyển khoản trực tiếp' },
             ]
         };

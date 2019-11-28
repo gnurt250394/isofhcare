@@ -215,7 +215,9 @@ class ListDoctorScreen extends Component {
     backPress = () => this.props.navigation && this.props.navigation.pop()
     renderHeader = () => {
         return (
-            <Animated.View style={[styles.containerHeader, { transform: [{ translateY: this.header }] }]}
+            <View style={[styles.containerHeader, 
+                // { transform: [{ translateY: this.header }] }
+            ]}
                 onLayout={(event) => {
                     this.setState({ height: event.nativeEvent.layout.height })
                     // this.height = event.nativeEvent.layout.height
@@ -266,7 +268,7 @@ class ListDoctorScreen extends Component {
                     onPress={this.onRefress}
                     style={styles.txtFilter}>Hiển thị tất cả</Text>
                 </View> */}
-            </Animated.View>
+            </View>
         )
     }
     render() {
@@ -275,16 +277,16 @@ class ListDoctorScreen extends Component {
             <ActivityPanel
                 actionbar={this.renderHeader}
                 isLoading={this.state.isLoading}>
-                <Animated.ScrollView
-                    onScroll={Animated.event(
-                        [{ nativeEvent: { contentOffset: { y: this.onScroll } } }],
-                        { useNativeDriver: true },
-                    )}
+                <ScrollView
+                    // onScroll={Animated.event(
+                    //     [{ nativeEvent: { contentOffset: { y: this.onScroll } } }],
+                    //     { useNativeDriver: true },
+                    // )}
                 >
                     <View style={[styles.backgroundHeader,]}></View>
                     {
                         this.state.height ?
-                            <View style={{ flex: 1, marginTop: this.state.height }}>
+                            <View style={{ flex: 1, }}>
 
                                 <FlatList
                                     data={data}
@@ -300,7 +302,7 @@ class ListDoctorScreen extends Component {
                             </View>
                             : null
                     }
-                </Animated.ScrollView>
+                </ScrollView>
             </ActivityPanel >
         );
     }
@@ -323,7 +325,7 @@ const styles = StyleSheet.create({
         fontWeight: '700'
     },
     containerHeader: {
-        position: 'absolute',
+        // position: 'absolute',
         zIndex: 100,
         left: 0,
         right: 0,
@@ -339,7 +341,7 @@ const styles = StyleSheet.create({
     },
     backgroundHeader: {
         backgroundColor: '#02C39A',
-        height: height / 4,
+        height: 100,
         position: 'absolute',
         left: 0,
         top: 0,
