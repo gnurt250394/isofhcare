@@ -275,7 +275,7 @@ class AccountScreen extends Component {
             <TouchableOpacity
               style={[styles.itemMenu]}
               onPress={() => {
-                this.props.navigation.navigate("patientHistory", {
+                this.props.navigation.navigate("listBookingHistory", {
                   title: "Lịch khám"
                 });
               }}
