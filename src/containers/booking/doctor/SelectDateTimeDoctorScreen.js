@@ -221,6 +221,7 @@ class SelectDateTimeDoctorScreen extends Component {
     }
     generateSchedule(month) {
         try {
+            let arrIndex = []
             let firstDay = month.getFirstDateOfMonth();
 
             let lastDay = month.getLastDateOfMonth();
@@ -266,19 +267,22 @@ class SelectDateTimeDoctorScreen extends Component {
                         : 'Bác sĩ'
                     snackbar.show(doctor + 'không có lịch làm việc trong thời gian này', 'danger')
                 }
+
                 let dataSchedules = this.state.profileDoctor.schedules.sort((a, b) => this.days.indexOf(b.workTime.dayOfTheWeek) - this.days.indexOf(a.workTime.dayOfTheWeek))
                 for (let i = 0; i < dataSchedules.length; i++) {
                     // if (dataSchedules[i].workTime.dayOfTheWeek == dayOfWeek) {
-                        if (dataSchedules[i].workTime.dayOfTheWeek == dayOfWeek && key == dataSchedules[i].workTime.day || dataSchedules[i].workTime.repeat) {
+                    if (dataSchedules[i].workTime.dayOfTheWeek == dayOfWeek && key == dataSchedules[i].workTime.day || dataSchedules[i].workTime.repeat) {
+                        arrIndex.push(i)
+                        console.log('arrIndex: ', arrIndex);
                         obj[key].marked = true;
                         obj[key].noSchedule = true;
                         obj[key].disabled = false;
                         obj[key].disableTouchEvent = false;
-                        selected = keyDate;
+                        if (arrIndex && arrIndex.length == 1) {
+                            selected = keyDate;
+                        }
                         break;
                     }
-
-
                 }
             }
             if (selected) {
