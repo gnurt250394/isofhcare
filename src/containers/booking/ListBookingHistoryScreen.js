@@ -267,7 +267,7 @@ class ListBookingHistoryScreen extends Component {
                     <FlatList
                         data={this.state.data}
                         refreshing={this.state.refreshing}
-                        onRefresh={this.onRefresh}
+                        onRefresh={this.onRefress}
                         // extraData={this.state}
                         onEndReached={this.loadMore}
                         onEndReachedThreshold={1}
