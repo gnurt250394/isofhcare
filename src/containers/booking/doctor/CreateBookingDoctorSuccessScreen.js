@@ -49,15 +49,20 @@ class CreateBookingDoctorSuccessScreen extends Component {
     goHome = () => {
         this.props.navigation.pop();
     }
+    getPrice = (service, voucher) => {
+        let price = voucher && voucher.price ? voucher.price : 0
+        if (price > service.monetaryAmount.value) {
+            return 0
+        }
+        return (service.monetaryAmount.value - price).formatPrice()
+    }
     onBackdropPress = () => this.setState({ isVisible: false })
     render() {
         let detailSchedule = this.props.navigation.getParam('detailSchedule');
         let bookingDate = this.props.navigation.getParam('bookingDate');
-        console.log('bookingDate: ', bookingDate);
-        console.log('detailSchedule: ', detailSchedule);
         let booking = this.props.navigation.getParam('booking');
-        console.log(booking, 'bookingbooking')
         let service = detailSchedule.medicalService || [];
+        let voucher = this.props.navigation.getParam('voucher');
         // if (!booking || !booking.profile || !booking.hospital || !booking.hospital.hospital || !booking.book) {
         //     this.props.navigation.pop();
         //     return null;
@@ -120,7 +125,7 @@ class CreateBookingDoctorSuccessScreen extends Component {
                                     <View style={styles.containerServices}>
                                         <View style={styles.flex}>
                                             <Text numberOfLines={1} style={[styles.text, styles.flex]}>{service.name}</Text>
-                                            {/* <Text style={[styles.text, { marginBottom: 5 }]}>({parseInt(service.monetaryAmount.value).formatPrice()}đ)</Text> */}
+                                            <Text style={[styles.text, { marginBottom: 5, color: '#BBB', fontStyle: 'italic' }]}>({parseInt(service.monetaryAmount.value).formatPrice()}đ) </Text>
                                         </View>
                                     </View>
                                 </View> : null
@@ -135,11 +140,18 @@ class CreateBookingDoctorSuccessScreen extends Component {
                                 <Text style={styles.txtAddressBooking}>{booking.description}</Text>
                             </View>
                             <View style={styles.between} />
+                            {voucher && voucher.price ?
+                                <View style={styles.row}>
+                                    <Text style={styles.txtTotalPrice}></Text>
+                                    <Text style={[styles.text, { color: '#BBB', fontStyle: 'italic' }]}>-{voucher.price.formatPrice()}đ </Text>
+                                </View>
+                                : null
+                            }
                             {
                                 service && service.monetaryAmount && service.monetaryAmount.value ?
                                     <View style={styles.row}>
                                         <Text style={styles.txtTotalPrice}>{constants.booking.sum_price}:</Text>
-                                        <Text style={[styles.text, { color: "#d0021b" }]}>{service.monetaryAmount.value.formatPrice()}đ</Text>
+                                        <Text style={[styles.text, { color: "#d0021b", fontStyle: 'italic' }]}>{this.getPrice(service, voucher)}đ </Text>
                                     </View> : null
                             }
                             <View style={styles.row}>

@@ -56,7 +56,7 @@ class AddBookingDoctorScreen extends Component {
         this.setState({ imageUris });
     }
     componentDidMount() {
-        
+
         // AppState.addEventListener('change', this._handleAppStateChange);
         dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, (s, e) => {
             if (s) {
@@ -303,19 +303,16 @@ class AddBookingDoctorScreen extends Component {
         let { paymentMethod } = this.state
         let date = new Date(this.state.schedule.key).format("yyyy-MM-dd")
         let { reason, voucher, detailSchedule, profile, schedule, profileDoctor } = this.state
-
-
-
-
+        let discount = voucher && voucher.price ? voucher.price : 0
         // let patitent = profile && profile.medicalRecords
         let patitent = this.props.userApp.currentUser
-        
+
         connectionUtils.isConnected().then(s => {
             this.setState({ isLoading: true }, () => {
                 bookingDoctorProvider.create(
                     date,
                     reason,
-                    voucher,
+                    discount,
                     detailSchedule.doctor,
                     profileDoctor.hospital,
                     detailSchedule.medicalService,
@@ -403,19 +400,12 @@ class AddBookingDoctorScreen extends Component {
         const { detailSchedule } = this.state
 
         let priceVoucher = this.state.voucher && this.state.voucher.price ? this.state.voucher.price : 0
-        // let services = detailSchedule.detailSchedule || []
         let services = detailSchedule.medicalService || {}
-
-
-
-        // let priceFinal = services.reduce((start, item) => {
-
-        //     return start + parseInt(item.monetaryAmount.value)
-        // }, 0)
-
-        // return (priceFinal - priceVoucher).formatPrice()
-        let price = services && services.monetaryAmount && services.monetaryAmount.value ? services.monetaryAmount.value.formatPrice() : 0
-        return price - priceVoucher
+        let price = services && services.monetaryAmount && services.monetaryAmount.value ? services.monetaryAmount.value : 0
+        if (priceVoucher > price) {
+            return 0
+        }
+        return (price - priceVoucher).formatPrice()
 
     }
     componentWillReceiveProps = (props) => {
@@ -430,7 +420,8 @@ class AddBookingDoctorScreen extends Component {
     goVoucher = () => {
         this.props.navigation.navigate('myVoucher', {
             onSelected: this.getVoucher,
-            booking: this.state.hospital
+            booking: this.state.hospital,
+            voucher: this.state.voucher
         })
     }
     renderServices = (hospital) => {
@@ -661,11 +652,22 @@ class AddBookingDoctorScreen extends Component {
                             </View>
                         </TouchableOpacity>
                         {/** sum Price */}
-                        <View style={styles.containerVoucher}>
-                            <Text style={styles.txtSumPrice}>Tổng tiền</Text>
-                            <Text style={styles.sumPrice}>{this.getPrice()}đ</Text>
+                        <View style={styles.containerPriveVoucher}>
+                            {
+                                this.state.voucher && this.state.voucher.price ?
+                                    <View style={[styles.containerVoucher, { paddingBottom: 5 }]}>
+                                        <Text style={styles.txtSumPrice}></Text>
+                                        <Text style={{
+                                            color: '#000'
+                                        }}>-{this.state.voucher.price.formatPrice()}đ</Text>
+                                    </View>
+                                    : null
+                            }
+                            <View style={styles.containerVoucher}>
+                                <Text style={styles.txtSumPrice}>Tổng tiền</Text>
+                                <Text style={styles.sumPrice}>{this.getPrice()}đ</Text>
+                            </View>
                         </View>
-
                         {/** Payment Method */}
                         <View>
                             <TouchableOpacity style={styles.buttonPayment}
@@ -723,6 +725,11 @@ class AddBookingDoctorScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+    containerPriveVoucher: {
+        paddingHorizontal: 10,
+        backgroundColor: 'rgba(225,225,225,0.3)',
+        paddingVertical: 20,
+    },
     txtPaymentMethod: {
         fontSize: 15,
         fontWeight: "bold",
@@ -762,9 +769,7 @@ const styles = StyleSheet.create({
     containerVoucher: {
         flexDirection: 'row',
         alignItems: 'center',
-        paddingHorizontal: 10,
-        backgroundColor: 'rgba(225,225,225,0.3)',
-        paddingVertical: 20,
+
     },
     txtChange: {
         fontWeight: '700',
