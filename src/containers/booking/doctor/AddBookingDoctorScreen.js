@@ -56,6 +56,7 @@ class AddBookingDoctorScreen extends Component {
         this.setState({ imageUris });
     }
     componentDidMount() {
+        
         // AppState.addEventListener('change', this._handleAppStateChange);
         dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, (s, e) => {
             if (s) {
@@ -306,7 +307,9 @@ class AddBookingDoctorScreen extends Component {
 
 
 
-        let patitent = profile && profile.medicalRecords
+        // let patitent = profile && profile.medicalRecords
+        let patitent = this.props.userApp.currentUser
+        
         connectionUtils.isConnected().then(s => {
             this.setState({ isLoading: true }, () => {
                 bookingDoctorProvider.create(
@@ -412,7 +415,7 @@ class AddBookingDoctorScreen extends Component {
 
         // return (priceFinal - priceVoucher).formatPrice()
         let price = services && services.monetaryAmount && services.monetaryAmount.value ? services.monetaryAmount.value.formatPrice() : 0
-        return price
+        return price - priceVoucher
 
     }
     componentWillReceiveProps = (props) => {
