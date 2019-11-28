@@ -17,7 +17,7 @@ class ListBookingHistoryScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            refreshing: true,
+            refreshing: false,
             isLoading: true,
             page: 0,
             size: 10,
@@ -30,14 +30,14 @@ class ListBookingHistoryScreen extends Component {
     }
     getData = () => {
         BookingDoctorProvider.getListBooking(this.props.userApp.currentUser.id, this.state.page, this.state.size).then(res => {
-            this.setState({ isLoading: false })
+            this.setState({ isLoading: false, refreshing: false })
             if (res && res.length > 0) {
                 this.formatData(res)
             } else {
                 this.formatData([])
             }
         }).catch(err => {
-            this.setState({ isLoading: false })
+            this.setState({ isLoading: false, refreshing: false })
             this.formatData([])
         })
     }

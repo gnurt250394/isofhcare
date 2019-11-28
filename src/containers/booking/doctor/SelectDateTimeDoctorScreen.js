@@ -38,6 +38,7 @@ class SelectDateTimeDoctorScreen extends Component {
             listHospital: [],
             profileDoctor: {}
         }
+        this.days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
     }
     getTime(yourDateString) {
         var yourDate = new Date(yourDateString);
@@ -52,15 +53,15 @@ class SelectDateTimeDoctorScreen extends Component {
         return yourDate;
     }
     getDayOfWeek = (dateSelect) => {
-        let days = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
         let date = new Date(dateSelect)
-        let dayOfWeek = days[date.getDay()];
+        let dayOfWeek = this.days[date.getDay()];
 
         return dayOfWeek
     }
 
     selectDay(day) {
-        let data = this.state.schedules[day].schedules || [];
+        let data = this.state.schedules[day].lock || [];
+
         let listSchedules = this.state.profileDoctor.schedules || []
 
 
@@ -80,9 +81,18 @@ class SelectDateTimeDoctorScreen extends Component {
                     let id;
                     for (let i = 0; i <= listSchedules.length; i++) {
                         if (listSchedules[i] && listSchedules[i].workTime.dayOfTheWeek == dateOfWeek) {
+                            let index = listSchedules[i].timeSlots.findIndex(e => e.date == day && e.time == date.format("HH:mm"))
+                            if (index != -1) {
+                                if (listSchedules[i].timeSlots[index].lock) {
+                                    disabled = true
+                                    id = listSchedules[i].id
+                                    break
+                                }
+                            }
 
                             if (listSchedules[i].workTime.start <= date.format('HH:mm')
-                                && listSchedules[i].workTime.end > date.format('HH:mm')) {
+                                && listSchedules[i].workTime.end > date.format('HH:mm')
+                            ) {
                                 disabled = false
                                 id = listSchedules[i].id
                                 break;
@@ -243,29 +253,32 @@ class SelectDateTimeDoctorScreen extends Component {
             }
             let selected = null;
             for (let key in obj) {
-
-                if (new Date(key) <= new Date())
+                let dayOfWeek = this.getDayOfWeek(key)
+                if (new Date(key) <= new Date() || dayOfWeek == 'SUNDAY')
                     continue;
                 let keyDate = new Date(key);
-                
-                let dayOfWeek = this.getDayOfWeek(key)
-                for (let i = 0; i < this.state.profileDoctor.schedules.length; i++) {
-                    if (this.state.profileDoctor.schedules[i].workTime.dayOfTheWeek == dayOfWeek) {
+
+                if (this.state.profileDoctor.schedules && this.state.profileDoctor.schedules.length == 0) {
+                    let doctor = this.state.profileDoctor
+                        && this.state.profileDoctor.academicDegree
+                        && this.state.profileDoctor.name
+                        ? this.state.profileDoctor.academicDegree + " " + this.state.profileDoctor.name
+                        : 'Bác sĩ'
+                    snackbar.show(doctor + 'không có lịch làm việc trong thời gian này', 'danger')
+                }
+                let dataSchedules = this.state.profileDoctor.schedules.sort((a, b) => this.days.indexOf(b.workTime.dayOfTheWeek) - this.days.indexOf(a.workTime.dayOfTheWeek))
+                for (let i = 0; i < dataSchedules.length; i++) {
+                    // if (dataSchedules[i].workTime.dayOfTheWeek == dayOfWeek) {
+                        if (dataSchedules[i].workTime.dayOfTheWeek == dayOfWeek && key == dataSchedules[i].workTime.day || dataSchedules[i].workTime.repeat) {
                         obj[key].marked = true;
                         obj[key].noSchedule = true;
                         obj[key].disabled = false;
                         obj[key].disableTouchEvent = false;
+                        selected = keyDate;
                         break;
                     }
 
-                }
-                if (this.state.profileDoctor.schedules && this.state.profileDoctor.schedules.length == 0) {
-                    snackbar.show('Bác sĩ hiện tại không có lịch làm việc trong thời gian này', 'danger')
-                }
-                if ((this.state.profileDoctor && this.state.profileDoctor.schedules && this.state.profileDoctor.schedules.length > 0
-                    && dayOfWeek == this.state.profileDoctor.schedules[0].workTime.dayOfTheWeek) && keyDate > new Date() && (selected == null || keyDate < selected)) {
 
-                    selected = keyDate;
                 }
             }
             if (selected) {
@@ -509,18 +522,8 @@ class SelectDateTimeDoctorScreen extends Component {
 
                         <Card style={styles.containerCalendar}>
                             <Text style={styles.txtTitleHeader}>{profileDoctor.academicDegree} {profileDoctor.name}</Text>
-                            <Text style={{
-                                paddingLeft: 15,
-                                color: '#000',
-                                fontWeight: 'bold'
-                            }}>NGÀY KHÁM</Text>
-                            <View style={{
-                                borderColor: '#ccc',
-                                borderWidth: 1,
-                                margin: 10,
-                                borderRadius: 10,
-                                padding: 10,
-                            }}>
+                            <Text style={styles.txtDateBooking}>NGÀY KHÁM</Text>
+                            <View style={styles.groupCalendar}>
                                 <Calendar style={styles.calendar}
                                     markedDates={this.state.schedules}
                                     current={(this.state.latestTime || new Date()).format("yyyy-MM-dd")}
@@ -590,6 +593,18 @@ function mapStateToProps(state) {
     };
 }
 const styles = StyleSheet.create({
+    groupCalendar: {
+        borderColor: '#ccc',
+        borderWidth: 1,
+        margin: 10,
+        borderRadius: 10,
+        padding: 10,
+    },
+    txtDateBooking: {
+        paddingLeft: 15,
+        color: '#000',
+        fontWeight: 'bold'
+    },
     txtHelp: {
         fontStyle: 'italic',
         marginVertical: 20,

@@ -132,11 +132,11 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         margin: 20,
         borderRadius: 30,
-        transform: [
-            { rotateX: '30deg' },
-            // { rotateZ: '15deg' },
-            { rotateY: '10deg' }
-        ],
+        // transform: [
+        //     { rotateX: '30deg' },
+        //     // { rotateZ: '15deg' },
+        //     { rotateY: '10deg' }
+        // ],
         backgroundColor: "#fff",
         elevation: 3,
         shadowColor: '#333',
