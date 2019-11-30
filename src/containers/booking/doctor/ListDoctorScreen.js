@@ -215,7 +215,7 @@ class ListDoctorScreen extends Component {
     backPress = () => this.props.navigation && this.props.navigation.pop()
     renderHeader = () => {
         return (
-            <View style={[styles.containerHeader, 
+            <View style={[styles.containerHeader,
                 // { transform: [{ translateY: this.header }] }
             ]}
                 onLayout={(event) => {
@@ -277,25 +277,25 @@ class ListDoctorScreen extends Component {
             <ActivityPanel
                 actionbar={this.renderHeader}
                 isLoading={this.state.isLoading}>
+                <View style={[styles.backgroundHeader,]} />
                 <ScrollView
-                    // onScroll={Animated.event(
-                    //     [{ nativeEvent: { contentOffset: { y: this.onScroll } } }],
-                    //     { useNativeDriver: true },
-                    // )}
+                // onScroll={Animated.event(
+                //     [{ nativeEvent: { contentOffset: { y: this.onScroll } } }],
+                //     { useNativeDriver: true },
+                // )}
                 >
-                    <View style={[styles.backgroundHeader,]}></View>
 
-                                <FlatList
-                                    data={data}
-                                    renderItem={this.renderItem}
-                                    // style={{paddingTop:height/4}}
-                                    keyExtractor={this.keyExtractor}
-                                    ListEmptyComponent={this.listEmpty}
-                                    onEndReached={this.loadMore}
-                                    onEndReachedThreshold={0.6}
-                                    onRefresh={this.onRefress}
-                                    refreshing={refreshing}
-                                />
+                    <FlatList
+                        data={data}
+                        renderItem={this.renderItem}
+                        // style={{paddingTop:height/4}}
+                        keyExtractor={this.keyExtractor}
+                        ListEmptyComponent={this.listEmpty}
+                        onEndReached={this.loadMore}
+                        onEndReachedThreshold={0.6}
+                        onRefresh={this.onRefress}
+                        refreshing={refreshing}
+                    />
                 </ScrollView>
             </ActivityPanel >
         );

@@ -268,12 +268,13 @@ class SelectDateTimeDoctorScreen extends Component {
                     snackbar.show(doctor + 'không có lịch làm việc trong thời gian này', 'danger')
                 }
 
-                let dataSchedules = this.state.profileDoctor.schedules.sort((a, b) => this.days.indexOf(b.workTime.dayOfTheWeek) - this.days.indexOf(a.workTime.dayOfTheWeek))
+                let dataSchedules = this.state.profileDoctor.schedules ? this.state.profileDoctor.schedules : []
                 for (let i = 0; i < dataSchedules.length; i++) {
                     // if (dataSchedules[i].workTime.dayOfTheWeek == dayOfWeek) {
-                    if (dataSchedules[i].workTime.dayOfTheWeek == dayOfWeek && key == dataSchedules[i].workTime.day || dataSchedules[i].workTime.repeat) {
+                    if ((dataSchedules[i].workTime.dayOfTheWeek == dayOfWeek
+                        && dataSchedules[i].workTime.expired >= key
+                        && dataSchedules[i].workTime.repeat) || (key == dataSchedules[i].workTime.day)) {
                         arrIndex.push(i)
-                        console.log('arrIndex: ', arrIndex);
                         obj[key].marked = true;
                         obj[key].noSchedule = true;
                         obj[key].disabled = false;
@@ -283,6 +284,18 @@ class SelectDateTimeDoctorScreen extends Component {
                         }
                         break;
                     }
+                    // else {
+                    //     if (timeout) clearTimeout(timeout)
+                    //     let timeout = setTimeout(() => {
+                    //         let date = new Date()
+                    //         date.setMonth(date.getMonth() + 1)
+                    //         // 
+                    //         // this.setState({ latestTime: date }, () => {
+                    //         //     this.selectMonth(date)
+                    //         //     
+                    //         // })
+                    //     })
+                    // }
                 }
             }
             if (selected) {
@@ -348,22 +361,23 @@ class SelectDateTimeDoctorScreen extends Component {
     selectMonth(date) {
         if (this.state.isNotHaveSchedule) {
             this.generateSchedule(date);
-        } else {
-            if (this.state.service && this.state.service.length) {
-                let service = this.state.service[0];
-                this.setState({ isLoading: true }, () => {
-
-
-                    scheduleProvider.getByMonthAndService(service.service.id, date.format("yyyyMM")).then(s => {
-                        this.setState({ isLoading: false }, () => {
-                            this.groupSchedule(s.data);
-                        });
-                    }).catch(e => {
-                        this.setState({ isLoading: false });
-                    })
-                })
-            }
         }
+        // else {
+        //     if (this.state.service && this.state.service.length) {
+        //         let service = this.state.service[0];
+        //         this.setState({ isLoading: true }, () => {
+
+
+        //             scheduleProvider.getByMonthAndService(service.service.id, date.format("yyyyMM")).then(s => {
+        //                 this.setState({ isLoading: false }, () => {
+        //                     this.groupSchedule(s.data);
+        //                 });
+        //             }).catch(e => {
+        //                 this.setState({ isLoading: false });
+        //             })
+        //         })
+        //     }
+        // }
     }
 
     selectTime = (item) => () => {
@@ -534,6 +548,7 @@ class SelectDateTimeDoctorScreen extends Component {
                                     onDayPress={this.onSelectDay}
                                     monthFormat={'MMMM - yyyy'}
                                     onMonthChange={this.onMonthChange}
+                                    ref={ref => this.calendar = ref}
                                     // hideArrows={true}
                                     hideExtraDays={true}
                                     firstDay={1}
