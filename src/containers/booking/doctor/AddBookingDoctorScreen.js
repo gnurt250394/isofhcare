@@ -143,6 +143,10 @@ class AddBookingDoctorScreen extends Component {
                         }
                     })
                     this.setState({ imageUris: [...imageUris] });
+                }).catch(err => {
+                    if (err) {
+                        snackbar.show('Định dạng ảnh không được hỗ trợ hoặc ảnh đã bị hỏng vui lòng chọn ảnh khác', 'danger')
+                    }
                 });
 
             }
