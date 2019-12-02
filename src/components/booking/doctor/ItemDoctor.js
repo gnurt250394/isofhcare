@@ -36,9 +36,9 @@ class ItemDoctor extends Component {
     renderDots = (item, i) => {
         if (item.specializations.slice(0, 2).length - 1 == i && item.specializations.length > 2) {
             return '...'
-        } else if(item.specializations.slice(0, 2).length - 1 == i){
+        } else if (item.specializations.slice(0, 2).length - 1 == i) {
             return ' '
-        }else{
+        } else {
             return ', '
         }
     }

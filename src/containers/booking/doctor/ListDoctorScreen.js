@@ -218,10 +218,10 @@ class ListDoctorScreen extends Component {
             <View style={[styles.containerHeader,
                 // { transform: [{ translateY: this.header }] }
             ]}
-                onLayout={(event) => {
-                    this.setState({ height: event.nativeEvent.layout.height })
-                    // this.height = event.nativeEvent.layout.height
-                }}
+                // onLayout={(event) => {
+                //     this.setState({ height: event.nativeEvent.layout.height })
+                //     // this.height = event.nativeEvent.layout.height
+                // }}
             >
                 <ActionBar
                     actionbarTextColor={[{ color: constants.colors.actionbar_title_color }]}
@@ -278,12 +278,12 @@ class ListDoctorScreen extends Component {
                 actionbar={this.renderHeader}
                 isLoading={this.state.isLoading}>
                 <View style={[styles.backgroundHeader,]} />
-                <ScrollView
+                {/* <ScrollView
                 // onScroll={Animated.event(
                 //     [{ nativeEvent: { contentOffset: { y: this.onScroll } } }],
                 //     { useNativeDriver: true },
                 // )}
-                >
+                > */}
 
                     <FlatList
                         data={data}
@@ -294,9 +294,9 @@ class ListDoctorScreen extends Component {
                         onEndReached={this.loadMore}
                         onEndReachedThreshold={0.6}
                         onRefresh={this.onRefress}
-                        refreshing={refreshing}
+                        refreshing={this.state.refreshing}
                     />
-                </ScrollView>
+                {/* </ScrollView> */}
             </ActivityPanel >
         );
     }
