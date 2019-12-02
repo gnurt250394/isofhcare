@@ -395,7 +395,7 @@ class AddBookingDoctorScreen extends Component {
                 alignItems: 'center'
             }}>
                 <Text style={{ textAlign: 'left', color: '#000', fontWeight: 'bold', paddingRight: 10, }}>{(new Date(this.state.schedule.key)).format("dd/MM/yyyy")}</Text>
-                <Text style={{ textAlign: 'left', color: '#02c39a', fontWeight: 'bold' }}>{(new Date(this.state.schedule.key)).format("HH:mm tt")}</Text>
+                <Text style={{ textAlign: 'left', color: '#02c39a', fontWeight: 'bold' }}>{(new Date(this.state.schedule.key)).format("HH:mm")}</Text>
             </View>
         return <Text style={{ textAlign: 'left' }}>Chọn ngày và giờ</Text>;
     }
