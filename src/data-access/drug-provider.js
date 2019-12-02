@@ -3,9 +3,9 @@ import string from 'mainam-react-native-string-utils';
 import constants from '@resources/strings';
 import datacacheProvider from '@data-access/datacache-provider';
 module.exports = {
-    createDrug(data) {
+    createDrug(data, idDrug) {
         return new Promise((resolve, reject) => {
-            client.requestApi("post", `${constants.api.drug.create_drug}`, data, (s, e) => {
+            client.requestApi(idDrug ? "put" : "post", `${constants.api.drug.create_drug}${idDrug ? `/${idDrug}` : ''}`, data, (s, e) => {
                 if (s) {
                     resolve(s);
                 }
@@ -15,7 +15,7 @@ module.exports = {
     },
     getLocation(id, page, size) {
         return new Promise((resolve, reject) => {
-            client.requestApi('get', `${constants.api.drug.get_location}?ownerId=${id}&page=${page}&size=${size}&sort=desc&properties=created`, {}, (s, e) => {
+            client.requestApi('get', `${constants.api.drug.get_location}/${id}?page=${page}&size=${size}&sort=desc&properties=created`, {}, (s, e) => {
                 if (s)
                     resolve(s)
                 else
@@ -33,14 +33,57 @@ module.exports = {
             })
         })
     },
-    getListMenu(page, size) {
+    getListMenu(page, size, owner) {
         return new Promise((resolve, reject) => {
-            client.requestApi('post', `${constants.api.drug.get_list_menu_drug}?page=${page}&size=${size}&sort=desc&properties=created`), {}, (s, e) => {
+            client.requestApi('get', `${constants.api.drug.get_list_menu_drug}/${owner}?page=${page}&size=${size}&sort=desc&properties=created`, {}, (s, e) => {
+                if (s) {
+                    resolve(s)
+                }
+                else {
+                    reject(e)
+                }
+            })
+        })
+    },
+    setLocationDefault(id) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('put', `${constants.api.drug.set_adress_default}/${id}/default`, {}, (s, e) => {
                 if (s)
                     resolve(s)
                 else
                     reject(e)
-            }
+            })
         })
     },
+    getDetailsDrug(id) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('get', `${constants.api.drug.get_details_drug}/${id}`, {}, (s, e) => {
+                if (s)
+                    resolve(s)
+                else
+                    reject(e)
+            })
+        })
+    },
+    findDrug(id, addressId) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('put', `${constants.api.drug.find_drug}/${id}/find-pharmacy/${addressId ? `?addressId=${addressId}` : ''}`, {}, (s, e) => {
+                if (s) {
+                    resolve(s)
+                } else {
+                    reject(e)
+                }
+            })
+        })
+    },
+    deleteDrug(id) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('delete', `${constants.api.drug.delete_drug}/${id}`, {}, (s, e) => {
+                if (s)
+                    resolve(s)
+                else
+                    reject(e)
+            })
+        })
+    }
 }

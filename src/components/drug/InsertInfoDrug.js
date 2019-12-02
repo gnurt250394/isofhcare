@@ -7,25 +7,89 @@ import snackbar from '@utils/snackbar-utils';
 import { connect } from "react-redux";
 import constants from '@resources/strings';
 import drugProvider from '@data-access/drug-provider'
+import dataCacheProvider from '@data-access/datacache-provider';
+
 class InsertInfoDrug extends Component {
     constructor(props) {
         super(props);
+        const dataEdit = this.props.dataEdit
+        console.log('dataEdit: ', dataEdit);
         this.state = {
+            isScan: true,
+            imageUris: dataEdit && dataEdit.images ? dataEdit.images : [],
+            name: dataEdit && dataEdit.name,
+            note: dataEdit && dataEdit.note,
+            location: dataEdit && dataEdit.address
         };
     }
     selectLocation = (location) => {
         let locationError = location ? "" : this.state.locationError;
         if (!location || !this.state.location || location.id != this.state.location.id) {
-            this.setState({ location, locationError, zone: null })
+            this.setState({ location, locationError })
         } else {
             this.setState({ location, locationError });
         }
     }
     onSelectLocation = () => {
-        this.props.navigation.navigate('selectLocation', {
+        NavigationService.navigate('selectLocation', {
             onSelected: this.selectLocation.bind(this),
         })
 
+    }
+    componentWillMount() {
+        dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LOCATION_DEFAULT, (s, e) => {
+            if (s) {
+                if (this.props.dataEdit && this.props.dataEdit.address) {
+                    this.setState({
+                        location: this.props.dataEdit.address
+                    })
+                } else {
+                    this.setState({ location: s[0] })
+                }
+                return
+            }
+            if (e) {
+                return
+            }
+        });
+    }
+    renderAddress = () => {
+        let item = this.state.location
+        let district = item.district ? item.district : null
+        let province = item.province ? item.province : null
+        let zone = item.zone ? item.zone : ''
+        let village = item.village ? item.village : null
+        if (district && province && zone && village) {
+            return (`${village}, ${zone}, ${district}, ${province}`)
+        }
+        else if (district && province && zone) {
+            return (`${zone}, ${district}, ${province}`)
+        }
+        else if (district && province && village) {
+            return (`${village}, ${district}, ${province}`)
+        }
+        else if (district && province) {
+            return (`${district},${province},`)
+        }
+
+        else if (province && village) {
+            return (`${village}, ${province}`)
+        }
+        else if (province) {
+            return (`${province}`)
+        }
+        else if (village) {
+            return (`${village}`)
+        } else if (!village && !district && !province && !zone) {
+            return ('')
+        }
+    }
+    onCreateSuccess(data) {
+        let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
+        if (callback) {
+            callback(data);
+            this.props.navigation.pop();
+        }
     }
     addMenuDrug = () => {
         let imageUris = this.props.imageUris
@@ -51,18 +115,25 @@ class InsertInfoDrug extends Component {
                 if (images)
                     images.push({
                         "action": "CREATE_OR_UPDATE",
-                        "path": item.image,
-                        "pathThumail": item.thumbnail
+                        "pathOriginal": item.url,
+                        "pathThumbnail": item.thumbnail
                     })
             });
-
+            let idDrug = this.props.dataEdit && this.props.dataEdit.id
             let data = {
-                addressId:addressId,
+                addressId: addressId,
                 images: images,
                 name: name,
                 note: note,
-                ownerId: id
+                ownerId: id,
+                "type": "IMAGE"
             }
+            drugProvider.createDrug(data,idDrug).then(res => {
+                if (res) {
+                    snackbar.show('Tạo đơn thuốc thành công!', 'success')
+                    this.onCreateSuccess(res)
+                }
+            })
             return
         } if (dataDrug && !imageUris) {
             let data2 = {
@@ -74,7 +145,8 @@ class InsertInfoDrug extends Component {
                         "name": "Paracetamol",
                         "price": 100000,
                         "quantity": 1,
-                        "unit": "mg"
+                        "unit": "mg",
+                        "type": "ADDITION"
                     }
                 ],
                 name: name,
@@ -88,18 +160,18 @@ class InsertInfoDrug extends Component {
             <View style={styles.container}>
                 <View style={styles.viewInput}>
                     <Text style={styles.txNameDrug}>Tên đơn thuốc</Text>
-                    <TextInput onChangeText={text => this.setState({})} underlineColorAndroid={'#fff'} style={styles.inputNameDrug} multiline={true} placeholder={'Nhập tên đơn thuốc'}></TextInput>
+                    <TextInput value={this.state.name} onChangeText={text => this.setState({ name: text })} underlineColorAndroid={'#fff'} style={styles.inputNameDrug} multiline={true} placeholder={'Nhập tên đơn thuốc'}></TextInput>
                 </View>
                 <View style={styles.viewInput}>
                     <Text style={styles.txNameDrug}>Ghi chú</Text>
-                    <TextInput placeholder={'Viết ghi chú cho đơn thuốc'} multiline={true} style={styles.inputNote}></TextInput>
+                    <TextInput value={this.state.note} onChangeText={text => this.setState({ note: text })} placeholder={'Viết ghi chú cho đơn thuốc'} multiline={true} style={styles.inputNote}></TextInput>
                 </View>
                 <View style={styles.viewInput}>
                     <Text style={styles.txNameDrug}>Vị trí của bạn</Text>
                     <TouchableOpacity onPress={this.onSelectLocation} style={styles.btnLocation}>
                         <View style={styles.inputLocation}>
                             <ScaledImage source={require('@images/new/drug/ic_location.png')} height={20}></ScaledImage>
-                            <Text style={styles.txLabelLocation}>Nhập địa chỉ</Text>
+                            <Text style={styles.txLabelLocation}>{this.state.location ? this.renderAddress() : 'Nhập địa chỉ'}</Text>
                         </View>
                         <ScaledImage source={require('@images/new/drug/ic_btn_location.png')} height={10}></ScaledImage>
                     </TouchableOpacity>
@@ -219,6 +291,8 @@ const styles = StyleSheet.create({
 function mapStateToProps(state) {
     return {
         userApp: state.userApp,
+        navigation: state.navigation
+
     };
 }
 export default connect(mapStateToProps)(InsertInfoDrug);

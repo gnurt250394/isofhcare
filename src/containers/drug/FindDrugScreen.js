@@ -4,11 +4,15 @@ import ScaledImage from 'mainam-react-native-scaleimage';
 import DrugScan from '@components/drug/DrugScan'
 import DrugInput from '@components/drug/DrugInput'
 import { ScrollView } from 'react-native-gesture-handler';
+import ActivityPanel from '@components/ActivityPanel';
+
 export default class FindDrugScreen extends Component {
     constructor(props) {
         super(props);
+        let dataEdit = this.props.navigation.getParam('dataEdit', null)
         this.state = {
-            isScan: true
+            isScan: true,
+            dataEdit
         };
     }
     selectInputTab = () => {
@@ -18,33 +22,36 @@ export default class FindDrugScreen extends Component {
     }
     selectScanTab = () => {
         this.setState({
-            isScan:true
+            isScan: true
         })
     }
     render() {
         return (
-            <ScrollView style={styles.container}>
-                <ScaledImage height={100} source={require('@images/new/drug/ic_bg_find_drug.png')}></ScaledImage>
-                {
-                    this.state.isScan ? (
-                        <View><View style={styles.viewTab}>
-                            <TouchableOpacity onPress={this.selectScanTab} style={[styles.btnTabScan, styles.btnSelected]}><Text style={styles.txSelected}>Chụp đơn thuốc</Text></TouchableOpacity>
-                            <TouchableOpacity onPress={this.selectInputTab} style={[styles.btnTabInput, styles.btnUnselected]}><Text style={styles.txUnSelected}>Nhập đơn thuốc</Text></TouchableOpacity>
-                        </View>
-                            <DrugScan />
-                        </View>
-                    ) : (
-                            <View>
-                                <View style={styles.viewTab}>
-                                    <TouchableOpacity onPress={this.selectScanTab} style={[styles.btnTabScan, styles.btnUnselected]}><Text style={styles.txUnSelected}>Chụp đơn thuốc</Text></TouchableOpacity>
-                                    <TouchableOpacity onPress={this.selectInputTab} style={[styles.btnTabInput, styles.btnSelected]}><Text style={styles.txSelected}>Nhập đơn thuốc</Text></TouchableOpacity>
-                                </View>
-                                <DrugInput></DrugInput>
-                            </View>
-                        )
-                }
+            <ActivityPanel style={styles.container} title={'Tìm nhà thuốc'} showFullScreen={true}>
 
-            </ScrollView>
+                <ScrollView keyboardShouldPersistTaps={'always'} style={styles.container}>
+                    <ScaledImage height={100} source={require('@images/new/drug/ic_bg_find_drug.png')}></ScaledImage>
+                    {
+                        this.state.isScan ? (
+                            <View><View style={styles.viewTab}>
+                                <TouchableOpacity onPress={this.selectScanTab} style={[styles.btnTabScan, styles.btnSelected]}><Text style={styles.txSelected}>Chụp đơn thuốc</Text></TouchableOpacity>
+                                <TouchableOpacity onPress={this.selectInputTab} style={[styles.btnTabInput, styles.btnUnselected]}><Text style={styles.txUnSelected}>Nhập đơn thuốc</Text></TouchableOpacity>
+                            </View>
+                                <DrugScan />
+                            </View>
+                        ) : (
+                                <View>
+                                    <View style={styles.viewTab}>
+                                        <TouchableOpacity onPress={this.selectScanTab} style={[styles.btnTabScan, styles.btnUnselected]}><Text style={styles.txUnSelected}>Chụp đơn thuốc</Text></TouchableOpacity>
+                                        <TouchableOpacity onPress={this.selectInputTab} style={[styles.btnTabInput, styles.btnSelected]}><Text style={styles.txSelected}>Nhập đơn thuốc</Text></TouchableOpacity>
+                                    </View>
+                                    <DrugInput></DrugInput>
+                                </View>
+                            )
+                    }
+                </ScrollView>
+            </ActivityPanel>
+
         );
     }
 }
@@ -82,7 +89,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderWidth: 1,
         borderColor: '#3161ad',
-        borderRightWidth:0
+        borderRightWidth: 0
     },
     btnTabInput: {
         borderBottomRightRadius: 25,
@@ -93,6 +100,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderWidth: 1,
         borderColor: '#3161ad',
-        borderLeftWidth:0
+        borderLeftWidth: 0
     },
 })

@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
 import {
     TouchableOpacity,
     ScrollView,
@@ -19,7 +19,10 @@ import dataCacheProvider from '@data-access/datacache-provider';
 import Field from "mainam-react-native-form-validate/Field";
 import ScaleImage from 'mainam-react-native-scaleimage';
 import { FlatList } from "react-native-gesture-handler";
+import dateUtils from 'mainam-react-native-date-utils';
 import drugProvider from '@data-access/drug-provider'
+import ActionSheet from 'react-native-actionsheet'
+
 const devices_width = Dimensions.get('window').width
 const padding = Platform.select({
     ios: 7,
@@ -30,41 +33,42 @@ class drugScreen extends Component {
         super(props);
         this.state = {
             dropDown: false,
-            dataDrug: [
-                {
-                    name: 'Đơn thuốc da liễu BS HUẤN',
-                    date: '21/10/2019',
-                    status: 1
-                },
-                {
-                    name: 'Đơn thuốc da liễu BS HUẤN',
-                    date: '21/10/2019',
-                    status: 2
-                },
-                {
-                    name: 'Đơn thuốc da liễu BS HUẤN',
-                    date: '21/10/2019',
-                    status: 3
-                }
-            ]
+            dataDrug: [],
+            page: 1,
+            size: 10
         }
     }
-    getListDrug = () =>{
-        drugProvider.getListMenu(1,50).then(res => {
-            console.log(res,'list menu drug')
+    componentWillMount() {
+        this.getListDrug()
+    }
+    getListDrug = () => {
+        let page = this.state.page
+        let size = this.state.size
+        let id = this.props.userApp.currentUser.id
+        drugProvider.getListMenu(page, size, id).then(res => {
+            this.setState({
+                dataDrug: res.data
+            })
         })
     }
+    onShowOption = (item) => {
+        this.setState({
+            dataSelect: item
+        })
+        this.actionSheetOption.show();
+
+    };
     renderStatus = (item) => {
-        switch (Number(item.status)) {
-            case 1:
+        switch (item.state) {
+            case 'FINDING':
                 return (
                     <Text style={styles.txStatusFinding}>Đang tìm nhà thuốc</Text>
                 )
-            case 2:
+            case 'FOUND':
                 return (
                     <Text style={styles.txStatusFinded}>Đã thấy nhà thuốc</Text>
                 )
-            case 3:
+            case 'STORED':
                 return (
                     <Text style={styles.txStatusSaved}>Đã lưu</Text>
                 )
@@ -75,8 +79,7 @@ class drugScreen extends Component {
         }
     }
     showDropdown = (index) => {
-        let dropDown = this.state.dropDown   
-        console.log('dropDown: ', dropDown);
+        let dropDown = this.state.dropDown
         this.setState({
             dropDown: !dropDown,
             index: index
@@ -87,28 +90,34 @@ class drugScreen extends Component {
             dropDown: false,
         })
     }
-    onSelectDetails = () => {
-        this.props.navigation.navigate('detailsDrug')
+
+    addDrug = (data) => {
+        let dataError = data ? "" : this.state.dataError;
+        if (!data || !this.state.data || data.id != this.state.data.id) {
+            this.setState({ data, dataError })
+            console.log('data: ', data);
+        } else {
+            this.setState({ data, dataError });
+        }
+    }
+    onSelectDetails = (id) => {
+        this.props.navigation.navigate('detailsDrug', {
+            id: id
+        })
+
     }
     renderItem = ({ item, index }) => {
         return (
             <View style={styles.viewItem}>
                 <Card style={styles.cardItem}>
-                    <TouchableOpacity onPress={this.onSelectDetails} style={styles.cardItem}>
+                    <TouchableOpacity onPress={() => this.onSelectDetails(item.id)} style={styles.cardItem}>
                         <View style={styles.viewImg}><ScaleImage height={30} source={require('@images/new/drug/ic_drug_item.png')}></ScaleImage></View>
                         <View style={styles.viewContentsItem}>
-                            <View style={styles.viewMenuDrug}><Text style={styles.txName}>{item.name}</Text><TouchableOpacity onPress={() => this.showDropdown(index)} style={styles.btnImage}><ScaleImage style={styles.imgDot} height={12} source={require('@images/new/drug/ic_dot.png')}></ScaleImage></TouchableOpacity></View>
-                            <View style={styles.viewDate}><Text style={styles.txDate}>{item.date}</Text>{this.renderStatus(item)}</View>
+                            <View style={styles.viewMenuDrug}><Text style={styles.txName}>{item.name}</Text><TouchableOpacity onPress={() => this.onShowOption(item)} style={styles.btnImage}><ScaleImage style={styles.imgDot} height={12} source={require('@images/new/drug/ic_dot.png')}></ScaleImage></TouchableOpacity></View>
+                            <View style={styles.viewDate}><Text style={styles.txDate}>{item.created ? item.created.toDateObject().format("dd/MM/yyyy") : ''}</Text>{this.renderStatus(item)}</View>
                         </View>
                     </TouchableOpacity>
-                    {
-                        this.state.dropDown && index == this.state.index ? <View style={styles.dropDown}>
-                            <TouchableOpacity onPress = {this.onEdit} style={styles.btnEdit}><Text style={styles.txEdit}>Chỉnh sửa</Text></TouchableOpacity>
-                            <TouchableOpacity onPress = {this.onDelete} style={styles.btnEdit}><Text style={styles.txEdit}>Xóa</Text></TouchableOpacity>
-                        </View> : null
-                    }
                 </Card>
-
             </View>
         )
     }
@@ -121,7 +130,33 @@ class drugScreen extends Component {
     onFindDrug = () => {
         this.props.navigation.navigate('findDrug')
     }
+    onSetOption = index => {
+        const dataSelect = this.state.dataSelect
+
+        try {
+            switch (index) {
+                case 0:
+                    if (dataSelect && dataSelect.images.length) {
+                        console.log('chay vao ifffff')
+                        this.props.navigation.navigate('editDrugScan', { dataEdit: dataSelect })
+                    }
+                    return
+                case 1:
+                    drugProvider.deleteDrug(dataSelect.id).then(res => {
+                        this.getListDrug()
+                    }).catch(err => {
+                        console.log('err: ', err);
+
+                    })
+                    return;
+            }
+        } catch (error) {
+
+        }
+
+    };
     render() {
+        console.log(this.state.dataDrug, 'this.state.dataDrug')
         return (
             // <ActivityPanel
             //     style={{ flex: 1 }}
@@ -163,6 +198,13 @@ class drugScreen extends Component {
 
                 </View>
                 <View style={styles.viewBottom}></View>
+                <ActionSheet
+                    ref={o => this.actionSheetOption = o}
+                    options={['Chỉnh sửa', 'Xóa', 'Hủy']}
+                    cancelButtonIndex={2}
+                    // destructiveButtonIndex={1}
+                    onPress={this.onSetOption}
+                />
             </ScrollView>
             // {Platform.OS == "ios" && <KeyboardSpacer />}
             // </ActivityPanel>
@@ -178,6 +220,7 @@ const styles = StyleSheet.create({
         position: 'relative',
     },
     viewFl: {
+        flex: 1
     },
     containerCard: {
         margin: 22,

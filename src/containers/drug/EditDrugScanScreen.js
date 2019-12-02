@@ -2,21 +2,22 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import { ScrollView } from 'react-native-gesture-handler';
-import InsertInfoDrug from './InsertInfoDrug'
 import ImageLoad from 'mainam-react-native-image-loader';
 import ImagePicker from 'mainam-react-native-select-image';
 import imageProvider from '@data-access/image-provider';
 import connectionUtils from '@utils/connection-utils';
 import snackbar from '@utils/snackbar-utils';
 import constants from '@resources/strings';
+import InsertInfoDrug from '@components/drug/InsertInfoDrug'
+import ActivityPanel from '@components/ActivityPanel';
 
-export default class DrugScan extends Component {
+
+export default class EditDrugScanScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isScan: true,
-            imageUris: [],
-        };
+            imageUris: []
+        }
     }
     selectTab = () => {
         let isScan = this.state.isScan
@@ -93,45 +94,62 @@ export default class DrugScan extends Component {
         imageUris.splice(index, 1);
         this.setState({ imageUris });
     }
-
+    componentDidMount() {
+        // "pathOriginal": item.url,
+        //                 "pathThumbnail": item.thumbnail
+        let dataEdit = this.props.navigation.getParam('dataEdit', null).images
+        var imageUris = []
+        for (let i = 0; i < dataEdit.length; i++) {
+            imageUris.push({
+                url: dataEdit[i].pathOriginal,
+                thumbnail: dataEdit[i].pathThumbnail,
+            })
+        }
+        console.log(imageUris, 'img')
+        this.setState({
+            imageUris
+        })
+    }
     render() {
-        console.log(this.state.imageUris,'this.state.imageUristhis.state.imageUris')
         return (
-            <View style={styles.container}>
-                <TouchableOpacity onPress={this.selectImage} style={styles.btnCamera}>
-                    <ScaledImage source={require('@images/new/drug/ic_scan.png')} height={20}></ScaledImage>
-                    <Text style={styles.txCamera}>Chụp đơn thuốc</Text></TouchableOpacity>
-                <View style={styles.list_image}>
-                    {
-                        this.state.imageUris && this.state.imageUris.map((item, index) => <View key={index} style={styles.containerImagePicker}>
-                            <View style={styles.groupImagePicker}>
-                                <Image source={{ uri: item.uri }} resizeMode="cover" style={styles.imagePicker} />
-                                {
-                                    item.error ?
-                                        <View style={styles.groupImageError} >
-                                            <ScaledImage source={require("@images/ic_warning.png")} width={40} />
-                                        </View> :
-                                        item.loading ?
-                                            <View style={styles.groupImageLoading} >
-                                                <ScaledImage source={require("@images/loading.gif")} width={40} />
-                                            </View>
-                                            : null
-                                }
-                            </View>
-                            <TouchableOpacity onPress={this.removeImage.bind(this, index)} style={styles.buttonClose} >
-                                <ScaledImage source={require("@images/new/ic_close.png")} width={16} />
-                            </TouchableOpacity>
-                        </View>)
-                    }
-                </View>
-                <InsertInfoDrug imageUris={this.state.imageUris} ></InsertInfoDrug>
-                <ImagePicker ref={ref => this.imagePicker = ref} />
-            </View>
+            <ActivityPanel style={styles.container} title={"Chỉnh sửa đơn thuốc"} showFullScreen={true}>
+                <ScrollView>
+                    <TouchableOpacity onPress={this.selectImage} style={styles.btnCamera}>
+                        <ScaledImage source={require('@images/new/drug/ic_scan.png')} height={20}></ScaledImage>
+                        <Text style={styles.txCamera}>Chụp đơn thuốc</Text></TouchableOpacity>
+                    <View style={styles.list_image}>
+                        {
+                            this.state.imageUris && this.state.imageUris.map((item, index) => <View key={index} style={styles.containerImagePicker}>
+                                <View style={styles.groupImagePicker}>
+                                    <Image source={{ uri: item.uri || item.url.absoluteUrl() }} resizeMode="cover" style={styles.imagePicker} />
+                                    {
+                                        item.error ?
+                                            <View style={styles.groupImageError} >
+                                                <ScaledImage source={require("@images/ic_warning.png")} width={40} />
+                                            </View> :
+                                            item.loading ?
+                                                <View style={styles.groupImageLoading} >
+                                                    <ScaledImage source={require("@images/loading.gif")} width={40} />
+                                                </View>
+                                                : null
+                                    }
+                                </View>
+                                <TouchableOpacity onPress={this.removeImage.bind(this, index)} style={styles.buttonClose} >
+                                    <ScaledImage source={require("@images/new/ic_close.png")} width={16} />
+                                </TouchableOpacity>
+                            </View>)
+                        }
+                    </View>
+                    <InsertInfoDrug dataEdit={this.props.navigation.getParam('dataEdit', null)} imageUris={this.state.imageUris} ></InsertInfoDrug>
+                    <ImagePicker ref={ref => this.imagePicker = ref} />
+                </ScrollView>
+            </ActivityPanel>
         );
     }
 }
 const styles = StyleSheet.create({
     container: {
+        flex: 1
     },
     buttonClose: {
         position: 'absolute',

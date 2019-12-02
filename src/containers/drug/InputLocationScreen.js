@@ -12,15 +12,74 @@ const devices_width = Dimensions.get('window').width
 class InputLocationScreen extends Component {
     constructor(props) {
         super(props);
+
         this.state = {
-            ownerName: '',
-            districts: '',
-            ownerId: '',
-            provinces: '',
-            telephone: '',
-            textAddition: '',
-            zone: ''
+
         };
+    }
+    componentDidMount() {
+        let dataLocation = this.props.navigation.getParam('dataLocation', null)
+        console.log('dataLocation: ', dataLocation);
+        let districts = {}
+        districts.name = dataLocation && dataLocation.district ? dataLocation.district : ''
+        districts.id = dataLocation && dataLocation.districtId ? dataLocation.districtId : ''
+        let provinces = {}
+        provinces.countryCode = dataLocation && dataLocation.province ? dataLocation.province : ''
+        provinces.id = dataLocation && dataLocation.provineId ? dataLocation.provineId : ''
+        let zone = {}
+        zone.name = dataLocation && dataLocation.zone ? dataLocation.zone : '',
+        zone.id = dataLocation && dataLocation.zoneId ? dataLocation.zoneId : ''
+
+            this.setState({
+                ownerName: dataLocation && dataLocation.ownerName ? dataLocation.ownerName : '',
+                districts: districts,
+                ownerId: dataLocation && dataLocation.ownerId ? dataLocation.ownerId : '',
+                provinces: provinces,
+                telephone: dataLocation && dataLocation.phone ? dataLocation.phone : '',
+                textAddition: dataLocation && dataLocation.village ? dataLocation.village : '',
+                zone: zone
+            })
+            console.log(districts,provinces)
+    }
+    renderAddress = () => {
+        let item = this.state.location
+        let district = item.district ? item.district : null
+        let province = item.province ? item.province : null
+        let zone = item.zone ? item.zone : ''
+        let village = item.village ? item.village : null
+        console.log(district, province, zone, village)
+        if (district && province && zone && village) {
+            return (`${village}, ${zone}, ${district}, ${province}`)
+
+
+        }
+        else if (district && province && zone) {
+            return (`${zone}, ${district}, ${province}`)
+
+        }
+        else if (district && province && village) {
+            return (`${village}, ${district}, ${province}`)
+
+        }
+        else if (district && province) {
+            return (`${district},${province},`)
+
+        }
+
+        else if (province && village) {
+            return (`${village}, ${province}`)
+
+        }
+        else if (province) {
+            return (`${province}`)
+
+        }
+        else if (village) {
+            return (`${village}`)
+
+        } else if (!village && !district && !province && !zone) {
+            return ('')
+        }
     }
     onAddLocation = () => {
         let { ownerName, districts, provinces, telephone, textAddition, zone } = this.state
@@ -28,15 +87,24 @@ class InputLocationScreen extends Component {
         let data =
         {
             "district": districts.name,
+            "districtId": districts.id,
             "ownerId": ownerId,
             "ownerName": ownerName,
             "phone": telephone,
             "province": provinces.countryCode,
+            "provinceId": provinces.id,
             "village": textAddition,
-            "zone": zone.name
+            "zone": zone.name,
+            "zoneId": zone.id
         }
         drugProvider.addLocation(data).then(res => {
-            console.log('res: ', res);
+            if (res) {
+                let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
+                if (callback) {
+                    callback(res.data);
+                    this.props.navigation.pop();
+                }
+            }
         })
     }
     selectDistrict = (districts) => {
@@ -120,11 +188,11 @@ class InputLocationScreen extends Component {
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <View style={styles.viewName}>
                         <Text style={styles.txName}>Họ và tên</Text>
-                        <TextInput onChangeText={text => this.setState({ ownerName: text })} multiline={true} style={styles.inputName} placeholder={'Nhập họ và tên'}></TextInput>
+                        <TextInput value={this.state.ownerName} onChangeText={text => this.setState({ ownerName: text })} multiline={true} style={styles.inputName} placeholder={'Nhập họ và tên'}></TextInput>
                     </View>
                     <View style={styles.viewName}>
                         <Text style={styles.txName}>Số điện thoại</Text>
-                        <TextInput onChangeText={text => this.setState({ telephone: text })} multiline={true} keyboardType={'numeric'} style={styles.inputName} placeholder={'Nhập số điện thoại'}></TextInput>
+                        <TextInput value={this.state.telephone} onChangeText={text => this.setState({ telephone: text })} multiline={true} keyboardType={'numeric'} style={styles.inputName} placeholder={'Nhập số điện thoại'}></TextInput>
                     </View>
                     <TouchableOpacity onPress={this.onSelectProvince} style={styles.viewLocation}>
                         <Text style={styles.txName}>Tỉnh/Thành phố</Text>
@@ -149,7 +217,7 @@ class InputLocationScreen extends Component {
                     </TouchableOpacity>
                     <View style={styles.viewName}>
                         <Text style={styles.txName}>Địa chỉ</Text>
-                        <TextInput ref={ref => this.input = ref}
+                        <TextInput value={this.state.textAddition} ref={ref => this.input = ref}
                             onChangeText={text => this.setState({ textAddition: text })} multiline={true} style={styles.inputName} placeholder={'Nhập địa chỉ'}></TextInput>
                     </View>
                     <View style={styles.viewBottom}></View>
