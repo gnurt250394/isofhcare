@@ -1,4 +1,4 @@
-import client from '@utils/client-utils2';
+import client from '@utils/client-utils';
 import string from 'mainam-react-native-string-utils';
 import constants from '@resources/strings';
 import datacacheProvider from '@data-access/datacache-provider';
