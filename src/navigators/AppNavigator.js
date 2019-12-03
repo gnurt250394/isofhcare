@@ -99,7 +99,15 @@ import ShareDataProfileScreen from '@containers/profile/ShareDataProfileScreen'
 //
 import HospitalByLocationScreen from '@containers/home/HospitalByLocationScreen'
 import HospitalScreen from '@containers/home/HospitalScreen'
+//drug
 import DrugScreen from '@containers/home/DrugScreen'
+import FindDrugScreen from '@containers/drug/FindDrugScreen'
+import InputLocationScreen from '@containers/drug/InputLocationScreen'
+import SelectLocationScreen from '@containers/drug/SelectLocationScreen'
+import DetailsDrugScreen from '@containers/drug/DetailsDrugScreen'
+import DrugStoreScreen from '@containers/drug/DrugStoreScreen'
+import EditDrugInputScreen from '@containers/drug/EditDrugInputScreen'
+import EditDrugScanScreen from '@containers/drug/EditDrugScanScreen'
 
 
 //
@@ -185,13 +193,19 @@ const TabNavigatorComponent = createBottomTabNavigator(
         },
       }
     },
-    videoTab: {
-      screen: AccountScreen,
+    drugTab: {
+      screen: DrugScreen,
       navigationOptions: {
         tabBarLabel: "Thuốc",
         tabBarIcon: ({ tintColor }) => <ScaledImage height={23} source={require('@images/new/homev2/ic_drug_menu.png')} style={{ tintColor: tintColor }} />,
         tabBarOnPress: ({ navigation, defaultHandler }) => {
-          snackbar.show("Chức năng đang phát triển");
+          if (userProvider.isLogin) {
+            defaultHandler();
+          } else {
+            NavigationService.navigate("login", {
+              // nextScreen: { screen: "notificationTab", param: {} }
+            });
+          }
         },
       }
     },
@@ -331,13 +345,21 @@ const RootNavigator = createStackNavigator(
     //menu profile
     setting: { screen: SettingScreen },
     changePassword: { screen: ChangePasswordScreen },
-    //
+    //drug
+    findDrug: { screen: FindDrugScreen },
+    selectLocation: { screen: SelectLocationScreen },
+    inputLocation: { screen: InputLocationScreen },
+    detailsDrug: { screen: DetailsDrugScreen },
+    drugStore: { screen: DrugStoreScreen },
+
     //
     specialist: { screen: SpecialistScreen },
 
     detailsVoucher: { screen: DetailVoucherScreen },
     hospital: { screen: HospitalScreen },
-    drug: { screen: DrugScreen },
+    drugTab: { screen: DrugScreen },
+    editDrugScan: { screen: EditDrugScanScreen },
+    editDrugInput: { screen: EditDrugInputScreen },
     hospitalByLocation: { screen: HospitalByLocationScreen },
     photoViewer: { screen: PhotoViewerScreen },
     myVoucher: { screen: MyVoucherScreen },
