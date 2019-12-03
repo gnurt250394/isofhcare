@@ -183,16 +183,16 @@ const TabNavigatorComponent = createBottomTabNavigator(
         tabBarIcon: ({ tintColor }) => <ScaledImage height={20} source={require('@images/new/homev2/ic_home_menu.png')} style={{ tintColor: tintColor }} />,
       }
     },
-    communityTab: {
-      screen: AccountScreen,
-      navigationOptions: {
-        tabBarLabel: "Cộng đồng",
-        tabBarIcon: ({ tintColor }) => <ScaledImage touchable={false} height={20} source={require('@images/new/homev2/ic_community_menu.png')} style={{ tintColor: tintColor }} />,
-        tabBarOnPress: ({ navigation, defaultHandler }) => {
-          snackbar.show("Chức năng đang phát triển");
-        },
-      }
-    },
+    // communityTab: {
+    //   screen: AccountScreen,
+    //   navigationOptions: {
+    //     tabBarLabel: "Cộng đồng",
+    //     tabBarIcon: ({ tintColor }) => <ScaledImage touchable={false} height={20} source={require('@images/new/homev2/ic_community_menu.png')} style={{ tintColor: tintColor }} />,
+    //     tabBarOnPress: ({ navigation, defaultHandler }) => {
+    //       snackbar.show("Chức năng đang phát triển");
+    //     },
+    //   }
+    // },
     drugTab: {
       screen: DrugScreen,
       navigationOptions: {
