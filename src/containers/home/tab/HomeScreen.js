@@ -28,6 +28,8 @@ import { Card, Toast } from "native-base";
 const DEVICE_WIDTH = Dimensions.get("window").width;
 import * as Animatable from 'react-native-animatable';
 import advertiseProvider from "@data-access/advertise-provider";
+import hospitalProvider from '@data-access/hospital-provider';
+
 class HomeScreen extends Component {
   constructor(props) {
     super(props);
@@ -35,9 +37,50 @@ class HomeScreen extends Component {
       ads: [],
       refreshing: false,
       ads0: [],
+      listDataHospital: [],
+      featuresBooking: [
+        {
+          icon: require("@images/new/homev2/ic_hospital.png"),
+          text: "CSYT",
+          onPress: () => {
+            if (this.props.userApp.isLogin)
+              this.props.navigation.navigate("addBooking1");
+            else
+              this.props.navigation.navigate("login", {
+                nextScreen: { screen: "addBooking1", param: {} }
+              });
+          }
+        },
+        {
+          icon: require("@images/new/homev2/ic_doctor.png"),
+          text: "Bác sĩ",
+          onPress: () => {
+            if (this.props.userApp.isLogin)
+              this.props.navigation.navigate("listDoctor");
+            else
+              this.props.navigation.navigate("login", {
+                nextScreen: { screen: "listDoctor", param: {} }
+              });
+          }
+        },
+        {
+          icon: require("@images/new/homev2/ic_specialist.png"),
+          text: "Chuyên khoa",
+          onPress: () => {
+            snackbar.show('Tính năng đang phát triển')
+          }
+        },
+        {
+          icon: require("@images/new/homev2/ic_symptom.png"),
+          text: "Triệu chứng",
+          onPress: () => {
+            snackbar.show('Tính năng đang phát triển')
+          }
+        }
+      ],
       features: [
         {
-          icon: require("@images/new/home/ic_ticket_news.png"),
+          icon: require("@images/new/homev2/ic_get_ticket.png"),
           text: "Lấy số",
           onPress: () => {
             if (this.props.userApp.isLogin)
@@ -49,27 +92,20 @@ class HomeScreen extends Component {
           }
         },
         {
-          icon: require("@images/new/home/ic_booking_news.png"),
-          text: "Đặt khám",
+          icon: require("@images/new/homev2/ic_advisory.png"),
+          text: "Tư vấn",
           onPress: () => {
             if (this.props.userApp.isLogin)
-              this.props.navigation.navigate("listBooking");
+              this.props.navigation.navigate("listQuestion");
             else
               this.props.navigation.navigate("login", {
-                nextScreen: { screen: "addBooking1", param: {} }
+                nextScreen: { screen: "listQuestion", param: {} }
               });
           }
         },
         {
-          icon: require("@images/new/home/ic_question_news.png"),
-          text: "Tư vấn",
-          onPress: () => {
-            this.props.navigation.navigate("listQuestion");
-          }
-        },
-        {
-          icon: require("@images/new/home/ic_ehealth_news.png"),
-          text: "Y bạ",
+          icon: require("@images/new/homev2/ic_ehealth.png"),
+          text: "Y bạ điện tử",
           onPress: () => {
             if (this.props.userApp.isLogin)
               this.props.navigation.navigate("ehealth");
@@ -77,6 +113,32 @@ class HomeScreen extends Component {
               this.props.navigation.navigate("login", {
                 nextScreen: { screen: 'ehealth' }
               });
+          }
+        },
+        {
+          icon: require("@images/new/homev2/ic_voucher.png"),
+          text: "Mã ưu đãi",
+          onPress: () => {
+            if (this.props.userApp.isLogin)
+              this.props.navigation.navigate("myVoucher");
+            else
+              this.props.navigation.navigate("login", {
+                nextScreen: { screen: 'myVoucher' }
+              });
+          }
+        },
+        {
+          icon: require("@images/new/homev2/ic_drug.png"),
+          text: "Thuốc",
+          onPress: () => {
+            snackbar.show('Tính năng đang phát triển')
+          }
+        },
+        {
+          icon: require("@images/new/homev2/ic_more_info.png"),
+          text: "Nhiều hơn",
+          onPress: () => {
+            snackbar.show('Tính năng đang phát triển')
           }
         }
       ]
@@ -105,7 +167,9 @@ class HomeScreen extends Component {
       }
     });
   }
-
+  onCallHotline = () => {
+    Linking.openURL('tel:1900299983')
+  }
   componentDidMount() {
     appProvider.setActiveApp();
     DeviceEventEmitter.removeAllListeners("hardwareBackPress");
@@ -115,13 +179,15 @@ class HomeScreen extends Component {
       this.handleHardwareBack.bind(this)
     );
     this.onRefresh();
+    this.onGetHospital()
   }
-  renderAds() {
-    return (<View>
-      <ScaledImage source={require("@images/new/slogan.jpg")} width={DEVICE_WIDTH} />
-      {/* <View style={styles.viewAds}>
-        <Text style={styles.txAds}>Ưu đãi</Text>
-        <ScaledImage source={require("@images/new/ic_more.png")} width={20} style={styles.imgMore} />
+  renderDoctor() {
+    return (<View style={{ backgroundColor: '#fff', marginTop: 10 }}>
+      {/* <ScaledImage source={require("@images/new/slogan.jpg")} width={DEVICE_WIDTH} />
+      <TouchableOpacity onPress={this.onCallHotline} style={{ alignItems: 'center', justifyContent: 'center' }}><Text style={{ fontSize: 18, color: '#02c39a', fontWeight: 'bold' }}>Tổng đài hỗ trợ: 1900299983</Text></TouchableOpacity> */}
+      <View style={styles.viewAds}>
+        <Text style={styles.txAds}>CÁC BÁC SĨ HÀNG ĐẦU</Text>
+        {/* <ScaledImage source={require("@images/new/ic_more.png")} width={20} style={styles.imgMore} /> */}
       </View>
       <FlatList
         style={styles.listAds}
@@ -135,26 +201,65 @@ class HomeScreen extends Component {
           if (!item || !item.advertise || !item.advertise.images)
             return null;
           return (
-            <Card style={styles.cardView}>
-              <TouchableOpacity
-                onPress={() => {
-                  if (item.advertise && item.advertise.value) {
-                    Linking.openURL(item.advertise.value);
-                  } else {
-                    snackbar.show("Url không tồn tại", "danger");
-                  }
-                }}
-              >
+            <View style={styles.cardViewDoctor}>
+              <Card style={{ borderRadius: 5 }}>
                 <ScaledImage
-                  uri={item.advertise.images.absoluteUrl()}
-                  width={DEVICE_WIDTH - 60}
+                  // uri={item.advertise.images.absoluteUrl()}
+                  style={{ borderRadius: 5 }}
+                  source={require('@images/new/homev2/doctor_demo.png')}
+                  width={DEVICE_WIDTH / 3}
                 />
-                <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensAds}>{item.advertise ? item.advertise.title : ""}</Text>
-              </TouchableOpacity>
-            </Card>
+              </Card>
+              <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensAds}>{item.advertise ? item.advertise.title : ""}</Text>
+
+            </View>
           );
         }}
-      /> */}
+      />
+    </View>)
+  }
+  renderHospital() {
+    let { listDataHospital } = this.state
+    return (<View style={{ backgroundColor: '#fff', marginTop: 10 }}>
+      {/* <ScaledImage source={require("@images/new/slogan.jpg")} width={DEVICE_WIDTH} />
+      <TouchableOpacity onPress={this.onCallHotline} style={{ alignItems: 'center', justifyContent: 'center' }}><Text style={{ fontSize: 18, color: '#02c39a', fontWeight: 'bold' }}>Tổng đài hỗ trợ: 1900299983</Text></TouchableOpacity> */}
+      <View style={styles.viewAds}>
+        <Text style={styles.txAds}>CƠ SỞ Y TẾ HÀNG ĐẦU</Text>
+        {/* <ScaledImage source={require("@images/new/ic_more.png")} width={20} style={styles.imgMore} /> */}
+      </View>
+      <FlatList
+        style={styles.listAds}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        keyExtractor={(item, index) => index.toString()}
+        extraData={this.state}
+        data={listDataHospital}
+        ListFooterComponent={<View style={styles.viewFooter}></View>}
+        renderItem={({ item, index }) => {
+          if (!item || !item.imageHome)
+            return (
+              <View style={styles.cardViewNone}>
+                <TouchableOpacity>
+                  <View style={styles.imgNone}></View>
+                  <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensAds}>{item ? item.name : ""}</Text>
+                </TouchableOpacity>
+              </View>
+            );
+          return (
+            <View>
+              <TouchableOpacity style={styles.cardView}>
+                <ScaledImage
+                  uri={item.imageHome.absoluteUrl()}
+                  width={DEVICE_WIDTH - 140}
+                  height={140}
+                  style={{ borderRadius: 6, }}
+                />
+              </TouchableOpacity>
+              <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensAds}>{item ? item.name : ""}</Text>
+            </View>
+          );
+        }}
+      />
     </View>)
   }
   pagination() {
@@ -167,14 +272,10 @@ class HomeScreen extends Component {
           activeDotIndex={activeSlide || 0}
           dotContainerStyle={styles.dotContainer}
           dotStyle={styles.dotStyle}
-          inactiveDotStyle={
-            styles.inactiveDotStyle
-          }
+          inactiveDotStyle={styles.inactiveDotStyle}
           inactiveDotOpacity={0.4}
           inactiveDotScale={0.6}
-          containerStyle={
-            styles.containerPagination
-          }
+          containerStyle={styles.containerPagination}
         />
       </View>
     );
@@ -243,91 +344,156 @@ class HomeScreen extends Component {
     })
   }
 
-  getItemWidth() {
+  getItemBookingWidth() {
     const width = DEVICE_WIDTH - 40;
     if (width >= 320) {
-      return Platform.OS == 'ios' ? 70 : 75;
+      return Platform.OS == 'ios' ? 75 : 80;
     }
 
     if (width > 300) {
-      return Platform.OS == 'ios' ? 100 : 110;
+      return Platform.OS == 'ios' ? 105 : 115;
     }
 
     if (width > 250)
-      return 70;
-    return width - 50;
+      return 75;
+    return width - 55;
   }
+  getItemWidth() {
+    const width = DEVICE_WIDTH - 40;
+    if (width >= 320) {
+      return Platform.OS == 'ios' ? 80 : 85;
+    }
 
+    if (width > 300) {
+      return Platform.OS == 'ios' ? 110 : 120;
+    }
+
+    if (width > 250)
+      return 80;
+    return width - 60;
+  }
+  renderButtonBooking = () => {
+    return (this.state.featuresBooking || []).map((item, position) => {
+      return (
+        <Animatable.View key={position} delay={100} animation={"swing"} direction="alternate">
+          {
+            item.empty ? <View style={[styles.viewEmpty, { width: this.getItemBookingWidth() }]}
+            ></View> :
+              <TouchableOpacity
+                style={[styles.button, { width: this.getItemBookingWidth() }]}
+                onPress={item.onPress}
+              >
+                <View style={styles.groupImageButton}>
+                  <ScaledImage style={[styles.icon]} source={item.icon} height={35} />
+                </View>
+                <Text style={[styles.label]}>{item.text}</Text>
+              </TouchableOpacity>
+
+          }
+        </Animatable.View>);
+    })
+  }
+  renderButton = () => {
+    return (this.state.features || []).map((item, position) => {
+      return (
+        <Animatable.View key={position} delay={100} animation={"swing"} direction="alternate">
+          {
+            item.empty ? <View style={[styles.viewEmpty, { width: this.getItemWidth() }]}
+            ></View> :
+              <TouchableOpacity
+                style={[styles.button, { width: this.getItemWidth() }]}
+                onPress={item.onPress}
+              >
+                <View style={styles.groupImageButton}>
+                  <ScaledImage style={[styles.icon]} source={item.icon} height={48} />
+                </View>
+                <Text style={[styles.label]}>{item.text}</Text>
+              </TouchableOpacity>
+
+          }
+        </Animatable.View>);
+    })
+  }
+  onGetHospital = () => {
+    // hospitalProvider.getBySearch(1, 10, '', -1).then(res => {
+    //   if (res.code == 0) {
+    //     this.setState({
+    //       hospital: res.data.data
+    //     })
+    //   }
+    //   console.log(res, 'hospital')
+    // })
+    hospitalProvider.getListTopRateHospital().then(res => {
+      this.setState({
+        listDataHospital: res.slice(0, 10)
+      })
+    }).catch(err => {
+      console.log(err)
+    })
+  }
+  refreshControl = () => {
+    return (
+      <RefreshControl
+        refreshing={this.state.refreshing}
+        onRefresh={this.onRefresh.bind(this)}
+      />
+    )
+  }
+  getUserName = (name) => {
+    if (!name) return "";
+    let x = name.trim().split(" ");
+    name = (x[x.length - 1]).toLowerCase();
+    if (name[0])
+      return name.charAt(0).toUpperCase() + name.slice(1);
+    return name;
+  }
   render() {
     return (
       <ActivityPanel
-        statusbarBackgroundColor="#02C39A"
         isLoading={this.state.isLoading}
         hideActionbar={true}
+        containerStyle={{ backgroundColor: '#f2f2f2' }}
+        style={styles.activityPanel}
       >
-        <View style={{ flex: 1, position: 'relative' }}>
-          <ScaledImage source={require("@images/new/home/bg_home_new.png")} width={DEVICE_WIDTH} style={{ position: 'absolute', top: 72, right: 0, left: 0 }} />
-          <View style={{ height: 75, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10, backgroundColor: '#fff', borderBottomColor: '#7c817f', borderBottomWidth: 0.5 }}>
-            <View style={{ flex: 1, alignItems: 'center' }}>
+        <View style={styles.container}>
+          {/* <View style={{ height: 150, backgroundColor: '#f2f2f2', position: "absolute", top: 300, left: 0, right: 0 }}></View> */}
+          <ScaledImage source={require("@images/new/homev2/ic_bg_home.png")} width={DEVICE_WIDTH} style={styles.imgHome} />
+          {/*   <View style={styles.containerImageLogo}>
+        <View style={styles.ImageCenter}>
               <ScaledImage source={require("@images/new/isofhcare.png")} width={116} />
-            </View>
-          </View>
+            </View> 
+          </View>*/}
+          {this.props.userApp.isLogin &&
+            <View style={styles.containerHeadertitle}>
+              <Text
+                style={styles.txtHeaderTitle}
+              >Xin chào, </Text>
+              <Text style={styles.colorUserName}>{this.getUserName(this.props.userApp.currentUser.name) + '!'}</Text>
+            </View>}
           <ScrollView
-            refreshControl={<RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={this.onRefresh.bind(this)}
-            />}
+            refreshControl={this.refreshControl()}
             showsVerticalScrollIndicator={false}
-            style={{
-              flex: 1,
-              paddingTop: 0
-            }}
+            style={styles.scroll}
           >
-            <View style={{ padding: 21 }}>
-              <Card style={{ borderRadius: 6, marginTop: 130 }}>
-
-                {this.props.userApp.isLogin &&
-                  <View style={{ alignItems: 'center', flexDirection: 'row', borderBottomColor: 'rgba(151, 151, 151, 0.29)', borderBottomWidth: 1, paddingVertical: 10, marginHorizontal: 20, justifyContent: 'center' }}>
-                    <Text style={{ marginLeft: 5, fontSize: 18, fontWeight: 'bold', color: "#4a4a4a" }} >Xin chào, <Text style={{ color: 'rgb(255,138,21)' }}>{((name) => {
-                      if (!name) return "";
-                      let x = name.trim().split(" ");
-                      name = (x[x.length - 1]).toLowerCase();
-                      if (name[0])
-                        return name.charAt(0).toUpperCase() + name.slice(1);
-                      return name;
-                    }).call(this, this.props.userApp.currentUser.name) + '!'}</Text></Text>
-                  </View>
-                }
-
-                <View style={{
-                  flexDirection: "row", padding: 10, marginVertical: 20, flexWrap: 'wrap',
-                  justifyContent: 'center'
-                }}>
-                  {
-                    (this.state.features || []).map((item, position) => {
-                      return (
-                        <Animatable.View key={position} delay={100} animation={"swing"} direction="alternate">
-                          {
-                            item.empty ? <View style={{ flex: 1, marginLeft: 5, alignItems: 'center', height: 100, width: this.getItemWidth() }}
-                            ></View> :
-                              <TouchableOpacity
-                                style={{ flex: 1, marginLeft: 5, alignItems: 'center', width: this.getItemWidth() }}
-                                onPress={item.onPress}
-                              >
-                                <View style={{ position: 'relative', padding: 5 }}>
-                                  <ScaledImage style={[styles.icon]} source={item.icon} height={48} />
-                                </View>
-                                <Text style={[styles.label]}>{item.text}</Text>
-                              </TouchableOpacity>
-                          }
-                        </Animatable.View>);
-                    })
-                  }
+            <View style={styles.padding21}>
+              <Card style={styles.card}>
+                <Text style={styles.txBooking}>ĐẶT KHÁM ONLINE</Text>
+                <View style={styles.containerButtonBooking}>
+                  {this.renderButtonBooking()}
                 </View>
               </Card>
+              {/* <View style={styles.viewMenu}> */}
+
+              {/* </View> */}
+            </View>
+            <View style={styles.containerButton}>
+              {this.renderButton()}
             </View>
             {
-              this.renderAds()
+              this.renderDoctor()
+            }
+            {
+              this.renderHospital()
             }
             <View style={{ height: 30 }} />
           </ScrollView>
@@ -370,10 +536,12 @@ const styles = StyleSheet.create({
   containerButton: {
     flexDirection: "row",
     padding: 30,
+    marginTop: 10,
     flex: 1,
     flexWrap: 'wrap',
     justifyContent: 'center',
     borderRadius: 5,
+    backgroundColor: '#F8F8F8'
   },
   colorUserName: {
     color: '#fff',
@@ -403,7 +571,7 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: 'bold'
   },
-  padding21: { padding: 21,paddingBottom:0 },
+  padding21: { padding: 21 },
   card: { borderRadius: 6, marginTop: 30 },
   viewMenu: { backgroundColor: '#F8F8F8', flex: 1, borderRadius: 5 },
   scroll: {
@@ -435,17 +603,20 @@ const styles = StyleSheet.create({
   icon: {
   },
   label: {
-    marginTop: 2, color: '#4A4A4A', fontSize: 15, fontWeight: '600', lineHeight: 20
+    marginTop: 2, color: '#4A4A4A', fontSize: 12, fontWeight: '600', lineHeight: 20
   },
   subLabel: {
     color: '#9B9B9B', fontSize: 12, textAlign: 'center', marginTop: 5
   },
-  viewAds: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center' },
-  txAds: { padding: 12, paddingLeft: 20, paddingBottom: 5, color: 'rgba(74,74,74,0.6)', fontWeight: '500', flex: 1 },
+  viewAds: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', },
+  txAds: { padding: 12, paddingLeft: 20, paddingBottom: 5, color: '#000', fontWeight: 'bold', flex: 1 },
   imgMore: { marginTop: 10, marginRight: 20 },
   listAds: { paddingHorizontal: 20 },
   viewFooter: { width: 35 },
-  cardView: { width: DEVICE_WIDTH - 60, borderRadius: 6, marginRight: 10 },
+  cardView: { width: DEVICE_WIDTH - 140, borderRadius: 6, marginRight: 10, borderColor: '#9B9B9B', borderWidth: 0.5, backgroundColor: '#fff',height: 140, },
+  cardViewNone: { width: DEVICE_WIDTH - 140, borderRadius: 6, marginRight: 10, backgroundColor: '#fff' },
+  imgNone: { width: DEVICE_WIDTH - 140, borderRadius: 6, height: 140, borderColor: '#9B9B9B', borderWidth: 0.5 },
+  cardViewDoctor: { width: DEVICE_WIDTH / 3, borderRadius: 6, marginRight: 10 },
   txContensAds: { color: '#000', margin: 13 },
   viewPagination: { position: 'absolute', bottom: 0, width: DEVICE_WIDTH },
   dotContainer: { width: 10, margin: 0, padding: 0, height: 10 },
