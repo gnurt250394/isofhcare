@@ -4,63 +4,47 @@ import ScaledImage from 'mainam-react-native-scaleimage';
 import { ScrollView, FlatList } from 'react-native-gesture-handler';
 import InsertInfoDrug from './InsertInfoDrug'
 import SearchableDropdown from 'react-native-searchable-dropdown';
-var items = [
-    {
-        id: 1,
-        name: 'JavaScript',
-    },
-    {
-        id: 2,
-        name: 'Java',
-    },
-    {
-        id: 3,
-        name: 'Ruby',
-    },
-    {
-        id: 4,
-        name: 'React Native',
-    },
-    {
-        id: 5,
-        name: 'PHP',
-    },
-    {
-        id: 6,
-        name: 'Python',
-    },
-    {
-        id: 7,
-        name: 'Go',
-    },
-    {
-        id: 8,
-        name: 'Swift',
-    },
-];
+import drugProvider from '@data-access/drug-provider'
+
 export default class DrugInput extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            listDrug: [{
-                name: 'Paracetamol 500mg'
-            }, {
-                name: 'Althax 120mg'
-            }, {
-                name: 'Aloem cream 20g'
-            }, {
-                name: 'Aleradin 5mg'
-            }, {
-                name: 'Med-Lipid Physioderm Cleansing Gel (Gel lau rửa da sinh lý)'
-            }],
-            selectedItems: []
+            selectedItems: [],
+            itemsDrug: [],
+            txSearch: '',
+            typing: false,
+            typingTimeout: 0
         };
+    }
+
+    onSearch = () => {
+        drugProvider.searchDrug(this.state.txSearch).then(res => {
+            console.log('res: ', res);
+        })
+    }
+    onChangeText = (text) => {
+        this.setState({
+            txSearch: text,
+        })
+        if (this.state.typingTimeout) {
+            clearTimeout(this.state.typingTimeout);
+        }
+        this.setState({
+            typing: false,
+            typingTimeout: setTimeout(function () {
+                drugProvider.searchDrug(text).then(res => {
+                    console.log('res: ', res);
+
+                })
+            }, 2000)
+        });
     }
     renderItem = ({ item, index }) => {
         return (
             <View style={styles.viewItem}>
                 <Text style={styles.txName}>{item.name}</Text>
-                <TouchableOpacity style = {{padding:5}} onPress={() => this.onRemoveItem(item)}><ScaledImage height={10} source={require('@images/new/drug/ic_cancer.png')}></ScaledImage></TouchableOpacity>
+                <TouchableOpacity style={{ padding: 5 }} onPress={() => this.onRemoveItem(item)}><ScaledImage height={10} source={require('@images/new/drug/ic_cancer.png')}></ScaledImage></TouchableOpacity>
             </View>
         )
     }
@@ -69,7 +53,6 @@ export default class DrugInput extends Component {
         this.setState({ selectedItems: items });
     }
     render() {
-        console.log(this.state.selectedItems, 'this.state.selectedItems')
         return (
             <View style={styles.container}>
                 {/* <View style={styles.viewInputDrug}> */}
@@ -78,7 +61,7 @@ export default class DrugInput extends Component {
                     multi={false}
                     selectedItems={this.state.selectedItems}
                     onItemSelect={(item) => {
-                        console.log('item: ', item);
+
                         const items = this.state.selectedItems;
                         items.push(item)
                         this.setState({ selectedItems: items });
@@ -98,12 +81,16 @@ export default class DrugInput extends Component {
                     }}
                     itemTextStyle={{ color: '#222' }}
                     itemsContainerStyle={{ maxHeight: 140 }}
-                    items={items}
+                    items={this.state.itemsDrug}
                     defaultIndex={2}
                     // chip={true}
                     resetValue={false}
+
                     textInputProps={
+
                         {
+                            onSubmitEditing: this.onSearch,
+                            returnKeyType: 'search',
                             placeholder: "Nhập tên thuốc, vd (Paracetamol 500mg",
                             underlineColorAndroid: "transparent",
                             style: {
@@ -114,9 +101,9 @@ export default class DrugInput extends Component {
                                 borderWidth: 1,
                                 borderColor: '#00ba99',
                                 alignItems: 'center',
-                                padding:10,
+                                padding: 10,
                             },
-                            onTextChange: text => this.setState({ txSearch: text })
+                            onTextChange: text => this.onChangeText(text)
                         }
                     }
                     listProps={
@@ -137,7 +124,7 @@ export default class DrugInput extends Component {
                     >
                     </FlatList>
                 </View>
-                <InsertInfoDrug ></InsertInfoDrug>
+                <InsertInfoDrug dataDrug={this.state.selectedItems} ></InsertInfoDrug>
                 <View style={styles.viewBottom}></View>
             </View>
         );

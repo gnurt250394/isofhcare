@@ -7,6 +7,7 @@ import {
     StyleSheet,
     Platform,
     Dimensions,
+    RefreshControl
 } from "react-native";
 import { Card } from 'native-base';
 import ActivityPanel from "@components/ActivityPanel";
@@ -42,12 +43,21 @@ class drugScreen extends Component {
         this.getListDrug()
     }
     getListDrug = () => {
-        let page = this.state.page
-        let size = this.state.size
-        let id = this.props.userApp.currentUser.id
-        drugProvider.getListMenu(page, size, id).then(res => {
-            this.setState({
-                dataDrug: res.data
+        this.setState({
+            isLoading: true
+        }, () => {
+            let page = this.state.page
+            let size = this.state.size
+            let id = this.props.userApp.currentUser.id
+            drugProvider.getListMenu(page, size, id).then(res => {
+                this.setState({
+                    dataDrug: res.data,
+                    isLoading: false
+                })
+            }).catch(err => {
+                this.setState({
+                    isLoading: false
+                })
             })
         })
     }
@@ -172,6 +182,12 @@ class drugScreen extends Component {
                 bounces={false}
                 style={styles.scroll}
                 keyboardShouldPersistTaps="handled"
+                refreshControl={
+                    <RefreshControl
+                        onRefresh={this.getListDrug}
+                        refreshing={this.state.isLoading}
+                    />
+                }
             // keyboardDismissMode='on-drag' 
             >
                 <ScaleImage width={devices_width} source={require('@images/new/drug/ic_bg_drug2.png')}></ScaleImage>

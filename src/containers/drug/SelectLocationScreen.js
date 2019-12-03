@@ -193,6 +193,7 @@ class SelectLocationScreen extends Component {
                     refreshing={this.state.isLoading}
                 // ListEmptyComponent={this.renderEmpty}
                 ></FlatList>
+                <View style = {{height:50}}></View>
                 <ActionSheet
                     ref={o => this.actionSheetOption = o}
                     options={['Đặt làm mặc định', 'Chỉnh sửa', 'Xóa', 'Hủy']}

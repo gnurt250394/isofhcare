@@ -128,7 +128,7 @@ class InsertInfoDrug extends Component {
                 ownerId: id,
                 "type": "IMAGE"
             }
-            drugProvider.createDrug(data,idDrug).then(res => {
+            drugProvider.createDrug(data, idDrug).then(res => {
                 if (res) {
                     snackbar.show('Tạo đơn thuốc thành công!', 'success')
                     this.onCreateSuccess(res)
@@ -176,8 +176,8 @@ class InsertInfoDrug extends Component {
                         <ScaledImage source={require('@images/new/drug/ic_btn_location.png')} height={10}></ScaledImage>
                     </TouchableOpacity>
                 </View>
-                <TouchableOpacity onPress={this.addMenuDrug} style={styles.btnFind}><Text style={styles.txFind}>Tìm nhà thuốc</Text></TouchableOpacity>
-                <TouchableOpacity style={styles.btnSave}><Text style={styles.txSave}>Lưu lại</Text></TouchableOpacity>
+                <TouchableOpacity style={styles.btnFind}><Text style={styles.txFind}>Tìm nhà thuốc</Text></TouchableOpacity>
+                <TouchableOpacity onPress={this.addMenuDrug} style={styles.btnSave}><Text style={styles.txSave}>Lưu lại</Text></TouchableOpacity>
                 <View style={styles.viewBottom}></View>
             </View>
         );

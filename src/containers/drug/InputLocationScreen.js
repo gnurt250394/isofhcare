@@ -28,18 +28,18 @@ class InputLocationScreen extends Component {
         provinces.id = dataLocation && dataLocation.provineId ? dataLocation.provineId : ''
         let zone = {}
         zone.name = dataLocation && dataLocation.zone ? dataLocation.zone : '',
-        zone.id = dataLocation && dataLocation.zoneId ? dataLocation.zoneId : ''
+            zone.id = dataLocation && dataLocation.zoneId ? dataLocation.zoneId : ''
 
-            this.setState({
-                ownerName: dataLocation && dataLocation.ownerName ? dataLocation.ownerName : '',
-                districts: districts,
-                ownerId: dataLocation && dataLocation.ownerId ? dataLocation.ownerId : '',
-                provinces: provinces,
-                telephone: dataLocation && dataLocation.phone ? dataLocation.phone : '',
-                textAddition: dataLocation && dataLocation.village ? dataLocation.village : '',
-                zone: zone
-            })
-            console.log(districts,provinces)
+        this.setState({
+            ownerName: dataLocation && dataLocation.ownerName ? dataLocation.ownerName : '',
+            districts: districts,
+            ownerId: dataLocation && dataLocation.ownerId ? dataLocation.ownerId : '',
+            provinces: provinces,
+            telephone: dataLocation && dataLocation.phone ? dataLocation.phone : '',
+            textAddition: dataLocation && dataLocation.village ? dataLocation.village : '',
+            zone: zone
+        })
+        console.log(districts, provinces)
     }
     renderAddress = () => {
         let item = this.state.location
@@ -144,10 +144,7 @@ class InputLocationScreen extends Component {
     selectZone = (zone) => {
         let zoneError = zone ? "" : this.state.zoneError;
         if (!zone || !this.state.zone || zone.id != this.state.zone.id) {
-            this.setState({ zone, zoneError }, () => {
-                this.input.focus()
-                console.log('object', this.input, 'hihi')
-            })
+            this.setState({ zone, zoneError })
         } else {
             this.setState({ zone, zoneError });
         }
@@ -197,27 +194,27 @@ class InputLocationScreen extends Component {
                     <TouchableOpacity onPress={this.onSelectProvince} style={styles.viewLocation}>
                         <Text style={styles.txName}>Tỉnh/Thành phố</Text>
                         <View style={styles.viewAddress}>
-                            <Text style={styles.inputAdress}>{this.state.provinces ? this.state.provinces.countryCode : 'Chọn Tỉnh/Thành phố'}</Text>
+                            <Text style={styles.inputAdress}>{this.state.provinces && this.state.provinces.countryCode ? this.state.provinces.countryCode : 'Chọn Tỉnh/Thành phố'}</Text>
                             <ScaledImage height={10} source={require('@images/new/drug/ic_btn_location.png')}></ScaledImage>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={this.onSelectDistrict} style={styles.viewLocation}>
                         <Text style={styles.txName}>Quận/Huyện</Text>
                         <View style={styles.viewAddress}>
-                            <Text style={styles.inputAdress}>{this.state.districts ? this.state.districts.name : 'Chọn Quận/Huyện'}</Text>
+                            <Text style={styles.inputAdress}>{this.state.districts && this.state.districts.name ? this.state.districts.name : 'Chọn Quận/Huyện'}</Text>
                             <ScaledImage height={10} source={require('@images/new/drug/ic_btn_location.png')}></ScaledImage>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={this.onSelectZone} style={styles.viewLocation}>
                         <Text style={styles.txName}>Phường/Xã</Text>
                         <View style={styles.viewAddress}>
-                            <Text style={styles.inputAdress} >{this.state.zone ? this.state.zone.name : 'Chọn Phường/Xã'}</Text>
+                            <Text style={styles.inputAdress} >{this.state.zone && this.state.zone.name ? this.state.zone.name : 'Chọn Phường/Xã'}</Text>
                             <ScaledImage height={10} source={require('@images/new/drug/ic_btn_location.png')}></ScaledImage>
                         </View>
                     </TouchableOpacity>
                     <View style={styles.viewName}>
                         <Text style={styles.txName}>Địa chỉ</Text>
-                        <TextInput value={this.state.textAddition} ref={ref => this.input = ref}
+                        <TextInput value={this.state.textAddition}
                             onChangeText={text => this.setState({ textAddition: text })} multiline={true} style={styles.inputName} placeholder={'Nhập địa chỉ'}></TextInput>
                     </View>
                     <View style={styles.viewBottom}></View>

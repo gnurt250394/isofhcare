@@ -1,4 +1,4 @@
-import client from '@utils/client-utils';
+import client from '@utils/client-utils2';
 import string from 'mainam-react-native-string-utils';
 import constants from '@resources/strings';
 import datacacheProvider from '@data-access/datacache-provider';
@@ -79,6 +79,16 @@ module.exports = {
     deleteDrug(id) {
         return new Promise((resolve, reject) => {
             client.requestApi('delete', `${constants.api.drug.delete_drug}/${id}`, {}, (s, e) => {
+                if (s)
+                    resolve(s)
+                else
+                    reject(e)
+            })
+        })
+    },
+    searchDrug(text) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('get', `${constants.api.drug.search_drug}?expression=${text}&filters=name&lang=en&page=1&size=10`, {}, (s, e) => {
                 if (s)
                     resolve(s)
                 else

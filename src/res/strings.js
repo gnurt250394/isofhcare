@@ -1013,7 +1013,8 @@ module.exports = {
       set_adress_default: isofhcare_service + 'orders/v1/addresses',
       get_details_drug: isofhcare_service + 'orders/v1/prescriptions',
       find_drug: isofhcare_service + 'orders/v1/prescriptions',
-      delete_drug: isofhcare_service + 'orders/v1/prescriptions'
+      delete_drug: isofhcare_service + 'orders/v1/prescriptions',
+      search_drug : isofhcare_service + 'pharmacy/v1/medicine/search'
     }
   }
 };
