@@ -44,7 +44,7 @@ module.exports = {
   confirm_new_password_not_null: "Bạn không được để trống trường này",
   confirm_password_not_null: 'Bạn không được để trống trường này',
   password_length_8: 'Mật khẩu dài ít nhất 6 ký tự',
-  password_length_20:'Mật khẩu dài tối đa 20 ký tự',
+  password_length_20: 'Mật khẩu dài tối đa 20 ký tự',
   confirm_password_length_8: "Xác nhận mật khẩu dài ít nhất 6 kí tự",
   new_password_not_match: 'Mật khẩu nhập lại không khớp',
   search: "Tìm kiếm",
@@ -151,7 +151,7 @@ module.exports = {
     action_select_hospital_get_ticket: "ACTION_SELECT_HOSPITAL_GET_TICKET",
     action_select_hospital_ehealth: "ACTION_SELECT_HOSPITAL_EHEALTH",
     action_select_patient_group_ehealth: "ACTION_SELECT_PATIENT_GROUP_EHEALTH",
-    action_otp_phone:"ACTION_OTP_PHONE"
+    action_otp_phone: "ACTION_OTP_PHONE"
   },
   colors: {
     breakline: "#c0c0c0",
@@ -204,7 +204,8 @@ module.exports = {
       LIST_BANNER: "LIST_BANNER",
       DATA_TOP_NEWS: 'DATA_TOP_NEWS',
       DATA_TOP_HOSPITAL: 'DATA_TOP_HOSPITAL',
-      KEY_HAS_UPDATE_NEW_VERSION: "KEY_HAS_UPDATE_NEW_VERSION"
+      KEY_HAS_UPDATE_NEW_VERSION: "KEY_HAS_UPDATE_NEW_VERSION",
+      LOCATION_DEFAULT: 'LOCATION_DEFAULT'
     }
   },
   questions: {
@@ -1006,6 +1007,17 @@ module.exports = {
     },
     voucher: {
       get_voucher: isofhcare_service + 'voucher'
+    },
+    drug: {
+      create_drug: isofhcare_service + 'orders/v1/prescriptions',
+      get_location: isofhcare_service + 'orders/v1/addresses/owner',
+      add_location: isofhcare_service + 'orders/v1/addresses',
+      get_list_menu_drug: isofhcare_service + 'orders/v1/prescriptions/owner',
+      set_adress_default: isofhcare_service + 'orders/v1/addresses',
+      get_details_drug: isofhcare_service + 'orders/v1/prescriptions',
+      find_drug: isofhcare_service + 'orders/v1/prescriptions',
+      delete_drug: isofhcare_service + 'orders/v1/prescriptions',
+      search_drug : isofhcare_service + 'pharmacy/v1/medicine/search'
     }
   }
 };
