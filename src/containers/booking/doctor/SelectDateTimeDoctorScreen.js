@@ -60,6 +60,7 @@ class SelectDateTimeDoctorScreen extends Component {
     }
 
     selectDay(day) {
+
         let data = this.state.schedules[day].lock || [];
 
         let listSchedules = this.state.profileDoctor.schedules || []
@@ -68,7 +69,8 @@ class SelectDateTimeDoctorScreen extends Component {
         let dateOfWeek = this.getDayOfWeek(day)
         let listTime = [];
         if (this.state.schedules[day].noSchedule) {
-            let date = new Date(new Date(day).format("yyyy-MM-dd"));
+            let date = new Date(day)
+
             date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
             date.setMinutes(date.getMinutes() + (8 * 60));
             while (true) {
@@ -79,9 +81,11 @@ class SelectDateTimeDoctorScreen extends Component {
 
                     let disabled = true;
                     let id;
+                    let maximumCapacity;
                     for (let i = 0; i <= listSchedules.length; i++) {
                         if (listSchedules[i] && listSchedules[i].workTime.dayOfTheWeek == dateOfWeek) {
                             let index = listSchedules[i].timeSlots.findIndex(e => e.date == day && e.time == date.format("HH:mm"))
+
                             if (index != -1) {
                                 if (listSchedules[i].timeSlots[index].lock) {
                                     disabled = true
@@ -90,12 +94,14 @@ class SelectDateTimeDoctorScreen extends Component {
                                 }
                             }
 
+
                             if (listSchedules[i].workTime.start <= date.format('HH:mm')
                                 && listSchedules[i].workTime.end > date.format('HH:mm')
                             ) {
+                                maximumCapacity = listSchedules[i].maximumCapacity
                                 disabled = false
                                 id = listSchedules[i].id
-                                break;
+                                // break;
                             }
                         }
                     }
@@ -105,6 +111,7 @@ class SelectDateTimeDoctorScreen extends Component {
                         schedule: {
                         },
                         id,
+                        maximumCapacity,
                         time: date.getTime(),
                         type: 3,
                         label: date.format("HH:mm"),
@@ -248,6 +255,11 @@ class SelectDateTimeDoctorScreen extends Component {
                     obj[key].marked = false;
                     obj[key].color = 'green';
                     obj[key].selectedColor = '#3161AD';
+                    obj[key].customStyles = {
+                        container: {
+                            backgroundColor: '#FFF',
+                        }
+                    }
                 }
                 // return;
                 firstDay.setDate(firstDay.getDate() + 1)
@@ -271,35 +283,52 @@ class SelectDateTimeDoctorScreen extends Component {
                 let dataSchedules = this.state.profileDoctor.schedules ? this.state.profileDoctor.schedules : []
                 for (let i = 0; i < dataSchedules.length; i++) {
                     // if (dataSchedules[i].workTime.dayOfTheWeek == dayOfWeek) {
+
                     if ((dataSchedules[i].workTime.dayOfTheWeek == dayOfWeek
                         && dataSchedules[i].workTime.expired >= key
                         && dataSchedules[i].workTime.repeat) || (key == dataSchedules[i].workTime.day)) {
                         arrIndex.push(i)
+
                         obj[key].marked = true;
                         obj[key].noSchedule = true;
                         obj[key].disabled = false;
                         obj[key].disableTouchEvent = false;
+                        obj[key].customStyles = {
+                            container: {
+                                backgroundColor: '#FFF',
+                                borderWidth: 1,
+                                borderColor: '#3161AD'
+                            }
+                        }
                         if (arrIndex && arrIndex.length == 1) {
                             selected = keyDate;
+                            obj[key].customStyles = {
+                                container: {
+                                    backgroundColor: '#3161AD'
+                                },
+                                text: {
+                                    color: '#FFF'
+                                }
+                            }
                         }
                         break;
                     }
-                    // else {
-                    //     if (timeout) clearTimeout(timeout)
-                    //     let timeout = setTimeout(() => {
-                    //         let date = new Date()
-                    //         date.setMonth(date.getMonth() + 1)
-                    //         // 
-                    //         // this.setState({ latestTime: date }, () => {
-                    //         //     this.selectMonth(date)
-                    //         //     
-                    //         // })
-                    //     })
+                    else {
+                        obj[key].customStyles = {
+                            container: {
+                                backgroundColor: '#FFF',
+                            }
+                        }
+                    }
+                    // if ((dataSchedules[i].workTime.repeat || key != dataSchedules[i].workTime.day)
+                    // ) {
+                    //     break;
                     // }
                 }
             }
             if (selected) {
                 (obj[selected.format("yyyy-MM-dd")] || {}).selected = true;
+
             }
 
             this.setState({
@@ -330,7 +359,15 @@ class SelectDateTimeDoctorScreen extends Component {
                         schedules: [],
                         marked: true,
                         color: 'green',
-                        selectedColor: '#3161AD'
+                        selectedColor: '#3161AD',
+                        customStyles: {
+                            container: {
+                                backgroundColor: '#3161AD'
+                            },
+                            text: {
+                                color: '#FFF'
+                            }
+                        }
                     }
                 } else {
                     obj[tgi].schedules.push(item);
@@ -379,12 +416,29 @@ class SelectDateTimeDoctorScreen extends Component {
         //     }
         // }
     }
+    daysBetween = (date1, date2) => {
+        //Get 1 day in milliseconds
+        var one_day = 1000 * 60 * 60 * 24;
 
+        // Convert both dates to milliseconds
+        var date1_ms = date1.getTime();
+        var date2_ms = date2.getTime();
+
+        // Calculate the difference in milliseconds
+        var difference_ms = date2_ms - date1_ms;
+
+        // Convert back to days and return
+        return Math.round(difference_ms / one_day);
+    }
     selectTime = (item) => () => {
-
         if (item.type == 0) {
             snackbar.show("Đã kín lịch trong khung giờ này", "danger");
             return;
+        }
+        let date = new Date(item.key)
+        if (item.maximumCapacity < this.daysBetween(new Date(), date)) {
+            snackbar.show(`Bạn chỉ được đặt lịch trước ${item.maximumCapacity} ngày`, "danger");
+            return
         }
 
         this.setState({ schedule: item, allowBooking: true }, () => {
@@ -413,7 +467,6 @@ class SelectDateTimeDoctorScreen extends Component {
             // callback(this.state.bookingDate, this.state.schedule, listFinal);
             //     this.props.navigation.pop();
             // }
-
 
             this.setState({ isLoading: true }, () => {
                 bookingDoctorProvider.get_detail_schedules(this.state.schedule.id).then(res => {
@@ -495,10 +548,25 @@ class SelectDateTimeDoctorScreen extends Component {
         let schedules = JSON.parse(JSON.stringify(this.state.schedules));
         if (schedules.hasOwnProperty(day.dateString)) {
             if (this.state.dateString) {
-                delete schedules[this.state.dateString].selected;
+                schedules[this.state.dateString].customStyles = {
+                    container: {
+                        backgroundColor: '#FFF',
+                        borderWidth: 1,
+                        borderColor: '#3161AD'
+                    }
+                }
+                // delete schedules[this.state.dateString].selected;
             }
-            schedules[day.dateString].selected = true;
-            schedules[day.dateString].selectedColor = '#3161AD';
+            // schedules[day.dateString].selected = true;
+            // schedules[day.dateString].selectedColor = '#3161AD';
+            schedules[day.dateString].customStyles = {
+                container: {
+                    backgroundColor: '#3161AD',
+                },
+                text: {
+                    color: '#FFF'
+                }
+            }
             this.setState({
                 dateString: day.dateString,
                 bookingDate: day.dateString.toDateObject(),
@@ -543,6 +611,7 @@ class SelectDateTimeDoctorScreen extends Component {
                             <Text style={styles.txtDateBooking}>NGÀY KHÁM</Text>
                             <View style={styles.groupCalendar}>
                                 <Calendar style={styles.calendar}
+                                    markingType="custom"
                                     markedDates={this.state.schedules}
                                     current={(this.state.latestTime || new Date()).format("yyyy-MM-dd")}
                                     onDayPress={this.onSelectDay}

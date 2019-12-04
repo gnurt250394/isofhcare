@@ -81,7 +81,7 @@ module.exports = {
      * @param {string} time 
      * @param {object} room 
      */
-    create(date, description, discount, doctor, hospitals, items, patient, payment, scheduleId, time, room) {
+    create(date, description, doctor, hospitals, items, patient, scheduleId, time, room) {
         console.log('hospitals: ', hospitals);
         return new Promise((resolve, reject) => {
             let doctors = { id: doctor.id, name: doctor.name }
@@ -107,7 +107,7 @@ module.exports = {
                     // mô tả
                     description,
                     // mã voucher
-                    discount: discount ? discount : 0,
+                    // discount: discount ? discount : 0,
                     // thông tin bác sỹ 
                     doctor: doctors,
                     // thông tin bệnh viện đặt khám 
@@ -117,13 +117,31 @@ module.exports = {
                     // thông tin bệnh nhân đặt khám
                     patient,
                     // Phương thức thanh toán
-                    payment,
+                    // payment,
                     // Thông tin phòng
                     room,
                     // Mã lịch đặt khám
                     scheduleId,
                     //giờ đặt khám
                     time
+                }, (s, e) => {
+                    if (s) resolve(s);
+                    else reject(e);
+                }
+            );
+        });
+    },
+
+    confirmBooking(id, paymentMethod, voucher) {
+        return new Promise((resolve, reject) => {
+            client.requestApi(
+                "post",
+                URL2 +
+                constants.api.booking.doctor.get_detail_booking + '/' + id + '/payment/' + paymentMethod,
+                {
+                    "code": voucher.code ? voucher.code : '',
+                    "discount": voucher.price ? voucher.price : '',
+                    "id": voucher.id ? voucher.id : ''
                 }, (s, e) => {
                     if (s) resolve(s);
                     else reject(e);

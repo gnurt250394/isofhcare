@@ -123,7 +123,8 @@ import ListHospitalScreen from '@containers/booking/doctor/ListHospitalScreen';
 import RatingDoctorScreen from '@containers/booking/doctor/RatingDoctorScreen';
 import ListRatingDoctorScreen from '@containers/booking/doctor/ListRatingDoctorScreen';
 import ListBookingHistoryScreen from '@containers/booking/ListBookingHistoryScreen';
-import DetailHistoryBookingScreen from '../containers/booking/DetailHistoryBookingScreen';
+import DetailHistoryBookingScreen from '@containers/booking/DetailHistoryBookingScreen';
+import ConfirmBookingDoctorScreen from '@containers/booking/doctor/ConfirmBookingDoctorScreen';
 const ProfileNavigation = createStackNavigator({
   selectProfile: SelectProfileScreen,
   createProfile: CreateProfileScreen,
@@ -343,7 +344,8 @@ const RootNavigator = createStackNavigator(
     listSpecialist: { screen: ListSpecialistScreen },
     ratingDoctor: { screen: RatingDoctorScreen },
     listRatingDoctor: { screen: ListRatingDoctorScreen },
-    listBookingHistory: { screen: ListBookingHistoryScreen }
+    listBookingHistory: { screen: ListBookingHistoryScreen },
+    confirmBookingDoctor: { screen: ConfirmBookingDoctorScreen },
   },
   {
     headerMode: "none",
