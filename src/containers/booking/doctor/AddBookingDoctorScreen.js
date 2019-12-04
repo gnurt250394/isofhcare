@@ -316,12 +316,12 @@ class AddBookingDoctorScreen extends Component {
                 bookingDoctorProvider.create(
                     date,
                     reason,
-                    discount,
+                    // discount,
                     detailSchedule.doctor,
                     profileDoctor.hospital,
                     detailSchedule.medicalService,
                     patitent,
-                    this.getPaymentMethod(),
+                    // this.getPaymentMethod(),
                     detailSchedule.id,
                     schedule.label,
                     detailSchedule.room
@@ -329,17 +329,17 @@ class AddBookingDoctorScreen extends Component {
                     this.setState({ isLoading: false }, () => {
                         if (s && s.reference) {
                             s.payment = this.state.paymentMethod
-                            snackbar.show('Đặt khám thành công', 'success')
-                            this.props.navigation.navigate("homeTab", {
-                                navigate: {
-                                    screen: "createBookingDoctorSuccess",
-                                    params: {
+                            // snackbar.show('Đặt khám thành công', 'success')
+                            this.props.navigation.navigate("confirmBookingDoctor", {
+                                // navigate: {
+                                //     screen: "createBookingDoctorSuccess",
+                                //     params: {
                                         detailSchedule,
                                         voucher: this.state.voucher,
                                         booking: s,
                                         bookingDate: this.state.bookingDate
-                                    }
-                                }
+                                    // }
+                                // }
                             });
                         }
                     })
@@ -634,7 +634,7 @@ class AddBookingDoctorScreen extends Component {
                             null
                         }
                         {/**Voucher */}
-                        <TouchableOpacity
+                        {/* <TouchableOpacity
                             onPress={this.goVoucher}
                             style={styles.btnVoucher}
                         >
@@ -654,9 +654,9 @@ class AddBookingDoctorScreen extends Component {
                                 <ScaleImage style={styles.imgmdk} height={11} source={require("@images/new/booking/ic_next.png")} />
 
                             </View>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                         {/** sum Price */}
-                        <View style={styles.containerPriveVoucher}>
+                        {/* <View style={styles.containerPriveVoucher}>
                             {
                                 this.state.voucher && this.state.voucher.price ?
                                     <View style={[styles.containerVoucher, { paddingBottom: 5 }]}>
@@ -671,9 +671,9 @@ class AddBookingDoctorScreen extends Component {
                                 <Text style={styles.txtSumPrice}>Tổng tiền</Text>
                                 <Text style={styles.sumPrice}>{this.getPrice()}đ</Text>
                             </View>
-                        </View>
+                        </View> */}
                         {/** Payment Method */}
-                        <View>
+                        {/* <View>
                             <TouchableOpacity style={styles.buttonPayment}
                                 onPress={this.setlectPaymentMethod}
                             >
@@ -684,16 +684,16 @@ class AddBookingDoctorScreen extends Component {
                                 </View>
                                 <ScaleImage style={styles.imgmdk} height={11} source={require("@images/new/booking/ic_next.png")} />
                             </TouchableOpacity>
-                        </View>
+                        </View> */}
 
                         {/* <SelectPaymentDoctor service={services} ref={ref => this = ref} /> */}
-                        <Text style={styles.txtHelper}>Nếu số tiền thanh toán trước cao hơn thực tế, quý khách sẽ nhận lại tiền thừa tại CSYT khám bệnh</Text>
+                        {/* <Text style={styles.txtHelper}>Nếu số tiền thanh toán trước cao hơn thực tế, quý khách sẽ nhận lại tiền thừa tại CSYT khám bệnh</Text> */}
+                    </KeyboardAwareScrollView>
                         <View style={styles.btn}>
                             <TouchableOpacity onPress={this.createBooking.bind(this)} style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]}>
                                 <Text style={styles.datkham}>Đặt khám</Text>
                             </TouchableOpacity>
                         </View>
-                    </KeyboardAwareScrollView>
 
 
                     <ImagePicker ref={ref => this.imagePicker = ref} />
