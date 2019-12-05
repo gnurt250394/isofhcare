@@ -67,9 +67,11 @@ class SelectDateTimeDoctorScreen extends Component {
 
 
         let dateOfWeek = this.getDayOfWeek(day)
+        console.log('dateOfWeek: ', dateOfWeek);
         let listTime = [];
         if (this.state.schedules[day].noSchedule) {
             let date = new Date(day)
+            console.log('date: ', date);
 
             date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
             date.setMinutes(date.getMinutes() + (8 * 60));
@@ -97,7 +99,13 @@ class SelectDateTimeDoctorScreen extends Component {
 
                             if (listSchedules[i].workTime.start <= date.format('HH:mm')
                                 && listSchedules[i].workTime.end > date.format('HH:mm')
+                                && listSchedules[i].workTime.day <= day
                             ) {
+                                if(listSchedules[i].workTime.expired <= day){
+                                    disabled = true
+                                    id = listSchedules[i].id
+                                    break
+                                }
                                 maximumCapacity = listSchedules[i].maximumCapacity
                                 disabled = false
                                 id = listSchedules[i].id
@@ -193,6 +201,13 @@ class SelectDateTimeDoctorScreen extends Component {
         //     return "#efd100";
         // return "#3161AD";
     }
+    getListSchedule = (hospitalId, doctorId) => {
+        bookingDoctorProvider.get_list_schedules(hospitalId, doctorId, 0).then(res => {
+
+        }).catch(err => {
+
+        })
+    }
     getDetailDoctor = () => {
         try {
             this.setState({ isLoading: true }, () => {
@@ -201,6 +216,7 @@ class SelectDateTimeDoctorScreen extends Component {
                 bookingDoctorProvider.detailDoctor(id).then(s => {
                     this.setState({ isLoading: false })
                     if (s) {
+                        // this.getListSchedule(s.hospital.id, s.id)
                         this.setState({ profileDoctor: s, isLoading: false }, () => {
                             this.selectMonth(new Date());
                         })
@@ -243,7 +259,8 @@ class SelectDateTimeDoctorScreen extends Component {
 
                 if (new Date(key) <= new Date()
                     // || firstDay.getDay() == 6 
-                    || firstDay.getDay() == 0) {
+                    // || firstDay.getDay() == 0
+                ) {
                     obj[key].disabled = true;
                     obj[key].disableTouchEvent = true;
 
@@ -267,7 +284,7 @@ class SelectDateTimeDoctorScreen extends Component {
             let selected = null;
             for (let key in obj) {
                 let dayOfWeek = this.getDayOfWeek(key)
-                if (new Date(key) <= new Date() || dayOfWeek == 'SUNDAY')
+                if (new Date(key) <= new Date())
                     continue;
                 let keyDate = new Date(key);
 
