@@ -81,7 +81,7 @@ class HomeScreen extends Component {
       features: [
         {
           icon: require("@images/new/homev2/ic_get_ticket.png"),
-          text: "Lấy số",
+          text: "Lấy số khám",
           onPress: () => {
             if (this.props.userApp.isLogin)
               this.props.navigation.navigate("getTicket");
@@ -346,17 +346,18 @@ class HomeScreen extends Component {
 
   getItemBookingWidth() {
     const width = DEVICE_WIDTH - 40;
+    console.log(width, 'widthwidthwidth')
     if (width >= 320) {
-      return Platform.OS == 'ios' ? 75 : 80;
+      return Platform.OS == 'ios' ? 70 : 75;
     }
 
     if (width > 300) {
-      return Platform.OS == 'ios' ? 105 : 115;
+      return Platform.OS == 'ios' ? 100 : 110;
     }
 
     if (width > 250)
-      return 75;
-    return width - 55;
+      return 70;
+    return width - 50;
   }
   getItemWidth() {
     const width = DEVICE_WIDTH - 40;
@@ -401,11 +402,11 @@ class HomeScreen extends Component {
             item.empty ? <View style={[styles.viewEmpty, { width: this.getItemWidth() }]}
             ></View> :
               <TouchableOpacity
-                style={[styles.button, { width: this.getItemWidth() }]}
+                style={[styles.button, { width: this.getItemWidth() },{marginLeft:20,marginTop:10}]}
                 onPress={item.onPress}
               >
                 <View style={styles.groupImageButton}>
-                  <ScaledImage style={[styles.icon]} source={item.icon} height={48} />
+                  <ScaledImage style={[styles.icon]} source={item.icon} height={54} />
                 </View>
                 <Text style={[styles.label]}>{item.text}</Text>
               </TouchableOpacity>
@@ -457,25 +458,26 @@ class HomeScreen extends Component {
       >
         <View style={styles.container}>
           {/* <View style={{ height: 150, backgroundColor: '#f2f2f2', position: "absolute", top: 300, left: 0, right: 0 }}></View> */}
-          <ScaledImage source={require("@images/new/homev2/ic_bg_home.png")} width={DEVICE_WIDTH} style={styles.imgHome} />
+          <ScaledImage source={require("@images/new/homev2/header_home.png")} width={DEVICE_WIDTH} style={styles.imgHome} />
           {/*   <View style={styles.containerImageLogo}>
         <View style={styles.ImageCenter}>
               <ScaledImage source={require("@images/new/isofhcare.png")} width={116} />
             </View> 
           </View>*/}
-          {this.props.userApp.isLogin &&
-            <View style={styles.containerHeadertitle}>
-              <Text
-                style={styles.txtHeaderTitle}
-              >Xin chào, </Text>
-              <Text style={styles.colorUserName}>{this.getUserName(this.props.userApp.currentUser.name) + '!'}</Text>
-            </View>}
+
           <ScrollView
             refreshControl={this.refreshControl()}
             showsVerticalScrollIndicator={false}
             style={styles.scroll}
           >
             <View style={styles.padding21}>
+              {this.props.userApp.isLogin &&
+                <View style={styles.containerHeadertitle}>
+                  <Text
+                    style={styles.txtHeaderTitle}
+                  >Xin chào, </Text>
+                  <Text style={styles.colorUserName}>{this.getUserName(this.props.userApp.currentUser.name) + '!'}</Text>
+                </View>}
               <Card style={styles.card}>
                 <Text style={styles.txBooking}>ĐẶT KHÁM ONLINE</Text>
                 <View style={styles.containerButtonBooking}>
@@ -495,7 +497,7 @@ class HomeScreen extends Component {
             {
               this.renderHospital()
             }
-            <View style={{ height: 30 }} />
+            <View style={{ height: 50,backgroundColor:'#fff' }} />
           </ScrollView>
         </View>
         <PushController />
@@ -523,7 +525,7 @@ const styles = StyleSheet.create({
   },
   activityPanel: {
     flex: 1,
-    backgroundColor: '#f2f2f2'
+    backgroundColor: '#f8f8f8'
   },
   containerButtonBooking: {
     flexDirection: "row",
@@ -535,13 +537,12 @@ const styles = StyleSheet.create({
   },
   containerButton: {
     flexDirection: "row",
-    padding: 30,
-    marginTop: 10,
+    padding: 21,
     flex: 1,
     flexWrap: 'wrap',
     justifyContent: 'center',
     borderRadius: 5,
-    backgroundColor: '#F8F8F8'
+    backgroundColor: '#f2f2f2'
   },
   colorUserName: {
     color: '#fff',
@@ -558,12 +559,9 @@ const styles = StyleSheet.create({
   containerHeadertitle: {
     alignItems: 'center',
     flexDirection: 'row',
-    borderBottomColor: 'rgba(151, 151, 151, 0.29)',
     // borderBottomColor: '#fff',
-    borderBottomWidth: 1,
-    paddingVertical: 10,
     marginHorizontal: 20,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   txBooking: {
     margin: 5,
@@ -571,12 +569,12 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: 'bold'
   },
-  padding21: { padding: 21 },
-  card: { borderRadius: 6, marginTop: 30 },
+  padding21: { padding: 21,paddingBottom:0 },
+  card: { borderRadius: 6, marginTop: 10 },
   viewMenu: { backgroundColor: '#F8F8F8', flex: 1, borderRadius: 5 },
   scroll: {
     flex: 1,
-    paddingTop: 0,
+    paddingTop: 30,
   },
   ImageCenter: {
     flex: 1, alignItems: 'center'
@@ -613,7 +611,7 @@ const styles = StyleSheet.create({
   imgMore: { marginTop: 10, marginRight: 20 },
   listAds: { paddingHorizontal: 20 },
   viewFooter: { width: 35 },
-  cardView: { width: DEVICE_WIDTH - 140, borderRadius: 6, marginRight: 10, borderColor: '#9B9B9B', borderWidth: 0.5, backgroundColor: '#fff',height: 140, },
+  cardView: { width: DEVICE_WIDTH - 140, borderRadius: 6, marginRight: 10, borderColor: '#9B9B9B', borderWidth: 0.5, backgroundColor: '#fff', height: 140, },
   cardViewNone: { width: DEVICE_WIDTH - 140, borderRadius: 6, marginRight: 10, backgroundColor: '#fff' },
   imgNone: { width: DEVICE_WIDTH - 140, borderRadius: 6, height: 140, borderColor: '#9B9B9B', borderWidth: 0.5 },
   cardViewDoctor: { width: DEVICE_WIDTH / 3, borderRadius: 6, marginRight: 10 },
