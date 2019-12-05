@@ -67,7 +67,6 @@ class SelectDateTimeDoctorScreen extends Component {
 
 
         let dateOfWeek = this.getDayOfWeek(day)
-        console.log('dateOfWeek: ', dateOfWeek);
         let listTime = [];
         if (this.state.schedules[day].noSchedule) {
             let date = new Date(day)
@@ -101,7 +100,8 @@ class SelectDateTimeDoctorScreen extends Component {
                                 && listSchedules[i].workTime.end > date.format('HH:mm')
                                 && listSchedules[i].workTime.day <= day
                             ) {
-                                if(listSchedules[i].workTime.expired <= day){
+                                if ((listSchedules[i].workTime.day != day && !listSchedules[i].workTime.repeat)
+                                    || (listSchedules[i].workTime.repeat && listSchedules[i].workTime.expired < day)) {
                                     disabled = true
                                     id = listSchedules[i].id
                                     break
