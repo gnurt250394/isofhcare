@@ -163,6 +163,19 @@ module.exports = {
             );
         });
     },
+    get_list_schedules(hospitalId, doctorId, page, size) {
+        return new Promise((resolve, reject) => {
+            client.requestApi(
+                "get",
+                URL +
+                `${constants.api.booking.doctor.get_list_schedules}/${hospitalId}/hospital/${doctorId}/doctor?page=${page}&size=20&sort=desc&properties=created`
+                , {}, (s, e) => {
+                    if (s) resolve(s);
+                    else reject(e);
+                }
+            );
+        });
+    },
     get_list_specialists(page, size) {
         return new Promise((resolve, reject) => {
             client.requestApi(
