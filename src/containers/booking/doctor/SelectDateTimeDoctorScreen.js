@@ -305,7 +305,12 @@ class SelectDateTimeDoctorScreen extends Component {
                         && dataSchedules[i].workTime.expired >= key
                         && dataSchedules[i].workTime.repeat) || (key == dataSchedules[i].workTime.day)) {
                         arrIndex.push(i)
-
+                        let indexDelete = dataSchedules[i].breakDays.findIndex(e => e == key)
+                        if (indexDelete != -1){
+                        obj[key].disabled = true;
+                        obj[key].disableTouchEvent = true;
+                        break
+                        }
                         obj[key].marked = true;
                         obj[key].noSchedule = true;
                         obj[key].disabled = false;
