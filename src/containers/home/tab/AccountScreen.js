@@ -135,12 +135,9 @@ class AccountScreen extends Component {
           <Text style={styles.txUserName}>
             {this.props.userApp.currentUser.name}
           </Text>
-          <View
-          >
-            <Text style={styles.txViewProfile}>
-              {this.props.userApp.currentUser.phone}
-            </Text>
-          </View>
+          <Text style={styles.txViewProfile}>
+            {this.props.userApp.currentUser.phone}
+          </Text>
         </View>
       </View>
     );
