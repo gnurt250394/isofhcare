@@ -86,7 +86,11 @@ class SelectDateTimeDoctorScreen extends Component {
                     for (let i = 0; i <= listSchedules.length; i++) {
                         if (listSchedules[i] && listSchedules[i].workTime.dayOfTheWeek == dateOfWeek) {
                             let index = listSchedules[i].timeSlots.findIndex(e => e.date == day && e.time == date.format("HH:mm"))
-
+                            let indexParent = listSchedules.findIndex(e => e.parent == listSchedules[i].id
+                                && (e.workTime.start > date.format("HH:mm")
+                                    || e.workTime.end < date.format("HH:mm"))
+                                && listSchedules[i].workTime.day != day
+                            )
                             if (index != -1) {
                                 if (listSchedules[i].timeSlots[index].lock) {
                                     disabled = true
@@ -100,12 +104,20 @@ class SelectDateTimeDoctorScreen extends Component {
                                 && listSchedules[i].workTime.end > date.format('HH:mm')
                                 && listSchedules[i].workTime.day <= day
                             ) {
-                                if ((listSchedules[i].workTime.day != day && !listSchedules[i].workTime.repeat)
-                                    || (listSchedules[i].workTime.repeat && listSchedules[i].workTime.expired < day)) {
+
+                                if ((indexParent != -1)) {
+                                    console.log('listSchedules[indexParent]: ', listSchedules[indexParent]);
+                                    console.log('llllll', listSchedules[i])
                                     disabled = true
                                     id = listSchedules[i].id
                                     break
                                 }
+                                // if ((listSchedules[i].workTime.day != day && !listSchedules[i].workTime.repeat)
+                                //     || (listSchedules[i].workTime.repeat && listSchedules[i].workTime.expired < day)) {
+                                //     disabled = true
+                                //     id = listSchedules[i].id
+                                //     break
+                                // }
                                 maximumCapacity = listSchedules[i].maximumCapacity
                                 disabled = false
                                 id = listSchedules[i].id
@@ -306,10 +318,10 @@ class SelectDateTimeDoctorScreen extends Component {
                         && dataSchedules[i].workTime.repeat) || (key == dataSchedules[i].workTime.day)) {
                         arrIndex.push(i)
                         let indexDelete = dataSchedules[i].breakDays.findIndex(e => e == key)
-                        if (indexDelete != -1){
-                        obj[key].disabled = true;
-                        obj[key].disableTouchEvent = true;
-                        break
+                        if (indexDelete != -1) {
+                            obj[key].disabled = true;
+                            obj[key].disableTouchEvent = true;
+                            break
                         }
                         obj[key].marked = true;
                         obj[key].noSchedule = true;
