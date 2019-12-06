@@ -475,7 +475,9 @@ class AccountScreen extends Component {
         }}>
           <Text style={[styles.itemText, { color: '#00000080' }]}>{'Phiên bản ' + DeviceInfo.getVersion() + '.' + DeviceInfo.getBuildNumber()}</Text>
         </TouchableOpacity>
-        <View style={styles.viewSpaceBottom} />
+        <View style={styles.viewSpaceBottom}>
+          <TouchableOpacity onPress={this.openLinkHotline} style={styles.btnHotline}><ScaledImage source={require('@images/new/homev2/ic_hotline.png')} height={20}></ScaledImage><Text style={{ marginLeft: 10, fontSize: 14 }}>Hotline: <Text style={{ fontWeight: 'bold', fontSize: 14 }}>1900299983</Text></Text></TouchableOpacity>
+        </View>
         <ImagePicker ref={ref => (this.imagePicker = ref)} />
       </ScrollView>
     );
@@ -495,6 +497,7 @@ class AccountScreen extends Component {
 const width = Dimensions.get("window").width;
 const styles = StyleSheet.create({
   icon: {},
+  btnHotline: { padding: 5, flexDirection: 'row', alignItems: 'center', marginBottom: 10, },
   label: {
     marginTop: 2,
     color: "#4A4A4A",
@@ -563,8 +566,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8F8F8'
   },
   txVersion: { marginLeft: 10, marginTop: 10 },
-  viewSpaceBottom: { height: 100 },
-  borderMenu: {height: 1, backgroundColor: '#00000011', alignSelf: 'flex-end' }
+  viewSpaceBottom: { height: 100, justifyContent: 'flex-end', alignItems: 'center' },
+  borderMenu: { width: '85%', height: 1, backgroundColor: '#00000011', alignSelf: 'flex-end' }
 
 });
 
