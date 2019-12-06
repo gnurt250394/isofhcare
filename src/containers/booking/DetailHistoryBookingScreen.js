@@ -83,6 +83,7 @@ class DetailHistoryBookingScreen extends Component {
             case 'CASH': return <Text style={styles.paymentHospital}>{constants.booking.status.payment_CSYT}</Text>;
             case 'VNPAY': return <Text style={styles.paymentHospital}>{constants.booking.status.payment_VNPAY}</Text>;
             case 'PAYOO': return <Text style={styles.paymentHospital}>{constants.booking.status.payment_payoo}</Text>;
+            case 'BANK_TRANSFER': return <Text style={styles.paymentHospital}>Chuyển khoản trực tiếp</Text>;
             // case 0:
             //     return <Text style={styles.paymentHospital}>{constants.booking.status.not_select_payment}</Text>;
             // case 1:
@@ -105,7 +106,7 @@ class DetailHistoryBookingScreen extends Component {
             case 'NEW':
                 return (
                     <View style={styles.statusTx}>
-                        <Text style={styles.txStatus}>{constants.booking.status.pending}</Text>
+                        <Text style={styles.txStatus}>Chờ duyệt</Text>
                     </View>
                 );
             case 'ACCEPTED':
@@ -114,9 +115,9 @@ class DetailHistoryBookingScreen extends Component {
                         <Text style={styles.txStatus}>Xác nhận đặt khám</Text>
                     </View>
                 )
-            case 'PAID': return (
+            case 'CHECKIN': return (
                 <View style={styles.statusTx}>
-                    <Text style={styles.txStatus}>{constants.booking.status.paymented}</Text>
+                    <Text style={styles.txStatus}>Đã check-in</Text>
                 </View>
             )
             case 'CANCELED': return (
@@ -131,7 +132,7 @@ class DetailHistoryBookingScreen extends Component {
             )
             case 'REJECTED': return (
                 <View style={styles.statusTx}>
-                    <Text style={styles.txStatus}>{constants.booking.status.rejected}</Text>
+                    <Text style={styles.txStatus}>Từ chối đặt khám</Text>
                 </View>
             )
             default:
@@ -142,7 +143,7 @@ class DetailHistoryBookingScreen extends Component {
         this.props.navigation.navigate("photoViewer", {
             urls: images.map(item => {
                 return item.absoluteUrl()
-            }), index
+            }),
         });
     }
     renderImages() {
@@ -200,10 +201,18 @@ class DetailHistoryBookingScreen extends Component {
             default: return ''
         }
     }
+    getPrice = () => {
+        let voucherPrice = 0
+        if (this.state.booking.invoice && this.state.booking.invoice.voucher && this.state.booking.invoice.voucher.discount) {
+            voucherPrice = this.state.booking.invoice.voucher.discount
+        }
+        let price = this.state.booking.invoice.services.reduce((start, item) => start + parseInt(item.price), 0)
+        return (price - voucherPrice).formatPrice()
+    }
     onBackdropPress = () => this.setState({ isVisible: false })
     defaultImage = () => <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={20} height={20} />
     render() {
-        console.log(this.props)
+        console.log(this.state)
         const avatar = this.props.userApp.currentUser && this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar } : require("@images/new/user.png")
         return (
             <ActivityPanel
@@ -258,10 +267,16 @@ class DetailHistoryBookingScreen extends Component {
                                     {
                                         this.state.booking.invoice.services.map((item, index) => {
                                             return <View key={index}>
-                                                <Text numberOfLines={1} key={index} style={[styles.txInfoService, styles.txtBold]}>{item.serviceName}</Text>
-                                                <Text key={index} style={[styles.txInfoService, styles.price]}>({item.price.formatPrice()}đ)</Text>
+                                                <Text numberOfLines={1} style={[styles.txInfoService, styles.txtBold]}>{item.serviceName}</Text>
+                                                <Text style={[styles.txInfoService, styles.price]}>({item.price.formatPrice()}đ)</Text>
                                             </View>
                                         })
+                                    }
+                                    {this.state.booking.invoice.voucher && this.state.booking.invoice.voucher.discount ?
+                                        <View >
+                                            <Text numberOfLines={1} style={[styles.txInfoService, styles.txtBold]}>ƯU đãi</Text>
+                                            <Text style={[styles.txInfoService, styles.price]}>(-{this.state.booking.invoice.voucher.discount.formatPrice()}đ)</Text>
+                                        </View> : null
                                     }
                                 </View>
                             </View> : null
@@ -343,7 +358,7 @@ class DetailHistoryBookingScreen extends Component {
                                         />
                                         <Text style={styles.txLabelPrice}>Tổng tiền dịch vụ</Text>
                                         <Text style={styles.txPrice}>
-                                            {this.state.booking.invoice.services.reduce((start, item) => start + parseInt(item.price), 0).formatPrice() + 'đ'}
+                                            {this.getPrice() + 'đ'}
                                         </Text>
                                     </View>
                                     <View style={styles.between}></View>

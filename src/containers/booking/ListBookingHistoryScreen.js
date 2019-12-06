@@ -226,14 +226,14 @@ class ListBookingHistoryScreen extends Component {
         switch (status) {
             case 'NEW':
                 return (
-                    <Text style={[styles.statusTx, styles.flexStart, styles.colorWhite]}>{constants.booking.status.pending}</Text>
+                    <Text style={[styles.statusTx, styles.flexStart, styles.colorWhite]}>Chờ duyệt</Text>
                 );
             case 'ACCEPTED':
                 return (
-                    <Text style={[styles.statusTx, styles.flexStart, styles.colorWhite]}>Xác nhận đặt khám</Text>
+                    <Text style={[styles.statusTx, styles.flexStart, styles.colorWhite]}>Đã duyệt</Text>
                 )
-            case 'PAID': return (
-                <Text style={[styles.statusTx, styles.flexStart, styles.colorWhite]}>{constants.booking.status.paymented}</Text>
+            case 'CHECKIN': return (
+                <Text style={[styles.statusTx, styles.flexStart, styles.colorWhite]}>Đã check-in</Text>
             )
             case 'CANCELED': return (
                 <Text style={[styles.statusReject, styles.flexStart, styles.colorRed]}>Đã hủy</Text>
@@ -242,7 +242,7 @@ class ListBookingHistoryScreen extends Component {
                 <Text style={[styles.statusTx, styles.flexStart, styles.colorWhite]}>Hoàn thành khám</Text>
             )
             case 'REJECTED': return (
-                <Text style={[styles.statusReject, styles.flexStart, styles.colorRed]}>{constants.booking.status.rejected}</Text>
+                <Text style={[styles.statusReject, styles.flexStart, styles.colorRed]}>Từ chối đặt khám</Text>
             )
 
 
