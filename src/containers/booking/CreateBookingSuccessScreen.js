@@ -64,11 +64,11 @@ class CreateBookingSuccessScreen extends Component {
         let booking = this.props.navigation.state.params.booking;
         let service = this.props.navigation.state.params.service || [];
         let voucher = this.props.navigation.state.params.voucher || {};
-        if (!booking || !booking.profile || !booking.hospital || !booking.hospital.hospital || !booking.book) {
+        if (!booking || !booking.profile || !booking.hospital || !booking.hospital.hospital ) {
             this.props.navigation.pop();
             return null;
         }
-        let bookingTime = booking.book.bookingTime.toDateObject("-");
+        let bookingTime = new Date(booking.date)
         return (
             <ActivityPanel
                 hideBackButton={true}
@@ -87,14 +87,14 @@ class CreateBookingSuccessScreen extends Component {
                                 <Text style={styles.col1}>{constants.booking.code}</Text>
                                 <TouchableOpacity onPress={this.onQrClick} style={styles.buttonQRCode}>
                                     <QRCode
-                                        value={booking.book.codeBooking || ""}
+                                        value={booking.reference || ""}
                                         logo={require('@images/new/logo.png')}
                                         logoSize={20}
                                         size={100}
                                         logoBackgroundColor='transparent'
                                     />
                                 </TouchableOpacity>
-                                <Text style={styles.txtCodeBooking}>{constants.booking.code_booking} {booking.book.codeBooking}</Text>
+                                <Text style={styles.txtCodeBooking}>{constants.booking.code_booking} {booking.reference}</Text>
                             </View>
                         </View>
                         <View style={styles.containerBody}>
@@ -114,7 +114,7 @@ class CreateBookingSuccessScreen extends Component {
 
                             <View style={styles.row}>
                                 <Text style={styles.label}>{constants.booking.time}</Text>
-                                <Text style={styles.text}>{bookingTime.format("hh:mm") + " " + (bookingTime.format("HH") < 12 ? "AM" : "PM") + " - " + bookingTime.format("thu, dd/MM/yyyy")}</Text>
+                                <Text style={styles.text}>{booking.time + " - " + bookingTime.format("thu, dd/MM/yyyy")}</Text>
                             </View>
                             {service && service.length ?
                                 <View style={styles.row}>
@@ -193,7 +193,7 @@ class CreateBookingSuccessScreen extends Component {
                     backdropTransitionOutTiming={1000}
                 >
                     <QRCode
-                        value={booking.book.codeBooking || ""}
+                        value={booking.reference || ""}
                         logo={require('@images/new/logo.png')}
                         logoSize={40}
                         size={250}
@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
         fontStyle: 'italic'
     },
     btnCopy: {
-        flex:1
+        flex: 1
     },
     row: {
         marginTop: 10,

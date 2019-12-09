@@ -12,6 +12,8 @@ import connectionUtils from '@utils/connection-utils';
 import payoo from 'mainam-react-native-payoo';
 import { NativeModules } from 'react-native';
 import constants from '../../res/strings';
+import bookingDoctorProvider from '@data-access/booking-doctor-provider'
+
 var PayooModule = NativeModules.PayooModule;
 
 class ConfirmBookingScreen extends Component {
@@ -47,17 +49,17 @@ class ConfirmBookingScreen extends Component {
         }
     }
     componentDidMount() {
-        AppState.addEventListener('change', this._handleAppStateChange);
+        // AppState.addEventListener('change', this._handleAppStateChange);
     }
     componentWillUnmount() {
-        AppState.removeEventListener('change', this._handleAppStateChange);
+        // AppState.removeEventListener('change', this._handleAppStateChange);
     }
     _handleAppStateChange = (nextAppState) => {
         if (nextAppState == 'inactive' || nextAppState == 'background') {
 
         } else {
             this.setState({ isLoading: true }, () => {
-                bookingProvider.detail(this.state.booking.book.id).then(s => {
+                bookingProvider.detail(this.state.booking.id).then(s => {
                     this.setState({ isLoading: false }, () => {
                         if (s.code == 0 && s.data && s.data.booking) {
                             if (s.code == 0 && s.data && s.data.booking) {
@@ -138,18 +140,19 @@ class ConfirmBookingScreen extends Component {
     }
 
     getPaymentMethod() {
-        switch (this.state.paymentMethod) {
+        let { paymentMethod } = this.state
+        switch (paymentMethod) {
             case 1:
                 return "VNPAY";
             case 2:
-                return "";
+                return "CASH";
             case 3:
             case 5:
-                return "PAYOO";
+            // return "PAYOO";
             case 4:
-                return "PAYOO_BILL";
+                return "PAYOO";
             case 6:
-                return "";
+                return "BANK_TRANSFER";
         }
     }
     getPaymentReturnUrl() {
@@ -434,7 +437,7 @@ class ConfirmBookingScreen extends Component {
                                         booking.transactionCode = obj["vnp_TxnRef"];
                                         this.props.navigation.navigate("paymentBookingError", { booking })
                                     }
-                                    else { 
+                                    else {
                                         booking.vnPayDate = obj["vnp_PayDate"]
                                         booking.vnPayDate = data.id
                                         this.props.navigation.navigate("homeTab", {
@@ -487,40 +490,91 @@ class ConfirmBookingScreen extends Component {
         })
     }
 
+    // createBooking() {
+    //     connectionUtils.isConnected().then(s => {
+    //         this.setState({ isLoading: true }, () => {
+    //             bookingProvider.detail(this.state.booking.book.id).then(s => {
+    //                 this.setState({ isLoading: false }, () => {
+    //                     if (s.code == 0 && s.data && s.data.booking) {
+    //                         switch (s.data.booking.status) {
+    //                             case 3: //đã thanh toán
+    //                                 snackbar.show(constants.booking.booking_paid, "danger")
+    //                                 break;
+    //                             case 4: //payment_last
+    //                                 snackbar.show(constants.booking.booking_paid_or_invalid);
+    //                                 break;
+    //                             default:
+    //                                 this.setState({ isLoading: true }, () => {
+    //                                     if (this.state.paymentMethod == 2) {
+    //                                         this.confirmPayment(this.state.booking, this.state.booking.book.id);
+    //                                         return
+    //                                     }
+    //                                     if (this.state.paymentMethod == 6) {
+    //                                         this.confirmPayment(this.state.booking, this.state.booking.book.id, this.state.paymentMethod);
+    //                                         return
+    //                                     }
+    //                                     else {
+    //                                         this.getPaymentLink(this.state.booking);
+    //                                     }
+    //                                 });
+    //                         }
+    //                     }
+    //                 })
+    //                 // 
+    //             }).catch(e => {
+    //                 this.setState({ isLoading: false }, () => {
+    //                 });
+    //             });
+
+    //         });
+    //     }).catch(e => {
+    //         snackbar.show(constants.msg.app.not_internet, "danger");
+    //     })
+    // }
     createBooking() {
+        const { booking } = this.state
+        booking.hospital = this.state.hospital;
+        booking.profile = this.state.profile;
+        booking.payment = this.state.paymentMethod;
+        console.log('booking: ', booking);
         connectionUtils.isConnected().then(s => {
             this.setState({ isLoading: true }, () => {
-                bookingProvider.detail(this.state.booking.book.id).then(s => {
-                    this.setState({ isLoading: false }, () => {
-                        if (s.code == 0 && s.data && s.data.booking) {
-                            switch (s.data.booking.status) {
-                                case 3: //đã thanh toán
-                                    snackbar.show(constants.booking.booking_paid, "danger")
-                                    break;
-                                case 4: //payment_last
-                                    snackbar.show(constants.booking.booking_paid_or_invalid);
-                                    break;
-                                default:
-                                    this.setState({ isLoading: true }, () => {
-                                        if (this.state.paymentMethod == 2) {
-                                            this.confirmPayment(this.state.booking, this.state.booking.book.id);
-                                            return
-                                        }
-                                        if (this.state.paymentMethod == 6) {
-                                            this.confirmPayment(this.state.booking, this.state.booking.book.id, this.state.paymentMethod);
-                                            return
-                                        }
-                                        else {
-                                            this.getPaymentLink(this.state.booking);
-                                        }
-                                    });
-                            }
+                bookingDoctorProvider.confirmBooking(this.state.booking.id, this.getPaymentMethod(), this.state.voucher).then(res => {
+                    console.log('res: ', res);
+                    this.setState({ isLoading: false })
+                    if (res) {
+                        snackbar.show('Đặt khám thành công', 'success')
+                        if (this.state.paymentMethod == 6) {
+                            this.props.navigation.navigate("homeTab", {
+                                navigate: {
+                                    screen: "createBookingWithPayment",
+                                    params: {
+                                        booking,
+                                        service: this.state.service,
+                                        voucher: this.state.voucher
+
+                                    }
+                                }
+                            });
                         }
-                    })
-                    // 
-                }).catch(e => {
-                    this.setState({ isLoading: false }, () => {
-                    });
+                        else {
+                            this.props.navigation.navigate("homeTab", {
+                                navigate: {
+                                    screen: "createBookingSuccess",
+                                    params: {
+                                        booking,
+                                        service: this.state.service,
+                                        voucher: this.state.voucher
+
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }).catch(err => {
+                    console.log('err: ', err);
+                    snackbar.show(constants.msg.booking.booking_err, "danger");
+                    this.setState({ isLoading: false })
                 });
 
             });
@@ -528,7 +582,6 @@ class ConfirmBookingScreen extends Component {
             snackbar.show(constants.msg.app.not_internet, "danger");
         })
     }
-
     getVoucher = (voucher) => {
 
         this.setState({ voucher: voucher })

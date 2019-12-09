@@ -178,7 +178,7 @@ class ListBookingHistoryScreen extends Component {
     };
     renderItem = ({ item }) => {
         let date = new Date(item.date)
-        console.log('date: ', date);
+        
         return (
             <TouchableOpacity style={styles.listBtn} onPress={() => this.onClickItem(item)}>
                 <View style={styles.row}>

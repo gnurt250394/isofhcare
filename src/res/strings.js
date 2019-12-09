@@ -792,6 +792,7 @@ module.exports = {
       detail: isofhcare_service + "booking/get-detail",
       getByAuthor: isofhcare_service + "booking/get-by-author",
       get_list_share_user: isofhcare_service + "booking/list-share-user",
+      create_booking: isofhcare_service + "appointment/v1/hospital",
       // pay_tranfer: isofhcare_service + 'booking/payTranfer',
       doctor: {
         get_list_doctor: isofhcare_service + 'catalog/v1/doctors',

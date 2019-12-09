@@ -52,13 +52,13 @@ class CreateBookingWithPaymentScreen extends Component {
     onBackdropPress = () => this.setState({ isVisible: false })
     render() {
         let booking = this.props.navigation.state.params.booking;
-        console.log(booking, 'bookingbooking')
         let service = this.props.navigation.state.params.service || [];
-        if (!booking || !booking.profile || !booking.hospital || !booking.hospital.hospital || !booking.book) {
+        let voucher = this.props.navigation.state.params.voucher || {};
+        if (!booking || !booking.profile || !booking.hospital || !booking.hospital.hospital ) {
             this.props.navigation.pop();
             return null;
         }
-        let bookingTime = booking.book.bookingTime.toDateObject("-");
+        let bookingTime = new Date(booking.date)
         return (
             <ActivityPanel
                 hideBackButton={true}
@@ -77,14 +77,14 @@ class CreateBookingWithPaymentScreen extends Component {
                                 <Text style={styles.col1}>{constants.booking.code}</Text>
                                 <TouchableOpacity onPress={this.onQrClick} style={styles.buttonQRCode}>
                                     <QRCode
-                                        value={booking.book.codeBooking || ""}
+                                        value={booking.reference || ""}
                                         logo={require('@images/new/logo.png')}
                                         logoSize={20}
                                         size={100}
                                         logoBackgroundColor='transparent'
                                     />
                                 </TouchableOpacity>
-                                <Text style={styles.txtCodeBooking}>{constants.booking.code_booking} {booking.book.codeBooking}</Text>
+                                <Text style={styles.txtCodeBooking}>{constants.booking.code_booking} {booking.reference}</Text>
                             </View>
                         </View>
                         <View style={styles.groupBody}>
@@ -104,7 +104,7 @@ class CreateBookingWithPaymentScreen extends Component {
 
                             <View style={styles.row}>
                                 <Text style={styles.label}>{constants.booking.time}</Text>
-                                <Text style={styles.text}>{bookingTime.format("hh:mm") + " " + (bookingTime.format("HH") < 12 ? "AM" : "PM") + " - " + bookingTime.format("thu, dd/MM/yyyy")}</Text>
+                                <Text style={styles.text}>{booking.time + " - " + bookingTime.format("thu, dd/MM/yyyy")}</Text>
                             </View>
                             {service && service.length ?
                                 <View style={styles.row}>
@@ -170,9 +170,9 @@ class CreateBookingWithPaymentScreen extends Component {
 
                                 <View style={styles.bankInfo}>
                                     <View style={styles.viewBankNumber}>
-                                        <Text style={styles.txNumber}>{'DK ' + booking.book.codeBooking}</Text>
+                                        <Text style={styles.txNumber}>{'DK ' + booking.reference}</Text>
                                     </View>
-                                    <TouchableOpacity onPress={this.onCopyContents(booking.book.codeBooking)} style={styles.btnCopy}>
+                                    <TouchableOpacity onPress={this.onCopyContents(booking.reference)} style={styles.btnCopy}>
                                         <Text style={styles.txCopy}>{constants.booking.guide.copy}</Text>
                                     </TouchableOpacity>
                                 </View></View>
@@ -196,7 +196,7 @@ class CreateBookingWithPaymentScreen extends Component {
                     backdropTransitionOutTiming={1000}
                 >
                     <QRCode
-                        value={booking.book.codeBooking || ""}
+                        value={booking.reference || ""}
                         logo={require('@images/new/logo.png')}
                         logoSize={40}
                         size={250}
