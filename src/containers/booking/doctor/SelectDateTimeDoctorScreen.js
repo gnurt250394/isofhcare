@@ -86,7 +86,13 @@ class SelectDateTimeDoctorScreen extends Component {
                     for (let i = 0; i <= listSchedules.length; i++) {
                         if (listSchedules[i] && listSchedules[i].workTime.dayOfTheWeek == dateOfWeek) {
                             let index = listSchedules[i].timeSlots.findIndex(e => e.date == day && e.time == date.format("HH:mm"))
-
+                            let indexParent = listSchedules.findIndex(e => {
+                                return (e.parent == listSchedules[i].id && e.workTime.day == day && listSchedules[i].workTime.day != day
+                                    // && (e.workTime.start < date.format("HH:mm")
+                                    //     || e.workTime.end > date.format("HH:mm"))
+                                )
+                            }
+                            )
                             if (index != -1) {
                                 if (listSchedules[i].timeSlots[index].lock) {
                                     disabled = true
@@ -95,21 +101,21 @@ class SelectDateTimeDoctorScreen extends Component {
                                 }
                             }
 
-
-                            if (listSchedules[i].workTime.start <= date.format('HH:mm')
-                                && listSchedules[i].workTime.end > date.format('HH:mm')
-                                && listSchedules[i].workTime.day <= day
-                            ) {
-                                if ((listSchedules[i].workTime.day != day && !listSchedules[i].workTime.repeat)
-                                    || (listSchedules[i].workTime.repeat && listSchedules[i].workTime.expired < day)) {
-                                    disabled = true
-                                    id = listSchedules[i].id
-                                    break
-                                }
+                            if (listSchedules[i].parent && listSchedules[i].workTime.day == day && listSchedules[i].workTime.start <= date.format('HH:mm')
+                                && listSchedules[i].workTime.end > date.format('HH:mm')) {
                                 maximumCapacity = listSchedules[i].maximumCapacity
                                 disabled = false
                                 id = listSchedules[i].id
-                                // break;
+                                break
+                            }
+                            if (listSchedules[i].workTime.start <= date.format('HH:mm')
+                                && listSchedules[i].workTime.end > date.format('HH:mm')
+                                && (indexParent == -1) && listSchedules[i].workTime.day <= day && !listSchedules[i].parent
+                            ) {
+                                maximumCapacity = listSchedules[i].maximumCapacity
+                                disabled = false
+                                id = listSchedules[i].id
+                                break;
                             }
                         }
                     }
@@ -306,10 +312,10 @@ class SelectDateTimeDoctorScreen extends Component {
                         && dataSchedules[i].workTime.repeat) || (key == dataSchedules[i].workTime.day)) {
                         arrIndex.push(i)
                         let indexDelete = dataSchedules[i].breakDays.findIndex(e => e == key)
-                        if (indexDelete != -1){
-                        obj[key].disabled = true;
-                        obj[key].disableTouchEvent = true;
-                        break
+                        if (indexDelete != -1) {
+                            obj[key].disabled = true;
+                            obj[key].disableTouchEvent = true;
+                            break
                         }
                         obj[key].marked = true;
                         obj[key].noSchedule = true;
@@ -453,11 +459,13 @@ class SelectDateTimeDoctorScreen extends Component {
         return Math.round(difference_ms / one_day);
     }
     selectTime = (item) => () => {
+        console.log('item: ', item);
         if (item.type == 0) {
             snackbar.show("Đã kín lịch trong khung giờ này", "danger");
             return;
         }
         let date = new Date(item.key)
+        console.log('this.daysBetween(new Date(), date): ', this.daysBetween(new Date(), date));
         if (item.maximumCapacity < this.daysBetween(new Date(), date)) {
             snackbar.show(`Bạn chỉ được đặt lịch trước ${item.maximumCapacity} ngày`, "danger");
             return

@@ -140,7 +140,7 @@ module.exports = {
                 constants.api.booking.doctor.get_detail_booking + '/' + id + '/payment/' + paymentMethod,
                 {
                     "code": voucher.code ? voucher.code : '',
-                    "discount": voucher.price ? voucher.price : '',
+                    "discount": voucher.price ? voucher.price : 0,
                     "id": voucher.id ? voucher.id : ''
                 }, (s, e) => {
                     if (s) resolve(s);

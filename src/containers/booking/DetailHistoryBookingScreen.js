@@ -5,7 +5,8 @@ import {
     Image,
     TouchableOpacity,
     ScrollView,
-    StyleSheet
+    StyleSheet,
+    Clipboard
 } from "react-native";
 import bookingProvider from "@data-access/booking-provider";
 import { connect } from "react-redux";
@@ -201,6 +202,15 @@ class DetailHistoryBookingScreen extends Component {
             default: return ''
         }
     }
+    onCopyNumber = () => {
+        Clipboard.setString(constants.booking.guide.number)
+        snackbar.show(constants.booking.copy_success, 'success')
+    }
+    onCopyContents = (codeBooking) => {
+        Clipboard.setString('DK ' + codeBooking)
+        snackbar.show(constants.booking.copy_success, 'success')
+
+    }
     getPrice = () => {
         let voucherPrice = 0
         if (this.state.booking.invoice && this.state.booking.invoice.voucher && this.state.booking.invoice.voucher.discount) {
@@ -374,6 +384,39 @@ class DetailHistoryBookingScreen extends Component {
                             <Text style={styles.txPayment}>{constants.booking.payment_methods}</Text>
                             {this.renderStatus()}
                         </View>
+                        {
+                            this.state.booking.invoice && this.state.booking.invoice.payment == "BANK_TRANSFER" ?
+                                <React.Fragment>
+                                    <View style={[styles.viewPrice, { borderTopWidth: 0, paddingHorizontal: 7 }]}>
+                                        <Text style={styles.txLabelPrice}>{constants.booking.number_bank}</Text>
+                                        <TouchableOpacity style={{ flexDirection: 'row' }} onPress={this.onCopyNumber}><Text style={[styles.txPrice, { color: 'red' }]}>
+                                            {constants.booking.guide.number}
+                                        </Text>
+                                            <ScaledImage height={20} style={{ tintColor: 'red' }} source={require('@images/new/booking/ic_coppy.png')}></ScaledImage>
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View style={[styles.viewPrice, { borderTopWidth: 0, paddingHorizontal: 7 }]}>
+                                        <Text style={styles.txLabelPrice}>{constants.booking.guide.branch}</Text>
+                                        <Text style={[styles.txPrice, { color: 'red' }]}>
+                                            {constants.booking.guide.branch_name}
+                                        </Text>
+                                    </View>
+                                    <View style={[styles.viewPrice, { borderTopWidth: 0, paddingHorizontal: 7 }]}>
+                                        <Text style={styles.txLabelPrice}>{constants.booking.guide.owner_name}</Text>
+                                        <Text style={[styles.txPrice, { color: 'red', textAlign: 'right' }]}>
+                                            {constants.booking.guide.name_account2}
+                                        </Text>
+                                    </View>
+                                    <View style={[styles.viewPrice, { borderTopWidth: 0, paddingHorizontal: 7 }]}>
+                                        <Text style={styles.txLabelPrice}>{constants.booking.syntax_tranfer}</Text>
+                                        <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => this.onCopyContents(this.state.booking.reference)}><Text style={[styles.txPrice, { color: 'red' }]}>
+                                            DK {this.state.booking.reference}
+                                        </Text><ScaledImage height={20} style={{ tintColor: 'red' }} source={require('@images/new/booking/ic_coppy.png')}></ScaledImage></TouchableOpacity>
+                                    </View>
+                                    <View style={styles.between}></View>
+                                </React.Fragment>
+                                : null
+                        }
                         <View style={styles.viewStatus}>
                             <ScaledImage
                                 height={20}
