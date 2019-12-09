@@ -87,37 +87,31 @@ class SelectDateTimeDoctorScreen extends Component {
                         if (listSchedules[i] && listSchedules[i].workTime.dayOfTheWeek == dateOfWeek) {
                             let index = listSchedules[i].timeSlots.findIndex(e => e.date == day && e.time == date.format("HH:mm"))
                             let indexParent = listSchedules.findIndex(e => {
-                                return (e.parent == listSchedules[i].id && e.workTime.day == day && listSchedules[i].workTime.day < day
+                                return (e.parent == listSchedules[i].id && e.workTime.day == day && listSchedules[i].workTime.day != day
                                     // && (e.workTime.start < date.format("HH:mm")
                                     //     || e.workTime.end > date.format("HH:mm"))
-                                    )
-                                }
                                 )
-                                if (index != -1) {
-                                    if (listSchedules[i].timeSlots[index].lock) {
-                                        disabled = true
-                                        id = listSchedules[i].id
-                                        break
-                                    }
+                            }
+                            )
+                            if (index != -1) {
+                                if (listSchedules[i].timeSlots[index].lock) {
+                                    disabled = true
+                                    id = listSchedules[i].id
+                                    break
                                 }
-                                
-                                
+                            }
+
+
                             if (listSchedules[i].workTime.start <= date.format('HH:mm')
                                 && listSchedules[i].workTime.end > date.format('HH:mm')
                                 && (indexParent == -1) && listSchedules[i].workTime.day <= day
                             ) {
                                 console.log(' listSchedules[i]: ', listSchedules[i]);
-                                // if ((listSchedules[i].workTime.day < day)) {
-                                //     disabled = true
-                                //     id = listSchedules[i].id
-                                //     break
-                                // }
-                                // if ((listSchedules[i].workTime.day != day && !listSchedules[i].workTime.repeat)
-                                //     || (listSchedules[i].workTime.repeat && listSchedules[i].workTime.expired < day)) {
-                                //     disabled = true
-                                //     id = listSchedules[i].id
-                                //     break
-                                // }
+                                if (listSchedules[i].parent && listSchedules[i].workTime.day != day) {
+                                    disabled = true
+                                    id = listSchedules[i].id
+                                    break
+                                }
                                 maximumCapacity = listSchedules[i].maximumCapacity
                                 disabled = false
                                 id = listSchedules[i].id
