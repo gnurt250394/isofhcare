@@ -63,8 +63,8 @@ export default class DetailsDrugScreen extends Component {
         })
 
     }
-    onClickItem = () => {
-        this.props.navigation.navigate('drugStore')
+    onClickItem = (item) => {
+        this.props.navigation.navigate('drugStore',{data:item})
     }
     findDrug = () => {
         if (this.state.dataDetail && this.state.dataDetail.address) {
@@ -157,13 +157,13 @@ export default class DetailsDrugScreen extends Component {
         return (
             <View style={styles.viewItem}>
                 <Card style={styles.cardItem}>
-                    <TouchableOpacity onPress={this.onClickItem} style={styles.cardItem}>
+                    <TouchableOpacity onPress={() => this.onClickItem(item)} style={styles.cardItem}>
                         <ScaledImage height={60} source={require('@images/new/drug/ic_shop_drug.png')}></ScaledImage>
                         <View style={styles.viewContentItem}>
                             <Text style={styles.txTitle}>
                                 {item.name}
                             </Text>
-                            <View style={styles.viewLocationItem}><Text style={styles.txLocationItem}>{item.location}</Text><View><Text style={styles.txLong}>{item.long}</Text></View></View>
+                            <View style={styles.viewLocationItem}><Text style={styles.txLocationItem}>{item.address}</Text><View><Text style={styles.txLong}>{item.distance}km</Text></View></View>
                         </View>
                     </TouchableOpacity>
                 </Card>
@@ -173,7 +173,7 @@ export default class DetailsDrugScreen extends Component {
     renderViewByStatus = () => {
         let status = this.state.dataDetail && this.state.dataDetail.state
         switch (status) {
-            case 'STORED': {
+            case 'FOUND': {
                 if (this.state.dataDetail && this.state.dataDetail.address)
                     return (
                         <View>
@@ -197,17 +197,18 @@ export default class DetailsDrugScreen extends Component {
                         <TouchableOpacity onPress={this.findDrug} style={styles.btnFind}><Text style={styles.txFind}>Tìm nhà thuốc</Text></TouchableOpacity>
                     </View>)
             }
-            case 'FOUND': return (
+            case 'STORED': return (
                 <View style={styles.viewLocation}>
                     <Text style={styles.txLabel}>Nhà thuốc có bán đơn thuốc của bạn</Text>
                     <TouchableOpacity style={styles.btnViewAddress}><Text style={styles.txViewAddress}>Xem địa chỉ của bạn</Text></TouchableOpacity>
                     <FlatList
-                        data={this.state.dataShop}
+                        data={this.state.dataDetail.pharmacies}
                         extraData={this.state}
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={this.renderItem}
                     >
                     </FlatList>
+                    <View style = {{height:50}}></View>
                 </View>
             )
             case 'FINDING': return (

@@ -51,7 +51,7 @@ class drugScreen extends Component {
             let id = this.props.userApp.currentUser.id
             drugProvider.getListMenu(page, size, id).then(res => {
                 this.setState({
-                    dataDrug: res.data,
+                    dataDrug: res.data.content,
                     isLoading: false
                 })
             }).catch(err => {
