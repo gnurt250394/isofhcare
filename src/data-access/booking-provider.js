@@ -148,59 +148,35 @@ module.exports = {
      * @param {object} items 
      * @param {object} patient 
      * @param {string} payment 
-     * @param {id} scheduleId 
      * @param {string} time 
      * @param {object} room 
      */
-  createBooking(date, description, hospitals, items, patient, payment, time, voucher) {
-    console.log('voucher: ', voucher);
-    console.log('time: ', time);
-    console.log('payment: ', payment);
-    console.log('patient: ', patient);
-    console.log('items: ', items);
-    console.log('description: ', description);
-    console.log('date: ', date);
-    console.log('hospitals: ', hospitals);
+
+  createBooking(date, description, hospitals, items, patient, time) {
+    const URL2 = 'http://10.0.50.111:8082/'
     return new Promise((resolve, reject) => {
-      // let doctors = { id: doctor.id, name: doctor.name }
-      // let hospital = { id: hospitals && hospitals.id || '', name: hospitals && hospitals.name || '', address: hospitals && hospitals.contact.address || '' }
-      // let services = [{ id: items.id || '', name: items.name || '', price: items.monetaryAmount.value || '' }]
-      voucher = {
-        "id": voucher.id,
-        "code": voucher.name,
-        "discount": voucher.price,
-      }
+      let hospital = { id: hospitals && hospitals.id || '', name: hospitals && hospitals.name || '', address: hospitals && hospitals.address || '' }
+      console.log('hospital: ', hospital);
       patient = {
         id: patient.id,
         name: patient.name,
         phone: patient.phone
       }
-      //     console.log('room: ', room);
       client.requestApi(
         "post",
         URL2 +
-        constants.api.booking.doctor.create_booking,
+        constants.api.booking.create_booking,
         {
           // ngày đặt khám
           date,
           // mô tả
           description,
-          // mã voucher
-          discount: discount ? discount : 0,
-          // thông tin bác sỹ 
-          doctor: doctors,
           // thông tin bệnh viện đặt khám 
           hospital,
           // danh sách dịch vụ
-          items: services,
+          items,
           // thông tin bệnh nhân đặt khám
           patient,
-          // Phương thức thanh toán
-          payment,
-          // Thông tin phòng
-          room,
-          // Mã lịch đặt khám
-          scheduleId,
           //giờ đặt khám
           time
         }, (s, e) => {
