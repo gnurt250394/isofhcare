@@ -101,21 +101,21 @@ class SelectDateTimeDoctorScreen extends Component {
                                 }
                             }
 
-
-                            if (listSchedules[i].workTime.start <= date.format('HH:mm')
-                                && listSchedules[i].workTime.end > date.format('HH:mm')
-                                && (indexParent == -1) && listSchedules[i].workTime.day <= day
-                            ) {
-                                console.log(' listSchedules[i]: ', listSchedules[i]);
-                                if (listSchedules[i].parent && listSchedules[i].workTime.day != day) {
-                                    disabled = true
-                                    id = listSchedules[i].id
-                                    break
-                                }
+                            if (listSchedules[i].parent && listSchedules[i].workTime.day == day && listSchedules[i].workTime.start <= date.format('HH:mm')
+                                && listSchedules[i].workTime.end > date.format('HH:mm')) {
                                 maximumCapacity = listSchedules[i].maximumCapacity
                                 disabled = false
                                 id = listSchedules[i].id
-                                // break;
+                                break
+                            }
+                            if (listSchedules[i].workTime.start <= date.format('HH:mm')
+                                && listSchedules[i].workTime.end > date.format('HH:mm')
+                                && (indexParent == -1) && listSchedules[i].workTime.day <= day && !listSchedules[i].parent
+                            ) {
+                                maximumCapacity = listSchedules[i].maximumCapacity
+                                disabled = false
+                                id = listSchedules[i].id
+                                break;
                             }
                         }
                     }
@@ -459,11 +459,13 @@ class SelectDateTimeDoctorScreen extends Component {
         return Math.round(difference_ms / one_day);
     }
     selectTime = (item) => () => {
+        console.log('item: ', item);
         if (item.type == 0) {
             snackbar.show("Đã kín lịch trong khung giờ này", "danger");
             return;
         }
         let date = new Date(item.key)
+        console.log('this.daysBetween(new Date(), date): ', this.daysBetween(new Date(), date));
         if (item.maximumCapacity < this.daysBetween(new Date(), date)) {
             snackbar.show(`Bạn chỉ được đặt lịch trước ${item.maximumCapacity} ngày`, "danger");
             return
