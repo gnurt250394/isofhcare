@@ -9,7 +9,7 @@ import {
   Dimensions,
   AppState,
   DeviceEventEmitter,
-  Alert,
+  PixelRatio,
   ScrollView,
   FlatList,
   RefreshControl,
@@ -246,13 +246,12 @@ class HomeScreen extends Component {
               </View>
             );
           return (
-            <View>
+            <View style = {{flex:1}}>
               <TouchableOpacity style={styles.cardView}>
                 <ScaledImage
                   uri={item.imageHome.absoluteUrl()}
-                  width={DEVICE_WIDTH - 140}
                   height={140}
-                  style={{ borderRadius: 6, }}
+                  style={{ borderRadius: 6,resizeMode:'cover'}}
                 />
               </TouchableOpacity>
               <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensAds}>{item ? item.name : ""}</Text>
@@ -346,7 +345,6 @@ class HomeScreen extends Component {
 
   getItemBookingWidth() {
     const width = DEVICE_WIDTH - 40;
-    console.log(width, 'widthwidthwidth')
     if (width >= 320) {
       return Platform.OS == 'ios' ? 70 : 75;
     }
@@ -370,7 +368,7 @@ class HomeScreen extends Component {
     }
 
     if (width > 250)
-      return 80;
+      return 60;
     return width - 60;
   }
   renderButtonBooking = () => {
@@ -381,7 +379,7 @@ class HomeScreen extends Component {
             item.empty ? <View style={[styles.viewEmpty, { width: this.getItemBookingWidth() }]}
             ></View> :
               <TouchableOpacity
-                style={[styles.button, { width: this.getItemBookingWidth() }]}
+                style={[styles.button, { width: this.getItemBookingWidth() },]}
                 onPress={item.onPress}
               >
                 <View style={styles.groupImageButton}>
@@ -394,6 +392,21 @@ class HomeScreen extends Component {
         </Animatable.View>);
     })
   }
+  getMargin (){
+    const width = PixelRatio.get()
+    console.log(width,'widthwidthwidth')
+    if(width >= 3){
+      return 24
+    }
+    if(width >=2){
+      return 64
+    }
+    else{
+      return 64
+    }
+    
+   
+  }
   renderButton = () => {
     return (this.state.features || []).map((item, position) => {
       return (
@@ -402,7 +415,7 @@ class HomeScreen extends Component {
             item.empty ? <View style={[styles.viewEmpty, { width: this.getItemWidth() }]}
             ></View> :
               <TouchableOpacity
-                style={[styles.button, { width: this.getItemWidth() },{marginLeft:20,marginTop:10}]}
+                style={[styles.button, {marginTop:10 },position != 0 && position != 3 ? {marginLeft:this.getMargin()}:{}]}
                 onPress={item.onPress}
               >
                 <View style={styles.groupImageButton}>
@@ -513,7 +526,6 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
-    marginLeft: 5,
     alignItems: 'center',
 
   },
@@ -529,8 +541,8 @@ const styles = StyleSheet.create({
   },
   containerButtonBooking: {
     flexDirection: "row",
-    padding: 10,
-    marginTop: 10,
+    paddingBottom:10,
+    paddingHorizontal: 10,
     flexWrap: 'wrap',
     justifyContent: 'center',
     borderRadius: 5,
@@ -564,7 +576,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   txBooking: {
-    margin: 5,
+    marginVertical:10,
     marginLeft: 39,
     color: '#000',
     fontWeight: 'bold'
@@ -609,9 +621,9 @@ const styles = StyleSheet.create({
   viewAds: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', },
   txAds: { padding: 12, paddingLeft: 20, paddingBottom: 5, color: '#000', fontWeight: 'bold', flex: 1 },
   imgMore: { marginTop: 10, marginRight: 20 },
-  listAds: { paddingHorizontal: 20 },
+  listAds: { paddingHorizontal: 20,flex:1 },
   viewFooter: { width: 35 },
-  cardView: { width: DEVICE_WIDTH - 140, borderRadius: 6, marginRight: 10, borderColor: '#9B9B9B', borderWidth: 0.5, backgroundColor: '#fff', height: 140, },
+  cardView: { width: DEVICE_WIDTH - 140, borderRadius: 6, marginRight: 10, borderColor: '#9B9B9B', borderWidth: 0.5, backgroundColor: '#fff', height: 140,flex:1 },
   cardViewNone: { width: DEVICE_WIDTH - 140, borderRadius: 6, marginRight: 10, backgroundColor: '#fff' },
   imgNone: { width: DEVICE_WIDTH - 140, borderRadius: 6, height: 140, borderColor: '#9B9B9B', borderWidth: 0.5 },
   cardViewDoctor: { width: DEVICE_WIDTH / 3, borderRadius: 6, marginRight: 10 },
