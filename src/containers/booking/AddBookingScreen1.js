@@ -467,9 +467,8 @@ class AddBookingScreen extends Component {
                             }
                         })
                     }).catch(e => {
-                        console.log('e: ', e);
-                        this.setState({ isLoading: false }, () => {
-                        });
+                        snackbar.show(constants.msg.booking.booking_err, "danger");
+                        this.setState({ isLoading: false });
                     })
                 });
             }).catch(e => {
