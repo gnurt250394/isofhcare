@@ -11,7 +11,7 @@ import snackbar from '@utils/snackbar-utils';
 import connectionUtils from '@utils/connection-utils';
 import payoo from 'mainam-react-native-payoo';
 import { NativeModules } from 'react-native';
-import constants from '../../res/strings';
+import constants from '@resources/strings';
 import voucherProvider from '@data-access/voucher-provider'
 import bookingDoctorProvider from '@data-access/booking-doctor-provider'
 
@@ -620,10 +620,13 @@ class ConfirmBookingScreen extends Component {
                                 }
                             });
                         }
+                    }else{
+                        snackbar.show(constants.msg.booking.booking_err2, "danger");
+
                     }
                 }).catch(err => {
                     console.log('err: ', err);
-                    snackbar.show(constants.msg.booking.booking_err, "danger");
+                    snackbar.show(constants.msg.booking.booking_err2, "danger");
                     this.setState({ isLoading: false })
                 });
 
