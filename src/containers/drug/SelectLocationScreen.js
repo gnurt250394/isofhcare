@@ -37,7 +37,7 @@ class SelectLocationScreen extends Component {
                 drugProvider.getLocation(id, page, size).then(res => {
                     this.setState({
                         isLoading: false,
-                        dataLocation: res.data
+                        dataLocation: res.data.content
                     })
                 }).catch(e => {
                     this.setState({

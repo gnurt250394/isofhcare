@@ -1,58 +1,72 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Dimensions,Linking,Platform } from 'react-native';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 const devices_width = Dimensions.get('window').width
 export default class DrugStoreScreen extends Component {
     constructor(props) {
         super(props);
+        let data = this.props.navigation.getParam('data',null)
         this.state = {
+            name:data && data.name,
+            address:data && data.address,
+            phone:data && data.phone,
+            type:data && data.type,
+            ownerCertificateNumber:data && data.ownerCertificateNumber,
+            registrationNumber:data && data.registrationNumber,
+            standardNumber:data && data.standardNumber,
+            ownerName:data && data.ownerName,
+            ownerQualification:data && data.ownerQualification
         };
     }
-
+    openMap = () => {
+            var scheme = Platform.OS === 'ios' ? 'maps://?daddr=' : 'https://www.google.com/maps/search/?api=1&query=';
+            var url = scheme + `${this.state.address}`;
+            Linking.openURL(url);
+    }
     render() {
         return (
             <View style={styles.container}>
                 <ScaledImage style={styles.bgdemo} width={devices_width} source={require('@images/new/drug/bg_demo.png')}></ScaledImage>
                 <View style={styles.viewShop}>
-                    <Text style={styles.txNameShop}>NHÀ THUỐC TẤN MINH</Text>
-                    <Text style={styles.txLocation}>Toà nhà Udic Complex , Hoàng Đạo Thuý, Cầu Giấy, Hà Nội</Text><TouchableOpacity><Text>Xem bản đồ</Text></TouchableOpacity>
+                    <Text style={styles.txNameShop}>{this.state.name.toUpperCase()}</Text>
+                    <Text style={styles.txLocation}>{this.state.address}</Text><TouchableOpacity onPress = {this.openMap}><Text>Xem bản đồ</Text></TouchableOpacity>
                     <Text style={styles.txTitle}>Thông tin nhà thuốc</Text>
                     <View style={styles.viewInfo}>
                         <ScaledImage source={require('@images/new/drug/ic_dot_blue.png')} height={10}></ScaledImage>
                         <Text style={styles.txLabel}>Số điện thoại: </Text>
-                        <Text style={styles.txContents}>0333876555</Text>
+                        <Text style={styles.txContents}>{this.state.phone}</Text>
                     </View>
                     <View style={styles.viewInfo}>
                         <ScaledImage source={require('@images/new/drug/ic_dot_blue.png')} height={10}></ScaledImage>
                         <Text style={styles.txLabel}>Loại hình NT: </Text>
-                        <Text style={styles.txContents}>Nhà thuốc</Text>
+                        <Text style={styles.txContents}>{this.state.type}</Text>
                     </View>
                     <View style={styles.viewInfo}>
                         <ScaledImage source={require('@images/new/drug/ic_dot_blue.png')} height={10}></ScaledImage>
                         <Text style={styles.txLabel}>Đạt chuẩn: </Text>
-                        <Text style={styles.txContents}>238946894</Text>
+                        <Text style={styles.txContents}>{this.state.standardNumber}</Text>
                     </View>
                     <View style={styles.viewInfo}>
                         <ScaledImage source={require('@images/new/drug/ic_dot_blue.png')} height={10}></ScaledImage>
                         <Text style={styles.txLabel}>Số đăng ký NT: </Text>
-                        <Text style={styles.txContents}>238946894</Text>
+                        <Text style={styles.txContents}>{this.state.registrationNumber}</Text>
                     </View>
                     <Text style={styles.txTitle}>Thông tin người đại diện</Text>
                     <View style={styles.viewInfo}>
                         <ScaledImage source={require('@images/new/drug/ic_dot_blue.png')} height={10}></ScaledImage>
                         <Text style={styles.txLabel}>Người đại diện: </Text>
-                        <Text style={styles.txContents}>Nguyễn Đình Huấn</Text>
+                        <Text style={styles.txContents}>{this.state.ownerName}</Text>
                     </View>
                     <View style={styles.viewInfo}>
                         <ScaledImage source={require('@images/new/drug/ic_dot_blue.png')} height={10}></ScaledImage>
                         <Text style={styles.txLabel}>Trình độ chuyên môn: </Text>
-                        <Text style={styles.txContents}>Dược sĩ</Text>
+                        <Text style={styles.txContents}>{this.state.ownerQualification}</Text>
                     </View>
                     <View style={styles.viewInfo}>
                         <ScaledImage source={require('@images/new/drug/ic_dot_blue.png')} height={10}></ScaledImage>
                         <Text style={styles.txLabel}>Số chứng chỉ hành nghề: </Text>
-                        <Text style={styles.txContents}>238946894</Text>
+                        <Text style={styles.txContents}>{this.state.ownerCertificateNumber}</Text>
                     </View>
                 </View>
             </View>
