@@ -2,7 +2,7 @@ import client from "@utils/client-utils";
 import string from "mainam-react-native-string-utils";
 import constants from "../res/strings";
 const URL = 'http://10.0.0.98:8080/'
-const URL2 = 'http://10.0.50.111:8082/'
+const URL2 = 'http://10.0.0.98:8082/'
 module.exports = {
     getListDoctor(page, size) {
         return new Promise((resolve, reject) => {
