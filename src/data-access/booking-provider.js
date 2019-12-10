@@ -1,6 +1,7 @@
 import client from "@utils/client-utils";
 import string from "mainam-react-native-string-utils";
 import constants from "@resources/strings";
+const URL2 = 'http://10.0.0.98:8082/'
 
 module.exports = {
   getListBooking(profileId, hospitalId) {
@@ -153,7 +154,6 @@ module.exports = {
      */
 
   createBooking(date, description, hospitals, items, patient, time) {
-    const URL2 = 'http://10.0.50.111:8082/'
     return new Promise((resolve, reject) => {
       let hospital = { id: hospitals && hospitals.id || '', name: hospitals && hospitals.name || '', address: hospitals && hospitals.address || '' }
       console.log('hospital: ', hospital);

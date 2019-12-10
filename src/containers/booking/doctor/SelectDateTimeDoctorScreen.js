@@ -300,7 +300,7 @@ class SelectDateTimeDoctorScreen extends Component {
                         && this.state.profileDoctor.name
                         ? this.state.profileDoctor.academicDegree + " " + this.state.profileDoctor.name
                         : 'Bác sĩ'
-                    snackbar.show(doctor + 'không có lịch làm việc trong thời gian này', 'danger')
+                    snackbar.show(doctor + ' không có lịch làm việc trong thời gian này', 'danger')
                 }
 
                 let dataSchedules = this.state.profileDoctor.schedules ? this.state.profileDoctor.schedules : []
