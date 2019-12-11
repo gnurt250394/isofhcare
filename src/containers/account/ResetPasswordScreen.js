@@ -108,7 +108,8 @@ class ResetPasswordScreen extends Component {
                                 <Field style={styles.inputPass}>
 
                                     <TextField
-                                        getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
+                                        getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
+                                            placeholderTextColor='#808080'
                                             placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Nhập mật khẩu mới"}
                                             secureTextEntry={this.state.secureTextEntry}
                                             allowFontScaling={false}
@@ -139,7 +140,8 @@ class ResetPasswordScreen extends Component {
                                 </Field>
                                 <Field style={styles.inputPass}>
                                     <TextField
-                                        getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
+                                        getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
+                                            placeholderTextColor='#808080'
                                             placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Xác nhận mật khẩu mới"}
                                             secureTextEntry={this.state.secureTextEntry2}
                                             allowFontScaling={false}
@@ -222,7 +224,7 @@ const styles = StyleSheet.create({
     },
     textInputStyle: {
         color: "#53657B",
-        fontWeight: "600",
+        fontWeight: "200",
         height: 51,
         marginLeft: 0,
         borderWidth: 1,
