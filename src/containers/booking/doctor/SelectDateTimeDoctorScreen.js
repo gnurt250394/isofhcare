@@ -87,7 +87,7 @@ class SelectDateTimeDoctorScreen extends Component {
                         if (listSchedules[i] && listSchedules[i].workTime.dayOfTheWeek == dateOfWeek) {
                             let index = listSchedules[i].timeSlots.findIndex(e => e.date == day && e.time == date.format("HH:mm"))
                             let indexParent = listSchedules.findIndex(e => e.parent == listSchedules[i].id && e.workTime.day == day && !e.workTime.repeat)
-                            let indexOfParent = listSchedules.findIndex(e => e.parent && e.parent == listSchedules[i].parent && !e.workTime.repeat && e.workTime.day == day)
+                            let indexChilOfParent = listSchedules.findIndex(e => e.parent && e.parent == listSchedules[i].parent && !e.workTime.repeat && e.workTime.day == day)
                             if (index != -1) {
                                 if (listSchedules[i].timeSlots[index].lock) {
                                     disabled = true
@@ -108,7 +108,7 @@ class SelectDateTimeDoctorScreen extends Component {
                             if (listSchedules[i].workTime.start <= date.format('HH:mm')
                                 && listSchedules[i].workTime.end > date.format('HH:mm')
                                 && (((indexParent == -1) && listSchedules[i].workTime.day <= day
-                                    && listSchedules[i].workTime.expired >= day && indexOfParent == -1 && listSchedules[i].workTime.repeat)
+                                    && listSchedules[i].workTime.expired >= day && indexChilOfParent == -1 && listSchedules[i].workTime.repeat)
                                     || (!listSchedules[i].workTime.repeat && listSchedules[i].workTime.day == day))
                             ) {
                                 maximumCapacity = listSchedules[i].maximumCapacity
@@ -308,7 +308,7 @@ class SelectDateTimeDoctorScreen extends Component {
 
                     if ((dataSchedules[i].workTime.dayOfTheWeek == dayOfWeek
                         && dataSchedules[i].workTime.expired >= key
-                        && dataSchedules[i].workTime.repeat) || (key == dataSchedules[i].workTime.day)) {
+                        && dataSchedules[i].workTime.repeat && key >= dataSchedules[i].workTime.day) || (key == dataSchedules[i].workTime.day)) {
                         arrIndex.push(i)
                         let indexDelete = dataSchedules[i].breakDays.findIndex(e => e == key)
                         if (indexDelete != -1) {

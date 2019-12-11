@@ -323,10 +323,10 @@ const styles = StyleSheet.create({
         zIndex: 100,
         left: 0,
         right: 0,
-        backgroundColor: '#02C39A'
+        backgroundColor: '#27c8ad'
     },
     actionbarStyle: {
-        backgroundColor: '#02C39A',
+        backgroundColor: '#27c8ad',
         borderBottomWidth: 0
     },
     titleStyle: {
@@ -334,7 +334,7 @@ const styles = StyleSheet.create({
         marginLeft: 10
     },
     backgroundHeader: {
-        backgroundColor: '#02C39A',
+        backgroundColor: '#27c8ad',
         height: 100,
         position: 'absolute',
         left: 0,
