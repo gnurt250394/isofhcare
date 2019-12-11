@@ -213,9 +213,9 @@ class ConfirmBookingScreen extends Component {
         let serviceText = "";
         if (this.state.service && this.state.service.length) {
             price = this.state.service.reduce((total, item) => {
-                return total + parseInt((item && item.service && item.service.price ? item.service.price : 0));
+                return total + parseInt((item && item.price ? item.price : 0));
             }, 0);
-            serviceText = this.state.service.map(item => (item && item.service ? item.service.id + " - " + item.service.name : "")).join(', ');
+            serviceText = this.state.service.map(item => (item  ? item.id + " - " + item.name : "")).join(', ');
         }
 
         this.setState({ isLoading: true }, async () => {
@@ -281,7 +281,7 @@ class ConfirmBookingScreen extends Component {
                             let payment_order = s.payment_order;
                             payment_order.orderInfo = payment_order.data;
                             payment_order.cashAmount = this.state.service.reduce((total, item) => {
-                                return total + parseInt(item.service.price)
+                                return total + parseInt(item.price)
                             }, 0);
                             this.payment(payment_order, vnp_TxnRef, booking, data);
 
@@ -483,7 +483,7 @@ class ConfirmBookingScreen extends Component {
                             let payment_order = s.payment_order;
                             payment_order.orderInfo = payment_order.data;
                             payment_order.cashAmount = this.state.service.reduce((total, item) => {
-                                return total + parseInt(item.service.price)
+                                return total + parseInt(item.price)
                             }, 0);
                             this.payment(payment_order, vnp_TxnRef, booking, data);
                             break;
@@ -674,7 +674,7 @@ class ConfirmBookingScreen extends Component {
     getPriceSecive = () => {
         let priceVoucher = this.state.voucher && this.state.voucher.price ? this.state.voucher.price : 0
         let priceFinal = this.state.service.reduce((start, item) => {
-            return start + parseInt(item.service.price)
+            return start + parseInt(item.price)
         }, 0)
         if (priceFinal < priceVoucher) {
             return 0
@@ -744,8 +744,8 @@ class ConfirmBookingScreen extends Component {
                                         <Text style={styles.text5}>{constants.booking.services}: </Text>
                                         {
                                             this.state.service.map((item, index) => <View key={index} style={styles.containerListServices}>
-                                                <Text style={styles.txtListServices} numberOfLines={1}>{index + 1}. {item.service.name}</Text>
-                                                <Text style={styles.txtPrice}>({parseInt(item.service.price).formatPrice()}đ)</Text>
+                                                <Text style={styles.txtListServices} numberOfLines={1}>{index + 1}. {item.name}</Text>
+                                                <Text style={styles.txtPrice}>({parseInt(item.price).formatPrice()}đ)</Text>
                                             </View>
                                             )
 
