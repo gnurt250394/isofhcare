@@ -106,9 +106,10 @@ class ChangePasswordScreen extends Component {
                             <Form ref={ref => (this.form = ref)} style={styles.form}>
                                 <Field style={styles.inputPass}>
                                     <TextField
-                                        getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
+                                        getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
                                             placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.enter_old_password}
                                             secureTextEntry={this.state.secureTextOldEntry}
+                                            placeholderTextColor='#808080'
                                             allowFontScaling={false}
                                             onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
                                         onChangeText={s => {
@@ -136,10 +137,11 @@ class ChangePasswordScreen extends Component {
                                 <Field style={styles.inputPass}>
 
                                     <TextField
-                                        getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
+                                        getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
                                             placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Nhập mật khẩu mới"}
                                             secureTextEntry={this.state.secureTextNewEntry}
                                             allowFontScaling={false}
+                                            placeholderTextColor='#808080'
                                             onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
                                         onChangeText={s => {
                                             this.setState({ passwordNew: s });
@@ -165,9 +167,10 @@ class ChangePasswordScreen extends Component {
                                 </Field>
                                 <Field style={styles.inputPass}>
                                     <TextField
-                                        getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
+                                        getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
                                             placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Xác nhận mật khẩu mới"}
                                             secureTextEntry={this.state.secureTextNew2Entry}
+                                            placeholderTextColor='#808080'
                                             allowFontScaling={false}
                                             onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
                                         onChangeText={s => {
@@ -250,7 +253,7 @@ const styles = StyleSheet.create({
     },
     textInputStyle: {
         color: "#53657B",
-        fontWeight: "600",
+        fontWeight: "200",
         height: 51,
         marginLeft: 0,
         borderWidth: 1,

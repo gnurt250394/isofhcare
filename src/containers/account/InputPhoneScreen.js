@@ -107,9 +107,10 @@ class ResetPasswordScreen extends Component {
                         <View>
                             <Form ref={ref => (this.form = ref)} style={styles.form}>
                                 <TextField
-                                    getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
+                                    getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
                                         keyboardType='numeric'
                                         placeholderStyle={{ fontSize: 16, }} value={value} underlineColor={'#CCCCCC'}
+                                        placeholderTextColor='#808080'
                                         inputStyle={styles.textInputStyle}
                                         labelStyle={styles.labelStyle} placeholder={constants.phone} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
                                     onChangeText={s => this.setState({ phone: s })}
@@ -183,7 +184,7 @@ const styles = StyleSheet.create({
     },
     textInputStyle: {
         color: "#53657B",
-        fontWeight: "600",
+        fontWeight: "200",
         height: 51,
         marginLeft: 0,
         borderWidth: 1,
