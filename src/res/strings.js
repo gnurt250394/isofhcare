@@ -978,7 +978,8 @@ module.exports = {
       createMedical: isofhcare_service + "medical-records/create"
     },
     service: {
-      get_all: isofhcare_service + "service/get-all"
+      get_all: isofhcare_service + "service/get-all",
+      get_all_services: isofhcare_service + "catalog/v1/medicalservice/",
     },
     schedule: {
       get_by_date_and_service: isofhcare_service + "schedule-booking/get-by-date-and-service",
