@@ -49,6 +49,16 @@ class CreateBookingWithPaymentScreen extends Component {
     goHome = () => {
         this.props.navigation.pop();
     }
+    getPriceSecive = (service, voucher) => {
+        let priceVoucher = voucher && voucher.price ? voucher.price : 0
+        let priceFinal = service.reduce((start, item) => {
+            return start + parseInt(item.price)
+        }, 0)
+        if (priceVoucher > priceFinal) {
+            return 0
+        }
+        return (priceFinal - priceVoucher).formatPrice()
+    }
     onBackdropPress = () => this.setState({ isVisible: false })
     render() {
         let booking = this.props.navigation.state.params.booking;
@@ -112,8 +122,8 @@ class CreateBookingWithPaymentScreen extends Component {
                                     <View style={styles.containerServices}>
                                         {service.map((item, index) => {
                                             return <View key={index} style={styles.flex}>
-                                                <Text numberOfLines={1} style={[styles.text, styles.flex]}>{item.service.name}</Text>
-                                                <Text style={[styles.text, { marginBottom: 5 }]}>({parseInt(item.service.price).formatPrice()}đ)</Text>
+                                                <Text numberOfLines={1} style={[styles.text, styles.flex]}>{item.name}</Text>
+                                                <Text style={[styles.text, { marginBottom: 5 }]}>({parseInt(item.price).formatPrice()}đ)</Text>
                                             </View>
                                         })}
                                     </View>

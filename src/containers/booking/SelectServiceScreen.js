@@ -48,22 +48,22 @@ class SelectServiceScreen extends Component {
         let serviceType = this.state.serviceType ? this.state.serviceType.id || "" : ''
         let specialist = "";//this.state.specialist ? this.state.specialist.id : ''
         this.setState({ refreshing: true }, () => {
-            serviceProvider.getAll(this.state.hospital.hospital.id, specialist, serviceType).then(s => {
+            serviceProvider.getAllServices(this.state.hospital.hospital.id).then(s => {
                 this.setState({
                     refreshing: false
                 }, () => {
                     if (s) {
-                        switch (s.code) {
-                            case 0:
-                                let listService = s.data.data.sort(function (a, b) {
-                                    return new Date(a.service.createdDate) - new Date(b.service.createdDate);
-                                });
+                        // switch (s.code) {
+                        //     case 0:
+                        //         let listService = s.data.data.sort(function (a, b) {
+                        //             return new Date(a.service.createdDate) - new Date(b.service.createdDate);
+                        //         });
                                 this.setState({
-                                    listService: listService
+                                    listService: s
                                 }, () => {
                                     this.onSearch();
                                 });
-                        }
+                        // }
                     }
                 })
             }).catch(e => {
@@ -87,10 +87,10 @@ class SelectServiceScreen extends Component {
     onSearch = () => {
         var s = this.state.searchValue;
         var listSearch = this.state.listService.filter(item => {
-            return s == null || item.service.name && item.service.name.trim().toLowerCase().unsignText().indexOf(s.trim().toLowerCase().unsignText()) != -1;
+            return s == null || item.name && item.name.trim().toLowerCase().unsignText().indexOf(s.trim().toLowerCase().unsignText()) != -1;
         });
         listSearch = listSearch.map(item => {
-            item.checked = this.listServicesSelected.find(item2 => item2.service.id == item.service.id);
+            item.checked = this.listServicesSelected.find(item2 => item2.id == item.id);
             return item;
         })
 
@@ -104,7 +104,7 @@ class SelectServiceScreen extends Component {
         );
     }
     onPressItem1(item) {
-        let x = this.listServicesSelected.find(item2 => item2.service.id == item.service.id);
+        let x = this.listServicesSelected.find(item2 => item2.id == item.id);
         if (x) {
             item.checked = false;
             let index = this.listServicesSelected.indexOf(x);
@@ -148,7 +148,7 @@ class SelectServiceScreen extends Component {
                 <View style={[styles.containerItem, item.checked ? { backgroundColor: 'rgba(240, 243, 189, 0.2)' } : { backgroundColor: '#FFF' }]}>
                     <View style={styles.groupContentItem}>
                         <Text style={styles.txtServices}>
-                            {item.service.name}
+                            {item.name}
                         </Text>
                         {item.checked &&
                             <ScaleImage source={require("@images/new/ic_verified.png")} width={20} />

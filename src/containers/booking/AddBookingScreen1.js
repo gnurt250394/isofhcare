@@ -434,7 +434,7 @@ class AddBookingScreen extends Component {
                     console.log(this.state.schedule.time);
                     const { userApp } = this.props
                     console.log('userApp: ', userApp);
-                    let services = this.state.listServicesSelected.map(e => ({ price: e.service.price, id: e.service.id, name: e.service.name }));
+                    let services = this.state.listServicesSelected.map(e => ({ price: e.monetaryAmount.value, id: e.id, name: e.name }));
                     let bookingDate = this.state.bookingDate.format("yyyy-MM-dd");
                     console.log('this.state.bookingDate: ', this.state.bookingDate);
                     console.log('bookingDate: ', bookingDate);
@@ -452,7 +452,7 @@ class AddBookingScreen extends Component {
                                 dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, this.state.profile);
                                 this.props.navigation.navigate("confirmBooking", {
                                     serviceType: this.state.serviceType,
-                                    service: this.state.listServicesSelected,
+                                    service: services,
                                     profile: this.state.profile,
                                     hospital: this.state.hospital,
                                     bookingDate: this.state.bookingDate,
@@ -651,7 +651,7 @@ class AddBookingScreen extends Component {
                                             this.state.listServicesSelected.map((item, index) => <Text
                                                 style={styles.txtListServices}
                                                 numberOfLines={1}
-                                                key={index}>{item.service.name}</Text>)
+                                                key={index}>{item.name}</Text>)
                                         }
                                         {/* <Text numberOfLines={1} style={styles.ktq}>{this.state.service.name}</Text> */}
                                         {/* <Text numberOfLines={1} style={styles.ktq}>{this.state.service.price.formatPrice() + 'đ'}</Text> */}

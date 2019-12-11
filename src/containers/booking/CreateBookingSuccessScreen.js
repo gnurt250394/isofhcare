@@ -38,7 +38,7 @@ class CreateBookingSuccessScreen extends Component {
     getPriceSecive = (service, voucher) => {
         let priceVoucher = voucher && voucher.price ? voucher.price : 0
         let priceFinal = service.reduce((start, item) => {
-            return start + parseInt(item.service.price)
+            return start + parseInt(item.price)
         }, 0)
         return (priceFinal - priceVoucher).formatPrice()
     }
@@ -122,8 +122,8 @@ class CreateBookingSuccessScreen extends Component {
                                     <View style={styles.containerPrice}>
                                         {service.map((item, index) => {
                                             return <View key={index} style={styles.flex}>
-                                                <Text numberOfLines={1} style={[styles.text, styles.flex]}>{item.service.name}</Text>
-                                                <Text style={[styles.text, { marginBottom: 5 }]}>({parseInt(item.service.price).formatPrice()}đ)</Text>
+                                                <Text numberOfLines={1} style={[styles.text, styles.flex]}>{item.name}</Text>
+                                                <Text style={[styles.text, { marginBottom: 5 }]}>({parseInt(item.price).formatPrice()}đ)</Text>
                                             </View>
                                         })}
                                         {voucher && voucher.price ?
