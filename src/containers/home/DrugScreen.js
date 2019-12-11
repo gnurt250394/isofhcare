@@ -131,12 +131,6 @@ class drugScreen extends Component {
             </View>
         )
     }
-    onEdit = () => {
-        alert('edit')
-    }
-    onDelete = () => {
-        alert('delete')
-    }
     onFindDrug = () => {
         this.props.navigation.navigate('findDrug')
     }
@@ -165,6 +159,8 @@ class drugScreen extends Component {
         }
 
     };
+    listEmpty = () => !this.state.isLoading && <Text style={styles.none_data}>{constants.not_found}</Text>
+
     render() {
         console.log(this.state.dataDrug, 'this.state.dataDrug')
         return (
@@ -201,8 +197,8 @@ class drugScreen extends Component {
                     </TouchableOpacity>
                     <View style={styles.viewFlatlish}></View>
                     <View style={styles.viewHeadFlat}>
-                        <Text>Đơn thuốc của tôi {this.state.dataDrug && this.state.dataDrug.length ? `(${this.state.dataDrug.length})` : ''}</Text>
-                        <TouchableOpacity><Text>Xem tất cả</Text></TouchableOpacity>
+                       {this.state.dataDrug && this.state.dataDrug.length ? <Text>Đơn thuốc của tôi {`(${this.state.dataDrug.length})`}</Text>:null}
+                        {/* <TouchableOpacity><Text>Xem tất cả</Text></TouchableOpacity> */}
                     </View>
                     <FlatList
                         style={styles.viewFl}
@@ -210,6 +206,7 @@ class drugScreen extends Component {
                         extraData={this.state}
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={this.renderItem}
+                        ListEmptyComponent = {this.listEmpty}
                     />
 
                 </View>
@@ -372,7 +369,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         height: 31,
         width: '100%'
-    }
+    },
+    none_data: {
+        fontStyle: 'italic',
+        marginTop: 30,
+        alignSelf: 'center',
+        fontSize: 16
+    },
 
 
 

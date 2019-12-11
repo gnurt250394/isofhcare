@@ -201,11 +201,10 @@ const TabNavigatorComponent = createBottomTabNavigator(
         tabBarIcon: ({ tintColor }) => <ScaledImage height={23} source={require('@images/new/homev2/ic_drug_menu.png')} style={{ tintColor: tintColor }} />,
         tabBarOnPress: ({ navigation, defaultHandler }) => {
           if (userProvider.isLogin) {
+            console.log('userProvider.isLogin: ', userProvider.isLogin);
             defaultHandler();
           } else {
-            NavigationService.navigate("login", {
-              // nextScreen: { screen: "notificationTab", param: {} }
-            });
+            NavigationService.navigate("login");
           }
         },
       }
