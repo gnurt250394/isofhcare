@@ -319,7 +319,7 @@ class DetailHistoryBookingScreen extends Component {
                                 source={require("@images/ic_location.png")}
                             />
                             <Text numberOfLines={5} style={styles.txLocation}>{constants.booking.address}</Text>
-                            <View style={styles.viewInfoLocation}>
+                            <View style={[styles.viewInfoLocation]}>
                                 <Text style={styles.txClinic}>{this.state.booking.hospital && this.state.booking.hospital.name}</Text>
                                 {this.state.booking.hospital.address ?
                                     <Text style={styles.txAddress}>{this.state.booking.hospital.address}</Text> : null
@@ -590,7 +590,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 5,
         justifyContent: 'center',
         alignItems: 'flex-end',
-        width: '50%'
+        flex:5
     },
     txAddress: {
         color: "#8F8E93",
