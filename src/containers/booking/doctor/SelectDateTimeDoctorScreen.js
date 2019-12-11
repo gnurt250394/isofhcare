@@ -70,7 +70,7 @@ class SelectDateTimeDoctorScreen extends Component {
         let listTime = [];
         if (this.state.schedules[day].noSchedule) {
             let date = new Date(day)
-            console.log('date: ', date);
+
 
             date.setMinutes(date.getMinutes() + date.getTimezoneOffset());
             date.setMinutes(date.getMinutes() + (8 * 60));
@@ -206,13 +206,7 @@ class SelectDateTimeDoctorScreen extends Component {
         //     return "#efd100";
         // return "#3161AD";
     }
-    getListSchedule = (hospitalId, doctorId) => {
-        bookingDoctorProvider.get_list_schedules(hospitalId, doctorId, 0).then(res => {
 
-        }).catch(err => {
-
-        })
-    }
     getDetailDoctor = () => {
         try {
             this.setState({ isLoading: true }, () => {
@@ -246,6 +240,14 @@ class SelectDateTimeDoctorScreen extends Component {
     componentDidMount() {
         this.getDetailDoctor()
 
+    }
+    timeStringToDate(time) {
+        let d = new Date();
+
+        let [hours, minutes] = time.split(':');
+        d.setHours(+hours);
+        d.setMinutes(minutes);
+        return d
     }
     generateSchedule(month) {
         try {
@@ -304,41 +306,69 @@ class SelectDateTimeDoctorScreen extends Component {
 
                 let dataSchedules = this.state.profileDoctor.schedules ? this.state.profileDoctor.schedules : []
                 for (let i = 0; i < dataSchedules.length; i++) {
-                    // if (dataSchedules[i].workTime.dayOfTheWeek == dayOfWeek) {
 
                     if ((dataSchedules[i].workTime.dayOfTheWeek == dayOfWeek
                         && dataSchedules[i].workTime.expired >= key
-                        && dataSchedules[i].workTime.repeat && key >= dataSchedules[i].workTime.day) || (key == dataSchedules[i].workTime.day)) {
-                        arrIndex.push(i)
-                        let indexDelete = dataSchedules[i].breakDays.findIndex(e => e == key)
+                        && dataSchedules[i].workTime.repeat && key >= dataSchedules[i].workTime.day)
+                        || (key == dataSchedules[i].workTime.day)) {
+
+                        let indexDelete = dataSchedules[i].breakDays.findIndex(e => e == key && dataSchedules[i].workTime.day != e)
+
                         if (indexDelete != -1) {
                             obj[key].disabled = true;
                             obj[key].disableTouchEvent = true;
-                            break
-                        }
-                        obj[key].marked = true;
-                        obj[key].noSchedule = true;
-                        obj[key].disabled = false;
-                        obj[key].disableTouchEvent = false;
-                        obj[key].customStyles = {
-                            container: {
-                                backgroundColor: '#FFF',
-                                borderWidth: 1,
-                                borderColor: '#3161AD'
+                        } else {
+                            // let dateEnd = this.timeStringToDate(dataSchedules[i].workTime.end)
+                            let timeStart = dataSchedules[i].workTime.start.split(':')
+                            let timeEnd = dataSchedules[i].workTime.end.split(':')
+                            let date = (timeEnd[0] - timeStart[0]) / 0.5
+                            let dateCheck = dataSchedules[i].timeSlots.findIndex(e => e.date == key)
+                            let data = []
+                            dataSchedules[i].timeSlots.forEach(e => {
+                                if (e.date == key) {
+                                    data.push(e)
+                                }
+                            })
+                            if (date == data.length && dateCheck != -1) {
+                                obj[key].disabled = true;
+                                obj[key].disableTouchEvent = true;
+                                break
                             }
-                        }
-                        if (arrIndex && arrIndex.length == 1) {
-                            selected = keyDate;
+                            // dateEnd.setMinutes(dateEnd.getMinutes() - 30)
+                            // let slotDate = dataSchedules[i].timeSlots.every(e => {
+                            //     if (e.lock && e.time && e.date == dataSchedules[i].workTime.day && e.time <= dateEnd.format('HH:mm')) {
+                            //         
+                            //         return true
+                            //     }
+                            // })
+                            // 
+                            // 
+                            arrIndex.push(i)
+                            obj[key].marked = true;
+                            obj[key].noSchedule = true;
+                            obj[key].disabled = false;
+                            obj[key].disableTouchEvent = false;
                             obj[key].customStyles = {
                                 container: {
-                                    backgroundColor: '#3161AD'
-                                },
-                                text: {
-                                    color: '#FFF'
+                                    backgroundColor: '#FFF',
+                                    borderWidth: 1,
+                                    borderColor: '#3161AD'
                                 }
                             }
+                            if (arrIndex && arrIndex.length == 1) {
+                                selected = keyDate;
+                                obj[key].customStyles = {
+                                    container: {
+                                        backgroundColor: '#3161AD'
+                                    },
+                                    text: {
+                                        color: '#FFF'
+                                    }
+                                }
+                            }
+                            break;
                         }
-                        break;
+
                     }
                     else {
                         obj[key].customStyles = {
@@ -458,13 +488,13 @@ class SelectDateTimeDoctorScreen extends Component {
         return Math.round(difference_ms / one_day);
     }
     selectTime = (item) => () => {
-        console.log('item: ', item);
+
         if (item.type == 0) {
             snackbar.show("Đã kín lịch trong khung giờ này", "danger");
             return;
         }
         let date = new Date(item.key)
-        console.log('this.daysBetween(new Date(), date): ', this.daysBetween(new Date(), date));
+
         if (item.maximumCapacity < this.daysBetween(new Date(), date)) {
             snackbar.show(`Bạn chỉ được đặt lịch trước ${item.maximumCapacity} ngày`, "danger");
             return
