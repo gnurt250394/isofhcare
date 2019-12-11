@@ -134,13 +134,14 @@ class EnterPasswordScreen extends Component {
 
   }
 
-  getComponent = (value, onChangeText, onFocus, onBlur, isError) => {
+  getComponent = (value, onChangeText, onFocus, onBlur, placeholderTextColor) => {
     return (
       <FloatingLabel
         placeholderStyle={styles.placeFloat}
         value={value}
         underlineColor={'#02C39A'}
         inputStyle={styles.textInputStyle}
+        placeholderTextColor='#808080'
         labelStyle={styles.labelStyle}
         placeholder={constants.input_password}
         secureTextEntry={this.state.secureTextPassEntry}
@@ -202,9 +203,10 @@ class EnterPasswordScreen extends Component {
                 </Field>
                 <Field style={styles.inputPass}>
                   <TextField
-                    getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
+                    getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
                       placeholderStyle={styles.placeFloat}
                       value={value}
+                      placeholderTextColor='#808080'
                       underlineColor={'#02C39A'}
                       inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.change_password_screens.confirm_pass}
 
@@ -329,7 +331,7 @@ const styles = StyleSheet.create({
   },
   textInputStyle: {
     color: "#53657B",
-    fontWeight: "600",
+    fontWeight: "200",
     height: 45,
     marginLeft: 0,
     fontSize: 20,

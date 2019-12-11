@@ -306,10 +306,13 @@ class LoginScreen extends Component {
 								<Form ref={ref => (this.form = ref)}>
 									<Field clearWhenFocus={true}>
 										<TextField
-											getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
+
+											getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
 												keyboardType='numeric'
 												placeholderStyle={styles.placeholder} value={value} underlineColor={'#CCCCCC'}
 												inputStyle={styles.textInputStyle}
+												placeholderTextColor='#808080'
+												placeholderStyle={{ fontWeight: '200' }}
 												labelStyle={styles.labelStyle} placeholder={constants.phone} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
 											onChangeText={s => this.setState({ phone: s })}
 											errorStyle={styles.errorStyle}
@@ -323,13 +326,13 @@ class LoginScreen extends Component {
 													phone: "SĐT không hợp lệ"
 												}
 											}}
-
 											autoCapitalize={"none"}
 										/>
 										<Field style={styles.inputPass}>
 											<TextField
-												getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
+												getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
 													placeholderStyle={styles.placeholder}
+													placeholderTextColor='#808080'
 													value={value} underlineColor={'#CCCCCC'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.password} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} secureTextEntry={this.state.secureTextEntry} />}
 												onChangeText={s => this.setState({ password: s })}
 												errorStyle={styles.errorStyle}
@@ -503,7 +506,7 @@ const styles = StyleSheet.create({
 	},
 	textInputStyle: {
 		color: "#53657B",
-		fontWeight: "600",
+		fontWeight: "200",
 		height: 51,
 		marginLeft: 0,
 		borderWidth: 1,
@@ -523,7 +526,7 @@ const styles = StyleSheet.create({
 	viewLogin: { marginHorizontal: 22 },
 	cardLogin: { padding: 22, paddingTop: 10, borderRadius: 8, marginTop: 50, borderColor: '#02C39A', borderWidth: 1 },
 	imgIsc: { alignSelf: 'center', },
-	placeholder: { fontSize: 16, },
+	placeholder: { fontSize: 16, fontWeight: '200' },
 	viewFogot: { flexDirection: 'row', marginTop: 15 },
 	btnFogot: { alignItems: "flex-end", flex: 1 },
 	txFogot: {

@@ -20,10 +20,11 @@ export default class CheckPassword extends Component {
       password: ""
     };
   }
-  getComponent = (value, onChangeText, onFocus, onBlur, isError) => {
+  getComponent = (value, onChangeText, onFocus, onBlur, placeholderTextColor) => {
     return (
       <FloatingLabel
         placeholderStyle={styles.placeFloat}
+        placeholderTextColor='#808080'
         value={value}
         underlineColor={"#02C39A"}
         inputStyle={styles.textInputStyle}
@@ -164,7 +165,7 @@ const styles = StyleSheet.create({
   },
   textInputStyle: {
     color: "#53657B",
-    fontWeight: "600",
+    fontWeight: "200",
     height: 45,
     marginLeft: 0,
     fontSize: 20
