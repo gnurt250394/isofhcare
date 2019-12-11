@@ -94,10 +94,14 @@ class InsertInfoDrug extends Component {
     addMenuDrug = () => {
         let imageUris = this.props.imageUris
         let dataDrug = this.props.dataDrug
-        let addressId = this.state.location.id
+        let addressId = this.state.location && this.state.location.id
         let note = this.state.note
         let id = this.props.userApp.currentUser.id
         let name = this.state.name
+        if(!addressId){
+            snackbar.show('Bạn chưa nhập địa chỉ','danger')
+            return
+        }
         if (imageUris && !dataDrug) {
             for (var i = 0; i < imageUris.length; i++) {
                 if (imageUris[i].loading) {
@@ -152,7 +156,14 @@ class InsertInfoDrug extends Component {
                 name: name,
                 note: note,
                 ownerId: id
+                
             }
+            drugProvider.createDrug(data2, idDrug).then(res => {
+                if (res) {
+                    snackbar.show('Tạo đơn thuốc thành công!', 'success')
+                    this.onCreateSuccess(res)
+                }
+            })
         }
     }
     render() {
