@@ -355,7 +355,7 @@ class HomeScreen extends Component {
     const width = DEVICE_WIDTH - 40;
     console.log('width: ', width);
     if (width >= 320) {
-      return Platform.OS == 'ios' ? 70 : 75;
+      return Platform.OS == 'ios' ? 75 : 75;
     }
 
     if (width > 300) {
@@ -392,7 +392,7 @@ class HomeScreen extends Component {
     const pixel = PixelRatio.get()
     console.log(pixel, 'widthwidthwidth', DEVICE_WIDTH)
     if (pixel >= 2 && DEVICE_WIDTH > 325) {
-      return 64
+      return 75
     }
     if (pixel > 2 && DEVICE_WIDTH < 325) {
       return 24
@@ -402,7 +402,7 @@ class HomeScreen extends Component {
     const width = DEVICE_WIDTH - 40;
     console.log('width: ', width);
     if (width >= 320) {
-      return Platform.OS == 'ios' ? 85 : 95;
+      return Platform.OS == 'ios' ? 95 : 95;
     }
 
     if (width > 300) {
@@ -453,7 +453,7 @@ class HomeScreen extends Component {
     })
   }
   getAdjustedFontSize(size) {
-    return parseInt(size) * DEVICE_WIDTH * (1.8 - 0.002 * DEVICE_WIDTH) / 400;
+    return Platform.OS == 'ios' ?  parseInt(size-2) * DEVICE_WIDTH * (1.8 - 0.002 * DEVICE_WIDTH) / 400: parseInt(size) * DEVICE_WIDTH * (1.8 - 0.002 * DEVICE_WIDTH) / 400;
   }
   refreshControl = () => {
     return (
