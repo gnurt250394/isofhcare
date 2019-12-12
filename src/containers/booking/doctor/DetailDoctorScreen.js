@@ -436,7 +436,7 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   backgroundHeader: {
-    backgroundColor: '#02C39A',
+    backgroundColor: '#27c8ad',
     height: '13%',
     position: 'absolute',
     top: 0,

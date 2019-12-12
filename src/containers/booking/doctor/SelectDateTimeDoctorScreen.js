@@ -321,28 +321,28 @@ class SelectDateTimeDoctorScreen extends Component {
                             // let dateEnd = this.timeStringToDate(dataSchedules[i].workTime.end)
                             let timeStart = dataSchedules[i].workTime.start.split(':')
                             let timeEnd = dataSchedules[i].workTime.end.split(':')
-                            let date = (timeEnd[0] - timeStart[0]) / 0.5
-                            let dateCheck = dataSchedules[i].timeSlots.findIndex(e => e.date == key)
+                            let date = 0
+                            if (timeEnd[1] == '30' || timeStart[1] == '30') {
+                                date = (timeEnd[0] - timeStart[0]) / 0.5 +1
+                            } else {
+                                date = (timeEnd[0] - timeStart[0]) / 0.5
+
+                            }
+
+                            let dateCheck = dataSchedules[i].timeSlots.findIndex(e => e.date == key && e.lock)
                             let data = []
                             dataSchedules[i].timeSlots.forEach(e => {
-                                if (e.date == key) {
+                                if (e.date == key && e.lock) {
                                     data.push(e)
                                 }
                             })
+                            console.log('data: ', data);
+                            console.log('date: ', date);
                             if (date == data.length && dateCheck != -1) {
                                 obj[key].disabled = true;
                                 obj[key].disableTouchEvent = true;
                                 break
                             }
-                            // dateEnd.setMinutes(dateEnd.getMinutes() - 30)
-                            // let slotDate = dataSchedules[i].timeSlots.every(e => {
-                            //     if (e.lock && e.time && e.date == dataSchedules[i].workTime.day && e.time <= dateEnd.format('HH:mm')) {
-                            //         
-                            //         return true
-                            //     }
-                            // })
-                            // 
-                            // 
                             arrIndex.push(i)
                             obj[key].marked = true;
                             obj[key].noSchedule = true;
@@ -474,17 +474,11 @@ class SelectDateTimeDoctorScreen extends Component {
         // }
     }
     daysBetween = (date1, date2) => {
-        //Get 1 day in milliseconds
         var one_day = 1000 * 60 * 60 * 24;
 
-        // Convert both dates to milliseconds
         var date1_ms = date1.getTime();
         var date2_ms = date2.getTime();
-
-        // Calculate the difference in milliseconds
         var difference_ms = date2_ms - date1_ms;
-
-        // Convert back to days and return
         return Math.round(difference_ms / one_day);
     }
     selectTime = (item) => () => {
