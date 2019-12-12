@@ -91,17 +91,19 @@ class InsertInfoDrug extends Component {
             this.props.navigation.pop();
         }
     }
-    addMenuDrug = () => {
+    addMenuDrug = (isFinding) => {
         let imageUris = this.props.imageUris
         let dataDrug = this.props.dataDrug
         let addressId = this.state.location && this.state.location.id
         let note = this.state.note
         let id = this.props.userApp.currentUser.id
         let name = this.state.name
-        if(!addressId){
-            snackbar.show('Bạn chưa nhập địa chỉ','danger')
+        if (!addressId) {
+            snackbar.show('Bạn chưa nhập địa chỉ', 'danger')
             return
         }
+        let idDrug = this.props.dataEdit && this.props.dataEdit.id
+
         if (imageUris && !dataDrug) {
             for (var i = 0; i < imageUris.length; i++) {
                 if (imageUris[i].loading) {
@@ -123,14 +125,14 @@ class InsertInfoDrug extends Component {
                         "pathThumbnail": item.thumbnail
                     })
             });
-            let idDrug = this.props.dataEdit && this.props.dataEdit.id
             let data = {
                 addressId: addressId,
                 images: images,
                 name: name,
                 note: note,
                 ownerId: id,
-                "type": "IMAGE"
+                "type": "IMAGE",
+                isFinding: isFinding,
             }
             drugProvider.createDrug(data, idDrug).then(res => {
                 if (res) {
@@ -150,13 +152,14 @@ class InsertInfoDrug extends Component {
                         "price": 100000,
                         "quantity": 1,
                         "unit": "mg",
-                        "type": "ADDITION"
+                        "type": "ADDITION",
+                        isFinding: isFinding
                     }
                 ],
                 name: name,
                 note: note,
                 ownerId: id
-                
+
             }
             drugProvider.createDrug(data2, idDrug).then(res => {
                 if (res) {
@@ -187,8 +190,8 @@ class InsertInfoDrug extends Component {
                         <ScaledImage source={require('@images/new/drug/ic_btn_location.png')} height={10}></ScaledImage>
                     </TouchableOpacity>
                 </View>
-                <TouchableOpacity style={styles.btnFind}><Text style={styles.txFind}>Tìm nhà thuốc</Text></TouchableOpacity>
-                <TouchableOpacity onPress={this.addMenuDrug} style={styles.btnSave}><Text style={styles.txSave}>Lưu lại</Text></TouchableOpacity>
+                <TouchableOpacity onPress={() => this.addMenuDrug(true)} style={styles.btnFind}><Text style={styles.txFind}>Tìm nhà thuốc</Text></TouchableOpacity>
+                <TouchableOpacity onPress={() => this.addMenuDrug(false)} style={styles.btnSave}><Text style={styles.txSave}>Lưu lại</Text></TouchableOpacity>
                 <View style={styles.viewBottom}></View>
             </View>
         );
