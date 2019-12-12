@@ -46,6 +46,7 @@ class AddBookingDoctorScreen extends Component {
             paymentMethod: 2,
             detailSchedule: this.props.navigation.getParam('detailSchedule', {})
         }
+        this.isChecking = true
     }
     _changeColor = () => {
         this.setState = ({ colorButton: !this.setState.colorButton })
@@ -310,53 +311,58 @@ class AddBookingDoctorScreen extends Component {
         let discount = voucher && voucher.price ? voucher.price : 0
         // let patitent = profile && profile.medicalRecords
         let patitent = this.props.userApp.currentUser
-
-        connectionUtils.isConnected().then(s => {
-            this.setState({ isLoading: true }, () => {
-                bookingDoctorProvider.create(
-                    date,
-                    reason,
-                    // discount,
-                    detailSchedule.doctor,
-                    profileDoctor.hospital,
-                    detailSchedule.medicalService,
-                    patitent,
-                    // this.getPaymentMethod(),
-                    detailSchedule.id,
-                    schedule.label,
-                    detailSchedule.room
-                ).then(s => {
-                    this.setState({ isLoading: false }, () => {
-                        if (s && s.reference) {
-                            s.payment = this.state.paymentMethod
-                            // snackbar.show('Đặt khám thành công', 'success')
-                            this.props.navigation.navigate("confirmBookingDoctor", {
-                                // navigate: {
-                                //     screen: "createBookingDoctorSuccess",
-                                //     params: {
-                                        detailSchedule,
-                                        voucher: this.state.voucher,
-                                        booking: s,
-                                        bookingDate: this.state.bookingDate
+        if (this.isChecking) {
+            this.isChecking = false
+            connectionUtils.isConnected().then(s => {
+                this.setState({ isLoading: true }, () => {
+                    bookingDoctorProvider.create(
+                        date,
+                        reason,
+                        // discount,
+                        detailSchedule.doctor,
+                        profileDoctor.hospital,
+                        detailSchedule.medicalService,
+                        patitent,
+                        // this.getPaymentMethod(),
+                        detailSchedule.id,
+                        schedule.label,
+                        detailSchedule.room
+                    ).then(s => {
+                        this.setState({ isLoading: false }, () => {
+                            if (s && s.reference) {
+                                s.payment = this.state.paymentMethod
+                                // snackbar.show('Đặt khám thành công', 'success')
+                                this.props.navigation.navigate("confirmBookingDoctor", {
+                                    // navigate: {
+                                    //     screen: "createBookingDoctorSuccess",
+                                    //     params: {
+                                    detailSchedule,
+                                    voucher: this.state.voucher,
+                                    booking: s,
+                                    bookingDate: this.state.bookingDate
                                     // }
-                                // }
-                            });
+                                    // }
+                                });
+                            }
+                        })
+                        // 
+                    }).catch(e => {
+                        this.isChecking = true
+                        this.setState({ isLoading: false });
+                        if (e.response && e.response.data.error == 'Locked') {
+                            snackbar.show(e.response.data.message, 'danger')
+                        } else {
+                            snackbar.show('Đặt khám không thành công', 'danger')
                         }
-                    })
-                    // 
-                }).catch(e => {
-                    this.setState({ isLoading: false });
-                    if (e.response && e.response.data.error == 'Locked') {
-                        snackbar.show(e.response.data.message, 'danger')
-                    } else {
-                        snackbar.show('Đặt khám không thành công', 'danger')
-                    }
-                });
+                    });
 
-            });
-        }).catch(e => {
-            snackbar.show(constants.msg.app.not_internet, "danger");
-        })
+                });
+            }).catch(e => {
+                this.isChecking = true
+                snackbar.show(constants.msg.app.not_internet, "danger");
+            })
+        }
+
     }
 
     onTimePickerChange(schedule) {
@@ -689,11 +695,11 @@ class AddBookingDoctorScreen extends Component {
                         {/* <SelectPaymentDoctor service={services} ref={ref => this = ref} /> */}
                         {/* <Text style={styles.txtHelper}>Nếu số tiền thanh toán trước cao hơn thực tế, quý khách sẽ nhận lại tiền thừa tại CSYT khám bệnh</Text> */}
                     </KeyboardAwareScrollView>
-                        <View style={styles.btn}>
-                            <TouchableOpacity onPress={this.createBooking.bind(this)} style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]}>
-                                <Text style={styles.datkham}>Đặt khám</Text>
-                            </TouchableOpacity>
-                        </View>
+                    <View style={styles.btn}>
+                        <TouchableOpacity onPress={this.createBooking.bind(this)} style={[styles.button, this.state.allowBooking ? { backgroundColor: "#02c39a" } : {}]}>
+                            <Text style={styles.datkham}>Đặt khám</Text>
+                        </TouchableOpacity>
+                    </View>
 
 
                     <ImagePicker ref={ref => this.imagePicker = ref} />
