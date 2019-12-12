@@ -71,7 +71,6 @@ class InsertInfoDrug extends Component {
         else if (district && province) {
             return (`${district},${province},`)
         }
-
         else if (province && village) {
             return (`${village}, ${province}`)
         }
@@ -174,11 +173,11 @@ class InsertInfoDrug extends Component {
             <View style={styles.container}>
                 <View style={styles.viewInput}>
                     <Text style={styles.txNameDrug}>Tên đơn thuốc</Text>
-                    <TextInput value={this.state.name} onChangeText={text => this.setState({ name: text })} underlineColorAndroid={'#fff'} style={styles.inputNameDrug} multiline={true} placeholder={'Nhập tên đơn thuốc'}></TextInput>
+                    <TextInput value={this.state.name} placeholderTextColor = "#808080" onChangeText={text => this.setState({ name: text })} underlineColorAndroid={'#fff'} style={styles.inputNameDrug} multiline={true} placeholder={'Nhập tên đơn thuốc'}></TextInput>
                 </View>
                 <View style={styles.viewInput}>
                     <Text style={styles.txNameDrug}>Ghi chú</Text>
-                    <TextInput value={this.state.note} onChangeText={text => this.setState({ note: text })} placeholder={'Viết ghi chú cho đơn thuốc'} multiline={true} style={styles.inputNote}></TextInput>
+                    <TextInput value={this.state.note} placeholderTextColor = "#808080" onChangeText={text => this.setState({ note: text })} placeholder={'Viết ghi chú cho đơn thuốc'} multiline={true} style={styles.inputNote}></TextInput>
                 </View>
                 <View style={styles.viewInput}>
                     <Text style={styles.txNameDrug}>Vị trí của bạn</Text>

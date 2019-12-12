@@ -1,28 +1,28 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Dimensions,Linking,Platform } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Linking, Platform } from 'react-native';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 const devices_width = Dimensions.get('window').width
 export default class DrugStoreScreen extends Component {
     constructor(props) {
         super(props);
-        let data = this.props.navigation.getParam('data',null)
+        let data = this.props.navigation.getParam('data', null)
         this.state = {
-            name:data && data.name,
-            address:data && data.address,
-            phone:data && data.phone,
-            type:data && data.type,
-            ownerCertificateNumber:data && data.ownerCertificateNumber,
-            registrationNumber:data && data.registrationNumber,
-            standardNumber:data && data.standardNumber,
-            ownerName:data && data.ownerName,
-            ownerQualification:data && data.ownerQualification
+            name: data && data.name,
+            address: data && data.address,
+            phone: data && data.phone,
+            type: data && data.type,
+            ownerCertificateNumber: data && data.ownerCertificateNumber,
+            registrationNumber: data && data.registrationNumber,
+            standardNumber: data && data.standardNumber,
+            ownerName: data && data.ownerName,
+            ownerQualification: data && data.ownerQualification
         };
     }
     openMap = () => {
-            var scheme = Platform.OS === 'ios' ? 'maps://?daddr=' : 'https://www.google.com/maps/search/?api=1&query=';
-            var url = scheme + `${this.state.address}`;
-            Linking.openURL(url);
+        var scheme = Platform.OS === 'ios' ? 'maps://?daddr=' : 'https://www.google.com/maps/search/?api=1&query=';
+        var url = scheme + `${this.state.address}`;
+        Linking.openURL(url);
     }
     render() {
         return (
@@ -30,7 +30,7 @@ export default class DrugStoreScreen extends Component {
                 <ScaledImage style={styles.bgdemo} width={devices_width} source={require('@images/new/drug/bg_demo.png')}></ScaledImage>
                 <View style={styles.viewShop}>
                     <Text style={styles.txNameShop}>{this.state.name.toUpperCase()}</Text>
-                    <Text style={styles.txLocation}>{this.state.address}</Text><TouchableOpacity onPress = {this.openMap}><Text>Xem bản đồ</Text></TouchableOpacity>
+                    <View style = {{flexDirection:'row',alignItems:'center'}}><Text style={styles.txLocation}>{this.state.address}</Text><TouchableOpacity style = {{padding:5}} onPress={this.openMap}><Text style={styles.txBtn}>Xem bản đồ</Text></TouchableOpacity></View>
                     <Text style={styles.txTitle}>Thông tin nhà thuốc</Text>
                     <View style={styles.viewInfo}>
                         <ScaledImage source={require('@images/new/drug/ic_dot_blue.png')} height={10}></ScaledImage>
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
         color: '#000',
         fontSize: 14,
         textAlign: 'left',
-        marginLeft:10
+        marginLeft: 10
 
     },
     txContents: {

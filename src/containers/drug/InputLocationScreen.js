@@ -92,7 +92,7 @@ class InputLocationScreen extends Component {
             snackbar.show('Số điện thoại không được để trống.', 'danger')
             return
         }
-        if (!telephone.match(/^\d{10}$/)) {
+        if (!telephone.match(/^(\+?84|0|\(\+?84\))[1-9]\d{8,9}$/g)) {
             snackbar.show('Số điện thoại không đúng định dạng.', 'danger')
             return
         }
