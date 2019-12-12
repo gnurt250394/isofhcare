@@ -142,7 +142,6 @@ const styles = StyleSheet.create({
         marginTop: 20,
         backgroundColor: '#FF8A00',
         borderRadius: 6,
-        height: 48,
         alignSelf: 'center',
         flexDirection: 'row',
         alignItems: 'center',
