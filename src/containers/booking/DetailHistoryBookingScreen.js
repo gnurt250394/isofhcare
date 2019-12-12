@@ -274,7 +274,7 @@ class DetailHistoryBookingScreen extends Component {
                                     }
                                     {this.state.booking.invoice.voucher && this.state.booking.invoice.voucher.discount ?
                                         <View >
-                                            <Text numberOfLines={1} style={[styles.txInfoService, styles.txtBold]}>ƯU đãi</Text>
+                                            <Text numberOfLines={1} style={[styles.txInfoService, styles.txtBold]}>Ưu đãi</Text>
                                             <Text style={[styles.txInfoService, styles.price]}>(-{this.state.booking.invoice.voucher.discount.formatPrice()}đ)</Text>
                                         </View> : null
                                     }
