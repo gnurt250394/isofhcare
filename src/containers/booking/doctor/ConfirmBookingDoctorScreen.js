@@ -25,6 +25,7 @@ class ConfirmBookingDoctorScreen extends Component {
             detailSchedule,
             voucher: {}
         }
+        this.isChecking = true
     }
 
     onQrClick = () => {
@@ -100,42 +101,46 @@ class ConfirmBookingDoctorScreen extends Component {
     }
     createBooking = () => {
         const { bookingDate, booking, detailSchedule } = this.state
-        
-        this.setState({ isLoading: true }, async () => {
-            if (this.state.voucher && this.state.voucher.code) {
+        if (this.isChecking) {
+            this.isChecking = false
+            this.setState({ isLoading: true }, async () => {
+                if (this.state.voucher && this.state.voucher.code) {
 
-                let dataVoucher = await this.confirmVoucher(this.state.voucher, booking.id);
-                if (!dataVoucher) {
-                    this.setState({ isLoading: false }, () => {
-                        snackbar.show(constants.voucher.voucher_not_found_or_expired, "danger");
-                    });
-                    return
+                    let dataVoucher = await this.confirmVoucher(this.state.voucher, booking.id);
+                    if (!dataVoucher) {
+                        this.isChecking = true
+                        this.setState({ isLoading: false }, () => {
+                            snackbar.show(constants.voucher.voucher_not_found_or_expired, "danger");
+                        });
+                        return
+                    }
                 }
-            }
-            bookingDoctorProvider.confirmBooking(booking.id, this.getPaymentMethod(), this.state.voucher).then(res => {
-                this.setState({ isLoading: false })
-                if (res) {
-                    snackbar.show('Đặt khám thành công', 'success')
-                    this.props.navigation.navigate("homeTab", {
-                        navigate: {
-                            screen: "createBookingDoctorSuccess",
-                            params: {
-                                detailSchedule: this.state.detailSchedule,
-                                voucher: this.state.voucher,
-                                booking: this.state.booking,
-                                bookingDate: this.state.bookingDate
+                bookingDoctorProvider.confirmBooking(booking.id, this.getPaymentMethod(), this.state.voucher).then(res => {
+                    this.setState({ isLoading: false })
+                    if (res) {
+                        snackbar.show('Đặt khám thành công', 'success')
+                        this.props.navigation.navigate("homeTab", {
+                            navigate: {
+                                screen: "createBookingDoctorSuccess",
+                                params: {
+                                    detailSchedule: this.state.detailSchedule,
+                                    voucher: this.state.voucher,
+                                    booking: this.state.booking,
+                                    bookingDate: this.state.bookingDate
 
+                                }
                             }
-                        }
-                    });
-                }
-            }).catch(err => {
-                
-                this.setState({ isLoading: false })
+                        });
+                    }
+                }).catch(err => {
+                    this.isChecking = true
+                    this.setState({ isLoading: false })
+
+                })
 
             })
-        })
 
+        }
     }
     renderPaymentMethod = () => {
         const { paymentMethod } = this.state
@@ -171,10 +176,10 @@ class ConfirmBookingDoctorScreen extends Component {
         // let detailSchedule = this.props.navigation.getParam('detailSchedule');
         // let bookingDate = this.props.navigation.getParam('bookingDate');
         // let booking = this.props.navigation.getParam('booking');
-        const { booking, bookingDate, detailSchedule,voucher } = this.state
-        
+        const { booking, bookingDate, detailSchedule, voucher } = this.state
+
         let service = detailSchedule.medicalService || [];
-        
+
         // let voucher = this.state;
         // if (!booking || !booking.profile || !booking.hospital || !booking.hospital.hospital || !booking.book) {
         //     this.props.navigation.pop();
@@ -252,7 +257,7 @@ class ConfirmBookingDoctorScreen extends Component {
                                 <Text style={styles.label}>Triệu chứng:</Text>
                                 <Text style={styles.txtAddressBooking}>{booking.description}</Text>
                             </View>
-                            
+
 
                         </View>
                         <TouchableOpacity
