@@ -313,31 +313,25 @@ class SelectDateTimeDoctorScreen extends Component {
                         || (key == dataSchedules[i].workTime.day)) {
 
                         let indexDelete = dataSchedules[i].breakDays.findIndex(e => e == key && dataSchedules[i].workTime.day != e)
-
-                        if (indexDelete != -1) {
+                        let dateStart = this.timeStringToDate(dataSchedules[i].workTime.start)
+                        let dateLength = 0
+                        while (dateStart.format('HH:mm') < dataSchedules[i].workTime.end) {
+                            if (dateStart.format("HH:mm") < "11:30" || dateStart.format("HH:mm") >= "13:30") {
+                                dateLength = dateLength + 1
+                            }
+                            dateStart.setMinutes(dateStart.getMinutes() + 30)
+                        }
+                        let dateCheck = dataSchedules[i].timeSlots.findIndex(e => e.date == key && e.lock)
+                        let data = []
+                        dataSchedules[i].timeSlots.forEach(e => {
+                            if (e.date == key && e.lock) {
+                                data.push(e)
+                            }
+                        })
+                        if (indexDelete != -1 || (dateLength == data.length && dateCheck != -1)) {
                             obj[key].disabled = true;
                             obj[key].disableTouchEvent = true;
                         } else {
-                            let dateStart = this.timeStringToDate(dataSchedules[i].workTime.start)
-                            let dateLength = 0
-                            while (dateStart.format('HH:mm') < dataSchedules[i].workTime.end) {
-                                if (dateStart.format("HH:mm") < "11:30" || dateStart.format("HH:mm") >= "13:30") {
-                                    dateLength = dateLength + 1
-                                }
-                                dateStart.setMinutes(dateStart.getMinutes() + 30)
-                            }
-                            let dateCheck = dataSchedules[i].timeSlots.findIndex(e => e.date == key && e.lock)
-                            let data = []
-                            dataSchedules[i].timeSlots.forEach(e => {
-                                if (e.date == key && e.lock) {
-                                    data.push(e)
-                                }
-                            })
-                            if (dateLength == data.length && dateCheck != -1) {
-                                obj[key].disabled = true;
-                                obj[key].disableTouchEvent = true;
-                                break
-                            }
                             arrIndex.push(i)
                             obj[key].marked = true;
                             obj[key].noSchedule = true;
