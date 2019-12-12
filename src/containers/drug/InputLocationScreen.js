@@ -84,6 +84,30 @@ class InputLocationScreen extends Component {
     onAddLocation = () => {
         let { ownerName, districts, provinces, telephone, textAddition, zone } = this.state
         let ownerId = this.props.userApp.currentUser.id
+        if (!ownerName) {
+            snackbar.show('Họ và tên không được để trống.', 'danger')
+            return
+        }
+        if (!telephone) {
+            snackbar.show('Số điện thoại không được để trống.', 'danger')
+            return
+        }
+        if (!telephone.match(/^\d{10}$/)) {
+            snackbar.show('Số điện thoại không đúng định dạng.', 'danger')
+            return
+        }
+        if (!provinces) {
+            snackbar.show('Bạn chưa chọn Tỉnh/Thành phố.', 'danger')
+            return
+        }
+        if (!districts) {
+            snackbar.show('Bạn chưa chọn Quận/Huyện.', 'danger')
+            return
+        }
+        if (!zone) {
+            snackbar.show('Bạn chưa chọn Phường/Xã', 'danger')
+            return
+        }
         let data =
         {
             "district": districts.name,
@@ -105,6 +129,8 @@ class InputLocationScreen extends Component {
                     this.props.navigation.pop();
                 }
             }
+        }).catch(e => {
+                snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại','danger')
         })
     }
     selectDistrict = (districts) => {
@@ -139,6 +165,7 @@ class InputLocationScreen extends Component {
         }
     }
     onSelectProvince = () => {
+
         this.props.navigation.navigate("selectProvince", { onSelected: this.selectprovinces.bind(this) });
     }
     selectZone = (zone) => {
