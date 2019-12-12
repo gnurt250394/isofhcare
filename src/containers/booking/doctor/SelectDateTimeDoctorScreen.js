@@ -318,17 +318,14 @@ class SelectDateTimeDoctorScreen extends Component {
                             obj[key].disabled = true;
                             obj[key].disableTouchEvent = true;
                         } else {
-                            // let dateEnd = this.timeStringToDate(dataSchedules[i].workTime.end)
-                            let timeStart = dataSchedules[i].workTime.start.split(':')
-                            let timeEnd = dataSchedules[i].workTime.end.split(':')
-                            let date = 0
-                            if (timeEnd[1] == '30' || timeStart[1] == '30') {
-                                date = (timeEnd[0] - timeStart[0]) / 0.5 +1
-                            } else {
-                                date = (timeEnd[0] - timeStart[0]) / 0.5
-
+                            let dateStart = this.timeStringToDate(dataSchedules[i].workTime.start)
+                            let dateLength = 0
+                            while (dateStart.format('HH:mm') < dataSchedules[i].workTime.end) {
+                                if (dateStart.format("HH:mm") < "11:30" || dateStart.format("HH:mm") >= "13:30") {
+                                    dateLength = dateLength + 1
+                                }
+                                dateStart.setMinutes(dateStart.getMinutes() + 30)
                             }
-
                             let dateCheck = dataSchedules[i].timeSlots.findIndex(e => e.date == key && e.lock)
                             let data = []
                             dataSchedules[i].timeSlots.forEach(e => {
@@ -336,9 +333,7 @@ class SelectDateTimeDoctorScreen extends Component {
                                     data.push(e)
                                 }
                             })
-                            console.log('data: ', data);
-                            console.log('date: ', date);
-                            if (date == data.length && dateCheck != -1) {
+                            if (dateLength == data.length && dateCheck != -1) {
                                 obj[key].disabled = true;
                                 obj[key].disableTouchEvent = true;
                                 break
