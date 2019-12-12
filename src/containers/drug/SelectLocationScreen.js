@@ -77,8 +77,6 @@ class SelectLocationScreen extends Component {
         let village = item.village ? item.village : null
         if (district && province && zone && village) {
             return (`${village}, ${zone}, ${district}, ${province}`)
-
-
         }
         else if (district && province && zone) {
             return (`${zone}, ${district}, ${province}`)
