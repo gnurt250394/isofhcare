@@ -260,7 +260,8 @@ class VerifyPhoneNumberScreen extends React.Component {
                                             snackbar.show(constants.msg.user.confirm_code_success, "success");
                                             this.props.navigation.replace("resetPassword", {
                                                 user: s.data.user,
-                                                id: s.data.user.id,
+                                                phone: this.state.phone.trim(),
+                                                otp: text,
                                                 nextScreen: this.nextScreen
                                             });
                                         }
