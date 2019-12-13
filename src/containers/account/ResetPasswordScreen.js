@@ -42,8 +42,9 @@ class ResetPasswordScreen extends Component {
         connectionUtils.isConnected().then(s => {
             this.setState({ isLoading: true, disabled: true }, () => {
                 let passwordNew = this.state.password
-                let id = this.props.navigation.getParam('id', '')
-                userProvider.resetPassword(id, passwordNew).then(s => {
+                let phone = this.props.navigation.getParam('phone',null)
+                let otp = this.props.navigation.getParam('otp',null)
+                userProvider.resetPassword( passwordNew,phone,otp).then(s => {
 
                     this.setState({ isLoading: false, disabled: false })
                     switch (s.code) {
