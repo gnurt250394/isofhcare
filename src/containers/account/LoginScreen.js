@@ -308,6 +308,7 @@ class LoginScreen extends Component {
 										<TextField
 											getComponent={(value, onChangeText, onFocus, onBlur, isError) => <FloatingLabel
 												keyboardType='numeric'
+												maxLength={10}
 												placeholderStyle={styles.placeholder} value={value} underlineColor={'#CCCCCC'}
 												inputStyle={styles.textInputStyle}
 												labelStyle={styles.labelStyle} placeholder={constants.phone} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}

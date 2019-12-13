@@ -145,7 +145,9 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         flexDirection: 'row',
         alignItems: 'center',
-        padding: 20
+        height:48,
+        width:194,
+        justifyContent:'center'
     },
     list_image: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 10, marginHorizontal: 20 },
     txCamera: {
