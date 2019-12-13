@@ -434,7 +434,7 @@ class AddBookingScreen extends Component {
                     console.log(this.state.schedule.time);
                     const { userApp } = this.props
                     console.log('userApp: ', userApp);
-                    let services = this.state.listServicesSelected.map(e => ({ price: e.monetaryAmount.value, id: e.id, name: e.name }));
+                    let services = this.state.listServicesSelected.map(e => ({ price: e.monetaryAmount.value, serviceId: e.id, name: e.name }));
                     let bookingDate = this.state.bookingDate.format("yyyy-MM-dd");
                     console.log('this.state.bookingDate: ', this.state.bookingDate);
                     console.log('bookingDate: ', bookingDate);
