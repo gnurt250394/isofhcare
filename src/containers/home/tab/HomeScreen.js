@@ -9,7 +9,7 @@ import {
   Dimensions,
   AppState,
   DeviceEventEmitter,
-  Alert,
+  PixelRatio,
   ScrollView,
   FlatList,
   RefreshControl,
@@ -246,13 +246,12 @@ class HomeScreen extends Component {
               </View>
             );
           return (
-            <View>
+            <View style={{ flex: 1 }}>
               <TouchableOpacity style={styles.cardView}>
                 <ScaledImage
                   uri={item.imageHome.absoluteUrl()}
-                  width={DEVICE_WIDTH - 140}
                   height={140}
-                  style={{ borderRadius: 6, }}
+                  style={{ borderRadius: 6, resizeMode: 'cover' }}
                 />
               </TouchableOpacity>
               <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensAds}>{item ? item.name : ""}</Text>
@@ -343,12 +342,20 @@ class HomeScreen extends Component {
       });
     })
   }
-
+  getMarginBooking() {
+    const pixel = PixelRatio.get()
+    if (pixel >= 2 && DEVICE_WIDTH > 325) {
+      return 34
+    }
+    if (pixel > 2 && DEVICE_WIDTH < 325) {
+      return 14
+    }
+  }
   getItemBookingWidth() {
     const width = DEVICE_WIDTH - 40;
-    console.log(width, 'widthwidthwidth')
+    console.log('width: ', width);
     if (width >= 320) {
-      return Platform.OS == 'ios' ? 70 : 75;
+      return Platform.OS == 'ios' ? 75 : 75;
     }
 
     if (width > 300) {
@@ -356,13 +363,46 @@ class HomeScreen extends Component {
     }
 
     if (width > 250)
-      return 70;
+      return 65;
+
     return width - 50;
+  }
+  renderButtonBooking() {
+    return (this.state.featuresBooking || []).map((item, position) => {
+      return (
+        <Animatable.View key={position} delay={100} animation={"swing"} direction="alternate">
+          {
+            item.empty ? <View style={[styles.viewEmpty,]}
+            ></View> :
+              <TouchableOpacity
+                style={[styles.buttonBooking, { width: this.getItemBookingWidth(), },]}
+                onPress={item.onPress}
+              >
+                <View style={{ alignItems: 'center' }}><View style={styles.groupImageButton}>
+                  <ScaledImage style={[styles.icon]} source={item.icon} height={30} />
+                </View>
+                  <Text style={[styles.label, { fontSize: this.getAdjustedFontSize(12) }]}>{item.text}</Text></View>
+              </TouchableOpacity>
+
+          }
+        </Animatable.View>);
+    })
+  }
+  getMargin() {
+    const pixel = PixelRatio.get()
+    console.log(pixel, 'widthwidthwidth', DEVICE_WIDTH)
+    if (pixel >= 2 && DEVICE_WIDTH > 325) {
+      return 75
+    }
+    if (pixel > 2 && DEVICE_WIDTH < 325) {
+      return 24
+    }
   }
   getItemWidth() {
     const width = DEVICE_WIDTH - 40;
+    console.log('width: ', width);
     if (width >= 320) {
-      return Platform.OS == 'ios' ? 80 : 85;
+      return Platform.OS == 'ios' ? 95 : 95;
     }
 
     if (width > 300) {
@@ -371,44 +411,24 @@ class HomeScreen extends Component {
 
     if (width > 250)
       return 80;
-    return width - 60;
-  }
-  renderButtonBooking = () => {
-    return (this.state.featuresBooking || []).map((item, position) => {
-      return (
-        <Animatable.View key={position} delay={100} animation={"swing"} direction="alternate">
-          {
-            item.empty ? <View style={[styles.viewEmpty, { width: this.getItemBookingWidth() }]}
-            ></View> :
-              <TouchableOpacity
-                style={[styles.button, { width: this.getItemBookingWidth() }]}
-                onPress={item.onPress}
-              >
-                <View style={styles.groupImageButton}>
-                  <ScaledImage style={[styles.icon]} source={item.icon} height={35} />
-                </View>
-                <Text style={[styles.label]}>{item.text}</Text>
-              </TouchableOpacity>
 
-          }
-        </Animatable.View>);
-    })
+    return width - 60;
   }
   renderButton = () => {
     return (this.state.features || []).map((item, position) => {
       return (
         <Animatable.View key={position} delay={100} animation={"swing"} direction="alternate">
           {
-            item.empty ? <View style={[styles.viewEmpty, { width: this.getItemWidth() }]}
+            item.empty ? <View style={[styles.viewEmpty]}
             ></View> :
               <TouchableOpacity
-                style={[styles.button, { width: this.getItemWidth() },{marginLeft:20,marginTop:10}]}
+                style={[styles.button, { marginTop: 10, }, { width: this.getItemWidth() },]}
                 onPress={item.onPress}
               >
                 <View style={styles.groupImageButton}>
                   <ScaledImage style={[styles.icon]} source={item.icon} height={54} />
                 </View>
-                <Text style={[styles.label]}>{item.text}</Text>
+                <Text style={[styles.label, { fontSize: this.getAdjustedFontSize(12) }]}>{item.text}</Text>
               </TouchableOpacity>
 
           }
@@ -431,6 +451,9 @@ class HomeScreen extends Component {
     }).catch(err => {
       console.log(err)
     })
+  }
+  getAdjustedFontSize(size) {
+    return Platform.OS == 'ios' ?  parseInt(size-2) * DEVICE_WIDTH * (1.8 - 0.002 * DEVICE_WIDTH) / 400: parseInt(size) * DEVICE_WIDTH * (1.8 - 0.002 * DEVICE_WIDTH) / 400;
   }
   refreshControl = () => {
     return (
@@ -471,17 +494,20 @@ class HomeScreen extends Component {
             style={styles.scroll}
           >
             <View style={styles.padding21}>
-              {this.props.userApp.isLogin &&
+              {this.props.userApp.isLogin ?
                 <View style={styles.containerHeadertitle}>
                   <Text
                     style={styles.txtHeaderTitle}
                   >Xin chào, </Text>
                   <Text style={styles.colorUserName}>{this.getUserName(this.props.userApp.currentUser.name) + '!'}</Text>
+                </View> : <View style={styles.containerHeadertitle}>
                 </View>}
               <Card style={styles.card}>
                 <Text style={styles.txBooking}>ĐẶT KHÁM ONLINE</Text>
-                <View style={styles.containerButtonBooking}>
-                  {this.renderButtonBooking()}
+                <View style = {{justifyContent:'center',paddingHorizontal:10}}>
+                  <View style={styles.containerButtonBooking}>
+                    {this.renderButtonBooking()}
+                  </View>
                 </View>
               </Card>
               {/* <View style={styles.viewMenu}> */}
@@ -497,7 +523,7 @@ class HomeScreen extends Component {
             {
               this.renderHospital()
             }
-            <View style={{ height: 50,backgroundColor:'#fff' }} />
+            <View style={{ height: 50, backgroundColor: '#fff' }} />
           </ScrollView>
         </View>
         <PushController />
@@ -513,9 +539,11 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
-    marginLeft: 5,
     alignItems: 'center',
-
+  },
+  buttonBooking: {
+    flex: 1,
+    alignItems: 'flex-start',
   },
   viewEmpty: {
     flex: 1,
@@ -529,10 +557,10 @@ const styles = StyleSheet.create({
   },
   containerButtonBooking: {
     flexDirection: "row",
-    padding: 10,
-    marginTop: 10,
-    flexWrap: 'wrap',
-    justifyContent: 'center',
+    paddingBottom: 10,
+    // flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    // justifyContent: 'center',
     borderRadius: 5,
   },
   containerButton: {
@@ -540,7 +568,7 @@ const styles = StyleSheet.create({
     padding: 21,
     flex: 1,
     flexWrap: 'wrap',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     borderRadius: 5,
     backgroundColor: '#f2f2f2'
   },
@@ -564,13 +592,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   txBooking: {
-    margin: 5,
-    marginLeft: 39,
+    marginVertical: 10,
     color: '#000',
+    marginLeft:10,
     fontWeight: 'bold'
   },
-  padding21: { padding: 21,paddingBottom:0 },
-  card: { borderRadius: 6, marginTop: 10 },
+  padding21: { padding: 21, paddingBottom: 0 },
+  card: { borderRadius: 6, marginTop: 10, paddingHorizontal: 10 },
   viewMenu: { backgroundColor: '#F8F8F8', flex: 1, borderRadius: 5 },
   scroll: {
     flex: 1,
@@ -601,7 +629,7 @@ const styles = StyleSheet.create({
   icon: {
   },
   label: {
-    marginTop: 2, color: '#4A4A4A', fontSize: 12, fontWeight: '600', lineHeight: 20
+    marginTop: 2, color: '#4A4A4A', fontWeight: '600', lineHeight: 20
   },
   subLabel: {
     color: '#9B9B9B', fontSize: 12, textAlign: 'center', marginTop: 5
@@ -609,9 +637,9 @@ const styles = StyleSheet.create({
   viewAds: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', },
   txAds: { padding: 12, paddingLeft: 20, paddingBottom: 5, color: '#000', fontWeight: 'bold', flex: 1 },
   imgMore: { marginTop: 10, marginRight: 20 },
-  listAds: { paddingHorizontal: 20 },
+  listAds: { paddingHorizontal: 20, flex: 1 },
   viewFooter: { width: 35 },
-  cardView: { width: DEVICE_WIDTH - 140, borderRadius: 6, marginRight: 10, borderColor: '#9B9B9B', borderWidth: 0.5, backgroundColor: '#fff', height: 140, },
+  cardView: { width: DEVICE_WIDTH - 140, borderRadius: 6, marginRight: 10, borderColor: '#9B9B9B', borderWidth: 0.5, backgroundColor: '#fff', height: 140, flex: 1 },
   cardViewNone: { width: DEVICE_WIDTH - 140, borderRadius: 6, marginRight: 10, backgroundColor: '#fff' },
   imgNone: { width: DEVICE_WIDTH - 140, borderRadius: 6, height: 140, borderColor: '#9B9B9B', borderWidth: 0.5 },
   cardViewDoctor: { width: DEVICE_WIDTH / 3, borderRadius: 6, marginRight: 10 },
