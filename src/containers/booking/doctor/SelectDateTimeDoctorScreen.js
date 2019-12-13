@@ -686,7 +686,7 @@ class SelectDateTimeDoctorScreen extends Component {
                                     </View>
                                     : !this.state.isLoading ? <Text style={[styles.errorStyle]}>{"Ngày bạn chọn không có lịch khám nào"}</Text> : null
                                 :
-                                <Text style={styles.txtHelp}>Vui lòng chọn khung giờ khám</Text>
+                                <Text style={styles.txtHelp}>{profileDoctor.academicDegree} {profileDoctor.name} Không có lịch khám trong thời gian này</Text>
                         }
                         {/* <View style={{ padding: 10 }}>
                             <Text style={styles.address}>Địa điểm khám</Text>
@@ -738,7 +738,8 @@ const styles = StyleSheet.create({
     txtHelp: {
         fontStyle: 'italic',
         marginVertical: 20,
-        textAlign: 'center'
+        textAlign: 'center',
+        color:'red'
     },
     txtSchedule: {
         color: '#000',
