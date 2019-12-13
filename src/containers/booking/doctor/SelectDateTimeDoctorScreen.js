@@ -86,7 +86,7 @@ class SelectDateTimeDoctorScreen extends Component {
                     for (let i = 0; i <= listSchedules.length; i++) {
                         if (listSchedules[i] && listSchedules[i].workTime.dayOfTheWeek == dateOfWeek) {
                             let index = listSchedules[i].timeSlots.findIndex(e => e.date == day && e.time == date.format("HH:mm"))
-                            let indexParent = listSchedules.findIndex(e => e.parent == listSchedules[i].id && e.workTime.day == day && !e.workTime.repeat)
+                            let indexParent = listSchedules.findIndex(e => e.parent == listSchedules[i].id && e.workTime.day == day)
                             let indexChilOfParent = listSchedules.findIndex(e => e.parent && e.parent == listSchedules[i].parent && !e.workTime.repeat && e.workTime.day == day)
                             if (index != -1) {
                                 if (listSchedules[i].timeSlots[index].lock) {
@@ -739,7 +739,7 @@ const styles = StyleSheet.create({
         fontStyle: 'italic',
         marginVertical: 20,
         textAlign: 'center',
-        color:'red'
+        color: 'red'
     },
     txtSchedule: {
         color: '#000',
