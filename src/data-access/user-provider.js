@@ -70,14 +70,12 @@ module.exports = {
       );
     });
   },
-  resetPassword(id, passwordNew, ) {
+  resetPassword( passwordNew,phoneOrMail,otp ) {
     return new Promise((resolve, reject) => {
-      var body = {
-        passwordNew: passwordNew.toMd5()
-      };
+      var body = {passwordNew:passwordNew.toMd5(), phoneOrMail : phoneOrMail,code : otp};
       client.requestApi(
         "put",
-        constants.api.user.resetPw + "/" + id,
+        constants.api.user.resetPw,
         body,
         (s, e) => {
           if (s) resolve(s);
