@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     headerAbsolute: {
-        backgroundColor: '#02C39A',
+        backgroundColor: '#27c8ad',
         height: 130,
         width: '100%',
         position: 'absolute',

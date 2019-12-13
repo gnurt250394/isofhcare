@@ -172,7 +172,8 @@ class SelectLocationScreen extends Component {
     }
     renderFooter = () => {
         return (
-            <TouchableOpacity onPress={this.onAddLocation} style={styles.newLocation}><Text style={styles.newAddress}>Thêm địa chỉ mới</Text><TouchableOpacity style={styles.btnDot}><ScaledImage source={require('@images/new/drug/ic_input.png')} height={12}></ScaledImage></TouchableOpacity></TouchableOpacity>
+            <View style={{ height: 50 }}></View>
+            // <TouchableOpacity onPress={this.onAddLocation} style={styles.newLocation}><Text style={styles.newAddress}>Thêm địa chỉ mới</Text><TouchableOpacity style={styles.btnDot}><ScaledImage source={require('@images/new/drug/ic_input.png')} height={12}></ScaledImage></TouchableOpacity></TouchableOpacity>
         )
 
     }
@@ -180,18 +181,20 @@ class SelectLocationScreen extends Component {
         console.log('render')
         return (
             <ActivityPanel style={styles.container} title={"Chọn địa chỉ đã lưu"} showFullScreen={true}>
-                <ScaledImage width={devices_width} source={require('@images/new/drug/ic_bg_find_drug.png')}></ScaledImage>
+                {/* <ScaledImage width={devices_width} source={require('@images/new/drug/ic_bg_find_drug.png')}></ScaledImage> */}
+                {!this.state.isLoading && <TouchableOpacity onPress={this.onAddLocation} style={styles.newLocation}><Text style={styles.newAddress}>Thêm địa chỉ mới</Text><TouchableOpacity style={styles.btnDot}><ScaledImage source={require('@images/new/drug/ic_input.png')} height={12}></ScaledImage></TouchableOpacity></TouchableOpacity>}
                 <FlatList
                     data={this.state.dataLocation}
                     extraData={this.state}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={this.renderItem}
-                    ListFooterComponent={this.renderFooter}
+                    // ListHeaderComponent={this.renderFooter}
                     onRefresh={this.onGetLocation}
                     refreshing={this.state.isLoading}
                 // ListEmptyComponent={this.renderEmpty}
                 ></FlatList>
-                <View style = {{height:50}}></View>
+                {/* <View style = {{height:50}}></View> */}
+                {/* <TouchableOpacity onPress={this.onAddLocation} style={styles.newLocation}><Text style={styles.newAddress}>Thêm địa chỉ mới</Text><TouchableOpacity style={styles.btnDot}><ScaledImage source={require('@images/new/drug/ic_input.png')} height={12}></ScaledImage></TouchableOpacity></TouchableOpacity> */}
                 <ActionSheet
                     ref={o => this.actionSheetOption = o}
                     options={['Đặt làm mặc định', 'Chỉnh sửa', 'Xóa', 'Hủy']}
@@ -251,7 +254,6 @@ const styles = StyleSheet.create({
     newLocation: {
         backgroundColor: '#fff',
         flexDirection: 'row',
-        flex: 1,
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: 10,

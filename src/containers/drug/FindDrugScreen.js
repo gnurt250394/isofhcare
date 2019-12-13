@@ -29,8 +29,8 @@ export default class FindDrugScreen extends Component {
         return (
             <ActivityPanel style={styles.container} title={'Tìm nhà thuốc'} showFullScreen={true}>
 
-                <ScrollView keyboardShouldPersistTaps={'always'} style={styles.container}>
-                    <ScaledImage height={100} source={require('@images/new/drug/ic_bg_find_drug.png')}></ScaledImage>
+                <ScrollView  style={styles.container}>
+                    {/* <ScaledImage height={100} source={require('@images/new/drug/ic_bg_find_drug.png')}></ScaledImage> */}
                     {
                         this.state.isScan ? (
                             <View><View style={styles.viewTab}>
@@ -57,12 +57,13 @@ export default class FindDrugScreen extends Component {
 }
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
     },
     viewTab: {
         flexDirection: 'row',
         borderRadius: 50,
-        margin: 10
+        margin: 10,
+        marginTop:30
     },
     btnSelected: {
         backgroundColor: '#3161AD',
