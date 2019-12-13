@@ -269,6 +269,7 @@ class RegisterScreen extends Component {
                 <TextField
                   getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
                     keyboardType='numeric'
+                    maxLength={10}
                     placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={this.state.phone}
                     placeholderTextColor='#808080'
                     inputStyle={styles.textInputStyle}

@@ -109,6 +109,7 @@ class ResetPasswordScreen extends Component {
                                 <TextField
                                     getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
                                         keyboardType='numeric'
+                                        maxLength={10}
                                         placeholderStyle={{ fontSize: 16, }} value={value} underlineColor={'#CCCCCC'}
                                         placeholderTextColor='#808080'
                                         inputStyle={styles.textInputStyle}

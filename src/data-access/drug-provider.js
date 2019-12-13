@@ -16,7 +16,7 @@ module.exports = {
     },
     getLocation(id, page, size) {
         return new Promise((resolve, reject) => {
-            client.requestApi('get', `${drugService}/${constants.api.drug.get_location}/${id}?page=${page}&size=${size}&sort=desc&properties=created`, {}, (s, e) => {
+            client.requestApi('get', `${drugService}/${constants.api.drug.get_location}/${id}?page=${page}&size=${size}&sort=desc&properties=isDefault,created`, {}, (s, e) => {
                 if (s)
                     resolve(s)
                 else

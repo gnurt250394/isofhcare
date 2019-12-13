@@ -7,6 +7,7 @@ import constants from "@resources/strings";
 import snackbar from "@utils/snackbar-utils";
 import ActivityPanel from "@components/ActivityPanel";
 import { connect } from "react-redux";
+import RNGooglePlaces from 'react-native-google-places';
 
 const devices_width = Dimensions.get('window').width
 class InputLocationScreen extends Component {
@@ -130,7 +131,7 @@ class InputLocationScreen extends Component {
                 }
             }
         }).catch(e => {
-                snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại','danger')
+            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
         })
     }
     selectDistrict = (districts) => {
@@ -194,6 +195,15 @@ class InputLocationScreen extends Component {
         }
 
     }
+    // openSearchModal() {
+    //     RNGooglePlaces.openAutocompleteModal()
+    //         .then((place) => {
+    //             console.log(place);
+    //             // place represents user's selection from the
+    //             // suggestions and it is a simplified Google Place object.
+    //         })
+    //         .catch(error => console.log(error.message));  // error is a Javascript Error object
+    // }
     render() {
         return (
             <ActivityPanel
@@ -239,6 +249,7 @@ class InputLocationScreen extends Component {
                             <ScaledImage height={10} source={require('@images/new/drug/ic_btn_location.png')}></ScaledImage>
                         </View>
                     </TouchableOpacity>
+
                     <View style={styles.viewName}>
                         <Text style={styles.txName}>Địa chỉ</Text>
                         <TextInput value={this.state.textAddition}
