@@ -525,7 +525,7 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     fontWeight: 'bold',
     fontSize: 15,
-    color: '#008D6F',
+    color: '#000000',
     marginLeft: 20
   },
   viewCurrentUser: { flexDirection: "row", alignItems: "center", marginTop: 30, borderTopColor: "#00000011", borderTopWidth: 1, borderBottomWidth: 1, borderBottomColor: '#00000011', paddingVertical: 20, paddingLeft: 25, paddingRight: 15, backgroundColor: '#fff' },
