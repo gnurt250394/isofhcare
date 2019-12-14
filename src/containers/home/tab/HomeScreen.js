@@ -60,7 +60,7 @@ class HomeScreen extends Component {
         },
         {
           icon: require("@images/new/homev2/ic_hospital.png"),
-          text: "CSYT",
+          text: "Cơ sở Y tế",
           onPress: () => {
             if (this.props.userApp.isLogin)
               this.props.navigation.navigate("addBooking1");
@@ -70,7 +70,7 @@ class HomeScreen extends Component {
               });
           }
         },
-       
+
         {
           icon: require("@images/new/homev2/ic_symptom.png"),
           text: "Triệu chứng",
@@ -371,7 +371,7 @@ class HomeScreen extends Component {
   renderButtonBooking() {
     return (this.state.featuresBooking || []).map((item, position) => {
       return (
-        <Animatable.View key={position} delay={100} animation={"zoomInUp"} direction="alternate">
+        <Animatable.View key={position} delay={100} animation={"zoomInUp"} style={{width:'25%',alignItems:'center'}} direction="alternate">
           {
             item.empty ? <View style={[styles.viewEmpty,]}
             ></View> :
@@ -391,7 +391,7 @@ class HomeScreen extends Component {
   }
   getMargin() {
     const pixel = PixelRatio.get()
-    
+
     if (pixel >= 2 && DEVICE_WIDTH > 325) {
       return 75
     }
@@ -449,11 +449,11 @@ class HomeScreen extends Component {
         listDataHospital: res.slice(0, 10)
       })
     }).catch(err => {
-      
+
     })
   }
   getAdjustedFontSize(size) {
-    return Platform.OS == 'ios' ?  parseInt(size-2) * DEVICE_WIDTH * (1.8 - 0.002 * DEVICE_WIDTH) / 400: parseInt(size) * DEVICE_WIDTH * (1.8 - 0.002 * DEVICE_WIDTH) / 400;
+    return Platform.OS == 'ios' ? parseInt(size - 2) * DEVICE_WIDTH * (1.8 - 0.002 * DEVICE_WIDTH) / 400 : parseInt(size) * DEVICE_WIDTH * (1.8 - 0.002 * DEVICE_WIDTH) / 400;
   }
   refreshControl = () => {
     return (
@@ -504,7 +504,7 @@ class HomeScreen extends Component {
                 </View>}
               <Card style={styles.card}>
                 <Text style={styles.txBooking}>ĐẶT KHÁM ONLINE</Text>
-                <View style = {{justifyContent:'center'}}>
+                <View style={{ justifyContent: 'center' }}>
                   <View style={styles.containerButtonBooking}>
                     {this.renderButtonBooking()}
                   </View>
@@ -594,7 +594,7 @@ const styles = StyleSheet.create({
   txBooking: {
     marginVertical: 10,
     color: '#000',
-    marginLeft:16,
+    marginLeft: 16,
     fontWeight: 'bold'
   },
   padding21: { padding: 21, paddingBottom: 0 },

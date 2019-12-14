@@ -22,6 +22,7 @@ import Button from "@components/booking/doctor/Button";
 import constants from '@resources/strings'
 import bookingDoctorProvider from '@data-access/booking-doctor-provider'
 import Modal from "@components/modal";
+import snackbar from '@utils/snackbar-utils';
 
 const dataRate = [
   { id: 1, name: 'Lê Hùng', rate: 4, message: 'Bác sĩ rất ...' },
@@ -132,6 +133,8 @@ class DetailsDoctorScreen extends Component {
     }
   }
   ratingDoctor = () => {
+    snackbar.show('Chức năng đang phát triển')
+    return
     this.props.navigation.navigate('listRatingDoctor')
   }
   _keyExtractor = (item, index) => `${item.id || index}`
@@ -208,7 +211,7 @@ class DetailsDoctorScreen extends Component {
                 </View>
                 <TouchableOpacity onPress={this.ratingDoctor} style={styles.groupRating}>
                   <Text>{constants.booking.rating}</Text>
-                  <Text style={[styles.rating, { color: '#00CBA7' }]}>{profileDoctor.average}</Text>
+                  <Text style={[styles.rating, { color: '#00CBA7' }]}>{profileDoctor.average ? profileDoctor.average : 0}</Text>
                 </TouchableOpacity>
               </View>
             </Card>
