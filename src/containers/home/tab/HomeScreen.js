@@ -351,22 +351,22 @@ class HomeScreen extends Component {
       return 14
     }
   }
-  getItemBookingWidth() {
-    const width = DEVICE_WIDTH - 40;
-    console.log('width: ', width);
-    if (width >= 320) {
-      return Platform.OS == 'ios' ? 75 : 75;
-    }
+  // getItemBookingWidth() {
+  //   const width = DEVICE_WIDTH - 40;
+  //   console.log('width: ', width);
+  //   if (width >= 320) {
+  //     return Platform.OS == 'ios' ? '30%' : '30%';
+  //   }
 
-    if (width > 300) {
-      return Platform.OS == 'ios' ? 100 : 110;
-    }
+  //   if (width > 300) {
+  //     return Platform.OS == 'ios' ? 100 : 110;
+  //   }
 
-    if (width > 250)
-      return 65;
+  //   if (width > 250)
+  //     return 65;
 
-    return width - 50;
-  }
+  //   return width - 50;
+  // }
   renderButtonBooking() {
     return (this.state.featuresBooking || []).map((item, position) => {
       return (
@@ -375,7 +375,7 @@ class HomeScreen extends Component {
             item.empty ? <View style={[styles.viewEmpty,]}
             ></View> :
               <TouchableOpacity
-                style={[styles.buttonBooking, { width: this.getItemBookingWidth(), },]}
+                style={[styles.buttonBooking, {},]}
                 onPress={item.onPress}
               >
                 <View style={{ alignItems: 'center' }}><View style={styles.groupImageButton}>
@@ -504,7 +504,7 @@ class HomeScreen extends Component {
                 </View>}
               <Card style={styles.card}>
                 <Text style={styles.txBooking}>ĐẶT KHÁM ONLINE</Text>
-                <View style = {{justifyContent:'center',paddingHorizontal:10}}>
+                <View style = {{justifyContent:'center'}}>
                   <View style={styles.containerButtonBooking}>
                     {this.renderButtonBooking()}
                   </View>
@@ -542,7 +542,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonBooking: {
-    flex: 1,
+    // flex: 1,
     alignItems: 'flex-start',
   },
   viewEmpty: {
@@ -594,7 +594,7 @@ const styles = StyleSheet.create({
   txBooking: {
     marginVertical: 10,
     color: '#000',
-    marginLeft:10,
+    marginLeft:16,
     fontWeight: 'bold'
   },
   padding21: { padding: 21, paddingBottom: 0 },
