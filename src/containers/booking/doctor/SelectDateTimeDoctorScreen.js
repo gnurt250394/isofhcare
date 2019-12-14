@@ -686,7 +686,7 @@ class SelectDateTimeDoctorScreen extends Component {
                                     </View>
                                     : !this.state.isLoading ? <Text style={[styles.errorStyle]}>{"Ngày bạn chọn không có lịch khám nào"}</Text> : null
                                 :
-                                <Text style={styles.txtHelp}>{profileDoctor.academicDegree} {profileDoctor.name} Không có lịch khám trong thời gian này</Text>
+                                <Text style={styles.txtHelp}>{profileDoctor.academicDegree} {profileDoctor.name} không có lịch làm việc trong thời gian này</Text>
                         }
                         {/* <View style={{ padding: 10 }}>
                             <Text style={styles.address}>Địa điểm khám</Text>
