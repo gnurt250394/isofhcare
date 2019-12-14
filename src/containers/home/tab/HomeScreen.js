@@ -40,15 +40,10 @@ class HomeScreen extends Component {
       listDataHospital: [],
       featuresBooking: [
         {
-          icon: require("@images/new/homev2/ic_hospital.png"),
-          text: "CSYT",
+          icon: require("@images/new/homev2/ic_specialist.png"),
+          text: "Chuyên khoa",
           onPress: () => {
-            if (this.props.userApp.isLogin)
-              this.props.navigation.navigate("addBooking1");
-            else
-              this.props.navigation.navigate("login", {
-                nextScreen: { screen: "addBooking1", param: {} }
-              });
+            snackbar.show('Tính năng đang phát triển')
           }
         },
         {
@@ -64,12 +59,18 @@ class HomeScreen extends Component {
           }
         },
         {
-          icon: require("@images/new/homev2/ic_specialist.png"),
-          text: "Chuyên khoa",
+          icon: require("@images/new/homev2/ic_hospital.png"),
+          text: "CSYT",
           onPress: () => {
-            snackbar.show('Tính năng đang phát triển')
+            if (this.props.userApp.isLogin)
+              this.props.navigation.navigate("addBooking1");
+            else
+              this.props.navigation.navigate("login", {
+                nextScreen: { screen: "addBooking1", param: {} }
+              });
           }
         },
+       
         {
           icon: require("@images/new/homev2/ic_symptom.png"),
           text: "Triệu chứng",
@@ -353,7 +354,7 @@ class HomeScreen extends Component {
   }
   // getItemBookingWidth() {
   //   const width = DEVICE_WIDTH - 40;
-  //   console.log('width: ', width);
+  //   
   //   if (width >= 320) {
   //     return Platform.OS == 'ios' ? '30%' : '30%';
   //   }
@@ -370,7 +371,7 @@ class HomeScreen extends Component {
   renderButtonBooking() {
     return (this.state.featuresBooking || []).map((item, position) => {
       return (
-        <Animatable.View key={position} delay={100} animation={"swing"} direction="alternate">
+        <Animatable.View key={position} delay={100} animation={"zoomInUp"} direction="alternate">
           {
             item.empty ? <View style={[styles.viewEmpty,]}
             ></View> :
@@ -390,7 +391,7 @@ class HomeScreen extends Component {
   }
   getMargin() {
     const pixel = PixelRatio.get()
-    console.log(pixel, 'widthwidthwidth', DEVICE_WIDTH)
+    
     if (pixel >= 2 && DEVICE_WIDTH > 325) {
       return 75
     }
@@ -400,7 +401,6 @@ class HomeScreen extends Component {
   }
   getItemWidth() {
     const width = DEVICE_WIDTH - 40;
-    console.log('width: ', width);
     if (width >= 320) {
       return Platform.OS == 'ios' ? 95 : 95;
     }
@@ -442,14 +442,14 @@ class HomeScreen extends Component {
     //       hospital: res.data.data
     //     })
     //   }
-    //   console.log(res, 'hospital')
+    //   
     // })
     hospitalProvider.getListTopRateHospital().then(res => {
       this.setState({
         listDataHospital: res.slice(0, 10)
       })
     }).catch(err => {
-      console.log(err)
+      
     })
   }
   getAdjustedFontSize(size) {
