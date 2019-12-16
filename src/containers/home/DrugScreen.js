@@ -42,6 +42,16 @@ class drugScreen extends Component {
     componentWillMount() {
         this.getListDrug()
     }
+    componentWillReceiveProps(nextProps) {
+        console.log('nextProps: ', nextProps);
+        if (nextProps.dataDrug) {
+            // this.setState(prev => ({
+            this.getListDrug()
+            // chưa dùng concat vì confilic với phần edit, tự add item mới
+            //     dataDrug: prev.dataDrug.concat(nextProps.dataDrug.data)
+            // }))
+        }
+    }
     getListDrug = () => {
         this.setState({
             isLoading: true
@@ -132,11 +142,13 @@ class drugScreen extends Component {
         )
     }
     onFindDrug = () => {
-        this.props.navigation.navigate('findDrug')
+        this.props.navigation.navigate('findDrug', {
+            onSelected: this.addDrug.bind(this)
+        })
     }
     onSetOption = index => {
         const dataSelect = this.state.dataSelect
-
+        console.log(dataSelect, 'dataSelectdataSelect')
         try {
             switch (index) {
                 case 0:
@@ -197,7 +209,7 @@ class drugScreen extends Component {
                     </TouchableOpacity>
                     <View style={styles.viewFlatlish}></View>
                     <View style={styles.viewHeadFlat}>
-                       {this.state.dataDrug && this.state.dataDrug.length ? <Text>Đơn thuốc của tôi {`(${this.state.dataDrug.length})`}</Text>:null}
+                        {this.state.dataDrug && this.state.dataDrug.length ? <Text>Đơn thuốc của tôi {`(${this.state.dataDrug.length})`}</Text> : null}
                         {/* <TouchableOpacity><Text>Xem tất cả</Text></TouchableOpacity> */}
                     </View>
                     <FlatList
@@ -206,7 +218,7 @@ class drugScreen extends Component {
                         extraData={this.state}
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={this.renderItem}
-                        ListEmptyComponent = {this.listEmpty}
+                        ListEmptyComponent={this.listEmpty}
                     />
 
                 </View>
@@ -382,7 +394,8 @@ const styles = StyleSheet.create({
 });
 function mapStateToProps(state) {
     return {
-        userApp: state.userApp
+        userApp: state.userApp,
+        dataDrug: state.dataDrug
     };
 }
 export default connect(mapStateToProps)(drugScreen);

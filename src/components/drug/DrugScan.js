@@ -9,8 +9,10 @@ import imageProvider from '@data-access/image-provider';
 import connectionUtils from '@utils/connection-utils';
 import snackbar from '@utils/snackbar-utils';
 import constants from '@resources/strings';
+import redux from "@redux-store";
+import { connect } from "react-redux";
 
-export default class DrugScan extends Component {
+class DrugScan extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -95,7 +97,6 @@ export default class DrugScan extends Component {
     }
 
     render() {
-        console.log(this.state.imageUris,'this.state.imageUristhis.state.imageUris')
         return (
             <View style={styles.container}>
                 <TouchableOpacity onPress={this.selectImage} style={styles.btnCamera}>
@@ -145,9 +146,9 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         flexDirection: 'row',
         alignItems: 'center',
-        height:48,
-        width:194,
-        justifyContent:'center'
+        height: 48,
+        width: 194,
+        justifyContent: 'center'
     },
     list_image: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 10, marginHorizontal: 20 },
     txCamera: {
@@ -185,3 +186,11 @@ const styles = StyleSheet.create({
     },
 
 })
+function mapStateToProps(state) {
+    return {
+        userApp: state.userApp,
+        navigation: state.navigation,
+        dataDrug: state.dataDrug
+    };
+}
+export default connect(mapStateToProps)(DrugScan);

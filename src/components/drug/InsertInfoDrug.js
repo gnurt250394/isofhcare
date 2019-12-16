@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 import constants from '@resources/strings';
 import drugProvider from '@data-access/drug-provider'
 import dataCacheProvider from '@data-access/datacache-provider';
-
+import redux from "@redux-store";
 class InsertInfoDrug extends Component {
     constructor(props) {
         super(props);
@@ -83,12 +83,9 @@ class InsertInfoDrug extends Component {
             return ('')
         }
     }
-    onCreateSuccess(data) {
-        let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
-        if (callback) {
-            callback(data);
-            this.props.navigation.pop();
-        }
+    onCreateSuccess = (data) => {
+        this.props.dispatch(redux.addDrug(data));
+        NavigationService.pop();
     }
     addMenuDrug = (isFinding) => {
         let imageUris = this.props.imageUris
@@ -101,9 +98,10 @@ class InsertInfoDrug extends Component {
             snackbar.show('Bạn chưa nhập địa chỉ', 'danger')
             return
         }
-        let idDrug = this.props.dataEdit && this.props.dataEdit.id
+        let idDrug = this.props.dataEdit && this.props.dataEdit.id ? this.props.dataEdit.id : null
+        debugger
+        if (imageUris) {
 
-        if (imageUris && !dataDrug) {
             for (var i = 0; i < imageUris.length; i++) {
                 if (imageUris[i].loading) {
                     snackbar.show(constants.msg.booking.image_loading, 'danger');
@@ -124,6 +122,7 @@ class InsertInfoDrug extends Component {
                         "pathThumbnail": item.thumbnail
                     })
             });
+
             let data = {
                 addressId: addressId,
                 images: images,
@@ -134,13 +133,19 @@ class InsertInfoDrug extends Component {
                 isFinding: isFinding,
             }
             drugProvider.createDrug(data, idDrug).then(res => {
+                console.log('ressx', res)
                 if (res) {
+                    console.log('ressx')
                     snackbar.show('Tạo đơn thuốc thành công!', 'success')
                     this.onCreateSuccess(res)
+                } else {
                 }
+            }).catch(err => {
+                console.log(err, 'đâsd')
             })
             return
         } if (dataDrug && !imageUris) {
+            console.log('else')
             let data2 = {
                 addressId: addressId,
                 "medicines": [
@@ -173,11 +178,11 @@ class InsertInfoDrug extends Component {
             <View style={styles.container}>
                 <View style={styles.viewInput}>
                     <Text style={styles.txNameDrug}>Tên đơn thuốc</Text>
-                    <TextInput value={this.state.name} placeholderTextColor = "#808080" onChangeText={text => this.setState({ name: text })} underlineColorAndroid={'#fff'} style={styles.inputNameDrug} multiline={true} placeholder={'Nhập tên đơn thuốc'}></TextInput>
+                    <TextInput value={this.state.name} placeholderTextColor="#808080" onChangeText={text => this.setState({ name: text })} underlineColorAndroid={'#fff'} style={styles.inputNameDrug} multiline={true} placeholder={'Nhập tên đơn thuốc'}></TextInput>
                 </View>
                 <View style={styles.viewInput}>
                     <Text style={styles.txNameDrug}>Ghi chú</Text>
-                    <TextInput value={this.state.note} placeholderTextColor = "#808080" onChangeText={text => this.setState({ note: text })} placeholder={'Viết ghi chú cho đơn thuốc'} multiline={true} style={styles.inputNote}></TextInput>
+                    <TextInput value={this.state.note} placeholderTextColor="#808080" onChangeText={text => this.setState({ note: text })} placeholder={'Viết ghi chú cho đơn thuốc'} multiline={true} style={styles.inputNote}></TextInput>
                 </View>
                 <View style={styles.viewInput}>
                     <Text style={styles.txNameDrug}>Vị trí của bạn</Text>
@@ -304,8 +309,8 @@ const styles = StyleSheet.create({
 function mapStateToProps(state) {
     return {
         userApp: state.userApp,
-        navigation: state.navigation
-
+        navigation: state.navigation,
+        dataDrug: state.dataDrug
     };
 }
 export default connect(mapStateToProps)(InsertInfoDrug);
