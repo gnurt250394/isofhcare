@@ -61,7 +61,7 @@ class ActivityPanel extends Component {
     render() {
         return (
             <Activity
-                statusbarBackgroundColor="#02C39A"
+                statusbarBackgroundColor="#27c8ad"
                 icBack={require('@images/new/left_arrow_white.png')}
                 iosBarStyle={'light-content'}
                 {...this.props}
@@ -71,14 +71,14 @@ class ActivityPanel extends Component {
                 paddingTop={this.state.paddingTop}
             // translucent={true}
             >
-                {this.showBackground === false ?
+                {/* {this.showBackground === false ?
                     null :
                     <ScaledImage
                         source={require("@images/new/background.png")}
                         height={200}
                         width={DEVICE_WIDTH}
                         style={styles.imageBackground} />
-                }
+                } */}
                 {this.props.children}
             </Activity>
         );
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
         justifyContent: "center"
     },
     actionbarStyle: {
-        backgroundColor: '#02C39A',
+        backgroundColor: '#27c8ad',
         borderBottomWidth: 0
     },
     titleStyle: {

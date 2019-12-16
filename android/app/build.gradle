@@ -132,8 +132,8 @@ android {
         applicationId "com.isofh.appisofhcarestable"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 78
-        versionName "5.1"
+        versionCode 79
+        versionName "5.2"
         ndk {
             // abiFilters "armeabi-v7a", "x86", "arm64-v8a"
             abiFilters  "armeabi-v7a", "arm64-v8a"
@@ -306,7 +306,7 @@ dependencies {
       implementation jscFlavor
     }
     implementation 'com.facebook.fresco:animated-base-support:1.3.0'
-    implementation 'com.facebook.fresco:animated-gif:1.3.0'
+    implementation 'com.facebook.fresco:animated-gif:2.0.0'
     compile group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib-common', version: '1.3.11'
 }
 

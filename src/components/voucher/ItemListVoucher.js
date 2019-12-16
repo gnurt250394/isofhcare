@@ -28,137 +28,132 @@ class ItemListVoucher extends Component {
 
     }
     defaultImage = () => {
-        const icSupport = require("@images/new/user.png");
+        const icSupport = require("@images/new/booking/ic_checked.png");
         return (
             <ScaleImage source={icSupport} width={100} />
         );
     }
     render() {
-        const icSupport = require("@images/new/user.png");
+        const icSupport = require("@images/new/booking/ic_checked.png");
         const { item, onPress, onPressLater } = this.props
         return (
-            <View style={{ padding: 10 }}>
+            <TouchableOpacity
+                onPress={onPress}
+                style={styles.containerItem}>
+                <View style={[styles.groupItem, { backgroundColor: item.type == 1 ? '#3161AD' : '#F07300', }]}>
+                    <View style={[styles.viewOther, styles.topRight]} />
+                    <View style={[styles.viewOther, styles.topLeft]} />
+                    <View style={[styles.viewOther, styles.bottomRight]} />
+                    <View style={[styles.viewOther, styles.bottomLeft]} />
+                    <View style={[styles.viewOther, styles.bottomScale]} />
+                    <View style={[styles.viewOther, styles.topScale]} />
 
-                <Card style={styles.containerItem} >
-                    {/* <ImageBackground source={require('@images/new/profile/img_cover_profile.png')} style={styles.containerImageBackground}
-                        imageStyle={{ borderRadius: 5 }}
-                    > */}
-                    <ImageLoad
-                        source={icSupport}
-                        imageStyle={styles.imageStyle}
-                        borderRadius={50}
-                        customImagePlaceholderDefaultStyle={styles.customImagePlace}
-                        style={styles.styleImgLoad}
-                        resizeMode="cover"
-                        placeholderSource={icSupport}
-                        loadingStyle={{ size: "small", color: "gray" }}
-                        defaultImage={this.defaultImage}
-                    />
-                    <View style={styles.container}>
+                    {/**line dots left */}
+                    <View style={styles.lineDot} />
+                    <View style={{
+                        paddingLeft: 20,
+                    }}>
                         <Text numberOfLines={2}
                             style={[styles.containerText, styles.txtPriceVoucher]}>GIẢM <Text style={{
                                 fontStyle: 'italic'
-                            }}>{item.price.formatPrice()}đ</Text> KHI ĐẶT KHÁM</Text>
-                        <Text style={styles.containerText}>{`HẠN SỬ DỤNG ĐẾN ${item.endTime.toDateObject('-').format("HH:mm, dd/MM/yyyy")}`}</Text>
-                        <View style={styles.containerRow}>
-                            <Text numberOfLines={1} style={styles.quality}>{`CÒN ${item.type == 0 ? item.quantity - item.counter : item.count} LẦN`}</Text>
-                            <LinearGradient
-                                colors={this.getColor(item)}
-                                locations={[0, 0.7, 1]}
-                                style={styles.btn}>
-                                <TouchableOpacity
-                                    onPress={item.status ? onPressLater : onPress}
-                                    style={[styles.button]}
-                                >
-                                    <Text style={styles.txtButton}>{this.getLabelButton(item)}</Text>
-                                </TouchableOpacity>
-                            </LinearGradient>
-                        </View>
+                            }}>{item.price.formatPrice()}đ </Text> KHI ĐẶT KHÁM</Text>
+                        <Text style={styles.containerText}>{`Hạn sử dụng: ${item.endTime.toDateObject('-').format("HH:mm, dd/MM/yyyy")}`}</Text>
+                        <Text numberOfLines={1} style={styles.quality}>{`CÒN ${item.type == 0 ? item.quantity - item.counter : item.type == 2 ? item.quantity : item.count} LẦN`}</Text>
                     </View>
-                    {/* </ImageBackground> */}
+                </View>
+                {item.status ?
+                    <ScaleImage source={icSupport} style={styles.imgChecked} width={16} />
+                    :
+                    <View style={styles.unChecked} />
+                }
 
-                </Card>
 
-            </View>
+            </TouchableOpacity>
         );
     }
 }
 
 const styles = StyleSheet.create({
+    unChecked: {
+        backgroundColor: '#fff',
+        height: 16,
+        width: 16,
+        borderRadius: 8,
+        borderColor: '#444',
+        borderWidth: 1,
+        marginRight: 5
+    },
+    imgChecked: {
+        resizeMode: "contain",
+        marginRight: 5
+    },
+    lineDot: {
+        borderColor: '#fff',
+        width: 0.5,
+        height: '90%',
+        borderWidth: 1,
+        borderRadius: 1,
+        borderStyle: 'dashed',
+    },
+    topScale: {
+        top: -6,
+        left: '20%',
+        transform: [{ scaleX: 1.3 }]
+    },
+    bottomScale: {
+        bottom: -6,
+        left: '20%',
+        transform: [{ scaleX: 1.3 }]
+    },
+    bottomLeft: {
+        bottom: -5,
+        left: -5,
+    },
+    bottomRight: {
+        bottom: -5,
+        right: -5,
+    },
+    topLeft: {
+        top: -5,
+        left: -5,
+    },
+    topRight: {
+        top: -5,
+        right: -5,
+    },
+    viewOther: {
+        backgroundColor: '#fff',
+        position: 'absolute',
+        height: 10,
+        width: 10,
+        borderRadius: 5
+    },
+    groupItem: {
+        padding: 10,
+        margin: 10,
+        flexDirection: 'row',
+        alignItems: 'center',
+        flex: 1,
+        height: '90%',
+    },
+    containerItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        flex: 1,
+    },
     txtPriceVoucher: { fontWeight: 'bold', fontSize: 16 },
-    containerImageBackground: {
-        width: null,
-        height: null,
-        flex: 1,
-        padding: 15,
-        paddingTop: 20
-    },
-    customImagePlace: {
-        height: 100,
-        width: 100,
-        borderRadius: 50
-    },
-    button: {
-        flex: 1,
-        paddingHorizontal: 12,
-        paddingVertical: 8,
-        paddingTop: 10
-    },
-    styleImgLoad: {
-        width: 100,
-        height: 100,
-        paddingRight: 5
-    },
-    shadow: {
-        elevation: 3,
-        shadowColor: '#111111',
-        shadowOffset: { width: 2, height: 2 },
-        shadowOpacity: 0.6,
-        shadowRadius: 2
-    },
-    txtButton: {
-        color: '#FFFFFF',
-        fontWeight: '700',
-        textAlign: 'center'
-    },
     quality: {
-        color: '#27AE60',
+        color: '#fff',
         fontWeight: '500',
         paddingVertical: 3,
         paddingTop: 7,
         // transform: [{ rotate: '-15deg' }]
     },
-    btn: {
-        backgroundColor: '#27AE60',
-        height: 38,
-        borderRadius: 7,
-    },
-    containerRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        flexWrap: 'wrap',
-        paddingLeft: 4
-    },
-    container: {
-        flex: 1
-    },
-    containerItem: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 10,
-        borderRadius: 5,
-        backgroundColor: '#FFFFFF'
-    },
+
     containerText: {
-        padding: 4,
-        // backgroundColor: '#FFFFFF',
-        // width: '100%',
+        paddingVertical: 4,
         marginBottom: 7,
-        color: '#27AE60'
-        // color: '#FF0000',
-        // transform: [{ rotate: '-10deg' }]
+        color: '#fff'
     },
 })
 

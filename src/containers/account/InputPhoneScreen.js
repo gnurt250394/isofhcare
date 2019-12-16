@@ -1,0 +1,212 @@
+import React, { Component, PropTypes } from 'react';
+import ActivityPanel from '@components/ActivityPanel';
+import Dimensions from 'Dimensions';
+import { View, Text, KeyboardAvoidingView, ScrollView, TouchableOpacity, StyleSheet, ImageBackground, Animated, Easing, Platform, Image, Keyboard } from 'react-native';
+import { connect } from 'react-redux';
+import snackbar from '@utils/snackbar-utils';
+import Form from 'mainam-react-native-form-validate/Form';
+import TextField from 'mainam-react-native-form-validate/TextField';
+import eyeImg from '@images/eye_black.png';
+import userProvider from '@data-access/user-provider';
+import constants from '@resources/strings';
+import FloatingLabel from 'mainam-react-native-floating-label';
+import connectionUtils from '@utils/connection-utils';
+import ScaleImage from 'mainam-react-native-scaleimage';
+import Field from "mainam-react-native-form-validate/Field";
+import HeaderBar from '@components/account/HeaderBar'
+const DEVICE_HEIGHT = Dimensions.get("window").height;
+
+class ResetPasswordScreen extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            isLoading: false,
+            secureTextEntry: true,
+            secureTextEntry2: true
+        }
+    }
+    componentDidMount() {
+
+    }
+    onShowPass = () => {
+        this.setState({
+            secureTextEntry: !this.state.secureTextEntry
+        })
+    }
+    changePassword() {
+        Keyboard.dismiss();
+        if (!this.form.isValid()) {
+            return;
+        }
+        connectionUtils.isConnected().then(s => {
+            this.setState({
+                isLoading: true
+            }, () => {
+                userProvider.forgotPassword(this.state.phone.trim(), 2, (s, e) => {
+                    switch (s.code) {
+                        case 0:
+                            this.props.navigation.navigate('verifyPhone', {
+                                phone: this.state.phone,
+                                verify: 2
+                            })
+                            break
+                        case 2:
+                            snackbar.show('Số điện thoại chưa được đăng ký', "danger");
+                            break
+                        case 6:
+                            this.props.navigation.navigate('verifyPhone', {
+                                phone: this.state.phone,
+                                verify: 2
+                            })
+                            break
+                    }
+
+
+                })
+                this.setState({
+                    isLoading: false,
+                })
+            })
+        }).catch(e => {
+            this.setState({
+                isLoading: false,
+            })
+            snackbar.show(constants.msg.app.not_internet, "danger");
+        })
+
+    }
+    onShowPass2 = () => {
+        this.setState({
+            secureTextEntry2: !this.state.secureTextEntry2
+        })
+    }
+    render() {
+        return (
+            <ImageBackground
+                style={styles.container}
+                source={require('@images/new/account/img_bg_login.png')}
+                resizeMode={'cover'}
+                resizeMethod="resize">
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    style={styles.scroll}
+                    keyboardShouldPersistTaps="handled"
+                >
+                    <HeaderBar style={styles.header}></HeaderBar>
+                    <View
+                        style={{
+                            marginTop: 60,
+                            justifyContent: "center",
+                            alignItems: "center"
+                        }}
+                    >
+                        <Text style={{ fontSize: 24, fontWeight: '800', color: '#00BA99', alignSelf: 'center' }}>NHẬP SỐ ĐIỆN THOẠI</Text>
+                        {/* <ScaleImage source={require("@images/logo.png")} width={120} /> */}
+                    </View>
+                    <KeyboardAvoidingView behavior="padding" >
+                        <View>
+                            <Form ref={ref => (this.form = ref)} style={styles.form}>
+                                <TextField
+                                    getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
+                                        keyboardType='numeric'
+                                        maxLength={10}
+                                        placeholderStyle={{ fontSize: 16, }} value={value} underlineColor={'#CCCCCC'}
+                                        placeholderTextColor='#808080'
+                                        inputStyle={styles.textInputStyle}
+                                        labelStyle={styles.labelStyle} placeholder={constants.phone} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
+                                    onChangeText={s => this.setState({ phone: s })}
+                                    errorStyle={styles.errorStyle}
+                                    validate={{
+                                        rules: {
+                                            required: true,
+                                            phone: true
+                                        },
+                                        messages: {
+                                            required: "Số điện thoại không được bỏ trống",
+                                            phone: "SĐT không hợp lệ"
+                                        }
+                                    }}
+
+                                    autoCapitalize={"none"}
+                                />
+                            </Form>
+                        </View>
+                    </KeyboardAvoidingView>
+                </ScrollView>
+                <View style={{ backgroundColor: '#fff' }}>
+                    <TouchableOpacity
+                        onPress={this.changePassword.bind(this)}
+                        style={styles.updatePass}>
+                        <Text style={styles.txbtnUpdate}>{constants.continue}</Text>
+                    </TouchableOpacity>
+                </View>
+            </ImageBackground>
+        )
+    }
+}
+const DEVICE_WIDTH = Dimensions.get('window').width;
+const styles = StyleSheet.create({
+    form:{marginTop:50},
+    header: { paddingHorizontal: 0 },
+    txbtnUpdate: { color: '#FFF', fontSize: 17 },
+    updatePass: { backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center', marginBottom: 20 },
+    container: { flex: 1, backgroundColor: '#000', height: DEVICE_HEIGHT },
+    btnEye: {
+        position: 'absolute',
+        right: 25,
+        top: 18
+    },
+    iconEye: {
+        width: 25,
+        height: 25,
+        tintColor: 'rgba(0,0,0,0.2)',
+    },
+    inputPass: {
+        position: 'relative',
+        alignSelf: 'stretch',
+        justifyContent: 'center'
+    },
+    input: {
+        maxWidth: 300,
+        paddingRight: 30,
+        backgroundColor: '#FFF',
+        width: DEVICE_WIDTH - 40,
+        height: 42,
+        marginHorizontal: 20,
+        paddingLeft: 15,
+        borderRadius: 6,
+        color: '#006ac6',
+        borderWidth: 1,
+        borderColor: 'rgba(155,155,155,0.7)'
+    },
+    errorStyle: {
+        color: "red",
+        marginTop: 10
+    },
+    textInputStyle: {
+        color: "#53657B",
+        fontWeight: "200",
+        height: 51,
+        marginLeft: 0,
+        borderWidth: 1,
+        padding: 10,
+        paddingHorizontal: 20,
+        borderRadius: 6,
+        borderColor: '#CCCCCC',
+        fontSize: 20,
+        paddingLeft: 15,
+        paddingRight: 45,
+
+    },
+    scroll: { flex: 1, borderTopLeftRadius: 20, borderTopRightRadius: 20, marginTop: 20, backgroundColor: '#fff', paddingHorizontal: 20 }
+
+});
+
+function mapStateToProps(state) {
+
+    return {
+        userApp: state.userApp,
+        navigation: state.navigation
+    };
+}
+export default connect(mapStateToProps)(ResetPasswordScreen);

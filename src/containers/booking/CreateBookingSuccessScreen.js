@@ -41,7 +41,7 @@ class CreateBookingSuccessScreen extends Component {
     getPriceSecive = (service, voucher) => {
         let priceVoucher = voucher && voucher.price ? voucher.price : 0
         let priceFinal = service.reduce((start, item) => {
-            return start + parseInt(item.service.price)
+            return start + parseInt(item.price)
         }, 0)
         if (priceVoucher > priceFinal) {
             return 0
@@ -73,11 +73,11 @@ class CreateBookingSuccessScreen extends Component {
         let booking = this.props.navigation.state.params.booking;
         let service = this.props.navigation.state.params.service || [];
         let voucher = this.props.navigation.state.params.voucher || {};
-        if (!booking || !booking.profile || !booking.hospital || !booking.hospital.hospital || !booking.book) {
+        if (!booking || !booking.profile || !booking.hospital || !booking.hospital.hospital ) {
             this.props.navigation.pop();
             return null;
         }
-        let bookingTime = booking.book.bookingTime.toDateObject("-");
+        let bookingTime = new Date(booking.date)
         return (
             <ActivityPanel
                 hideBackButton={true}
@@ -96,14 +96,14 @@ class CreateBookingSuccessScreen extends Component {
                                 <Text style={styles.col1}>{constants.booking.code}</Text>
                                 <TouchableOpacity onPress={this.onQrClick} style={styles.buttonQRCode}>
                                     <QRCode
-                                        value={booking.book.codeBooking || ""}
+                                        value={booking.reference || ""}
                                         logo={require('@images/new/logo.png')}
                                         logoSize={20}
                                         size={100}
                                         logoBackgroundColor='transparent'
                                     />
                                 </TouchableOpacity>
-                                <Text style={styles.txtCodeBooking}>{constants.booking.code_booking} {booking.book.codeBooking}</Text>
+                                <Text style={styles.txtCodeBooking}>{constants.booking.code_booking} {booking.reference}</Text>
                             </View>
                         </View>
                         <View style={styles.containerBody}>
@@ -126,7 +126,7 @@ class CreateBookingSuccessScreen extends Component {
 
                             <View style={styles.row}>
                                 <Text style={styles.label}>{constants.booking.time}</Text>
-                                <Text style={styles.text}>{bookingTime.format("hh:mm") + " " + (bookingTime.format("HH") < 12 ? "AM" : "PM") + " - " + bookingTime.format("thu, dd/MM/yyyy")}</Text>
+                                <Text style={styles.text}>{booking.time + " - " + bookingTime.format("thu, dd/MM/yyyy")}</Text>
                             </View>
                             {service && service.length ?
                                 <View style={styles.row}>
@@ -134,8 +134,8 @@ class CreateBookingSuccessScreen extends Component {
                                     <View style={styles.containerPrice}>
                                         {service.map((item, index) => {
                                             return <View key={index} style={styles.flex}>
-                                                <Text numberOfLines={1} style={[styles.text, styles.flex]}>{item.service.name}</Text>
-                                                <Text style={[styles.text, { marginBottom: 5 }]}>({parseInt(item.service.price).formatPrice()}đ)</Text>
+                                                <Text numberOfLines={1} style={[styles.text, styles.flex]}>{item.name}</Text>
+                                                <Text style={[styles.text, { marginBottom: 5 }]}>({parseInt(item.price).formatPrice()}đ)</Text>
                                             </View>
                                         })}
                                         {voucher && voucher.price ?
@@ -188,6 +188,20 @@ class CreateBookingSuccessScreen extends Component {
                             }
 
                         </View>
+                        {/* <View style={styles.view2}>
+                        <View style={styles.col}>
+                            <Text style={styles.col1}>Mã code:</Text>
+                            <TouchableOpacity onPress={this.onQrClick} style={{ alignItems: 'center', marginTop: 10 }}>
+                                <QRCode
+                                    style={{ alignSelf: 'center', backgroundColor: '#000' }}
+                                    value={booking.book.codeBooking}
+                                    size={100}
+                                    fgColor='white' />
+                            </TouchableOpacity>
+                            <Text style={{textAlign:'center',color:'#4a4a4a',marginVertical:5}}>Mã đặt khám: {booking.book.codeBooking}</Text>
+
+                        </View>
+                    </View> */}
                         <View style={styles.view1}>
                             <Text style={styles.text2}>{constants.booking.booking_send}</Text>
                         </View>
@@ -205,7 +219,7 @@ class CreateBookingSuccessScreen extends Component {
                     backdropTransitionOutTiming={1000}
                 >
                     <QRCode
-                        value={booking.book.codeBooking || ""}
+                        value={booking.reference || ""}
                         logo={require('@images/new/logo.png')}
                         logoSize={40}
                         size={250}

@@ -169,8 +169,9 @@ class CreateProfileScreen extends Component {
                                             snackbar.show(constants.msg.user.add_member_success, 'success')
                                             break
                                         case 'NOT_EXIST_ACCOUNT':
-                                            NavigationService.navigate('checkOtp', {
-                                                id: res.data.medicalRecords.id
+                                            NavigationService.navigate('verifyPhone', {
+                                                id: res.data.medicalRecords.id,
+                                                verify: 3
                                             })
                                             break
                                         case 'EXIST_ACCOUNT':
@@ -306,7 +307,7 @@ class CreateProfileScreen extends Component {
                 isVisible: false
             })
             if (res.code == 0) {
-                NavigationService.navigate('shareDataProfile', { id: res.data.record.id, shareId: res.data.shareRecord.id })
+                NavigationService.navigate('shareDataProfile', { id: res.data.shareRecord.id, shareId: res.data.record.id, })
 
             } else {
                 snackbar.show(constants.msg.notification.error_retry, 'danger')

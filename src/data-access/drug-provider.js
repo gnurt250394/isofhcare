@@ -2,69 +2,99 @@ import client from '@utils/client-utils';
 import string from 'mainam-react-native-string-utils';
 import constants from '@resources/strings';
 import datacacheProvider from '@data-access/datacache-provider';
+const drugService = 'http://10.0.0.98:8095'
 module.exports = {
-    getTop(top, callback, requestApi) {
-        if (!requestApi)
-            datacacheProvider.read("", constants.key.storage.DATA_TOP_DRUG, (s, e) => {
-                if (s) {
-                    if (callback)
-                        callback(s, e);
-                    this.getTop(top, null, true);
-                }
-                else
-                    this.getTop(top, callback, true);
-            });
-        else
-            this.searchTop("", 1, top, (s, e) => {
-                if (s && s.code == 0 && s.data && s.data.data) {
-                    datacacheProvider.save("", constants.key.storage.DATA_TOP_DRUG, s.data.data);
-                    if (callback)
-                        callback(s.data.data, e);
-                }
-            });
-    },
-    searchTop(name, page, size, callback) {
-        client.requestApi("get", constants.api.drug.search + "?name=" + name + "&page=" + page + "&size=" + size + "&sortType=1", {}, (s, e) => {
-            if (callback)
-                callback(s, e);
-        });
-    },
-
-    search(name, page, size, callback) {
-        client.requestApi("get", constants.api.drug.search + "?name=" + name + "&page=" + page + "&size=" + size, {}, (s, e) => {
-            if (callback)
-                callback(s, e);
-        });
-    },
-    updateViewCount(id, callback) {
-        client.requestApi("put", constants.api.drug.update_view_count + "/" + id, {}, (s, e) => {
-            if (callback)
-                callback(s, e);
-        });
-    },
-    getListDrug(requestApi) {
+    createDrug(data, idDrug) {
         return new Promise((resolve, reject) => {
-            if (!requestApi) {
-                datacacheProvider.readPromise("", constants.key.storage.DATA_TOP_DRUG).then(s => {
-                    this.getListDrug(true);
+            client.requestApi(idDrug ? "put" : "post", `${drugService}/${constants.api.drug.create_drug}${idDrug ? `/${idDrug}` : ''}`, data, (s, e) => {
+                if (s) {
                     resolve(s);
-                }).catch(e => {
-                    this.getListDrug(true).then(s => {
-                        resolve(s);
-                    }).catch(e => {
-                        reject([]);
-                    })
-                });
-            }
-            else {
-                client.requestApi("get", constants.api.home.get_list_drug, {}, (s, e) => {
-                    if (s && s.code == 0 && s.data && s.data.medicines ) {
-                        datacacheProvider.save("", constants.key.storage.DATA_TOP_DRUG, s.data.medicines);
-                        resolve(s.data.medicines);
-                    }
-                    reject([]);
-                });
-            }
+                }
+                reject(e);
+            });
         });
+    },
+    getLocation(id, page, size) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('get', `${drugService}/${constants.api.drug.get_location}/${id}?page=${page}&size=${size}&sort=desc&properties=isDefault,created`, {}, (s, e) => {
+                if (s)
+                    resolve(s)
+                else
+                    reject(e)
+            })
+        })
+    },
+    addLocation(data) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('post', `${drugService}/${constants.api.drug.add_location}`, data, (s, e) => {
+                if (s)
+                    resolve(s)
+                else
+                    reject(e)
+            })
+        })
+    },
+    getListMenu(page, size, owner) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('get', `${drugService}/${constants.api.drug.get_list_menu_drug}/${owner}?page=${page}&size=${size}&sort=desc&properties=created`, {}, (s, e) => {
+                if (s) {
+                    resolve(s)
+                }
+                else {
+                    reject(e)
+                }
+            })
+        })
+    },
+    setLocationDefault(id) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('put', `${drugService}/${constants.api.drug.set_adress_default}/${id}/default`, {}, (s, e) => {
+                if (s)
+                    resolve(s)
+                else
+                    reject(e)
+            })
+        })
+    },
+    getDetailsDrug(id) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('get', `${drugService}/${constants.api.drug.get_details_drug}/${id}`, {}, (s, e) => {
+                if (s)
+                    resolve(s)
+                else
+                    reject(e)
+            })
+        })
+    },
+    findDrug(id, addressId) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('put', `${drugService}/${constants.api.drug.find_drug}/${id}/find-pharmacy/${addressId ? `?addressId=${addressId}` : ''}`, {}, (s, e) => {
+                if (s) {
+                    resolve(s)
+                } else {
+                    reject(e)
+                }
+            })
+        })
+    },
+    deleteDrug(id) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('delete', `${drugService}/${constants.api.drug.delete_drug}/${id}`, {}, (s, e) => {
+                if (s)
+                    resolve(s)
+                else
+                    reject(e)
+            })
+        })
+    },
+    searchDrug(text) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('get', `${drugService}/${constants.api.drug.search_drug}?expression=${text}&filters=name&lang=en&page=1&size=10`, {}, (s, e) => {
+                if (s)
+                    resolve(s)
+                else
+                    reject(e)
+            })
+        })
     }
 }

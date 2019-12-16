@@ -24,7 +24,7 @@ module.exports = {
     },
     selectVoucher(idVoucher,idBooking) {
         return new Promise((resolve, reject) => {
-            client.requestApi("post", `${constants.api.voucher.get_voucher}/redeem/${idVoucher}/${idBooking}`,
+            client.requestApi("put", `${constants.api.voucher.get_voucher}/redeem/${idVoucher}/${idBooking}`,
                 {}, (s, e) => {
                     if (s)
                         resolve(s);

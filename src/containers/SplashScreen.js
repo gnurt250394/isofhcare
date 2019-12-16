@@ -42,10 +42,7 @@ class SplashScreen extends Component {
 		userProvider.getAccountStorage((s) => {
 			setTimeout(() => {
 				if (s) {
-					userProvider.detail(s.id).then(res => {
-						this.props.dispatch(redux.userLogin(res.data.user));
-					})
-
+					this.props.dispatch(redux.userLogin(s));
 				}
 				else {
 					this.props.dispatch(redux.userLogout());
