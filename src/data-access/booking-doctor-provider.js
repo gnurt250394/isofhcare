@@ -1,15 +1,13 @@
 import client from "@utils/client-utils";
 import string from "mainam-react-native-string-utils";
 import constants from "../res/strings";
-const URL = 'http://10.0.0.98:8080/'
-const URL2 = 'http://10.0.0.98:8082/'
 module.exports = {
     getListDoctor(page, size) {
         return new Promise((resolve, reject) => {
 
             client.requestApi(
                 "get",
-                URL +
+                client.serviceSchedule +
                 constants.api.booking.doctor.get_list_doctor +
                 '?page=' + Number(page) + '&size=' + Number(size),
                 {},
@@ -24,7 +22,7 @@ module.exports = {
         return new Promise((resolve, reject) => {
             client.requestApi(
                 "get",
-                URL +
+                client.serviceSchedule +
                 constants.api.booking.doctor.get_detail_doctor +
                 "/" +
                 id,
@@ -40,7 +38,7 @@ module.exports = {
         return new Promise((resolve, reject) => {
             client.requestApi(
                 "get",
-                URL +
+                client.serviceSchedule +
                 constants.api.booking.doctor.search_list_doctor +
                 `?expression=${keyword}&lang=${lang}&page=${page}&size=${size}`,
                 {},
@@ -55,7 +53,7 @@ module.exports = {
         return new Promise((resolve, reject) => {
             client.requestApi(
                 "get",
-                URL +
+                client.serviceSchedule +
                 constants.api.booking.doctor.get_detail_schedules +
                 `/` +
                 id,
@@ -99,7 +97,7 @@ module.exports = {
             //     console.log('room: ', room);
             client.requestApi(
                 "post",
-                URL2 +
+                client.serviceBooking +
                 constants.api.booking.doctor.create_booking,
                 {
                     // ngày đặt khám
@@ -136,7 +134,7 @@ module.exports = {
         return new Promise((resolve, reject) => {
             client.requestApi(
                 "post",
-                URL2 +
+                client.serviceBooking +
                 constants.api.booking.doctor.get_detail_booking + '/' + id + '/payment/' + paymentMethod,
                 {
                     "code": voucher.code ? voucher.code : '',
@@ -154,7 +152,7 @@ module.exports = {
         return new Promise((resolve, reject) => {
             client.requestApi(
                 "get",
-                URL +
+                client.serviceSchedule +
                 `${constants.api.booking.doctor.get_list_hospitals}?page=${page}&size=${size}`
                 , {}, (s, e) => {
                     if (s) resolve(s);
@@ -167,7 +165,7 @@ module.exports = {
         return new Promise((resolve, reject) => {
             client.requestApi(
                 "get",
-                URL +
+                client.serviceSchedule +
                 `${constants.api.booking.doctor.get_list_schedules}/${hospitalId}/hospital/${doctorId}/doctor?page=${page}&size=20&sort=desc&properties=created`
                 , {}, (s, e) => {
                     if (s) resolve(s);
@@ -180,7 +178,7 @@ module.exports = {
         return new Promise((resolve, reject) => {
             client.requestApi(
                 "get",
-                URL +
+                client.serviceSchedule +
                 `${constants.api.booking.doctor.get_list_specialists}?page=${page}&size=${size}`
                 , {}, (s, e) => {
                     if (s) resolve(s);
@@ -194,7 +192,7 @@ module.exports = {
             let url = constants.api.booking.doctor.get_doctor_hospitals.replace('hospitalId', hospitalId)
             client.requestApi(
                 "get",
-                URL +
+                client.serviceSchedule +
                 `${url}?page=${page}&size=${size}`
                 , {}, (s, e) => {
                     if (s) resolve(s);
@@ -208,7 +206,7 @@ module.exports = {
             let url = constants.api.booking.doctor.get_doctor_specialists.replace('specialistId', specialistId)
             client.requestApi(
                 "get",
-                URL +
+                client.serviceSchedule +
                 `${url}?page=${page}&size=${size}`
                 , {}, (s, e) => {
                     if (s) resolve(s);
@@ -222,7 +220,7 @@ module.exports = {
             let url = constants.api.booking.doctor.get_list_booking.replace('patientId', patientId)
             client.requestApi(
                 "get",
-                URL2 +
+                client.serviceBooking +
                 `${url}?page=${page}&size=${size}&sort=desc&properties=created`
                 , {}, (s, e) => {
                     if (s) resolve(s);
@@ -235,7 +233,7 @@ module.exports = {
         return new Promise((resolve, reject) => {
             client.requestApi(
                 "get",
-                URL2 +
+                client.serviceBooking +
                 `${constants.api.booking.doctor.get_detail_booking}/${id}`
                 , {}, (s, e) => {
                     if (s) resolve(s);
