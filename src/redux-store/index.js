@@ -32,15 +32,21 @@ function _getUnreadNotificationCount() {
                             dispatch({ type: constants.action.action_change_notification_count, value: total })
                             return;
                         } catch (error) {
-                            
+
                         }
                     }
                     dispatch({ type: constants.action.action_change_notification_count, value: 0 })
                     break;
             }
         }).catch(e => {
-            
+
         });
+    }
+}
+function _getDrug(data) {
+    return (dispatch) => {
+        dispatch({ type: constants.action.action_add_drug, value: data })
+        return Promise.resolve();
     }
 }
 module.exports = {
@@ -74,9 +80,14 @@ module.exports = {
     },
     getOtpPhone(otp) {
         return function (dispatch, getState) {
-            
+
             dispatch(_getOtpPhone(otp))
         }
     },
+    addDrug(data) {
+        return function (dispatch, getState) {
+            dispatch(_getDrug(data))
+        }
+    }
 
 }
