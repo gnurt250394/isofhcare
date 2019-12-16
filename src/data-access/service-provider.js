@@ -45,7 +45,7 @@ module.exports = {
             //     });
             // }
             // else {
-            client.requestApi("get", `${URL}${constants.api.service.get_all_services}/${hospitalId}/hospital?page=0&size=999&sort=desc&properties=created`, {}, (s, e) => {
+            client.requestApi("get", `${client.serviceSchedule}${constants.api.service.get_all_services}/${hospitalId}/hospital?page=0&size=999&sort=desc&properties=created`, {}, (s, e) => {
                 // if (s && s.code == 0 && s.data && s.data.services) {
                 // datacacheProvider.save(hospitalId, constants.key.storage.DATA_SERVICE_TYPE, s.data.services);
                 if (s)

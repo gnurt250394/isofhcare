@@ -1,7 +1,6 @@
 import client from "@utils/client-utils";
 import string from "mainam-react-native-string-utils";
 import constants from "@resources/strings";
-const URL2 = 'http://10.0.0.98:8082/'
 
 module.exports = {
   getListBooking(profileId, hospitalId) {
@@ -164,7 +163,7 @@ module.exports = {
       }
       client.requestApi(
         "post",
-        URL2 +
+        client.serviceBooking +
         constants.api.booking.create_booking,
         {
           // ngày đặt khám

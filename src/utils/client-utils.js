@@ -69,6 +69,8 @@ String.prototype.getServiceUrl =
 module.exports = {
   auth: "",
   serverApi: server_url + "/",
+  serviceSchedule: "http://10.0.0.98:8080/",
+  serviceBooking: "http://10.0.0.98:8082/",
   response: {
     ok(data, message) {
       if (!message) message = "";
