@@ -200,6 +200,8 @@ const TabNavigatorComponent = createBottomTabNavigator(
         tabBarLabel: "Thuốc",
         tabBarIcon: ({ tintColor }) => <ScaledImage height={23} source={require('@images/new/homev2/ic_drug_menu.png')} style={{ tintColor: tintColor }} />,
         tabBarOnPress: ({ navigation, defaultHandler }) => {
+          snackbar.show('Tính năng đang phát triển')
+          return
           if (userProvider.isLogin) {
             console.log('userProvider.isLogin: ', userProvider.isLogin);
             defaultHandler();
