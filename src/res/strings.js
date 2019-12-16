@@ -150,7 +150,8 @@ module.exports = {
     action_select_hospital_get_ticket: "ACTION_SELECT_HOSPITAL_GET_TICKET",
     action_select_hospital_ehealth: "ACTION_SELECT_HOSPITAL_EHEALTH",
     action_select_patient_group_ehealth: "ACTION_SELECT_PATIENT_GROUP_EHEALTH",
-    action_otp_phone: "ACTION_OTP_PHONE"
+    action_otp_phone: "ACTION_OTP_PHONE",
+    action_add_drug:'ACTION_ADD_DRUG',
   },
   colors: {
     breakline: "#c0c0c0",

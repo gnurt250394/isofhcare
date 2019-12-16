@@ -5,6 +5,7 @@ import datacacheProvider from '@data-access/datacache-provider';
 const drugService = 'http://10.0.0.98:8095'
 module.exports = {
     createDrug(data, idDrug) {
+        console.log('CALL API')
         return new Promise((resolve, reject) => {
             client.requestApi(idDrug ? "put" : "post", `${drugService}/${constants.api.drug.create_drug}${idDrug ? `/${idDrug}` : ''}`, data, (s, e) => {
                 if (s) {
