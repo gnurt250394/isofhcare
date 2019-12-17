@@ -247,7 +247,7 @@ class RegisterScreen extends Component {
                 <Form ref={ref => (this.form = ref)}>
                   <TextField
                     getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
-                      placeholderTextColor='#808080'
+                      placeholderTextColor='#000'
                       placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Họ và tên"}
                       onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
                     onChangeText={s => {
@@ -271,7 +271,7 @@ class RegisterScreen extends Component {
                       keyboardType='numeric'
                       maxLength={10}
                       placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={this.state.phone}
-                      placeholderTextColor='#808080'
+                      placeholderTextColor='#000'
                       inputStyle={styles.textInputStyle}
                       labelStyle={styles.labelStyle} placeholder={constants.phone} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
                     onChangeText={s => this.setState({ phone: s })}
@@ -294,7 +294,7 @@ class RegisterScreen extends Component {
                   <Field style={styles.inputPass}>
                     <TextField
                       getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
-                        placeholderTextColor='#808080'
+                        placeholderTextColor='#000'
                         placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.input_password}
                         secureTextEntry={this.state.secureTextPassEntry}
                         onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
@@ -324,7 +324,7 @@ class RegisterScreen extends Component {
                     <TextField
                       getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
                         placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={'Nhập lại mật khẩu'}
-                        placeholderTextColor='#808080'
+                        placeholderTextColor='#000'
                         secureTextEntry={this.state.secureTextPass2Entry}
                         onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
                       onChangeText={s => {
