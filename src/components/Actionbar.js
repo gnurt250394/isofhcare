@@ -25,7 +25,7 @@ class Actionbar extends Component {
     render() {
         return (
             <View>
-                <View style={[styles.actionbar, this.props.actionbarStyle, { paddingTop: 10, minHeight: 60 }]}>
+                <View style={[styles.actionbar, this.props.actionbarStyle, { paddingTop: 10, minHeight: 60, backgroundColor:'transparent' }]}>
                     {
                         this.props.backButton ?
                             this.props.backButton :

@@ -1,4 +1,4 @@
-let isofhcare_service = 'isofhcare-dev/';
+let isofhcare_service = 'isofhcare/';
 // let wallet_services = 'wallet-services-test/'; //test
 let wallet_services = 'wallet-services-dev/'; //dev
 module.exports = {
@@ -43,7 +43,7 @@ module.exports = {
   confirm_new_password_not_null: "Bạn không được để trống trường này",
   confirm_password_not_null: 'Bạn không được để trống trường này',
   password_length_8: 'Mật khẩu dài ít nhất 6 ký tự',
-  password_length_20:'Mật khẩu dài tối đa 20 ký tự',
+  password_length_20: 'Mật khẩu dài tối đa 20 ký tự',
   confirm_password_length_8: "Xác nhận mật khẩu dài ít nhất 6 kí tự",
   new_password_not_match: 'Mật khẩu nhập lại không khớp',
   search: "Tìm kiếm",
@@ -150,7 +150,8 @@ module.exports = {
     action_select_hospital_get_ticket: "ACTION_SELECT_HOSPITAL_GET_TICKET",
     action_select_hospital_ehealth: "ACTION_SELECT_HOSPITAL_EHEALTH",
     action_select_patient_group_ehealth: "ACTION_SELECT_PATIENT_GROUP_EHEALTH",
-    action_otp_phone:"ACTION_OTP_PHONE"
+    action_otp_phone: "ACTION_OTP_PHONE",
+    action_add_drug:'ACTION_ADD_DRUG',
   },
   colors: {
     breakline: "#c0c0c0",
@@ -203,7 +204,8 @@ module.exports = {
       LIST_BANNER: "LIST_BANNER",
       DATA_TOP_NEWS: 'DATA_TOP_NEWS',
       DATA_TOP_HOSPITAL: 'DATA_TOP_HOSPITAL',
-      KEY_HAS_UPDATE_NEW_VERSION: "KEY_HAS_UPDATE_NEW_VERSION"
+      KEY_HAS_UPDATE_NEW_VERSION: "KEY_HAS_UPDATE_NEW_VERSION",
+      LOCATION_DEFAULT: 'LOCATION_DEFAULT'
     }
   },
   questions: {
@@ -611,6 +613,13 @@ module.exports = {
     schedule_booking: 'LỊCH KHÁM',
     booking_paid: 'Đặt khám đã được thanh toán',
     booking_paid_or_invalid: 'Đặt khám đã được thanh toán hoặc không tồn tại',
+    quantity_booking: 'Lượt đặt khám',
+    quantity_advisory: 'Lượt tư vấn',
+    rating: 'Đánh giá',
+    work: 'Đơn vị công tác',
+    specialist: 'Chuyên khoa',
+    time_work: 'Quá trình công tác',
+    select_payment_method: 'Chọn phương thức thanh toán',
     guide: {
       part_1: 'Bước 1: Điền thông tin chuyển khoản thụ hưởng:',
       bank: 'Ngân hàng',
@@ -787,7 +796,11 @@ module.exports = {
     setting_share: 'CÀI ĐẶT CHIA SẺ',
     scan_qr_code: 'QUÉT MÃ QRCODE',
     voucher: 'Mã ưu đãi',
-    profile: 'Hồ sơ cá nhân'
+    profile: 'Hồ sơ cá nhân',
+    list_booking: 'Chọn hình thức đặt khám',
+    select_doctor: 'Chọn bác sĩ',
+    info_doctor: 'Thông tin bác sỹ',
+    edit_profile: 'Hoàn thành hồ sơ'
   },
   account_screens: {
     signin_or_signup: 'Đăng nhập/ Đăng Ký',
@@ -836,6 +849,7 @@ module.exports = {
       login_social: isofhcare_service + "user/login-social",
       logout: isofhcare_service + "user/logout",
       register: isofhcare_service + "user/register",
+      registerV2: isofhcare_service + 'v3.0/user/registration',
       forgot_password: isofhcare_service + "user/forget-password",
       update: isofhcare_service + "user/update",
       change_password: isofhcare_service + "user/update-password",
@@ -895,7 +909,22 @@ module.exports = {
       detail: isofhcare_service + "booking/get-detail",
       getByAuthor: isofhcare_service + "booking/get-by-author",
       get_list_share_user: isofhcare_service + "booking/list-share-user",
-      // pay_tranfer: isofhcare_service + 'booking/payTranfer'
+      create_booking: isofhcare_service + "appointment/v1/hospital",
+      // pay_tranfer: isofhcare_service + 'booking/payTranfer',
+      doctor: {
+        get_list_doctor: isofhcare_service + 'catalog/v1/doctors',
+        get_detail_doctor: isofhcare_service + 'catalog/v1/doctor',
+        search_list_doctor: isofhcare_service + 'catalog/v1/doctor/search',
+        get_detail_schedules: isofhcare_service + 'catalog/v1/schedule',
+        create_booking: isofhcare_service + 'appointment/v1/doctor',
+        get_list_hospitals: isofhcare_service + 'catalog/v1/hospitals',
+        get_list_specialists: isofhcare_service + 'catalog/v1/specializations',
+        get_doctor_hospitals: isofhcare_service + 'catalog/v1/doctor/hospitalId/hospital',
+        get_doctor_specialists: isofhcare_service + 'catalog/v1/doctor/specialistId/specialization',
+        get_list_booking: isofhcare_service + 'appointment/v1/patientId/histories',
+        get_detail_booking: isofhcare_service + 'appointment/v1',
+        get_list_schedules: isofhcare_service + 'work-time-hospital',
+      }
     },
     question: {
       create: isofhcare_service + "post/create",
@@ -949,7 +978,8 @@ module.exports = {
       createMedical: isofhcare_service + "medical-records/create"
     },
     service: {
-      get_all: isofhcare_service + "service/get-all"
+      get_all: isofhcare_service + "service/get-all",
+      get_all_services: isofhcare_service + "catalog/v1/medicalservice",
     },
     schedule: {
       get_by_date_and_service: isofhcare_service + "schedule-booking/get-by-date-and-service",
@@ -980,6 +1010,17 @@ module.exports = {
     },
     voucher: {
       get_voucher: isofhcare_service + 'voucher'
+    },
+    drug: {
+      create_drug: isofhcare_service + 'orders/v1/prescriptions',
+      get_location: isofhcare_service + 'orders/v1/addresses/owner',
+      add_location: isofhcare_service + 'orders/v1/addresses',
+      get_list_menu_drug: isofhcare_service + 'orders/v1/prescriptions/owner',
+      set_adress_default: isofhcare_service + 'orders/v1/addresses',
+      get_details_drug: isofhcare_service + 'orders/v1/prescriptions',
+      find_drug: isofhcare_service + 'orders/v1/prescriptions',
+      delete_drug: isofhcare_service + 'orders/v1/prescriptions',
+      search_drug : isofhcare_service + 'pharmacy/v1/medicine/search'
     }
   }
 };

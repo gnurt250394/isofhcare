@@ -2,6 +2,8 @@ import axios from 'axios';
 import DeviceInfo from 'react-native-device-info';
 import { Platform } from 'react-native';
 const server_url = "http://123.24.206.9:8000"; //dev
+
+
 // const server_url = "http://10.0.50.191:8080";//test local
 // const server_url = "http://123.24.206.9:8000"; //test
 // const server_url = "https://api.produce.isofhcare.com"; //release
@@ -70,6 +72,8 @@ String.prototype.getServiceUrl =
 module.exports = {
   auth: "",
   serverApi: server_url + "/",
+  serviceSchedule: "http://10.0.0.98:8080/",
+  serviceBooking: "http://10.0.0.98:8082/",
   response: {
     ok(data, message) {
       if (!message) message = "";
@@ -271,7 +275,14 @@ module.exports = {
           } else resolve(json);
         })
         .catch(e => {
-          console.log(e);
+          if (e.response) {
+            console.log('e.response: ', e.response);
+          } else if (e.request) {
+            console.log('e.request: ', e.request);
+
+          } else {
+            console.log(e, 'err')
+          }
           reject(e);
         });
     });

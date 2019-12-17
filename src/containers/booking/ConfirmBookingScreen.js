@@ -11,8 +11,9 @@ import snackbar from '@utils/snackbar-utils';
 import connectionUtils from '@utils/connection-utils';
 import payoo from 'mainam-react-native-payoo';
 import { NativeModules } from 'react-native';
-import constants from '../../res/strings';
+import constants from '@resources/strings';
 import voucherProvider from '@data-access/voucher-provider'
+import bookingDoctorProvider from '@data-access/booking-doctor-provider'
 
 var PayooModule = NativeModules.PayooModule;
 
@@ -49,17 +50,17 @@ class ConfirmBookingScreen extends Component {
         }
     }
     componentDidMount() {
-        AppState.addEventListener('change', this._handleAppStateChange);
+        // AppState.addEventListener('change', this._handleAppStateChange);
     }
     componentWillUnmount() {
-        AppState.removeEventListener('change', this._handleAppStateChange);
+        // AppState.removeEventListener('change', this._handleAppStateChange);
     }
     _handleAppStateChange = (nextAppState) => {
         if (nextAppState == 'inactive' || nextAppState == 'background') {
 
         } else {
             this.setState({ isLoading: true }, () => {
-                bookingProvider.detail(this.state.booking.book.id).then(s => {
+                bookingProvider.detail(this.state.booking.id).then(s => {
                     this.setState({ isLoading: false }, () => {
                         if (s.code == 0 && s.data && s.data.booking) {
                             if (s.code == 0 && s.data && s.data.booking) {
@@ -156,18 +157,19 @@ class ConfirmBookingScreen extends Component {
     }
 
     getPaymentMethod() {
-        switch (this.state.paymentMethod) {
+        let { paymentMethod } = this.state
+        switch (paymentMethod) {
             case 1:
                 return "VNPAY";
             case 2:
-                return "";
+                return "CASH";
             case 3:
             case 5:
-                return "PAYOO";
+            // return "PAYOO";
             case 4:
-                return "PAYOO_BILL";
+                return "PAYOO";
             case 6:
-                return "";
+                return "BANK_TRANSFER";
         }
     }
     getPaymentReturnUrl() {
@@ -211,9 +213,9 @@ class ConfirmBookingScreen extends Component {
         let serviceText = "";
         if (this.state.service && this.state.service.length) {
             price = this.state.service.reduce((total, item) => {
-                return total + parseInt((item && item.service && item.service.price ? item.service.price : 0));
+                return total + parseInt((item && item.price ? item.price : 0));
             }, 0);
-            serviceText = this.state.service.map(item => (item && item.service ? item.service.id + " - " + item.service.name : "")).join(', ');
+            serviceText = this.state.service.map(item => (item  ? item.id + " - " + item.name : "")).join(', ');
         }
 
         this.setState({ isLoading: true }, async () => {
@@ -279,7 +281,7 @@ class ConfirmBookingScreen extends Component {
                             let payment_order = s.payment_order;
                             payment_order.orderInfo = payment_order.data;
                             payment_order.cashAmount = this.state.service.reduce((total, item) => {
-                                return total + parseInt(item.service.price)
+                                return total + parseInt(item.price)
                             }, 0);
                             this.payment(payment_order, vnp_TxnRef, booking, data);
 
@@ -481,7 +483,7 @@ class ConfirmBookingScreen extends Component {
                             let payment_order = s.payment_order;
                             payment_order.orderInfo = payment_order.data;
                             payment_order.cashAmount = this.state.service.reduce((total, item) => {
-                                return total + parseInt(item.service.price)
+                                return total + parseInt(item.price)
                             }, 0);
                             this.payment(payment_order, vnp_TxnRef, booking, data);
                             break;
@@ -529,40 +531,103 @@ class ConfirmBookingScreen extends Component {
         })
     }
 
+    // createBooking() {
+    //     connectionUtils.isConnected().then(s => {
+    //         this.setState({ isLoading: true }, () => {
+    //             bookingProvider.detail(this.state.booking.book.id).then(s => {
+    //                 this.setState({ isLoading: false }, () => {
+    //                     if (s.code == 0 && s.data && s.data.booking) {
+    //                         switch (s.data.booking.status) {
+    //                             case 3: //đã thanh toán
+    //                                 snackbar.show(constants.booking.booking_paid, "danger")
+    //                                 break;
+    //                             case 4: //payment_last
+    //                                 snackbar.show(constants.booking.booking_paid_or_invalid);
+    //                                 break;
+    //                             default:
+    //                                 this.setState({ isLoading: true }, () => {
+    //                                     if (this.state.paymentMethod == 2) {
+    //                                         this.confirmPayment(this.state.booking, this.state.booking.book.id);
+    //                                         return
+    //                                     }
+    //                                     if (this.state.paymentMethod == 6) {
+    //                                         this.confirmPayment(this.state.booking, this.state.booking.book.id, this.state.paymentMethod);
+    //                                         return
+    //                                     }
+    //                                     else {
+    //                                         this.getPaymentLink(this.state.booking);
+    //                                     }
+    //                                 });
+    //                         }
+    //                     }
+    //                 })
+    //                 // 
+    //             }).catch(e => {
+    //                 this.setState({ isLoading: false }, () => {
+    //                 });
+    //             });
+
+    //         });
+    //     }).catch(e => {
+    //         snackbar.show(constants.msg.app.not_internet, "danger");
+    //     })
+    // }
     createBooking() {
+        const { booking } = this.state
+        booking.hospital = this.state.hospital;
+        booking.profile = this.state.profile;
+        booking.payment = this.state.paymentMethod;
+        console.log('booking: ', booking);
         connectionUtils.isConnected().then(s => {
-            this.setState({ isLoading: true }, () => {
-                bookingProvider.detail(this.state.booking.book.id).then(s => {
-                    this.setState({ isLoading: false }, () => {
-                        if (s.code == 0 && s.data && s.data.booking) {
-                            switch (s.data.booking.status) {
-                                case 3: //đã thanh toán
-                                    snackbar.show(constants.booking.booking_paid, "danger")
-                                    break;
-                                case 4: //payment_last
-                                    snackbar.show(constants.booking.booking_paid_or_invalid);
-                                    break;
-                                default:
-                                    this.setState({ isLoading: true }, () => {
-                                        if (this.state.paymentMethod == 2) {
-                                            this.confirmPayment(this.state.booking, this.state.booking.book.id);
-                                            return
-                                        }
-                                        if (this.state.paymentMethod == 6) {
-                                            this.confirmPayment(this.state.booking, this.state.booking.book.id, this.state.paymentMethod);
-                                            return
-                                        }
-                                        else {
-                                            this.getPaymentLink(this.state.booking);
-                                        }
-                                    });
-                            }
+            this.setState({ isLoading: true }, async () => {
+                if (this.state.voucher && this.state.voucher.code) {
+                    let dataVoucher = await this.confirmVoucher(this.state.voucher, booking.id)
+                    if (!dataVoucher) {
+                        this.setState({ isLoading: false }, () => {
+                            snackbar.show(constants.voucher.voucher_not_found_or_expired, "danger")
+                        })
+                        return
+                    }
+                }
+                bookingDoctorProvider.confirmBooking(this.state.booking.id, this.getPaymentMethod(), this.state.voucher).then(res => {
+                    console.log('res: ', res);
+                    this.setState({ isLoading: false })
+                    if (res) {
+                        snackbar.show('Đặt khám thành công', 'success')
+                        if (this.state.paymentMethod == 6) {
+                            this.props.navigation.navigate("homeTab", {
+                                navigate: {
+                                    screen: "createBookingWithPayment",
+                                    params: {
+                                        booking,
+                                        service: this.state.service,
+                                        voucher: this.state.voucher
+
+                                    }
+                                }
+                            });
                         }
-                    })
-                    // 
-                }).catch(e => {
-                    this.setState({ isLoading: false }, () => {
-                    });
+                        else {
+                            this.props.navigation.navigate("homeTab", {
+                                navigate: {
+                                    screen: "createBookingSuccess",
+                                    params: {
+                                        booking,
+                                        service: this.state.service,
+                                        voucher: this.state.voucher
+
+                                    }
+                                }
+                            });
+                        }
+                    }else{
+                        snackbar.show(constants.msg.booking.booking_err2, "danger");
+
+                    }
+                }).catch(err => {
+                    console.log('err: ', err);
+                    snackbar.show(constants.msg.booking.booking_err2, "danger");
+                    this.setState({ isLoading: false })
                 });
 
             });
@@ -609,7 +674,7 @@ class ConfirmBookingScreen extends Component {
     getPriceSecive = () => {
         let priceVoucher = this.state.voucher && this.state.voucher.price ? this.state.voucher.price : 0
         let priceFinal = this.state.service.reduce((start, item) => {
-            return start + parseInt(item.service.price)
+            return start + parseInt(item.price)
         }, 0)
         if (priceFinal < priceVoucher) {
             return 0
@@ -679,8 +744,8 @@ class ConfirmBookingScreen extends Component {
                                         <Text style={styles.text5}>{constants.booking.services}: </Text>
                                         {
                                             this.state.service.map((item, index) => <View key={index} style={styles.containerListServices}>
-                                                <Text style={styles.txtListServices} numberOfLines={1}>{index + 1}. {item.service.name}</Text>
-                                                <Text style={styles.txtPrice}>({parseInt(item.service.price).formatPrice()}đ)</Text>
+                                                <Text style={styles.txtListServices} numberOfLines={1}>{index + 1}. {item.name}</Text>
+                                                <Text style={styles.txtPrice}>({parseInt(item.price).formatPrice()}đ)</Text>
                                             </View>
                                             )
 

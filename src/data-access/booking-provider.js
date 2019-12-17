@@ -140,6 +140,51 @@ module.exports = {
       );
     });
   },
+  /**
+     * 
+     * @param {string} date 
+     * @param {string} description 
+     * @param {object} hospital 
+     * @param {object} items 
+     * @param {object} patient 
+     * @param {string} payment 
+     * @param {string} time 
+     * @param {object} room 
+     */
+
+  createBooking(date, description, hospitals, items, patient, time) {
+    return new Promise((resolve, reject) => {
+      let hospital = { id: hospitals && hospitals.id || '', name: hospitals && hospitals.name || '', address: hospitals && hospitals.address || '' }
+      console.log('hospital: ', hospital);
+      patient = {
+        id: patient.id,
+        name: patient.name,
+        phone: patient.phone
+      }
+      client.requestApi(
+        "post",
+        client.serviceBooking +
+        constants.api.booking.create_booking,
+        {
+          // ngày đặt khám
+          date,
+          // mô tả
+          description,
+          // thông tin bệnh viện đặt khám 
+          hospital,
+          // danh sách dịch vụ
+          items,
+          // thông tin bệnh nhân đặt khám
+          patient,
+          //giờ đặt khám
+          time
+        }, (s, e) => {
+          if (s) resolve(s);
+          else reject(e);
+        }
+      );
+    });
+  },
   // payTranfer(bookingId) {
   //   return new Promise((resolve, reject) => {
   //     client.requestApi(

@@ -49,7 +49,7 @@ import CreateQuestionStep1Screen from "@containers/question/CreateQuestionStep1S
 import CreateQuestionStep2Screen from "@containers/question/CreateQuestionStep2Screen";
 import DetailQuestionScreen from "@containers/question/DetailQuestionScreen";
 import ProfileInfo from '@containers/account/ProfileInfo'
-import DetailsDoctorScreen from "@containers/question/DetailsDoctorScreen";
+// import DetailsDoctorScreen from "@containers/question/DetailsDoctorScreen";
 
 
 //booking
@@ -72,6 +72,7 @@ import CreateBookingWithPaymentScreen from "@containers/booking/CreateBookingWit
 import CreateProfileScreen from "@containers/profile/CreateProfileScreen";
 import PaymentWithVNPayScreen from "@containers/payment/PaymentWithVNPayScreen";
 import SelectProfileScreen from "@containers/booking/SelectProfileScreen";
+// import SelectProfileScreen from "@containers/booking/SelectProfileScreen1";
 
 //-------get ticket----------------
 import SelectProfileMedicalScreen from "@containers/ticket/SelectProfileMedicalScreen";
@@ -98,7 +99,15 @@ import ShareDataProfileScreen from '@containers/profile/ShareDataProfileScreen'
 //
 import HospitalByLocationScreen from '@containers/home/HospitalByLocationScreen'
 import HospitalScreen from '@containers/home/HospitalScreen'
+//drug
 import DrugScreen from '@containers/home/DrugScreen'
+import FindDrugScreen from '@containers/drug/FindDrugScreen'
+import InputLocationScreen from '@containers/drug/InputLocationScreen'
+import SelectLocationScreen from '@containers/drug/SelectLocationScreen'
+import DetailsDrugScreen from '@containers/drug/DetailsDrugScreen'
+import DrugStoreScreen from '@containers/drug/DrugStoreScreen'
+import EditDrugInputScreen from '@containers/drug/EditDrugInputScreen'
+import EditDrugScanScreen from '@containers/drug/EditDrugScanScreen'
 
 
 //
@@ -111,8 +120,25 @@ import ConfirmCodeScreen from "@containers/account/ConfirmCodeScreen";
 import ResetPasswordScreen from "@containers/account/ResetPasswordScreen";
 import { fromLeft, zoomIn, zoomOut, fromRight } from 'react-navigation-transitions';
 import MyVoucherScreen from '@containers/voucher';
-import DetailVoucherScreen from '../containers/voucher/DetailVoucherScreen';
 
+import DetailVoucherScreen from '@containers/voucher/DetailVoucherScreen';
+
+import ListDoctorScreen from '@containers/booking/doctor/ListDoctorScreen';
+import DetailsDoctorScreen from '@containers/booking/doctor/DetailDoctorScreen';
+import AddBookingDoctorScreen from '@containers/booking/doctor/AddBookingDoctorScreen';
+import SelectDateTimeDoctorScreen from '@containers/booking/doctor/SelectDateTimeDoctorScreen';
+import ListBookingScreen from '@containers/booking/ListBookingScreens'
+import ListPaymentMethodScreen from '@containers/booking/doctor/ListPaymentMethodScreen';
+import CreateBookingDoctorSuccessScreen from '@containers/booking/doctor/CreateBookingDoctorSuccessScreen';
+import EditProfileScreen1 from '@containers/booking/EditProfileScreen';
+import SelectAddressScreen from '@containers/booking/SelectAddressScreen';
+import ListSpecialistScreen from '@containers/booking/doctor/ListSpecialistScreen';
+import ListHospitalScreen from '@containers/booking/doctor/ListHospitalScreen';
+import RatingDoctorScreen from '@containers/booking/doctor/RatingDoctorScreen';
+import ListRatingDoctorScreen from '@containers/booking/doctor/ListRatingDoctorScreen';
+import ListBookingHistoryScreen from '@containers/booking/ListBookingHistoryScreen';
+import DetailHistoryBookingScreen from '@containers/booking/DetailHistoryBookingScreen';
+import ConfirmBookingDoctorScreen from '@containers/booking/doctor/ConfirmBookingDoctorScreen';
 const ProfileNavigation = createStackNavigator({
   selectProfile: SelectProfileScreen,
   createProfile: CreateProfileScreen,
@@ -158,23 +184,28 @@ const TabNavigatorComponent = createBottomTabNavigator(
         tabBarIcon: ({ tintColor }) => <ScaledImage height={20} source={require('@images/new/homev2/ic_home_menu.png')} style={{ tintColor: tintColor }} />,
       }
     },
-    communityTab: {
-      screen: AccountScreen,
-      navigationOptions: {
-        tabBarLabel: "Cộng đồng",
-        tabBarIcon: ({ tintColor }) => <ScaledImage touchable={false} height={20} source={require('@images/new/homev2/ic_community_menu.png')} style={{ tintColor: tintColor }} />,
-        tabBarOnPress: ({ navigation, defaultHandler }) => {
-          snackbar.show("Chức năng đang phát triển");
-        },
-      }
-    },
-    videoTab: {
-      screen: AccountScreen,
+    // communityTab: {
+    //   screen: AccountScreen,
+    //   navigationOptions: {
+    //     tabBarLabel: "Cộng đồng",
+    //     tabBarIcon: ({ tintColor }) => <ScaledImage touchable={false} height={20} source={require('@images/new/homev2/ic_community_menu.png')} style={{ tintColor: tintColor }} />,
+    //     tabBarOnPress: ({ navigation, defaultHandler }) => {
+    //       snackbar.show("Chức năng đang phát triển");
+    //     },
+    //   }
+    // },
+    drugTab: {
+      screen: DrugScreen,
       navigationOptions: {
         tabBarLabel: "Thuốc",
         tabBarIcon: ({ tintColor }) => <ScaledImage height={23} source={require('@images/new/homev2/ic_drug_menu.png')} style={{ tintColor: tintColor }} />,
         tabBarOnPress: ({ navigation, defaultHandler }) => {
-          snackbar.show("Chức năng đang phát triển");
+          if (userProvider.isLogin) {
+            console.log('userProvider.isLogin: ', userProvider.isLogin);
+            defaultHandler();
+          } else {
+            NavigationService.navigate("login");
+          }
         },
       }
     },
@@ -301,11 +332,11 @@ const RootNavigator = createStackNavigator(
     confirmBooking: { screen: ConfirmBookingScreen },
     createBookingSuccess: { screen: CreateBookingSuccessScreen },
     paymentBookingError: { screen: PaymentBookingErrorScreen },
-    detailsHistory: { screen: DetailsHistoryScreen },
+    detailsHistory: { screen: DetailHistoryBookingScreen },
     createProfile: { screen: CreateProfileScreen },
     paymentVNPay: { screen: PaymentWithVNPayScreen },
     filterSpecialist: { screen: FilterSpecialistScreen },
-    selectProfile: { screen: SelectProfileScreen },
+    // selectProfile: { screen: SelectProfileScreen },
     patientHistory: { screen: PatientHistoryScreen },
     createBookingWithPayment: { screen: CreateBookingWithPaymentScreen },
 
@@ -314,16 +345,38 @@ const RootNavigator = createStackNavigator(
     //menu profile
     setting: { screen: SettingScreen },
     changePassword: { screen: ChangePasswordScreen },
-    //
+    //drug
+    findDrug: { screen: FindDrugScreen },
+    selectLocation: { screen: SelectLocationScreen },
+    inputLocation: { screen: InputLocationScreen },
+    detailsDrug: { screen: DetailsDrugScreen },
+    drugStore: { screen: DrugStoreScreen },
+
     //
     specialist: { screen: SpecialistScreen },
 
     detailsVoucher: { screen: DetailVoucherScreen },
     hospital: { screen: HospitalScreen },
-    drug: { screen: DrugScreen },
+    drugTab: { screen: DrugScreen },
+    editDrugScan: { screen: EditDrugScanScreen },
+    editDrugInput: { screen: EditDrugInputScreen },
     hospitalByLocation: { screen: HospitalByLocationScreen },
     photoViewer: { screen: PhotoViewerScreen },
-    myVoucher: { screen: MyVoucherScreen }
+    myVoucher: { screen: MyVoucherScreen },
+    listDoctor: { screen: ListDoctorScreen },
+    addBookingDoctor: { screen: AddBookingDoctorScreen },
+    selectTimeDoctor: { screen: SelectDateTimeDoctorScreen },
+    listBooking: { screen: ListBookingScreen },
+    listHospital: { screen: ListHospitalScreen },
+    listPaymentMethod: { screen: ListPaymentMethodScreen },
+    createBookingDoctorSuccess: { screen: CreateBookingDoctorSuccessScreen },
+    editProfile1: { screen: EditProfileScreen1 },
+    selectAddress: { screen: SelectAddressScreen },
+    listSpecialist: { screen: ListSpecialistScreen },
+    ratingDoctor: { screen: RatingDoctorScreen },
+    listRatingDoctor: { screen: ListRatingDoctorScreen },
+    listBookingHistory: { screen: ListBookingHistoryScreen },
+    confirmBookingDoctor: { screen: ConfirmBookingDoctorScreen },
   },
   {
     headerMode: "none",

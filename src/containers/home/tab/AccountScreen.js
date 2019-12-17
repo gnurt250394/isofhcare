@@ -135,12 +135,9 @@ class AccountScreen extends Component {
           <Text style={styles.txUserName}>
             {this.props.userApp.currentUser.name}
           </Text>
-          <View
-          >
-            <Text style={styles.txViewProfile}>
-              {this.props.userApp.currentUser.phone}
-            </Text>
-          </View>
+          <Text style={styles.txViewProfile}>
+            {this.props.userApp.currentUser.phone}
+          </Text>
         </View>
       </View>
     );
@@ -275,7 +272,7 @@ class AccountScreen extends Component {
             <TouchableOpacity
               style={[styles.itemMenu]}
               onPress={() => {
-                this.props.navigation.navigate("patientHistory", {
+                this.props.navigation.navigate("listBookingHistory", {
                   title: "Lịch khám"
                 });
               }}
@@ -475,7 +472,9 @@ class AccountScreen extends Component {
         }}>
           <Text style={[styles.itemText, { color: '#00000080' }]}>{'Phiên bản ' + DeviceInfo.getVersion() + '.' + DeviceInfo.getBuildNumber()}</Text>
         </TouchableOpacity>
-        <View style={styles.viewSpaceBottom} />
+        <View style={styles.viewSpaceBottom}>
+          <TouchableOpacity onPress={this.openLinkHotline} style={styles.btnHotline}><ScaledImage source={require('@images/new/homev2/ic_hotline.png')} height={20}></ScaledImage><Text style={{ marginLeft: 10, fontSize: 14 }}>Hotline: <Text style={{ fontWeight: 'bold', fontSize: 14 }}>1900299983</Text></Text></TouchableOpacity>
+        </View>
         <ImagePicker ref={ref => (this.imagePicker = ref)} />
       </ScrollView>
     );
@@ -495,6 +494,7 @@ class AccountScreen extends Component {
 const width = Dimensions.get("window").width;
 const styles = StyleSheet.create({
   icon: {},
+  btnHotline: { padding: 5, flexDirection: 'row', alignItems: 'center', marginBottom: 10, },
   label: {
     marginTop: 2,
     color: "#4A4A4A",
@@ -525,7 +525,7 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     fontWeight: 'bold',
     fontSize: 15,
-    color: '#008D6F',
+    color: '#000000',
     marginLeft: 20
   },
   viewCurrentUser: { flexDirection: "row", alignItems: "center", marginTop: 30, borderTopColor: "#00000011", borderTopWidth: 1, borderBottomWidth: 1, borderBottomColor: '#00000011', paddingVertical: 20, paddingLeft: 25, paddingRight: 15, backgroundColor: '#fff' },
@@ -563,7 +563,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8F8F8'
   },
   txVersion: { marginLeft: 10, marginTop: 10 },
-  viewSpaceBottom: { height: 100 },
+  viewSpaceBottom: { height: 100, justifyContent: 'flex-end', alignItems: 'center' },
   borderMenu: { width: '85%', height: 1, backgroundColor: '#00000011', alignSelf: 'flex-end' }
 
 });

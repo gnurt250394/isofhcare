@@ -110,7 +110,7 @@ class ResetPasswordScreen extends Component {
 
                                     <TextField
                                         getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
-                                            placeholderTextColor='#808080'
+                                            placeholderTextColor='#000'
                                             placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Nhập mật khẩu mới"}
                                             secureTextEntry={this.state.secureTextEntry}
                                             allowFontScaling={false}
@@ -142,7 +142,7 @@ class ResetPasswordScreen extends Component {
                                 <Field style={styles.inputPass}>
                                     <TextField
                                         getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
-                                            placeholderTextColor='#808080'
+                                            placeholderTextColor='#000'
                                             placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Xác nhận mật khẩu mới"}
                                             secureTextEntry={this.state.secureTextEntry2}
                                             allowFontScaling={false}

@@ -42,7 +42,7 @@ class VerifyPhoneNumberScreen extends React.Component {
         }
     }
     componentDidMount() {
-        setInterval(() => {
+        this.interval = setInterval(() => {
             if (this.state.seconds > 0)
                 this.setState(preState => {
                     return {
@@ -51,6 +51,15 @@ class VerifyPhoneNumberScreen extends React.Component {
                 })
         }, 1000);
         // AppState.addEventListener('change', this._handleAppStateChange);
+    }
+    componentDidUpdate() {
+        if (this.state.timer === 0) {
+            clearInterval(this.interval);
+        }
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
     }
     // setInterval = () => {
     //     setInterval(() => {

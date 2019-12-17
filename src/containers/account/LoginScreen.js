@@ -309,9 +309,10 @@ class LoginScreen extends Component {
 
 											getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
 												keyboardType='numeric'
+												maxLength={10}
 												placeholderStyle={styles.placeholder} value={value} underlineColor={'#CCCCCC'}
 												inputStyle={styles.textInputStyle}
-												placeholderTextColor='#808080'
+												placeholderTextColor='#000'
 												placeholderStyle={{ fontWeight: '200' }}
 												labelStyle={styles.labelStyle} placeholder={constants.phone} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
 											onChangeText={s => this.setState({ phone: s })}
@@ -332,7 +333,7 @@ class LoginScreen extends Component {
 											<TextField
 												getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
 													placeholderStyle={styles.placeholder}
-													placeholderTextColor='#808080'
+													placeholderTextColor='#000'
 													value={value} underlineColor={'#CCCCCC'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.password} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} secureTextEntry={this.state.secureTextEntry} />}
 												onChangeText={s => this.setState({ password: s })}
 												errorStyle={styles.errorStyle}
