@@ -26,20 +26,22 @@ class InputLocationScreen extends Component {
     }
     componentDidMount() {
         let dataLocation = this.props.navigation.getParam('dataLocation', null)
-        let resultsLocation = dataLocation && [{
-            address: dataLocation && dataLocation.address ? dataLocation.address : '',
-            location: {
-                latitude: dataLocation && dataLocation.lat ? dataLocation.lat : null,
-                longitude: dataLocation && dataLocation.lng ? dataLocation.lng : null,
-            }
-        }]
-        this.setState({
-            ownerName: dataLocation && dataLocation.ownerName ? dataLocation.ownerName : '',
-            ownerId: dataLocation && dataLocation.ownerId ? dataLocation.ownerId : '',
-            telephone: dataLocation && dataLocation.phone ? dataLocation.phone : '',
-            resultsLocation,
-            address: dataLocation && dataLocation.address
-        })
+        if (dataLocation) {
+            let resultsLocation = dataLocation && [{
+                address: dataLocation && dataLocation.address ? dataLocation.address : '',
+                location: {
+                    latitude: dataLocation && dataLocation.lat ? dataLocation.lat : null,
+                    longitude: dataLocation && dataLocation.lng ? dataLocation.lng : null,
+                }
+            }]
+            this.setState({
+                ownerName: dataLocation && dataLocation.ownerName ? dataLocation.ownerName : '',
+                ownerId: dataLocation && dataLocation.ownerId ? dataLocation.ownerId : '',
+                telephone: dataLocation && dataLocation.phone ? dataLocation.phone : '',
+                resultsLocation,
+                address: dataLocation && dataLocation.address
+            })
+        }
     }
     onAddLocation = () => {
         let { ownerName, telephone } = this.state
