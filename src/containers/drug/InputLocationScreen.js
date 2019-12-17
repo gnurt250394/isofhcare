@@ -38,7 +38,7 @@ class InputLocationScreen extends Component {
             ownerId: dataLocation && dataLocation.ownerId ? dataLocation.ownerId : '',
             telephone: dataLocation && dataLocation.phone ? dataLocation.phone : '',
             resultsLocation,
-            address: dataLocation.address
+            address: dataLocation && dataLocation.address
         })
     }
     onAddLocation = () => {
