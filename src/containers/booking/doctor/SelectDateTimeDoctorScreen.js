@@ -640,6 +640,7 @@ class SelectDateTimeDoctorScreen extends Component {
         const { profileDoctor } = this.state
         return (<ActivityPanel
             isLoading={this.state.isLoading}
+            transparent={true}
             title="Chọn thời gian">
             <View style={styles.flex}>
                 <View style={styles.container}>

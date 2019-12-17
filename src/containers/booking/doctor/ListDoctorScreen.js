@@ -212,12 +212,13 @@ class ListDoctorScreen extends Component {
             onSelected: this.onSelectSpecialist
         })
     }
-   
+
     render() {
         const { refreshing, data } = this.state
         return (
             <ActivityPanel
                 title={constants.title.select_doctor}
+                transparent={true}
                 isLoading={this.state.isLoading}>
                 <View style={styles.groupSearch}>
                     <TextInput
@@ -241,14 +242,6 @@ class ListDoctorScreen extends Component {
                     }
 
                 </View>
-                {/* <View style={[styles.backgroundHeader,]} /> */}
-                {/* <ScrollView
-                // onScroll={Animated.event(
-                //     [{ nativeEvent: { contentOffset: { y: this.onScroll } } }],
-                //     { useNativeDriver: true },
-                // )}
-                > */}
-
                 <FlatList
                     data={data}
                     renderItem={this.renderItem}

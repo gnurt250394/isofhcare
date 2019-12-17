@@ -150,9 +150,8 @@ class DetailsDoctorScreen extends Component {
       <ActivityPanel
         title={constants.title.info_doctor}
         isLoading={this.state.isLoading}
-
+        transparent={true}
       >
-        <View style={styles.backgroundHeader}></View>
 
         <ScrollView
           keyboardShouldPersistTaps="handled"

@@ -187,7 +187,7 @@ class MyVoucherScreen extends Component {
         const { keyword, voucherSelected } = this.state
         return (
             <ActivityPanel
-                containerStyle={{ backgroundColor: '#eee' }}
+                // containerStyle={{ backgroundColor: '#eee' }}
                 title={constants.title.voucher}
                 transparent={true}
                 useCard={true}
@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         borderTopLeftRadius: 5,
         borderTopRightRadius: 5,
-        backgroundColor: '#fff',
+        // backgroundColor: '#fff',
     },
     headerAbsolute: {
         backgroundColor: '#27c8ad',
