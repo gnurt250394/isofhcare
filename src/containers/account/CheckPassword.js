@@ -24,7 +24,7 @@ export default class CheckPassword extends Component {
     return (
       <FloatingLabel
         placeholderStyle={styles.placeFloat}
-        placeholderTextColor='#808080'
+        placeholderTextColor='#000'
         value={value}
         underlineColor={"#02C39A"}
         inputStyle={styles.textInputStyle}
