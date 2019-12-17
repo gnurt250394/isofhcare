@@ -64,7 +64,7 @@ export default class DetailsDrugScreen extends Component {
 
     }
     onClickItem = (item) => {
-        this.props.navigation.navigate('drugStore',{data:item})
+        this.props.navigation.navigate('drugStore', { data: item })
     }
     findDrug = () => {
         if (this.state.dataDetail && this.state.dataDetail.address) {
@@ -173,7 +173,22 @@ export default class DetailsDrugScreen extends Component {
     renderViewByStatus = () => {
         let status = this.state.dataDetail && this.state.dataDetail.state
         switch (status) {
-            case 'FOUND': {
+            case 'FOUND':
+                return (
+                    <View style={styles.viewLocation}>
+                        <Text style={styles.txLabel}>Nhà thuốc có bán đơn thuốc của bạn</Text>
+                        <TouchableOpacity style={styles.btnViewAddress}><Text style={styles.txViewAddress}>Xem địa chỉ của bạn</Text></TouchableOpacity>
+                        <FlatList
+                            data={this.state.dataDetail.pharmacies}
+                            extraData={this.state}
+                            keyExtractor={(item, index) => index.toString()}
+                            renderItem={this.renderItem}
+                        >
+                        </FlatList>
+                        <View style={{ height: 50 }}></View>
+                    </View>
+                )
+            case 'STORED': {
                 if (this.state.dataDetail && this.state.dataDetail.address)
                     return (
                         <View>
@@ -197,29 +212,17 @@ export default class DetailsDrugScreen extends Component {
                         <TouchableOpacity onPress={this.findDrug} style={styles.btnFind}><Text style={styles.txFind}>Tìm nhà thuốc</Text></TouchableOpacity>
                     </View>)
             }
-            case 'STORED': return (
-                <View style={styles.viewLocation}>
-                    <Text style={styles.txLabel}>Nhà thuốc có bán đơn thuốc của bạn</Text>
-                    <TouchableOpacity style={styles.btnViewAddress}><Text style={styles.txViewAddress}>Xem địa chỉ của bạn</Text></TouchableOpacity>
-                    <FlatList
-                        data={this.state.dataDetail.pharmacies}
-                        extraData={this.state}
-                        keyExtractor={(item, index) => index.toString()}
-                        renderItem={this.renderItem}
-                    >
-                    </FlatList>
-                    <View style = {{height:50}}></View>
-                </View>
-            )
-            case 'FINDING': return (
-                <View style={styles.viewLocation}>
-                    <Text style={styles.txLabel}>Nhà thuốc có bán đơn thuốc của bạn</Text>
-                    <TouchableOpacity style={styles.btnViewAddress}><Text style={styles.txViewAddress}>Xem địa chỉ của bạn</Text></TouchableOpacity>
-                    <View style={styles.viewFinding}>
-                        <Text style={styles.txFinding}>Đang xử lý đơn thuốc...</Text>
+            case 'FINDING':
+                return (
+                    <View style={styles.viewLocation}>
+                        <Text style={styles.txLabel}>Nhà thuốc có bán đơn thuốc của bạn</Text>
+                        <TouchableOpacity style={styles.btnViewAddress}><Text style={styles.txViewAddress}>Xem địa chỉ của bạn</Text></TouchableOpacity>
+                        <View style={styles.viewFinding}>
+                            <Text style={styles.txFinding}>Đang xử lý đơn thuốc...</Text>
+                        </View>
                     </View>
-                </View>
-            )
+                )
+
         }
 
     }
@@ -247,7 +250,7 @@ export default class DetailsDrugScreen extends Component {
         let dataDetail = this.state.dataDetail
         return (
             <ActivityPanel isLoading={this.state.isLoading} style={styles.container} title={"Chi tiết đơn thuốc"} showFullScreen={true}>
-                <ScrollView style = {{backgroundColor: '#f2f2f2'}}>
+                <ScrollView style={{ backgroundColor: '#f2f2f2' }}>
                     <ScaledImage height={100} source={require('@images/new/drug/ic_bg_find_drug.png')}></ScaledImage>
                     <View style={styles.viewTitle}>
                         <Text style={styles.txTitle}>{dataDetail && dataDetail.name}</Text>

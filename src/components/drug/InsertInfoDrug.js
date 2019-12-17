@@ -53,36 +53,6 @@ class InsertInfoDrug extends Component {
             }
         });
     }
-    renderAddress = () => {
-        let item = this.state.location
-        let district = item.district ? item.district : null
-        let province = item.province ? item.province : null
-        let zone = item.zone ? item.zone : ''
-        let village = item.village ? item.village : null
-        if (district && province && zone && village) {
-            return (`${village}, ${zone}, ${district}, ${province}`)
-        }
-        else if (district && province && zone) {
-            return (`${zone}, ${district}, ${province}`)
-        }
-        else if (district && province && village) {
-            return (`${village}, ${district}, ${province}`)
-        }
-        else if (district && province) {
-            return (`${district},${province},`)
-        }
-        else if (province && village) {
-            return (`${village}, ${province}`)
-        }
-        else if (province) {
-            return (`${province}`)
-        }
-        else if (village) {
-            return (`${village}`)
-        } else if (!village && !district && !province && !zone) {
-            return ('')
-        }
-    }
     onCreateSuccess = (data) => {
         this.props.dispatch(redux.addDrug(data));
         NavigationService.pop();
@@ -90,16 +60,11 @@ class InsertInfoDrug extends Component {
     addMenuDrug = (isFinding) => {
         let imageUris = this.props.imageUris
         let dataDrug = this.props.dataDrug
-        let addressId = this.state.location && this.state.location.id
+        let addressId = this.state.location && this.state.location.id ? this.state.location.id : null
         let note = this.state.note
         let id = this.props.userApp.currentUser.id
         let name = this.state.name
-        if (!addressId) {
-            snackbar.show('Bạn chưa nhập địa chỉ', 'danger')
-            return
-        }
         let idDrug = this.props.dataEdit && this.props.dataEdit.id ? this.props.dataEdit.id : null
-        debugger
         if (imageUris) {
 
             for (var i = 0; i < imageUris.length; i++) {
@@ -178,18 +143,18 @@ class InsertInfoDrug extends Component {
             <View style={styles.container}>
                 <View style={styles.viewInput}>
                     <Text style={styles.txNameDrug}>Tên đơn thuốc</Text>
-                    <TextInput value={this.state.name} placeholderTextColor="#808080" onChangeText={text => this.setState({ name: text })} underlineColorAndroid={'#fff'} style={styles.inputNameDrug} multiline={true} placeholder={'Nhập tên đơn thuốc'}></TextInput>
+                    <TextInput value={this.state.name} placeholderTextColor="#000" onChangeText={text => this.setState({ name: text })} underlineColorAndroid={'#fff'} style={styles.inputNameDrug} multiline={true} placeholder={'Nhập tên đơn thuốc'}></TextInput>
                 </View>
                 <View style={styles.viewInput}>
                     <Text style={styles.txNameDrug}>Ghi chú</Text>
-                    <TextInput value={this.state.note} placeholderTextColor="#808080" onChangeText={text => this.setState({ note: text })} placeholder={'Viết ghi chú cho đơn thuốc'} multiline={true} style={styles.inputNote}></TextInput>
+                    <TextInput value={this.state.note} placeholderTextColor="#000" onChangeText={text => this.setState({ note: text })} placeholder={'Viết ghi chú cho đơn thuốc'} multiline={true} style={styles.inputNote}></TextInput>
                 </View>
                 <View style={styles.viewInput}>
                     <Text style={styles.txNameDrug}>Vị trí của bạn</Text>
                     <TouchableOpacity onPress={this.onSelectLocation} style={styles.btnLocation}>
                         <View style={styles.inputLocation}>
                             <ScaledImage source={require('@images/new/drug/ic_location.png')} height={20}></ScaledImage>
-                            <Text style={styles.txLabelLocation}>{this.state.location ? this.renderAddress() : 'Nhập địa chỉ'}</Text>
+                            <Text style={styles.txLabelLocation}>{this.state.location ? this.state.location.address : 'Nhập địa chỉ'}</Text>
                         </View>
                         <ScaledImage source={require('@images/new/drug/ic_btn_location.png')} height={10}></ScaledImage>
                     </TouchableOpacity>

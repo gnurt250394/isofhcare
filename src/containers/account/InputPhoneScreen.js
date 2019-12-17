@@ -111,7 +111,7 @@ class ResetPasswordScreen extends Component {
                                         keyboardType='numeric'
                                         maxLength={10}
                                         placeholderStyle={{ fontSize: 16, }} value={value} underlineColor={'#CCCCCC'}
-                                        placeholderTextColor='#808080'
+                                        placeholderTextColor='#000'
                                         inputStyle={styles.textInputStyle}
                                         labelStyle={styles.labelStyle} placeholder={constants.phone} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
                                     onChangeText={s => this.setState({ phone: s })}

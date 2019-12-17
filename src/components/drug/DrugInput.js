@@ -93,7 +93,7 @@ export default class DrugInput extends Component {
                             returnKeyType: 'search',
                             placeholder: "Nhập tên thuốc, vd (Paracetamol 500mg",
                             underlineColorAndroid: "transparent",
-                            placeholderTextColor : "#808080",
+                            placeholderTextColor : "#000",
                             style: {
                                 flex: 1,
                                 color:'#000',

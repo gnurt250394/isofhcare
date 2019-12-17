@@ -59,6 +59,8 @@ class ListQuestionScreen extends Component {
                 style={{ flex: 1 }}
                 title={constants.title.advisory_online}
                 showFullScreen={true}
+                transparent={true}
+                useCard={true}
                 menuButton={this.props.userApp.isLogin ? this.menuCreate() : null}
                 isLoading={this.state.isLoading}
                 titleStyle={[this.props.userApp.isLogin ? { marginRight: 0 } : {}, { color: '#FFF' }]}
@@ -66,7 +68,6 @@ class ListQuestionScreen extends Component {
                 {
                     this.props.userApp.isLogin ?
                         <View style={styles.containerTab} keyboardShouldPersistTaps="handled">
-                            <View style={styles.backgroundTab}></View>
                             <View style={styles.groupTab}>
                                 <TouchableOpacity style={styles.flex} onPress={this.swipe.bind(this, 0)}>
                                     <Text style={[styles.txtTab, this.state.tabIndex == 0 ? styles.tabSelected : styles.tabNormal]}>{constants.questions.answered}</Text>

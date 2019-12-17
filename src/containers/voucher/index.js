@@ -187,10 +187,11 @@ class MyVoucherScreen extends Component {
         const { keyword, voucherSelected } = this.state
         return (
             <ActivityPanel
-                containerStyle={{ backgroundColor: '#eee' }}
+                // containerStyle={{ backgroundColor: '#eee' }}
                 title={constants.title.voucher}
+                transparent={true}
+                useCard={true}
                 showFullScreen={true} isLoading={this.state.isLoading}>
-                <View style={styles.headerAbsolute} />
                 <View style={styles.container}>
                     <View style={styles.containerSearch}>
                         <TextInput style={styles.input}
@@ -275,7 +276,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         borderTopLeftRadius: 5,
         borderTopRightRadius: 5,
-        backgroundColor: '#fff',
+        // backgroundColor: '#fff',
     },
     headerAbsolute: {
         backgroundColor: '#27c8ad',

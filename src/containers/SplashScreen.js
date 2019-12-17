@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Image, StyleSheet, TouchableOpacity,StatusBar } from 'react-native';
 import { connect } from 'react-redux';
 import userProvider from '@data-access/user-provider';
 import constants from '@resources/strings';
@@ -61,7 +61,8 @@ class SplashScreen extends Component {
 
 	render() {
 		return (
-			<ActivityPanel style={styles.flex} hideActionbar={true} hideStatusbar={true} showFullScreen={true}>
+			<ActivityPanel style={styles.flex} hideActionbar={true} hideStatusbar={true} showFullScreen={true} showBackgroundHeader={false}>
+				<StatusBar translucent={true} backgroundColor='transparent'/>
 				<View style={styles.container}>
 					<View style={[styles.containerLogo]}>
 						<MyScaleImage animation="rubberBand" delay={500} duration={3000} source={require("@images/logo.png")} width={120} />

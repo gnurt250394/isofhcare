@@ -109,7 +109,7 @@ class ChangePasswordScreen extends Component {
                                         getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
                                             placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.enter_old_password}
                                             secureTextEntry={this.state.secureTextOldEntry}
-                                            placeholderTextColor='#808080'
+                                            placeholderTextColor='#000'
                                             allowFontScaling={false}
                                             onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
                                         onChangeText={s => {
@@ -141,7 +141,7 @@ class ChangePasswordScreen extends Component {
                                             placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Nhập mật khẩu mới"}
                                             secureTextEntry={this.state.secureTextNewEntry}
                                             allowFontScaling={false}
-                                            placeholderTextColor='#808080'
+                                            placeholderTextColor='#000'
                                             onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
                                         onChangeText={s => {
                                             this.setState({ passwordNew: s });
@@ -170,7 +170,7 @@ class ChangePasswordScreen extends Component {
                                         getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
                                             placeholderStyle={{ fontSize: 16, fontWeight: '200' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Xác nhận mật khẩu mới"}
                                             secureTextEntry={this.state.secureTextNew2Entry}
-                                            placeholderTextColor='#808080'
+                                            placeholderTextColor='#000'
                                             allowFontScaling={false}
                                             onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
                                         onChangeText={s => {

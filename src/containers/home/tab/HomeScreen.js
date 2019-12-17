@@ -371,7 +371,7 @@ class HomeScreen extends Component {
   renderButtonBooking() {
     return (this.state.featuresBooking || []).map((item, position) => {
       return (
-        <Animatable.View key={position} delay={100} animation={"zoomInUp"} style={{width:'25%',alignItems:'center'}} direction="alternate">
+        <Animatable.View key={position} delay={100} animation={"zoomInUp"} style={{ width: '25%', alignItems: 'center' }} direction="alternate">
           {
             item.empty ? <View style={[styles.viewEmpty,]}
             ></View> :
@@ -474,14 +474,15 @@ class HomeScreen extends Component {
   render() {
     return (
       <ActivityPanel
+        transparent={true}
         isLoading={this.state.isLoading}
         hideActionbar={true}
         containerStyle={{ backgroundColor: '#f2f2f2' }}
-        style={styles.activityPanel}
+        style={[styles.activityPanel, { backgroundColor: 'transparent' }]}
       >
         <View style={styles.container}>
           {/* <View style={{ height: 150, backgroundColor: '#f2f2f2', position: "absolute", top: 300, left: 0, right: 0 }}></View> */}
-          <ScaledImage source={require("@images/new/homev2/header_home.png")} width={DEVICE_WIDTH} style={styles.imgHome} />
+          {/* <ScaledImage source={require("@images/new/homev2/header_home.png")} width={DEVICE_WIDTH} style={styles.imgHome} /> */}
           {/*   <View style={styles.containerImageLogo}>
         <View style={styles.ImageCenter}>
               <ScaledImage source={require("@images/new/isofhcare.png")} width={116} />

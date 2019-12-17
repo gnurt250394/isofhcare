@@ -212,25 +212,14 @@ class ListDoctorScreen extends Component {
             onSelected: this.onSelectSpecialist
         })
     }
-    backPress = () => this.props.navigation && this.props.navigation.pop()
-    renderHeader = () => {
+
+    render() {
+        const { refreshing, data } = this.state
         return (
-            <View style={[styles.containerHeader,
-                // { transform: [{ translateY: this.header }] }
-            ]}
-                // onLayout={(event) => {
-                //     this.setState({ height: event.nativeEvent.layout.height })
-                //     // this.height = event.nativeEvent.layout.height
-                // }}
-            >
-                <ActionBar
-                    actionbarTextColor={[{ color: constants.colors.actionbar_title_color }]}
-                    backButtonClick={this.backPress}
-                    title={constants.title.select_doctor}
-                    icBack={require('@images/new/left_arrow_white.png')}
-                    titleStyle={[styles.titleStyle]}
-                    actionbarStyle={[{ backgroundColor: constants.colors.actionbar_color }, styles.actionbarStyle]}
-                />
+            <ActivityPanel
+                title={constants.title.select_doctor}
+                transparent={true}
+                isLoading={this.state.isLoading}>
                 <View style={styles.groupSearch}>
                     <TextInput
                         value={this.state.keyword}
@@ -253,49 +242,17 @@ class ListDoctorScreen extends Component {
                     }
 
                 </View>
-                {/* <View style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between'
-                }}>
-                    <View style={styles.containerFilte}>
-                        <Text
-                            onPress={this.filterCSYT}
-                            style={styles.txtFilter}>Cơ sở y tế</Text>
-                        <Text onPress={this.filterSpecialist} style={styles.txtFilter}>Chuyên khoa</Text>
-                    </View>
-                    <Text 
-                    onPress={this.onRefress}
-                    style={styles.txtFilter}>Hiển thị tất cả</Text>
-                </View> */}
-            </View>
-        )
-    }
-    render() {
-        const { refreshing, data } = this.state
-        return (
-            <ActivityPanel
-                actionbar={this.renderHeader}
-                isLoading={this.state.isLoading}>
-                <View style={[styles.backgroundHeader,]} />
-                {/* <ScrollView
-                // onScroll={Animated.event(
-                //     [{ nativeEvent: { contentOffset: { y: this.onScroll } } }],
-                //     { useNativeDriver: true },
-                // )}
-                > */}
-
-                    <FlatList
-                        data={data}
-                        renderItem={this.renderItem}
-                        // style={{paddingTop:height/4}}
-                        keyExtractor={this.keyExtractor}
-                        ListEmptyComponent={this.listEmpty}
-                        onEndReached={this.loadMore}
-                        onEndReachedThreshold={0.6}
-                        onRefresh={this.onRefress}
-                        refreshing={this.state.refreshing}
-                    />
+                <FlatList
+                    data={data}
+                    renderItem={this.renderItem}
+                    // style={{paddingTop:height/4}}
+                    keyExtractor={this.keyExtractor}
+                    ListEmptyComponent={this.listEmpty}
+                    onEndReached={this.loadMore}
+                    onEndReachedThreshold={0.6}
+                    onRefresh={this.onRefress}
+                    refreshing={this.state.refreshing}
+                />
                 {/* </ScrollView> */}
             </ActivityPanel >
         );
