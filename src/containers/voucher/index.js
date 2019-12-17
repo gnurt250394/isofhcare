@@ -189,8 +189,9 @@ class MyVoucherScreen extends Component {
             <ActivityPanel
                 containerStyle={{ backgroundColor: '#eee' }}
                 title={constants.title.voucher}
+                transparent={true}
+                useCard={true}
                 showFullScreen={true} isLoading={this.state.isLoading}>
-                <View style={styles.headerAbsolute} />
                 <View style={styles.container}>
                     <View style={styles.containerSearch}>
                         <TextInput style={styles.input}

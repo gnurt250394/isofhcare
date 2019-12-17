@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, StatusBar, TouchableOpacity, Dimensions, ActivityIndicator, StyleSheet, View } from 'react-native';
+import { Text, StatusBar, TouchableOpacity, Dimensions, ActivityIndicator, StyleSheet, View, Platform } from 'react-native';
 import PropTypes from 'prop-types';
 const DEVICE_WIDTH = Dimensions.get("window").width;
 import constants from '@resources/strings'
@@ -8,7 +8,8 @@ import Activity from 'mainam-react-native-activity-panel';
 import ActionBar from '@components/Actionbar';
 import { connect } from 'react-redux';
 import ScaledImage from 'mainam-react-native-scaleimage';
-
+import { SafeAreaView } from 'react-navigation';
+import { Card } from 'native-base';
 
 class ActivityPanel extends Component {
     constructor(props) {
@@ -60,27 +61,65 @@ class ActivityPanel extends Component {
 
     render() {
         return (
-            <Activity
-                statusbarBackgroundColor="#27c8ad"
-                icBack={require('@images/new/left_arrow_white.png')}
-                iosBarStyle={'light-content'}
-                {...this.props}
-                containerStyle={[styles.container, this.props.containerStyle]}
-                actionbar={this.props.actionbar ? this.props.actionbar : this.getActionbar.bind(this)}
-                loadingView={this.getLoadingView()}
-                paddingTop={this.state.paddingTop}
-            // translucent={true}
-            >
-                {/* {this.showBackground === false ?
-                    null :
-                    <ScaledImage
-                        source={require("@images/new/background.png")}
-                        height={200}
-                        width={DEVICE_WIDTH}
-                        style={styles.imageBackground} />
-                } */}
-                {this.props.children}
-            </Activity>
+            <View style={{ flex: 1 }}>
+                <StatusBar translucent backgroundColor="transparent" />
+                <View style={{ height: 1, position: 'relative', flex: 1 }}>
+                    {
+                        (this.props.showBackgroundHeader || this.props.showBackgroundHeader === undefined) ?
+                            this.props.backgroundHeader ?
+                                <ScaledImage source={this.props.backgroundHeader} width={DEVICE_WIDTH} style={{ position: "absolute", top: 0, left: 0, right: 0 }} />
+                                :
+                                <ScaledImage source={require("@images/app/header.png")} width={DEVICE_WIDTH} style={{ position: "absolute", top: 0, left: 0, right: 0 }} />
+                            :
+                            null
+                    }
+                    {this.showBackground === false ?
+                        null :
+                        <ScaledImage
+                            source={require("@images/new/background.png")}
+                            height={200}
+                            width={DEVICE_WIDTH}
+                            style={styles.imageBackground} />
+                    }
+                    <SafeAreaView style={{ flex: 1, paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0 }}
+                        forceInset={Platform.OS === 'android' && { vertical: 'never' }}
+                    >
+                        <Activity
+                            icBack={require('@images/new/left_arrow_white.png')}
+                            iosBarStyle={'light-content'}
+                            {...this.props}
+                            containerStyle={[styles.container, this.props.containerStyle]}
+                            style={{ backgroundColor: 'transparent' }}
+                            actionbar={this.props.actionbar ? this.props.actionbar : this.getActionbar.bind(this)}
+                            loadingView={this.getLoadingView()}
+                        >
+                            {
+                                this.props.transparent ?
+                                    this.props.useCard ?
+                                        <View style={[{ flex: 1, paddingHorizontal: 10 }, this.props.containerStyle]}>
+                                            <Card style={[{ flex: 1, paddingBottom: 0, marginBottom: -10, borderRadius: 10 }, this.props.cardStyle]}>
+                                                {this.props.children}
+                                            </Card>
+                                        </View>
+                                        :
+                                        this.props.children
+                                    :
+                                    <View style={[{ flex: 1, backgroundColor: '#FFF' }, this.props.containerStyle]}>
+                                        {
+                                            this.props.useCard ?
+                                                <Card style={[{ flex: 1, paddingBottom: 0, marginBottom: -10, borderRadius: 10 }, this.props.cardStyle]}>
+                                                    {this.props.children}
+                                                </Card>
+                                                :
+                                                this.props.children
+
+                                        }
+                                    </View>
+                            }
+                        </Activity>
+                    </SafeAreaView>
+                </View>
+            </View >
         );
     }
 }
