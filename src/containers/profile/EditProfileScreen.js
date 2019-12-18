@@ -38,8 +38,8 @@ class EditProfileScreen extends Component {
         this.state = {
             name: dataProfile.name ? dataProfile.name : '',
             date: dataProfile && dataProfile.dob ? dataProfile.dob.toDateObject('-').format('dd/MM/yyyy') : (''),
-            txGender: dataProfile.gender == 1 ? 'Nam' : 'Nữ',
-            gender: dataProfile.gender,
+            txGender: '',
+            gender: '',
             dobOld: dataProfile.dob ? dataProfile.dob : '',
             height: dataProfile.height ? dataProfile.height.toString() : '',
             weight: dataProfile.weight ? dataProfile.weight.toString() : '',
@@ -61,6 +61,34 @@ class EditProfileScreen extends Component {
     }
     componentWillMount() {
         // this.renderRelation()
+        this.setTxGender()
+    }
+    setTxGender = () => {
+        let dataProfile = this.props.navigation.state.params.data.medicalRecords
+        switch (dataProfile.gender) {
+            case 1: {
+                this.setState({
+                    txGender: 'Nam',
+                    gender: 1
+                })
+                break
+            }
+            case 0: {
+                this.setState({
+                    txGender: 'Nữ',
+                    gender: 0
+                })
+                break
+            }
+            default: {
+                this.setState({
+                    txGender: '',
+                    gender: null
+                })
+                break
+            }
+        }
+
     }
     onChangeText = type => text => {
         this.setState({ [type]: text });
@@ -283,6 +311,10 @@ class EditProfileScreen extends Component {
             })
             return
         }
+        if (!this.state.gender) {
+            snackbar.show('Bạn chưa chọn giới tính', 'danger')
+            return
+        }
         connectionUtils
             .isConnected()
             .then(s => {
@@ -476,7 +508,7 @@ class EditProfileScreen extends Component {
                                     style={[
                                         styles.mucdichkham,
                                     ]}
-                                    disabled={true}
+                                    // disabled={true}
                                     onPress={this.onShowGender}
                                 >
                                     <Text style={styles.mdk}>{constants.gender}</Text>
