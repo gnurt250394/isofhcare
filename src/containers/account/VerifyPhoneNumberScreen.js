@@ -402,15 +402,15 @@ class VerifyPhoneNumberScreen extends React.Component {
                         </View>
                         {
                             this.state.countResend ? (<Text style={[styles.txReSent, { color: 'red', marginTop: 10 }]}>Bạn chỉ được chọn gửi lại mã tối đa 5 lần, xin vui lòng thử lại sau 60 phút</Text>) :
-                                <View>
-                                    <Text style={{ fontStyle: 'italic', color: '#000', marginTop: 100 }}>Bạn cho rằng mình chưa nhận được mã ?</Text>
+                                <View style = {{flex:1,padding:10}}>
+                                    <Text style={{ color: '#000', marginTop: 100,fontSize:14 }}>Bạn cho rằng mình chưa nhận được mã ?</Text>
                                     <TouchableOpacity style={styles.btnReSend} disabled={this.state.disabled} onPress={this.onReSendPhone}><Text style={styles.txBtnReSend}>Gửi lại mã</Text></TouchableOpacity>
                                 </View>
                         }
 
                     </KeyboardAvoidingView>
                 </ScrollView>
-            </ImageBackground >
+            </ImageBackground>
         )
     }
 }
@@ -436,8 +436,8 @@ const styles = StyleSheet.create({
     txReSent: { color: '#000', fontStyle: 'italic', fontWeight: '700', textAlign: 'center', fontSize: 14 },
     btnFinish: { backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 40, alignItems: 'center', justifyContent: 'center', marginBottom: 20 },
     txFinish: { color: '#FFF', fontSize: 17 },
-    btnReSend: { alignSelf: 'center', padding: 2, marginTop: 15, borderRadius: 5, height: 28, width: 100, justifyContent: 'center', alignItems: 'center' },
-    txBtnReSend: { color: '#3161AD', fontStyle: 'italic', fontWeight: 'bold', fontSize: 14, textDecorationLine: 'underline' },
+    btnReSend: { alignSelf: 'center', marginTop: 15, borderRadius: 5, height: 28, width: 150, justifyContent: 'center', alignItems: 'center'},
+    txBtnReSend: { color: '#3161AD', fontWeight: 'bold', fontSize: 14, textDecorationLine: 'underline',margin:2 },
     txErr: {
         textAlign: 'center', color: 'red', fontSize: 14, fontStyle: 'italic', fontWeight: '700', marginTop: 20
     },

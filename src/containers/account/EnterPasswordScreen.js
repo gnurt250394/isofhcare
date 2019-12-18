@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
   },
   placeFloat: {
     fontSize: 16,
-    fontWeight: '200'
+    fontWeight: '300'
   },
   form: {
     marginTop: 10
