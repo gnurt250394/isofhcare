@@ -44,7 +44,7 @@ class EditProfileScreen extends Component {
             height: dataProfile.height ? dataProfile.height.toString() : '',
             weight: dataProfile.weight ? dataProfile.weight.toString() : '',
             address: dataProfile.village && dataProfile.village != ' ' ? dataProfile.village : '',
-            relationshipType: dataProfile.relationshipType ? dataProfile.relationshipType : '',
+            // relationshipType: dataProfile.relationshipType ? dataProfile.relationshipType : '',
             profileNo: dataProfile.profileNo ? dataProfile.profileNo : '',
             id: dataProfile.id,
             dob: dataProfile.dob ? dataProfile.dob.toDateObject('-') : '',
@@ -60,7 +60,7 @@ class EditProfileScreen extends Component {
         console.log(dataProfile.id)
     }
     componentWillMount() {
-        this.renderRelation()
+        // this.renderRelation()
     }
     onChangeText = type => text => {
         this.setState({ [type]: text });
@@ -292,7 +292,6 @@ class EditProfileScreen extends Component {
                     },
                     () => {
                         let id = this.state.id
-                        console.log(id)
                         let data = {
                             'name': this.state.name,
                             "dob": this.state.dob ? this.state.dob.format('yyyy-MM-dd') + ' 00:00:00' : null,
@@ -304,7 +303,7 @@ class EditProfileScreen extends Component {
                             "districtId": this.state.districts ? this.state.districts.id.toString() : null,
                             "zoneId": this.state.zone ? this.state.zone.id.toString() : null,
                             "village": this.state.address ? this.state.address : ' ',
-                            "relationshipType": this.state.relationShip && this.state.relationShip.type ? this.state.relationShip.type : (this.state.relationshipType || null)
+                            "relationshipType": null
                         }
                         profileProvider.updateProfile(id, data).then(res => {
                             switch (res.code) {
@@ -328,22 +327,22 @@ class EditProfileScreen extends Component {
                 snackbar.show(constants.msg.app.not_internet, "danger");
             });
     }
-    onSelectRelationShip = () => {
-        NavigationService.navigate('selectRelationship', {
-            onSelected: this.selectRelationShip.bind(this),
-            gender: this.state.gender
-            // id: this.state.relationShip.id
-        })
+    // onSelectRelationShip = () => {
+    //     NavigationService.navigate('selectRelationship', {
+    //         onSelected: this.selectRelationShip.bind(this),
+    //         gender: this.state.gender
+    //         // id: this.state.relationShip.id
+    //     })
 
-    }
-    selectRelationShip = (relationShip) => {
-        let relationShipError = relationShip ? "" : this.state.relationShipError;
-        if (!relationShip || !this.state.relationShip || relationShip.id != this.state.relationShip.id) {
-            this.setState({ relationShip, relationShipError })
-        } else {
-            this.setState({ relationShip, relationShipError });
-        }
-    }
+    // }
+    // selectRelationShip = (relationShip) => {
+    //     let relationShipError = relationShip ? "" : this.state.relationShipError;
+    //     if (!relationShip || !this.state.relationShip || relationShip.id != this.state.relationShip.id) {
+    //         this.setState({ relationShip, relationShipError })
+    //     } else {
+    //         this.setState({ relationShip, relationShipError });
+    //     }
+    // }
     onSelectDate = () => this.setState({ toggelDateTimePickerVisible: true })
     onConfirmDate = newDate => {
         this.setState({
@@ -696,7 +695,7 @@ class EditProfileScreen extends Component {
                                 />
                             </Field>
                             <Text style={[styles.errorStyle]}>{this.state.addressError}</Text>
-                            {this.state.data.status !== 1 ? (
+                            {/* {this.state.data.status !== 1 ? (
                                 <Field style={{ flex: 1 }}>
                                     <Text style={styles.mdk}>Quan hệ <Text style={{ color: 'red' }}>(*)</Text></Text>
                                     <Field>
@@ -718,7 +717,7 @@ class EditProfileScreen extends Component {
                                     <Text style={[styles.errorStyle]}>{this.state.relationErr}</Text>
                                 </Field>
                             ) : (<View></View>)
-                            }
+                            } */}
 
                         </Form>
                     </View>
