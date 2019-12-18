@@ -311,7 +311,7 @@ class EditProfileScreen extends Component {
             })
             return
         }
-        if (!this.state.gender) {
+        if (!this.state.gender && this.state.gender != 0) {
             snackbar.show('Bạn chưa chọn giới tính', 'danger')
             return
         }
