@@ -249,7 +249,8 @@ const styles = StyleSheet.create({
         borderBottomWidth: 4,
         borderColor: '#3161AD',
         width: 38,
-        textAlign: 'center'
+        textAlign: 'center',
+        paddingVertical:10
     },
     viewComponents: {
         marginLeft: 10
