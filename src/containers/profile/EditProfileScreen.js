@@ -65,7 +65,7 @@ class EditProfileScreen extends Component {
     }
     setTxGender = () => {
         let dataProfile = this.props.navigation.state.params.data.medicalRecords
-        switch (dataProfile.gender) {
+        switch (Number(dataProfile.gender)) {
             case 1: {
                 this.setState({
                     txGender: 'Nam',
