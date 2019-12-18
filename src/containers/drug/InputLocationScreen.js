@@ -9,6 +9,7 @@ import ActivityPanel from "@components/ActivityPanel";
 import { connect } from "react-redux";
 import RNGooglePlaces from 'react-native-google-places';
 import SearchableDropdown from 'react-native-searchable-dropdown';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 const devices_width = Dimensions.get('window').width
 class InputLocationScreen extends Component {
@@ -165,7 +166,6 @@ class InputLocationScreen extends Component {
                 </TouchableOpacity>}
                 titleStyle={styles.txTitle}
             >
-                <ScaledImage width={devices_width} source={require('@images/new/drug/ic_bg_find_drug.png')}></ScaledImage>
                 <View style={styles.viewName}>
                     <Text style={styles.txName}>Họ và tên</Text>
                     <TextInput value={this.state.ownerName} onChangeText={text => this.setState({ ownerName: text })} multiline={true} style={styles.inputName} placeholder={'Nhập họ và tên'}></TextInput>
@@ -180,10 +180,11 @@ class InputLocationScreen extends Component {
                             <Text style={styles.inputAdress}>{this.state.address ? this.state.address : 'Nhập địa chỉ'}</Text>
                         </View>
                     </TouchableOpacity> */}
-                <View><View style={styles.viewName}>
-                    <Text style={styles.txName}>Địa chỉ</Text>
-                    <TextInput value={this.state.address} onChangeText={text => this.onFindLocation(text)} multiline={true} style={styles.inputName} placeholder={'Nhập địa chỉ'}></TextInput>
-                </View>
+                <View>
+                    <View style={styles.viewName}>
+                        <Text style={styles.txName}>Địa chỉ</Text>
+                        <TextInput value={this.state.address} onChangeText={text => this.onFindLocation(text)} multiline={true} style={styles.inputName} placeholder={'Nhập địa chỉ'}></TextInput>
+                    </View>
                     <ScrollView
                         keyboardShouldPersistTaps="handled"
                     >
@@ -194,9 +195,10 @@ class InputLocationScreen extends Component {
                                 </TouchableOpacity>
                             )
                         })}
+                        <KeyboardSpacer></KeyboardSpacer>
                     </ScrollView>
                 </View>
-                <View style={styles.viewBottom}></View>
+                {/* <View style={styles.viewBottom}></View> */}
             </ActivityPanel>
         );
     }
