@@ -141,7 +141,7 @@ class EnterPasswordScreen extends Component {
         value={value}
         underlineColor={'#02C39A'}
         inputStyle={styles.textInputStyle}
-        placeholderTextColor='#808080'
+        placeholderTextColor='#000'
         labelStyle={styles.labelStyle}
         placeholder={constants.input_password}
         secureTextEntry={this.state.secureTextPassEntry}
@@ -206,7 +206,7 @@ class EnterPasswordScreen extends Component {
                     getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
                       placeholderStyle={styles.placeFloat}
                       value={value}
-                      placeholderTextColor='#808080'
+                      placeholderTextColor='#000'
                       underlineColor={'#02C39A'}
                       inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.change_password_screens.confirm_pass}
 
@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
   },
   placeFloat: {
     fontSize: 16,
-    fontWeight: '200'
+    fontWeight: '300'
   },
   form: {
     marginTop: 10
@@ -330,8 +330,8 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   textInputStyle: {
-    color: "#53657B",
-    fontWeight: "200",
+    color: "#000",
+    fontWeight: "300",
     height: 45,
     marginLeft: 0,
     fontSize: 20,

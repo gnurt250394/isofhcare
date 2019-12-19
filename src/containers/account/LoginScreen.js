@@ -312,8 +312,8 @@ class LoginScreen extends Component {
 												maxLength={10}
 												placeholderStyle={styles.placeholder} value={value} underlineColor={'#CCCCCC'}
 												inputStyle={styles.textInputStyle}
-												placeholderTextColor='#808080'
-												placeholderStyle={{ fontWeight: '200' }}
+												placeholderTextColor='#000'
+												placeholderStyle={{ fontWeight: '300',fontSize:16 }}
 												labelStyle={styles.labelStyle} placeholder={constants.phone} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
 											onChangeText={s => this.setState({ phone: s })}
 											errorStyle={styles.errorStyle}
@@ -333,7 +333,7 @@ class LoginScreen extends Component {
 											<TextField
 												getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
 													placeholderStyle={styles.placeholder}
-													placeholderTextColor='#808080'
+													placeholderTextColor='#000'
 													value={value} underlineColor={'#CCCCCC'} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.password} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} secureTextEntry={this.state.secureTextEntry} />}
 												onChangeText={s => this.setState({ password: s })}
 												errorStyle={styles.errorStyle}
@@ -351,7 +351,7 @@ class LoginScreen extends Component {
 
 											</TextField>
 											{
-												this.state.password ? (this.state.secureTextEntry ? (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 45, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 3, top: 45, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
+												this.state.password ? (this.state.secureTextEntry ? (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 45, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 45, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
 											}
 										</Field>
 									</Field>
@@ -506,8 +506,8 @@ const styles = StyleSheet.create({
 		marginTop: 10
 	},
 	textInputStyle: {
-		color: "#53657B",
-		fontWeight: "200",
+		color: "#000",
+		fontWeight: "300",
 		height: 51,
 		marginLeft: 0,
 		borderWidth: 1,
@@ -527,7 +527,7 @@ const styles = StyleSheet.create({
 	viewLogin: { marginHorizontal: 22 },
 	cardLogin: { padding: 22, paddingTop: 10, borderRadius: 8, marginTop: 50, borderColor: '#02C39A', borderWidth: 1 },
 	imgIsc: { alignSelf: 'center', },
-	placeholder: { fontSize: 16, fontWeight: '200' },
+	placeholder: { fontSize: 16, fontWeight: '300' },
 	viewFogot: { flexDirection: 'row', marginTop: 15 },
 	btnFogot: { alignItems: "flex-end", flex: 1 },
 	txFogot: {

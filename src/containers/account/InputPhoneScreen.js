@@ -100,7 +100,7 @@ class ResetPasswordScreen extends Component {
                             alignItems: "center"
                         }}
                     >
-                        <Text style={{ fontSize: 24, fontWeight: '800', color: '#00BA99', alignSelf: 'center' }}>NHẬP SỐ ĐIỆN THOẠI</Text>
+                        <Text style={{ fontSize: 24, fontWeight: '500', color: '#00BA99', alignSelf: 'center' }}>NHẬP SỐ ĐIỆN THOẠI</Text>
                         {/* <ScaleImage source={require("@images/logo.png")} width={120} /> */}
                     </View>
                     <KeyboardAvoidingView behavior="padding" >
@@ -110,8 +110,8 @@ class ResetPasswordScreen extends Component {
                                     getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
                                         keyboardType='numeric'
                                         maxLength={10}
-                                        placeholderStyle={{ fontSize: 16, }} value={value} underlineColor={'#CCCCCC'}
-                                        placeholderTextColor='#808080'
+                                        placeholderStyle={{ fontSize: 16,fontWeight:'300' }} value={value} underlineColor={'#CCCCCC'}
+                                        placeholderTextColor='#000'
                                         inputStyle={styles.textInputStyle}
                                         labelStyle={styles.labelStyle} placeholder={constants.phone} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
                                     onChangeText={s => this.setState({ phone: s })}
@@ -184,8 +184,8 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     textInputStyle: {
-        color: "#53657B",
-        fontWeight: "200",
+        color: "#000",
+        fontWeight: "300",
         height: 51,
         marginLeft: 0,
         borderWidth: 1,

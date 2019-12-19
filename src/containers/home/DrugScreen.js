@@ -42,6 +42,16 @@ class drugScreen extends Component {
     componentWillMount() {
         this.getListDrug()
     }
+    componentWillReceiveProps(nextProps) {
+        console.log('nextProps: ', nextProps);
+        if (nextProps.dataDrug) {
+            // this.setState(prev => ({
+            this.getListDrug()
+            // chưa dùng concat vì confilic với phần edit, tự add item mới
+            //     dataDrug: prev.dataDrug.concat(nextProps.dataDrug.data)
+            // }))
+        }
+    }
     getListDrug = () => {
         this.setState({
             isLoading: true
@@ -132,11 +142,13 @@ class drugScreen extends Component {
         )
     }
     onFindDrug = () => {
-        this.props.navigation.navigate('findDrug')
+        this.props.navigation.navigate('findDrug', {
+            onSelected: this.addDrug.bind(this)
+        })
     }
     onSetOption = index => {
         const dataSelect = this.state.dataSelect
-
+        console.log(dataSelect, 'dataSelectdataSelect')
         try {
             switch (index) {
                 case 0:
@@ -164,63 +176,64 @@ class drugScreen extends Component {
     render() {
         console.log(this.state.dataDrug, 'this.state.dataDrug')
         return (
-            // <ActivityPanel
-            //     style={{ flex: 1 }}
-            //     title={constants.title.content}
-            //     showFullScreen={true}
-            //     // isLoading={this.state.isLoading}
-            //     titleStyle={{
-            //         color: '#FFF'
-            //     }}
-            // >
-            <ScrollView
-                showsVerticalScrollIndicator={false}
-                bounces={false}
-                style={styles.scroll}
-                keyboardShouldPersistTaps="handled"
-                refreshControl={
-                    <RefreshControl
-                        onRefresh={this.getListDrug}
-                        refreshing={this.state.isLoading}
-                    />
-                }
-            // keyboardDismissMode='on-drag' 
+            <ActivityPanel
+                style={{ flex: 1 }}
+                title={constants.title.content}
+                hideActionbar={true}
+                // isLoading={this.state.isLoading}
+                backgroundHeader={require('@images/new/drug/ic_bg_drug2.png')}
+                containerStyle={{ marginTop: 150, borderTopLeftRadius: 10, borderTopRightRadius: 10}}
+                titleStyle={{
+                    color: '#FFF'
+                }}
             >
-                <ScaleImage width={devices_width} source={require('@images/new/drug/ic_bg_drug2.png')}></ScaleImage>
-                <View style={styles.containerCard}>
-                    <TouchableOpacity onPress={this.onFindDrug} style={styles.btnAdd}>
-                        <ScaleImage style={styles.imgBtn} height={30} source={require('@images/new/drug/ic_drug_btn.png')}></ScaleImage>
-                        <View style={styles.viewContentBtn}>
-                            <Text style={styles.txSearchDrug}>Tìm nhà thuốc</Text>
-                            <Text style={styles.txSearchMenuDrug}>Theo đơn thuốc</Text>
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    bounces={false}
+                    style={styles.scroll}
+                    keyboardShouldPersistTaps="handled"
+                    refreshControl={
+                        <RefreshControl
+                            onRefresh={this.getListDrug}
+                            refreshing={this.state.isLoading}
+                        />
+                    }
+                // keyboardDismissMode='on-drag' 
+                >
+                    <View style={styles.containerCard}>
+                        <TouchableOpacity onPress={this.onFindDrug} style={styles.btnAdd}>
+                            <ScaleImage style={styles.imgBtn} height={30} source={require('@images/new/drug/ic_drug_btn.png')}></ScaleImage>
+                            <View style={styles.viewContentBtn}>
+                                <Text style={styles.txSearchDrug}>Tìm nhà thuốc</Text>
+                                <Text style={styles.txSearchMenuDrug}>Theo đơn thuốc</Text>
+                            </View>
+                        </TouchableOpacity>
+                        <View style={styles.viewFlatlish}></View>
+                        <View style={styles.viewHeadFlat}>
+                            {this.state.dataDrug && this.state.dataDrug.length ? <Text>Đơn thuốc của tôi {`(${this.state.dataDrug.length})`}</Text> : null}
+                            {/* <TouchableOpacity><Text>Xem tất cả</Text></TouchableOpacity> */}
                         </View>
-                    </TouchableOpacity>
-                    <View style={styles.viewFlatlish}></View>
-                    <View style={styles.viewHeadFlat}>
-                       {this.state.dataDrug && this.state.dataDrug.length ? <Text>Đơn thuốc của tôi {`(${this.state.dataDrug.length})`}</Text>:null}
-                        {/* <TouchableOpacity><Text>Xem tất cả</Text></TouchableOpacity> */}
-                    </View>
-                    <FlatList
-                        style={styles.viewFl}
-                        data={this.state.dataDrug}
-                        extraData={this.state}
-                        keyExtractor={(item, index) => index.toString()}
-                        renderItem={this.renderItem}
-                        ListEmptyComponent = {this.listEmpty}
-                    />
+                        <FlatList
+                            style={styles.viewFl}
+                            data={this.state.dataDrug}
+                            extraData={this.state}
+                            keyExtractor={(item, index) => index.toString()}
+                            renderItem={this.renderItem}
+                            ListEmptyComponent={this.listEmpty}
+                        />
 
-                </View>
-                <View style={styles.viewBottom}></View>
-                <ActionSheet
-                    ref={o => this.actionSheetOption = o}
-                    options={['Chỉnh sửa', 'Xóa', 'Hủy']}
-                    cancelButtonIndex={2}
-                    // destructiveButtonIndex={1}
-                    onPress={this.onSetOption}
-                />
-            </ScrollView>
-            // {Platform.OS == "ios" && <KeyboardSpacer />}
-            // </ActivityPanel>
+                    </View>
+                    <View style={styles.viewBottom}></View>
+                    <ActionSheet
+                        ref={o => this.actionSheetOption = o}
+                        options={['Chỉnh sửa', 'Xóa', 'Hủy']}
+                        cancelButtonIndex={2}
+                        // destructiveButtonIndex={1}
+                        onPress={this.onSetOption}
+                    />
+                </ScrollView>
+                {Platform.OS == "ios" && <KeyboardSpacer />}
+            </ActivityPanel>
         );
     }
 }
@@ -382,7 +395,8 @@ const styles = StyleSheet.create({
 });
 function mapStateToProps(state) {
     return {
-        userApp: state.userApp
+        userApp: state.userApp,
+        dataDrug: state.dataDrug
     };
 }
 export default connect(mapStateToProps)(drugScreen);

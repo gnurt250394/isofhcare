@@ -70,58 +70,7 @@ class SelectLocationScreen extends Component {
         }
 
     };
-    renderAddress = (item) => {
-        let district = item.district ? item.district : null
-        let province = item.province ? item.province : null
-        let zone = item.zone ? item.zone : ''
-        let village = item.village ? item.village : null
-        if (district && province && zone && village) {
-            return (`${village}, ${zone}, ${district}, ${province}`)
-        }
-        else if (district && province && zone) {
-            return (`${zone}, ${district}, ${province}`)
 
-        }
-        else if (district && province && village) {
-            return (`${village}, ${district}, ${province}`)
-
-        }
-        else if (district && province) {
-            return (`${district},${province},`)
-
-        }
-
-        else if (province && village) {
-            return (`${village}, ${province}`)
-
-        }
-        else if (province) {
-            return (`${province}`)
-
-        }
-        else if (village) {
-            return (`${village}`)
-
-        } else if (!village && !district && !province && !zone) {
-            return ('')
-        }
-
-        // return (<Text style={styles.txContent}>{dataLocaotion.address}</Text>)
-        // let dataLocaotion = this.state.data && this.state.data.medicalRecords ? this.state.data.medicalRecords : {}
-        // if (dataLocaotion) {
-        //     if (dataLocaotion.address && dataLocaotion.village) {
-        //         return (<Text style={styles.txContent}>{dataLocaotion.village + ', ' + dataLocaotion.address}</Text>)
-        //     }
-
-        //     if (dataLocaotion.address && !dataLocaotion.village) {
-        //         return (<Text style={styles.txContent}>{dataLocaotion.address}</Text>)
-        //     }
-        //     if (!dataLocaotion.address && dataLocaotion.village) {
-        //         return (<Text style={styles.txContent}>{dataLocaotion.village}</Text>)
-        //     }
-        // }
-
-    }
     addLocation = (location) => {
         console.log('location: ', location);
         let locationError = location ? "" : this.state.locationError;
@@ -165,7 +114,7 @@ class SelectLocationScreen extends Component {
             <TouchableOpacity onPress={() => this.selectLocation(item)} style={styles.viewItem}>
                 <View style={styles.viewName}><Text style={styles.txName}>{item.ownerName}</Text><TouchableOpacity onPress={() => this.showOption(item)} style={styles.btnDot}><ScaledImage height={15} source={require('@images/new/drug/ic_dot.png')}></ScaledImage></TouchableOpacity></View>
                 <Text style={styles.txPhone}>{item.phone}</Text>
-                <Text style={styles.txLocation}>{this.renderAddress(item)}</Text>
+                <Text style={styles.txLocation}>{item.address}</Text>
                 {item.isDefault && <Text style={styles.txStatus}>Địa chỉ mặc định</Text>}
             </TouchableOpacity>
         )

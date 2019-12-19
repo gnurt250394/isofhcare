@@ -24,7 +24,7 @@ export default class CheckPassword extends Component {
     return (
       <FloatingLabel
         placeholderStyle={styles.placeFloat}
-        placeholderTextColor='#808080'
+        placeholderTextColor='#000'
         value={value}
         underlineColor={"#02C39A"}
         inputStyle={styles.textInputStyle}
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
   },
   placeFloat: {
     fontSize: 16,
-    fontWeight: "200"
+    fontWeight: "300"
   },
   form: { width: '60%', },
   enterPass: {
@@ -164,8 +164,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold"
   },
   textInputStyle: {
-    color: "#53657B",
-    fontWeight: "200",
+    color: "#000",
+    fontWeight: "300",
     height: 45,
     marginLeft: 0,
     fontSize: 20

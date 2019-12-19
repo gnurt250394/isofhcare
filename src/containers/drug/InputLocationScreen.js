@@ -8,6 +8,8 @@ import snackbar from "@utils/snackbar-utils";
 import ActivityPanel from "@components/ActivityPanel";
 import { connect } from "react-redux";
 import RNGooglePlaces from 'react-native-google-places';
+import SearchableDropdown from 'react-native-searchable-dropdown';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 const devices_width = Dimensions.get('window').width
 class InputLocationScreen extends Component {
@@ -15,75 +17,35 @@ class InputLocationScreen extends Component {
         super(props);
 
         this.state = {
-
-        };
+            selectedItems: [],
+            itemsDrug: [],
+            typing: false,
+            typingTimeout: 0,
+            txSearch: '',
+            listAddress: []
+        }
     }
     componentDidMount() {
         let dataLocation = this.props.navigation.getParam('dataLocation', null)
-        console.log('dataLocation: ', dataLocation);
-        let districts = {}
-        districts.name = dataLocation && dataLocation.district ? dataLocation.district : ''
-        districts.id = dataLocation && dataLocation.districtId ? dataLocation.districtId : ''
-        let provinces = {}
-        provinces.countryCode = dataLocation && dataLocation.province ? dataLocation.province : ''
-        provinces.id = dataLocation && dataLocation.provineId ? dataLocation.provineId : ''
-        let zone = {}
-        zone.name = dataLocation && dataLocation.zone ? dataLocation.zone : '',
-            zone.id = dataLocation && dataLocation.zoneId ? dataLocation.zoneId : ''
-
-        this.setState({
-            ownerName: dataLocation && dataLocation.ownerName ? dataLocation.ownerName : '',
-            districts: districts,
-            ownerId: dataLocation && dataLocation.ownerId ? dataLocation.ownerId : '',
-            provinces: provinces,
-            telephone: dataLocation && dataLocation.phone ? dataLocation.phone : '',
-            textAddition: dataLocation && dataLocation.village ? dataLocation.village : '',
-            zone: zone
-        })
-        console.log(districts, provinces)
-    }
-    renderAddress = () => {
-        let item = this.state.location
-        let district = item.district ? item.district : null
-        let province = item.province ? item.province : null
-        let zone = item.zone ? item.zone : ''
-        let village = item.village ? item.village : null
-        console.log(district, province, zone, village)
-        if (district && province && zone && village) {
-            return (`${village}, ${zone}, ${district}, ${province}`)
-
-
-        }
-        else if (district && province && zone) {
-            return (`${zone}, ${district}, ${province}`)
-
-        }
-        else if (district && province && village) {
-            return (`${village}, ${district}, ${province}`)
-
-        }
-        else if (district && province) {
-            return (`${district},${province},`)
-
-        }
-
-        else if (province && village) {
-            return (`${village}, ${province}`)
-
-        }
-        else if (province) {
-            return (`${province}`)
-
-        }
-        else if (village) {
-            return (`${village}`)
-
-        } else if (!village && !district && !province && !zone) {
-            return ('')
+        if (dataLocation) {
+            let resultsLocation = dataLocation && [{
+                address: dataLocation && dataLocation.address ? dataLocation.address : '',
+                location: {
+                    latitude: dataLocation && dataLocation.lat ? dataLocation.lat : null,
+                    longitude: dataLocation && dataLocation.lng ? dataLocation.lng : null,
+                }
+            }]
+            this.setState({
+                ownerName: dataLocation && dataLocation.ownerName ? dataLocation.ownerName : '',
+                ownerId: dataLocation && dataLocation.ownerId ? dataLocation.ownerId : '',
+                telephone: dataLocation && dataLocation.phone ? dataLocation.phone : '',
+                resultsLocation,
+                address: dataLocation && dataLocation.address
+            })
         }
     }
     onAddLocation = () => {
-        let { ownerName, districts, provinces, telephone, textAddition, zone } = this.state
+        let { ownerName, telephone } = this.state
         let ownerId = this.props.userApp.currentUser.id
         if (!ownerName) {
             snackbar.show('Họ và tên không được để trống.', 'danger')
@@ -97,30 +59,14 @@ class InputLocationScreen extends Component {
             snackbar.show('Số điện thoại không đúng định dạng.', 'danger')
             return
         }
-        if (!provinces) {
-            snackbar.show('Bạn chưa chọn Tỉnh/Thành phố.', 'danger')
-            return
-        }
-        if (!districts) {
-            snackbar.show('Bạn chưa chọn Quận/Huyện.', 'danger')
-            return
-        }
-        if (!zone) {
-            snackbar.show('Bạn chưa chọn Phường/Xã', 'danger')
-            return
-        }
-        let data =
-        {
-            "district": districts.name,
-            "districtId": districts.id,
+        let dataAddress = this.state.resultsLocation
+        let data = {
+            "address": dataAddress.address,
+            "lat": dataAddress ? dataAddress.location.latitude : null,
+            "lng": dataAddress ? dataAddress.location.longitude : null,
             "ownerId": ownerId,
             "ownerName": ownerName,
-            "phone": telephone,
-            "province": provinces.countryCode,
-            "provinceId": provinces.id,
-            "village": textAddition,
-            "zone": zone.name,
-            "zoneId": zone.id
+            "phone": telephone
         }
         drugProvider.addLocation(data).then(res => {
             if (res) {
@@ -134,76 +80,78 @@ class InputLocationScreen extends Component {
             snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
         })
     }
-    selectDistrict = (districts) => {
-        let districtsError = districts ? "" : this.state.districtsError;
-        if (!districts || !this.state.districts || districts.id != this.state.districts.id) {
-            this.setState({ districts, districtsError, zone: null }, () => {
-                this.onSelectZone()
+    openSearchModal = () => {
+        RNGooglePlaces.openAutocompleteModal()
+            .then((place) => {
+                console.log(place);
+                // place represents user's selection from the
+                // suggestions and it is a simplified Google Place object.
             })
-        } else {
-            this.setState({ districts, districtsError });
-        }
+            .catch(error => console.log(error.message));  // error is a Javascript Error object
     }
-    onSelectDistrict = () => {
-        if (this.state.provinces) {
-            this.props.navigation.navigate('selectDistrict', {
-                onSelected: this.selectDistrict.bind(this),
-                id: this.state.provinces.id
-            })
-        } else {
-            snackbar.show(constants.msg.user.please_select_address)
-        }
+    onGetLocation = (item) => {
+        this.setState({
+            results: []
+        }, () => {
+            RNGooglePlaces.lookUpPlaceByID(item.placeID)
+                .then((results) => {
+                    console.log(results);
+                    this.setState({
+                        resultsLocation: results,
+                        address: results.address
+                    })
+                    // place represents user's selection from the
+                    // suggestions and it is a simplified Google Place object.
+                })
+        })
     }
-    selectprovinces(provinces) {
-        let provincesError = provinces ? "" : this.state.provincesError;
-        if (!provinces || !this.state.provinces || provinces.id != this.state.provinces.id) {
-            this.setState({ provinces, provincesError, districts: null, zone: null }, () => {
-                this.onSelectDistrict()
-            })
+    onFindLocation = (text) => {
+        this.setState({
+            address: text
+        }, () => {
+            RNGooglePlaces.getAutocompletePredictions(text)
+                .then((results) => {
+                    console.log(results);
+                    this.setState({
+                        results
+                    })
+                    // place represents user's selection from the
+                    // suggestions and it is a simplified Google Place object.
+                })
+                .catch(error => console.log(error.message));
+        })
+        // if (this.state.typingTimeout) {
+        //     clearTimeout(this.state.typingTimeout);
+        // }
+        // this.setState({
+        //     typing: false,
+        //     typingTimeout: setTimeout(function () {
+        //         RNGooglePlaces.getAutocompletePredictions(text)
+        //             .then((results) => {
+        //                 console.log(results);
+        //                 if (results && results.length) {
+        //                     var listAddress = []
+        //                     for (let i = 0; i < results.length; i++) {
+        //                         listAddress.push({
+        //                             id: i,
+        //                             name: results[i].secondaryText
+        //                         })
+        //                     }
+        //                     this.setState({
+        //                         listAddress
+        //                     })
 
-        } else {
-            this.setState({ provinces, provincesError });
-        }
-    }
-    onSelectProvince = () => {
+        //                     console.log(listAddress, 'listAddress')
 
-        this.props.navigation.navigate("selectProvince", { onSelected: this.selectprovinces.bind(this) });
-    }
-    selectZone = (zone) => {
-        let zoneError = zone ? "" : this.state.zoneError;
-        if (!zone || !this.state.zone || zone.id != this.state.zone.id) {
-            this.setState({ zone, zoneError })
-        } else {
-            this.setState({ zone, zoneError });
-        }
-    }
-    onSelectZone = () => {
-        if (!this.state.provinces) {
-            snackbar.show(constants.msg.user.please_select_address)
-            return
-        }
-        if (!this.state.districts) {
-            snackbar.show(constants.msg.user.please_select_district)
-            return
-        }
-        if (this.state.provinces.id && this.state.districts.id) {
-            this.props.navigation.navigate('selectZone', {
-                onSelected: this.selectZone.bind(this),
-                id: this.state.districts.id
-            })
-            return
-        }
+        //                 }
+        //                 // place represents user's selection from the
+        //                 // suggestions and it is a simplified Google Place object.
+        //             })
+        //             .catch(error => console.log(error.message));  // error is a Javascript Error object
+        //     }, 2000)
+        // });
 
     }
-    // openSearchModal() {
-    //     RNGooglePlaces.openAutocompleteModal()
-    //         .then((place) => {
-    //             console.log(place);
-    //             // place represents user's selection from the
-    //             // suggestions and it is a simplified Google Place object.
-    //         })
-    //         .catch(error => console.log(error.message));  // error is a Javascript Error object
-    // }
     render() {
         return (
             <ActivityPanel
@@ -218,45 +166,39 @@ class InputLocationScreen extends Component {
                 </TouchableOpacity>}
                 titleStyle={styles.txTitle}
             >
-                <ScaledImage width={devices_width} source={require('@images/new/drug/ic_bg_find_drug.png')}></ScaledImage>
-                <ScrollView showsVerticalScrollIndicator={false}>
-                    <View style={styles.viewName}>
-                        <Text style={styles.txName}>Họ và tên</Text>
-                        <TextInput value={this.state.ownerName} onChangeText={text => this.setState({ ownerName: text })} multiline={true} style={styles.inputName} placeholder={'Nhập họ và tên'}></TextInput>
-                    </View>
-                    <View style={styles.viewName}>
-                        <Text style={styles.txName}>Số điện thoại</Text>
-                        <TextInput value={this.state.telephone} onChangeText={text => this.setState({ telephone: text })} multiline={true} keyboardType={'numeric'} style={styles.inputName} placeholder={'Nhập số điện thoại'}></TextInput>
-                    </View>
-                    <TouchableOpacity onPress={this.onSelectProvince} style={styles.viewLocation}>
-                        <Text style={styles.txName}>Tỉnh/Thành phố</Text>
+                <View style={styles.viewName}>
+                    <Text style={styles.txName}>Họ và tên</Text>
+                    <TextInput value={this.state.ownerName} onChangeText={text => this.setState({ ownerName: text })} multiline={true} style={styles.inputName} placeholder={'Nhập họ và tên'}></TextInput>
+                </View>
+                <View style={styles.viewName}>
+                    <Text style={styles.txName}>Số điện thoại</Text>
+                    <TextInput value={this.state.telephone} onChangeText={text => this.setState({ telephone: text })} multiline={true} keyboardType={'numeric'} style={styles.inputName} placeholder={'Nhập số điện thoại'}></TextInput>
+                </View>
+                {/* <TouchableOpacity onPress={this.openSearchModal} style={styles.viewLocation}>
+                        <Text style={styles.txName}>Địa chỉ</Text>
                         <View style={styles.viewAddress}>
-                            <Text style={styles.inputAdress}>{this.state.provinces && this.state.provinces.countryCode ? this.state.provinces.countryCode : 'Chọn Tỉnh/Thành phố'}</Text>
-                            <ScaledImage height={10} source={require('@images/new/drug/ic_btn_location.png')}></ScaledImage>
+                            <Text style={styles.inputAdress}>{this.state.address ? this.state.address : 'Nhập địa chỉ'}</Text>
                         </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={this.onSelectDistrict} style={styles.viewLocation}>
-                        <Text style={styles.txName}>Quận/Huyện</Text>
-                        <View style={styles.viewAddress}>
-                            <Text style={styles.inputAdress}>{this.state.districts && this.state.districts.name ? this.state.districts.name : 'Chọn Quận/Huyện'}</Text>
-                            <ScaledImage height={10} source={require('@images/new/drug/ic_btn_location.png')}></ScaledImage>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={this.onSelectZone} style={styles.viewLocation}>
-                        <Text style={styles.txName}>Phường/Xã</Text>
-                        <View style={styles.viewAddress}>
-                            <Text style={styles.inputAdress} >{this.state.zone && this.state.zone.name ? this.state.zone.name : 'Chọn Phường/Xã'}</Text>
-                            <ScaledImage height={10} source={require('@images/new/drug/ic_btn_location.png')}></ScaledImage>
-                        </View>
-                    </TouchableOpacity>
-
+                    </TouchableOpacity> */}
+                <View>
                     <View style={styles.viewName}>
                         <Text style={styles.txName}>Địa chỉ</Text>
-                        <TextInput value={this.state.textAddition}
-                            onChangeText={text => this.setState({ textAddition: text })} multiline={true} style={styles.inputName} placeholder={'Nhập địa chỉ'}></TextInput>
+                        <TextInput value={this.state.address} onChangeText={text => this.onFindLocation(text)} multiline={true} style={styles.inputName} placeholder={'Nhập địa chỉ'}></TextInput>
                     </View>
-                    <View style={styles.viewBottom}></View>
-                </ScrollView>
+                    <ScrollView
+                        keyboardShouldPersistTaps="handled"
+                    >
+                        {this.state.results && this.state.results.length > 0 && this.state.results.map((item, index) => {
+                            return (
+                                <TouchableOpacity style={{ backgroundColor: '#fff', padding: 15 }} onPress={() => this.onGetLocation(item)} key={index}>
+                                    <Text style={{ textAlign: 'right', color: '#000', fontSize: 14 }}>{item.secondaryText}</Text>
+                                </TouchableOpacity>
+                            )
+                        })}
+                        <KeyboardSpacer></KeyboardSpacer>
+                    </ScrollView>
+                </View>
+                {/* <View style={styles.viewBottom}></View> */}
             </ActivityPanel>
         );
     }

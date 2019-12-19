@@ -29,7 +29,7 @@ const DEVICE_WIDTH = Dimensions.get("window").width;
 import * as Animatable from 'react-native-animatable';
 import advertiseProvider from "@data-access/advertise-provider";
 import hospitalProvider from '@data-access/hospital-provider';
-
+import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 class HomeScreen extends Component {
   constructor(props) {
     super(props);
@@ -371,7 +371,7 @@ class HomeScreen extends Component {
   renderButtonBooking() {
     return (this.state.featuresBooking || []).map((item, position) => {
       return (
-        <Animatable.View key={position} delay={100} animation={"zoomInUp"} style={{width:'25%',alignItems:'center'}} direction="alternate">
+        <Animatable.View key={position} delay={100} animation={"zoomInUp"} style={{ flex: 1, alignItems: 'center' }} direction="alternate">
           {
             item.empty ? <View style={[styles.viewEmpty,]}
             ></View> :
@@ -471,17 +471,25 @@ class HomeScreen extends Component {
       return name.charAt(0).toUpperCase() + name.slice(1);
     return name;
   }
+  getHeightImage = (source) => {
+    let img = resolveAssetSource(source);
+    return img.height * (DEVICE_WIDTH / img.width)
+  }
   render() {
+    const headerHome = require("@images/new/homev2/header_home.png")
     return (
       <ActivityPanel
+        transparent={true}
         isLoading={this.state.isLoading}
         hideActionbar={true}
+        showBackgroundHeader={true}
+        backgroundHeader={headerHome}
         containerStyle={{ backgroundColor: '#f2f2f2' }}
-        style={styles.activityPanel}
+        style={[styles.activityPanel, { backgroundColor: 'transparent' }]}
       >
         <View style={styles.container}>
           {/* <View style={{ height: 150, backgroundColor: '#f2f2f2', position: "absolute", top: 300, left: 0, right: 0 }}></View> */}
-          <ScaledImage source={require("@images/new/homev2/header_home.png")} width={DEVICE_WIDTH} style={styles.imgHome} />
+          {/* <ScaledImage source={require("@images/new/homev2/header_home.png")} width={DEVICE_WIDTH} style={styles.imgHome} /> */}
           {/*   <View style={styles.containerImageLogo}>
         <View style={styles.ImageCenter}>
               <ScaledImage source={require("@images/new/isofhcare.png")} width={116} />
@@ -491,39 +499,41 @@ class HomeScreen extends Component {
           <ScrollView
             refreshControl={this.refreshControl()}
             showsVerticalScrollIndicator={false}
-            style={styles.scroll}
-          >
-            <View style={styles.padding21}>
-              {this.props.userApp.isLogin ?
-                <View style={styles.containerHeadertitle}>
-                  <Text
-                    style={styles.txtHeaderTitle}
-                  >Xin chào, </Text>
-                  <Text style={styles.colorUserName}>{this.getUserName(this.props.userApp.currentUser.name) + '!'}</Text>
-                </View> : <View style={styles.containerHeadertitle}>
-                </View>}
-              <Card style={styles.card}>
-                <Text style={styles.txBooking}>ĐẶT KHÁM ONLINE</Text>
-                <View style={{ justifyContent: 'center' }}>
-                  <View style={styles.containerButtonBooking}>
-                    {this.renderButtonBooking()}
-                  </View>
-                </View>
-              </Card>
-              {/* <View style={styles.viewMenu}> */}
 
-              {/* </View> */}
+          >
+            <View style={[styles.scroll, { paddingTop: this.getHeightImage(headerHome) /10 }]}>
+              <View style={[styles.padding21,]}>
+                {this.props.userApp.isLogin ?
+                  <View style={styles.containerHeadertitle}>
+                    <Text
+                      style={styles.txtHeaderTitle}
+                    >Xin chào, </Text>
+                    <Text style={styles.colorUserName}>{this.getUserName(this.props.userApp.currentUser.name) + '!'}</Text>
+                  </View> : <View style={styles.containerHeadertitle}>
+                  </View>}
+                <Card style={styles.card}>
+                  <Text style={styles.txBooking}>ĐẶT KHÁM ONLINE</Text>
+                  <View style={{ justifyContent: 'center' }}>
+                    <View style={styles.containerButtonBooking}>
+                      {this.renderButtonBooking()}
+                    </View>
+                  </View>
+                </Card>
+                {/* <View style={styles.viewMenu}> */}
+
+                {/* </View> */}
+              </View>
+              <View style={styles.containerButton}>
+                {this.renderButton()}
+              </View>
+              {
+                this.renderDoctor()
+              }
+              {
+                this.renderHospital()
+              }
+              <View style={{ height: 50, backgroundColor: '#fff' }} />
             </View>
-            <View style={styles.containerButton}>
-              {this.renderButton()}
-            </View>
-            {
-              this.renderDoctor()
-            }
-            {
-              this.renderHospital()
-            }
-            <View style={{ height: 50, backgroundColor: '#fff' }} />
           </ScrollView>
         </View>
         <PushController />
@@ -590,6 +600,7 @@ const styles = StyleSheet.create({
     // borderBottomColor: '#fff',
     marginHorizontal: 20,
     justifyContent: 'center',
+    height: 40
   },
   txBooking: {
     marginVertical: 10,
@@ -597,12 +608,15 @@ const styles = StyleSheet.create({
     marginLeft: 16,
     fontWeight: 'bold'
   },
-  padding21: { padding: 21, paddingBottom: 0 },
-  card: { borderRadius: 6, marginTop: 10, paddingHorizontal: 10 },
+  padding21: {
+    paddingHorizontal: 21,
+    paddingBottom: 0
+  },
+  card: { borderRadius: 6, paddingHorizontal: 10 },
   viewMenu: { backgroundColor: '#F8F8F8', flex: 1, borderRadius: 5 },
   scroll: {
     flex: 1,
-    paddingTop: 30,
+    // paddingTop: 30,
   },
   ImageCenter: {
     flex: 1, alignItems: 'center'

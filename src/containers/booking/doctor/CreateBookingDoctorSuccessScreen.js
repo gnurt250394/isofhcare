@@ -73,10 +73,8 @@ class CreateBookingDoctorSuccessScreen extends Component {
                 hideBackButton={true}
                 title={constants.title.create_booking_success}
                 titleStyle={styles.txtTitle}
-                iosBarStyle={'light-content'}
-                statusbarBackgroundColor="#02C39A"
-                containerStyle={styles.backgroundContainer}
-                actionbarStyle={styles.backgroundContainer}>
+                transparent={true}
+            >
                 <View style={styles.container}>
                     <ScrollView keyboardShouldPersistTaps='handled' style={styles.flex}>
                         {/* <ScaleImage style={styles.image1} height={80} source={require("@images/new/booking/ic_rating.png")} />
