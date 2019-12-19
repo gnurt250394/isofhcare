@@ -68,7 +68,7 @@ class InsertInfoDrug extends Component {
             snackbar.show('Bạn chưa nhập tên đơn thuốc!', 'danger')
             return
         }
-        if (!addressId) {
+        if (isFinding && !addressId) {
             snackbar.show('Bạn chưa chọn địa chỉ!', 'danger')
             return
         }
