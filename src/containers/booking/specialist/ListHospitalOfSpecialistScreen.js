@@ -3,14 +3,14 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity, TextInput, Dimensio
 import ActivityPanel from '@components/ActivityPanel';
 import StarRating from 'react-native-star-rating';
 import ImageLoad from "mainam-react-native-image-loader";
-import { Card } from 'native-base'
-import ItemDoctor from '@components/booking/doctor/ItemDoctor';
 import ScaleImage from "mainam-react-native-scaleimage";
 import Carousel, { Pagination } from 'react-native-snap-carousel'
 import LinearGradient from 'react-native-linear-gradient'
 import ActionBar from '@components/Actionbar';
 import constants from '@resources/strings'
 import bookingDoctorProvider from '@data-access/booking-doctor-provider'
+import { withNavigation } from 'react-navigation';
+import ItemHospital from '@components/booking/specialist/itemHospital';
 
 const { width, height } = Dimensions.get('window')
 const TYPE = {
@@ -18,7 +18,7 @@ const TYPE = {
     HOSPITAL: 'HOSPITAL',
     SPECIALIST: 'SPECIALIST'
 }
-class ListDoctorScreen extends Component {
+class ListHospitalOfSpecialistScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -101,7 +101,7 @@ class ListDoctorScreen extends Component {
         }
     }
     goDetailDoctor = (item) => () => {
-        this.props.navigation.navigate('detailsDoctor', {
+        this.props.navigation.navigate('profileHospital', {
             item
         })
     }
@@ -117,7 +117,7 @@ class ListDoctorScreen extends Component {
     renderItem = ({ item }) => {
 
         return (
-            <ItemDoctor
+            <ItemHospital
                 item={item}
                 onPressDoctor={this.goDetailDoctor(item)}
                 onPressBooking={this.addBookingDoctor(item)}
@@ -168,98 +168,26 @@ class ListDoctorScreen extends Component {
     keyExtractor = (item, index) => index.toString()
     listEmpty = () => !this.state.isLoading && <Text style={styles.none_data}>Không có dữ liệu</Text>
 
-    getDoctorHospitals = () => {
-        const { item } = this.state
-        bookingDoctorProvider.get_doctor_hospitals(item.id, this.state.page, this.state.size).then(res => {
-            if (res && res.length > 0) {
-                this.formatData(res)
-            } else {
-                this.formatData([])
-            }
-        }).catch(err => {
-            this.formatData([])
-        })
-    }
-    getDoctorSpecialists = () => {
-        const { item } = this.state
-        bookingDoctorProvider.get_doctor_specialists(item.id, this.state.page, this.state.size).then(res => {
-            if (res && res.length > 0) {
-                this.formatData(res)
-            } else {
-                this.formatData([])
-            }
-        }).catch(err => {
-            this.formatData([])
-        })
-    }
-    onSelectHospitals = (item) => {
-        this.setState({ item, type: TYPE.HOSPITAL, page: 0 }, () => {
-            this.getDoctorHospitals(item)
-        })
-    }
-    onSelectSpecialist = (item) => {
-        this.setState({ item, type: TYPE.SPECIALIST, page: 0 }, () => {
-            this.getDoctorSpecialists(item)
-        })
-    }
-    filterCSYT = () => {
-        this.props.navigation.navigate('listHospital', {
-            onSelected: this.onSelectHospitals
-        })
-    }
-    filterSpecialist = () => {
-        this.props.navigation.navigate('listSpecialistWithDoctor', {
-            onSelected: this.onSelectSpecialist
-        })
-    }
-
     render() {
         const { refreshing, data } = this.state
         return (
-            <ActivityPanel
-                title={constants.title.select_doctor}
-                transparent={true}
-                isLoading={this.state.isLoading}>
-                <View style={styles.groupSearch}>
-                    <TextInput
-                        value={this.state.keyword}
-                        onChangeText={this.onChangeText('keyword')}
-                        onSubmitEditing={this.onSearch}
-                        returnKeyType='search'
-                        style={styles.inputSearch}
-                        placeholder={"Tìm kiếm…"}
-                        underlineColorAndroid={"transparent"} />
-                    {
-                        this.state.type == TYPE.SEARCH ?
-                            <TouchableOpacity style={[styles.buttonSearch, { borderLeftColor: '#BBB', borderLeftWidth: 0.7 }]} onPress={this.onRefress}>
-                                <ScaleImage source={require('@images/ic_close.png')} height={16} />
-                            </TouchableOpacity>
-                            :
-                            <TouchableOpacity style={[styles.buttonSearch,]} onPress={this.onSearch}>
-                                <ScaleImage source={require('@images/new/hospital/ic_search.png')} height={16} />
-                            </TouchableOpacity>
 
-                    }
-
-                </View>
-                <FlatList
-                    data={data}
-                    renderItem={this.renderItem}
-                    // style={{paddingTop:height/4}}
-                    keyExtractor={this.keyExtractor}
-                    ListEmptyComponent={this.listEmpty}
-                    onEndReached={this.loadMore}
-                    onEndReachedThreshold={0.6}
-                    onRefresh={this.onRefress}
-                    refreshing={this.state.refreshing}
-                />
-                {/* </ScrollView> */}
-            </ActivityPanel >
+            <FlatList
+                data={data}
+                renderItem={this.renderItem}
+                // style={{paddingTop:height/4}}
+                keyExtractor={this.keyExtractor}
+                ListEmptyComponent={this.listEmpty}
+                onEndReached={this.loadMore}
+                onEndReachedThreshold={0.6}
+                onRefresh={this.onRefress}
+                refreshing={this.state.refreshing}
+            />
         );
     }
 }
 
-export default ListDoctorScreen;
+export default withNavigation(ListHospitalOfSpecialistScreen);
 
 
 const styles = StyleSheet.create({

@@ -50,10 +50,10 @@ class ListBookingScreens extends Component {
                     text: "Theo chuyên khoa",
                     onPress: () => {
                         if (this.props.userApp.isLogin)
-                            this.props.navigation.navigate("addBooking1");
+                            this.props.navigation.navigate("listSpecialist");
                         else
                             this.props.navigation.navigate("login", {
-                                nextScreen: { screen: "addBooking1", param: {} }
+                                nextScreen: { screen: "listSpecialist", param: {} }
                             });
                     }
                 },

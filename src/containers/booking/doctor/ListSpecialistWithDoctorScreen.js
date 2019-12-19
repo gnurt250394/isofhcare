@@ -3,7 +3,7 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator }
 import ActivityPanel from '@components/ActivityPanel';
 import bookingDoctorProvider from '@data-access/booking-doctor-provider'
 
-class ListSpecialistScreen extends Component {
+class ListSpecialistWithDoctorScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -101,7 +101,7 @@ class ListSpecialistScreen extends Component {
     }
 }
 
-export default ListSpecialistScreen;
+export default ListSpecialistWithDoctorScreen;
 
 
 const styles = StyleSheet.create({
