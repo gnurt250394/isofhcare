@@ -69,14 +69,14 @@ class EditProfileScreen extends Component {
             case 1: {
                 this.setState({
                     txGender: 'Nam',
-                    gender: 1
+                    gender: '1'
                 })
                 break
             }
             case 0: {
                 this.setState({
                     txGender: 'Nữ',
-                    gender: 0
+                    gender: '0'
                 })
                 break
             }

@@ -197,7 +197,7 @@ class ListProfileScreen extends Component {
         return (
             item.medicalRecords.statusConfirm == "NEED_CONFIRM" ?
                 (
-                    <TouchableOpacity onPress={this.onClickItem(item)} >
+                    <TouchableOpacity>
                         <Text style={styles.txtmedicalRecords}>Tài khoản {item.medicalRecords.name} có số điện thoại {item.medicalRecords.phone} muốn xác nhận mối quan hệ với bạn.</Text>
                         {item.medicalRecords.status == 1 ? (
                             <TouchableOpacity style={styles.viewProfileUser} onPress={this.onClickItem(item)} >
@@ -209,6 +209,7 @@ class ListProfileScreen extends Component {
                             marginHorizontal: 10,
                         }}>
                             <Card style={styles.cardView}>
+                            <TouchableOpacity  onPress={this.onClickItem(item)}>
                                 <View style={styles.viewProfileFamily}>
                                     <View>
                                         <Text style={styles.txName}>{item.medicalRecords.name}</Text>
@@ -218,7 +219,7 @@ class ListProfileScreen extends Component {
                                                 : <View></View>
                                         }
                                     </View>
-                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                                         {
                                             item.medicalRecords.statusConfirm == "NEED_CONFIRM" ? (
                                                 <TouchableOpacity disabled={this.state.disabled} onPress={() => this.onConfirm(item.medicalRecords.id, item.medicalRecords.sharePermission, item.medicalRecords.medicalRelatedId)} style={{ paddingHorizontal: 20, paddingVertical: 5, backgroundColor: '#FFAE00', borderRadius: 5 }}><Text style={{ color: '#fff', fontWeight: 'bold' }}>XÁC NHẬN</Text></TouchableOpacity>
@@ -229,6 +230,7 @@ class ListProfileScreen extends Component {
                                         </TouchableOpacity>
                                     </View>
                                 </View>
+                                </TouchableOpacity>
                             </Card>
                         </View>)}
                     </TouchableOpacity>
