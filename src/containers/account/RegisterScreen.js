@@ -33,6 +33,8 @@ import DateTimePicker from 'mainam-react-native-date-picker';
 import connectionUtils from "@utils/connection-utils";
 import HeaderBar from '@components/account/HeaderBar'
 import KeyboardSpacer from "react-native-keyboard-spacer";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
 class RegisterScreen extends Component {
   constructor(props) {
     super(props);
@@ -230,7 +232,7 @@ class RegisterScreen extends Component {
           containerStyle={{ marginTop: 50 }}
         >
 
-          <ScrollView
+          <KeyboardAwareScrollView
             showsVerticalScrollIndicator={false}
             style={styles.scroll} keyboardShouldPersistTaps="handled">
             <HeaderBar></HeaderBar>
@@ -354,10 +356,9 @@ class RegisterScreen extends Component {
                   <Text style={styles.txSignUp}>{"TIẾP TỤC"}</Text>
                 </TouchableOpacity>
               </View>
-              {Platform.OS == 'ios' && <KeyboardSpacer></KeyboardSpacer>}
               <View style={{ height: 50 }}></View>
             </View>
-          </ScrollView>
+          </KeyboardAwareScrollView>
         </ActivityPanel>
       )
     );
