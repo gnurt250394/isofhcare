@@ -98,7 +98,7 @@ class ChangePasswordScreen extends Component {
                             alignItems: "center"
                         }}
                     >
-                        <Text style={{ fontSize: 24, fontWeight: '800', color: '#00BA99', alignSelf: 'center' }}>ĐẶT LẠI MẬT KHẨU</Text>
+                        <Text style={{ fontSize: 24, fontWeight: '500', color: '#00BA99', alignSelf: 'center' }}>ĐẶT LẠI MẬT KHẨU</Text>
                         {/* <ScaleImage source={require("@images/logo.png")} width={120} /> */}
                     </View>
                     <KeyboardAvoidingView behavior="padding" >
