@@ -32,6 +32,7 @@ import FloatingLabel from 'mainam-react-native-floating-label';
 import DateTimePicker from 'mainam-react-native-date-picker';
 import connectionUtils from "@utils/connection-utils";
 import HeaderBar from '@components/account/HeaderBar'
+import KeyboardSpacer from "react-native-keyboard-spacer";
 class RegisterScreen extends Component {
   constructor(props) {
     super(props);
@@ -226,136 +227,137 @@ class RegisterScreen extends Component {
           titleStyle={{ textAlign: 'left', marginLeft: 20 }}
           showFullScreen={true}
           isLoading={this.state.isLoading}
-          containerStyle={{marginTop: 50}}
+          containerStyle={{ marginTop: 50 }}
         >
 
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              style={styles.scroll} keyboardShouldPersistTaps="handled">
-              <HeaderBar></HeaderBar>
-              <View style={{ flex: 1, padding: 20 }}>
-                <View
-                  style={{
-                    marginTop: 60,
-                    justifyContent: "center",
-                    alignItems: "center"
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            style={styles.scroll} keyboardShouldPersistTaps="handled">
+            <HeaderBar></HeaderBar>
+            <View style={{ flex: 1, padding: 20 }}>
+              <View
+                style={{
+                  marginTop: 60,
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+              >
+                <Text style={{ fontSize: 24, fontWeight: '800', color: '#00BA99', alignSelf: 'center', }}>ĐĂNG KÝ</Text>
+                {/* <ScaleImage source={require("@images/logo.png")} width={120} /> */}
+              </View>
+              <Form ref={ref => (this.form = ref)}>
+                <TextField
+                  getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
+                    placeholderTextColor='#000'
+                    placeholderStyle={{ fontSize: 16, fontWeight: '300' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Họ và tên"}
+                    onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
+                  onChangeText={s => {
+                    this.setState({ fullname: s });
                   }}
-                >
-                  <Text style={{ fontSize: 24, fontWeight: '800', color: '#00BA99', alignSelf: 'center', }}>ĐĂNG KÝ</Text>
-                  {/* <ScaleImage source={require("@images/logo.png")} width={120} /> */}
-                </View>
-                <Form ref={ref => (this.form = ref)}>
+                  errorStyle={styles.errorStyle}
+                  validate={{
+                    rules: {
+                      required: true,
+                      maxlength: 50
+                    },
+                    messages: {
+                      required: "Họ và tên không được bỏ trống",
+                      maxlength: "Không được nhập quá 50 kí tự"
+                    }
+                  }}
+                  autoCapitalize={"none"}
+                />
+                <TextField
+                  getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
+                    keyboardType='numeric'
+                    maxLength={10}
+                    placeholderStyle={{ fontSize: 16, fontWeight: '300' }} value={this.state.phone}
+                    placeholderTextColor='#000'
+                    inputStyle={styles.textInputStyle}
+                    labelStyle={styles.labelStyle} placeholder={constants.phone} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
+                  onChangeText={s => this.setState({ phone: s })}
+                  value={this.state.phone}
+                  errorStyle={styles.errorStyle}
+                  validate={{
+                    rules: {
+                      required: true,
+                      phone: true
+                    },
+                    messages: {
+                      required: "Số điện thoại không được bỏ trống",
+                      phone: "SĐT không hợp lệ"
+                    }
+                  }}
+
+                  placeholder={constants.input_password}
+                  autoCapitalize={"none"}
+                />
+                <Field style={styles.inputPass}>
                   <TextField
                     getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
                       placeholderTextColor='#000'
-                      placeholderStyle={{ fontSize: 16, fontWeight: '300' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Họ và tên"}
+                      placeholderStyle={{ fontSize: 16, fontWeight: '300' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.input_password}
+                      secureTextEntry={this.state.secureTextPassEntry}
                       onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
                     onChangeText={s => {
-                      this.setState({ fullname: s });
+                      this.setState({ password: s });
                     }}
                     errorStyle={styles.errorStyle}
                     validate={{
                       rules: {
                         required: true,
-                        maxlength: 50
+                        minlength: 6,
+                        maxlength: 20
                       },
                       messages: {
-                        required: "Họ và tên không được bỏ trống",
-                        maxlength: "Không được nhập quá 50 kí tự"
+                        required: constants.password_not_null,
+                        minlength: constants.password_length_8,
+                        maxlength: constants.password_length_20
                       }
                     }}
                     autoCapitalize={"none"}
                   />
+                  {
+                    this.state.password ? (this.state.secureTextPassEntry ? (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 45, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 45, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
+                  }
+                </Field>
+                <Field style={styles.inputPass}>
                   <TextField
                     getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
-                      keyboardType='numeric'
-                      maxLength={10}
-                      placeholderStyle={{ fontSize: 16, fontWeight: '300' }} value={this.state.phone}
+                      placeholderStyle={{ fontSize: 16, fontWeight: '300' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={'Nhập lại mật khẩu'}
                       placeholderTextColor='#000'
-                      inputStyle={styles.textInputStyle}
-                      labelStyle={styles.labelStyle} placeholder={constants.phone} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
-                    onChangeText={s => this.setState({ phone: s })}
-                    value={this.state.phone}
+                      secureTextEntry={this.state.secureTextPass2Entry}
+                      onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
+                    onChangeText={s => {
+                      this.setState({ confirm_password: s });
+                    }}
                     errorStyle={styles.errorStyle}
                     validate={{
                       rules: {
                         required: true,
-                        phone: true
+                        equalTo: this.state.password
                       },
                       messages: {
-                        required: "Số điện thoại không được bỏ trống",
-                        phone: "SĐT không hợp lệ"
+                        required: constants.confirm_password_not_null,
+                        equalTo: constants.new_password_not_match
                       }
                     }}
-
-                    placeholder={constants.input_password}
                     autoCapitalize={"none"}
                   />
-                  <Field style={styles.inputPass}>
-                    <TextField
-                      getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
-                        placeholderTextColor='#000'
-                        placeholderStyle={{ fontSize: 16, fontWeight: '300' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.input_password}
-                        secureTextEntry={this.state.secureTextPassEntry}
-                        onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
-                      onChangeText={s => {
-                        this.setState({ password: s });
-                      }}
-                      errorStyle={styles.errorStyle}
-                      validate={{
-                        rules: {
-                          required: true,
-                          minlength: 6,
-                          maxlength: 20
-                        },
-                        messages: {
-                          required: constants.password_not_null,
-                          minlength: constants.password_length_8,
-                          maxlength: constants.password_length_20
-                        }
-                      }}
-                      autoCapitalize={"none"}
-                    />
-                    {
-                      this.state.password ? (this.state.secureTextPassEntry ? (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 45, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 45, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
-                    }
-                  </Field>
-                  <Field style={styles.inputPass}>
-                    <TextField
-                      getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
-                        placeholderStyle={{ fontSize: 16, fontWeight: '300' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={'Nhập lại mật khẩu'}
-                        placeholderTextColor='#000'
-                        secureTextEntry={this.state.secureTextPass2Entry}
-                        onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
-                      onChangeText={s => {
-                        this.setState({ confirm_password: s });
-                      }}
-                      errorStyle={styles.errorStyle}
-                      validate={{
-                        rules: {
-                          required: true,
-                          equalTo: this.state.password
-                        },
-                        messages: {
-                          required: constants.confirm_password_not_null,
-                          equalTo: constants.new_password_not_match
-                        }
-                      }}
-                      autoCapitalize={"none"}
-                    />
-                    {
-                      this.state.confirm_password ? (this.state.secureTextPass2Entry ? (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 45, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowPass2}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 45, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowPass2}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
-                    }
-                  </Field>
-                </Form>
-                <View style={{ backgroundColor: '#fff' }}>
-                  <TouchableOpacity disabled={this.state.disabled} onPress={this.onRegiter} style={styles.btnSignup} >
-                    <Text style={styles.txSignUp}>{"TIẾP TỤC"}</Text>
-                  </TouchableOpacity>
-                </View>
-                <View style={{ height: 50 }}></View>
+                  {
+                    this.state.confirm_password ? (this.state.secureTextPass2Entry ? (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 45, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowPass2}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 45, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowPass2}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
+                  }
+                </Field>
+              </Form>
+              <View style={{ backgroundColor: '#fff' }}>
+                <TouchableOpacity disabled={this.state.disabled} onPress={this.onRegiter} style={styles.btnSignup} >
+                  <Text style={styles.txSignUp}>{"TIẾP TỤC"}</Text>
+                </TouchableOpacity>
               </View>
-            </ScrollView>          
+              {Platform.OS == 'ios' && <KeyboardSpacer></KeyboardSpacer>}
+              <View style={{ height: 50 }}></View>
+            </View>
+          </ScrollView>
         </ActivityPanel>
       )
     );
