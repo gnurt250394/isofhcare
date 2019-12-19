@@ -224,8 +224,8 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     textInputStyle: {
-        color: "#53657B",
-        fontWeight: "200",
+        color: "#000",
+        fontWeight: "300",
         height: 51,
         marginLeft: 0,
         borderWidth: 1,

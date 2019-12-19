@@ -164,8 +164,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold"
   },
   textInputStyle: {
-    color: "#53657B",
-    fontWeight: "200",
+    color: "#000",
+    fontWeight: "300",
     height: 45,
     marginLeft: 0,
     fontSize: 20
