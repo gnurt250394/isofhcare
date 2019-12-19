@@ -64,9 +64,20 @@ class InsertInfoDrug extends Component {
         let note = this.state.note
         let id = this.props.userApp.currentUser.id
         let name = this.state.name
+        if (!name) {
+            snackbar.show('Bạn chưa nhập tên đơn thuốc!', 'danger')
+            return
+        }
+        if (!addressId) {
+            snackbar.show('Bạn chưa chọn địa chỉ!', 'danger')
+            return
+        }
         let idDrug = this.props.dataEdit && this.props.dataEdit.id ? this.props.dataEdit.id : null
         if (imageUris) {
-
+            if (imageUris && imageUris.length == 0) {
+                snackbar.show('Bạn cần chọn ít nhất một ảnh!', 'danger')
+                return
+            }
             for (var i = 0; i < imageUris.length; i++) {
                 if (imageUris[i].loading) {
                     snackbar.show(constants.msg.booking.image_loading, 'danger');
@@ -110,7 +121,11 @@ class InsertInfoDrug extends Component {
             })
             return
         } if (dataDrug && !imageUris) {
-            console.log('else')
+            console.log(dataDrug, 'dataDrugdataDrug')
+            if (Object.keys(dataDrug).length == 0) {
+                snackbar.show('Bạn cần nhập ít nhất một loại thuốc!', 'danger')
+                return
+            }
             let data2 = {
                 addressId: addressId,
                 "medicines": [
