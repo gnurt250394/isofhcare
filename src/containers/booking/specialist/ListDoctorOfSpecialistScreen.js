@@ -11,14 +11,14 @@ import LinearGradient from 'react-native-linear-gradient'
 import ActionBar from '@components/Actionbar';
 import constants from '@resources/strings'
 import bookingDoctorProvider from '@data-access/booking-doctor-provider'
-
+import { withNavigation } from 'react-navigation';
 const { width, height } = Dimensions.get('window')
 const TYPE = {
     SEARCH: 'SEARCH',
     HOSPITAL: 'HOSPITAL',
     SPECIALIST: 'SPECIALIST'
 }
-class ListDoctorScreen extends Component {
+class ListDoctorOfSpecialistScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -168,141 +168,26 @@ class ListDoctorScreen extends Component {
     keyExtractor = (item, index) => index.toString()
     listEmpty = () => !this.state.isLoading && <Text style={styles.none_data}>Không có dữ liệu</Text>
 
-    getDoctorHospitals = () => {
-        const { item } = this.state
-        bookingDoctorProvider.get_doctor_hospitals(item.id, this.state.page, this.state.size).then(res => {
-            if (res && res.length > 0) {
-                this.formatData(res)
-            } else {
-                this.formatData([])
-            }
-        }).catch(err => {
-            this.formatData([])
-        })
-    }
-    getDoctorSpecialists = () => {
-        const { item } = this.state
-        bookingDoctorProvider.get_doctor_specialists(item.id, this.state.page, this.state.size).then(res => {
-            if (res && res.length > 0) {
-                this.formatData(res)
-            } else {
-                this.formatData([])
-            }
-        }).catch(err => {
-            this.formatData([])
-        })
-    }
-    onSelectHospitals = (item) => {
-        this.setState({ item, type: TYPE.HOSPITAL, page: 0 }, () => {
-            this.getDoctorHospitals(item)
-        })
-    }
-    onSelectSpecialist = (item) => {
-        this.setState({ item, type: TYPE.SPECIALIST, page: 0 }, () => {
-            this.getDoctorSpecialists(item)
-        })
-    }
-    filterCSYT = () => {
-        this.props.navigation.navigate('listHospital', {
-            onSelected: this.onSelectHospitals
-        })
-    }
-    filterSpecialist = () => {
-        this.props.navigation.navigate('listSpecialistWithDoctor', {
-            onSelected: this.onSelectSpecialist
-        })
-    }
-    backPress = () => this.props.navigation && this.props.navigation.pop()
-    renderHeader = () => {
-        return (
-            <View style={[styles.containerHeader,
-                // { transform: [{ translateY: this.header }] }
-            ]}
-                // onLayout={(event) => {
-                //     this.setState({ height: event.nativeEvent.layout.height })
-                //     // this.height = event.nativeEvent.layout.height
-                // }}
-            >
-                <ActionBar
-                    actionbarTextColor={[{ color: constants.colors.actionbar_title_color }]}
-                    backButtonClick={this.backPress}
-                    title={constants.title.select_doctor}
-                    icBack={require('@images/new/left_arrow_white.png')}
-                    titleStyle={[styles.titleStyle]}
-                    actionbarStyle={[{ backgroundColor: constants.colors.actionbar_color }, styles.actionbarStyle]}
-                />
-                <View style={styles.groupSearch}>
-                    <TextInput
-                        value={this.state.keyword}
-                        onChangeText={this.onChangeText('keyword')}
-                        onSubmitEditing={this.onSearch}
-                        returnKeyType='search'
-                        style={styles.inputSearch}
-                        placeholder={"Tìm kiếm…"}
-                        underlineColorAndroid={"transparent"} />
-                    {
-                        this.state.type == TYPE.SEARCH ?
-                            <TouchableOpacity style={[styles.buttonSearch, { borderLeftColor: '#BBB', borderLeftWidth: 0.7 }]} onPress={this.onRefress}>
-                                <ScaleImage source={require('@images/ic_close.png')} height={16} />
-                            </TouchableOpacity>
-                            :
-                            <TouchableOpacity style={[styles.buttonSearch,]} onPress={this.onSearch}>
-                                <ScaleImage source={require('@images/new/hospital/ic_search.png')} height={16} />
-                            </TouchableOpacity>
-
-                    }
-
-                </View>
-                {/* <View style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between'
-                }}>
-                    <View style={styles.containerFilte}>
-                        <Text
-                            onPress={this.filterCSYT}
-                            style={styles.txtFilter}>Cơ sở y tế</Text>
-                        <Text onPress={this.filterSpecialist} style={styles.txtFilter}>Chuyên khoa</Text>
-                    </View>
-                    <Text 
-                    onPress={this.onRefress}
-                    style={styles.txtFilter}>Hiển thị tất cả</Text>
-                </View> */}
-            </View>
-        )
-    }
     render() {
         const { refreshing, data } = this.state
         return (
-            <ActivityPanel
-                actionbar={this.renderHeader}
-                isLoading={this.state.isLoading}>
-                <View style={[styles.backgroundHeader,]} />
-                {/* <ScrollView
-                // onScroll={Animated.event(
-                //     [{ nativeEvent: { contentOffset: { y: this.onScroll } } }],
-                //     { useNativeDriver: true },
-                // )}
-                > */}
 
-                    <FlatList
-                        data={data}
-                        renderItem={this.renderItem}
-                        // style={{paddingTop:height/4}}
-                        keyExtractor={this.keyExtractor}
-                        ListEmptyComponent={this.listEmpty}
-                        onEndReached={this.loadMore}
-                        onEndReachedThreshold={0.6}
-                        onRefresh={this.onRefress}
-                        refreshing={this.state.refreshing}
-                    />
-                {/* </ScrollView> */}
-            </ActivityPanel >
+            <FlatList
+                data={data}
+                renderItem={this.renderItem}
+                // style={{paddingTop:height/4}}
+                keyExtractor={this.keyExtractor}
+                ListEmptyComponent={this.listEmpty}
+                onEndReached={this.loadMore}
+                onEndReachedThreshold={0.6}
+                onRefresh={this.onRefress}
+                refreshing={this.state.refreshing}
+            />
         );
     }
 }
 
-export default ListDoctorScreen;
+export default withNavigation(ListDoctorOfSpecialistScreen);
 
 
 const styles = StyleSheet.create({

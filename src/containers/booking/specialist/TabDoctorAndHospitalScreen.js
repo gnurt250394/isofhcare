@@ -11,6 +11,9 @@ import LinearGradient from 'react-native-linear-gradient'
 import ActionBar from '@components/Actionbar';
 import constants from '@resources/strings'
 import bookingDoctorProvider from '@data-access/booking-doctor-provider'
+import { IndicatorViewPager } from "mainam-react-native-viewpager";
+import ListDoctorOfSpecialistScreen from './ListDoctorOfSpecialistScreen';
+import ListHospitalOfSpecialistScreen from './ListHospitalOfSpecialistScreen';
 
 const { width, height } = Dimensions.get('window')
 const TYPE = {
@@ -18,9 +21,10 @@ const TYPE = {
     HOSPITAL: 'HOSPITAL',
     SPECIALIST: 'SPECIALIST'
 }
-class ListDoctorScreen extends Component {
+class TabDoctorAndHospitalScreen extends Component {
     constructor(props) {
         super(props);
+        let tabIndex = 0;
         this.state = {
             isLoading: true,
             data: [],
@@ -30,12 +34,30 @@ class ListDoctorScreen extends Component {
             size: 20,
             refreshing: false,
             item: {},
-            type: ''
+            type: '',
+            tabIndex,
+            tabSelect: true
         };
-        this.listSearch = []
-        this.onScroll = new Animated.Value(0)
-        this.header = Animated.multiply(Animated.diffClamp(this.onScroll, 0, 60), -1)
     }
+    onSetPage = (page) => () => {
+        
+        
+        if (this.viewPager) this.viewPager.setPage(page);
+    }
+
+    swipe(targetIndex) {
+        if (this.viewPager) this.viewPager.setPage(targetIndex);
+
+    }
+    onPageScroll = (e) => {
+        var tabIndex = e.position;
+        var offset = e.offset * 100;
+        if (tabIndex == -1 || (tabIndex == 1 && offset > 0)) return;
+        this.setState({
+            tabSelect: tabIndex == 0
+        });
+    }
+
     componentDidMount = () => {
         this.getData()
         // setTimeout(()=>{
@@ -45,7 +67,7 @@ class ListDoctorScreen extends Component {
     };
     getData = () => {
         const { page, size } = this.state
-        console.log('getData')
+        
 
         bookingDoctorProvider.getListDoctor(page, size).then(res => {
             this.setState({ isLoading: false, refreshing: false })
@@ -114,17 +136,7 @@ class ListDoctorScreen extends Component {
     goToAdvisory = () => {
         this.props.navigation.navigate("listQuestion");
     }
-    renderItem = ({ item }) => {
 
-        return (
-            <ItemDoctor
-                item={item}
-                onPressDoctor={this.goDetailDoctor(item)}
-                onPressBooking={this.addBookingDoctor(item)}
-                onPressAdvisory={this.goToAdvisory}
-            />
-        )
-    }
     onChangeText = (state) => (value) => {
         this.setState({ [state]: value })
         if (value.length == 0) {
@@ -134,7 +146,7 @@ class ListDoctorScreen extends Component {
     search = async () => {
         try {
             let { keyword, page, size } = this.state
-            console.log('keyword: ', keyword);
+            
             let res = await bookingDoctorProvider.searchDoctor(keyword, 'en', page + 1, size)
             this.setState({ refreshing: false })
             if (res && res.length > 0) {
@@ -168,60 +180,11 @@ class ListDoctorScreen extends Component {
     keyExtractor = (item, index) => index.toString()
     listEmpty = () => !this.state.isLoading && <Text style={styles.none_data}>Không có dữ liệu</Text>
 
-    getDoctorHospitals = () => {
-        const { item } = this.state
-        bookingDoctorProvider.get_doctor_hospitals(item.id, this.state.page, this.state.size).then(res => {
-            if (res && res.length > 0) {
-                this.formatData(res)
-            } else {
-                this.formatData([])
-            }
-        }).catch(err => {
-            this.formatData([])
-        })
-    }
-    getDoctorSpecialists = () => {
-        const { item } = this.state
-        bookingDoctorProvider.get_doctor_specialists(item.id, this.state.page, this.state.size).then(res => {
-            if (res && res.length > 0) {
-                this.formatData(res)
-            } else {
-                this.formatData([])
-            }
-        }).catch(err => {
-            this.formatData([])
-        })
-    }
-    onSelectHospitals = (item) => {
-        this.setState({ item, type: TYPE.HOSPITAL, page: 0 }, () => {
-            this.getDoctorHospitals(item)
-        })
-    }
-    onSelectSpecialist = (item) => {
-        this.setState({ item, type: TYPE.SPECIALIST, page: 0 }, () => {
-            this.getDoctorSpecialists(item)
-        })
-    }
-    filterCSYT = () => {
-        this.props.navigation.navigate('listHospital', {
-            onSelected: this.onSelectHospitals
-        })
-    }
-    filterSpecialist = () => {
-        this.props.navigation.navigate('listSpecialistWithDoctor', {
-            onSelected: this.onSelectSpecialist
-        })
-    }
+
     backPress = () => this.props.navigation && this.props.navigation.pop()
     renderHeader = () => {
         return (
-            <View style={[styles.containerHeader,
-                // { transform: [{ translateY: this.header }] }
-            ]}
-                // onLayout={(event) => {
-                //     this.setState({ height: event.nativeEvent.layout.height })
-                //     // this.height = event.nativeEvent.layout.height
-                // }}
+            <View style={[styles.containerHeader,]}
             >
                 <ActionBar
                     actionbarTextColor={[{ color: constants.colors.actionbar_title_color }]}
@@ -238,7 +201,7 @@ class ListDoctorScreen extends Component {
                         onSubmitEditing={this.onSearch}
                         returnKeyType='search'
                         style={styles.inputSearch}
-                        placeholder={"Tìm kiếm…"}
+                        placeholder={"Tìm kiếm bác sĩ, chuyên khoa hoặc cơ sở y tế"}
                         underlineColorAndroid={"transparent"} />
                     {
                         this.state.type == TYPE.SEARCH ?
@@ -253,21 +216,6 @@ class ListDoctorScreen extends Component {
                     }
 
                 </View>
-                {/* <View style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between'
-                }}>
-                    <View style={styles.containerFilte}>
-                        <Text
-                            onPress={this.filterCSYT}
-                            style={styles.txtFilter}>Cơ sở y tế</Text>
-                        <Text onPress={this.filterSpecialist} style={styles.txtFilter}>Chuyên khoa</Text>
-                    </View>
-                    <Text 
-                    onPress={this.onRefress}
-                    style={styles.txtFilter}>Hiển thị tất cả</Text>
-                </View> */}
             </View>
         )
     }
@@ -277,35 +225,92 @@ class ListDoctorScreen extends Component {
             <ActivityPanel
                 actionbar={this.renderHeader}
                 isLoading={this.state.isLoading}>
-                <View style={[styles.backgroundHeader,]} />
-                {/* <ScrollView
-                // onScroll={Animated.event(
-                //     [{ nativeEvent: { contentOffset: { y: this.onScroll } } }],
-                //     { useNativeDriver: true },
-                // )}
-                > */}
 
-                    <FlatList
-                        data={data}
-                        renderItem={this.renderItem}
-                        // style={{paddingTop:height/4}}
-                        keyExtractor={this.keyExtractor}
-                        ListEmptyComponent={this.listEmpty}
-                        onEndReached={this.loadMore}
-                        onEndReachedThreshold={0.6}
-                        onRefresh={this.onRefress}
-                        refreshing={this.state.refreshing}
-                    />
-                {/* </ScrollView> */}
+                <View style={styles.container}>
+                    <View style={styles.containerTab}>
+                        <View style={styles.groupTab}>
+                            <TouchableOpacity
+                                onPress={this.onSetPage(0)}
+                                style={[styles.buttonTab, this.state.tabSelect ? { borderBottomWidth: 2, } : {}]}>
+                                <Text style={[styles.txtButtonTab, this.state.tabSelect ? { color: "#3161AD" } : {}]}>BÁC SĨ</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={this.onSetPage(1)}
+                                style={[styles.buttonTab, this.state.tabSelect ? {} : { borderBottomWidth: 2 }]}>
+                                <Text style={[styles.txtButtonTab, this.state.tabSelect ? {} : { color: '#3161AD' }]}>CƠ SỞ Y TẾ</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <TouchableOpacity style={styles.buttonLocation}>
+                            <ScaleImage source={require('@images/ic_location.png')} height={20} style={styles.iconLocation} />
+                            <Text style={styles.txtLocation}>Gần tôi</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <IndicatorViewPager style={styles.flex}
+                        ref={viewPager => {
+                            this.viewPager = viewPager;
+                        }}
+                        onPageScroll={this.onPageScroll}>
+                        <View style={[styles.flex, { paddingTop: 10, }]}>
+                            <ListDoctorOfSpecialistScreen />
+                        </View>
+                        <View style={[styles.flex, { paddingTop: 10, }]}>
+                            <ListHospitalOfSpecialistScreen />
+                        </View>
+                    </IndicatorViewPager>
+
+                </View>
             </ActivityPanel >
         );
     }
 }
 
-export default ListDoctorScreen;
+export default TabDoctorAndHospitalScreen;
 
 
 const styles = StyleSheet.create({
+    flex: { flex: 1 },
+    txtButtonTab: {
+        fontWeight: 'bold'
+    },
+    buttonTab: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginRight: 10,
+        paddingVertical: 10,
+        borderBottomColor: '#3161AD'
+    },
+    buttonLocation: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    iconLocation: {
+        tintColor: '#00A3FF'
+    },
+    txtLocation: {
+        color: '#00A3FF',
+        paddingLeft: 5,
+        paddingRight: 10,
+    },
+    groupTab: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '50%'
+    },
+    containerTab: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingTop: 10,
+        borderBottomColor: '#BBB',
+        borderBottomWidth: 0.6,
+    },
+    container: {
+        backgroundColor: '#FFF',
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        flex: 1
+    },
     containerFilte: {
         flexDirection: 'row',
         alignItems: 'center',

@@ -189,7 +189,7 @@ class ConfirmBookingDoctorScreen extends Component {
         return (
             <ActivityPanel
                 // hideBackButton={true}
-                title={constants.title.create_booking_success}
+                title={'Chọn phương thức thanh toán'}
                 titleStyle={styles.txtTitle}
                 iosBarStyle={'light-content'}
                 statusbarBackgroundColor="#02C39A"
