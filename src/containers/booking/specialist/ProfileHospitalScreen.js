@@ -168,9 +168,9 @@ class ProfileHospitalScreen extends Component {
         }
     }
     ratingDoctor = () => {
-        snackbar.show('Chức năng đang phát triển')
-        return
-        this.props.navigation.navigate('listRatingDoctor')
+        // snackbar.show('Chức năng đang phát triển')
+        // return
+        this.props.navigation.navigate('ratingDoctor')
     }
     _keyExtractor = (item, index) => `${item.id || index}`
     onBackdropPress = () => { this.setState({ isVisible: false }) }
