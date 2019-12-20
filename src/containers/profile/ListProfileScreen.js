@@ -141,7 +141,7 @@ class ListProfileScreen extends Component {
                     NavigationService.navigate("shareDataProfile", {
                         shareId: id,
                         id: medicalRelatedId,
-                        sharePermission:  sharePermission
+                        sharePermission: sharePermission
                     })
                     this.setState({
                         disabled: false
@@ -205,34 +205,34 @@ class ListProfileScreen extends Component {
                                     <Text style={styles.txProfileUser}>{item.medicalRecords.name}</Text>
                                 </LinearGradient>
                             </TouchableOpacity>
-                        ) : (<View style={{
-                            marginHorizontal: 10,
-                        }}>
-                            <Card style={styles.cardView}>
-                            <TouchableOpacity  onPress={this.onClickItem(item)}>
-                                <View style={styles.viewProfileFamily}>
-                                    <View>
-                                        <Text style={styles.txName}>{item.medicalRecords.name}</Text>
-                                        {
-                                            item.medicalRecords.relationshipType ?
-                                                <Text style={styles.txtRelationshipType}>Quan hệ: {this.renderRelation(item.medicalRecords.relationshipType)}</Text>
-                                                : <View></View>
-                                        }
-                                    </View>
-                                    <View style={{ flexDirection: 'row', alignItems: 'center', }}>
-                                        {
-                                            item.medicalRecords.statusConfirm == "NEED_CONFIRM" ? (
-                                                <TouchableOpacity disabled={this.state.disabled} onPress={() => this.onConfirm(item.medicalRecords.id, item.medicalRecords.sharePermission, item.medicalRecords.medicalRelatedId)} style={{ paddingHorizontal: 20, paddingVertical: 5, backgroundColor: '#FFAE00', borderRadius: 5 }}><Text style={{ color: '#fff', fontWeight: 'bold' }}>XÁC NHẬN</Text></TouchableOpacity>
-                                            ) : (<View></View>)
-                                        }
-                                        <TouchableOpacity style={{ padding: 10 }} onPress={() => this.onShowOptions(item.medicalRecords.id, item.medicalRecords.permission, item.medicalRecords.medicalRelatedId ? item.medicalRecords.medicalRelatedId : null)}>
-                                            <ScaledImage height={20} width={20} source={require('@images/new/profile/ic_three_dot.png')}></ScaledImage>
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                                </TouchableOpacity>
-                            </Card>
-                        </View>)}
+                        ) : (
+                                <Card style={styles.cardView}>
+                                    <TouchableOpacity onPress={this.onClickItem(item)} style={{
+                                        marginHorizontal: 10,
+                                    }}>
+                                        <View style={styles.viewProfileFamily}>
+                                            <View>
+                                                <Text style={styles.txName}>{item.medicalRecords.name}</Text>
+                                                {
+                                                    item.medicalRecords.relationshipType ?
+                                                        <Text style={styles.txtRelationshipType}>Quan hệ: {this.renderRelation(item.medicalRecords.relationshipType)}</Text>
+                                                        : <View></View>
+                                                }
+                                            </View>
+                                            <View style={{ flexDirection: 'row', alignItems: 'center', }}>
+                                                {
+                                                    item.medicalRecords.statusConfirm == "NEED_CONFIRM" ? (
+                                                        <TouchableOpacity disabled={this.state.disabled} onPress={() => this.onConfirm(item.medicalRecords.id, item.medicalRecords.sharePermission, item.medicalRecords.medicalRelatedId)} style={{ paddingHorizontal: 20, paddingVertical: 5, backgroundColor: '#FFAE00', borderRadius: 5 }}><Text style={{ color: '#fff', fontWeight: 'bold' }}>XÁC NHẬN</Text></TouchableOpacity>
+                                                    ) : (<View></View>)
+                                                }
+                                                <TouchableOpacity style={{ padding: 10 }} onPress={() => this.onShowOptions(item.medicalRecords.id, item.medicalRecords.permission, item.medicalRecords.medicalRelatedId ? item.medicalRecords.medicalRelatedId : null)}>
+                                                    <ScaledImage height={20} width={20} source={require('@images/new/profile/ic_three_dot.png')}></ScaledImage>
+                                                </TouchableOpacity>
+                                            </View>
+                                        </View>
+                                    </TouchableOpacity>
+                                </Card>
+                            )}
                     </TouchableOpacity>
                 ) : (
                     item.medicalRecords.status == 1 ? (
