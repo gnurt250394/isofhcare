@@ -216,6 +216,153 @@ class AddBookingScreen extends Component {
         }
     }
 
+    // addBooking = () => {
+    //     Keyboard.dismiss();
+    //     if (!this.state.allowBooking)
+    //         return;
+
+    //     let error = false;
+
+    //     if (this.state.contact) {
+    //         this.setState({ contactError: "" })
+    //     } else {
+    //         this.setState({ contactError: constants.msg.booking.contact_not_null })
+    //         error = true;
+    //     }
+    //     if (this.state.profile) {
+    //         this.setState({ profileError: "" })
+    //     } else {
+    //         this.setState({ profileError: constants.msg.booking.profile_not_null })
+    //         error = true;
+    //     }
+    //     // if (this.state.serviceType) {
+    //     //     this.setState({ serviceTypeError: "" })
+    //     // } else {
+    //     //     this.setState({ serviceTypeError: constants.msg.booking.require_not_null })
+    //     //     error = true;
+    //     // }
+    //     if (this.state.listServicesSelected && this.state.listServicesSelected.length) {
+    //         this.setState({ serviceError: "" })
+    //     } else {
+    //         this.setState({ serviceError: constants.msg.booking.service_not_null })
+    //         error = true;
+    //     }
+    //     if (this.state.bookingDate) {
+    //         this.setState({ bookingError: "" })
+    //     } else {
+    //         this.setState({ bookingError: constants.msg.booking.date_booking_not_null })
+    //         error = true;
+    //     }
+    //     if (this.state.hospital) {
+    //         this.setState({ hospitalError: "" })
+    //     } else {
+    //         this.setState({ hospitalError: constants.msg.booking.location_not_null })
+    //         error = true;
+    //     }
+
+    //     if (this.state.schedule) {
+    //         this.setState({ scheduleError: "" })
+    //     } else {
+    //         this.setState({ scheduleError: constants.msg.booking.schedule_not_null })
+    //         error = true;
+    //     }
+
+    //     let validForm = this.form.isValid();
+    //     if (!error && validForm) {
+    //         for (var i = 0; i < this.state.imageUris.length; i++) {
+    //             if (this.state.imageUris[i].loading) {
+    //                 snackbar.show(constants.msg.booking.image_loading, 'danger');
+    //                 return;
+    //             }
+    //             if (this.state.imageUris[i].error) {
+    //                 snackbar.show(constants.msg.booking.image_load_err, 'danger');
+    //                 return;
+    //             }
+    //         }
+    //         var images = "";
+    //         this.state.imageUris.forEach((item) => {
+    //             if (images)
+    //                 images += ",";
+    //             images += item.url;
+    //         });
+    //         let reason = this.state.reason ? this.state.reason : ''
+    //         let img = images ? images : ''
+
+
+
+    //         connectionUtils.isConnected().then(s => {
+    //             this.setState({ isLoading: true }, () => {
+    //                 console.log(this.state.schedule.time);
+    //                 let serviceIds = this.state.listServicesSelected.map(item => item.service.id).join(",");
+    //                 let bookingDate = this.state.bookingDate.format("yyyy-MM-dd") + " " + this.state.schedule.label + ":00";
+    //                 bookingProvider.create(
+    //                     this.state.hospital.hospital.id,
+    //                     this.state.schedule && this.state.schedule.schedule ? this.state.schedule.schedule.id : "",
+    //                     this.state.profile.medicalRecords.id,
+    //                     (this.state.serviceType || {}).id,
+    //                     serviceIds,
+    //                     bookingDate,
+    //                     reason,
+    //                     img
+    //                 ).then(s => {
+    //                     this.setState({ isLoading: false }, () => {
+    //                         if (s) {
+    //                             switch (s.code) {
+    //                                 case 0:
+    //                                     dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, this.state.profile);
+    //                                     this.props.navigation.navigate("confirmBooking", {
+    //                                         serviceType: this.state.serviceType,
+    //                                         service: this.state.listServicesSelected,
+    //                                         profile: this.state.profile,
+    //                                         hospital: this.state.hospital,
+    //                                         bookingDate: this.state.bookingDate,
+    //                                         schedule: this.state.schedule,
+    //                                         reason: reason,
+    //                                         images: img,
+    //                                         contact: this.state.contact,
+    //                                         booking: s.data
+    //                                     });
+    //                                     break;
+    //                                 case 1:
+    //                                     this.setState({ isLoading: false }, () => {
+    //                                         snackbar.show(constants.msg.booking.booking_must_equal_datetime, "danger");
+    //                                     });
+    //                                     break;
+    //                                 case 2:
+    //                                     this.setState({ isLoading: false }, () => {
+    //                                         snackbar.show(constants.msg.booking.full_slot_on_this_time, "danger");
+    //                                     });
+    //                                     break;
+    //                                 case 401:
+    //                                     this.setState({ isLoading: false }, () => {
+    //                                         snackbar.show(constants.msg.booking.booking_must_login, "danger");
+    //                                         this.props.navigation.navigate("login"
+    //                                             // , {
+    //                                             //     nextScreen: {
+    //                                             //         screen: "confirmBooking", params: this.props.navigation.state.params
+    //                                             //     }
+    //                                             // }
+    //                                         );
+    //                                     });
+    //                                     break;
+    //                                 default:
+    //                                     this.setState({ isLoading: false }, () => {
+    //                                         snackbar.show(constants.msg.booking.booking_err, "danger");
+    //                                     });
+    //                                     break;
+    //                             }
+    //                         }
+    //                     });
+    //                 }).catch(e => {
+    //                     this.setState({ isLoading: false }, () => {
+    //                     });
+    //                 })
+    //             });
+    //         }).catch(e => {
+    //             snackbar.show(constants.msg.app.not_internet, "danger");
+    //         })
+    //     }
+    // }
     addBooking = () => {
         Keyboard.dismiss();
         if (!this.state.allowBooking)
@@ -293,69 +440,43 @@ class AddBookingScreen extends Component {
             connectionUtils.isConnected().then(s => {
                 this.setState({ isLoading: true }, () => {
                     console.log(this.state.schedule.time);
-                    let serviceIds = this.state.listServicesSelected.map(item => item.service.id).join(",");
-                    let bookingDate = this.state.bookingDate.format("yyyy-MM-dd") + " " + this.state.schedule.label + ":00";
-                    bookingProvider.create(
-                        this.state.hospital.hospital.id,
-                        this.state.schedule && this.state.schedule.schedule ? this.state.schedule.schedule.id : "",
-                        this.state.profile.medicalRecords.id,
-                        (this.state.serviceType || {}).id,
-                        serviceIds,
+                    const { userApp } = this.props
+                    console.log('userApp: ', userApp);
+                    let services = this.state.listServicesSelected.map(e => ({ price: e.monetaryAmount.value, serviceId: e.id, name: e.name }));
+                    let bookingDate = this.state.bookingDate.format("yyyy-MM-dd");
+                    console.log('this.state.bookingDate: ', this.state.bookingDate);
+                    console.log('bookingDate: ', bookingDate);
+                    console.log('this.state.profile: ', this.state.profile);
+                    bookingProvider.createBooking(
                         bookingDate,
                         reason,
-                        img
+                        this.state.hospital.hospital,
+                        services,
+                        userApp.currentUser,
+                        this.state.schedule.label
                     ).then(s => {
                         this.setState({ isLoading: false }, () => {
-                            if (s) {
-                                switch (s.code) {
-                                    case 0:
-                                        dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, this.state.profile);
-                                        this.props.navigation.navigate("confirmBooking", {
-                                            serviceType: this.state.serviceType,
-                                            service: this.state.listServicesSelected,
-                                            profile: this.state.profile,
-                                            hospital: this.state.hospital,
-                                            bookingDate: this.state.bookingDate,
-                                            schedule: this.state.schedule,
-                                            reason: reason,
-                                            images: img,
-                                            contact: this.state.contact,
-                                            booking: s.data
-                                        });
-                                        break;
-                                    case 1:
-                                        this.setState({ isLoading: false }, () => {
-                                            snackbar.show(constants.msg.booking.booking_must_equal_datetime, "danger");
-                                        });
-                                        break;
-                                    case 2:
-                                        this.setState({ isLoading: false }, () => {
-                                            snackbar.show(constants.msg.booking.full_slot_on_this_time, "danger");
-                                        });
-                                        break;
-                                    case 401:
-                                        this.setState({ isLoading: false }, () => {
-                                            snackbar.show(constants.msg.booking.booking_must_login, "danger");
-                                            this.props.navigation.navigate("login"
-                                                // , {
-                                                //     nextScreen: {
-                                                //         screen: "confirmBooking", params: this.props.navigation.state.params
-                                                //     }
-                                                // }
-                                            );
-                                        });
-                                        break;
-                                    default:
-                                        this.setState({ isLoading: false }, () => {
-                                            snackbar.show(constants.msg.booking.booking_err, "danger");
-                                        });
-                                        break;
-                                }
+                            if (s && s.id) {
+                                dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, this.state.profile);
+                                this.props.navigation.navigate("confirmBooking", {
+                                    serviceType: this.state.serviceType,
+                                    service: services,
+                                    profile: this.state.profile,
+                                    hospital: this.state.hospital,
+                                    bookingDate: this.state.bookingDate,
+                                    schedule: this.state.schedule,
+                                    reason: reason,
+                                    images: img,
+                                    contact: this.state.contact,
+                                    booking: s
+                                });
+                            } else {
+                                snackbar.show(constants.msg.booking.booking_err, "danger");
                             }
-                        });
+                        })
                     }).catch(e => {
-                        this.setState({ isLoading: false }, () => {
-                        });
+                        snackbar.show(constants.msg.booking.booking_err, "danger");
+                        this.setState({ isLoading: false });
                     })
                 });
             }).catch(e => {
@@ -538,7 +659,7 @@ class AddBookingScreen extends Component {
                                             this.state.listServicesSelected.map((item, index) => <Text
                                                 style={styles.txtListServices}
                                                 numberOfLines={1}
-                                                key={index}>{item.service.name}</Text>)
+                                                key={index}>{item.name}</Text>)
                                         }
                                         {/* <Text numberOfLines={1} style={styles.ktq}>{this.state.service.name}</Text> */}
                                         {/* <Text numberOfLines={1} style={styles.ktq}>{this.state.service.price.formatPrice() + 'đ'}</Text> */}

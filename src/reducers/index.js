@@ -16,7 +16,9 @@ const defaultState = {
     },
     ehealth: {
 
-    }
+    },
+    otpPhone: null,
+    dataDrug: {}
 }
 const reducer = (state = defaultState, action) => {
     var newState = JSON.parse(JSON.stringify(state));
@@ -71,6 +73,12 @@ const reducer = (state = defaultState, action) => {
         case constants.action.action_select_patient_group_ehealth:
             newState.ehealth.patient = action.value;
             return newState;
+        case constants.action.action_otp_phone:
+            newState.otpPhone = action.value
+            return newState;
+        case constants.action.action_add_drug:
+            newState.dataDrug = action.value
+            return newState
     }
     return newState;
 }

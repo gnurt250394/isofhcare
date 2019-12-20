@@ -9,7 +9,7 @@ import {
   Dimensions,
   AppState,
   DeviceEventEmitter,
-  Alert,
+  PixelRatio,
   ScrollView,
   FlatList,
   RefreshControl,
@@ -28,6 +28,8 @@ import { Card, Toast } from "native-base";
 const DEVICE_WIDTH = Dimensions.get("window").width;
 import * as Animatable from 'react-native-animatable';
 import advertiseProvider from "@data-access/advertise-provider";
+import hospitalProvider from '@data-access/hospital-provider';
+import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
 class HomeScreen extends Component {
   constructor(props) {
     super(props);
@@ -35,22 +37,51 @@ class HomeScreen extends Component {
       ads: [],
       refreshing: false,
       ads0: [],
-      features: [
+      listDataHospital: [{
+        name: 'Bệnh viện E',
+        image: require('@images/new/homev2/csyt_demo.png')
+      },
+      {
+        name: 'Phòng khám Y khoa HN',
+        image: require('@images/new/homev2/csyt_demo2.png')
+      }],
+      listDataDoctor: [
         {
-          icon: require("@images/new/home/ic_ticket_news.png"),
-          text: "Lấy số",
+          name: 'PGS BS Trương Hồng Sơn',
+          image: require('@images/new/homev2/doctor_demo.png')
+        },
+        {
+          name: 'BS Ngô Thành Trung',
+          image: require('@images/new/homev2/doctor_demo2.png')
+        },
+        {
+          name: 'PGS BS Trương Hồng Sơn',
+          image: require('@images/new/homev2/doctor_demo3.png')
+        }
+      ],
+      featuresBooking: [
+        {
+          icon: require("@images/new/homev2/ic_specialist.png"),
+          text: "Chuyên khoa",
+          onPress: () => {
+            snackbar.show('Tính năng đang phát triển')
+          }
+        },
+        {
+          icon: require("@images/new/homev2/ic_doctor.png"),
+          text: "Bác sĩ",
           onPress: () => {
             if (this.props.userApp.isLogin)
-              this.props.navigation.navigate("selectHealthFacilitiesScreen");
+              this.props.navigation.navigate("listDoctor");
             else
               this.props.navigation.navigate("login", {
-                nextScreen: { screen: "selectHealthFacilitiesScreen", param: {} }
+                nextScreen: { screen: "listDoctor", param: {} }
               });
           }
         },
         {
-          icon: require("@images/new/home/ic_booking_news.png"),
-          text: "Đặt khám",
+          icon: require("@images/new/homev2/ic_hospital.png"),
+          text: "Cơ sở Y tế",
           onPress: () => {
             if (this.props.userApp.isLogin)
               this.props.navigation.navigate("addBooking1");
@@ -60,16 +91,43 @@ class HomeScreen extends Component {
               });
           }
         },
+
         {
-          icon: require("@images/new/home/ic_question_news.png"),
-          text: "Tư vấn",
+          icon: require("@images/new/homev2/ic_symptom.png"),
+          text: "Triệu chứng",
           onPress: () => {
-            this.props.navigation.navigate("listQuestion");
+            snackbar.show('Tính năng đang phát triển')
+          }
+        }
+      ],
+      features: [
+        {
+          icon: require("@images/new/homev2/ic_get_ticket.png"),
+          text: "Lấy số khám",
+          onPress: () => {
+            if (this.props.userApp.isLogin)
+              this.props.navigation.navigate("getTicket");
+            else
+              this.props.navigation.navigate("login", {
+                nextScreen: { screen: "getTicket", param: {} }
+              });
           }
         },
         {
-          icon: require("@images/new/home/ic_ehealth_news.png"),
-          text: "Y bạ",
+          icon: require("@images/new/homev2/ic_advisory.png"),
+          text: "Tư vấn",
+          onPress: () => {
+            if (this.props.userApp.isLogin)
+              this.props.navigation.navigate("listQuestion");
+            else
+              this.props.navigation.navigate("login", {
+                nextScreen: { screen: "listQuestion", param: {} }
+              });
+          }
+        },
+        {
+          icon: require("@images/new/homev2/ic_ehealth.png"),
+          text: "Y bạ điện tử",
           onPress: () => {
             if (this.props.userApp.isLogin)
               this.props.navigation.navigate("ehealth");
@@ -78,33 +136,59 @@ class HomeScreen extends Component {
                 nextScreen: { screen: 'ehealth' }
               });
           }
+        },
+        {
+          icon: require("@images/new/homev2/ic_voucher.png"),
+          text: "Mã ưu đãi",
+          onPress: () => {
+            if (this.props.userApp.isLogin)
+              this.props.navigation.navigate("myVoucher");
+            else
+              this.props.navigation.navigate("login", {
+                nextScreen: { screen: 'myVoucher' }
+              });
+          }
+        },
+        {
+          icon: require("@images/new/homev2/ic_drug.png"),
+          text: "Thuốc",
+          onPress: () => {
+            snackbar.show('Tính năng đang phát triển')
+          }
+        },
+        {
+          icon: require("@images/new/homev2/ic_more_info.png"),
+          text: "Nhiều hơn",
+          onPress: () => {
+            snackbar.show('Tính năng đang phát triển')
+          }
         }
       ]
     };
   }
-  getTopAds(reload) {
-    advertiseProvider.getTop(100, (s, e) => {
-      if (s) {
-        if (s.length == 0) {
-          if (!reload)
-            this.getTopAds(true);
-        }
-        this.setState({
-          ads: (s || []).filter(x => x.advertise && x.advertise.type == 2 && x.advertise.images),
-          ads0: (s || []).filter(x => x.advertise && x.advertise.type == 1 && x.advertise.images)
-          // .filter(item => { return item.advertise && item.advertise.images })
-        });
-      }
-      else {
-        if (!reload)
-          this.getTopAds(true);
-      }
-      if (e) {
-        if (!reload)
-          this.getTopAds(true);
-      }
-    });
-  }
+  // getTopAds(reload) {
+  //   advertiseProvider.getTop(100, (s, e) => {
+  //     if (s) {
+  //       if (s.length == 0) {
+  //         if (!reload)
+  //           this.getTopAds(true);
+  //       }
+  //       this.setState({
+  //         ads: (s || []).filter(x => x.advertise && x.advertise.type == 2 && x.advertise.images),
+  //         ads0: (s || []).filter(x => x.advertise && x.advertise.type == 1 && x.advertise.images)
+  //         // .filter(item => { return item.advertise && item.advertise.images })
+  //       });
+  //     }
+  //     else {
+  //       if (!reload)
+  //         this.getTopAds(true);
+  //     }
+  //     if (e) {
+  //       if (!reload)
+  //         this.getTopAds(true);
+  //     }
+  //   });
+  // }
   onCallHotline = () => {
     Linking.openURL('tel:1900299983')
   }
@@ -116,15 +200,16 @@ class HomeScreen extends Component {
       "hardwareBackPress",
       this.handleHardwareBack.bind(this)
     );
-    this.onRefresh();
+    // this.onRefresh();
+    // this.onGetHospital()
   }
-  renderAds() {
-    return (<View>
-      <ScaledImage source={require("@images/new/slogan.jpg")} width={DEVICE_WIDTH} />
-      <TouchableOpacity onPress={this.onCallHotline} style={{ alignItems: 'center', justifyContent: 'center' }}><Text style={{ fontSize: 18, color: '#02c39a',fontWeight:'bold' }}>Tổng đài hỗ trợ: 1900299983</Text></TouchableOpacity>
-      {/* <View style={styles.viewAds}>
-        <Text style={styles.txAds}>Ưu đãi</Text>
-        <ScaledImage source={require("@images/new/ic_more.png")} width={20} style={styles.imgMore} />
+  renderDoctor() {
+    return (<View style={{ backgroundColor: '#fff', marginTop: 10 }}>
+      {/* <ScaledImage source={require("@images/new/slogan.jpg")} width={DEVICE_WIDTH} />
+      <TouchableOpacity onPress={this.onCallHotline} style={{ alignItems: 'center', justifyContent: 'center' }}><Text style={{ fontSize: 18, color: '#02c39a', fontWeight: 'bold' }}>Tổng đài hỗ trợ: 1900299983</Text></TouchableOpacity> */}
+      <View style={styles.viewAds}>
+        <Text style={styles.txAds}>CÁC BÁC SĨ HÀNG ĐẦU</Text>
+        {/* <ScaledImage source={require("@images/new/ic_more.png")} width={20} style={styles.imgMore} /> */}
       </View>
       <FlatList
         style={styles.listAds}
@@ -132,32 +217,59 @@ class HomeScreen extends Component {
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
         extraData={this.state}
-        data={this.state.ads}
+        data={this.state.listDataDoctor}
         ListFooterComponent={<View style={styles.viewFooter}></View>}
         renderItem={({ item, index }) => {
-          if (!item || !item.advertise || !item.advertise.images)
-            return null;
           return (
-            <Card style={styles.cardView}>
-              <TouchableOpacity
-                onPress={() => {
-                  if (item.advertise && item.advertise.value) {
-                    Linking.openURL(item.advertise.value);
-                  } else {
-                    snackbar.show("Url không tồn tại", "danger");
-                  }
-                }}
-              >
+            <View style={styles.cardViewDoctor}>
+              <Card style={{ borderRadius: 5 }}>
                 <ScaledImage
-                  uri={item.advertise.images.absoluteUrl()}
-                  width={DEVICE_WIDTH - 60}
+                  // uri={item.advertise.images.absoluteUrl()}
+                  style={{ borderRadius: 5 }}
+                  source={item.image}
+                  width={DEVICE_WIDTH / 3}
                 />
-                <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensAds}>{item.advertise ? item.advertise.title : ""}</Text>
-              </TouchableOpacity>
-            </Card>
+              </Card>
+              <Text numberOfLines={2} ellipsizeMode='tail' style={styles.txContensAds}>{item.name ? item.name : ""}</Text>
+
+            </View>
           );
         }}
-      /> */}
+      />
+    </View>)
+  }
+  renderHospital() {
+    let { listDataHospital } = this.state
+    return (<View style={{ backgroundColor: '#fff', marginTop: 10 }}>
+      {/* <ScaledImage source={require("@images/new/slogan.jpg")} width={DEVICE_WIDTH} />
+      <TouchableOpacity onPress={this.onCallHotline} style={{ alignItems: 'center', justifyContent: 'center' }}><Text style={{ fontSize: 18, color: '#02c39a', fontWeight: 'bold' }}>Tổng đài hỗ trợ: 1900299983</Text></TouchableOpacity> */}
+      <View style={styles.viewAds}>
+        <Text style={styles.txAds}>CƠ SỞ Y TẾ HÀNG ĐẦU</Text>
+        {/* <ScaledImage source={require("@images/new/ic_more.png")} width={20} style={styles.imgMore} /> */}
+      </View>
+      <FlatList
+        style={styles.listAds}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        keyExtractor={(item, index) => index.toString()}
+        extraData={this.state}
+        data={listDataHospital}
+        ListFooterComponent={<View style={styles.viewFooter}></View>}
+        renderItem={({ item, index }) => {
+          return (
+            <View style={{ flex: 1 }}>
+              <TouchableOpacity style={styles.cardView}>
+                <ScaledImage
+                  source={item.image}
+                  height={134}
+                  style={{ borderRadius: 6, resizeMode: 'cover' }}
+                />
+              </TouchableOpacity>
+              <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensAds}>{item ? item.name : ""}</Text>
+            </View>
+          );
+        }}
+      />
     </View>)
   }
   pagination() {
@@ -241,42 +353,117 @@ class HomeScreen extends Component {
       });
     })
   }
-
-  getItemWidth() {
-    const width = DEVICE_WIDTH - 40;
-    if (width >= 320) {
-      return Platform.OS == 'ios' ? 70 : 75;
+  getMarginBooking() {
+    const pixel = PixelRatio.get()
+    if (pixel >= 2 && DEVICE_WIDTH > 325) {
+      return 34
     }
-
-    if (width > 300) {
-      return Platform.OS == 'ios' ? 100 : 110;
+    if (pixel > 2 && DEVICE_WIDTH < 325) {
+      return 14
     }
-
-    if (width > 250)
-      return 70;
-    return width - 50;
   }
+  // getItemBookingWidth() {
+  //   const width = DEVICE_WIDTH - 40;
+  //   
+  //   if (width >= 320) {
+  //     return Platform.OS == 'ios' ? '30%' : '30%';
+  //   }
 
-  renderButton = () => {
-    return (this.state.features || []).map((item, position) => {
+  //   if (width > 300) {
+  //     return Platform.OS == 'ios' ? 100 : 110;
+  //   }
+
+  //   if (width > 250)
+  //     return 65;
+
+  //   return width - 50;
+  // }
+  renderButtonBooking() {
+    return (this.state.featuresBooking || []).map((item, position) => {
       return (
-        <Animatable.View key={position} delay={100} animation={"swing"} direction="alternate">
+        <Animatable.View key={position} delay={100} animation={"zoomInUp"} style={{ flex: 1, alignItems: 'center' }} direction="alternate">
           {
-            item.empty ? <View style={[styles.viewEmpty, { width: this.getItemWidth() }]}
+            item.empty ? <View style={[styles.viewEmpty,]}
             ></View> :
               <TouchableOpacity
-                style={[styles.button, { width: this.getItemWidth() }]}
+                style={[styles.buttonBooking, {},]}
                 onPress={item.onPress}
               >
-                <View style={styles.groupImageButton}>
-                  <ScaledImage style={[styles.icon]} source={item.icon} height={48} />
+                <View style={{ alignItems: 'center' }}><View style={styles.groupImageButton}>
+                  <ScaledImage style={[styles.icon]} source={item.icon} height={30} />
                 </View>
-                <Text style={[styles.label]}>{item.text}</Text>
+                  <Text style={[styles.label, { fontSize: this.getAdjustedFontSize(12) }]}>{item.text}</Text></View>
               </TouchableOpacity>
 
           }
         </Animatable.View>);
     })
+  }
+  getMargin() {
+    const pixel = PixelRatio.get()
+
+    if (pixel >= 2 && DEVICE_WIDTH > 325) {
+      return 75
+    }
+    if (pixel > 2 && DEVICE_WIDTH < 325) {
+      return 24
+    }
+  }
+  getItemWidth() {
+    const width = DEVICE_WIDTH - 40;
+    if (width >= 320) {
+      return Platform.OS == 'ios' ? 95 : 95;
+    }
+
+    if (width > 300) {
+      return Platform.OS == 'ios' ? 110 : 120;
+    }
+
+    if (width > 250)
+      return 80;
+
+    return width - 60;
+  }
+  renderButton = () => {
+    return (this.state.features || []).map((item, position) => {
+      return (
+        <Animatable.View key={position} delay={100} animation={"swing"} direction="alternate">
+          {
+            item.empty ? <View style={[styles.viewEmpty]}
+            ></View> :
+              <TouchableOpacity
+                style={[styles.button, { marginTop: 10, }, { width: this.getItemWidth() },]}
+                onPress={item.onPress}
+              >
+                <View style={styles.groupImageButton}>
+                  <ScaledImage style={[styles.icon]} source={item.icon} height={54} />
+                </View>
+                <Text style={[styles.label, { fontSize: this.getAdjustedFontSize(12) }]}>{item.text}</Text>
+              </TouchableOpacity>
+
+          }
+        </Animatable.View>);
+    })
+  }
+  onGetHospital = () => {
+    // hospitalProvider.getBySearch(1, 10, '', -1).then(res => {
+    //   if (res.code == 0) {
+    //     this.setState({
+    //       hospital: res.data.data
+    //     })
+    //   }
+    //   
+    // })
+    hospitalProvider.getListTopRateHospital().then(res => {
+      this.setState({
+        listDataHospital: res.slice(0, 10)
+      })
+    }).catch(err => {
+
+    })
+  }
+  getAdjustedFontSize(size) {
+    return Platform.OS == 'ios' ? parseInt(size - 2) * DEVICE_WIDTH * (1.8 - 0.002 * DEVICE_WIDTH) / 400 : parseInt(size) * DEVICE_WIDTH * (1.8 - 0.002 * DEVICE_WIDTH) / 400;
   }
   refreshControl = () => {
     return (
@@ -294,43 +481,69 @@ class HomeScreen extends Component {
       return name.charAt(0).toUpperCase() + name.slice(1);
     return name;
   }
+  getHeightImage = (source) => {
+    let img = resolveAssetSource(source);
+    return img.height * (DEVICE_WIDTH / img.width)
+  }
   render() {
+    const headerHome = require("@images/new/homev2/header_home.png")
     return (
       <ActivityPanel
+        transparent={true}
         isLoading={this.state.isLoading}
         hideActionbar={true}
+        showBackgroundHeader={true}
+        backgroundHeader={headerHome}
+        containerStyle={{ backgroundColor: '#f2f2f2' }}
+        style={[styles.activityPanel, { backgroundColor: 'transparent' }]}
       >
         <View style={styles.container}>
-          <ScaledImage source={require("@images/new/home/bg_home_new.png")} width={DEVICE_WIDTH} style={styles.imgHome} />
-          <View style={styles.containerImageLogo}>
-            <View style={styles.ImageCenter}>
+          {/* <View style={{ height: 150, backgroundColor: '#f2f2f2', position: "absolute", top: 300, left: 0, right: 0 }}></View> */}
+          {/* <ScaledImage source={require("@images/new/homev2/header_home.png")} width={DEVICE_WIDTH} style={styles.imgHome} /> */}
+          {/*   <View style={styles.containerImageLogo}>
+        <View style={styles.ImageCenter}>
               <ScaledImage source={require("@images/new/isofhcare.png")} width={116} />
-            </View>
-          </View>
+            </View> 
+          </View>*/}
+
           <ScrollView
             refreshControl={this.refreshControl()}
             showsVerticalScrollIndicator={false}
-            style={styles.scroll}
-          >
-            <View style={styles.padding21}>
-              <Card style={styles.card}>
 
-                {this.props.userApp.isLogin &&
+          >
+            <View style={[styles.scroll, { paddingTop: this.getHeightImage(headerHome) / 10 }]}>
+              <View style={[styles.padding21,]}>
+                {this.props.userApp.isLogin ?
                   <View style={styles.containerHeadertitle}>
                     <Text
                       style={styles.txtHeaderTitle}
                     >Xin chào, </Text>
                     <Text style={styles.colorUserName}>{this.getUserName(this.props.userApp.currentUser.name) + '!'}</Text>
+                  </View> : <View style={styles.containerHeadertitle}>
                   </View>}
-                <View style={styles.containerButton}>
-                  {this.renderButton()}
-                </View>
-              </Card>
+                <Card style={styles.card}>
+                  <Text style={styles.txBooking}>ĐẶT KHÁM ONLINE</Text>
+                  <View style={{ justifyContent: 'center' }}>
+                    <View style={styles.containerButtonBooking}>
+                      {this.renderButtonBooking()}
+                    </View>
+                  </View>
+                </Card>
+                {/* <View style={styles.viewMenu}> */}
+
+                {/* </View> */}
+              </View>
+              <View style={styles.containerButton}>
+                {this.renderButton()}
+              </View>
+              {
+                this.renderDoctor()
+              }
+              {
+                this.renderHospital()
+              }
+              <View style={{ height: 50, backgroundColor: '#fff' }} />
             </View>
-            {
-              this.renderAds()
-            }
-            <View style={{ height: 30 }} />
           </ScrollView>
         </View>
         <PushController />
@@ -346,9 +559,11 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
-    marginLeft: 5,
     alignItems: 'center',
-
+  },
+  buttonBooking: {
+    // flex: 1,
+    alignItems: 'flex-start',
   },
   viewEmpty: {
     flex: 1,
@@ -356,38 +571,62 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 100,
   },
+  activityPanel: {
+    flex: 1,
+    backgroundColor: '#f8f8f8'
+  },
+  containerButtonBooking: {
+    flexDirection: "row",
+    paddingBottom: 10,
+    // flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    // justifyContent: 'center',
+    borderRadius: 5,
+  },
   containerButton: {
     flexDirection: "row",
-    padding: 10,
-    marginVertical: 20,
+    padding: 21,
+    flex: 1,
     flexWrap: 'wrap',
-    justifyContent: 'center'
+    justifyContent: 'space-around',
+    borderRadius: 5,
+    backgroundColor: '#f2f2f2'
   },
   colorUserName: {
-    color: 'rgb(255,138,21)',
-    paddingLeft:4,
-    fontSize:18
+    color: '#fff',
+    paddingLeft: 4,
+    fontSize: 18,
+    fontWeight: 'bold',
+
   },
   txtHeaderTitle: {
     marginLeft: 5,
     fontSize: 18,
-    fontWeight: 'bold',
-    color: "#4a4a4a"
+    color: "#fff"
   },
   containerHeadertitle: {
     alignItems: 'center',
     flexDirection: 'row',
-    borderBottomColor: 'rgba(151, 151, 151, 0.29)',
-    borderBottomWidth: 1,
-    paddingVertical: 10,
+    // borderBottomColor: '#fff',
     marginHorizontal: 20,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    height: 40
   },
-  padding21: { padding: 21 },
-  card: { borderRadius: 6, marginTop: 130 },
+  txBooking: {
+    marginVertical: 10,
+    color: '#000',
+    marginLeft: 16,
+    fontWeight: 'bold'
+  },
+  padding21: {
+    paddingHorizontal: 21,
+    paddingBottom: 0
+  },
+  card: { borderRadius: 6, paddingHorizontal: 10 },
+  viewMenu: { backgroundColor: '#F8F8F8', flex: 1, borderRadius: 5 },
   scroll: {
     flex: 1,
-    paddingTop: 0
+    // paddingTop: 30,
   },
   ImageCenter: {
     flex: 1, alignItems: 'center'
@@ -407,25 +646,28 @@ const styles = StyleSheet.create({
   },
   imgHome: {
     position: 'absolute',
-    top: 72,
+    // top: 72,
     right: 0,
     left: 0
   },
   icon: {
   },
   label: {
-    marginTop: 2, color: '#4A4A4A', fontSize: 15, fontWeight: '600', lineHeight: 20
+    marginTop: 2, color: '#4A4A4A', fontWeight: '600', lineHeight: 20
   },
   subLabel: {
     color: '#9B9B9B', fontSize: 12, textAlign: 'center', marginTop: 5
   },
-  viewAds: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center' },
-  txAds: { padding: 12, paddingLeft: 20, paddingBottom: 5, color: 'rgba(74,74,74,0.6)', fontWeight: '500', flex: 1 },
+  viewAds: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', },
+  txAds: { padding: 12, paddingLeft: 20, paddingBottom: 5, color: '#000', fontWeight: 'bold', flex: 1 },
   imgMore: { marginTop: 10, marginRight: 20 },
-  listAds: { paddingHorizontal: 20 },
+  listAds: { paddingHorizontal: 20, flex: 1 },
   viewFooter: { width: 35 },
-  cardView: { width: DEVICE_WIDTH - 60, borderRadius: 6, marginRight: 10 },
-  txContensAds: { color: '#000', margin: 13 },
+  cardView: {borderRadius: 6, marginRight: 10, borderColor: '#9B9B9B', borderWidth: 0.5, backgroundColor: '#fff', height: 134, },
+  cardViewNone: { width: DEVICE_WIDTH - 140, borderRadius: 6, marginRight: 10, backgroundColor: '#fff' },
+  imgNone: { width: DEVICE_WIDTH - 140, borderRadius: 6, height: 140, borderColor: '#9B9B9B', borderWidth: 0.5 },
+  cardViewDoctor: { width: DEVICE_WIDTH / 3, borderRadius: 6, marginRight: 10 },
+  txContensAds: { color: '#000', margin: 13,marginLeft:5 },
   viewPagination: { position: 'absolute', bottom: 0, width: DEVICE_WIDTH },
   dotContainer: { width: 10, margin: 0, padding: 0, height: 10 },
   dotStyle: {

@@ -57,6 +57,7 @@ class SearchDrugScreen extends Component {
             <View style={styles.end} />
         </TouchableOpacity>
     }
+    
     onSearchAll = () => this.props.navigation.navigate("searchDrugResult", { keyword })
     renderFooter(keyword, data) {
         if (keyword)
@@ -88,7 +89,8 @@ class SearchDrugScreen extends Component {
                         renderFooter={this.renderFooter.bind(this)} />
 
                 </View>
-            </ActivityPanel >
+                <ImagePicker ref={ref => this.imagePicker = ref} />
+            </ActivityPanel>
         );
     }
 }
