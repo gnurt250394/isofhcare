@@ -118,7 +118,7 @@ import PolicyScreen from "@containers/utility/PolicyScreen";
 import SpecialistScreen from "@containers/specialist/SpecialistScreen";
 import ConfirmCodeScreen from "@containers/account/ConfirmCodeScreen";
 import ResetPasswordScreen from "@containers/account/ResetPasswordScreen";
-import { fromLeft, zoomIn, zoomOut, fromRight } from 'react-navigation-transitions';
+import { fromLeft, zoomIn, zoomOut, fromRight, fromBottom } from 'react-navigation-transitions';
 import MyVoucherScreen from '@containers/voucher';
 
 import DetailVoucherScreen from '@containers/voucher/DetailVoucherScreen';
@@ -132,13 +132,17 @@ import ListPaymentMethodScreen from '@containers/booking/doctor/ListPaymentMetho
 import CreateBookingDoctorSuccessScreen from '@containers/booking/doctor/CreateBookingDoctorSuccessScreen';
 import EditProfileScreen1 from '@containers/booking/EditProfileScreen';
 import SelectAddressScreen from '@containers/booking/SelectAddressScreen';
-import ListSpecialistScreen from '@containers/booking/doctor/ListSpecialistScreen';
+import ListSpecialistWithDoctorScreen from '@containers/booking/doctor/ListSpecialistWithDoctorScreen';
 import ListHospitalScreen from '@containers/booking/doctor/ListHospitalScreen';
 import RatingDoctorScreen from '@containers/booking/doctor/RatingDoctorScreen';
 import ListRatingDoctorScreen from '@containers/booking/doctor/ListRatingDoctorScreen';
 import ListBookingHistoryScreen from '@containers/booking/ListBookingHistoryScreen';
 import DetailHistoryBookingScreen from '@containers/booking/DetailHistoryBookingScreen';
 import ConfirmBookingDoctorScreen from '@containers/booking/doctor/ConfirmBookingDoctorScreen';
+import ListSpecialistScreen from '@containers/booking/specialist/ListSpecialistScreen';
+import TabDoctorAndHospitalScreen from '@containers/booking/specialist/TabDoctorAndHospitalScreen';
+import ProfileHospitalScreen from '@containers/booking/specialist/ProfileHospitalScreen';
+import MaphospitalScreen from '@containers/booking/specialist/MaphospitalScreen';
 const ProfileNavigation = createStackNavigator({
   selectProfile: SelectProfileScreen,
   createProfile: CreateProfileScreen,
@@ -272,6 +276,13 @@ const TabNavigatorComponent = createBottomTabNavigator(
 // );
 
 const handleCustomTransition = ({ scenes }) => {
+  const prevScene = scenes[scenes.length - 2];
+  const nextScene = scenes[scenes.length - 1];
+  if (prevScene
+    && prevScene.route.routeName === 'listBooking'
+    && nextScene.route.routeName === 'listSpecialist') {
+    return fromBottom();
+  }
   return fromRight();
 }
 
@@ -372,11 +383,15 @@ const RootNavigator = createStackNavigator(
     createBookingDoctorSuccess: { screen: CreateBookingDoctorSuccessScreen },
     editProfile1: { screen: EditProfileScreen1 },
     selectAddress: { screen: SelectAddressScreen },
-    listSpecialist: { screen: ListSpecialistScreen },
+    listSpecialistWithDoctor: { screen: ListSpecialistWithDoctorScreen },
     ratingDoctor: { screen: RatingDoctorScreen },
     listRatingDoctor: { screen: ListRatingDoctorScreen },
     listBookingHistory: { screen: ListBookingHistoryScreen },
     confirmBookingDoctor: { screen: ConfirmBookingDoctorScreen },
+    listSpecialist: { screen: ListSpecialistScreen },
+    tabDoctorAndHospital: { screen: TabDoctorAndHospitalScreen },
+    profileHospital: { screen: ProfileHospitalScreen },
+    mapHospital: { screen: MaphospitalScreen },
   },
   {
     headerMode: "none",
