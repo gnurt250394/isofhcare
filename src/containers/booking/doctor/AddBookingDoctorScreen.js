@@ -308,8 +308,22 @@ class AddBookingDoctorScreen extends Component {
         let { paymentMethod } = this.state
         let date = new Date(this.state.schedule.key).format("yyyy-MM-dd")
         let { reason, voucher, detailSchedule, profile, schedule, profileDoctor } = this.state
-        if (!profile) {
-            this.setState({ profileError: 'Vui lòng chọn người tới khám' })
+        if (!this.props.userApp.isLogin) {
+            this.props.navigation.replace("login", {
+                nextScreen: {
+                    screen: "addBookingDoctor", param: {
+                        profileDoctor: this.state.profileDoctor,
+                        bookingDate: this.state.bookingDate,
+                        detailSchedule: this.state.detailSchedule,
+                        schedule: this.state.schedule,
+                    }
+                }
+            });
+
+            return
+        }
+        if (!this.state.profile) {
+            this.setState({ profileError: 'Bạn chưa chọn người tới khám' })
             return
         }
         let discount = voucher && voucher.price ? voucher.price : 0
