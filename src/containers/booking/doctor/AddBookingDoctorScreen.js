@@ -308,6 +308,10 @@ class AddBookingDoctorScreen extends Component {
         let { paymentMethod } = this.state
         let date = new Date(this.state.schedule.key).format("yyyy-MM-dd")
         let { reason, voucher, detailSchedule, profile, schedule, profileDoctor } = this.state
+        if (!profile) {
+            this.setState({ profileError: 'Vui lòng chọn người tới khám' })
+            return
+        }
         let discount = voucher && voucher.price ? voucher.price : 0
         // let patitent = profile && profile.medicalRecords
         let patitent = this.props.userApp.currentUser
@@ -385,6 +389,18 @@ class AddBookingDoctorScreen extends Component {
     }
 
     onSelectProfile = () => {
+        this.setState({ profileError: '' })
+        if (!this.props.userApp.isLogin) {
+            this.props.navigation.navigate("login", {
+                nextScreen: {
+                    screen: "selectProfile", param: {
+                        onSelected: this.selectProfile.bind(this),
+                        profile: this.state.profile
+                    }
+                }
+            });
+            return
+        }
         connectionUtils.isConnected().then(s => {
             this.props.navigation.navigate("selectProfile", {
                 onSelected: this.selectProfile.bind(this),
@@ -548,7 +564,11 @@ class AddBookingDoctorScreen extends Component {
                             subName={constants.booking.select_profile}
                             label={'Người tới khám'}
                         />
-
+                        {
+                            this.state.profileError ?
+                                <Text style={styles.errorStyle}>{this.state.profileError}</Text>
+                                : null
+                        }
                         <ViewHeader
                             source={require("@images/new/booking/ic_serviceType.png")}
                             name={profileDoctor ? profileDoctor.academicDegree + ' ' + profileDoctor.name : null}
@@ -948,9 +968,10 @@ const styles = StyleSheet.create({
     },
     errorStyle: {
         color: 'red',
-        marginTop: 10,
+        paddingVertical: 5,
         marginLeft: 25,
-        marginRight: 25
+        marginRight: 25,
+        fontStyle: 'italic'
     },
 });
 

@@ -88,23 +88,23 @@ class AddBookingScreen extends Component {
         //     if (s) {
         //         this.setState({ profile: s })
         //     } else {
-                medicalRecordProvider.getByUser(this.props.userApp.currentUser.id, 1, 100).then(s => {
-                    switch (s.code) {
-                        case 0:
-                            if (s.data && s.data.data && s.data.data.length != 0) {
+        medicalRecordProvider.getByUser(this.props.userApp.currentUser.id, 1, 100).then(s => {
+            switch (s.code) {
+                case 0:
+                    if (s.data && s.data.data && s.data.data.length != 0) {
 
-                                let data = s.data.data;
-                                let profile = data.find(item => {
-                                    return item.medicalRecords.status == 1;
-                                });
-                                if (profile) {
-                                    this.setState({ profile: profile });
-                                    dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, profile);
-                                }
-                            }
-                            break;
+                        let data = s.data.data;
+                        let profile = data.find(item => {
+                            return item.medicalRecords.status == 1;
+                        });
+                        if (profile) {
+                            this.setState({ profile: profile });
+                            dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, profile);
+                        }
                     }
-                });
+                    break;
+            }
+        });
         //     }
         // });
 
@@ -364,6 +364,7 @@ class AddBookingScreen extends Component {
     //     }
     // }
     addBooking = () => {
+
         Keyboard.dismiss();
         if (!this.state.allowBooking)
             return;
@@ -435,7 +436,14 @@ class AddBookingScreen extends Component {
             let reason = this.state.reason ? this.state.reason : ''
             let img = images ? images : ''
 
-
+            if (!this.props.userApp.isLogin) {
+                this.props.navigation.navigate("login", {
+                    nextScreen: {
+                        screen: "confirmBooking", param: {}
+                    }
+                });
+                return
+            }
 
             connectionUtils.isConnected().then(s => {
                 this.setState({ isLoading: true }, () => {
@@ -503,6 +511,17 @@ class AddBookingScreen extends Component {
         return <Text style={{ textAlign: 'right' }}>{constants.booking.select_date_time}</Text>;
     }
     onSelectProfile = () => {
+        if (!this.props.userApp.isLogin) {
+            this.props.navigation.navigate("login", {
+                nextScreen: {
+                    screen: "selectProfile", param: {
+                        onSelected: this.selectProfile.bind(this),
+                        profile: this.state.profile
+                    }
+                }
+            });
+            return
+        }
         connectionUtils.isConnected().then(s => {
             this.props.navigation.navigate("selectProfile", {
                 onSelected: this.selectProfile.bind(this),

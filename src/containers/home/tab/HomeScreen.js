@@ -48,7 +48,7 @@ class HomeScreen extends Component {
       listDataDoctor: [
         {
           name: 'PGS BS Trương Hồng Sơn',
-          image: require('@images/new/homev2/doctor_demo.png')
+          image: require('@images/new/homev2/doctor_demo1.png')
         },
         {
           name: 'BS Ngô Thành Trung',
@@ -71,24 +71,14 @@ class HomeScreen extends Component {
           icon: require("@images/new/homev2/ic_doctor.png"),
           text: "Bác sĩ",
           onPress: () => {
-            if (this.props.userApp.isLogin)
               this.props.navigation.navigate("listDoctor");
-            else
-              this.props.navigation.navigate("login", {
-                nextScreen: { screen: "listDoctor", param: {} }
-              });
           }
         },
         {
           icon: require("@images/new/homev2/ic_hospital.png"),
           text: "Cơ sở Y tế",
           onPress: () => {
-            if (this.props.userApp.isLogin)
               this.props.navigation.navigate("addBooking1");
-            else
-              this.props.navigation.navigate("login", {
-                nextScreen: { screen: "addBooking1", param: {} }
-              });
           }
         },
 
@@ -222,14 +212,15 @@ class HomeScreen extends Component {
         renderItem={({ item, index }) => {
           return (
             <View style={styles.cardViewDoctor}>
-              <Card style={{ borderRadius: 5 }}>
+              {/* <Card style={{ borderRadius: 5, }}> */}
                 <ScaledImage
                   // uri={item.advertise.images.absoluteUrl()}
                   style={{ borderRadius: 5 }}
                   source={item.image}
                   width={DEVICE_WIDTH / 3}
+                  height={137}
                 />
-              </Card>
+              {/* </Card> */}
               <Text numberOfLines={2} ellipsizeMode='tail' style={styles.txContensAds}>{item.name ? item.name : ""}</Text>
 
             </View>
@@ -663,11 +654,11 @@ const styles = StyleSheet.create({
   imgMore: { marginTop: 10, marginRight: 20 },
   listAds: { paddingHorizontal: 20, flex: 1 },
   viewFooter: { width: 35 },
-  cardView: {borderRadius: 6, marginRight: 10, borderColor: '#9B9B9B', borderWidth: 0.5, backgroundColor: '#fff', height: 134, },
+  cardView: { borderRadius: 6, marginRight: 10, borderColor: '#9B9B9B', borderWidth: 0.5, backgroundColor: '#fff', height: 134, },
   cardViewNone: { width: DEVICE_WIDTH - 140, borderRadius: 6, marginRight: 10, backgroundColor: '#fff' },
   imgNone: { width: DEVICE_WIDTH - 140, borderRadius: 6, height: 140, borderColor: '#9B9B9B', borderWidth: 0.5 },
   cardViewDoctor: { width: DEVICE_WIDTH / 3, borderRadius: 6, marginRight: 10 },
-  txContensAds: { color: '#000', margin: 13,marginLeft:5 },
+  txContensAds: { color: '#000', margin: 13, marginLeft: 5 },
   viewPagination: { position: 'absolute', bottom: 0, width: DEVICE_WIDTH },
   dotContainer: { width: 10, margin: 0, padding: 0, height: 10 },
   dotStyle: {
