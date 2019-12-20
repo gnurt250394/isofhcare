@@ -10,11 +10,11 @@ class Button extends Component {
     }
 
     render() {
-        const { source, label, style, onPress } = this.props
+        const { source, label, style, onPress, textStyle } = this.props
         return (
             <TouchableOpacity onPress={onPress} style={[styles.button, style]}>
-                <ScaleImage source={source} height={17} style={{ tintColor: '#fff' }} />
-                <Text style={[styles.txtButton]}>{label}</Text>
+                {source && <ScaleImage source={source} height={17} style={{ tintColor: '#fff', marginRight: 5, }} />}
+                <Text style={[styles.txtButton, textStyle]}>{label}</Text>
             </TouchableOpacity>
         );
     }
@@ -27,7 +27,6 @@ const styles = StyleSheet.create({
     txtButton: {
         color: '#fff',
         fontWeight: 'bold',
-        paddingLeft: 6,
         fontSize: PixelRatio.get() <= 2 ? 12 : 14
     },
     button: {
