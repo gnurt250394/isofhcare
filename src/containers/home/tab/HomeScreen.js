@@ -37,7 +37,28 @@ class HomeScreen extends Component {
       ads: [],
       refreshing: false,
       ads0: [],
-      listDataHospital: [],
+      listDataHospital: [{
+        name: 'Bệnh viện E',
+        image: require('@images/new/homev2/csyt_demo.png')
+      },
+      {
+        name: 'Phòng khám Y khoa HN',
+        image: require('@images/new/homev2/csyt_demo2.png')
+      }],
+      listDataDoctor: [
+        {
+          name: 'PGS BS Trương Hồng Sơn',
+          image: require('@images/new/homev2/doctor_demo.png')
+        },
+        {
+          name: 'BS Ngô Thành Trung',
+          image: require('@images/new/homev2/doctor_demo2.png')
+        },
+        {
+          name: 'PGS BS Trương Hồng Sơn',
+          image: require('@images/new/homev2/doctor_demo3.png')
+        }
+      ],
       featuresBooking: [
         {
           icon: require("@images/new/homev2/ic_specialist.png"),
@@ -145,29 +166,29 @@ class HomeScreen extends Component {
       ]
     };
   }
-  getTopAds(reload) {
-    advertiseProvider.getTop(100, (s, e) => {
-      if (s) {
-        if (s.length == 0) {
-          if (!reload)
-            this.getTopAds(true);
-        }
-        this.setState({
-          ads: (s || []).filter(x => x.advertise && x.advertise.type == 2 && x.advertise.images),
-          ads0: (s || []).filter(x => x.advertise && x.advertise.type == 1 && x.advertise.images)
-          // .filter(item => { return item.advertise && item.advertise.images })
-        });
-      }
-      else {
-        if (!reload)
-          this.getTopAds(true);
-      }
-      if (e) {
-        if (!reload)
-          this.getTopAds(true);
-      }
-    });
-  }
+  // getTopAds(reload) {
+  //   advertiseProvider.getTop(100, (s, e) => {
+  //     if (s) {
+  //       if (s.length == 0) {
+  //         if (!reload)
+  //           this.getTopAds(true);
+  //       }
+  //       this.setState({
+  //         ads: (s || []).filter(x => x.advertise && x.advertise.type == 2 && x.advertise.images),
+  //         ads0: (s || []).filter(x => x.advertise && x.advertise.type == 1 && x.advertise.images)
+  //         // .filter(item => { return item.advertise && item.advertise.images })
+  //       });
+  //     }
+  //     else {
+  //       if (!reload)
+  //         this.getTopAds(true);
+  //     }
+  //     if (e) {
+  //       if (!reload)
+  //         this.getTopAds(true);
+  //     }
+  //   });
+  // }
   onCallHotline = () => {
     Linking.openURL('tel:1900299983')
   }
@@ -179,8 +200,8 @@ class HomeScreen extends Component {
       "hardwareBackPress",
       this.handleHardwareBack.bind(this)
     );
-    this.onRefresh();
-    this.onGetHospital()
+    // this.onRefresh();
+    // this.onGetHospital()
   }
   renderDoctor() {
     return (<View style={{ backgroundColor: '#fff', marginTop: 10 }}>
@@ -196,22 +217,20 @@ class HomeScreen extends Component {
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
         extraData={this.state}
-        data={this.state.ads}
+        data={this.state.listDataDoctor}
         ListFooterComponent={<View style={styles.viewFooter}></View>}
         renderItem={({ item, index }) => {
-          if (!item || !item.advertise || !item.advertise.images)
-            return null;
           return (
             <View style={styles.cardViewDoctor}>
               <Card style={{ borderRadius: 5 }}>
                 <ScaledImage
                   // uri={item.advertise.images.absoluteUrl()}
                   style={{ borderRadius: 5 }}
-                  source={require('@images/new/homev2/doctor_demo.png')}
+                  source={item.image}
                   width={DEVICE_WIDTH / 3}
                 />
               </Card>
-              <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensAds}>{item.advertise ? item.advertise.title : ""}</Text>
+              <Text numberOfLines={2} ellipsizeMode='tail' style={styles.txContensAds}>{item.name ? item.name : ""}</Text>
 
             </View>
           );
@@ -237,21 +256,12 @@ class HomeScreen extends Component {
         data={listDataHospital}
         ListFooterComponent={<View style={styles.viewFooter}></View>}
         renderItem={({ item, index }) => {
-          if (!item || !item.imageHome)
-            return (
-              <View style={styles.cardViewNone}>
-                <TouchableOpacity>
-                  <View style={styles.imgNone}></View>
-                  <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensAds}>{item ? item.name : ""}</Text>
-                </TouchableOpacity>
-              </View>
-            );
           return (
             <View style={{ flex: 1 }}>
               <TouchableOpacity style={styles.cardView}>
                 <ScaledImage
-                  uri={item.imageHome.absoluteUrl()}
-                  height={140}
+                  source={item.image}
+                  height={134}
                   style={{ borderRadius: 6, resizeMode: 'cover' }}
                 />
               </TouchableOpacity>
@@ -501,7 +511,7 @@ class HomeScreen extends Component {
             showsVerticalScrollIndicator={false}
 
           >
-            <View style={[styles.scroll, { paddingTop: this.getHeightImage(headerHome) /10 }]}>
+            <View style={[styles.scroll, { paddingTop: this.getHeightImage(headerHome) / 10 }]}>
               <View style={[styles.padding21,]}>
                 {this.props.userApp.isLogin ?
                   <View style={styles.containerHeadertitle}>
@@ -653,11 +663,11 @@ const styles = StyleSheet.create({
   imgMore: { marginTop: 10, marginRight: 20 },
   listAds: { paddingHorizontal: 20, flex: 1 },
   viewFooter: { width: 35 },
-  cardView: { width: DEVICE_WIDTH - 140, borderRadius: 6, marginRight: 10, borderColor: '#9B9B9B', borderWidth: 0.5, backgroundColor: '#fff', height: 140, flex: 1 },
+  cardView: {borderRadius: 6, marginRight: 10, borderColor: '#9B9B9B', borderWidth: 0.5, backgroundColor: '#fff', height: 134, },
   cardViewNone: { width: DEVICE_WIDTH - 140, borderRadius: 6, marginRight: 10, backgroundColor: '#fff' },
   imgNone: { width: DEVICE_WIDTH - 140, borderRadius: 6, height: 140, borderColor: '#9B9B9B', borderWidth: 0.5 },
   cardViewDoctor: { width: DEVICE_WIDTH / 3, borderRadius: 6, marginRight: 10 },
-  txContensAds: { color: '#000', margin: 13 },
+  txContensAds: { color: '#000', margin: 13,marginLeft:5 },
   viewPagination: { position: 'absolute', bottom: 0, width: DEVICE_WIDTH },
   dotContainer: { width: 10, margin: 0, padding: 0, height: 10 },
   dotStyle: {
