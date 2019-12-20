@@ -442,7 +442,6 @@ class EditProfileScreen extends Component {
                                         }
                                     }}
                                     placeholder={constants.msg.user.input_name}
-                                    multiline={true}
                                     inputStyle={[
                                         styles.ktq,
                                     ]}
@@ -544,7 +543,6 @@ class EditProfileScreen extends Component {
                                             }}
                                             keyboardType="numeric"
                                             placeholder={'Chiều cao'}
-                                            multiline={true}
                                             inputStyle={[
                                                 styles.ktq,
                                             ]}
@@ -580,7 +578,6 @@ class EditProfileScreen extends Component {
                                             //     }
                                             // }}
                                             placeholder={'Cân nặng'}
-                                            multiline={true}
                                             inputStyle={[
                                                 styles.ktq,
                                             ]}
@@ -620,7 +617,6 @@ class EditProfileScreen extends Component {
                                         }}
                                         keyboardType="numeric"
                                         placeholder={constants.phone}
-                                        multiline={true}
                                         inputStyle={[
                                             styles.ktq,
                                         ]}
@@ -642,7 +638,6 @@ class EditProfileScreen extends Component {
                                         hideError={true}
                                         onPress={this.onSelectProvince}
                                         editable={false}
-                                        multiline={true}
                                         inputStyle={[
                                             styles.ktq, { minHeight: 41 }, this.state.provinces && this.state.provinces.countryCode ? {} : { color: '#8d8d8d' }
                                         ]}
@@ -669,7 +664,6 @@ class EditProfileScreen extends Component {
                                         //         number: 'Cân nặng không hợp lệ',
                                         //     }
                                         // }}
-                                        multiline={true}
                                         inputStyle={[
                                             styles.ktq, this.state.districts && this.state.districts.name ? {} : { color: '#8d8d8d' }, { minHeight: 41 }
                                         ]}
@@ -688,7 +682,6 @@ class EditProfileScreen extends Component {
                                 <Field>
                                     <TextField
                                         hideError={true}
-                                        multiline={true}
                                         onPress={this.onSelectZone}
                                         editable={false}
                                         inputStyle={[
@@ -714,7 +707,6 @@ class EditProfileScreen extends Component {
                                         }
                                     }}
                                     placeholder={'Thôn/Xóm/Số nhà'}
-                                    multiline={true}
                                     inputStyle={[
                                         styles.ktq,
                                     ]}
