@@ -31,13 +31,23 @@ import scheduleProvider from '@data-access/schedule-provider';
 class AddBookingScreen extends Component {
     constructor(props) {
         super(props);
-
+        let profile = this.props.navigation.getParam('profile')
+        let listServicesSelected = this.props.navigation.getParam('listServicesSelected')
+        let schedule = this.props.navigation.getParam('schedule')
+        let hospital = this.props.navigation.getParam('hospital')
+        let bookingDate = this.props.navigation.getParam('bookingDate')
+        let allowBooking = this.props.navigation.getParam('allowBooking')
         this.state = {
             colorButton: 'red',
             imageUris: [],
             allowBooking: false,
             contact: 2,
-            listServicesSelected: []
+            listServicesSelected: listServicesSelected || [],
+            profile,
+            schedule,
+            hospital,
+            bookingDate,
+            allowBooking
         }
     }
     _changeColor = () => {
@@ -72,7 +82,7 @@ class AddBookingScreen extends Component {
         // });
 
         // dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_SPECIALIST, (s, e) => {
-        //     console.log(s, 'specialist');
+        //     
         //     if (s) {
         //         this.setState({ specialist: s })
         //     } else {
@@ -88,6 +98,13 @@ class AddBookingScreen extends Component {
         //     if (s) {
         //         this.setState({ profile: s })
         //     } else {
+        this.getProfile()
+        //     }
+        // });
+
+
+    }
+    getProfile = () => {
         medicalRecordProvider.getByUser(this.props.userApp.currentUser.id, 1, 100).then(s => {
             switch (s.code) {
                 case 0:
@@ -105,11 +122,25 @@ class AddBookingScreen extends Component {
                     break;
             }
         });
-        //     }
-        // });
-
-
     }
+    // componentWillReceiveProps = (props) => {
+    //     let profile = props.navigation.getParam('profile')
+        
+    //     let listServicesSelected = props.navigation.getParam('listServicesSelected')
+        
+    //     let schedule = props.navigation.getParam('schedule')
+        
+    //     let hospital = props.navigation.getParam('hospital')
+        
+    //     let bookingDate = props.navigation.getParam('bookingDate')
+        
+    //     let allowBooking = props.navigation.getParam('allowBooking')
+        
+    //     if (profile || listServicesSelected || schedule || hospital || bookingDate || allowBooking) {
+    //         this.getProfile()
+    //     }
+
+    // }
     selectImage() {
         if (this.state.imageUris && this.state.imageUris.length >= 5) {
             snackbar.show(constants.msg.booking.image_without_five, "danger");
@@ -208,10 +239,10 @@ class AddBookingScreen extends Component {
         let servicesError = services ? "" : this.state.servicesError;
         if (!services || !this.state.services || services.id != this.state.services.id) {
             this.setState({ listServicesSelected: services, allowBooking: true, servicesError })
-            console.log('if')
+            
         } else {
             this.setState({ listServicesSelected: [], allowBooking: true, servicesError: "", servicesError });
-            console.log('else')
+            
 
         }
     }
@@ -292,7 +323,7 @@ class AddBookingScreen extends Component {
 
     //         connectionUtils.isConnected().then(s => {
     //             this.setState({ isLoading: true }, () => {
-    //                 console.log(this.state.schedule.time);
+    //                 
     //                 let serviceIds = this.state.listServicesSelected.map(item => item.service.id).join(",");
     //                 let bookingDate = this.state.bookingDate.format("yyyy-MM-dd") + " " + this.state.schedule.label + ":00";
     //                 bookingProvider.create(
@@ -370,7 +401,27 @@ class AddBookingScreen extends Component {
             return;
 
         let error = false;
-
+        if (!this.props.userApp.isLogin) {
+            this.props.navigation.replace("login", {
+                nextScreen: {
+                    screen: "addBooking1", param: {
+                        profile: this.state.profile,
+                        listServicesSelected: this.state.listServicesSelected,
+                        schedule: this.state.schedule,
+                        hospital: this.state.hospital,
+                        bookingDate: this.state.bookingDate,
+                        allowBooking: this.state.allowBooking
+                    }
+                }
+            });
+            return
+        }
+        
+        
+        
+        
+        
+        
         if (this.state.contact) {
             this.setState({ contactError: "" })
         } else {
@@ -436,25 +487,18 @@ class AddBookingScreen extends Component {
             let reason = this.state.reason ? this.state.reason : ''
             let img = images ? images : ''
 
-            if (!this.props.userApp.isLogin) {
-                this.props.navigation.navigate("login", {
-                    nextScreen: {
-                        screen: "confirmBooking", param: {}
-                    }
-                });
-                return
-            }
+
 
             connectionUtils.isConnected().then(s => {
                 this.setState({ isLoading: true }, () => {
-                    console.log(this.state.schedule.time);
+                    
                     const { userApp } = this.props
-                    console.log('userApp: ', userApp);
+                    
                     let services = this.state.listServicesSelected.map(e => ({ price: e.monetaryAmount.value, serviceId: e.id, name: e.name }));
                     let bookingDate = this.state.bookingDate.format("yyyy-MM-dd");
-                    console.log('this.state.bookingDate: ', this.state.bookingDate);
-                    console.log('bookingDate: ', bookingDate);
-                    console.log('this.state.profile: ', this.state.profile);
+                    
+                    
+                    
                     bookingProvider.createBooking(
                         bookingDate,
                         reason,
@@ -545,7 +589,7 @@ class AddBookingScreen extends Component {
         })
     }
     selectDateTime = () => {
-        console.log(this.state.listServicesSelected);
+        
         this.props.navigation.navigate("selectTime", {
             service: this.state.listServicesSelected,
             isNotHaveSchedule: true,
