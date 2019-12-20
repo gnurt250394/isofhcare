@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, FlatList, TextInput, ScrollView, RefreshControl } from 'react-native';
 import ActivityPanel from '@components/ActivityPanel';
 import { IndicatorViewPager } from "mainam-react-native-viewpager";
 import { Card } from 'native-base'
@@ -7,113 +7,303 @@ import FillMyVocherScreen from './FillMyVoucherScreen';
 import MyVoucherCodeScreen from './MyVoucherCodeScreen';
 import constants from '@resources/strings';
 import Modal from '@components/modal';
+import ItemListVoucher from '@components/voucher/ItemListVoucher';
+import voucherProvider from '@data-access/voucher-provider'
+import snackbar from '@utils/snackbar-utils';
 
+// const data = [
+//     {
+//         code: "ISOFH1122",
+//         counter: 0,
+//         created: "2019-10-10T09:28:13.861+0000",
+//         deleted: 0,
+//         endTime: "2019-10-19 16:27:00",
+//         id: 1,
+//         price: 10000,
+//         quantity: 10,
+//         startTime: "2019-10-10 16:27:52",
+//         type: 0,
+//     },
+//     {
+//         code: "ISOFH1122",
+//         counter: 0,
+//         created: "2019-10-10T09:28:13.861+0000",
+//         deleted: 0,
+//         endTime: "2019-10-19 16:27:00",
+//         id: 1,
+//         price: 10000,
+//         quantity: 10,
+//         startTime: "2019-10-10 16:27:52",
+//         type: 1,
+//         status: true
+//     },
+
+// ]
 class MyVoucherScreen extends Component {
     constructor(props) {
         super(props);
         let tabIndex = 0;
+        let voucherSelected = this.props.navigation.getParam('voucher', null)
+        let booking = this.props.navigation.getParam('booking', null)
+
         if (this.props.navigation.state.params && this.props.navigation.state.params.selectTab)
             tabIndex = this.props.navigation.state.params.selectTab;
         this.state = {
             isMyVocher: true,
             tabIndex,
+            refreshing: true,
+            page: 1,
+            size: 10,
+            data: [],
+            voucherSelected,
+            booking,
+            keyword: ''
         };
     }
 
 
-    onSelectMyVocher = () => {
-        if (this.viewPager) this.viewPager.setPage(0);
-    }
-    onMyVocher = () => {
-        if (this.viewPager) this.viewPager.setPage(1);
-    }
-    swipe(targetIndex) {
-        if (this.viewPager) this.viewPager.setPage(targetIndex);
-
-    }
-    onPageScroll(e) {
-        var tabIndex = e.position;
-        var offset = e.offset * 100;
-        if (tabIndex == -1 || (tabIndex == 1 && offset > 0)) return;
-        this.setState({
-            isMyVocher: tabIndex == 0
-        });
-    }
-
-    comfirmVoucher = (voucher) => {
-        this.setState({ voucher, })
+    listEmpty = () => !this.state.refreshing && <Text style={styles.none_data}>{constants.not_found}</Text>
+    comfirmVoucher = (item, index) => () => {
+        const { voucherSelected, data } = this.state
+        if (voucherSelected && voucherSelected.code && data[index].id == voucherSelected.id) {
+            let onSelected = ((this.props.navigation.state || {}).params || {}).onSelected;
+            if (onSelected) onSelected({})
+            this.props.navigation.pop()
+            return
+        }
+        item.status = true
         let onSelected = ((this.props.navigation.state || {}).params || {}).onSelected;
-        if (onSelected) onSelected(voucher)
+        if (onSelected) onSelected(item)
         this.props.navigation.pop()
     }
-    onClickDone = () => {
+
+    onSearchVoucher = () => {
+        this.setState({ isLoading: true }, () => {
+            let { booking } = this.state
+            let voucher = this.state.keyword || ""
+
+            if (voucher == "") {
+                this.setState({ isLoading: false })
+                snackbar.show(constants.voucher.voucher_not_null, "danger")
+                return
+            }
+            voucherProvider.fillInVoucher(voucher.toUpperCase()).then(res => {
+                this.setState({ isLoading: false });
+
+                if (res.code == 0 && res.data) {
+                    if (this.state.voucherSelected && res.data.id == this.state.voucherSelected.id) {
+
+                        let onSelected = ((this.props.navigation.state || {}).params || {}).onSelected;
+                        if (onSelected) onSelected({})
+                        this.props.navigation.pop()
+                    } else {
+                        let data = res.data
+                        data.status = true
+                        let onSelected = ((this.props.navigation.state || {}).params || {}).onSelected;
+                        if (onSelected) onSelected(data)
+                        this.props.navigation.pop()
+                    }
+                } else {
+                    snackbar.show(constants.voucher.voucher_not_found_or_expired, "danger")
+
+                }
+            }).catch(err => {
+                this.setState({ isLoading: false })
+
+            })
+        }
+        )
+    }
+    onRefresh = () => this.setState({ refreshing: true }, this.getListVoucher)
+    duplicateArray(arr) {
+        var obj = {}
+        var result = [];
+        let newArr = [...arr]
+        newArr.forEach((item) => {
+            var id = item["id"];
+            if (obj[id]) {
+                obj[id].count++;
+            } else {
+                obj[id] = {
+                    count: 1,
+                    ...item
+                }
+                result.push(obj[id]);
+            }
+        });
+        return result
+    }
+    getListVoucher = () => {
+        voucherProvider.getListVoucher().then(res => {
+
+            switch (res.code) {
+                case 0:
+                    let { voucherSelected } = this.state
+                    let data = res.data
+                    let arr = this.duplicateArray(data)
+
+                    if (voucherSelected && voucherSelected.code) {
+                        arr.forEach(e => {
+                            if (e.id == voucherSelected.id) {
+                                e.status = voucherSelected.status
+                            }
+                        })
+                    }
+
+                    this.setState({ refreshing: false, data: arr })
+                    break;
+                default: this.setState({ refreshing: false })
+                    break;
+            }
+        }).catch(err => {
+
+            this.setState({ refreshing: false })
+        })
 
     }
+
+    componentDidMount = () => {
+        this.getListVoucher()
+    };
+    keyExtractor = (item, index) => `${item.id || index}`
+    _renderItem = ({ item, index }) => {
+        return (
+            <ItemListVoucher
+                item={item}
+                onPress={this.comfirmVoucher(item, index)}
+                onPressLater={this.onPressLater}
+            />
+        )
+    }
+    onChangeText = (keyword) => {
+        this.setState({ keyword })
+    }
+    unSelectedVoucher = () => {
+        let onSelected = ((this.props.navigation.state || {}).params || {}).onSelected;
+        if (onSelected) onSelected({})
+        this.props.navigation.pop()
+    }
     render() {
-        let booking = this.props.navigation.getParam('booking', null)
-        let voucher = this.props.navigation.getParam('voucher', null)
+        const { keyword, voucherSelected } = this.state
         return (
             <ActivityPanel
+                // containerStyle={{ backgroundColor: '#eee' }}
                 title={constants.title.voucher}
+                transparent={true}
+                useCard={true}
                 showFullScreen={true} isLoading={this.state.isLoading}>
-                <View style={styles.viewBtn}>
-                    <View style={styles.separateBackground}></View>
-                    <TouchableOpacity onPress={this.onSelectMyVocher} style={[styles.btnGetNumber, this.state.isMyVocher ? styles.buttonSelected : {}]}>
-                        <Text style={this.state.isMyVocher ? styles.unSelected : styles.selected}>{constants.voucher.input_voucher}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={this.onMyVocher} style={[styles.btnGetNumber, , this.state.isMyVocher ? {} : styles.buttonSelected]}>
-                        <Text style={this.state.isMyVocher ? styles.selected : styles.unSelected}>{constants.voucher.my_voucher}</Text>
-                    </TouchableOpacity>
-                </View>
-                <IndicatorViewPager style={styles.container}
-                    ref={viewPager => {
-                        this.viewPager = viewPager;
-                    }}
-                    onPageScroll={this.onPageScroll.bind(this)}>
-                    <View style={styles.container}>
-                        <FillMyVocherScreen booking={booking} voucher={voucher} onPress={this.comfirmVoucher} parrent={this} />
-                    </View>
-                    <View style={styles.container}>
+                <View style={styles.container}>
+                    <View style={styles.containerSearch}>
+                        <TextInput style={styles.input}
+                            placeholder="Nhập mã ưu đãi"
+                            value={keyword}
+                            onChangeText={this.onChangeText}
+                        />
+                        <TouchableOpacity
+                            onPress={this.onSearchVoucher}
+                            style={styles.buttonSearch}>
+                            <Text style={styles.txtSearch}>Áp dụng</Text>
+                        </TouchableOpacity>
 
-                        <MyVoucherCodeScreen booking={booking} voucher={voucher} onPress={this.comfirmVoucher} parrent={this} />
                     </View>
 
-                </IndicatorViewPager>
-                {/* <Modal
-                    isVisible={this.state.isVisible}
-                    onBackdropPress={this.onCloseModal}
-                    backdropOpacity={0.5}
-                    animationInTiming={500}
-                    animationOutTiming={500}
-                    style={styles.viewModal}
-                    backdropTransitionInTiming={1000}
-                    backdropTransitionOutTiming={1000}
-                >
-                    <View style={styles.viewPopup}>
-                        <Text style={styles.txNotifi}>{constants.voucher.use_voucher}</Text>
-                        <View style={styles.viewBtn}>
-                            <TouchableOpacity onPress={this.onClickDone} style={styles.btnDone}><Text style={styles.txDone}>{constants.actionSheet.accept}</Text></TouchableOpacity>
-                            <TouchableOpacity onPress={this.onCloseModal} style={styles.btnReject}><Text style={styles.txDone}>{constants.actionSheet.cancel}</Text></TouchableOpacity>
+
+                    <Text style={styles.txtHeader}>Tất cả ưu đãi</Text>
+                    <ScrollView
+                        refreshControl={<RefreshControl
+                            onRefresh={this.onRefresh}
+                            refreshing={this.state.refreshing}
+                        />}
+                        showsVerticalScrollIndicator={false}
+                        nestedScrollEnabled={false}>
+                        <View>
+                            {voucherSelected && voucherSelected.type == 2 && <ItemListVoucher item={this.state.voucherSelected} onPress={this.unSelectedVoucher} />}
+
+                            <FlatList
+                                data={this.state.data}
+                                renderItem={this._renderItem}
+                                keyExtractor={this.keyExtractor}
+                                showsVerticalScrollIndicator={false}
+                                ListEmptyComponent={this.listEmpty}
+                            />
+
                         </View>
-                    </View>
-                </Modal> */}
+                    </ScrollView>
+                </View>
             </ActivityPanel>
         );
     }
 }
 const styles = StyleSheet.create({
+    txtHeader: {
+        color: '#111',
+        fontWeight: 'bold',
+        fontSize: 16,
+        textAlign: 'center',
+        paddingTop: 15,
+        paddingBottom: 8,
+    },
+    txtSearch: {
+        color: '#fff',
+        fontWeight: 'bold'
+    },
+    buttonSearch: {
+        backgroundColor: '#00CBA7',
+        paddingHorizontal: 10,
+        borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginLeft: 8,
+        height: 42
+    },
+    input: {
+        height: 42,
+        backgroundColor: '#F8F8F8',
+        borderWidth: 0.7,
+        borderColor: '#555',
+        borderRadius: 7,
+        paddingLeft: 8,
+        flex: 1
+    },
+    containerSearch: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 10,
+    },
+    container: {
+        flex: 1,
+        marginTop: 10,
+        marginHorizontal: 10,
+        borderTopLeftRadius: 5,
+        borderTopRightRadius: 5,
+        // backgroundColor: '#fff',
+    },
+    headerAbsolute: {
+        backgroundColor: '#27c8ad',
+        height: 130,
+        width: '100%',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0
+    },
+    none_data: {
+        fontStyle: 'italic',
+        marginTop: 30,
+        alignSelf: 'center',
+        fontSize: 16
+    },
     buttonSelected: { backgroundColor: '#27AE60' },
     selected: {
         color: '#27AE60',
         fontWeight: "bold",
-        textAlign:'center'
+        textAlign: 'center'
     },
     unSelected: {
         color: '#fff',
         fontWeight: "bold",
-        textAlign:'center'
+        textAlign: 'center'
     },
-    container: { flex: 1 },
     viewBtn: {
         flexDirection: 'row',
         height: 40,
@@ -131,7 +321,7 @@ const styles = StyleSheet.create({
     },
     btnGetNumber: {
         paddingVertical: 8,
-        paddingTop:10,
+        paddingTop: 10,
         flex: 1,
         borderRadius: 6,
         overflow: 'hidden'

@@ -69,6 +69,8 @@ String.prototype.getServiceUrl =
 module.exports = {
   auth: "",
   serverApi: server_url + "/",
+  serviceSchedule: "http://35.198.240.51:8088/",
+  serviceBooking: "http://35.198.240.51:8088/",
   response: {
     ok(data, message) {
       if (!message) message = "";
@@ -100,7 +102,7 @@ module.exports = {
       {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",
-        Authorization: this.auth,
+        Authorization: this.auth ? this.auth : '',
         MobileMode: "user",
         deviceType: "mobile",
         deviceOs: Platform.OS + " " + deviceOS,
@@ -123,7 +125,39 @@ module.exports = {
       });
   },
   requestApi(methodType, url, body, funRes) {
-    this.requestApiWithAuthorization(methodType, url, body, this.auth, funRes);
+    this.requestApiWithAuthorization(methodType, url, body, this.auth ? this.auth : '', funRes);
+  },
+  requestApiWithHeaderBear(methodType, url, body, funRes) {
+    this.requestApiWithAuthorizationBear(methodType, url, body, this.auth ? this.auth : '', funRes);
+  },
+  requestApiWithAuthorizationBear(methodType, url, body, auth, funRes) {
+    var dataBody = "";
+    if (!body) body = {};
+    dataBody = JSON.stringify(body);
+
+    this.requestFetch(
+      methodType,
+      url && url.indexOf("http") == 0 ? url : this.serverApi + url,
+      {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `bearer ${auth}`,
+        // 'MobileMode': 'vender'
+      },
+      dataBody
+    )
+      .then(s => {
+        if (funRes) {
+          if (s.data) {
+            funRes(s.data);
+          } else {
+            funRes(undefined, e);
+          }
+        }
+      })
+      .catch(e => {
+        if (funRes) funRes(undefined, e);
+      });
   },
   requestApiWithAuthorization(methodType, url, body, auth, funRes) {
     var dataBody = "";
@@ -136,7 +170,7 @@ module.exports = {
       {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: auth ? auth : '',
+        Authorization: 'bearer ' + auth ? auth : '',
         MobileMode: "user",
         deviceType: "mobile",
         deviceOs: Platform.OS + " " + deviceOS,
@@ -167,7 +201,7 @@ module.exports = {
     let headers = {
       Accept: "application/json",
       "Content-Type": "application/json",
-      Authorization: this.auth,
+      Authorization: this.auth ? this.auth : '',
       MobileMode: "user",
       deviceType: "mobile",
       deviceOs: Platform.OS + " " + deviceOS,
@@ -238,7 +272,14 @@ module.exports = {
           } else resolve(json);
         })
         .catch(e => {
-          console.log(e);
+          if (e.response) {
+            console.log('e.response: ', e.response);
+          } else if (e.request) {
+            console.log('e.request: ', e.request);
+
+          } else {
+            console.log(e, 'err')
+          }
           reject(e);
         });
     });

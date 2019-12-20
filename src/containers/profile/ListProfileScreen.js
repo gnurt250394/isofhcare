@@ -26,12 +26,13 @@ class ListProfileScreen extends Component {
             isVisible: false,
         };
     }
-    onShowOptions = (id, sharePermission, medicalRelatedId) => {
+    onShowOptions = (id, permission, medicalRelatedId) => {
+        console.log('permission: ', permission);
         this.actionSheetOptions.show();
         this.setState({
             idProfile: id,
             medicalRelatedId: medicalRelatedId ? medicalRelatedId : null,
-            sharePermission: sharePermission
+            permission: permission
         })
     };
     onRefresh = () => {
@@ -48,7 +49,7 @@ class ListProfileScreen extends Component {
                     NavigationService.navigate("shareDataProfile", {
                         shareId: this.state.medicalRelatedId,
                         id: this.state.idProfile,
-                        sharePermission: this.state.sharePermission
+                        permission: this.state.permission
                     })
                     return;
                 case 1:
@@ -138,9 +139,9 @@ class ListProfileScreen extends Component {
             profileProvider.confirm(id).then(res => {
                 if (res.code == 0) {
                     NavigationService.navigate("shareDataProfile", {
-                        shareId: medicalRelatedId,
-                        id: id,
-                        sharePermission: sharePermission
+                        shareId: id,
+                        id: medicalRelatedId,
+                        sharePermission:  sharePermission
                     })
                     this.setState({
                         disabled: false
@@ -196,7 +197,7 @@ class ListProfileScreen extends Component {
         return (
             item.medicalRecords.statusConfirm == "NEED_CONFIRM" ?
                 (
-                    <TouchableOpacity onPress={this.onClickItem(item)} >
+                    <TouchableOpacity>
                         <Text style={styles.txtmedicalRecords}>Tài khoản {item.medicalRecords.name} có số điện thoại {item.medicalRecords.phone} muốn xác nhận mối quan hệ với bạn.</Text>
                         {item.medicalRecords.status == 1 ? (
                             <TouchableOpacity style={styles.viewProfileUser} onPress={this.onClickItem(item)} >
@@ -208,6 +209,7 @@ class ListProfileScreen extends Component {
                             marginHorizontal: 10,
                         }}>
                             <Card style={styles.cardView}>
+                            <TouchableOpacity  onPress={this.onClickItem(item)}>
                                 <View style={styles.viewProfileFamily}>
                                     <View>
                                         <Text style={styles.txName}>{item.medicalRecords.name}</Text>
@@ -217,17 +219,18 @@ class ListProfileScreen extends Component {
                                                 : <View></View>
                                         }
                                     </View>
-                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                                         {
                                             item.medicalRecords.statusConfirm == "NEED_CONFIRM" ? (
                                                 <TouchableOpacity disabled={this.state.disabled} onPress={() => this.onConfirm(item.medicalRecords.id, item.medicalRecords.sharePermission, item.medicalRecords.medicalRelatedId)} style={{ paddingHorizontal: 20, paddingVertical: 5, backgroundColor: '#FFAE00', borderRadius: 5 }}><Text style={{ color: '#fff', fontWeight: 'bold' }}>XÁC NHẬN</Text></TouchableOpacity>
                                             ) : (<View></View>)
                                         }
-                                        <TouchableOpacity style={{ padding: 10 }} onPress={() => this.onShowOptions(item.medicalRecords.id, item.medicalRecords.sharePermission, item.medicalRecords.medicalRelatedId ? item.medicalRecords.medicalRelatedId : null)}>
+                                        <TouchableOpacity style={{ padding: 10 }} onPress={() => this.onShowOptions(item.medicalRecords.id, item.medicalRecords.permission, item.medicalRecords.medicalRelatedId ? item.medicalRecords.medicalRelatedId : null)}>
                                             <ScaledImage height={20} width={20} source={require('@images/new/profile/ic_three_dot.png')}></ScaledImage>
                                         </TouchableOpacity>
                                     </View>
                                 </View>
+                                </TouchableOpacity>
                             </Card>
                         </View>)}
                     </TouchableOpacity>
@@ -260,7 +263,7 @@ class ListProfileScreen extends Component {
                                                 item.medicalRecords.statusConfirm == "WAIT_CONFIRM" ?
                                                     (<Text>Chờ xác nhận</Text>) : (<View></View>)
                                             }
-                                            <TouchableOpacity style={{ padding: 10 }} onPress={() => this.onShowOptions(item.medicalRecords.id, item.medicalRecords.sharePermission, item.medicalRecords.medicalRelatedId ? item.medicalRecords.medicalRelatedId : null)}>
+                                            <TouchableOpacity style={{ padding: 10 }} onPress={() => this.onShowOptions(item.medicalRecords.id, item.medicalRecords.permission, item.medicalRecords.medicalRelatedId ? item.medicalRecords.medicalRelatedId : null)}>
                                                 <ScaledImage height={20} width={20} source={require('@images/new/profile/ic_three_dot.png')}></ScaledImage>
                                             </TouchableOpacity>
                                         </View>

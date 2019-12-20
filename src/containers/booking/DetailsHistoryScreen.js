@@ -22,6 +22,7 @@ import Modal from "@components/modal";
 import stylemodal from "@styles/modal-style";
 import constants from "@resources/strings";
 import Barcode from 'mainam-react-native-barcode'
+import BookingDoctorProvider from '@data-access/booking-doctor-provider';
 class DetailsHistoryScreen extends Component {
   constructor(props) {
     super(props);
@@ -36,6 +37,7 @@ class DetailsHistoryScreen extends Component {
   componentDidMount() {
     this.setState({ isLoading: true }, () => {
       bookingProvider.detail(this.state.id).then(s => {
+        console.log(s,'áđâsđâsđá')
         if (s.code == 0 && s.data) {
           // let address = s.data.hospital.address;
           // if (s.data.zone && s.data.zone.name)
@@ -67,6 +69,13 @@ class DetailsHistoryScreen extends Component {
         return;
       });
     });
+  }
+  getData = () => {
+    BookingDoctorProvider.getDetailBooking().then(res => {
+
+    }).catch(err => {
+
+    })
   }
   renderStatus = () => {
     switch (Number(this.state.booking.statusPay)) {

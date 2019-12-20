@@ -220,10 +220,15 @@ class ProfileScreen extends Component {
 
         }
         else if (village) {
+            console.log('else iffffffffff')
             this.setState({
                 location: `${village}`
             })
 
+        } else if (!village && !district && !province && !zone) {
+            this.setState({
+                location: null
+            })
         }
 
         // return (<Text style={styles.txContent}>{dataLocaotion.address}</Text>)

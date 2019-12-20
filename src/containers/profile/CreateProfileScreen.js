@@ -110,12 +110,6 @@ class CreateProfileScreen extends Component {
             })
             return
         }
-        if (!this.state.relationShip) {
-            this.setState({
-                relationErr: constants.msg.user.please_select_relationship
-            })
-            return
-        }
         connectionUtils
             .isConnected()
             .then(s => {
@@ -135,7 +129,6 @@ class CreateProfileScreen extends Component {
                         let idDistrics = this.state.districts ? this.state.districts.id : null
                         let idZone = this.state.zone ? this.state.zone.id : null
                         let village = this.state.address ? this.state.address : null
-                        let relationshipType = this.state.relationShip && this.state.relationShip.type ? this.state.relationShip.type : ''
                         // parseFloat(item.distance).toFixed(1)
                         let data = {
                             "name": name,
@@ -148,7 +141,7 @@ class CreateProfileScreen extends Component {
                             "districtId": idDistrics,
                             "zoneId": idZone,
                             "village": village,
-                            "relationshipType": relationshipType
+                            "relationshipType": null
                         }
                         profileProvider.createProfile(data).then(res => {
                             console.log(res.code, 'dasdasd');
@@ -169,8 +162,9 @@ class CreateProfileScreen extends Component {
                                             snackbar.show(constants.msg.user.add_member_success, 'success')
                                             break
                                         case 'NOT_EXIST_ACCOUNT':
-                                            NavigationService.navigate('checkOtp', {
-                                                id: res.data.medicalRecords.id
+                                            NavigationService.navigate('verifyPhone', {
+                                                id: res.data.medicalRecords.id,
+                                                verify: 3
                                             })
                                             break
                                         case 'EXIST_ACCOUNT':
@@ -279,14 +273,14 @@ class CreateProfileScreen extends Component {
         }
 
     }
-    selectRelationShip = (relationShip) => {
-        let relationShipError = relationShip ? "" : this.state.relationShipError;
-        if (!relationShip || !this.state.relationShip || relationShip.id != this.state.relationShip.id) {
-            this.setState({ relationShip, relationShipError, relationErr: '' })
-        } else {
-            this.setState({ relationShip, relationShipError, relationErr: '' });
-        }
-    }
+    // selectRelationShip = (relationShip) => {
+    //     let relationShipError = relationShip ? "" : this.state.relationShipError;
+    //     if (!relationShip || !this.state.relationShip || relationShip.id != this.state.relationShip.id) {
+    //         this.setState({ relationShip, relationShipError, relationErr: '' })
+    //     } else {
+    //         this.setState({ relationShip, relationShipError, relationErr: '' });
+    //     }
+    // }
     onCloseModal = () => {
         this.setState({
             isVisible: false
@@ -306,7 +300,7 @@ class CreateProfileScreen extends Component {
                 isVisible: false
             })
             if (res.code == 0) {
-                NavigationService.navigate('shareDataProfile', { id: res.data.record.id, shareId: res.data.shareRecord.id })
+                NavigationService.navigate('shareDataProfile', { id: res.data.shareRecord.id, shareId: res.data.record.id, })
 
             } else {
                 snackbar.show(constants.msg.notification.error_retry, 'danger')
@@ -699,7 +693,7 @@ class CreateProfileScreen extends Component {
                                 />
                             </Field>
                             <Text style={[styles.errorStyle]}>{this.state.addressError}</Text>
-                            <Field style={{ flex: 1 }}>
+                            {/* <Field style={{ flex: 1 }}>
                                 <Text style={styles.mdk}>Quan hệ <Text style={{ color: 'red' }}>(*)</Text></Text>
                                 <Field>
                                     <TextField
@@ -718,7 +712,7 @@ class CreateProfileScreen extends Component {
                                     />
                                 </Field>
                                 <Text style={[styles.errorStyle]}>{this.state.relationErr}</Text>
-                            </Field>
+                            </Field> */}
                         </Form>
                     </View>
                 </KeyboardAwareScrollView>
