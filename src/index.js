@@ -48,7 +48,7 @@ class Kernel extends Component {
           screenProps={{ state: store.getState() }}
         />
         {/* </Root> */}
-        <FlashMessage floating={true} position="top" ref="myLocalFlashMessage" />
+        <FlashMessage floating={true} style={{marginTop:30}} position="top" ref="myLocalFlashMessage" />
       </Provider>
     )
   }
