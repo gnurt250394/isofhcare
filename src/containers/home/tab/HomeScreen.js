@@ -71,24 +71,14 @@ class HomeScreen extends Component {
           icon: require("@images/new/homev2/ic_doctor.png"),
           text: "Bác sĩ",
           onPress: () => {
-            if (this.props.userApp.isLogin)
               this.props.navigation.navigate("listDoctor");
-            else
-              this.props.navigation.navigate("login", {
-                nextScreen: { screen: "listDoctor", param: {} }
-              });
           }
         },
         {
           icon: require("@images/new/homev2/ic_hospital.png"),
           text: "Cơ sở Y tế",
           onPress: () => {
-            if (this.props.userApp.isLogin)
               this.props.navigation.navigate("addBooking1");
-            else
-              this.props.navigation.navigate("login", {
-                nextScreen: { screen: "addBooking1", param: {} }
-              });
           }
         },
 
