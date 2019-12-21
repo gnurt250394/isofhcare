@@ -177,6 +177,9 @@ class ProfileHospitalScreen extends Component {
     showProfile = (state) => () => {
         this.setState({ [state]: !this.state[state] })
     }
+    showMapHospital=()=>{
+        snackbar.show('Chức năng đang phát triển')
+    }
     render() {
         const icSupport = require("@images/new/user.png");
         const { profileHospital } = this.state
@@ -252,7 +255,7 @@ class ProfileHospitalScreen extends Component {
                             </TouchableOpacity>
                             {this.state.showProfile ?
                                 <View style={styles.containerProfile}>
-                                    <TouchableOpacity>
+                                    <TouchableOpacity onPress={this.showMapHospital}>
                                         <Text style={styles.txtMap}>Xem sơ đồ CSYT</Text>
                                     </TouchableOpacity>
                                     <Text style={styles.colorBold}>Liên hệ</Text>

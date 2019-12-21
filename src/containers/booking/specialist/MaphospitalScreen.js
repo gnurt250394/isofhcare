@@ -43,9 +43,7 @@ class MaphospitalScreen extends Component {
             locationProvider.saveCurrentLocation(region.latitude, region.longitude);
             this.setState({
                 origin: `${region.latitude},${region.longitude}`
-            }, () => {
-                this.getRoutePoints(this.state.origin, this.state.destination)
-            });
+            }, this.getRoutePoints);
         }).catch(() => {
             locationProvider.getCurrentLocationHasSave().then(s => {
                 if (s && s.latitude && s.longitude) {
@@ -53,9 +51,7 @@ class MaphospitalScreen extends Component {
                     s.longitudeDelta = 0.1;
                     this.setState({
                         origin: `${s.latitude},${s.longitude}`
-                    }, () => {
-                        this.getRoutePoints(this.state.origin, this.state.destination)
-                    });
+                    }, this.getRoutePoints);
                 }
             }).catch(e => {
                 if (!callAgain) {
@@ -84,9 +80,7 @@ class MaphospitalScreen extends Component {
                         locationProvider.saveCurrentLocation(region.latitude, region.longitude);
                         this.setState({
                             origin: `${region.latitude},${region.longitude}`
-                        }, () => {
-                            this.getRoutePoints(this.state.origin, this.state.destination)
-                        });
+                        }, this.getRoutePoints);
                     }).catch((e) => {
                         locationProvider.getCurrentLocationHasSave().then(s => {
                             if (s && s.latitude && s.longitude) {
@@ -94,9 +88,7 @@ class MaphospitalScreen extends Component {
                                 s.longitudeDelta = 0.1;
                                 this.setState({
                                     origin: `${s.latitude},${s.longitude}`
-                                }, () => {
-                                    this.getRoutePoints(this.state.origin, this.state.destination)
-                                });
+                                }, this.getRoutePoints);
                             }
                         }).catch(e => {
                             if (!callAgain) {
@@ -118,71 +110,35 @@ class MaphospitalScreen extends Component {
                     locationProvider.saveCurrentLocation(region.latitude, region.longitude);
                     this.setState({
                         origin: `${region.latitude},${region.longitude}`
-                    }, () => {
-                        this.getRoutePoints(this.state.origin, this.state.destination);
-                    });
+                    }, this.getRoutePoints);
                 })
                 .catch((error) => {
-                    this.setState({ isLoading: false })
+                    const { code, message } = error
+                    if (code == 'UNAVAILABLE') {
+                        this.requestPermission()
+                    }
+
                 });
         }
         else {
             try {
                 LocationSwitch.isLocationEnabled(() => {
                     getLocation();
-                }, () => {
-                    Alert.alert(
-                        '',
-                        constants.booking.location_open,
-                        [
-                            {
-                                text: constants.actionSheet.cancel,
-                                onPress: () => console.log('Cancel Pressed'),
-                            },
-                            {
-                                text: constants.actionSheet.accept,
-                                onPress: () => {
-                                    LocationSwitch.enableLocationService(1000, true, () => {
-                                        getLocation();
-                                    }, () => {
-                                        this.setState({ locationEnabled: false });
-                                    });
-                                },
-                                style: 'default'
-                            }],
-                        { cancelable: false },
-                    );
-                });
+                }, this.requestPermission);
             } catch (error) {
             }
         }
 
     }
     requestPermission = () => {
-        Alert.alert(
-            '',
-            constants.booking.location_open,
-            [
-                {
-                    text: constants.actionSheet.cancel,
-                    onPress: () => console.log('Cancel Pressed'),
-                },
-                {
-                    text: constants.actionSheet.accept,
-                    onPress: () => {
-                        LocationSwitch.enableLocationService(1000, true, () => {
-                            this.setState({ isLoading: true }, this.getLocation);
-                        }, () => {
-                            this.setState({ locationEnabled: false });
-                        });
-                    },
-                    style: 'default'
-                }],
-            { cancelable: false },
-        );
+        LocationSwitch.enableLocationService(1000, true, () => {
+            this.setState({ isLoading: true }, this.getLocation);
+        }, () => {
+            this.setState({ isLoading: false });
+        });
     }
-    getRoutePoints(origin, destination) {
-        bookingSpecialistProvider.getLocationDirection(origin, destination, mode)
+    getRoutePoints() {
+        bookingSpecialistProvider.getLocationDirection(this.state.origin, this.state.destination, mode)
             .then(res => {
                 if (res && res.routes && res.routes.length) {
                     var cortemp = this.decode(res.routes[0].overview_polyline.points)
@@ -274,6 +230,7 @@ class MaphospitalScreen extends Component {
                                 {this.state.destMarker ?
                                     <Marker
                                         key={2}
+                                        title="aaa"
                                         image={require('@images/ic_maker.png')}
                                         coordinate={this.state.destMarker}
                                     >
