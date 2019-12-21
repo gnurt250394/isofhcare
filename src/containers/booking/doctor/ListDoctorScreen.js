@@ -121,7 +121,6 @@ class ListDoctorScreen extends Component {
                 item={item}
                 onPressDoctor={this.goDetailDoctor(item)}
                 onPressBooking={this.addBookingDoctor(item)}
-                onPressAdvisory={this.goToAdvisory}
             />
         )
     }

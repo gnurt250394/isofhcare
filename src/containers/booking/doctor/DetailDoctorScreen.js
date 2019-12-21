@@ -75,6 +75,8 @@ class DetailsDoctorScreen extends Component {
   }
   goToAdvisory = () => {
     // this.props.navigation.navigate("listQuestion");
+    snackbar.show('Tính năng đang phát triển')
+    return
     this.setState({ isVisible: true })
   }
 
