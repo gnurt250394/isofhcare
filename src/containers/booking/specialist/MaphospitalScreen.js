@@ -1,28 +1,35 @@
 import React, { Component } from 'react';
-import { View, Text, Dimensions, StyleSheet, Platform, AppState, PermissionsAndroid } from 'react-native';
+import { View, Text, Dimensions, StyleSheet, Platform, AppState, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
 import ActivityPanel from "@components/ActivityPanel";
-import MapView, { Marker, Polyline } from 'react-native-maps';
+import MapView, { Marker, Polyline, LocalTile, Callout } from 'react-native-maps';
 import locationProvider from '@data-access/location-provider';
 import LocationSwitch from 'mainam-react-native-location-switch';
 import GetLocation from 'react-native-get-location'
 import RNLocation from 'react-native-location';
 import constants from '@resources/strings';
 import bookingSpecialistProvider from '@data-access/booking-specialist-provider';
+import ScaledImage from 'mainam-react-native-scaleimage';
+const { width, height } = Dimensions.get('window');
 const mode = 'driving'; // 'walking';
 const LATITUDE_DELTA = 0.0922;
+const ASPECT_RATIO = width / height;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const SPACE = 0.01;
 const DEFAULT_PADDING = { top: 100, right: 100, bottom: 100, left: 100 };
-const { width, height } = Dimensions.get('window');
-const ASPECT_RATIO = width / height;
 class MaphospitalScreen extends Component {
     constructor(props) {
         super(props);
         let item = this.props.navigation.getParam('item') || {}
         this.state = {
             item,
+            initialRegion: {
+                latitude: 21.046469,
+                longitude: 105.7871942,
+                latitudeDelta: LATITUDE_DELTA,
+                longitudeDelta: LONGITUDE_DELTA
+            },
             MARKERS: null,
-            origin: '0,0',
+            origin: '',
             destination: item.hospital && item.hospital.contact && item.hospital.contact.address || '',
             destMarker: '',
             startMarker: '',
@@ -36,9 +43,7 @@ class MaphospitalScreen extends Component {
             locationProvider.saveCurrentLocation(region.latitude, region.longitude);
             this.setState({
                 origin: `${region.latitude},${region.longitude}`
-            }, () => {
-                this.getRoutePoints(this.state.origin, this.state.destination)
-            });
+            }, this.getRoutePoints);
         }).catch(() => {
             locationProvider.getCurrentLocationHasSave().then(s => {
                 if (s && s.latitude && s.longitude) {
@@ -46,9 +51,7 @@ class MaphospitalScreen extends Component {
                     s.longitudeDelta = 0.1;
                     this.setState({
                         origin: `${s.latitude},${s.longitude}`
-                    }, () => {
-                        this.getRoutePoints(this.state.origin, this.state.destination)
-                    });
+                    }, this.getRoutePoints);
                 }
             }).catch(e => {
                 if (!callAgain) {
@@ -77,9 +80,7 @@ class MaphospitalScreen extends Component {
                         locationProvider.saveCurrentLocation(region.latitude, region.longitude);
                         this.setState({
                             origin: `${region.latitude},${region.longitude}`
-                        }, () => {
-                            this.getRoutePoints(this.state.origin, this.state.destination)
-                        });
+                        }, this.getRoutePoints);
                     }).catch((e) => {
                         locationProvider.getCurrentLocationHasSave().then(s => {
                             if (s && s.latitude && s.longitude) {
@@ -87,9 +88,7 @@ class MaphospitalScreen extends Component {
                                 s.longitudeDelta = 0.1;
                                 this.setState({
                                     origin: `${s.latitude},${s.longitude}`
-                                }, () => {
-                                    this.getRoutePoints(this.state.origin, this.state.destination)
-                                });
+                                }, this.getRoutePoints);
                             }
                         }).catch(e => {
                             if (!callAgain) {
@@ -108,57 +107,38 @@ class MaphospitalScreen extends Component {
                 timeout: 15000,
             })
                 .then(region => {
-                    console.log('region: ', region);
                     locationProvider.saveCurrentLocation(region.latitude, region.longitude);
                     this.setState({
                         origin: `${region.latitude},${region.longitude}`
-                    }, () => {
-                        this.getRoutePoints(this.state.origin, this.state.destination);
-                    });
+                    }, this.getRoutePoints);
                 })
-                .catch(async (error) => {
+                .catch((error) => {
                     const { code, message } = error
-                    // if(code =='UNAUTHORIZED'){
-                        GetLocation.openGpsSettings()
-                    // }
-                    console.log('message: ', message);
-                    console.log('code: ', code);
+                    if (code == 'UNAVAILABLE') {
+                        this.requestPermission()
+                    }
+
                 });
         }
         else {
             try {
                 LocationSwitch.isLocationEnabled(() => {
                     getLocation();
-                }, () => {
-                    Alert.alert(
-                        '',
-                        constants.booking.location_open,
-                        [
-                            {
-                                text: constants.actionSheet.cancel,
-                                onPress: () => console.log('Cancel Pressed'),
-                            },
-                            {
-                                text: constants.actionSheet.accept,
-                                onPress: () => {
-                                    LocationSwitch.enableLocationService(1000, true, () => {
-                                        getLocation();
-                                    }, () => {
-                                        this.setState({ locationEnabled: false });
-                                    });
-                                },
-                                style: 'default'
-                            }],
-                        { cancelable: false },
-                    );
-                });
+                }, this.requestPermission);
             } catch (error) {
             }
         }
 
     }
-    getRoutePoints(origin, destination) {
-        bookingSpecialistProvider.getLocationDirection(origin, destination, mode)
+    requestPermission = () => {
+        LocationSwitch.enableLocationService(1000, true, () => {
+            this.setState({ isLoading: true }, this.getLocation);
+        }, () => {
+            this.setState({ isLoading: false });
+        });
+    }
+    getRoutePoints() {
+        bookingSpecialistProvider.getLocationDirection(this.state.origin, this.state.destination, mode)
             .then(res => {
                 if (res && res.routes && res.routes.length) {
                     var cortemp = this.decode(res.routes[0].overview_polyline.points)
@@ -201,7 +181,7 @@ class MaphospitalScreen extends Component {
     fitAllMarkers() {
         const temMark = this.state.MARKERS;
         this.setState({ isLoading: false });
-        if (this.mapRef == null) {
+        if (this.mapRef == null || !temMark) {
             console.log("map is null")
         } else {
             console.log("temMark : " + JSON.stringify(temMark));
@@ -211,60 +191,82 @@ class MaphospitalScreen extends Component {
             });
         }
     }
-   
-    _handleAppStateChange = (nextAppState) => {
-        if (
-            this.state.appState.match(/inactive|background/) &&
-            nextAppState === 'active'
-        ) {
-            this.getLocation()
 
-            console.log('App has come to the foreground!');
-        }
-        this.setState({ appState: nextAppState });
-    };
+
     componentDidMount() {
-            this.getLocation()
-        AppState.addEventListener('change', this._handleAppStateChange);
+        this.getLocation()
 
-    }
-    componentWillUnmount() {
-        AppState.removeEventListener('change', this._handleAppStateChange);
     }
     render() {
         return (
             <ActivityPanel
                 title={this.state.item.hospital.name}
-                isLoading={this.state.isLoading}
+            // isLoading={this.state.isLoading}
             >
                 <View style={styles.container}>
                     {
-                        (this.state.coords != null) ?
+                        this.state.coords ?
                             <MapView
                                 ref={ref => { this.mapRef = ref; }}
                                 style={styles.map}
-                                onLayout={() => this.fitAllMarkers()}>
+                                onLayout={() => this.fitAllMarkers()}
+                            >
+                                {
+                                    this.state.coords ?
+                                        <Polyline
+                                            coordinates={this.state.coords}
+                                            strokeWidth={4}
+                                            strokeColor={"red"}
+                                        /> : null
+                                }
+                                {this.state.startMarker ?
+                                    <Marker
+                                        key={1}
+                                        coordinate={this.state.startMarker}
+                                        image={require('@images/ic_maker.png')}
+                                    >
+                                    </Marker> : null
+                                }
+                                {this.state.destMarker ?
+                                    <Marker
+                                        key={2}
+                                        title="aaa"
+                                        image={require('@images/ic_maker.png')}
+                                        coordinate={this.state.destMarker}
+                                    >
+                                        <Callout >
+                                            <Text style={{
+                                                color: '#00BA99'
+                                            }}>{this.state.item.hospital.name}</Text>
+                                        </Callout>
+                                    </Marker> : null
+                                }
 
-                                <Polyline
-                                    coordinates={this.state.coords}
-                                    strokeWidth={4}
-                                    strokeColor={"red"}
+                            </MapView>
+                            :
+                            <View style={styles.container}>
+                                <MapView
+                                    // initialRegion={this.state.initialRegion}
+                                    style={styles.map}
                                 />
 
-                                <Marker
-                                    key={1}
-                                    coordinate={this.state.startMarker}
-                                    image={require('@images/ic_maker.png')}
-                                />
-
-                                <Marker
-                                    key={2}
-                                    image={require('@images/ic_maker.png')}
-                                    coordinate={this.state.destMarker}
-                                >
-                                </Marker>
-                            </MapView> : null
+                                <TouchableOpacity
+                                    onPress={this.requestPermission}
+                                    style={[styles.buttonLocation, { bottom: 30, }]}>
+                                    {this.state.isLoading ?
+                                        <ActivityIndicator color="#FFF" size="small" /> :
+                                        <ScaledImage source={require('@images/ic_destination.png')} height={20} />
+                                    }
+                                </TouchableOpacity>
+                            </View>
                     }
+
+                    {/* <TouchableOpacity style={[styles.buttonLocation, {
+                        bottom: 80,
+                    }]}>
+                        <ScaledImage source={require('@images/ic_position.png')} height={20} />
+                    </TouchableOpacity> */}
+
                 </View>
             </ActivityPanel>
         );
@@ -275,6 +277,18 @@ export default MaphospitalScreen;
 
 
 const styles = StyleSheet.create({
+    buttonLocation: {
+        backgroundColor: '#00CBA7',
+        padding: 10,
+        borderRadius: 20,
+        right: 10,
+        elevation: 3,
+        position: 'absolute',
+        shadowColor: '#000',
+        shadowOffset: { width: 2, height: 2 },
+        shadowOpacity: 0.6
+
+    },
     container: {
         ...StyleSheet.absoluteFillObject,
         flex: 1,
