@@ -168,14 +168,17 @@ class ProfileHospitalScreen extends Component {
         }
     }
     ratingDoctor = () => {
-        snackbar.show('Chức năng đang phát triển')
-        return
-        this.props.navigation.navigate('listRatingDoctor')
+        // snackbar.show('Chức năng đang phát triển')
+        // return
+        this.props.navigation.navigate('ratingDoctor')
     }
     _keyExtractor = (item, index) => `${item.id || index}`
     onBackdropPress = () => { this.setState({ isVisible: false }) }
     showProfile = (state) => () => {
         this.setState({ [state]: !this.state[state] })
+    }
+    showMapHospital=()=>{
+        snackbar.show('Chức năng đang phát triển')
     }
     render() {
         const icSupport = require("@images/new/user.png");
@@ -252,7 +255,7 @@ class ProfileHospitalScreen extends Component {
                             </TouchableOpacity>
                             {this.state.showProfile ?
                                 <View style={styles.containerProfile}>
-                                    <TouchableOpacity>
+                                    <TouchableOpacity onPress={this.showMapHospital}>
                                         <Text style={styles.txtMap}>Xem sơ đồ CSYT</Text>
                                     </TouchableOpacity>
                                     <Text style={styles.colorBold}>Liên hệ</Text>
