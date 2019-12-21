@@ -7,6 +7,7 @@ import { Card } from 'native-base'
 import LinearGradient from 'react-native-linear-gradient'
 import Button from './Button';
 import Modal from "@components/modal";
+import snackbar from '@utils/snackbar-utils';
 
 class ItemDoctor extends Component {
     constructor(props) {
@@ -31,6 +32,8 @@ class ItemDoctor extends Component {
 
     }
     showModal = (item) => () => {
+        snackbar.show('Tính năng đang phát triển')
+        return
         this.setState({ isVisible: true, item })
     }
     renderDots = (item, i) => {
