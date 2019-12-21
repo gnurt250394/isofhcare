@@ -793,7 +793,7 @@ class ConfirmBookingScreen extends Component {
                                     </View>
                                     <Text style={styles.ckeckthanhtoan}>{constants.payment.direct_transfer}</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={styles.ckeck} onPress={this.selectPaymentmethod(1)}>
+                                {/* <TouchableOpacity style={styles.ckeck} onPress={this.selectPaymentmethod(1)}>
                                     <View style={styles.containerBtnSelect}>
                                         {this.state.paymentMethod == 1 &&
                                             <View style={styles.isSelected}></View>
@@ -824,7 +824,7 @@ class ConfirmBookingScreen extends Component {
                                         }
                                     </View>
                                     <Text style={styles.ckeckthanhtoan}>{constants.payment.PAYOO_convenient_shop}</Text>
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
                             </React.Fragment> : null
                     }
                     <TouchableOpacity style={styles.ckeck} onPress={this.selectPaymentmethod(2)}>
