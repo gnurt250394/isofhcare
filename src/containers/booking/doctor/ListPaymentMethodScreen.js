@@ -13,7 +13,7 @@ class ListPaymentMethodScreen extends Component {
                 // { id: 3, value: 3, name: 'PAYOO' },
                 // { id: 4, value: 4, name: 'PAYOO - cửa hàng tiện ích' },
                 // { id: 5, value: 5, name: 'PAYOO - trả góp 0%' },
-                { id: 6, value: 6, name: 'Chuyển khoản trực tiếp' },
+                // { id: 6, value: 6, name: 'Chuyển khoản trực tiếp' },
             ]
         };
     }
