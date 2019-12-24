@@ -13,7 +13,8 @@ import {
   ScrollView,
   FlatList,
   RefreshControl,
-  Linking
+  Linking,
+  Image,
 } from "react-native";
 import { connect } from "react-redux";
 import constants from "@resources/strings";
@@ -26,6 +27,7 @@ import NavigationService from "@navigators/NavigationService";
 import appProvider from '@data-access/app-provider';
 import { Card, Toast } from "native-base";
 const DEVICE_WIDTH = Dimensions.get("window").width;
+const DEVICE_HEIGHT = Dimensions.get("window").height;
 import * as Animatable from 'react-native-animatable';
 import advertiseProvider from "@data-access/advertise-provider";
 import hospitalProvider from '@data-access/hospital-provider';
@@ -38,47 +40,47 @@ class HomeScreen extends Component {
       refreshing: false,
       ads0: [],
       listDataHospital: [{
-        name: 'Bệnh viện E',
+        name: 'Phòng khám Y khoa HN',
         image: require('@images/new/homev2/csyt_demo.png')
       },
       {
-        name: 'Phòng khám Y khoa HN',
+        name: 'Bệnh viện E',
         image: require('@images/new/homev2/csyt_demo2.png')
       }],
       listDataDoctor: [
         {
-          name: 'PGS BS Trương Hồng Sơn',
-          image: require('@images/new/homev2/doctor_demo1.png')
+          name: 'BS Hoàng Thị Bạch Dương',
+          image: require('@images/new/homev2/doctor_demo1.jpg')
         },
         {
-          name: 'BS Ngô Thành Trung',
-          image: require('@images/new/homev2/doctor_demo2.png')
+          name: 'GS TS Phạm Minh Thông',
+          image: require('@images/new/homev2/doctor_demo2.jpg')
         },
-        {
-          name: 'PGS BS Trương Hồng Sơn',
-          image: require('@images/new/homev2/doctor_demo3.png')
-        }
+        // {
+        //   name: 'PGS BS Trương Hồng Sơn',
+        //   image: require('@images/new/homev2/doctor_demo3.png')
+        // }
       ],
       featuresBooking: [
-        {
-          icon: require("@images/new/homev2/ic_specialist.png"),
-          text: "Chuyên khoa",
-          onPress: () => {
-            snackbar.show('Tính năng đang phát triển')
-          }
-        },
         {
           icon: require("@images/new/homev2/ic_doctor.png"),
           text: "Bác sĩ",
           onPress: () => {
-              this.props.navigation.navigate("listDoctor");
+            this.props.navigation.navigate("listDoctor");
           }
         },
         {
           icon: require("@images/new/homev2/ic_hospital.png"),
           text: "Cơ sở Y tế",
           onPress: () => {
-              this.props.navigation.navigate("addBooking1");
+            this.props.navigation.navigate("addBooking1");
+          }
+        },
+        {
+          icon: require("@images/new/homev2/ic_specialist.png"),
+          text: "Chuyên khoa",
+          onPress: () => {
+            snackbar.show('Tính năng đang phát triển')
           }
         },
 
@@ -213,13 +215,15 @@ class HomeScreen extends Component {
           return (
             <View style={styles.cardViewDoctor}>
               {/* <Card style={{ borderRadius: 5, }}> */}
-                <ScaledImage
+              <View style={styles.containerImageDoctor}>
+                <Image
                   // uri={item.advertise.images.absoluteUrl()}
-                  style={{ borderRadius: 5 }}
+                  style={{ borderRadius: 5, width: '100%', height: '100%' }}
                   source={item.image}
-                  width={DEVICE_WIDTH / 3}
-                  height={137}
+                // width={DEVICE_WIDTH / 3}
+                // height={137}
                 />
+              </View>
               {/* </Card> */}
               <Text numberOfLines={2} ellipsizeMode='tail' style={styles.txContensAds}>{item.name ? item.name : ""}</Text>
 
@@ -474,16 +478,19 @@ class HomeScreen extends Component {
   }
   getHeightImage = (source) => {
     let img = resolveAssetSource(source);
-    return img.height * (DEVICE_WIDTH / img.width)
+    return (img.height / img.width * DEVICE_WIDTH)
   }
   render() {
-    const headerHome = require("@images/new/homev2/header_home.png")
+    const headerHome = require("@images/app/header.png")
     return (
       <ActivityPanel
         transparent={true}
         isLoading={this.state.isLoading}
         hideActionbar={true}
         showBackgroundHeader={true}
+        backgroundStyle={{
+          height: DEVICE_HEIGHT / 3
+        }}
         backgroundHeader={headerHome}
         containerStyle={{ backgroundColor: '#f2f2f2' }}
         style={[styles.activityPanel, { backgroundColor: 'transparent' }]}
@@ -500,12 +507,14 @@ class HomeScreen extends Component {
           <ScrollView
             refreshControl={this.refreshControl()}
             showsVerticalScrollIndicator={false}
-
           >
-            <View style={[styles.scroll, { paddingTop: this.getHeightImage(headerHome) / 10 }]}>
-              <View style={[styles.padding21,]}>
+            <View style={[styles.scroll, { paddingTop: (DEVICE_HEIGHT / 3) / 4 }]}>
+
+              <View
+                style={[styles.padding21,]}>
                 {this.props.userApp.isLogin ?
-                  <View style={styles.containerHeadertitle}>
+                  <View
+                    style={styles.containerHeadertitle}>
                     <Text
                       style={styles.txtHeaderTitle}
                     >Xin chào, </Text>
@@ -544,6 +553,20 @@ class HomeScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  containerImageDoctor: {
+    borderRadius: 5,
+    elevation: 4,
+    backgroundColor: '#FFF',
+    margin: 1,
+    width: DEVICE_WIDTH / 3,
+    height: 137,
+    shadowColor: '#222',
+    shadowOffset: {
+      width: 2,
+      height: 2
+    },
+    shadowOpacity: 0.6
+  },
   groupImageButton: {
     position: 'relative',
     padding: 5
@@ -611,7 +634,6 @@ const styles = StyleSheet.create({
   },
   padding21: {
     paddingHorizontal: 21,
-    paddingBottom: 0
   },
   card: { borderRadius: 6, paddingHorizontal: 10 },
   viewMenu: { backgroundColor: '#F8F8F8', flex: 1, borderRadius: 5 },
