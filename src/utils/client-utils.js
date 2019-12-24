@@ -70,7 +70,7 @@ module.exports = {
   auth: "",
   serverApi: server_url + "/",
   serviceSchedule: "http://35.198.240.51:8088/",
-  serviceBooking: "http://35.198.240.51:8088/",
+  serviceBooking: "http://35.198.240.51:8082/",
   response: {
     ok(data, message) {
       if (!message) message = "";
