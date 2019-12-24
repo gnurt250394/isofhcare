@@ -7,33 +7,28 @@ import dateUtils from 'mainam-react-native-date-utils';
 import ActivityPanel from "@components/ActivityPanel";
 import snackbar from "@utils/snackbar-utils";
 import { ScrollView } from 'react-native-gesture-handler';
+import { connect } from "react-redux";
 
-export default class DetailsDrugScreen extends Component {
+class DetailsDrugScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            dataShop: [
-                {
-                    name: 'Nhà thuốc Tấn Minh',
-                    location: 'Hoàng Cầu, Đống Đa, Hà Nội',
-                    long: '5km'
-                },
-                {
-                    name: 'Nhà thuốc Tấn Minh',
-                    location: 'Hoàng Cầu, Đống Đa, Hà Nội',
-                    long: '5km'
-                },
-                {
-                    name: 'Nhà thuốc Tấn Minh',
-                    location: 'Hoàng Cầu, Đống Đa, Hà Nội',
-                    long: '5km'
-                }
-            ],
+            dataShop: [],
             dataDetail: []
         };
     }
     componentDidMount() {
         this.onGetDetail()
+    }
+    componentWillReceiveProps(nextProps) {
+
+        if (nextProps.dataDrug) {
+            // this.setState(prev => ({
+            this.onGetDetail()
+            // chưa dùng concat vì confilic với phần edit, tự add item mới
+            //     dataDrug: prev.dataDrug.concat(nextProps.dataDrug.data)
+            // }))
+        }
     }
     onGetDetail = () => {
         this.setState({
@@ -42,6 +37,7 @@ export default class DetailsDrugScreen extends Component {
             let id = this.props.navigation.getParam('id', '')
             if (id) {
                 drugProvider.getDetailsDrug(id).then(res => {
+                    console.log('getDetailsDrug:', res.data)
                     this.setState({
                         dataDetail: res.data
                     })
@@ -52,7 +48,7 @@ export default class DetailsDrugScreen extends Component {
                     this.setState({
                         isLoading: false
                     })
-                    console.log(err)
+
                 })
             } else {
                 this.setState({
@@ -76,7 +72,7 @@ export default class DetailsDrugScreen extends Component {
                     this.setState({
                         isLoading: false
                     })
-                    console.log(res, 'infffooo')
+
                 })
             })
         } else {
@@ -90,7 +86,7 @@ export default class DetailsDrugScreen extends Component {
                         this.setState({
                             isLoading: false
                         })
-                        console.log(res, 'infffooo')
+
                     })
                 })
             } else {
@@ -119,7 +115,7 @@ export default class DetailsDrugScreen extends Component {
         let province = item.province ? item.province : null
         let zone = item.zone ? item.zone : ''
         let village = item.village ? item.village : null
-        console.log(district, province, zone, village)
+
         if (district && province && zone && village) {
             return (`${village}, ${zone}, ${district}, ${province}`)
 
@@ -246,10 +242,73 @@ export default class DetailsDrugScreen extends Component {
                 )
         }
     }
+    renderDetails = (dataDetail) => {
+
+        if (dataDetail && dataDetail.images && dataDetail.images.length) {
+            return (
+                <View>
+                    <Text style={styles.txLabel}>Hình ảnh đơn thuốc({dataDetail.images.length})</Text>
+                    <View style={styles.list_image}>
+                        {
+                            dataDetail.images.map((item, index) => <View key={index} style={styles.containerImagePicker}>
+                                <View style={styles.groupImagePicker}>
+                                    <Image source={{ uri: item.pathThumbnail.absoluteUrl() }} resizeMode="cover" style={styles.imagePicker} />
+                                    {
+                                        item.error ?
+                                            <View style={styles.groupImageError} >
+                                                <ScaledImage source={require("@images/ic_warning.png")} width={40} />
+                                            </View> :
+                                            item.loading ?
+                                                <View style={styles.groupImageLoading} >
+                                                    <ScaledImage source={require("@images/loading.gif")} width={40} />
+                                                </View>
+                                                : null
+                                    }
+                                </View>
+                            </View>)
+                        }
+                    </View>
+                </View>
+            )
+        }
+        if (dataDetail && dataDetail.medicines && dataDetail.medicines.length) {
+            return (
+                <View style={styles.listSelect}>
+                    <Text style={styles.txSelect}>Danh sách thuốc ({dataDetail.medicines.length})</Text>
+                    <FlatList
+                        data={dataDetail.medicines}
+                        extraData={this.state}
+                        keyExtractor={(item, index) => index.toString()}
+                        renderItem={this.renderItem}
+                    >
+                    </FlatList>
+                </View>
+            )
+        }
+    }
+    renderItem = ({ item, index }) => {
+        return (
+            <View style={styles.viewItem}>
+                <Text style={styles.txName}>{`${item.name}`}</Text>
+            </View>
+        )
+    }
+    onEdit = () => {
+        let dataDetail = this.state.dataDetail
+        if (dataDetail && dataDetail.images && dataDetail.images.length) {
+            this.props.navigation.navigate('editDrugScan', { dataEdit: this.state.dataDetail })
+            return
+        } if (dataDetail && dataDetail.medicines && dataDetail.medicines.length) {
+            this.props.navigation.navigate('editDrugInput', { dataEdit: this.state.dataDetail })
+            return
+        }
+    }
     render() {
         let dataDetail = this.state.dataDetail
         return (
-            <ActivityPanel isLoading={this.state.isLoading} style={styles.container} title={"Chi tiết đơn thuốc"} showFullScreen={true}>
+            <ActivityPanel titleStyle={styles.txTitle} isLoading={this.state.isLoading} style={styles.container} title={"Chi tiết đơn thuốc"} showFullScreen={true} menuButton={<TouchableOpacity onPress={this.onEdit} style={{ padding: 5, marginRight: 16 }}>
+                <ScaledImage source={require('@images/new/drug/ic_edit.png')} height={20}></ScaledImage>
+            </TouchableOpacity>}>
                 <ScrollView style={{ backgroundColor: '#f2f2f2' }}>
                     <ScaledImage height={100} source={require('@images/new/drug/ic_bg_find_drug.png')}></ScaledImage>
                     <View style={styles.viewTitle}>
@@ -258,27 +317,7 @@ export default class DetailsDrugScreen extends Component {
                         <Text><Text style={styles.txContent}>Trạng thái: </Text>{this.renderStatus()}</Text>
                     </View>
                     <View style={styles.viewImg}>
-                        <Text style={styles.txLabel}>Hình ảnh đơn thuốc({dataDetail && dataDetail.images ? dataDetail.images.length : 0})</Text>
-                        <View style={styles.list_image}>
-                            {
-                                dataDetail && dataDetail.images && dataDetail.images.map((item, index) => <View key={index} style={styles.containerImagePicker}>
-                                    <View style={styles.groupImagePicker}>
-                                        <Image source={{ uri: item.pathThumbnail.absoluteUrl() }} resizeMode="cover" style={styles.imagePicker} />
-                                        {
-                                            item.error ?
-                                                <View style={styles.groupImageError} >
-                                                    <ScaledImage source={require("@images/ic_warning.png")} width={40} />
-                                                </View> :
-                                                item.loading ?
-                                                    <View style={styles.groupImageLoading} >
-                                                        <ScaledImage source={require("@images/loading.gif")} width={40} />
-                                                    </View>
-                                                    : null
-                                        }
-                                    </View>
-                                </View>)
-                            }
-                        </View>
+                        {this.renderDetails(dataDetail)}
                         <View>
                         </View>
                         <Text style={styles.txLabel}>Ghi chú</Text>
@@ -376,12 +415,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         padding: 10
     },
-    txTitle: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#000',
-        textAlign: 'left'
-    },
+
     txStatus: {
         fontSize: 14,
         fontWeight: 'bold',
@@ -456,5 +490,36 @@ const styles = StyleSheet.create({
         height: 88,
         position: 'relative'
     },
+    viewItem: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        borderBottomColor: '#cccccc',
+        borderBottomWidth: 0.5,
+        paddingVertical: 10
+
+    },
+    txName: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: '#00B090',
+        textAlign: 'left',
+        maxWidth: '80%'
+    },
+    listSelect: {
+        padding: 10,
+        paddingLeft: 0
+    },
+    txSelect: {
+        fontStyle: 'italic',
+    },
+    txTitle: { color: '#fff', marginLeft: 50, fontSize: 18 },
 
 })
+function mapStateToProps(state) {
+    return {
+        userApp: state.userApp,
+        dataDrug: state.dataDrug
+    };
+}
+export default connect(mapStateToProps)(DetailsDrugScreen);

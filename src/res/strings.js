@@ -152,7 +152,7 @@ module.exports = {
     action_select_hospital_ehealth: "ACTION_SELECT_HOSPITAL_EHEALTH",
     action_select_patient_group_ehealth: "ACTION_SELECT_PATIENT_GROUP_EHEALTH",
     action_otp_phone: "ACTION_OTP_PHONE",
-    action_add_drug:'ACTION_ADD_DRUG',
+    action_add_drug: 'ACTION_ADD_DRUG',
   },
   colors: {
     breakline: "#c0c0c0",
@@ -874,8 +874,7 @@ module.exports = {
       set: isofhcare_service + "key-value/set-value"
     },
     drug: {
-      search: isofhcare_service + "drug/search",
-      update_view_count: isofhcare_service + "drug/update-view-count"
+      update_view_count: isofhcare_service + "drug/update-view-count",
     },
     facility: {
       search: isofhcare_service + "facility/search",
@@ -1021,7 +1020,9 @@ module.exports = {
       get_details_drug: isofhcare_service + 'orders/v1/prescriptions',
       find_drug: isofhcare_service + 'orders/v1/prescriptions',
       delete_drug: isofhcare_service + 'orders/v1/prescriptions',
-      search_drug : isofhcare_service + 'pharmacy/v1/medicine/search'
+      search_drug: isofhcare_service + 'pharmacy/v1/medicine/search',
+      search_by_name: '/v1/search?expression=',
+
     }
   }
 };
