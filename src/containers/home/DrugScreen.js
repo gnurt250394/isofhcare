@@ -152,11 +152,13 @@ class drugScreen extends Component {
         try {
             switch (index) {
                 case 0:
-                    if (dataSelect && dataSelect.images.length) {
-
-                        this.props.navigation.navigate('editDrugScan', { dataEdit: dataSelect })
+                    if (dataSelect && dataSelect.images && dataSelect.images.length) {
+                        this.props.navigation.navigate('editDrugScan', { dataEdit: this.state.dataSelect })
+                        return
+                    } if (dataSelect && dataSelect.medicines && dataSelect.medicines.length) {
+                        this.props.navigation.navigate('editDrugInput', { dataEdit: this.state.dataSelect })
+                        return
                     }
-                    return
                 case 1:
                     drugProvider.deleteDrug(dataSelect.id).then(res => {
                         this.getListDrug()
