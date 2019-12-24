@@ -80,11 +80,16 @@ class ChangePasswordScreen extends Component {
 
     render() {
         return (
-            <ImageBackground
-                style={styles.container}
-                source={require('@images/new/account/img_bg_login.png')}
-                resizeMode={'cover'}
-                resizeMethod="resize">
+            <ActivityPanel
+                style={{ flex: 1 }}
+                hideActionbar={true}
+                transparent={true}
+                useCard={true}
+                titleStyle={{ textAlign: 'left', marginLeft: 20 }}
+                showFullScreen={true}
+                isLoading={this.state.isLoading}
+                containerStyle={{ marginTop: 50 }}
+            >
                 <ScrollView
                     showsVerticalScrollIndicator={false}
                     style={styles.scroll}
@@ -209,7 +214,8 @@ class ChangePasswordScreen extends Component {
                         <Text style={styles.txbtnUpdate}>{constants.update_to_up_case}</Text>
                     </TouchableOpacity>
                 </View>
-            </ImageBackground>
+                <View style={{ height: 50 }}></View>
+            </ActivityPanel>
         )
     }
 }
