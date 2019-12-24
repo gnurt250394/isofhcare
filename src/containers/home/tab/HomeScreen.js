@@ -155,7 +155,8 @@ class HomeScreen extends Component {
             snackbar.show('Tính năng đang phát triển')
           }
         }
-      ]
+      ],
+      height: 0
     };
   }
   // getTopAds(reload) {
@@ -482,6 +483,7 @@ class HomeScreen extends Component {
   }
   render() {
     const headerHome = require("@images/app/header.png")
+    let statusBarHeight = Platform.OS == 'android' ? StatusBar.currentHeight : 0
     return (
       <ActivityPanel
         transparent={true}
@@ -489,7 +491,7 @@ class HomeScreen extends Component {
         hideActionbar={true}
         showBackgroundHeader={true}
         backgroundStyle={{
-          height: DEVICE_HEIGHT / 3
+          height: DEVICE_HEIGHT / 4
         }}
         backgroundHeader={headerHome}
         containerStyle={{ backgroundColor: '#f2f2f2' }}
@@ -508,9 +510,12 @@ class HomeScreen extends Component {
             refreshControl={this.refreshControl()}
             showsVerticalScrollIndicator={false}
           >
-            <View style={[styles.scroll, { paddingTop: (DEVICE_HEIGHT / 3) / 4 }]}>
+            <View style={[styles.scroll, { top: (DEVICE_HEIGHT / 4) - this.state.height + statusBarHeight }]}>
 
               <View
+                onLayout={(e) => {
+                  this.setState({ height: e.nativeEvent.layout.height })
+                }}
                 style={[styles.padding21,]}>
                 {this.props.userApp.isLogin ?
                   <View
