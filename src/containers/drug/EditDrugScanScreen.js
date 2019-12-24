@@ -16,7 +16,8 @@ export default class EditDrugScanScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            imageUris: []
+            imageUris: [],
+            imagesEdit: []
         }
     }
     selectTab = () => {
@@ -59,6 +60,7 @@ export default class EditDrugScanScreen extends Component {
                                 if (s.success) {
                                     if (s.data.code == 0 && s.data.data && s.data.data.images && s.data.data.images.length > 0) {
                                         let imageUris = this.state.imageUris;
+                                        let imagesEdit = this.state.imagesEdit
                                         imageUris.forEach((item) => {
                                             if (item.uri == s.uri) {
                                                 item.loading = false;
@@ -66,8 +68,14 @@ export default class EditDrugScanScreen extends Component {
                                                 item.thumbnail = s.data.data.images[0].thumbnail;
                                             }
                                         });
+                                        imagesEdit.push({
+                                            uri: image.path,
+                                            loading: false,
+                                            url: s.data.data.images[0].image,
+                                            thumbnail: s.data.data.images[0].thumbnail,
+                                        })
                                         this.setState({
-                                            imageUris
+                                            imageUris, imagesEdit
                                         });
                                     }
                                 } else {
@@ -81,7 +89,8 @@ export default class EditDrugScanScreen extends Component {
                         }
                     })
                     this.setState({ imageUris: [...imageUris] });
-                    console.log('imageUris: ', [...imageUris]);
+
+
                 });
 
             }
@@ -89,25 +98,44 @@ export default class EditDrugScanScreen extends Component {
             snackbar.show(constants.msg.app.not_internet, "danger");
         });
     }
-    removeImage(index) {
+    removeImage(item, index) {
         var imageUris = this.state.imageUris;
         imageUris.splice(index, 1);
-        this.setState({ imageUris });
+        // let imagesEdit = this.state.imagesEdit.map((i, index) => {
+        //     
+        //     if (i.id && item.id) {
+        //         i.id == item.id ? { ...i, action: 'DELETE' } : i
+        //     }
+
+        // })
+        var newImageEdit = this.state.imagesEdit
+        for (var i in newImageEdit) {
+            if (newImageEdit[i].id && item.id) {
+                if (newImageEdit[i].id == item.id) {
+                    newImageEdit[i].action = 'DELETE';
+                    break; //Stop this loop, we found it!
+                }
+            }
+        }
+        this.setState({ imageUris, imagesEdit: newImageEdit });
     }
     componentDidMount() {
         // "pathOriginal": item.url,
         //                 "pathThumbnail": item.thumbnail
         let dataEdit = this.props.navigation.getParam('dataEdit', null).images
+
         var imageUris = []
         for (let i = 0; i < dataEdit.length; i++) {
             imageUris.push({
+                id: dataEdit[i].id,
                 url: dataEdit[i].pathOriginal,
                 thumbnail: dataEdit[i].pathThumbnail,
             })
         }
-        console.log(imageUris, 'img')
+        let imagesEdit = imageUris.slice()
         this.setState({
-            imageUris
+            imageUris,
+            imagesEdit
         })
     }
     render() {
@@ -134,13 +162,13 @@ export default class EditDrugScanScreen extends Component {
                                                 : null
                                     }
                                 </View>
-                                <TouchableOpacity onPress={this.removeImage.bind(this, index)} style={styles.buttonClose} >
+                                <TouchableOpacity onPress={() => this.removeImage(item, index)} style={styles.buttonClose} >
                                     <ScaledImage source={require("@images/new/ic_close.png")} width={16} />
                                 </TouchableOpacity>
                             </View>)
                         }
                     </View>
-                    <InsertInfoDrug dataEdit={this.props.navigation.getParam('dataEdit', null)} imageUris={this.state.imageUris} ></InsertInfoDrug>
+                    <InsertInfoDrug dataEdit={this.props.navigation.getParam('dataEdit', null)} imageUris={this.state.imagesEdit} ></InsertInfoDrug>
                     <ImagePicker ref={ref => this.imagePicker = ref} />
                 </ScrollView>
             </ActivityPanel>

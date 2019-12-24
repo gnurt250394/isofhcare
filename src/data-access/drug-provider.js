@@ -3,9 +3,10 @@ import string from 'mainam-react-native-string-utils';
 import constants from '@resources/strings';
 import datacacheProvider from '@data-access/datacache-provider';
 const drugService = 'http://10.0.0.98:8095'
+const searchDrugService = 'http://10.0.50.116:60785'
 module.exports = {
     createDrug(data, idDrug) {
-        console.log('CALL API')
+        console.log('CALL API',data)
         return new Promise((resolve, reject) => {
             client.requestApi(idDrug ? "put" : "post", `${drugService}/${constants.api.drug.create_drug}${idDrug ? `/${idDrug}` : ''}`, data, (s, e) => {
                 if (s) {
@@ -88,9 +89,9 @@ module.exports = {
             })
         })
     },
-    searchDrug(text) {
+    searchDrug(keyword, page, size) {
         return new Promise((resolve, reject) => {
-            client.requestApi('get', `${drugService}/${constants.api.drug.search_drug}?expression=${text}&filters=name&lang=en&page=1&size=10`, {}, (s, e) => {
+            client.requestApi('get', `${searchDrugService}/${constants.api.drug.search_by_name}${keyword}&lang=en&page=${page}&size=${size}`, {}, (s, e) => {
                 if (s)
                     resolve(s)
                 else

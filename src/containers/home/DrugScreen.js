@@ -43,7 +43,7 @@ class drugScreen extends Component {
         this.getListDrug()
     }
     componentWillReceiveProps(nextProps) {
-        console.log('nextProps: ', nextProps);
+
         if (nextProps.dataDrug) {
             // this.setState(prev => ({
             this.getListDrug()
@@ -115,7 +115,7 @@ class drugScreen extends Component {
         let dataError = data ? "" : this.state.dataError;
         if (!data || !this.state.data || data.id != this.state.data.id) {
             this.setState({ data, dataError })
-            console.log('data: ', data);
+
         } else {
             this.setState({ data, dataError });
         }
@@ -148,12 +148,12 @@ class drugScreen extends Component {
     }
     onSetOption = index => {
         const dataSelect = this.state.dataSelect
-        console.log(dataSelect, 'dataSelectdataSelect')
+
         try {
             switch (index) {
                 case 0:
                     if (dataSelect && dataSelect.images.length) {
-                        console.log('chay vao ifffff')
+
                         this.props.navigation.navigate('editDrugScan', { dataEdit: dataSelect })
                     }
                     return
@@ -161,7 +161,7 @@ class drugScreen extends Component {
                     drugProvider.deleteDrug(dataSelect.id).then(res => {
                         this.getListDrug()
                     }).catch(err => {
-                        console.log('err: ', err);
+
 
                     })
                     return;
@@ -174,7 +174,7 @@ class drugScreen extends Component {
     listEmpty = () => !this.state.isLoading && <Text style={styles.none_data}>{constants.not_found}</Text>
 
     render() {
-        console.log(this.state.dataDrug, 'this.state.dataDrug')
+
         return (
             <ActivityPanel
                 style={{ flex: 1 }}
@@ -182,7 +182,7 @@ class drugScreen extends Component {
                 hideActionbar={true}
                 // isLoading={this.state.isLoading}
                 backgroundHeader={require('@images/new/drug/ic_bg_drug2.png')}
-                containerStyle={{ marginTop: 150, borderTopLeftRadius: 10, borderTopRightRadius: 10}}
+                containerStyle={{ marginTop: 150, borderTopLeftRadius: 10, borderTopRightRadius: 10 }}
                 titleStyle={{
                     color: '#FFF'
                 }}
