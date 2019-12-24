@@ -28,6 +28,7 @@ import DeviceInfo from 'react-native-device-info';
 import firebase from 'react-native-firebase';
 import client from '@utils/client-utils';
 import connectionUtils from "@utils/connection-utils";
+
 class LoginScreen extends Component {
 	constructor(props) {
 		super(props);
@@ -282,9 +283,10 @@ class LoginScreen extends Component {
 	render() {
 		return (
 
-			<ScrollView
-				showsVerticalScrollIndicator={false}
-				keyboardShouldPersistTaps="handled"
+			<ActivityPanel
+				style={{ flex: 1 }}
+				hideActionbar={true}
+				showFullScreen={true}
 
 			>
 				<ImageBackground
@@ -313,7 +315,7 @@ class LoginScreen extends Component {
 												placeholderStyle={styles.placeholder} value={value} underlineColor={'#CCCCCC'}
 												inputStyle={styles.textInputStyle}
 												placeholderTextColor='#000'
-												placeholderStyle={{ fontWeight: '300',fontSize:16 }}
+												placeholderStyle={{ fontWeight: '300', fontSize: 16 }}
 												labelStyle={styles.labelStyle} placeholder={constants.phone} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
 											onChangeText={s => this.setState({ phone: s })}
 											errorStyle={styles.errorStyle}
@@ -400,7 +402,7 @@ class LoginScreen extends Component {
 					<View style={styles.viewBottom}></View>
 				</ImageBackground>
 
-			</ScrollView>
+			</ActivityPanel>
 
 		);
 	}
@@ -521,7 +523,7 @@ const styles = StyleSheet.create({
 
 	},
 	labelStyle: { paddingTop: 10, color: '#53657B', fontSize: 16 },
-	imgBg: { flex: 1, backgroundColor: '#000', height: DEVICE_HEIGHT },
+	imgBg: { flex: 1, backgroundColor: '#000', },
 	txLogin: { color: '#fff', fontSize: 22, alignSelf: 'center', marginTop: 100 },
 	viewCard: { flex: 1, justifyContent: 'center', },
 	viewLogin: { marginHorizontal: 22 },
