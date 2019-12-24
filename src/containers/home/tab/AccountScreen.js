@@ -199,17 +199,20 @@ class AccountScreen extends Component {
   }
   render() {
     return (
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={styles.styleScrollView}
+      <ActivityPanel
+        style={{ flex: 1, }}
+        hideActionbar={true}
+        showFullScreen={true}
+        containerStyle = {{backgroundColor:'#F8F8F8'}}
       >
-        {this.props.userApp.isLogin
-          ? this.renderCurrentUserInfo()
-          : this.renderViewUserNotLogin()}
+        <ScrollView showsVerticalScrollIndicator={false} >
+          {this.props.userApp.isLogin
+            ? this.renderCurrentUserInfo()
+            : this.renderViewUserNotLogin()}
 
-        {this.props.userApp.isLogin ? (
-          <View>
-            {/* <TouchableOpacity
+          {this.props.userApp.isLogin ? (
+            <View>
+              {/* <TouchableOpacity
                 style={[styles.itemMenu, { marginTop: 40 }]}
                 onPress={() => {
                   this.props.navigation.navigate("emptyScreen", {
@@ -226,7 +229,7 @@ class AccountScreen extends Component {
                   height={24}
                 />
               </TouchableOpacity> */}
-            {/* <TouchableOpacity
+              {/* <TouchableOpacity
               style={[styles.itemMenu]}
               onPress={() => {
                 this.props.navigation.navigate("ehealth");
@@ -239,68 +242,68 @@ class AccountScreen extends Component {
                 height={24}
               />
             </TouchableOpacity> */}
-            <TouchableOpacity
-              style={[styles.itemMenu, { marginTop: 40, borderTopColor: "#00000011", borderTopWidth: 1 }]}
-              onPress={() => {
-                this.props.navigation.navigate("listProfileUser");
-              }}
-            >
-              <ScaledImage
-                source={require("@images/new/account/ic_profile.png")}
-                width={22}
-                height={22}
-              />
-              <Text style={styles.itemText}>Thành viên gia đình</Text>
-              <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
-            </TouchableOpacity>
-            <View style={styles.borderMenu}></View>
-            <TouchableOpacity
-              style={[styles.itemMenu]}
-              onPress={() => {
-                this.props.navigation.navigate("ehealth");
-              }}
-            >
-              <ScaledImage
-                source={require("@images/new/account/ic_ehealth.png")}
-                width={26}
-                height={26}
-              />
-              <Text style={[styles.itemText, { marginLeft: 27 }]}>Y bạ điện tử</Text>
-              <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
-            </TouchableOpacity>
-            <View style={styles.borderMenu}></View>
-            <TouchableOpacity
-              style={[styles.itemMenu]}
-              onPress={() => {
-                this.props.navigation.navigate("listBookingHistory", {
-                  title: "Lịch khám"
-                });
-              }}
-            >
-              <ScaledImage
-                source={require("@images/new/account/ic_booking.png")}
-                width={24}
-                height={24}
-              />
-              <Text style={styles.itemText}>Lịch khám</Text>
-              <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
-            </TouchableOpacity>
-            <View style={styles.borderMenu}></View>
-            <TouchableOpacity
-              style={[styles.itemMenu, { borderBottomColor: "#00000011", borderBottomWidth: 1 }]}
-              onPress={() => {
-                snackbar.show("Chức năng đang phát triển");
-              }}
-            >
-              <ScaledImage
-                source={require("@images/new/account/ic_tranfer.png")}
-                width={24}
-                height={24}
-              />
-              <Text style={[styles.itemText, { marginLeft: 22, }]}>Lịch sử giao dịch</Text>
-              <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
-            </TouchableOpacity>
-            {/* <TouchableOpacity
+              <TouchableOpacity
+                style={[styles.itemMenu, { marginTop: 40, borderTopColor: "#00000011", borderTopWidth: 1 }]}
+                onPress={() => {
+                  this.props.navigation.navigate("listProfileUser");
+                }}
+              >
+                <ScaledImage
+                  source={require("@images/new/account/ic_profile.png")}
+                  width={22}
+                  height={22}
+                />
+                <Text style={styles.itemText}>Thành viên gia đình</Text>
+                <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
+              </TouchableOpacity>
+              <View style={styles.borderMenu}></View>
+              <TouchableOpacity
+                style={[styles.itemMenu]}
+                onPress={() => {
+                  this.props.navigation.navigate("ehealth");
+                }}
+              >
+                <ScaledImage
+                  source={require("@images/new/account/ic_ehealth.png")}
+                  width={26}
+                  height={26}
+                />
+                <Text style={[styles.itemText, { marginLeft: 27 }]}>Y bạ điện tử</Text>
+                <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
+              </TouchableOpacity>
+              <View style={styles.borderMenu}></View>
+              <TouchableOpacity
+                style={[styles.itemMenu]}
+                onPress={() => {
+                  this.props.navigation.navigate("listBookingHistory", {
+                    title: "Lịch khám"
+                  });
+                }}
+              >
+                <ScaledImage
+                  source={require("@images/new/account/ic_booking.png")}
+                  width={24}
+                  height={24}
+                />
+                <Text style={styles.itemText}>Lịch khám</Text>
+                <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
+              </TouchableOpacity>
+              <View style={styles.borderMenu}></View>
+              <TouchableOpacity
+                style={[styles.itemMenu, { borderBottomColor: "#00000011", borderBottomWidth: 1 }]}
+                onPress={() => {
+                  snackbar.show("Chức năng đang phát triển");
+                }}
+              >
+                <ScaledImage
+                  source={require("@images/new/account/ic_tranfer.png")}
+                  width={24}
+                  height={24}
+                />
+                <Text style={[styles.itemText, { marginLeft: 22, }]}>Lịch sử giao dịch</Text>
+                <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
+              </TouchableOpacity>
+              {/* <TouchableOpacity
                 style={[styles.itemMenu]}
                 onPress={this.navigate_to()}
               >
@@ -312,7 +315,7 @@ class AccountScreen extends Component {
                 />
               </TouchableOpacity> */}
 
-            {/* <TouchableOpacity
+              {/* <TouchableOpacity
                 style={[
                   styles.itemMenu,
                   this.state.showSetting
@@ -335,29 +338,29 @@ class AccountScreen extends Component {
                   height={24}
                 />
               </TouchableOpacity> */}
-            <TouchableOpacity
-              style={[styles.itemMenu, { marginVertical: 20, borderTopColor: "#00000011", borderTopWidth: 1, borderBottomColor: "#00000011", borderBottomWidth: 1 }]}
-              onPress={() => {
-                this.props.navigation.navigate("changePassword");
-              }}
-            >
-              <ScaledImage
-                source={require("@images/new/account/ic_change_pass.png")}
-                width={24}
-                height={24}
-              />
-              <Text style={styles.itemText}>Đổi mật khẩu</Text>
-              <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
-            </TouchableOpacity>
-          </View>
-        ) : null}
-        {this.state.showSetting && (
-          <View>
+              <TouchableOpacity
+                style={[styles.itemMenu, { marginVertical: 20, borderTopColor: "#00000011", borderTopWidth: 1, borderBottomColor: "#00000011", borderBottomWidth: 1 }]}
+                onPress={() => {
+                  this.props.navigation.navigate("changePassword");
+                }}
+              >
+                <ScaledImage
+                  source={require("@images/new/account/ic_change_pass.png")}
+                  width={24}
+                  height={24}
+                />
+                <Text style={styles.itemText}>Đổi mật khẩu</Text>
+                <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
+              </TouchableOpacity>
+            </View>
+          ) : null}
+          {this.state.showSetting && (
+            <View>
 
-            {
-              /* login with finger*/
-            }
-            {/* <TouchableOpacity
+              {
+                /* login with finger*/
+              }
+              {/* <TouchableOpacity
               style={[styles.itemMenu, { paddingLeft: 40 }]}
               onPress={this.onFingerClick}
             >
@@ -380,103 +383,104 @@ class AccountScreen extends Component {
                   style={styles.popup}
                 />
               </Modal> */}
-          </View>
-        )}
-        {/* {
+            </View>
+          )}
+          {/* {
           this.state.showSetting && <TouchableOpacity style={[styles.itemMenu, { paddingLeft: 40 }]}>
             <Text style={styles.itemText}>Đăng nhập vân tay</Text>
             <ScaledImage style={{ tintColor: '#008D6F' }} source={require("@images/new/ic_menu_fingerprint.png")} width={24} height={24} />
           </TouchableOpacity>
         } */}
-        <TouchableOpacity
-          style={[styles.itemMenu, { borderTopColor: "#00000011", borderTopWidth: 1 }]}
-          onPress={() => {
-            this.props.navigation.navigate("about");
-          }}
-        >
-          <ScaledImage
-            source={require("@images/new/account/ic_about_isc.png")}
-            width={24}
-            height={24}
-          />
-          <Text style={styles.itemText}>Về iSofH</Text>
-          <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
-        </TouchableOpacity>
-        <View style={[styles.borderMenu, { width: '95%' }]}></View>
-        <TouchableOpacity
-          style={[styles.itemMenu]}
-          onPress={() => {
-            Linking.openURL(
-              "mailto:support@isofhcare.vn?subject=Hỗ trợ sử dụng app ISofhCare&body="
-            );
-          }}
-        ><ScaledImage
-            source={require("@images/new/account/ic_support.png")}
-            width={24}
-            height={24}
-          />
-          <Text style={styles.itemText}>Hỗ trợ</Text>
-          <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
-        </TouchableOpacity>
-        <View style={[styles.borderMenu, { width: '95%' }]}></View>
-        <TouchableOpacity
-          style={[styles.itemMenu]}
-          onPress={() => {
-            Linking.openURL(
-              "mailto:support@isofhcare.vn?subject=Báo lỗi quá trình sử dụng app ISofhCare&body="
-            );
-          }}
-        ><ScaledImage
-            source={require("@images/new/account/ic_report.png")}
-            width={24}
-            height={24}
-          />
-          <Text style={styles.itemText}>Báo lỗi</Text>
-          <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
-        </TouchableOpacity>
-        <View style={[styles.borderMenu, { width: '95%' }]}></View>
-        <TouchableOpacity
-          style={[styles.itemMenu, { borderBottomColor: "#00000011", borderBottomWidth: 1 }]}
-          onPress={() => {
-            this.props.navigation.navigate("terms");
-          }}
-        >
-          <ScaledImage
-            source={require("@images/new/account/ic_rules.png")}
-            width={24}
-            height={24}
-          />
-          <Text style={styles.itemText}>Điều khoản sử dụng</Text>
-          <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
-        </TouchableOpacity>
-        {this.props.userApp.isLogin && (
           <TouchableOpacity
-            style={[styles.itemMenu, { marginTop: 10, marginVertical: 20, borderTopColor: "#00000011", borderTopWidth: 1, borderBottomColor: "#00000011", borderBottomWidth: 1 }]}
+            style={[styles.itemMenu, { borderTopColor: "#00000011", borderTopWidth: 1 }]}
             onPress={() => {
-              this.props.dispatch(redux.userLogout());
-              if (this.props.onLogout) this.props.onLogout();
+              this.props.navigation.navigate("about");
             }}
           >
             <ScaledImage
-              source={require("@images/new/account/ic_logout.png")}
+              source={require("@images/new/account/ic_about_isc.png")}
               width={24}
               height={24}
             />
-            <Text style={styles.itemText}>Đăng xuất</Text>
+            <Text style={styles.itemText}>Về iSofH</Text>
             <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
           </TouchableOpacity>
-        )}
-        <TouchableOpacity style={[{ backgroundColor: '#f8f8f8', }, this.props.userApp.isLogin ? {} : { top: 10 }]} onPress={() => {
-          snackbar.show("Đang kiểm tra cập nhật", "success");
-          codePushUtils.checkupDate();
-        }}>
-          <Text style={[styles.itemText, { color: '#00000080' }]}>{'Phiên bản ' + DeviceInfo.getVersion() + '.' + DeviceInfo.getBuildNumber()}</Text>
-        </TouchableOpacity>
-        <View style={styles.viewSpaceBottom}>
-          <TouchableOpacity onPress={this.openLinkHotline} style={styles.btnHotline}><ScaledImage source={require('@images/new/homev2/ic_hotline.png')} height={20}></ScaledImage><Text style={{ marginLeft: 10, fontSize: 14 }}>Hotline: <Text style={{ fontWeight: 'bold', fontSize: 14 }}>1900299983</Text></Text></TouchableOpacity>
-        </View>
+          <View style={[styles.borderMenu, { width: '95%' }]}></View>
+          <TouchableOpacity
+            style={[styles.itemMenu]}
+            onPress={() => {
+              Linking.openURL(
+                "mailto:support@isofhcare.vn?subject=Hỗ trợ sử dụng app ISofhCare&body="
+              );
+            }}
+          ><ScaledImage
+              source={require("@images/new/account/ic_support.png")}
+              width={24}
+              height={24}
+            />
+            <Text style={styles.itemText}>Hỗ trợ</Text>
+            <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
+          </TouchableOpacity>
+          <View style={[styles.borderMenu, { width: '95%' }]}></View>
+          <TouchableOpacity
+            style={[styles.itemMenu]}
+            onPress={() => {
+              Linking.openURL(
+                "mailto:support@isofhcare.vn?subject=Báo lỗi quá trình sử dụng app ISofhCare&body="
+              );
+            }}
+          ><ScaledImage
+              source={require("@images/new/account/ic_report.png")}
+              width={24}
+              height={24}
+            />
+            <Text style={styles.itemText}>Báo lỗi</Text>
+            <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
+          </TouchableOpacity>
+          <View style={[styles.borderMenu, { width: '95%' }]}></View>
+          <TouchableOpacity
+            style={[styles.itemMenu, { borderBottomColor: "#00000011", borderBottomWidth: 1 }]}
+            onPress={() => {
+              this.props.navigation.navigate("terms");
+            }}
+          >
+            <ScaledImage
+              source={require("@images/new/account/ic_rules.png")}
+              width={24}
+              height={24}
+            />
+            <Text style={styles.itemText}>Điều khoản sử dụng</Text>
+            <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
+          </TouchableOpacity>
+          {this.props.userApp.isLogin && (
+            <TouchableOpacity
+              style={[styles.itemMenu, { marginTop: 10, marginVertical: 20, borderTopColor: "#00000011", borderTopWidth: 1, borderBottomColor: "#00000011", borderBottomWidth: 1 }]}
+              onPress={() => {
+                this.props.dispatch(redux.userLogout());
+                if (this.props.onLogout) this.props.onLogout();
+              }}
+            >
+              <ScaledImage
+                source={require("@images/new/account/ic_logout.png")}
+                width={24}
+                height={24}
+              />
+              <Text style={styles.itemText}>Đăng xuất</Text>
+              <ScaledImage height={10} source={require("@images/new/booking/ic_next.png")} />
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity style={[{ backgroundColor: '#f8f8f8', }, this.props.userApp.isLogin ? {} : { top: 10 }]} onPress={() => {
+            snackbar.show("Đang kiểm tra cập nhật", "success");
+            codePushUtils.checkupDate();
+          }}>
+            <Text style={[styles.itemText, { color: '#00000080' }]}>{'Phiên bản ' + DeviceInfo.getVersion() + '.' + DeviceInfo.getBuildNumber()}</Text>
+          </TouchableOpacity>
+          <View style={styles.viewSpaceBottom}>
+            <TouchableOpacity onPress={this.openLinkHotline} style={styles.btnHotline}><ScaledImage source={require('@images/new/homev2/ic_hotline.png')} height={20}></ScaledImage><Text style={{ marginLeft: 10, fontSize: 14 }}>Hotline: <Text style={{ fontWeight: 'bold', fontSize: 14 }}>1900299983</Text></Text></TouchableOpacity>
+          </View>
+        </ScrollView>
         <ImagePicker ref={ref => (this.imagePicker = ref)} />
-      </ScrollView>
+      </ActivityPanel>
     );
   }
   handleFingerprintDismissed = () => {
