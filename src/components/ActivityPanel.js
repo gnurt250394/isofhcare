@@ -67,9 +67,9 @@ class ActivityPanel extends Component {
                     {
                         (this.props.showBackgroundHeader || this.props.showBackgroundHeader === undefined) ?
                             this.props.backgroundHeader ?
-                                <ScaledImage source={this.props.backgroundHeader} width={DEVICE_WIDTH} style={[{ position: "absolute", top: 0, left: 0, right: 0},this.props.backgroundStyle]} />
+                                <Image source={this.props.backgroundHeader} width={DEVICE_WIDTH} style={[{ position: "absolute", top: 0, left: 0, right: 0,width:DEVICE_WIDTH},this.props.backgroundStyle]} />
                                 :
-                                <ScaledImage source={require("@images/app/header.png")} width={DEVICE_WIDTH} style={{ position: "absolute", top: 0, left: 0, right: 0 }} />
+                                <ScaledImage source={require("@images/app/header2.png")} width={DEVICE_WIDTH} style={{ position: "absolute", top: 0, left: 0, right: 0 }} />
                             :
                             null
                     }
