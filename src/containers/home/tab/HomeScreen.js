@@ -477,13 +477,17 @@ class HomeScreen extends Component {
       return name.charAt(0).toUpperCase() + name.slice(1);
     return name;
   }
-  getHeightImage = (source) => {
-    let img = resolveAssetSource(source);
-    return (img.height / img.width * DEVICE_WIDTH)
+
+  getHeightImage = () => {
+    let height = (DEVICE_HEIGHT / 4) - this.state.height + StatusBar.currentHeight
+    if (height >= 0) {
+      return height
+    } else {
+      return 0
+    }
   }
   render() {
     const headerHome = require("@images/app/header.png")
-    let statusBarHeight = Platform.OS == 'android' ? StatusBar.currentHeight : 0
     return (
       <ActivityPanel
         transparent={true}
@@ -510,7 +514,7 @@ class HomeScreen extends Component {
             refreshControl={this.refreshControl()}
             showsVerticalScrollIndicator={false}
           >
-            <View style={[styles.scroll, { top: (DEVICE_HEIGHT / 4) - this.state.height + statusBarHeight }]}>
+            <View style={[styles.scroll, { top: this.getHeightImage() }]}>
 
               <View
                 onLayout={(e) => {
@@ -567,10 +571,10 @@ const styles = StyleSheet.create({
     height: 137,
     shadowColor: '#222',
     shadowOffset: {
-      width: 2,
-      height: 2
+      width: 1,
+      height: 1
     },
-    shadowOpacity: 0.6
+    shadowOpacity: 0.4
   },
   groupImageButton: {
     position: 'relative',

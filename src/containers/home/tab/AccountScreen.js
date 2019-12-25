@@ -64,6 +64,7 @@ class AccountScreen extends Component {
                           let current = this.props.userApp.currentUser;
                           user.bookingNumberHospital = current.bookingNumberHospital;
                           user.bookingStatus = current.bookingStatus;
+                          user.avatar = s.data.user.avatar.absoluteUrl()
                           this.props.dispatch(redux.userLogin(user));
                         } else {
                           snackbar.show(
