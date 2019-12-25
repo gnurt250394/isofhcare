@@ -23,6 +23,7 @@ import { FlatList } from "react-native-gesture-handler";
 import dateUtils from 'mainam-react-native-date-utils';
 import drugProvider from '@data-access/drug-provider'
 import ActionSheet from 'react-native-actionsheet'
+import snackbar from "@utils/snackbar-utils";
 
 const devices_width = Dimensions.get('window').width
 const padding = Platform.select({
@@ -157,12 +158,16 @@ class drugScreen extends Component {
         try {
             switch (index) {
                 case 0:
-                    if (dataSelect && dataSelect.images && dataSelect.images.length) {
-                        this.props.navigation.navigate('editDrugScan', { dataEdit: this.state.dataSelect })
-                        return
-                    } if (dataSelect && dataSelect.medicines && dataSelect.medicines.length) {
-                        this.props.navigation.navigate('editDrugInput', { dataEdit: this.state.dataSelect })
-                        return
+                    if (dataSelect.state == 'STORED') {
+                        if (dataSelect && dataSelect.images && dataSelect.images.length) {
+                            this.props.navigation.navigate('editDrugScan', { dataEdit: this.state.dataSelect })
+                            return
+                        } if (dataSelect && dataSelect.medicines && dataSelect.medicines.length) {
+                            this.props.navigation.navigate('editDrugInput', { dataEdit: this.state.dataSelect })
+                            return
+                        }
+                    } else {
+                        snackbar.show('Đơn thuốc không được phép thay đổi', 'danger')
                     }
                 case 1:
                     drugProvider.deleteDrug(dataSelect.id).then(res => {

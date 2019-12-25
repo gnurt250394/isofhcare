@@ -310,12 +310,16 @@ class DetailsDrugScreen extends Component {
     }
     onEdit = () => {
         let dataDetail = this.state.dataDetail
-        if (dataDetail && dataDetail.images && dataDetail.images.length) {
-            this.props.navigation.navigate('editDrugScan', { dataEdit: this.state.dataDetail })
-            return
-        } if (dataDetail && dataDetail.medicines && dataDetail.medicines.length) {
-            this.props.navigation.navigate('editDrugInput', { dataEdit: this.state.dataDetail })
-            return
+        if (dataDetail.state == 'STORED') {
+            if (dataDetail && dataDetail.images && dataDetail.images.length) {
+                this.props.navigation.navigate('editDrugScan', { dataEdit: this.state.dataDetail })
+                return
+            } if (dataDetail && dataDetail.medicines && dataDetail.medicines.length) {
+                this.props.navigation.navigate('editDrugInput', { dataEdit: this.state.dataDetail })
+                return
+            }
+        } else {
+            snackbar.show('Đơn thuốc không được phép thay đổi', 'danger')
         }
     }
     render() {
