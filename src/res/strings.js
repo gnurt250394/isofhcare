@@ -1021,7 +1021,7 @@ module.exports = {
       delete_drug: isofhcare_service + 'orders/v1/prescriptions',
       search_drug: isofhcare_service + 'pharmacy/v1/medicine/search',
       search_by_name: '/v1/search?expression=',
-
+      delete_address: isofhcare_service + 'orders/v1/addresses/'
     }
   }
 };

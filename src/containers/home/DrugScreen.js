@@ -53,6 +53,7 @@ class drugScreen extends Component {
         }
     }
     getListDrug = () => {
+        console.log('get list')
         this.setState({
             isLoading: true
         }, () => {
@@ -120,9 +121,13 @@ class drugScreen extends Component {
             this.setState({ data, dataError });
         }
     }
+    selectDetails = (data) => {
+        this.getListDrug()
+    }
     onSelectDetails = (id) => {
         this.props.navigation.navigate('detailsDrug', {
-            id: id
+            id: id,
+            onSelected: this.selectDetails.bind(this),
         })
 
     }

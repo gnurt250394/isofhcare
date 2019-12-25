@@ -72,7 +72,17 @@ class DetailsDrugScreen extends Component {
                     this.setState({
                         isLoading: false
                     })
+                    let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
+                    if (callback) {
+                        callback(res.data);
+                        this.props.navigation.pop();
+                    }
 
+                }).catch(err => {
+                    this.setState({
+                        isLoading: false
+                    })
+                    snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại')
                 })
             })
         } else {
@@ -86,6 +96,11 @@ class DetailsDrugScreen extends Component {
                         this.setState({
                             isLoading: false
                         })
+                        let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
+                        if (callback) {
+                            callback(res.data);
+                            this.props.navigation.pop();
+                        }
 
                     })
                 })
@@ -305,6 +320,7 @@ class DetailsDrugScreen extends Component {
     }
     render() {
         let dataDetail = this.state.dataDetail
+        console.log('dataDetail: ', dataDetail);
         return (
             <ActivityPanel titleStyle={styles.txTitle} isLoading={this.state.isLoading} style={styles.container} title={"Chi tiết đơn thuốc"} showFullScreen={true} menuButton={<TouchableOpacity onPress={this.onEdit} style={{ padding: 5, marginRight: 16 }}>
                 <ScaledImage source={require('@images/new/drug/ic_edit.png')} height={20}></ScaledImage>
@@ -312,7 +328,7 @@ class DetailsDrugScreen extends Component {
                 <ScrollView style={{ backgroundColor: '#f2f2f2' }}>
                     <ScaledImage height={100} source={require('@images/new/drug/ic_bg_find_drug.png')}></ScaledImage>
                     <View style={styles.viewTitle}>
-                        <Text style={styles.txTitle}>{dataDetail && dataDetail.name}</Text>
+                        <Text style={styles.txTitleMenu}>{dataDetail && dataDetail.name}</Text>
                         <Text style={styles.txContent}>Ngày tạo: {dataDetail && dataDetail.created ? dataDetail.created.toDateObject().format("dd/MM/yyyy") : ''}</Text>
                         <Text><Text style={styles.txContent}>Trạng thái: </Text>{this.renderStatus()}</Text>
                     </View>
@@ -514,7 +530,12 @@ const styles = StyleSheet.create({
         fontStyle: 'italic',
     },
     txTitle: { color: '#fff', marginLeft: 50, fontSize: 18 },
-
+    txTitleMenu: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#000',
+        textAlign: 'left'
+    }
 })
 function mapStateToProps(state) {
     return {
