@@ -24,6 +24,7 @@ class InputLocationScreen extends Component {
             txSearch: '',
             listAddress: []
         }
+        this.timeout = 0
     }
     componentDidMount() {
         let dataLocation = this.props.navigation.getParam('dataLocation', null)
@@ -105,10 +106,10 @@ class InputLocationScreen extends Component {
                 })
         })
     }
-    onFindLocation = (text) => {
-        this.setState({
-            address: text
-        }, () => {
+    onFindLocation(text) {
+        this.setState({ address: text })
+        if (this.timeout) clearTimeout(this.timeout);
+        this.timeout = setTimeout(() => {
             RNGooglePlaces.getAutocompletePredictions(text)
                 .then((results) => {
                     console.log(results);
@@ -119,39 +120,9 @@ class InputLocationScreen extends Component {
                     // suggestions and it is a simplified Google Place object.
                 })
                 .catch(error => console.log(error.message));
-        })
-        // if (this.state.typingTimeout) {
-        //     clearTimeout(this.state.typingTimeout);
-        // }
-        // this.setState({
-        //     typing: false,
-        //     typingTimeout: setTimeout(function () {
-        //         RNGooglePlaces.getAutocompletePredictions(text)
-        //             .then((results) => {
-        //                 console.log(results);
-        //                 if (results && results.length) {
-        //                     var listAddress = []
-        //                     for (let i = 0; i < results.length; i++) {
-        //                         listAddress.push({
-        //                             id: i,
-        //                             name: results[i].secondaryText
-        //                         })
-        //                     }
-        //                     this.setState({
-        //                         listAddress
-        //                     })
-
-        //                     console.log(listAddress, 'listAddress')
-
-        //                 }
-        //                 // place represents user's selection from the
-        //                 // suggestions and it is a simplified Google Place object.
-        //             })
-        //             .catch(error => console.log(error.message));  // error is a Javascript Error object
-        //     }, 2000)
-        // });
-
+        }, 500);
     }
+
     render() {
         return (
             <ActivityPanel

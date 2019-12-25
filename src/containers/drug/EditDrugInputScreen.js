@@ -14,6 +14,7 @@ export default class EditDrugInputScreen extends Component {
         this.state = {
             selectedItems: dataEdit.medicines
         };
+        this.timeout = 0
     }
     renderItem = ({ item, index }) => {
         if (!item.action || item.action !== 'DELETE') {
@@ -49,26 +50,10 @@ export default class EditDrugInputScreen extends Component {
             console.log(err)
         })
     }
-    demoTimeOut = () => {
-        if (!this.state.typing) {
-            this.setState({ typing: true })
-            console.log('typing')
-        } else {
-            clearTimeout(timeoutVar);
-        }
 
-        //var lastTypingTime = (new Date()).getTime();
-
-        timeoutVar = setTimeout(() => {
-            console.log('Stop typing')
-            this.setState({ typing: false });
-        }, 2000);
-    }
-    onChangeText = (text) => {
-        this.setState({
-            txSearch: text,
-        })
-        if (text.length > 3) {
+    onChangeText(text) {
+        if (this.timeout) clearTimeout(this.timeout);
+        this.timeout = setTimeout(() => {
             drugProvider.searchDrug(text, 0, 5).then(res => {
                 if (res && res.length) {
                     this.setState({
@@ -78,39 +63,9 @@ export default class EditDrugInputScreen extends Component {
                 }
 
             }).catch(err => {
-                console.log(err)
+
             })
-        }
-        // if (this.state.typingTimeout) {
-        //     clearTimeout(this.state.typingTimeout);
-        // }
-        // var itemsDrug = []
-        // this.setState({
-        //     typing: false,
-        //     typingTimeout: setTimeout(function () {
-        //         drugProvider.searchDrug(text, 0, 5).then(res => {
-        //             if (res && res.length) {
-        //                 this.setState({
-        //                     itemsDrug: res,
-        //                     isShowList: true,
-        //                 })
-        //             }
-
-        //         }).catch(err => {
-        //             console.log(err)
-        //         })
-
-        //     }, 2000),
-
-        // }, () => {
-        //     this.setState({
-        //         itemsDrug: itemsDrug,
-        //         isShowList: true,
-        //     })
-        //     console.log(itemsDrug, 'itemsDrugitemsDrug')
-
-        // });
-
+        }, 500);
     }
     onRemoveItem = (item) => {
         const items = this.state.selectedItems;
