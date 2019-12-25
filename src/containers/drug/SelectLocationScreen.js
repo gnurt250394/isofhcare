@@ -89,13 +89,13 @@ class SelectLocationScreen extends Component {
     };
 
     addLocation = (location) => {
-
-        let locationError = location ? "" : this.state.locationError;
-        if (!location || !this.state.location || location.id != this.state.location.id) {
-            this.state.dataLocation.unshift(location)
-        } else {
-            this.onGetLocation()
-        }
+        this.onGetLocation()
+        // let locationError = location ? "" : this.state.locationError;
+        // if (!location || !this.state.location || location.id != this.state.location.id) {
+        //     this.state.dataLocation.unshift(location)
+        // } else {
+        //     this.onGetLocation()
+        // }
     }
     editLocation = (location) => {
         let locationError = location ? "" : this.state.locationError;
