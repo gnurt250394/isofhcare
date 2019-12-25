@@ -6,7 +6,7 @@ const drugService = 'http://10.0.0.98:8095'
 const searchDrugService = 'http://10.0.50.116:60785'
 module.exports = {
     createDrug(data, idDrug) {
-        console.log('CALL API',data)
+        console.log('CALL API', data)
         return new Promise((resolve, reject) => {
             client.requestApi(idDrug ? "put" : "post", `${drugService}/${constants.api.drug.create_drug}${idDrug ? `/${idDrug}` : ''}`, data, (s, e) => {
                 if (s) {
@@ -92,6 +92,16 @@ module.exports = {
     searchDrug(keyword, page, size) {
         return new Promise((resolve, reject) => {
             client.requestApi('get', `${searchDrugService}/${constants.api.drug.search_by_name}${keyword}&lang=en&page=${page}&size=${size}`, {}, (s, e) => {
+                if (s)
+                    resolve(s)
+                else
+                    reject(e)
+            })
+        })
+    },
+    deleteLocation(id) {
+        return new Promise((resolve, reject) => {
+            client.requestApi('delete', `${drugService}/${constants.api.drug.delete_address}${id}`, {}, (s, e) => {
                 if (s)
                     resolve(s)
                 else
