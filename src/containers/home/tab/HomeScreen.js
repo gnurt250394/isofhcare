@@ -32,6 +32,11 @@ import * as Animatable from 'react-native-animatable';
 import advertiseProvider from "@data-access/advertise-provider";
 import hospitalProvider from '@data-access/hospital-provider';
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
+const X_WIDTH = 375;
+const X_HEIGHT = 812;
+
+const XSMAX_WIDTH = 414;
+const XSMAX_HEIGHT = 896;
 class HomeScreen extends Component {
   constructor(props) {
     super(props);
@@ -479,7 +484,13 @@ class HomeScreen extends Component {
   }
 
   getHeightImage = () => {
-    let height = (DEVICE_HEIGHT / 4) - this.state.height + StatusBar.currentHeight
+    let isIPhoneX = false;
+
+    if (Platform.OS === 'ios' && !Platform.isPad && !Platform.isTVOS) {
+      isIPhoneX = DEVICE_WIDTH === X_WIDTH && DEVICE_HEIGHT === X_HEIGHT || DEVICE_WIDTH === XSMAX_WIDTH && DEVICE_HEIGHT === XSMAX_HEIGHT;
+    }
+    let statusHeight = Platform.OS == 'android' ? StatusBar.currentHeight : (isIPhoneX ? 44 : 28)
+    let height = (DEVICE_HEIGHT / 4) - this.state.height + statusHeight
     if (height >= 0) {
       return height
     } else {
@@ -514,7 +525,7 @@ class HomeScreen extends Component {
             refreshControl={this.refreshControl()}
             showsVerticalScrollIndicator={false}
           >
-            <View style={[styles.scroll, { top: this.getHeightImage() }]}>
+            <View style={[styles.scroll, { paddingTop: this.getHeightImage() }]}>
 
               <View
                 onLayout={(e) => {
