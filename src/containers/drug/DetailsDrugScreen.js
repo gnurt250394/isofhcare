@@ -188,7 +188,6 @@ class DetailsDrugScreen extends Component {
                 return (
                     <View style={styles.viewLocation}>
                         <Text style={styles.txLabel}>Nhà thuốc có bán đơn thuốc của bạn</Text>
-                        <TouchableOpacity style={styles.btnViewAddress}><Text style={styles.txViewAddress}>Xem địa chỉ của bạn</Text></TouchableOpacity>
                         <FlatList
                             data={this.state.dataDetail.pharmacies}
                             extraData={this.state}
@@ -205,7 +204,6 @@ class DetailsDrugScreen extends Component {
                         <View>
                             <View style={styles.viewLocation} >
                                 <Text style={styles.txLabel}>Nhà thuốc có bán đơn thuốc của bạn</Text>
-                                <TouchableOpacity style={styles.btnViewAddress}><Text style={styles.txViewAddress}>Xem địa chỉ của bạn</Text></TouchableOpacity>
                             </View>
                             <View style={styles.viewFinding}><TouchableOpacity onPress={this.findDrug} style={[styles.btnFind,]}><Text style={styles.txFind}>Tìm nhà thuốc</Text></TouchableOpacity></View>
                         </View>
@@ -227,7 +225,6 @@ class DetailsDrugScreen extends Component {
                 return (
                     <View style={styles.viewLocation}>
                         <Text style={styles.txLabel}>Nhà thuốc có bán đơn thuốc của bạn</Text>
-                        <TouchableOpacity style={styles.btnViewAddress}><Text style={styles.txViewAddress}>Xem địa chỉ của bạn</Text></TouchableOpacity>
                         <View style={styles.viewFinding}>
                             <Text style={styles.txFinding}>Đang xử lý đơn thuốc...</Text>
                         </View>
@@ -342,6 +339,10 @@ class DetailsDrugScreen extends Component {
                         </View>
                         <Text style={styles.txLabel}>Ghi chú</Text>
                         <Text style={styles.txContent}>{dataDetail && dataDetail.note}</Text>
+                        {dataDetail && dataDetail.address && dataDetail.address.address ? <View>
+                            <Text style={styles.txLabel}>Địa chỉ</Text>
+                            <Text style={styles.txContent}>{dataDetail && dataDetail.address && dataDetail.address.address}</Text>
+                        </View> : <View></View>}
                     </View>
                     {this.renderViewByStatus()}
                 </ScrollView>
