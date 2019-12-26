@@ -15,6 +15,7 @@ import ScaleImage from 'mainam-react-native-scaleimage';
 import Field from "mainam-react-native-form-validate/Field";
 import HeaderBar from '@components/account/HeaderBar'
 const DEVICE_HEIGHT = Dimensions.get("window").height;
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 class ChangePasswordScreen extends Component {
     constructor(props) {
@@ -90,10 +91,9 @@ class ChangePasswordScreen extends Component {
                 isLoading={this.state.isLoading}
                 containerStyle={{ marginTop: 50 }}
             >
-                <ScrollView
-                    showsVerticalScrollIndicator={false}
+                <KeyboardAwareScrollView
                     style={styles.scroll}
-                    keyboardShouldPersistTaps="handled"
+                    showsVerticalScrollIndicator={false}
                 >
                     <HeaderBar style={styles.header}></HeaderBar>
                     <View
@@ -106,115 +106,113 @@ class ChangePasswordScreen extends Component {
                         <Text style={{ fontSize: 24, fontWeight: '500', color: '#00BA99', alignSelf: 'center' }}>ĐẶT LẠI MẬT KHẨU</Text>
                         {/* <ScaleImage source={require("@images/logo.png")} width={120} /> */}
                     </View>
-                    <KeyboardAvoidingView behavior="padding" >
-                        <View>
-                            <Form ref={ref => (this.form = ref)} style={styles.form}>
-                                <Field style={styles.inputPass}>
-                                    <TextField
-                                        getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
-                                            placeholderStyle={{ fontSize: 16, fontWeight: '300' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.enter_old_password}
-                                            secureTextEntry={this.state.secureTextOldEntry}
-                                            placeholderTextColor='#000'
-                                            allowFontScaling={false}
-                                            onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
-                                        onChangeText={s => {
-                                            this.setState({ passwordOld: s });
-                                        }}
+                    <View>
+                        <Form ref={ref => (this.form = ref)} style={styles.form}>
+                            <Field style={styles.inputPass}>
+                                <TextField
+                                    getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
+                                        placeholderStyle={{ fontSize: 16, fontWeight: '300' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={constants.enter_old_password}
+                                        secureTextEntry={this.state.secureTextOldEntry}
+                                        placeholderTextColor='#000'
                                         allowFontScaling={false}
-                                        errorStyle={styles.errorStyle}
-                                        validate={{
-                                            rules: {
-                                                required: true,
-                                                minlength: 6
-                                            },
-                                            messages: {
-                                                required: constants.old_password_not_null,
-                                                minlength: constants.password_length_8
-                                            }
-                                        }}
-                                        placeholder={constants.input_password}
-                                        autoCapitalize={"none"}
-                                    />
-                                    {
-                                        this.state.passwordOld ? (this.state.secureTextOldEntry ? (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 35, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowOldPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 35, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowOldPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
-                                    }
-                                </Field>
-                                <Field style={styles.inputPass}>
+                                        onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
+                                    onChangeText={s => {
+                                        this.setState({ passwordOld: s });
+                                    }}
+                                    allowFontScaling={false}
+                                    errorStyle={styles.errorStyle}
+                                    validate={{
+                                        rules: {
+                                            required: true,
+                                            minlength: 6
+                                        },
+                                        messages: {
+                                            required: constants.old_password_not_null,
+                                            minlength: constants.password_length_8
+                                        }
+                                    }}
+                                    placeholder={constants.input_password}
+                                    autoCapitalize={"none"}
+                                />
+                                {
+                                    this.state.passwordOld ? (this.state.secureTextOldEntry ? (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 35, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowOldPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 35, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowOldPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
+                                }
+                            </Field>
+                            <Field style={styles.inputPass}>
 
-                                    <TextField
-                                        getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
-                                            placeholderStyle={{ fontSize: 16, fontWeight: '300' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Nhập mật khẩu mới"}
-                                            secureTextEntry={this.state.secureTextNewEntry}
-                                            allowFontScaling={false}
-                                            placeholderTextColor='#000'
-                                            onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
-                                        onChangeText={s => {
-                                            this.setState({ passwordNew: s });
-                                        }}
+                                <TextField
+                                    getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
+                                        placeholderStyle={{ fontSize: 16, fontWeight: '300' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Nhập mật khẩu mới"}
+                                        secureTextEntry={this.state.secureTextNewEntry}
                                         allowFontScaling={false}
-                                        errorStyle={styles.errorStyle}
-                                        validate={{
-                                            rules: {
-                                                required: true,
-                                                minlength: 6
-                                            },
-                                            messages: {
-                                                required: constants.new_password_not_null,
-                                                minlength: constants.password_length_8
-                                            }
-                                        }}
-                                        placeholder={constants.input_password}
-                                        autoCapitalize={"none"}
-                                    />
-                                    {
-                                        this.state.passwordNew ? (this.state.secureTextNewEntry ? (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 35, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowNewPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 35, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowNewPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
-                                    }
-                                </Field>
-                                <Field style={styles.inputPass}>
-                                    <TextField
-                                        getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
-                                            placeholderStyle={{ fontSize: 16, fontWeight: '300' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Xác nhận mật khẩu mới"}
-                                            secureTextEntry={this.state.secureTextNew2Entry}
-                                            placeholderTextColor='#000'
-                                            allowFontScaling={false}
-                                            onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
-                                        onChangeText={s => {
-                                            this.setState({ confirm_password: s });
-                                        }}
-                                        errorStyle={styles.errorStyle}
+                                        placeholderTextColor='#000'
+                                        onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
+                                    onChangeText={s => {
+                                        this.setState({ passwordNew: s });
+                                    }}
+                                    allowFontScaling={false}
+                                    errorStyle={styles.errorStyle}
+                                    validate={{
+                                        rules: {
+                                            required: true,
+                                            minlength: 6
+                                        },
+                                        messages: {
+                                            required: constants.new_password_not_null,
+                                            minlength: constants.password_length_8
+                                        }
+                                    }}
+                                    placeholder={constants.input_password}
+                                    autoCapitalize={"none"}
+                                />
+                                {
+                                    this.state.passwordNew ? (this.state.secureTextNewEntry ? (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 35, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowNewPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 35, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowNewPass}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
+                                }
+                            </Field>
+                            <Field style={styles.inputPass}>
+                                <TextField
+                                    getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
+                                        placeholderStyle={{ fontSize: 16, fontWeight: '300' }} value={value} inputStyle={styles.textInputStyle} labelStyle={styles.labelStyle} placeholder={"Xác nhận mật khẩu mới"}
+                                        secureTextEntry={this.state.secureTextNew2Entry}
+                                        placeholderTextColor='#000'
                                         allowFontScaling={false}
-                                        validate={{
-                                            rules: {
-                                                required: true,
-                                                equalTo: this.state.passwordNew,
-                                                minlength: 6
-                                            },
-                                            messages: {
-                                                required: constants.confirm_new_password_not_null,
-                                                minlength: constants.confirm_password_length_8,
-                                                equalTo: constants.new_password_not_match
-                                            }
-                                        }}
-                                        placeholder={constants.input_password}
-                                        autoCapitalize={"none"}
-                                    />
-                                    {
-                                        this.state.confirm_password ? (this.state.secureTextNew2Entry ? (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 35, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowNewPass2}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 35, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowNewPass2}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
-                                    }
-                                </Field>
-                            </Form>
-                        </View>
-                    </KeyboardAvoidingView>
-                </ScrollView>
-                <View style={{ backgroundColor: '#fff' }}>
-                    <TouchableOpacity
-                        disabled={this.state.disabled}
-                        onPress={this.change.bind(this)}
-                        style={styles.updatePass}>
-                        <Text style={styles.txbtnUpdate}>{constants.update_to_up_case}</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={{ height: 50 }}></View>
+                                        onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
+                                    onChangeText={s => {
+                                        this.setState({ confirm_password: s });
+                                    }}
+                                    errorStyle={styles.errorStyle}
+                                    allowFontScaling={false}
+                                    validate={{
+                                        rules: {
+                                            required: true,
+                                            equalTo: this.state.passwordNew,
+                                            minlength: 6
+                                        },
+                                        messages: {
+                                            required: constants.confirm_new_password_not_null,
+                                            minlength: constants.confirm_password_length_8,
+                                            equalTo: constants.new_password_not_match
+                                        }
+                                    }}
+                                    placeholder={constants.input_password}
+                                    autoCapitalize={"none"}
+                                />
+                                {
+                                    this.state.confirm_password ? (this.state.secureTextNew2Entry ? (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 35, justifyContent: 'center', alignItems: 'center', }} onPress={this.onShowNewPass2}><ScaleImage style={{ tintColor: '#7B7C7D' }} resizeMode={'contain'} height={20} source={require('@images/new/ic_hide_pass.png')}></ScaleImage></TouchableOpacity>) : (<TouchableOpacity style={{ position: 'absolute', right: 10, top: 35, justifyContent: 'center', alignItems: 'center' }} onPress={this.onShowNewPass2}><ScaleImage style={{ tintColor: '#7B7C7D' }} height={20} source={require('@images/new/ic_show_pass.png')}></ScaleImage></TouchableOpacity>)) : (<Field></Field>)
+                                }
+                            </Field>
+                        </Form>
+                    </View>
+                    <View style={{ backgroundColor: '#fff' }}>
+                        <TouchableOpacity
+                            disabled={this.state.disabled}
+                            onPress={this.change.bind(this)}
+                            style={styles.updatePass}>
+                            <Text style={styles.txbtnUpdate}>{constants.update_to_up_case}</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{ height: 50 }}></View>
+                </KeyboardAwareScrollView>
             </ActivityPanel>
         )
     }
@@ -238,7 +236,8 @@ const styles = StyleSheet.create({
     inputPass: {
         position: 'relative',
         alignSelf: 'stretch',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginTop:10
     },
     input: {
         maxWidth: 300,

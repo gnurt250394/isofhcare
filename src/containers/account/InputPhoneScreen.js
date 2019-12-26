@@ -93,10 +93,9 @@ class ResetPasswordScreen extends Component {
                 isLoading={this.state.isLoading}
                 containerStyle={{ marginTop: 50 }}
             >
-                <ScrollView
+                <KeyboardAwareScrollView
                     showsVerticalScrollIndicator={false}
                     style={styles.scroll}
-                    keyboardShouldPersistTaps="handled"
                 >
                     <HeaderBar style={styles.header}></HeaderBar>
                     <View
@@ -138,15 +137,15 @@ class ResetPasswordScreen extends Component {
                             </Form>
                         </View>
                     </KeyboardAvoidingView>
-                </ScrollView>
-                <View style={{ backgroundColor: '#fff' }}>
-                    <TouchableOpacity
-                        onPress={this.changePassword.bind(this)}
-                        style={styles.updatePass}>
-                        <Text style={styles.txbtnUpdate}>{constants.continue}</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={{ height: 50 }}></View>
+                    <View style={{ backgroundColor: '#fff' }}>
+                        <TouchableOpacity
+                            onPress={this.changePassword.bind(this)}
+                            style={styles.updatePass}>
+                            <Text style={styles.txbtnUpdate}>{constants.continue}</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{ height: 50 }}></View>
+                </KeyboardAwareScrollView>
             </ActivityPanel>
         )
     }
@@ -156,7 +155,7 @@ const styles = StyleSheet.create({
     form: { marginTop: 50 },
     header: { paddingHorizontal: 0 },
     txbtnUpdate: { color: '#FFF', fontSize: 17 },
-    updatePass: { backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center', marginBottom: 20 },
+    updatePass: { backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center', marginBottom: 20,marginTop:70 },
     container: { flex: 1, backgroundColor: '#000', height: DEVICE_HEIGHT },
     btnEye: {
         position: 'absolute',
