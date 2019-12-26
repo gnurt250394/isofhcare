@@ -125,17 +125,17 @@ class AddBookingScreen extends Component {
     }
     // componentWillReceiveProps = (props) => {
     //     let profile = props.navigation.getParam('profile')
-        
+
     //     let listServicesSelected = props.navigation.getParam('listServicesSelected')
-        
+
     //     let schedule = props.navigation.getParam('schedule')
-        
+
     //     let hospital = props.navigation.getParam('hospital')
-        
+
     //     let bookingDate = props.navigation.getParam('bookingDate')
-        
+
     //     let allowBooking = props.navigation.getParam('allowBooking')
-        
+
     //     if (profile || listServicesSelected || schedule || hospital || bookingDate || allowBooking) {
     //         this.getProfile()
     //     }
@@ -205,6 +205,7 @@ class AddBookingScreen extends Component {
         });
     }
     selectProfile(profile) {
+        console.log('profile: ', profile);
         this.setState({ profile, allowBooking: true });
     }
     // selectServiceType(serviceType) {
@@ -239,10 +240,10 @@ class AddBookingScreen extends Component {
         let servicesError = services ? "" : this.state.servicesError;
         if (!services || !this.state.services || services.id != this.state.services.id) {
             this.setState({ listServicesSelected: services, allowBooking: true, servicesError })
-            
+
         } else {
             this.setState({ listServicesSelected: [], allowBooking: true, servicesError: "", servicesError });
-            
+
 
         }
     }
@@ -416,12 +417,12 @@ class AddBookingScreen extends Component {
             });
             return
         }
-        
-        
-        
-        
-        
-        
+
+
+
+
+
+
         if (this.state.contact) {
             this.setState({ contactError: "" })
         } else {
@@ -491,21 +492,20 @@ class AddBookingScreen extends Component {
 
             connectionUtils.isConnected().then(s => {
                 this.setState({ isLoading: true }, () => {
-                    
+
                     const { userApp } = this.props
-                    
+
                     let services = this.state.listServicesSelected.map(e => ({ price: e.monetaryAmount.value, serviceId: e.id, name: e.name }));
                     let bookingDate = this.state.bookingDate.format("yyyy-MM-dd");
-                    
-                    
-                    
+                    let idUser = this.props.userApp.currentUser.id
                     bookingProvider.createBooking(
                         bookingDate,
                         reason,
                         this.state.hospital.hospital,
                         services,
-                        userApp.currentUser,
-                        this.state.schedule.label
+                        this.state.profile && this.state.profile.medicalRecords,
+                        this.state.schedule.label,
+                        idUser
                     ).then(s => {
                         this.setState({ isLoading: false }, () => {
                             if (s && s.id) {
@@ -589,7 +589,7 @@ class AddBookingScreen extends Component {
         })
     }
     selectDateTime = () => {
-        
+
         this.props.navigation.navigate("selectTime", {
             service: this.state.listServicesSelected,
             isNotHaveSchedule: true,
