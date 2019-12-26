@@ -132,6 +132,7 @@ const styles = StyleSheet.create({
         width: '92%',
         height: '100%',
         padding: 10,
+        color:'#000'
     },
     listSelect: {
         padding: 10
