@@ -13,6 +13,8 @@ import ActivityPanel from "@components/ActivityPanel";
 import dateUtils from "mainam-react-native-date-utils";
 import constants from '@resources/strings';
 import BookingDoctorProvider from '@data-access/booking-doctor-provider';
+import profileProvider from '@data-access/profile-provider'
+
 class ListBookingHistoryScreen extends Component {
     constructor(props) {
         super(props);
@@ -25,11 +27,35 @@ class ListBookingHistoryScreen extends Component {
         };
     }
     componentDidMount() {
-        // this.onRefresh();
-        this.getData()
+        this.getListProfile()
+    }
+    getListProfile = () => {
+        profileProvider.getListProfile().then(s => {
+            switch (s.code) {
+                case 0:
+                    if (s.data && s.data && s.data.length != 0) {
+
+                        let data = s.data;
+                        let phoneProfile = ''
+                        let length = data.length
+                        for (let i = 0; i < length - 1; i++) {
+                            phoneProfile += data[i].medicalRecords.phone + ','
+
+                        }
+                        phoneProfile += data[length - 1].medicalRecords.phone
+                        this.setState({
+                            phoneProfile
+                        }, () => {
+                            this.getData()
+                        })
+                    }
+                    break;
+            }
+        });
     }
     getData = () => {
-        BookingDoctorProvider.getListBooking(this.props.userApp.currentUser.phone, this.state.page, this.state.size).then(res => {
+        let { phoneProfile } = this.state
+        BookingDoctorProvider.getListBooking(phoneProfile, this.props.userApp.currentUser.id, this.state.page, this.state.size).then(res => {
             this.setState({ isLoading: false, refreshing: false })
             if (res && res.length > 0) {
                 this.formatData(res)
@@ -178,7 +204,7 @@ class ListBookingHistoryScreen extends Component {
     };
     renderItem = ({ item }) => {
         let date = new Date(item.date)
-        
+
         return (
             <TouchableOpacity style={styles.listBtn} onPress={() => this.onClickItem(item)}>
                 <View style={styles.row}>
