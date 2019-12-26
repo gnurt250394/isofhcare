@@ -152,7 +152,7 @@ module.exports = {
      * @param {object} room 
      */
 
-  createBooking(date, description, hospitals, items, patient, time,idUser) {
+  createBooking(date, description, hospitals, items, patient, time, idUser) {
     return new Promise((resolve, reject) => {
       let hospital = { id: hospitals && hospitals.id || '', name: hospitals && hospitals.name || '', address: hospitals && hospitals.address || '' }
       console.log('hospital: ', hospital);
@@ -177,7 +177,9 @@ module.exports = {
           // thông tin bệnh nhân đặt khám
           patient,
           //giờ đặt khám
-          time
+          time,
+          //owner : true: đặt khám chính chủ, false: đặt khám hộ
+          owner: patient.status == 1 ? true : false
         }, (s, e) => {
           if (s) resolve(s);
           else reject(e);

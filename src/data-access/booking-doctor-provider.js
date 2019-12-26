@@ -121,7 +121,9 @@ module.exports = {
                     // Mã lịch đặt khám
                     scheduleId,
                     //giờ đặt khám
-                    time
+                    time,
+                    //owner : true: đặt khám chính chủ, false: đặt khám hộ
+                    owner: patient.status == 1 ? true : false
                 }, (s, e) => {
                     if (s) resolve(s);
                     else reject(e);
@@ -215,13 +217,13 @@ module.exports = {
             );
         });
     },
-    getListBooking(patientId, page, size) {
+    getListBooking(phoneProfile, patientId, page, size) {
         return new Promise((resolve, reject) => {
             let url = constants.api.booking.doctor.get_list_booking.replace('patientId', patientId)
             client.requestApi(
                 "get",
                 client.serviceBooking +
-                `${url}?page=${page}&size=${size}&sort=desc&properties=created`
+                `${url}?phones=${phoneProfile}&page=${page}&size=${size}&sort=desc&properties=created`
                 , {}, (s, e) => {
                     if (s) resolve(s);
                     else reject(e);
