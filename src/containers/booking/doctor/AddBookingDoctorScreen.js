@@ -24,6 +24,8 @@ import walletProvider from '@data-access/wallet-provider';
 import StarRating from 'react-native-star-rating';
 import bookingDoctorProvider from '@data-access/booking-doctor-provider'
 import ViewHeader from '@components/booking/doctor/ViewHeader';
+import profileProvider from '@data-access/profile-provider'
+
 class AddBookingDoctorScreen extends Component {
     constructor(props) {
         super(props);
@@ -64,12 +66,12 @@ class AddBookingDoctorScreen extends Component {
 
                 this.setState({ profile: s })
             } else {
-                medicalRecordProvider.getByUser(this.props.userApp.currentUser.id, 1, 100).then(s => {
+                profileProvider.getListProfile().then(s => {
                     switch (s.code) {
                         case 0:
-                            if (s.data && s.data.data && s.data.data.length != 0) {
+                            if (s.data && s.data && s.data.length != 0) {
 
-                                let data = s.data.data;
+                                let data = s.data;
                                 let profile = data.find(item => {
                                     return item.medicalRecords.status == 1;
                                 });

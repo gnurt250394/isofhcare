@@ -26,6 +26,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import BookingTimePicker from '@components/booking/BookingTimePicker';
 import bookingProvider from '@data-access/booking-provider';
 import serviceProvider from '@data-access/service-provider';
+import profileProvider from '@data-access/profile-provider'
 
 import scheduleProvider from '@data-access/schedule-provider';
 class AddBookingScreen extends Component {
@@ -105,12 +106,13 @@ class AddBookingScreen extends Component {
 
     }
     getProfile = () => {
-        medicalRecordProvider.getByUser(this.props.userApp.currentUser.id, 1, 100).then(s => {
+        
+        profileProvider.getListProfile().then(s => {
             switch (s.code) {
                 case 0:
-                    if (s.data && s.data.data && s.data.data.length != 0) {
+                    if (s.data &&  s.data.length != 0) {
 
-                        let data = s.data.data;
+                        let data = s.data;
                         let profile = data.find(item => {
                             return item.medicalRecords.status == 1;
                         });
