@@ -32,6 +32,11 @@ import * as Animatable from 'react-native-animatable';
 import advertiseProvider from "@data-access/advertise-provider";
 import hospitalProvider from '@data-access/hospital-provider';
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
+const X_WIDTH = 375;
+const X_HEIGHT = 812;
+
+const XSMAX_WIDTH = 414;
+const XSMAX_HEIGHT = 896;
 class HomeScreen extends Component {
   constructor(props) {
     super(props);
@@ -145,7 +150,12 @@ class HomeScreen extends Component {
           icon: require("@images/new/homev2/ic_drug.png"),
           text: "Thuốc",
           onPress: () => {
-            snackbar.show('Tính năng đang phát triển')
+            if (this.props.userApp.isLogin)
+              this.props.navigation.navigate("drugTab");
+            else
+              this.props.navigation.navigate("login", {
+                nextScreen: { screen: 'drugTab' }
+              });
           }
         },
         {
@@ -477,13 +487,23 @@ class HomeScreen extends Component {
       return name.charAt(0).toUpperCase() + name.slice(1);
     return name;
   }
-  getHeightImage = (source) => {
-    let img = resolveAssetSource(source);
-    return (img.height / img.width * DEVICE_WIDTH)
+
+  getHeightImage = () => {
+    let isIPhoneX = false;
+
+    if (Platform.OS === 'ios' && !Platform.isPad && !Platform.isTVOS) {
+      isIPhoneX = DEVICE_WIDTH === X_WIDTH && DEVICE_HEIGHT === X_HEIGHT || DEVICE_WIDTH === XSMAX_WIDTH && DEVICE_HEIGHT === XSMAX_HEIGHT;
+    }
+    let statusHeight = Platform.OS == 'android' ? StatusBar.currentHeight : (isIPhoneX ? 44 : 28)
+    let height = (DEVICE_HEIGHT / 4) - this.state.height + statusHeight
+    if (height >= 0) {
+      return height
+    } else {
+      return 0
+    }
   }
   render() {
     const headerHome = require("@images/app/header.png")
-    let statusBarHeight = Platform.OS == 'android' ? StatusBar.currentHeight : 0
     return (
       <ActivityPanel
         transparent={true}
@@ -510,7 +530,7 @@ class HomeScreen extends Component {
             refreshControl={this.refreshControl()}
             showsVerticalScrollIndicator={false}
           >
-            <View style={[styles.scroll, { top: (DEVICE_HEIGHT / 4) - this.state.height + statusBarHeight }]}>
+            <View style={[styles.scroll, { paddingTop: this.getHeightImage() }]}>
 
               <View
                 onLayout={(e) => {
@@ -567,10 +587,10 @@ const styles = StyleSheet.create({
     height: 137,
     shadowColor: '#222',
     shadowOffset: {
-      width: 2,
-      height: 2
+      width: 1,
+      height: 1
     },
-    shadowOpacity: 0.6
+    shadowOpacity: 0.4
   },
   groupImageButton: {
     position: 'relative',

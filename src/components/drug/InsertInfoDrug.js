@@ -13,10 +13,10 @@ class InsertInfoDrug extends Component {
     constructor(props) {
         super(props);
         const dataEdit = this.props.dataEdit
-        console.log('dataEdit: ', dataEdit);
+
         this.state = {
             isScan: true,
-            imageUris: dataEdit && dataEdit.images ? dataEdit.images : [],
+            imageUris: [],
             name: dataEdit && dataEdit.name,
             note: dataEdit && dataEdit.note,
             location: dataEdit && dataEdit.address
@@ -58,8 +58,9 @@ class InsertInfoDrug extends Component {
         NavigationService.pop();
     }
     addMenuDrug = (isFinding) => {
-        let imageUris = this.props.imageUris
-        let dataDrug = this.props.dataDrug
+        var imageUris = this.props.imageUris
+        console.log('imageUris: ', imageUris);
+        var dataDrug = this.props.dataSearchDrug
         let addressId = this.state.location && this.state.location.id ? this.state.location.id : null
         let note = this.state.note
         let id = this.props.userApp.currentUser.id
@@ -90,12 +91,13 @@ class InsertInfoDrug extends Component {
             }
             var images = [];
             imageUris.forEach((item) => {
-                console.log('item: ', item);
+
                 if (images)
                     images.push({
-                        "action": "CREATE_OR_UPDATE",
-                        "pathOriginal": item.url,
-                        "pathThumbnail": item.thumbnail
+                        id: item.id ? item.id : null,
+                        action: item.action ? item.action : 'CREATE_OR_UPDATE',
+                        pathOriginal: item.url,
+                        pathThumbnail: item.thumbnail
                     })
             });
 
@@ -104,51 +106,84 @@ class InsertInfoDrug extends Component {
                 images: images,
                 name: name,
                 note: note,
-                ownerId: id,
+                // ownerId: id,
                 "type": "IMAGE",
                 isFinding: isFinding,
             }
             drugProvider.createDrug(data, idDrug).then(res => {
-                console.log('ressx', res)
-                if (res) {
-                    console.log('ressx')
+                console.log('resCreateDrug: ', res);
+
+                if (res && !this.props.dataEdit) {
+
                     snackbar.show('Tạo đơn thuốc thành công!', 'success')
                     this.onCreateSuccess(res)
                 } else {
+                    snackbar.show('Sửa đơn thuốc thành công!', 'success')
+                    this.onCreateSuccess(res)
                 }
             }).catch(err => {
-                console.log(err, 'đâsd')
+                if (err.response) {
+                    let status = err.response.data && err.response.data.status
+                    switch (status) {
+                        case 406:
+                            snackbar.show("Đơn thuốc không được phép thay đổi", 'danger')
+                            break
+                        default:
+                            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                            break
+                    }
+                } else {
+                    snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+
+                }
             })
             return
         } if (dataDrug && !imageUris) {
-            console.log(dataDrug, 'dataDrugdataDrug')
-            if (Object.keys(dataDrug).length == 0) {
+            if (dataDrug.length == 0) {
                 snackbar.show('Bạn cần nhập ít nhất một loại thuốc!', 'danger')
                 return
             }
+            var medicines = []
+            for (let i = 0; i < dataDrug.length; i++) {
+                medicines.push({
+                    id: dataDrug[i].id ? dataDrug[i].id : null,
+                    name: `${dataDrug[i].name ? dataDrug[i].name : ''} ${dataDrug[i].packing ? dataDrug[i].packing : ''}`,
+                    // "unit": dataDrug[i].unit,
+                    medicineId: dataDrug[i].medicineId,
+                    action: dataDrug[i].action ? dataDrug[i].action : 'CREATE_OR_UPDATE'
+                })
+            }
+
             let data2 = {
                 addressId: addressId,
-                "medicines": [
-                    {
-                        "action": "CREATE_OR_UPDATE",
-                        "id": 1,
-                        "name": "Paracetamol",
-                        "price": 100000,
-                        "quantity": 1,
-                        "unit": "mg",
-                        "type": "ADDITION",
-                        isFinding: isFinding
-                    }
-                ],
+                medicines: medicines,
                 name: name,
                 note: note,
-                ownerId: id
-
+                // ownerId: id,
+                isFinding: isFinding
             }
             drugProvider.createDrug(data2, idDrug).then(res => {
-                if (res) {
+                if (res && !this.props.dataEdit) {
                     snackbar.show('Tạo đơn thuốc thành công!', 'success')
                     this.onCreateSuccess(res)
+                } else {
+                    snackbar.show('Sửa đơn thuốc thành công!', 'success')
+                    this.onCreateSuccess(res)
+                }
+            }).catch(err => {
+                if (err.response) {
+                    let status = err.response.data && err.response.data.status
+                    switch (status) {
+                        case 406:
+                            snackbar.show("Đơn thuốc không được phép thay đổi", 'danger')
+                            break
+                        default:
+                            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                            break
+                    }
+                } else {
+                    snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+
                 }
             })
         }

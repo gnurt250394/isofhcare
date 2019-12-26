@@ -113,7 +113,7 @@ class DetailHistoryBookingScreen extends Component {
             case 'ACCEPTED':
                 return (
                     <View style={styles.statusTx}>
-                        <Text style={styles.txStatus}>Xác nhận đặt khám</Text>
+                        <Text style={styles.txStatus}>Đã duyệt</Text>
                     </View>
                 )
             case 'CHECKIN': return (
@@ -222,7 +222,6 @@ class DetailHistoryBookingScreen extends Component {
     onBackdropPress = () => this.setState({ isVisible: false })
     defaultImage = () => <ScaleImage resizeMode='cover' source={require("@images/new/user.png")} width={20} height={20} />
     render() {
-        console.log(this.state)
         const avatar = this.props.userApp.currentUser && this.props.userApp.currentUser.avatar ? { uri: this.props.userApp.currentUser.avatar } : require("@images/new/user.png")
         return (
             <ActivityPanel
