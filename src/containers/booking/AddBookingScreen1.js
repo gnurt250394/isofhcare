@@ -106,11 +106,11 @@ class AddBookingScreen extends Component {
 
     }
     getProfile = () => {
-        
+
         profileProvider.getListProfile().then(s => {
             switch (s.code) {
                 case 0:
-                    if (s.data &&  s.data.length != 0) {
+                    if (s.data && s.data.length != 0) {
 
                         let data = s.data;
                         let profile = data.find(item => {
@@ -481,17 +481,17 @@ class AddBookingScreen extends Component {
                     return;
                 }
             }
-            var images = "";
+            var images = [];
             this.state.imageUris.forEach((item) => {
-                if (images)
-                    images += ",";
-                images += item.url;
+                console.log('item: ', item);
+
+                images.push(item.url);
             });
             let reason = this.state.reason ? this.state.reason : ''
             let img = images ? images : ''
 
 
-
+            console.log('img: ', img);
             connectionUtils.isConnected().then(s => {
                 this.setState({ isLoading: true }, () => {
 
@@ -507,7 +507,8 @@ class AddBookingScreen extends Component {
                         services,
                         this.state.profile && this.state.profile.medicalRecords,
                         this.state.schedule.label,
-                        idUser
+                        idUser,
+                        img,
                     ).then(s => {
                         this.setState({ isLoading: false }, () => {
                             if (s && s.id) {
