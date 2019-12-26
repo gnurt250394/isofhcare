@@ -112,7 +112,7 @@ class DetailHistoryBookingScreen extends Component {
             case 'ACCEPTED':
                 return (
                     <View style={styles.statusTx}>
-                        <Text style={styles.txStatus}>Xác nhận đặt khám</Text>
+                        <Text style={styles.txStatus}>Đã duyệt</Text>
                     </View>
                 )
             case 'CHECKIN': return (
