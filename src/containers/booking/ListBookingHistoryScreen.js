@@ -29,7 +29,7 @@ class ListBookingHistoryScreen extends Component {
         this.getData()
     }
     getData = () => {
-        BookingDoctorProvider.getListBooking(this.props.userApp.currentUser.id, this.state.page, this.state.size).then(res => {
+        BookingDoctorProvider.getListBooking(this.props.userApp.currentUser.phone, this.state.page, this.state.size).then(res => {
             this.setState({ isLoading: false, refreshing: false })
             if (res && res.length > 0) {
                 this.formatData(res)
