@@ -117,8 +117,6 @@ class RegisterScreen extends Component {
     if (!this.form.isValid()) {
       return;
     }
-    let dateBirth = null
-    let gender = null
     let name = this.state.fullname
     let phone = this.state.phone
     let password = this.state.password
@@ -127,7 +125,7 @@ class RegisterScreen extends Component {
         isLoading: true,
         disabled: true
       }, () => {
-        userProvider.register(name, phone, password, dateBirth, gender).then(res => {
+        userProvider.register(name, phone, password).then(res => {
           if (res.code == 0) {
             this.setState({
               isLoading: false,
