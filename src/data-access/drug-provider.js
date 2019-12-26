@@ -3,6 +3,7 @@ import string from 'mainam-react-native-string-utils';
 import constants from '@resources/strings';
 import datacacheProvider from '@data-access/datacache-provider';
 const drugService = 'http://10.0.0.98:8095'
+const searchDrugService = 'http://10.0.50.151:60785'
 module.exports = {
     createDrug(data, idDrug) {
         console.log('CALL API')
