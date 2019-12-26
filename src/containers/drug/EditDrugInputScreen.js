@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, StyleSheet, ActivityIndicator } from 'react-native';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import { ScrollView, FlatList } from 'react-native-gesture-handler';
 import InsertInfoDrug from '@components/drug/InsertInfoDrug'
@@ -38,32 +38,48 @@ export default class EditDrugInputScreen extends Component {
         })
     }
     onSearch = () => {
-        drugProvider.searchDrug(this.state.txSearch, 0, 5).then(res => {
-            if (res && res.length) {
-                this.setState({
-                    itemsDrug: res,
-                    isShowList: true,
-                })
-            }
+        this.setState({
+            isSearch: true
+        }, () => {
+            drugProvider.searchDrug(this.state.txSearch, 0, 5).then(res => {
+                if (res && res.length) {
+                    this.setState({
+                        itemsDrug: res,
+                        isSearch: false,
+                        isShowList: true,
+                    })
+                }
 
-        }).catch(err => {
-            console.log(err)
+            }).catch(err => {
+                this.setState({
+                    isSearch: false,
+                })
+                console.log(err)
+            })
         })
     }
 
     onChangeText(text) {
         if (this.timeout) clearTimeout(this.timeout);
         this.timeout = setTimeout(() => {
-            drugProvider.searchDrug(text, 0, 5).then(res => {
-                if (res && res.length) {
+            this.setState({
+                isSearch: true
+            }, () => {
+                drugProvider.searchDrug(text, 0, 5).then(res => {
+                    if (res && res.length) {
+                        this.setState({
+                            itemsDrug: res,
+                            isShowList: true,
+                            isSearch: false,
+
+                        })
+                    }
+
+                }).catch(err => {
                     this.setState({
-                        itemsDrug: res,
-                        isShowList: true,
+                        isSearch: false,
                     })
-                }
-
-            }).catch(err => {
-
+                })
             })
         }, 500);
     }
@@ -86,7 +102,7 @@ export default class EditDrugInputScreen extends Component {
                     <View>
                         <View style={styles.viewInputDrug}>
                             <TextInput onChangeText={text => this.onChangeText(text)} placeholderTextColor={'#000'} placeholder={'Nhập tên thuốc, vd (Paracetamol 500mg)'} style={styles.inpuNameDrug}></TextInput>
-                            {/* {/* <ScaledImage height={20} source={require('@images/new/drug/ic_search.png')}></ScaledImage> */}
+                            {this.state.isSearch ? <ActivityIndicator size={'small'}></ActivityIndicator> : null}
                         </View>
                         {this.state.isShowList ?
                             <ScrollView>
