@@ -152,12 +152,12 @@ module.exports = {
      * @param {object} room 
      */
 
-  createBooking(date, description, hospitals, items, patient, time) {
+  createBooking(date, description, hospitals, items, patient, time,idUser) {
     return new Promise((resolve, reject) => {
       let hospital = { id: hospitals && hospitals.id || '', name: hospitals && hospitals.name || '', address: hospitals && hospitals.address || '' }
       console.log('hospital: ', hospital);
       patient = {
-        id: patient.id,
+        id: idUser,
         name: patient.name,
         phone: patient.phone
       }

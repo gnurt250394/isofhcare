@@ -79,7 +79,7 @@ module.exports = {
      * @param {string} time 
      * @param {object} room 
      */
-    create(date, description, doctor, hospitals, items, patient, scheduleId, time, room) {
+    create(date, description, doctor, hospitals, items, patient, scheduleId, time, room, idUser) {
         console.log('hospitals: ', hospitals);
         return new Promise((resolve, reject) => {
             let doctors = { id: doctor.id, name: doctor.name }
@@ -90,7 +90,7 @@ module.exports = {
                 "name": room.name
             }
             patient = {
-                id: patient.id,
+                id: idUser,
                 name: patient.name,
                 phone: patient.phone
             }

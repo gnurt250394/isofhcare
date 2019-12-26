@@ -327,8 +327,8 @@ class AddBookingDoctorScreen extends Component {
             return
         }
         let discount = voucher && voucher.price ? voucher.price : 0
-        // let patitent = profile && profile.medicalRecords
-        let patitent = this.props.userApp.currentUser
+        let patitent = profile && profile.medicalRecords
+        let idUser = this.props.userApp.currentUser.id
         if (this.isChecking) {
             this.isChecking = false
             connectionUtils.isConnected().then(s => {
@@ -344,7 +344,8 @@ class AddBookingDoctorScreen extends Component {
                         // this.getPaymentMethod(),
                         detailSchedule.id,
                         schedule.label,
-                        detailSchedule.room
+                        detailSchedule.room,
+                        idUser
                     ).then(s => {
                         this.setState({ isLoading: false }, () => {
                             if (s && s.reference) {
