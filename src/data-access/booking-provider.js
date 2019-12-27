@@ -149,6 +149,7 @@ module.exports = {
      * @param {string} payment 
      * @param {string} time 
      * @param {object} room 
+     * @param {array} images 
      */
 
   createBooking(date, description, hospitals, items, patient, time, idUser,images) {
