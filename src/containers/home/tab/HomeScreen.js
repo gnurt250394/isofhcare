@@ -54,6 +54,10 @@ class HomeScreen extends Component {
       }],
       listDataDoctor: [
         {
+          name: 'ThS Hoàng Lan Hiệp',
+          image: require('@images/new/homev2/doctor_demo4.jpg')
+        },
+        {
           name: 'BS Hoàng Thị Bạch Dương',
           image: require('@images/new/homev2/doctor_demo1.jpg')
         },
