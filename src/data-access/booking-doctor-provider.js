@@ -79,7 +79,7 @@ module.exports = {
      * @param {string} time 
      * @param {object} room 
      */
-    create(date, description, doctor, hospitals, items, patient, scheduleId, time, room, idUser) {
+    create(date, description, doctor, hospitals, items, patient, scheduleId, time, room, idUser,images) {
         console.log('hospitals: ', hospitals);
         return new Promise((resolve, reject) => {
             let doctors = { id: doctor.id, name: doctor.name }
@@ -123,7 +123,8 @@ module.exports = {
                     //giờ đặt khám
                     time,
                     //owner : true: đặt khám chính chủ, false: đặt khám hộ
-                    owner: patient.status == 1 ? true : false
+                    owner: patient.status == 1 ? true : false,
+                    images
                 }, (s, e) => {
                     if (s) resolve(s);
                     else reject(e);

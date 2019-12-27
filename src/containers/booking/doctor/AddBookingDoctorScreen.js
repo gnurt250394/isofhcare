@@ -328,6 +328,24 @@ class AddBookingDoctorScreen extends Component {
             this.setState({ profileError: 'Bạn chưa chọn người tới khám' })
             return
         }
+        for (var i = 0; i < this.state.imageUris.length; i++) {
+            if (this.state.imageUris[i].loading) {
+                snackbar.show(constants.msg.booking.image_loading, 'danger');
+                return;
+            }
+            if (this.state.imageUris[i].error) {
+                snackbar.show(constants.msg.booking.image_load_err, 'danger');
+                return;
+            }
+        }
+        var images = [];
+        this.state.imageUris.forEach((item) => {
+            console.log('item: ', item);
+
+            images.push(item.url);
+        });
+        let img = images ? images : ''
+        console.log('img: ', img);
         let discount = voucher && voucher.price ? voucher.price : 0
         let patitent = profile && profile.medicalRecords
         let idUser = this.props.userApp.currentUser.id
@@ -347,7 +365,8 @@ class AddBookingDoctorScreen extends Component {
                         detailSchedule.id,
                         schedule.label,
                         detailSchedule.room,
-                        idUser
+                        idUser,
+                        img
                     ).then(s => {
                         this.setState({ isLoading: false }, () => {
                             if (s && s.reference) {
