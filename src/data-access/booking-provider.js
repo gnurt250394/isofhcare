@@ -105,7 +105,7 @@ module.exports = {
       })
     })
   },
-  create(hospitalId, detailScheduleId, medicalRecordId, serviceTypeId, serviceId, bookingTime, content, images) {
+  create(hospitalId, detailScheduleId, medicalRecordId, serviceTypeId, serviceId, bookingTime, content) {
     return new Promise((resolve, reject) => {
       client.requestApi(
         "post",
@@ -118,7 +118,6 @@ module.exports = {
           booking: {
             bookingTime,
             content,
-            images
           }
         }, (s, e) => {
           if (s) resolve(s);
@@ -150,14 +149,15 @@ module.exports = {
      * @param {string} payment 
      * @param {string} time 
      * @param {object} room 
+     * @param {array} images 
      */
 
-  createBooking(date, description, hospitals, items, patient, time) {
+  createBooking(date, description, hospitals, items, patient, time, idUser,images) {
     return new Promise((resolve, reject) => {
       let hospital = { id: hospitals && hospitals.id || '', name: hospitals && hospitals.name || '', address: hospitals && hospitals.address || '' }
       console.log('hospital: ', hospital);
       patient = {
-        id: patient.id,
+        id: idUser,
         name: patient.name,
         phone: patient.phone
       }
@@ -177,7 +177,10 @@ module.exports = {
           // thông tin bệnh nhân đặt khám
           patient,
           //giờ đặt khám
-          time
+          time,
+          //owner : true: đặt khám chính chủ, false: đặt khám hộ
+          owner: patient.status == 1 ? true : false,
+          images
         }, (s, e) => {
           if (s) resolve(s);
           else reject(e);

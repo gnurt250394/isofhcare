@@ -70,9 +70,9 @@ module.exports = {
       );
     });
   },
-  resetPassword( passwordNew,phoneOrMail,otp ) {
+  resetPassword(passwordNew, phoneOrMail, otp) {
     return new Promise((resolve, reject) => {
-      var body = {passwordNew:passwordNew.toMd5(), phoneOrMail : phoneOrMail,code : otp};
+      var body = { passwordNew: passwordNew.toMd5(), phoneOrMail: phoneOrMail, code: otp };
       client.requestApi(
         "put",
         constants.api.user.resetPw,
@@ -204,8 +204,6 @@ module.exports = {
     name,
     phone,
     password,
-    dob,
-    gender,
   ) {
     return new Promise((resolve, reject) => {
       // reject({});
@@ -213,12 +211,10 @@ module.exports = {
         user: {
           password: password.toMd5(),
           name,
-          gender: gender,
           phone: phone,
-          dob,
           role: 1,
         },
-        applicationId: "457683741386685",
+        // applicationId: "457683741386685",
         socialType: 1,
         device: { os: os, deviceId: this.deviceId, token: this.deviceToken }
       };

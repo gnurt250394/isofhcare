@@ -41,7 +41,8 @@ class TabDoctorAndHospitalScreen extends Component {
             tabIndex,
             tabSelect: true,
             latitude: 0,
-            longitude: 0
+            longitude: 0,
+            item: this.props.navigation.getParam('item') || {}
         };
     }
     onSetPage = (page) => () => {
@@ -63,84 +64,7 @@ class TabDoctorAndHospitalScreen extends Component {
         });
     }
 
-    componentDidMount = () => {
-        this.getData()
-        // setTimeout(()=>{
-        //     this.setState({ data, isLoading: false, refreshing: false })
 
-        // },1000)
-    };
-    getData = () => {
-        const { page, size } = this.state
-
-
-        bookingDoctorProvider.getListDoctor(page, size).then(res => {
-            this.setState({ isLoading: false, refreshing: false })
-            if (res && res.length > 0) {
-                this.formatData(res)
-            } else {
-                this.formatData([])
-            }
-        }).catch(err => {
-            this.formatData([])
-            this.setState({ isLoading: false, refreshing: false })
-
-        })
-    }
-    formatData = (data) => {
-        if (data.length == 0) {
-            if (this.state.page == 0) {
-                this.setState({ data })
-            }
-        } else {
-            if (this.state.page == 0) {
-                this.setState({ data })
-            } else {
-                this.setState(preState => {
-                    return { data: [...preState.data, ...data] }
-                })
-            }
-        }
-    }
-    loadMore = () => {
-        const { page, size, data, keyword } = this.state
-        if (data.length >= (page + 1) * size) {
-            this.setState(preState => {
-                return {
-                    page: preState.page + 1
-                }
-            }, () => {
-                switch (this.state.type) {
-                    case TYPE.SEARCH:
-                        this.search()
-                        break;
-                    case TYPE.HOSPITAL:
-                        this.getDoctorHospitals()
-                        break;
-                    case TYPE.SPECIALIST:
-                        this.getDoctorSpecialists()
-                        break;
-                    default:
-                        this.getData()
-                        break;
-                }
-            })
-        }
-    }
-    goDetailDoctor = (item) => () => {
-        this.props.navigation.navigate('detailsDoctor', {
-            item
-        })
-    }
-    addBookingDoctor = (item) => () => {
-        this.props.navigation.navigate('selectTimeDoctor', {
-            item,
-            isNotHaveSchedule: true
-        })
-    }
-    goToAdvisory = () => {
-        this.props.navigation.navigate("listQuestion");
-    }
 
     onChangeText = (state) => (value) => {
         this.setState({ [state]: value })
@@ -336,6 +260,7 @@ class TabDoctorAndHospitalScreen extends Component {
         return (
             <ActivityPanel
                 actionbar={this.renderHeader}
+                transparent={true}
                 isLoading={this.state.isLoading}>
 
                 <View style={styles.container}>
@@ -360,15 +285,13 @@ class TabDoctorAndHospitalScreen extends Component {
                         </TouchableOpacity>
                     </View>
                     <IndicatorViewPager style={styles.flex}
-                        ref={viewPager => {
-                            this.viewPager = viewPager;
-                        }}
+                        ref={viewPager => this.viewPager = viewPager}
                         onPageScroll={this.onPageScroll}>
                         <View style={[styles.flex, { paddingTop: 10, }]}>
-                            <ListDoctorOfSpecialistScreen />
+                            <ListDoctorOfSpecialistScreen item={this.state.item} self={this} />
                         </View>
                         <View style={[styles.flex, { paddingTop: 10, }]}>
-                            <ListHospitalOfSpecialistScreen />
+                            <ListHospitalOfSpecialistScreen item={this.state.item} self={this} />
                         </View>
                     </IndicatorViewPager>
 
@@ -442,7 +365,7 @@ const styles = StyleSheet.create({
         zIndex: 100,
         left: 0,
         right: 0,
-        backgroundColor: '#27c8ad'
+        // backgroundColor: '#27c8ad'
     },
     actionbarStyle: {
         backgroundColor: '#27c8ad',
