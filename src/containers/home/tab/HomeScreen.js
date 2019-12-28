@@ -32,6 +32,37 @@ import * as Animatable from 'react-native-animatable';
 import advertiseProvider from "@data-access/advertise-provider";
 import hospitalProvider from '@data-access/hospital-provider';
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
+const X_WIDTH = 375;
+const X_HEIGHT = 812;
+
+const XSMAX_WIDTH = 414;
+const XSMAX_HEIGHT = 896;
+const listDataHospital = [{
+  name: 'Phòng khám Y khoa HN',
+  image: require('@images/new/homev2/csyt_demo.png')
+},
+{
+  name: 'Bệnh viện E',
+  image: require('@images/new/homev2/csyt_demo2.png')
+}]
+const listDataDoctor = [
+  {
+    name: 'ThS Hoàng Lan Hiệp',
+    image: require('@images/new/homev2/doctor_demo4.jpg')
+  },
+  {
+    name: 'BS Hoàng Thị Bạch Dương',
+    image: require('@images/new/homev2/doctor_demo1.jpg')
+  },
+  {
+    name: 'GS TS Phạm Minh Thông',
+    image: require('@images/new/homev2/doctor_demo2.jpg')
+  },
+  // {
+  //   name: 'PGS BS Trương Hồng Sơn',
+  //   image: require('@images/new/homev2/doctor_demo3.png')
+  // }
+]
 class HomeScreen extends Component {
   constructor(props) {
     super(props);
@@ -39,28 +70,6 @@ class HomeScreen extends Component {
       ads: [],
       refreshing: false,
       ads0: [],
-      listDataHospital: [{
-        name: 'Phòng khám Y khoa HN',
-        image: require('@images/new/homev2/csyt_demo.png')
-      },
-      {
-        name: 'Bệnh viện E',
-        image: require('@images/new/homev2/csyt_demo2.png')
-      }],
-      listDataDoctor: [
-        {
-          name: 'BS Hoàng Thị Bạch Dương',
-          image: require('@images/new/homev2/doctor_demo1.jpg')
-        },
-        {
-          name: 'GS TS Phạm Minh Thông',
-          image: require('@images/new/homev2/doctor_demo2.jpg')
-        },
-        // {
-        //   name: 'PGS BS Trương Hồng Sơn',
-        //   image: require('@images/new/homev2/doctor_demo3.png')
-        // }
-      ],
       featuresBooking: [
         {
           icon: require("@images/new/homev2/ic_doctor.png"),
@@ -145,7 +154,12 @@ class HomeScreen extends Component {
           icon: require("@images/new/homev2/ic_drug.png"),
           text: "Thuốc",
           onPress: () => {
-            snackbar.show('Tính năng đang phát triển')
+            if (this.props.userApp.isLogin)
+              this.props.navigation.navigate("drugTab");
+            else
+              this.props.navigation.navigate("login", {
+                nextScreen: { screen: 'drugTab' }
+              });
           }
         },
         {
@@ -159,29 +173,7 @@ class HomeScreen extends Component {
       height: 0
     };
   }
-  // getTopAds(reload) {
-  //   advertiseProvider.getTop(100, (s, e) => {
-  //     if (s) {
-  //       if (s.length == 0) {
-  //         if (!reload)
-  //           this.getTopAds(true);
-  //       }
-  //       this.setState({
-  //         ads: (s || []).filter(x => x.advertise && x.advertise.type == 2 && x.advertise.images),
-  //         ads0: (s || []).filter(x => x.advertise && x.advertise.type == 1 && x.advertise.images)
-  //         // .filter(item => { return item.advertise && item.advertise.images })
-  //       });
-  //     }
-  //     else {
-  //       if (!reload)
-  //         this.getTopAds(true);
-  //     }
-  //     if (e) {
-  //       if (!reload)
-  //         this.getTopAds(true);
-  //     }
-  //   });
-  // }
+
   onCallHotline = () => {
     Linking.openURL('tel:1900299983')
   }
@@ -193,49 +185,59 @@ class HomeScreen extends Component {
       "hardwareBackPress",
       this.handleHardwareBack.bind(this)
     );
-    // this.onRefresh();
     // this.onGetHospital()
+  }
+  renderItemDoctor = ({ item, index }) => {
+    return (
+      <View style={styles.cardViewDoctor}>
+        {/* <Card style={{ borderRadius: 5, }}> */}
+        <View style={styles.containerImageDoctor}>
+          <Image
+            // uri={item.advertise.images.absoluteUrl()}
+            style={{ borderRadius: 5, width: '100%', height: '100%' }}
+            source={item.image}
+          // width={DEVICE_WIDTH / 3}
+          // height={137}
+          />
+        </View>
+        {/* </Card> */}
+        <Text numberOfLines={2} ellipsizeMode='tail' style={styles.txContensAds}>{item.name ? item.name : ""}</Text>
+
+      </View>
+    );
   }
   renderDoctor() {
     return (<View style={{ backgroundColor: '#fff', marginTop: 10 }}>
-      {/* <ScaledImage source={require("@images/new/slogan.jpg")} width={DEVICE_WIDTH} />
-      <TouchableOpacity onPress={this.onCallHotline} style={{ alignItems: 'center', justifyContent: 'center' }}><Text style={{ fontSize: 18, color: '#02c39a', fontWeight: 'bold' }}>Tổng đài hỗ trợ: 1900299983</Text></TouchableOpacity> */}
       <View style={styles.viewAds}>
         <Text style={styles.txAds}>CÁC BÁC SĨ HÀNG ĐẦU</Text>
-        {/* <ScaledImage source={require("@images/new/ic_more.png")} width={20} style={styles.imgMore} /> */}
       </View>
       <FlatList
-        style={styles.listAds}
+        contentContainerStyle={styles.listAds}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
-        extraData={this.state}
-        data={this.state.listDataDoctor}
-        ListFooterComponent={<View style={styles.viewFooter}></View>}
-        renderItem={({ item, index }) => {
-          return (
-            <View style={styles.cardViewDoctor}>
-              {/* <Card style={{ borderRadius: 5, }}> */}
-              <View style={styles.containerImageDoctor}>
-                <Image
-                  // uri={item.advertise.images.absoluteUrl()}
-                  style={{ borderRadius: 5, width: '100%', height: '100%' }}
-                  source={item.image}
-                // width={DEVICE_WIDTH / 3}
-                // height={137}
-                />
-              </View>
-              {/* </Card> */}
-              <Text numberOfLines={2} ellipsizeMode='tail' style={styles.txContensAds}>{item.name ? item.name : ""}</Text>
-
-            </View>
-          );
-        }}
+        // extraData={this.state}
+        data={listDataDoctor}
+        // ListFooterComponent={<View style={styles.viewFooter}></View>}
+        renderItem={this.renderItemDoctor}
       />
     </View>)
   }
+  renderItemHospital = ({ item, index }) => {
+    return (
+      <View style={{ flex: 1 }}>
+        <TouchableOpacity style={styles.cardView}>
+          <ScaledImage
+            source={item.image}
+            height={134}
+            style={{ borderRadius: 6, resizeMode: 'cover' }}
+          />
+        </TouchableOpacity>
+        <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensAds}>{item ? item.name : ""}</Text>
+      </View>
+    );
+  }
   renderHospital() {
-    let { listDataHospital } = this.state
     return (<View style={{ backgroundColor: '#fff', marginTop: 10 }}>
       {/* <ScaledImage source={require("@images/new/slogan.jpg")} width={DEVICE_WIDTH} />
       <TouchableOpacity onPress={this.onCallHotline} style={{ alignItems: 'center', justifyContent: 'center' }}><Text style={{ fontSize: 18, color: '#02c39a', fontWeight: 'bold' }}>Tổng đài hỗ trợ: 1900299983</Text></TouchableOpacity> */}
@@ -244,47 +246,16 @@ class HomeScreen extends Component {
         {/* <ScaledImage source={require("@images/new/ic_more.png")} width={20} style={styles.imgMore} /> */}
       </View>
       <FlatList
-        style={styles.listAds}
+        contentContainerStyle={styles.listAds}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
         extraData={this.state}
         data={listDataHospital}
         ListFooterComponent={<View style={styles.viewFooter}></View>}
-        renderItem={({ item, index }) => {
-          return (
-            <View style={{ flex: 1 }}>
-              <TouchableOpacity style={styles.cardView}>
-                <ScaledImage
-                  source={item.image}
-                  height={134}
-                  style={{ borderRadius: 6, resizeMode: 'cover' }}
-                />
-              </TouchableOpacity>
-              <Text numberOfLines={1} ellipsizeMode='tail' style={styles.txContensAds}>{item ? item.name : ""}</Text>
-            </View>
-          );
-        }}
+        renderItem={this.renderItemHospital}
       />
     </View>)
-  }
-  pagination() {
-    const { ads0, activeSlide } = this.state;
-    let length = ads0.length;
-    return (
-      <View style={styles.viewPagination}>
-        <Pagination
-          dotsLength={length}
-          activeDotIndex={activeSlide || 0}
-          dotContainerStyle={styles.dotContainer}
-          dotStyle={styles.dotStyle}
-          inactiveDotStyle={styles.inactiveDotStyle}
-          inactiveDotOpacity={0.4}
-          inactiveDotScale={0.6}
-          containerStyle={styles.containerPagination}
-        />
-      </View>
-    );
   }
 
   componentWillUnmount() {
@@ -310,45 +281,6 @@ class HomeScreen extends Component {
     this.props.dispatch(redux.userLogout());
   }
 
-  onRefresh(reload) {
-    this.setState({ refreshing: true }, () => {
-      advertiseProvider.getTop(100, (s, e) => {
-        if (s) {
-          if (s.length == 0) {
-            if (!reload)
-              this.getTopAds(true);
-            this.setState({
-              refreshing: false,
-
-            })
-          }
-          this.setState({
-            ads: (s || []).filter(x => x.advertise && x.advertise.type == 2 && x.advertise.images),
-            ads0: (s || []).filter(x => x.advertise && x.advertise.type == 1 && x.advertise.images),
-            refreshing: false,
-
-            // .filter(item => { return item.advertise && item.advertise.images })
-          });
-        }
-        else {
-          this.setState({
-            refreshing: false,
-
-          })
-          if (!reload)
-            this.getTopAds(true);
-        }
-        if (e) {
-          this.setState({
-            refreshing: false,
-
-          })
-          if (!reload)
-            this.getTopAds(true);
-        }
-      });
-    })
-  }
   getMarginBooking() {
     const pixel = PixelRatio.get()
     if (pixel >= 2 && DEVICE_WIDTH > 325) {
@@ -358,22 +290,6 @@ class HomeScreen extends Component {
       return 14
     }
   }
-  // getItemBookingWidth() {
-  //   const width = DEVICE_WIDTH - 40;
-  //   
-  //   if (width >= 320) {
-  //     return Platform.OS == 'ios' ? '30%' : '30%';
-  //   }
-
-  //   if (width > 300) {
-  //     return Platform.OS == 'ios' ? 100 : 110;
-  //   }
-
-  //   if (width > 250)
-  //     return 65;
-
-  //   return width - 50;
-  // }
   renderButtonBooking() {
     return (this.state.featuresBooking || []).map((item, position) => {
       return (
@@ -461,14 +377,6 @@ class HomeScreen extends Component {
   getAdjustedFontSize(size) {
     return Platform.OS == 'ios' ? parseInt(size - 2) * DEVICE_WIDTH * (1.8 - 0.002 * DEVICE_WIDTH) / 400 : parseInt(size) * DEVICE_WIDTH * (1.8 - 0.002 * DEVICE_WIDTH) / 400;
   }
-  refreshControl = () => {
-    return (
-      <RefreshControl
-        refreshing={this.state.refreshing}
-        onRefresh={this.onRefresh.bind(this)}
-      />
-    )
-  }
   getUserName = (name) => {
     if (!name) return "";
     let x = name.trim().split(" ");
@@ -477,13 +385,23 @@ class HomeScreen extends Component {
       return name.charAt(0).toUpperCase() + name.slice(1);
     return name;
   }
-  getHeightImage = (source) => {
-    let img = resolveAssetSource(source);
-    return (img.height / img.width * DEVICE_WIDTH)
+
+  getHeightImage = () => {
+    let isIPhoneX = false;
+
+    if (Platform.OS === 'ios' && !Platform.isPad && !Platform.isTVOS) {
+      isIPhoneX = DEVICE_WIDTH === X_WIDTH && DEVICE_HEIGHT === X_HEIGHT || DEVICE_WIDTH === XSMAX_WIDTH && DEVICE_HEIGHT === XSMAX_HEIGHT;
+    }
+    let statusHeight = Platform.OS == 'android' ? StatusBar.currentHeight : (isIPhoneX ? 44 : 28)
+    let height = (DEVICE_HEIGHT / 4) - this.state.height + statusHeight
+    if (height >= 0) {
+      return height
+    } else {
+      return 0
+    }
   }
   render() {
     const headerHome = require("@images/app/header.png")
-    let statusBarHeight = Platform.OS == 'android' ? StatusBar.currentHeight : 0
     return (
       <ActivityPanel
         transparent={true}
@@ -498,19 +416,11 @@ class HomeScreen extends Component {
         style={[styles.activityPanel, { backgroundColor: 'transparent' }]}
       >
         <View style={styles.container}>
-          {/* <View style={{ height: 150, backgroundColor: '#f2f2f2', position: "absolute", top: 300, left: 0, right: 0 }}></View> */}
-          {/* <ScaledImage source={require("@images/new/homev2/header_home.png")} width={DEVICE_WIDTH} style={styles.imgHome} /> */}
-          {/*   <View style={styles.containerImageLogo}>
-        <View style={styles.ImageCenter}>
-              <ScaledImage source={require("@images/new/isofhcare.png")} width={116} />
-            </View> 
-          </View>*/}
 
           <ScrollView
-            refreshControl={this.refreshControl()}
             showsVerticalScrollIndicator={false}
           >
-            <View style={[styles.scroll, { top: (DEVICE_HEIGHT / 4) - this.state.height + statusBarHeight }]}>
+            <View style={[styles.scroll, { paddingTop: this.getHeightImage() }]}>
 
               <View
                 onLayout={(e) => {
@@ -567,17 +477,16 @@ const styles = StyleSheet.create({
     height: 137,
     shadowColor: '#222',
     shadowOffset: {
-      width: 2,
-      height: 2
+      width: 1,
+      height: 1
     },
-    shadowOpacity: 0.6
+    shadowOpacity: 0.4
   },
   groupImageButton: {
     position: 'relative',
     padding: 5
   },
   button: {
-    flex: 1,
     alignItems: 'center',
   },
   buttonBooking: {
@@ -605,7 +514,6 @@ const styles = StyleSheet.create({
   containerButton: {
     flexDirection: "row",
     padding: 21,
-    flex: 1,
     flexWrap: 'wrap',
     justifyContent: 'space-around',
     borderRadius: 5,
@@ -679,7 +587,7 @@ const styles = StyleSheet.create({
   viewAds: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', },
   txAds: { padding: 12, paddingLeft: 20, paddingBottom: 5, color: '#000', fontWeight: 'bold', flex: 1 },
   imgMore: { marginTop: 10, marginRight: 20 },
-  listAds: { paddingHorizontal: 20, flex: 1 },
+  listAds: { paddingHorizontal: 20, },
   viewFooter: { width: 35 },
   cardView: { borderRadius: 6, marginRight: 10, borderColor: '#9B9B9B', borderWidth: 0.5, backgroundColor: '#fff', height: 134, },
   cardViewNone: { width: DEVICE_WIDTH - 140, borderRadius: 6, marginRight: 10, backgroundColor: '#fff' },

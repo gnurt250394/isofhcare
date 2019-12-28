@@ -26,6 +26,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import BookingTimePicker from '@components/booking/BookingTimePicker';
 import bookingProvider from '@data-access/booking-provider';
 import serviceProvider from '@data-access/service-provider';
+import profileProvider from '@data-access/profile-provider'
 
 import scheduleProvider from '@data-access/schedule-provider';
 class AddBookingScreen extends Component {
@@ -105,12 +106,13 @@ class AddBookingScreen extends Component {
 
     }
     getProfile = () => {
-        medicalRecordProvider.getByUser(this.props.userApp.currentUser.id, 1, 100).then(s => {
+
+        profileProvider.getListProfile().then(s => {
             switch (s.code) {
                 case 0:
-                    if (s.data && s.data.data && s.data.data.length != 0) {
+                    if (s.data && s.data.length != 0) {
 
-                        let data = s.data.data;
+                        let data = s.data;
                         let profile = data.find(item => {
                             return item.medicalRecords.status == 1;
                         });
@@ -125,17 +127,17 @@ class AddBookingScreen extends Component {
     }
     // componentWillReceiveProps = (props) => {
     //     let profile = props.navigation.getParam('profile')
-        
+
     //     let listServicesSelected = props.navigation.getParam('listServicesSelected')
-        
+
     //     let schedule = props.navigation.getParam('schedule')
-        
+
     //     let hospital = props.navigation.getParam('hospital')
-        
+
     //     let bookingDate = props.navigation.getParam('bookingDate')
-        
+
     //     let allowBooking = props.navigation.getParam('allowBooking')
-        
+
     //     if (profile || listServicesSelected || schedule || hospital || bookingDate || allowBooking) {
     //         this.getProfile()
     //     }
@@ -205,6 +207,7 @@ class AddBookingScreen extends Component {
         });
     }
     selectProfile(profile) {
+        console.log('profile: ', profile);
         this.setState({ profile, allowBooking: true });
     }
     // selectServiceType(serviceType) {
@@ -239,10 +242,10 @@ class AddBookingScreen extends Component {
         let servicesError = services ? "" : this.state.servicesError;
         if (!services || !this.state.services || services.id != this.state.services.id) {
             this.setState({ listServicesSelected: services, allowBooking: true, servicesError })
-            
+
         } else {
             this.setState({ listServicesSelected: [], allowBooking: true, servicesError: "", servicesError });
-            
+
 
         }
     }
@@ -416,12 +419,12 @@ class AddBookingScreen extends Component {
             });
             return
         }
-        
-        
-        
-        
-        
-        
+
+
+
+
+
+
         if (this.state.contact) {
             this.setState({ contactError: "" })
         } else {
@@ -478,34 +481,34 @@ class AddBookingScreen extends Component {
                     return;
                 }
             }
-            var images = "";
+            var images = [];
             this.state.imageUris.forEach((item) => {
-                if (images)
-                    images += ",";
-                images += item.url;
+                console.log('item: ', item);
+
+                images.push(item.url);
             });
             let reason = this.state.reason ? this.state.reason : ''
             let img = images ? images : ''
 
 
-
+            console.log('img: ', img);
             connectionUtils.isConnected().then(s => {
                 this.setState({ isLoading: true }, () => {
-                    
+
                     const { userApp } = this.props
-                    
+
                     let services = this.state.listServicesSelected.map(e => ({ price: e.monetaryAmount.value, serviceId: e.id, name: e.name }));
                     let bookingDate = this.state.bookingDate.format("yyyy-MM-dd");
-                    
-                    
-                    
+                    let idUser = this.props.userApp.currentUser.id
                     bookingProvider.createBooking(
                         bookingDate,
                         reason,
                         this.state.hospital.hospital,
                         services,
-                        userApp.currentUser,
-                        this.state.schedule.label
+                        this.state.profile && this.state.profile.medicalRecords,
+                        this.state.schedule.label,
+                        idUser,
+                        img,
                     ).then(s => {
                         this.setState({ isLoading: false }, () => {
                             if (s && s.id) {
@@ -589,7 +592,7 @@ class AddBookingScreen extends Component {
         })
     }
     selectDateTime = () => {
-        
+
         this.props.navigation.navigate("selectTime", {
             service: this.state.listServicesSelected,
             isNotHaveSchedule: true,

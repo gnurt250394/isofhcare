@@ -39,7 +39,7 @@ class EditProfileScreen extends Component {
             name: dataProfile.name ? dataProfile.name : '',
             date: dataProfile && dataProfile.dob ? dataProfile.dob.toDateObject('-').format('dd/MM/yyyy') : (''),
             txGender: '',
-            gender: '',
+            gender: dataProfile.gender,
             dobOld: dataProfile.dob ? dataProfile.dob : '',
             height: dataProfile.height ? dataProfile.height.toString() : '',
             weight: dataProfile.weight ? dataProfile.weight.toString() : '',
@@ -60,35 +60,26 @@ class EditProfileScreen extends Component {
         console.log(dataProfile.id)
     }
     componentWillMount() {
-        // this.renderRelation()
-        this.setTxGender()
-    }
-    setTxGender = () => {
+        this.renderRelation()
         let dataProfile = this.props.navigation.state.params.data.medicalRecords
-        switch (Number(dataProfile.gender)) {
-            case 1: {
-                this.setState({
-                    txGender: 'Nam',
-                    gender: '1'
-                })
-                break
-            }
-            case 0: {
-                this.setState({
-                    txGender: 'Nữ',
-                    gender: '0'
-                })
-                break
-            }
-            default: {
-                this.setState({
-                    txGender: '',
-                    gender: null
-                })
-                break
-            }
+        if(dataProfile.gender == 1){
+            this.setState({
+                txGender:'Nam'
+            })
+            return
         }
-
+        if(dataProfile.gender == 0){
+            this.setState({
+                txGender:'Nữ'
+            })
+            return
+        }
+        if(!dataProfile.gender){
+            this.setState({
+                txGender:'Chưa có giới tính'
+            })
+            return
+        }
     }
     onChangeText = type => text => {
         this.setState({ [type]: text });

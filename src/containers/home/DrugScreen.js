@@ -23,6 +23,7 @@ import { FlatList } from "react-native-gesture-handler";
 import dateUtils from 'mainam-react-native-date-utils';
 import drugProvider from '@data-access/drug-provider'
 import ActionSheet from 'react-native-actionsheet'
+import snackbar from "@utils/snackbar-utils";
 
 const devices_width = Dimensions.get('window').width
 const padding = Platform.select({
@@ -43,7 +44,7 @@ class drugScreen extends Component {
         this.getListDrug()
     }
     componentWillReceiveProps(nextProps) {
-        console.log('nextProps: ', nextProps);
+
         if (nextProps.dataDrug) {
             // this.setState(prev => ({
             this.getListDrug()
@@ -53,6 +54,7 @@ class drugScreen extends Component {
         }
     }
     getListDrug = () => {
+        console.log('get list')
         this.setState({
             isLoading: true
         }, () => {
@@ -115,14 +117,18 @@ class drugScreen extends Component {
         let dataError = data ? "" : this.state.dataError;
         if (!data || !this.state.data || data.id != this.state.data.id) {
             this.setState({ data, dataError })
-            console.log('data: ', data);
+
         } else {
             this.setState({ data, dataError });
         }
     }
+    selectDetails = (data) => {
+        this.getListDrug()
+    }
     onSelectDetails = (id) => {
         this.props.navigation.navigate('detailsDrug', {
-            id: id
+            id: id,
+            onSelected: this.selectDetails.bind(this),
         })
 
     }
@@ -148,20 +154,26 @@ class drugScreen extends Component {
     }
     onSetOption = index => {
         const dataSelect = this.state.dataSelect
-        console.log(dataSelect, 'dataSelectdataSelect')
+
         try {
             switch (index) {
                 case 0:
-                    if (dataSelect && dataSelect.images.length) {
-                        console.log('chay vao ifffff')
-                        this.props.navigation.navigate('editDrugScan', { dataEdit: dataSelect })
+                    if (dataSelect.state == 'STORED') {
+                        if (dataSelect && dataSelect.images && dataSelect.images.length) {
+                            this.props.navigation.navigate('editDrugScan', { dataEdit: this.state.dataSelect })
+                            return
+                        } if (dataSelect && dataSelect.medicines && dataSelect.medicines.length) {
+                            this.props.navigation.navigate('editDrugInput', { dataEdit: this.state.dataSelect })
+                            return
+                        }
+                    } else {
+                        snackbar.show('Đơn thuốc không được phép thay đổi', 'danger')
                     }
-                    return
                 case 1:
                     drugProvider.deleteDrug(dataSelect.id).then(res => {
                         this.getListDrug()
                     }).catch(err => {
-                        console.log('err: ', err);
+
 
                     })
                     return;
@@ -174,7 +186,7 @@ class drugScreen extends Component {
     listEmpty = () => !this.state.isLoading && <Text style={styles.none_data}>{constants.not_found}</Text>
 
     render() {
-        console.log(this.state.dataDrug, 'this.state.dataDrug')
+
         return (
             <ActivityPanel
                 style={{ flex: 1 }}
@@ -182,7 +194,7 @@ class drugScreen extends Component {
                 hideActionbar={true}
                 // isLoading={this.state.isLoading}
                 backgroundHeader={require('@images/new/drug/ic_bg_drug2.png')}
-                containerStyle={{ marginTop: 150, borderTopLeftRadius: 10, borderTopRightRadius: 10}}
+                containerStyle={{ marginTop: 150, borderTopLeftRadius: 10, borderTopRightRadius: 10 }}
                 titleStyle={{
                     color: '#FFF'
                 }}

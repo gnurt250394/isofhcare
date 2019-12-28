@@ -24,6 +24,8 @@ import walletProvider from '@data-access/wallet-provider';
 import StarRating from 'react-native-star-rating';
 import bookingDoctorProvider from '@data-access/booking-doctor-provider'
 import ViewHeader from '@components/booking/doctor/ViewHeader';
+import profileProvider from '@data-access/profile-provider'
+
 class AddBookingDoctorScreen extends Component {
     constructor(props) {
         super(props);
@@ -64,12 +66,12 @@ class AddBookingDoctorScreen extends Component {
 
                 this.setState({ profile: s })
             } else {
-                medicalRecordProvider.getByUser(this.props.userApp.currentUser.id, 1, 100).then(s => {
+                profileProvider.getListProfile().then(s => {
                     switch (s.code) {
                         case 0:
-                            if (s.data && s.data.data && s.data.data.length != 0) {
+                            if (s.data && s.data && s.data.length != 0) {
 
-                                let data = s.data.data;
+                                let data = s.data;
                                 let profile = data.find(item => {
                                     return item.medicalRecords.status == 1;
                                 });
@@ -326,9 +328,27 @@ class AddBookingDoctorScreen extends Component {
             this.setState({ profileError: 'Bạn chưa chọn người tới khám' })
             return
         }
+        for (var i = 0; i < this.state.imageUris.length; i++) {
+            if (this.state.imageUris[i].loading) {
+                snackbar.show(constants.msg.booking.image_loading, 'danger');
+                return;
+            }
+            if (this.state.imageUris[i].error) {
+                snackbar.show(constants.msg.booking.image_load_err, 'danger');
+                return;
+            }
+        }
+        var images = [];
+        this.state.imageUris.forEach((item) => {
+            console.log('item: ', item);
+
+            images.push(item.url);
+        });
+        let img = images ? images : ''
+        console.log('img: ', img);
         let discount = voucher && voucher.price ? voucher.price : 0
-        // let patitent = profile && profile.medicalRecords
-        let patitent = this.props.userApp.currentUser
+        let patitent = profile && profile.medicalRecords
+        let idUser = this.props.userApp.currentUser.id
         if (this.isChecking) {
             this.isChecking = false
             connectionUtils.isConnected().then(s => {
@@ -344,7 +364,9 @@ class AddBookingDoctorScreen extends Component {
                         // this.getPaymentMethod(),
                         detailSchedule.id,
                         schedule.label,
-                        detailSchedule.room
+                        detailSchedule.room,
+                        idUser,
+                        img
                     ).then(s => {
                         this.setState({ isLoading: false }, () => {
                             if (s && s.reference) {

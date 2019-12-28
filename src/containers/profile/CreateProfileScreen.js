@@ -164,7 +164,8 @@ class CreateProfileScreen extends Component {
                                         case 'NOT_EXIST_ACCOUNT':
                                             NavigationService.navigate('verifyPhone', {
                                                 id: res.data.medicalRecords.id,
-                                                verify: 3
+                                                verify: 3,
+                                                phone: phone
                                             })
                                             break
                                         case 'EXIST_ACCOUNT':

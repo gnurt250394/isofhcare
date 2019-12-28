@@ -15,6 +15,7 @@ import ScaleImage from 'mainam-react-native-scaleimage';
 import Field from "mainam-react-native-form-validate/Field";
 import HeaderBar from '@components/account/HeaderBar'
 const DEVICE_HEIGHT = Dimensions.get("window").height;
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 class ResetPasswordScreen extends Component {
     constructor(props) {
@@ -82,15 +83,19 @@ class ResetPasswordScreen extends Component {
     }
     render() {
         return (
-            <ImageBackground
-                style={styles.container}
-                source={require('@images/new/account/img_bg_login.png')}
-                resizeMode={'cover'}
-                resizeMethod="resize">
-                <ScrollView
+            <ActivityPanel
+                style={{ flex: 1 }}
+                hideActionbar={true}
+                transparent={true}
+                useCard={true}
+                titleStyle={{ textAlign: 'left', marginLeft: 20 }}
+                showFullScreen={true}
+                isLoading={this.state.isLoading}
+                containerStyle={{ marginTop: 50 }}
+            >
+                <KeyboardAwareScrollView
                     showsVerticalScrollIndicator={false}
                     style={styles.scroll}
-                    keyboardShouldPersistTaps="handled"
                 >
                     <HeaderBar style={styles.header}></HeaderBar>
                     <View
@@ -110,7 +115,7 @@ class ResetPasswordScreen extends Component {
                                     getComponent={(value, onChangeText, onFocus, onBlur, placeholderTextColor) => <FloatingLabel
                                         keyboardType='numeric'
                                         maxLength={10}
-                                        placeholderStyle={{ fontSize: 16,fontWeight:'300' }} value={value} underlineColor={'#CCCCCC'}
+                                        placeholderStyle={{ fontSize: 16, fontWeight: '300' }} value={value} underlineColor={'#CCCCCC'}
                                         placeholderTextColor='#000'
                                         inputStyle={styles.textInputStyle}
                                         labelStyle={styles.labelStyle} placeholder={constants.phone} onChangeText={onChangeText} onBlur={onBlur} onFocus={onFocus} />}
@@ -132,24 +137,25 @@ class ResetPasswordScreen extends Component {
                             </Form>
                         </View>
                     </KeyboardAvoidingView>
-                </ScrollView>
-                <View style={{ backgroundColor: '#fff' }}>
-                    <TouchableOpacity
-                        onPress={this.changePassword.bind(this)}
-                        style={styles.updatePass}>
-                        <Text style={styles.txbtnUpdate}>{constants.continue}</Text>
-                    </TouchableOpacity>
-                </View>
-            </ImageBackground>
+                    <View style={{ backgroundColor: '#fff' }}>
+                        <TouchableOpacity
+                            onPress={this.changePassword.bind(this)}
+                            style={styles.updatePass}>
+                            <Text style={styles.txbtnUpdate}>{constants.continue}</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{ height: 50 }}></View>
+                </KeyboardAwareScrollView>
+            </ActivityPanel>
         )
     }
 }
 const DEVICE_WIDTH = Dimensions.get('window').width;
 const styles = StyleSheet.create({
-    form:{marginTop:50},
+    form: { marginTop: 50 },
     header: { paddingHorizontal: 0 },
     txbtnUpdate: { color: '#FFF', fontSize: 17 },
-    updatePass: { backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center', marginBottom: 20 },
+    updatePass: { backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 34, alignItems: 'center', justifyContent: 'center', marginBottom: 20,marginTop:70 },
     container: { flex: 1, backgroundColor: '#000', height: DEVICE_HEIGHT },
     btnEye: {
         position: 'absolute',

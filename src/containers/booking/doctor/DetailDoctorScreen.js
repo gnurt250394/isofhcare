@@ -186,7 +186,7 @@ class DetailsDoctorScreen extends Component {
                   }}
                 />
                 <View style={{ paddingLeft: 10, flex: 1 }}>
-                  <Text style={styles.nameDoctor}>{profileDoctor.academicDegree}.{profileDoctor.name}</Text>
+                  <Text style={styles.nameDoctor}>{profileDoctor.academicDegree} {profileDoctor.name}</Text>
 
                   <Text style={{ paddingBottom: 10 }}>{this.renderPosition(profileDoctor)}</Text>
                   <View style={styles.containerButton}>

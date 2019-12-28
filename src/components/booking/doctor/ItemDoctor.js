@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
     },
     txtHospitalName: {
         color: '#111',
-        fontSize: PixelRatio.get() <= 2 ? 12 : 14
+        fontSize: PixelRatio.get() <= 2 ? 13 : 14
     },
     txtBooking: {
         backgroundColor: '#00CBA7',
@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
         paddingRight: 3,
         fontStyle: 'italic',
         marginVertical: 5,
-        fontSize: PixelRatio.get() <= 2 ? 12 : 14,
+        fontSize: PixelRatio.get() <= 2 ? 13 : 14,
         fontWeight: 'bold'
     },
     flexRow: {
@@ -280,7 +280,6 @@ const styles = StyleSheet.create({
         color: '#000000',
         fontSize: PixelRatio.get() <= 2 ? 16 : 18,
         paddingTop: 8,
-        paddingBottom: 4,
         fontWeight: 'bold'
     },
     paddingLeft5: {

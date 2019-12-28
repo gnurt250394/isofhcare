@@ -281,7 +281,7 @@ const handleCustomTransition = ({ scenes }) => {
   const prevScene = scenes[scenes.length - 2];
   const nextScene = scenes[scenes.length - 1];
   if (prevScene
-    && prevScene.route.routeName === 'listBooking'
+    && prevScene.route.routeName === 'home'
     && nextScene.route.routeName === 'listSpecialist') {
     return fromBottom();
   }

@@ -8,6 +8,7 @@ import ActionSheet from 'react-native-actionsheet'
 import ActivityPanel from '@components/ActivityPanel';
 import dataCacheProvider from '@data-access/datacache-provider';
 import constants from '@resources/strings';
+import snackbar from "@utils/snackbar-utils";
 
 class SelectLocationScreen extends Component {
     constructor(props) {
@@ -48,21 +49,37 @@ class SelectLocationScreen extends Component {
         })
     }
     onSetOption = index => {
+        var dataSelect = this.state.dataSelect
+
         try {
             switch (index) {
                 case 0:
-                    let dataSelect = this.state.dataSelect
                     drugProvider.setLocationDefault(dataSelect.id).then(res => {
                         this.onGetLocation()
                     }).catch(err => {
-                        console.log('err: ', err);
-
                     })
                     return;
                 case 1:
                     this.props.navigation.navigate('inputLocation', { dataLocation: this.state.dataSelect, onSelected: this.editLocation.bind(this), })
                     return;
                 case 2:
+                    drugProvider.deleteLocation(dataSelect.id).then(res => {
+                        this.onGetLocation()
+                    }).catch(err => {
+                        if (err.response && err.response.data) {
+                            switch (err.response.data) {
+                                case 406:
+                                    snackbar.show('Không thể xóa địa chỉ đã có đơn thuốc dùng để tìm kiếm nhà thuốc', 'danger')
+                                    break
+                                default:
+                                    snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+                                    break
+                            }
+                        } else {
+                            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+
+                        }
+                    })
                     return
             }
         } catch (error) {
@@ -72,13 +89,13 @@ class SelectLocationScreen extends Component {
     };
 
     addLocation = (location) => {
-        console.log('location: ', location);
-        let locationError = location ? "" : this.state.locationError;
-        if (!location || !this.state.location || location.id != this.state.location.id) {
-            this.state.dataLocation.unshift(location)
-        } else {
-            this.onGetLocation()
-        }
+        this.onGetLocation()
+        // let locationError = location ? "" : this.state.locationError;
+        // if (!location || !this.state.location || location.id != this.state.location.id) {
+        //     this.state.dataLocation.unshift(location)
+        // } else {
+        //     this.onGetLocation()
+        // }
     }
     editLocation = (location) => {
         let locationError = location ? "" : this.state.locationError;
@@ -127,7 +144,7 @@ class SelectLocationScreen extends Component {
 
     }
     render() {
-        console.log('render')
+
         return (
             <ActivityPanel style={styles.container} title={"Chọn địa chỉ đã lưu"} showFullScreen={true}>
                 {/* <ScaledImage width={devices_width} source={require('@images/new/drug/ic_bg_find_drug.png')}></ScaledImage> */}

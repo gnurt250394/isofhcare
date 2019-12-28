@@ -9,6 +9,7 @@ import connectionUtils from "@utils/connection-utils";
 import HeaderBar from '@components/account/HeaderBar'
 import InputOtp from '@components/account/InputOtp'
 import redux from "@redux-store";
+import ActivityPanel from '@components/ActivityPanel';
 
 const DEVICE_HEIGHT = Dimensions.get("window").height;
 //props: verify
@@ -336,14 +337,18 @@ class VerifyPhoneNumberScreen extends React.Component {
     }
     render() {
         return (
-            <ImageBackground
-                style={{ flex: 1, backgroundColor: '#000', height: DEVICE_HEIGHT }}
-                source={require('@images/new/account/img_bg_login.png')}
-                resizeMode={'cover'}
-                resizeMethod="resize" >
+            <ActivityPanel
+                style={{ flex: 1 }}
+                hideActionbar={true}
+                transparent={true}
+                useCard={true}
+                titleStyle={{ textAlign: 'left', marginLeft: 20 }}
+                showFullScreen={true}
+                isLoading={this.state.isLoading}
+                containerStyle={{ marginTop: 50 }}
+            >
                 <ScrollView
                     showsVerticalScrollIndicator={false}
-                    style={styles.scroll}
                     keyboardShouldPersistTaps="handled"
                 >
                     <HeaderBar></HeaderBar>
@@ -402,15 +407,15 @@ class VerifyPhoneNumberScreen extends React.Component {
                         </View>
                         {
                             this.state.countResend ? (<Text style={[styles.txReSent, { color: 'red', marginTop: 10 }]}>Bạn chỉ được chọn gửi lại mã tối đa 5 lần, xin vui lòng thử lại sau 60 phút</Text>) :
-                                <View style = {{flex:1,padding:10}}>
-                                    <Text style={{ color: '#000', marginTop: 100,fontSize:14 }}>Bạn cho rằng mình chưa nhận được mã ?</Text>
+                                <View style={{ flex: 1, padding: 10 }}>
+                                    <Text style={{ color: '#000', marginTop: 100, fontSize: 14 }}>Bạn cho rằng mình chưa nhận được mã ?</Text>
                                     <TouchableOpacity style={styles.btnReSend} disabled={this.state.disabled} onPress={this.onReSendPhone}><Text style={styles.txBtnReSend}>Gửi lại mã</Text></TouchableOpacity>
                                 </View>
                         }
-
                     </KeyboardAvoidingView>
+                    <View style={{ height: 50 }}></View>
                 </ScrollView>
-            </ImageBackground>
+            </ActivityPanel>
         )
     }
 }
@@ -436,8 +441,8 @@ const styles = StyleSheet.create({
     txReSent: { color: '#000', fontStyle: 'italic', fontWeight: '700', textAlign: 'center', fontSize: 14 },
     btnFinish: { backgroundColor: 'rgb(2,195,154)', alignSelf: 'center', borderRadius: 6, width: 250, height: 48, marginTop: 40, alignItems: 'center', justifyContent: 'center', marginBottom: 20 },
     txFinish: { color: '#FFF', fontSize: 17 },
-    btnReSend: { alignSelf: 'center', marginTop: 15, borderRadius: 5, height: 28, width: 150, justifyContent: 'center', alignItems: 'center'},
-    txBtnReSend: { color: '#3161AD', fontWeight: 'bold', fontSize: 14, textDecorationLine: 'underline',margin:2 },
+    btnReSend: { alignSelf: 'center', marginTop: 15, borderRadius: 5, height: 28, width: 150, justifyContent: 'center', alignItems: 'center' },
+    txBtnReSend: { color: '#3161AD', fontWeight: 'bold', fontSize: 14, textDecorationLine: 'underline', margin: 2 },
     txErr: {
         textAlign: 'center', color: 'red', fontSize: 14, fontStyle: 'italic', fontWeight: '700', marginTop: 20
     },
