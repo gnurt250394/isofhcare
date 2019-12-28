@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, TextInput, StyleSheet, FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
 import ScaledImage from 'mainam-react-native-scaleimage';
 import { ScrollView, } from 'react-native-gesture-handler';
 import InsertInfoDrug from './InsertInfoDrug'
@@ -24,31 +24,45 @@ export default class DrugInput extends Component {
     }
 
     onSearch = () => {
-        drugProvider.searchDrug(this.state.txSearch, 0, 5).then(res => {
-            if (res && res.length) {
-                this.setState({
-                    itemsDrug: res,
-                    isShowList: true,
-                })
-            }
-
-        }).catch(err => {
-
-        })
-    }
-    onChangeText(text) {
-        if (this.timeout) clearTimeout(this.timeout);
-        this.timeout = setTimeout(() => {
+        this.setState({
+            isSearch: true,
+        }, () => {
             drugProvider.searchDrug(text, 0, 5).then(res => {
                 if (res && res.length) {
                     this.setState({
                         itemsDrug: res,
+                        isSearch: false,
                         isShowList: true,
                     })
                 }
 
             }).catch(err => {
+                this.setState({
+                    isSearch: false,
+                })
+            })
+        })
+    }
+    onChangeText(text) {
+        if (this.timeout) clearTimeout(this.timeout);
+        this.timeout = setTimeout(() => {
+            this.setState({
+                isSearch: true,
+            }, () => {
+                drugProvider.searchDrug(text, 0, 5).then(res => {
+                    if (res && res.length) {
+                        this.setState({
+                            itemsDrug: res,
+                            isSearch: false,
+                            isShowList: true,
+                        })
+                    }
 
+                }).catch(err => {
+                    this.setState({
+                        isSearch: false,
+                    })
+                })
             })
         }, 500);
     }
@@ -61,7 +75,6 @@ export default class DrugInput extends Component {
         )
     }
     onGetItem = (item) => {
-
         this.setState({
             itemsDrug: [],
             isShowList: false
@@ -83,7 +96,7 @@ export default class DrugInput extends Component {
                 <View>
                     <View style={styles.viewInputDrug}>
                         <TextInput onChangeText={text => this.onChangeText(text)} placeholderTextColor={'#000'} placeholder={'Nhập tên thuốc, vd (Paracetamol 500mg)'} style={styles.inpuNameDrug}></TextInput>
-                        {/* {/* <ScaledImage height={20} source={require('@images/new/drug/ic_search.png')}></ScaledImage> */}
+                        {this.state.isSearch ? <ActivityIndicator size={'small'}></ActivityIndicator> : null}
                     </View>
                     {this.state.isShowList ?
                         <ScrollView keyboardShouldPersistTaps="handled">
@@ -132,6 +145,7 @@ const styles = StyleSheet.create({
         width: '92%',
         height: '100%',
         padding: 10,
+        color: '#000'
     },
     listSelect: {
         padding: 10

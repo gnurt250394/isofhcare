@@ -140,21 +140,20 @@ class DetailHistoryBookingScreen extends Component {
                 <Text style={styles.txStatus} />;
         }
     };
-    showImage = () => {
+    showImage = (image) => {
         this.props.navigation.navigate("photoViewer", {
-            urls: images.map(item => {
+            urls: image.map(item => {
                 return item.absoluteUrl()
             }),
         });
     }
     renderImages() {
         var image = this.state.booking.images;
-        if (image) {
-            var images = image.split(",");
+        if (image && image.length) {
             return (<View>
                 <View style={styles.containerListImage}>
                     {
-                        images.map((item, index) => <TouchableOpacity onPress={this.showImage}
+                        image.map((item, index) => <TouchableOpacity onPress={() => this.showImage(image)}
                             key={index} style={styles.buttonShowImage}>
                             <Image
                                 style={styles.ImageViewer}
@@ -589,7 +588,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 5,
         justifyContent: 'center',
         alignItems: 'flex-end',
-        flex:5
+        flex: 5
     },
     txAddress: {
         color: "#8F8E93",

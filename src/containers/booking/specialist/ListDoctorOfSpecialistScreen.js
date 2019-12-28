@@ -18,7 +18,7 @@ const TYPE = {
     HOSPITAL: 'HOSPITAL',
     SPECIALIST: 'SPECIALIST'
 }
-class ListDoctorOfSpecialistScreen extends Component {
+class ListDoctorOfSpecialistScreen extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -33,22 +33,16 @@ class ListDoctorOfSpecialistScreen extends Component {
             type: ''
         };
         this.listSearch = []
-        this.onScroll = new Animated.Value(0)
-        this.header = Animated.multiply(Animated.diffClamp(this.onScroll, 0, 60), -1)
+        this.self = this.props.self ? this.props.self : this
     }
     componentDidMount = () => {
         this.getData()
-        // setTimeout(()=>{
-        //     this.setState({ data, isLoading: false, refreshing: false })
-
-        // },1000)
     };
     getData = () => {
         const { page, size } = this.state
-        console.log('getData')
-
-        bookingDoctorProvider.getListDoctor(page, size).then(res => {
-            this.setState({ isLoading: false, refreshing: false })
+        bookingDoctorProvider.getListDoctorWithSpecialist(this.props.item.id, page, size).then(res => {
+            this.self.setState({ isLoading: false })
+            this.setState({ refreshing: false })
             if (res && res.length > 0) {
                 this.formatData(res)
             } else {
@@ -56,7 +50,8 @@ class ListDoctorOfSpecialistScreen extends Component {
             }
         }).catch(err => {
             this.formatData([])
-            this.setState({ isLoading: false, refreshing: false })
+            this.setState({ refreshing: false })
+            this.self.setState({ isLoading: false })
 
         })
     }
@@ -160,8 +155,6 @@ class ListDoctorOfSpecialistScreen extends Component {
         this.setState({
             page: 0,
             refreshing: true,
-            keyword: '',
-            item: {},
             type: ''
         }, this.getData)
     }

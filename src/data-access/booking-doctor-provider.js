@@ -18,6 +18,37 @@ module.exports = {
             );
         });
     },
+    getListDoctorWithSpecialist(idSpecialist, page, size) {
+        return new Promise((resolve, reject) => {
+
+            client.requestApi(
+                "get",
+                client.serviceSchedule +
+                constants.api.booking.doctor.get_detail_doctor + `/${idSpecialist}/specialization?page=${page}&size=${size}&sort=desc&properties=created`,
+                {},
+                (s, e) => {
+                    if (s) resolve(s);
+                    reject(e);
+                }
+            );
+        });
+    },
+    getListHospitalWithSpecialist(idSpecialist, page, size) {
+        return new Promise((resolve, reject) => {
+
+            client.requestApi(
+                "get",
+                client.serviceSchedule +
+                constants.api.booking.doctor.get_detail_hospital + `/${idSpecialist}/specialization?page=${page}&size=${size}&sort=desc&properties=created`,
+                {},
+                (s, e) => {
+                    if (s) resolve(s);
+                    reject(e);
+                }
+            );
+        });
+    },
+
     detailDoctor(id) {
         return new Promise((resolve, reject) => {
             client.requestApi(
@@ -79,7 +110,7 @@ module.exports = {
      * @param {string} time 
      * @param {object} room 
      */
-    create(date, description, doctor, hospitals, items, patient, scheduleId, time, room) {
+    create(date, description, doctor, hospitals, items, patient, scheduleId, time, room, idUser, images) {
         console.log('hospitals: ', hospitals);
         return new Promise((resolve, reject) => {
             let doctors = { id: doctor.id, name: doctor.name }
@@ -90,7 +121,7 @@ module.exports = {
                 "name": room.name
             }
             patient = {
-                id: patient.id,
+                id: idUser,
                 name: patient.name,
                 phone: patient.phone
             }
@@ -121,7 +152,10 @@ module.exports = {
                     // Mã lịch đặt khám
                     scheduleId,
                     //giờ đặt khám
-                    time
+                    time,
+                    //owner : true: đặt khám chính chủ, false: đặt khám hộ
+                    owner: patient.status == 1 ? true : false,
+                    images
                 }, (s, e) => {
                     if (s) resolve(s);
                     else reject(e);
@@ -179,7 +213,7 @@ module.exports = {
             client.requestApi(
                 "get",
                 client.serviceSchedule +
-                `${constants.api.booking.doctor.get_list_specialists}?page=${page}&size=${size}`
+                `${constants.api.booking.doctor.get_list_specialists}?page=${page}&size=${size}&sort=desc&properties=created`
                 , {}, (s, e) => {
                     if (s) resolve(s);
                     else reject(e);
@@ -215,13 +249,13 @@ module.exports = {
             );
         });
     },
-    getListBooking(patientId, page, size) {
+    getListBooking(phoneProfile, patientId, page, size) {
         return new Promise((resolve, reject) => {
             let url = constants.api.booking.doctor.get_list_booking.replace('patientId', patientId)
             client.requestApi(
                 "get",
                 client.serviceBooking +
-                `${url}?page=${page}&size=${size}&sort=desc&properties=created`
+                `${url}?phones=${phoneProfile}&page=${page}&size=${size}&sort=desc&properties=created`
                 , {}, (s, e) => {
                     if (s) resolve(s);
                     else reject(e);
