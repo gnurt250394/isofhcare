@@ -18,7 +18,7 @@ const TYPE = {
     HOSPITAL: 'HOSPITAL',
     SPECIALIST: 'SPECIALIST'
 }
-class ListHospitalOfSpecialistScreen extends Component {
+class ListHospitalOfSpecialistScreen extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -32,23 +32,15 @@ class ListHospitalOfSpecialistScreen extends Component {
             item: {},
             type: ''
         };
-        this.listSearch = []
-        this.onScroll = new Animated.Value(0)
-        this.header = Animated.multiply(Animated.diffClamp(this.onScroll, 0, 60), -1)
+        this.self = this.props.self ? this.props.self : this
     }
     componentDidMount = () => {
         this.getData()
-        // setTimeout(()=>{
-        //     this.setState({ data, isLoading: false, refreshing: false })
-
-        // },1000)
     };
     getData = () => {
         const { page, size } = this.state
-        console.log('getData')
-
-        bookingDoctorProvider.getListDoctor(page, size).then(res => {
-            this.setState({ isLoading: false, refreshing: false })
+        bookingDoctorProvider.getListHospitalWithSpecialist(this.props.item.id, page, size).then(res => {
+            this.self.setState({ isLoading: false })
             if (res && res.length > 0) {
                 this.formatData(res)
             } else {
@@ -56,7 +48,7 @@ class ListHospitalOfSpecialistScreen extends Component {
             }
         }).catch(err => {
             this.formatData([])
-            this.setState({ isLoading: false, refreshing: false })
+            this.self.setState({ isLoading: false })
 
         })
     }
@@ -86,12 +78,6 @@ class ListHospitalOfSpecialistScreen extends Component {
                 switch (this.state.type) {
                     case TYPE.SEARCH:
                         this.search()
-                        break;
-                    case TYPE.HOSPITAL:
-                        this.getDoctorHospitals()
-                        break;
-                    case TYPE.SPECIALIST:
-                        this.getDoctorSpecialists()
                         break;
                     default:
                         this.getData()
