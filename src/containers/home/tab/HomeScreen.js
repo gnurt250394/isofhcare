@@ -212,7 +212,7 @@ class HomeScreen extends Component {
         <Text style={styles.txAds}>CÁC BÁC SĨ HÀNG ĐẦU</Text>
       </View>
       <FlatList
-        style={styles.listAds}
+        contentContainerStyle={styles.listAds}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
@@ -246,7 +246,7 @@ class HomeScreen extends Component {
         {/* <ScaledImage source={require("@images/new/ic_more.png")} width={20} style={styles.imgMore} /> */}
       </View>
       <FlatList
-        style={styles.listAds}
+        contentContainerStyle={styles.listAds}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
@@ -487,7 +487,6 @@ const styles = StyleSheet.create({
     padding: 5
   },
   button: {
-    flex: 1,
     alignItems: 'center',
   },
   buttonBooking: {
@@ -515,7 +514,6 @@ const styles = StyleSheet.create({
   containerButton: {
     flexDirection: "row",
     padding: 21,
-    flex: 1,
     flexWrap: 'wrap',
     justifyContent: 'space-around',
     borderRadius: 5,
@@ -589,7 +587,7 @@ const styles = StyleSheet.create({
   viewAds: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', },
   txAds: { padding: 12, paddingLeft: 20, paddingBottom: 5, color: '#000', fontWeight: 'bold', flex: 1 },
   imgMore: { marginTop: 10, marginRight: 20 },
-  listAds: { paddingHorizontal: 20, flex: 1 },
+  listAds: { paddingHorizontal: 20, },
   viewFooter: { width: 35 },
   cardView: { borderRadius: 6, marginRight: 10, borderColor: '#9B9B9B', borderWidth: 0.5, backgroundColor: '#fff', height: 134, },
   cardViewNone: { width: DEVICE_WIDTH - 140, borderRadius: 6, marginRight: 10, backgroundColor: '#fff' },
