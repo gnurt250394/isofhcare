@@ -129,42 +129,60 @@ class ListSpecialistScreen extends Component {
             <ActivityPanel
                 hideActionbar={true}
                 transparent={true}
+                useCard={true}
+                containerStyle={styles.container}
                 isLoading={this.state.isLoading}>
-                <View style={{ padding: 10, }}>
-                    <TouchableOpacity
-                        onPress={this.onClose}
-                        style={{ alignSelf: 'flex-end' }}>
-                        <ScaleImage source={require('@images/ic_close.png')} height={18} style={{ tintColor: '#000' }} />
-                    </TouchableOpacity>
-                    <Text style={styles.txtHeader}>Chuyên khoa</Text>
-                    <View style={styles.containerInput}>
-                        <TextInput style={styles.inputSearch} placeholder="Tìm kiếm bác sĩ, chuyên khoa hoặc cơ sở y tế" />
-                        <TouchableOpacity style={[styles.buttonSearch,]} onPress={this.onSearch}>
-                            <ScaleImage source={require('@images/new/hospital/ic_search.png')} height={16} />
+                <View style={styles.group}>
+                    <View >
+                        <TouchableOpacity
+                            onPress={this.onClose}
+                            style={{
+                                alignSelf: 'flex-end',
+                                paddingRight: 20,
+                                paddingBottom: 10
+                            }}>
+                            <ScaleImage source={require('@images/ic_close.png')} height={18} style={{ tintColor: '#000' }} />
                         </TouchableOpacity>
+                        <Text style={styles.txtHeader}>Chuyên khoa</Text>
+                        <View style={styles.containerInput}>
+                            <TextInput style={styles.inputSearch} placeholder="Tìm kiếm bác sĩ, chuyên khoa hoặc cơ sở y tế" />
+                            <TouchableOpacity style={[styles.buttonSearch,]} onPress={this.onSearch}>
+                                <ScaleImage source={require('@images/new/hospital/ic_search.png')} height={16} />
+                            </TouchableOpacity>
+                        </View>
                     </View>
+                    <FlatList
+                        data={this.state.data}
+                        renderItem={this.renderItem}
+                        // style={{paddingTop:height/4}}
+                        keyExtractor={this.keyExtractor}
+                        style={{
+                            padding: 10
+                            // justifyContent: 'space-evenly',
+                        }}
+                        numColumns={2}
+                        ListEmptyComponent={this.listEmpty}
+                        onEndReached={this.loadMore}
+                        onEndReachedThreshold={0.6}
+                        onRefresh={this.onRefress}
+                        refreshing={this.state.refreshing}
+                    />
                 </View>
-                <FlatList
-                    data={this.state.data}
-                    renderItem={this.renderItem}
-                    // style={{paddingTop:height/4}}
-                    keyExtractor={this.keyExtractor}
-                    columnWrapperStyle={{
-                        // justifyContent: 'space-evenly',
-                    }}
-                    numColumns={2}
-                    ListEmptyComponent={this.listEmpty}
-                    onEndReached={this.loadMore}
-                    onEndReachedThreshold={0.6}
-                    onRefresh={this.onRefress}
-                    refreshing={this.state.refreshing}
-                />
             </ActivityPanel >
         )
     }
 }
 
 const styles = StyleSheet.create({
+    group: {
+        flex: 1,
+        marginTop: 20
+    },
+    container: {
+        paddingHorizontal: 10,
+        paddingTop: 20,
+        backgroundColor: 'rgba(0,0,0,0.4)'
+    },
     txtItem: {
         color: '#FFF',
         paddingHorizontal: 7,
@@ -185,7 +203,7 @@ const styles = StyleSheet.create({
     containerInput: {
         flexDirection: 'row',
         alignItems: 'center',
-        width: '100%',
+        width: '95%',
         height: 45,
         borderColor: '#BBB',
         borderWidth: 0.7,
