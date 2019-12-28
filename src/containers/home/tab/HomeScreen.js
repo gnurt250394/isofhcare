@@ -154,6 +154,8 @@ class HomeScreen extends Component {
           icon: require("@images/new/homev2/ic_drug.png"),
           text: "Thuốc",
           onPress: () => {
+            snackbar.show('Tính năng đang phát triển')
+            return
             if (this.props.userApp.isLogin)
               this.props.navigation.navigate("drugTab");
             else
