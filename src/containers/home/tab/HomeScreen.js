@@ -89,6 +89,8 @@ class HomeScreen extends Component {
           icon: require("@images/new/homev2/ic_specialist.png"),
           text: "Chuyên khoa",
           onPress: () => {
+            this.props.navigation.navigate("listSpecialist");
+            return
             snackbar.show('Tính năng đang phát triển')
           }
         },
