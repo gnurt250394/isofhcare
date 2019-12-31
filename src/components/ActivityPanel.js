@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, StatusBar, TouchableOpacity, Dimensions, ActivityIndicator, StyleSheet, View, Platform ,Image} from 'react-native';
+import { Text, StatusBar, TouchableOpacity, Dimensions, ActivityIndicator, StyleSheet, View, Platform, Image } from 'react-native';
 import PropTypes from 'prop-types';
 const DEVICE_WIDTH = Dimensions.get("window").width;
 import constants from '@resources/strings'
@@ -63,11 +63,11 @@ class ActivityPanel extends Component {
         return (
             <View style={{ flex: 1 }}>
                 <StatusBar translucent backgroundColor="transparent" />
-                <View style={{  position: 'relative', flex: 1 }}>
+                <View style={{ position: 'relative', flex: 1, backgroundColor: '#f2f2f2'  }}>
                     {
                         (this.props.showBackgroundHeader || this.props.showBackgroundHeader === undefined) ?
                             this.props.backgroundHeader ?
-                                <Image source={this.props.backgroundHeader} width={DEVICE_WIDTH} style={[{ position: "absolute", top: 0, left: 0, right: 0,width:DEVICE_WIDTH},this.props.backgroundStyle]} />
+                                <Image source={this.props.backgroundHeader} width={DEVICE_WIDTH} style={[{ position: "absolute", top: 0, left: 0, right: 0, width: DEVICE_WIDTH }, this.props.backgroundStyle]} />
                                 :
                                 <ScaledImage source={require("@images/app/header2.png")} width={DEVICE_WIDTH} style={{ position: "absolute", top: 0, left: 0, right: 0 }} />
                             :
@@ -102,7 +102,7 @@ class ActivityPanel extends Component {
                                             </Card>
                                         </View>
                                         :
-                                        this.props.children
+                                            this.props.children
                                     :
                                     <View style={[{ flex: 1, backgroundColor: '#FFF' }, this.props.containerStyle]}>
                                         {
