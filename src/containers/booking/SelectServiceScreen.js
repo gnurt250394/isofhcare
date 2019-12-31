@@ -26,7 +26,7 @@ class SelectServiceScreen extends Component {
             listServiceSearch: [],
             searchValue: "",
             refreshing: false,
-            hospital: hospital || { hospital: {} },
+            hospital: hospital || {},
             serviceType,
             listSpecialist: [],
             specialists: []
@@ -48,7 +48,7 @@ class SelectServiceScreen extends Component {
         let serviceType = this.state.serviceType ? this.state.serviceType.id || "" : ''
         let specialist = "";//this.state.specialist ? this.state.specialist.id : ''
         this.setState({ refreshing: true }, () => {
-            serviceProvider.getAllServices(this.state.hospital.hospital.id).then(s => {
+            serviceProvider.getAllServices(this.state.hospital.id).then(s => {
                 this.setState({
                     refreshing: false
                 }, () => {
@@ -58,11 +58,11 @@ class SelectServiceScreen extends Component {
                         //         let listService = s.data.data.sort(function (a, b) {
                         //             return new Date(a.service.createdDate) - new Date(b.service.createdDate);
                         //         });
-                                this.setState({
-                                    listService: s
-                                }, () => {
-                                    this.onSearch();
-                                });
+                        this.setState({
+                            listService: s
+                        }, () => {
+                            this.onSearch();
+                        });
                         // }
                     }
                 })
@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
         color: "#02c39a",
         fontWeight: 'bold',
         marginLeft: 10,
-        width:'15%'
+        width: '15%'
     },
     buttonCheck: {
         alignSelf: 'flex-end',

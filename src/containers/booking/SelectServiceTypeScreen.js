@@ -37,7 +37,7 @@ class SelectServiceTypeScreen extends Component {
 
     onRefresh = () => {
         this.setState({ refreshing: true }, () => {
-            serviceTypeProvider.getAll(false, this.state.hospital.hospital.id).then(s => {
+            serviceTypeProvider.getAll(false, this.state.hospital.id).then(s => {
                 this.setState({
                     refreshing: false
                 }, () => {

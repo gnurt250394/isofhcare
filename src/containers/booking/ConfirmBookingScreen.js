@@ -241,7 +241,7 @@ class ConfirmBookingScreen extends Component {
             walletProvider.createOnlinePayment(
                 this.props.userApp.currentUser.id,
                 this.getPaymentMethod(),
-                this.state.hospital.hospital.id,
+                this.state.hospital.id,
                 booking.book.id,
                 this.getPaymentReturnUrl(),
                 price,
@@ -709,8 +709,8 @@ class ConfirmBookingScreen extends Component {
                             <View style={[styles.view2]}>
                                 <ScaleImage style={styles.ic_Location} width={20} source={require("@images/new/hospital/ic_place.png")} />
                                 <View>
-                                    <Text style={[styles.text5, styles.fontBold]}>{this.state.hospital.hospital.name}</Text>
-                                    <Text style={[styles.text5, styles.margin10]}>{constants.booking.address}: <Text>{this.state.hospital.hospital.address}</Text></Text>
+                                    <Text style={[styles.text5, styles.fontBold]}>{this.state.hospital.name}</Text>
+                                    <Text style={[styles.text5, styles.margin10]}>{constants.booking.address}: <Text>{this.state.hospital.address}</Text></Text>
                                 </View>
                             </View>
 

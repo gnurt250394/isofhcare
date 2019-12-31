@@ -258,12 +258,17 @@ class SelectHospitalScreen extends Component {
         let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
         if (callback) {
             this.props.navigation.pop();
-            callback(item);
+            callback(item.hospital);
         }
     }
     search() {
         this.setState({ page: 1 }, () => {
             this.onLoad();
+        })
+    }
+    detalHospital = (item) => () => {
+        this.props.navigation.navigate('profileHospital', {
+            item: item.hospital
         })
     }
     renderItem = ({ item, index }) => {
@@ -279,7 +284,14 @@ class SelectHospitalScreen extends Component {
                 <Text style={styles.bv} numberOfLines={2}>{item.hospital.name}</Text>
                 <Text style={styles.bv1} numberOfLines={2}>{item.hospital.address}</Text>
             </View>
-            <ScaleImage style={styles.help} height={21} source={require("@images/new/hospital/ic_info.png")} />
+            <TouchableOpacity
+                onPress={this.detalHospital(item)}
+                style={{
+                    paddingHorizontal: 15,
+                    paddingVertical: 10
+                }}>
+                <ScaleImage style={styles.help} height={21} source={require("@images/new/hospital/ic_info.png")} />
+            </TouchableOpacity>
         </TouchableOpacity>
     }
 
