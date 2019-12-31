@@ -253,8 +253,10 @@ const TabNavigatorComponent = createBottomTabNavigator(
       showLabel: true,
       activeTintColor: '#00CBA7',
       inactiveTintColor: '#b3b3b3',
+      allowFontScaling: false,
       style: {
-        backgroundColor: "#fff",
+        backgroundColor: "#FFF",
+        paddingTop:5,
       },
     }
   }

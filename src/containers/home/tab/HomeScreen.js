@@ -32,6 +32,7 @@ import * as Animatable from 'react-native-animatable';
 import advertiseProvider from "@data-access/advertise-provider";
 import hospitalProvider from '@data-access/hospital-provider';
 import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
+import fonts from '@resources/fonts';
 const X_WIDTH = 375;
 const X_HEIGHT = 812;
 
@@ -253,7 +254,6 @@ class HomeScreen extends Component {
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
-        extraData={this.state}
         data={listDataHospital}
         ListFooterComponent={<View style={styles.viewFooter}></View>}
         renderItem={({ item, index }) => {
@@ -509,8 +509,6 @@ class HomeScreen extends Component {
           height: DEVICE_HEIGHT / 4
         }}
         backgroundHeader={headerHome}
-        containerStyle={{ backgroundColor: '#f2f2f2' }}
-        style={[styles.activityPanel, { backgroundColor: 'transparent' }]}
       >
         <View style={styles.container}>
           {/* <View style={{ height: 150, backgroundColor: '#f2f2f2', position: "absolute", top: 300, left: 0, right: 0 }}></View> */}
@@ -650,7 +648,8 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     color: '#000',
     marginLeft: 16,
-    fontWeight: 'bold'
+    // fontWeight: 'bold',
+    fontFamily: fonts.bold
   },
   padding21: {
     paddingHorizontal: 21,
@@ -686,20 +685,24 @@ const styles = StyleSheet.create({
   icon: {
   },
   label: {
-    marginTop: 2, color: '#4A4A4A', fontWeight: '600', lineHeight: 20
+    marginTop: 2,
+    color: '#4A4A4A',
+    fontWeight: '600',
+    lineHeight: 20,
+    textAlign: 'center'
   },
   subLabel: {
     color: '#9B9B9B', fontSize: 12, textAlign: 'center', marginTop: 5
   },
   viewAds: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', },
-  txAds: { padding: 12, paddingLeft: 20, paddingBottom: 5, color: '#000', fontWeight: 'bold', flex: 1 },
+  txAds: { padding: 12, paddingLeft: 20, paddingBottom: 5, color: '#000', fontFamily: fonts.bold, flex: 1 },
   imgMore: { marginTop: 10, marginRight: 20 },
   listAds: { paddingHorizontal: 20, flex: 1 },
   viewFooter: { width: 35 },
   cardView: { borderRadius: 6, marginRight: 10, borderColor: '#9B9B9B', borderWidth: 0.5, backgroundColor: '#fff', height: 134, },
   cardViewNone: { width: DEVICE_WIDTH - 140, borderRadius: 6, marginRight: 10, backgroundColor: '#fff' },
   imgNone: { width: DEVICE_WIDTH - 140, borderRadius: 6, height: 140, borderColor: '#9B9B9B', borderWidth: 0.5 },
-  cardViewDoctor: { width: DEVICE_WIDTH / 3, borderRadius: 6, marginRight: 10 },
+  cardViewDoctor: { width: DEVICE_WIDTH / 3, borderRadius: 6, marginRight: 18 },
   txContensAds: { color: '#000', margin: 13, marginLeft: 5 },
   viewPagination: { position: 'absolute', bottom: 0, width: DEVICE_WIDTH },
   dotContainer: { width: 10, margin: 0, padding: 0, height: 10 },
