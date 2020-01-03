@@ -74,6 +74,9 @@ class InputLocationScreen extends Component {
             }
             let dataAddress = this.state.resultsLocation
             if (!dataAddress) {
+                this.setState({
+                    isLoading: false
+                })
                 snackbar.show('Vui lòng chọn một trong các địa chỉ được gợi ý', 'danger')
                 return
             }
