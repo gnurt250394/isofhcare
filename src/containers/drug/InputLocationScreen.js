@@ -46,39 +46,62 @@ class InputLocationScreen extends Component {
         }
     }
     onAddLocation = () => {
-        let { ownerName, telephone } = this.state
-        let ownerId = this.props.userApp.currentUser.id
-        if (!ownerName) {
-            snackbar.show('Họ và tên không được để trống.', 'danger')
-            return
-        }
-        if (!telephone) {
-            snackbar.show('Số điện thoại không được để trống.', 'danger')
-            return
-        }
-        if (!telephone.match(/^(\+?84|0|\(\+?84\))[1-9]\d{8,9}$/g)) {
-            snackbar.show('Số điện thoại không đúng định dạng.', 'danger')
-            return
-        }
-        let dataAddress = this.state.resultsLocation
-        let data = {
-            "address": dataAddress.address,
-            "lat": dataAddress ? dataAddress.location.latitude : null,
-            "lng": dataAddress ? dataAddress.location.longitude : null,
-            "ownerId": ownerId,
-            "ownerName": ownerName,
-            "phone": telephone
-        }
-        drugProvider.addLocation(data).then(res => {
-            if (res) {
-                let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
-                if (callback) {
-                    callback(res.data);
-                    this.props.navigation.pop();
-                }
+        this.setState({
+            isLoading: true
+        }, () => {
+            let { ownerName, telephone } = this.state
+            let ownerId = this.props.userApp.currentUser.id
+            if (!ownerName) {
+                this.setState({
+                    isLoading: false
+                })
+                snackbar.show('Họ và tên không được để trống.', 'danger')
+                return
             }
-        }).catch(e => {
-            snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+            if (!telephone) {
+                this.setState({
+                    isLoading: false
+                })
+                snackbar.show('Số điện thoại không được để trống.', 'danger')
+                return
+            }
+            if (!telephone.match(/^(\+?84|0|\(\+?84\))[1-9]\d{8,9}$/g)) {
+                this.setState({
+                    isLoading: false
+                })
+                snackbar.show('Số điện thoại không đúng định dạng.', 'danger')
+                return
+            }
+            let dataAddress = this.state.resultsLocation
+            let data = {
+                "address": dataAddress.address,
+                "lat": dataAddress ? dataAddress.location.latitude : null,
+                "lng": dataAddress ? dataAddress.location.longitude : null,
+                "ownerId": ownerId,
+                "ownerName": ownerName,
+                "phone": telephone
+            }
+            drugProvider.addLocation(data).then(res => {
+                if (res) {
+                    this.setState({
+                        isLoading: false
+                    })
+                    let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
+                    if (callback) {
+                        callback(res.data);
+                        this.props.navigation.pop();
+                    }
+                } else {
+                    this.setState({
+                        isLoading: false
+                    })
+                }
+            }).catch(e => {
+                this.setState({
+                    isLoading: false
+                })
+                snackbar.show('Có lỗi xảy ra, xin vui lòng thử lại', 'danger')
+            })
         })
     }
     openSearchModal = () => {
@@ -132,6 +155,7 @@ class InputLocationScreen extends Component {
                 actionbarStyle={styles.actionbarStyle}
                 style={styles.activityPanel}
                 containerStyle={styles.container}
+                isLoading = {this.state.isLoading}
                 menuButton={<TouchableOpacity style={{ padding: 5 }} onPress={this.onAddLocation}>
                     <Text style={styles.txtSave}>{constants.actionSheet.save}</Text>
                 </TouchableOpacity>}
