@@ -90,7 +90,7 @@ class ProfileHospitalScreen extends Component {
     getDetails = () => {
         const item = this.props.navigation.getParam('item', {})
         let id = item && item.id
-        bookingDoctorProvider.detailDoctor(id).then(s => {
+        bookingDoctorProvider.detailHospital(id).then(s => {
             if (s) {
                 this.setState({ profileHospital: s, isLoading: false })
             }
@@ -104,10 +104,9 @@ class ProfileHospitalScreen extends Component {
     }
 
     addBooking = () => {
-        this.props.navigation.navigate('selectTimeDoctor', {
-            item: this.state.profileHospital,
-            isNotHaveSchedule: true,
-            schedules: this.state.profileHospital.schedules
+        let hospital = { address: this.state.profileHospital.contact.address, ...this.state.profileHospital }
+        this.props.navigation.navigate('addBooking1', {
+            hospital,
         })
     }
     goToMap = () => {
@@ -177,7 +176,7 @@ class ProfileHospitalScreen extends Component {
     showProfile = (state) => () => {
         this.setState({ [state]: !this.state[state] })
     }
-    showMapHospital=()=>{
+    showMapHospital = () => {
         snackbar.show('Chức năng đang phát triển')
     }
     render() {
@@ -186,7 +185,7 @@ class ProfileHospitalScreen extends Component {
         const source = profileHospital && profileHospital.imagePath
             ? { uri: profileHospital.imagePath.absoluteUrl() }
             : icSupport;
-
+        const contact = profileHospital && profileHospital.contact || {}
         return (
             <ActivityPanel
                 title={'Thông tin cơ sở y tế'}
@@ -223,8 +222,8 @@ class ProfileHospitalScreen extends Component {
                                     }}
                                 />
                                 <View style={{ paddingLeft: 10, flex: 1 }}>
-                                    <Text style={styles.nameDoctor}>{profileHospital.academicDegree}.{profileHospital.name}</Text>
-                                    <Text style={{ paddingBottom: 10 }}>{this.renderPosition(profileHospital)}</Text>
+                                    <Text style={styles.nameDoctor}>{profileHospital.name}</Text>
+                                    <Text style={{ paddingBottom: 10 }}>{contact.address}</Text>
                                     <View style={styles.containerButton}>
                                         <Button label="Đặt khám" style={styles.txtBooking} onPress={this.addBooking} source={require("@images/ic_service.png")} />
                                         <Button label="Xem bản đồ" style={styles.txtAdvisory} textStyle={{ color: '#00A3FF' }} onPress={this.goToMap} />
@@ -259,8 +258,8 @@ class ProfileHospitalScreen extends Component {
                                         <Text style={styles.txtMap}>Xem sơ đồ CSYT</Text>
                                     </TouchableOpacity>
                                     <Text style={styles.colorBold}>Liên hệ</Text>
-                                    <Text style={styles.txtPhone}>Số điện thoại: <Text style={styles.txtBold}>{'0987654321'}</Text></Text>
-                                    <Text style={styles.txtPhone}>Email: <Text style={styles.txtBold}>{'email@.com'}</Text></Text>
+                                    <Text style={styles.txtPhone}>Số điện thoại: <Text style={styles.txtBold}>{contact.telephone}</Text></Text>
+                                    <Text style={styles.txtPhone}>Email: <Text style={styles.txtBold}>{contact.email}</Text></Text>
                                     <Text style={styles.txtPhone}>Website: <Text style={styles.txtBold}>{'website.com'}</Text></Text>
                                     <Text style={styles.txtPhone}>Fanpage: <Text style={styles.txtBold}>{'fanpage.com'}</Text></Text>
                                     <Text style={styles.colorBold}>Giới thiệu chung</Text>
@@ -480,7 +479,7 @@ const styles = StyleSheet.create({
     containerInfo: {
         flex: 1,
         marginVertical: 20,
-        borderRadius: 10,
+        borderRadius: 5,
     },
     containerSeeDetails: {
         flexDirection: 'row',
@@ -572,7 +571,7 @@ const styles = StyleSheet.create({
     },
     viewImgUpload: {
         padding: 10,
-        borderRadius: 10
+        borderRadius: 5
     },
 });
 function mapStateToProps(state) {

@@ -152,9 +152,9 @@ module.exports = {
      * @param {array} images 
      */
 
-  createBooking(date, description, hospitals, items, patient, time, idUser,images) {
+  createBooking(date, description, hospitals, items, patient, time, idUser, images) {
     return new Promise((resolve, reject) => {
-      let hospital = { id: hospitals && hospitals.id || '', name: hospitals && hospitals.name || '', address: hospitals && hospitals.address || '' }
+      let hospital = { id: hospitals && hospitals.id || '', name: hospitals && hospitals.name || '', address: hospitals && hospitals.address || hospitals.contact && hospitals.contact.address || '' }
       console.log('hospital: ', hospital);
       patient = {
         id: idUser,

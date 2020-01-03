@@ -32,7 +32,6 @@ class TabDoctorAndHospitalScreen extends Component {
             isLoading: true,
             data: [],
             keyword: '',
-            infoDoctor: {},
             page: 0,
             size: 20,
             refreshing: false,
@@ -46,8 +45,6 @@ class TabDoctorAndHospitalScreen extends Component {
         };
     }
     onSetPage = (page) => () => {
-
-
         if (this.viewPager) this.viewPager.setPage(page);
     }
 
@@ -68,86 +65,20 @@ class TabDoctorAndHospitalScreen extends Component {
 
     onChangeText = (state) => (value) => {
         this.setState({ [state]: value })
-        if (value.length == 0) {
-            this.getData()
-        }
     }
-    search = async () => {
-        try {
-            let { keyword, page, size } = this.state
 
-            let res = await bookingDoctorProvider.searchDoctor(keyword, 'en', page + 1, size)
-            this.setState({ refreshing: false })
-            if (res && res.length > 0) {
-                this.formatData(res)
-            } else {
-                this.formatData([])
-            }
-        } catch (error) {
-            this.formatData([])
-            this.setState({ refreshing: false })
-
-        }
-
-    }
     onSearch = () => {
-        this.setState({
-            page: 0,
-            refreshing: true,
-            type: TYPE.SEARCH
-        }, this.search)
+        console.log(this.lisDoctor)
+        if (!this.state.keyword) {
+            return
+        }
+        this.setState({ type: TYPE.SEARCH })
     }
     onRefress = () => {
-        this.setState({
-            page: 0,
-            refreshing: true,
-            keyword: '',
-            item: {},
-            type: ''
-        }, this.getData)
+        this.setState({ type: '', keyword: '' })
     }
-    keyExtractor = (item, index) => index.toString()
-    listEmpty = () => !this.state.isLoading && <Text style={styles.none_data}>Không có dữ liệu</Text>
 
 
-    backPress = () => this.props.navigation && this.props.navigation.pop()
-    renderHeader = () => {
-        return (
-            <View style={[styles.containerHeader,]}
-            >
-                <ActionBar
-                    actionbarTextColor={[{ color: constants.colors.actionbar_title_color }]}
-                    backButtonClick={this.backPress}
-                    title={constants.title.select_doctor}
-                    icBack={require('@images/new/left_arrow_white.png')}
-                    titleStyle={[styles.titleStyle]}
-                    actionbarStyle={[{ backgroundColor: constants.colors.actionbar_color }, styles.actionbarStyle]}
-                />
-                <View style={styles.groupSearch}>
-                    <TextInput
-                        value={this.state.keyword}
-                        onChangeText={this.onChangeText('keyword')}
-                        onSubmitEditing={this.onSearch}
-                        returnKeyType='search'
-                        style={styles.inputSearch}
-                        placeholder={"Tìm kiếm bác sĩ, chuyên khoa hoặc cơ sở y tế"}
-                        underlineColorAndroid={"transparent"} />
-                    {
-                        this.state.type == TYPE.SEARCH ?
-                            <TouchableOpacity style={[styles.buttonSearch, { borderLeftColor: '#BBB', borderLeftWidth: 0.7 }]} onPress={this.onRefress}>
-                                <ScaleImage source={require('@images/ic_close.png')} height={16} />
-                            </TouchableOpacity>
-                            :
-                            <TouchableOpacity style={[styles.buttonSearch,]} onPress={this.onSearch}>
-                                <ScaleImage source={require('@images/new/hospital/ic_search.png')} height={16} />
-                            </TouchableOpacity>
-
-                    }
-
-                </View>
-            </View>
-        )
-    }
     getCurrentLocation(callAgain) {
         RNLocation.getLatestLocation().then(region => {
             locationProvider.saveCurrentLocation(region.latitude, region.longitude);
@@ -259,10 +190,31 @@ class TabDoctorAndHospitalScreen extends Component {
         const { refreshing, data } = this.state
         return (
             <ActivityPanel
-                actionbar={this.renderHeader}
                 transparent={true}
+                title={constants.title.select_doctor}
                 isLoading={this.state.isLoading}>
+                <View style={styles.groupSearch}>
+                    <TextInput
+                        value={this.state.keyword}
+                        onChangeText={this.onChangeText('keyword')}
+                        onSubmitEditing={this.onSearch}
+                        returnKeyType='search'
+                        style={styles.inputSearch}
+                        placeholder={"Tìm kiếm bác sĩ, chuyên khoa hoặc cơ sở y tế"}
+                        underlineColorAndroid={"transparent"} />
+                    {
+                        this.state.type == TYPE.SEARCH ?
+                            <TouchableOpacity style={[styles.buttonSearch, { borderLeftColor: '#BBB', borderLeftWidth: 0.7 }]} onPress={this.onRefress}>
+                                <ScaleImage source={require('@images/ic_close.png')} height={16} />
+                            </TouchableOpacity>
+                            :
+                            <TouchableOpacity style={[styles.buttonSearch,]} onPress={this.onSearch}>
+                                <ScaleImage source={require('@images/new/hospital/ic_search.png')} height={16} />
+                            </TouchableOpacity>
 
+                    }
+
+                </View>
                 <View style={styles.container}>
                     <View style={styles.containerTab}>
                         <View style={styles.groupTab}>
@@ -288,10 +240,20 @@ class TabDoctorAndHospitalScreen extends Component {
                         ref={viewPager => this.viewPager = viewPager}
                         onPageScroll={this.onPageScroll}>
                         <View style={[styles.flex, { paddingTop: 10, }]}>
-                            <ListDoctorOfSpecialistScreen item={this.state.item} self={this} />
+                            <ListDoctorOfSpecialistScreen
+                                item={this.state.item}
+                                onRef={ref => this.lisDoctor = ref}
+                                type={this.state.type}
+                                keyword={this.state.keyword}
+                                self={this} />
                         </View>
                         <View style={[styles.flex, { paddingTop: 10, }]}>
-                            <ListHospitalOfSpecialistScreen item={this.state.item} self={this} />
+                            <ListHospitalOfSpecialistScreen
+                                onRef={ref => this.listHospital = ref}
+                                type={this.state.type}
+                                keyword={this.state.keyword}
+                                item={this.state.item}
+                                self={this} />
                         </View>
                     </IndicatorViewPager>
 

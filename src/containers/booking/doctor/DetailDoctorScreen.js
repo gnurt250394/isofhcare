@@ -145,9 +145,8 @@ class DetailsDoctorScreen extends Component {
     const icSupport = require("@images/new/user.png");
     const { profileDoctor } = this.state
     const source = profileDoctor && profileDoctor.imagePath
-      ? { uri: profileDoctor.imagePath.absoluteUrl() }
-      : icSupport;
-
+    ? { uri: profileDoctor.imagePath.absoluteUrl() }
+    : icSupport;
     return (
       <ActivityPanel
         title={constants.title.info_doctor}
@@ -450,7 +449,7 @@ const styles = StyleSheet.create({
   containerInfo: {
     flex: 1,
     marginVertical: 20,
-    borderRadius: 10,
+    borderRadius: 5,
     paddingBottom: 10
   },
   containerSeeDetails: {
@@ -509,7 +508,7 @@ const styles = StyleSheet.create({
   },
   nameDoctor: { fontSize: 16, color: '#000000', fontWeight: 'bold', paddingBottom: 5, },
   imgDefault: { width: 70, height: 70, alignSelf: "center" },
-  boderImage: { borderRadius: 35, borderWidth: 2, borderColor: '#00CBA7' },
+  boderImage: { borderRadius: 35, },
   avatar: { width: 70, height: 70, alignSelf: "flex-start", },
   imgPlaceHoder: {
     width: 70,
@@ -543,7 +542,7 @@ const styles = StyleSheet.create({
   },
   viewImgUpload: {
     padding: 10,
-    borderRadius: 10
+    borderRadius: 5
   },
 });
 function mapStateToProps(state) {

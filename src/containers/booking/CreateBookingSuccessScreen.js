@@ -73,7 +73,7 @@ class CreateBookingSuccessScreen extends Component {
         let booking = this.props.navigation.state.params.booking;
         let service = this.props.navigation.state.params.service || [];
         let voucher = this.props.navigation.state.params.voucher || {};
-        if (!booking || !booking.profile || !booking.hospital || !booking.hospital.hospital ) {
+        if (!booking || !booking.profile || !booking.hospital) {
             this.props.navigation.pop();
             return null;
         }
@@ -109,11 +109,11 @@ class CreateBookingSuccessScreen extends Component {
                         <View style={styles.containerBody}>
                             <View style={styles.row}>
                                 <Text style={styles.label}>{constants.booking.CSYT}:</Text>
-                                <Text style={styles.text}>{booking.hospital.hospital.name}</Text>
+                                <Text style={styles.text}>{booking.hospital.name}</Text>
                             </View>
                             <View style={styles.row}>
                                 <Text style={styles.label}>{constants.booking.address}:</Text>
-                                <Text style={styles.text}>{booking.hospital.hospital.address}</Text>
+                                <Text style={styles.text}>{booking.hospital.address}</Text>
                             </View>
                             <View style={styles.row}>
                                 <Text style={styles.label}>{constants.booking.hotline}:</Text>
