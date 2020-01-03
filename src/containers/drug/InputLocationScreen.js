@@ -73,6 +73,10 @@ class InputLocationScreen extends Component {
                 return
             }
             let dataAddress = this.state.resultsLocation
+            if (!dataAddress) {
+                snackbar.show('Vui lòng chọn một trong các địa chỉ được gợi ý', 'danger')
+                return
+            }
             let data = {
                 "address": dataAddress.address,
                 "lat": dataAddress ? dataAddress.location.latitude : null,
@@ -155,7 +159,7 @@ class InputLocationScreen extends Component {
                 actionbarStyle={styles.actionbarStyle}
                 style={styles.activityPanel}
                 containerStyle={styles.container}
-                isLoading = {this.state.isLoading}
+                isLoading={this.state.isLoading}
                 menuButton={<TouchableOpacity style={{ padding: 5 }} onPress={this.onAddLocation}>
                     <Text style={styles.txtSave}>{constants.actionSheet.save}</Text>
                 </TouchableOpacity>}
