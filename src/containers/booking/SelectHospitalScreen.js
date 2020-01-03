@@ -272,14 +272,36 @@ class SelectHospitalScreen extends Component {
         })
     }
     renderItem = ({ item, index }) => {
-        const source = item.medicalRecords && item.medicalRecords.avatar ? { uri: item.medicalRecords.avatar.absoluteUrl() } : require("@images/new/user.png");
+        const source = item.hospital && item.hospital.avatar ? { uri: item.hospital.avatar } : require("@images/new/user.png");
         return <TouchableOpacity style={styles.details} onPress={this.selectHospital.bind(this, item)}>
-            {this.state.region &&
-                < View style={styles.containerPlace}>
-                    <ScaleImage style={styles.plac} height={21} source={require("@images/new/hospital/ic_place.png")} />
+            <View style={styles.containerImage}>
+                <ImageLoad
+                    resizeMode="cover"
+                    imageStyle={styles.boderImage}
+                    borderRadius={5}
+                    customImagePlaceholderDefaultStyle={styles.imgPlaceHoder}
+                    placeholderSource={require("@images/new/user.png")}
+                    style={styles.avatar}
+                    loadingStyle={{ size: "small", color: "gray" }}
+                    source={source}
+                    defaultImage={() => {
+                        return (
+                            <ScaleImage
+                                resizeMode="cover"
+                                source={require("@images/new/user.png")}
+                                width={70}
+                                style={styles.imgDefault}
+                            />
+                        );
+                    }}
+                />
+                {this.state.region &&
+                    // < View style={styles.containerPlace}>
+                    //     <ScaleImage style={styles.plac} height={21} source={require("@images/new/hospital/ic_place.png")} />
                     <Text style={styles.bv1}>{(Math.round(item.hospital.distance * 100) / 100).toFixed(2)} km</Text>
-                </View>
-            }
+                    // </View>
+                }
+            </View>
             <View style={styles.groupContent}>
                 <Text style={styles.bv} numberOfLines={2}>{item.hospital.name}</Text>
                 <Text style={styles.bv1} numberOfLines={2}>{item.hospital.address}</Text>
@@ -372,6 +394,19 @@ function mapStateToProps(state) {
     };
 }
 const styles = StyleSheet.create({
+    containerImage: {
+        marginLeft: 10,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    imgDefault: { width: 60, height: 60, alignSelf: "center" },
+    boderImage: { borderRadius: 5 },
+    avatar: { width: 60, height: 60, alignSelf: "flex-start", },
+    imgPlaceHoder: {
+        width: 60,
+        height: 60,
+        alignSelf: "center"
+    },
     containerSearch: {
         borderBottomWidth: 1,
         borderBottomColor: 'rgba(0, 0, 0, 0.06)'
@@ -379,7 +414,6 @@ const styles = StyleSheet.create({
     groupNoneData: { alignItems: "center", marginTop: 50 },
     groupContent: { flex: 1, marginLeft: 20 },
     containerPlace: {
-        marginLeft: 20,
         alignItems: 'center',
         marginTop: 5
     },

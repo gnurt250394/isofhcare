@@ -12,7 +12,7 @@ class SelectServiceScreen extends Component {
         super(props);
         let hospital = this.props.navigation.state.params.hospital;
         let serviceType = this.props.navigation.state.params.serviceType || {};
-        this.listServicesSelected = this.props.navigation.state.params.listServicesSelected || [];
+        this.listServicesSelected = this.props.navigation.getParam('listServicesSelected') || [];
         if (!hospital) {
             this.props.navigation.pop();
             snackbar.show(constants.msg.booking.please_select_location, "danger");
@@ -35,13 +35,7 @@ class SelectServiceScreen extends Component {
     componentDidMount() {
         this.onRefresh();
     }
-    selectService(service) {
-        let callback = ((this.props.navigation.state || {}).params || {}).onSelected;
-        if (callback) {
-            callback(service.service, service.specialist && service.specialist.length > 0 ? service.specialist[0] : {});
-            this.props.navigation.pop();
-        }
-    }
+
 
 
     onRefresh = () => {
@@ -119,7 +113,6 @@ class SelectServiceScreen extends Component {
         this.setState({
             listServiceSearch: [...this.state.listServiceSearch]
         })
-        // this.selectService.bind(this, item)
     }
     ok = () => {
         // let listChecked = this.state.listServiceSearch.filter(item => item.checked);
@@ -150,8 +143,11 @@ class SelectServiceScreen extends Component {
                         <Text style={styles.txtServices}>
                             {item.name}
                         </Text>
-                        {item.checked &&
+                        <Text style={{ paddingRight: 10, fontStyle: 'italic' }}>{item.monetaryAmount && item.monetaryAmount.value ? item.monetaryAmount.value.formatPrice() : 0}đ </Text>
+                        {item.checked ?
                             <ScaleImage source={require("@images/new/ic_verified.png")} width={20} />
+                            :
+                            <View style={{ width: 20 }} />
                         }
                         {/* <Text>{item.service.price.formatPrice() + 'đ'}</Text> */}
                     </View>
