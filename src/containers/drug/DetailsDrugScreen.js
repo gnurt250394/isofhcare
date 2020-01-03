@@ -171,7 +171,7 @@ class DetailsDrugScreen extends Component {
                     <TouchableOpacity onPress={() => this.onClickItem(item)} style={styles.cardItem}>
                         <ScaledImage height={60} source={require('@images/new/drug/ic_shop_drug.png')}></ScaledImage>
                         <View style={styles.viewContentItem}>
-                            <Text style={styles.txTitle}>
+                            <Text style={styles.txTitleStore}>
                                 {item.name}
                             </Text>
                             <View style={styles.viewLocationItem}><Text style={styles.txLocationItem}>{item.address}</Text><View><Text style={styles.txLong}>{item.distance}km</Text></View></View>
@@ -291,14 +291,14 @@ class DetailsDrugScreen extends Component {
                         data={dataDetail.medicines}
                         extraData={this.state}
                         keyExtractor={(item, index) => index.toString()}
-                        renderItem={this.renderItem}
+                        renderItem={this.renderDrugItem}
                     >
                     </FlatList>
                 </View>
             )
         }
     }
-    renderItem = ({ item, index }) => {
+    renderDrugItem = ({ item, index }) => {
         return (
             <View style={styles.viewItem}>
                 <Text style={styles.txName}>{`${item.name}`}</Text>
@@ -535,6 +535,7 @@ const styles = StyleSheet.create({
         fontStyle: 'italic',
     },
     txTitle: { color: '#fff', marginLeft: 50, fontSize: 18 },
+    txTitleStore:{color: '#000', fontSize: 18,fontWeight:'bold'},
     txTitleMenu: {
         fontSize: 16,
         fontWeight: 'bold',
