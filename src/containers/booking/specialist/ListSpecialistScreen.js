@@ -186,6 +186,7 @@ const styles = StyleSheet.create({
     txtItem: {
         color: '#FFF',
         paddingHorizontal: 7,
+        paddingRight:10,
         fontWeight: 'bold'
     },
     containerItem: {

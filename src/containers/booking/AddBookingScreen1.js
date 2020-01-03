@@ -60,50 +60,14 @@ class AddBookingScreen extends Component {
         this.setState({ imageUris });
     }
     componentDidMount() {
-        // dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_SERVICE_TYPE, (s, e) => {
-        //     if (s) {
-        //         this.setState({ serviceType: s }, () => {
-        //             serviceTypeProvider.getAll().then(s => {
-        //                 if (s) {
-        //                     let _default = s.find(item => item.status == 1);
-        //                     this.setState({ serviceType: _default });
-        //                     dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_SERVICE_TYPE, _default);
-        //                 }
-        //             });
-        //         })
-        //     } else {
-        //         serviceTypeProvider.getAll().then(s => {
-        //             if (s) {
-        //                 let _default = s.find(item => item.status == 1);
-        //                 this.setState({ serviceType: _default });
-        //                 dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_SERVICE_TYPE, _default);
-        //             }
-        //         });
-        //     }
-        // });
-
-        // dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_SPECIALIST, (s, e) => {
-        //     
-        //     if (s) {
-        //         this.setState({ specialist: s })
-        //     } else {
-        //         specialistProvider.getAll().then(s => {
-        //             if (s) {
-        //                 let specialist = s[0]
-        //                 this.setState({ specialist: specialist })
-        //             }
-        //         });
-        //     }
-        // })
-        // dataCacheProvider.read(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, (s, e) => {
-        //     if (s) {
-        //         this.setState({ profile: s })
-        //     } else {
         this.getProfile()
-        //     }
-        // });
-
-
+    }
+    componentWillReceiveProps = (props) => {
+        const { navigation } = props
+        const hospital = navigation.getParam('hospital')
+        if (hospital != this.state.hospital) {
+            this.setState({ hospital })
+        }
     }
     getProfile = () => {
 
@@ -125,24 +89,6 @@ class AddBookingScreen extends Component {
             }
         });
     }
-    // componentWillReceiveProps = (props) => {
-    //     let profile = props.navigation.getParam('profile')
-
-    //     let listServicesSelected = props.navigation.getParam('listServicesSelected')
-
-    //     let schedule = props.navigation.getParam('schedule')
-
-    //     let hospital = props.navigation.getParam('hospital')
-
-    //     let bookingDate = props.navigation.getParam('bookingDate')
-
-    //     let allowBooking = props.navigation.getParam('allowBooking')
-
-    //     if (profile || listServicesSelected || schedule || hospital || bookingDate || allowBooking) {
-    //         this.getProfile()
-    //     }
-
-    // }
     selectImage() {
         if (this.state.imageUris && this.state.imageUris.length >= 5) {
             snackbar.show(constants.msg.booking.image_without_five, "danger");
@@ -225,7 +171,7 @@ class AddBookingScreen extends Component {
                 onSelected: (hospital) => {
                     let hospitalError = hospital ? "" : this.state.hospitalError;
 
-                    if (!hospital || !this.state.hospital || hospital.hospital.id != this.state.hospital.hospital.id) {
+                    if (!hospital || !this.state.hospital || hospital.id != this.state.hospital.id) {
                         this.setState({ hospital, listServicesSelected: [], serviceType: null, schedules: [], allowBooking: true, hospitalError })
                     } else {
                         this.setState({ hospital, allowBooking: true, hospitalError });
@@ -250,153 +196,7 @@ class AddBookingScreen extends Component {
         }
     }
 
-    // addBooking = () => {
-    //     Keyboard.dismiss();
-    //     if (!this.state.allowBooking)
-    //         return;
 
-    //     let error = false;
-
-    //     if (this.state.contact) {
-    //         this.setState({ contactError: "" })
-    //     } else {
-    //         this.setState({ contactError: constants.msg.booking.contact_not_null })
-    //         error = true;
-    //     }
-    //     if (this.state.profile) {
-    //         this.setState({ profileError: "" })
-    //     } else {
-    //         this.setState({ profileError: constants.msg.booking.profile_not_null })
-    //         error = true;
-    //     }
-    //     // if (this.state.serviceType) {
-    //     //     this.setState({ serviceTypeError: "" })
-    //     // } else {
-    //     //     this.setState({ serviceTypeError: constants.msg.booking.require_not_null })
-    //     //     error = true;
-    //     // }
-    //     if (this.state.listServicesSelected && this.state.listServicesSelected.length) {
-    //         this.setState({ serviceError: "" })
-    //     } else {
-    //         this.setState({ serviceError: constants.msg.booking.service_not_null })
-    //         error = true;
-    //     }
-    //     if (this.state.bookingDate) {
-    //         this.setState({ bookingError: "" })
-    //     } else {
-    //         this.setState({ bookingError: constants.msg.booking.date_booking_not_null })
-    //         error = true;
-    //     }
-    //     if (this.state.hospital) {
-    //         this.setState({ hospitalError: "" })
-    //     } else {
-    //         this.setState({ hospitalError: constants.msg.booking.location_not_null })
-    //         error = true;
-    //     }
-
-    //     if (this.state.schedule) {
-    //         this.setState({ scheduleError: "" })
-    //     } else {
-    //         this.setState({ scheduleError: constants.msg.booking.schedule_not_null })
-    //         error = true;
-    //     }
-
-    //     let validForm = this.form.isValid();
-    //     if (!error && validForm) {
-    //         for (var i = 0; i < this.state.imageUris.length; i++) {
-    //             if (this.state.imageUris[i].loading) {
-    //                 snackbar.show(constants.msg.booking.image_loading, 'danger');
-    //                 return;
-    //             }
-    //             if (this.state.imageUris[i].error) {
-    //                 snackbar.show(constants.msg.booking.image_load_err, 'danger');
-    //                 return;
-    //             }
-    //         }
-    //         var images = "";
-    //         this.state.imageUris.forEach((item) => {
-    //             if (images)
-    //                 images += ",";
-    //             images += item.url;
-    //         });
-    //         let reason = this.state.reason ? this.state.reason : ''
-    //         let img = images ? images : ''
-
-
-
-    //         connectionUtils.isConnected().then(s => {
-    //             this.setState({ isLoading: true }, () => {
-    //                 
-    //                 let serviceIds = this.state.listServicesSelected.map(item => item.service.id).join(",");
-    //                 let bookingDate = this.state.bookingDate.format("yyyy-MM-dd") + " " + this.state.schedule.label + ":00";
-    //                 bookingProvider.create(
-    //                     this.state.hospital.hospital.id,
-    //                     this.state.schedule && this.state.schedule.schedule ? this.state.schedule.schedule.id : "",
-    //                     this.state.profile.medicalRecords.id,
-    //                     (this.state.serviceType || {}).id,
-    //                     serviceIds,
-    //                     bookingDate,
-    //                     reason,
-    //                     img
-    //                 ).then(s => {
-    //                     this.setState({ isLoading: false }, () => {
-    //                         if (s) {
-    //                             switch (s.code) {
-    //                                 case 0:
-    //                                     dataCacheProvider.save(this.props.userApp.currentUser.id, constants.key.storage.LASTEST_PROFILE, this.state.profile);
-    //                                     this.props.navigation.navigate("confirmBooking", {
-    //                                         serviceType: this.state.serviceType,
-    //                                         service: this.state.listServicesSelected,
-    //                                         profile: this.state.profile,
-    //                                         hospital: this.state.hospital,
-    //                                         bookingDate: this.state.bookingDate,
-    //                                         schedule: this.state.schedule,
-    //                                         reason: reason,
-    //                                         images: img,
-    //                                         contact: this.state.contact,
-    //                                         booking: s.data
-    //                                     });
-    //                                     break;
-    //                                 case 1:
-    //                                     this.setState({ isLoading: false }, () => {
-    //                                         snackbar.show(constants.msg.booking.booking_must_equal_datetime, "danger");
-    //                                     });
-    //                                     break;
-    //                                 case 2:
-    //                                     this.setState({ isLoading: false }, () => {
-    //                                         snackbar.show(constants.msg.booking.full_slot_on_this_time, "danger");
-    //                                     });
-    //                                     break;
-    //                                 case 401:
-    //                                     this.setState({ isLoading: false }, () => {
-    //                                         snackbar.show(constants.msg.booking.booking_must_login, "danger");
-    //                                         this.props.navigation.navigate("login"
-    //                                             // , {
-    //                                             //     nextScreen: {
-    //                                             //         screen: "confirmBooking", params: this.props.navigation.state.params
-    //                                             //     }
-    //                                             // }
-    //                                         );
-    //                                     });
-    //                                     break;
-    //                                 default:
-    //                                     this.setState({ isLoading: false }, () => {
-    //                                         snackbar.show(constants.msg.booking.booking_err, "danger");
-    //                                     });
-    //                                     break;
-    //                             }
-    //                         }
-    //                     });
-    //                 }).catch(e => {
-    //                     this.setState({ isLoading: false }, () => {
-    //                     });
-    //                 })
-    //             });
-    //         }).catch(e => {
-    //             snackbar.show(constants.msg.app.not_internet, "danger");
-    //         })
-    //     }
-    // }
     addBooking = () => {
 
         Keyboard.dismiss();
@@ -503,7 +303,7 @@ class AddBookingScreen extends Component {
                     bookingProvider.createBooking(
                         bookingDate,
                         reason,
-                        this.state.hospital.hospital,
+                        this.state.hospital,
                         services,
                         this.state.profile && this.state.profile.medicalRecords,
                         this.state.schedule.label,
@@ -681,7 +481,7 @@ class AddBookingScreen extends Component {
                             <TouchableOpacity style={styles.mucdichkham} onPress={this.selectHospital}>
                                 <ScaleImage style={styles.imgIc} width={18} source={require("@images/new/booking/ic_placeholder.png")} />
                                 <Text style={styles.mdk}>{constants.booking.location}</Text>
-                                <Text numberOfLines={1} style={styles.ktq}>{this.state.hospital ? this.state.hospital.hospital.name : constants.booking.select_location}</Text>
+                                <Text numberOfLines={1} style={styles.ktq}>{this.state.hospital && this.state.hospital.name ? this.state.hospital.name : constants.booking.select_location}</Text>
                                 <ScaleImage style={styles.imgmdk} height={10} source={require("@images/new/booking/ic_next.png")} />
                             </TouchableOpacity>
                             {

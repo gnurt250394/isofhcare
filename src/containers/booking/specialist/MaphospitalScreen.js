@@ -30,7 +30,7 @@ class MaphospitalScreen extends Component {
             },
             MARKERS: null,
             origin: '',
-            destination: item.hospital && item.hospital.contact && item.hospital.contact.address || '',
+            destination:  item.contact && item.contact.address || '',
             destMarker: '',
             startMarker: '',
             imageloaded: false,
@@ -200,7 +200,7 @@ class MaphospitalScreen extends Component {
     render() {
         return (
             <ActivityPanel
-                title={this.state.item.hospital.name}
+                title={this.state.item.name}
             // isLoading={this.state.isLoading}
             >
                 <View style={styles.container}>
@@ -237,7 +237,7 @@ class MaphospitalScreen extends Component {
                                         <Callout >
                                             <Text style={{
                                                 color: '#00BA99'
-                                            }}>{this.state.item.hospital.name}</Text>
+                                            }}>{this.state.item.name}</Text>
                                         </Callout>
                                     </Marker> : null
                                 }
