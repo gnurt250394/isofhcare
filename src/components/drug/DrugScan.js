@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet,ScrollView } from 'react-native';
 import ScaledImage from 'mainam-react-native-scaleimage';
-import { ScrollView } from 'react-native-gesture-handler';
 import InsertInfoDrug from './InsertInfoDrug'
 import ImageLoad from 'mainam-react-native-image-loader';
 import ImagePicker from 'mainam-react-native-select-image';

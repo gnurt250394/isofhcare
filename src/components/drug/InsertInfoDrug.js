@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, TextInput, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, StyleSheet, ActivityIndicator,ScrollView } from 'react-native';
 import ScaledImage from 'mainam-react-native-scaleimage';
-import { ScrollView } from 'react-native-gesture-handler';
 import NavigationService from "@navigators/NavigationService";
 import snackbar from '@utils/snackbar-utils';
 import { connect } from "react-redux";
